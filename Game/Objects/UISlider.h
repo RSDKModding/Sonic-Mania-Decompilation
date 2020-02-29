@@ -1,0 +1,23 @@
+#ifndef OBJ_UISLIDER_H
+#define OBJ_UISLIDER_H
+
+//Object Class
+class UISlider : Object {
+
+};
+
+//Entity Class
+class EntityUISlider : Entity {
+
+};
+
+//Entity Functions
+void UISlider_Update();
+void UISlider_EarlyUpdate();
+void UISlider_LateUpdate();
+void UISlider_Draw();
+void UISlider_Setup(void* subtype);
+void UISlider_StageLoad();
+void UISlider_GetAttributes();
+
+#endif //!OBJ_UISLIDER_H

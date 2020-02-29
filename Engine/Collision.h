@@ -1,0 +1,7 @@
+
+enum {
+	CMODE_FLOOR,
+	CMODE_LWALL,
+	CMODE_ROOF,
+	CMODE_RWALL,
+};

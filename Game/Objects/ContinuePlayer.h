@@ -1,0 +1,23 @@
+#ifndef OBJ_CONTINUEPLAYER_H
+#define OBJ_CONTINUEPLAYER_H
+
+//Object Class
+class ContinuePlayer : Object {
+
+};
+
+//Entity Class
+class EntityContinuePlayer : Entity {
+
+};
+
+//Entity Functions
+void ContinuePlayer_Update();
+void ContinuePlayer_EarlyUpdate();
+void ContinuePlayer_LateUpdate();
+void ContinuePlayer_Draw();
+void ContinuePlayer_Setup(void* subtype);
+void ContinuePlayer_StageLoad();
+void ContinuePlayer_GetAttributes();
+
+#endif //!OBJ_CONTINUEPLAYER_H
