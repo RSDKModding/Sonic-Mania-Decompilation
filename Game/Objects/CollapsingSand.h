@@ -1,15 +1,22 @@
 #ifndef OBJ_COLLAPSINGSAND_H
 #define OBJ_COLLAPSINGSAND_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CollapsingSand : Object {
+class ObjectCollapsingSand : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCollapsingSand : Entity {
+class EntityCollapsingSand : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCollapsingSand CollapsingSand;
 
 //Entity Functions
 void CollapsingSand_Update();

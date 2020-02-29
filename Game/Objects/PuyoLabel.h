@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOLABEL_H
 #define OBJ_PUYOLABEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoLabel : Object {
+class ObjectPuyoLabel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoLabel : Entity {
+class EntityPuyoLabel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoLabel PuyoLabel;
 
 //Entity Functions
 void PuyoLabel_Update();

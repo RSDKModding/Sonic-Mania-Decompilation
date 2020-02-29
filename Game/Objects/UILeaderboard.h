@@ -1,15 +1,22 @@
 #ifndef OBJ_UILEADERBOARD_H
 #define OBJ_UILEADERBOARD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UILeaderboard : Object {
+class ObjectUILeaderboard : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUILeaderboard : Entity {
+class EntityUILeaderboard : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUILeaderboard UILeaderboard;
 
 //Entity Functions
 void UILeaderboard_Update();

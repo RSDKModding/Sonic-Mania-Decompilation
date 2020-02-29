@@ -1,15 +1,22 @@
 #ifndef OBJ_CONVEYORWHEEL_H
 #define OBJ_CONVEYORWHEEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ConveyorWheel : Object {
+class ObjectConveyorWheel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityConveyorWheel : Entity {
+class EntityConveyorWheel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectConveyorWheel ConveyorWheel;
 
 //Entity Functions
 void ConveyorWheel_Update();

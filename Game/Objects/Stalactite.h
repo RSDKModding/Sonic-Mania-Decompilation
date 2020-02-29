@@ -1,15 +1,22 @@
 #ifndef OBJ_STALACTITE_H
 #define OBJ_STALACTITE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Stalactite : Object {
+class ObjectStalactite : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityStalactite : Entity {
+class EntityStalactite : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectStalactite Stalactite;
 
 //Entity Functions
 void Stalactite_Update();

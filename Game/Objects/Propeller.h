@@ -1,15 +1,22 @@
 #ifndef OBJ_PROPELLER_H
 #define OBJ_PROPELLER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Propeller : Object {
+class ObjectPropeller : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPropeller : Entity {
+class EntityPropeller : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPropeller Propeller;
 
 //Entity Functions
 void Propeller_Update();

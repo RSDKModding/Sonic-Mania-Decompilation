@@ -1,15 +1,22 @@
 #ifndef OBJ_ANIMALHBH_H
 #define OBJ_ANIMALHBH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AnimalHBH : Object {
+class ObjectAnimalHBH : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAnimalHBH : Entity {
+class EntityAnimalHBH : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAnimalHBH AnimalHBH;
 
 //Entity Functions
 void AnimalHBH_Update();

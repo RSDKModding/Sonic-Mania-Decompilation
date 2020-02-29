@@ -1,15 +1,22 @@
 #ifndef OBJ_DNARISER_H
 #define OBJ_DNARISER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DNARiser : Object {
+class ObjectDNARiser : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDNARiser : Entity {
+class EntityDNARiser : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDNARiser DNARiser;
 
 //Entity Functions
 void DNARiser_Update();

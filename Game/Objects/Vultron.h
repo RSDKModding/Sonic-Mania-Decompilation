@@ -1,15 +1,22 @@
 #ifndef OBJ_VULTRON_H
 #define OBJ_VULTRON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Vultron : Object {
+class ObjectVultron : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityVultron : Entity {
+class EntityVultron : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectVultron Vultron;
 
 //Entity Functions
 void Vultron_Update();

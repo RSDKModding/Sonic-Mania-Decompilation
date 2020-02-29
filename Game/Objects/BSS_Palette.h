@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_PALETTE_H
 #define OBJ_BSS_PALETTE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_Palette : Object {
+class ObjectBSS_Palette : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_Palette : Entity {
+class EntityBSS_Palette : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_Palette BSS_Palette;
 
 //Entity Functions
 void BSS_Palette_Update();

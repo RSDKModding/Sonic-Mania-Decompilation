@@ -1,15 +1,22 @@
 #ifndef OBJ_TURBINE_H
 #define OBJ_TURBINE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Turbine : Object {
+class ObjectTurbine : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTurbine : Entity {
+class EntityTurbine : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTurbine Turbine;
 
 //Entity Functions
 void Turbine_Update();

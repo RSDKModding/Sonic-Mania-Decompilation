@@ -1,15 +1,22 @@
 #ifndef OBJ_VALVE_H
 #define OBJ_VALVE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Valve : Object {
+class ObjectValve : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityValve : Entity {
+class EntityValve : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectValve Valve;
 
 //Entity Functions
 void Valve_Update();

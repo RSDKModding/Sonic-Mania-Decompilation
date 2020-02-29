@@ -1,15 +1,22 @@
 #ifndef OBJ_BGSWITCH_H
 #define OBJ_BGSWITCH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BGSwitch : Object {
+class ObjectBGSwitch : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBGSwitch : Entity {
+class EntityBGSwitch : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBGSwitch BGSwitch;
 
 //Entity Functions
 void BGSwitch_Update();

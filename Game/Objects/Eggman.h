@@ -1,15 +1,22 @@
 #ifndef OBJ_EGGMAN_H
 #define OBJ_EGGMAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Eggman : Object {
+class ObjectEggman : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEggman : Entity {
+class EntityEggman : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEggman Eggman;
 
 //Entity Functions
 void Eggman_Update();

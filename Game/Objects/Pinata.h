@@ -1,15 +1,22 @@
 #ifndef OBJ_PINATA_H
 #define OBJ_PINATA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Pinata : Object {
+class ObjectPinata : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPinata : Entity {
+class EntityPinata : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPinata Pinata;
 
 //Entity Functions
 void Pinata_Update();

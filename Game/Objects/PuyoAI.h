@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOAI_H
 #define OBJ_PUYOAI_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoAI : Object {
+class ObjectPuyoAI : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoAI : Entity {
+class EntityPuyoAI : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoAI PuyoAI;
 
 //Entity Functions
 void PuyoAI_Update();

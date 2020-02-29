@@ -1,15 +1,22 @@
 #ifndef OBJ_METALSONIC_H
 #define OBJ_METALSONIC_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MetalSonic : Object {
+class ObjectMetalSonic : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMetalSonic : Entity {
+class EntityMetalSonic : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMetalSonic MetalSonic;
 
 //Entity Functions
 void MetalSonic_Update();

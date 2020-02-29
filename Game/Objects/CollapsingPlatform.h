@@ -1,15 +1,22 @@
 #ifndef OBJ_COLLAPSINGPLATFORM_H
 #define OBJ_COLLAPSINGPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CollapsingPlatform : Object {
+class ObjectCollapsingPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCollapsingPlatform : Entity {
+class EntityCollapsingPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCollapsingPlatform CollapsingPlatform;
 
 //Entity Functions
 void CollapsingPlatform_Update();

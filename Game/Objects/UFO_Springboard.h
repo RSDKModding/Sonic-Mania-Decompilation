@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_SPRINGBOARD_H
 #define OBJ_UFO_SPRINGBOARD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Springboard : Object {
+class ObjectUFO_Springboard : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Springboard : Entity {
+class EntityUFO_Springboard : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Springboard UFO_Springboard;
 
 //Entity Functions
 void UFO_Springboard_Update();

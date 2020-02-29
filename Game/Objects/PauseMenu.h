@@ -1,15 +1,22 @@
 #ifndef OBJ_PAUSEMENU_H
 #define OBJ_PAUSEMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PauseMenu : Object {
+class ObjectPauseMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPauseMenu : Entity {
+class EntityPauseMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPauseMenu PauseMenu;
 
 //Entity Functions
 void PauseMenu_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_BUCKWILDBALL_H
 #define OBJ_BUCKWILDBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BuckwildBall : Object {
+class ObjectBuckwildBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBuckwildBall : Entity {
+class EntityBuckwildBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBuckwildBall BuckwildBall;
 
 //Entity Functions
 void BuckwildBall_Update();

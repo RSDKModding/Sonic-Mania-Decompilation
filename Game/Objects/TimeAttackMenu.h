@@ -1,15 +1,22 @@
 #ifndef OBJ_TIMEATTACKMENU_H
 #define OBJ_TIMEATTACKMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TimeAttackMenu : Object {
+class ObjectTimeAttackMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTimeAttackMenu : Entity {
+class EntityTimeAttackMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTimeAttackMenu TimeAttackMenu;
 
 //Entity Functions
 void TimeAttackMenu_Update();

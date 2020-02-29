@@ -1,15 +1,22 @@
 #ifndef OBJ_UIKEYBINDER_H
 #define OBJ_UIKEYBINDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIKeyBinder : Object {
+class ObjectUIKeyBinder : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIKeyBinder : Entity {
+class EntityUIKeyBinder : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIKeyBinder UIKeyBinder;
 
 //Entity Functions
 void UIKeyBinder_Update();

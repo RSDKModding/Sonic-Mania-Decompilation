@@ -1,15 +1,22 @@
 #ifndef OBJ_EGGLOCO_H
 #define OBJ_EGGLOCO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EggLoco : Object {
+class ObjectEggLoco : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEggLoco : Entity {
+class EntityEggLoco : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEggLoco EggLoco;
 
 //Entity Functions
 void EggLoco_Update();

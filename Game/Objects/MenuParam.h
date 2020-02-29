@@ -1,15 +1,22 @@
 #ifndef OBJ_MENUPARAM_H
 #define OBJ_MENUPARAM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MenuParam : Object {
+class ObjectMenuParam : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMenuParam : Entity {
+class EntityMenuParam : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMenuParam MenuParam;
 
 //Entity Functions
 void MenuParam_Update();

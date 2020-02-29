@@ -1,15 +1,22 @@
 #ifndef OBJ_SIDEBARREL_H
 #define OBJ_SIDEBARREL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SideBarrel : Object {
+class ObjectSideBarrel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySideBarrel : Entity {
+class EntitySideBarrel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSideBarrel SideBarrel;
 
 //Entity Functions
 void SideBarrel_Update();

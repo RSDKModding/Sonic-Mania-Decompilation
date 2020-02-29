@@ -1,15 +1,22 @@
 #ifndef OBJ_SWINGROPE_H
 #define OBJ_SWINGROPE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SwingRope : Object {
+class ObjectSwingRope : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySwingRope : Entity {
+class EntitySwingRope : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSwingRope SwingRope;
 
 //Entity Functions
 void SwingRope_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_CACTULA_H
 #define OBJ_CACTULA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Cactula : Object {
+class ObjectCactula : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCactula : Entity {
+class EntityCactula : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCactula Cactula;
 
 //Entity Functions
 void Cactula_Update();

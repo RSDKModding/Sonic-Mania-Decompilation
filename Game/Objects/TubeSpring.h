@@ -1,15 +1,22 @@
 #ifndef OBJ_TUBESPRING_H
 #define OBJ_TUBESPRING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TubeSpring : Object {
+class ObjectTubeSpring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTubeSpring : Entity {
+class EntityTubeSpring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTubeSpring TubeSpring;
 
 //Entity Functions
 void TubeSpring_Update();

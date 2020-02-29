@@ -1,15 +1,22 @@
 #ifndef OBJ_KLEPTOMOBILE_H
 #define OBJ_KLEPTOMOBILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class KleptoMobile : Object {
+class ObjectKleptoMobile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityKleptoMobile : Entity {
+class EntityKleptoMobile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectKleptoMobile KleptoMobile;
 
 //Entity Functions
 void KleptoMobile_Update();

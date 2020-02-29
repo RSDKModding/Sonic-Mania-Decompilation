@@ -1,15 +1,22 @@
 #ifndef OBJ_UIBACKGROUND_H
 #define OBJ_UIBACKGROUND_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIBackground : Object {
+class ObjectUIBackground : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIBackground : Entity {
+class EntityUIBackground : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIBackground UIBackground;
 
 //Entity Functions
 void UIBackground_Update();

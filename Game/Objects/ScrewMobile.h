@@ -1,15 +1,22 @@
 #ifndef OBJ_SCREWMOBILE_H
 #define OBJ_SCREWMOBILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ScrewMobile : Object {
+class ObjectScrewMobile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityScrewMobile : Entity {
+class EntityScrewMobile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectScrewMobile ScrewMobile;
 
 //Entity Functions
 void ScrewMobile_Update();

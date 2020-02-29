@@ -1,15 +1,22 @@
 #ifndef OBJ_JUNCTIONWHEEL_H
 #define OBJ_JUNCTIONWHEEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class JunctionWheel : Object {
+class ObjectJunctionWheel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityJunctionWheel : Entity {
+class EntityJunctionWheel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectJunctionWheel JunctionWheel;
 
 //Entity Functions
 void JunctionWheel_Update();

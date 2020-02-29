@@ -1,15 +1,22 @@
 #ifndef OBJ_UIVSSCOREBOARD_H
 #define OBJ_UIVSSCOREBOARD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIVsScoreboard : Object {
+class ObjectUIVsScoreboard : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIVsScoreboard : Entity {
+class EntityUIVsScoreboard : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIVsScoreboard UIVsScoreboard;
 
 //Entity Functions
 void UIVsScoreboard_Update();

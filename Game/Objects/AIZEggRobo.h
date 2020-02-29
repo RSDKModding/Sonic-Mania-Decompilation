@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZEGGROBO_H
 #define OBJ_AIZEGGROBO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZEggRobo : Object {
+class ObjectAIZEggRobo : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZEggRobo : Entity {
+class EntityAIZEggRobo : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZEggRobo AIZEggRobo;
 
 //Entity Functions
 void AIZEggRobo_Update();

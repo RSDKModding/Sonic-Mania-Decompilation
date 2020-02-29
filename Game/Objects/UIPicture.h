@@ -1,15 +1,22 @@
 #ifndef OBJ_UIPICTURE_H
 #define OBJ_UIPICTURE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIPicture : Object {
+class ObjectUIPicture : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIPicture : Entity {
+class EntityUIPicture : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIPicture UIPicture;
 
 //Entity Functions
 void UIPicture_Update();

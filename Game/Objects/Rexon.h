@@ -1,15 +1,22 @@
 #ifndef OBJ_REXON_H
 #define OBJ_REXON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Rexon : Object {
+class ObjectRexon : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRexon : Entity {
+class EntityRexon : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRexon Rexon;
 
 //Entity Functions
 void Rexon_Update();

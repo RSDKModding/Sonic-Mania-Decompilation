@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZTORNADO_H
 #define OBJ_AIZTORNADO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZTornado : Object {
+class ObjectAIZTornado : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZTornado : Entity {
+class EntityAIZTornado : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZTornado AIZTornado;
 
 //Entity Functions
 void AIZTornado_Update();

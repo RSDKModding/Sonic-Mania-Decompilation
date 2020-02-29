@@ -1,15 +1,22 @@
 #ifndef OBJ_HEAVYMYSTIC_H
 #define OBJ_HEAVYMYSTIC_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HeavyMystic : Object {
+class ObjectHeavyMystic : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHeavyMystic : Entity {
+class EntityHeavyMystic : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHeavyMystic HeavyMystic;
 
 //Entity Functions
 void HeavyMystic_Update();

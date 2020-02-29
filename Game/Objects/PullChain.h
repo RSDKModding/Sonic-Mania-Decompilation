@@ -1,15 +1,22 @@
 #ifndef OBJ_PULLCHAIN_H
 #define OBJ_PULLCHAIN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PullChain : Object {
+class ObjectPullChain : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPullChain : Entity {
+class EntityPullChain : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPullChain PullChain;
 
 //Entity Functions
 void PullChain_Update();

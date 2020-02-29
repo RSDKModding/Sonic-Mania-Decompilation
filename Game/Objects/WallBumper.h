@@ -1,15 +1,22 @@
 #ifndef OBJ_WALLBUMPER_H
 #define OBJ_WALLBUMPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WallBumper : Object {
+class ObjectWallBumper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWallBumper : Entity {
+class EntityWallBumper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWallBumper WallBumper;
 
 //Entity Functions
 void WallBumper_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_SIZELASER_H
 #define OBJ_SIZELASER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SizeLaser : Object {
+class ObjectSizeLaser : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySizeLaser : Entity {
+class EntitySizeLaser : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSizeLaser SizeLaser;
 
 //Entity Functions
 void SizeLaser_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_STICKYPLATFORM_H
 #define OBJ_STICKYPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class StickyPlatform : Object {
+class ObjectStickyPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityStickyPlatform : Entity {
+class EntityStickyPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectStickyPlatform StickyPlatform;
 
 //Entity Functions
 void StickyPlatform_Update();

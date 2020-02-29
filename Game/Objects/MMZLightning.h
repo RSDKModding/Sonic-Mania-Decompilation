@@ -1,15 +1,22 @@
 #ifndef OBJ_MMZLIGHTNING_H
 #define OBJ_MMZLIGHTNING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MMZLightning : Object {
+class ObjectMMZLightning : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMMZLightning : Entity {
+class EntityMMZLightning : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMMZLightning MMZLightning;
 
 //Entity Functions
 void MMZLightning_Update();

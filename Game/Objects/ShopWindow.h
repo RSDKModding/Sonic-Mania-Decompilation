@@ -1,15 +1,22 @@
 #ifndef OBJ_SHOPWINDOW_H
 #define OBJ_SHOPWINDOW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ShopWindow : Object {
+class ObjectShopWindow : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityShopWindow : Entity {
+class EntityShopWindow : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectShopWindow ShopWindow;
 
 //Entity Functions
 void ShopWindow_Update();

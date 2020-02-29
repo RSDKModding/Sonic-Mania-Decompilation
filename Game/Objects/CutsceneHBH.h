@@ -1,15 +1,22 @@
 #ifndef OBJ_CUTSCENEHBH_H
 #define OBJ_CUTSCENEHBH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CutsceneHBH : Object {
+class ObjectCutsceneHBH : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCutsceneHBH : Entity {
+class EntityCutsceneHBH : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCutsceneHBH CutsceneHBH;
 
 //Entity Functions
 void CutsceneHBH_Update();

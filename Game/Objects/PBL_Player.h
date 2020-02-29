@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_PLAYER_H
 #define OBJ_PBL_PLAYER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Player : Object {
+class ObjectPBL_Player : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Player : Entity {
+class EntityPBL_Player : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Player PBL_Player;
 
 //Entity Functions
 void PBL_Player_Update();

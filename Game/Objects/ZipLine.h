@@ -1,15 +1,22 @@
 #ifndef OBJ_ZIPLINE_H
 #define OBJ_ZIPLINE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ZipLine : Object {
+class ObjectZipLine : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityZipLine : Entity {
+class EntityZipLine : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectZipLine ZipLine;
 
 //Entity Functions
 void ZipLine_Update();

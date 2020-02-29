@@ -1,15 +1,22 @@
 #ifndef OBJ_ARMADILOID_H
 #define OBJ_ARMADILOID_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Armadiloid : Object {
+class ObjectArmadiloid : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityArmadiloid : Entity {
+class EntityArmadiloid : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectArmadiloid Armadiloid;
 
 //Entity Functions
 void Armadiloid_Update();

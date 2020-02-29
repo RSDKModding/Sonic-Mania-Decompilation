@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZRIDER_H
 #define OBJ_ERZRIDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZRider : Object {
+class ObjectERZRider : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZRider : Entity {
+class EntityERZRider : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZRider ERZRider;
 
 //Entity Functions
 void ERZRider_Update();

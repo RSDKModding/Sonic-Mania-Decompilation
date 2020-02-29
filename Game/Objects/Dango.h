@@ -1,15 +1,22 @@
 #ifndef OBJ_DANGO_H
 #define OBJ_DANGO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Dango : Object {
+class ObjectDango : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDango : Entity {
+class EntityDango : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDango Dango;
 
 //Entity Functions
 void Dango_Update();

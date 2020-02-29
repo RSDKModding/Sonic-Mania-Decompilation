@@ -1,15 +1,22 @@
 #ifndef OBJ_METALARM_H
 #define OBJ_METALARM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MetalArm : Object {
+class ObjectMetalArm : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMetalArm : Entity {
+class EntityMetalArm : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMetalArm MetalArm;
 
 //Entity Functions
 void MetalArm_Update();

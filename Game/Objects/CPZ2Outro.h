@@ -1,15 +1,22 @@
 #ifndef OBJ_CPZ2OUTRO_H
 #define OBJ_CPZ2OUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CPZ2Outro : Object {
+class ObjectCPZ2Outro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCPZ2Outro : Entity {
+class EntityCPZ2Outro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCPZ2Outro CPZ2Outro;
 
 //Entity Functions
 void CPZ2Outro_Update();

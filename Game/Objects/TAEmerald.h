@@ -1,15 +1,22 @@
 #ifndef OBJ_TAEMERALD_H
 #define OBJ_TAEMERALD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TAEmerald : Object {
+class ObjectTAEmerald : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTAEmerald : Entity {
+class EntityTAEmerald : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTAEmerald TAEmerald;
 
 //Entity Functions
 void TAEmerald_Update();

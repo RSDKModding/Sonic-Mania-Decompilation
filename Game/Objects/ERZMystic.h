@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZMYSTIC_H
 #define OBJ_ERZMYSTIC_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZMystic : Object {
+class ObjectERZMystic : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZMystic : Entity {
+class EntityERZMystic : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZMystic ERZMystic;
 
 //Entity Functions
 void ERZMystic_Update();

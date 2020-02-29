@@ -1,15 +1,22 @@
 #ifndef OBJ_CPZSHUTTER_H
 #define OBJ_CPZSHUTTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CPZShutter : Object {
+class ObjectCPZShutter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCPZShutter : Entity {
+class EntityCPZShutter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCPZShutter CPZShutter;
 
 //Entity Functions
 void CPZShutter_Update();

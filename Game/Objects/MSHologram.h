@@ -1,15 +1,22 @@
 #ifndef OBJ_MSHOLOGRAM_H
 #define OBJ_MSHOLOGRAM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSHologram : Object {
+class ObjectMSHologram : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSHologram : Entity {
+class EntityMSHologram : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSHologram MSHologram;
 
 //Entity Functions
 void MSHologram_Update();

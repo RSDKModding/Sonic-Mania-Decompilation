@@ -1,15 +1,22 @@
 #ifndef OBJ_FLASHERMKII_H
 #define OBJ_FLASHERMKII_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FlasherMKII : Object {
+class ObjectFlasherMKII : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFlasherMKII : Entity {
+class EntityFlasherMKII : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFlasherMKII FlasherMKII;
 
 //Entity Functions
 void FlasherMKII_Update();

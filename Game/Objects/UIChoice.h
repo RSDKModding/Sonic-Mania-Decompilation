@@ -1,15 +1,22 @@
 #ifndef OBJ_UICHOICE_H
 #define OBJ_UICHOICE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIChoice : Object {
+class ObjectUIChoice : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIChoice : Entity {
+class EntityUIChoice : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIChoice UIChoice;
 
 //Entity Functions
 void UIChoice_Update();

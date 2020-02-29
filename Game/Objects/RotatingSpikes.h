@@ -1,15 +1,22 @@
 #ifndef OBJ_ROTATINGSPIKES_H
 #define OBJ_ROTATINGSPIKES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RotatingSpikes : Object {
+class ObjectRotatingSpikes : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRotatingSpikes : Entity {
+class EntityRotatingSpikes : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRotatingSpikes RotatingSpikes;
 
 //Entity Functions
 void RotatingSpikes_Update();

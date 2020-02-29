@@ -1,15 +1,22 @@
 #ifndef OBJ_JACOBSLADDER_H
 #define OBJ_JACOBSLADDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class JacobsLadder : Object {
+class ObjectJacobsLadder : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityJacobsLadder : Entity {
+class EntityJacobsLadder : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectJacobsLadder JacobsLadder;
 
 //Entity Functions
 void JacobsLadder_Update();

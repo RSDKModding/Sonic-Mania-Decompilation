@@ -1,15 +1,22 @@
 #ifndef OBJ_DBTOWER_H
 #define OBJ_DBTOWER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DBTower : Object {
+class ObjectDBTower : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDBTower : Entity {
+class EntityDBTower : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDBTower DBTower;
 
 //Entity Functions
 void DBTower_Update();

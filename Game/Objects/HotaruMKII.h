@@ -1,15 +1,22 @@
 #ifndef OBJ_HOTARUMKII_H
 #define OBJ_HOTARUMKII_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HotaruMKII : Object {
+class ObjectHotaruMKII : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHotaruMKII : Entity {
+class EntityHotaruMKII : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHotaruMKII HotaruMKII;
 
 //Entity Functions
 void HotaruMKII_Update();

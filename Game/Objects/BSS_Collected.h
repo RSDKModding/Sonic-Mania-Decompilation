@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_COLLECTED_H
 #define OBJ_BSS_COLLECTED_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_Collected : Object {
+class ObjectBSS_Collected : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_Collected : Entity {
+class EntityBSS_Collected : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_Collected BSS_Collected;
 
 //Entity Functions
 void BSS_Collected_Update();

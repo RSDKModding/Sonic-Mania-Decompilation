@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZSETUP_H
 #define OBJ_AIZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZSetup : Object {
+class ObjectAIZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZSetup : Entity {
+class EntityAIZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZSetup AIZSetup;
 
 //Entity Functions
 void AIZSetup_Update();

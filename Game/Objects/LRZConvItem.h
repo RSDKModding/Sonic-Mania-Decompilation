@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZCONVITEM_H
 #define OBJ_LRZCONVITEM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZConvItem : Object {
+class ObjectLRZConvItem : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZConvItem : Entity {
+class EntityLRZConvItem : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZConvItem LRZConvItem;
 
 //Entity Functions
 void LRZConvItem_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_HCZSETUP_H
 #define OBJ_HCZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HCZSetup : Object {
+class ObjectHCZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHCZSetup : Entity {
+class EntityHCZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHCZSetup HCZSetup;
 
 //Entity Functions
 void HCZSetup_Update();

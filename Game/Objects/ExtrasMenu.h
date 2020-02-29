@@ -1,15 +1,22 @@
 #ifndef OBJ_EXTRASMENU_H
 #define OBJ_EXTRASMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ExtrasMenu : Object {
+class ObjectExtrasMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityExtrasMenu : Entity {
+class EntityExtrasMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectExtrasMenu ExtrasMenu;
 
 //Entity Functions
 void ExtrasMenu_Update();

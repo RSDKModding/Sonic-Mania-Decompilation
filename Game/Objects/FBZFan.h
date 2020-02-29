@@ -1,15 +1,22 @@
 #ifndef OBJ_FBZFAN_H
 #define OBJ_FBZFAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FBZFan : Object {
+class ObjectFBZFan : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFBZFan : Entity {
+class EntityFBZFan : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFBZFan FBZFan;
 
 //Entity Functions
 void FBZFan_Update();

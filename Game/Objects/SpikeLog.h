@@ -1,15 +1,22 @@
 #ifndef OBJ_SPIKELOG_H
 #define OBJ_SPIKELOG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpikeLog : Object {
+class ObjectSpikeLog : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpikeLog : Entity {
+class EntitySpikeLog : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpikeLog SpikeLog;
 
 //Entity Functions
 void SpikeLog_Update();

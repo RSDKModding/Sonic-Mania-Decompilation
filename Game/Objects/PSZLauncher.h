@@ -1,15 +1,22 @@
 #ifndef OBJ_PSZLAUNCHER_H
 #define OBJ_PSZLAUNCHER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PSZLauncher : Object {
+class ObjectPSZLauncher : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPSZLauncher : Entity {
+class EntityPSZLauncher : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPSZLauncher PSZLauncher;
 
 //Entity Functions
 void PSZLauncher_Update();

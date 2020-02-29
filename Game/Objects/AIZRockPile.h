@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZROCKPILE_H
 #define OBJ_AIZROCKPILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZRockPile : Object {
+class ObjectAIZRockPile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZRockPile : Entity {
+class EntityAIZRockPile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZRockPile AIZRockPile;
 
 //Entity Functions
 void AIZRockPile_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_WATERFALLSOUND_H
 #define OBJ_WATERFALLSOUND_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WaterfallSound : Object {
+class ObjectWaterfallSound : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWaterfallSound : Entity {
+class EntityWaterfallSound : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWaterfallSound WaterfallSound;
 
 //Entity Functions
 void WaterfallSound_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_CHEMBUBBLE_H
 #define OBJ_CHEMBUBBLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ChemBubble : Object {
+class ObjectChemBubble : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityChemBubble : Entity {
+class EntityChemBubble : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectChemBubble ChemBubble;
 
 //Entity Functions
 void ChemBubble_Update();

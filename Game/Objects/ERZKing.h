@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZKING_H
 #define OBJ_ERZKING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZKing : Object {
+class ObjectERZKing : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZKing : Entity {
+class EntityERZKing : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZKing ERZKing;
 
 //Entity Functions
 void ERZKing_Update();

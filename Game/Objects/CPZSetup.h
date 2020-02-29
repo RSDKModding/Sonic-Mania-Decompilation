@@ -1,15 +1,22 @@
 #ifndef OBJ_CPZSETUP_H
 #define OBJ_CPZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CPZSetup : Object {
+class ObjectCPZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCPZSetup : Entity {
+class EntityCPZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCPZSetup CPZSetup;
 
 //Entity Functions
 void CPZSetup_Update();

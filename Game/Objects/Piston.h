@@ -1,15 +1,22 @@
 #ifndef OBJ_PISTON_H
 #define OBJ_PISTON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Piston : Object {
+class ObjectPiston : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPiston : Entity {
+class EntityPiston : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPiston Piston;
 
 //Entity Functions
 void Piston_Update();

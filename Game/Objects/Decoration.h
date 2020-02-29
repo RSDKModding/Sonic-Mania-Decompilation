@@ -1,15 +1,22 @@
 #ifndef OBJ_DECORATION_H
 #define OBJ_DECORATION_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Decoration : Object {
+class ObjectDecoration : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDecoration : Entity {
+class EntityDecoration : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDecoration Decoration;
 
 //Entity Functions
 void Decoration_Update();

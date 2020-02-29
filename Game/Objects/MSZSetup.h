@@ -1,15 +1,22 @@
 #ifndef OBJ_MSZSETUP_H
 #define OBJ_MSZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSZSetup : Object {
+class ObjectMSZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSZSetup : Entity {
+class EntityMSZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSZSetup MSZSetup;
 
 //Entity Functions
 void MSZSetup_Update();

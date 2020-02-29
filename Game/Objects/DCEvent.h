@@ -1,15 +1,22 @@
 #ifndef OBJ_DCEVENT_H
 #define OBJ_DCEVENT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DCEvent : Object {
+class ObjectDCEvent : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDCEvent : Entity {
+class EntityDCEvent : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDCEvent DCEvent;
 
 //Entity Functions
 void DCEvent_Update();

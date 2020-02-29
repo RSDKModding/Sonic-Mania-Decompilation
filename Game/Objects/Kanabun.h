@@ -1,15 +1,22 @@
 #ifndef OBJ_KANABUN_H
 #define OBJ_KANABUN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Kanabun : Object {
+class ObjectKanabun : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityKanabun : Entity {
+class EntityKanabun : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectKanabun Kanabun;
 
 //Entity Functions
 void Kanabun_Update();

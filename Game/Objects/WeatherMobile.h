@@ -1,15 +1,22 @@
 #ifndef OBJ_WEATHERMOBILE_H
 #define OBJ_WEATHERMOBILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WeatherMobile : Object {
+class ObjectWeatherMobile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWeatherMobile : Entity {
+class EntityWeatherMobile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWeatherMobile WeatherMobile;
 
 //Entity Functions
 void WeatherMobile_Update();

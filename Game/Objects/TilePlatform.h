@@ -1,15 +1,22 @@
 #ifndef OBJ_TILEPLATFORM_H
 #define OBJ_TILEPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TilePlatform : Object {
+class ObjectTilePlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTilePlatform : Entity {
+class EntityTilePlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTilePlatform TilePlatform;
 
 //Entity Functions
 void TilePlatform_Update();

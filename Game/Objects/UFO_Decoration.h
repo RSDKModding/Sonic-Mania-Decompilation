@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_DECORATION_H
 #define OBJ_UFO_DECORATION_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Decoration : Object {
+class ObjectUFO_Decoration : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Decoration : Entity {
+class EntityUFO_Decoration : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Decoration UFO_Decoration;
 
 //Entity Functions
 void UFO_Decoration_Update();

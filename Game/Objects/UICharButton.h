@@ -1,15 +1,22 @@
 #ifndef OBJ_UICHARBUTTON_H
 #define OBJ_UICHARBUTTON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UICharButton : Object {
+class ObjectUICharButton : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUICharButton : Entity {
+class EntityUICharButton : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUICharButton UICharButton;
 
 //Entity Functions
 void UICharButton_Update();

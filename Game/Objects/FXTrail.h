@@ -1,15 +1,22 @@
 #ifndef OBJ_FXTRAIL_H
 #define OBJ_FXTRAIL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FXTrail : Object {
+class ObjectFXTrail : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFXTrail : Entity {
+class EntityFXTrail : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFXTrail FXTrail;
 
 //Entity Functions
 void FXTrail_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_REPLAYRECORDER_H
 #define OBJ_REPLAYRECORDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ReplayRecorder : Object {
+class ObjectReplayRecorder : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityReplayRecorder : Entity {
+class EntityReplayRecorder : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectReplayRecorder ReplayRecorder;
 
 //Entity Functions
 void ReplayRecorder_Update();

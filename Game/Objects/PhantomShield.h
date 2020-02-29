@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMSHIELD_H
 #define OBJ_PHANTOMSHIELD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomShield : Object {
+class ObjectPhantomShield : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomShield : Entity {
+class EntityPhantomShield : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomShield PhantomShield;
 
 //Entity Functions
 void PhantomShield_Update();

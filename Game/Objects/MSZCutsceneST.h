@@ -1,15 +1,22 @@
 #ifndef OBJ_MSZCUTSCENEST_H
 #define OBJ_MSZCUTSCENEST_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSZCutsceneST : Object {
+class ObjectMSZCutsceneST : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSZCutsceneST : Entity {
+class EntityMSZCutsceneST : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSZCutsceneST MSZCutsceneST;
 
 //Entity Functions
 void MSZCutsceneST_Update();

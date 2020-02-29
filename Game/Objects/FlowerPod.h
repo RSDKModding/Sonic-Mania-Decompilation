@@ -1,15 +1,22 @@
 #ifndef OBJ_FLOWERPOD_H
 #define OBJ_FLOWERPOD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FlowerPod : Object {
+class ObjectFlowerPod : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFlowerPod : Entity {
+class EntityFlowerPod : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFlowerPod FlowerPod;
 
 //Entity Functions
 void FlowerPod_Update();

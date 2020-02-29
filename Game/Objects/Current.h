@@ -1,15 +1,22 @@
 #ifndef OBJ_CURRENT_H
 #define OBJ_CURRENT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Current : Object {
+class ObjectCurrent : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCurrent : Entity {
+class EntityCurrent : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCurrent Current;
 
 //Entity Functions
 void Current_Update();

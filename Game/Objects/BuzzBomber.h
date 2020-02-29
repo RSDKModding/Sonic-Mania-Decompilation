@@ -1,15 +1,22 @@
 #ifndef OBJ_BUZZBOMBER_H
 #define OBJ_BUZZBOMBER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BuzzBomber : Object {
+class ObjectBuzzBomber : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBuzzBomber : Entity {
+class EntityBuzzBomber : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBuzzBomber BuzzBomber;
 
 //Entity Functions
 void BuzzBomber_Update();

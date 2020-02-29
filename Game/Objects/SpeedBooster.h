@@ -1,15 +1,22 @@
 #ifndef OBJ_SPEEDBOOSTER_H
 #define OBJ_SPEEDBOOSTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpeedBooster : Object {
+class ObjectSpeedBooster : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpeedBooster : Entity {
+class EntitySpeedBooster : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpeedBooster SpeedBooster;
 
 //Entity Functions
 void SpeedBooster_Update();

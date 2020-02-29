@@ -1,15 +1,22 @@
 #ifndef OBJ_CRIMSONEYE_H
 #define OBJ_CRIMSONEYE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CrimsonEye : Object {
+class ObjectCrimsonEye : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCrimsonEye : Entity {
+class EntityCrimsonEye : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCrimsonEye CrimsonEye;
 
 //Entity Functions
 void CrimsonEye_Update();

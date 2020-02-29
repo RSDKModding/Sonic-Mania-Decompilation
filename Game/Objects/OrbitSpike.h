@@ -1,15 +1,22 @@
 #ifndef OBJ_ORBITSPIKE_H
 #define OBJ_ORBITSPIKE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class OrbitSpike : Object {
+class ObjectOrbitSpike : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOrbitSpike : Entity {
+class EntityOrbitSpike : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOrbitSpike OrbitSpike;
 
 //Entity Functions
 void OrbitSpike_Update();

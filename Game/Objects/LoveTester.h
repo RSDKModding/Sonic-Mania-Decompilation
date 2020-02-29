@@ -1,15 +1,22 @@
 #ifndef OBJ_LOVETESTER_H
 #define OBJ_LOVETESTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LoveTester : Object {
+class ObjectLoveTester : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLoveTester : Entity {
+class EntityLoveTester : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLoveTester LoveTester;
 
 //Entity Functions
 void LoveTester_Update();

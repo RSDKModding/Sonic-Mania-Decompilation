@@ -1,15 +1,22 @@
 #ifndef OBJ_JELLYGNITE_H
 #define OBJ_JELLYGNITE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Jellygnite : Object {
+class ObjectJellygnite : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityJellygnite : Entity {
+class EntityJellygnite : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectJellygnite Jellygnite;
 
 //Entity Functions
 void Jellygnite_Update();

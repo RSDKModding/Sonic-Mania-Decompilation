@@ -26,8 +26,12 @@ enum ActiveFlags {
 	ACTIVE_BOUNDS2,
 };
 
-class Entity
-{
+class Object {
+    
+};
+
+class Entity {
+public:
     int XPos;
     int YPos;
     int ScaleX;
@@ -60,4 +64,5 @@ class Entity
     byte Visible;
     byte field_56;
     byte field_57;
+private:
 };

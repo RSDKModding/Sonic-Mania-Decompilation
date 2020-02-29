@@ -1,15 +1,22 @@
 #ifndef OBJ_CHEMICALBALL_H
 #define OBJ_CHEMICALBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ChemicalBall : Object {
+class ObjectChemicalBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityChemicalBall : Entity {
+class EntityChemicalBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectChemicalBall ChemicalBall;
 
 //Entity Functions
 void ChemicalBall_Update();

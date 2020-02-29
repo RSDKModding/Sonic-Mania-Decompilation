@@ -1,15 +1,22 @@
 #ifndef OBJ_TURBOTURTLE_H
 #define OBJ_TURBOTURTLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TurboTurtle : Object {
+class ObjectTurboTurtle : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTurboTurtle : Entity {
+class EntityTurboTurtle : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTurboTurtle TurboTurtle;
 
 //Entity Functions
 void TurboTurtle_Update();

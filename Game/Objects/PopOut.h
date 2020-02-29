@@ -1,15 +1,22 @@
 #ifndef OBJ_POPOUT_H
 #define OBJ_POPOUT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PopOut : Object {
+class ObjectPopOut : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPopOut : Entity {
+class EntityPopOut : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPopOut PopOut;
 
 //Entity Functions
 void PopOut_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_BUMPALO_H
 #define OBJ_BUMPALO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Bumpalo : Object {
+class ObjectBumpalo : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBumpalo : Entity {
+class EntityBumpalo : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBumpalo Bumpalo;
 
 //Entity Functions
 void Bumpalo_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_UITRANSITION_H
 #define OBJ_UITRANSITION_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UITransition : Object {
+class ObjectUITransition : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUITransition : Entity {
+class EntityUITransition : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUITransition UITransition;
 
 //Entity Functions
 void UITransition_Update();

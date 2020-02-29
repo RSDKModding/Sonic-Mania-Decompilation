@@ -1,15 +1,22 @@
 #ifndef OBJ_VANISHPLATFORM_H
 #define OBJ_VANISHPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class VanishPlatform : Object {
+class ObjectVanishPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityVanishPlatform : Entity {
+class EntityVanishPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectVanishPlatform VanishPlatform;
 
 //Entity Functions
 void VanishPlatform_Update();

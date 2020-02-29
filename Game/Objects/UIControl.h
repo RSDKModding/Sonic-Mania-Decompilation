@@ -1,15 +1,22 @@
 #ifndef OBJ_UICONTROL_H
 #define OBJ_UICONTROL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIControl : Object {
+class ObjectUIControl : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIControl : Entity {
+class EntityUIControl : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIControl UIControl;
 
 //Entity Functions
 void UIControl_Update();

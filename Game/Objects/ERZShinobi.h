@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZSHINOBI_H
 #define OBJ_ERZSHINOBI_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZShinobi : Object {
+class ObjectERZShinobi : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZShinobi : Entity {
+class EntityERZShinobi : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZShinobi ERZShinobi;
 
 //Entity Functions
 void ERZShinobi_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_SSZSPIKEBALL_H
 #define OBJ_SSZSPIKEBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SSZSpikeBall : Object {
+class ObjectSSZSpikeBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySSZSpikeBall : Entity {
+class EntitySSZSpikeBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSSZSpikeBall SSZSpikeBall;
 
 //Entity Functions
 void SSZSpikeBall_Update();

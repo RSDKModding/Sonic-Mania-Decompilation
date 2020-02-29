@@ -1,15 +1,22 @@
 #ifndef OBJ_MONARCHBG_H
 #define OBJ_MONARCHBG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MonarchBG : Object {
+class ObjectMonarchBG : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMonarchBG : Entity {
+class EntityMonarchBG : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMonarchBG MonarchBG;
 
 //Entity Functions
 void MonarchBG_Update();

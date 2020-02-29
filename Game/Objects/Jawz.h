@@ -1,15 +1,22 @@
 #ifndef OBJ_JAWZ_H
 #define OBJ_JAWZ_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Jawz : Object {
+class ObjectJawz : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityJawz : Entity {
+class EntityJawz : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectJawz Jawz;
 
 //Entity Functions
 void Jawz_Update();

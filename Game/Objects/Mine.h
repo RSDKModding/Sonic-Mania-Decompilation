@@ -1,15 +1,22 @@
 #ifndef OBJ_MINE_H
 #define OBJ_MINE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Mine : Object {
+class ObjectMine : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMine : Entity {
+class EntityMine : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMine Mine;
 
 //Entity Functions
 void Mine_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_STAIRCASE_H
 #define OBJ_STAIRCASE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Staircase : Object {
+class ObjectStaircase : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityStaircase : Entity {
+class EntityStaircase : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectStaircase Staircase;
 
 //Entity Functions
 void Staircase_Update();

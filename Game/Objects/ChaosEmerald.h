@@ -1,15 +1,22 @@
 #ifndef OBJ_CHAOSEMERALD_H
 #define OBJ_CHAOSEMERALD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ChaosEmerald : Object {
+class ObjectChaosEmerald : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityChaosEmerald : Entity {
+class EntityChaosEmerald : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectChaosEmerald ChaosEmerald;
 
 //Entity Functions
 void ChaosEmerald_Update();

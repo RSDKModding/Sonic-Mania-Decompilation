@@ -1,15 +1,22 @@
 #ifndef OBJ_CIRCLEBUMPER_H
 #define OBJ_CIRCLEBUMPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CircleBumper : Object {
+class ObjectCircleBumper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCircleBumper : Entity {
+class EntityCircleBumper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCircleBumper CircleBumper;
 
 //Entity Functions
 void CircleBumper_Update();

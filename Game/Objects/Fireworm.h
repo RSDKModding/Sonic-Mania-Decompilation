@@ -1,15 +1,22 @@
 #ifndef OBJ_FIREWORM_H
 #define OBJ_FIREWORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Fireworm : Object {
+class ObjectFireworm : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFireworm : Entity {
+class EntityFireworm : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFireworm Fireworm;
 
 //Entity Functions
 void Fireworm_Update();

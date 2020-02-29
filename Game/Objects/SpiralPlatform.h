@@ -1,15 +1,22 @@
 #ifndef OBJ_SPIRALPLATFORM_H
 #define OBJ_SPIRALPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpiralPlatform : Object {
+class ObjectSpiralPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpiralPlatform : Entity {
+class EntitySpiralPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpiralPlatform SpiralPlatform;
 
 //Entity Functions
 void SpiralPlatform_Update();

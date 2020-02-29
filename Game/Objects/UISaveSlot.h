@@ -1,15 +1,22 @@
 #ifndef OBJ_UISAVESLOT_H
 #define OBJ_UISAVESLOT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UISaveSlot : Object {
+class ObjectUISaveSlot : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUISaveSlot : Entity {
+class EntityUISaveSlot : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUISaveSlot UISaveSlot;
 
 //Entity Functions
 void UISaveSlot_Update();

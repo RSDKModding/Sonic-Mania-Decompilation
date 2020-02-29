@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_FLIPPER_H
 #define OBJ_PBL_FLIPPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Flipper : Object {
+class ObjectPBL_Flipper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Flipper : Entity {
+class EntityPBL_Flipper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Flipper PBL_Flipper;
 
 //Entity Functions
 void PBL_Flipper_Update();

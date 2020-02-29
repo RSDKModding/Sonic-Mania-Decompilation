@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_BUMPER_H
 #define OBJ_PBL_BUMPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Bumper : Object {
+class ObjectPBL_Bumper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Bumper : Entity {
+class EntityPBL_Bumper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Bumper PBL_Bumper;
 
 //Entity Functions
 void PBL_Bumper_Update();

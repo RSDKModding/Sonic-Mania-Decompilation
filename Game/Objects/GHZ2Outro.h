@@ -1,15 +1,22 @@
 #ifndef OBJ_GHZ2OUTRO_H
 #define OBJ_GHZ2OUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GHZ2Outro : Object {
+class ObjectGHZ2Outro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGHZ2Outro : Entity {
+class EntityGHZ2Outro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGHZ2Outro GHZ2Outro;
 
 //Entity Functions
 void GHZ2Outro_Update();

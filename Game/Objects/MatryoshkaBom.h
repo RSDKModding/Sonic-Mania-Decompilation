@@ -1,15 +1,22 @@
 #ifndef OBJ_MATRYOSHKABOM_H
 #define OBJ_MATRYOSHKABOM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MatryoshkaBom : Object {
+class ObjectMatryoshkaBom : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMatryoshkaBom : Entity {
+class EntityMatryoshkaBom : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMatryoshkaBom MatryoshkaBom;
 
 //Entity Functions
 void MatryoshkaBom_Update();

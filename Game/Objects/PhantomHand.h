@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMHAND_H
 #define OBJ_PHANTOMHAND_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomHand : Object {
+class ObjectPhantomHand : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomHand : Entity {
+class EntityPhantomHand : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomHand PhantomHand;
 
 //Entity Functions
 void PhantomHand_Update();

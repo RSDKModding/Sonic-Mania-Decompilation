@@ -1,15 +1,22 @@
 #ifndef OBJ_LOCOSMOKE_H
 #define OBJ_LOCOSMOKE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LocoSmoke : Object {
+class ObjectLocoSmoke : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLocoSmoke : Entity {
+class EntityLocoSmoke : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLocoSmoke LocoSmoke;
 
 //Entity Functions
 void LocoSmoke_Update();

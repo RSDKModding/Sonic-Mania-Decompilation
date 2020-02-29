@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZSPIKEBALL_H
 #define OBJ_LRZSPIKEBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZSpikeBall : Object {
+class ObjectLRZSpikeBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZSpikeBall : Entity {
+class EntityLRZSpikeBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZSpikeBall LRZSpikeBall;
 
 //Entity Functions
 void LRZSpikeBall_Update();

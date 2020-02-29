@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_ITEMBOX_H
 #define OBJ_UFO_ITEMBOX_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_ItemBox : Object {
+class ObjectUFO_ItemBox : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_ItemBox : Entity {
+class EntityUFO_ItemBox : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_ItemBox UFO_ItemBox;
 
 //Entity Functions
 void UFO_ItemBox_Update();

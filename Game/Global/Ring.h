@@ -1,7 +1,7 @@
 #ifndef OBJ_RING
 #define OBJ_RING
 
-#include "../ManiaGlobals.h"
+#include "../../SonicMania.h"
 
 class Ring : Object {
   byte StructSize;

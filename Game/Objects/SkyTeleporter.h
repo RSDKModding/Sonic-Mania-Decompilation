@@ -1,15 +1,22 @@
 #ifndef OBJ_SKYTELEPORTER_H
 #define OBJ_SKYTELEPORTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SkyTeleporter : Object {
+class ObjectSkyTeleporter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySkyTeleporter : Entity {
+class EntitySkyTeleporter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSkyTeleporter SkyTeleporter;
 
 //Entity Functions
 void SkyTeleporter_Update();

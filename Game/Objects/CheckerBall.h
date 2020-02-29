@@ -1,15 +1,22 @@
 #ifndef OBJ_CHECKERBALL_H
 #define OBJ_CHECKERBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CheckerBall : Object {
+class ObjectCheckerBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCheckerBall : Entity {
+class EntityCheckerBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCheckerBall CheckerBall;
 
 //Entity Functions
 void CheckerBall_Update();

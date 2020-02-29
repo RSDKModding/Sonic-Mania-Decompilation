@@ -1,15 +1,22 @@
 #ifndef OBJ_FLAMESPRING_H
 #define OBJ_FLAMESPRING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FlameSpring : Object {
+class ObjectFlameSpring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFlameSpring : Entity {
+class EntityFlameSpring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFlameSpring FlameSpring;
 
 //Entity Functions
 void FlameSpring_Update();

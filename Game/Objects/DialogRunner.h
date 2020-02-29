@@ -1,15 +1,22 @@
 #ifndef OBJ_DIALOGRUNNER_H
 #define OBJ_DIALOGRUNNER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DialogRunner : Object {
+class ObjectDialogRunner : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDialogRunner : Entity {
+class EntityDialogRunner : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDialogRunner DialogRunner;
 
 //Entity Functions
 void DialogRunner_Update();

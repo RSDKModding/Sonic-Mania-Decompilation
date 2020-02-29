@@ -1,15 +1,22 @@
 #ifndef OBJ_TIPPINGPLATFORM_H
 #define OBJ_TIPPINGPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TippingPlatform : Object {
+class ObjectTippingPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTippingPlatform : Entity {
+class EntityTippingPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTippingPlatform TippingPlatform;
 
 //Entity Functions
 void TippingPlatform_Update();

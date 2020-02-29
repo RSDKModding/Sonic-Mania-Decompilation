@@ -1,15 +1,22 @@
 #ifndef OBJ_ROCKDRILL_H
 #define OBJ_ROCKDRILL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RockDrill : Object {
+class ObjectRockDrill : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRockDrill : Entity {
+class EntityRockDrill : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRockDrill RockDrill;
 
 //Entity Functions
 void RockDrill_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_FLIPPER_H
 #define OBJ_FLIPPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Flipper : Object {
+class ObjectFlipper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFlipper : Entity {
+class EntityFlipper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFlipper Flipper;
 
 //Entity Functions
 void Flipper_Update();

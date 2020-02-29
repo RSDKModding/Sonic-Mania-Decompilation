@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZOUTRO_H
 #define OBJ_ERZOUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZOutro : Object {
+class ObjectERZOutro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZOutro : Entity {
+class EntityERZOutro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZOutro ERZOutro;
 
 //Entity Functions
 void ERZOutro_Update();

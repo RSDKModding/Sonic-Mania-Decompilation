@@ -1,15 +1,22 @@
 #ifndef OBJ_POPCORNMACHINE_H
 #define OBJ_POPCORNMACHINE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PopcornMachine : Object {
+class ObjectPopcornMachine : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPopcornMachine : Entity {
+class EntityPopcornMachine : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPopcornMachine PopcornMachine;
 
 //Entity Functions
 void PopcornMachine_Update();

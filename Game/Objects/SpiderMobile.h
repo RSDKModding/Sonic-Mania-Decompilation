@@ -1,15 +1,22 @@
 #ifndef OBJ_SPIDERMOBILE_H
 #define OBJ_SPIDERMOBILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpiderMobile : Object {
+class ObjectSpiderMobile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpiderMobile : Entity {
+class EntitySpiderMobile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpiderMobile SpiderMobile;
 
 //Entity Functions
 void SpiderMobile_Update();

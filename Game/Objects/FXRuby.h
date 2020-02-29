@@ -1,15 +1,22 @@
 #ifndef OBJ_FXRUBY_H
 #define OBJ_FXRUBY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FXRuby : Object {
+class ObjectFXRuby : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFXRuby : Entity {
+class EntityFXRuby : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFXRuby FXRuby;
 
 //Entity Functions
 void FXRuby_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_HEAVYGUNNER_H
 #define OBJ_HEAVYGUNNER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HeavyGunner : Object {
+class ObjectHeavyGunner : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHeavyGunner : Entity {
+class EntityHeavyGunner : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHeavyGunner HeavyGunner;
 
 //Entity Functions
 void HeavyGunner_Update();

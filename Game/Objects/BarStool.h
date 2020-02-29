@@ -1,15 +1,22 @@
 #ifndef OBJ_BARSTOOL_H
 #define OBJ_BARSTOOL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BarStool : Object {
+class ObjectBarStool : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBarStool : Entity {
+class EntityBarStool : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBarStool BarStool;
 
 //Entity Functions
 void BarStool_Update();

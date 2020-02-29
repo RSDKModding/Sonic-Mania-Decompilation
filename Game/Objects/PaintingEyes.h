@@ -1,15 +1,22 @@
 #ifndef OBJ_PAINTINGEYES_H
 #define OBJ_PAINTINGEYES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PaintingEyes : Object {
+class ObjectPaintingEyes : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPaintingEyes : Entity {
+class EntityPaintingEyes : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPaintingEyes PaintingEyes;
 
 //Entity Functions
 void PaintingEyes_Update();

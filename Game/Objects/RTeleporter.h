@@ -1,15 +1,22 @@
 #ifndef OBJ_RTELEPORTER_H
 #define OBJ_RTELEPORTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RTeleporter : Object {
+class ObjectRTeleporter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRTeleporter : Entity {
+class EntityRTeleporter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRTeleporter RTeleporter;
 
 //Entity Functions
 void RTeleporter_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_FLAMETHROWER_H
 #define OBJ_FLAMETHROWER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Flamethrower : Object {
+class ObjectFlamethrower : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFlamethrower : Entity {
+class EntityFlamethrower : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFlamethrower Flamethrower;
 
 //Entity Functions
 void Flamethrower_Update();

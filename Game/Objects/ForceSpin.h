@@ -1,15 +1,22 @@
 #ifndef OBJ_FORCESPIN_H
 #define OBJ_FORCESPIN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ForceSpin : Object {
+class ObjectForceSpin : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityForceSpin : Entity {
+class EntityForceSpin : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectForceSpin ForceSpin;
 
 //Entity Functions
 void ForceSpin_Update();

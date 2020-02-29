@@ -1,15 +1,22 @@
 #ifndef OBJ_DRAGONFLY_H
 #define OBJ_DRAGONFLY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Dragonfly : Object {
+class ObjectDragonfly : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDragonfly : Entity {
+class EntityDragonfly : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDragonfly Dragonfly;
 
 //Entity Functions
 void Dragonfly_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PRINTBLOCK_H
 #define OBJ_PRINTBLOCK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PrintBlock : Object {
+class ObjectPrintBlock : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPrintBlock : Entity {
+class EntityPrintBlock : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPrintBlock PrintBlock;
 
 //Entity Functions
 void PrintBlock_Update();

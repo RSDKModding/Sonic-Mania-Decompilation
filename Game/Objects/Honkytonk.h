@@ -1,15 +1,22 @@
 #ifndef OBJ_HONKYTONK_H
 #define OBJ_HONKYTONK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Honkytonk : Object {
+class ObjectHonkytonk : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHonkytonk : Entity {
+class EntityHonkytonk : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHonkytonk Honkytonk;
 
 //Entity Functions
 void Honkytonk_Update();

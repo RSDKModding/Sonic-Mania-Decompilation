@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_SPHERE_H
 #define OBJ_UFO_SPHERE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Sphere : Object {
+class ObjectUFO_Sphere : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Sphere : Entity {
+class EntityUFO_Sphere : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Sphere UFO_Sphere;
 
 //Entity Functions
 void UFO_Sphere_Update();

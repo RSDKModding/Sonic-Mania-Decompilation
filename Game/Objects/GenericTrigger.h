@@ -1,15 +1,22 @@
 #ifndef OBJ_GENERICTRIGGER_H
 #define OBJ_GENERICTRIGGER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GenericTrigger : Object {
+class ObjectGenericTrigger : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGenericTrigger : Entity {
+class EntityGenericTrigger : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGenericTrigger GenericTrigger;
 
 //Entity Functions
 void GenericTrigger_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZCONVDROPPER_H
 #define OBJ_LRZCONVDROPPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZConvDropper : Object {
+class ObjectLRZConvDropper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZConvDropper : Entity {
+class EntityLRZConvDropper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZConvDropper LRZConvDropper;
 
 //Entity Functions
 void LRZConvDropper_Update();

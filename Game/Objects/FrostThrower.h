@@ -1,15 +1,22 @@
 #ifndef OBJ_FROSTTHROWER_H
 #define OBJ_FROSTTHROWER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FrostThrower : Object {
+class ObjectFrostThrower : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFrostThrower : Entity {
+class EntityFrostThrower : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFrostThrower FrostThrower;
 
 //Entity Functions
 void FrostThrower_Update();

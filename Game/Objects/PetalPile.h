@@ -1,15 +1,22 @@
 #ifndef OBJ_PETALPILE_H
 #define OBJ_PETALPILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PetalPile : Object {
+class ObjectPetalPile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPetalPile : Entity {
+class EntityPetalPile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPetalPile PetalPile;
 
 //Entity Functions
 void PetalPile_Update();

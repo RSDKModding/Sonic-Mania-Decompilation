@@ -1,15 +1,22 @@
 #ifndef OBJ_TUESDAY_H
 #define OBJ_TUESDAY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Tuesday : Object {
+class ObjectTuesday : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTuesday : Entity {
+class EntityTuesday : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTuesday Tuesday;
 
 //Entity Functions
 void Tuesday_Update();

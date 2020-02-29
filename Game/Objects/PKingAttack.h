@@ -1,15 +1,22 @@
 #ifndef OBJ_PKINGATTACK_H
 #define OBJ_PKINGATTACK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PKingAttack : Object {
+class ObjectPKingAttack : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPKingAttack : Entity {
+class EntityPKingAttack : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPKingAttack PKingAttack;
 
 //Entity Functions
 void PKingAttack_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_ICEBOMBA_H
 #define OBJ_ICEBOMBA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class IceBomba : Object {
+class ObjectIceBomba : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityIceBomba : Entity {
+class EntityIceBomba : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectIceBomba IceBomba;
 
 //Entity Functions
 void IceBomba_Update();

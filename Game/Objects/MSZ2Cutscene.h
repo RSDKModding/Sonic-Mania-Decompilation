@@ -1,15 +1,22 @@
 #ifndef OBJ_MSZ2CUTSCENE_H
 #define OBJ_MSZ2CUTSCENE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSZ2Cutscene : Object {
+class ObjectMSZ2Cutscene : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSZ2Cutscene : Entity {
+class EntityMSZ2Cutscene : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSZ2Cutscene MSZ2Cutscene;
 
 //Entity Functions
 void MSZ2Cutscene_Update();

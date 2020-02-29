@@ -1,15 +1,22 @@
 #ifndef OBJ_ROTATINGSTAIR_H
 #define OBJ_ROTATINGSTAIR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RotatingStair : Object {
+class ObjectRotatingStair : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRotatingStair : Entity {
+class EntityRotatingStair : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRotatingStair RotatingStair;
 
 //Entity Functions
 void RotatingStair_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TIMEPOST_H
 #define OBJ_TIMEPOST_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TimePost : Object {
+class ObjectTimePost : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTimePost : Entity {
+class EntityTimePost : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTimePost TimePost;
 
 //Entity Functions
 void TimePost_Update();

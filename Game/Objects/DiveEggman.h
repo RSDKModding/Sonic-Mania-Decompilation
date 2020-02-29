@@ -1,15 +1,22 @@
 #ifndef OBJ_DIVEEGGMAN_H
 #define OBJ_DIVEEGGMAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DiveEggman : Object {
+class ObjectDiveEggman : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDiveEggman : Entity {
+class EntityDiveEggman : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDiveEggman DiveEggman;
 
 //Entity Functions
 void DiveEggman_Update();

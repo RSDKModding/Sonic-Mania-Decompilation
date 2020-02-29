@@ -1,15 +1,22 @@
 #ifndef OBJ_TORNADOPATH_H
 #define OBJ_TORNADOPATH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TornadoPath : Object {
+class ObjectTornadoPath : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTornadoPath : Entity {
+class EntityTornadoPath : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTornadoPath TornadoPath;
 
 //Entity Functions
 void TornadoPath_Update();

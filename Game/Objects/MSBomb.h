@@ -1,15 +1,22 @@
 #ifndef OBJ_MSBOMB_H
 #define OBJ_MSBOMB_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSBomb : Object {
+class ObjectMSBomb : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSBomb : Entity {
+class EntityMSBomb : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSBomb MSBomb;
 
 //Entity Functions
 void MSBomb_Update();

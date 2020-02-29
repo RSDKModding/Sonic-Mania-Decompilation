@@ -1,15 +1,22 @@
 #ifndef OBJ_UIDIORAMA_H
 #define OBJ_UIDIORAMA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIDiorama : Object {
+class ObjectUIDiorama : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIDiorama : Entity {
+class EntityUIDiorama : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIDiorama UIDiorama;
 
 //Entity Functions
 void UIDiorama_Update();

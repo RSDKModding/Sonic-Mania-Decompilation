@@ -1,15 +1,22 @@
 #ifndef OBJ_BLASTOID_H
 #define OBJ_BLASTOID_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Blastoid : Object {
+class ObjectBlastoid : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBlastoid : Entity {
+class EntityBlastoid : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBlastoid Blastoid;
 
 //Entity Functions
 void Blastoid_Update();

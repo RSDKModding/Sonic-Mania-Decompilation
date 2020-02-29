@@ -1,15 +1,22 @@
 #ifndef OBJ_SHUTTERBUG_H
 #define OBJ_SHUTTERBUG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Shutterbug : Object {
+class ObjectShutterbug : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityShutterbug : Entity {
+class EntityShutterbug : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectShutterbug Shutterbug;
 
 //Entity Functions
 void Shutterbug_Update();

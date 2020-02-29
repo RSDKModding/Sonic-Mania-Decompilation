@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOSCORE_H
 #define OBJ_PUYOSCORE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoScore : Object {
+class ObjectPuyoScore : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoScore : Entity {
+class EntityPuyoScore : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoScore PuyoScore;
 
 //Entity Functions
 void PuyoScore_Update();

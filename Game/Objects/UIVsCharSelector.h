@@ -1,15 +1,22 @@
 #ifndef OBJ_UIVSCHARSELECTOR_H
 #define OBJ_UIVSCHARSELECTOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIVsCharSelector : Object {
+class ObjectUIVsCharSelector : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIVsCharSelector : Entity {
+class EntityUIVsCharSelector : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIVsCharSelector UIVsCharSelector;
 
 //Entity Functions
 void UIVsCharSelector_Update();

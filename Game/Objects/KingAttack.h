@@ -1,15 +1,22 @@
 #ifndef OBJ_KINGATTACK_H
 #define OBJ_KINGATTACK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class KingAttack : Object {
+class ObjectKingAttack : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityKingAttack : Entity {
+class EntityKingAttack : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectKingAttack KingAttack;
 
 //Entity Functions
 void KingAttack_Update();

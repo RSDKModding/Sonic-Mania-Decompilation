@@ -1,15 +1,22 @@
 #ifndef OBJ_TVFLYINGBATTERY_H
 #define OBJ_TVFLYINGBATTERY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TVFlyingBattery : Object {
+class ObjectTVFlyingBattery : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTVFlyingBattery : Entity {
+class EntityTVFlyingBattery : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTVFlyingBattery TVFlyingBattery;
 
 //Entity Functions
 void TVFlyingBattery_Update();

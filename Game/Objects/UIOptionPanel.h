@@ -1,15 +1,22 @@
 #ifndef OBJ_UIOPTIONPANEL_H
 #define OBJ_UIOPTIONPANEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIOptionPanel : Object {
+class ObjectUIOptionPanel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIOptionPanel : Entity {
+class EntityUIOptionPanel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIOptionPanel UIOptionPanel;
 
 //Entity Functions
 void UIOptionPanel_Update();

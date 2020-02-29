@@ -1,15 +1,22 @@
 #ifndef OBJ_DRILLERDROID_H
 #define OBJ_DRILLERDROID_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Drillerdroid : Object {
+class ObjectDrillerdroid : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDrillerdroid : Entity {
+class EntityDrillerdroid : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDrillerdroid Drillerdroid;
 
 //Entity Functions
 void Drillerdroid_Update();

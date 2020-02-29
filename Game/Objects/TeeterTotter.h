@@ -1,15 +1,22 @@
 #ifndef OBJ_TEETERTOTTER_H
 #define OBJ_TEETERTOTTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TeeterTotter : Object {
+class ObjectTeeterTotter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTeeterTotter : Entity {
+class EntityTeeterTotter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTeeterTotter TeeterTotter;
 
 //Entity Functions
 void TeeterTotter_Update();

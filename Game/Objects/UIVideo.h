@@ -1,15 +1,22 @@
 #ifndef OBJ_UIVIDEO_H
 #define OBJ_UIVIDEO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIVideo : Object {
+class ObjectUIVideo : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIVideo : Entity {
+class EntityUIVideo : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIVideo UIVideo;
 
 //Entity Functions
 void UIVideo_Update();

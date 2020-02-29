@@ -1,15 +1,22 @@
 #ifndef OBJ_LETTERBOARD_H
 #define OBJ_LETTERBOARD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Letterboard : Object {
+class ObjectLetterboard : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLetterboard : Entity {
+class EntityLetterboard : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLetterboard Letterboard;
 
 //Entity Functions
 void Letterboard_Update();

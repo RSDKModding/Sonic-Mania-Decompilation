@@ -1,15 +1,22 @@
 #ifndef OBJ_PSZ1INTRO_H
 #define OBJ_PSZ1INTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PSZ1Intro : Object {
+class ObjectPSZ1Intro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPSZ1Intro : Entity {
+class EntityPSZ1Intro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPSZ1Intro PSZ1Intro;
 
 //Entity Functions
 void PSZ1Intro_Update();

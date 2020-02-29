@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_SHADOW_H
 #define OBJ_UFO_SHADOW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Shadow : Object {
+class ObjectUFO_Shadow : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Shadow : Entity {
+class EntityUFO_Shadow : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Shadow UFO_Shadow;
 
 //Entity Functions
 void UFO_Shadow_Update();

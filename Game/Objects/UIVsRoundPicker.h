@@ -1,15 +1,22 @@
 #ifndef OBJ_UIVSROUNDPICKER_H
 #define OBJ_UIVSROUNDPICKER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIVsRoundPicker : Object {
+class ObjectUIVsRoundPicker : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIVsRoundPicker : Entity {
+class EntityUIVsRoundPicker : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIVsRoundPicker UIVsRoundPicker;
 
 //Entity Functions
 void UIVsRoundPicker_Update();

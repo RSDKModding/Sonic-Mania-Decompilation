@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_PLASMA_H
 #define OBJ_UFO_PLASMA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Plasma : Object {
+class ObjectUFO_Plasma : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Plasma : Entity {
+class EntityUFO_Plasma : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Plasma UFO_Plasma;
 
 //Entity Functions
 void UFO_Plasma_Update();

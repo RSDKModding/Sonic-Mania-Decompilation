@@ -1,15 +1,22 @@
 #ifndef OBJ_ROLLERMKII_H
 #define OBJ_ROLLERMKII_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RollerMKII : Object {
+class ObjectRollerMKII : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRollerMKII : Entity {
+class EntityRollerMKII : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRollerMKII RollerMKII;
 
 //Entity Functions
 void RollerMKII_Update();

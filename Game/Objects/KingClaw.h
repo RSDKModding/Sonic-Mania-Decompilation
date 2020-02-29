@@ -1,15 +1,22 @@
 #ifndef OBJ_KINGCLAW_H
 #define OBJ_KINGCLAW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class KingClaw : Object {
+class ObjectKingClaw : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityKingClaw : Entity {
+class EntityKingClaw : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectKingClaw KingClaw;
 
 //Entity Functions
 void KingClaw_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_COMPETITIONMENU_H
 #define OBJ_COMPETITIONMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CompetitionMenu : Object {
+class ObjectCompetitionMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCompetitionMenu : Entity {
+class EntityCompetitionMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCompetitionMenu CompetitionMenu;
 
 //Entity Functions
 void CompetitionMenu_Update();

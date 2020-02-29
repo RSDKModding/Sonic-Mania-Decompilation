@@ -1,15 +1,22 @@
 #ifndef OBJ_LAUNCHER_H
 #define OBJ_LAUNCHER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Launcher : Object {
+class ObjectLauncher : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLauncher : Entity {
+class EntityLauncher : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLauncher Launcher;
 
 //Entity Functions
 void Launcher_Update();

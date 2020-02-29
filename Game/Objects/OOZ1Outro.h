@@ -1,15 +1,22 @@
 #ifndef OBJ_OOZ1OUTRO_H
 #define OBJ_OOZ1OUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class OOZ1Outro : Object {
+class ObjectOOZ1Outro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOOZ1Outro : Entity {
+class EntityOOZ1Outro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOOZ1Outro OOZ1Outro;
 
 //Entity Functions
 void OOZ1Outro_Update();

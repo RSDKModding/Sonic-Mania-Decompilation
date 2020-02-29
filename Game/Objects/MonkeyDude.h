@@ -1,15 +1,22 @@
 #ifndef OBJ_MONKEYDUDE_H
 #define OBJ_MONKEYDUDE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MonkeyDude : Object {
+class ObjectMonkeyDude : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMonkeyDude : Entity {
+class EntityMonkeyDude : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMonkeyDude MonkeyDude;
 
 //Entity Functions
 void MonkeyDude_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_SUMMARYEMERALD_H
 #define OBJ_SUMMARYEMERALD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SummaryEmerald : Object {
+class ObjectSummaryEmerald : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySummaryEmerald : Entity {
+class EntitySummaryEmerald : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSummaryEmerald SummaryEmerald;
 
 //Entity Functions
 void SummaryEmerald_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOMATCH_H
 #define OBJ_PUYOMATCH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoMatch : Object {
+class ObjectPuyoMatch : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoMatch : Entity {
+class EntityPuyoMatch : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoMatch PuyoMatch;
 
 //Entity Functions
 void PuyoMatch_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_SPARKRAIL_H
 #define OBJ_SPARKRAIL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SparkRail : Object {
+class ObjectSparkRail : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySparkRail : Entity {
+class EntitySparkRail : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSparkRail SparkRail;
 
 //Entity Functions
 void SparkRail_Update();

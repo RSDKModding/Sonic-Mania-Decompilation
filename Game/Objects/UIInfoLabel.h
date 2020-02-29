@@ -1,15 +1,22 @@
 #ifndef OBJ_UIINFOLABEL_H
 #define OBJ_UIINFOLABEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIInfoLabel : Object {
+class ObjectUIInfoLabel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIInfoLabel : Entity {
+class EntityUIInfoLabel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIInfoLabel UIInfoLabel;
 
 //Entity Functions
 void UIInfoLabel_Update();

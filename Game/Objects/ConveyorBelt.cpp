@@ -1,0 +1,30 @@
+#include "../../SonicMania.h"
+
+void ConveyorBelt_Update() {
+
+}
+
+void ConveyorBelt_EarlyUpdate() {
+
+}
+
+void ConveyorBelt_LateUpdate() {
+
+}
+
+void ConveyorBelt_Draw() {
+
+}
+
+void ConveyorBelt_Setup(void* subtype) {
+
+}
+
+void ConveyorBelt_StageLoad() {
+
+}
+
+void ConveyorBelt_GetAttributes() {
+
+}
+

@@ -1,15 +1,22 @@
 #ifndef OBJ_DEROBOT_H
 #define OBJ_DEROBOT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DERobot : Object {
+class ObjectDERobot : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDERobot : Entity {
+class EntityDERobot : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDERobot DERobot;
 
 //Entity Functions
 void DERobot_Update();

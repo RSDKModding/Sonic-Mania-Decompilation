@@ -1,15 +1,22 @@
 #ifndef OBJ_UIPOPOVER_H
 #define OBJ_UIPOPOVER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIPopover : Object {
+class ObjectUIPopover : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIPopover : Entity {
+class EntityUIPopover : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIPopover UIPopover;
 
 //Entity Functions
 void UIPopover_Update();

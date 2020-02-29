@@ -1,15 +1,22 @@
 #ifndef OBJ_EGGTOWER_H
 #define OBJ_EGGTOWER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EggTower : Object {
+class ObjectEggTower : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEggTower : Entity {
+class EntityEggTower : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEggTower EggTower;
 
 //Entity Functions
 void EggTower_Update();

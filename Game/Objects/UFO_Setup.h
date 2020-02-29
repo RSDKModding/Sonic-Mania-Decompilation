@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_SETUP_H
 #define OBJ_UFO_SETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Setup : Object {
+class ObjectUFO_Setup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Setup : Entity {
+class EntityUFO_Setup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Setup UFO_Setup;
 
 //Entity Functions
 void UFO_Setup_Update();

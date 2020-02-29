@@ -1,15 +1,22 @@
 #ifndef OBJ_LAVAGEYSER_H
 #define OBJ_LAVAGEYSER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LavaGeyser : Object {
+class ObjectLavaGeyser : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLavaGeyser : Entity {
+class EntityLavaGeyser : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLavaGeyser LavaGeyser;
 
 //Entity Functions
 void LavaGeyser_Update();

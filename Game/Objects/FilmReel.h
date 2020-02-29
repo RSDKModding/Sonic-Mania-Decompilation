@@ -1,15 +1,22 @@
 #ifndef OBJ_FILMREEL_H
 #define OBJ_FILMREEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FilmReel : Object {
+class ObjectFilmReel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFilmReel : Entity {
+class EntityFilmReel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFilmReel FilmReel;
 
 //Entity Functions
 void FilmReel_Update();

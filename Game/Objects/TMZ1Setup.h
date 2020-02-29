@@ -1,15 +1,22 @@
 #ifndef OBJ_TMZ1SETUP_H
 #define OBJ_TMZ1SETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TMZ1Setup : Object {
+class ObjectTMZ1Setup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTMZ1Setup : Entity {
+class EntityTMZ1Setup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTMZ1Setup TMZ1Setup;
 
 //Entity Functions
 void TMZ1Setup_Update();

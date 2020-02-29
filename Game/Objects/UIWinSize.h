@@ -1,15 +1,22 @@
 #ifndef OBJ_UIWINSIZE_H
 #define OBJ_UIWINSIZE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIWinSize : Object {
+class ObjectUIWinSize : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIWinSize : Entity {
+class EntityUIWinSize : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIWinSize UIWinSize;
 
 //Entity Functions
 void UIWinSize_Update();

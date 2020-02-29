@@ -1,15 +1,22 @@
 #ifndef OBJ_UIRANKBUTTON_H
 #define OBJ_UIRANKBUTTON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIRankButton : Object {
+class ObjectUIRankButton : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIRankButton : Entity {
+class EntityUIRankButton : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIRankButton UIRankButton;
 
 //Entity Functions
 void UIRankButton_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_SNOWFLAKES_H
 #define OBJ_SNOWFLAKES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Snowflakes : Object {
+class ObjectSnowflakes : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySnowflakes : Entity {
+class EntitySnowflakes : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSnowflakes Snowflakes;
 
 //Entity Functions
 void Snowflakes_Update();

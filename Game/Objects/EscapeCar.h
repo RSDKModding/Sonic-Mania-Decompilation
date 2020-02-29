@@ -1,15 +1,22 @@
 #ifndef OBJ_ESCAPECAR_H
 #define OBJ_ESCAPECAR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EscapeCar : Object {
+class ObjectEscapeCar : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEscapeCar : Entity {
+class EntityEscapeCar : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEscapeCar EscapeCar;
 
 //Entity Functions
 void EscapeCar_Update();

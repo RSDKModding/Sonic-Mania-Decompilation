@@ -1,15 +1,22 @@
 #ifndef OBJ_RUBYPORTAL_H
 #define OBJ_RUBYPORTAL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RubyPortal : Object {
+class ObjectRubyPortal : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRubyPortal : Entity {
+class EntityRubyPortal : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRubyPortal RubyPortal;
 
 //Entity Functions
 void RubyPortal_Update();

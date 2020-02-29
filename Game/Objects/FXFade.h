@@ -1,15 +1,22 @@
 #ifndef OBJ_FXFADE_H
 #define OBJ_FXFADE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FXFade : Object {
+class ObjectFXFade : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFXFade : Entity {
+class EntityFXFade : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFXFade FXFade;
 
 //Entity Functions
 void FXFade_Update();

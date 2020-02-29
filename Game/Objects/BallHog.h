@@ -1,15 +1,22 @@
 #ifndef OBJ_BALLHOG_H
 #define OBJ_BALLHOG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BallHog : Object {
+class ObjectBallHog : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBallHog : Entity {
+class EntityBallHog : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBallHog BallHog;
 
 //Entity Functions
 void BallHog_Update();

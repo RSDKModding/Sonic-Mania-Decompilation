@@ -1,15 +1,22 @@
 #ifndef OBJ_FBZSETUP_H
 #define OBJ_FBZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FBZSetup : Object {
+class ObjectFBZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFBZSetup : Entity {
+class EntityFBZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFBZSetup FBZSetup;
 
 //Entity Functions
 void FBZSetup_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_CRANE_H
 #define OBJ_PBL_CRANE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Crane : Object {
+class ObjectPBL_Crane : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Crane : Entity {
+class EntityPBL_Crane : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Crane PBL_Crane;
 
 //Entity Functions
 void PBL_Crane_Update();

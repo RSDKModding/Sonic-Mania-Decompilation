@@ -1,15 +1,22 @@
 #ifndef OBJ_RPLANESHIFTER_H
 #define OBJ_RPLANESHIFTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RPlaneShifter : Object {
+class ObjectRPlaneShifter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRPlaneShifter : Entity {
+class EntityRPlaneShifter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRPlaneShifter RPlaneShifter;
 
 //Entity Functions
 void RPlaneShifter_Update();

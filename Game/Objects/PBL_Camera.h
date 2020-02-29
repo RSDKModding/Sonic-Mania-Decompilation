@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_CAMERA_H
 #define OBJ_PBL_CAMERA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Camera : Object {
+class ObjectPBL_Camera : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Camera : Entity {
+class EntityPBL_Camera : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Camera PBL_Camera;
 
 //Entity Functions
 void PBL_Camera_Update();

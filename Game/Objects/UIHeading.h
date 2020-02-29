@@ -1,15 +1,22 @@
 #ifndef OBJ_UIHEADING_H
 #define OBJ_UIHEADING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIHeading : Object {
+class ObjectUIHeading : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIHeading : Entity {
+class EntityUIHeading : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIHeading UIHeading;
 
 //Entity Functions
 void UIHeading_Update();

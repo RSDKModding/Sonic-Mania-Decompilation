@@ -1,15 +1,22 @@
 #ifndef OBJ_GIANTPISTOL_H
 #define OBJ_GIANTPISTOL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GiantPistol : Object {
+class ObjectGiantPistol : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGiantPistol : Entity {
+class EntityGiantPistol : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGiantPistol GiantPistol;
 
 //Entity Functions
 void GiantPistol_Update();

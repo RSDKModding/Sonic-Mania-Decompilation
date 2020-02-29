@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_HUD_H
 #define OBJ_PBL_HUD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_HUD : Object {
+class ObjectPBL_HUD : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_HUD : Entity {
+class EntityPBL_HUD : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_HUD PBL_HUD;
 
 //Entity Functions
 void PBL_HUD_Update();

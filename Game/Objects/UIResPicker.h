@@ -1,15 +1,22 @@
 #ifndef OBJ_UIRESPICKER_H
 #define OBJ_UIRESPICKER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIResPicker : Object {
+class ObjectUIResPicker : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIResPicker : Entity {
+class EntityUIResPicker : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIResPicker UIResPicker;
 
 //Entity Functions
 void UIResPicker_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TWISTEDTUBES_H
 #define OBJ_TWISTEDTUBES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TwistedTubes : Object {
+class ObjectTwistedTubes : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTwistedTubes : Entity {
+class EntityTwistedTubes : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTwistedTubes TwistedTubes;
 
 //Entity Functions
 void TwistedTubes_Update();

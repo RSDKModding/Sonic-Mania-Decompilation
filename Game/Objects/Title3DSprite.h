@@ -1,15 +1,22 @@
 #ifndef OBJ_TITLE3DSPRITE_H
 #define OBJ_TITLE3DSPRITE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Title3DSprite : Object {
+class ObjectTitle3DSprite : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTitle3DSprite : Entity {
+class EntityTitle3DSprite : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTitle3DSprite Title3DSprite;
 
 //Entity Functions
 void Title3DSprite_Update();

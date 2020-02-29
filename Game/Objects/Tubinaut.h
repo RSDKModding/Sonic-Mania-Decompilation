@@ -1,15 +1,22 @@
 #ifndef OBJ_TUBINAUT_H
 #define OBJ_TUBINAUT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Tubinaut : Object {
+class ObjectTubinaut : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTubinaut : Entity {
+class EntityTubinaut : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTubinaut Tubinaut;
 
 //Entity Functions
 void Tubinaut_Update();

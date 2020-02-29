@@ -1,15 +1,22 @@
 #ifndef OBJ_SWEEP_H
 #define OBJ_SWEEP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Sweep : Object {
+class ObjectSweep : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySweep : Entity {
+class EntitySweep : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSweep Sweep;
 
 //Entity Functions
 void Sweep_Update();

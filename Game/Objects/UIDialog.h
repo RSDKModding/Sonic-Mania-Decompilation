@@ -1,15 +1,22 @@
 #ifndef OBJ_UIDIALOG_H
 #define OBJ_UIDIALOG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIDialog : Object {
+class ObjectUIDialog : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIDialog : Entity {
+class EntityUIDialog : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIDialog UIDialog;
 
 //Entity Functions
 void UIDialog_Update();

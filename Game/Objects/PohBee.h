@@ -1,15 +1,22 @@
 #ifndef OBJ_POHBEE_H
 #define OBJ_POHBEE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PohBee : Object {
+class ObjectPohBee : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPohBee : Entity {
+class EntityPohBee : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPohBee PohBee;
 
 //Entity Functions
 void PohBee_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TRYAGAIN_H
 #define OBJ_TRYAGAIN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TryAgain : Object {
+class ObjectTryAgain : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTryAgain : Entity {
+class EntityTryAgain : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTryAgain TryAgain;
 
 //Entity Functions
 void TryAgain_Update();

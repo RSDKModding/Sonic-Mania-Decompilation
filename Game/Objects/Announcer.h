@@ -1,15 +1,22 @@
 #ifndef OBJ_ANNOUNCER_H
 #define OBJ_ANNOUNCER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Announcer : Object {
+class ObjectAnnouncer : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAnnouncer : Entity {
+class EntityAnnouncer : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAnnouncer Announcer;
 
 //Entity Functions
 void Announcer_Update();

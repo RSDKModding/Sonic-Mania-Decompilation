@@ -1,15 +1,22 @@
 #ifndef OBJ_UITAZONEMODULE_H
 #define OBJ_UITAZONEMODULE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UITAZoneModule : Object {
+class ObjectUITAZoneModule : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUITAZoneModule : Entity {
+class EntityUITAZoneModule : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUITAZoneModule UITAZoneModule;
 
 //Entity Functions
 void UITAZoneModule_Update();

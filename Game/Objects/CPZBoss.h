@@ -1,15 +1,22 @@
 #ifndef OBJ_CPZBOSS_H
 #define OBJ_CPZBOSS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CPZBoss : Object {
+class ObjectCPZBoss : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCPZBoss : Entity {
+class EntityCPZBoss : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCPZBoss CPZBoss;
 
 //Entity Functions
 void CPZBoss_Update();

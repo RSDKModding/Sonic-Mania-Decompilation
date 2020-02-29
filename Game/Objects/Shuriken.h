@@ -1,15 +1,22 @@
 #ifndef OBJ_SHURIKEN_H
 #define OBJ_SHURIKEN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Shuriken : Object {
+class ObjectShuriken : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityShuriken : Entity {
+class EntityShuriken : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectShuriken Shuriken;
 
 //Entity Functions
 void Shuriken_Update();

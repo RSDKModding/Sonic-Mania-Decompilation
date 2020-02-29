@@ -1,15 +1,22 @@
 #ifndef OBJ_SOL_H
 #define OBJ_SOL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Sol : Object {
+class ObjectSol : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySol : Entity {
+class EntitySol : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSol Sol;
 
 //Entity Functions
 void Sol_Update();

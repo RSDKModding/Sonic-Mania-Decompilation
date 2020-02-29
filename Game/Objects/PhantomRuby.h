@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMRUBY_H
 #define OBJ_PHANTOMRUBY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomRuby : Object {
+class ObjectPhantomRuby : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomRuby : Entity {
+class EntityPhantomRuby : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomRuby PhantomRuby;
 
 //Entity Functions
 void PhantomRuby_Update();

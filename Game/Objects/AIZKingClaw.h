@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZKINGCLAW_H
 #define OBJ_AIZKINGCLAW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZKingClaw : Object {
+class ObjectAIZKingClaw : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZKingClaw : Entity {
+class EntityAIZKingClaw : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZKingClaw AIZKingClaw;
 
 //Entity Functions
 void AIZKingClaw_Update();

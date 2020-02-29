@@ -1,15 +1,22 @@
 #ifndef OBJ_CABLEWARP_H
 #define OBJ_CABLEWARP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CableWarp : Object {
+class ObjectCableWarp : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCableWarp : Entity {
+class EntityCableWarp : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCableWarp CableWarp;
 
 //Entity Functions
 void CableWarp_Update();

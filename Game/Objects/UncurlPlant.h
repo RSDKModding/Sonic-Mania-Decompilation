@@ -1,15 +1,22 @@
 #ifndef OBJ_UNCURLPLANT_H
 #define OBJ_UNCURLPLANT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UncurlPlant : Object {
+class ObjectUncurlPlant : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUncurlPlant : Entity {
+class EntityUncurlPlant : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUncurlPlant UncurlPlant;
 
 //Entity Functions
 void UncurlPlant_Update();

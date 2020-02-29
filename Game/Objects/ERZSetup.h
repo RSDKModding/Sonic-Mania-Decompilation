@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZSETUP_H
 #define OBJ_ERZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZSetup : Object {
+class ObjectERZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZSetup : Entity {
+class EntityERZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZSetup ERZSetup;
 
 //Entity Functions
 void ERZSetup_Update();

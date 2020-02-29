@@ -1,15 +1,22 @@
 #ifndef OBJ_SAVEGAME_H
 #define OBJ_SAVEGAME_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SaveGame : Object {
+class ObjectSaveGame : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySaveGame : Entity {
+class EntitySaveGame : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSaveGame SaveGame;
 
 //Entity Functions
 void SaveGame_Update();

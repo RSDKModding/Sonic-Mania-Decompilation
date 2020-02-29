@@ -1,15 +1,22 @@
 #ifndef OBJ_WARPDOOR_H
 #define OBJ_WARPDOOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WarpDoor : Object {
+class ObjectWarpDoor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWarpDoor : Entity {
+class EntityWarpDoor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWarpDoor WarpDoor;
 
 //Entity Functions
 void WarpDoor_Update();

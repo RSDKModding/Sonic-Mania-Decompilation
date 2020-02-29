@@ -1,15 +1,22 @@
 #ifndef OBJ_RINGFIELD_H
 #define OBJ_RINGFIELD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RingField : Object {
+class ObjectRingField : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRingField : Entity {
+class EntityRingField : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRingField RingField;
 
 //Entity Functions
 void RingField_Update();

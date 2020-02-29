@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_SPEEDLINES_H
 #define OBJ_UFO_SPEEDLINES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_SpeedLines : Object {
+class ObjectUFO_SpeedLines : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_SpeedLines : Entity {
+class EntityUFO_SpeedLines : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_SpeedLines UFO_SpeedLines;
 
 //Entity Functions
 void UFO_SpeedLines_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PUSHSPRING_H
 #define OBJ_PUSHSPRING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PushSpring : Object {
+class ObjectPushSpring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPushSpring : Entity {
+class EntityPushSpring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPushSpring PushSpring;
 
 //Entity Functions
 void PushSpring_Update();

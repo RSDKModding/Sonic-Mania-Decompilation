@@ -1,15 +1,22 @@
 #ifndef OBJ_GREENSCREEN_H
 #define OBJ_GREENSCREEN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GreenScreen : Object {
+class ObjectGreenScreen : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGreenScreen : Entity {
+class EntityGreenScreen : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGreenScreen GreenScreen;
 
 //Entity Functions
 void GreenScreen_Update();

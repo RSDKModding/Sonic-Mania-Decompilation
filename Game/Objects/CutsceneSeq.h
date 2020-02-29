@@ -1,15 +1,22 @@
 #ifndef OBJ_CUTSCENESEQ_H
 #define OBJ_CUTSCENESEQ_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CutsceneSeq : Object {
+class ObjectCutsceneSeq : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCutsceneSeq : Entity {
+class EntityCutsceneSeq : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCutsceneSeq CutsceneSeq;
 
 //Entity Functions
 void CutsceneSeq_Update();

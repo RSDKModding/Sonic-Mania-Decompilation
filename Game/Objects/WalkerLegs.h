@@ -1,15 +1,22 @@
 #ifndef OBJ_WALKERLEGS_H
 #define OBJ_WALKERLEGS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WalkerLegs : Object {
+class ObjectWalkerLegs : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWalkerLegs : Entity {
+class EntityWalkerLegs : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWalkerLegs WalkerLegs;
 
 //Entity Functions
 void WalkerLegs_Update();

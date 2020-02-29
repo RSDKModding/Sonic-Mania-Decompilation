@@ -1,15 +1,22 @@
 #ifndef OBJ_BUTTON_H
 #define OBJ_BUTTON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Button : Object {
+class ObjectButton : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityButton : Entity {
+class EntityButton : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectButton Button;
 
 //Entity Functions
 void Button_Update();

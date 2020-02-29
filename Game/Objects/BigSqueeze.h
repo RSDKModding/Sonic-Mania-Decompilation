@@ -1,15 +1,22 @@
 #ifndef OBJ_BIGSQUEEZE_H
 #define OBJ_BIGSQUEEZE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BigSqueeze : Object {
+class ObjectBigSqueeze : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBigSqueeze : Entity {
+class EntityBigSqueeze : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBigSqueeze BigSqueeze;
 
 //Entity Functions
 void BigSqueeze_Update();

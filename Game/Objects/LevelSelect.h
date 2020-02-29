@@ -1,15 +1,22 @@
 #ifndef OBJ_LEVELSELECT_H
 #define OBJ_LEVELSELECT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LevelSelect : Object {
+class ObjectLevelSelect : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLevelSelect : Entity {
+class EntityLevelSelect : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLevelSelect LevelSelect;
 
 //Entity Functions
 void LevelSelect_Update();

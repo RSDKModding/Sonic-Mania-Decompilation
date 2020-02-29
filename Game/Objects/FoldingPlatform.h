@@ -1,15 +1,22 @@
 #ifndef OBJ_FOLDINGPLATFORM_H
 #define OBJ_FOLDINGPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FoldingPlatform : Object {
+class ObjectFoldingPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFoldingPlatform : Entity {
+class EntityFoldingPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFoldingPlatform FoldingPlatform;
 
 //Entity Functions
 void FoldingPlatform_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_MESSAGE_H
 #define OBJ_UFO_MESSAGE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Message : Object {
+class ObjectUFO_Message : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Message : Entity {
+class EntityUFO_Message : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Message UFO_Message;
 
 //Entity Functions
 void UFO_Message_Update();

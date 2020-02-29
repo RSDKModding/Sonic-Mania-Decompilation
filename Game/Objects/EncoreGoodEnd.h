@@ -1,15 +1,22 @@
 #ifndef OBJ_ENCOREGOODEND_H
 #define OBJ_ENCOREGOODEND_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EncoreGoodEnd : Object {
+class ObjectEncoreGoodEnd : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEncoreGoodEnd : Entity {
+class EntityEncoreGoodEnd : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEncoreGoodEnd EncoreGoodEnd;
 
 //Entity Functions
 void EncoreGoodEnd_Update();

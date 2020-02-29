@@ -1,15 +1,22 @@
 #ifndef OBJ_LAVAFALL_H
 #define OBJ_LAVAFALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LavaFall : Object {
+class ObjectLavaFall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLavaFall : Entity {
+class EntityLavaFall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLavaFall LavaFall;
 
 //Entity Functions
 void LavaFall_Update();

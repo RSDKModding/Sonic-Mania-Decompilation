@@ -1,15 +1,22 @@
 #ifndef OBJ_BUNGEE_H
 #define OBJ_BUNGEE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Bungee : Object {
+class ObjectBungee : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBungee : Entity {
+class EntityBungee : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBungee Bungee;
 
 //Entity Functions
 void Bungee_Update();

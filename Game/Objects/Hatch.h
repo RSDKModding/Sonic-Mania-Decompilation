@@ -1,15 +1,22 @@
 #ifndef OBJ_HATCH_H
 #define OBJ_HATCH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Hatch : Object {
+class ObjectHatch : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHatch : Entity {
+class EntityHatch : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHatch Hatch;
 
 //Entity Functions
 void Hatch_Update();

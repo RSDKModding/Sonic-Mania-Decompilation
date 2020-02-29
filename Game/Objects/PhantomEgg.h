@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMEGG_H
 #define OBJ_PHANTOMEGG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomEgg : Object {
+class ObjectPhantomEgg : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomEgg : Entity {
+class EntityPhantomEgg : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomEgg PhantomEgg;
 
 //Entity Functions
 void PhantomEgg_Update();

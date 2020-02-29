@@ -1,15 +1,22 @@
 #ifndef OBJ_WHIRLPOOL_H
 #define OBJ_WHIRLPOOL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Whirlpool : Object {
+class ObjectWhirlpool : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWhirlpool : Entity {
+class EntityWhirlpool : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWhirlpool Whirlpool;
 
 //Entity Functions
 void Whirlpool_Update();

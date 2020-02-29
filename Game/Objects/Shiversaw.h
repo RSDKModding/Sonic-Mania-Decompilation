@@ -1,15 +1,22 @@
 #ifndef OBJ_SHIVERSAW_H
 #define OBJ_SHIVERSAW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Shiversaw : Object {
+class ObjectShiversaw : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityShiversaw : Entity {
+class EntityShiversaw : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectShiversaw Shiversaw;
 
 //Entity Functions
 void Shiversaw_Update();

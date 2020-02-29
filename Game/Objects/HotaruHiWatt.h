@@ -1,15 +1,22 @@
 #ifndef OBJ_HOTARUHIWATT_H
 #define OBJ_HOTARUHIWATT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HotaruHiWatt : Object {
+class ObjectHotaruHiWatt : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHotaruHiWatt : Entity {
+class EntityHotaruHiWatt : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHotaruHiWatt HotaruHiWatt;
 
 //Entity Functions
 void HotaruHiWatt_Update();

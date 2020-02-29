@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_SECTOR_H
 #define OBJ_PBL_SECTOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Sector : Object {
+class ObjectPBL_Sector : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Sector : Entity {
+class EntityPBL_Sector : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Sector PBL_Sector;
 
 //Entity Functions
 void PBL_Sector_Update();

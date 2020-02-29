@@ -1,15 +1,22 @@
 #ifndef OBJ_HANGGLIDER_H
 #define OBJ_HANGGLIDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HangGlider : Object {
+class ObjectHangGlider : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHangGlider : Entity {
+class EntityHangGlider : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHangGlider HangGlider;
 
 //Entity Functions
 void HangGlider_Update();

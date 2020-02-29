@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZGUNNER_H
 #define OBJ_ERZGUNNER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZGunner : Object {
+class ObjectERZGunner : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZGunner : Entity {
+class EntityERZGunner : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZGunner ERZGunner;
 
 //Entity Functions
 void ERZGunner_Update();

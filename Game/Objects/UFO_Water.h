@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_WATER_H
 #define OBJ_UFO_WATER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Water : Object {
+class ObjectUFO_Water : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Water : Entity {
+class EntityUFO_Water : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Water UFO_Water;
 
 //Entity Functions
 void UFO_Water_Update();

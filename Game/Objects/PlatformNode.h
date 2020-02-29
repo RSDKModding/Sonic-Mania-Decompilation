@@ -1,15 +1,22 @@
 #ifndef OBJ_PLATFORMNODE_H
 #define OBJ_PLATFORMNODE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PlatformNode : Object {
+class ObjectPlatformNode : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPlatformNode : Entity {
+class EntityPlatformNode : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPlatformNode PlatformNode;
 
 //Entity Functions
 void PlatformNode_Update();

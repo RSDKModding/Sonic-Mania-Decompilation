@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOLEVELSELECT_H
 #define OBJ_PUYOLEVELSELECT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoLevelSelect : Object {
+class ObjectPuyoLevelSelect : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoLevelSelect : Entity {
+class EntityPuyoLevelSelect : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoLevelSelect PuyoLevelSelect;
 
 //Entity Functions
 void PuyoLevelSelect_Update();

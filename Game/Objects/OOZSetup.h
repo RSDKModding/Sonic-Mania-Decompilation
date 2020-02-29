@@ -1,15 +1,22 @@
 #ifndef OBJ_OOZSETUP_H
 #define OBJ_OOZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class OOZSetup : Object {
+class ObjectOOZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOOZSetup : Entity {
+class EntityOOZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOOZSetup OOZSetup;
 
 //Entity Functions
 void OOZSetup_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TMZBARRIER_H
 #define OBJ_TMZBARRIER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TMZBarrier : Object {
+class ObjectTMZBarrier : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTMZBarrier : Entity {
+class EntityTMZBarrier : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTMZBarrier TMZBarrier;
 
 //Entity Functions
 void TMZBarrier_Update();

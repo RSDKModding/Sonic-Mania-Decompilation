@@ -1,15 +1,22 @@
 #ifndef OBJ_MSORB_H
 #define OBJ_MSORB_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSOrb : Object {
+class ObjectMSOrb : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSOrb : Entity {
+class EntityMSOrb : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSOrb MSOrb;
 
 //Entity Functions
 void MSOrb_Update();

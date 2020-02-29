@@ -1,15 +1,22 @@
 #ifndef OBJ_MAGSPIKEBALL_H
 #define OBJ_MAGSPIKEBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MagSpikeBall : Object {
+class ObjectMagSpikeBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMagSpikeBall : Entity {
+class EntityMagSpikeBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMagSpikeBall MagSpikeBall;
 
 //Entity Functions
 void MagSpikeBall_Update();

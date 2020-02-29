@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZ1INTRO_H
 #define OBJ_LRZ1INTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZ1Intro : Object {
+class ObjectLRZ1Intro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZ1Intro : Entity {
+class EntityLRZ1Intro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZ1Intro LRZ1Intro;
 
 //Entity Functions
 void LRZ1Intro_Update();

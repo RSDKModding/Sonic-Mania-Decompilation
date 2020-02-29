@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZCONVSWITCH_H
 #define OBJ_LRZCONVSWITCH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZConvSwitch : Object {
+class ObjectLRZConvSwitch : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZConvSwitch : Entity {
+class EntityLRZConvSwitch : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZConvSwitch LRZConvSwitch;
 
 //Entity Functions
 void LRZConvSwitch_Update();

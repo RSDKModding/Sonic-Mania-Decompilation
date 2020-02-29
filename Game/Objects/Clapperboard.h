@@ -1,15 +1,22 @@
 #ifndef OBJ_CLAPPERBOARD_H
 #define OBJ_CLAPPERBOARD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Clapperboard : Object {
+class ObjectClapperboard : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityClapperboard : Entity {
+class EntityClapperboard : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectClapperboard Clapperboard;
 
 //Entity Functions
 void Clapperboard_Update();

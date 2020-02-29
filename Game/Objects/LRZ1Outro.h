@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZ1OUTRO_H
 #define OBJ_LRZ1OUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZ1Outro : Object {
+class ObjectLRZ1Outro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZ1Outro : Entity {
+class EntityLRZ1Outro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZ1Outro LRZ1Outro;
 
 //Entity Functions
 void LRZ1Outro_Update();

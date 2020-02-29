@@ -1,15 +1,22 @@
 #ifndef OBJ_WOODROW_H
 #define OBJ_WOODROW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Woodrow : Object {
+class ObjectWoodrow : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWoodrow : Entity {
+class EntityWoodrow : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWoodrow Woodrow;
 
 //Entity Functions
 void Woodrow_Update();

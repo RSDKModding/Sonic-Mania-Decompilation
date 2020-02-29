@@ -1,15 +1,22 @@
 #ifndef OBJ_CRABMEAT_H
 #define OBJ_CRABMEAT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Crabmeat : Object {
+class ObjectCrabmeat : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCrabmeat : Entity {
+class EntityCrabmeat : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCrabmeat Crabmeat;
 
 //Entity Functions
 void Crabmeat_Update();

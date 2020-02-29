@@ -1,15 +1,22 @@
 #ifndef OBJ_TITLEBG_H
 #define OBJ_TITLEBG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TitleBG : Object {
+class ObjectTitleBG : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTitleBG : Entity {
+class EntityTitleBG : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTitleBG TitleBG;
 
 //Entity Functions
 void TitleBG_Update();

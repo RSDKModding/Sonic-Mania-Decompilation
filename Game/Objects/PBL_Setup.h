@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_SETUP_H
 #define OBJ_PBL_SETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Setup : Object {
+class ObjectPBL_Setup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Setup : Entity {
+class EntityPBL_Setup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Setup PBL_Setup;
 
 //Entity Functions
 void PBL_Setup_Update();

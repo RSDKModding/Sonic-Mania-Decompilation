@@ -1,15 +1,22 @@
 #ifndef OBJ_EGGPISTONSMKII_H
 #define OBJ_EGGPISTONSMKII_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EggPistonsMKII : Object {
+class ObjectEggPistonsMKII : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEggPistonsMKII : Entity {
+class EntityEggPistonsMKII : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEggPistonsMKII EggPistonsMKII;
 
 //Entity Functions
 void EggPistonsMKII_Update();

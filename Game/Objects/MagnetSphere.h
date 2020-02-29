@@ -1,15 +1,22 @@
 #ifndef OBJ_MAGNETSPHERE_H
 #define OBJ_MAGNETSPHERE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MagnetSphere : Object {
+class ObjectMagnetSphere : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMagnetSphere : Entity {
+class EntityMagnetSphere : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMagnetSphere MagnetSphere;
 
 //Entity Functions
 void MagnetSphere_Update();

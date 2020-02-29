@@ -1,15 +1,22 @@
 #ifndef OBJ_CONTINUESETUP_H
 #define OBJ_CONTINUESETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ContinueSetup : Object {
+class ObjectContinueSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityContinueSetup : Entity {
+class EntityContinueSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectContinueSetup ContinueSetup;
 
 //Entity Functions
 void ContinueSetup_Update();

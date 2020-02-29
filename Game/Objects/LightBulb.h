@@ -1,15 +1,22 @@
 #ifndef OBJ_LIGHTBULB_H
 #define OBJ_LIGHTBULB_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LightBulb : Object {
+class ObjectLightBulb : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLightBulb : Entity {
+class EntityLightBulb : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLightBulb LightBulb;
 
 //Entity Functions
 void LightBulb_Update();

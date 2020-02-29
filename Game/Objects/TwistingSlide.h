@@ -1,15 +1,22 @@
 #ifndef OBJ_TWISTINGSLIDE_H
 #define OBJ_TWISTINGSLIDE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TwistingSlide : Object {
+class ObjectTwistingSlide : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTwistingSlide : Entity {
+class EntityTwistingSlide : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTwistingSlide TwistingSlide;
 
 //Entity Functions
 void TwistingSlide_Update();

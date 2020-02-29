@@ -1,15 +1,22 @@
 #ifndef OBJ_SPECIALCLEAR_H
 #define OBJ_SPECIALCLEAR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpecialClear : Object {
+class ObjectSpecialClear : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpecialClear : Entity {
+class EntitySpecialClear : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpecialClear SpecialClear;
 
 //Entity Functions
 void SpecialClear_Update();

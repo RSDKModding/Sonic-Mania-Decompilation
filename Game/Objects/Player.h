@@ -1,15 +1,22 @@
 #ifndef OBJ_PLAYER_H
 #define OBJ_PLAYER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Player : Object {
+class ObjectPlayer : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPlayer : Entity {
+class EntityPlayer : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPlayer Player;
 
 //Entity Functions
 void Player_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_MSZ1KINTRO_H
 #define OBJ_MSZ1KINTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSZ1KIntro : Object {
+class ObjectMSZ1KIntro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSZ1KIntro : Entity {
+class EntityMSZ1KIntro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSZ1KIntro MSZ1KIntro;
 
 //Entity Functions
 void MSZ1KIntro_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_FBZSINKTRASH_H
 #define OBJ_FBZSINKTRASH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FBZSinkTrash : Object {
+class ObjectFBZSinkTrash : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFBZSinkTrash : Entity {
+class EntityFBZSinkTrash : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFBZSinkTrash FBZSinkTrash;
 
 //Entity Functions
 void FBZSinkTrash_Update();

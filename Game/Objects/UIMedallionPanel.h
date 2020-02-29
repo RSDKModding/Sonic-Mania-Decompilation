@@ -1,15 +1,22 @@
 #ifndef OBJ_UIMEDALLIONPANEL_H
 #define OBJ_UIMEDALLIONPANEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIMedallionPanel : Object {
+class ObjectUIMedallionPanel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIMedallionPanel : Entity {
+class EntityUIMedallionPanel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIMedallionPanel UIMedallionPanel;
 
 //Entity Functions
 void UIMedallionPanel_Update();

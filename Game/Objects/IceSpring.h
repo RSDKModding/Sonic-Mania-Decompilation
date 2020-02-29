@@ -1,15 +1,22 @@
 #ifndef OBJ_ICESPRING_H
 #define OBJ_ICESPRING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class IceSpring : Object {
+class ObjectIceSpring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityIceSpring : Entity {
+class EntityIceSpring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectIceSpring IceSpring;
 
 //Entity Functions
 void IceSpring_Update();

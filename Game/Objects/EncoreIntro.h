@@ -1,15 +1,22 @@
 #ifndef OBJ_ENCOREINTRO_H
 #define OBJ_ENCOREINTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EncoreIntro : Object {
+class ObjectEncoreIntro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEncoreIntro : Entity {
+class EntityEncoreIntro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEncoreIntro EncoreIntro;
 
 //Entity Functions
 void EncoreIntro_Update();

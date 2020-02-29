@@ -1,15 +1,22 @@
 #ifndef OBJ_KABASIRA_H
 #define OBJ_KABASIRA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Kabasira : Object {
+class ObjectKabasira : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityKabasira : Entity {
+class EntityKabasira : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectKabasira Kabasira;
 
 //Entity Functions
 void Kabasira_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_BLASTER_H
 #define OBJ_BLASTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Blaster : Object {
+class ObjectBlaster : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBlaster : Entity {
+class EntityBlaster : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBlaster Blaster;
 
 //Entity Functions
 void Blaster_Update();

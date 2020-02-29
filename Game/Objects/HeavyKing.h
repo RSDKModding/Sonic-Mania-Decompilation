@@ -1,15 +1,22 @@
 #ifndef OBJ_HEAVYKING_H
 #define OBJ_HEAVYKING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HeavyKing : Object {
+class ObjectHeavyKing : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHeavyKing : Entity {
+class EntityHeavyKing : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHeavyKing HeavyKing;
 
 //Entity Functions
 void HeavyKing_Update();

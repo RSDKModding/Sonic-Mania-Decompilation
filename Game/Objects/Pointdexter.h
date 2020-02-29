@@ -1,15 +1,22 @@
 #ifndef OBJ_POINTDEXTER_H
 #define OBJ_POINTDEXTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Pointdexter : Object {
+class ObjectPointdexter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPointdexter : Entity {
+class EntityPointdexter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPointdexter Pointdexter;
 
 //Entity Functions
 void Pointdexter_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMGUNNER_H
 #define OBJ_PHANTOMGUNNER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomGunner : Object {
+class ObjectPhantomGunner : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomGunner : Entity {
+class EntityPhantomGunner : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomGunner PhantomGunner;
 
 //Entity Functions
 void PhantomGunner_Update();

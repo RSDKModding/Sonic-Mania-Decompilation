@@ -1,15 +1,22 @@
 #ifndef OBJ_UIVSZONEBUTTON_H
 #define OBJ_UIVSZONEBUTTON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIVsZoneButton : Object {
+class ObjectUIVsZoneButton : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIVsZoneButton : Entity {
+class EntityUIVsZoneButton : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIVsZoneButton UIVsZoneButton;
 
 //Entity Functions
 void UIVsZoneButton_Update();

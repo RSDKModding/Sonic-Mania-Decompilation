@@ -1,15 +1,22 @@
 #ifndef OBJ_REPLAYDB_H
 #define OBJ_REPLAYDB_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ReplayDB : Object {
+class ObjectReplayDB : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityReplayDB : Entity {
+class EntityReplayDB : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectReplayDB ReplayDB;
 
 //Entity Functions
 void ReplayDB_Update();

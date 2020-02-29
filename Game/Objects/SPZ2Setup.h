@@ -1,15 +1,22 @@
 #ifndef OBJ_SPZ2SETUP_H
 #define OBJ_SPZ2SETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SPZ2Setup : Object {
+class ObjectSPZ2Setup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySPZ2Setup : Entity {
+class EntitySPZ2Setup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSPZ2Setup SPZ2Setup;
 
 //Entity Functions
 void SPZ2Setup_Update();

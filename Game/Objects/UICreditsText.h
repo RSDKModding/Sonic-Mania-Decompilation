@@ -1,15 +1,22 @@
 #ifndef OBJ_UICREDITSTEXT_H
 #define OBJ_UICREDITSTEXT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UICreditsText : Object {
+class ObjectUICreditsText : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUICreditsText : Entity {
+class EntityUICreditsText : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUICreditsText UICreditsText;
 
 //Entity Functions
 void UICreditsText_Update();

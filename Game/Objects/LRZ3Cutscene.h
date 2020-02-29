@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZ3CUTSCENE_H
 #define OBJ_LRZ3CUTSCENE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZ3Cutscene : Object {
+class ObjectLRZ3Cutscene : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZ3Cutscene : Entity {
+class EntityLRZ3Cutscene : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZ3Cutscene LRZ3Cutscene;
 
 //Entity Functions
 void LRZ3Cutscene_Update();

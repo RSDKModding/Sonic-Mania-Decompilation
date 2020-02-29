@@ -1,15 +1,22 @@
 #ifndef OBJ_SPINSIGN_H
 #define OBJ_SPINSIGN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpinSign : Object {
+class ObjectSpinSign : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpinSign : Entity {
+class EntitySpinSign : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpinSign SpinSign;
 
 //Entity Functions
 void SpinSign_Update();

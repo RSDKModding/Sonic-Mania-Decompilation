@@ -1,15 +1,22 @@
 #ifndef OBJ_DASHLIFT_H
 #define OBJ_DASHLIFT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DashLift : Object {
+class ObjectDashLift : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDashLift : Entity {
+class EntityDashLift : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDashLift DashLift;
 
 //Entity Functions
 void DashLift_Update();

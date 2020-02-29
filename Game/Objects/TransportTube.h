@@ -1,15 +1,22 @@
 #ifndef OBJ_TRANSPORTTUBE_H
 #define OBJ_TRANSPORTTUBE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TransportTube : Object {
+class ObjectTransportTube : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTransportTube : Entity {
+class EntityTransportTube : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTransportTube TransportTube;
 
 //Entity Functions
 void TransportTube_Update();

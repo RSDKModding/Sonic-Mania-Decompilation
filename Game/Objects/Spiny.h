@@ -1,15 +1,22 @@
 #ifndef OBJ_SPINY_H
 #define OBJ_SPINY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Spiny : Object {
+class ObjectSpiny : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpiny : Entity {
+class EntitySpiny : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpiny Spiny;
 
 //Entity Functions
 void Spiny_Update();

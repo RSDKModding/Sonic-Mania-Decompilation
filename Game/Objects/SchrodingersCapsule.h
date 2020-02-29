@@ -1,15 +1,22 @@
 #ifndef OBJ_SCHRODINGERSCAPSULE_H
 #define OBJ_SCHRODINGERSCAPSULE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SchrodingersCapsule : Object {
+class ObjectSchrodingersCapsule : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySchrodingersCapsule : Entity {
+class EntitySchrodingersCapsule : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSchrodingersCapsule SchrodingersCapsule;
 
 //Entity Functions
 void SchrodingersCapsule_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_CLUCKER_H
 #define OBJ_CLUCKER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Clucker : Object {
+class ObjectClucker : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityClucker : Entity {
+class EntityClucker : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectClucker Clucker;
 
 //Entity Functions
 void Clucker_Update();

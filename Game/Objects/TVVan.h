@@ -1,15 +1,22 @@
 #ifndef OBJ_TVVAN_H
 #define OBJ_TVVAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TVVan : Object {
+class ObjectTVVan : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTVVan : Entity {
+class EntityTVVan : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTVVan TVVan;
 
 //Entity Functions
 void TVVan_Update();

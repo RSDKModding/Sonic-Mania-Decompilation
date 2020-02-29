@@ -1,15 +1,22 @@
 #ifndef OBJ_BREAKABLEWALL_H
 #define OBJ_BREAKABLEWALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BreakableWall : Object {
+class ObjectBreakableWall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBreakableWall : Entity {
+class EntityBreakableWall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBreakableWall BreakableWall;
 
 //Entity Functions
 void BreakableWall_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_ERZSTART_H
 #define OBJ_ERZSTART_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ERZStart : Object {
+class ObjectERZStart : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityERZStart : Entity {
+class EntityERZStart : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectERZStart ERZStart;
 
 //Entity Functions
 void ERZStart_Update();

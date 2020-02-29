@@ -1,15 +1,22 @@
 #ifndef OBJ_FUNNEL_H
 #define OBJ_FUNNEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Funnel : Object {
+class ObjectFunnel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFunnel : Entity {
+class EntityFunnel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFunnel Funnel;
 
 //Entity Functions
 void Funnel_Update();

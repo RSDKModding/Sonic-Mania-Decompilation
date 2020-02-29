@@ -1,15 +1,22 @@
 #ifndef OBJ_CRATE_H
 #define OBJ_CRATE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Crate : Object {
+class ObjectCrate : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCrate : Entity {
+class EntityCrate : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCrate Crate;
 
 //Entity Functions
 void Crate_Update();

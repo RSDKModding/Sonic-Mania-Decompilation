@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZTORNADOPATH_H
 #define OBJ_AIZTORNADOPATH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZTornadoPath : Object {
+class ObjectAIZTornadoPath : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZTornadoPath : Entity {
+class EntityAIZTornadoPath : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZTornadoPath AIZTornadoPath;
 
 //Entity Functions
 void AIZTornadoPath_Update();

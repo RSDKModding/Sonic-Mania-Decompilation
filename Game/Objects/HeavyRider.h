@@ -1,15 +1,22 @@
 #ifndef OBJ_HEAVYRIDER_H
 #define OBJ_HEAVYRIDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HeavyRider : Object {
+class ObjectHeavyRider : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHeavyRider : Entity {
+class EntityHeavyRider : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHeavyRider HeavyRider;
 
 //Entity Functions
 void HeavyRider_Update();

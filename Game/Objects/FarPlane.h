@@ -1,15 +1,22 @@
 #ifndef OBJ_FARPLANE_H
 #define OBJ_FARPLANE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FarPlane : Object {
+class ObjectFarPlane : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFarPlane : Entity {
+class EntityFarPlane : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFarPlane FarPlane;
 
 //Entity Functions
 void FarPlane_Update();

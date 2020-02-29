@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_HUD_H
 #define OBJ_UFO_HUD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_HUD : Object {
+class ObjectUFO_HUD : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_HUD : Entity {
+class EntityUFO_HUD : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_HUD UFO_HUD;
 
 //Entity Functions
 void UFO_HUD_Update();

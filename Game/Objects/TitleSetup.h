@@ -1,15 +1,22 @@
 #ifndef OBJ_TITLESETUP_H
 #define OBJ_TITLESETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TitleSetup : Object {
+class ObjectTitleSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTitleSetup : Entity {
+class EntityTitleSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTitleSetup TitleSetup;
 
 //Entity Functions
 void TitleSetup_Update();

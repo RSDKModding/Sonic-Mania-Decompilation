@@ -1,15 +1,22 @@
 #ifndef OBJ_BREAKBAR_H
 #define OBJ_BREAKBAR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BreakBar : Object {
+class ObjectBreakBar : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBreakBar : Entity {
+class EntityBreakBar : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBreakBar BreakBar;
 
 //Entity Functions
 void BreakBar_Update();

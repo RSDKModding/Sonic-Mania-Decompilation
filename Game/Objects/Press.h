@@ -1,15 +1,22 @@
 #ifndef OBJ_PRESS_H
 #define OBJ_PRESS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Press : Object {
+class ObjectPress : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPress : Entity {
+class EntityPress : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPress Press;
 
 //Entity Functions
 void Press_Update();

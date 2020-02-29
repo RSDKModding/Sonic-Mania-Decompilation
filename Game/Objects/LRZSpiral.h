@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZSPIRAL_H
 #define OBJ_LRZSPIRAL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZSpiral : Object {
+class ObjectLRZSpiral : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZSpiral : Entity {
+class EntityLRZSpiral : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZSpiral LRZSpiral;
 
 //Entity Functions
 void LRZSpiral_Update();

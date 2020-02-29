@@ -1,15 +1,22 @@
 #ifndef OBJ_SSZSPOTLIGHT_H
 #define OBJ_SSZSPOTLIGHT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SSZSpotlight : Object {
+class ObjectSSZSpotlight : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySSZSpotlight : Entity {
+class EntitySSZSpotlight : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSSZSpotlight SSZSpotlight;
 
 //Entity Functions
 void SSZSpotlight_Update();

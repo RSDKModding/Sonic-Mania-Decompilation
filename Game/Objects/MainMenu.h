@@ -1,15 +1,22 @@
 #ifndef OBJ_MAINMENU_H
 #define OBJ_MAINMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MainMenu : Object {
+class ObjectMainMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMainMenu : Entity {
+class EntityMainMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMainMenu MainMenu;
 
 //Entity Functions
 void MainMenu_Update();

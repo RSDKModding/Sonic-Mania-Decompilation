@@ -1,15 +1,22 @@
 #ifndef OBJ_FXSPINRAY_H
 #define OBJ_FXSPINRAY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FXSpinRay : Object {
+class ObjectFXSpinRay : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFXSpinRay : Entity {
+class EntityFXSpinRay : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFXSpinRay FXSpinRay;
 
 //Entity Functions
 void FXSpinRay_Update();

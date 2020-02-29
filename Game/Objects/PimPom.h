@@ -1,15 +1,22 @@
 #ifndef OBJ_PIMPOM_H
 #define OBJ_PIMPOM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PimPom : Object {
+class ObjectPimPom : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPimPom : Entity {
+class EntityPimPom : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPimPom PimPom;
 
 //Entity Functions
 void PimPom_Update();

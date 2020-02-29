@@ -1,15 +1,22 @@
 #ifndef OBJ_METERDROID_H
 #define OBJ_METERDROID_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MeterDroid : Object {
+class ObjectMeterDroid : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMeterDroid : Entity {
+class EntityMeterDroid : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMeterDroid MeterDroid;
 
 //Entity Functions
 void MeterDroid_Update();

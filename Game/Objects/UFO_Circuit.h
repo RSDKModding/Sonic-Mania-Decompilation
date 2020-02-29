@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_CIRCUIT_H
 #define OBJ_UFO_CIRCUIT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Circuit : Object {
+class ObjectUFO_Circuit : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Circuit : Entity {
+class EntityUFO_Circuit : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Circuit UFO_Circuit;
 
 //Entity Functions
 void UFO_Circuit_Update();

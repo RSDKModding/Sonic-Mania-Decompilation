@@ -1,15 +1,22 @@
 #ifndef OBJ_MICDROP_H
 #define OBJ_MICDROP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MicDrop : Object {
+class ObjectMicDrop : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMicDrop : Entity {
+class EntityMicDrop : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMicDrop MicDrop;
 
 //Entity Functions
 void MicDrop_Update();

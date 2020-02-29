@@ -1,15 +1,22 @@
 #ifndef OBJ_SPIKEFLAIL_H
 #define OBJ_SPIKEFLAIL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpikeFlail : Object {
+class ObjectSpikeFlail : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpikeFlail : Entity {
+class EntitySpikeFlail : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpikeFlail SpikeFlail;
 
 //Entity Functions
 void SpikeFlail_Update();

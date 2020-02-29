@@ -1,15 +1,22 @@
 #ifndef OBJ_RHINOBOT_H
 #define OBJ_RHINOBOT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Rhinobot : Object {
+class ObjectRhinobot : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRhinobot : Entity {
+class EntityRhinobot : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRhinobot Rhinobot;
 
 //Entity Functions
 void Rhinobot_Update();

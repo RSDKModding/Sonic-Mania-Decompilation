@@ -1,15 +1,22 @@
 #ifndef OBJ_UIVSRESULTS_H
 #define OBJ_UIVSRESULTS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIVsResults : Object {
+class ObjectUIVsResults : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIVsResults : Entity {
+class EntityUIVsResults : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIVsResults UIVsResults;
 
 //Entity Functions
 void UIVsResults_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_FLINGRAMP_H
 #define OBJ_FLINGRAMP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FlingRamp : Object {
+class ObjectFlingRamp : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFlingRamp : Entity {
+class EntityFlingRamp : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFlingRamp FlingRamp;
 
 //Entity Functions
 void FlingRamp_Update();

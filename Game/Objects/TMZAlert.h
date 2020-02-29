@@ -1,15 +1,22 @@
 #ifndef OBJ_TMZALERT_H
 #define OBJ_TMZALERT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TMZAlert : Object {
+class ObjectTMZAlert : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTMZAlert : Entity {
+class EntityTMZAlert : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTMZAlert TMZAlert;
 
 //Entity Functions
 void TMZAlert_Update();

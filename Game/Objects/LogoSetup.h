@@ -1,15 +1,22 @@
 #ifndef OBJ_LOGOSETUP_H
 #define OBJ_LOGOSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LogoSetup : Object {
+class ObjectLogoSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLogoSetup : Entity {
+class EntityLogoSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLogoSetup LogoSetup;
 
 //Entity Functions
 void LogoSetup_Update();

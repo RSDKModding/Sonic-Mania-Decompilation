@@ -1,15 +1,22 @@
 #ifndef OBJ_TWISTINGDOOR_H
 #define OBJ_TWISTINGDOOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TwistingDoor : Object {
+class ObjectTwistingDoor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTwistingDoor : Entity {
+class EntityTwistingDoor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTwistingDoor TwistingDoor;
 
 //Entity Functions
 void TwistingDoor_Update();

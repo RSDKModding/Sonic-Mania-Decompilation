@@ -1,15 +1,22 @@
 #ifndef OBJ_SELTZERBOTTLE_H
 #define OBJ_SELTZERBOTTLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SeltzerBottle : Object {
+class ObjectSeltzerBottle : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySeltzerBottle : Entity {
+class EntitySeltzerBottle : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSeltzerBottle SeltzerBottle;
 
 //Entity Functions
 void SeltzerBottle_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_RISINGLAVA_H
 #define OBJ_RISINGLAVA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RisingLava : Object {
+class ObjectRisingLava : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRisingLava : Entity {
+class EntityRisingLava : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRisingLava RisingLava;
 
 //Entity Functions
 void RisingLava_Update();

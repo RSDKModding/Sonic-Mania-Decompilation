@@ -1,15 +1,22 @@
 #ifndef OBJ_CONTINUEPLAYER_H
 #define OBJ_CONTINUEPLAYER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ContinuePlayer : Object {
+class ObjectContinuePlayer : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityContinuePlayer : Entity {
+class EntityContinuePlayer : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectContinuePlayer ContinuePlayer;
 
 //Entity Functions
 void ContinuePlayer_Update();

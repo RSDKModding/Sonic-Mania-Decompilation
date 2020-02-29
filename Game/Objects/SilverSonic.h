@@ -1,15 +1,22 @@
 #ifndef OBJ_SILVERSONIC_H
 #define OBJ_SILVERSONIC_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SilverSonic : Object {
+class ObjectSilverSonic : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySilverSonic : Entity {
+class EntitySilverSonic : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSilverSonic SilverSonic;
 
 //Entity Functions
 void SilverSonic_Update();

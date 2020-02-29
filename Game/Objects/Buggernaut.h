@@ -1,15 +1,22 @@
 #ifndef OBJ_BUGGERNAUT_H
 #define OBJ_BUGGERNAUT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Buggernaut : Object {
+class ObjectBuggernaut : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBuggernaut : Entity {
+class EntityBuggernaut : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBuggernaut Buggernaut;
 
 //Entity Functions
 void Buggernaut_Update();

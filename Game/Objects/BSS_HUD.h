@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_HUD_H
 #define OBJ_BSS_HUD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_HUD : Object {
+class ObjectBSS_HUD : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_HUD : Entity {
+class EntityBSS_HUD : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_HUD BSS_HUD;
 
 //Entity Functions
 void BSS_HUD_Update();

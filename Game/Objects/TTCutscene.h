@@ -1,15 +1,22 @@
 #ifndef OBJ_TTCUTSCENE_H
 #define OBJ_TTCUTSCENE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TTCutscene : Object {
+class ObjectTTCutscene : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTTCutscene : Entity {
+class EntityTTCutscene : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTTCutscene TTCutscene;
 
 //Entity Functions
 void TTCutscene_Update();

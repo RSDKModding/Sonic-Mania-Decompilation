@@ -1,15 +1,22 @@
 #ifndef OBJ_BLADEPOLE_H
 #define OBJ_BLADEPOLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BladePole : Object {
+class ObjectBladePole : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBladePole : Entity {
+class EntityBladePole : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBladePole BladePole;
 
 //Entity Functions
 void BladePole_Update();

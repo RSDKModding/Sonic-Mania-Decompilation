@@ -1,15 +1,22 @@
 #ifndef OBJ_FXWAVERING_H
 #define OBJ_FXWAVERING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FXWaveRing : Object {
+class ObjectFXWaveRing : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFXWaveRing : Entity {
+class EntityFXWaveRing : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFXWaveRing FXWaveRing;
 
 //Entity Functions
 void FXWaveRing_Update();

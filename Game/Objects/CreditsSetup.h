@@ -1,15 +1,22 @@
 #ifndef OBJ_CREDITSSETUP_H
 #define OBJ_CREDITSSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CreditsSetup : Object {
+class ObjectCreditsSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCreditsSetup : Entity {
+class EntityCreditsSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCreditsSetup CreditsSetup;
 
 //Entity Functions
 void CreditsSetup_Update();

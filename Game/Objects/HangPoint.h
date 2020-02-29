@@ -1,15 +1,22 @@
 #ifndef OBJ_HANGPOINT_H
 #define OBJ_HANGPOINT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HangPoint : Object {
+class ObjectHangPoint : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHangPoint : Entity {
+class EntityHangPoint : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHangPoint HangPoint;
 
 //Entity Functions
 void HangPoint_Update();

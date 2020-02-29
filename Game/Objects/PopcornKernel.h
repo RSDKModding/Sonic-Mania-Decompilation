@@ -1,15 +1,22 @@
 #ifndef OBJ_POPCORNKERNEL_H
 #define OBJ_POPCORNKERNEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PopcornKernel : Object {
+class ObjectPopcornKernel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPopcornKernel : Entity {
+class EntityPopcornKernel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPopcornKernel PopcornKernel;
 
 //Entity Functions
 void PopcornKernel_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_DEBRIS_H
 #define OBJ_DEBRIS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Debris : Object {
+class ObjectDebris : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDebris : Entity {
+class EntityDebris : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDebris Debris;
 
 //Entity Functions
 void Debris_Update();

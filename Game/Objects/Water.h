@@ -1,15 +1,22 @@
 #ifndef OBJ_WATER_H
 #define OBJ_WATER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Water : Object {
+class ObjectWater : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWater : Entity {
+class EntityWater : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWater Water;
 
 //Entity Functions
 void Water_Update();

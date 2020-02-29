@@ -1,15 +1,22 @@
 #ifndef OBJ_TITLESONIC_H
 #define OBJ_TITLESONIC_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TitleSonic : Object {
+class ObjectTitleSonic : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTitleSonic : Entity {
+class EntityTitleSonic : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTitleSonic TitleSonic;
 
 //Entity Functions
 void TitleSonic_Update();

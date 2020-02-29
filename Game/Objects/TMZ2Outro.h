@@ -1,15 +1,22 @@
 #ifndef OBJ_TMZ2OUTRO_H
 #define OBJ_TMZ2OUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TMZ2Outro : Object {
+class ObjectTMZ2Outro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTMZ2Outro : Entity {
+class EntityTMZ2Outro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTMZ2Outro TMZ2Outro;
 
 //Entity Functions
 void TMZ2Outro_Update();

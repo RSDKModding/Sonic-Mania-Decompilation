@@ -1,15 +1,22 @@
 #ifndef OBJ_WATERGUSH_H
 #define OBJ_WATERGUSH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WaterGush : Object {
+class ObjectWaterGush : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWaterGush : Entity {
+class EntityWaterGush : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWaterGush WaterGush;
 
 //Entity Functions
 void WaterGush_Update();

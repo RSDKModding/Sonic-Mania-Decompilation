@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZFIREBALL_H
 #define OBJ_LRZFIREBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZFireball : Object {
+class ObjectLRZFireball : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZFireball : Entity {
+class EntityLRZFireball : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZFireball LRZFireball;
 
 //Entity Functions
 void LRZFireball_Update();

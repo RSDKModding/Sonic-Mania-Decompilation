@@ -1,15 +1,22 @@
 #ifndef OBJ_MSPANEL_H
 #define OBJ_MSPANEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSPanel : Object {
+class ObjectMSPanel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSPanel : Entity {
+class EntityMSPanel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSPanel MSPanel;
 
 //Entity Functions
 void MSPanel_Update();

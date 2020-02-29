@@ -1,15 +1,22 @@
 #ifndef OBJ_SPEAR_H
 #define OBJ_SPEAR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Spear : Object {
+class ObjectSpear : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpear : Entity {
+class EntitySpear : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpear Spear;
 
 //Entity Functions
 void Spear_Update();

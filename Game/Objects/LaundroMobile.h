@@ -1,15 +1,22 @@
 #ifndef OBJ_LAUNDROMOBILE_H
 #define OBJ_LAUNDROMOBILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LaundroMobile : Object {
+class ObjectLaundroMobile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLaundroMobile : Entity {
+class EntityLaundroMobile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLaundroMobile LaundroMobile;
 
 //Entity Functions
 void LaundroMobile_Update();

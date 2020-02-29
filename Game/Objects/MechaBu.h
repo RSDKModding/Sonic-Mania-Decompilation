@@ -1,15 +1,22 @@
 #ifndef OBJ_MECHABU_H
 #define OBJ_MECHABU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MechaBu : Object {
+class ObjectMechaBu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMechaBu : Entity {
+class EntityMechaBu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMechaBu MechaBu;
 
 //Entity Functions
 void MechaBu_Update();

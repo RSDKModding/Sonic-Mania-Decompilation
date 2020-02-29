@@ -1,15 +1,22 @@
 #ifndef OBJ_CANISTA_H
 #define OBJ_CANISTA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Canista : Object {
+class ObjectCanista : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCanista : Entity {
+class EntityCanista : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCanista Canista;
 
 //Entity Functions
 void Canista_Update();

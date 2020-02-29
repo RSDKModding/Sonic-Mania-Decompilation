@@ -1,15 +1,22 @@
 #ifndef OBJ_BUZZSAW_H
 #define OBJ_BUZZSAW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BuzzSaw : Object {
+class ObjectBuzzSaw : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBuzzSaw : Entity {
+class EntityBuzzSaw : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBuzzSaw BuzzSaw;
 
 //Entity Functions
 void BuzzSaw_Update();

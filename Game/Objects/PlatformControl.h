@@ -1,15 +1,22 @@
 #ifndef OBJ_PLATFORMCONTROL_H
 #define OBJ_PLATFORMCONTROL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PlatformControl : Object {
+class ObjectPlatformControl : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPlatformControl : Entity {
+class EntityPlatformControl : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPlatformControl PlatformControl;
 
 //Entity Functions
 void PlatformControl_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_LAUNCHSPRING_H
 #define OBJ_LAUNCHSPRING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LaunchSpring : Object {
+class ObjectLaunchSpring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLaunchSpring : Entity {
+class EntityLaunchSpring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLaunchSpring LaunchSpring;
 
 //Entity Functions
 void LaunchSpring_Update();

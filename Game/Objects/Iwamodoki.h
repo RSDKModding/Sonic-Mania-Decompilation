@@ -1,15 +1,22 @@
 #ifndef OBJ_IWAMODOKI_H
 #define OBJ_IWAMODOKI_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Iwamodoki : Object {
+class ObjectIwamodoki : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityIwamodoki : Entity {
+class EntityIwamodoki : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectIwamodoki Iwamodoki;
 
 //Entity Functions
 void Iwamodoki_Update();

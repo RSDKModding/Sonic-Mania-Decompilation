@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_RING_H
 #define OBJ_UFO_RING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Ring : Object {
+class ObjectUFO_Ring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Ring : Entity {
+class EntityUFO_Ring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Ring UFO_Ring;
 
 //Entity Functions
 void UFO_Ring_Update();

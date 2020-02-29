@@ -1,15 +1,22 @@
 #ifndef OBJ_CHOPPER_H
 #define OBJ_CHOPPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Chopper : Object {
+class ObjectChopper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityChopper : Entity {
+class EntityChopper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectChopper Chopper;
 
 //Entity Functions
 void Chopper_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TMZCABLE_H
 #define OBJ_TMZCABLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TMZCable : Object {
+class ObjectTMZCable : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTMZCable : Entity {
+class EntityTMZCable : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTMZCable TMZCable;
 
 //Entity Functions
 void TMZCable_Update();

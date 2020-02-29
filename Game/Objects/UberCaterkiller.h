@@ -1,15 +1,22 @@
 #ifndef OBJ_UBERCATERKILLER_H
 #define OBJ_UBERCATERKILLER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UberCaterkiller : Object {
+class ObjectUberCaterkiller : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUberCaterkiller : Entity {
+class EntityUberCaterkiller : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUberCaterkiller UberCaterkiller;
 
 //Entity Functions
 void UberCaterkiller_Update();

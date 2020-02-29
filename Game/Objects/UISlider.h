@@ -1,15 +1,22 @@
 #ifndef OBJ_UISLIDER_H
 #define OBJ_UISLIDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UISlider : Object {
+class ObjectUISlider : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUISlider : Entity {
+class EntityUISlider : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUISlider UISlider;
 
 //Entity Functions
 void UISlider_Update();

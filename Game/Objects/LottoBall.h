@@ -1,15 +1,22 @@
 #ifndef OBJ_LOTTOBALL_H
 #define OBJ_LOTTOBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LottoBall : Object {
+class ObjectLottoBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLottoBall : Entity {
+class EntityLottoBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLottoBall LottoBall;
 
 //Entity Functions
 void LottoBall_Update();

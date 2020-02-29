@@ -1,15 +1,22 @@
 #ifndef OBJ_THANKSSETUP_H
 #define OBJ_THANKSSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ThanksSetup : Object {
+class ObjectThanksSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityThanksSetup : Entity {
+class EntityThanksSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectThanksSetup ThanksSetup;
 
 //Entity Functions
 void ThanksSetup_Update();

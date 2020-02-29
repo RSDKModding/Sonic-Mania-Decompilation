@@ -1,15 +1,22 @@
 #ifndef OBJ_HCZ1INTRO_H
 #define OBJ_HCZ1INTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HCZ1Intro : Object {
+class ObjectHCZ1Intro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHCZ1Intro : Entity {
+class EntityHCZ1Intro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHCZ1Intro HCZ1Intro;
 
 //Entity Functions
 void HCZ1Intro_Update();

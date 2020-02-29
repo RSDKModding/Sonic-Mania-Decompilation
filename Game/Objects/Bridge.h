@@ -1,15 +1,22 @@
 #ifndef OBJ_BRIDGE_H
 #define OBJ_BRIDGE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Bridge : Object {
+class ObjectBridge : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBridge : Entity {
+class EntityBridge : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBridge Bridge;
 
 //Entity Functions
 void Bridge_Update();

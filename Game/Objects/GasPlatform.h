@@ -1,15 +1,22 @@
 #ifndef OBJ_GASPLATFORM_H
 #define OBJ_GASPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GasPlatform : Object {
+class ObjectGasPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGasPlatform : Entity {
+class EntityGasPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGasPlatform GasPlatform;
 
 //Entity Functions
 void GasPlatform_Update();

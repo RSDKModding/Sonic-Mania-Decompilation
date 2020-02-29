@@ -1,15 +1,22 @@
 #ifndef OBJ_YOYOPULLEY_H
 #define OBJ_YOYOPULLEY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class YoyoPulley : Object {
+class ObjectYoyoPulley : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityYoyoPulley : Entity {
+class EntityYoyoPulley : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectYoyoPulley YoyoPulley;
 
 //Entity Functions
 void YoyoPulley_Update();

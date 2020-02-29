@@ -1,15 +1,22 @@
 #ifndef OBJ_FORCEUNSTICK_H
 #define OBJ_FORCEUNSTICK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ForceUnstick : Object {
+class ObjectForceUnstick : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityForceUnstick : Entity {
+class EntityForceUnstick : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectForceUnstick ForceUnstick;
 
 //Entity Functions
 void ForceUnstick_Update();

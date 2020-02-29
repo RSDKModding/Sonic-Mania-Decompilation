@@ -1,15 +1,22 @@
 #ifndef OBJ_SPIKECRUSHER_H
 #define OBJ_SPIKECRUSHER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpikeCrusher : Object {
+class ObjectSpikeCrusher : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpikeCrusher : Entity {
+class EntitySpikeCrusher : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpikeCrusher SpikeCrusher;
 
 //Entity Functions
 void SpikeCrusher_Update();

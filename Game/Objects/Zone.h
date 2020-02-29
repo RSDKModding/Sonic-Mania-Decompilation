@@ -1,15 +1,22 @@
 #ifndef OBJ_ZONE_H
 #define OBJ_ZONE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Zone : Object {
+class ObjectZone : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityZone : Entity {
+class EntityZone : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectZone Zone;
 
 //Entity Functions
 void Zone_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_MEGACHOPPER_H
 #define OBJ_MEGACHOPPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MegaChopper : Object {
+class ObjectMegaChopper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMegaChopper : Entity {
+class EntityMegaChopper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMegaChopper MegaChopper;
 
 //Entity Functions
 void MegaChopper_Update();

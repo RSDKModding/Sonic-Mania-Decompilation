@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_PLAYER_H
 #define OBJ_UFO_PLAYER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Player : Object {
+class ObjectUFO_Player : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Player : Entity {
+class EntityUFO_Player : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Player UFO_Player;
 
 //Entity Functions
 void UFO_Player_Update();

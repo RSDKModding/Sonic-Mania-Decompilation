@@ -1,15 +1,22 @@
 #ifndef OBJ_UIUSERNAMEPOPUP_H
 #define OBJ_UIUSERNAMEPOPUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIUsernamePopup : Object {
+class ObjectUIUsernamePopup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIUsernamePopup : Entity {
+class EntityUIUsernamePopup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIUsernamePopup UIUsernamePopup;
 
 //Entity Functions
 void UIUsernamePopup_Update();

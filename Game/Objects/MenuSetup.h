@@ -1,15 +1,22 @@
 #ifndef OBJ_MENUSETUP_H
 #define OBJ_MENUSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MenuSetup : Object {
+class ObjectMenuSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMenuSetup : Entity {
+class EntityMenuSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMenuSetup MenuSetup;
 
 //Entity Functions
 void MenuSetup_Update();

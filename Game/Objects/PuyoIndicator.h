@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOINDICATOR_H
 #define OBJ_PUYOINDICATOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoIndicator : Object {
+class ObjectPuyoIndicator : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoIndicator : Entity {
+class EntityPuyoIndicator : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoIndicator PuyoIndicator;
 
 //Entity Functions
 void PuyoIndicator_Update();

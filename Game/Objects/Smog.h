@@ -1,15 +1,22 @@
 #ifndef OBJ_SMOG_H
 #define OBJ_SMOG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Smog : Object {
+class ObjectSmog : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySmog : Entity {
+class EntitySmog : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSmog Smog;
 
 //Entity Functions
 void Smog_Update();

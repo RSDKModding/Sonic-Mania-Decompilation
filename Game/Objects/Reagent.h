@@ -1,15 +1,22 @@
 #ifndef OBJ_REAGENT_H
 #define OBJ_REAGENT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Reagent : Object {
+class ObjectReagent : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityReagent : Entity {
+class EntityReagent : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectReagent Reagent;
 
 //Entity Functions
 void Reagent_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_UIBUTTONLABEL_H
 #define OBJ_UIBUTTONLABEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIButtonLabel : Object {
+class ObjectUIButtonLabel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIButtonLabel : Entity {
+class EntityUIButtonLabel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIButtonLabel UIButtonLabel;
 
 //Entity Functions
 void UIButtonLabel_Update();

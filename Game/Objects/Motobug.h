@@ -1,15 +1,22 @@
 #ifndef OBJ_MOTOBUG_H
 #define OBJ_MOTOBUG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Motobug : Object {
+class ObjectMotobug : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMotobug : Entity {
+class EntityMotobug : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMotobug Motobug;
 
 //Entity Functions
 void Motobug_Update();

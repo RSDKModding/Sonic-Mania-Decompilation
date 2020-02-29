@@ -1,15 +1,22 @@
 #ifndef OBJ_CYLINDER_H
 #define OBJ_CYLINDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Cylinder : Object {
+class ObjectCylinder : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCylinder : Entity {
+class EntityCylinder : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCylinder Cylinder;
 
 //Entity Functions
 void Cylinder_Update();

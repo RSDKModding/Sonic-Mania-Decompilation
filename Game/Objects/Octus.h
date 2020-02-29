@@ -1,15 +1,22 @@
 #ifndef OBJ_OCTUS_H
 #define OBJ_OCTUS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Octus : Object {
+class ObjectOctus : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOctus : Entity {
+class EntityOctus : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOctus Octus;
 
 //Entity Functions
 void Octus_Update();

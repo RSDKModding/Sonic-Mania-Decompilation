@@ -1,15 +1,22 @@
 #ifndef OBJ_TITLELOGO_H
 #define OBJ_TITLELOGO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TitleLogo : Object {
+class ObjectTitleLogo : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTitleLogo : Entity {
+class EntityTitleLogo : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTitleLogo TitleLogo;
 
 //Entity Functions
 void TitleLogo_Update();

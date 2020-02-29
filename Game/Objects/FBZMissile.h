@@ -1,15 +1,22 @@
 #ifndef OBJ_FBZMISSILE_H
 #define OBJ_FBZMISSILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FBZMissile : Object {
+class ObjectFBZMissile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFBZMissile : Entity {
+class EntityFBZMissile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFBZMissile FBZMissile;
 
 //Entity Functions
 void FBZMissile_Update();

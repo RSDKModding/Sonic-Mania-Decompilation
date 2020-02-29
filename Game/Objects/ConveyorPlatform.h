@@ -1,15 +1,22 @@
 #ifndef OBJ_CONVEYORPLATFORM_H
 #define OBJ_CONVEYORPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ConveyorPlatform : Object {
+class ObjectConveyorPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityConveyorPlatform : Entity {
+class EntityConveyorPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectConveyorPlatform ConveyorPlatform;
 
 //Entity Functions
 void ConveyorPlatform_Update();

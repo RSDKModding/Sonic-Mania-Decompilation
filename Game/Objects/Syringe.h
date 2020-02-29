@@ -1,15 +1,22 @@
 #ifndef OBJ_SYRINGE_H
 #define OBJ_SYRINGE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Syringe : Object {
+class ObjectSyringe : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySyringe : Entity {
+class EntitySyringe : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSyringe Syringe;
 
 //Entity Functions
 void Syringe_Update();

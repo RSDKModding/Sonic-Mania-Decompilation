@@ -1,15 +1,22 @@
 #ifndef OBJ_SDASHWHEEL_H
 #define OBJ_SDASHWHEEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SDashWheel : Object {
+class ObjectSDashWheel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySDashWheel : Entity {
+class EntitySDashWheel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSDashWheel SDashWheel;
 
 //Entity Functions
 void SDashWheel_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_GRABBER_H
 #define OBJ_GRABBER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Grabber : Object {
+class ObjectGrabber : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGrabber : Entity {
+class EntityGrabber : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGrabber Grabber;
 
 //Entity Functions
 void Grabber_Update();

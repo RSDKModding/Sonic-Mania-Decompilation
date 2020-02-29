@@ -1,15 +1,22 @@
 #ifndef OBJ_MEGAOCTUS_H
 #define OBJ_MEGAOCTUS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MegaOctus : Object {
+class ObjectMegaOctus : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMegaOctus : Entity {
+class EntityMegaOctus : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMegaOctus MegaOctus;
 
 //Entity Functions
 void MegaOctus_Update();

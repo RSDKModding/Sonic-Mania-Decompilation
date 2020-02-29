@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_PLAYER_H
 #define OBJ_BSS_PLAYER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_Player : Object {
+class ObjectBSS_Player : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_Player : Entity {
+class EntityBSS_Player : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_Player BSS_Player;
 
 //Entity Functions
 void BSS_Player_Update();

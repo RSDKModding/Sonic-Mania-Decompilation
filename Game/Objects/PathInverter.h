@@ -1,15 +1,22 @@
 #ifndef OBJ_PATHINVERTER_H
 #define OBJ_PATHINVERTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PathInverter : Object {
+class ObjectPathInverter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPathInverter : Entity {
+class EntityPathInverter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPathInverter PathInverter;
 
 //Entity Functions
 void PathInverter_Update();

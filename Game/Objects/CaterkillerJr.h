@@ -1,15 +1,22 @@
 #ifndef OBJ_CATERKILLERJR_H
 #define OBJ_CATERKILLERJR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CaterkillerJr : Object {
+class ObjectCaterkillerJr : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCaterkillerJr : Entity {
+class EntityCaterkillerJr : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCaterkillerJr CaterkillerJr;
 
 //Entity Functions
 void CaterkillerJr_Update();

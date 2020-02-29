@@ -1,15 +1,22 @@
 #ifndef OBJ_BATBRAIN_H
 #define OBJ_BATBRAIN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Batbrain : Object {
+class ObjectBatbrain : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBatbrain : Entity {
+class EntityBatbrain : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBatbrain Batbrain;
 
 //Entity Functions
 void Batbrain_Update();

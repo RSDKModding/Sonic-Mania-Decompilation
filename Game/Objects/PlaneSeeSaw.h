@@ -1,15 +1,22 @@
 #ifndef OBJ_PLANESEESAW_H
 #define OBJ_PLANESEESAW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PlaneSeeSaw : Object {
+class ObjectPlaneSeeSaw : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPlaneSeeSaw : Entity {
+class EntityPlaneSeeSaw : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPlaneSeeSaw PlaneSeeSaw;
 
 //Entity Functions
 void PlaneSeeSaw_Update();

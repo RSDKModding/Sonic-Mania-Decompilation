@@ -1,15 +1,22 @@
 #ifndef OBJ_SWITCHDOOR_H
 #define OBJ_SWITCHDOOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SwitchDoor : Object {
+class ObjectSwitchDoor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySwitchDoor : Entity {
+class EntitySwitchDoor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSwitchDoor SwitchDoor;
 
 //Entity Functions
 void SwitchDoor_Update();

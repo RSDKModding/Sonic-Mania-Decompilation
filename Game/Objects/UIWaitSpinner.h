@@ -1,15 +1,22 @@
 #ifndef OBJ_UIWAITSPINNER_H
 #define OBJ_UIWAITSPINNER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIWaitSpinner : Object {
+class ObjectUIWaitSpinner : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIWaitSpinner : Entity {
+class EntityUIWaitSpinner : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIWaitSpinner UIWaitSpinner;
 
 //Entity Functions
 void UIWaitSpinner_Update();

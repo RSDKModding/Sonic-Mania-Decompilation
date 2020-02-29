@@ -1,15 +1,22 @@
 #ifndef OBJ_TVPOLE_H
 #define OBJ_TVPOLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TVPole : Object {
+class ObjectTVPole : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTVPole : Entity {
+class EntityTVPole : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTVPole TVPole;
 
 //Entity Functions
 void TVPole_Update();

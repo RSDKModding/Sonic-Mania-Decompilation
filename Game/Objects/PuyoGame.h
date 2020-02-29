@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOGAME_H
 #define OBJ_PUYOGAME_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoGame : Object {
+class ObjectPuyoGame : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoGame : Entity {
+class EntityPuyoGame : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoGame PuyoGame;
 
 //Entity Functions
 void PuyoGame_Update();

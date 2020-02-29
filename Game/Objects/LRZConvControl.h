@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZCONVCONTROL_H
 #define OBJ_LRZCONVCONTROL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZConvControl : Object {
+class ObjectLRZConvControl : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZConvControl : Entity {
+class EntityLRZConvControl : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZConvControl LRZConvControl;
 
 //Entity Functions
 void LRZConvControl_Update();

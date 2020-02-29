@@ -1,15 +1,22 @@
 #ifndef OBJ_FXEXPANDRING_H
 #define OBJ_FXEXPANDRING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FXExpandRing : Object {
+class ObjectFXExpandRing : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFXExpandRing : Entity {
+class EntityFXExpandRing : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFXExpandRing FXExpandRing;
 
 //Entity Functions
 void FXExpandRing_Update();

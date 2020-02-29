@@ -1,15 +1,22 @@
 #ifndef OBJ_NEWSPAPER_H
 #define OBJ_NEWSPAPER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Newspaper : Object {
+class ObjectNewspaper : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityNewspaper : Entity {
+class EntityNewspaper : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectNewspaper Newspaper;
 
 //Entity Functions
 void Newspaper_Update();

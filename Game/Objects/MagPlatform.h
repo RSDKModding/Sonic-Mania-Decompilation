@@ -1,15 +1,22 @@
 #ifndef OBJ_MAGPLATFORM_H
 #define OBJ_MAGPLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MagPlatform : Object {
+class ObjectMagPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMagPlatform : Entity {
+class EntityMagPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMagPlatform MagPlatform;
 
 //Entity Functions
 void MagPlatform_Update();

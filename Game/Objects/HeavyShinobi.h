@@ -1,15 +1,22 @@
 #ifndef OBJ_HEAVYSHINOBI_H
 #define OBJ_HEAVYSHINOBI_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HeavyShinobi : Object {
+class ObjectHeavyShinobi : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHeavyShinobi : Entity {
+class EntityHeavyShinobi : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHeavyShinobi HeavyShinobi;
 
 //Entity Functions
 void HeavyShinobi_Update();

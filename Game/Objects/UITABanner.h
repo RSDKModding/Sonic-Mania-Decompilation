@@ -1,15 +1,22 @@
 #ifndef OBJ_UITABANNER_H
 #define OBJ_UITABANNER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UITABanner : Object {
+class ObjectUITABanner : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUITABanner : Entity {
+class EntityUITABanner : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUITABanner UITABanner;
 
 //Entity Functions
 void UITABanner_Update();

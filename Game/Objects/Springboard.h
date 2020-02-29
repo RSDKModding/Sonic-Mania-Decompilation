@@ -1,15 +1,22 @@
 #ifndef OBJ_SPRINGBOARD_H
 #define OBJ_SPRINGBOARD_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Springboard : Object {
+class ObjectSpringboard : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpringboard : Entity {
+class EntitySpringboard : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpringboard Springboard;
 
 //Entity Functions
 void Springboard_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PSZEGGMAN_H
 #define OBJ_PSZEGGMAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PSZEggman : Object {
+class ObjectPSZEggman : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPSZEggman : Entity {
+class EntityPSZEggman : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPSZEggman PSZEggman;
 
 //Entity Functions
 void PSZEggman_Update();

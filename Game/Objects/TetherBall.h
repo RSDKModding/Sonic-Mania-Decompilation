@@ -1,15 +1,22 @@
 #ifndef OBJ_TETHERBALL_H
 #define OBJ_TETHERBALL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TetherBall : Object {
+class ObjectTetherBall : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTetherBall : Entity {
+class EntityTetherBall : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTetherBall TetherBall;
 
 //Entity Functions
 void TetherBall_Update();

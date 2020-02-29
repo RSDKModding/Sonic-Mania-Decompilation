@@ -1,15 +1,22 @@
 #ifndef OBJ_LOCALIZATION_H
 #define OBJ_LOCALIZATION_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Localization : Object {
+class ObjectLocalization : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLocalization : Entity {
+class EntityLocalization : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLocalization Localization;
 
 //Entity Functions
 void Localization_Update();

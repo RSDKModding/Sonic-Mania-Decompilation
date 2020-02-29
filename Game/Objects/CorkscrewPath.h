@@ -1,15 +1,22 @@
 #ifndef OBJ_CORKSCREWPATH_H
 #define OBJ_CORKSCREWPATH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CorkscrewPath : Object {
+class ObjectCorkscrewPath : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCorkscrewPath : Entity {
+class EntityCorkscrewPath : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCorkscrewPath CorkscrewPath;
 
 //Entity Functions
 void CorkscrewPath_Update();

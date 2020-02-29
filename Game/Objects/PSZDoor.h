@@ -1,15 +1,22 @@
 #ifndef OBJ_PSZDOOR_H
 #define OBJ_PSZDOOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PSZDoor : Object {
+class ObjectPSZDoor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPSZDoor : Entity {
+class EntityPSZDoor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPSZDoor PSZDoor;
 
 //Entity Functions
 void PSZDoor_Update();

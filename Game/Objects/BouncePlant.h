@@ -1,15 +1,22 @@
 #ifndef OBJ_BOUNCEPLANT_H
 #define OBJ_BOUNCEPLANT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BouncePlant : Object {
+class ObjectBouncePlant : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBouncePlant : Entity {
+class EntityBouncePlant : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBouncePlant BouncePlant;
 
 //Entity Functions
 void BouncePlant_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_UIMODEBUTTON_H
 #define OBJ_UIMODEBUTTON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIModeButton : Object {
+class ObjectUIModeButton : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIModeButton : Entity {
+class EntityUIModeButton : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIModeButton UIModeButton;
 
 //Entity Functions
 void UIModeButton_Update();

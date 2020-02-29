@@ -1,15 +1,22 @@
 #ifndef OBJ_MANIAMODEMENU_H
 #define OBJ_MANIAMODEMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ManiaModeMenu : Object {
+class ObjectManiaModeMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityManiaModeMenu : Entity {
+class EntityManiaModeMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectManiaModeMenu ManiaModeMenu;
 
 //Entity Functions
 void ManiaModeMenu_Update();

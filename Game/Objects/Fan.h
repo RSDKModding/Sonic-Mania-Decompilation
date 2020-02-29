@@ -1,15 +1,22 @@
 #ifndef OBJ_FAN_H
 #define OBJ_FAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Fan : Object {
+class ObjectFan : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFan : Entity {
+class EntityFan : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFan Fan;
 
 //Entity Functions
 void Fan_Update();

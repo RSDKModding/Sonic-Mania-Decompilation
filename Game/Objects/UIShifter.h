@@ -1,15 +1,22 @@
 #ifndef OBJ_UISHIFTER_H
 #define OBJ_UISHIFTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIShifter : Object {
+class ObjectUIShifter : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIShifter : Entity {
+class EntityUIShifter : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIShifter UIShifter;
 
 //Entity Functions
 void UIShifter_Update();

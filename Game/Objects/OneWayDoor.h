@@ -1,15 +1,22 @@
 #ifndef OBJ_ONEWAYDOOR_H
 #define OBJ_ONEWAYDOOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class OneWayDoor : Object {
+class ObjectOneWayDoor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOneWayDoor : Entity {
+class EntityOneWayDoor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOneWayDoor OneWayDoor;
 
 //Entity Functions
 void OneWayDoor_Update();

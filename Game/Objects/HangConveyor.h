@@ -1,15 +1,22 @@
 #ifndef OBJ_HANGCONVEYOR_H
 #define OBJ_HANGCONVEYOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HangConveyor : Object {
+class ObjectHangConveyor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHangConveyor : Entity {
+class EntityHangConveyor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHangConveyor HangConveyor;
 
 //Entity Functions
 void HangConveyor_Update();

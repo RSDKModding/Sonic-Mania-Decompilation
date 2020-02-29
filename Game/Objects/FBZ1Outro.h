@@ -1,15 +1,22 @@
 #ifndef OBJ_FBZ1OUTRO_H
 #define OBJ_FBZ1OUTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FBZ1Outro : Object {
+class ObjectFBZ1Outro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFBZ1Outro : Entity {
+class EntityFBZ1Outro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFBZ1Outro FBZ1Outro;
 
 //Entity Functions
 void FBZ1Outro_Update();

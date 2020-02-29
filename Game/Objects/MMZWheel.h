@@ -1,15 +1,22 @@
 #ifndef OBJ_MMZWHEEL_H
 #define OBJ_MMZWHEEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MMZWheel : Object {
+class ObjectMMZWheel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMMZWheel : Entity {
+class EntityMMZWheel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMMZWheel MMZWheel;
 
 //Entity Functions
 void MMZWheel_Update();

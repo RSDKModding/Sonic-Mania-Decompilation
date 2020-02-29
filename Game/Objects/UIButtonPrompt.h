@@ -1,15 +1,22 @@
 #ifndef OBJ_UIBUTTONPROMPT_H
 #define OBJ_UIBUTTONPROMPT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIButtonPrompt : Object {
+class ObjectUIButtonPrompt : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIButtonPrompt : Entity {
+class EntityUIButtonPrompt : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIButtonPrompt UIButtonPrompt;
 
 //Entity Functions
 void UIButtonPrompt_Update();

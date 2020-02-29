@@ -1,15 +1,22 @@
 #ifndef OBJ_GHZCUTSCENEK_H
 #define OBJ_GHZCUTSCENEK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GHZCutsceneK : Object {
+class ObjectGHZCutsceneK : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGHZCutsceneK : Entity {
+class EntityGHZCutsceneK : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGHZCutsceneK GHZCutsceneK;
 
 //Entity Functions
 void GHZCutsceneK_Update();

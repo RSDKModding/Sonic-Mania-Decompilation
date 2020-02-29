@@ -1,15 +1,22 @@
 #ifndef OBJ_CAMERA_H
 #define OBJ_CAMERA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Camera : Object {
+class ObjectCamera : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCamera : Entity {
+class EntityCamera : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCamera Camera;
 
 //Entity Functions
 void Camera_Update();

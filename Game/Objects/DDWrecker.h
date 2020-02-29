@@ -1,15 +1,22 @@
 #ifndef OBJ_DDWRECKER_H
 #define OBJ_DDWRECKER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DDWrecker : Object {
+class ObjectDDWrecker : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDDWrecker : Entity {
+class EntityDDWrecker : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDDWrecker DDWrecker;
 
 //Entity Functions
 void DDWrecker_Update();

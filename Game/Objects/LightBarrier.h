@@ -1,15 +1,22 @@
 #ifndef OBJ_LIGHTBARRIER_H
 #define OBJ_LIGHTBARRIER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LightBarrier : Object {
+class ObjectLightBarrier : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLightBarrier : Entity {
+class EntityLightBarrier : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLightBarrier LightBarrier;
 
 //Entity Functions
 void LightBarrier_Update();

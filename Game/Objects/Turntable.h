@@ -1,15 +1,22 @@
 #ifndef OBJ_TURNTABLE_H
 #define OBJ_TURNTABLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Turntable : Object {
+class ObjectTurntable : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTurntable : Entity {
+class EntityTurntable : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTurntable Turntable;
 
 //Entity Functions
 void Turntable_Update();

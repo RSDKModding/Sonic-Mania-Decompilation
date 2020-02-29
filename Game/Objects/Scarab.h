@@ -1,15 +1,22 @@
 #ifndef OBJ_SCARAB_H
 #define OBJ_SCARAB_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Scarab : Object {
+class ObjectScarab : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityScarab : Entity {
+class EntityScarab : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectScarab Scarab;
 
 //Entity Functions
 void Scarab_Update();

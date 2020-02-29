@@ -1,15 +1,22 @@
 #ifndef OBJ_UIWIDGETS_H
 #define OBJ_UIWIDGETS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIWidgets : Object {
+class ObjectUIWidgets : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIWidgets : Entity {
+class EntityUIWidgets : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIWidgets UIWidgets;
 
 //Entity Functions
 void UIWidgets_Update();

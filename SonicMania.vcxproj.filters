@@ -1,0 +1,3308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{3c5f46c9-c2bf-4b2e-a6dd-12e23c8d7d63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{cd773a5f-e9c7-4ef1-b8dc-8419b417e532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Objects">
+      <UniqueIdentifier>{44df4ff2-216d-4cc4-8ef7-c0d392b3e128}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game\Objects\AIZEggRobo.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AIZEncoreTutorial.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AIZKingClaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AIZRockPile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AIZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AIZTornado.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AIZTornadoPath.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AmoebaDroid.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\AnimalHBH.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Announcer.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Aquis.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Armadiloid.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BallCannon.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BallHog.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BarStool.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Batbrain.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Beanstalk.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BGSwitch.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BigSqueeze.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BladePole.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Blaster.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Blastoid.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Bloominator.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BouncePlant.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BreakableWall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BreakBar.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Bridge.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Collectable.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Collected.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Horizon.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_HUD.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Message.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Palette.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Player.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BSS_Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BuckwildBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Buggernaut.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Bumpalo.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Bungee.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BurningLog.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Button.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ButtonDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BuzzBomber.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\BuzzSaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CableWarp.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Cactula.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Camera.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Canista.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CaterkillerJr.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ChaosEmerald.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CheckerBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ChemBubble.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ChemicalBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ChemicalPool.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Chopper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CircleBumper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Clapperboard.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Clucker.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CollapsingPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CollapsingSand.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CompetitionMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Constellation.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ContinuePlayer.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ContinueSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ConveyorBelt.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ConveyorPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ConveyorWheel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CorkscrewPath.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CPZ1Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CPZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CPZBoss.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CPZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CPZShutter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Crabmeat.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Crane.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CrashTest.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Crate.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CreditsSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CrimsonEye.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Current.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CutsceneHBH.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\CutsceneSeq.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Cylinder.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DAControl.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Dango.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DASetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DashLift.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DBTower.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DCEvent.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DDWrecker.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Debris.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Decoration.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DERobot.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DialogRunner.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DirectorChair.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DiveEggman.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DNARiser.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DoorTrigger.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Dragonfly.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Drillerdroid.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\DrillerdroidO.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EggLoco.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Eggman.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EggPistonsMKII.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EggTower.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EggTV.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ElectroMagnet.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EncoreGoodEnd.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EncoreIntro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZGunner.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZKing.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZMystic.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZOutro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZRider.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZShinobi.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ERZStart.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\EscapeCar.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ExtrasMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Fan.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FarPlane.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZ1Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZFan.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZMissile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZSinkTrash.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZStorm.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FBZTrash.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FernParallax.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FilmProjector.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FilmReel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Fireflies.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Firework.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Fireworm.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FlameSpring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Flamethrower.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FlasherMKII.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FlingRamp.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Flipper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FlowerPod.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FoldingPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ForceSpin.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ForceUnstick.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FrostThrower.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Funnel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FXExpandRing.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FXFade.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FXRuby.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FXSpinRay.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FXTrail.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\FXWaveRing.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Gachapandora.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GasPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GenericTrigger.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GHZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GHZCutsceneK.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GHZCutsceneST.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GHZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GiantPistol.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GigaMetal.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Gondola.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Grabber.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GreenScreen.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\GymBar.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HandLauncher.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HangConveyor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HangGlider.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HangPoint.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Hatch.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Hatterkiller.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HCZ1Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HCZOneWayDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HCZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HCZSpikeBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HeavyGunner.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HeavyKing.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HeavyMystic.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HeavyRider.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HeavyShinobi.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HiLoSign.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Honkytonk.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Hotaru.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HotaruHiWatt.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HotaruMKII.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\HPZEmerald.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Ice.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\IceBomba.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\IceSpring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Iwamodoki.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\JacobsLadder.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Jawz.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Jellygnite.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\JuggleSaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\JunctionWheel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Kabasira.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Kanabun.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\KingAttack.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\KingClaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\KleptoMobile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LargeGear.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Launcher.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LaunchSpring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LaundroMobile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LavaFall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LavaGeyser.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LEDPanel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Letterboard.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LevelSelect.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LightBarrier.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LightBulb.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Localization.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LocoSmoke.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LogoSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LottoBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LottoMachine.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LoveTester.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ1Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ1Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ1Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ2Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ3Cutscene.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ3Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ3OutroK.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZ3Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZConvControl.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZConvDropper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZConveyor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZConvItem.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZConvSwitch.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZFireball.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZRockPile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZSpikeBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\LRZSpiral.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MagnetSphere.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MagPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MagSpikeBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MainMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ManiaModeMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MatryoshkaBom.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MechaBu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MegaChopper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MegaOctus.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MenuParam.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MenuSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MetalArm.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MetalSonic.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MeterDroid.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MicDrop.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Mine.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MMZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MMZLightning.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MMZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MMZWheel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MonarchBG.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MonarchPlans.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MonkeyDude.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Motobug.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSBomb.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSFactory.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSHologram.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSOrb.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSPanel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSZ1KIntro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSZ2Cutscene.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSZCutsceneK.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSZCutsceneST.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\MSZSpotlight.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Music.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Newspaper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Newtron.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Octus.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OneWayDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OOZ1Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OOZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OOZFlames.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OOZSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OptionsMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\OrbitSpike.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PaintingEyes.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PaperRoller.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ParallaxSprite.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PathInverter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PauseMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Bumper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Camera.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Crane.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Flipper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_HUD.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Player.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Ring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Sector.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PBL_TargetBumper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PetalPile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomEgg.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomGunner.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomHand.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomKing.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomMissile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomMystic.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomRider.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomRuby.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomShield.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PhantomShinobi.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PimPom.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Pinata.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Piston.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PKingAttack.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PlaneSeeSaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Platform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PlatformControl.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PlatformNode.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Player.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PlayerProbe.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PohBee.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Pointdexter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PopcornKernel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PopcornMachine.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PopOut.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Press.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PrintBlock.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Projectile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Propeller.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PropellerShaft.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZ1Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZ1Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZ2Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZ2Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZEggman.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PSZLauncher.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PullChain.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PullSwitch.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PushSpring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoAI.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoAttack.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoBean.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoGame.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoIndicator.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoLabel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoLevelSelect.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoMatch.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\PuyoScore.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Rattlekiller.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Reagent.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ReplayDB.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ReplayRecorder.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Rexon.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Rhinobot.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RingField.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RisingLava.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RockDrill.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RockemSockem.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RollerMKII.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RotatingSpikes.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RotatingStair.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RPlaneShifter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RTeleporter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\RubyPortal.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SaveGame.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Scarab.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SchrodingersCapsule.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ScrewMobile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SDashWheel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SeeSaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SeltzerBottle.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SeltzerWater.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SentryBug.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Shiversaw.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ShopWindow.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Shuriken.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Shutterbug.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SideBarrel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SilverSonic.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SizeLaser.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SkyTeleporter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Smog.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Snowflakes.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Sol.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SP500.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SP500MkII.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SparkRail.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Spear.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpecialClear.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpeedBooster.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpiderMobile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpikeCorridor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpikeCrusher.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpikeFlail.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpikeLog.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpinBooster.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpinSign.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Spiny.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SpiralPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Splats.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Springboard.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SPZ1Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SPZ1Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SPZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SPZ2Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZ1Intro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZ1Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZ1Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZ2Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZ3Cutscene.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZEggman.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZSpikeBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SSZSpotlight.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Staircase.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Stalactite.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\StickyPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Summary.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SummaryEmerald.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Sweep.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SwingRope.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\SwitchDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Syringe.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TAEmerald.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Technosqueek.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TeeterTotter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TetherBall.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ThanksSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ThoughtBubble.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TilePlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TimeAttackMenu.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TimePost.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TimeTravelSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TippingPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Title3DSprite.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TitleBG.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TitleEggman.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TitleLogo.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TitleSetup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TitleSonic.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZ1Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZ1Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZ2Outro.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZ2Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZ3Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZAlert.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZBarrier.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZCable.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TMZFlames.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Tornado.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TornadoPath.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Toxomister.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TransportTube.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TryAgain.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TryAgainE.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TTCutscene.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TubeSpring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Tubinaut.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Tuesday.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Turbine.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TurboSpiker.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TurboTurtle.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Turntable.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TurretSwitch.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TVFlyingBattery.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TVPole.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TVVan.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TwistedTubes.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TwistingDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\TwistingSlide.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UberCaterkiller.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Camera.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Circuit.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Decoration.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Dust.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_HUD.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_ItemBox.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Message.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Plasma.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Player.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Ring.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Setup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Shadow.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_SpeedLines.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Sphere.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Springboard.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UFO_Water.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIBackground.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIButton.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIButtonLabel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIButtonPrompt.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UICarousel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UICharButton.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIChoice.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIControl.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UICreditsText.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIDialog.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIDiorama.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIHeading.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIInfoLabel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIKeyBinder.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UILeaderboard.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIMedallionPanel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIModeButton.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIOptionPanel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIPicture.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIPopover.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIRankButton.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIReplayCarousel.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIResPicker.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UISaveSlot.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIShifter.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UISlider.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UISubHeading.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UITABanner.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UITAZoneModule.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIText.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UITransition.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIUsernamePopup.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIVideo.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIVsCharSelector.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIVsResults.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIVsRoundPicker.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIVsScoreboard.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIVsZoneButton.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIWaitSpinner.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIWidgets.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UIWinSize.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\UncurlPlant.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Valve.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\VanishPlatform.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Vultron.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WalkerLegs.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WallBumper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WarpDoor.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Water.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WaterfallSound.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WaterGush.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WeatherMobile.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WeatherTV.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Whirlpool.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\WoodChipper.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Woodrow.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\YoyoPulley.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\ZipLine.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Objects\Zone.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game\Objects\AIZEggRobo.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AIZEncoreTutorial.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AIZKingClaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AIZRockPile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AIZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AIZTornado.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AIZTornadoPath.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AmoebaDroid.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\AnimalHBH.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Announcer.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Aquis.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Armadiloid.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BallCannon.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BallHog.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BarStool.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Batbrain.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Beanstalk.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BGSwitch.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BigSqueeze.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BladePole.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Blaster.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Blastoid.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Bloominator.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BouncePlant.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BreakableWall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BreakBar.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Bridge.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Collectable.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Collected.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Horizon.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_HUD.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Message.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Palette.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Player.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BSS_Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BuckwildBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Buggernaut.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Bumpalo.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Bungee.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BurningLog.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Button.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ButtonDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BuzzBomber.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\BuzzSaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CableWarp.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Cactula.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Camera.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Canista.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CaterkillerJr.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ChaosEmerald.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CheckerBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ChemBubble.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ChemicalBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ChemicalPool.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Chopper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CircleBumper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Clapperboard.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Clucker.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CollapsingPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CollapsingSand.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CompetitionMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Constellation.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ContinuePlayer.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ContinueSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ConveyorBelt.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ConveyorPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ConveyorWheel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CorkscrewPath.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CPZ1Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CPZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CPZBoss.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CPZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CPZShutter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Crabmeat.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Crane.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CrashTest.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Crate.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CreditsSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CrimsonEye.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Current.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CutsceneHBH.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\CutsceneSeq.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Cylinder.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DAControl.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Dango.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DASetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DashLift.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DBTower.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DCEvent.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DDWrecker.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Debris.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Decoration.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DERobot.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DialogRunner.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DirectorChair.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DiveEggman.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DNARiser.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DoorTrigger.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Dragonfly.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Drillerdroid.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\DrillerdroidO.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EggLoco.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Eggman.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EggPistonsMKII.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EggTower.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EggTV.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ElectroMagnet.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EncoreGoodEnd.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EncoreIntro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZGunner.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZKing.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZMystic.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZOutro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZRider.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZShinobi.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ERZStart.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\EscapeCar.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ExtrasMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Fan.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FarPlane.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZ1Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZFan.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZMissile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZSinkTrash.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZStorm.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FBZTrash.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FernParallax.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FilmProjector.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FilmReel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Fireflies.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Firework.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Fireworm.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FlameSpring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Flamethrower.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FlasherMKII.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FlingRamp.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Flipper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FlowerPod.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FoldingPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ForceSpin.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ForceUnstick.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FrostThrower.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Funnel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FXExpandRing.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FXFade.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FXRuby.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FXSpinRay.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FXTrail.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\FXWaveRing.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Gachapandora.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GasPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GenericTrigger.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GHZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GHZCutsceneK.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GHZCutsceneST.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GHZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GiantPistol.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GigaMetal.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Gondola.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Grabber.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GreenScreen.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\GymBar.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HandLauncher.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HangConveyor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HangGlider.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HangPoint.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Hatch.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Hatterkiller.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HCZ1Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HCZOneWayDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HCZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HCZSpikeBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HeavyGunner.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HeavyKing.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HeavyMystic.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HeavyRider.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HeavyShinobi.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HiLoSign.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Honkytonk.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Hotaru.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HotaruHiWatt.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HotaruMKII.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\HPZEmerald.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Ice.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\IceBomba.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\IceSpring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Iwamodoki.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\JacobsLadder.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Jawz.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Jellygnite.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\JuggleSaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\JunctionWheel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Kabasira.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Kanabun.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\KingAttack.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\KingClaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\KleptoMobile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LargeGear.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Launcher.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LaunchSpring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LaundroMobile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LavaFall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LavaGeyser.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LEDPanel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Letterboard.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LevelSelect.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LightBarrier.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LightBulb.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Localization.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LocoSmoke.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LogoSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LottoBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LottoMachine.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LoveTester.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ1Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ1Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ1Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ2Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ3Cutscene.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ3Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ3OutroK.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZ3Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZConvControl.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZConvDropper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZConveyor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZConvItem.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZConvSwitch.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZFireball.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZRockPile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZSpikeBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\LRZSpiral.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MagnetSphere.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MagPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MagSpikeBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MainMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ManiaModeMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MatryoshkaBom.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MechaBu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MegaChopper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MegaOctus.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MenuParam.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MenuSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MetalArm.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MetalSonic.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MeterDroid.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MicDrop.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Mine.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MMZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MMZLightning.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MMZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MMZWheel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MonarchBG.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MonarchPlans.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MonkeyDude.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Motobug.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSBomb.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSFactory.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSHologram.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSOrb.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSPanel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSZ1KIntro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSZ2Cutscene.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSZCutsceneK.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSZCutsceneST.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\MSZSpotlight.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Music.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Newspaper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Newtron.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Octus.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OneWayDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OOZ1Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OOZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OOZFlames.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OOZSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OptionsMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\OrbitSpike.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PaintingEyes.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PaperRoller.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ParallaxSprite.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PathInverter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PauseMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Bumper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Camera.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Crane.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Flipper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_HUD.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Player.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Ring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Sector.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PBL_TargetBumper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PetalPile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomEgg.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomGunner.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomHand.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomKing.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomMissile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomMystic.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomRider.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomRuby.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomShield.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PhantomShinobi.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PimPom.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Pinata.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Piston.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PKingAttack.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PlaneSeeSaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Platform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PlatformControl.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PlatformNode.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Player.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PlayerProbe.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PohBee.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Pointdexter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PopcornKernel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PopcornMachine.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PopOut.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Press.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PrintBlock.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Projectile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Propeller.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PropellerShaft.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZ1Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZ1Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZ2Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZ2Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZEggman.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PSZLauncher.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PullChain.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PullSwitch.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PushSpring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoAI.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoAttack.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoBean.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoGame.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoIndicator.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoLabel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoLevelSelect.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoMatch.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\PuyoScore.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Rattlekiller.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Reagent.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ReplayDB.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ReplayRecorder.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Rexon.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Rhinobot.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RingField.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RisingLava.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RockDrill.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RockemSockem.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RollerMKII.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RotatingSpikes.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RotatingStair.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RPlaneShifter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RTeleporter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\RubyPortal.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SaveGame.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Scarab.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SchrodingersCapsule.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ScrewMobile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SDashWheel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SeeSaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SeltzerBottle.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SeltzerWater.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SentryBug.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Shiversaw.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ShopWindow.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Shuriken.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Shutterbug.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SideBarrel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SilverSonic.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SizeLaser.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SkyTeleporter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Smog.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Snowflakes.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Sol.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SP500.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SP500MkII.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SparkRail.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Spear.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpecialClear.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpeedBooster.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpiderMobile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpikeCorridor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpikeCrusher.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpikeFlail.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpikeLog.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpinBooster.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpinSign.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Spiny.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SpiralPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Splats.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Springboard.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SPZ1Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SPZ1Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SPZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SPZ2Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZ1Intro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZ1Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZ1Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZ2Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZ3Cutscene.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZEggman.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZSpikeBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SSZSpotlight.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Staircase.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Stalactite.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\StickyPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Summary.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SummaryEmerald.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Sweep.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SwingRope.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\SwitchDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Syringe.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TAEmerald.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Technosqueek.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TeeterTotter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TetherBall.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ThanksSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ThoughtBubble.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TilePlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TimeAttackMenu.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TimePost.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TimeTravelSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TippingPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Title3DSprite.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TitleBG.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TitleEggman.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TitleLogo.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TitleSetup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TitleSonic.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZ1Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZ1Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZ2Outro.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZ2Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZ3Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZAlert.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZBarrier.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZCable.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TMZFlames.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Tornado.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TornadoPath.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Toxomister.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TransportTube.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TryAgain.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TryAgainE.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TTCutscene.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TubeSpring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Tubinaut.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Tuesday.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Turbine.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TurboSpiker.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TurboTurtle.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Turntable.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TurretSwitch.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TVFlyingBattery.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TVPole.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TVVan.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TwistedTubes.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TwistingDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\TwistingSlide.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UberCaterkiller.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Camera.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Circuit.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Decoration.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Dust.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_HUD.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_ItemBox.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Message.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Plasma.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Player.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Ring.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Setup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Shadow.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_SpeedLines.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Sphere.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Springboard.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UFO_Water.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIBackground.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIButton.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIButtonLabel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIButtonPrompt.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UICarousel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UICharButton.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIChoice.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIControl.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UICreditsText.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIDialog.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIDiorama.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIHeading.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIInfoLabel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIKeyBinder.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UILeaderboard.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIMedallionPanel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIModeButton.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIOptionPanel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIPicture.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIPopover.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIRankButton.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIReplayCarousel.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIResPicker.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UISaveSlot.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIShifter.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UISlider.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UISubHeading.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UITABanner.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UITAZoneModule.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIText.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UITransition.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIUsernamePopup.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIVideo.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIVsCharSelector.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIVsResults.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIVsRoundPicker.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIVsScoreboard.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIVsZoneButton.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIWaitSpinner.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIWidgets.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UIWinSize.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\UncurlPlant.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Valve.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\VanishPlatform.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Vultron.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WalkerLegs.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WallBumper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WarpDoor.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Water.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WaterfallSound.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WaterGush.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WeatherMobile.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WeatherTV.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Whirlpool.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\WoodChipper.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Woodrow.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\YoyoPulley.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\ZipLine.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects\Zone.h">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Objects.h">
+      <Filter>Source Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Collision.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Drawing.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Objects.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Sprites.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SonicMania.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Options.h">
+      <Filter>Source Files\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,15 +1,22 @@
 #ifndef OBJ_LEDPANEL_H
 #define OBJ_LEDPANEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LEDPanel : Object {
+class ObjectLEDPanel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLEDPanel : Entity {
+class EntityLEDPanel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLEDPanel LEDPanel;
 
 //Entity Functions
 void LEDPanel_Update();

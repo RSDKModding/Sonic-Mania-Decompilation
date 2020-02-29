@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_DUST_H
 #define OBJ_UFO_DUST_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Dust : Object {
+class ObjectUFO_Dust : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Dust : Entity {
+class EntityUFO_Dust : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Dust UFO_Dust;
 
 //Entity Functions
 void UFO_Dust_Update();

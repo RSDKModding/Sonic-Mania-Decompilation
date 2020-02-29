@@ -1,15 +1,22 @@
 #ifndef OBJ_PAPERROLLER_H
 #define OBJ_PAPERROLLER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PaperRoller : Object {
+class ObjectPaperRoller : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPaperRoller : Entity {
+class EntityPaperRoller : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPaperRoller PaperRoller;
 
 //Entity Functions
 void PaperRoller_Update();

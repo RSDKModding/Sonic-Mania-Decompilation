@@ -1,15 +1,22 @@
 #ifndef OBJ_MSFACTORY_H
 #define OBJ_MSFACTORY_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MSFactory : Object {
+class ObjectMSFactory : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMSFactory : Entity {
+class EntityMSFactory : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMSFactory MSFactory;
 
 //Entity Functions
 void MSFactory_Update();

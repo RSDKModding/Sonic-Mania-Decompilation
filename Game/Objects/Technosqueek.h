@@ -1,15 +1,22 @@
 #ifndef OBJ_TECHNOSQUEEK_H
 #define OBJ_TECHNOSQUEEK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Technosqueek : Object {
+class ObjectTechnosqueek : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTechnosqueek : Entity {
+class EntityTechnosqueek : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTechnosqueek Technosqueek;
 
 //Entity Functions
 void Technosqueek_Update();

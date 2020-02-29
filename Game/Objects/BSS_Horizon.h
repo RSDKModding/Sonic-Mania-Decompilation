@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_HORIZON_H
 #define OBJ_BSS_HORIZON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_Horizon : Object {
+class ObjectBSS_Horizon : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_Horizon : Entity {
+class EntityBSS_Horizon : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_Horizon BSS_Horizon;
 
 //Entity Functions
 void BSS_Horizon_Update();

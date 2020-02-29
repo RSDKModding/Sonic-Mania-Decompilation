@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZROCKPILE_H
 #define OBJ_LRZROCKPILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZRockPile : Object {
+class ObjectLRZRockPile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZRockPile : Entity {
+class EntityLRZRockPile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZRockPile LRZRockPile;
 
 //Entity Functions
 void LRZRockPile_Update();

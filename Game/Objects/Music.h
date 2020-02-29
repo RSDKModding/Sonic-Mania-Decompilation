@@ -1,15 +1,22 @@
 #ifndef OBJ_MUSIC_H
 #define OBJ_MUSIC_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Music : Object {
+class ObjectMusic : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMusic : Entity {
+class EntityMusic : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMusic Music;
 
 //Entity Functions
 void Music_Update();

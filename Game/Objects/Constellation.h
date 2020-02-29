@@ -1,15 +1,22 @@
 #ifndef OBJ_CONSTELLATION_H
 #define OBJ_CONSTELLATION_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Constellation : Object {
+class ObjectConstellation : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityConstellation : Entity {
+class EntityConstellation : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectConstellation Constellation;
 
 //Entity Functions
 void Constellation_Update();

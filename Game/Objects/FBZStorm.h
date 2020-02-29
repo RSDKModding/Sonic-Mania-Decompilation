@@ -1,15 +1,22 @@
 #ifndef OBJ_FBZSTORM_H
 #define OBJ_FBZSTORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FBZStorm : Object {
+class ObjectFBZStorm : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFBZStorm : Entity {
+class EntityFBZStorm : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFBZStorm FBZStorm;
 
 //Entity Functions
 void FBZStorm_Update();

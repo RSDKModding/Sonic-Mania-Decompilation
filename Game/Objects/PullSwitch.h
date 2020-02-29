@@ -1,15 +1,22 @@
 #ifndef OBJ_PULLSWITCH_H
 #define OBJ_PULLSWITCH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PullSwitch : Object {
+class ObjectPullSwitch : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPullSwitch : Entity {
+class EntityPullSwitch : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPullSwitch PullSwitch;
 
 //Entity Functions
 void PullSwitch_Update();

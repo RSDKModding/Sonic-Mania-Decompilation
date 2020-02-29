@@ -1,15 +1,22 @@
 #ifndef OBJ_BUTTONDOOR_H
 #define OBJ_BUTTONDOOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ButtonDoor : Object {
+class ObjectButtonDoor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityButtonDoor : Entity {
+class EntityButtonDoor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectButtonDoor ButtonDoor;
 
 //Entity Functions
 void ButtonDoor_Update();

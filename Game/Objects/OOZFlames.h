@@ -1,15 +1,22 @@
 #ifndef OBJ_OOZFLAMES_H
 #define OBJ_OOZFLAMES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class OOZFlames : Object {
+class ObjectOOZFlames : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOOZFlames : Entity {
+class EntityOOZFlames : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOOZFlames OOZFlames;
 
 //Entity Functions
 void OOZFlames_Update();

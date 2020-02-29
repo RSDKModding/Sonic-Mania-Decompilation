@@ -1,15 +1,22 @@
 #ifndef OBJ_HANDLAUNCHER_H
 #define OBJ_HANDLAUNCHER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HandLauncher : Object {
+class ObjectHandLauncher : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHandLauncher : Entity {
+class EntityHandLauncher : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHandLauncher HandLauncher;
 
 //Entity Functions
 void HandLauncher_Update();

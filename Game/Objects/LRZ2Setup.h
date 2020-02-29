@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZ2SETUP_H
 #define OBJ_LRZ2SETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZ2Setup : Object {
+class ObjectLRZ2Setup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZ2Setup : Entity {
+class EntityLRZ2Setup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZ2Setup LRZ2Setup;
 
 //Entity Functions
 void LRZ2Setup_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TMZFLAMES_H
 #define OBJ_TMZFLAMES_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TMZFlames : Object {
+class ObjectTMZFlames : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTMZFlames : Entity {
+class EntityTMZFlames : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTMZFlames TMZFlames;
 
 //Entity Functions
 void TMZFlames_Update();

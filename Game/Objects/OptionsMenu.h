@@ -1,15 +1,22 @@
 #ifndef OBJ_OPTIONSMENU_H
 #define OBJ_OPTIONSMENU_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class OptionsMenu : Object {
+class ObjectOptionsMenu : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityOptionsMenu : Entity {
+class EntityOptionsMenu : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectOptionsMenu OptionsMenu;
 
 //Entity Functions
 void OptionsMenu_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_TORNADO_H
 #define OBJ_TORNADO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Tornado : Object {
+class ObjectTornado : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTornado : Entity {
+class EntityTornado : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTornado Tornado;
 
 //Entity Functions
 void Tornado_Update();

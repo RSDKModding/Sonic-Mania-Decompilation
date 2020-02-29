@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMKING_H
 #define OBJ_PHANTOMKING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomKing : Object {
+class ObjectPhantomKing : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomKing : Entity {
+class EntityPhantomKing : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomKing PhantomKing;
 
 //Entity Functions
 void PhantomKing_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_GYMBAR_H
 #define OBJ_GYMBAR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GymBar : Object {
+class ObjectGymBar : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGymBar : Entity {
+class EntityGymBar : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGymBar GymBar;
 
 //Entity Functions
 void GymBar_Update();

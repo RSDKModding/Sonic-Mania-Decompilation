@@ -1,15 +1,22 @@
 #ifndef OBJ_WEATHERTV_H
 #define OBJ_WEATHERTV_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class WeatherTV : Object {
+class ObjectWeatherTV : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityWeatherTV : Entity {
+class EntityWeatherTV : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectWeatherTV WeatherTV;
 
 //Entity Functions
 void WeatherTV_Update();

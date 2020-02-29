@@ -1,15 +1,22 @@
 #ifndef OBJ_TOXOMISTER_H
 #define OBJ_TOXOMISTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Toxomister : Object {
+class ObjectToxomister : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityToxomister : Entity {
+class EntityToxomister : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectToxomister Toxomister;
 
 //Entity Functions
 void Toxomister_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_UICAROUSEL_H
 #define OBJ_UICAROUSEL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UICarousel : Object {
+class ObjectUICarousel : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUICarousel : Entity {
+class EntityUICarousel : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUICarousel UICarousel;
 
 //Entity Functions
 void UICarousel_Update();

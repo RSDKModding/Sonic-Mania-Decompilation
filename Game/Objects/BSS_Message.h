@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_MESSAGE_H
 #define OBJ_BSS_MESSAGE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_Message : Object {
+class ObjectBSS_Message : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_Message : Entity {
+class EntityBSS_Message : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_Message BSS_Message;
 
 //Entity Functions
 void BSS_Message_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOATTACK_H
 #define OBJ_PUYOATTACK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoAttack : Object {
+class ObjectPuyoAttack : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoAttack : Entity {
+class EntityPuyoAttack : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoAttack PuyoAttack;
 
 //Entity Functions
 void PuyoAttack_Update();

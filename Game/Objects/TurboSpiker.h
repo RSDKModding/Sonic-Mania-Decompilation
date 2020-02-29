@@ -1,15 +1,22 @@
 #ifndef OBJ_TURBOSPIKER_H
 #define OBJ_TURBOSPIKER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TurboSpiker : Object {
+class ObjectTurboSpiker : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTurboSpiker : Entity {
+class EntityTurboSpiker : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTurboSpiker TurboSpiker;
 
 //Entity Functions
 void TurboSpiker_Update();

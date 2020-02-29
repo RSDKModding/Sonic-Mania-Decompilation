@@ -1,15 +1,22 @@
 #ifndef OBJ_PROJECTILE_H
 #define OBJ_PROJECTILE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Projectile : Object {
+class ObjectProjectile : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityProjectile : Entity {
+class EntityProjectile : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectProjectile Projectile;
 
 //Entity Functions
 void Projectile_Update();

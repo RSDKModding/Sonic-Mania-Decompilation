@@ -1,15 +1,22 @@
 #ifndef OBJ_FIREWORK_H
 #define OBJ_FIREWORK_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Firework : Object {
+class ObjectFirework : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFirework : Entity {
+class EntityFirework : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFirework Firework;
 
 //Entity Functions
 void Firework_Update();

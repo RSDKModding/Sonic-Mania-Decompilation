@@ -1,15 +1,22 @@
 #ifndef OBJ_UITEXT_H
 #define OBJ_UITEXT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UIText : Object {
+class ObjectUIText : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUIText : Entity {
+class EntityUIText : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUIText UIText;
 
 //Entity Functions
 void UIText_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PBL_RING_H
 #define OBJ_PBL_RING_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PBL_Ring : Object {
+class ObjectPBL_Ring : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPBL_Ring : Entity {
+class EntityPBL_Ring : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPBL_Ring PBL_Ring;
 
 //Entity Functions
 void PBL_Ring_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_ROCKEMSOCKEM_H
 #define OBJ_ROCKEMSOCKEM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class RockemSockem : Object {
+class ObjectRockemSockem : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRockemSockem : Entity {
+class EntityRockemSockem : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRockemSockem RockemSockem;
 
 //Entity Functions
 void RockemSockem_Update();

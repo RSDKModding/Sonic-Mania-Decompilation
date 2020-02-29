@@ -1,15 +1,22 @@
 #ifndef OBJ_SEESAW_H
 #define OBJ_SEESAW_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SeeSaw : Object {
+class ObjectSeeSaw : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySeeSaw : Entity {
+class EntitySeeSaw : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSeeSaw SeeSaw;
 
 //Entity Functions
 void SeeSaw_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_BALLCANNON_H
 #define OBJ_BALLCANNON_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BallCannon : Object {
+class ObjectBallCannon : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBallCannon : Entity {
+class EntityBallCannon : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBallCannon BallCannon;
 
 //Entity Functions
 void BallCannon_Update();

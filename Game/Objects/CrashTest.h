@@ -1,15 +1,22 @@
 #ifndef OBJ_CRASHTEST_H
 #define OBJ_CRASHTEST_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CrashTest : Object {
+class ObjectCrashTest : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCrashTest : Entity {
+class EntityCrashTest : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCrashTest CrashTest;
 
 //Entity Functions
 void CrashTest_Update();

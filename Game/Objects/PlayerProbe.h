@@ -1,15 +1,22 @@
 #ifndef OBJ_PLAYERPROBE_H
 #define OBJ_PLAYERPROBE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PlayerProbe : Object {
+class ObjectPlayerProbe : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPlayerProbe : Entity {
+class EntityPlayerProbe : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPlayerProbe PlayerProbe;
 
 //Entity Functions
 void PlayerProbe_Update();

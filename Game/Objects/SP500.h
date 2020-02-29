@@ -1,15 +1,22 @@
 #ifndef OBJ_SP500_H
 #define OBJ_SP500_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SP500 : Object {
+class ObjectSP500 : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySP500 : Entity {
+class EntitySP500 : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSP500 SP500;
 
 //Entity Functions
 void SP500_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_CONVEYORBELT_H
 #define OBJ_CONVEYORBELT_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ConveyorBelt : Object {
+class ObjectConveyorBelt : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityConveyorBelt : Entity {
+class EntityConveyorBelt : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectConveyorBelt ConveyorBelt;
 
 //Entity Functions
 void ConveyorBelt_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_AIZENCORETUTORIAL_H
 #define OBJ_AIZENCORETUTORIAL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class AIZEncoreTutorial : Object {
+class ObjectAIZEncoreTutorial : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAIZEncoreTutorial : Entity {
+class EntityAIZEncoreTutorial : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAIZEncoreTutorial AIZEncoreTutorial;
 
 //Entity Functions
 void AIZEncoreTutorial_Update();

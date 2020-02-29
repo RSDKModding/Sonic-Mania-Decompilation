@@ -1,15 +1,22 @@
 #ifndef OBJ_SPLATS_H
 #define OBJ_SPLATS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Splats : Object {
+class ObjectSplats : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySplats : Entity {
+class EntitySplats : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSplats Splats;
 
 //Entity Functions
 void Splats_Update();

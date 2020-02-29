@@ -1,15 +1,22 @@
 #ifndef OBJ_PLATFORM_H
 #define OBJ_PLATFORM_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Platform : Object {
+class ObjectPlatform : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPlatform : Entity {
+class EntityPlatform : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPlatform Platform;
 
 //Entity Functions
 void Platform_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_DIRECTORCHAIR_H
 #define OBJ_DIRECTORCHAIR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DirectorChair : Object {
+class ObjectDirectorChair : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDirectorChair : Entity {
+class EntityDirectorChair : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDirectorChair DirectorChair;
 
 //Entity Functions
 void DirectorChair_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_FERNPARALLAX_H
 #define OBJ_FERNPARALLAX_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FernParallax : Object {
+class ObjectFernParallax : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFernParallax : Entity {
+class EntityFernParallax : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFernParallax FernParallax;
 
 //Entity Functions
 void FernParallax_Update();

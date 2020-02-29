@@ -1,15 +1,22 @@
 #ifndef OBJ_UFO_CAMERA_H
 #define OBJ_UFO_CAMERA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class UFO_Camera : Object {
+class ObjectUFO_Camera : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityUFO_Camera : Entity {
+class EntityUFO_Camera : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectUFO_Camera UFO_Camera;
 
 //Entity Functions
 void UFO_Camera_Update();

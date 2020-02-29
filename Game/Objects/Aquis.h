@@ -1,15 +1,22 @@
 #ifndef OBJ_AQUIS_H
 #define OBJ_AQUIS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Aquis : Object {
+class ObjectAquis : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityAquis : Entity {
+class EntityAquis : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectAquis Aquis;
 
 //Entity Functions
 void Aquis_Update();

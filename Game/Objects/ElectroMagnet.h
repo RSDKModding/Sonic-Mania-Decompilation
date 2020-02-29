@@ -1,15 +1,22 @@
 #ifndef OBJ_ELECTROMAGNET_H
 #define OBJ_ELECTROMAGNET_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ElectroMagnet : Object {
+class ObjectElectroMagnet : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityElectroMagnet : Entity {
+class EntityElectroMagnet : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectElectroMagnet ElectroMagnet;
 
 //Entity Functions
 void ElectroMagnet_Update();

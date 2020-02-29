@@ -1,15 +1,22 @@
 #ifndef OBJ_HILOSIGN_H
 #define OBJ_HILOSIGN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class HiLoSign : Object {
+class ObjectHiLoSign : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHiLoSign : Entity {
+class EntityHiLoSign : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHiLoSign HiLoSign;
 
 //Entity Functions
 void HiLoSign_Update();

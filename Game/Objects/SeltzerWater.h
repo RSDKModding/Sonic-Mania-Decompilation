@@ -1,15 +1,22 @@
 #ifndef OBJ_SELTZERWATER_H
 #define OBJ_SELTZERWATER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SeltzerWater : Object {
+class ObjectSeltzerWater : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySeltzerWater : Entity {
+class EntitySeltzerWater : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSeltzerWater SeltzerWater;
 
 //Entity Functions
 void SeltzerWater_Update();

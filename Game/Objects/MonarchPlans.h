@@ -1,15 +1,22 @@
 #ifndef OBJ_MONARCHPLANS_H
 #define OBJ_MONARCHPLANS_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class MonarchPlans : Object {
+class ObjectMonarchPlans : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityMonarchPlans : Entity {
+class EntityMonarchPlans : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectMonarchPlans MonarchPlans;
 
 //Entity Functions
 void MonarchPlans_Update();

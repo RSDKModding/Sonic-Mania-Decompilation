@@ -1,15 +1,22 @@
 #ifndef OBJ_LARGEGEAR_H
 #define OBJ_LARGEGEAR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LargeGear : Object {
+class ObjectLargeGear : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLargeGear : Entity {
+class EntityLargeGear : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLargeGear LargeGear;
 
 //Entity Functions
 void LargeGear_Update();

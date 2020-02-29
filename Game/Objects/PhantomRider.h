@@ -1,15 +1,22 @@
 #ifndef OBJ_PHANTOMRIDER_H
 #define OBJ_PHANTOMRIDER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PhantomRider : Object {
+class ObjectPhantomRider : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPhantomRider : Entity {
+class EntityPhantomRider : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPhantomRider PhantomRider;
 
 //Entity Functions
 void PhantomRider_Update();

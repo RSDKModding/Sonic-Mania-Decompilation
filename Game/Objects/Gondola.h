@@ -1,15 +1,22 @@
 #ifndef OBJ_GONDOLA_H
 #define OBJ_GONDOLA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Gondola : Object {
+class ObjectGondola : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGondola : Entity {
+class EntityGondola : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGondola Gondola;
 
 //Entity Functions
 void Gondola_Update();

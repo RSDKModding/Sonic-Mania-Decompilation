@@ -1,15 +1,22 @@
 #ifndef OBJ_DACONTROL_H
 #define OBJ_DACONTROL_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DAControl : Object {
+class ObjectDAControl : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDAControl : Entity {
+class EntityDAControl : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDAControl DAControl;
 
 //Entity Functions
 void DAControl_Update();

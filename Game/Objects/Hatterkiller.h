@@ -1,15 +1,22 @@
 #ifndef OBJ_HATTERKILLER_H
 #define OBJ_HATTERKILLER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Hatterkiller : Object {
+class ObjectHatterkiller : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityHatterkiller : Entity {
+class EntityHatterkiller : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectHatterkiller Hatterkiller;
 
 //Entity Functions
 void Hatterkiller_Update();

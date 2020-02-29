@@ -1,15 +1,22 @@
 #ifndef OBJ_BURNINGLOG_H
 #define OBJ_BURNINGLOG_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BurningLog : Object {
+class ObjectBurningLog : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBurningLog : Entity {
+class EntityBurningLog : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBurningLog BurningLog;
 
 //Entity Functions
 void BurningLog_Update();

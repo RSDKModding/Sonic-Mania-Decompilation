@@ -1,15 +1,22 @@
 #ifndef OBJ_TURRETSWITCH_H
 #define OBJ_TURRETSWITCH_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class TurretSwitch : Object {
+class ObjectTurretSwitch : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityTurretSwitch : Entity {
+class EntityTurretSwitch : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectTurretSwitch TurretSwitch;
 
 //Entity Functions
 void TurretSwitch_Update();

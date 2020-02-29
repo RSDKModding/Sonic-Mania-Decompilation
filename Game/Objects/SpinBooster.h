@@ -1,15 +1,22 @@
 #ifndef OBJ_SPINBOOSTER_H
 #define OBJ_SPINBOOSTER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class SpinBooster : Object {
+class ObjectSpinBooster : public Object {
+public:
 
 };
 
 //Entity Class
-class EntitySpinBooster : Entity {
+class EntitySpinBooster : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectSpinBooster SpinBooster;
 
 //Entity Functions
 void SpinBooster_Update();

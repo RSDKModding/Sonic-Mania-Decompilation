@@ -1,15 +1,22 @@
 #ifndef OBJ_ICE_H
 #define OBJ_ICE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Ice : Object {
+class ObjectIce : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityIce : Entity {
+class EntityIce : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectIce Ice;
 
 //Entity Functions
 void Ice_Update();

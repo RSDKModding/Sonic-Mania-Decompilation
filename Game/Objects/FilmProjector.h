@@ -1,15 +1,22 @@
 #ifndef OBJ_FILMPROJECTOR_H
 #define OBJ_FILMPROJECTOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class FilmProjector : Object {
+class ObjectFilmProjector : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityFilmProjector : Entity {
+class EntityFilmProjector : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectFilmProjector FilmProjector;
 
 //Entity Functions
 void FilmProjector_Update();

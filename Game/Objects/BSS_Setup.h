@@ -1,15 +1,22 @@
 #ifndef OBJ_BSS_SETUP_H
 #define OBJ_BSS_SETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class BSS_Setup : Object {
+class ObjectBSS_Setup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBSS_Setup : Entity {
+class EntityBSS_Setup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBSS_Setup BSS_Setup;
 
 //Entity Functions
 void BSS_Setup_Update();

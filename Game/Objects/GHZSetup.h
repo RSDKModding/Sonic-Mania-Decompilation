@@ -1,15 +1,22 @@
 #ifndef OBJ_GHZSETUP_H
 #define OBJ_GHZSETUP_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class GHZSetup : Object {
+class ObjectGHZSetup : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGHZSetup : Entity {
+class EntityGHZSetup : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGHZSetup GHZSetup;
 
 //Entity Functions
 void GHZSetup_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_LRZCONVEYOR_H
 #define OBJ_LRZCONVEYOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class LRZConveyor : Object {
+class ObjectLRZConveyor : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityLRZConveyor : Entity {
+class EntityLRZConveyor : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectLRZConveyor LRZConveyor;
 
 //Entity Functions
 void LRZConveyor_Update();

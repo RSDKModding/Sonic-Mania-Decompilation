@@ -1,15 +1,22 @@
 #ifndef OBJ_DOORTRIGGER_H
 #define OBJ_DOORTRIGGER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class DoorTrigger : Object {
+class ObjectDoorTrigger : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityDoorTrigger : Entity {
+class EntityDoorTrigger : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectDoorTrigger DoorTrigger;
 
 //Entity Functions
 void DoorTrigger_Update();

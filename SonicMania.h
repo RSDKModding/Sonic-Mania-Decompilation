@@ -1,3 +1,5 @@
+#ifndef SONIC_MANIA_H
+#define SONIC_MANIA_H
 
 typedef unsigned char byte;
 typedef signed char sbyte;
@@ -10,5 +12,8 @@ typedef unsigned int uint;
 #include "Engine/Collision.h"
 #include "Engine/Drawing.h"
 
-//Objects
+//Game
+#include "Game/Options.h"
 #include "Game/Objects.h"
+
+#endif // !SONIC_MANIA_H

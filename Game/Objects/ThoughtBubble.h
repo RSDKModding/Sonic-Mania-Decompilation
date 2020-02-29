@@ -1,15 +1,22 @@
 #ifndef OBJ_THOUGHTBUBBLE_H
 #define OBJ_THOUGHTBUBBLE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ThoughtBubble : Object {
+class ObjectThoughtBubble : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityThoughtBubble : Entity {
+class EntityThoughtBubble : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectThoughtBubble ThoughtBubble;
 
 //Entity Functions
 void ThoughtBubble_Update();

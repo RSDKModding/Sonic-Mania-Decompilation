@@ -1,15 +1,22 @@
 #ifndef OBJ_GACHAPANDORA_H
 #define OBJ_GACHAPANDORA_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Gachapandora : Object {
+class ObjectGachapandora : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityGachapandora : Entity {
+class EntityGachapandora : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectGachapandora Gachapandora;
 
 //Entity Functions
 void Gachapandora_Update();

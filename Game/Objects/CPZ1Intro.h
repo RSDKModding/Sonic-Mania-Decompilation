@@ -1,15 +1,22 @@
 #ifndef OBJ_CPZ1INTRO_H
 #define OBJ_CPZ1INTRO_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class CPZ1Intro : Object {
+class ObjectCPZ1Intro : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityCPZ1Intro : Entity {
+class EntityCPZ1Intro : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectCPZ1Intro CPZ1Intro;
 
 //Entity Functions
 void CPZ1Intro_Update();

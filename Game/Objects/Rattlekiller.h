@@ -1,15 +1,22 @@
 #ifndef OBJ_RATTLEKILLER_H
 #define OBJ_RATTLEKILLER_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Rattlekiller : Object {
+class ObjectRattlekiller : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityRattlekiller : Entity {
+class EntityRattlekiller : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectRattlekiller Rattlekiller;
 
 //Entity Functions
 void Rattlekiller_Update();

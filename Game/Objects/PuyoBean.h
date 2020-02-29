@@ -1,15 +1,22 @@
 #ifndef OBJ_PUYOBEAN_H
 #define OBJ_PUYOBEAN_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class PuyoBean : Object {
+class ObjectPuyoBean : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityPuyoBean : Entity {
+class EntityPuyoBean : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectPuyoBean PuyoBean;
 
 //Entity Functions
 void PuyoBean_Update();

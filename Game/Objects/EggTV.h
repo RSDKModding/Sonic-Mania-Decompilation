@@ -1,15 +1,22 @@
 #ifndef OBJ_EGGTV_H
 #define OBJ_EGGTV_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class EggTV : Object {
+class ObjectEggTV : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityEggTV : Entity {
+class EntityEggTV : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectEggTV EggTV;
 
 //Entity Functions
 void EggTV_Update();

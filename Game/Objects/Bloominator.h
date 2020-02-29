@@ -1,15 +1,22 @@
 #ifndef OBJ_BLOOMINATOR_H
 #define OBJ_BLOOMINATOR_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class Bloominator : Object {
+class ObjectBloominator : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityBloominator : Entity {
+class EntityBloominator : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectBloominator Bloominator;
 
 //Entity Functions
 void Bloominator_Update();

@@ -1,15 +1,22 @@
 #ifndef OBJ_PARALLAXSPRITE_H
 #define OBJ_PARALLAXSPRITE_H
 
+#include "../../SonicMania.h"
+
 //Object Class
-class ParallaxSprite : Object {
+class ObjectParallaxSprite : public Object {
+public:
 
 };
 
 //Entity Class
-class EntityParallaxSprite : Entity {
+class EntityParallaxSprite : public Entity {
+public:
 
 };
+
+//Object Entity
+ObjectParallaxSprite ParallaxSprite;
 
 //Entity Functions
 void ParallaxSprite_Update();
