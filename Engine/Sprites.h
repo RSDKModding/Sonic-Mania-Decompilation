@@ -1,6 +1,0 @@
-
-enum Scopes {
-	SCOPE_NONE,
-	SCOPE_GLOBAL,
-	SCOPE_STAGE,
-};
