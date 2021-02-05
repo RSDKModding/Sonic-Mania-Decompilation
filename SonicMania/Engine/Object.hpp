@@ -2,20 +2,21 @@
 #define OBJECT_H
 
 #define OBJECT_COUNT (0x400)
-#define ENTITY_COUNT (0x9A0)
+#define ENTITY_COUNT (0x940)
+#define EDITABLEVAR_COUNT (0x100)
 
 enum AttributeTypes {
-	ATTRIBUTE_UINT8,
-	ATTRIBUTE_UINT16,
-	ATTRIBUTE_UINT32,
-	ATTRIBUTE_INT8,
-	ATTRIBUTE_INT16,
-	ATTRIBUTE_INT32,
+	ATTRIBUTE_U8,
+	ATTRIBUTE_U16,
+	ATTRIBUTE_U32,
+	ATTRIBUTE_S8,
+	ATTRIBUTE_S16,
+	ATTRIBUTE_S32,
 	ATTRIBUTE_VAR,
 	ATTRIBUTE_BOOL,
 	ATTRIBUTE_STRING,
 	ATTRIBUTE_VECTOR2,
-	ATTRIBUTE_VECTOR3,
+	ATTRIBUTE_UNKNOWN,
 	ATTRIBUTE_COLOUR,
 };
 
@@ -78,7 +79,7 @@ struct ObjectInfo {
     void (*lateUpdate)(void);
     void (*staticUpdate)(void);
     void (*draw)(void);
-    void(__cdecl *create)(void *);
+    void(*create)(void *);
     void (*stageLoad)(void);
     void (*editorDraw)(void);
     void (*editorLoad)(void);
@@ -86,7 +87,14 @@ struct ObjectInfo {
     Object *type;
     int entitySize;
     int objectSize;
-};              
+};        
+
+struct EditableVarInfo {
+    uint hash[4];
+    int offset;
+    int active;
+    byte attribType;
+};
 
 extern int objectCount;
 extern ObjectInfo objectList[OBJECT_COUNT];
@@ -97,9 +105,35 @@ extern int stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];
 
+extern EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
+extern int editableVarCount;
+
 void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
 void CreateObjectContainer(Object *structPtr, const char *name, uint objectSize);
+
+void LoadStaticObject(byte *obj, uint *hash, int dataPos);
+
+inline void SetEditableVar(byte type, const char *name, byte object, int storeOffset)
+{
+    if (editableVarCount < 255) {
+        EditableVarInfo *editableVar = &editableVarList[editableVarCount];
+        memset(&hashBuffer, 0, 0x400u);
+        int len = StrLength(name);
+        memcpy(&hashBuffer, name, len);
+        GenerateHash(editableVar->hash, len);
+        editableVarList[editableVarCount].attribType = type;
+        editableVarList[editableVarCount].offset     = storeOffset;
+        editableVarList[editableVarCount].active     = 1;
+        editableVarCount++;
+    }
+}
+
+void InitObjects();
+void ProcessObjects();
+void ProcessPausedObjects();
+void ProcessFrozenObjects();
+void ProcessObjectDrawLists();
 
 #endif // !OBJECT_H

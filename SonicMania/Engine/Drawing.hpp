@@ -11,6 +11,9 @@
 #define BLENDTABLE_XSIZE (0x20)
 #define BLENDTABLE_SIZE  (BLENDTABLE_XSIZE * BLENDTABLE_YSIZE)
 
+#define LAYER_COUNT     (8)
+#define DRAWLAYER_COUNT (16)
+
 enum InkEffects {
     INK_NONE,
     INK_BLEND,
@@ -50,6 +53,16 @@ struct ScreenInfo {
     int unknown;
 };
 
+struct DrawList {
+    ushort entries[ENTITY_COUNT];
+    ushort layerDrawList[LAYER_COUNT];
+    void (*initDrawPtr)(void);
+    int visible;
+    int entityCount;
+    int layerCount;
+};
+
+extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];
 
 extern short blendLookupTable[BLENDTABLE_SIZE];
@@ -60,6 +73,7 @@ extern GFXSurface gfxSurface[SURFACE_MAX];
 extern byte graphicData[GFXDATA_MAX];
 
 extern int SCREEN_XSIZE;
+extern int screenCount;
 extern ScreenInfo screens[SCREEN_MAX];
 
 bool InitRenderDevice();

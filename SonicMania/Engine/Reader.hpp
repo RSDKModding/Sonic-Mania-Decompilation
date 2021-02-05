@@ -90,6 +90,26 @@ inline void CloseFile(FileInfo *info)
 
 void GenerateELoadKeys(FileInfo *info, const char *key1, int key2);
 void DecryptBytes(FileInfo *info, void *buffer, int size);
+void SkipBytes(FileInfo *info, int size);
+
+inline void Seek(FileInfo* info, int count) {
+    if (info->readPos != count) {
+        info->readPos = count;
+        if (info->encrypted) {
+            info->eKeyPosA = 0;
+            info->eKeyPosA = 8;
+            info->eKeyNo                 = (info->fileSize >> 2) & 0x7F;
+            info->eNybbleSwap            = 0;
+            SkipBytes(info, count);
+        }
+        if (info->usingFileBuffer) {
+            info->fileData = (byte *)info->file + info->readPos;
+        }
+        else {
+            fSeek(info->file, info->readPos + info->fileOffset, SEEK_SET);
+        }
+    }
+}
 
 inline void ReadBytes(FileInfo *info, void* data, int count)
 {

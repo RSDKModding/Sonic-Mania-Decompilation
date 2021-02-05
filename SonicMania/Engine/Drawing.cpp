@@ -1,5 +1,7 @@
 #include "Retroengine.hpp"
 
+DrawList drawLayers[DRAWLAYER_COUNT];
+
 short blendLookupTable[BLENDTABLE_SIZE];
 short subtractLookupTable[BLENDTABLE_SIZE];
 
@@ -8,6 +10,7 @@ GFXSurface gfxSurface[SURFACE_MAX];
 byte graphicData[GFXDATA_MAX];
 
 int SCREEN_XSIZE = 424;
+int screenCount  = 1;
 ScreenInfo screens[SCREEN_MAX];
 
 char drawGroupNames[0x10][0x10]{
@@ -1436,10 +1439,9 @@ bool InitRenderDevice() {
 
 void FlipScreen() {
 #if RETRO_USING_SDL2
-    byte activeScreens = 1;
     SDL_Rect destScreenPos[SCREEN_MAX];
 
-    switch (activeScreens) {
+    switch (screenCount) {
         case 1:
             destScreenPos[0].x = 0;
             destScreenPos[0].y = 0;
@@ -1502,7 +1504,7 @@ void FlipScreen() {
 
     int pitch      = 0;
     ushort *pixels = NULL;
-    for (int s = 0; s < activeScreens; ++s) {
+    for (int s = 0; s < screenCount; ++s) {
         SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
         memcpy(pixels, screens[s].frameBuffer, pitch * SCREEN_YSIZE);
         SDL_UnlockTexture(engine.screenBuffer[s]);

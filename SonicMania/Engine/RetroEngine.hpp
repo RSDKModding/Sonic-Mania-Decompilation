@@ -48,6 +48,7 @@ typedef unsigned long long uint64;
 #include "iniparser/iniparser.h"
 
 #include "Math.hpp"
+#include "Text.hpp"
 #include "Reader.hpp"
 #include "Animation.hpp"
 #include "Audio.hpp"
@@ -60,7 +61,6 @@ typedef unsigned long long uint64;
 #include "Collision.hpp"
 #include "Scene.hpp"
 #include "Sprite.hpp"
-#include "Text.hpp"
 #include "Userdata.hpp"
 #include "Debug.hpp"
 #include "Link.hpp"
@@ -97,12 +97,13 @@ struct RetroEngine {
     int startList  = 0;
     int startStage = 0;
 
-    int engineMode       = ENGINESTATE_LOAD;
-    bool running         = false;
-    int gameSpeed = 1;
-    int fastForwardSpeed = 8;
-    bool frameStep       = false;
+    int engineMode          = ENGINESTATE_LOAD;
+    bool running            = false;
+    int gameSpeed           = 1;
+    int fastForwardSpeed    = 8;
+    bool frameStep          = false;
     bool masterPaused       = false;
+    bool showPaletteOverlay = false;
 
     bool isFullScreen = false;
 

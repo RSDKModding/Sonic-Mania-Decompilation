@@ -5,7 +5,18 @@
 
 // Object Class
 struct ObjectDebugMode : Object {
-
+    short objectIDs[0x100];
+    void (*draw[0x100])();
+    void (*spawn[0x100])();
+    EntityAnimationData debugData;
+    int objID;
+    int itemCount;
+    int debugActive;
+    byte debugItemSubType;
+    byte subtypeCount;
+    byte field_A2A;
+    byte field_A2B;
+    int field_A2C;
 };
 
 // Entity Class

@@ -1,12 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#define LAYER_COUNT    (9)
-#define DEFORM_STORE   (0x100)
-#define DEFORM_SIZE    (320)
-#define DEFORM_COUNT   (DEFORM_STORE + DEFORM_SIZE)
-#define PARALLAX_COUNT (0x100)
-
 #define TILE_COUNT    (0x400)
 #define TILE_SIZE     (0x10)
 #define TILE_DATASIZE (TILE_SIZE * TILE_SIZE)
@@ -26,7 +20,7 @@ struct SceneListInfo {
 
 struct SceneListEntry {
     uint nameHash[4];
-    uint folderHash[4];
+    char folder[0x11];
     char sceneID[8];
     byte modeFilter;
 };
@@ -61,6 +55,21 @@ extern SceneListEntry sceneListEntries[0x400];
 extern int sceneListCount;
 extern int sceneCount;
 
+extern int activeSceneList;
+extern int sceneListPosition;
+
+extern char currentSceneFolder[0x10];
+
 extern SceneInfo sceneInfo;
+
+extern byte tilesetGFXData[TILESET_SIZE];
+
+void LoadScene();
+void LoadSceneFile();
+void LoadTileConfig(char *filepath);
+void LoadStageGIF(char *filepath);
+
+void ProcessParallaxAutoScroll();
+void ProcessSceneTimer();
 
 #endif

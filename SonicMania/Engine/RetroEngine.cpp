@@ -131,43 +131,42 @@ bool processEvents()
                         break;
                     case SDLK_F1:
                         if (engine.devMenu) {
-                            //activeStageList   = 0;
-                            //stageListPosition = 0;
+                            activeSceneList   = 0;
+                            sceneListPosition = 0;
                             engine.engineMode = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F2:
-                        /*if (engine.devMenu) {
-                            stageListPosition--;
-                            if (stageListPosition < 0) {
-                                activeStageList--;
+                        if (engine.devMenu) {
+                            sceneListPosition--;
+                            if (sceneListPosition < 0) {
+                                activeSceneList--;
 
-                                if (activeStageList < 0) {
-                                    activeStageList = 3;
+                                if (activeSceneList < 0) {
+                                    activeSceneList = sceneListCount - 1;
                                 }
-                                stageListPosition = sceneLists[activeStageList].sceneCount - 1;
+                                sceneListPosition = sceneLists[activeSceneList].sceneCount - 1;
                             }
                             engine.engineMode = ENGINESTATE_LOAD;
-                        }*/
+                        }
                         break;
                     case SDLK_F3:
-                        /*if (engine.devMenu) {
-                            stageListPosition++;
-                            if (stageListPosition >= sceneLists[activeStageList].sceneCount) {
-                                activeStageList++;
+                        if (engine.devMenu) {
+                            sceneListPosition++;
+                            if (sceneListPosition >= sceneLists[activeSceneList].sceneCount) {
+                                activeSceneList++;
 
-                                stageListPosition = 0;
-
-                                if (activeStageList >= 4) {
-                                    activeStageList = 0;
+                                sceneListPosition = 0;
+                                if (activeSceneList >= sceneListCount) {
+                                    activeSceneList = 0;
                                 }
                             }
                             engine.engineMode       = ENGINESTATE_LOAD;
-                        }*/
+                        }
                         break;
                     case SDLK_F10:
-                        //if (engine.devMenu)
-                        //    engine.showPaletteOverlay ^= 1;
+                        if (engine.devMenu)
+                            engine.showPaletteOverlay ^= 1;
                         break;
                     case SDLK_BACKSPACE:
                         if (engine.devMenu)
@@ -245,99 +244,110 @@ void runRetroEngine() {
             switch (engine.engineMode) {
                 default: break;
                 case ENGINESTATE_LOAD:
-                    // LoadScene();
-                    // LoadSceneFile();
-                    // InitStageObjects();
+                    LoadScene();
+                    LoadSceneFile();
+                    InitObjects();
                     for (int v = 0; v < 0x10 && v < DEBUGVAL_MAX; ++v) {
                         DebugValueInfo *val = &debugValues[debugValCnt++];
                         strncpy(val->name, drawGroupNames[v], 0x10);
                         val->field_14   = 0;
-                        val->value      = NULL; // TODO
+                        val->value      = &drawLayers[v].visible;
                         val->valByteCnt = 4;
                         val->unknown1   = 0;
                         val->unknown2   = 1;
+
+                        MEM_ZERO(drawLayers[v]);
+                        drawLayers[v].visible = true;
                     }
-                    // ProcessInput();
-                    // ProcessObjects();
+                    ProcessInput();
+                    ProcessObjects();
                     break;
                 case ENGINESTATE_REGULAR:
-                    // ProcessInput();
-                    // ProcessSceneTimer();
-                    // ProcessObjects();
-                    // ProcessParallaxAutoScroll();
+                    ProcessInput();
+                    ProcessSceneTimer();
+                    ProcessObjects();
+                    ProcessParallaxAutoScroll();
                     for (int i = 1; i < engine.fastForwardSpeed; ++i) {
                         if (engine.engineMode != ENGINESTATE_REGULAR)
                             break;
-                        // ProcessSceneTimer();
-                        // ProcessObjects();
-                        // ProcessParallaxAutoScroll();
+                        ProcessSceneTimer();
+                        ProcessObjects();
+                        ProcessParallaxAutoScroll();
                     }
-                    // ProcessDrawObjectList();
+                    ProcessObjectDrawLists();
                     break;
                 case ENGINESTATE_PAUSED:
-                    // ProcessInput();
-                    // ProcessPausedObjects();
+                    ProcessInput();
+                    ProcessPausedObjects();
                     for (int i = 1; i < engine.fastForwardSpeed; ++i) {
                         if (engine.engineMode != ENGINESTATE_PAUSED)
                             break;
-                        // ProcessPausedObjects();
+                        ProcessPausedObjects();
                     }
-                    // ProcessDrawObjectList();
+                    ProcessObjectDrawLists();
                     break;
                 case ENGINESTATE_FROZEN:
-                    // ProcessInput();
-                    // ProcessFrozenObjects();
+                    ProcessInput();
+                    ProcessFrozenObjects();
                     for (int i = 1; i < engine.fastForwardSpeed; ++i) {
                         if (engine.engineMode != ENGINESTATE_PAUSED)
                             break;
-                        // ProcessFrozenObjects();
+                        ProcessFrozenObjects();
                     }
-                    // ProcessDrawObjectList();
+                    ProcessObjectDrawLists();
                     break;
                 case ENGINESTATE_LOAD_STEPOVER:
-                    // LoadScene();
-                    // LoadSceneFile();
-                    // InitStageObjects();
+                    LoadScene();
+                    LoadSceneFile();
+                    InitObjects();
                     for (int v = 0; v < 0x10 && v < DEBUGVAL_MAX; ++v) {
                         DebugValueInfo *val = &debugValues[debugValCnt++];
                         strncpy(val->name, drawGroupNames[v], 0x10);
                         val->field_14   = 0;
-                        val->value      = NULL; // TODO
+                        val->value      = &drawLayers[v].visible;
                         val->valByteCnt = 4;
                         val->unknown1   = 0;
                         val->unknown2   = 1;
+
+                        MEM_ZERO(drawLayers[v]);
+                        drawLayers[v].visible = true;
                     }
-                    // ProcessInput();
-                    // ProcessObjects();
+                    ProcessInput();
+                    ProcessObjects();
                     engine.engineMode = ENGINESTATE_REGULAR_STEPOVER;
                     break;
                 case ENGINESTATE_REGULAR_STEPOVER:
-                    // ProcessInput();
+                    ProcessInput();
                     if (engine.frameStep) {
-                        // ProcessSceneTimer();
-                        // ProcessObjects();
-                        // ProcessParallaxAutoScroll();
-                        // ProcessDrawObjectList();
+                        ProcessSceneTimer();
+                        ProcessObjects();
+                        ProcessParallaxAutoScroll();
+                        ProcessObjectDrawLists();
                         engine.frameStep = false;
                     }
                     break;
                 case ENGINESTATE_PAUSED_STEPOVER:
-                    // ProcessInput();
+                    ProcessInput();
                     if (engine.frameStep) {
-                        // ProcessPausedObjects();
-                        // ProcessDrawObjectList();
+                        ProcessPausedObjects();
+                        ProcessObjectDrawLists();
                         engine.frameStep = false;
                     }
                     break;
                 case ENGINESTATE_FROZEN_STEPOVER:
-                    // ProcessInput();
+                    ProcessInput();
                     if (engine.frameStep) {
-                        // ProcessFrozenObjects();
-                        // ProcessDrawObjectList();
+                        ProcessFrozenObjects();
+                        ProcessObjectDrawLists();
                         engine.frameStep = false;
                     }
                     break;
-                case ENGINESTATE_DEVMENU: break;
+                case ENGINESTATE_DEVMENU:
+                    ProcessInput();
+                    //activeScreen = screens;
+                    if (devMenu.state)
+                        devMenu.state();
+                    break;
                 case ENGINESTATE_VIDEOPLAYBACK: break;
                 case ENGINESTATE_SHOWPNG: break;
                 case ENGINESTATE_ERRORMSG: break;
@@ -407,7 +417,8 @@ void LoadGameConfig()
             GenerateHash(hash, StrLength(hashBuffer));
 
             if (objectCount > 0) {
-                int objID = 0;
+                int objID                          = 0;
+                globalObjectIDs[globalObjectCount] = 0;
                 do {
                     if (hash[0] == objectList[objID].hash[0] && hash[1] == objectList[objID].hash[1] && hash[2] == objectList[objID].hash[2]
                         && hash[3] == objectList[objID].hash[3]) {
@@ -458,9 +469,7 @@ void LoadGameConfig()
                 ReadString(&info, hashBuffer);
                 GenerateHash(sceneListEntries[sceneID + s].nameHash, StrLength(hashBuffer));
 
-                ReadString(&info, hashBuffer);
-                GenerateHash(sceneListEntries[sceneID + s].folderHash, StrLength(hashBuffer));
-
+                ReadString(&info, sceneListEntries[sceneID + s].folder);
                 ReadString(&info, sceneListEntries[sceneID + s].sceneID);
 
                 sceneListEntries[sceneID + s].modeFilter = ReadInt8(&info);

@@ -13,8 +13,8 @@ struct ObjectRing : Object {
 
 // Entity Class
 struct EntityRing : Entity {
-    void *state;
-    void *stateDraw;
+    void (*state)();
+    void (*stateDraw)();
     int type;
     int planeFilter;
     int ringAmount;
@@ -44,6 +44,7 @@ void Ring_EditorLoad();
 void Ring_Serialize();
 
 // Extra Entity Functions
-
+void Ring_DebugSpawn();
+void Ring_DebugDraw();
 
 #endif //!OBJ_RING_H
