@@ -2,25 +2,29 @@
 
 int objectCount;
 ObjectInfo objectList[OBJECT_COUNT];
+int globalObjectCount = 0;
+int globalObjectIDs[OBJECT_COUNT];
+int stageObjectCount = 0;
+int stageObjectIDs[OBJECT_COUNT];
 
 EntityBase objectEntityList[ENTITY_COUNT];
 
-void CreateObject(Object *structPtr, const char *name, unsigned int entitySize, unsigned int objectSize, void (*update)(void),
+void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
                   void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                   void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 {
-    if (objectCount < 0x400u) {
+    if (objectCount < OBJECT_COUNT) {
         ObjectInfo *info = &objectList[objectCount];
-        if (entitySize > 0x458)
+        if (entitySize > sizeof(EntityBase))
             printf("Class exceeds max entity memory: %s \n", name);
         info->type = (Object*)structPtr;
-        // memset(HashBuffer, 0, 0x400u);
+        memset(hashBuffer, 0, 0x400);
         int nameLen = 0;
         while (name[nameLen]) ++nameLen;
 
         if (nameLen < 0x400) {
-            // memcpy(HashBuffer, name, nameLen);
-            // GenerateHash(info->hash, nameLen);
+            memcpy(hashBuffer, name, nameLen);
+            GenerateHash(info->hash, nameLen);
         }
         ++objectCount;
         info->entitySize   = entitySize;
@@ -35,4 +39,18 @@ void CreateObject(Object *structPtr, const char *name, unsigned int entitySize, 
         info->editorLoad   = editorLoad;
         info->serialize    = serialize;
     }
+}
+
+void CreateObjectContainer(Object *structPtr, const char *name, uint objectSize)
+{
+    memset(hashBuffer, 0, 0x400);
+    int nameLen = 0;
+    while (name[nameLen]) ++nameLen;
+
+    if (nameLen < 0x400) {
+        memcpy(hashBuffer, name, nameLen);
+        //GenerateHash(info->hash, nameLen);
+    }
+    ClearStruct(objectSize, structPtr, 0, true);
+    //LoadStaticObject(structPtr, info->hash, 0);
 }

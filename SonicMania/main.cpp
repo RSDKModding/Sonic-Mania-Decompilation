@@ -1,10 +1,9 @@
-#include "Game/SonicMania.hpp"
+#include "Engine/RetroEngine.hpp"
 
 int main(int argc, char *argv[])
 {
-    engine.init();
-    linkGameLogic(NULL);
-    engine.run();
+    initRetroEngine();
+    runRetroEngine();
 
 	return 0;
 }

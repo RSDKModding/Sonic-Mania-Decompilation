@@ -576,6 +576,6 @@
 #include "Objects/ZipLine.hpp"
 #include "Objects/Zone.hpp"
 
-void linkGameLogic(void *gameInfo);
+void linkGameLogic(GameInfo *gameInfo);
 
 #endif //! GAMEOBJECTS_H

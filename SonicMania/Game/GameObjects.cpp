@@ -1,7 +1,26 @@
 #include "GameObjects.hpp"
 
-void linkGameLogic(void *gameInfo)
+SceneInfo *RSDK_SceneInfo = NULL;
+SKUInfo *RSDK_SKU         = NULL;
+ScreenInfo *RSDK_Screens  = NULL;
+
+void linkGameLogic(GameInfo *info)
 {
+    //qmemcpy(&RSDK_ClearStruct, info->functionPtrs, 0x2D0u);
+    //v1 = info->UserdataPtrs;
+    //if (v1)
+    //    qmemcpy(&unk_EA7640, v1, 0xECu);
+    RSDK_SKU       = info->currentSKU;
+    RSDK_SceneInfo = info->sceneInfo;
+    //Game_ActiveDPad        = (int)info->ActiveDPad;
+    //Game_ActiveAnalogStick = (int)info->ActiveAnalogStick;
+    //GameInfo_Unknown2      = (int)info->Unknown2;
+    //GameInfo_Unknown3      = (int)info->Unknown3;
+    //GameInfo_Unknown4      = (int)info->MousePos;
+    //GameInfo_Unknown5      = (int)info->InputCount;
+    RSDK_Screens             = info->screenInfo;
+    //RSDK_ClearStruct(&Options, &loc_4417A4)
+
     CreateObject(&ActClear, "ActClear", sizeof(EntityActClear), sizeof(ObjectActClear), ActClear_Update, ActClear_LateUpdate, ActClear_StaticUpdate,
                  ActClear_Draw, ActClear_Create, ActClear_StageLoad, ActClear_EditorDraw, ActClear_EditorLoad, ActClear_Serialize);
     CreateObject(&AIZEggRobo, "AIZEggRobo", sizeof(EntityAIZEggRobo), sizeof(ObjectAIZEggRobo), AIZEggRobo_Update, AIZEggRobo_LateUpdate,

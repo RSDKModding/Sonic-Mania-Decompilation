@@ -68,12 +68,12 @@ struct Entity {
     byte field_57;
 };
 
-struct EntityBase {
+struct EntityBase : Entity {
     byte data[0x400];
 };
 
 struct ObjectInfo {
-    byte hash[0x10];
+    uint hash[4];
     void (*update)(void);
     void (*lateUpdate)(void);
     void (*staticUpdate)(void);
@@ -86,13 +86,20 @@ struct ObjectInfo {
     Object *type;
     int entitySize;
     int objectSize;
-};
+};              
 
 extern int objectCount;
 extern ObjectInfo objectList[OBJECT_COUNT];
+extern int globalObjectCount;
+extern int globalObjectIDs[OBJECT_COUNT];
+extern int stageObjectCount;
+extern int stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];
 
-void CreateObject(Object *structPtr, const char *name, unsigned int entitySize, unsigned int objectSize, void (*update)(void), void (*lateUpdate)(void),
-                  void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
+void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+                  void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                  void (*editorLoad)(void), void (*serialize)(void));
+void CreateObjectContainer(Object *structPtr, const char *name, uint objectSize);
+
 #endif // !OBJECT_H
