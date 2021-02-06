@@ -1,7 +1,14 @@
 #ifndef SONIC_MANIA_H
 #define SONIC_MANIA_H
 
-#include "../Engine/RetroEngine.hpp"
+#include "../RSDKv5/RetroEngine.hpp"
+
+#if RETRO_PLATFORM == RETRO_WIN
+#define DLLExport __declspec(dllexport)
+#else
+#define DLLExport
+#endif
+
 #include "GameOptions.hpp"
 #include "GameObjects.hpp"
 

@@ -1,5 +1,4 @@
-//#include "Retroengine.hpp"
-#include "../Game/SonicMania.hpp"
+#include "Retroengine.hpp"
 
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
@@ -9,6 +8,7 @@ HMODULE hLibModule = NULL;
 typedef void(__cdecl *linkPtr)(GameInfo*);
 #endif
 
+int *optionsPtr    = NULL;
 RetroEngine engine = RetroEngine();
 
 bool processEvents()
@@ -478,8 +478,8 @@ void LoadGameConfig()
         }
 
         byte cfmCount = ReadInt8(&info);
-        int *dataPtr  = (int*)&options;
-        for (int i = 0; i < cfmCount; ++i) {
+        int *dataPtr  = optionsPtr;
+        for (int i = 0; i < cfmCount && optionsPtr; ++i) {
             int offset = ReadInt32(&info);
             int count  = ReadInt32(&info);
             for (int v = 0; v < count; ++v) {
@@ -493,6 +493,7 @@ void LoadGameConfig()
 
 void InitScriptSystem()
 {
+    setupFunctions();
 
     CreateObject(&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL, NULL, NULL,
                  DefaultObject_Create, NULL, NULL, NULL, NULL);
@@ -505,28 +506,34 @@ void InitScriptSystem()
 
     GameInfo info;
 
-    //info.functionPtrs      = &FunctionPtrs;
-    //info.userdataPtrs      = &UserdataPtrs;
+    info.functionPtrs      = functionTable;
+    info.userdataPtrs      = NULL; //userdataPtrs
     info.gameName          = engine.gameName;
     info.currentSKU        = &curSKU;
     info.sceneInfo         = &sceneInfo;
-    //info.activeDPad        = (GameInput *)&Key_Up;
-    //info.activeAnalogStick = (GameInput *)&Engine_AnalogStickP1;
-    //info.unknown1          = &Engine_AnalogStickP2;
-    //info.unknown2          = &Engine_AnalogStickP3;
-    //info.unknown3          = &Engine_AnalogStickP4;
-    //info.mousePos          = &Engine_MousePos;
-    //info.inputCount        = (int *)&Engine_InputCount;
+    info.activeDPad        = NULL; //(GameInput *)&Key_Up;
+    info.activeAnalogStick = NULL; //(GameInput *)&Engine_AnalogStickP1;
+    info.unknown1          = NULL; //&Engine_AnalogStickP2;
+    info.unknown2          = NULL; //&Engine_AnalogStickP3;
+    info.unknown3          = NULL; //&Engine_AnalogStickP4;
+    info.mousePos          = NULL; //&Engine_MousePos;
+    info.inputCount        = NULL; //(int *)&Engine_InputCount;
     info.screenInfo        = screens;
 
-    if (!engine.useExternalCode)
-        return linkGameLogic(&info);
+    if (!engine.useExternalCode) {
+        optionsPtr = NULL;
+        //return linkGameLogic(&info);
+    }
 
 #if RETRO_PLATFORM == RETRO_WIN
     if (!hLibModule)
         hLibModule = LoadLibraryA("Game");
 
     if (hLibModule) {
+        void* gameOptions = (void*)GetProcAddress(hLibModule, "options");
+        if (gameOptions)
+            optionsPtr = (int *)gameOptions;
+
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
         if (linkGameLogic)
             linkGameLogic(&info);

@@ -20,12 +20,22 @@ typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef long long int64;
 typedef unsigned long long uint64;
+typedef unsigned int bool32;
+
+enum GamePlatforms {
+    PLATFORM_WIN    = 0,
+    PLATFORM_PS4    = 1,
+    PLATFORM_XB1    = 2,
+    PLATFORM_SWITCH = 3,
+    PLATFORM_DEV    = 0xFF,
+};
 
 #define RETRO_WIN   (0)
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
 
 #define RETRO_PLATFORM   (RETRO_WIN)
+#define GAME_PLATFORM  (PLATFORM_WIN)
 
 #define SCREEN_YSIZE (240)
 
@@ -91,7 +101,7 @@ struct RetroEngine {
     char gameSubName[0x80];
     char gameVersion[0x20];
 
-    bool useExternalCode = false;
+    bool useExternalCode = true;
 
     bool devMenu   = false;
     bool printConsole = true;
@@ -132,6 +142,13 @@ void startGameObjects();
 
 void LoadGameConfig();
 void InitScriptSystem();
+
+inline void SetEngineState(byte state)
+{
+    if (state < 4) {
+        engine.engineMode = state | engine.engineMode & 4;
+    }
+}
 
 #include "Link.hpp"
 

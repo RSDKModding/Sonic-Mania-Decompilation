@@ -9,6 +9,8 @@ int stageObjectIDs[OBJECT_COUNT];
 
 EntityBase objectEntityList[ENTITY_COUNT];
 
+int tempEntityID = ENTITY_COUNT - 0x100;
+
 EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
 int editableVarCount = 0;
 
@@ -184,7 +186,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 
 void InitObjects()
 {
-    for (int o = 0; 0 < stageObjectCount; ++o) {
+    for (int o = 0; o < stageObjectCount; ++o) {
         if (objectList[stageObjectIDs[o]].stageLoad)
             objectList[stageObjectIDs[o]].stageLoad();
     }
@@ -213,3 +215,67 @@ void ProcessObjects() {}
 void ProcessPausedObjects() {}
 void ProcessFrozenObjects() {}
 void ProcessObjectDrawLists() {}
+
+void DestroyEntity(Entity *entity, ushort type, void *data)
+{
+    if (entity) {
+        ObjectInfo *info = &objectList[stageObjectIDs[type]];
+        memset(entity, 0, info->entitySize);
+        if (info->create) {
+            Entity *curEnt      = sceneInfo.entity;
+            sceneInfo.entity    = entity;
+            entity->interaction = 1;
+            info->create(data);
+            sceneInfo.entity = curEnt;
+        }
+        entity->objectID = type;
+    }
+}
+
+void ResetEntity(ushort slotID, ushort type, void *data)
+{
+    short slot          = ENTITY_COUNT - 1;
+    ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
+    if (slotID < ENTITY_COUNT)
+        slot = slotID;
+    Entity *entityPtr = &objectEntityList[slot];
+    memset(&objectEntityList[slot], 0, objInfo->entitySize);
+    if (objInfo->create) {
+        Entity *curEnt         = sceneInfo.entity;
+        sceneInfo.entity       = entityPtr;
+        entityPtr->interaction = true;
+        objInfo->create(data);
+        sceneInfo.entity = curEnt;
+        // word_869A46[v6]  = type;
+    }
+    else {
+        // word_869A46[v6] = type;
+    }
+}
+
+void SpawnEntity(ushort type, void *data, int x, int y)
+{
+    if (tempEntityID >= ENTITY_COUNT)
+        tempEntityID -= 0x100;
+
+    ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
+    Entity *entityPtr   = &objectEntityList[tempEntityID++];
+
+    memset(entityPtr, 0, objInfo->entitySize);
+    entityPtr->position.x  = x;
+    entityPtr->position.y  = y;
+    entityPtr->interaction = true;
+
+    if (objInfo->create) {
+        Entity *curEnt   = sceneInfo.entity;
+        sceneInfo.entity = entityPtr;
+        objInfo->create(data);
+        sceneInfo.entity    = curEnt;
+        entityPtr->objectID = type;
+    }
+    else {
+        entityPtr->objectID = type;
+        entityPtr->priority = ACTIVE_NORMAL;
+        entityPtr->visible  = true;
+    }
+}

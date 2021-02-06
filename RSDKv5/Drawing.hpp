@@ -83,6 +83,17 @@ void ReleaseRenderDevice();
 void GenerateBlendLookupTable();
 
 void InitGFXSystem();
+inline void AddScreen(int x, int y, int width, int height)
+{
+    if (screenCount < SCREEN_MAX) {
+        screens[screenCount].position.x = x;
+        screens[screenCount].position.y = y;
+        screens[screenCount].width = width;
+        screens[screenCount].height = height;
+    }
+}
+
+inline void ClearScreens() { screenCount = 0; }
 
 inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
 {
@@ -118,6 +129,33 @@ inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
         else {
             screen->clipBound_Y2 = 0;
         }
+    }
+}
+
+inline ushort GetDrawListRef(byte layerID, ushort entityID)
+{
+    DrawList *listPtr = &drawLayers[layerID];
+    if (layerID >= DRAWLAYER_COUNT || entityID >= listPtr->entityCount)
+        return 0;
+    else
+        return listPtr->entries[entityID];
+}
+
+inline Entity *GetDrawListRefPtr(byte layerID, ushort entityID)
+{
+    DrawList *listPtr = &drawLayers[layerID];
+    if (layerID >= DRAWLAYER_COUNT || entityID >= listPtr->entityCount)
+        return NULL;
+    else
+        return &objectEntityList[listPtr->entries[entityID]];
+}
+
+inline void SetDrawLayerProperties(byte layer, int active, void (*initDrawPtr)(void))
+{
+    if (layer < DRAWLAYER_COUNT) {
+        DrawList *list      = &drawLayers[layer];
+        list->visible     = active;
+        list->initDrawPtr   = initDrawPtr;
     }
 }
 

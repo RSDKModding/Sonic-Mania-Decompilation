@@ -5,33 +5,30 @@ ObjectDevOutput DevOutput;
 void DevOutput_Update()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
-    int id                  = 0;
+
     switch (entity->type) {
         case 0:
-            id = entity->id;
-            if (id <= 0)
+            if (entity->id <= 0)
                 entity->type = 1;
             else
-                entity->id = id - 1;
+                entity->id--;
             break;
         case 1:
-            id = entity->position.y;
-            if (id >= 0)
+            if (entity->position.y >= 0)
                 entity->type = 2;
             else
-                entity->position.y = id + 2;
+                entity->position.y += 2;
             break;
         case 2:
-            id = entity->id;
-            if (id >= 120)
+            if (entity->id >= 120)
                 entity->type = 3;
             else
-                entity->id = id + 1;
+                entity->id++;
             break;
         case 3:
             entity->position.y -= 2;
-            //if (-entity->position.y > entity->yOffset)
-            //    DestroyEntity(entity, 0, 0);
+            if (-entity->position.y > entity->yOffset)
+                DestroyEntity(entity, 0, NULL);
             break;
         default: return;
     }

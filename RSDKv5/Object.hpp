@@ -54,7 +54,7 @@ struct Entity {
     int field_3C;
     int tileCollisions;
     int interaction;
-    int grounded;
+    int onGround;
     byte priority;
     byte filter;
     byte direction;
@@ -105,6 +105,8 @@ extern int stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];
 
+extern int tempEntityID;
+
 extern EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
 extern int editableVarCount;
 
@@ -136,4 +138,36 @@ void ProcessPausedObjects();
 void ProcessFrozenObjects();
 void ProcessObjectDrawLists();
 
+inline ushort GetObjectByName(const char *name)
+{
+    StrCopy(hashBuffer, name);
+    uint hash[4];
+    GenerateHash(hash, StrLength(hashBuffer));
+
+    for (int o = 0; o < stageObjectCount; ++o) {
+        if (memcmp(hash, objectList[stageObjectIDs[o]].hash, 4 * sizeof(int)) == 0)
+            return o;
+    }
+    return 0xFFFF;
+}
+
+inline Entity* GetObjectByID(ushort objectID)
+{
+    return &objectEntityList[objectID < ENTITY_COUNT ? objectID : (ENTITY_COUNT - 1)];
+}
+
+inline int GetEntityID(EntityBase *entityPtr) { return entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0; }
+
+void DestroyEntity(Entity *entity, ushort type, void *data);
+void ResetEntity(ushort slotID, ushort type, void *data);
+void SpawnEntity(ushort type, void *data, int x, int y);
+
+inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
+{
+    if (destEntity && srcEntity) {
+        memcpy(destEntity, srcEntity, sizeof(EntityBase));
+        if (clearSrcEntity)
+            memset(srcEntity, 0, sizeof(EntityBase));
+    }
+}
 #endif // !OBJECT_H

@@ -1,0 +1,1325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameObjects.hpp" />
+    <ClInclude Include="GameOptions.hpp" />
+    <ClInclude Include="Objects\ActClear.hpp" />
+    <ClInclude Include="Objects\AIZEggRobo.hpp" />
+    <ClInclude Include="Objects\AIZEncoreTutorial.hpp" />
+    <ClInclude Include="Objects\AIZKingClaw.hpp" />
+    <ClInclude Include="Objects\AIZRockPile.hpp" />
+    <ClInclude Include="Objects\AIZSetup.hpp" />
+    <ClInclude Include="Objects\AIZTornado.hpp" />
+    <ClInclude Include="Objects\AIZTornadoPath.hpp" />
+    <ClInclude Include="Objects\AmoebaDroid.hpp" />
+    <ClInclude Include="Objects\AnimalHBH.hpp" />
+    <ClInclude Include="Objects\Animals.hpp" />
+    <ClInclude Include="Objects\Announcer.hpp" />
+    <ClInclude Include="Objects\Aquis.hpp" />
+    <ClInclude Include="Objects\Armadiloid.hpp" />
+    <ClInclude Include="Objects\BallCannon.hpp" />
+    <ClInclude Include="Objects\BallHog.hpp" />
+    <ClInclude Include="Objects\BarStool.hpp" />
+    <ClInclude Include="Objects\Batbrain.hpp" />
+    <ClInclude Include="Objects\Beanstalk.hpp" />
+    <ClInclude Include="Objects\BGSwitch.hpp" />
+    <ClInclude Include="Objects\BigSqueeze.hpp" />
+    <ClInclude Include="Objects\BladePole.hpp" />
+    <ClInclude Include="Objects\Blaster.hpp" />
+    <ClInclude Include="Objects\Blastoid.hpp" />
+    <ClInclude Include="Objects\Bloominator.hpp" />
+    <ClInclude Include="Objects\BouncePlant.hpp" />
+    <ClInclude Include="Objects\BoundsMarker.hpp" />
+    <ClInclude Include="Objects\BreakableWall.hpp" />
+    <ClInclude Include="Objects\BreakBar.hpp" />
+    <ClInclude Include="Objects\Bridge.hpp" />
+    <ClInclude Include="Objects\BSS_Collectable.hpp" />
+    <ClInclude Include="Objects\BSS_Collected.hpp" />
+    <ClInclude Include="Objects\BSS_Horizon.hpp" />
+    <ClInclude Include="Objects\BSS_HUD.hpp" />
+    <ClInclude Include="Objects\BSS_Message.hpp" />
+    <ClInclude Include="Objects\BSS_Palette.hpp" />
+    <ClInclude Include="Objects\BSS_Player.hpp" />
+    <ClInclude Include="Objects\BSS_Setup.hpp" />
+    <ClInclude Include="Objects\BuckwildBall.hpp" />
+    <ClInclude Include="Objects\Buggernaut.hpp" />
+    <ClInclude Include="Objects\Bumpalo.hpp" />
+    <ClInclude Include="Objects\Bungee.hpp" />
+    <ClInclude Include="Objects\BurningLog.hpp" />
+    <ClInclude Include="Objects\Button.hpp" />
+    <ClInclude Include="Objects\ButtonDoor.hpp" />
+    <ClInclude Include="Objects\BuzzBomber.hpp" />
+    <ClInclude Include="Objects\BuzzSaw.hpp" />
+    <ClInclude Include="Objects\CableWarp.hpp" />
+    <ClInclude Include="Objects\Cactula.hpp" />
+    <ClInclude Include="Objects\Camera.hpp" />
+    <ClInclude Include="Objects\Canista.hpp" />
+    <ClInclude Include="Objects\CaterkillerJr.hpp" />
+    <ClInclude Include="Objects\ChaosEmerald.hpp" />
+    <ClInclude Include="Objects\CheckerBall.hpp" />
+    <ClInclude Include="Objects\ChemBubble.hpp" />
+    <ClInclude Include="Objects\ChemicalBall.hpp" />
+    <ClInclude Include="Objects\ChemicalPool.hpp" />
+    <ClInclude Include="Objects\Chopper.hpp" />
+    <ClInclude Include="Objects\CircleBumper.hpp" />
+    <ClInclude Include="Objects\Clapperboard.hpp" />
+    <ClInclude Include="Objects\Clucker.hpp" />
+    <ClInclude Include="Objects\CollapsingPlatform.hpp" />
+    <ClInclude Include="Objects\CollapsingSand.hpp" />
+    <ClInclude Include="Objects\Competition.hpp" />
+    <ClInclude Include="Objects\CompetitionMenu.hpp" />
+    <ClInclude Include="Objects\Constellation.hpp" />
+    <ClInclude Include="Objects\ContinuePlayer.hpp" />
+    <ClInclude Include="Objects\ContinueSetup.hpp" />
+    <ClInclude Include="Objects\ConveyorBelt.hpp" />
+    <ClInclude Include="Objects\ConveyorPlatform.hpp" />
+    <ClInclude Include="Objects\ConveyorWheel.hpp" />
+    <ClInclude Include="Objects\CorkscrewPath.hpp" />
+    <ClInclude Include="Objects\COverlay.hpp" />
+    <ClInclude Include="Objects\CPZ1Intro.hpp" />
+    <ClInclude Include="Objects\CPZ2Outro.hpp" />
+    <ClInclude Include="Objects\CPZBoss.hpp" />
+    <ClInclude Include="Objects\CPZSetup.hpp" />
+    <ClInclude Include="Objects\CPZShutter.hpp" />
+    <ClInclude Include="Objects\Crabmeat.hpp" />
+    <ClInclude Include="Objects\Crane.hpp" />
+    <ClInclude Include="Objects\CrashTest.hpp" />
+    <ClInclude Include="Objects\Crate.hpp" />
+    <ClInclude Include="Objects\CreditsSetup.hpp" />
+    <ClInclude Include="Objects\CrimsonEye.hpp" />
+    <ClInclude Include="Objects\Current.hpp" />
+    <ClInclude Include="Objects\CutsceneHBH.hpp" />
+    <ClInclude Include="Objects\CutsceneSeq.hpp" />
+    <ClInclude Include="Objects\Cylinder.hpp" />
+    <ClInclude Include="Objects\DAControl.hpp" />
+    <ClInclude Include="Objects\Dango.hpp" />
+    <ClInclude Include="Objects\DASetup.hpp" />
+    <ClInclude Include="Objects\DashLift.hpp" />
+    <ClInclude Include="Objects\DBTower.hpp" />
+    <ClInclude Include="Objects\DCEvent.hpp" />
+    <ClInclude Include="Objects\DDWrecker.hpp" />
+    <ClInclude Include="Objects\Debris.hpp" />
+    <ClInclude Include="Objects\DebugMode.hpp" />
+    <ClInclude Include="Objects\Decoration.hpp" />
+    <ClInclude Include="Objects\DERobot.hpp" />
+    <ClInclude Include="Objects\DialogRunner.hpp" />
+    <ClInclude Include="Objects\DirectorChair.hpp" />
+    <ClInclude Include="Objects\DiveEggman.hpp" />
+    <ClInclude Include="Objects\DNARiser.hpp" />
+    <ClInclude Include="Objects\DoorTrigger.hpp" />
+    <ClInclude Include="Objects\Dragonfly.hpp" />
+    <ClInclude Include="Objects\Drillerdroid.hpp" />
+    <ClInclude Include="Objects\DrillerdroidO.hpp" />
+    <ClInclude Include="Objects\Dust.hpp" />
+    <ClInclude Include="Objects\EggLoco.hpp" />
+    <ClInclude Include="Objects\Eggman.hpp" />
+    <ClInclude Include="Objects\EggPistonsMKII.hpp" />
+    <ClInclude Include="Objects\EggPrison.hpp" />
+    <ClInclude Include="Objects\EggTower.hpp" />
+    <ClInclude Include="Objects\EggTV.hpp" />
+    <ClInclude Include="Objects\ElectroMagnet.hpp" />
+    <ClInclude Include="Objects\EncoreGoodEnd.hpp" />
+    <ClInclude Include="Objects\EncoreIntro.hpp" />
+    <ClInclude Include="Objects\EncoreRoute.hpp" />
+    <ClInclude Include="Objects\ERZGunner.hpp" />
+    <ClInclude Include="Objects\ERZKing.hpp" />
+    <ClInclude Include="Objects\ERZMystic.hpp" />
+    <ClInclude Include="Objects\ERZOutro.hpp" />
+    <ClInclude Include="Objects\ERZRider.hpp" />
+    <ClInclude Include="Objects\ERZSetup.hpp" />
+    <ClInclude Include="Objects\ERZShinobi.hpp" />
+    <ClInclude Include="Objects\ERZStart.hpp" />
+    <ClInclude Include="Objects\EscapeCar.hpp" />
+    <ClInclude Include="Objects\Explosion.hpp" />
+    <ClInclude Include="Objects\ExtrasMenu.hpp" />
+    <ClInclude Include="Objects\Fan.hpp" />
+    <ClInclude Include="Objects\FarPlane.hpp" />
+    <ClInclude Include="Objects\FBZ1Outro.hpp" />
+    <ClInclude Include="Objects\FBZ2Outro.hpp" />
+    <ClInclude Include="Objects\FBZFan.hpp" />
+    <ClInclude Include="Objects\FBZMissile.hpp" />
+    <ClInclude Include="Objects\FBZSetup.hpp" />
+    <ClInclude Include="Objects\FBZSinkTrash.hpp" />
+    <ClInclude Include="Objects\FBZStorm.hpp" />
+    <ClInclude Include="Objects\FBZTrash.hpp" />
+    <ClInclude Include="Objects\FernParallax.hpp" />
+    <ClInclude Include="Objects\FilmProjector.hpp" />
+    <ClInclude Include="Objects\FilmReel.hpp" />
+    <ClInclude Include="Objects\Fireflies.hpp" />
+    <ClInclude Include="Objects\Firework.hpp" />
+    <ClInclude Include="Objects\Fireworm.hpp" />
+    <ClInclude Include="Objects\FlameSpring.hpp" />
+    <ClInclude Include="Objects\Flamethrower.hpp" />
+    <ClInclude Include="Objects\FlasherMKII.hpp" />
+    <ClInclude Include="Objects\FlingRamp.hpp" />
+    <ClInclude Include="Objects\Flipper.hpp" />
+    <ClInclude Include="Objects\FlowerPod.hpp" />
+    <ClInclude Include="Objects\FoldingPlatform.hpp" />
+    <ClInclude Include="Objects\ForceSpin.hpp" />
+    <ClInclude Include="Objects\ForceUnstick.hpp" />
+    <ClInclude Include="Objects\FrostThrower.hpp" />
+    <ClInclude Include="Objects\Funnel.hpp" />
+    <ClInclude Include="Objects\FXExpandRing.hpp" />
+    <ClInclude Include="Objects\FXFade.hpp" />
+    <ClInclude Include="Objects\FXRuby.hpp" />
+    <ClInclude Include="Objects\FXSpinRay.hpp" />
+    <ClInclude Include="Objects\FXTrail.hpp" />
+    <ClInclude Include="Objects\FXWaveRing.hpp" />
+    <ClInclude Include="Objects\Gachapandora.hpp" />
+    <ClInclude Include="Objects\GameOver.hpp" />
+    <ClInclude Include="Objects\GasPlatform.hpp" />
+    <ClInclude Include="Objects\GenericTrigger.hpp" />
+    <ClInclude Include="Objects\GHZ2Outro.hpp" />
+    <ClInclude Include="Objects\GHZCutsceneK.hpp" />
+    <ClInclude Include="Objects\GHZCutsceneST.hpp" />
+    <ClInclude Include="Objects\GHZSetup.hpp" />
+    <ClInclude Include="Objects\GiantPistol.hpp" />
+    <ClInclude Include="Objects\GigaMetal.hpp" />
+    <ClInclude Include="Objects\Gondola.hpp" />
+    <ClInclude Include="Objects\Grabber.hpp" />
+    <ClInclude Include="Objects\GreenScreen.hpp" />
+    <ClInclude Include="Objects\GymBar.hpp" />
+    <ClInclude Include="Objects\HandLauncher.hpp" />
+    <ClInclude Include="Objects\HangConveyor.hpp" />
+    <ClInclude Include="Objects\HangGlider.hpp" />
+    <ClInclude Include="Objects\HangPoint.hpp" />
+    <ClInclude Include="Objects\Hatch.hpp" />
+    <ClInclude Include="Objects\Hatterkiller.hpp" />
+    <ClInclude Include="Objects\HCZ1Intro.hpp" />
+    <ClInclude Include="Objects\HCZOneWayDoor.hpp" />
+    <ClInclude Include="Objects\HCZSetup.hpp" />
+    <ClInclude Include="Objects\HCZSpikeBall.hpp" />
+    <ClInclude Include="Objects\HeavyGunner.hpp" />
+    <ClInclude Include="Objects\HeavyKing.hpp" />
+    <ClInclude Include="Objects\HeavyMystic.hpp" />
+    <ClInclude Include="Objects\HeavyRider.hpp" />
+    <ClInclude Include="Objects\HeavyShinobi.hpp" />
+    <ClInclude Include="Objects\HiLoSign.hpp" />
+    <ClInclude Include="Objects\Honkytonk.hpp" />
+    <ClInclude Include="Objects\Hotaru.hpp" />
+    <ClInclude Include="Objects\HotaruHiWatt.hpp" />
+    <ClInclude Include="Objects\HotaruMKII.hpp" />
+    <ClInclude Include="Objects\HPZEmerald.hpp" />
+    <ClInclude Include="Objects\HUD.hpp" />
+    <ClInclude Include="Objects\Ice.hpp" />
+    <ClInclude Include="Objects\IceBomba.hpp" />
+    <ClInclude Include="Objects\IceSpring.hpp" />
+    <ClInclude Include="Objects\ImageTrail.hpp" />
+    <ClInclude Include="Objects\InvincibleStars.hpp" />
+    <ClInclude Include="Objects\InvisibleBlock.hpp" />
+    <ClInclude Include="Objects\ItemBox.hpp" />
+    <ClInclude Include="Objects\Iwamodoki.hpp" />
+    <ClInclude Include="Objects\JacobsLadder.hpp" />
+    <ClInclude Include="Objects\Jawz.hpp" />
+    <ClInclude Include="Objects\Jellygnite.hpp" />
+    <ClInclude Include="Objects\JuggleSaw.hpp" />
+    <ClInclude Include="Objects\JunctionWheel.hpp" />
+    <ClInclude Include="Objects\Kabasira.hpp" />
+    <ClInclude Include="Objects\Kanabun.hpp" />
+    <ClInclude Include="Objects\KingAttack.hpp" />
+    <ClInclude Include="Objects\KingClaw.hpp" />
+    <ClInclude Include="Objects\KleptoMobile.hpp" />
+    <ClInclude Include="Objects\LargeGear.hpp" />
+    <ClInclude Include="Objects\Launcher.hpp" />
+    <ClInclude Include="Objects\LaunchSpring.hpp" />
+    <ClInclude Include="Objects\LaundroMobile.hpp" />
+    <ClInclude Include="Objects\LavaFall.hpp" />
+    <ClInclude Include="Objects\LavaGeyser.hpp" />
+    <ClInclude Include="Objects\LEDPanel.hpp" />
+    <ClInclude Include="Objects\Letterboard.hpp" />
+    <ClInclude Include="Objects\LevelSelect.hpp" />
+    <ClInclude Include="Objects\LightBarrier.hpp" />
+    <ClInclude Include="Objects\LightBulb.hpp" />
+    <ClInclude Include="Objects\Localization.hpp" />
+    <ClInclude Include="Objects\LocoSmoke.hpp" />
+    <ClInclude Include="Objects\LogoSetup.hpp" />
+    <ClInclude Include="Objects\LottoBall.hpp" />
+    <ClInclude Include="Objects\LottoMachine.hpp" />
+    <ClInclude Include="Objects\LoveTester.hpp" />
+    <ClInclude Include="Objects\LRZ1Intro.hpp" />
+    <ClInclude Include="Objects\LRZ1Outro.hpp" />
+    <ClInclude Include="Objects\LRZ1Setup.hpp" />
+    <ClInclude Include="Objects\LRZ2Setup.hpp" />
+    <ClInclude Include="Objects\LRZ3Cutscene.hpp" />
+    <ClInclude Include="Objects\LRZ3Outro.hpp" />
+    <ClInclude Include="Objects\LRZ3OutroK.hpp" />
+    <ClInclude Include="Objects\LRZ3Setup.hpp" />
+    <ClInclude Include="Objects\LRZConvControl.hpp" />
+    <ClInclude Include="Objects\LRZConvDropper.hpp" />
+    <ClInclude Include="Objects\LRZConveyor.hpp" />
+    <ClInclude Include="Objects\LRZConvItem.hpp" />
+    <ClInclude Include="Objects\LRZConvSwitch.hpp" />
+    <ClInclude Include="Objects\LRZFireball.hpp" />
+    <ClInclude Include="Objects\LRZRockPile.hpp" />
+    <ClInclude Include="Objects\LRZSpikeBall.hpp" />
+    <ClInclude Include="Objects\LRZSpiral.hpp" />
+    <ClInclude Include="Objects\MagnetSphere.hpp" />
+    <ClInclude Include="Objects\MagPlatform.hpp" />
+    <ClInclude Include="Objects\MagSpikeBall.hpp" />
+    <ClInclude Include="Objects\MainMenu.hpp" />
+    <ClInclude Include="Objects\ManiaModeMenu.hpp" />
+    <ClInclude Include="Objects\MatryoshkaBom.hpp" />
+    <ClInclude Include="Objects\MechaBu.hpp" />
+    <ClInclude Include="Objects\MegaChopper.hpp" />
+    <ClInclude Include="Objects\MegaOctus.hpp" />
+    <ClInclude Include="Objects\MenuParam.hpp" />
+    <ClInclude Include="Objects\MenuSetup.hpp" />
+    <ClInclude Include="Objects\MetalArm.hpp" />
+    <ClInclude Include="Objects\MetalSonic.hpp" />
+    <ClInclude Include="Objects\MeterDroid.hpp" />
+    <ClInclude Include="Objects\MicDrop.hpp" />
+    <ClInclude Include="Objects\Mine.hpp" />
+    <ClInclude Include="Objects\MMZ2Outro.hpp" />
+    <ClInclude Include="Objects\MMZLightning.hpp" />
+    <ClInclude Include="Objects\MMZSetup.hpp" />
+    <ClInclude Include="Objects\MMZWheel.hpp" />
+    <ClInclude Include="Objects\MonarchBG.hpp" />
+    <ClInclude Include="Objects\MonarchPlans.hpp" />
+    <ClInclude Include="Objects\MonkeyDude.hpp" />
+    <ClInclude Include="Objects\Motobug.hpp" />
+    <ClInclude Include="Objects\MSBomb.hpp" />
+    <ClInclude Include="Objects\MSFactory.hpp" />
+    <ClInclude Include="Objects\MSHologram.hpp" />
+    <ClInclude Include="Objects\MSOrb.hpp" />
+    <ClInclude Include="Objects\MSPanel.hpp" />
+    <ClInclude Include="Objects\MSZ1KIntro.hpp" />
+    <ClInclude Include="Objects\MSZ2Cutscene.hpp" />
+    <ClInclude Include="Objects\MSZCutsceneK.hpp" />
+    <ClInclude Include="Objects\MSZCutsceneST.hpp" />
+    <ClInclude Include="Objects\MSZSetup.hpp" />
+    <ClInclude Include="Objects\MSZSpotlight.hpp" />
+    <ClInclude Include="Objects\Music.hpp" />
+    <ClInclude Include="Objects\Newspaper.hpp" />
+    <ClInclude Include="Objects\Newtron.hpp" />
+    <ClInclude Include="Objects\NoSwap.hpp" />
+    <ClInclude Include="Objects\Octus.hpp" />
+    <ClInclude Include="Objects\OneWayDoor.hpp" />
+    <ClInclude Include="Objects\OOZ1Outro.hpp" />
+    <ClInclude Include="Objects\OOZ2Outro.hpp" />
+    <ClInclude Include="Objects\OOZFlames.hpp" />
+    <ClInclude Include="Objects\OOZSetup.hpp" />
+    <ClInclude Include="Objects\OptionsMenu.hpp" />
+    <ClInclude Include="Objects\OrbitSpike.hpp" />
+    <ClInclude Include="Objects\PaintingEyes.hpp" />
+    <ClInclude Include="Objects\PaperRoller.hpp" />
+    <ClInclude Include="Objects\ParallaxSprite.hpp" />
+    <ClInclude Include="Objects\PathInverter.hpp" />
+    <ClInclude Include="Objects\PauseMenu.hpp" />
+    <ClInclude Include="Objects\PBL_Bumper.hpp" />
+    <ClInclude Include="Objects\PBL_Camera.hpp" />
+    <ClInclude Include="Objects\PBL_Crane.hpp" />
+    <ClInclude Include="Objects\PBL_Flipper.hpp" />
+    <ClInclude Include="Objects\PBL_HUD.hpp" />
+    <ClInclude Include="Objects\PBL_Player.hpp" />
+    <ClInclude Include="Objects\PBL_Ring.hpp" />
+    <ClInclude Include="Objects\PBL_Sector.hpp" />
+    <ClInclude Include="Objects\PBL_Setup.hpp" />
+    <ClInclude Include="Objects\PBL_TargetBumper.hpp" />
+    <ClInclude Include="Objects\PetalPile.hpp" />
+    <ClInclude Include="Objects\PhantomEgg.hpp" />
+    <ClInclude Include="Objects\PhantomGunner.hpp" />
+    <ClInclude Include="Objects\PhantomHand.hpp" />
+    <ClInclude Include="Objects\PhantomKing.hpp" />
+    <ClInclude Include="Objects\PhantomMissile.hpp" />
+    <ClInclude Include="Objects\PhantomMystic.hpp" />
+    <ClInclude Include="Objects\PhantomRider.hpp" />
+    <ClInclude Include="Objects\PhantomRuby.hpp" />
+    <ClInclude Include="Objects\PhantomShield.hpp" />
+    <ClInclude Include="Objects\PhantomShinobi.hpp" />
+    <ClInclude Include="Objects\PimPom.hpp" />
+    <ClInclude Include="Objects\Pinata.hpp" />
+    <ClInclude Include="Objects\Piston.hpp" />
+    <ClInclude Include="Objects\PKingAttack.hpp" />
+    <ClInclude Include="Objects\PlaneSeeSaw.hpp" />
+    <ClInclude Include="Objects\PlaneSwitch.hpp" />
+    <ClInclude Include="Objects\Platform.hpp" />
+    <ClInclude Include="Objects\PlatformControl.hpp" />
+    <ClInclude Include="Objects\PlatformNode.hpp" />
+    <ClInclude Include="Objects\Player.hpp" />
+    <ClInclude Include="Objects\PlayerProbe.hpp" />
+    <ClInclude Include="Objects\PohBee.hpp" />
+    <ClInclude Include="Objects\Pointdexter.hpp" />
+    <ClInclude Include="Objects\PopcornKernel.hpp" />
+    <ClInclude Include="Objects\PopcornMachine.hpp" />
+    <ClInclude Include="Objects\PopOut.hpp" />
+    <ClInclude Include="Objects\Press.hpp" />
+    <ClInclude Include="Objects\PrintBlock.hpp" />
+    <ClInclude Include="Objects\Projectile.hpp" />
+    <ClInclude Include="Objects\Propeller.hpp" />
+    <ClInclude Include="Objects\PropellerShaft.hpp" />
+    <ClInclude Include="Objects\PSZ1Intro.hpp" />
+    <ClInclude Include="Objects\PSZ1Setup.hpp" />
+    <ClInclude Include="Objects\PSZ2Intro.hpp" />
+    <ClInclude Include="Objects\PSZ2Outro.hpp" />
+    <ClInclude Include="Objects\PSZ2Setup.hpp" />
+    <ClInclude Include="Objects\PSZDoor.hpp" />
+    <ClInclude Include="Objects\PSZEggman.hpp" />
+    <ClInclude Include="Objects\PSZLauncher.hpp" />
+    <ClInclude Include="Objects\PullChain.hpp" />
+    <ClInclude Include="Objects\PullSwitch.hpp" />
+    <ClInclude Include="Objects\PushSpring.hpp" />
+    <ClInclude Include="Objects\PuyoAI.hpp" />
+    <ClInclude Include="Objects\PuyoAttack.hpp" />
+    <ClInclude Include="Objects\PuyoBean.hpp" />
+    <ClInclude Include="Objects\PuyoGame.hpp" />
+    <ClInclude Include="Objects\PuyoIndicator.hpp" />
+    <ClInclude Include="Objects\PuyoLabel.hpp" />
+    <ClInclude Include="Objects\PuyoLevelSelect.hpp" />
+    <ClInclude Include="Objects\PuyoMatch.hpp" />
+    <ClInclude Include="Objects\PuyoScore.hpp" />
+    <ClInclude Include="Objects\Rattlekiller.hpp" />
+    <ClInclude Include="Objects\Reagent.hpp" />
+    <ClInclude Include="Objects\ReplayDB.hpp" />
+    <ClInclude Include="Objects\ReplayRecorder.hpp" />
+    <ClInclude Include="Objects\Rexon.hpp" />
+    <ClInclude Include="Objects\Rhinobot.hpp" />
+    <ClInclude Include="Objects\Ring.hpp" />
+    <ClInclude Include="Objects\RingField.hpp" />
+    <ClInclude Include="Objects\RisingLava.hpp" />
+    <ClInclude Include="Objects\RockDrill.hpp" />
+    <ClInclude Include="Objects\RockemSockem.hpp" />
+    <ClInclude Include="Objects\RollerMKII.hpp" />
+    <ClInclude Include="Objects\RotatingSpikes.hpp" />
+    <ClInclude Include="Objects\RotatingStair.hpp" />
+    <ClInclude Include="Objects\RPlaneShifter.hpp" />
+    <ClInclude Include="Objects\RTeleporter.hpp" />
+    <ClInclude Include="Objects\RubyPortal.hpp" />
+    <ClInclude Include="Objects\SaveGame.hpp" />
+    <ClInclude Include="Objects\Scarab.hpp" />
+    <ClInclude Include="Objects\SchrodingersCapsule.hpp" />
+    <ClInclude Include="Objects\ScoreBonus.hpp" />
+    <ClInclude Include="Objects\ScrewMobile.hpp" />
+    <ClInclude Include="Objects\SDashWheel.hpp" />
+    <ClInclude Include="Objects\SeeSaw.hpp" />
+    <ClInclude Include="Objects\SeltzerBottle.hpp" />
+    <ClInclude Include="Objects\SeltzerWater.hpp" />
+    <ClInclude Include="Objects\SentryBug.hpp" />
+    <ClInclude Include="Objects\Shield.hpp" />
+    <ClInclude Include="Objects\Shiversaw.hpp" />
+    <ClInclude Include="Objects\ShopWindow.hpp" />
+    <ClInclude Include="Objects\Shuriken.hpp" />
+    <ClInclude Include="Objects\Shutterbug.hpp" />
+    <ClInclude Include="Objects\SideBarrel.hpp" />
+    <ClInclude Include="Objects\SignPost.hpp" />
+    <ClInclude Include="Objects\SilverSonic.hpp" />
+    <ClInclude Include="Objects\SizeLaser.hpp" />
+    <ClInclude Include="Objects\SkyTeleporter.hpp" />
+    <ClInclude Include="Objects\Smog.hpp" />
+    <ClInclude Include="Objects\Snowflakes.hpp" />
+    <ClInclude Include="Objects\Sol.hpp" />
+    <ClInclude Include="Objects\Soundboard.hpp" />
+    <ClInclude Include="Objects\SP500.hpp" />
+    <ClInclude Include="Objects\SP500MkII.hpp" />
+    <ClInclude Include="Objects\SparkRail.hpp" />
+    <ClInclude Include="Objects\Spear.hpp" />
+    <ClInclude Include="Objects\SpecialClear.hpp" />
+    <ClInclude Include="Objects\SpecialRing.hpp" />
+    <ClInclude Include="Objects\SpeedBooster.hpp" />
+    <ClInclude Include="Objects\SpeedGate.hpp" />
+    <ClInclude Include="Objects\SpiderMobile.hpp" />
+    <ClInclude Include="Objects\SpikeCorridor.hpp" />
+    <ClInclude Include="Objects\SpikeCrusher.hpp" />
+    <ClInclude Include="Objects\SpikeFlail.hpp" />
+    <ClInclude Include="Objects\SpikeLog.hpp" />
+    <ClInclude Include="Objects\Spikes.hpp" />
+    <ClInclude Include="Objects\SpinBooster.hpp" />
+    <ClInclude Include="Objects\SpinSign.hpp" />
+    <ClInclude Include="Objects\Spiny.hpp" />
+    <ClInclude Include="Objects\SpiralPlatform.hpp" />
+    <ClInclude Include="Objects\Splats.hpp" />
+    <ClInclude Include="Objects\Spring.hpp" />
+    <ClInclude Include="Objects\Springboard.hpp" />
+    <ClInclude Include="Objects\SPZ1Intro.hpp" />
+    <ClInclude Include="Objects\SPZ1Setup.hpp" />
+    <ClInclude Include="Objects\SPZ2Outro.hpp" />
+    <ClInclude Include="Objects\SPZ2Setup.hpp" />
+    <ClInclude Include="Objects\SSZ1Intro.hpp" />
+    <ClInclude Include="Objects\SSZ1Outro.hpp" />
+    <ClInclude Include="Objects\SSZ1Setup.hpp" />
+    <ClInclude Include="Objects\SSZ2Setup.hpp" />
+    <ClInclude Include="Objects\SSZ3Cutscene.hpp" />
+    <ClInclude Include="Objects\SSZEggman.hpp" />
+    <ClInclude Include="Objects\SSZSpikeBall.hpp" />
+    <ClInclude Include="Objects\SSZSpotlight.hpp" />
+    <ClInclude Include="Objects\Staircase.hpp" />
+    <ClInclude Include="Objects\Stalactite.hpp" />
+    <ClInclude Include="Objects\StarPost.hpp" />
+    <ClInclude Include="Objects\StickyPlatform.hpp" />
+    <ClInclude Include="Objects\Summary.hpp" />
+    <ClInclude Include="Objects\SummaryEmerald.hpp" />
+    <ClInclude Include="Objects\SuperSparkle.hpp" />
+    <ClInclude Include="Objects\Sweep.hpp" />
+    <ClInclude Include="Objects\SwingRope.hpp" />
+    <ClInclude Include="Objects\SwitchDoor.hpp" />
+    <ClInclude Include="Objects\Syringe.hpp" />
+    <ClInclude Include="Objects\TAEmerald.hpp" />
+    <ClInclude Include="Objects\Technosqueek.hpp" />
+    <ClInclude Include="Objects\TeeterTotter.hpp" />
+    <ClInclude Include="Objects\TetherBall.hpp" />
+    <ClInclude Include="Objects\ThanksSetup.hpp" />
+    <ClInclude Include="Objects\ThoughtBubble.hpp" />
+    <ClInclude Include="Objects\TilePlatform.hpp" />
+    <ClInclude Include="Objects\TimeAttackGate.hpp" />
+    <ClInclude Include="Objects\TimeAttackMenu.hpp" />
+    <ClInclude Include="Objects\TimePost.hpp" />
+    <ClInclude Include="Objects\TimeTravelSetup.hpp" />
+    <ClInclude Include="Objects\TippingPlatform.hpp" />
+    <ClInclude Include="Objects\Title3DSprite.hpp" />
+    <ClInclude Include="Objects\TitleBG.hpp" />
+    <ClInclude Include="Objects\TitleCard.hpp" />
+    <ClInclude Include="Objects\TitleEggman.hpp" />
+    <ClInclude Include="Objects\TitleLogo.hpp" />
+    <ClInclude Include="Objects\TitleSetup.hpp" />
+    <ClInclude Include="Objects\TitleSonic.hpp" />
+    <ClInclude Include="Objects\TMZ1Outro.hpp" />
+    <ClInclude Include="Objects\TMZ1Setup.hpp" />
+    <ClInclude Include="Objects\TMZ2Outro.hpp" />
+    <ClInclude Include="Objects\TMZ2Setup.hpp" />
+    <ClInclude Include="Objects\TMZ3Setup.hpp" />
+    <ClInclude Include="Objects\TMZAlert.hpp" />
+    <ClInclude Include="Objects\TMZBarrier.hpp" />
+    <ClInclude Include="Objects\TMZCable.hpp" />
+    <ClInclude Include="Objects\TMZFlames.hpp" />
+    <ClInclude Include="Objects\Tornado.hpp" />
+    <ClInclude Include="Objects\TornadoPath.hpp" />
+    <ClInclude Include="Objects\Toxomister.hpp" />
+    <ClInclude Include="Objects\TransportTube.hpp" />
+    <ClInclude Include="Objects\TryAgain.hpp" />
+    <ClInclude Include="Objects\TryAgainE.hpp" />
+    <ClInclude Include="Objects\TTCutscene.hpp" />
+    <ClInclude Include="Objects\TubeSpring.hpp" />
+    <ClInclude Include="Objects\Tubinaut.hpp" />
+    <ClInclude Include="Objects\Tuesday.hpp" />
+    <ClInclude Include="Objects\Turbine.hpp" />
+    <ClInclude Include="Objects\TurboSpiker.hpp" />
+    <ClInclude Include="Objects\TurboTurtle.hpp" />
+    <ClInclude Include="Objects\Turntable.hpp" />
+    <ClInclude Include="Objects\TurretSwitch.hpp" />
+    <ClInclude Include="Objects\TVFlyingBattery.hpp" />
+    <ClInclude Include="Objects\TVPole.hpp" />
+    <ClInclude Include="Objects\TVVan.hpp" />
+    <ClInclude Include="Objects\TwistedTubes.hpp" />
+    <ClInclude Include="Objects\TwistingDoor.hpp" />
+    <ClInclude Include="Objects\TwistingSlide.hpp" />
+    <ClInclude Include="Objects\UberCaterkiller.hpp" />
+    <ClInclude Include="Objects\UFO_Camera.hpp" />
+    <ClInclude Include="Objects\UFO_Circuit.hpp" />
+    <ClInclude Include="Objects\UFO_Decoration.hpp" />
+    <ClInclude Include="Objects\UFO_Dust.hpp" />
+    <ClInclude Include="Objects\UFO_HUD.hpp" />
+    <ClInclude Include="Objects\UFO_ItemBox.hpp" />
+    <ClInclude Include="Objects\UFO_Message.hpp" />
+    <ClInclude Include="Objects\UFO_Plasma.hpp" />
+    <ClInclude Include="Objects\UFO_Player.hpp" />
+    <ClInclude Include="Objects\UFO_Ring.hpp" />
+    <ClInclude Include="Objects\UFO_Setup.hpp" />
+    <ClInclude Include="Objects\UFO_Shadow.hpp" />
+    <ClInclude Include="Objects\UFO_SpeedLines.hpp" />
+    <ClInclude Include="Objects\UFO_Sphere.hpp" />
+    <ClInclude Include="Objects\UFO_Springboard.hpp" />
+    <ClInclude Include="Objects\UFO_Water.hpp" />
+    <ClInclude Include="Objects\UIBackground.hpp" />
+    <ClInclude Include="Objects\UIButton.hpp" />
+    <ClInclude Include="Objects\UIButtonLabel.hpp" />
+    <ClInclude Include="Objects\UIButtonPrompt.hpp" />
+    <ClInclude Include="Objects\UICarousel.hpp" />
+    <ClInclude Include="Objects\UICharButton.hpp" />
+    <ClInclude Include="Objects\UIChoice.hpp" />
+    <ClInclude Include="Objects\UIControl.hpp" />
+    <ClInclude Include="Objects\UICreditsText.hpp" />
+    <ClInclude Include="Objects\UIDialog.hpp" />
+    <ClInclude Include="Objects\UIDiorama.hpp" />
+    <ClInclude Include="Objects\UIHeading.hpp" />
+    <ClInclude Include="Objects\UIInfoLabel.hpp" />
+    <ClInclude Include="Objects\UIKeyBinder.hpp" />
+    <ClInclude Include="Objects\UILeaderboard.hpp" />
+    <ClInclude Include="Objects\UIMedallionPanel.hpp" />
+    <ClInclude Include="Objects\UIModeButton.hpp" />
+    <ClInclude Include="Objects\UIOptionPanel.hpp" />
+    <ClInclude Include="Objects\UIPicture.hpp" />
+    <ClInclude Include="Objects\UIPopover.hpp" />
+    <ClInclude Include="Objects\UIRankButton.hpp" />
+    <ClInclude Include="Objects\UIReplayCarousel.hpp" />
+    <ClInclude Include="Objects\UIResPicker.hpp" />
+    <ClInclude Include="Objects\UISaveSlot.hpp" />
+    <ClInclude Include="Objects\UIShifter.hpp" />
+    <ClInclude Include="Objects\UISlider.hpp" />
+    <ClInclude Include="Objects\UISubHeading.hpp" />
+    <ClInclude Include="Objects\UITABanner.hpp" />
+    <ClInclude Include="Objects\UITAZoneModule.hpp" />
+    <ClInclude Include="Objects\UIText.hpp" />
+    <ClInclude Include="Objects\UITransition.hpp" />
+    <ClInclude Include="Objects\UIUsernamePopup.hpp" />
+    <ClInclude Include="Objects\UIVideo.hpp" />
+    <ClInclude Include="Objects\UIVsCharSelector.hpp" />
+    <ClInclude Include="Objects\UIVsResults.hpp" />
+    <ClInclude Include="Objects\UIVsRoundPicker.hpp" />
+    <ClInclude Include="Objects\UIVsScoreboard.hpp" />
+    <ClInclude Include="Objects\UIVsZoneButton.hpp" />
+    <ClInclude Include="Objects\UIWaitSpinner.hpp" />
+    <ClInclude Include="Objects\UIWidgets.hpp" />
+    <ClInclude Include="Objects\UIWinSize.hpp" />
+    <ClInclude Include="Objects\UncurlPlant.hpp" />
+    <ClInclude Include="Objects\Valve.hpp" />
+    <ClInclude Include="Objects\VanishPlatform.hpp" />
+    <ClInclude Include="Objects\Vultron.hpp" />
+    <ClInclude Include="Objects\WalkerLegs.hpp" />
+    <ClInclude Include="Objects\WallBumper.hpp" />
+    <ClInclude Include="Objects\WarpDoor.hpp" />
+    <ClInclude Include="Objects\Water.hpp" />
+    <ClInclude Include="Objects\WaterfallSound.hpp" />
+    <ClInclude Include="Objects\WaterGush.hpp" />
+    <ClInclude Include="Objects\WeatherMobile.hpp" />
+    <ClInclude Include="Objects\WeatherTV.hpp" />
+    <ClInclude Include="Objects\Whirlpool.hpp" />
+    <ClInclude Include="Objects\WoodChipper.hpp" />
+    <ClInclude Include="Objects\Woodrow.hpp" />
+    <ClInclude Include="Objects\YoyoPulley.hpp" />
+    <ClInclude Include="Objects\ZipLine.hpp" />
+    <ClInclude Include="Objects\Zone.hpp" />
+    <ClInclude Include="SonicMania.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameObjects.cpp" />
+    <ClCompile Include="GameOptions.cpp" />
+    <ClCompile Include="Objects\ActClear.cpp" />
+    <ClCompile Include="Objects\AIZEggRobo.cpp" />
+    <ClCompile Include="Objects\AIZEncoreTutorial.cpp" />
+    <ClCompile Include="Objects\AIZKingClaw.cpp" />
+    <ClCompile Include="Objects\AIZRockPile.cpp" />
+    <ClCompile Include="Objects\AIZSetup.cpp" />
+    <ClCompile Include="Objects\AIZTornado.cpp" />
+    <ClCompile Include="Objects\AIZTornadoPath.cpp" />
+    <ClCompile Include="Objects\AmoebaDroid.cpp" />
+    <ClCompile Include="Objects\AnimalHBH.cpp" />
+    <ClCompile Include="Objects\Animals.cpp" />
+    <ClCompile Include="Objects\Announcer.cpp" />
+    <ClCompile Include="Objects\Aquis.cpp" />
+    <ClCompile Include="Objects\Armadiloid.cpp" />
+    <ClCompile Include="Objects\BallCannon.cpp" />
+    <ClCompile Include="Objects\BallHog.cpp" />
+    <ClCompile Include="Objects\BarStool.cpp" />
+    <ClCompile Include="Objects\Batbrain.cpp" />
+    <ClCompile Include="Objects\Beanstalk.cpp" />
+    <ClCompile Include="Objects\BGSwitch.cpp" />
+    <ClCompile Include="Objects\BigSqueeze.cpp" />
+    <ClCompile Include="Objects\BladePole.cpp" />
+    <ClCompile Include="Objects\Blaster.cpp" />
+    <ClCompile Include="Objects\Blastoid.cpp" />
+    <ClCompile Include="Objects\Bloominator.cpp" />
+    <ClCompile Include="Objects\BouncePlant.cpp" />
+    <ClCompile Include="Objects\BoundsMarker.cpp" />
+    <ClCompile Include="Objects\BreakableWall.cpp" />
+    <ClCompile Include="Objects\BreakBar.cpp" />
+    <ClCompile Include="Objects\Bridge.cpp" />
+    <ClCompile Include="Objects\BSS_Collectable.cpp" />
+    <ClCompile Include="Objects\BSS_Collected.cpp" />
+    <ClCompile Include="Objects\BSS_Horizon.cpp" />
+    <ClCompile Include="Objects\BSS_HUD.cpp" />
+    <ClCompile Include="Objects\BSS_Message.cpp" />
+    <ClCompile Include="Objects\BSS_Palette.cpp" />
+    <ClCompile Include="Objects\BSS_Player.cpp" />
+    <ClCompile Include="Objects\BSS_Setup.cpp" />
+    <ClCompile Include="Objects\BuckwildBall.cpp" />
+    <ClCompile Include="Objects\Buggernaut.cpp" />
+    <ClCompile Include="Objects\Bumpalo.cpp" />
+    <ClCompile Include="Objects\Bungee.cpp" />
+    <ClCompile Include="Objects\BurningLog.cpp" />
+    <ClCompile Include="Objects\Button.cpp" />
+    <ClCompile Include="Objects\ButtonDoor.cpp" />
+    <ClCompile Include="Objects\BuzzBomber.cpp" />
+    <ClCompile Include="Objects\BuzzSaw.cpp" />
+    <ClCompile Include="Objects\CableWarp.cpp" />
+    <ClCompile Include="Objects\Cactula.cpp" />
+    <ClCompile Include="Objects\Camera.cpp" />
+    <ClCompile Include="Objects\Canista.cpp" />
+    <ClCompile Include="Objects\CaterkillerJr.cpp" />
+    <ClCompile Include="Objects\ChaosEmerald.cpp" />
+    <ClCompile Include="Objects\CheckerBall.cpp" />
+    <ClCompile Include="Objects\ChemBubble.cpp" />
+    <ClCompile Include="Objects\ChemicalBall.cpp" />
+    <ClCompile Include="Objects\ChemicalPool.cpp" />
+    <ClCompile Include="Objects\Chopper.cpp" />
+    <ClCompile Include="Objects\CircleBumper.cpp" />
+    <ClCompile Include="Objects\Clapperboard.cpp" />
+    <ClCompile Include="Objects\Clucker.cpp" />
+    <ClCompile Include="Objects\CollapsingPlatform.cpp" />
+    <ClCompile Include="Objects\CollapsingSand.cpp" />
+    <ClCompile Include="Objects\Competition.cpp" />
+    <ClCompile Include="Objects\CompetitionMenu.cpp" />
+    <ClCompile Include="Objects\Constellation.cpp" />
+    <ClCompile Include="Objects\ContinuePlayer.cpp" />
+    <ClCompile Include="Objects\ContinueSetup.cpp" />
+    <ClCompile Include="Objects\ConveyorBelt.cpp" />
+    <ClCompile Include="Objects\ConveyorPlatform.cpp" />
+    <ClCompile Include="Objects\ConveyorWheel.cpp" />
+    <ClCompile Include="Objects\CorkscrewPath.cpp" />
+    <ClCompile Include="Objects\COverlay.cpp" />
+    <ClCompile Include="Objects\CPZ1Intro.cpp" />
+    <ClCompile Include="Objects\CPZ2Outro.cpp" />
+    <ClCompile Include="Objects\CPZBoss.cpp" />
+    <ClCompile Include="Objects\CPZSetup.cpp" />
+    <ClCompile Include="Objects\CPZShutter.cpp" />
+    <ClCompile Include="Objects\Crabmeat.cpp" />
+    <ClCompile Include="Objects\Crane.cpp" />
+    <ClCompile Include="Objects\CrashTest.cpp" />
+    <ClCompile Include="Objects\Crate.cpp" />
+    <ClCompile Include="Objects\CreditsSetup.cpp" />
+    <ClCompile Include="Objects\CrimsonEye.cpp" />
+    <ClCompile Include="Objects\Current.cpp" />
+    <ClCompile Include="Objects\CutsceneHBH.cpp" />
+    <ClCompile Include="Objects\CutsceneSeq.cpp" />
+    <ClCompile Include="Objects\Cylinder.cpp" />
+    <ClCompile Include="Objects\DAControl.cpp" />
+    <ClCompile Include="Objects\Dango.cpp" />
+    <ClCompile Include="Objects\DASetup.cpp" />
+    <ClCompile Include="Objects\DashLift.cpp" />
+    <ClCompile Include="Objects\DBTower.cpp" />
+    <ClCompile Include="Objects\DCEvent.cpp" />
+    <ClCompile Include="Objects\DDWrecker.cpp" />
+    <ClCompile Include="Objects\Debris.cpp" />
+    <ClCompile Include="Objects\DebugMode.cpp" />
+    <ClCompile Include="Objects\Decoration.cpp" />
+    <ClCompile Include="Objects\DERobot.cpp" />
+    <ClCompile Include="Objects\DialogRunner.cpp" />
+    <ClCompile Include="Objects\DirectorChair.cpp" />
+    <ClCompile Include="Objects\DiveEggman.cpp" />
+    <ClCompile Include="Objects\DNARiser.cpp" />
+    <ClCompile Include="Objects\DoorTrigger.cpp" />
+    <ClCompile Include="Objects\Dragonfly.cpp" />
+    <ClCompile Include="Objects\Drillerdroid.cpp" />
+    <ClCompile Include="Objects\DrillerdroidO.cpp" />
+    <ClCompile Include="Objects\Dust.cpp" />
+    <ClCompile Include="Objects\EggLoco.cpp" />
+    <ClCompile Include="Objects\Eggman.cpp" />
+    <ClCompile Include="Objects\EggPistonsMKII.cpp" />
+    <ClCompile Include="Objects\EggPrison.cpp" />
+    <ClCompile Include="Objects\EggTower.cpp" />
+    <ClCompile Include="Objects\EggTV.cpp" />
+    <ClCompile Include="Objects\ElectroMagnet.cpp" />
+    <ClCompile Include="Objects\EncoreGoodEnd.cpp" />
+    <ClCompile Include="Objects\EncoreIntro.cpp" />
+    <ClCompile Include="Objects\EncoreRoute.cpp" />
+    <ClCompile Include="Objects\ERZGunner.cpp" />
+    <ClCompile Include="Objects\ERZKing.cpp" />
+    <ClCompile Include="Objects\ERZMystic.cpp" />
+    <ClCompile Include="Objects\ERZOutro.cpp" />
+    <ClCompile Include="Objects\ERZRider.cpp" />
+    <ClCompile Include="Objects\ERZSetup.cpp" />
+    <ClCompile Include="Objects\ERZShinobi.cpp" />
+    <ClCompile Include="Objects\ERZStart.cpp" />
+    <ClCompile Include="Objects\EscapeCar.cpp" />
+    <ClCompile Include="Objects\Explosion.cpp" />
+    <ClCompile Include="Objects\ExtrasMenu.cpp" />
+    <ClCompile Include="Objects\Fan.cpp" />
+    <ClCompile Include="Objects\FarPlane.cpp" />
+    <ClCompile Include="Objects\FBZ1Outro.cpp" />
+    <ClCompile Include="Objects\FBZ2Outro.cpp" />
+    <ClCompile Include="Objects\FBZFan.cpp" />
+    <ClCompile Include="Objects\FBZMissile.cpp" />
+    <ClCompile Include="Objects\FBZSetup.cpp" />
+    <ClCompile Include="Objects\FBZSinkTrash.cpp" />
+    <ClCompile Include="Objects\FBZStorm.cpp" />
+    <ClCompile Include="Objects\FBZTrash.cpp" />
+    <ClCompile Include="Objects\FernParallax.cpp" />
+    <ClCompile Include="Objects\FilmProjector.cpp" />
+    <ClCompile Include="Objects\FilmReel.cpp" />
+    <ClCompile Include="Objects\Fireflies.cpp" />
+    <ClCompile Include="Objects\Firework.cpp" />
+    <ClCompile Include="Objects\Fireworm.cpp" />
+    <ClCompile Include="Objects\FlameSpring.cpp" />
+    <ClCompile Include="Objects\Flamethrower.cpp" />
+    <ClCompile Include="Objects\FlasherMKII.cpp" />
+    <ClCompile Include="Objects\FlingRamp.cpp" />
+    <ClCompile Include="Objects\Flipper.cpp" />
+    <ClCompile Include="Objects\FlowerPod.cpp" />
+    <ClCompile Include="Objects\FoldingPlatform.cpp" />
+    <ClCompile Include="Objects\ForceSpin.cpp" />
+    <ClCompile Include="Objects\ForceUnstick.cpp" />
+    <ClCompile Include="Objects\FrostThrower.cpp" />
+    <ClCompile Include="Objects\Funnel.cpp" />
+    <ClCompile Include="Objects\FXExpandRing.cpp" />
+    <ClCompile Include="Objects\FXFade.cpp" />
+    <ClCompile Include="Objects\FXRuby.cpp" />
+    <ClCompile Include="Objects\FXSpinRay.cpp" />
+    <ClCompile Include="Objects\FXTrail.cpp" />
+    <ClCompile Include="Objects\FXWaveRing.cpp" />
+    <ClCompile Include="Objects\Gachapandora.cpp" />
+    <ClCompile Include="Objects\GameOver.cpp" />
+    <ClCompile Include="Objects\GasPlatform.cpp" />
+    <ClCompile Include="Objects\GenericTrigger.cpp" />
+    <ClCompile Include="Objects\GHZ2Outro.cpp" />
+    <ClCompile Include="Objects\GHZCutsceneK.cpp" />
+    <ClCompile Include="Objects\GHZCutsceneST.cpp" />
+    <ClCompile Include="Objects\GHZSetup.cpp" />
+    <ClCompile Include="Objects\GiantPistol.cpp" />
+    <ClCompile Include="Objects\GigaMetal.cpp" />
+    <ClCompile Include="Objects\Gondola.cpp" />
+    <ClCompile Include="Objects\Grabber.cpp" />
+    <ClCompile Include="Objects\GreenScreen.cpp" />
+    <ClCompile Include="Objects\GymBar.cpp" />
+    <ClCompile Include="Objects\HandLauncher.cpp" />
+    <ClCompile Include="Objects\HangConveyor.cpp" />
+    <ClCompile Include="Objects\HangGlider.cpp" />
+    <ClCompile Include="Objects\HangPoint.cpp" />
+    <ClCompile Include="Objects\Hatch.cpp" />
+    <ClCompile Include="Objects\Hatterkiller.cpp" />
+    <ClCompile Include="Objects\HCZ1Intro.cpp" />
+    <ClCompile Include="Objects\HCZOneWayDoor.cpp" />
+    <ClCompile Include="Objects\HCZSetup.cpp" />
+    <ClCompile Include="Objects\HCZSpikeBall.cpp" />
+    <ClCompile Include="Objects\HeavyGunner.cpp" />
+    <ClCompile Include="Objects\HeavyKing.cpp" />
+    <ClCompile Include="Objects\HeavyMystic.cpp" />
+    <ClCompile Include="Objects\HeavyRider.cpp" />
+    <ClCompile Include="Objects\HeavyShinobi.cpp" />
+    <ClCompile Include="Objects\HiLoSign.cpp" />
+    <ClCompile Include="Objects\Honkytonk.cpp" />
+    <ClCompile Include="Objects\Hotaru.cpp" />
+    <ClCompile Include="Objects\HotaruHiWatt.cpp" />
+    <ClCompile Include="Objects\HotaruMKII.cpp" />
+    <ClCompile Include="Objects\HPZEmerald.cpp" />
+    <ClCompile Include="Objects\HUD.cpp" />
+    <ClCompile Include="Objects\Ice.cpp" />
+    <ClCompile Include="Objects\IceBomba.cpp" />
+    <ClCompile Include="Objects\IceSpring.cpp" />
+    <ClCompile Include="Objects\ImageTrail.cpp" />
+    <ClCompile Include="Objects\InvincibleStars.cpp" />
+    <ClCompile Include="Objects\InvisibleBlock.cpp" />
+    <ClCompile Include="Objects\ItemBox.cpp" />
+    <ClCompile Include="Objects\Iwamodoki.cpp" />
+    <ClCompile Include="Objects\JacobsLadder.cpp" />
+    <ClCompile Include="Objects\Jawz.cpp" />
+    <ClCompile Include="Objects\Jellygnite.cpp" />
+    <ClCompile Include="Objects\JuggleSaw.cpp" />
+    <ClCompile Include="Objects\JunctionWheel.cpp" />
+    <ClCompile Include="Objects\Kabasira.cpp" />
+    <ClCompile Include="Objects\Kanabun.cpp" />
+    <ClCompile Include="Objects\KingAttack.cpp" />
+    <ClCompile Include="Objects\KingClaw.cpp" />
+    <ClCompile Include="Objects\KleptoMobile.cpp" />
+    <ClCompile Include="Objects\LargeGear.cpp" />
+    <ClCompile Include="Objects\Launcher.cpp" />
+    <ClCompile Include="Objects\LaunchSpring.cpp" />
+    <ClCompile Include="Objects\LaundroMobile.cpp" />
+    <ClCompile Include="Objects\LavaFall.cpp" />
+    <ClCompile Include="Objects\LavaGeyser.cpp" />
+    <ClCompile Include="Objects\LEDPanel.cpp" />
+    <ClCompile Include="Objects\Letterboard.cpp" />
+    <ClCompile Include="Objects\LevelSelect.cpp" />
+    <ClCompile Include="Objects\LightBarrier.cpp" />
+    <ClCompile Include="Objects\LightBulb.cpp" />
+    <ClCompile Include="Objects\Localization.cpp" />
+    <ClCompile Include="Objects\LocoSmoke.cpp" />
+    <ClCompile Include="Objects\LogoSetup.cpp" />
+    <ClCompile Include="Objects\LottoBall.cpp" />
+    <ClCompile Include="Objects\LottoMachine.cpp" />
+    <ClCompile Include="Objects\LoveTester.cpp" />
+    <ClCompile Include="Objects\LRZ1Intro.cpp" />
+    <ClCompile Include="Objects\LRZ1Outro.cpp" />
+    <ClCompile Include="Objects\LRZ1Setup.cpp" />
+    <ClCompile Include="Objects\LRZ2Setup.cpp" />
+    <ClCompile Include="Objects\LRZ3Cutscene.cpp" />
+    <ClCompile Include="Objects\LRZ3Outro.cpp" />
+    <ClCompile Include="Objects\LRZ3OutroK.cpp" />
+    <ClCompile Include="Objects\LRZ3Setup.cpp" />
+    <ClCompile Include="Objects\LRZConvControl.cpp" />
+    <ClCompile Include="Objects\LRZConvDropper.cpp" />
+    <ClCompile Include="Objects\LRZConveyor.cpp" />
+    <ClCompile Include="Objects\LRZConvItem.cpp" />
+    <ClCompile Include="Objects\LRZConvSwitch.cpp" />
+    <ClCompile Include="Objects\LRZFireball.cpp" />
+    <ClCompile Include="Objects\LRZRockPile.cpp" />
+    <ClCompile Include="Objects\LRZSpikeBall.cpp" />
+    <ClCompile Include="Objects\LRZSpiral.cpp" />
+    <ClCompile Include="Objects\MagnetSphere.cpp" />
+    <ClCompile Include="Objects\MagPlatform.cpp" />
+    <ClCompile Include="Objects\MagSpikeBall.cpp" />
+    <ClCompile Include="Objects\MainMenu.cpp" />
+    <ClCompile Include="Objects\ManiaModeMenu.cpp" />
+    <ClCompile Include="Objects\MatryoshkaBom.cpp" />
+    <ClCompile Include="Objects\MechaBu.cpp" />
+    <ClCompile Include="Objects\MegaChopper.cpp" />
+    <ClCompile Include="Objects\MegaOctus.cpp" />
+    <ClCompile Include="Objects\MenuParam.cpp" />
+    <ClCompile Include="Objects\MenuSetup.cpp" />
+    <ClCompile Include="Objects\MetalArm.cpp" />
+    <ClCompile Include="Objects\MetalSonic.cpp" />
+    <ClCompile Include="Objects\MeterDroid.cpp" />
+    <ClCompile Include="Objects\MicDrop.cpp" />
+    <ClCompile Include="Objects\Mine.cpp" />
+    <ClCompile Include="Objects\MMZ2Outro.cpp" />
+    <ClCompile Include="Objects\MMZLightning.cpp" />
+    <ClCompile Include="Objects\MMZSetup.cpp" />
+    <ClCompile Include="Objects\MMZWheel.cpp" />
+    <ClCompile Include="Objects\MonarchBG.cpp" />
+    <ClCompile Include="Objects\MonarchPlans.cpp" />
+    <ClCompile Include="Objects\MonkeyDude.cpp" />
+    <ClCompile Include="Objects\Motobug.cpp" />
+    <ClCompile Include="Objects\MSBomb.cpp" />
+    <ClCompile Include="Objects\MSFactory.cpp" />
+    <ClCompile Include="Objects\MSHologram.cpp" />
+    <ClCompile Include="Objects\MSOrb.cpp" />
+    <ClCompile Include="Objects\MSPanel.cpp" />
+    <ClCompile Include="Objects\MSZ1KIntro.cpp" />
+    <ClCompile Include="Objects\MSZ2Cutscene.cpp" />
+    <ClCompile Include="Objects\MSZCutsceneK.cpp" />
+    <ClCompile Include="Objects\MSZCutsceneST.cpp" />
+    <ClCompile Include="Objects\MSZSetup.cpp" />
+    <ClCompile Include="Objects\MSZSpotlight.cpp" />
+    <ClCompile Include="Objects\Music.cpp" />
+    <ClCompile Include="Objects\Newspaper.cpp" />
+    <ClCompile Include="Objects\Newtron.cpp" />
+    <ClCompile Include="Objects\NoSwap.cpp" />
+    <ClCompile Include="Objects\Octus.cpp" />
+    <ClCompile Include="Objects\OneWayDoor.cpp" />
+    <ClCompile Include="Objects\OOZ1Outro.cpp" />
+    <ClCompile Include="Objects\OOZ2Outro.cpp" />
+    <ClCompile Include="Objects\OOZFlames.cpp" />
+    <ClCompile Include="Objects\OOZSetup.cpp" />
+    <ClCompile Include="Objects\OptionsMenu.cpp" />
+    <ClCompile Include="Objects\OrbitSpike.cpp" />
+    <ClCompile Include="Objects\PaintingEyes.cpp" />
+    <ClCompile Include="Objects\PaperRoller.cpp" />
+    <ClCompile Include="Objects\ParallaxSprite.cpp" />
+    <ClCompile Include="Objects\PathInverter.cpp" />
+    <ClCompile Include="Objects\PauseMenu.cpp" />
+    <ClCompile Include="Objects\PBL_Bumper.cpp" />
+    <ClCompile Include="Objects\PBL_Camera.cpp" />
+    <ClCompile Include="Objects\PBL_Crane.cpp" />
+    <ClCompile Include="Objects\PBL_Flipper.cpp" />
+    <ClCompile Include="Objects\PBL_HUD.cpp" />
+    <ClCompile Include="Objects\PBL_Player.cpp" />
+    <ClCompile Include="Objects\PBL_Ring.cpp" />
+    <ClCompile Include="Objects\PBL_Sector.cpp" />
+    <ClCompile Include="Objects\PBL_Setup.cpp" />
+    <ClCompile Include="Objects\PBL_TargetBumper.cpp" />
+    <ClCompile Include="Objects\PetalPile.cpp" />
+    <ClCompile Include="Objects\PhantomEgg.cpp" />
+    <ClCompile Include="Objects\PhantomGunner.cpp" />
+    <ClCompile Include="Objects\PhantomHand.cpp" />
+    <ClCompile Include="Objects\PhantomKing.cpp" />
+    <ClCompile Include="Objects\PhantomMissile.cpp" />
+    <ClCompile Include="Objects\PhantomMystic.cpp" />
+    <ClCompile Include="Objects\PhantomRider.cpp" />
+    <ClCompile Include="Objects\PhantomRuby.cpp" />
+    <ClCompile Include="Objects\PhantomShield.cpp" />
+    <ClCompile Include="Objects\PhantomShinobi.cpp" />
+    <ClCompile Include="Objects\PimPom.cpp" />
+    <ClCompile Include="Objects\Pinata.cpp" />
+    <ClCompile Include="Objects\Piston.cpp" />
+    <ClCompile Include="Objects\PKingAttack.cpp" />
+    <ClCompile Include="Objects\PlaneSeeSaw.cpp" />
+    <ClCompile Include="Objects\PlaneSwitch.cpp" />
+    <ClCompile Include="Objects\Platform.cpp" />
+    <ClCompile Include="Objects\PlatformControl.cpp" />
+    <ClCompile Include="Objects\PlatformNode.cpp" />
+    <ClCompile Include="Objects\Player.cpp" />
+    <ClCompile Include="Objects\PlayerProbe.cpp" />
+    <ClCompile Include="Objects\PohBee.cpp" />
+    <ClCompile Include="Objects\Pointdexter.cpp" />
+    <ClCompile Include="Objects\PopcornKernel.cpp" />
+    <ClCompile Include="Objects\PopcornMachine.cpp" />
+    <ClCompile Include="Objects\PopOut.cpp" />
+    <ClCompile Include="Objects\Press.cpp" />
+    <ClCompile Include="Objects\PrintBlock.cpp" />
+    <ClCompile Include="Objects\Projectile.cpp" />
+    <ClCompile Include="Objects\Propeller.cpp" />
+    <ClCompile Include="Objects\PropellerShaft.cpp" />
+    <ClCompile Include="Objects\PSZ1Intro.cpp" />
+    <ClCompile Include="Objects\PSZ1Setup.cpp" />
+    <ClCompile Include="Objects\PSZ2Intro.cpp" />
+    <ClCompile Include="Objects\PSZ2Outro.cpp" />
+    <ClCompile Include="Objects\PSZ2Setup.cpp" />
+    <ClCompile Include="Objects\PSZDoor.cpp" />
+    <ClCompile Include="Objects\PSZEggman.cpp" />
+    <ClCompile Include="Objects\PSZLauncher.cpp" />
+    <ClCompile Include="Objects\PullChain.cpp" />
+    <ClCompile Include="Objects\PullSwitch.cpp" />
+    <ClCompile Include="Objects\PushSpring.cpp" />
+    <ClCompile Include="Objects\PuyoAI.cpp" />
+    <ClCompile Include="Objects\PuyoAttack.cpp" />
+    <ClCompile Include="Objects\PuyoBean.cpp" />
+    <ClCompile Include="Objects\PuyoGame.cpp" />
+    <ClCompile Include="Objects\PuyoIndicator.cpp" />
+    <ClCompile Include="Objects\PuyoLabel.cpp" />
+    <ClCompile Include="Objects\PuyoLevelSelect.cpp" />
+    <ClCompile Include="Objects\PuyoMatch.cpp" />
+    <ClCompile Include="Objects\PuyoScore.cpp" />
+    <ClCompile Include="Objects\Rattlekiller.cpp" />
+    <ClCompile Include="Objects\Reagent.cpp" />
+    <ClCompile Include="Objects\ReplayDB.cpp" />
+    <ClCompile Include="Objects\ReplayRecorder.cpp" />
+    <ClCompile Include="Objects\Rexon.cpp" />
+    <ClCompile Include="Objects\Rhinobot.cpp" />
+    <ClCompile Include="Objects\Ring.cpp" />
+    <ClCompile Include="Objects\RingField.cpp" />
+    <ClCompile Include="Objects\RisingLava.cpp" />
+    <ClCompile Include="Objects\RockDrill.cpp" />
+    <ClCompile Include="Objects\RockemSockem.cpp" />
+    <ClCompile Include="Objects\RollerMKII.cpp" />
+    <ClCompile Include="Objects\RotatingSpikes.cpp" />
+    <ClCompile Include="Objects\RotatingStair.cpp" />
+    <ClCompile Include="Objects\RPlaneShifter.cpp" />
+    <ClCompile Include="Objects\RTeleporter.cpp" />
+    <ClCompile Include="Objects\RubyPortal.cpp" />
+    <ClCompile Include="Objects\SaveGame.cpp" />
+    <ClCompile Include="Objects\Scarab.cpp" />
+    <ClCompile Include="Objects\SchrodingersCapsule.cpp" />
+    <ClCompile Include="Objects\ScoreBonus.cpp" />
+    <ClCompile Include="Objects\ScrewMobile.cpp" />
+    <ClCompile Include="Objects\SDashWheel.cpp" />
+    <ClCompile Include="Objects\SeeSaw.cpp" />
+    <ClCompile Include="Objects\SeltzerBottle.cpp" />
+    <ClCompile Include="Objects\SeltzerWater.cpp" />
+    <ClCompile Include="Objects\SentryBug.cpp" />
+    <ClCompile Include="Objects\Shield.cpp" />
+    <ClCompile Include="Objects\Shiversaw.cpp" />
+    <ClCompile Include="Objects\ShopWindow.cpp" />
+    <ClCompile Include="Objects\Shuriken.cpp" />
+    <ClCompile Include="Objects\Shutterbug.cpp" />
+    <ClCompile Include="Objects\SideBarrel.cpp" />
+    <ClCompile Include="Objects\SignPost.cpp" />
+    <ClCompile Include="Objects\SilverSonic.cpp" />
+    <ClCompile Include="Objects\SizeLaser.cpp" />
+    <ClCompile Include="Objects\SkyTeleporter.cpp" />
+    <ClCompile Include="Objects\Smog.cpp" />
+    <ClCompile Include="Objects\Snowflakes.cpp" />
+    <ClCompile Include="Objects\Sol.cpp" />
+    <ClCompile Include="Objects\Soundboard.cpp" />
+    <ClCompile Include="Objects\SP500.cpp" />
+    <ClCompile Include="Objects\SP500MkII.cpp" />
+    <ClCompile Include="Objects\SparkRail.cpp" />
+    <ClCompile Include="Objects\Spear.cpp" />
+    <ClCompile Include="Objects\SpecialClear.cpp" />
+    <ClCompile Include="Objects\SpecialRing.cpp" />
+    <ClCompile Include="Objects\SpeedBooster.cpp" />
+    <ClCompile Include="Objects\SpeedGate.cpp" />
+    <ClCompile Include="Objects\SpiderMobile.cpp" />
+    <ClCompile Include="Objects\SpikeCorridor.cpp" />
+    <ClCompile Include="Objects\SpikeCrusher.cpp" />
+    <ClCompile Include="Objects\SpikeFlail.cpp" />
+    <ClCompile Include="Objects\SpikeLog.cpp" />
+    <ClCompile Include="Objects\Spikes.cpp" />
+    <ClCompile Include="Objects\SpinBooster.cpp" />
+    <ClCompile Include="Objects\SpinSign.cpp" />
+    <ClCompile Include="Objects\Spiny.cpp" />
+    <ClCompile Include="Objects\SpiralPlatform.cpp" />
+    <ClCompile Include="Objects\Splats.cpp" />
+    <ClCompile Include="Objects\Spring.cpp" />
+    <ClCompile Include="Objects\Springboard.cpp" />
+    <ClCompile Include="Objects\SPZ1Intro.cpp" />
+    <ClCompile Include="Objects\SPZ1Setup.cpp" />
+    <ClCompile Include="Objects\SPZ2Outro.cpp" />
+    <ClCompile Include="Objects\SPZ2Setup.cpp" />
+    <ClCompile Include="Objects\SSZ1Intro.cpp" />
+    <ClCompile Include="Objects\SSZ1Outro.cpp" />
+    <ClCompile Include="Objects\SSZ1Setup.cpp" />
+    <ClCompile Include="Objects\SSZ2Setup.cpp" />
+    <ClCompile Include="Objects\SSZ3Cutscene.cpp" />
+    <ClCompile Include="Objects\SSZEggman.cpp" />
+    <ClCompile Include="Objects\SSZSpikeBall.cpp" />
+    <ClCompile Include="Objects\SSZSpotlight.cpp" />
+    <ClCompile Include="Objects\Staircase.cpp" />
+    <ClCompile Include="Objects\Stalactite.cpp" />
+    <ClCompile Include="Objects\StarPost.cpp" />
+    <ClCompile Include="Objects\StickyPlatform.cpp" />
+    <ClCompile Include="Objects\Summary.cpp" />
+    <ClCompile Include="Objects\SummaryEmerald.cpp" />
+    <ClCompile Include="Objects\SuperSparkle.cpp" />
+    <ClCompile Include="Objects\Sweep.cpp" />
+    <ClCompile Include="Objects\SwingRope.cpp" />
+    <ClCompile Include="Objects\SwitchDoor.cpp" />
+    <ClCompile Include="Objects\Syringe.cpp" />
+    <ClCompile Include="Objects\TAEmerald.cpp" />
+    <ClCompile Include="Objects\Technosqueek.cpp" />
+    <ClCompile Include="Objects\TeeterTotter.cpp" />
+    <ClCompile Include="Objects\TetherBall.cpp" />
+    <ClCompile Include="Objects\ThanksSetup.cpp" />
+    <ClCompile Include="Objects\ThoughtBubble.cpp" />
+    <ClCompile Include="Objects\TilePlatform.cpp" />
+    <ClCompile Include="Objects\TimeAttackGate.cpp" />
+    <ClCompile Include="Objects\TimeAttackMenu.cpp" />
+    <ClCompile Include="Objects\TimePost.cpp" />
+    <ClCompile Include="Objects\TimeTravelSetup.cpp" />
+    <ClCompile Include="Objects\TippingPlatform.cpp" />
+    <ClCompile Include="Objects\Title3DSprite.cpp" />
+    <ClCompile Include="Objects\TitleBG.cpp" />
+    <ClCompile Include="Objects\TitleCard.cpp" />
+    <ClCompile Include="Objects\TitleEggman.cpp" />
+    <ClCompile Include="Objects\TitleLogo.cpp" />
+    <ClCompile Include="Objects\TitleSetup.cpp" />
+    <ClCompile Include="Objects\TitleSonic.cpp" />
+    <ClCompile Include="Objects\TMZ1Outro.cpp" />
+    <ClCompile Include="Objects\TMZ1Setup.cpp" />
+    <ClCompile Include="Objects\TMZ2Outro.cpp" />
+    <ClCompile Include="Objects\TMZ2Setup.cpp" />
+    <ClCompile Include="Objects\TMZ3Setup.cpp" />
+    <ClCompile Include="Objects\TMZAlert.cpp" />
+    <ClCompile Include="Objects\TMZBarrier.cpp" />
+    <ClCompile Include="Objects\TMZCable.cpp" />
+    <ClCompile Include="Objects\TMZFlames.cpp" />
+    <ClCompile Include="Objects\Tornado.cpp" />
+    <ClCompile Include="Objects\TornadoPath.cpp" />
+    <ClCompile Include="Objects\Toxomister.cpp" />
+    <ClCompile Include="Objects\TransportTube.cpp" />
+    <ClCompile Include="Objects\TryAgain.cpp" />
+    <ClCompile Include="Objects\TryAgainE.cpp" />
+    <ClCompile Include="Objects\TTCutscene.cpp" />
+    <ClCompile Include="Objects\TubeSpring.cpp" />
+    <ClCompile Include="Objects\Tubinaut.cpp" />
+    <ClCompile Include="Objects\Tuesday.cpp" />
+    <ClCompile Include="Objects\Turbine.cpp" />
+    <ClCompile Include="Objects\TurboSpiker.cpp" />
+    <ClCompile Include="Objects\TurboTurtle.cpp" />
+    <ClCompile Include="Objects\Turntable.cpp" />
+    <ClCompile Include="Objects\TurretSwitch.cpp" />
+    <ClCompile Include="Objects\TVFlyingBattery.cpp" />
+    <ClCompile Include="Objects\TVPole.cpp" />
+    <ClCompile Include="Objects\TVVan.cpp" />
+    <ClCompile Include="Objects\TwistedTubes.cpp" />
+    <ClCompile Include="Objects\TwistingDoor.cpp" />
+    <ClCompile Include="Objects\TwistingSlide.cpp" />
+    <ClCompile Include="Objects\UberCaterkiller.cpp" />
+    <ClCompile Include="Objects\UFO_Camera.cpp" />
+    <ClCompile Include="Objects\UFO_Circuit.cpp" />
+    <ClCompile Include="Objects\UFO_Decoration.cpp" />
+    <ClCompile Include="Objects\UFO_Dust.cpp" />
+    <ClCompile Include="Objects\UFO_HUD.cpp" />
+    <ClCompile Include="Objects\UFO_ItemBox.cpp" />
+    <ClCompile Include="Objects\UFO_Message.cpp" />
+    <ClCompile Include="Objects\UFO_Plasma.cpp" />
+    <ClCompile Include="Objects\UFO_Player.cpp" />
+    <ClCompile Include="Objects\UFO_Ring.cpp" />
+    <ClCompile Include="Objects\UFO_Setup.cpp" />
+    <ClCompile Include="Objects\UFO_Shadow.cpp" />
+    <ClCompile Include="Objects\UFO_SpeedLines.cpp" />
+    <ClCompile Include="Objects\UFO_Sphere.cpp" />
+    <ClCompile Include="Objects\UFO_Springboard.cpp" />
+    <ClCompile Include="Objects\UFO_Water.cpp" />
+    <ClCompile Include="Objects\UIBackground.cpp" />
+    <ClCompile Include="Objects\UIButton.cpp" />
+    <ClCompile Include="Objects\UIButtonLabel.cpp" />
+    <ClCompile Include="Objects\UIButtonPrompt.cpp" />
+    <ClCompile Include="Objects\UICarousel.cpp" />
+    <ClCompile Include="Objects\UICharButton.cpp" />
+    <ClCompile Include="Objects\UIChoice.cpp" />
+    <ClCompile Include="Objects\UIControl.cpp" />
+    <ClCompile Include="Objects\UICreditsText.cpp" />
+    <ClCompile Include="Objects\UIDialog.cpp" />
+    <ClCompile Include="Objects\UIDiorama.cpp" />
+    <ClCompile Include="Objects\UIHeading.cpp" />
+    <ClCompile Include="Objects\UIInfoLabel.cpp" />
+    <ClCompile Include="Objects\UIKeyBinder.cpp" />
+    <ClCompile Include="Objects\UILeaderboard.cpp" />
+    <ClCompile Include="Objects\UIMedallionPanel.cpp" />
+    <ClCompile Include="Objects\UIModeButton.cpp" />
+    <ClCompile Include="Objects\UIOptionPanel.cpp" />
+    <ClCompile Include="Objects\UIPicture.cpp" />
+    <ClCompile Include="Objects\UIPopover.cpp" />
+    <ClCompile Include="Objects\UIRankButton.cpp" />
+    <ClCompile Include="Objects\UIReplayCarousel.cpp" />
+    <ClCompile Include="Objects\UIResPicker.cpp" />
+    <ClCompile Include="Objects\UISaveSlot.cpp" />
+    <ClCompile Include="Objects\UIShifter.cpp" />
+    <ClCompile Include="Objects\UISlider.cpp" />
+    <ClCompile Include="Objects\UISubHeading.cpp" />
+    <ClCompile Include="Objects\UITABanner.cpp" />
+    <ClCompile Include="Objects\UITAZoneModule.cpp" />
+    <ClCompile Include="Objects\UIText.cpp" />
+    <ClCompile Include="Objects\UITransition.cpp" />
+    <ClCompile Include="Objects\UIUsernamePopup.cpp" />
+    <ClCompile Include="Objects\UIVideo.cpp" />
+    <ClCompile Include="Objects\UIVsCharSelector.cpp" />
+    <ClCompile Include="Objects\UIVsResults.cpp" />
+    <ClCompile Include="Objects\UIVsRoundPicker.cpp" />
+    <ClCompile Include="Objects\UIVsScoreboard.cpp" />
+    <ClCompile Include="Objects\UIVsZoneButton.cpp" />
+    <ClCompile Include="Objects\UIWaitSpinner.cpp" />
+    <ClCompile Include="Objects\UIWidgets.cpp" />
+    <ClCompile Include="Objects\UIWinSize.cpp" />
+    <ClCompile Include="Objects\UncurlPlant.cpp" />
+    <ClCompile Include="Objects\Valve.cpp" />
+    <ClCompile Include="Objects\VanishPlatform.cpp" />
+    <ClCompile Include="Objects\Vultron.cpp" />
+    <ClCompile Include="Objects\WalkerLegs.cpp" />
+    <ClCompile Include="Objects\WallBumper.cpp" />
+    <ClCompile Include="Objects\WarpDoor.cpp" />
+    <ClCompile Include="Objects\Water.cpp" />
+    <ClCompile Include="Objects\WaterfallSound.cpp" />
+    <ClCompile Include="Objects\WaterGush.cpp" />
+    <ClCompile Include="Objects\WeatherMobile.cpp" />
+    <ClCompile Include="Objects\WeatherTV.cpp" />
+    <ClCompile Include="Objects\Whirlpool.cpp" />
+    <ClCompile Include="Objects\WoodChipper.cpp" />
+    <ClCompile Include="Objects\Woodrow.cpp" />
+    <ClCompile Include="Objects\YoyoPulley.cpp" />
+    <ClCompile Include="Objects\ZipLine.cpp" />
+    <ClCompile Include="Objects\Zone.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e179ba4d-fee4-49dc-b5a0-14a7af1fbb06}</ProjectGuid>
+    <RootNamespace>SonicMania</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>Game</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>Game</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>Game</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>Game</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level1</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level1</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level1</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level1</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;SONICMANIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

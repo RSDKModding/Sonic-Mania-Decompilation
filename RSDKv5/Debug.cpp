@@ -22,7 +22,7 @@ void printLog(SeverityModes severity, const char* message, ...) {
 
         if (severity == SEVERITY_WARN) {
             if (engine.engineMode & ENGINESTATE_FROZEN) {
-                //SpawnEntity(DevOutput.objectID, outputString, 0, 0);
+                SpawnEntity(DevOutput.objectID, outputString, 0, 0);
                 return;
             }
         }
