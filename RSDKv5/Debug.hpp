@@ -58,7 +58,7 @@ struct DebugValueInfo {
 extern int debugValCnt;
 extern DebugValueInfo debugValues[DEBUGVAL_MAX];
 
-inline void ResetDebugValues() { debugValCnt = 0; }
+inline void ClearDebugValues() { debugValCnt = 0; }
 void SetDebugValue(const char *name, int valPtr, int type, int unknown1, int unknown2);
 
 struct DevMenu {

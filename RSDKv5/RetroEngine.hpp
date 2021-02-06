@@ -150,6 +150,13 @@ inline void SetEngineState(byte state)
     }
 }
 
+extern int *gameOptionsPtr;
+
+inline void InitGameOptions(void* options, int size) {
+    AllocateStorage(size, options, DATASET_STG, true);
+    gameOptionsPtr = (int*)options;
+}
+
 #include "Link.hpp"
 
 #endif //! RETROENGINE_H

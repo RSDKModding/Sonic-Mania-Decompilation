@@ -37,8 +37,8 @@ void DevOutput_Update()
 void DevOutput_Draw()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
-    //DrawRect(0, 0, CurrentScreen->Width, entity->position.Y + entity->yOffset, 128, 255, 0, true);
-    //DrawDevText(8, entity->message, entity->position.Y + 8, 0, 0xF0F0F0);
+    //DrawRect(0, 0, CurrentScreen->Width, entity->position.y + entity->yOffset, 128, 255, 0, true);
+    //DrawDevText(8, entity->message, entity->position.y + 8, 0, 0xF0F0F0);
 }
 
 void DevOutput_Create(void* source)
@@ -48,8 +48,8 @@ void DevOutput_Create(void* source)
     entity->visible         = 1;
     entity->field_3C        = 1;
     entity->drawOrder       = 15;
-    strncpy(entity->message, (char *)source, 0x400u);
-    //entity->id   = 180 * Engine_GetEntityNo(DevOutput.objectID, 0);
+    strncpy(entity->message, (char *)source, 0x3F4);
+    entity->id   = 180 * GetEntityCount(DevOutput.objectID, 0);
     entity->yOffset    = DevOutput_GetStringYOffset(entity->message);
     entity->position.y = -entity->yOffset;
 }

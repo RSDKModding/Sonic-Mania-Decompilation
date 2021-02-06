@@ -4,6 +4,7 @@
 #define OBJECT_COUNT (0x400)
 #define ENTITY_COUNT (0x940)
 #define EDITABLEVAR_COUNT (0x100)
+#define TYPEGROUP_COUNT (0x104)
 
 enum AttributeTypes {
 	ATTRIBUTE_U8,
@@ -96,6 +97,15 @@ struct EditableVarInfo {
     byte attribType;
 };
 
+struct ForeachStackInfo {
+    int id;
+};
+
+struct TypeGroupList {
+    int entryCount;
+    ushort entries[ENTITY_COUNT];
+};
+
 extern int objectCount;
 extern ObjectInfo objectList[OBJECT_COUNT];
 extern int globalObjectCount;
@@ -109,6 +119,11 @@ extern int tempEntityID;
 
 extern EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
 extern int editableVarCount;
+
+extern ForeachStackInfo foreachStackList[0x20];
+extern ForeachStackInfo *foreachStackPtr;
+
+extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
@@ -158,6 +173,8 @@ inline Entity* GetObjectByID(ushort objectID)
 
 inline int GetEntityID(EntityBase *entityPtr) { return entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0; }
 
+int GetEntityCount(ushort type, bool32 isActive);
+
 void DestroyEntity(Entity *entity, ushort type, void *data);
 void ResetEntity(ushort slotID, ushort type, void *data);
 void SpawnEntity(ushort type, void *data, int x, int y);
@@ -170,4 +187,10 @@ inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
             memset(srcEntity, 0, sizeof(EntityBase));
     }
 }
+
+bool32 GetActiveObjects(ushort group, Entity *entity);
+bool32 GetObjects(ushort type, Entity *entity);
+
+inline void NextForeachLoop() { --foreachStackPtr; }
+
 #endif // !OBJECT_H

@@ -14,6 +14,11 @@ int tempEntityID = ENTITY_COUNT - 0x100;
 EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
 int editableVarCount = 0;
 
+ForeachStackInfo foreachStackList[0x20];
+ForeachStackInfo *foreachStackPtr = NULL;
+
+TypeGroupList typeGroups[TYPEGROUP_COUNT];
+
 void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
                   void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                   void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
@@ -216,6 +221,21 @@ void ProcessPausedObjects() {}
 void ProcessFrozenObjects() {}
 void ProcessObjectDrawLists() {}
 
+int GetEntityCount(ushort type, bool32 isActive)
+{
+    if (type >= OBJECT_COUNT)
+        return 0;
+    if (isActive)
+        return typeGroups[type].entryCount;
+
+    int cnt = 0;
+    for (int i = 0; i < ENTITY_COUNT; ++i) {
+        if (objectEntityList[i].objectID == type)
+            cnt++;
+    }
+    return cnt;
+}
+
 void DestroyEntity(Entity *entity, ushort type, void *data)
 {
     if (entity) {
@@ -278,4 +298,65 @@ void SpawnEntity(ushort type, void *data, int x, int y)
         entityPtr->priority = ACTIVE_NORMAL;
         entityPtr->visible  = true;
     }
+}
+
+bool32 GetActiveObjects(ushort group, Entity *entity) {
+    if (group > 0x103u)
+        return false;
+    if (!entity)
+        return false;
+    ForeachStackInfo *stackPtr   = foreachStackPtr;
+    Entity* nextEntity = 0;
+    bool flag       = 0;
+    while (true) {
+        if (nextEntity && nextEntity->objectID == group) {
+            entity = nextEntity;
+            return true;
+        }
+        if (flag || entity) {
+            ++stackPtr->id;
+        }
+        else {
+            foreachStackPtr++;
+            stackPtr->id = 0;
+        }
+        if (stackPtr->id >= typeGroups[group].entryCount)
+            break;
+        flag       = true;
+        nextEntity = &objectEntityList[typeGroups[group].entries[stackPtr->id]];
+    }
+    foreachStackPtr--;
+    return false;
+}
+bool32 GetObjects(ushort type, Entity* entity) {
+    if (type > 0xFFu)
+        return 0;
+    if (!entity)
+        return 0;
+
+    ForeachStackInfo *stackPtr = foreachStackPtr;
+    if (entity) {
+        ++foreachStackPtr->id;
+    }
+    else {
+        foreachStackPtr++;
+        foreachStackPtr->id = 0;
+    }
+    
+    Entity* nextEnt = &objectEntityList[stackPtr->id];
+    if (stackPtr->id >= ENTITY_COUNT) {
+        foreachStackPtr = stackPtr - 1;
+        return false;
+    }
+    while (nextEnt->objectID != type) {
+        ++stackPtr->id;
+        ++nextEnt;
+        if (stackPtr->id >= ENTITY_COUNT) {
+            foreachStackPtr = stackPtr - 1;
+            return false;
+        }
+    }
+
+    entity = nextEnt;
+    return true;
 }

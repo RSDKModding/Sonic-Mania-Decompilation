@@ -1,9 +1,11 @@
 #ifndef LINK_H
 #define LINK_H
 
-#define FUNCTABLE_COUNT (199)
+#define FUNCTABLE_COUNT (180)
+#define UDATATABLE_COUNT (59)
 
 extern void *functionTable[FUNCTABLE_COUNT];
+extern void *userDataTable[UDATATABLE_COUNT];
 
 struct SKUInfo {
     int platform;

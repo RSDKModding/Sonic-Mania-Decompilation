@@ -8,7 +8,7 @@ HMODULE hLibModule = NULL;
 typedef void(__cdecl *linkPtr)(GameInfo*);
 #endif
 
-int *optionsPtr    = NULL;
+int *gameOptionsPtr = NULL;
 RetroEngine engine = RetroEngine();
 
 bool processEvents()
@@ -478,12 +478,11 @@ void LoadGameConfig()
         }
 
         byte cfmCount = ReadInt8(&info);
-        int *dataPtr  = optionsPtr;
-        for (int i = 0; i < cfmCount && optionsPtr; ++i) {
+        for (int i = 0; i < cfmCount && gameOptionsPtr; ++i) {
             int offset = ReadInt32(&info);
             int count  = ReadInt32(&info);
             for (int v = 0; v < count; ++v) {
-                dataPtr[offset + v] = ReadInt32(&info);
+                gameOptionsPtr[offset + v] = ReadInt32(&info);
             }
         }
 
@@ -507,7 +506,7 @@ void InitScriptSystem()
     GameInfo info;
 
     info.functionPtrs      = functionTable;
-    info.userdataPtrs      = NULL; //userdataPtrs
+    info.userdataPtrs      = userDataTable;
     info.gameName          = engine.gameName;
     info.currentSKU        = &curSKU;
     info.sceneInfo         = &sceneInfo;
@@ -521,7 +520,6 @@ void InitScriptSystem()
     info.screenInfo        = screens;
 
     if (!engine.useExternalCode) {
-        optionsPtr = NULL;
         //return linkGameLogic(&info);
     }
 
@@ -530,10 +528,6 @@ void InitScriptSystem()
         hLibModule = LoadLibraryA("Game");
 
     if (hLibModule) {
-        void* gameOptions = (void*)GetProcAddress(hLibModule, "options");
-        if (gameOptions)
-            optionsPtr = (int *)gameOptions;
-
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
         if (linkGameLogic)
             linkGameLogic(&info);
