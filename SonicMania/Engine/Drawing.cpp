@@ -1394,12 +1394,12 @@ bool InitRenderDevice() {
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
     if (!engine.window) {
-        printLog("ERROR: failed to create window!");
+        printLog(SEVERITY_NONE, "ERROR: failed to create window!");
         return 0;
     }
 
     if (!engine.renderer) {
-        printLog("ERROR: failed to create renderer!");
+        printLog(SEVERITY_NONE, "ERROR: failed to create renderer!");
         return 0;
     }
 
@@ -1411,7 +1411,7 @@ bool InitRenderDevice() {
             SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].width, screens[s].height);
 
         if (!engine.screenBuffer[s]) {
-            printLog("ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
+            printLog(SEVERITY_NONE, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
             return 0;
         }
     }
