@@ -19,6 +19,12 @@
 #define fWrite(buffer, elementSize, elementCount, file) fwrite(buffer, elementSize, elementCount, file)
 #endif
 
+enum Scopes {
+    SCOPE_NONE,
+    SCOPE_GLOBAL,
+    SCOPE_STAGE,
+};
+
 struct FileInfo {
     int fileSize;
     int externalFile;
@@ -96,12 +102,13 @@ inline void Seek(FileInfo* info, int count) {
     if (info->readPos != count) {
         info->readPos = count;
         if (info->encrypted) {
-            info->eKeyPosA = 0;
-            info->eKeyPosA = 8;
-            info->eKeyNo                 = (info->fileSize >> 2) & 0x7F;
-            info->eNybbleSwap            = 0;
+            info->eKeyNo      = (info->fileSize / 4) & 0x7F;
+            info->eKeyPosA    = 0;
+            info->eKeyPosB    = 8;
+            info->eNybbleSwap = false;
             SkipBytes(info, count);
         }
+
         if (info->usingFileBuffer) {
             info->fileData = (byte *)info->file + info->readPos;
         }

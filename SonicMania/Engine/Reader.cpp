@@ -85,6 +85,7 @@ bool OpenDataFile(FileInfo *info, const char *filename)
         info->readPos           = 0;
         fSeek(info->file, file->offset, SEEK_SET);
 
+        info->fileOffset = file->offset;
         info->encrypted = file->encrypted;
         memset(info->encryptionKeyA, 0, 0x10 * sizeof(byte));
         memset(info->encryptionKeyB, 0, 0x10 * sizeof(byte));
@@ -148,25 +149,25 @@ void DecryptBytes(FileInfo *info, void *buffer, int size)
             if (info->eKeyPosA <= 0x0F) {
                 if (info->eKeyPosB > 0x0C) {
                     info->eKeyPosB = 0;
-                    info->eNybbleSwap ^= 0x01;
+                    info->eNybbleSwap ^= 1;
                 }
             }
             else if (info->eKeyPosB <= 0x08) {
                 info->eKeyPosA = 0;
-                info->eNybbleSwap ^= 0x01;
+                info->eNybbleSwap ^= 1;
             }
             else {
                 info->eKeyNo += 2;
                 info->eKeyNo &= 0x7F;
 
-                if (info->eNybbleSwap != 0) {
-                    info->eNybbleSwap = 0;
+                if (info->eNybbleSwap) {
+                    info->eNybbleSwap = false;
 
                     info->eKeyPosA = info->eKeyNo % 7;
                     info->eKeyPosB = (info->eKeyNo % 0xC) + 2;
                 }
                 else {
-                    info->eNybbleSwap = 1;
+                    info->eNybbleSwap = true;
 
                     info->eKeyPosA = (info->eKeyNo % 0xC) + 3;
                     info->eKeyPosB = info->eKeyNo % 7;
@@ -187,25 +188,25 @@ void SkipBytes(FileInfo* info, int size) {
             if (info->eKeyPosA <= 0x0F) {
                 if (info->eKeyPosB > 0x0C) {
                     info->eKeyPosB = 0;
-                    info->eNybbleSwap ^= 0x01;
+                    info->eNybbleSwap ^= 1;
                 }
             }
             else if (info->eKeyPosB <= 0x08) {
                 info->eKeyPosA = 0;
-                info->eNybbleSwap ^= 0x01;
+                info->eNybbleSwap ^= 1;
             }
             else {
                 info->eKeyNo += 2;
                 info->eKeyNo &= 0x7F;
 
-                if (info->eNybbleSwap != 0) {
-                    info->eNybbleSwap = 0;
+                if (info->eNybbleSwap) {
+                    info->eNybbleSwap = false;
 
                     info->eKeyPosA = info->eKeyNo % 7;
                     info->eKeyPosB = (info->eKeyNo % 0xC) + 2;
                 }
                 else {
-                    info->eNybbleSwap = 1;
+                    info->eNybbleSwap = true;
 
                     info->eKeyPosA = (info->eKeyNo % 0xC) + 3;
                     info->eKeyPosB = info->eKeyNo % 7;

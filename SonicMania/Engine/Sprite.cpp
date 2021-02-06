@@ -252,3 +252,66 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
     }
     return false;
 }
+
+short LoadSpriteSheet(const char *filename, Scopes scope)
+{
+    char buffer[0x100];
+    StrCopy(buffer, "Data/Sprites/");
+    StrAdd(buffer, filename);
+
+    uint hash[4];
+    StrCopy(hashBuffer, filename);
+    GenerateHash(hash, StrLength(filename));
+
+    for (int i = 0; i < SURFACE_MAX; ++i) {
+        if (memcmp(hash, gfxSurface[i].hash, 4 * sizeof(int)) == 0) {
+            return i;
+        }
+    }
+
+    short id = -1;
+    for (id = 0; id < SURFACE_MAX; ++id) {
+        if (gfxSurface[id].scope == SCOPE_NONE)
+            break;
+    }
+
+    if (id >= SURFACE_MAX)
+        return -1;
+
+    GFXSurface *surface = &gfxSurface[id];
+    Image image;
+    MEM_ZERO(image);
+
+    AllocateStorage(sizeof(GifDecoder), &image.decoder, DATASET_TMP, true);
+
+    if (LoadGIF(&image, buffer, true)) {
+        surface->scope    = scope;
+        surface->width    = image.width;
+        surface->height   = image.height;
+        surface->lineSize = 0;
+        memcpy(surface->hash, hash, 4 * sizeof(int));
+
+        int w = surface->width;
+        if (w > 1) {
+            int ls = 0;
+            do {
+                w >>= 1;
+                ++ls;
+            } while (w > 1);
+            surface->lineSize = ls;
+        }
+
+        byte *gfxDataPtr = NULL; //&gfxData[8 * v16];
+        AllocateStorage(surface->width * surface->height, gfxDataPtr, DATASET_STG, false);
+        image.dataPtr = gfxDataPtr;
+        LoadGIF(&image, NULL, false);
+
+        CloseFile(&image.info);
+
+        return id;
+    }
+    else {
+        CloseFile(&image.info);
+        return -1;
+    }
+}

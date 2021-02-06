@@ -2,7 +2,7 @@
 #define DRAWING_H
 
 #define SPRITESHEETS_MAX (16)
-#define SURFACE_MAX      (24)
+#define SURFACE_MAX      (0x40)
 #define GFXDATA_MAX      (0x200000)
 
 #define SCREEN_MAX       (0x4)

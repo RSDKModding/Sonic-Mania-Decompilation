@@ -8,11 +8,4 @@ enum {
     CMODE_RWALL,
 };
 
-struct Hitbox {
-    short left;
-    short top;
-    short right;
-    short bottom;
-};
-
 #endif // !COLLISION_H

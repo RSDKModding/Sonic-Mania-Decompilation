@@ -1,26 +1,6 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-
-enum Scopes {
-	SCOPE_NONE,
-	SCOPE_GLOBAL,
-	SCOPE_STAGE,
-};
-
-struct EntityAnimationData {
-    void *framePtrs;
-    int frameID;
-    short animationID;
-    short prevAnimationID;
-    short animationSpeed;
-    short animationTimer;
-    short frameDelay;
-    short frameCount;
-    byte loopIndex;
-    byte rotationFlag;
-};
-
 struct GifDecoder {
     int depth;
     int clearCode;
@@ -56,6 +36,9 @@ struct Image {
     GifDecoder decoder;
 };
 
+
 bool LoadGIF(Image *image, const char *fileName, bool dontLoadData);
+
+short LoadSpriteSheet(const char *filename, Scopes scope);
 
 #endif // SPRITE_H
