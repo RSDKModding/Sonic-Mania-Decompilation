@@ -96,10 +96,10 @@ bool OpenDataFile(FileInfo *info, const char *filename)
             info->eKeyPosB = 8;
             info->eNybbleSwap = false;
         }
-        printLog("Loaded File '%s'", filename);
+        printLog(SEVERITY_NONE, "Loaded File '%s'", filename);
         return true;
     }
-    printLog("Couldn't load file '%s'", filename);
+    printLog(SEVERITY_NONE, "Couldn't load file '%s'", filename);
     return false;
 }
 

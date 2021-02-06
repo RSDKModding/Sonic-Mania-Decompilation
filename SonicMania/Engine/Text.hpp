@@ -1,6 +1,12 @@
 #ifndef TEXT_H
 #define TEXT_H
 
+struct TextInfo {
+    ushort* text;
+    short textLength;
+    short length;
+};
+
 inline void StrCopy(char *dest, const char *src)
 {
 #ifdef USE_STDLIB

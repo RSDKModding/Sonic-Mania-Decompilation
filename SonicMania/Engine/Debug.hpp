@@ -5,39 +5,45 @@
 
 #include <stdarg.h>
 
+enum SeverityModes {
+    SEVERITY_NONE,
+    SEVERITY_WARN,
+    SEVERITY_ERROR,
+    SEVERITY_FATAL,
+};
+
 extern bool engineDebugMode;
+extern char outputString[0x400];
 
-inline void printLog(const char *msg, ...)
+void printLog(SeverityModes severity, const char *message, ...);
+inline void printConsole(const char *message) { printf(message); }
+
+inline void printString(SeverityModes severity, const char *message) { printLog(severity, "%s\n", message); }
+inline void printText(SeverityModes severity, const char *message, TextInfo *text)
 {
-#ifndef RETRO_DISABLE_LOG
-    if (engineDebugMode) {
-        char buffer[0x100];
-
-        // make the full string
-        va_list args;
-        va_start(args, msg);
-        vsprintf(buffer, msg, args);
-        printf("%s\n", buffer);
-        sprintf(buffer, "%s\n", buffer);
-
-        char pathBuffer[0x100];
-        sprintf(pathBuffer, BASE_PATH "log.txt");
-        FileIO *file = fOpen(pathBuffer, "a");
-        if (file) {
-            fWrite(&buffer, 1, StrLength(buffer), file);
-            fClose(file);
-        }
+    for (int c = 0; c < text->textLength; ++c) {
+        printLog(severity, "%c", text->text[c]);
     }
-#endif
+    printLog(severity, "\n");
 }
-
-inline void PrintConsoleDebug(const char *message, ...)
+inline void printIntegerUnsigned(SeverityModes severity, const char *message, uint integer) { printLog(severity, "%s: %d", message, integer); }
+inline void printInteger(SeverityModes severity, const char *message, int integer) { printLog(severity, "%s: %d", message, integer); }
+inline void printFloat(SeverityModes severity, const char *message, float f) { printLog(severity, "%s: %f", message, f); }
+inline void printVector2(SeverityModes severity, const char *message, int x, int y)
 {
-    char buffer[0x100];
-    va_list va;
-
-    va_start(va, message);
-    vsprintf(buffer, message, va);
+    int absX = abs(x);
+    int absY = abs(y);
+    int xCnt = 32;
+    if (x < 0)
+        xCnt = 45;
+    int yCnt = 32;
+    if (y < 0)
+        yCnt = 45;
+    printLog(severity, "%s: <%c%08X, %c%08X>", message, xCnt, absX, yCnt, absY);
+}
+inline void printHitbox(SeverityModes severity, const char *message, Hitbox *hitbox)
+{
+    printLog(severity, "%s: <l: %d, r: %d, t: %d, b: %d>", message, hitbox->left, hitbox->right, hitbox->top, hitbox->bottom);
 }
 
 struct DebugValueInfo {

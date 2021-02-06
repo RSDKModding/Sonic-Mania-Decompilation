@@ -194,13 +194,13 @@ extern void *RSDK_Unknown101;
 extern void *RSDK_Unknown102;
 extern void *RSDK_Unknown103;
 extern void *RSDK_Unknown104;
-extern void *RSDK_PrintDebug3;
-extern int (*RSDK_PrintString)(void *, void *);
-extern void *RSDK_PrintSomething6;
-extern void *RSDK_PrintSomething4;
-extern void *RSDK_PrintSomething2;
-extern void *RSDK_Unknown105;
-extern void (*RSDK_ResetDebugValues)();
+extern void (*RSDK_printLog)(SeverityModes severity, const char *message, ...);
+extern void (*RSDK_printString)(SeverityModes severity, const char *message);
+extern void (*RSDK_printText)(SeverityModes severity, const char *message, TextInfo *text);
+extern void (*RSDK_printInteger)(SeverityModes severity, const char *message, int integer);
+extern void (*RSDK_printVector2)(SeverityModes severity, const char *message, int x, int y);
+extern void (*RSDK_Unknown105)();
+extern void (*RSDK_Unknown106)();
 extern void (*RSDK_SetDebugValue)(const char *name, int valPtr, int type, int unknown1, int unknown2);
 
 struct SKUInfo {

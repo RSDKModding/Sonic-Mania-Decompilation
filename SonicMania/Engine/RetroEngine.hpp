@@ -94,10 +94,12 @@ struct RetroEngine {
     bool useExternalCode = false;
 
     bool devMenu   = false;
+    bool printConsole = true;
     int startList  = 0;
     int startStage = 0;
 
     int engineMode          = ENGINESTATE_LOAD;
+    int prevEngineMode      = ENGINESTATE_LOAD;
     bool running            = false;
     int gameSpeed           = 1;
     int fastForwardSpeed    = 8;
