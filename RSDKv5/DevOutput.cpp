@@ -30,7 +30,7 @@ void DevOutput_Update()
             if (-entity->position.y > entity->yOffset)
                 DestroyEntity(entity, 0, NULL);
             break;
-        default: return;
+        default: break;
     }
 }
 

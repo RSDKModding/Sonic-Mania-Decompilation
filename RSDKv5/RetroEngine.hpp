@@ -105,10 +105,7 @@ struct RetroEngine {
 
     bool devMenu   = false;
     bool printConsole = true;
-    int startList  = 0;
-    int startStage = 0;
 
-    int engineMode          = ENGINESTATE_LOAD;
     int prevEngineMode      = ENGINESTATE_LOAD;
     bool running            = false;
     int gameSpeed           = 1;
@@ -138,6 +135,8 @@ extern RetroEngine engine;
 void initRetroEngine();
 void runRetroEngine();
 
+void parseArguments(int argc, char *argv[]);
+
 void startGameObjects();
 
 void LoadGameConfig();
@@ -146,7 +145,7 @@ void InitScriptSystem();
 inline void SetEngineState(byte state)
 {
     if (state < 4) {
-        engine.engineMode = state | engine.engineMode & 4;
+        sceneInfo.state = state | sceneInfo.state & 4;
     }
 }
 

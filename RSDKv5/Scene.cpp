@@ -7,8 +7,8 @@ SceneListEntry sceneListEntries[0x400];
 int sceneListCount = 0;
 int sceneCount     = 0;
 
-int activeSceneList = 0;
-int sceneListPosition    = 0;
+int activeSceneList   = 0;
+int sceneListPosition = 0;
 
 char currentSceneFolder[0x10];
 
@@ -45,8 +45,8 @@ void LoadScene()
 
     // Unload stage SFX
 
-    for (int s = 0; s < stageObjectCount; ++s) {
-        //Clear stage objects
+    for (int s = 0; s < sceneInfo.classCount; ++s) {
+        // Clear stage objects
     }
 
     SceneListEntry *sceneEntry = &sceneListEntries[sceneListPosition];
@@ -81,13 +81,13 @@ void LoadScene()
             }
         }
         else {
-            stageObjectIDs[0] = globalObjectIDs[0];
-            stageObjectIDs[1] = globalObjectIDs[1];
-            stageObjectCount  = 2;
+            stageObjectIDs[0]    = globalObjectIDs[0];
+            stageObjectIDs[1]    = globalObjectIDs[1];
+            sceneInfo.classCount = 2;
         }
 
         byte objCnt = ReadInt8(&info);
-        
+
         for (int o = 0; o < objCnt; ++o) {
             ReadString(&info, hashBuffer);
 
@@ -95,23 +95,23 @@ void LoadScene()
             GenerateHash(hash, StrLength(hashBuffer));
 
             if (objectCount > 0) {
-                int objID                        = 0;
-                stageObjectIDs[stageObjectCount] = 0;
+                int objID                            = 0;
+                stageObjectIDs[sceneInfo.classCount] = 0;
                 do {
                     if (hash[0] == objectList[objID].hash[0] && hash[1] == objectList[objID].hash[1] && hash[2] == objectList[objID].hash[2]
                         && hash[3] == objectList[objID].hash[3]) {
-                        stageObjectIDs[stageObjectCount++] = objID;
+                        stageObjectIDs[sceneInfo.classCount++] = objID;
                     }
                     ++objID;
                 } while (objID < objectCount);
             }
         }
 
-        for (int o = 0; o < stageObjectCount; ++o) {
+        for (int o = 0; o < sceneInfo.classCount; ++o) {
             ObjectInfo *obj = &objectList[stageObjectIDs[o]];
             if (obj->type) {
                 AllocateStorage(obj->objectSize, obj->type, DATASET_STG, true);
-                LoadStaticObject((byte*)obj->type, obj->hash, 2);
+                LoadStaticObject((byte *)obj->type, obj->hash, 2);
             }
         }
 
@@ -149,12 +149,8 @@ void LoadScene()
     StrAdd(buffer, "/16x16Tiles.gif");
     LoadStageGIF(buffer);
 }
-void LoadSceneFile() {
-
-}
-void LoadTileConfig(char* filepath) {
-
-}
+void LoadSceneFile() {}
+void LoadTileConfig(char *filepath) {}
 void LoadStageGIF(char *filepath)
 {
     Image tileset;

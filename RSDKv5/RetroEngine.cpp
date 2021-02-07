@@ -108,7 +108,7 @@ bool processEvents()
                     default: break;
                     case SDLK_ESCAPE:
                         if (engine.devMenu)
-                            engine.engineMode = ENGINESTATE_DEVMENU;
+                            sceneInfo.state = ENGINESTATE_DEVMENU;
                         break;
                     case SDLK_F4:
                         engine.isFullScreen ^= 1;
@@ -133,7 +133,7 @@ bool processEvents()
                         if (engine.devMenu) {
                             activeSceneList   = 0;
                             sceneListPosition = 0;
-                            engine.engineMode = ENGINESTATE_LOAD;
+                            sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F2:
@@ -147,7 +147,7 @@ bool processEvents()
                                 }
                                 sceneListPosition = sceneLists[activeSceneList].sceneCount - 1;
                             }
-                            engine.engineMode = ENGINESTATE_LOAD;
+                            sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F3:
@@ -161,7 +161,7 @@ bool processEvents()
                                     activeSceneList = 0;
                                 }
                             }
-                            engine.engineMode       = ENGINESTATE_LOAD;
+                            sceneInfo.state       = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F10:
@@ -241,7 +241,7 @@ void runRetroEngine() {
 
         engine.running = processEvents();
         for (int f = 0; f < engine.gameSpeed && (!engine.masterPaused || engine.frameStep); ++f) {
-            switch (engine.engineMode) {
+            switch (sceneInfo.state) {
                 default: break;
                 case ENGINESTATE_LOAD:
                     LoadScene();
@@ -268,7 +268,7 @@ void runRetroEngine() {
                     ProcessObjects();
                     ProcessParallaxAutoScroll();
                     for (int i = 1; i < engine.fastForwardSpeed; ++i) {
-                        if (engine.engineMode != ENGINESTATE_REGULAR)
+                        if (sceneInfo.state != ENGINESTATE_REGULAR)
                             break;
                         ProcessSceneTimer();
                         ProcessObjects();
@@ -280,7 +280,7 @@ void runRetroEngine() {
                     ProcessInput();
                     ProcessPausedObjects();
                     for (int i = 1; i < engine.fastForwardSpeed; ++i) {
-                        if (engine.engineMode != ENGINESTATE_PAUSED)
+                        if (sceneInfo.state != ENGINESTATE_PAUSED)
                             break;
                         ProcessPausedObjects();
                     }
@@ -290,7 +290,7 @@ void runRetroEngine() {
                     ProcessInput();
                     ProcessFrozenObjects();
                     for (int i = 1; i < engine.fastForwardSpeed; ++i) {
-                        if (engine.engineMode != ENGINESTATE_PAUSED)
+                        if (sceneInfo.state != ENGINESTATE_PAUSED)
                             break;
                         ProcessFrozenObjects();
                     }
@@ -314,7 +314,7 @@ void runRetroEngine() {
                     }
                     ProcessInput();
                     ProcessObjects();
-                    engine.engineMode = ENGINESTATE_REGULAR_STEPOVER;
+                    sceneInfo.state = ENGINESTATE_REGULAR_STEPOVER;
                     break;
                 case ENGINESTATE_REGULAR_STEPOVER:
                     ProcessInput();
@@ -373,13 +373,57 @@ void runRetroEngine() {
 #endif
 }
 
+void parseArguments(int argc, char *argv[])
+{
+    for (int a = 0; a < argc; ++a) {
+
+        if (StrComp(argv[a], "stage=")) {
+            char buf[0x40];
+
+            int b = 0;
+            int c = 7;
+            while (argv[a][c] && argv[a][c] != ';') {
+                buf[b++] = argv[a][c++];
+            }
+            buf[b] = 0;
+        }
+        if (StrComp(argv[a], "scene=")) {
+            char buf[0x40];
+
+            int b = 0;
+            int c = 7;
+            while (argv[a][c] && argv[a][c] != ';') {
+                buf[b++] = argv[a][c++];
+            }
+            buf[b] = 0;
+        }
+        if (StrComp(argv[a], "filter=")) {
+            char buf[0x10];
+
+            int b = 0;
+            int c = 7;
+            while (argv[a][c] && argv[a][c] != ';') {
+                buf[b++] = argv[a][c++];
+            }
+            buf[b]           = 0;
+            sceneInfo.filter = atoi(buf);
+        }
+
+        if (StrComp(argv[a], "console=true")) {
+            engine.printConsole = true;
+            engine.devMenu      = true;
+        }
+    }
+}
+
 void startGameObjects() {
     memset(&objectList, 0, OBJECT_COUNT * sizeof(ObjectInfo));
-    //StageObjectCount = 0;
-    //CategoryID       = 0;
-    //SceneID          = 0;
-    //EngineState     = 0;
-    //ConsoleActive  = DevMenuEnabled;
+    sceneInfo.classCount     = 0;
+    sceneInfo.activeCategory = 0;
+    sceneInfo.listPos        = 0;
+    sceneInfo.state          = 0;
+    sceneInfo.inEditor       = 0;
+    sceneInfo.debugMode      = engine.devMenu;
     devMenu.state = DevMenu_MainMenu;
     InitScriptSystem();
     LoadGameConfig();
@@ -406,8 +450,8 @@ void LoadGameConfig()
         ReadString(&info, engine.gameSubName);
         ReadString(&info, engine.gameVersion);
 
-        engine.startList                = ReadInt8(&info);
-        engine.startStage          = ReadInt16(&info);
+        sceneInfo.activeCategory = ReadInt8(&info);
+        sceneInfo.listPos        = ReadInt16(&info);
 
         byte objCnt = ReadInt8(&info);
         for (int i = 0; i < objCnt; ++i) {
@@ -456,7 +500,7 @@ void LoadGameConfig()
         }
 
         sceneCount = ReadInt16(&info);
-        sceneListCount = ReadInt8(&info);
+        sceneInfo.categoryCount = ReadInt8(&info);
 
         int sceneID = 0;
         for (int i = 0; i < sceneListCount; ++i) {

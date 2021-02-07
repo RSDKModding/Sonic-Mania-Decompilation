@@ -21,21 +21,21 @@ void printLog(SeverityModes severity, const char* message, ...) {
         sprintf(buffer, "%s\n", buffer);
 
         if (severity == SEVERITY_WARN) {
-            if (engine.engineMode & ENGINESTATE_FROZEN) {
+            if (sceneInfo.state & ENGINESTATE_FROZEN) {
                 SpawnEntity(DevOutput.objectID, outputString, 0, 0);
                 return;
             }
         }
         else if (severity == SEVERITY_ERROR) {
-            if (engine.engineMode & ENGINESTATE_FROZEN) {
-                engine.prevEngineMode = engine.engineMode;
-                engine.engineMode = ENGINESTATE_ERRORMSG;
+            if (sceneInfo.state & ENGINESTATE_FROZEN) {
+                engine.prevEngineMode = sceneInfo.state;
+                sceneInfo.state = ENGINESTATE_ERRORMSG;
                 return;
             }
         }
-        else if (severity == SEVERITY_FATAL && engine.engineMode & ENGINESTATE_FROZEN) {
-            engine.prevEngineMode           = engine.engineMode;
-            engine.engineMode = ENGINESTATE_ERRORMSG_FATAL;
+        else if (severity == SEVERITY_FATAL && sceneInfo.state & ENGINESTATE_FROZEN) {
+            engine.prevEngineMode           = sceneInfo.state;
+            sceneInfo.state = ENGINESTATE_ERRORMSG_FATAL;
             return;
         }
 

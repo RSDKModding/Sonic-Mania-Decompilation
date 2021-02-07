@@ -9,6 +9,10 @@
 #define DLLExport
 #endif
 
+enum GameDLC {
+	DLC_PLUS
+};
+
 #include "GameOptions.hpp"
 #include "GameObjects.hpp"
 

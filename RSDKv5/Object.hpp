@@ -3,8 +3,17 @@
 
 #define OBJECT_COUNT (0x400)
 #define ENTITY_COUNT (0x940)
+#define TYPE_COUNT (0x100)
 #define EDITABLEVAR_COUNT (0x100)
 #define TYPEGROUP_COUNT (0x104)
+
+enum TypeGroups {
+    GROUP_ALL     = 0,
+    GROUP_CUSTOM1 = TYPE_COUNT,
+    GROUP_CUSTOM2,
+    GROUP_CUSTOM3,
+    GROUP_CUSTOM4,
+};
 
 enum AttributeTypes {
 	ATTRIBUTE_U8,
@@ -22,7 +31,6 @@ enum AttributeTypes {
 };
 
 enum ActiveFlags {
-	ACTIVE_NEVER3 = -1,
 	ACTIVE_NEVER,
 	ACTIVE_ALWAYS,
 	ACTIVE_NORMAL,
@@ -30,7 +38,7 @@ enum ActiveFlags {
 	ACTIVE_BOUNDS,
 	ACTIVE_XBOUNDS,
 	ACTIVE_YBOUNDS,
-	ACTIVE_BOUNDS2,
+    ACTIVE_RBOUNDS,
 };
 
 struct Object {
@@ -49,13 +57,13 @@ struct Entity {
     int rotation;
     int speed;
     int depth;
-    ushort entityID;
-    ushort objectID;
-    int onScreen;
+    ushort group;
+    ushort type;
+    bool32 inBounds;
     int field_3C;
-    int tileCollisions;
-    int interaction;
-    int onGround;
+    bool32 tileCollisions;
+    bool32 interaction;
+    bool32 onGround;
     byte priority;
     byte filter;
     byte direction;
@@ -110,12 +118,9 @@ extern int objectCount;
 extern ObjectInfo objectList[OBJECT_COUNT];
 extern int globalObjectCount;
 extern int globalObjectIDs[OBJECT_COUNT];
-extern int stageObjectCount;
 extern int stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];
-
-extern int tempEntityID;
 
 extern EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
 extern int editableVarCount;
@@ -124,6 +129,8 @@ extern ForeachStackInfo foreachStackList[0x20];
 extern ForeachStackInfo *foreachStackPtr;
 
 extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
+
+extern bool32 validDraw;
 
 void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
@@ -153,19 +160,7 @@ void ProcessPausedObjects();
 void ProcessFrozenObjects();
 void ProcessObjectDrawLists();
 
-inline ushort GetObjectByName(const char *name)
-{
-    StrCopy(hashBuffer, name);
-    uint hash[4];
-    GenerateHash(hash, StrLength(hashBuffer));
-
-    for (int o = 0; o < stageObjectCount; ++o) {
-        if (memcmp(hash, objectList[stageObjectIDs[o]].hash, 4 * sizeof(int)) == 0)
-            return o;
-    }
-    return 0xFFFF;
-}
-
+ushort GetObjectByName(const char *name);
 inline Entity* GetObjectByID(ushort objectID)
 {
     return &objectEntityList[objectID < ENTITY_COUNT ? objectID : (ENTITY_COUNT - 1)];

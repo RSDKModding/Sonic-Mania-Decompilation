@@ -36,11 +36,11 @@ struct SceneInfo {
     int entitySlot;
     int createSlot;
     int classCount;
-    int inEditor;
-    int effectGizmo;
-    int debugMode;
-    int useGlobalScripts;
-    int timeEnabled;
+    bool32 inEditor;
+    bool32 effectGizmo;
+    bool32 debugMode;
+    bool32 useGlobalScripts;
+    bool32 timeEnabled;
     byte activeCategory;
     byte categoryCount;
     byte state;
