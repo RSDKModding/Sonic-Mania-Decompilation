@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGachapandora : Object {
+struct ObjectGachapandora : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGachapandora : Entity {
 
 };
 
-// Object Entity
-extern ObjectGachapandora Gachapandora;
+// Object Struct
+extern ObjectGachapandora *Gachapandora;
 
 // Standard Entity Events
 void Gachapandora_Update();

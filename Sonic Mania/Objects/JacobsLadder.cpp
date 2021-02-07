@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectJacobsLadder JacobsLadder;
+ObjectJacobsLadder *JacobsLadder;
 
 void JacobsLadder_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectShiversaw : Object {
+struct ObjectShiversaw : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityShiversaw : Entity {
 
 };
 
-// Object Entity
-extern ObjectShiversaw Shiversaw;
+// Object Struct
+extern ObjectShiversaw *Shiversaw;
 
 // Standard Entity Events
 void Shiversaw_Update();

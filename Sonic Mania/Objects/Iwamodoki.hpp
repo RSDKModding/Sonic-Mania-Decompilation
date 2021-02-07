@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectIwamodoki : Object {
+struct ObjectIwamodoki : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityIwamodoki : Entity {
 
 };
 
-// Object Entity
-extern ObjectIwamodoki Iwamodoki;
+// Object Struct
+extern ObjectIwamodoki *Iwamodoki;
 
 // Standard Entity Events
 void Iwamodoki_Update();

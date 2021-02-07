@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFlamethrower Flamethrower;
+ObjectFlamethrower *Flamethrower;
 
 void Flamethrower_Update()
 {

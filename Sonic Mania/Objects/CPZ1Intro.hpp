@@ -13,7 +13,7 @@ struct EntityCPZ1Intro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectCPZ1Intro CPZ1Intro;
 
 // Standard Entity Events

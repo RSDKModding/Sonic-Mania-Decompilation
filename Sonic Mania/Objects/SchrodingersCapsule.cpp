@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSchrodingersCapsule SchrodingersCapsule;
+ObjectSchrodingersCapsule *SchrodingersCapsule;
 
 void SchrodingersCapsule_Update()
 {

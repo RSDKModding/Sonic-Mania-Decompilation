@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpringboard Springboard;
+ObjectSpringboard *Springboard;
 
 void Springboard_Update()
 {

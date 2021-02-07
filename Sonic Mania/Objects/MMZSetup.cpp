@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMMZSetup MMZSetup;
+ObjectMMZSetup *MMZSetup;
 
 void MMZSetup_Update()
 {

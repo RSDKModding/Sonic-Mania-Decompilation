@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDBTower DBTower;
+ObjectDBTower *DBTower;
 
 void DBTower_Update()
 {

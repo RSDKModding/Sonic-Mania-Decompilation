@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMetalSonic MetalSonic;
+ObjectMetalSonic *MetalSonic;
 
 void MetalSonic_Update()
 {

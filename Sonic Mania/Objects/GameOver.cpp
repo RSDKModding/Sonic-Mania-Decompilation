@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGameOver GameOver;
+ObjectGameOver *GameOver;
 
 void GameOver_Update()
 {

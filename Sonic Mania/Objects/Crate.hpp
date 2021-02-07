@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCrate : Object {
+struct ObjectCrate : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCrate : Entity {
 
 };
 
-// Object Entity
-extern ObjectCrate Crate;
+// Object Struct
+extern ObjectCrate *Crate;
 
 // Standard Entity Events
 void Crate_Update();

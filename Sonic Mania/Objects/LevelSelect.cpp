@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLevelSelect LevelSelect;
+ObjectLevelSelect *LevelSelect;
 
 void LevelSelect_Update()
 {

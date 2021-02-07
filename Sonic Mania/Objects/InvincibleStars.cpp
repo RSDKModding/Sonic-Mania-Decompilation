@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectInvincibleStars InvincibleStars;
+ObjectInvincibleStars *InvincibleStars;
 
 void InvincibleStars_Update()
 {

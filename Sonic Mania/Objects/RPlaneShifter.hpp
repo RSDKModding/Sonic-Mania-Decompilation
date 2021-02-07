@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRPlaneShifter : Object {
+struct ObjectRPlaneShifter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRPlaneShifter : Entity {
 
 };
 
-// Object Entity
-extern ObjectRPlaneShifter RPlaneShifter;
+// Object Struct
+extern ObjectRPlaneShifter *RPlaneShifter;
 
 // Standard Entity Events
 void RPlaneShifter_Update();

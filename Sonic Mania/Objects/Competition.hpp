@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCompetition : Object {
+struct ObjectCompetition : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCompetition : Entity {
 
 };
 
-// Object Entity
-extern ObjectCompetition Competition;
+// Object Struct
+extern ObjectCompetition *Competition;
 
 // Standard Entity Events
 void Competition_Update();

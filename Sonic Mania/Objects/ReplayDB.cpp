@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectReplayDB ReplayDB;
+ObjectReplayDB *ReplayDB;
 
 void ReplayDB_Update()
 {

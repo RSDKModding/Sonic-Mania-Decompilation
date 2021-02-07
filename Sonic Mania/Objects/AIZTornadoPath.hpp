@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZTornadoPath : Object {
+struct ObjectAIZTornadoPath : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAIZTornadoPath : Entity {
 
 };
 
-// Object Entity
-extern ObjectAIZTornadoPath AIZTornadoPath;
+// Object Struct
+extern ObjectAIZTornadoPath *AIZTornadoPath;
 
 // Standard Entity Events
 void AIZTornadoPath_Update();

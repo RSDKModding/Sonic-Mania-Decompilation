@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectReplayRecorder : Object {
+struct ObjectReplayRecorder : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityReplayRecorder : Entity {
 
 };
 
-// Object Entity
-extern ObjectReplayRecorder ReplayRecorder;
+// Object Struct
+extern ObjectReplayRecorder *ReplayRecorder;
 
 // Standard Entity Events
 void ReplayRecorder_Update();

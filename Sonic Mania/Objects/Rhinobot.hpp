@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRhinobot : Object {
+struct ObjectRhinobot : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRhinobot : Entity {
 
 };
 
-// Object Entity
-extern ObjectRhinobot Rhinobot;
+// Object Struct
+extern ObjectRhinobot *Rhinobot;
 
 // Standard Entity Events
 void Rhinobot_Update();

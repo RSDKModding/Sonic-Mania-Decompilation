@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectContinueSetup ContinueSetup;
+ObjectContinueSetup *ContinueSetup;
 
 void ContinueSetup_Update()
 {

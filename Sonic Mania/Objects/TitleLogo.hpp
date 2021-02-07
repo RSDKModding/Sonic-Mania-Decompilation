@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleLogo : Object {
+struct ObjectTitleLogo : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTitleLogo : Entity {
 
 };
 
-// Object Entity
-extern ObjectTitleLogo TitleLogo;
+// Object Struct
+extern ObjectTitleLogo *TitleLogo;
 
 // Standard Entity Events
 void TitleLogo_Update();

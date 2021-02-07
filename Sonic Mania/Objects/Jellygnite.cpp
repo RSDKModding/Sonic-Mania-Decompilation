@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectJellygnite Jellygnite;
+ObjectJellygnite *Jellygnite;
 
 void Jellygnite_Update()
 {

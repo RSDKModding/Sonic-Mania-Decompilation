@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRotatingSpikes RotatingSpikes;
+ObjectRotatingSpikes *RotatingSpikes;
 
 void RotatingSpikes_Update()
 {

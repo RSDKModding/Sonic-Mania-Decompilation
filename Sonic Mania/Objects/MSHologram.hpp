@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSHologram : Object {
+struct ObjectMSHologram : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSHologram : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSHologram MSHologram;
+// Object Struct
+extern ObjectMSHologram *MSHologram;
 
 // Standard Entity Events
 void MSHologram_Update();

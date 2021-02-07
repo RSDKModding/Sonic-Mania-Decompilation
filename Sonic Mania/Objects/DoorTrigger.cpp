@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDoorTrigger DoorTrigger;
+ObjectDoorTrigger *DoorTrigger;
 
 void DoorTrigger_Update()
 {

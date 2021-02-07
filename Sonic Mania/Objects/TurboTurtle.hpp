@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurboTurtle : Object {
+struct ObjectTurboTurtle : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTurboTurtle : Entity {
 
 };
 
-// Object Entity
-extern ObjectTurboTurtle TurboTurtle;
+// Object Struct
+extern ObjectTurboTurtle *TurboTurtle;
 
 // Standard Entity Events
 void TurboTurtle_Update();

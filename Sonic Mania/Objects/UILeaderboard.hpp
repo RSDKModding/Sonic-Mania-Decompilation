@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUILeaderboard : Object {
+struct ObjectUILeaderboard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUILeaderboard : Entity {
 
 };
 
-// Object Entity
-extern ObjectUILeaderboard UILeaderboard;
+// Object Struct
+extern ObjectUILeaderboard *UILeaderboard;
 
 // Standard Entity Events
 void UILeaderboard_Update();

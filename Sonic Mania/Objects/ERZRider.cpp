@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZRider ERZRider;
+ObjectERZRider *ERZRider;
 
 void ERZRider_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDebris : Object {
+struct ObjectDebris : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDebris : Entity {
 
 };
 
-// Object Entity
-extern ObjectDebris Debris;
+// Object Struct
+extern ObjectDebris *Debris;
 
 // Standard Entity Events
 void Debris_Update();

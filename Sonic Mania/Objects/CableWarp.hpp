@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCableWarp : Object {
+struct ObjectCableWarp : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCableWarp : Entity {
 
 };
 
-// Object Entity
-extern ObjectCableWarp CableWarp;
+// Object Struct
+extern ObjectCableWarp *CableWarp;
 
 // Standard Entity Events
 void CableWarp_Update();

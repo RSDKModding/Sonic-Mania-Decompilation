@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDashLift DashLift;
+ObjectDashLift *DashLift;
 
 void DashLift_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDango : Object {
+struct ObjectDango : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDango : Entity {
 
 };
 
-// Object Entity
-extern ObjectDango Dango;
+// Object Struct
+extern ObjectDango *Dango;
 
 // Standard Entity Events
 void Dango_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDASetup DASetup;
+ObjectDASetup *DASetup;
 
 void DASetup_Update()
 {

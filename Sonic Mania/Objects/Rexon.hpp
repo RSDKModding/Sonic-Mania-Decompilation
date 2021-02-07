@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRexon : Object {
+struct ObjectRexon : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRexon : Entity {
 
 };
 
-// Object Entity
-extern ObjectRexon Rexon;
+// Object Struct
+extern ObjectRexon *Rexon;
 
 // Standard Entity Events
 void Rexon_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGymBar : Object {
+struct ObjectGymBar : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGymBar : Entity {
 
 };
 
-// Object Entity
-extern ObjectGymBar GymBar;
+// Object Struct
+extern ObjectGymBar *GymBar;
 
 // Standard Entity Events
 void GymBar_Update();

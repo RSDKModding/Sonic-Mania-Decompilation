@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBuggernaut : Object {
+struct ObjectBuggernaut : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBuggernaut : Entity {
 
 };
 
-// Object Entity
-extern ObjectBuggernaut Buggernaut;
+// Object Struct
+extern ObjectBuggernaut *Buggernaut;
 
 // Standard Entity Events
 void Buggernaut_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBlaster : Object {
+struct ObjectBlaster : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBlaster : Entity {
 
 };
 
-// Object Entity
-extern ObjectBlaster Blaster;
+// Object Struct
+extern ObjectBlaster *Blaster;
 
 // Standard Entity Events
 void Blaster_Update();

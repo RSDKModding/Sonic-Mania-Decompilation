@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectItemBox ItemBox;
+ObjectItemBox *ItemBox;
 
 void ItemBox_Update()
 {

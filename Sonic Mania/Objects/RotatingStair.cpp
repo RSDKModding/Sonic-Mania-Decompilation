@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRotatingStair RotatingStair;
+ObjectRotatingStair *RotatingStair;
 
 void RotatingStair_Update()
 {

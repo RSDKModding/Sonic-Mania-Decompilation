@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVsCharSelector : Object {
+struct ObjectUIVsCharSelector : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIVsCharSelector : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIVsCharSelector UIVsCharSelector;
+// Object Struct
+extern ObjectUIVsCharSelector *UIVsCharSelector;
 
 // Standard Entity Events
 void UIVsCharSelector_Update();

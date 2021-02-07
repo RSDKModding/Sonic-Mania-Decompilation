@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectExplosion Explosion;
+ObjectExplosion *Explosion;
 
 void Explosion_Update()
 {

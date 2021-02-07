@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDust : Object {
+struct ObjectDust : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDust : Entity {
 
 };
 
-// Object Entity
-extern ObjectDust Dust;
+// Object Struct
+extern ObjectDust *Dust;
 
 // Standard Entity Events
 void Dust_Update();

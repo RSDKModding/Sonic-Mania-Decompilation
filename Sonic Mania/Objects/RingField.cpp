@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRingField RingField;
+ObjectRingField *RingField;
 
 void RingField_Update()
 {

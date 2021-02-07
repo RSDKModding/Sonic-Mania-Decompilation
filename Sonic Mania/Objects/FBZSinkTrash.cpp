@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFBZSinkTrash FBZSinkTrash;
+ObjectFBZSinkTrash *FBZSinkTrash;
 
 void FBZSinkTrash_Update()
 {

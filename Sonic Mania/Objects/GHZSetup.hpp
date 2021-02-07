@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGHZSetup : Object {
+struct ObjectGHZSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGHZSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectGHZSetup GHZSetup;
+// Object Struct
+extern ObjectGHZSetup *GHZSetup;
 
 // Standard Entity Events
 void GHZSetup_Update();

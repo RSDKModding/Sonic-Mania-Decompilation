@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurboSpiker : Object {
+struct ObjectTurboSpiker : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTurboSpiker : Entity {
 
 };
 
-// Object Entity
-extern ObjectTurboSpiker TurboSpiker;
+// Object Struct
+extern ObjectTurboSpiker *TurboSpiker;
 
 // Standard Entity Events
 void TurboSpiker_Update();

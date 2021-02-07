@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIBackground : Object {
+struct ObjectUIBackground : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIBackground : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIBackground UIBackground;
+// Object Struct
+extern ObjectUIBackground *UIBackground;
 
 // Standard Entity Events
 void UIBackground_Update();

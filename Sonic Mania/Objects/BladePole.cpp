@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBladePole BladePole;
+ObjectBladePole *BladePole;
 
 void BladePole_Update()
 {

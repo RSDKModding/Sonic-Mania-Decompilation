@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectInvisibleBlock : Object {
+struct ObjectInvisibleBlock : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityInvisibleBlock : Entity {
 
 };
 
-// Object Entity
-extern ObjectInvisibleBlock InvisibleBlock;
+// Object Struct
+extern ObjectInvisibleBlock *InvisibleBlock;
 
 // Standard Entity Events
 void InvisibleBlock_Update();

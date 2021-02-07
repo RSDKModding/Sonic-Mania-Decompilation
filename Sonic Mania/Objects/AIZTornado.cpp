@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZTornado AIZTornado;
+ObjectAIZTornado *AIZTornado;
 
 void AIZTornado_Update()
 {

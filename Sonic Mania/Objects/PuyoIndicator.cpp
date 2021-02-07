@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoIndicator PuyoIndicator;
+ObjectPuyoIndicator *PuyoIndicator;
 
 void PuyoIndicator_Update()
 {

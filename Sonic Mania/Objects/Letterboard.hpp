@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLetterboard : Object {
+struct ObjectLetterboard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLetterboard : Entity {
 
 };
 
-// Object Entity
-extern ObjectLetterboard Letterboard;
+// Object Struct
+extern ObjectLetterboard *Letterboard;
 
 // Standard Entity Events
 void Letterboard_Update();

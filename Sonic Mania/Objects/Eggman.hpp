@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEggman : Object {
+struct ObjectEggman : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityEggman : Entity {
 
 };
 
-// Object Entity
-extern ObjectEggman Eggman;
+// Object Struct
+extern ObjectEggman *Eggman;
 
 // Standard Entity Events
 void Eggman_Update();

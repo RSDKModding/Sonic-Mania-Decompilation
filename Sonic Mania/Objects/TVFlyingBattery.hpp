@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTVFlyingBattery : Object {
+struct ObjectTVFlyingBattery : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTVFlyingBattery : Entity {
 
 };
 
-// Object Entity
-extern ObjectTVFlyingBattery TVFlyingBattery;
+// Object Struct
+extern ObjectTVFlyingBattery *TVFlyingBattery;
 
 // Standard Entity Events
 void TVFlyingBattery_Update();

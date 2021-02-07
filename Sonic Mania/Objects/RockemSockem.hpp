@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRockemSockem : Object {
+struct ObjectRockemSockem : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRockemSockem : Entity {
 
 };
 
-// Object Entity
-extern ObjectRockemSockem RockemSockem;
+// Object Struct
+extern ObjectRockemSockem *RockemSockem;
 
 // Standard Entity Events
 void RockemSockem_Update();

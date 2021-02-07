@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEncoreIntro EncoreIntro;
+ObjectEncoreIntro *EncoreIntro;
 
 void EncoreIntro_Update()
 {

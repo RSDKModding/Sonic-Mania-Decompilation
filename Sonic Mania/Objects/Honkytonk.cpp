@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHonkytonk Honkytonk;
+ObjectHonkytonk *Honkytonk;
 
 void Honkytonk_Update()
 {

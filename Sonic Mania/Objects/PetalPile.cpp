@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPetalPile PetalPile;
+ObjectPetalPile *PetalPile;
 
 void PetalPile_Update()
 {

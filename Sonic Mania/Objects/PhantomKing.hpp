@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomKing : Object {
+struct ObjectPhantomKing : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPhantomKing : Entity {
 
 };
 
-// Object Entity
-extern ObjectPhantomKing PhantomKing;
+// Object Struct
+extern ObjectPhantomKing *PhantomKing;
 
 // Standard Entity Events
 void PhantomKing_Update();

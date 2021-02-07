@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFBZSetup FBZSetup;
+ObjectFBZSetup *FBZSetup;
 
 void FBZSetup_Update()
 {

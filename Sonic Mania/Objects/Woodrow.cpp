@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWoodrow Woodrow;
+ObjectWoodrow *Woodrow;
 
 void Woodrow_Update()
 {

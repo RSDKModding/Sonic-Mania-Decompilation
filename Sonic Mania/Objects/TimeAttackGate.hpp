@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimeAttackGate : Object {
+struct ObjectTimeAttackGate : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTimeAttackGate : Entity {
 
 };
 
-// Object Entity
-extern ObjectTimeAttackGate TimeAttackGate;
+// Object Struct
+extern ObjectTimeAttackGate *TimeAttackGate;
 
 // Standard Entity Events
 void TimeAttackGate_Update();

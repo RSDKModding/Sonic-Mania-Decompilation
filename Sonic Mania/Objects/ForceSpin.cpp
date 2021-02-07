@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectForceSpin ForceSpin;
+ObjectForceSpin *ForceSpin;
 
 void ForceSpin_Update()
 {

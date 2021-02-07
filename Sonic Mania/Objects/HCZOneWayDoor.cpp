@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHCZOneWayDoor HCZOneWayDoor;
+ObjectHCZOneWayDoor *HCZOneWayDoor;
 
 void HCZOneWayDoor_Update()
 {

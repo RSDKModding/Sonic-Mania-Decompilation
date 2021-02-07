@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWhirlpool : Object {
+struct ObjectWhirlpool : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWhirlpool : Entity {
 
 };
 
-// Object Entity
-extern ObjectWhirlpool Whirlpool;
+// Object Struct
+extern ObjectWhirlpool *Whirlpool;
 
 // Standard Entity Events
 void Whirlpool_Update();

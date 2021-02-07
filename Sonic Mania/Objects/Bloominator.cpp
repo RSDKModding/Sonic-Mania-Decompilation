@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBloominator Bloominator;
+ObjectBloominator *Bloominator;
 
 void Bloominator_Update()
 {

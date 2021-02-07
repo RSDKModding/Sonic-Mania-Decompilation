@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFXFade FXFade;
+ObjectFXFade *FXFade;
 
 void FXFade_Update()
 {

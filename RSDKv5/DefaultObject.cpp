@@ -1,6 +1,6 @@
 #include "RetroEngine.hpp"
 
-ObjectDefaultObject DefaultObject;
+ObjectDefaultObject *DefaultObject;
 
 void DefaultObject_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTwistingDoor : Object {
+struct ObjectTwistingDoor : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTwistingDoor : Entity {
 
 };
 
-// Object Entity
-extern ObjectTwistingDoor TwistingDoor;
+// Object Struct
+extern ObjectTwistingDoor *TwistingDoor;
 
 // Standard Entity Events
 void TwistingDoor_Update();

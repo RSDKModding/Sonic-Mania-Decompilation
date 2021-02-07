@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoBean PuyoBean;
+ObjectPuyoBean *PuyoBean;
 
 void PuyoBean_Update()
 {

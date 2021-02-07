@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGymBar GymBar;
+ObjectGymBar *GymBar;
 
 void GymBar_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPopOut : Object {
+struct ObjectPopOut : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPopOut : Entity {
 
 };
 
-// Object Entity
-extern ObjectPopOut PopOut;
+// Object Struct
+extern ObjectPopOut *PopOut;
 
 // Standard Entity Events
 void PopOut_Update();

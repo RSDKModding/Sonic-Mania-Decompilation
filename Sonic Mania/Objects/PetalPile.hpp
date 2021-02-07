@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPetalPile : Object {
+struct ObjectPetalPile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPetalPile : Entity {
 
 };
 
-// Object Entity
-extern ObjectPetalPile PetalPile;
+// Object Struct
+extern ObjectPetalPile *PetalPile;
 
 // Standard Entity Events
 void PetalPile_Update();

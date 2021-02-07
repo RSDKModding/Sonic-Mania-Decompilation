@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlayerProbe PlayerProbe;
+ObjectPlayerProbe *PlayerProbe;
 
 void PlayerProbe_Update()
 {

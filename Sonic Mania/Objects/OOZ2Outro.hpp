@@ -13,7 +13,7 @@ struct EntityOOZ2Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectOOZ2Outro OOZ2Outro;
 
 // Standard Entity Events

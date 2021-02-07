@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEggTower EggTower;
+ObjectEggTower *EggTower;
 
 void EggTower_Update()
 {

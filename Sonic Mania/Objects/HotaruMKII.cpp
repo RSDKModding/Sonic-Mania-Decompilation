@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHotaruMKII HotaruMKII;
+ObjectHotaruMKII *HotaruMKII;
 
 void HotaruMKII_Update()
 {

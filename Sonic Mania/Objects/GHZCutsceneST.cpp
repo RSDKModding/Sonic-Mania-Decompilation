@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGHZCutsceneST GHZCutsceneST;
+ObjectGHZCutsceneST *GHZCutsceneST;
 
 void GHZCutsceneST_Update()
 {

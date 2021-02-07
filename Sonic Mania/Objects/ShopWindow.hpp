@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectShopWindow : Object {
+struct ObjectShopWindow : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityShopWindow : Entity {
 
 };
 
-// Object Entity
-extern ObjectShopWindow ShopWindow;
+// Object Struct
+extern ObjectShopWindow *ShopWindow;
 
 // Standard Entity Events
 void ShopWindow_Update();

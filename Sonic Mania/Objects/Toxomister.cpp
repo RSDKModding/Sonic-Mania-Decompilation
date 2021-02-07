@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectToxomister Toxomister;
+ObjectToxomister *Toxomister;
 
 void Toxomister_Update()
 {

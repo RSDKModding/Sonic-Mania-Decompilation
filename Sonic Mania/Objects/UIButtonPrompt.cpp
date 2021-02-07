@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIButtonPrompt UIButtonPrompt;
+ObjectUIButtonPrompt *UIButtonPrompt;
 
 void UIButtonPrompt_Update()
 {

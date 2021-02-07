@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSkyTeleporter : Object {
+struct ObjectSkyTeleporter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySkyTeleporter : Entity {
 
 };
 
-// Object Entity
-extern ObjectSkyTeleporter SkyTeleporter;
+// Object Struct
+extern ObjectSkyTeleporter *SkyTeleporter;
 
 // Standard Entity Events
 void SkyTeleporter_Update();

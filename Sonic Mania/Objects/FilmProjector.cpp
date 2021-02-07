@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFilmProjector FilmProjector;
+ObjectFilmProjector *FilmProjector;
 
 void FilmProjector_Update()
 {

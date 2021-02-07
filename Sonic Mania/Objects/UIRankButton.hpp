@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIRankButton : Object {
+struct ObjectUIRankButton : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIRankButton : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIRankButton UIRankButton;
+// Object Struct
+extern ObjectUIRankButton *UIRankButton;
 
 // Standard Entity Events
 void UIRankButton_Update();

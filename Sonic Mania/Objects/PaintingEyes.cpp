@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPaintingEyes PaintingEyes;
+ObjectPaintingEyes *PaintingEyes;
 
 void PaintingEyes_Update()
 {

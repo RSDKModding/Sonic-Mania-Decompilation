@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLetterboard Letterboard;
+ObjectLetterboard *Letterboard;
 
 void Letterboard_Update()
 {

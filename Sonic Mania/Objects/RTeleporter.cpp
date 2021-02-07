@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRTeleporter RTeleporter;
+ObjectRTeleporter *RTeleporter;
 
 void RTeleporter_Update()
 {

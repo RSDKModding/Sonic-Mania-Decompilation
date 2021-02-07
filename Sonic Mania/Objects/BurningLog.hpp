@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBurningLog : Object {
+struct ObjectBurningLog : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBurningLog : Entity {
 
 };
 
-// Object Entity
-extern ObjectBurningLog BurningLog;
+// Object Struct
+extern ObjectBurningLog *BurningLog;
 
 // Standard Entity Events
 void BurningLog_Update();

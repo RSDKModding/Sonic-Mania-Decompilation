@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGasPlatform GasPlatform;
+ObjectGasPlatform *GasPlatform;
 
 void GasPlatform_Update()
 {

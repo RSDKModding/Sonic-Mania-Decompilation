@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIKeyBinder UIKeyBinder;
+ObjectUIKeyBinder *UIKeyBinder;
 
 void UIKeyBinder_Update()
 {

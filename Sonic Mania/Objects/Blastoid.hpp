@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBlastoid : Object {
+struct ObjectBlastoid : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBlastoid : Entity {
 
 };
 
-// Object Entity
-extern ObjectBlastoid Blastoid;
+// Object Struct
+extern ObjectBlastoid *Blastoid;
 
 // Standard Entity Events
 void Blastoid_Update();

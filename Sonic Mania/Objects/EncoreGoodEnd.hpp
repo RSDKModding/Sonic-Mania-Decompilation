@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEncoreGoodEnd : Object {
+struct ObjectEncoreGoodEnd : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityEncoreGoodEnd : Entity {
 
 };
 
-// Object Entity
-extern ObjectEncoreGoodEnd EncoreGoodEnd;
+// Object Struct
+extern ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 // Standard Entity Events
 void EncoreGoodEnd_Update();

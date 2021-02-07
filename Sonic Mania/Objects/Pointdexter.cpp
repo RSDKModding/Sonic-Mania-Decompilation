@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPointdexter Pointdexter;
+ObjectPointdexter *Pointdexter;
 
 void Pointdexter_Update()
 {

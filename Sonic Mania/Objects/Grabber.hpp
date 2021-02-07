@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGrabber : Object {
+struct ObjectGrabber : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGrabber : Entity {
 
 };
 
-// Object Entity
-extern ObjectGrabber Grabber;
+// Object Struct
+extern ObjectGrabber *Grabber;
 
 // Standard Entity Events
 void Grabber_Update();

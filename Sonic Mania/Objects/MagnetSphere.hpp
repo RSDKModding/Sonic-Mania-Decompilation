@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMagnetSphere : Object {
+struct ObjectMagnetSphere : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMagnetSphere : Entity {
 
 };
 
-// Object Entity
-extern ObjectMagnetSphere MagnetSphere;
+// Object Struct
+extern ObjectMagnetSphere *MagnetSphere;
 
 // Standard Entity Events
 void MagnetSphere_Update();

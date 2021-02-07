@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHUD HUD;
+ObjectHUD *HUD;
 
 void HUD_Update()
 {

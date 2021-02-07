@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLaundroMobile : Object {
+struct ObjectLaundroMobile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLaundroMobile : Entity {
 
 };
 
-// Object Entity
-extern ObjectLaundroMobile LaundroMobile;
+// Object Struct
+extern ObjectLaundroMobile *LaundroMobile;
 
 // Standard Entity Events
 void LaundroMobile_Update();

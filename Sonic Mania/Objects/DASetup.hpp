@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDASetup : Object {
+struct ObjectDASetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDASetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectDASetup DASetup;
+// Object Struct
+extern ObjectDASetup *DASetup;
 
 // Standard Entity Events
 void DASetup_Update();

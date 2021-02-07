@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTurbine Turbine;
+ObjectTurbine *Turbine;
 
 void Turbine_Update()
 {

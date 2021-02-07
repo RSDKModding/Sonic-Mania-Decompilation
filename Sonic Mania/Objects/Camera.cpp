@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCamera Camera;
+ObjectCamera *Camera;
 
 void Camera_Update()
 {

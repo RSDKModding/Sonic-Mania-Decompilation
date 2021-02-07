@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoAI PuyoAI;
+ObjectPuyoAI *PuyoAI;
 
 void PuyoAI_Update()
 {

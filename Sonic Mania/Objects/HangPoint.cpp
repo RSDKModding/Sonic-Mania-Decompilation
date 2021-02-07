@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHangPoint HangPoint;
+ObjectHangPoint *HangPoint;
 
 void HangPoint_Update()
 {

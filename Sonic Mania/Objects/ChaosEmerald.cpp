@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectChaosEmerald ChaosEmerald;
+ObjectChaosEmerald *ChaosEmerald;
 
 void ChaosEmerald_Update()
 {

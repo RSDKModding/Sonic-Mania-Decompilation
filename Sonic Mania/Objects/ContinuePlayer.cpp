@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectContinuePlayer ContinuePlayer;
+ObjectContinuePlayer *ContinuePlayer;
 
 void ContinuePlayer_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIInfoLabel : Object {
+struct ObjectUIInfoLabel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIInfoLabel : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIInfoLabel UIInfoLabel;
+// Object Struct
+extern ObjectUIInfoLabel *UIInfoLabel;
 
 // Standard Entity Events
 void UIInfoLabel_Update();

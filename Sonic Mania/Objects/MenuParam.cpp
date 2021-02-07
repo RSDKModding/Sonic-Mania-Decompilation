@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMenuParam MenuParam;
+ObjectMenuParam *MenuParam;
 
 void MenuParam_Update()
 {

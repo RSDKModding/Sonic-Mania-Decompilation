@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleBG : Object {
+struct ObjectTitleBG : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTitleBG : Entity {
 
 };
 
-// Object Entity
-extern ObjectTitleBG TitleBG;
+// Object Struct
+extern ObjectTitleBG *TitleBG;
 
 // Standard Entity Events
 void TitleBG_Update();

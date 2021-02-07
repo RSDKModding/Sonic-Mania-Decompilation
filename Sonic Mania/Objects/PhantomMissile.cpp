@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomMissile PhantomMissile;
+ObjectPhantomMissile *PhantomMissile;
 
 void PhantomMissile_Update()
 {

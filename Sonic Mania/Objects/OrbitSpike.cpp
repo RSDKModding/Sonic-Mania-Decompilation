@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectOrbitSpike OrbitSpike;
+ObjectOrbitSpike *OrbitSpike;
 
 void OrbitSpike_Update()
 {

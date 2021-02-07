@@ -13,7 +13,7 @@ struct EntitySSZ1Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectSSZ1Outro SSZ1Outro;
 
 // Standard Entity Events

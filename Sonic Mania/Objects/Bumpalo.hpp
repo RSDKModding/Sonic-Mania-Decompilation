@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBumpalo : Object {
+struct ObjectBumpalo : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBumpalo : Entity {
 
 };
 
-// Object Entity
-extern ObjectBumpalo Bumpalo;
+// Object Struct
+extern ObjectBumpalo *Bumpalo;
 
 // Standard Entity Events
 void Bumpalo_Update();

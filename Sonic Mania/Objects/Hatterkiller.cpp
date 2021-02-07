@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHatterkiller Hatterkiller;
+ObjectHatterkiller *Hatterkiller;
 
 void Hatterkiller_Update()
 {

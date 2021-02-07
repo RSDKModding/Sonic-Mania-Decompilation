@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEscapeCar EscapeCar;
+ObjectEscapeCar *EscapeCar;
 
 void EscapeCar_Update()
 {

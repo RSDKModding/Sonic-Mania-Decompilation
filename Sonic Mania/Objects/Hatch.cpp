@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHatch Hatch;
+ObjectHatch *Hatch;
 
 void Hatch_Update()
 {

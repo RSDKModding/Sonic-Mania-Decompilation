@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikeCrusher : Object {
+struct ObjectSpikeCrusher : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpikeCrusher : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpikeCrusher SpikeCrusher;
+// Object Struct
+extern ObjectSpikeCrusher *SpikeCrusher;
 
 // Standard Entity Events
 void SpikeCrusher_Update();

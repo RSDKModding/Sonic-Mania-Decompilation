@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZOutro ERZOutro;
+ObjectERZOutro *ERZOutro;
 
 void ERZOutro_Update()
 {

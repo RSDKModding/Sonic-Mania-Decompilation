@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectOptionsMenu OptionsMenu;
+ObjectOptionsMenu *OptionsMenu;
 
 void OptionsMenu_Update()
 {

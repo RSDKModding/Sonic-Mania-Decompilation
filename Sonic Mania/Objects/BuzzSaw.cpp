@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBuzzSaw BuzzSaw;
+ObjectBuzzSaw *BuzzSaw;
 
 void BuzzSaw_Update()
 {

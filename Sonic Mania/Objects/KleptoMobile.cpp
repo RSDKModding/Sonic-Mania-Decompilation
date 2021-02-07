@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectKleptoMobile KleptoMobile;
+ObjectKleptoMobile *KleptoMobile;
 
 void KleptoMobile_Update()
 {

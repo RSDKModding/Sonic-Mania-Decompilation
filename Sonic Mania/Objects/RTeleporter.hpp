@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRTeleporter : Object {
+struct ObjectRTeleporter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRTeleporter : Entity {
 
 };
 
-// Object Entity
-extern ObjectRTeleporter RTeleporter;
+// Object Struct
+extern ObjectRTeleporter *RTeleporter;
 
 // Standard Entity Events
 void RTeleporter_Update();

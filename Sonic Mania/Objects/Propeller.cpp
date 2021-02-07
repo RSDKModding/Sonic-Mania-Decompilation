@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPropeller Propeller;
+ObjectPropeller *Propeller;
 
 void Propeller_Update()
 {

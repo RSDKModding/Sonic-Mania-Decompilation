@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSZCutsceneST : Object {
+struct ObjectMSZCutsceneST : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSZCutsceneST : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSZCutsceneST MSZCutsceneST;
+// Object Struct
+extern ObjectMSZCutsceneST *MSZCutsceneST;
 
 // Standard Entity Events
 void MSZCutsceneST_Update();

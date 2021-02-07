@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectInvisibleBlock InvisibleBlock;
+ObjectInvisibleBlock *InvisibleBlock;
 
 void InvisibleBlock_Update()
 {

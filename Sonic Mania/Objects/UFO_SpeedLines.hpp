@@ -13,7 +13,7 @@ struct EntityUFO_SpeedLines : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_SpeedLines UFO_SpeedLines;
 
 // Standard Entity Events

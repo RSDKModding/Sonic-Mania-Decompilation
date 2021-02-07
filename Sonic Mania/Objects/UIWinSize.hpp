@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIWinSize : Object {
+struct ObjectUIWinSize : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIWinSize : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIWinSize UIWinSize;
+// Object Struct
+extern ObjectUIWinSize *UIWinSize;
 
 // Standard Entity Events
 void UIWinSize_Update();

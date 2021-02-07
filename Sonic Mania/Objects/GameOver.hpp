@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGameOver : Object {
+struct ObjectGameOver : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGameOver : Entity {
 
 };
 
-// Object Entity
-extern ObjectGameOver GameOver;
+// Object Struct
+extern ObjectGameOver *GameOver;
 
 // Standard Entity Events
 void GameOver_Update();

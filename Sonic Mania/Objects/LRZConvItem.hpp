@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZConvItem : Object {
+struct ObjectLRZConvItem : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZConvItem : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZConvItem LRZConvItem;
+// Object Struct
+extern ObjectLRZConvItem *LRZConvItem;
 
 // Standard Entity Events
 void LRZConvItem_Update();

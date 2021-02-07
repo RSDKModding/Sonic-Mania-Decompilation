@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHangGlider : Object {
+struct ObjectHangGlider : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHangGlider : Entity {
 
 };
 
-// Object Entity
-extern ObjectHangGlider HangGlider;
+// Object Struct
+extern ObjectHangGlider *HangGlider;
 
 // Standard Entity Events
 void HangGlider_Update();

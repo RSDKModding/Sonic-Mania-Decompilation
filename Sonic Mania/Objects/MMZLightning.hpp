@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMMZLightning : Object {
+struct ObjectMMZLightning : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMMZLightning : Entity {
 
 };
 
-// Object Entity
-extern ObjectMMZLightning MMZLightning;
+// Object Struct
+extern ObjectMMZLightning *MMZLightning;
 
 // Standard Entity Events
 void MMZLightning_Update();

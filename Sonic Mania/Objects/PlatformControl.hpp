@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlatformControl : Object {
+struct ObjectPlatformControl : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPlatformControl : Entity {
 
 };
 
-// Object Entity
-extern ObjectPlatformControl PlatformControl;
+// Object Struct
+extern ObjectPlatformControl *PlatformControl;
 
 // Standard Entity Events
 void PlatformControl_Update();

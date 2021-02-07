@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectZone : Object {
+struct ObjectZone : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityZone : Entity {
 
 };
 
-// Object Entity
-extern ObjectZone Zone;
+// Object Struct
+extern ObjectZone *Zone;
 
 // Standard Entity Events
 void Zone_Update();

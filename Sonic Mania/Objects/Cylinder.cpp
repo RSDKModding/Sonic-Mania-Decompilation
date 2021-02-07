@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCylinder Cylinder;
+ObjectCylinder *Cylinder;
 
 void Cylinder_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBlastoid Blastoid;
+ObjectBlastoid *Blastoid;
 
 void Blastoid_Update()
 {

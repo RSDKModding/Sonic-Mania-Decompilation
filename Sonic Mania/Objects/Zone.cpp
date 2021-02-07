@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectZone Zone;
+ObjectZone *Zone;
 
 void Zone_Update()
 {

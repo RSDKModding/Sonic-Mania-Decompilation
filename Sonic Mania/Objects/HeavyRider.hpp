@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHeavyRider : Object {
+struct ObjectHeavyRider : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHeavyRider : Entity {
 
 };
 
-// Object Entity
-extern ObjectHeavyRider HeavyRider;
+// Object Struct
+extern ObjectHeavyRider *HeavyRider;
 
 // Standard Entity Events
 void HeavyRider_Update();

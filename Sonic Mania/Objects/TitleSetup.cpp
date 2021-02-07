@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTitleSetup TitleSetup;
+ObjectTitleSetup *TitleSetup;
 
 void TitleSetup_Update()
 {

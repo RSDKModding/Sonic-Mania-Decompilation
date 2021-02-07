@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIDiorama : Object {
+struct ObjectUIDiorama : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIDiorama : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIDiorama UIDiorama;
+// Object Struct
+extern ObjectUIDiorama *UIDiorama;
 
 // Standard Entity Events
 void UIDiorama_Update();

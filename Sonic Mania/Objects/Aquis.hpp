@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAquis : Object {
+struct ObjectAquis : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAquis : Entity {
 
 };
 
-// Object Entity
-extern ObjectAquis Aquis;
+// Object Struct
+extern ObjectAquis *Aquis;
 
 // Standard Entity Events
 void Aquis_Update();

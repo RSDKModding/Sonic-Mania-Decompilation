@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPathInverter PathInverter;
+ObjectPathInverter *PathInverter;
 
 void PathInverter_Update()
 {

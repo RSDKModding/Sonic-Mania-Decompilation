@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSuperSparkle SuperSparkle;
+ObjectSuperSparkle *SuperSparkle;
 
 void SuperSparkle_Update()
 {

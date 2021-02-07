@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCollapsingPlatform : Object {
+struct ObjectCollapsingPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCollapsingPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectCollapsingPlatform CollapsingPlatform;
+// Object Struct
+extern ObjectCollapsingPlatform *CollapsingPlatform;
 
 // Standard Entity Events
 void CollapsingPlatform_Update();

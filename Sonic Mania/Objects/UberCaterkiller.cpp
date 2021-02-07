@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUberCaterkiller UberCaterkiller;
+ObjectUberCaterkiller *UberCaterkiller;
 
 void UberCaterkiller_Update()
 {

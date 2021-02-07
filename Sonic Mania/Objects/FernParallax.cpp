@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFernParallax FernParallax;
+ObjectFernParallax *FernParallax;
 
 void FernParallax_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTMZBarrier TMZBarrier;
+ObjectTMZBarrier *TMZBarrier;
 
 void TMZBarrier_Update()
 {

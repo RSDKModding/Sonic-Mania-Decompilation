@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMechaBu MechaBu;
+ObjectMechaBu *MechaBu;
 
 void MechaBu_Update()
 {

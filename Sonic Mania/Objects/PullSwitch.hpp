@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPullSwitch : Object {
+struct ObjectPullSwitch : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPullSwitch : Entity {
 
 };
 
-// Object Entity
-extern ObjectPullSwitch PullSwitch;
+// Object Struct
+extern ObjectPullSwitch *PullSwitch;
 
 // Standard Entity Events
 void PullSwitch_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoIndicator : Object {
+struct ObjectPuyoIndicator : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPuyoIndicator : Entity {
 
 };
 
-// Object Entity
-extern ObjectPuyoIndicator PuyoIndicator;
+// Object Struct
+extern ObjectPuyoIndicator *PuyoIndicator;
 
 // Standard Entity Events
 void PuyoIndicator_Update();

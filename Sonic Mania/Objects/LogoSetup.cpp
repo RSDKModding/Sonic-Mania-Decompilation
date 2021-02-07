@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLogoSetup LogoSetup;
+ObjectLogoSetup *LogoSetup;
 
 void LogoSetup_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWeatherMobile : Object {
+struct ObjectWeatherMobile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWeatherMobile : Entity {
 
 };
 
-// Object Entity
-extern ObjectWeatherMobile WeatherMobile;
+// Object Struct
+extern ObjectWeatherMobile *WeatherMobile;
 
 // Standard Entity Events
 void WeatherMobile_Update();

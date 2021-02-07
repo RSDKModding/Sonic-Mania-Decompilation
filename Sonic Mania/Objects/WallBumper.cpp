@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWallBumper WallBumper;
+ObjectWallBumper *WallBumper;
 
 void WallBumper_Update()
 {

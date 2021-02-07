@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFrostThrower FrostThrower;
+ObjectFrostThrower *FrostThrower;
 
 void FrostThrower_Update()
 {

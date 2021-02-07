@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpikes Spikes;
+ObjectSpikes *Spikes;
 
 void Spikes_Update()
 {

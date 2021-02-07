@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpeedGate SpeedGate;
+ObjectSpeedGate *SpeedGate;
 
 void SpeedGate_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlasherMKII : Object {
+struct ObjectFlasherMKII : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFlasherMKII : Entity {
 
 };
 
-// Object Entity
-extern ObjectFlasherMKII FlasherMKII;
+// Object Struct
+extern ObjectFlasherMKII *FlasherMKII;
 
 // Standard Entity Events
 void FlasherMKII_Update();

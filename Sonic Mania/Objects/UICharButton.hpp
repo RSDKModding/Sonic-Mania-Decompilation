@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUICharButton : Object {
+struct ObjectUICharButton : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUICharButton : Entity {
 
 };
 
-// Object Entity
-extern ObjectUICharButton UICharButton;
+// Object Struct
+extern ObjectUICharButton *UICharButton;
 
 // Standard Entity Events
 void UICharButton_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMagPlatform MagPlatform;
+ObjectMagPlatform *MagPlatform;
 
 void MagPlatform_Update()
 {

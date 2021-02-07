@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWallBumper : Object {
+struct ObjectWallBumper : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWallBumper : Entity {
 
 };
 
-// Object Entity
-extern ObjectWallBumper WallBumper;
+// Object Struct
+extern ObjectWallBumper *WallBumper;
 
 // Standard Entity Events
 void WallBumper_Update();

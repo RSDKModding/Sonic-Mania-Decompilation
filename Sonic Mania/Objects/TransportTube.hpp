@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTransportTube : Object {
+struct ObjectTransportTube : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTransportTube : Entity {
 
 };
 
-// Object Entity
-extern ObjectTransportTube TransportTube;
+// Object Struct
+extern ObjectTransportTube *TransportTube;
 
 // Standard Entity Events
 void TransportTube_Update();

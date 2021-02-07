@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFarPlane : Object {
+struct ObjectFarPlane : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFarPlane : Entity {
 
 };
 
-// Object Entity
-extern ObjectFarPlane FarPlane;
+// Object Struct
+extern ObjectFarPlane *FarPlane;
 
 // Standard Entity Events
 void FarPlane_Update();

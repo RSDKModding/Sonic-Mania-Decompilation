@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZSetup : Object {
+struct ObjectFBZSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFBZSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectFBZSetup FBZSetup;
+// Object Struct
+extern ObjectFBZSetup *FBZSetup;
 
 // Standard Entity Events
 void FBZSetup_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHeavyMystic HeavyMystic;
+ObjectHeavyMystic *HeavyMystic;
 
 void HeavyMystic_Update()
 {

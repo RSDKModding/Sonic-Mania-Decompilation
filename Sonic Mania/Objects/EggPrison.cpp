@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEggPrison EggPrison;
+ObjectEggPrison *EggPrison;
 
 void EggPrison_Update()
 {

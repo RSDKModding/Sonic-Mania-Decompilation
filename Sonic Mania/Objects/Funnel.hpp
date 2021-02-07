@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFunnel : Object {
+struct ObjectFunnel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFunnel : Entity {
 
 };
 
-// Object Entity
-extern ObjectFunnel Funnel;
+// Object Struct
+extern ObjectFunnel *Funnel;
 
 // Standard Entity Events
 void Funnel_Update();

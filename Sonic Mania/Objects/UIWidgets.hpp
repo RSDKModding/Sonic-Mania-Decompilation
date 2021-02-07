@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIWidgets : Object {
+struct ObjectUIWidgets : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIWidgets : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIWidgets UIWidgets;
+// Object Struct
+extern ObjectUIWidgets *UIWidgets;
 
 // Standard Entity Events
 void UIWidgets_Update();

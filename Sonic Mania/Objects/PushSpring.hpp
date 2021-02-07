@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPushSpring : Object {
+struct ObjectPushSpring : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPushSpring : Entity {
 
 };
 
-// Object Entity
-extern ObjectPushSpring PushSpring;
+// Object Struct
+extern ObjectPushSpring *PushSpring;
 
 // Standard Entity Events
 void PushSpring_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectManiaModeMenu ManiaModeMenu;
+ObjectManiaModeMenu *ManiaModeMenu;
 
 void ManiaModeMenu_Update()
 {

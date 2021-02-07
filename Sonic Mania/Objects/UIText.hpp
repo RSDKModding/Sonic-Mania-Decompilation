@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIText : Object {
+struct ObjectUIText : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIText : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIText UIText;
+// Object Struct
+extern ObjectUIText *UIText;
 
 // Standard Entity Events
 void UIText_Update();

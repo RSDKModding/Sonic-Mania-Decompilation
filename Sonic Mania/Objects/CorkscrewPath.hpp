@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCorkscrewPath : Object {
+struct ObjectCorkscrewPath : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCorkscrewPath : Entity {
 
 };
 
-// Object Entity
-extern ObjectCorkscrewPath CorkscrewPath;
+// Object Struct
+extern ObjectCorkscrewPath *CorkscrewPath;
 
 // Standard Entity Events
 void CorkscrewPath_Update();

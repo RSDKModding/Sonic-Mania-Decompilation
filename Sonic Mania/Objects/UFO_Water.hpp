@@ -13,7 +13,7 @@ struct EntityUFO_Water : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_Water UFO_Water;
 
 // Standard Entity Events

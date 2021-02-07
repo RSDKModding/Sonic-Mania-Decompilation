@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEncoreGoodEnd EncoreGoodEnd;
+ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 void EncoreGoodEnd_Update()
 {

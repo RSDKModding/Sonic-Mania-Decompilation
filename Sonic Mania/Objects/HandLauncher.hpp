@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHandLauncher : Object {
+struct ObjectHandLauncher : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHandLauncher : Entity {
 
 };
 
-// Object Entity
-extern ObjectHandLauncher HandLauncher;
+// Object Struct
+extern ObjectHandLauncher *HandLauncher;
 
 // Standard Entity Events
 void HandLauncher_Update();

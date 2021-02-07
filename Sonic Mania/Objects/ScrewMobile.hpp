@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectScrewMobile : Object {
+struct ObjectScrewMobile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityScrewMobile : Entity {
 
 };
 
-// Object Entity
-extern ObjectScrewMobile ScrewMobile;
+// Object Struct
+extern ObjectScrewMobile *ScrewMobile;
 
 // Standard Entity Events
 void ScrewMobile_Update();

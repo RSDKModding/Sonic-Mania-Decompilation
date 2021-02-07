@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTwistingSlide : Object {
+struct ObjectTwistingSlide : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTwistingSlide : Entity {
 
 };
 
-// Object Entity
-extern ObjectTwistingSlide TwistingSlide;
+// Object Struct
+extern ObjectTwistingSlide *TwistingSlide;
 
 // Standard Entity Events
 void TwistingSlide_Update();

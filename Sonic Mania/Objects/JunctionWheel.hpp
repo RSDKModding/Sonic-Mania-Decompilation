@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJunctionWheel : Object {
+struct ObjectJunctionWheel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityJunctionWheel : Entity {
 
 };
 
-// Object Entity
-extern ObjectJunctionWheel JunctionWheel;
+// Object Struct
+extern ObjectJunctionWheel *JunctionWheel;
 
 // Standard Entity Events
 void JunctionWheel_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPrintBlock PrintBlock;
+ObjectPrintBlock *PrintBlock;
 
 void PrintBlock_Update()
 {

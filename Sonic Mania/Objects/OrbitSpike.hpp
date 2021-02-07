@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectOrbitSpike : Object {
+struct ObjectOrbitSpike : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityOrbitSpike : Entity {
 
 };
 
-// Object Entity
-extern ObjectOrbitSpike OrbitSpike;
+// Object Struct
+extern ObjectOrbitSpike *OrbitSpike;
 
 // Standard Entity Events
 void OrbitSpike_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBoundsMarker : Object {
+struct ObjectBoundsMarker : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBoundsMarker : Entity {
 
 };
 
-// Object Entity
-extern ObjectBoundsMarker BoundsMarker;
+// Object Struct
+extern ObjectBoundsMarker *BoundsMarker;
 
 // Standard Entity Events
 void BoundsMarker_Update();

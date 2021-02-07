@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBeanstalk Beanstalk;
+ObjectBeanstalk *Beanstalk;
 
 void Beanstalk_Update()
 {

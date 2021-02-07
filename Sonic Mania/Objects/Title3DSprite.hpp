@@ -13,7 +13,7 @@ struct EntityTitle3DSprite : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectTitle3DSprite Title3DSprite;
 
 // Standard Entity Events

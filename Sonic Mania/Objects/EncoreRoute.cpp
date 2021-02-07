@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEncoreRoute EncoreRoute;
+ObjectEncoreRoute *EncoreRoute;
 
 void EncoreRoute_Update()
 {

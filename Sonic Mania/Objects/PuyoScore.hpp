@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoScore : Object {
+struct ObjectPuyoScore : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPuyoScore : Entity {
 
 };
 
-// Object Entity
-extern ObjectPuyoScore PuyoScore;
+// Object Struct
+extern ObjectPuyoScore *PuyoScore;
 
 // Standard Entity Events
 void PuyoScore_Update();

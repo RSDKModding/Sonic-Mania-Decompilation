@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpikeCrusher SpikeCrusher;
+ObjectSpikeCrusher *SpikeCrusher;
 
 void SpikeCrusher_Update()
 {

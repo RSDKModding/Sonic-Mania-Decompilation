@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHatterkiller : Object {
+struct ObjectHatterkiller : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHatterkiller : Entity {
 
 };
 
-// Object Entity
-extern ObjectHatterkiller Hatterkiller;
+// Object Struct
+extern ObjectHatterkiller *Hatterkiller;
 
 // Standard Entity Events
 void Hatterkiller_Update();

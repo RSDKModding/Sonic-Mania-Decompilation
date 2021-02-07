@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTurboSpiker TurboSpiker;
+ObjectTurboSpiker *TurboSpiker;
 
 void TurboSpiker_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPopcornKernel : Object {
+struct ObjectPopcornKernel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPopcornKernel : Entity {
 
 };
 
-// Object Entity
-extern ObjectPopcornKernel PopcornKernel;
+// Object Struct
+extern ObjectPopcornKernel *PopcornKernel;
 
 // Standard Entity Events
 void PopcornKernel_Update();

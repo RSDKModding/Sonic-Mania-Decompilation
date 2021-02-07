@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCollapsingPlatform CollapsingPlatform;
+ObjectCollapsingPlatform *CollapsingPlatform;
 
 void CollapsingPlatform_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectERZSetup : Object {
+struct ObjectERZSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityERZSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectERZSetup ERZSetup;
+// Object Struct
+extern ObjectERZSetup *ERZSetup;
 
 // Standard Entity Events
 void ERZSetup_Update();

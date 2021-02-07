@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJawz : Object {
+struct ObjectJawz : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityJawz : Entity {
 
 };
 
-// Object Entity
-extern ObjectJawz Jawz;
+// Object Struct
+extern ObjectJawz *Jawz;
 
 // Standard Entity Events
 void Jawz_Update();

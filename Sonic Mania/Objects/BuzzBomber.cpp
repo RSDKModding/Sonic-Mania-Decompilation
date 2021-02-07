@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBuzzBomber BuzzBomber;
+ObjectBuzzBomber *BuzzBomber;
 
 void BuzzBomber_Update()
 {

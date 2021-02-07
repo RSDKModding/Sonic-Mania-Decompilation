@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTippingPlatform TippingPlatform;
+ObjectTippingPlatform *TippingPlatform;
 
 void TippingPlatform_Update()
 {

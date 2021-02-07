@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGiantPistol GiantPistol;
+ObjectGiantPistol *GiantPistol;
 
 void GiantPistol_Update()
 {

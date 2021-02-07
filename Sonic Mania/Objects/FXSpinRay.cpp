@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFXSpinRay FXSpinRay;
+ObjectFXSpinRay *FXSpinRay;
 
 void FXSpinRay_Update()
 {

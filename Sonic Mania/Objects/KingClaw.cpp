@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectKingClaw KingClaw;
+ObjectKingClaw *KingClaw;
 
 void KingClaw_Update()
 {

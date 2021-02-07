@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPinata : Object {
+struct ObjectPinata : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPinata : Entity {
 
 };
 
-// Object Entity
-extern ObjectPinata Pinata;
+// Object Struct
+extern ObjectPinata *Pinata;
 
 // Standard Entity Events
 void Pinata_Update();

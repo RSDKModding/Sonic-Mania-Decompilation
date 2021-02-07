@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectShopWindow ShopWindow;
+ObjectShopWindow *ShopWindow;
 
 void ShopWindow_Update()
 {

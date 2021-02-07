@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTurboTurtle TurboTurtle;
+ObjectTurboTurtle *TurboTurtle;
 
 void TurboTurtle_Update()
 {

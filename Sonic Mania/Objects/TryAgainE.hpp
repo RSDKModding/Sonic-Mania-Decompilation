@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTryAgainE : Object {
+struct ObjectTryAgainE : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTryAgainE : Entity {
 
 };
 
-// Object Entity
-extern ObjectTryAgainE TryAgainE;
+// Object Struct
+extern ObjectTryAgainE *TryAgainE;
 
 // Standard Entity Events
 void TryAgainE_Update();

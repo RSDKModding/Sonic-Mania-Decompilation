@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSummary : Object {
+struct ObjectSummary : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySummary : Entity {
 
 };
 
-// Object Entity
-extern ObjectSummary Summary;
+// Object Struct
+extern ObjectSummary *Summary;
 
 // Standard Entity Events
 void Summary_Update();

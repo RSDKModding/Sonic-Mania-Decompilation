@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectClapperboard Clapperboard;
+ObjectClapperboard *Clapperboard;
 
 void Clapperboard_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCrashTest CrashTest;
+ObjectCrashTest *CrashTest;
 
 void CrashTest_Update()
 {

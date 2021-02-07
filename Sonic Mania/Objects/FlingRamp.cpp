@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFlingRamp FlingRamp;
+ObjectFlingRamp *FlingRamp;
 
 void FlingRamp_Update()
 {

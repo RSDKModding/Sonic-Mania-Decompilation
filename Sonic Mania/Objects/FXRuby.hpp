@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXRuby : Object {
+struct ObjectFXRuby : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFXRuby : Entity {
 
 };
 
-// Object Entity
-extern ObjectFXRuby FXRuby;
+// Object Struct
+extern ObjectFXRuby *FXRuby;
 
 // Standard Entity Events
 void FXRuby_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIModeButton UIModeButton;
+ObjectUIModeButton *UIModeButton;
 
 void UIModeButton_Update()
 {

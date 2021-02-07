@@ -13,7 +13,7 @@ struct EntityBSS_Player : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_Player BSS_Player;
 
 // Standard Entity Events

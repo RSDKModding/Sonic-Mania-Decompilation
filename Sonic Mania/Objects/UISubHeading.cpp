@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUISubHeading UISubHeading;
+ObjectUISubHeading *UISubHeading;
 
 void UISubHeading_Update()
 {

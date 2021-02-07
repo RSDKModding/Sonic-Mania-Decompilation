@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIKeyBinder : Object {
+struct ObjectUIKeyBinder : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIKeyBinder : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIKeyBinder UIKeyBinder;
+// Object Struct
+extern ObjectUIKeyBinder *UIKeyBinder;
 
 // Standard Entity Events
 void UIKeyBinder_Update();

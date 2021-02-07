@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTVVan TVVan;
+ObjectTVVan *TVVan;
 
 void TVVan_Update()
 {

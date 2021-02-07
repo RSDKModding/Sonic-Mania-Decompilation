@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMicDrop MicDrop;
+ObjectMicDrop *MicDrop;
 
 void MicDrop_Update()
 {

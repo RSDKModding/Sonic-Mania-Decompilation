@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSmog : Object {
+struct ObjectSmog : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySmog : Entity {
 
 };
 
-// Object Entity
-extern ObjectSmog Smog;
+// Object Struct
+extern ObjectSmog *Smog;
 
 // Standard Entity Events
 void Smog_Update();

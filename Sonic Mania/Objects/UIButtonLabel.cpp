@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIButtonLabel UIButtonLabel;
+ObjectUIButtonLabel *UIButtonLabel;
 
 void UIButtonLabel_Update()
 {

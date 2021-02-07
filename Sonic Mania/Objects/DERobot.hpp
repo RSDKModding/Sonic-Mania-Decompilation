@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDERobot : Object {
+struct ObjectDERobot : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDERobot : Entity {
 
 };
 
-// Object Entity
-extern ObjectDERobot DERobot;
+// Object Struct
+extern ObjectDERobot *DERobot;
 
 // Standard Entity Events
 void DERobot_Update();

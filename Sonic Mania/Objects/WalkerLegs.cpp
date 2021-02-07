@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWalkerLegs WalkerLegs;
+ObjectWalkerLegs *WalkerLegs;
 
 void WalkerLegs_Update()
 {

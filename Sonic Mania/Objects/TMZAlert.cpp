@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTMZAlert TMZAlert;
+ObjectTMZAlert *TMZAlert;
 
 void TMZAlert_Update()
 {

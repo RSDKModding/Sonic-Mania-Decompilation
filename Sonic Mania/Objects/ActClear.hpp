@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectActClear : Object {
+struct ObjectActClear : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityActClear : Entity {
 
 };
 
-// Object Entity
-extern ObjectActClear ActClear;
+// Object Struct
+extern ObjectActClear *ActClear;
 
 // Standard Entity Events
 void ActClear_Update();

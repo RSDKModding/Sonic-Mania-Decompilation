@@ -13,7 +13,7 @@ struct EntityTMZ2Setup : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectTMZ2Setup TMZ2Setup;
 
 // Standard Entity Events

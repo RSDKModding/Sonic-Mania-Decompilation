@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGigaMetal : Object {
+struct ObjectGigaMetal : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGigaMetal : Entity {
 
 };
 
-// Object Entity
-extern ObjectGigaMetal GigaMetal;
+// Object Struct
+extern ObjectGigaMetal *GigaMetal;
 
 // Standard Entity Events
 void GigaMetal_Update();

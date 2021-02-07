@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTimeAttackGate TimeAttackGate;
+ObjectTimeAttackGate *TimeAttackGate;
 
 void TimeAttackGate_Update()
 {

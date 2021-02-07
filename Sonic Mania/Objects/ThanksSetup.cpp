@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectThanksSetup ThanksSetup;
+ObjectThanksSetup *ThanksSetup;
 
 void ThanksSetup_Update()
 {

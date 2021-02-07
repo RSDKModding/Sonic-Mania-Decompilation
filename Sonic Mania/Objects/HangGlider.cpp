@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHangGlider HangGlider;
+ObjectHangGlider *HangGlider;
 
 void HangGlider_Update()
 {

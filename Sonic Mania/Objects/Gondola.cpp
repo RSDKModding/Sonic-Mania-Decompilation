@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGondola Gondola;
+ObjectGondola *Gondola;
 
 void Gondola_Update()
 {

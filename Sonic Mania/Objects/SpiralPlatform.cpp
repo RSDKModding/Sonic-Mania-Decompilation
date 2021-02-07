@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpiralPlatform SpiralPlatform;
+ObjectSpiralPlatform *SpiralPlatform;
 
 void SpiralPlatform_Update()
 {

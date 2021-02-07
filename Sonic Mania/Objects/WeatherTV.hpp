@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWeatherTV : Object {
+struct ObjectWeatherTV : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWeatherTV : Entity {
 
 };
 
-// Object Entity
-extern ObjectWeatherTV WeatherTV;
+// Object Struct
+extern ObjectWeatherTV *WeatherTV;
 
 // Standard Entity Events
 void WeatherTV_Update();

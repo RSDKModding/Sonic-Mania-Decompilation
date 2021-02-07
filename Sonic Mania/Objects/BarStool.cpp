@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBarStool BarStool;
+ObjectBarStool *BarStool;
 
 void BarStool_Update()
 {

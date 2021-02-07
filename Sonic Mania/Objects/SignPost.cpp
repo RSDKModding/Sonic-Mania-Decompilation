@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSignPost SignPost;
+ObjectSignPost *SignPost;
 
 void SignPost_Update()
 {

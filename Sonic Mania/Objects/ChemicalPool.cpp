@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectChemicalPool ChemicalPool;
+ObjectChemicalPool *ChemicalPool;
 
 void ChemicalPool_Update()
 {

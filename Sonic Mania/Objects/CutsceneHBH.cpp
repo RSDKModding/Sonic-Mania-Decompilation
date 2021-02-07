@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCutsceneHBH CutsceneHBH;
+ObjectCutsceneHBH *CutsceneHBH;
 
 void CutsceneHBH_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHatch : Object {
+struct ObjectHatch : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHatch : Entity {
 
 };
 
-// Object Entity
-extern ObjectHatch Hatch;
+// Object Struct
+extern ObjectHatch *Hatch;
 
 // Standard Entity Events
 void Hatch_Update();

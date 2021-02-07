@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectButton : Object {
+struct ObjectButton : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityButton : Entity {
 
 };
 
-// Object Entity
-extern ObjectButton Button;
+// Object Struct
+extern ObjectButton *Button;
 
 // Standard Entity Events
 void Button_Update();

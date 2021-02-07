@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFlameSpring FlameSpring;
+ObjectFlameSpring *FlameSpring;
 
 void FlameSpring_Update()
 {

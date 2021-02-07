@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomGunner PhantomGunner;
+ObjectPhantomGunner *PhantomGunner;
 
 void PhantomGunner_Update()
 {

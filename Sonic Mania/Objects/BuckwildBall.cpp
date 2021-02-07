@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBuckwildBall BuckwildBall;
+ObjectBuckwildBall *BuckwildBall;
 
 void BuckwildBall_Update()
 {

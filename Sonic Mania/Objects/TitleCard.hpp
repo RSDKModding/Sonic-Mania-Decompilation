@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleCard : Object {
+struct ObjectTitleCard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTitleCard : Entity {
 
 };
 
-// Object Entity
-extern ObjectTitleCard TitleCard;
+// Object Struct
+extern ObjectTitleCard *TitleCard;
 
 // Standard Entity Events
 void TitleCard_Update();

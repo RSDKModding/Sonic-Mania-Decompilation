@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZGunner ERZGunner;
+ObjectERZGunner *ERZGunner;
 
 void ERZGunner_Update()
 {

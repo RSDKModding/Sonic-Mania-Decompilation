@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectActClear ActClear;
+ObjectActClear *ActClear;
 
 void ActClear_Update()
 {

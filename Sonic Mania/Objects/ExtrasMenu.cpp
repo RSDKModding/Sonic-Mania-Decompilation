@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectExtrasMenu ExtrasMenu;
+ObjectExtrasMenu *ExtrasMenu;
 
 void ExtrasMenu_Update()
 {

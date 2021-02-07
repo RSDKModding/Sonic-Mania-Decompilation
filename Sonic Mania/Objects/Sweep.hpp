@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSweep : Object {
+struct ObjectSweep : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySweep : Entity {
 
 };
 
-// Object Entity
-extern ObjectSweep Sweep;
+// Object Struct
+extern ObjectSweep *Sweep;
 
 // Standard Entity Events
 void Sweep_Update();

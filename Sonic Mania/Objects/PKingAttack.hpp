@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPKingAttack : Object {
+struct ObjectPKingAttack : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPKingAttack : Entity {
 
 };
 
-// Object Entity
-extern ObjectPKingAttack PKingAttack;
+// Object Struct
+extern ObjectPKingAttack *PKingAttack;
 
 // Standard Entity Events
 void PKingAttack_Update();

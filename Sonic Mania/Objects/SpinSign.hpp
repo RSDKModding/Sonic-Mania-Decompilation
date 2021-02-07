@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpinSign : Object {
+struct ObjectSpinSign : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpinSign : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpinSign SpinSign;
+// Object Struct
+extern ObjectSpinSign *SpinSign;
 
 // Standard Entity Events
 void SpinSign_Update();

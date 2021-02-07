@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDialogRunner : Object {
+struct ObjectDialogRunner : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDialogRunner : Entity {
 
 };
 
-// Object Entity
-extern ObjectDialogRunner DialogRunner;
+// Object Struct
+extern ObjectDialogRunner *DialogRunner;
 
 // Standard Entity Events
 void DialogRunner_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRisingLava RisingLava;
+ObjectRisingLava *RisingLava;
 
 void RisingLava_Update()
 {

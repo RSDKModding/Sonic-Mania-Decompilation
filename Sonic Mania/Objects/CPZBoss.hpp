@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCPZBoss : Object {
+struct ObjectCPZBoss : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCPZBoss : Entity {
 
 };
 
-// Object Entity
-extern ObjectCPZBoss CPZBoss;
+// Object Struct
+extern ObjectCPZBoss *CPZBoss;
 
 // Standard Entity Events
 void CPZBoss_Update();

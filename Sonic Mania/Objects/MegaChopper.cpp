@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMegaChopper MegaChopper;
+ObjectMegaChopper *MegaChopper;
 
 void MegaChopper_Update()
 {

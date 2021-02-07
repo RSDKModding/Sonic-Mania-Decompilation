@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCactula Cactula;
+ObjectCactula *Cactula;
 
 void Cactula_Update()
 {

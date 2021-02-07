@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCollapsingSand CollapsingSand;
+ObjectCollapsingSand *CollapsingSand;
 
 void CollapsingSand_Update()
 {

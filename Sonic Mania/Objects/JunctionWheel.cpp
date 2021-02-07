@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectJunctionWheel JunctionWheel;
+ObjectJunctionWheel *JunctionWheel;
 
 void JunctionWheel_Update()
 {

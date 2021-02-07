@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCableWarp CableWarp;
+ObjectCableWarp *CableWarp;
 
 void CableWarp_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMegaChopper : Object {
+struct ObjectMegaChopper : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMegaChopper : Entity {
 
 };
 
-// Object Entity
-extern ObjectMegaChopper MegaChopper;
+// Object Struct
+extern ObjectMegaChopper *MegaChopper;
 
 // Standard Entity Events
 void MegaChopper_Update();

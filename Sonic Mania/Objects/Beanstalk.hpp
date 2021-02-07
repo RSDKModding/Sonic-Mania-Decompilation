@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBeanstalk : Object {
+struct ObjectBeanstalk : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBeanstalk : Entity {
 
 };
 
-// Object Entity
-extern ObjectBeanstalk Beanstalk;
+// Object Struct
+extern ObjectBeanstalk *Beanstalk;
 
 // Standard Entity Events
 void Beanstalk_Update();

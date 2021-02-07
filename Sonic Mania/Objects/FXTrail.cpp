@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFXTrail FXTrail;
+ObjectFXTrail *FXTrail;
 
 void FXTrail_Update()
 {

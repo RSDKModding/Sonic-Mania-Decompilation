@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectConstellation Constellation;
+ObjectConstellation *Constellation;
 
 void Constellation_Update()
 {

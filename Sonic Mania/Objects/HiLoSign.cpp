@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHiLoSign HiLoSign;
+ObjectHiLoSign *HiLoSign;
 
 void HiLoSign_Update()
 {

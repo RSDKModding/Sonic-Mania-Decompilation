@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEggPistonsMKII EggPistonsMKII;
+ObjectEggPistonsMKII *EggPistonsMKII;
 
 void EggPistonsMKII_Update()
 {

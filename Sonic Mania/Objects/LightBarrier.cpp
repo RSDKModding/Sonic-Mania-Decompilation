@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLightBarrier LightBarrier;
+ObjectLightBarrier *LightBarrier;
 
 void LightBarrier_Update()
 {

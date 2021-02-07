@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLauncher : Object {
+struct ObjectLauncher : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLauncher : Entity {
 
 };
 
-// Object Entity
-extern ObjectLauncher Launcher;
+// Object Struct
+extern ObjectLauncher *Launcher;
 
 // Standard Entity Events
 void Launcher_Update();

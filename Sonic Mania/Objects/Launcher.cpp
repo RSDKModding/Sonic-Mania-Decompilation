@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLauncher Launcher;
+ObjectLauncher *Launcher;
 
 void Launcher_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIButtonPrompt : Object {
+struct ObjectUIButtonPrompt : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIButtonPrompt : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIButtonPrompt UIButtonPrompt;
+// Object Struct
+extern ObjectUIButtonPrompt *UIButtonPrompt;
 
 // Standard Entity Events
 void UIButtonPrompt_Update();

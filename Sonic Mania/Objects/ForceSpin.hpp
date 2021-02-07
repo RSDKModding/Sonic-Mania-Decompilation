@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectForceSpin : Object {
+struct ObjectForceSpin : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityForceSpin : Entity {
 
 };
 
-// Object Entity
-extern ObjectForceSpin ForceSpin;
+// Object Struct
+extern ObjectForceSpin *ForceSpin;
 
 // Standard Entity Events
 void ForceSpin_Update();

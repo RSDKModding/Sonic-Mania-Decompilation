@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDNARiser : Object {
+struct ObjectDNARiser : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDNARiser : Entity {
 
 };
 
-// Object Entity
-extern ObjectDNARiser DNARiser;
+// Object Struct
+extern ObjectDNARiser *DNARiser;
 
 // Standard Entity Events
 void DNARiser_Update();

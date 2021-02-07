@@ -13,7 +13,7 @@ struct EntityPBL_Camera : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Camera PBL_Camera;
 
 // Standard Entity Events

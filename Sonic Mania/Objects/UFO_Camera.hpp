@@ -13,7 +13,7 @@ struct EntityUFO_Camera : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_Camera UFO_Camera;
 
 // Standard Entity Events

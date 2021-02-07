@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWarpDoor WarpDoor;
+ObjectWarpDoor *WarpDoor;
 
 void WarpDoor_Update()
 {

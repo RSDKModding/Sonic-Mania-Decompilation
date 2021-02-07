@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIRankButton UIRankButton;
+ObjectUIRankButton *UIRankButton;
 
 void UIRankButton_Update()
 {

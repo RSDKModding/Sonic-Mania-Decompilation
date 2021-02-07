@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBreakBar : Object {
+struct ObjectBreakBar : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBreakBar : Entity {
 
 };
 
-// Object Entity
-extern ObjectBreakBar BreakBar;
+// Object Struct
+extern ObjectBreakBar *BreakBar;
 
 // Standard Entity Events
 void BreakBar_Update();

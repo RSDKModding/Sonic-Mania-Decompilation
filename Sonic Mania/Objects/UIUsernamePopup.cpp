@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIUsernamePopup UIUsernamePopup;
+ObjectUIUsernamePopup *UIUsernamePopup;
 
 void UIUsernamePopup_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDCEvent : Object {
+struct ObjectDCEvent : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDCEvent : Entity {
 
 };
 
-// Object Entity
-extern ObjectDCEvent DCEvent;
+// Object Struct
+extern ObjectDCEvent *DCEvent;
 
 // Standard Entity Events
 void DCEvent_Update();

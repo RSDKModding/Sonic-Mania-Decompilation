@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSentryBug SentryBug;
+ObjectSentryBug *SentryBug;
 
 void SentryBug_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPinata Pinata;
+ObjectPinata *Pinata;
 
 void Pinata_Update()
 {

@@ -13,7 +13,7 @@ struct EntityGHZ2Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectGHZ2Outro GHZ2Outro;
 
 // Standard Entity Events

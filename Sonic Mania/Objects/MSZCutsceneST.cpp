@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSZCutsceneST MSZCutsceneST;
+ObjectMSZCutsceneST *MSZCutsceneST;
 
 void MSZCutsceneST_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBloominator : Object {
+struct ObjectBloominator : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBloominator : Entity {
 
 };
 
-// Object Entity
-extern ObjectBloominator Bloominator;
+// Object Struct
+extern ObjectBloominator *Bloominator;
 
 // Standard Entity Events
 void Bloominator_Update();

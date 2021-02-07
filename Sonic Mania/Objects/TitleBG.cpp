@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTitleBG TitleBG;
+ObjectTitleBG *TitleBG;
 
 void TitleBG_Update()
 {

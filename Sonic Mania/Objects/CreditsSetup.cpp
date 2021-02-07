@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCreditsSetup CreditsSetup;
+ObjectCreditsSetup *CreditsSetup;
 
 void CreditsSetup_Update()
 {

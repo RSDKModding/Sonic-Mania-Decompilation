@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPohBee : Object {
+struct ObjectPohBee : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPohBee : Entity {
 
 };
 
-// Object Entity
-extern ObjectPohBee PohBee;
+// Object Struct
+extern ObjectPohBee *PohBee;
 
 // Standard Entity Events
 void PohBee_Update();

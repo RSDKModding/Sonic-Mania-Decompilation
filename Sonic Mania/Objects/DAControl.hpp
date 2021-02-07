@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDAControl : Object {
+struct ObjectDAControl : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDAControl : Entity {
 
 };
 
-// Object Entity
-extern ObjectDAControl DAControl;
+// Object Struct
+extern ObjectDAControl *DAControl;
 
 // Standard Entity Events
 void DAControl_Update();

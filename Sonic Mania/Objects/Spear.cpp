@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpear Spear;
+ObjectSpear *Spear;
 
 void Spear_Update()
 {

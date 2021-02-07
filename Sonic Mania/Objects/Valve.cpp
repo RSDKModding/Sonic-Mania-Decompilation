@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectValve Valve;
+ObjectValve *Valve;
 
 void Valve_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGHZSetup GHZSetup;
+ObjectGHZSetup *GHZSetup;
 
 void GHZSetup_Update()
 {

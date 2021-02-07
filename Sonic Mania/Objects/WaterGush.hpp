@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWaterGush : Object {
+struct ObjectWaterGush : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWaterGush : Entity {
 
 };
 
-// Object Entity
-extern ObjectWaterGush WaterGush;
+// Object Struct
+extern ObjectWaterGush *WaterGush;
 
 // Standard Entity Events
 void WaterGush_Update();

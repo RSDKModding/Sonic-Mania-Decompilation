@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFunnel Funnel;
+ObjectFunnel *Funnel;
 
 void Funnel_Update()
 {

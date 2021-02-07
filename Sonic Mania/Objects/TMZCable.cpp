@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTMZCable TMZCable;
+ObjectTMZCable *TMZCable;
 
 void TMZCable_Update()
 {

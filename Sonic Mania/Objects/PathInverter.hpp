@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPathInverter : Object {
+struct ObjectPathInverter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPathInverter : Entity {
 
 };
 
-// Object Entity
-extern ObjectPathInverter PathInverter;
+// Object Struct
+extern ObjectPathInverter *PathInverter;
 
 // Standard Entity Events
 void PathInverter_Update();

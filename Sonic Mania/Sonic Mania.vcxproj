@@ -185,6 +185,7 @@
     <ClInclude Include="Objects\FXWaveRing.hpp" />
     <ClInclude Include="Objects\Gachapandora.hpp" />
     <ClInclude Include="Objects\GameOver.hpp" />
+    <ClInclude Include="Objects\GameProgress.hpp" />
     <ClInclude Include="Objects\GasPlatform.hpp" />
     <ClInclude Include="Objects\GenericTrigger.hpp" />
     <ClInclude Include="Objects\GHZ2Outro.hpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="Objects\OOZ2Outro.hpp" />
     <ClInclude Include="Objects\OOZFlames.hpp" />
     <ClInclude Include="Objects\OOZSetup.hpp" />
+    <ClInclude Include="Objects\Options.hpp" />
     <ClInclude Include="Objects\OptionsMenu.hpp" />
     <ClInclude Include="Objects\OrbitSpike.hpp" />
     <ClInclude Include="Objects\PaintingEyes.hpp" />
@@ -477,6 +479,7 @@
     <ClInclude Include="Objects\ThanksSetup.hpp" />
     <ClInclude Include="Objects\ThoughtBubble.hpp" />
     <ClInclude Include="Objects\TilePlatform.hpp" />
+    <ClInclude Include="Objects\TimeAttackData.hpp" />
     <ClInclude Include="Objects\TimeAttackGate.hpp" />
     <ClInclude Include="Objects\TimeAttackMenu.hpp" />
     <ClInclude Include="Objects\TimePost.hpp" />
@@ -764,6 +767,7 @@
     <ClCompile Include="Objects\FXWaveRing.cpp" />
     <ClCompile Include="Objects\Gachapandora.cpp" />
     <ClCompile Include="Objects\GameOver.cpp" />
+    <ClCompile Include="Objects\GameProgress.cpp" />
     <ClCompile Include="Objects\GasPlatform.cpp" />
     <ClCompile Include="Objects\GenericTrigger.cpp" />
     <ClCompile Include="Objects\GHZ2Outro.cpp" />
@@ -895,6 +899,7 @@
     <ClCompile Include="Objects\OOZ2Outro.cpp" />
     <ClCompile Include="Objects\OOZFlames.cpp" />
     <ClCompile Include="Objects\OOZSetup.cpp" />
+    <ClCompile Include="Objects\Options.cpp" />
     <ClCompile Include="Objects\OptionsMenu.cpp" />
     <ClCompile Include="Objects\OrbitSpike.cpp" />
     <ClCompile Include="Objects\PaintingEyes.cpp" />
@@ -1056,6 +1061,7 @@
     <ClCompile Include="Objects\ThanksSetup.cpp" />
     <ClCompile Include="Objects\ThoughtBubble.cpp" />
     <ClCompile Include="Objects\TilePlatform.cpp" />
+    <ClCompile Include="Objects\TimeAttackData.cpp" />
     <ClCompile Include="Objects\TimeAttackGate.cpp" />
     <ClCompile Include="Objects\TimeAttackMenu.cpp" />
     <ClCompile Include="Objects\TimePost.cpp" />

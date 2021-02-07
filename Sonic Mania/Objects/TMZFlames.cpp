@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTMZFlames TMZFlames;
+ObjectTMZFlames *TMZFlames;
 
 void TMZFlames_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectReplayDB : Object {
+struct ObjectReplayDB : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityReplayDB : Entity {
 
 };
 
-// Object Entity
-extern ObjectReplayDB ReplayDB;
+// Object Struct
+extern ObjectReplayDB *ReplayDB;
 
 // Standard Entity Events
 void ReplayDB_Update();

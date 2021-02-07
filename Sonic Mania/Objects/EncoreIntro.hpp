@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEncoreIntro : Object {
+struct ObjectEncoreIntro : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityEncoreIntro : Entity {
 
 };
 
-// Object Entity
-extern ObjectEncoreIntro EncoreIntro;
+// Object Struct
+extern ObjectEncoreIntro *EncoreIntro;
 
 // Standard Entity Events
 void EncoreIntro_Update();

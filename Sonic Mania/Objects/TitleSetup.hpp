@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleSetup : Object {
+struct ObjectTitleSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTitleSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectTitleSetup TitleSetup;
+// Object Struct
+extern ObjectTitleSetup *TitleSetup;
 
 // Standard Entity Events
 void TitleSetup_Update();

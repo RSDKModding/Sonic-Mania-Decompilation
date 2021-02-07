@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlaneSeeSaw : Object {
+struct ObjectPlaneSeeSaw : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPlaneSeeSaw : Entity {
 
 };
 
-// Object Entity
-extern ObjectPlaneSeeSaw PlaneSeeSaw;
+// Object Struct
+extern ObjectPlaneSeeSaw *PlaneSeeSaw;
 
 // Standard Entity Events
 void PlaneSeeSaw_Update();

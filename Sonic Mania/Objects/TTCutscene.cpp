@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTTCutscene TTCutscene;
+ObjectTTCutscene *TTCutscene;
 
 void TTCutscene_Update()
 {

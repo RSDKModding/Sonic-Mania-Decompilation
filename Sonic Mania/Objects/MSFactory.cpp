@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSFactory MSFactory;
+ObjectMSFactory *MSFactory;
 
 void MSFactory_Update()
 {

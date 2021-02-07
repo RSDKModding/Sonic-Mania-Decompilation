@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTilePlatform TilePlatform;
+ObjectTilePlatform *TilePlatform;
 
 void TilePlatform_Update()
 {

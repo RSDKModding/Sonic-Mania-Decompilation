@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWalkerLegs : Object {
+struct ObjectWalkerLegs : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWalkerLegs : Entity {
 
 };
 
-// Object Entity
-extern ObjectWalkerLegs WalkerLegs;
+// Object Struct
+extern ObjectWalkerLegs *WalkerLegs;
 
 // Standard Entity Events
 void WalkerLegs_Update();

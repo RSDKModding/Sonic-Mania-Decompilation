@@ -67,10 +67,10 @@ extern void (*User_Unknown43)(short a1);
 
 // Function Table
 extern void (*RSDK_InitGameOptions)(void *options, int size);
-extern void (*RSDK_CreateObject)(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+extern void (*RSDK_CreateObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                            void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                            void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
-extern void (*RSDK_CreateObjectContainer)(Object *structPtr, const char *name, uint objectSize);
+extern void (*RSDK_CreateObjectContainer)(Object **structPtr, const char *name, uint objectSize);
 extern bool32 (*RSDK_GetActiveObjects)(ushort group, Entity *entity);
 extern bool32 (*RSDK_GetObjects)(ushort type, Entity *entity);
 extern void (*RSDK_NextForEachLoop)(void);
@@ -145,8 +145,8 @@ extern int (*RSDK_SetScreenSize)(void *, void *, void *, void *, void *);
 extern void (*RSDK_SetClipBounds)(byte screenID, int x1, int y1, int x2, int y2);
 extern void (*RSDK_ScreenUnknown)(void);
 extern short (*RSDK_LoadSpriteSheet)(const char *path, Scopes scope);
-extern void (*RSDK_SetInkValue)(uint value);
-extern void (*RSDK_SetPaletteMask)(uint colour);
+extern void (*RSDK_SetLookupTable)(ushort* tablePtr);
+extern void (*RSDK_SetPaletteMask)(uint maskColour);
 extern void (*RSDK_SetPaletteEntry)(byte paletteID, byte index, uint colour);
 extern uint (*RSDK_GetPaletteEntry)(byte paletteID, byte index);
 extern void (*RSDK_SetActivePalette)(byte newActivePal, int startLine, int endLine);
@@ -155,17 +155,19 @@ extern void (*RSDK_LoadPalette)(const char *filePath, int paletteID, int startPa
 extern void (*RSDK_RotatePalette)(byte palID, byte startIndex, byte endIndex, bool right);
 extern void (*RSDK_SetLimitedFade)(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
 extern void (*RSDK_DoPaletteSomething3)(void);
-extern void (*RSDK_DrawRect)(void);
-extern void (*RSDK_DrawLine)(void);
-extern void (*RSDK_DrawCircle)(void);
-extern void (*RSDK_DrawCircleOutline)(void);
-extern void (*RSDK_DrawQuad)(void);
-extern void (*RSDK_DrawTexturedQuad)(void);
-extern int (*RSDK_DrawSprite)(void *, void *, void *);
-extern int (*RSDK_DrawUnknown)(void *, void *, void *);
-extern void (*RSDK_DrawText)(void);
-extern void (*RSDK_DrawSprite3)(void);
-extern void (*RSDK_DrawTile)(void);
+extern void (*RSDK_DrawRect)(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
+extern void (*RSDK_DrawLine)(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
+extern void (*RSDK_DrawCircle)(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
+extern void (*RSDK_DrawCircleOutline)(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
+extern void (*RSDK_DrawQuad)(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
+extern void (*RSDK_DrawTexturedQuad)(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
+extern void (*RSDK_DrawSprite)(EntityAnimationData *data, Vector2 *position, bool32 screenRelative);
+extern void (*RSDK_DrawUnknown)(void *, void *, void *);
+extern void (*RSDK_DrawText)(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8,
+                      int a9, bool32 ScreenRelative);
+extern void (*RSDK_DrawTile)(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
+extern void (*RSDK_CopyTile)(void);
+extern void (*RSDK_DrawAniTile)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
 extern void (*RSDK_DrawSheetFrame)(void);
 extern int (*RSDK_SetScreenFade)(int a, int r, int g, int b);
 extern void (*RSDK_LoadMesh)(void);
@@ -412,6 +414,7 @@ extern void (*RSDK_SetDebugValue)(const char *name, int valPtr, int type, int un
 #include "Objects/FXTrail.hpp"
 #include "Objects/FXWaveRing.hpp"
 #include "Objects/Gachapandora.hpp"
+#include "Objects/GameProgress.hpp"
 #include "Objects/GameOver.hpp"
 #include "Objects/GasPlatform.hpp"
 #include "Objects/GenericTrigger.hpp"
@@ -544,6 +547,7 @@ extern void (*RSDK_SetDebugValue)(const char *name, int valPtr, int type, int un
 #include "Objects/OOZ2Outro.hpp"
 #include "Objects/OOZFlames.hpp"
 #include "Objects/OOZSetup.hpp"
+#include "Objects/Options.hpp"
 #include "Objects/OptionsMenu.hpp"
 #include "Objects/OrbitSpike.hpp"
 #include "Objects/PaintingEyes.hpp"
@@ -705,6 +709,7 @@ extern void (*RSDK_SetDebugValue)(const char *name, int valPtr, int type, int un
 #include "Objects/ThanksSetup.hpp"
 #include "Objects/ThoughtBubble.hpp"
 #include "Objects/TilePlatform.hpp"
+#include "Objects/TimeAttackData.hpp"
 #include "Objects/TimeAttackGate.hpp"
 #include "Objects/TimeAttackMenu.hpp"
 #include "Objects/TimePost.hpp"

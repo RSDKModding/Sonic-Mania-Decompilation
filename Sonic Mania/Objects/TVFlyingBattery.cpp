@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTVFlyingBattery TVFlyingBattery;
+ObjectTVFlyingBattery *TVFlyingBattery;
 
 void TVFlyingBattery_Update()
 {

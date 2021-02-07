@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSideBarrel : Object {
+struct ObjectSideBarrel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySideBarrel : Entity {
 
 };
 
-// Object Entity
-extern ObjectSideBarrel SideBarrel;
+// Object Struct
+extern ObjectSideBarrel *SideBarrel;
 
 // Standard Entity Events
 void SideBarrel_Update();

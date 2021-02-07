@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPSZLauncher PSZLauncher;
+ObjectPSZLauncher *PSZLauncher;
 
 void PSZLauncher_Update()
 {

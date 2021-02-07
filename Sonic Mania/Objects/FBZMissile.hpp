@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZMissile : Object {
+struct ObjectFBZMissile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFBZMissile : Entity {
 
 };
 
-// Object Entity
-extern ObjectFBZMissile FBZMissile;
+// Object Struct
+extern ObjectFBZMissile *FBZMissile;
 
 // Standard Entity Events
 void FBZMissile_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBouncePlant BouncePlant;
+ObjectBouncePlant *BouncePlant;
 
 void BouncePlant_Update()
 {

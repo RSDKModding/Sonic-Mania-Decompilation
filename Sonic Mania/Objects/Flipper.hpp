@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlipper : Object {
+struct ObjectFlipper : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFlipper : Entity {
 
 };
 
-// Object Entity
-extern ObjectFlipper Flipper;
+// Object Struct
+extern ObjectFlipper *Flipper;
 
 // Standard Entity Events
 void Flipper_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectJuggleSaw JuggleSaw;
+ObjectJuggleSaw *JuggleSaw;
 
 void JuggleSaw_Update()
 {

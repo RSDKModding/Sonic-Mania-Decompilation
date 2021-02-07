@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectChemBubble ChemBubble;
+ObjectChemBubble *ChemBubble;
 
 void ChemBubble_Update()
 {

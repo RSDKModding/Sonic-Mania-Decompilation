@@ -1745,6 +1745,15 @@
     <ClInclude Include="Objects\Zone.hpp">
       <Filter>Sources\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\GameProgress.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Options.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\TimeAttackData.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.cpp">
@@ -3473,6 +3482,15 @@
       <Filter>Sources\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Zone.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameProgress.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Options.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\TimeAttackData.cpp">
       <Filter>Sources\Objects</Filter>
     </ClCompile>
   </ItemGroup>

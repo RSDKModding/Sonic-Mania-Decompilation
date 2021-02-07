@@ -13,7 +13,7 @@ struct EntityPBL_TargetBumper : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_TargetBumper PBL_TargetBumper;
 
 // Standard Entity Events

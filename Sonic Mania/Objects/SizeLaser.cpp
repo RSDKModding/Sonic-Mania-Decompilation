@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSizeLaser SizeLaser;
+ObjectSizeLaser *SizeLaser;
 
 void SizeLaser_Update()
 {

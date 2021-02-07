@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCrate Crate;
+ObjectCrate *Crate;
 
 void Crate_Update()
 {

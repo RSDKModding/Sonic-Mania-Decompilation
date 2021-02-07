@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGachapandora Gachapandora;
+ObjectGachapandora *Gachapandora;
 
 void Gachapandora_Update()
 {

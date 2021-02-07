@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSnowflakes : Object {
+struct ObjectSnowflakes : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySnowflakes : Entity {
 
 };
 
-// Object Entity
-extern ObjectSnowflakes Snowflakes;
+// Object Struct
+extern ObjectSnowflakes *Snowflakes;
 
 // Standard Entity Events
 void Snowflakes_Update();

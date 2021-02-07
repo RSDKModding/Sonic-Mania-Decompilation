@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectOneWayDoor OneWayDoor;
+ObjectOneWayDoor *OneWayDoor;
 
 void OneWayDoor_Update()
 {

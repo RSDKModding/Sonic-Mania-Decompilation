@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectContinuePlayer : Object {
+struct ObjectContinuePlayer : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityContinuePlayer : Entity {
 
 };
 
-// Object Entity
-extern ObjectContinuePlayer ContinuePlayer;
+// Object Struct
+extern ObjectContinuePlayer *ContinuePlayer;
 
 // Standard Entity Events
 void ContinuePlayer_Update();

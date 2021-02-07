@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCutsceneSeq CutsceneSeq;
+ObjectCutsceneSeq *CutsceneSeq;
 
 void CutsceneSeq_Update()
 {

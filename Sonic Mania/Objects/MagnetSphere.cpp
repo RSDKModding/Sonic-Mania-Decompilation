@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMagnetSphere MagnetSphere;
+ObjectMagnetSphere *MagnetSphere;
 
 void MagnetSphere_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectJawz Jawz;
+ObjectJawz *Jawz;
 
 void Jawz_Update()
 {

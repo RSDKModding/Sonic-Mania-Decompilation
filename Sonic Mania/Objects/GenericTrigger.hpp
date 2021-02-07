@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGenericTrigger : Object {
+struct ObjectGenericTrigger : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGenericTrigger : Entity {
 
 };
 
-// Object Entity
-extern ObjectGenericTrigger GenericTrigger;
+// Object Struct
+extern ObjectGenericTrigger *GenericTrigger;
 
 // Standard Entity Events
 void GenericTrigger_Update();

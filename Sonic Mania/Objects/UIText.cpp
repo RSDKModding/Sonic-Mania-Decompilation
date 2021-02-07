@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIText UIText;
+ObjectUIText *UIText;
 
 void UIText_Update()
 {

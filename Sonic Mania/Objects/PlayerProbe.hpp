@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlayerProbe : Object {
+struct ObjectPlayerProbe : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPlayerProbe : Entity {
 
 };
 
-// Object Entity
-extern ObjectPlayerProbe PlayerProbe;
+// Object Struct
+extern ObjectPlayerProbe *PlayerProbe;
 
 // Standard Entity Events
 void PlayerProbe_Update();

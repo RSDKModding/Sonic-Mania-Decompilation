@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIPopover UIPopover;
+ObjectUIPopover *UIPopover;
 
 void UIPopover_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRockemSockem RockemSockem;
+ObjectRockemSockem *RockemSockem;
 
 void RockemSockem_Update()
 {

@@ -13,7 +13,7 @@ struct EntityPBL_Flipper : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Flipper PBL_Flipper;
 
 // Standard Entity Events

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJellygnite : Object {
+struct ObjectJellygnite : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityJellygnite : Entity {
 
 };
 
-// Object Entity
-extern ObjectJellygnite Jellygnite;
+// Object Struct
+extern ObjectJellygnite *Jellygnite;
 
 // Standard Entity Events
 void Jellygnite_Update();

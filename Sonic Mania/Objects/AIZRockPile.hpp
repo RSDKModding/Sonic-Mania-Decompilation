@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZRockPile : Object {
+struct ObjectAIZRockPile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAIZRockPile : Entity {
 
 };
 
-// Object Entity
-extern ObjectAIZRockPile AIZRockPile;
+// Object Struct
+extern ObjectAIZRockPile *AIZRockPile;
 
 // Standard Entity Events
 void AIZRockPile_Update();

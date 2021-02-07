@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIMedallionPanel UIMedallionPanel;
+ObjectUIMedallionPanel *UIMedallionPanel;
 
 void UIMedallionPanel_Update()
 {

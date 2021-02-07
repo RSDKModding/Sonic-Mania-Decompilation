@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVsRoundPicker : Object {
+struct ObjectUIVsRoundPicker : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIVsRoundPicker : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIVsRoundPicker UIVsRoundPicker;
+// Object Struct
+extern ObjectUIVsRoundPicker *UIVsRoundPicker;
 
 // Standard Entity Events
 void UIVsRoundPicker_Update();

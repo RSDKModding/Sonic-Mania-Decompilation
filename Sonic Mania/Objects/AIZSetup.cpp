@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZSetup AIZSetup;
+ObjectAIZSetup *AIZSetup;
 
 void AIZSetup_Update()
 {

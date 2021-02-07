@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoAI : Object {
+struct ObjectPuyoAI : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPuyoAI : Entity {
 
 };
 
-// Object Entity
-extern ObjectPuyoAI PuyoAI;
+// Object Struct
+extern ObjectPuyoAI *PuyoAI;
 
 // Standard Entity Events
 void PuyoAI_Update();

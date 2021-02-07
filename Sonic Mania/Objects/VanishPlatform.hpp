@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectVanishPlatform : Object {
+struct ObjectVanishPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityVanishPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectVanishPlatform VanishPlatform;
+// Object Struct
+extern ObjectVanishPlatform *VanishPlatform;
 
 // Standard Entity Events
 void VanishPlatform_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBGSwitch : Object {
+struct ObjectBGSwitch : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBGSwitch : Entity {
 
 };
 
-// Object Entity
-extern ObjectBGSwitch BGSwitch;
+// Object Struct
+extern ObjectBGSwitch *BGSwitch;
 
 // Standard Entity Events
 void BGSwitch_Update();

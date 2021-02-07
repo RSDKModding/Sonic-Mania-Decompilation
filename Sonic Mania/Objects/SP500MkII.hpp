@@ -13,7 +13,7 @@ struct EntitySP500MkII : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectSP500MkII SP500MkII;
 
 // Standard Entity Events

@@ -13,7 +13,7 @@ struct EntityBSS_HUD : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_HUD BSS_HUD;
 
 // Standard Entity Events

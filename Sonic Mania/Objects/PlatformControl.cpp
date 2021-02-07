@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlatformControl PlatformControl;
+ObjectPlatformControl *PlatformControl;
 
 void PlatformControl_Update()
 {

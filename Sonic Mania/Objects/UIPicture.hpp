@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIPicture : Object {
+struct ObjectUIPicture : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIPicture : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIPicture UIPicture;
+// Object Struct
+extern ObjectUIPicture *UIPicture;
 
 // Standard Entity Events
 void UIPicture_Update();

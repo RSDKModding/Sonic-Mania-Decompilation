@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCOverlay COverlay;
+ObjectCOverlay *COverlay;
 
 void COverlay_Update()
 {

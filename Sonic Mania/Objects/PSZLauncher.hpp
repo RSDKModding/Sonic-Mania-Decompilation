@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPSZLauncher : Object {
+struct ObjectPSZLauncher : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPSZLauncher : Entity {
 
 };
 
-// Object Entity
-extern ObjectPSZLauncher PSZLauncher;
+// Object Struct
+extern ObjectPSZLauncher *PSZLauncher;
 
 // Standard Entity Events
 void PSZLauncher_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPress Press;
+ObjectPress *Press;
 
 void Press_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectScarab Scarab;
+ObjectScarab *Scarab;
 
 void Scarab_Update()
 {

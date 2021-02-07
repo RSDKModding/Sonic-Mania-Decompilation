@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWaterGush WaterGush;
+ObjectWaterGush *WaterGush;
 
 void WaterGush_Update()
 {

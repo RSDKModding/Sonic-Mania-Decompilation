@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDragonfly : Object {
+struct ObjectDragonfly : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDragonfly : Entity {
 
 };
 
-// Object Entity
-extern ObjectDragonfly Dragonfly;
+// Object Struct
+extern ObjectDragonfly *Dragonfly;
 
 // Standard Entity Events
 void Dragonfly_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSummaryEmerald SummaryEmerald;
+ObjectSummaryEmerald *SummaryEmerald;
 
 void SummaryEmerald_Update()
 {

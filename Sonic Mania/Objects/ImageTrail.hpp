@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectImageTrail : Object {
+struct ObjectImageTrail : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityImageTrail : Entity {
 
 };
 
-// Object Entity
-extern ObjectImageTrail ImageTrail;
+// Object Struct
+extern ObjectImageTrail *ImageTrail;
 
 // Standard Entity Events
 void ImageTrail_Update();

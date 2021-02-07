@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPopcornKernel PopcornKernel;
+ObjectPopcornKernel *PopcornKernel;
 
 void PopcornKernel_Update()
 {

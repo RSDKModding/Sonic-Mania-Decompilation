@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGreenScreen GreenScreen;
+ObjectGreenScreen *GreenScreen;
 
 void GreenScreen_Update()
 {

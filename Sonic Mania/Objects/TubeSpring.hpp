@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTubeSpring : Object {
+struct ObjectTubeSpring : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTubeSpring : Entity {
 
 };
 
-// Object Entity
-extern ObjectTubeSpring TubeSpring;
+// Object Struct
+extern ObjectTubeSpring *TubeSpring;
 
 // Standard Entity Events
 void TubeSpring_Update();

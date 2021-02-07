@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBoundsMarker BoundsMarker;
+ObjectBoundsMarker *BoundsMarker;
 
 void BoundsMarker_Update()
 {

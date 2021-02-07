@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFlowerPod FlowerPod;
+ObjectFlowerPod *FlowerPod;
 
 void FlowerPod_Update()
 {

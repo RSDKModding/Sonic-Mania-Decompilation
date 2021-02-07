@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectShield Shield;
+ObjectShield *Shield;
 
 void Shield_Update()
 {

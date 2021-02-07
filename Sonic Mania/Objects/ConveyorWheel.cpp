@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectConveyorWheel ConveyorWheel;
+ObjectConveyorWheel *ConveyorWheel;
 
 void ConveyorWheel_Update()
 {

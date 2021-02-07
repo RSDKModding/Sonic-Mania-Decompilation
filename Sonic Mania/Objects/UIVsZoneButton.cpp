@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIVsZoneButton UIVsZoneButton;
+ObjectUIVsZoneButton *UIVsZoneButton;
 
 void UIVsZoneButton_Update()
 {

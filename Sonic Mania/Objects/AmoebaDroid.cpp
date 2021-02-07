@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAmoebaDroid AmoebaDroid;
+ObjectAmoebaDroid *AmoebaDroid;
 
 void AmoebaDroid_Update()
 {

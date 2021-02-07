@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZConveyor LRZConveyor;
+ObjectLRZConveyor *LRZConveyor;
 
 void LRZConveyor_Update()
 {

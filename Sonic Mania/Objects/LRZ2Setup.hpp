@@ -13,7 +13,7 @@ struct EntityLRZ2Setup : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectLRZ2Setup LRZ2Setup;
 
 // Standard Entity Events

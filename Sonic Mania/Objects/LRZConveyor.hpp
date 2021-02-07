@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZConveyor : Object {
+struct ObjectLRZConveyor : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZConveyor : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZConveyor LRZConveyor;
+// Object Struct
+extern ObjectLRZConveyor *LRZConveyor;
 
 // Standard Entity Events
 void LRZConveyor_Update();

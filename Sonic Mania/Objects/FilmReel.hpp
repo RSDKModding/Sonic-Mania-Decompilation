@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFilmReel : Object {
+struct ObjectFilmReel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFilmReel : Entity {
 
 };
 
-// Object Entity
-extern ObjectFilmReel FilmReel;
+// Object Struct
+extern ObjectFilmReel *FilmReel;
 
 // Standard Entity Events
 void FilmReel_Update();

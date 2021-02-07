@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSBomb MSBomb;
+ObjectMSBomb *MSBomb;
 
 void MSBomb_Update()
 {

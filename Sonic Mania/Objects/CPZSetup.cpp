@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCPZSetup CPZSetup;
+ObjectCPZSetup *CPZSetup;
 
 void CPZSetup_Update()
 {

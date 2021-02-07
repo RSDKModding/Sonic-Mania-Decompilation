@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLocalization Localization;
+ObjectLocalization *Localization;
 
 void Localization_Update()
 {

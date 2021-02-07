@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTwistedTubes TwistedTubes;
+ObjectTwistedTubes *TwistedTubes;
 
 void TwistedTubes_Update()
 {

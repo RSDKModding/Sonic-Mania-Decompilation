@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZConvDropper LRZConvDropper;
+ObjectLRZConvDropper *LRZConvDropper;
 
 void LRZConvDropper_Update()
 {

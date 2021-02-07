@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUncurlPlant UncurlPlant;
+ObjectUncurlPlant *UncurlPlant;
 
 void UncurlPlant_Update()
 {

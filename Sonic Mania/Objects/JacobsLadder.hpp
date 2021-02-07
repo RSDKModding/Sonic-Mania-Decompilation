@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJacobsLadder : Object {
+struct ObjectJacobsLadder : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityJacobsLadder : Entity {
 
 };
 
-// Object Entity
-extern ObjectJacobsLadder JacobsLadder;
+// Object Struct
+extern ObjectJacobsLadder *JacobsLadder;
 
 // Standard Entity Events
 void JacobsLadder_Update();

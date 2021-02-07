@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSwingRope : Object {
+struct ObjectSwingRope : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySwingRope : Entity {
 
 };
 
-// Object Entity
-extern ObjectSwingRope SwingRope;
+// Object Struct
+extern ObjectSwingRope *SwingRope;
 
 // Standard Entity Events
 void SwingRope_Update();

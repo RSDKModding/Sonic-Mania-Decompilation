@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZStorm : Object {
+struct ObjectFBZStorm : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFBZStorm : Entity {
 
 };
 
-// Object Entity
-extern ObjectFBZStorm FBZStorm;
+// Object Struct
+extern ObjectFBZStorm *FBZStorm;
 
 // Standard Entity Events
 void FBZStorm_Update();

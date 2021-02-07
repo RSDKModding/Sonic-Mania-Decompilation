@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEggLoco EggLoco;
+ObjectEggLoco *EggLoco;
 
 void EggLoco_Update()
 {

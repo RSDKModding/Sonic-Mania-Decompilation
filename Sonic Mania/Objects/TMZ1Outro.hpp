@@ -13,7 +13,7 @@ struct EntityTMZ1Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectTMZ1Outro TMZ1Outro;
 
 // Standard Entity Events

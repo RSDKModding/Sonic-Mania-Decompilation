@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCaterkillerJr CaterkillerJr;
+ObjectCaterkillerJr *CaterkillerJr;
 
 void CaterkillerJr_Update()
 {

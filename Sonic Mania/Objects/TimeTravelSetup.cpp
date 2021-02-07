@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTimeTravelSetup TimeTravelSetup;
+ObjectTimeTravelSetup *TimeTravelSetup;
 
 void TimeTravelSetup_Update()
 {

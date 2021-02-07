@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFoldingPlatform FoldingPlatform;
+ObjectFoldingPlatform *FoldingPlatform;
 
 void FoldingPlatform_Update()
 {

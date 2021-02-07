@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMusic Music;
+ObjectMusic *Music;
 
 void Music_Update()
 {

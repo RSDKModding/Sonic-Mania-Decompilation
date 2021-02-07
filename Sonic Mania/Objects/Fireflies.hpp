@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFireflies : Object {
+struct ObjectFireflies : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFireflies : Entity {
 
 };
 
-// Object Entity
-extern ObjectFireflies Fireflies;
+// Object Struct
+extern ObjectFireflies *Fireflies;
 
 // Standard Entity Events
 void Fireflies_Update();

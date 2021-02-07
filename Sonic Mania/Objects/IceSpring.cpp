@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectIceSpring IceSpring;
+ObjectIceSpring *IceSpring;
 
 void IceSpring_Update()
 {

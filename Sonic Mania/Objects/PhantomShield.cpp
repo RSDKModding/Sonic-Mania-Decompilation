@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomShield PhantomShield;
+ObjectPhantomShield *PhantomShield;
 
 void PhantomShield_Update()
 {

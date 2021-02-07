@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectValve : Object {
+struct ObjectValve : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityValve : Entity {
 
 };
 
-// Object Entity
-extern ObjectValve Valve;
+// Object Struct
+extern ObjectValve *Valve;
 
 // Standard Entity Events
 void Valve_Update();

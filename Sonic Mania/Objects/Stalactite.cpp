@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectStalactite Stalactite;
+ObjectStalactite *Stalactite;
 
 void Stalactite_Update()
 {

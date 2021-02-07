@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLocoSmoke LocoSmoke;
+ObjectLocoSmoke *LocoSmoke;
 
 void LocoSmoke_Update()
 {

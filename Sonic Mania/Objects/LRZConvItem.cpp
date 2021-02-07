@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZConvItem LRZConvItem;
+ObjectLRZConvItem *LRZConvItem;
 
 void LRZConvItem_Update()
 {

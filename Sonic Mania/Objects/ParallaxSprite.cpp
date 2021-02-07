@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectParallaxSprite ParallaxSprite;
+ObjectParallaxSprite *ParallaxSprite;
 
 void ParallaxSprite_Update()
 {

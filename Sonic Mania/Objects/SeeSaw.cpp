@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSeeSaw SeeSaw;
+ObjectSeeSaw *SeeSaw;
 
 void SeeSaw_Update()
 {

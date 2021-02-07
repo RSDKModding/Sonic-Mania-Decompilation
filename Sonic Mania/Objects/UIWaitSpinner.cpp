@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIWaitSpinner UIWaitSpinner;
+ObjectUIWaitSpinner *UIWaitSpinner;
 
 void UIWaitSpinner_Update()
 {

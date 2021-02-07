@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIInfoLabel UIInfoLabel;
+ObjectUIInfoLabel *UIInfoLabel;
 
 void UIInfoLabel_Update()
 {

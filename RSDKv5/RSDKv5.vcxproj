@@ -36,6 +36,7 @@
     <ClCompile Include="Scene3D.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Storage.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Userdata.cpp" />
     <ClCompile Include="main.cpp" />
@@ -59,6 +60,7 @@
     <ClInclude Include="Scene3D.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Sprite.hpp" />
+    <ClInclude Include="Storage.hpp" />
     <ClInclude Include="Text.hpp" />
     <ClInclude Include="Userdata.hpp" />
     <ClInclude Include="RetroEngine.hpp" />

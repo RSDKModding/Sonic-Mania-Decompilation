@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCPZShutter : Object {
+struct ObjectCPZShutter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCPZShutter : Entity {
 
 };
 
-// Object Entity
-extern ObjectCPZShutter CPZShutter;
+// Object Struct
+extern ObjectCPZShutter *CPZShutter;
 
 // Standard Entity Events
 void CPZShutter_Update();

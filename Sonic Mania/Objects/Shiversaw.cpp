@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectShiversaw Shiversaw;
+ObjectShiversaw *Shiversaw;
 
 void Shiversaw_Update()
 {

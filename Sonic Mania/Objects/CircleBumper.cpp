@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCircleBumper CircleBumper;
+ObjectCircleBumper *CircleBumper;
 
 void CircleBumper_Update()
 {

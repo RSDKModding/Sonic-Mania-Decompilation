@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDebugMode DebugMode;
+ObjectDebugMode *DebugMode;
 
 void DebugMode_Update()
 {

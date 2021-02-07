@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectClucker Clucker;
+ObjectClucker *Clucker;
 
 void Clucker_Update()
 {

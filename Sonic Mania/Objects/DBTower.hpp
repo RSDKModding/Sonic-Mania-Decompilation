@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDBTower : Object {
+struct ObjectDBTower : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDBTower : Entity {
 
 };
 
-// Object Entity
-extern ObjectDBTower DBTower;
+// Object Struct
+extern ObjectDBTower *DBTower;
 
 // Standard Entity Events
 void DBTower_Update();

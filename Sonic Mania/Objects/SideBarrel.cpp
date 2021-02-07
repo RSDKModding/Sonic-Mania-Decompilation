@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSideBarrel SideBarrel;
+ObjectSideBarrel *SideBarrel;
 
 void SideBarrel_Update()
 {

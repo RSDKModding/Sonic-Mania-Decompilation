@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRockDrill RockDrill;
+ObjectRockDrill *RockDrill;
 
 void RockDrill_Update()
 {

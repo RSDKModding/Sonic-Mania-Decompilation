@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCrimsonEye CrimsonEye;
+ObjectCrimsonEye *CrimsonEye;
 
 void CrimsonEye_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDecoration : Object {
+struct ObjectDecoration : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDecoration : Entity {
 
 };
 
-// Object Entity
-extern ObjectDecoration Decoration;
+// Object Struct
+extern ObjectDecoration *Decoration;
 
 // Standard Entity Events
 void Decoration_Update();

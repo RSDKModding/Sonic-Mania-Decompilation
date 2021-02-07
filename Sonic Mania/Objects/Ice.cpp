@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectIce Ice;
+ObjectIce *Ice;
 
 void Ice_Update()
 {

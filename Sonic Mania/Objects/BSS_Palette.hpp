@@ -13,7 +13,7 @@ struct EntityBSS_Palette : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_Palette BSS_Palette;
 
 // Standard Entity Events

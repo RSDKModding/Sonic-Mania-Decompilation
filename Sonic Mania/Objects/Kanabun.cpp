@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectKanabun Kanabun;
+ObjectKanabun *Kanabun;
 
 void Kanabun_Update()
 {

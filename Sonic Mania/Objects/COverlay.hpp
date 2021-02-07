@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCOverlay : Object {
+struct ObjectCOverlay : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCOverlay : Entity {
 
 };
 
-// Object Entity
-extern ObjectCOverlay COverlay;
+// Object Struct
+extern ObjectCOverlay *COverlay;
 
 // Standard Entity Events
 void COverlay_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpinSign SpinSign;
+ObjectSpinSign *SpinSign;
 
 void SpinSign_Update()
 {

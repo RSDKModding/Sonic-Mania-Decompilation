@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUILeaderboard UILeaderboard;
+ObjectUILeaderboard *UILeaderboard;
 
 void UILeaderboard_Update()
 {

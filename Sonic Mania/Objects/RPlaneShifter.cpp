@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRPlaneShifter RPlaneShifter;
+ObjectRPlaneShifter *RPlaneShifter;
 
 void RPlaneShifter_Update()
 {

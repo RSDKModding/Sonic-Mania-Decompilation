@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUICharButton UICharButton;
+ObjectUICharButton *UICharButton;
 
 void UICharButton_Update()
 {

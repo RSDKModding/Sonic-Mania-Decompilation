@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMine Mine;
+ObjectMine *Mine;
 
 void Mine_Update()
 {

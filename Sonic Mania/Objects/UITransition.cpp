@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUITransition UITransition;
+ObjectUITransition *UITransition;
 
 void UITransition_Update()
 {

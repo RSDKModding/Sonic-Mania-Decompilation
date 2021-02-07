@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTitleLogo TitleLogo;
+ObjectTitleLogo *TitleLogo;
 
 void TitleLogo_Update()
 {

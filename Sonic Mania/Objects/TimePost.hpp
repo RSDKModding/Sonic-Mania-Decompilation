@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimePost : Object {
+struct ObjectTimePost : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTimePost : Entity {
 
 };
 
-// Object Entity
-extern ObjectTimePost TimePost;
+// Object Struct
+extern ObjectTimePost *TimePost;
 
 // Standard Entity Events
 void TimePost_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIButton : Object {
+struct ObjectUIButton : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIButton : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIButton UIButton;
+// Object Struct
+extern ObjectUIButton *UIButton;
 
 // Standard Entity Events
 void UIButton_Update();

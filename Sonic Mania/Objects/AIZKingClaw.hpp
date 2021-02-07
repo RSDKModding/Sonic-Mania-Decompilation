@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZKingClaw : Object {
+struct ObjectAIZKingClaw : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAIZKingClaw : Entity {
 
 };
 
-// Object Entity
-extern ObjectAIZKingClaw AIZKingClaw;
+// Object Struct
+extern ObjectAIZKingClaw *AIZKingClaw;
 
 // Standard Entity Events
 void AIZKingClaw_Update();

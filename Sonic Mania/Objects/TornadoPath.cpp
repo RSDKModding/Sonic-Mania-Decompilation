@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTornadoPath TornadoPath;
+ObjectTornadoPath *TornadoPath;
 
 void TornadoPath_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSDashWheel : Object {
+struct ObjectSDashWheel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySDashWheel : Entity {
 
 };
 
-// Object Entity
-extern ObjectSDashWheel SDashWheel;
+// Object Struct
+extern ObjectSDashWheel *SDashWheel;
 
 // Standard Entity Events
 void SDashWheel_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGigaMetal GigaMetal;
+ObjectGigaMetal *GigaMetal;
 
 void GigaMetal_Update()
 {

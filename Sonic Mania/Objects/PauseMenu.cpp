@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPauseMenu PauseMenu;
+ObjectPauseMenu *PauseMenu;
 
 void PauseMenu_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectProjectile Projectile;
+ObjectProjectile *Projectile;
 
 void Projectile_Update()
 {

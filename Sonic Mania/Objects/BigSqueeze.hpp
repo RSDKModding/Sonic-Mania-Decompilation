@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBigSqueeze : Object {
+struct ObjectBigSqueeze : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBigSqueeze : Entity {
 
 };
 
-// Object Entity
-extern ObjectBigSqueeze BigSqueeze;
+// Object Struct
+extern ObjectBigSqueeze *BigSqueeze;
 
 // Standard Entity Events
 void BigSqueeze_Update();

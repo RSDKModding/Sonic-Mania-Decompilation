@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRotatingStair : Object {
+struct ObjectRotatingStair : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRotatingStair : Entity {
 
 };
 
-// Object Entity
-extern ObjectRotatingStair RotatingStair;
+// Object Struct
+extern ObjectRotatingStair *RotatingStair;
 
 // Standard Entity Events
 void RotatingStair_Update();

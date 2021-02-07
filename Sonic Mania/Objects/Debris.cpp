@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDebris Debris;
+ObjectDebris *Debris;
 
 void Debris_Update()
 {

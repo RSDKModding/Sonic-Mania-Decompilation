@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomKing PhantomKing;
+ObjectPhantomKing *PhantomKing;
 
 void PhantomKing_Update()
 {

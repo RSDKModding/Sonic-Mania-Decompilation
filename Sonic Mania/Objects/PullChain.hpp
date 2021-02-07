@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPullChain : Object {
+struct ObjectPullChain : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPullChain : Entity {
 
 };
 
-// Object Entity
-extern ObjectPullChain PullChain;
+// Object Struct
+extern ObjectPullChain *PullChain;
 
 // Standard Entity Events
 void PullChain_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMine : Object {
+struct ObjectMine : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMine : Entity {
 
 };
 
-// Object Entity
-extern ObjectMine Mine;
+// Object Struct
+extern ObjectMine *Mine;
 
 // Standard Entity Events
 void Mine_Update();

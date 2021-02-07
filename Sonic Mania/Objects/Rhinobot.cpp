@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRhinobot Rhinobot;
+ObjectRhinobot *Rhinobot;
 
 void Rhinobot_Update()
 {

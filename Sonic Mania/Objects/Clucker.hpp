@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectClucker : Object {
+struct ObjectClucker : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityClucker : Entity {
 
 };
 
-// Object Entity
-extern ObjectClucker Clucker;
+// Object Struct
+extern ObjectClucker *Clucker;
 
 // Standard Entity Events
 void Clucker_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRollerMKII : Object {
+struct ObjectRollerMKII : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRollerMKII : Entity {
 
 };
 
-// Object Entity
-extern ObjectRollerMKII RollerMKII;
+// Object Struct
+extern ObjectRollerMKII *RollerMKII;
 
 // Standard Entity Events
 void RollerMKII_Update();

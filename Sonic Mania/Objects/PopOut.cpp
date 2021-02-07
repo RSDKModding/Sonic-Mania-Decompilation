@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPopOut PopOut;
+ObjectPopOut *PopOut;
 
 void PopOut_Update()
 {

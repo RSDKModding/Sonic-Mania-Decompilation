@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectZipLine : Object {
+struct ObjectZipLine : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityZipLine : Entity {
 
 };
 
-// Object Entity
-extern ObjectZipLine ZipLine;
+// Object Struct
+extern ObjectZipLine *ZipLine;
 
 // Standard Entity Events
 void ZipLine_Update();

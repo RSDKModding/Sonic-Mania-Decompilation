@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectZipLine ZipLine;
+ObjectZipLine *ZipLine;
 
 void ZipLine_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFirework : Object {
+struct ObjectFirework : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFirework : Entity {
 
 };
 
-// Object Entity
-extern ObjectFirework Firework;
+// Object Struct
+extern ObjectFirework *Firework;
 
 // Standard Entity Events
 void Firework_Update();

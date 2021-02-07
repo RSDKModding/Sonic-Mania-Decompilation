@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlayer : Object {
+struct ObjectPlayer : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPlayer : Entity {
 
 };
 
-// Object Entity
-extern ObjectPlayer Player;
+// Object Struct
+extern ObjectPlayer *Player;
 
 // Standard Entity Events
 void Player_Update();

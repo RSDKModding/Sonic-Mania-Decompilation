@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectKleptoMobile : Object {
+struct ObjectKleptoMobile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityKleptoMobile : Entity {
 
 };
 
-// Object Entity
-extern ObjectKleptoMobile KleptoMobile;
+// Object Struct
+extern ObjectKleptoMobile *KleptoMobile;
 
 // Standard Entity Events
 void KleptoMobile_Update();

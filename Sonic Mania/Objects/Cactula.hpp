@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCactula : Object {
+struct ObjectCactula : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCactula : Entity {
 
 };
 
-// Object Entity
-extern ObjectCactula Cactula;
+// Object Struct
+extern ObjectCactula *Cactula;
 
 // Standard Entity Events
 void Cactula_Update();

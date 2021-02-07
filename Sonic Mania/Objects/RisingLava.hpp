@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRisingLava : Object {
+struct ObjectRisingLava : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRisingLava : Entity {
 
 };
 
-// Object Entity
-extern ObjectRisingLava RisingLava;
+// Object Struct
+extern ObjectRisingLava *RisingLava;
 
 // Standard Entity Events
 void RisingLava_Update();

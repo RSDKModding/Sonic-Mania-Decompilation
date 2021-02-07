@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCorkscrewPath CorkscrewPath;
+ObjectCorkscrewPath *CorkscrewPath;
 
 void CorkscrewPath_Update()
 {

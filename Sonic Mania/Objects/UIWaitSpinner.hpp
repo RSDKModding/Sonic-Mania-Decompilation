@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIWaitSpinner : Object {
+struct ObjectUIWaitSpinner : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIWaitSpinner : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIWaitSpinner UIWaitSpinner;
+// Object Struct
+extern ObjectUIWaitSpinner *UIWaitSpinner;
 
 // Standard Entity Events
 void UIWaitSpinner_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDrillerdroidO : Object {
+struct ObjectDrillerdroidO : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDrillerdroidO : Entity {
 
 };
 
-// Object Entity
-extern ObjectDrillerdroidO DrillerdroidO;
+// Object Struct
+extern ObjectDrillerdroidO *DrillerdroidO;
 
 // Standard Entity Events
 void DrillerdroidO_Update();

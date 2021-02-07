@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLaundroMobile LaundroMobile;
+ObjectLaundroMobile *LaundroMobile;
 
 void LaundroMobile_Update()
 {

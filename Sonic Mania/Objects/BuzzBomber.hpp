@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBuzzBomber : Object {
+struct ObjectBuzzBomber : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBuzzBomber : Entity {
 
 };
 
-// Object Entity
-extern ObjectBuzzBomber BuzzBomber;
+// Object Struct
+extern ObjectBuzzBomber *BuzzBomber;
 
 // Standard Entity Events
 void BuzzBomber_Update();

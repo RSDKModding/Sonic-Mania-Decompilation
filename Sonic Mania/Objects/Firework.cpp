@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFirework Firework;
+ObjectFirework *Firework;
 
 void Firework_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZEggRobo AIZEggRobo;
+ObjectAIZEggRobo *AIZEggRobo;
 
 void AIZEggRobo_Update()
 {

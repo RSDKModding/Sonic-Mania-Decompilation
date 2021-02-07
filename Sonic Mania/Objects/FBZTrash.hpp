@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZTrash : Object {
+struct ObjectFBZTrash : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFBZTrash : Entity {
 
 };
 
-// Object Entity
-extern ObjectFBZTrash FBZTrash;
+// Object Struct
+extern ObjectFBZTrash *FBZTrash;
 
 // Standard Entity Events
 void FBZTrash_Update();

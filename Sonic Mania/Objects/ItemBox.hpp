@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectItemBox : Object {
+struct ObjectItemBox : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityItemBox : Entity {
 
 };
 
-// Object Entity
-extern ObjectItemBox ItemBox;
+// Object Struct
+extern ObjectItemBox *ItemBox;
 
 // Standard Entity Events
 void ItemBox_Update();

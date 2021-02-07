@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDirectorChair : Object {
+struct ObjectDirectorChair : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDirectorChair : Entity {
 
 };
 
-// Object Entity
-extern ObjectDirectorChair DirectorChair;
+// Object Struct
+extern ObjectDirectorChair *DirectorChair;
 
 // Standard Entity Events
 void DirectorChair_Update();

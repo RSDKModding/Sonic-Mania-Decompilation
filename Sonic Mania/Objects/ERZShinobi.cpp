@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZShinobi ERZShinobi;
+ObjectERZShinobi *ERZShinobi;
 
 void ERZShinobi_Update()
 {

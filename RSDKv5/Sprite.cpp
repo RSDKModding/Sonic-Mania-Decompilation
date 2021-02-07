@@ -17,42 +17,42 @@ byte TraceGifPrefix(uint *prefix, int code, int clearCode);
 void InitGifDecoder(Image *image)
 {
     byte val                      = ReadInt8(&image->info);
-    image->decoder.fileState      = LOADING_IMAGE;
-    image->decoder.position       = 0;
-    image->decoder.bufferSize     = 0;
-    image->decoder.buffer[0]      = 0;
-    image->decoder.depth          = val;
-    image->decoder.clearCode      = 1 << val;
-    image->decoder.eofCode        = image->decoder.clearCode + 1;
-    image->decoder.runningCode    = image->decoder.eofCode + 1;
-    image->decoder.runningBits    = val + 1;
-    image->decoder.maxCodePlusOne = 1 << image->decoder.runningBits;
-    image->decoder.stackPtr       = 0;
-    image->decoder.prevCode       = NO_SUCH_CODE;
-    image->decoder.shiftState     = 0;
-    image->decoder.shiftData      = 0u;
-    for (int i = 0; i <= LZ_MAX_CODE; ++i) image->decoder.prefix[i] = (byte)NO_SUCH_CODE;
+    image->decoder->fileState      = LOADING_IMAGE;
+    image->decoder->position       = 0;
+    image->decoder->bufferSize     = 0;
+    image->decoder->buffer[0]      = 0;
+    image->decoder->depth          = val;
+    image->decoder->clearCode      = 1 << val;
+    image->decoder->eofCode        = image->decoder->clearCode + 1;
+    image->decoder->runningCode    = image->decoder->eofCode + 1;
+    image->decoder->runningBits    = val + 1;
+    image->decoder->maxCodePlusOne = 1 << image->decoder->runningBits;
+    image->decoder->stackPtr       = 0;
+    image->decoder->prevCode       = NO_SUCH_CODE;
+    image->decoder->shiftState     = 0;
+    image->decoder->shiftData      = 0u;
+    for (int i = 0; i <= LZ_MAX_CODE; ++i) image->decoder->prefix[i] = (byte)NO_SUCH_CODE;
 }
 void ReadGifLine(Image* image, byte *line, int length, int offset)
 {
     int i         = 0;
-    int stackPtr  = image->decoder.stackPtr;
-    int eofCode   = image->decoder.eofCode;
-    int clearCode = image->decoder.clearCode;
-    int prevCode  = image->decoder.prevCode;
+    int stackPtr  = image->decoder->stackPtr;
+    int eofCode   = image->decoder->eofCode;
+    int clearCode = image->decoder->clearCode;
+    int prevCode  = image->decoder->prevCode;
     if (stackPtr != 0) {
         while (stackPtr != 0) {
             if (i >= length) {
                 break;
             }
-            line[offset++] = image->decoder.stack[--stackPtr];
+            line[offset++] = image->decoder->stack[--stackPtr];
             i++;
         }
     }
     while (i < length) {
         int gifCode = ReadGifCode(image);
         if (gifCode == eofCode) {
-            if (i != length - 1 | image->decoder.pixelCount != 0) {
+            if (i != length - 1 | image->decoder->pixelCount != 0) {
                 return;
             }
             i++;
@@ -60,12 +60,12 @@ void ReadGifLine(Image* image, byte *line, int length, int offset)
         else {
             if (gifCode == clearCode) {
                 for (int j = 0; j <= LZ_MAX_CODE; j++) {
-                    image->decoder.prefix[j] = NO_SUCH_CODE;
+                    image->decoder->prefix[j] = NO_SUCH_CODE;
                 }
-                image->decoder.runningCode    = image->decoder.eofCode + 1;
-                image->decoder.runningBits    = image->decoder.depth + 1;
-                image->decoder.maxCodePlusOne = 1 << image->decoder.runningBits;
-                prevCode                  = (image->decoder.prevCode = NO_SUCH_CODE);
+                image->decoder->runningCode    = image->decoder->eofCode + 1;
+                image->decoder->runningBits    = image->decoder->depth + 1;
+                image->decoder->maxCodePlusOne = 1 << image->decoder->runningBits;
+                prevCode                  = (image->decoder->prevCode = NO_SUCH_CODE);
             }
             else {
                 if (gifCode < clearCode) {
@@ -77,63 +77,63 @@ void ReadGifLine(Image* image, byte *line, int length, int offset)
                         return;
                     }
                     int code;
-                    if (image->decoder.prefix[gifCode] == NO_SUCH_CODE) {
-                        if (gifCode != image->decoder.runningCode - 2) {
+                    if (image->decoder->prefix[gifCode] == NO_SUCH_CODE) {
+                        if (gifCode != image->decoder->runningCode - 2) {
                             return;
                         }
                         code = prevCode;
-                        image->decoder.suffix[image->decoder.runningCode - 2] =
-                            (image->decoder.stack[stackPtr++] = TraceGifPrefix(image->decoder.prefix, prevCode, clearCode));
+                        image->decoder->suffix[image->decoder->runningCode - 2] =
+                            (image->decoder->stack[stackPtr++] = TraceGifPrefix(image->decoder->prefix, prevCode, clearCode));
                     }
                     else {
                         code = gifCode;
                     }
                     int c = 0;
                     while (c++ <= LZ_MAX_CODE && code > clearCode && code <= LZ_MAX_CODE) {
-                        image->decoder.stack[stackPtr++] = image->decoder.suffix[code];
-                        code                         = image->decoder.prefix[code];
+                        image->decoder->stack[stackPtr++] = image->decoder->suffix[code];
+                        code                         = image->decoder->prefix[code];
                     }
                     if (c >= LZ_MAX_CODE | code > LZ_MAX_CODE) {
                         return;
                     }
-                    image->decoder.stack[stackPtr++] = (byte)code;
+                    image->decoder->stack[stackPtr++] = (byte)code;
                     while (stackPtr != 0 && i++ < length) {
-                        line[offset++] = image->decoder.stack[--stackPtr];
+                        line[offset++] = image->decoder->stack[--stackPtr];
                     }
                 }
                 if (prevCode != NO_SUCH_CODE) {
-                    if (image->decoder.runningCode<2 | image->decoder.runningCode> FIRST_CODE) {
+                    if (image->decoder->runningCode<2 | image->decoder->runningCode> FIRST_CODE) {
                         return;
                     }
-                    image->decoder.prefix[image->decoder.runningCode - 2] = prevCode;
-                    if (gifCode == image->decoder.runningCode - 2) {
-                        image->decoder.suffix[image->decoder.runningCode - 2] = TraceGifPrefix(image->decoder.prefix, prevCode, clearCode);
+                    image->decoder->prefix[image->decoder->runningCode - 2] = prevCode;
+                    if (gifCode == image->decoder->runningCode - 2) {
+                        image->decoder->suffix[image->decoder->runningCode - 2] = TraceGifPrefix(image->decoder->prefix, prevCode, clearCode);
                     }
                     else {
-                        image->decoder.suffix[image->decoder.runningCode - 2] = TraceGifPrefix(image->decoder.prefix, gifCode, clearCode);
+                        image->decoder->suffix[image->decoder->runningCode - 2] = TraceGifPrefix(image->decoder->prefix, gifCode, clearCode);
                     }
                 }
                 prevCode = gifCode;
             }
         }
     }
-    image->decoder.prevCode = prevCode;
-    image->decoder.stackPtr = stackPtr;
+    image->decoder->prevCode = prevCode;
+    image->decoder->stackPtr = stackPtr;
 }
 
 int ReadGifCode(Image *image)
 {
-    while (image->decoder.shiftState < image->decoder.runningBits) {
+    while (image->decoder->shiftState < image->decoder->runningBits) {
         byte b = ReadGifByte(image);
-        image->decoder.shiftData |= (uint)((uint)b << image->decoder.shiftState);
-        image->decoder.shiftState += 8;
+        image->decoder->shiftData |= (uint)((uint)b << image->decoder->shiftState);
+        image->decoder->shiftState += 8;
     }
-    int result = (int)((unsigned long)image->decoder.shiftData & (unsigned long)(codeMasks[image->decoder.runningBits]));
-    image->decoder.shiftData >>= image->decoder.runningBits;
-    image->decoder.shiftState -= image->decoder.runningBits;
-    if (++image->decoder.runningCode > image->decoder.maxCodePlusOne && image->decoder.runningBits < LZ_BITS) {
-        image->decoder.maxCodePlusOne <<= 1;
-        image->decoder.runningBits++;
+    int result = (int)((unsigned long)image->decoder->shiftData & (unsigned long)(codeMasks[image->decoder->runningBits]));
+    image->decoder->shiftData >>= image->decoder->runningBits;
+    image->decoder->shiftState -= image->decoder->runningBits;
+    if (++image->decoder->runningCode > image->decoder->maxCodePlusOne && image->decoder->runningBits < LZ_BITS) {
+        image->decoder->maxCodePlusOne <<= 1;
+        image->decoder->runningBits++;
     }
     return result;
 }
@@ -141,23 +141,23 @@ int ReadGifCode(Image *image)
 byte ReadGifByte(Image *image)
 {
     byte c = '\0';
-    if (image->decoder.fileState == LOAD_COMPLETE)
+    if (image->decoder->fileState == LOAD_COMPLETE)
         return c;
 
     byte b;
-    if (image->decoder.position == image->decoder.bufferSize) {
+    if (image->decoder->position == image->decoder->bufferSize) {
         b                         = ReadInt8(&image->info);
-        image->decoder.bufferSize = (int)b;
-        if (image->decoder.bufferSize == 0) {
-            image->decoder.fileState = LOAD_COMPLETE;
+        image->decoder->bufferSize = (int)b;
+        if (image->decoder->bufferSize == 0) {
+            image->decoder->fileState = LOAD_COMPLETE;
             return c;
         }
-        ReadBytes(&image->info, image->decoder.buffer, image->decoder.bufferSize);
-        b                   = image->decoder.buffer[0];
-        image->decoder.position = 1;
+        ReadBytes(&image->info, image->decoder->buffer, image->decoder->bufferSize);
+        b                   = image->decoder->buffer[0];
+        image->decoder->position = 1;
     }
     else {
-        b = image->decoder.buffer[image->decoder.position++];
+        b = image->decoder->buffer[image->decoder->position++];
     }
     return b;
 }
@@ -218,7 +218,7 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
         AllocateStorage(0x400, &image->field_50, DATASET_TMP, true);
 
     if (!image->dataPtr)
-        AllocateStorage(image->width * image->height, &image->dataPtr, DATASET_TMP, false);
+        AllocateStorage(image->width * image->height, (void **)&image->dataPtr, DATASET_TMP, false);
 
     if (image->field_50) {
         byte clr[3];
@@ -228,8 +228,8 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
             ReadBytes(&image->info, clr, 3);
         } while (c != palette_size);
 
-        byte buf = ReadInt16(&image->info);
-        while (buf != ',') buf = ReadInt16(&image->info); // gif image start identifier
+        byte buf = ReadInt8(&image->info);
+        while (buf != ',') buf = ReadInt8(&image->info); // gif image start identifier
 
         ReadInt16(&image->info);
         ReadInt16(&image->info);
@@ -282,7 +282,7 @@ short LoadSpriteSheet(const char *filename, Scopes scope)
     Image image;
     MEM_ZERO(image);
 
-    AllocateStorage(sizeof(GifDecoder), &image.decoder, DATASET_TMP, true);
+    AllocateStorage(sizeof(GifDecoder), (void **)&image.decoder, DATASET_TMP, true);
 
     if (LoadGIF(&image, buffer, true)) {
         surface->scope    = scope;
@@ -302,7 +302,7 @@ short LoadSpriteSheet(const char *filename, Scopes scope)
         }
 
         byte *gfxDataPtr = NULL; //&gfxData[8 * v16];
-        AllocateStorage(surface->width * surface->height, gfxDataPtr, DATASET_STG, false);
+        AllocateStorage(surface->width * surface->height, (void **)&gfxDataPtr, DATASET_STG, false);
         image.dataPtr = gfxDataPtr;
         LoadGIF(&image, NULL, false);
 

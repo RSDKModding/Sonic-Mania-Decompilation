@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTetherBall : Object {
+struct ObjectTetherBall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTetherBall : Entity {
 
 };
 
-// Object Entity
-extern ObjectTetherBall TetherBall;
+// Object Struct
+extern ObjectTetherBall *TetherBall;
 
 // Standard Entity Events
 void TetherBall_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZRockPile : Object {
+struct ObjectLRZRockPile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZRockPile : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZRockPile LRZRockPile;
+// Object Struct
+extern ObjectLRZRockPile *LRZRockPile;
 
 // Standard Entity Events
 void LRZRockPile_Update();

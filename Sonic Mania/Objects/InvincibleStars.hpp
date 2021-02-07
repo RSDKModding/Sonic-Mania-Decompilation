@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectInvincibleStars : Object {
+struct ObjectInvincibleStars : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityInvincibleStars : Entity {
 
 };
 
-// Object Entity
-extern ObjectInvincibleStars InvincibleStars;
+// Object Struct
+extern ObjectInvincibleStars *InvincibleStars;
 
 // Standard Entity Events
 void InvincibleStars_Update();

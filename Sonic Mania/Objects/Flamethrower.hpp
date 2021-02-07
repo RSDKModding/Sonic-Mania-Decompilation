@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlamethrower : Object {
+struct ObjectFlamethrower : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFlamethrower : Entity {
 
 };
 
-// Object Entity
-extern ObjectFlamethrower Flamethrower;
+// Object Struct
+extern ObjectFlamethrower *Flamethrower;
 
 // Standard Entity Events
 void Flamethrower_Update();

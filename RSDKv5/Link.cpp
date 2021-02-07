@@ -144,7 +144,7 @@ enum FunctionTableIDs {
     FunctionTable_SetClipBounds,
     FunctionTable_SetScreenFade,
     FunctionTable_LoadSpriteSheet,
-    FunctionTable_SetInkValue,
+    FunctionTable_SetLookupTable,
     FunctionTable_SetPaletteMask,
     FunctionTable_SetPaletteEntry,
     FunctionTable_GetPaletteEntry,
@@ -163,9 +163,9 @@ enum FunctionTableIDs {
     FunctionTable_DrawSprite,
     FunctionTable_DrawUnknown,
     FunctionTable_DrawText,
-    FunctionTable_DrawSprite3,
     FunctionTable_DrawTile,
-    FunctionTable_DrawSheetFrame,
+    FunctionTable_CopyTile,
+    FunctionTable_DrawAniTile,
     FunctionTable_SetPaletteThing,
     FunctionTable_LoadMesh,
     FunctionTable_Create3DScene,
@@ -403,7 +403,7 @@ void setupFunctions()
     functionTable[FunctionTable_SetClipBounds]                = SetClipBounds;
     functionTable[FunctionTable_SetScreenFade]                = NULL; // SetScreenFade;
     functionTable[FunctionTable_LoadSpriteSheet]              = LoadSpriteSheet;
-    functionTable[FunctionTable_SetInkValue]                  = SetInkValue;
+    functionTable[FunctionTable_SetLookupTable]               = SetLookupTable;
     functionTable[FunctionTable_SetPaletteMask]               = SetPaletteMask;
     functionTable[FunctionTable_SetPaletteEntry]              = SetPaletteEntry;
     functionTable[FunctionTable_GetPaletteEntry]              = GetPaletteEntry;
@@ -413,18 +413,18 @@ void setupFunctions()
     functionTable[FunctionTable_RotatePalette]                = RotatePalette;
     functionTable[FunctionTable_SetLimitedFade]               = SetPaletteFade;
     functionTable[FunctionTable_DoPaletteSomething3]          = NULL; // DoPaletteSomething3;
-    functionTable[FunctionTable_DrawRect]                     = NULL; // DrawRect;
-    functionTable[FunctionTable_DrawLine]                     = NULL; // DrawLine;
-    functionTable[FunctionTable_DrawCircle]                   = NULL; // DrawCircle;
-    functionTable[FunctionTable_DrawCircleOutline]            = NULL; // DrawCircleOutline;
-    functionTable[FunctionTable_DrawQuad]                     = NULL; // DrawQuad;
-    functionTable[FunctionTable_DrawTexturedQuad]             = NULL; // DrawTexturedQuad;
-    functionTable[FunctionTable_DrawSprite]                   = NULL; // DrawSprite;
-    functionTable[FunctionTable_DrawUnknown]                  = NULL; // DrawUnknown;
-    functionTable[FunctionTable_DrawText]                     = NULL; // DrawText;
-    functionTable[FunctionTable_DrawSprite3]                  = NULL; // DrawSprite3;
-    functionTable[FunctionTable_DrawTile]                     = NULL; // DrawTile;
-    functionTable[FunctionTable_DrawSheetFrame]               = NULL; // DrawSheetFrame;
+    functionTable[FunctionTable_DrawRect]                     = DrawRectangle;
+    functionTable[FunctionTable_DrawLine]                     = DrawLine;
+    functionTable[FunctionTable_DrawCircle]                   = DrawCircle;
+    functionTable[FunctionTable_DrawCircleOutline]            = DrawCircleOutline;
+    functionTable[FunctionTable_DrawQuad]                     = DrawQuad;
+    functionTable[FunctionTable_DrawTexturedQuad]             = DrawTexturedQuad;
+    functionTable[FunctionTable_DrawSprite]                   = DrawSprite;
+    functionTable[FunctionTable_DrawUnknown]                  = // DrawUnknown;
+    functionTable[FunctionTable_DrawText]                     = DrawText;
+    functionTable[FunctionTable_DrawTile]                     = DrawTile;
+    functionTable[FunctionTable_CopyTile]                     = NULL; // CopyTile;
+    functionTable[FunctionTable_DrawAniTile]                  = DrawAniTile;
     functionTable[FunctionTable_SetPaletteThing]              = NULL; // SetPaletteThing;
     functionTable[FunctionTable_LoadMesh]                     = NULL; // LoadMesh;
     functionTable[FunctionTable_Create3DScene]                = NULL; // Create3DScene;

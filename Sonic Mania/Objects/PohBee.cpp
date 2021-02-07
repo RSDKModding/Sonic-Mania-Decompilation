@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPohBee PohBee;
+ObjectPohBee *PohBee;
 
 void PohBee_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRingField : Object {
+struct ObjectRingField : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRingField : Entity {
 
 };
 
-// Object Entity
-extern ObjectRingField RingField;
+// Object Struct
+extern ObjectRingField *RingField;
 
 // Standard Entity Events
 void RingField_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIControl : Object {
+struct ObjectUIControl : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIControl : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIControl UIControl;
+// Object Struct
+extern ObjectUIControl *UIControl;
 
 // Standard Entity Events
 void UIControl_Update();

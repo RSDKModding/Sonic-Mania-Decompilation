@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPiston : Object {
+struct ObjectPiston : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPiston : Entity {
 
 };
 
-// Object Entity
-extern ObjectPiston Piston;
+// Object Struct
+extern ObjectPiston *Piston;
 
 // Standard Entity Events
 void Piston_Update();

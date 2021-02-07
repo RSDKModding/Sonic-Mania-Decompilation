@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPSZDoor : Object {
+struct ObjectPSZDoor : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPSZDoor : Entity {
 
 };
 
-// Object Entity
-extern ObjectPSZDoor PSZDoor;
+// Object Struct
+extern ObjectPSZDoor *PSZDoor;
 
 // Standard Entity Events
 void PSZDoor_Update();

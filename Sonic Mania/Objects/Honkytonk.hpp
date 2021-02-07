@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHonkytonk : Object {
+struct ObjectHonkytonk : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHonkytonk : Entity {
 
 };
 
-// Object Entity
-extern ObjectHonkytonk Honkytonk;
+// Object Struct
+extern ObjectHonkytonk *Honkytonk;
 
 // Standard Entity Events
 void Honkytonk_Update();

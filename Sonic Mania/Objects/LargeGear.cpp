@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLargeGear LargeGear;
+ObjectLargeGear *LargeGear;
 
 void LargeGear_Update()
 {

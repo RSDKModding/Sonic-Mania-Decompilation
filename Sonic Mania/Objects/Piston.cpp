@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPiston Piston;
+ObjectPiston *Piston;
 
 void Piston_Update()
 {

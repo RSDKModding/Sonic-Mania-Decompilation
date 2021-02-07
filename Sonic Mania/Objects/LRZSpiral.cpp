@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZSpiral LRZSpiral;
+ObjectLRZSpiral *LRZSpiral;
 
 void LRZSpiral_Update()
 {

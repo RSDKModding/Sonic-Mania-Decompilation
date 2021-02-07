@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTwistingDoor TwistingDoor;
+ObjectTwistingDoor *TwistingDoor;
 
 void TwistingDoor_Update()
 {

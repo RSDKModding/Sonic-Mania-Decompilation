@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSuperSparkle : Object {
+struct ObjectSuperSparkle : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySuperSparkle : Entity {
 
 };
 
-// Object Entity
-extern ObjectSuperSparkle SuperSparkle;
+// Object Struct
+extern ObjectSuperSparkle *SuperSparkle;
 
 // Standard Entity Events
 void SuperSparkle_Update();

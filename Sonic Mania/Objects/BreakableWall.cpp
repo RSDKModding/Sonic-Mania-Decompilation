@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBreakableWall BreakableWall;
+ObjectBreakableWall *BreakableWall;
 
 void BreakableWall_Update()
 {

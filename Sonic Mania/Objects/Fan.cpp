@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFan Fan;
+ObjectFan *Fan;
 
 void Fan_Update()
 {

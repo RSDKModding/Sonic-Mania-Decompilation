@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTurretSwitch TurretSwitch;
+ObjectTurretSwitch *TurretSwitch;
 
 void TurretSwitch_Update()
 {

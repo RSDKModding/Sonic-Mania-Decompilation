@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCPZSetup : Object {
+struct ObjectCPZSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCPZSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectCPZSetup CPZSetup;
+// Object Struct
+extern ObjectCPZSetup *CPZSetup;
 
 // Standard Entity Events
 void CPZSetup_Update();

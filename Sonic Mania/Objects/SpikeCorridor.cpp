@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpikeCorridor SpikeCorridor;
+ObjectSpikeCorridor *SpikeCorridor;
 
 void SpikeCorridor_Update()
 {

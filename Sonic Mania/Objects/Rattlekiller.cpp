@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRattlekiller Rattlekiller;
+ObjectRattlekiller *Rattlekiller;
 
 void Rattlekiller_Update()
 {

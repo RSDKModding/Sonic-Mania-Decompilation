@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZConvControl LRZConvControl;
+ObjectLRZConvControl *LRZConvControl;
 
 void LRZConvControl_Update()
 {

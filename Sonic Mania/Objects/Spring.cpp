@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpring Spring;
+ObjectSpring *Spring;
 
 void Spring_Update()
 {

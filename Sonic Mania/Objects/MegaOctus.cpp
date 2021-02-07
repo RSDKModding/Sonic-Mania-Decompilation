@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMegaOctus MegaOctus;
+ObjectMegaOctus *MegaOctus;
 
 void MegaOctus_Update()
 {

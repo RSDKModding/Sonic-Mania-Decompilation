@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMotobug Motobug;
+ObjectMotobug *Motobug;
 
 void Motobug_Update()
 {

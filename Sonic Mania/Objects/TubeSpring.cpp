@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTubeSpring TubeSpring;
+ObjectTubeSpring *TubeSpring;
 
 void TubeSpring_Update()
 {

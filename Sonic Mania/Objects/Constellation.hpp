@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectConstellation : Object {
+struct ObjectConstellation : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityConstellation : Entity {
 
 };
 
-// Object Entity
-extern ObjectConstellation Constellation;
+// Object Struct
+extern ObjectConstellation *Constellation;
 
 // Standard Entity Events
 void Constellation_Update();

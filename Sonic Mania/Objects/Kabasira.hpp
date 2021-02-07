@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectKabasira : Object {
+struct ObjectKabasira : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityKabasira : Entity {
 
 };
 
-// Object Entity
-extern ObjectKabasira Kabasira;
+// Object Struct
+extern ObjectKabasira *Kabasira;
 
 // Standard Entity Events
 void Kabasira_Update();

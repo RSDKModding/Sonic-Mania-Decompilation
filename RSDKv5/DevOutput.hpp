@@ -15,7 +15,7 @@ struct EntityDevOutput : Entity {
 };
 
 // Object Entity
-extern ObjectDevOutput DevOutput;
+extern ObjectDevOutput *DevOutput;
 
 // Standard Entity Events
 void DevOutput_Update();

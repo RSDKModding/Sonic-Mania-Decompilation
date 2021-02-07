@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoLevelSelect : Object {
+struct ObjectPuyoLevelSelect : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPuyoLevelSelect : Entity {
 
 };
 
-// Object Entity
-extern ObjectPuyoLevelSelect PuyoLevelSelect;
+// Object Struct
+extern ObjectPuyoLevelSelect *PuyoLevelSelect;
 
 // Standard Entity Events
 void PuyoLevelSelect_Update();

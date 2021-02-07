@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMagSpikeBall : Object {
+struct ObjectMagSpikeBall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMagSpikeBall : Entity {
 
 };
 
-// Object Entity
-extern ObjectMagSpikeBall MagSpikeBall;
+// Object Struct
+extern ObjectMagSpikeBall *MagSpikeBall;
 
 // Standard Entity Events
 void MagSpikeBall_Update();

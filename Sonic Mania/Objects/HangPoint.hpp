@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHangPoint : Object {
+struct ObjectHangPoint : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHangPoint : Entity {
 
 };
 
-// Object Entity
-extern ObjectHangPoint HangPoint;
+// Object Struct
+extern ObjectHangPoint *HangPoint;
 
 // Standard Entity Events
 void HangPoint_Update();

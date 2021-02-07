@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFBZFan FBZFan;
+ObjectFBZFan *FBZFan;
 
 void FBZFan_Update()
 {

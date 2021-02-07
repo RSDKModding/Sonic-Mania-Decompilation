@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSplats Splats;
+ObjectSplats *Splats;
 
 void Splats_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBallHog BallHog;
+ObjectBallHog *BallHog;
 
 void BallHog_Update()
 {

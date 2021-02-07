@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpecialRing : Object {
+struct ObjectSpecialRing : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpecialRing : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpecialRing SpecialRing;
+// Object Struct
+extern ObjectSpecialRing *SpecialRing;
 
 // Standard Entity Events
 void SpecialRing_Update();

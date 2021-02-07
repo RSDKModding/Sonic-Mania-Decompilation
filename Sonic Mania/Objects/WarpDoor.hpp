@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWarpDoor : Object {
+struct ObjectWarpDoor : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWarpDoor : Entity {
 
 };
 
-// Object Entity
-extern ObjectWarpDoor WarpDoor;
+// Object Struct
+extern ObjectWarpDoor *WarpDoor;
 
 // Standard Entity Events
 void WarpDoor_Update();

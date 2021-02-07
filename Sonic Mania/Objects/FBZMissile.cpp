@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFBZMissile FBZMissile;
+ObjectFBZMissile *FBZMissile;
 
 void FBZMissile_Update()
 {

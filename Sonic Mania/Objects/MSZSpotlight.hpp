@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSZSpotlight : Object {
+struct ObjectMSZSpotlight : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSZSpotlight : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSZSpotlight MSZSpotlight;
+// Object Struct
+extern ObjectMSZSpotlight *MSZSpotlight;
 
 // Standard Entity Events
 void MSZSpotlight_Update();

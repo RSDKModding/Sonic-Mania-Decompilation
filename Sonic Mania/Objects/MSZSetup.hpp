@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSZSetup : Object {
+struct ObjectMSZSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSZSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSZSetup MSZSetup;
+// Object Struct
+extern ObjectMSZSetup *MSZSetup;
 
 // Standard Entity Events
 void MSZSetup_Update();

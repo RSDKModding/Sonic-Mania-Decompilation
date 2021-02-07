@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMonarchBG MonarchBG;
+ObjectMonarchBG *MonarchBG;
 
 void MonarchBG_Update()
 {

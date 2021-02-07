@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlameSpring : Object {
+struct ObjectFlameSpring : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFlameSpring : Entity {
 
 };
 
-// Object Entity
-extern ObjectFlameSpring FlameSpring;
+// Object Struct
+extern ObjectFlameSpring *FlameSpring;
 
 // Standard Entity Events
 void FlameSpring_Update();

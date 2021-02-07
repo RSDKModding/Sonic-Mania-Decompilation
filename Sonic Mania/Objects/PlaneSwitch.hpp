@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlaneSwitch : Object {
+struct ObjectPlaneSwitch : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPlaneSwitch : Entity {
 
 };
 
-// Object Entity
-extern ObjectPlaneSwitch PlaneSwitch;
+// Object Struct
+extern ObjectPlaneSwitch *PlaneSwitch;
 
 // Standard Entity Events
 void PlaneSwitch_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMonkeyDude : Object {
+struct ObjectMonkeyDude : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMonkeyDude : Entity {
 
 };
 
-// Object Entity
-extern ObjectMonkeyDude MonkeyDude;
+// Object Struct
+extern ObjectMonkeyDude *MonkeyDude;
 
 // Standard Entity Events
 void MonkeyDude_Update();

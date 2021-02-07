@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRing : Object {
+struct ObjectRing : Object{
     Hitbox hitbox;
     int pan;
     short spriteIndex;
@@ -29,8 +29,8 @@ struct EntityRing : Entity {
     EntityAnimationData animData;
 };
 
-// Object Entity
-extern ObjectRing Ring;
+// Object Struct
+extern ObjectRing *Ring;
 
 // Standard Entity Events
 void Ring_Update();

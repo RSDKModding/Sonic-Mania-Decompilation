@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTuesday Tuesday;
+ObjectTuesday *Tuesday;
 
 void Tuesday_Update()
 {

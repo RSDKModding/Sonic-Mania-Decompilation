@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUITABanner UITABanner;
+ObjectUITABanner *UITABanner;
 
 void UITABanner_Update()
 {

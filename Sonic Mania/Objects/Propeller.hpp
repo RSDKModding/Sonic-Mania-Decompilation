@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPropeller : Object {
+struct ObjectPropeller : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPropeller : Entity {
 
 };
 
-// Object Entity
-extern ObjectPropeller Propeller;
+// Object Struct
+extern ObjectPropeller *Propeller;
 
 // Standard Entity Events
 void Propeller_Update();

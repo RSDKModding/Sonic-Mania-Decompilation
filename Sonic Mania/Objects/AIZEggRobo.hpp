@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZEggRobo : Object {
+struct ObjectAIZEggRobo : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAIZEggRobo : Entity {
 
 };
 
-// Object Entity
-extern ObjectAIZEggRobo AIZEggRobo;
+// Object Struct
+extern ObjectAIZEggRobo *AIZEggRobo;
 
 // Standard Entity Events
 void AIZEggRobo_Update();

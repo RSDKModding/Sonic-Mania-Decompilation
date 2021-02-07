@@ -13,7 +13,7 @@ struct EntityMSZ1KIntro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectMSZ1KIntro MSZ1KIntro;
 
 // Standard Entity Events

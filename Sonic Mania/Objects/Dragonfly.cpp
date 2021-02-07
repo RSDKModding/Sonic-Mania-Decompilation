@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDragonfly Dragonfly;
+ObjectDragonfly *Dragonfly;
 
 void Dragonfly_Update()
 {

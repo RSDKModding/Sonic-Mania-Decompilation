@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectReplayRecorder ReplayRecorder;
+ObjectReplayRecorder *ReplayRecorder;
 
 void ReplayRecorder_Update()
 {

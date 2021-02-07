@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIVideo UIVideo;
+ObjectUIVideo *UIVideo;
 
 void UIVideo_Update()
 {

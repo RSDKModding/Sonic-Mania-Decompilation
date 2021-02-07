@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDCEvent DCEvent;
+ObjectDCEvent *DCEvent;
 
 void DCEvent_Update()
 {

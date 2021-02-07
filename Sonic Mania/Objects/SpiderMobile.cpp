@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpiderMobile SpiderMobile;
+ObjectSpiderMobile *SpiderMobile;
 
 void SpiderMobile_Update()
 {

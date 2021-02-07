@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXWaveRing : Object {
+struct ObjectFXWaveRing : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFXWaveRing : Entity {
 
 };
 
-// Object Entity
-extern ObjectFXWaveRing FXWaveRing;
+// Object Struct
+extern ObjectFXWaveRing *FXWaveRing;
 
 // Standard Entity Events
 void FXWaveRing_Update();

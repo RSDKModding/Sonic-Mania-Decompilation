@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFireflies Fireflies;
+ObjectFireflies *Fireflies;
 
 void Fireflies_Update()
 {

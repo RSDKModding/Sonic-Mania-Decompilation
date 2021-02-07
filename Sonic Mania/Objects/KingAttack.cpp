@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectKingAttack KingAttack;
+ObjectKingAttack *KingAttack;
 
 void KingAttack_Update()
 {

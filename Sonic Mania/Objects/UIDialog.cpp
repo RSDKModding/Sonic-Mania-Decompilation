@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIDialog UIDialog;
+ObjectUIDialog *UIDialog;
 
 void UIDialog_Update()
 {

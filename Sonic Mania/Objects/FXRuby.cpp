@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFXRuby FXRuby;
+ObjectFXRuby *FXRuby;
 
 void FXRuby_Update()
 {

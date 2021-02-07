@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCanista : Object {
+struct ObjectCanista : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCanista : Entity {
 
 };
 
-// Object Entity
-extern ObjectCanista Canista;
+// Object Struct
+extern ObjectCanista *Canista;
 
 // Standard Entity Events
 void Canista_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSwitchDoor SwitchDoor;
+ObjectSwitchDoor *SwitchDoor;
 
 void SwitchDoor_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHPZEmerald HPZEmerald;
+ObjectHPZEmerald *HPZEmerald;
 
 void HPZEmerald_Update()
 {

@@ -13,7 +13,7 @@ struct EntityBSS_Collected : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_Collected BSS_Collected;
 
 // Standard Entity Events

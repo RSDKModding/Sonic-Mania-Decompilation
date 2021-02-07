@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectVultron : Object {
+struct ObjectVultron : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityVultron : Entity {
 
 };
 
-// Object Entity
-extern ObjectVultron Vultron;
+// Object Struct
+extern ObjectVultron *Vultron;
 
 // Standard Entity Events
 void Vultron_Update();

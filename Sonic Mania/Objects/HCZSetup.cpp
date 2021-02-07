@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHCZSetup HCZSetup;
+ObjectHCZSetup *HCZSetup;
 
 void HCZSetup_Update()
 {

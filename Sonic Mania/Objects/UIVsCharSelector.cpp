@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIVsCharSelector UIVsCharSelector;
+ObjectUIVsCharSelector *UIVsCharSelector;
 
 void UIVsCharSelector_Update()
 {

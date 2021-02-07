@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRubyPortal : Object {
+struct ObjectRubyPortal : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRubyPortal : Entity {
 
 };
 
-// Object Entity
-extern ObjectRubyPortal RubyPortal;
+// Object Struct
+extern ObjectRubyPortal *RubyPortal;
 
 // Standard Entity Events
 void RubyPortal_Update();

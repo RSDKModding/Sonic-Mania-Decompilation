@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTMZBarrier : Object {
+struct ObjectTMZBarrier : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTMZBarrier : Entity {
 
 };
 
-// Object Entity
-extern ObjectTMZBarrier TMZBarrier;
+// Object Struct
+extern ObjectTMZBarrier *TMZBarrier;
 
 // Standard Entity Events
 void TMZBarrier_Update();

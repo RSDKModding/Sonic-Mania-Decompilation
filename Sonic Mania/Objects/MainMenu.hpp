@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMainMenu : Object {
+struct ObjectMainMenu : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMainMenu : Entity {
 
 };
 
-// Object Entity
-extern ObjectMainMenu MainMenu;
+// Object Struct
+extern ObjectMainMenu *MainMenu;
 
 // Standard Entity Events
 void MainMenu_Update();

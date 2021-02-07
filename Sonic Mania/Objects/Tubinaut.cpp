@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTubinaut Tubinaut;
+ObjectTubinaut *Tubinaut;
 
 void Tubinaut_Update()
 {

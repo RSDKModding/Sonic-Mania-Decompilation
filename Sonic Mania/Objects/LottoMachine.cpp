@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLottoMachine LottoMachine;
+ObjectLottoMachine *LottoMachine;
 
 void LottoMachine_Update()
 {

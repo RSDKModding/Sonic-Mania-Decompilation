@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSilverSonic : Object {
+struct ObjectSilverSonic : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySilverSonic : Entity {
 
 };
 
-// Object Entity
-extern ObjectSilverSonic SilverSonic;
+// Object Struct
+extern ObjectSilverSonic *SilverSonic;
 
 // Standard Entity Events
 void SilverSonic_Update();

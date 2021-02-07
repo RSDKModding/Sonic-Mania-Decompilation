@@ -13,7 +13,7 @@ struct EntityPBL_HUD : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_HUD PBL_HUD;
 
 // Standard Entity Events

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLavaFall LavaFall;
+ObjectLavaFall *LavaFall;
 
 void LavaFall_Update()
 {

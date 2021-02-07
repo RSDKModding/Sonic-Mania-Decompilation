@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWoodChipper : Object {
+struct ObjectWoodChipper : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWoodChipper : Entity {
 
 };
 
-// Object Entity
-extern ObjectWoodChipper WoodChipper;
+// Object Struct
+extern ObjectWoodChipper *WoodChipper;
 
 // Standard Entity Events
 void WoodChipper_Update();

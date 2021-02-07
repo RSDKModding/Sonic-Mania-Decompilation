@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUICarousel : Object {
+struct ObjectUICarousel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUICarousel : Entity {
 
 };
 
-// Object Entity
-extern ObjectUICarousel UICarousel;
+// Object Struct
+extern ObjectUICarousel *UICarousel;
 
 // Standard Entity Events
 void UICarousel_Update();

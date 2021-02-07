@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPopcornMachine PopcornMachine;
+ObjectPopcornMachine *PopcornMachine;
 
 void PopcornMachine_Update()
 {

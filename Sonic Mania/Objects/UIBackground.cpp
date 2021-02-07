@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIBackground UIBackground;
+ObjectUIBackground *UIBackground;
 
 void UIBackground_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIModeButton : Object {
+struct ObjectUIModeButton : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIModeButton : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIModeButton UIModeButton;
+// Object Struct
+extern ObjectUIModeButton *UIModeButton;
 
 // Standard Entity Events
 void UIModeButton_Update();

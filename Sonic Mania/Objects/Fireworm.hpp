@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFireworm : Object {
+struct ObjectFireworm : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFireworm : Entity {
 
 };
 
-// Object Entity
-extern ObjectFireworm Fireworm;
+// Object Struct
+extern ObjectFireworm *Fireworm;
 
 // Standard Entity Events
 void Fireworm_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIResPicker UIResPicker;
+ObjectUIResPicker *UIResPicker;
 
 void UIResPicker_Update()
 {

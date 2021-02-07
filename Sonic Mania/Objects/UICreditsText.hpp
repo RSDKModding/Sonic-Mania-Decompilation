@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUICreditsText : Object {
+struct ObjectUICreditsText : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUICreditsText : Entity {
 
 };
 
-// Object Entity
-extern ObjectUICreditsText UICreditsText;
+// Object Struct
+extern ObjectUICreditsText *UICreditsText;
 
 // Standard Entity Events
 void UICreditsText_Update();

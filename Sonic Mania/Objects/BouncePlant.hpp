@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBouncePlant : Object {
+struct ObjectBouncePlant : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBouncePlant : Entity {
 
 };
 
-// Object Entity
-extern ObjectBouncePlant BouncePlant;
+// Object Struct
+extern ObjectBouncePlant *BouncePlant;
 
 // Standard Entity Events
 void BouncePlant_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectOOZSetup OOZSetup;
+ObjectOOZSetup *OOZSetup;
 
 void OOZSetup_Update()
 {

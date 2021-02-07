@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTransportTube TransportTube;
+ObjectTransportTube *TransportTube;
 
 void TransportTube_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomRider PhantomRider;
+ObjectPhantomRider *PhantomRider;
 
 void PhantomRider_Update()
 {

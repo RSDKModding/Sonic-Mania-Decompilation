@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAnimalHBH AnimalHBH;
+ObjectAnimalHBH *AnimalHBH;
 
 void AnimalHBH_Update()
 {

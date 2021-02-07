@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIDiorama UIDiorama;
+ObjectUIDiorama *UIDiorama;
 
 void UIDiorama_Update()
 {

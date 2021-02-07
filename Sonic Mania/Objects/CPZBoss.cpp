@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCPZBoss CPZBoss;
+ObjectCPZBoss *CPZBoss;
 
 void CPZBoss_Update()
 {

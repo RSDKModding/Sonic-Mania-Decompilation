@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFlasherMKII FlasherMKII;
+ObjectFlasherMKII *FlasherMKII;
 
 void FlasherMKII_Update()
 {

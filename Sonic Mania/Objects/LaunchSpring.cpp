@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLaunchSpring LaunchSpring;
+ObjectLaunchSpring *LaunchSpring;
 
 void LaunchSpring_Update()
 {

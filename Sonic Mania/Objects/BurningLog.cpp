@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBurningLog BurningLog;
+ObjectBurningLog *BurningLog;
 
 void BurningLog_Update()
 {

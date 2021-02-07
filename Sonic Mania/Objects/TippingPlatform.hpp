@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTippingPlatform : Object {
+struct ObjectTippingPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTippingPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectTippingPlatform TippingPlatform;
+// Object Struct
+extern ObjectTippingPlatform *TippingPlatform;
 
 // Standard Entity Events
 void TippingPlatform_Update();

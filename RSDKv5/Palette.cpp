@@ -9,7 +9,7 @@ ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 byte gfxLineBuffer[SCREEN_YSIZE];
 
 int maskColour = 0;
-int inkValue = 0;
+ushort *lookUpBuffer = NULL;
 
 
 void LoadPalette(const char *filePath, int paletteID, int startPaletteIndex, int startIndex, int endIndex)

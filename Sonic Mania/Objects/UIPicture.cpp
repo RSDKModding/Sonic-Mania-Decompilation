@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIPicture UIPicture;
+ObjectUIPicture *UIPicture;
 
 void UIPicture_Update()
 {

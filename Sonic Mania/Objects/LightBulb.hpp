@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLightBulb : Object {
+struct ObjectLightBulb : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLightBulb : Entity {
 
 };
 
-// Object Entity
-extern ObjectLightBulb LightBulb;
+// Object Struct
+extern ObjectLightBulb *LightBulb;
 
 // Standard Entity Events
 void LightBulb_Update();

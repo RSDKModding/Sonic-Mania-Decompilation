@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectStarPost : Object {
+struct ObjectStarPost : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityStarPost : Entity {
 
 };
 
-// Object Entity
-extern ObjectStarPost StarPost;
+// Object Struct
+extern ObjectStarPost *StarPost;
 
 // Standard Entity Events
 void StarPost_Update();

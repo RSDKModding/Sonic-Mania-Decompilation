@@ -13,7 +13,7 @@ struct EntityBSS_Horizon : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_Horizon BSS_Horizon;
 
 // Standard Entity Events

@@ -74,6 +74,9 @@
     <ClCompile Include="Userdata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Storage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -134,6 +137,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Userdata.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

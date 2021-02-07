@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectStaircase Staircase;
+ObjectStaircase *Staircase;
 
 void Staircase_Update()
 {

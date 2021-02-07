@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurretSwitch : Object {
+struct ObjectTurretSwitch : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTurretSwitch : Entity {
 
 };
 
-// Object Entity
-extern ObjectTurretSwitch TurretSwitch;
+// Object Struct
+extern ObjectTurretSwitch *TurretSwitch;
 
 // Standard Entity Events
 void TurretSwitch_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHangConveyor HangConveyor;
+ObjectHangConveyor *HangConveyor;
 
 void HangConveyor_Update()
 {

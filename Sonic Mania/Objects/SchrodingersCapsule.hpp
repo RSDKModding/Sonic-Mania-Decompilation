@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSchrodingersCapsule : Object {
+struct ObjectSchrodingersCapsule : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySchrodingersCapsule : Entity {
 
 };
 
-// Object Entity
-extern ObjectSchrodingersCapsule SchrodingersCapsule;
+// Object Struct
+extern ObjectSchrodingersCapsule *SchrodingersCapsule;
 
 // Standard Entity Events
 void SchrodingersCapsule_Update();

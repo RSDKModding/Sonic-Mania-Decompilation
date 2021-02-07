@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIDialog : Object {
+struct ObjectUIDialog : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIDialog : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIDialog UIDialog;
+// Object Struct
+extern ObjectUIDialog *UIDialog;
 
 // Standard Entity Events
 void UIDialog_Update();

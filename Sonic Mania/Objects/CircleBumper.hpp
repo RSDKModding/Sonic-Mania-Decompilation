@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCircleBumper : Object {
+struct ObjectCircleBumper : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCircleBumper : Entity {
 
 };
 
-// Object Entity
-extern ObjectCircleBumper CircleBumper;
+// Object Struct
+extern ObjectCircleBumper *CircleBumper;
 
 // Standard Entity Events
 void CircleBumper_Update();

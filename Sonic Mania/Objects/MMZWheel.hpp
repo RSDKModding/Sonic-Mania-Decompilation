@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMMZWheel : Object {
+struct ObjectMMZWheel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMMZWheel : Entity {
 
 };
 
-// Object Entity
-extern ObjectMMZWheel MMZWheel;
+// Object Struct
+extern ObjectMMZWheel *MMZWheel;
 
 // Standard Entity Events
 void MMZWheel_Update();

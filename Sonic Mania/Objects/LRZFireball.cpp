@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZFireball LRZFireball;
+ObjectLRZFireball *LRZFireball;
 
 void LRZFireball_Update()
 {

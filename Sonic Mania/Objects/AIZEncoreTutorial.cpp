@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZEncoreTutorial AIZEncoreTutorial;
+ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 
 void AIZEncoreTutorial_Update()
 {

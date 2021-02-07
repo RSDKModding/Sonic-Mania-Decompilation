@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpikeFlail SpikeFlail;
+ObjectSpikeFlail *SpikeFlail;
 
 void SpikeFlail_Update()
 {

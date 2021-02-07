@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSeltzerWater SeltzerWater;
+ObjectSeltzerWater *SeltzerWater;
 
 void SeltzerWater_Update()
 {

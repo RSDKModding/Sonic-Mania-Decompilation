@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIShifter UIShifter;
+ObjectUIShifter *UIShifter;
 
 void UIShifter_Update()
 {

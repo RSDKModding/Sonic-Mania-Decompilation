@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPointdexter : Object {
+struct ObjectPointdexter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPointdexter : Entity {
 
 };
 
-// Object Entity
-extern ObjectPointdexter Pointdexter;
+// Object Struct
+extern ObjectPointdexter *Pointdexter;
 
 // Standard Entity Events
 void Pointdexter_Update();

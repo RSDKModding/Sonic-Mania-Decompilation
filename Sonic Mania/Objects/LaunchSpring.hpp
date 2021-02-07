@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLaunchSpring : Object {
+struct ObjectLaunchSpring : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLaunchSpring : Entity {
 
 };
 
-// Object Entity
-extern ObjectLaunchSpring LaunchSpring;
+// Object Struct
+extern ObjectLaunchSpring *LaunchSpring;
 
 // Standard Entity Events
 void LaunchSpring_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectForceUnstick ForceUnstick;
+ObjectForceUnstick *ForceUnstick;
 
 void ForceUnstick_Update()
 {

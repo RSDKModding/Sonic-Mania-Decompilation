@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRollerMKII RollerMKII;
+ObjectRollerMKII *RollerMKII;
 
 void RollerMKII_Update()
 {

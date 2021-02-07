@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCompetition Competition;
+ObjectCompetition *Competition;
 
 void Competition_Update()
 {

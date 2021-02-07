@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHandLauncher HandLauncher;
+ObjectHandLauncher *HandLauncher;
 
 void HandLauncher_Update()
 {

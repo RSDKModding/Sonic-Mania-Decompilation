@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectIceBomba IceBomba;
+ObjectIceBomba *IceBomba;
 
 void IceBomba_Update()
 {

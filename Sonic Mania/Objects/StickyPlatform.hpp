@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectStickyPlatform : Object {
+struct ObjectStickyPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityStickyPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectStickyPlatform StickyPlatform;
+// Object Struct
+extern ObjectStickyPlatform *StickyPlatform;
 
 // Standard Entity Events
 void StickyPlatform_Update();

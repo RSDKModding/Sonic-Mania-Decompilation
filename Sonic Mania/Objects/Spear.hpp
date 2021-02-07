@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpear : Object {
+struct ObjectSpear : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpear : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpear Spear;
+// Object Struct
+extern ObjectSpear *Spear;
 
 // Standard Entity Events
 void Spear_Update();

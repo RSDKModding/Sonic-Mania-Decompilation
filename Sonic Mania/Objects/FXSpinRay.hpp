@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXSpinRay : Object {
+struct ObjectFXSpinRay : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFXSpinRay : Entity {
 
 };
 
-// Object Entity
-extern ObjectFXSpinRay FXSpinRay;
+// Object Struct
+extern ObjectFXSpinRay *FXSpinRay;
 
 // Standard Entity Events
 void FXSpinRay_Update();

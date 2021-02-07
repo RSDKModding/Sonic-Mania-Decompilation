@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlaneSwitch PlaneSwitch;
+ObjectPlaneSwitch *PlaneSwitch;
 
 void PlaneSwitch_Update()
 {

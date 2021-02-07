@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMonarchPlans MonarchPlans;
+ObjectMonarchPlans *MonarchPlans;
 
 void MonarchPlans_Update()
 {

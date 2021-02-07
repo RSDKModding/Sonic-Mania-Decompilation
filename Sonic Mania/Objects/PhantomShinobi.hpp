@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomShinobi : Object {
+struct ObjectPhantomShinobi : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPhantomShinobi : Entity {
 
 };
 
-// Object Entity
-extern ObjectPhantomShinobi PhantomShinobi;
+// Object Struct
+extern ObjectPhantomShinobi *PhantomShinobi;
 
 // Standard Entity Events
 void PhantomShinobi_Update();

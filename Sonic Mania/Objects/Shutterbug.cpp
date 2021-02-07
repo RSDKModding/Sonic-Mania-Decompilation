@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectShutterbug Shutterbug;
+ObjectShutterbug *Shutterbug;
 
 void Shutterbug_Update()
 {

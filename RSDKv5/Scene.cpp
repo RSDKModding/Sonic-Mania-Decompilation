@@ -109,8 +109,8 @@ void LoadScene()
 
         for (int o = 0; o < sceneInfo.classCount; ++o) {
             ObjectInfo *obj = &objectList[stageObjectIDs[o]];
-            if (obj->type) {
-                AllocateStorage(obj->objectSize, obj->type, DATASET_STG, true);
+            if (obj->type && !*obj->type) {
+                AllocateStorage(obj->objectSize, (void**)obj->type, DATASET_STG, true);
                 LoadStaticObject((byte *)obj->type, obj->hash, 2);
             }
         }
@@ -123,7 +123,7 @@ void LoadScene()
                         byte red                     = ReadInt8(&info);
                         byte green                   = ReadInt8(&info);
                         byte blue                    = ReadInt8(&info);
-                        fullPalette[i][(r << 4) + c] = bIndexes[buffer[2]] | gIndexes[buffer[1]] | rIndexes[buffer[0]];
+                        fullPalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
                     }
                 }
                 else {
@@ -156,7 +156,7 @@ void LoadStageGIF(char *filepath)
     Image tileset;
     MEM_ZERO(tileset);
 
-    AllocateStorage(sizeof(GifDecoder), &tileset.decoder, DATASET_TMP, true);
+    AllocateStorage(sizeof(GifDecoder), (void **)&tileset.decoder, DATASET_TMP, true);
 
     if (LoadGIF(&tileset, filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x4000) {
         tileset.dataPtr = tilesetGFXData;

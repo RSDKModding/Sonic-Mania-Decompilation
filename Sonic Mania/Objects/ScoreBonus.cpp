@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectScoreBonus ScoreBonus;
+ObjectScoreBonus *ScoreBonus;
 
 void ScoreBonus_Update()
 {

@@ -13,7 +13,7 @@ struct EntityUFO_Springboard : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_Springboard UFO_Springboard;
 
 // Standard Entity Events

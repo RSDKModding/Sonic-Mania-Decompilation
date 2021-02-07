@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoAttack PuyoAttack;
+ObjectPuyoAttack *PuyoAttack;
 
 void PuyoAttack_Update()
 {

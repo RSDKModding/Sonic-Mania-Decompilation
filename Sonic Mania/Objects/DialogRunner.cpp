@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDialogRunner DialogRunner;
+ObjectDialogRunner *DialogRunner;
 
 void DialogRunner_Update()
 {

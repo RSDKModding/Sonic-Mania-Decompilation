@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHeavyKing HeavyKing;
+ObjectHeavyKing *HeavyKing;
 
 void HeavyKing_Update()
 {

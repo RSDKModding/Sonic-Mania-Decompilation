@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIVsResults UIVsResults;
+ObjectUIVsResults *UIVsResults;
 
 void UIVsResults_Update()
 {

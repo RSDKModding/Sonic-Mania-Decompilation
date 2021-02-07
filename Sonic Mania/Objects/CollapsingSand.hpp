@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCollapsingSand : Object {
+struct ObjectCollapsingSand : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCollapsingSand : Entity {
 
 };
 
-// Object Entity
-extern ObjectCollapsingSand CollapsingSand;
+// Object Struct
+extern ObjectCollapsingSand *CollapsingSand;
 
 // Standard Entity Events
 void CollapsingSand_Update();

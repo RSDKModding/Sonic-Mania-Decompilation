@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSBomb : Object {
+struct ObjectMSBomb : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSBomb : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSBomb MSBomb;
+// Object Struct
+extern ObjectMSBomb *MSBomb;
 
 // Standard Entity Events
 void MSBomb_Update();

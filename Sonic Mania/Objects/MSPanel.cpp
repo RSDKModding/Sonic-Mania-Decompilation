@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSPanel MSPanel;
+ObjectMSPanel *MSPanel;
 
 void MSPanel_Update()
 {

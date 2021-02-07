@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTechnosqueek Technosqueek;
+ObjectTechnosqueek *Technosqueek;
 
 void Technosqueek_Update()
 {

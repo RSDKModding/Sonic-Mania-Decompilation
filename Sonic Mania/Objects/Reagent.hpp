@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectReagent : Object {
+struct ObjectReagent : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityReagent : Entity {
 
 };
 
-// Object Entity
-extern ObjectReagent Reagent;
+// Object Struct
+extern ObjectReagent *Reagent;
 
 // Standard Entity Events
 void Reagent_Update();

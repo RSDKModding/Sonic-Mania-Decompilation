@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectERZStart : Object {
+struct ObjectERZStart : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityERZStart : Entity {
 
 };
 
-// Object Entity
-extern ObjectERZStart ERZStart;
+// Object Struct
+extern ObjectERZStart *ERZStart;
 
 // Standard Entity Events
 void ERZStart_Update();

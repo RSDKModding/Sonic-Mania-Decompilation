@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDebugMode : Object {
+struct ObjectDebugMode : Object{
     short objectIDs[0x100];
     void (*draw[0x100])();
     void (*spawn[0x100])();
@@ -24,8 +24,8 @@ struct EntityDebugMode : Entity {
 
 };
 
-// Object Entity
-extern ObjectDebugMode DebugMode;
+// Object Struct
+extern ObjectDebugMode *DebugMode;
 
 // Standard Entity Events
 void DebugMode_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTwistedTubes : Object {
+struct ObjectTwistedTubes : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTwistedTubes : Entity {
 
 };
 
-// Object Entity
-extern ObjectTwistedTubes TwistedTubes;
+// Object Struct
+extern ObjectTwistedTubes *TwistedTubes;
 
 // Standard Entity Events
 void TwistedTubes_Update();

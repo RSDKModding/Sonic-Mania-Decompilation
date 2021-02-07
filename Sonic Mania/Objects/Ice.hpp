@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectIce : Object {
+struct ObjectIce : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityIce : Entity {
 
 };
 
-// Object Entity
-extern ObjectIce Ice;
+// Object Struct
+extern ObjectIce *Ice;
 
 // Standard Entity Events
 void Ice_Update();

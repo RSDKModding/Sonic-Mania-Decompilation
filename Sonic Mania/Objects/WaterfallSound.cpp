@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWaterfallSound WaterfallSound;
+ObjectWaterfallSound *WaterfallSound;
 
 void WaterfallSound_Update()
 {

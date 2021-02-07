@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimeTravelSetup : Object {
+struct ObjectTimeTravelSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTimeTravelSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectTimeTravelSetup TimeTravelSetup;
+// Object Struct
+extern ObjectTimeTravelSetup *TimeTravelSetup;
 
 // Standard Entity Events
 void TimeTravelSetup_Update();

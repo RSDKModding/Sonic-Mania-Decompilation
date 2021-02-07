@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTVVan : Object {
+struct ObjectTVVan : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTVVan : Entity {
 
 };
 
-// Object Entity
-extern ObjectTVVan TVVan;
+// Object Struct
+extern ObjectTVVan *TVVan;
 
 // Standard Entity Events
 void TVVan_Update();

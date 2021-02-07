@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUITAZoneModule UITAZoneModule;
+ObjectUITAZoneModule *UITAZoneModule;
 
 void UITAZoneModule_Update()
 {

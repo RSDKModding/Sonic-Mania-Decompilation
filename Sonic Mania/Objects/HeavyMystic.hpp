@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHeavyMystic : Object {
+struct ObjectHeavyMystic : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHeavyMystic : Entity {
 
 };
 
-// Object Entity
-extern ObjectHeavyMystic HeavyMystic;
+// Object Struct
+extern ObjectHeavyMystic *HeavyMystic;
 
 // Standard Entity Events
 void HeavyMystic_Update();

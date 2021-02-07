@@ -13,7 +13,7 @@ extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 extern byte gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
 
 extern int maskColour;
-extern int inkValue;
+extern ushort* lookUpBuffer;
 
 #define RGB888_TO_RGB565(r, g, b)  ((b) >> 3) | (((g) >> 2) << 5) | (((r) >> 3) << 11)       // used in pc vers
 
@@ -48,7 +48,7 @@ inline void SetPaletteMask(uint colour)
     maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 }
 
-inline void SetInkValue(uint value) { inkValue = value; }
+inline void SetLookupTable(ushort *tablePtr) { lookUpBuffer = tablePtr; }
 
 inline void CopyPalette(byte sourcePalette, byte srcPaletteStart, byte destinationPalette, byte destPaletteStart, ushort count)
 {

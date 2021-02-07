@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTMZAlert : Object {
+struct ObjectTMZAlert : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTMZAlert : Entity {
 
 };
 
-// Object Entity
-extern ObjectTMZAlert TMZAlert;
+// Object Struct
+extern ObjectTMZAlert *TMZAlert;
 
 // Standard Entity Events
 void TMZAlert_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIOptionPanel UIOptionPanel;
+ObjectUIOptionPanel *UIOptionPanel;
 
 void UIOptionPanel_Update()
 {

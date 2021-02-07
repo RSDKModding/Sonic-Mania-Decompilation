@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectButtonDoor ButtonDoor;
+ObjectButtonDoor *ButtonDoor;
 
 void ButtonDoor_Update()
 {

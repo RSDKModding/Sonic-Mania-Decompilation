@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFXWaveRing FXWaveRing;
+ObjectFXWaveRing *FXWaveRing;
 
 void FXWaveRing_Update()
 {

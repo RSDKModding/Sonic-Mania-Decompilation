@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBlaster Blaster;
+ObjectBlaster *Blaster;
 
 void Blaster_Update()
 {

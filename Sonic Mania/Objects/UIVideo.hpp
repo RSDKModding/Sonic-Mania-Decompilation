@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVideo : Object {
+struct ObjectUIVideo : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIVideo : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIVideo UIVideo;
+// Object Struct
+extern ObjectUIVideo *UIVideo;
 
 // Standard Entity Events
 void UIVideo_Update();

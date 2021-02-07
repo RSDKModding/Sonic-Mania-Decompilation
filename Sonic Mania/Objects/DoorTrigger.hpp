@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDoorTrigger : Object {
+struct ObjectDoorTrigger : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDoorTrigger : Entity {
 
 };
 
-// Object Entity
-extern ObjectDoorTrigger DoorTrigger;
+// Object Struct
+extern ObjectDoorTrigger *DoorTrigger;
 
 // Standard Entity Events
 void DoorTrigger_Update();

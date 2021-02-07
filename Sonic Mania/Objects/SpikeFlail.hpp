@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikeFlail : Object {
+struct ObjectSpikeFlail : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpikeFlail : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpikeFlail SpikeFlail;
+// Object Struct
+extern ObjectSpikeFlail *SpikeFlail;
 
 // Standard Entity Events
 void SpikeFlail_Update();

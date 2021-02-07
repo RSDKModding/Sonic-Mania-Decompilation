@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoLevelSelect PuyoLevelSelect;
+ObjectPuyoLevelSelect *PuyoLevelSelect;
 
 void PuyoLevelSelect_Update()
 {

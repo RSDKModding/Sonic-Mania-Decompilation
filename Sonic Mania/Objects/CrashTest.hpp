@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCrashTest : Object {
+struct ObjectCrashTest : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCrashTest : Entity {
 
 };
 
-// Object Entity
-extern ObjectCrashTest CrashTest;
+// Object Struct
+extern ObjectCrashTest *CrashTest;
 
 // Standard Entity Events
 void CrashTest_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPrintBlock : Object {
+struct ObjectPrintBlock : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPrintBlock : Entity {
 
 };
 
-// Object Entity
-extern ObjectPrintBlock PrintBlock;
+// Object Struct
+extern ObjectPrintBlock *PrintBlock;
 
 // Standard Entity Events
 void PrintBlock_Update();

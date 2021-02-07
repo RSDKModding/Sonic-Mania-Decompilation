@@ -13,7 +13,7 @@ struct EntityPBL_Sector : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Sector PBL_Sector;
 
 // Standard Entity Events

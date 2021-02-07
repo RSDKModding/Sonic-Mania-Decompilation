@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBreakableWall : Object {
+struct ObjectBreakableWall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBreakableWall : Entity {
 
 };
 
-// Object Entity
-extern ObjectBreakableWall BreakableWall;
+// Object Struct
+extern ObjectBreakableWall *BreakableWall;
 
 // Standard Entity Events
 void BreakableWall_Update();

@@ -13,7 +13,7 @@ struct EntitySP500 : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectSP500 SP500;
 
 // Standard Entity Events

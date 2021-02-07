@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBladePole : Object {
+struct ObjectBladePole : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBladePole : Entity {
 
 };
 
-// Object Entity
-extern ObjectBladePole BladePole;
+// Object Struct
+extern ObjectBladePole *BladePole;
 
 // Standard Entity Events
 void BladePole_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTubinaut : Object {
+struct ObjectTubinaut : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTubinaut : Entity {
 
 };
 
-// Object Entity
-extern ObjectTubinaut Tubinaut;
+// Object Struct
+extern ObjectTubinaut *Tubinaut;
 
 // Standard Entity Events
 void Tubinaut_Update();

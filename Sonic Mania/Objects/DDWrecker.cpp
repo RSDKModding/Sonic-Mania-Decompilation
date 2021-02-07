@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDDWrecker DDWrecker;
+ObjectDDWrecker *DDWrecker;
 
 void DDWrecker_Update()
 {

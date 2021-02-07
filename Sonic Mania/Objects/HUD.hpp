@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHUD : Object {
+struct ObjectHUD : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHUD : Entity {
 
 };
 
-// Object Entity
-extern ObjectHUD HUD;
+// Object Struct
+extern ObjectHUD *HUD;
 
 // Standard Entity Events
 void HUD_Update();

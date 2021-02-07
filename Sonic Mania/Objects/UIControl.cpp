@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIControl UIControl;
+ObjectUIControl *UIControl;
 
 void UIControl_Update()
 {

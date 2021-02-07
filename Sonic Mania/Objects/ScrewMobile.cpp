@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectScrewMobile ScrewMobile;
+ObjectScrewMobile *ScrewMobile;
 
 void ScrewMobile_Update()
 {

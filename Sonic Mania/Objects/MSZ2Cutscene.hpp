@@ -13,7 +13,7 @@ struct EntityMSZ2Cutscene : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectMSZ2Cutscene MSZ2Cutscene;
 
 // Standard Entity Events

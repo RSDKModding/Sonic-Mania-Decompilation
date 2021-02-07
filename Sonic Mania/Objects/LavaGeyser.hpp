@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLavaGeyser : Object {
+struct ObjectLavaGeyser : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLavaGeyser : Entity {
 
 };
 
-// Object Entity
-extern ObjectLavaGeyser LavaGeyser;
+// Object Struct
+extern ObjectLavaGeyser *LavaGeyser;
 
 // Standard Entity Events
 void LavaGeyser_Update();

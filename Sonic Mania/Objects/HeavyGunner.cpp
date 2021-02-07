@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHeavyGunner HeavyGunner;
+ObjectHeavyGunner *HeavyGunner;
 
 void HeavyGunner_Update()
 {

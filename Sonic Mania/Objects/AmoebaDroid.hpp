@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAmoebaDroid : Object {
+struct ObjectAmoebaDroid : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAmoebaDroid : Entity {
 
 };
 
-// Object Entity
-extern ObjectAmoebaDroid AmoebaDroid;
+// Object Struct
+extern ObjectAmoebaDroid *AmoebaDroid;
 
 // Standard Entity Events
 void AmoebaDroid_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectChopper Chopper;
+ObjectChopper *Chopper;
 
 void Chopper_Update()
 {

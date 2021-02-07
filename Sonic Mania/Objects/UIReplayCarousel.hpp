@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIReplayCarousel : Object {
+struct ObjectUIReplayCarousel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIReplayCarousel : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIReplayCarousel UIReplayCarousel;
+// Object Struct
+extern ObjectUIReplayCarousel *UIReplayCarousel;
 
 // Standard Entity Events
 void UIReplayCarousel_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectStalactite : Object {
+struct ObjectStalactite : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityStalactite : Entity {
 
 };
 
-// Object Entity
-extern ObjectStalactite Stalactite;
+// Object Struct
+extern ObjectStalactite *Stalactite;
 
 // Standard Entity Events
 void Stalactite_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectOOZFlames : Object {
+struct ObjectOOZFlames : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityOOZFlames : Entity {
 
 };
 
-// Object Entity
-extern ObjectOOZFlames OOZFlames;
+// Object Struct
+extern ObjectOOZFlames *OOZFlames;
 
 // Standard Entity Events
 void OOZFlames_Update();

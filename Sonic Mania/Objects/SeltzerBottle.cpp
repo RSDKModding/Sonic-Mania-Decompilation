@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSeltzerBottle SeltzerBottle;
+ObjectSeltzerBottle *SeltzerBottle;
 
 void SeltzerBottle_Update()
 {

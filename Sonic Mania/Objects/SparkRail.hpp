@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSparkRail : Object {
+struct ObjectSparkRail : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySparkRail : Entity {
 
 };
 
-// Object Entity
-extern ObjectSparkRail SparkRail;
+// Object Struct
+extern ObjectSparkRail *SparkRail;
 
 // Standard Entity Events
 void SparkRail_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectShuriken Shuriken;
+ObjectShuriken *Shuriken;
 
 void Shuriken_Update()
 {

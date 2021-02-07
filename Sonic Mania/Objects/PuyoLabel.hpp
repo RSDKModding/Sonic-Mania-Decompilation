@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoLabel : Object {
+struct ObjectPuyoLabel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPuyoLabel : Entity {
 
 };
 
-// Object Entity
-extern ObjectPuyoLabel PuyoLabel;
+// Object Struct
+extern ObjectPuyoLabel *PuyoLabel;
 
 // Standard Entity Events
 void PuyoLabel_Update();

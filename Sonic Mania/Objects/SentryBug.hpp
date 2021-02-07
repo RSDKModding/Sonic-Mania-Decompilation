@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSentryBug : Object {
+struct ObjectSentryBug : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySentryBug : Entity {
 
 };
 
-// Object Entity
-extern ObjectSentryBug SentryBug;
+// Object Struct
+extern ObjectSentryBug *SentryBug;
 
 // Standard Entity Events
 void SentryBug_Update();

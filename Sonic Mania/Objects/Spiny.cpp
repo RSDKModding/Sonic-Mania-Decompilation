@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpiny Spiny;
+ObjectSpiny *Spiny;
 
 void Spiny_Update()
 {

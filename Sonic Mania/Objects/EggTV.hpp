@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEggTV : Object {
+struct ObjectEggTV : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityEggTV : Entity {
 
 };
 
-// Object Entity
-extern ObjectEggTV EggTV;
+// Object Struct
+extern ObjectEggTV *EggTV;
 
 // Standard Entity Events
 void EggTV_Update();

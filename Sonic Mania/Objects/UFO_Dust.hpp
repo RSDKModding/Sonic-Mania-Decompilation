@@ -13,7 +13,7 @@ struct EntityUFO_Dust : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_Dust UFO_Dust;
 
 // Standard Entity Events

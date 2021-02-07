@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectKabasira Kabasira;
+ObjectKabasira *Kabasira;
 
 void Kabasira_Update()
 {

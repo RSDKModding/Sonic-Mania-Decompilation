@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZSpiral : Object {
+struct ObjectLRZSpiral : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZSpiral : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZSpiral LRZSpiral;
+// Object Struct
+extern ObjectLRZSpiral *LRZSpiral;
 
 // Standard Entity Events
 void LRZSpiral_Update();

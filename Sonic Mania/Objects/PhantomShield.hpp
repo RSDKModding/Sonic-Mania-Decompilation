@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomShield : Object {
+struct ObjectPhantomShield : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPhantomShield : Entity {
 
 };
 
-// Object Entity
-extern ObjectPhantomShield PhantomShield;
+// Object Struct
+extern ObjectPhantomShield *PhantomShield;
 
 // Standard Entity Events
 void PhantomShield_Update();

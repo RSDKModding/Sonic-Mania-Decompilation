@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectButton Button;
+ObjectButton *Button;
 
 void Button_Update()
 {

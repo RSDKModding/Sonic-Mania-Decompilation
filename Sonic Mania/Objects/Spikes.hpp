@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikes : Object {
+struct ObjectSpikes : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpikes : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpikes Spikes;
+// Object Struct
+extern ObjectSpikes *Spikes;
 
 // Standard Entity Events
 void Spikes_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpring : Object {
+struct ObjectSpring : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpring : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpring Spring;
+// Object Struct
+extern ObjectSpring *Spring;
 
 // Standard Entity Events
 void Spring_Update();

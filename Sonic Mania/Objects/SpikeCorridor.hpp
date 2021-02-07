@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikeCorridor : Object {
+struct ObjectSpikeCorridor : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpikeCorridor : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpikeCorridor SpikeCorridor;
+// Object Struct
+extern ObjectSpikeCorridor *SpikeCorridor;
 
 // Standard Entity Events
 void SpikeCorridor_Update();

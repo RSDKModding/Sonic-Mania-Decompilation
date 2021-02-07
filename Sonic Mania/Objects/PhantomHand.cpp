@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomHand PhantomHand;
+ObjectPhantomHand *PhantomHand;
 
 void PhantomHand_Update()
 {

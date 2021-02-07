@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZKingClaw AIZKingClaw;
+ObjectAIZKingClaw *AIZKingClaw;
 
 void AIZKingClaw_Update()
 {

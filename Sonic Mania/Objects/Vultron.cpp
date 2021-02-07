@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectVultron Vultron;
+ObjectVultron *Vultron;
 
 void Vultron_Update()
 {

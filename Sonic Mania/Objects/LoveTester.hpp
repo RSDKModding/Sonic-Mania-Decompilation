@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLoveTester : Object {
+struct ObjectLoveTester : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLoveTester : Entity {
 
 };
 
-// Object Entity
-extern ObjectLoveTester LoveTester;
+// Object Struct
+extern ObjectLoveTester *LoveTester;
 
 // Standard Entity Events
 void LoveTester_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectChemBubble : Object {
+struct ObjectChemBubble : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityChemBubble : Entity {
 
 };
 
-// Object Entity
-extern ObjectChemBubble ChemBubble;
+// Object Struct
+extern ObjectChemBubble *ChemBubble;
 
 // Standard Entity Events
 void ChemBubble_Update();

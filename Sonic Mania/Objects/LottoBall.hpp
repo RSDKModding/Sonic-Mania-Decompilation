@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLottoBall : Object {
+struct ObjectLottoBall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLottoBall : Entity {
 
 };
 
-// Object Entity
-extern ObjectLottoBall LottoBall;
+// Object Struct
+extern ObjectLottoBall *LottoBall;
 
 // Standard Entity Events
 void LottoBall_Update();

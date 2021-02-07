@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRockDrill : Object {
+struct ObjectRockDrill : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRockDrill : Entity {
 
 };
 
-// Object Entity
-extern ObjectRockDrill RockDrill;
+// Object Struct
+extern ObjectRockDrill *RockDrill;
 
 // Standard Entity Events
 void RockDrill_Update();

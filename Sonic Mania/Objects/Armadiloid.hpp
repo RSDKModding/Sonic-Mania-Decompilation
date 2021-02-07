@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectArmadiloid : Object {
+struct ObjectArmadiloid : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityArmadiloid : Entity {
 
 };
 
-// Object Entity
-extern ObjectArmadiloid Armadiloid;
+// Object Struct
+extern ObjectArmadiloid *Armadiloid;
 
 // Standard Entity Events
 void Armadiloid_Update();

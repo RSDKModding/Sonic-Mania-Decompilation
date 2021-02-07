@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectToxomister : Object {
+struct ObjectToxomister : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityToxomister : Entity {
 
 };
 
-// Object Entity
-extern ObjectToxomister Toxomister;
+// Object Struct
+extern ObjectToxomister *Toxomister;
 
 // Standard Entity Events
 void Toxomister_Update();

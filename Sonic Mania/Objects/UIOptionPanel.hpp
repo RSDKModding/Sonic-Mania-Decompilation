@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIOptionPanel : Object {
+struct ObjectUIOptionPanel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIOptionPanel : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIOptionPanel UIOptionPanel;
+// Object Struct
+extern ObjectUIOptionPanel *UIOptionPanel;
 
 // Standard Entity Events
 void UIOptionPanel_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSOrb : Object {
+struct ObjectMSOrb : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSOrb : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSOrb MSOrb;
+// Object Struct
+extern ObjectMSOrb *MSOrb;
 
 // Standard Entity Events
 void MSOrb_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZMystic ERZMystic;
+ObjectERZMystic *ERZMystic;
 
 void ERZMystic_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpeedBooster : Object {
+struct ObjectSpeedBooster : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpeedBooster : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpeedBooster SpeedBooster;
+// Object Struct
+extern ObjectSpeedBooster *SpeedBooster;
 
 // Standard Entity Events
 void SpeedBooster_Update();

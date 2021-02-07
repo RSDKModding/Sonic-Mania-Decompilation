@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMonkeyDude MonkeyDude;
+ObjectMonkeyDude *MonkeyDude;
 
 void MonkeyDude_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimeAttackMenu : Object {
+struct ObjectTimeAttackMenu : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTimeAttackMenu : Entity {
 
 };
 
-// Object Entity
-extern ObjectTimeAttackMenu TimeAttackMenu;
+// Object Struct
+extern ObjectTimeAttackMenu *TimeAttackMenu;
 
 // Standard Entity Events
 void TimeAttackMenu_Update();

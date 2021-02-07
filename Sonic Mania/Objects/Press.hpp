@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPress : Object {
+struct ObjectPress : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPress : Entity {
 
 };
 
-// Object Entity
-extern ObjectPress Press;
+// Object Struct
+extern ObjectPress *Press;
 
 // Standard Entity Events
 void Press_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDirectorChair DirectorChair;
+ObjectDirectorChair *DirectorChair;
 
 void DirectorChair_Update()
 {

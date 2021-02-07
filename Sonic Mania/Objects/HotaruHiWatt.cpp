@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHotaruHiWatt HotaruHiWatt;
+ObjectHotaruHiWatt *HotaruHiWatt;
 
 void HotaruHiWatt_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSol Sol;
+ObjectSol *Sol;
 
 void Sol_Update()
 {

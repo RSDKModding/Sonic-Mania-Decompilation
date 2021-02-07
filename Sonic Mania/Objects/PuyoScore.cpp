@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoScore PuyoScore;
+ObjectPuyoScore *PuyoScore;
 
 void PuyoScore_Update()
 {

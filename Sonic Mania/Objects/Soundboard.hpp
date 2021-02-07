@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSoundboard : Object {
+struct ObjectSoundboard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySoundboard : Entity {
 
 };
 
-// Object Entity
-extern ObjectSoundboard Soundboard;
+// Object Struct
+extern ObjectSoundboard *Soundboard;
 
 // Standard Entity Events
 void Soundboard_Update();

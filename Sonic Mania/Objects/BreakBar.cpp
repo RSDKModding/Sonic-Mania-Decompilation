@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBreakBar BreakBar;
+ObjectBreakBar *BreakBar;
 
 void BreakBar_Update()
 {

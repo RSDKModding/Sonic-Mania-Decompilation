@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectOOZFlames OOZFlames;
+ObjectOOZFlames *OOZFlames;
 
 void OOZFlames_Update()
 {

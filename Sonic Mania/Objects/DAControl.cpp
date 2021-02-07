@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDAControl DAControl;
+ObjectDAControl *DAControl;
 
 void DAControl_Update()
 {

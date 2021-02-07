@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGHZCutsceneST : Object {
+struct ObjectGHZCutsceneST : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGHZCutsceneST : Entity {
 
 };
 
-// Object Entity
-extern ObjectGHZCutsceneST GHZCutsceneST;
+// Object Struct
+extern ObjectGHZCutsceneST *GHZCutsceneST;
 
 // Standard Entity Events
 void GHZCutsceneST_Update();

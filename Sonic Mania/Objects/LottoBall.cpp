@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLottoBall LottoBall;
+ObjectLottoBall *LottoBall;
 
 void LottoBall_Update()
 {

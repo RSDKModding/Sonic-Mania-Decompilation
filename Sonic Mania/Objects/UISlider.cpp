@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUISlider UISlider;
+ObjectUISlider *UISlider;
 
 void UISlider_Update()
 {

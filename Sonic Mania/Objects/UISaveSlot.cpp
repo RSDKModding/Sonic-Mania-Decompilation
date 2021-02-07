@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUISaveSlot UISaveSlot;
+ObjectUISaveSlot *UISaveSlot;
 
 void UISaveSlot_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPaperRoller PaperRoller;
+ObjectPaperRoller *PaperRoller;
 
 void PaperRoller_Update()
 {

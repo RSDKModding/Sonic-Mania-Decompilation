@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMagPlatform : Object {
+struct ObjectMagPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMagPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectMagPlatform MagPlatform;
+// Object Struct
+extern ObjectMagPlatform *MagPlatform;
 
 // Standard Entity Events
 void MagPlatform_Update();

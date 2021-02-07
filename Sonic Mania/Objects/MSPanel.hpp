@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSPanel : Object {
+struct ObjectMSPanel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSPanel : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSPanel MSPanel;
+// Object Struct
+extern ObjectMSPanel *MSPanel;
 
 // Standard Entity Events
 void MSPanel_Update();

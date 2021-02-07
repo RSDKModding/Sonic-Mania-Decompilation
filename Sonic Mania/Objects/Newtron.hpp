@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectNewtron : Object {
+struct ObjectNewtron : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityNewtron : Entity {
 
 };
 
-// Object Entity
-extern ObjectNewtron Newtron;
+// Object Struct
+extern ObjectNewtron *Newtron;
 
 // Standard Entity Events
 void Newtron_Update();

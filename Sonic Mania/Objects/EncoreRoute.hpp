@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEncoreRoute : Object {
+struct ObjectEncoreRoute : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityEncoreRoute : Entity {
 
 };
 
-// Object Entity
-extern ObjectEncoreRoute EncoreRoute;
+// Object Struct
+extern ObjectEncoreRoute *EncoreRoute;
 
 // Standard Entity Events
 void EncoreRoute_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectManiaModeMenu : Object {
+struct ObjectManiaModeMenu : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityManiaModeMenu : Entity {
 
 };
 
-// Object Entity
-extern ObjectManiaModeMenu ManiaModeMenu;
+// Object Struct
+extern ObjectManiaModeMenu *ManiaModeMenu;
 
 // Standard Entity Events
 void ManiaModeMenu_Update();

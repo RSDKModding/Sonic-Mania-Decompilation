@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBarStool : Object {
+struct ObjectBarStool : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBarStool : Entity {
 
 };
 
-// Object Entity
-extern ObjectBarStool BarStool;
+// Object Struct
+extern ObjectBarStool *BarStool;
 
 // Standard Entity Events
 void BarStool_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLocoSmoke : Object {
+struct ObjectLocoSmoke : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLocoSmoke : Entity {
 
 };
 
-// Object Entity
-extern ObjectLocoSmoke LocoSmoke;
+// Object Struct
+extern ObjectLocoSmoke *LocoSmoke;
 
 // Standard Entity Events
 void LocoSmoke_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGrabber Grabber;
+ObjectGrabber *Grabber;
 
 void Grabber_Update()
 {

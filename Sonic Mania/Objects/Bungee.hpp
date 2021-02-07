@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBungee : Object {
+struct ObjectBungee : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBungee : Entity {
 
 };
 
-// Object Entity
-extern ObjectBungee Bungee;
+// Object Struct
+extern ObjectBungee *Bungee;
 
 // Standard Entity Events
 void Bungee_Update();

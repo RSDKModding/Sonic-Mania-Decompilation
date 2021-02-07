@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZRockPile AIZRockPile;
+ObjectAIZRockPile *AIZRockPile;
 
 void AIZRockPile_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectNewspaper Newspaper;
+ObjectNewspaper *Newspaper;
 
 void Newspaper_Update()
 {

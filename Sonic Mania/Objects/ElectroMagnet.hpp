@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectElectroMagnet : Object {
+struct ObjectElectroMagnet : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityElectroMagnet : Entity {
 
 };
 
-// Object Entity
-extern ObjectElectroMagnet ElectroMagnet;
+// Object Struct
+extern ObjectElectroMagnet *ElectroMagnet;
 
 // Standard Entity Events
 void ElectroMagnet_Update();

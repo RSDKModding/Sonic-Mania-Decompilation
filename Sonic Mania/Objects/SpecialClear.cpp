@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpecialClear SpecialClear;
+ObjectSpecialClear *SpecialClear;
 
 void SpecialClear_Update()
 {

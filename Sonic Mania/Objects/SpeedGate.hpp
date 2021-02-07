@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpeedGate : Object {
+struct ObjectSpeedGate : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpeedGate : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpeedGate SpeedGate;
+// Object Struct
+extern ObjectSpeedGate *SpeedGate;
 
 // Standard Entity Events
 void SpeedGate_Update();

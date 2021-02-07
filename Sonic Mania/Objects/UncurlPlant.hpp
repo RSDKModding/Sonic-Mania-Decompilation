@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUncurlPlant : Object {
+struct ObjectUncurlPlant : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUncurlPlant : Entity {
 
 };
 
-// Object Entity
-extern ObjectUncurlPlant UncurlPlant;
+// Object Struct
+extern ObjectUncurlPlant *UncurlPlant;
 
 // Standard Entity Events
 void UncurlPlant_Update();

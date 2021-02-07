@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDiveEggman DiveEggman;
+ObjectDiveEggman *DiveEggman;
 
 void DiveEggman_Update()
 {

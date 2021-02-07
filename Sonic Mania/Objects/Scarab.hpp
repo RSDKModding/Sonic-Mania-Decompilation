@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectScarab : Object {
+struct ObjectScarab : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityScarab : Entity {
 
 };
 
-// Object Entity
-extern ObjectScarab Scarab;
+// Object Struct
+extern ObjectScarab *Scarab;
 
 // Standard Entity Events
 void Scarab_Update();

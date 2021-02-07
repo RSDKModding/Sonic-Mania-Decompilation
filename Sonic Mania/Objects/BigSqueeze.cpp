@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBigSqueeze BigSqueeze;
+ObjectBigSqueeze *BigSqueeze;
 
 void BigSqueeze_Update()
 {

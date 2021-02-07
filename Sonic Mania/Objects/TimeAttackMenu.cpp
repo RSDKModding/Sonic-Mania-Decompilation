@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTimeAttackMenu TimeAttackMenu;
+ObjectTimeAttackMenu *TimeAttackMenu;
 
 void TimeAttackMenu_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDashLift : Object {
+struct ObjectDashLift : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDashLift : Entity {
 
 };
 
-// Object Entity
-extern ObjectDashLift DashLift;
+// Object Struct
+extern ObjectDashLift *DashLift;
 
 // Standard Entity Events
 void DashLift_Update();

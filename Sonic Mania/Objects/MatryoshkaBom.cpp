@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMatryoshkaBom MatryoshkaBom;
+ObjectMatryoshkaBom *MatryoshkaBom;
 
 void MatryoshkaBom_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIMedallionPanel : Object {
+struct ObjectUIMedallionPanel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIMedallionPanel : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIMedallionPanel UIMedallionPanel;
+// Object Struct
+extern ObjectUIMedallionPanel *UIMedallionPanel;
 
 // Standard Entity Events
 void UIMedallionPanel_Update();

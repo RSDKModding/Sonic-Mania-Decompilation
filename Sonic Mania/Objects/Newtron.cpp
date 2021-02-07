@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectNewtron Newtron;
+ObjectNewtron *Newtron;
 
 void Newtron_Update()
 {

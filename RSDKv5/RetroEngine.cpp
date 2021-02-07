@@ -207,7 +207,8 @@ bool processEvents()
 }
 
 void initRetroEngine() { 
-    
+    InitialiseUserStorage();
+
     CheckDataFile("Data.rsdk");
     //if (CheckDataFile("Data.rsdk"))
     //    DevMenuEnabled = Engine_GetSettingsBool(0) != 0;
@@ -359,6 +360,7 @@ void runRetroEngine() {
     ReleaseAudioDevice();
     ReleaseRenderDevice();
     //writeSettings();
+    ReleaseUserStorage();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
     SDL_Quit();
@@ -503,7 +505,7 @@ void LoadGameConfig()
         sceneInfo.categoryCount = ReadInt8(&info);
 
         int sceneID = 0;
-        for (int i = 0; i < sceneListCount; ++i) {
+        for (int i = 0; i < sceneInfo.categoryCount; ++i) {
             ReadString(&info, hashBuffer);
             GenerateHash(sceneLists[i].hash, StrLength(hashBuffer));
 
@@ -538,9 +540,9 @@ void InitScriptSystem()
 {
     setupFunctions();
 
-    CreateObject(&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL, NULL, NULL,
+    CreateObject((Object**)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL, NULL, NULL,
                  DefaultObject_Create, NULL, NULL, NULL, NULL);
-    CreateObject(&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
+    CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
     globalObjectIDs[0] = 0;
     globalObjectIDs[1] = 1;

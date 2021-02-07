@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTryAgain TryAgain;
+ObjectTryAgain *TryAgain;
 
 void TryAgain_Update()
 {

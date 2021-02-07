@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTechnosqueek : Object {
+struct ObjectTechnosqueek : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTechnosqueek : Entity {
 
 };
 
-// Object Entity
-extern ObjectTechnosqueek Technosqueek;
+// Object Struct
+extern ObjectTechnosqueek *Technosqueek;
 
 // Standard Entity Events
 void Technosqueek_Update();

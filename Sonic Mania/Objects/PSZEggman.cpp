@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPSZEggman PSZEggman;
+ObjectPSZEggman *PSZEggman;
 
 void PSZEggman_Update()
 {

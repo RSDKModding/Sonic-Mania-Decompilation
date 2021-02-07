@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTVPole : Object {
+struct ObjectTVPole : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTVPole : Entity {
 
 };
 
-// Object Entity
-extern ObjectTVPole TVPole;
+// Object Struct
+extern ObjectTVPole *TVPole;
 
 // Standard Entity Events
 void TVPole_Update();

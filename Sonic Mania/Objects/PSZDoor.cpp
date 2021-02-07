@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPSZDoor PSZDoor;
+ObjectPSZDoor *PSZDoor;
 
 void PSZDoor_Update()
 {

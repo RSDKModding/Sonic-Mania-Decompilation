@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectElectroMagnet ElectroMagnet;
+ObjectElectroMagnet *ElectroMagnet;
 
 void ElectroMagnet_Update()
 {

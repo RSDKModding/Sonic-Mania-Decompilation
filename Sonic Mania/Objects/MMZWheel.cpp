@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMMZWheel MMZWheel;
+ObjectMMZWheel *MMZWheel;
 
 void MMZWheel_Update()
 {

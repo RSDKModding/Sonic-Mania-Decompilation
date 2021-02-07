@@ -57,6 +57,7 @@ enum GamePlatforms {
 // Utils
 #include "iniparser/iniparser.h"
 
+#include "Storage.hpp"
 #include "Math.hpp"
 #include "Text.hpp"
 #include "Reader.hpp"
@@ -152,7 +153,7 @@ inline void SetEngineState(byte state)
 extern int *gameOptionsPtr;
 
 inline void InitGameOptions(void* options, int size) {
-    AllocateStorage(size, options, DATASET_STG, true);
+    AllocateStorage(size, &options, DATASET_STG, true);
     gameOptionsPtr = (int*)options;
 }
 

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSyringe Syringe;
+ObjectSyringe *Syringe;
 
 void Syringe_Update()
 {

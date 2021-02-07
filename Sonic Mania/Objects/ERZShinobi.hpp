@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectERZShinobi : Object {
+struct ObjectERZShinobi : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityERZShinobi : Entity {
 
 };
 
-// Object Entity
-extern ObjectERZShinobi ERZShinobi;
+// Object Struct
+extern ObjectERZShinobi *ERZShinobi;
 
 // Standard Entity Events
 void ERZShinobi_Update();

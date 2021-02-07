@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomEgg PhantomEgg;
+ObjectPhantomEgg *PhantomEgg;
 
 void PhantomEgg_Update()
 {

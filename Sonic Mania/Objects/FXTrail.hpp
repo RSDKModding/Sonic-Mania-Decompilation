@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXTrail : Object {
+struct ObjectFXTrail : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFXTrail : Entity {
 
 };
 
-// Object Entity
-extern ObjectFXTrail FXTrail;
+// Object Struct
+extern ObjectFXTrail *FXTrail;
 
 // Standard Entity Events
 void FXTrail_Update();

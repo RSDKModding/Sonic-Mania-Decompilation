@@ -93,7 +93,7 @@ struct ObjectInfo {
     void (*editorDraw)(void);
     void (*editorLoad)(void);
     void (*serialize)(void);
-    Object *type;
+    Object **type;
     int entitySize;
     int objectSize;
 };        
@@ -132,10 +132,10 @@ extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 extern bool32 validDraw;
 
-void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
-void CreateObjectContainer(Object *structPtr, const char *name, uint objectSize);
+void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize);
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos);
 

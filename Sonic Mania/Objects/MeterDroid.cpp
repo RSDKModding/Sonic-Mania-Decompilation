@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMeterDroid MeterDroid;
+ObjectMeterDroid *MeterDroid;
 
 void MeterDroid_Update()
 {

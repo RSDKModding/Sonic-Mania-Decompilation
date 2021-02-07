@@ -13,7 +13,7 @@ struct EntityFBZ1Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectFBZ1Outro FBZ1Outro;
 
 // Standard Entity Events

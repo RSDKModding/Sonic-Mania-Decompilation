@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurntable : Object {
+struct ObjectTurntable : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTurntable : Entity {
 
 };
 
-// Object Entity
-extern ObjectTurntable Turntable;
+// Object Struct
+extern ObjectTurntable *Turntable;
 
 // Standard Entity Events
 void Turntable_Update();

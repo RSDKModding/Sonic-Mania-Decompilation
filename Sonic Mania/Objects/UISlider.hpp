@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUISlider : Object {
+struct ObjectUISlider : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUISlider : Entity {
 
 };
 
-// Object Entity
-extern ObjectUISlider UISlider;
+// Object Struct
+extern ObjectUISlider *UISlider;
 
 // Standard Entity Events
 void UISlider_Update();

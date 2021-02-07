@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSkyTeleporter SkyTeleporter;
+ObjectSkyTeleporter *SkyTeleporter;
 
 void SkyTeleporter_Update()
 {

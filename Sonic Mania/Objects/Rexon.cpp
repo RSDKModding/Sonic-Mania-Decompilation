@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRexon Rexon;
+ObjectRexon *Rexon;
 
 void Rexon_Update()
 {

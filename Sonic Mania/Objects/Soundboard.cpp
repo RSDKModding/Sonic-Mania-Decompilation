@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSoundboard Soundboard;
+ObjectSoundboard *Soundboard;
 
 void Soundboard_Update()
 {

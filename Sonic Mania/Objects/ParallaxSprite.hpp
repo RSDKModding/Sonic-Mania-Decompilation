@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectParallaxSprite : Object {
+struct ObjectParallaxSprite : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityParallaxSprite : Entity {
 
 };
 
-// Object Entity
-extern ObjectParallaxSprite ParallaxSprite;
+// Object Struct
+extern ObjectParallaxSprite *ParallaxSprite;
 
 // Standard Entity Events
 void ParallaxSprite_Update();

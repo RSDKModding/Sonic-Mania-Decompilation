@@ -13,7 +13,7 @@ struct EntityLRZ3Cutscene : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectLRZ3Cutscene LRZ3Cutscene;
 
 // Standard Entity Events

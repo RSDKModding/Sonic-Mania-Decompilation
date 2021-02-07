@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFlipper Flipper;
+ObjectFlipper *Flipper;
 
 void Flipper_Update()
 {

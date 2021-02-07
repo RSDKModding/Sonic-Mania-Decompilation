@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMechaBu : Object {
+struct ObjectMechaBu : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMechaBu : Entity {
 
 };
 
-// Object Entity
-extern ObjectMechaBu MechaBu;
+// Object Struct
+extern ObjectMechaBu *MechaBu;
 
 // Standard Entity Events
 void MechaBu_Update();

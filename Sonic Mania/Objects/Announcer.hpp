@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAnnouncer : Object {
+struct ObjectAnnouncer : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAnnouncer : Entity {
 
 };
 
-// Object Entity
-extern ObjectAnnouncer Announcer;
+// Object Struct
+extern ObjectAnnouncer *Announcer;
 
 // Standard Entity Events
 void Announcer_Update();

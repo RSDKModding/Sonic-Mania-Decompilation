@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTTCutscene : Object {
+struct ObjectTTCutscene : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTTCutscene : Entity {
 
 };
 
-// Object Entity
-extern ObjectTTCutscene TTCutscene;
+// Object Struct
+extern ObjectTTCutscene *TTCutscene;
 
 // Standard Entity Events
 void TTCutscene_Update();

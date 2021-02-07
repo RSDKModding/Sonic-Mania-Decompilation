@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFarPlane FarPlane;
+ObjectFarPlane *FarPlane;
 
 void FarPlane_Update()
 {

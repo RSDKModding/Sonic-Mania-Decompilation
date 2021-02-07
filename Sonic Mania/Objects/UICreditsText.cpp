@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUICreditsText UICreditsText;
+ObjectUICreditsText *UICreditsText;
 
 void UICreditsText_Update()
 {

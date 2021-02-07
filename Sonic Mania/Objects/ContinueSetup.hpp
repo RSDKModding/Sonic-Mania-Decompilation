@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectContinueSetup : Object {
+struct ObjectContinueSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityContinueSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectContinueSetup ContinueSetup;
+// Object Struct
+extern ObjectContinueSetup *ContinueSetup;
 
 // Standard Entity Events
 void ContinueSetup_Update();

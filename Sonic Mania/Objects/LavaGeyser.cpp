@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLavaGeyser LavaGeyser;
+ObjectLavaGeyser *LavaGeyser;
 
 void LavaGeyser_Update()
 {

@@ -13,7 +13,7 @@ struct EntityUFO_Message : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_Message UFO_Message;
 
 // Standard Entity Events

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIButton UIButton;
+ObjectUIButton *UIButton;
 
 void UIButton_Update()
 {

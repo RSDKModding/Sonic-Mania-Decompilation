@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTitleSonic TitleSonic;
+ObjectTitleSonic *TitleSonic;
 
 void TitleSonic_Update()
 {

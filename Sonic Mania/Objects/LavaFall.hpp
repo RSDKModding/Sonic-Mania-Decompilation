@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLavaFall : Object {
+struct ObjectLavaFall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLavaFall : Entity {
 
 };
 
-// Object Entity
-extern ObjectLavaFall LavaFall;
+// Object Struct
+extern ObjectLavaFall *LavaFall;
 
 // Standard Entity Events
 void LavaFall_Update();

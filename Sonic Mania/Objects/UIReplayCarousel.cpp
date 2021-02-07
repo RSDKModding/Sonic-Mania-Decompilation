@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIReplayCarousel UIReplayCarousel;
+ObjectUIReplayCarousel *UIReplayCarousel;
 
 void UIReplayCarousel_Update()
 {

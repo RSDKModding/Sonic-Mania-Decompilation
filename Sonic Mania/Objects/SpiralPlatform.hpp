@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpiralPlatform : Object {
+struct ObjectSpiralPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpiralPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpiralPlatform SpiralPlatform;
+// Object Struct
+extern ObjectSpiralPlatform *SpiralPlatform;
 
 // Standard Entity Events
 void SpiralPlatform_Update();

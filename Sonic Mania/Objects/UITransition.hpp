@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUITransition : Object {
+struct ObjectUITransition : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUITransition : Entity {
 
 };
 
-// Object Entity
-extern ObjectUITransition UITransition;
+// Object Struct
+extern ObjectUITransition *UITransition;
 
 // Standard Entity Events
 void UITransition_Update();

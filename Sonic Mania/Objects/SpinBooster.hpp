@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpinBooster : Object {
+struct ObjectSpinBooster : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpinBooster : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpinBooster SpinBooster;
+// Object Struct
+extern ObjectSpinBooster *SpinBooster;
 
 // Standard Entity Events
 void SpinBooster_Update();

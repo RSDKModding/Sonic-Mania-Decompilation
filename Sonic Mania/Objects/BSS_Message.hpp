@@ -13,7 +13,7 @@ struct EntityBSS_Message : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_Message BSS_Message;
 
 // Standard Entity Events

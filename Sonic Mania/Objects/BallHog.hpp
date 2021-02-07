@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBallHog : Object {
+struct ObjectBallHog : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBallHog : Entity {
 
 };
 
-// Object Entity
-extern ObjectBallHog BallHog;
+// Object Struct
+extern ObjectBallHog *BallHog;
 
 // Standard Entity Events
 void BallHog_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpiny : Object {
+struct ObjectSpiny : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpiny : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpiny Spiny;
+// Object Struct
+extern ObjectSpiny *Spiny;
 
 // Standard Entity Events
 void Spiny_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZFireball : Object {
+struct ObjectLRZFireball : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZFireball : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZFireball LRZFireball;
+// Object Struct
+extern ObjectLRZFireball *LRZFireball;
 
 // Standard Entity Events
 void LRZFireball_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSilverSonic SilverSonic;
+ObjectSilverSonic *SilverSonic;
 
 void SilverSonic_Update()
 {

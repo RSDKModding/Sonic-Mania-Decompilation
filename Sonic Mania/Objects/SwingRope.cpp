@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSwingRope SwingRope;
+ObjectSwingRope *SwingRope;
 
 void SwingRope_Update()
 {

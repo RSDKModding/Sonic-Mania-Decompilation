@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoMatch PuyoMatch;
+ObjectPuyoMatch *PuyoMatch;
 
 void PuyoMatch_Update()
 {

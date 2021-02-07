@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPimPom PimPom;
+ObjectPimPom *PimPom;
 
 void PimPom_Update()
 {

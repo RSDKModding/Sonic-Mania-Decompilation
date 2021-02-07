@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectRubyPortal RubyPortal;
+ObjectRubyPortal *RubyPortal;
 
 void RubyPortal_Update()
 {

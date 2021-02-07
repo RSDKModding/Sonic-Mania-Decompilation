@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZStart ERZStart;
+ObjectERZStart *ERZStart;
 
 void ERZStart_Update()
 {

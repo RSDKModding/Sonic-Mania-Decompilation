@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPimPom : Object {
+struct ObjectPimPom : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPimPom : Entity {
 
 };
 
-// Object Entity
-extern ObjectPimPom PimPom;
+// Object Struct
+extern ObjectPimPom *PimPom;
 
 // Standard Entity Events
 void PimPom_Update();

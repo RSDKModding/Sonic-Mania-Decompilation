@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWoodrow : Object {
+struct ObjectWoodrow : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityWoodrow : Entity {
 
 };
 
-// Object Entity
-extern ObjectWoodrow Woodrow;
+// Object Struct
+extern ObjectWoodrow *Woodrow;
 
 // Standard Entity Events
 void Woodrow_Update();

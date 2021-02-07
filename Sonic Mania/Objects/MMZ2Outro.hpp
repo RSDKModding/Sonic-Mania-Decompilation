@@ -13,7 +13,7 @@ struct EntityMMZ2Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectMMZ2Outro MMZ2Outro;
 
 // Standard Entity Events

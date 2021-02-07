@@ -13,7 +13,7 @@ struct EntityPBL_Ring : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Ring PBL_Ring;
 
 // Standard Entity Events

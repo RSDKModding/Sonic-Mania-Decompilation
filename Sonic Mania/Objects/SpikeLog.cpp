@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpikeLog SpikeLog;
+ObjectSpikeLog *SpikeLog;
 
 void SpikeLog_Update()
 {

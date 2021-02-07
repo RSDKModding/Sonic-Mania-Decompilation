@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCompetitionMenu CompetitionMenu;
+ObjectCompetitionMenu *CompetitionMenu;
 
 void CompetitionMenu_Update()
 {

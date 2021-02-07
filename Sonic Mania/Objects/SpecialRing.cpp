@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpecialRing SpecialRing;
+ObjectSpecialRing *SpecialRing;
 
 void SpecialRing_Update()
 {

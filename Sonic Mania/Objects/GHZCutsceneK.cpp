@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGHZCutsceneK GHZCutsceneK;
+ObjectGHZCutsceneK *GHZCutsceneK;
 
 void GHZCutsceneK_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWhirlpool Whirlpool;
+ObjectWhirlpool *Whirlpool;
 
 void Whirlpool_Update()
 {

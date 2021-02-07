@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCPZShutter CPZShutter;
+ObjectCPZShutter *CPZShutter;
 
 void CPZShutter_Update()
 {

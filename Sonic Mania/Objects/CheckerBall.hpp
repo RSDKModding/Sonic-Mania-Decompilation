@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCheckerBall : Object {
+struct ObjectCheckerBall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCheckerBall : Entity {
 
 };
 
-// Object Entity
-extern ObjectCheckerBall CheckerBall;
+// Object Struct
+extern ObjectCheckerBall *CheckerBall;
 
 // Standard Entity Events
 void CheckerBall_Update();

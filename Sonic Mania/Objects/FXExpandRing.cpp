@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFXExpandRing FXExpandRing;
+ObjectFXExpandRing *FXExpandRing;
 
 void FXExpandRing_Update()
 {

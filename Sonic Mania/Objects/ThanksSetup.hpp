@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectThanksSetup : Object {
+struct ObjectThanksSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityThanksSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectThanksSetup ThanksSetup;
+// Object Struct
+extern ObjectThanksSetup *ThanksSetup;
 
 // Standard Entity Events
 void ThanksSetup_Update();

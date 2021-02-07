@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectClapperboard : Object {
+struct ObjectClapperboard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityClapperboard : Entity {
 
 };
 
-// Object Entity
-extern ObjectClapperboard Clapperboard;
+// Object Struct
+extern ObjectClapperboard *Clapperboard;
 
 // Standard Entity Events
 void Clapperboard_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSyringe : Object {
+struct ObjectSyringe : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySyringe : Entity {
 
 };
 
-// Object Entity
-extern ObjectSyringe Syringe;
+// Object Struct
+extern ObjectSyringe *Syringe;
 
 // Standard Entity Events
 void Syringe_Update();

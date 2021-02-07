@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBridge : Object {
+struct ObjectBridge : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBridge : Entity {
 
 };
 
-// Object Entity
-extern ObjectBridge Bridge;
+// Object Struct
+extern ObjectBridge *Bridge;
 
 // Standard Entity Events
 void Bridge_Update();

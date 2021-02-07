@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBGSwitch BGSwitch;
+ObjectBGSwitch *BGSwitch;
 
 void BGSwitch_Update()
 {

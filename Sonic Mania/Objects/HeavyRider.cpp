@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHeavyRider HeavyRider;
+ObjectHeavyRider *HeavyRider;
 
 void HeavyRider_Update()
 {

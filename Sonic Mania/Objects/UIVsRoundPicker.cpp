@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIVsRoundPicker UIVsRoundPicker;
+ObjectUIVsRoundPicker *UIVsRoundPicker;
 
 void UIVsRoundPicker_Update()
 {

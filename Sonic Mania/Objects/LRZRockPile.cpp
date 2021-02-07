@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZRockPile LRZRockPile;
+ObjectLRZRockPile *LRZRockPile;
 
 void LRZRockPile_Update()
 {

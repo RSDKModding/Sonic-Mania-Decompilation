@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHeavyKing : Object {
+struct ObjectHeavyKing : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHeavyKing : Entity {
 
 };
 
-// Object Entity
-extern ObjectHeavyKing HeavyKing;
+// Object Struct
+extern ObjectHeavyKing *HeavyKing;
 
 // Standard Entity Events
 void HeavyKing_Update();

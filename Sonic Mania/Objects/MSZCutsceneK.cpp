@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSZCutsceneK MSZCutsceneK;
+ObjectMSZCutsceneK *MSZCutsceneK;
 
 void MSZCutsceneK_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMMZLightning MMZLightning;
+ObjectMMZLightning *MMZLightning;
 
 void MMZLightning_Update()
 {

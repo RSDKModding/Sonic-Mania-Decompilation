@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIResPicker : Object {
+struct ObjectUIResPicker : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIResPicker : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIResPicker UIResPicker;
+// Object Struct
+extern ObjectUIResPicker *UIResPicker;
 
 // Standard Entity Events
 void UIResPicker_Update();

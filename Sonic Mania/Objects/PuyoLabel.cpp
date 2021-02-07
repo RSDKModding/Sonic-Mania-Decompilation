@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoLabel PuyoLabel;
+ObjectPuyoLabel *PuyoLabel;
 
 void PuyoLabel_Update()
 {

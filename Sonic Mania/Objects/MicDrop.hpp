@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMicDrop : Object {
+struct ObjectMicDrop : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMicDrop : Entity {
 
 };
 
-// Object Entity
-extern ObjectMicDrop MicDrop;
+// Object Struct
+extern ObjectMicDrop *MicDrop;
 
 // Standard Entity Events
 void MicDrop_Update();

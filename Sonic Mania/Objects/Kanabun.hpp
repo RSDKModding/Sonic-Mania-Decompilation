@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectKanabun : Object {
+struct ObjectKanabun : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityKanabun : Entity {
 
 };
 
-// Object Entity
-extern ObjectKanabun Kanabun;
+// Object Struct
+extern ObjectKanabun *Kanabun;
 
 // Standard Entity Events
 void Kanabun_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSignPost : Object {
+struct ObjectSignPost : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySignPost : Entity {
 
 };
 
-// Object Entity
-extern ObjectSignPost SignPost;
+// Object Struct
+extern ObjectSignPost *SignPost;
 
 // Standard Entity Events
 void SignPost_Update();

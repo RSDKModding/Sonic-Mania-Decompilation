@@ -13,7 +13,7 @@ struct EntitySSZ2Setup : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectSSZ2Setup SSZ2Setup;
 
 // Standard Entity Events

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLEDPanel : Object {
+struct ObjectLEDPanel : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLEDPanel : Entity {
 
 };
 
-// Object Entity
-extern ObjectLEDPanel LEDPanel;
+// Object Struct
+extern ObjectLEDPanel *LEDPanel;
 
 // Standard Entity Events
 void LEDPanel_Update();

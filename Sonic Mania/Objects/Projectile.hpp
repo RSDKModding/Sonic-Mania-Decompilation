@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectProjectile : Object {
+struct ObjectProjectile : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityProjectile : Entity {
 
 };
 
-// Object Entity
-extern ObjectProjectile Projectile;
+// Object Struct
+extern ObjectProjectile *Projectile;
 
 // Standard Entity Events
 void Projectile_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTetherBall TetherBall;
+ObjectTetherBall *TetherBall;
 
 void TetherBall_Update()
 {

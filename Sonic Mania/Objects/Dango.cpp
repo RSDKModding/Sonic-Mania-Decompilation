@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDango Dango;
+ObjectDango *Dango;
 
 void Dango_Update()
 {

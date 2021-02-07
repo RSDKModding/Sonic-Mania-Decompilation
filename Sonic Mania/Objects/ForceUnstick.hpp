@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectForceUnstick : Object {
+struct ObjectForceUnstick : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityForceUnstick : Entity {
 
 };
 
-// Object Entity
-extern ObjectForceUnstick ForceUnstick;
+// Object Struct
+extern ObjectForceUnstick *ForceUnstick;
 
 // Standard Entity Events
 void ForceUnstick_Update();

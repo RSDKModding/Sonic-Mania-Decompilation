@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectArmadiloid Armadiloid;
+ObjectArmadiloid *Armadiloid;
 
 void Armadiloid_Update()
 {

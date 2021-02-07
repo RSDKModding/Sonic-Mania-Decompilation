@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectConveyorBelt ConveyorBelt;
+ObjectConveyorBelt *ConveyorBelt;
 
 void ConveyorBelt_Update()
 {

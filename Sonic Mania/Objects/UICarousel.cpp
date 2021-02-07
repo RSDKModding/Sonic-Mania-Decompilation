@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUICarousel UICarousel;
+ObjectUICarousel *UICarousel;
 
 void UICarousel_Update()
 {

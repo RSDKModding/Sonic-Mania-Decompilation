@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZSetup ERZSetup;
+ObjectERZSetup *ERZSetup;
 
 void ERZSetup_Update()
 {

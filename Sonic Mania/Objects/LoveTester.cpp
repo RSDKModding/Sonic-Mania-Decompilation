@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLoveTester LoveTester;
+ObjectLoveTester *LoveTester;
 
 void LoveTester_Update()
 {

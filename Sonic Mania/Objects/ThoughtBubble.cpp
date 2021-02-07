@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectThoughtBubble ThoughtBubble;
+ObjectThoughtBubble *ThoughtBubble;
 
 void ThoughtBubble_Update()
 {

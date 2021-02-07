@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectImageTrail ImageTrail;
+ObjectImageTrail *ImageTrail;
 
 void ImageTrail_Update()
 {

@@ -13,7 +13,7 @@ struct EntityBSS_Setup : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectBSS_Setup BSS_Setup;
 
 // Standard Entity Events

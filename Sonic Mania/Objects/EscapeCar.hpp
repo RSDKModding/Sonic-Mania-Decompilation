@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEscapeCar : Object {
+struct ObjectEscapeCar : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityEscapeCar : Entity {
 
 };
 
-// Object Entity
-extern ObjectEscapeCar EscapeCar;
+// Object Struct
+extern ObjectEscapeCar *EscapeCar;
 
 // Standard Entity Events
 void EscapeCar_Update();

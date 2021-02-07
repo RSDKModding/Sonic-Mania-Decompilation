@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSizeLaser : Object {
+struct ObjectSizeLaser : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySizeLaser : Entity {
 
 };
 
-// Object Entity
-extern ObjectSizeLaser SizeLaser;
+// Object Struct
+extern ObjectSizeLaser *SizeLaser;
 
 // Standard Entity Events
 void SizeLaser_Update();

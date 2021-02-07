@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMenuSetup MenuSetup;
+ObjectMenuSetup *MenuSetup;
 
 void MenuSetup_Update()
 {

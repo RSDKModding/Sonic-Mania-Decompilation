@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectStarPost StarPost;
+ObjectStarPost *StarPost;
 
 void StarPost_Update()
 {

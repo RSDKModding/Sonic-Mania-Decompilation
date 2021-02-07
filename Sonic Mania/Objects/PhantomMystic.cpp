@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomMystic PhantomMystic;
+ObjectPhantomMystic *PhantomMystic;
 
 void PhantomMystic_Update()
 {

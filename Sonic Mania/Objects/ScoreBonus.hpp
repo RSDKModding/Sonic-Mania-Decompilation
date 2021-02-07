@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectScoreBonus : Object {
+struct ObjectScoreBonus : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityScoreBonus : Entity {
 
 };
 
-// Object Entity
-extern ObjectScoreBonus ScoreBonus;
+// Object Struct
+extern ObjectScoreBonus *ScoreBonus;
 
 // Standard Entity Events
 void ScoreBonus_Update();

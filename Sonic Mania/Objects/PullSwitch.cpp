@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPullSwitch PullSwitch;
+ObjectPullSwitch *PullSwitch;
 
 void PullSwitch_Update()
 {

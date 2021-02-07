@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectStickyPlatform StickyPlatform;
+ObjectStickyPlatform *StickyPlatform;
 
 void StickyPlatform_Update()
 {

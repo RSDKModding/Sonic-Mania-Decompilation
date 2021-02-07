@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCanista Canista;
+ObjectCanista *Canista;
 
 void Canista_Update()
 {

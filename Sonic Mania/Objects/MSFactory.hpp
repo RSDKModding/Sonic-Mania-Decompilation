@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSFactory : Object {
+struct ObjectMSFactory : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMSFactory : Entity {
 
 };
 
-// Object Entity
-extern ObjectMSFactory MSFactory;
+// Object Struct
+extern ObjectMSFactory *MSFactory;
 
 // Standard Entity Events
 void MSFactory_Update();

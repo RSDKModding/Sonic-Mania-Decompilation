@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFireworm Fireworm;
+ObjectFireworm *Fireworm;
 
 void Fireworm_Update()
 {

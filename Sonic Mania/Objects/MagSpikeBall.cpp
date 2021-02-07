@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMagSpikeBall MagSpikeBall;
+ObjectMagSpikeBall *MagSpikeBall;
 
 void MagSpikeBall_Update()
 {

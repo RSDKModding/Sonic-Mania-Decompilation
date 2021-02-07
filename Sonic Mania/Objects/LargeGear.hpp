@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLargeGear : Object {
+struct ObjectLargeGear : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLargeGear : Entity {
 
 };
 
-// Object Entity
-extern ObjectLargeGear LargeGear;
+// Object Struct
+extern ObjectLargeGear *LargeGear;
 
 // Standard Entity Events
 void LargeGear_Update();

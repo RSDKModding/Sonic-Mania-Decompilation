@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSummary Summary;
+ObjectSummary *Summary;
 
 void Summary_Update()
 {

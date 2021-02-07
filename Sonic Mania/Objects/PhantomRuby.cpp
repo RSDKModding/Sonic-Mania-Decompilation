@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomRuby PhantomRuby;
+ObjectPhantomRuby *PhantomRuby;
 
 void PhantomRuby_Update()
 {

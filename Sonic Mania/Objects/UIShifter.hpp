@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIShifter : Object {
+struct ObjectUIShifter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIShifter : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIShifter UIShifter;
+// Object Struct
+extern ObjectUIShifter *UIShifter;
 
 // Standard Entity Events
 void UIShifter_Update();

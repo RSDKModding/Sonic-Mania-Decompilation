@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZEncoreTutorial : Object {
+struct ObjectAIZEncoreTutorial : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityAIZEncoreTutorial : Entity {
 
 };
 
-// Object Entity
-extern ObjectAIZEncoreTutorial AIZEncoreTutorial;
+// Object Struct
+extern ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 
 // Standard Entity Events
 void AIZEncoreTutorial_Update();

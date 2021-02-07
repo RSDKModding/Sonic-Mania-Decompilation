@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIUsernamePopup : Object {
+struct ObjectUIUsernamePopup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIUsernamePopup : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIUsernamePopup UIUsernamePopup;
+// Object Struct
+extern ObjectUIUsernamePopup *UIUsernamePopup;
 
 // Standard Entity Events
 void UIUsernamePopup_Update();

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSnowflakes Snowflakes;
+ObjectSnowflakes *Snowflakes;
 
 void Snowflakes_Update()
 {

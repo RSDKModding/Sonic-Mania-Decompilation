@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBuggernaut Buggernaut;
+ObjectBuggernaut *Buggernaut;
 
 void Buggernaut_Update()
 {

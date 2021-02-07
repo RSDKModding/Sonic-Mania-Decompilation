@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTitleCard TitleCard;
+ObjectTitleCard *TitleCard;
 
 void TitleCard_Update()
 {

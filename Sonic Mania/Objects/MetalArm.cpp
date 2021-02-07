@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMetalArm MetalArm;
+ObjectMetalArm *MetalArm;
 
 void MetalArm_Update()
 {

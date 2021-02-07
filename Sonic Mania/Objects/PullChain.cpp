@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPullChain PullChain;
+ObjectPullChain *PullChain;
 
 void PullChain_Update()
 {

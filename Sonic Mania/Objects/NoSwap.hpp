@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectNoSwap : Object {
+struct ObjectNoSwap : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityNoSwap : Entity {
 
 };
 
-// Object Entity
-extern ObjectNoSwap NoSwap;
+// Object Struct
+extern ObjectNoSwap *NoSwap;
 
 // Standard Entity Events
 void NoSwap_Update();

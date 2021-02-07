@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectIwamodoki Iwamodoki;
+ObjectIwamodoki *Iwamodoki;
 
 void Iwamodoki_Update()
 {

@@ -13,7 +13,7 @@ struct EntityCPZ2Outro : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectCPZ2Outro CPZ2Outro;
 
 // Standard Entity Events

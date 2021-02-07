@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectStaircase : Object {
+struct ObjectStaircase : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityStaircase : Entity {
 
 };
 
-// Object Entity
-extern ObjectStaircase Staircase;
+// Object Struct
+extern ObjectStaircase *Staircase;
 
 // Standard Entity Events
 void Staircase_Update();

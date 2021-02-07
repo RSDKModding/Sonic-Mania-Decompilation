@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCrane Crane;
+ObjectCrane *Crane;
 
 void Crane_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpinBooster SpinBooster;
+ObjectSpinBooster *SpinBooster;
 
 void SpinBooster_Update()
 {

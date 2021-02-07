@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZConvDropper : Object {
+struct ObjectLRZConvDropper : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZConvDropper : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZConvDropper LRZConvDropper;
+// Object Struct
+extern ObjectLRZConvDropper *LRZConvDropper;
 
 // Standard Entity Events
 void LRZConvDropper_Update();

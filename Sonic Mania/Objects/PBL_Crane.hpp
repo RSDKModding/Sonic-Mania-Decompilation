@@ -13,7 +13,7 @@ struct EntityPBL_Crane : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Crane PBL_Crane;
 
 // Standard Entity Events

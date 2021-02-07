@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVsScoreboard : Object {
+struct ObjectUIVsScoreboard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIVsScoreboard : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIVsScoreboard UIVsScoreboard;
+// Object Struct
+extern ObjectUIVsScoreboard *UIVsScoreboard;
 
 // Standard Entity Events
 void UIVsScoreboard_Update();

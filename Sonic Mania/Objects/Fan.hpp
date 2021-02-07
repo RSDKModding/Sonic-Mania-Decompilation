@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFan : Object {
+struct ObjectFan : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFan : Entity {
 
 };
 
-// Object Entity
-extern ObjectFan Fan;
+// Object Struct
+extern ObjectFan *Fan;
 
 // Standard Entity Events
 void Fan_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlingRamp : Object {
+struct ObjectFlingRamp : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFlingRamp : Entity {
 
 };
 
-// Object Entity
-extern ObjectFlingRamp FlingRamp;
+// Object Struct
+extern ObjectFlingRamp *FlingRamp;
 
 // Standard Entity Events
 void FlingRamp_Update();

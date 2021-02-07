@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWater Water;
+ObjectWater *Water;
 
 void Water_Update()
 {

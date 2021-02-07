@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCurrent Current;
+ObjectCurrent *Current;
 
 void Current_Update()
 {

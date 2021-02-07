@@ -12,7 +12,7 @@ struct EntityDefaultObject : Entity {
 };
 
 // Object Entity
-extern ObjectDefaultObject DefaultObject;
+extern ObjectDefaultObject *DefaultObject;
 
 // Standard Entity Events
 void DefaultObject_Update();

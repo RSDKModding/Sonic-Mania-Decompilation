@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSZSetup MSZSetup;
+ObjectMSZSetup *MSZSetup;
 
 void MSZSetup_Update()
 {

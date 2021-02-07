@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZConvSwitch LRZConvSwitch;
+ObjectLRZConvSwitch *LRZConvSwitch;
 
 void LRZConvSwitch_Update()
 {

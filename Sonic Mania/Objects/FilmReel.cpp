@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFilmReel FilmReel;
+ObjectFilmReel *FilmReel;
 
 void FilmReel_Update()
 {

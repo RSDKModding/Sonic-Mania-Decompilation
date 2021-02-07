@@ -13,7 +13,7 @@ struct EntityPBL_Player : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Player PBL_Player;
 
 // Standard Entity Events

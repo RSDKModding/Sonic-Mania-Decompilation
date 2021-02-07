@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXFade : Object {
+struct ObjectFXFade : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFXFade : Entity {
 
 };
 
-// Object Entity
-extern ObjectFXFade FXFade;
+// Object Struct
+extern ObjectFXFade *FXFade;
 
 // Standard Entity Events
 void FXFade_Update();

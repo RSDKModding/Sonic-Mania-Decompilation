@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTAEmerald : Object {
+struct ObjectTAEmerald : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTAEmerald : Entity {
 
 };
 
-// Object Entity
-extern ObjectTAEmerald TAEmerald;
+// Object Struct
+extern ObjectTAEmerald *TAEmerald;
 
 // Standard Entity Events
 void TAEmerald_Update();

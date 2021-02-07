@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectNoSwap NoSwap;
+ObjectNoSwap *NoSwap;
 
 void NoSwap_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikeLog : Object {
+struct ObjectSpikeLog : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpikeLog : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpikeLog SpikeLog;
+// Object Struct
+extern ObjectSpikeLog *SpikeLog;
 
 // Standard Entity Events
 void SpikeLog_Update();

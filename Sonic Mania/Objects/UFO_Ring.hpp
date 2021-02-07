@@ -13,7 +13,7 @@ struct EntityUFO_Ring : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectUFO_Ring UFO_Ring;
 
 // Standard Entity Events

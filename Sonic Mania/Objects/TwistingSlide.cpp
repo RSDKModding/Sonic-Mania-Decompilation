@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTwistingSlide TwistingSlide;
+ObjectTwistingSlide *TwistingSlide;
 
 void TwistingSlide_Update()
 {

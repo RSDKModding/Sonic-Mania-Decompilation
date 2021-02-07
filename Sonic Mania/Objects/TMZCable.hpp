@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTMZCable : Object {
+struct ObjectTMZCable : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTMZCable : Entity {
 
 };
 
-// Object Entity
-extern ObjectTMZCable TMZCable;
+// Object Struct
+extern ObjectTMZCable *TMZCable;
 
 // Standard Entity Events
 void TMZCable_Update();

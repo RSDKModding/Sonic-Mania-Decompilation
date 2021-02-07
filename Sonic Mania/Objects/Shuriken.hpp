@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectShuriken : Object {
+struct ObjectShuriken : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityShuriken : Entity {
 
 };
 
-// Object Entity
-extern ObjectShuriken Shuriken;
+// Object Struct
+extern ObjectShuriken *Shuriken;
 
 // Standard Entity Events
 void Shuriken_Update();

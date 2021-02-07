@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCrimsonEye : Object {
+struct ObjectCrimsonEye : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCrimsonEye : Entity {
 
 };
 
-// Object Entity
-extern ObjectCrimsonEye CrimsonEye;
+// Object Struct
+extern ObjectCrimsonEye *CrimsonEye;
 
 // Standard Entity Events
 void CrimsonEye_Update();

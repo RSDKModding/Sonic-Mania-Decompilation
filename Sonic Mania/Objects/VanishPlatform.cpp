@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectVanishPlatform VanishPlatform;
+ObjectVanishPlatform *VanishPlatform;
 
 void VanishPlatform_Update()
 {

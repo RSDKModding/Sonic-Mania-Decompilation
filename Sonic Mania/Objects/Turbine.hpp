@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurbine : Object {
+struct ObjectTurbine : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTurbine : Entity {
 
 };
 
-// Object Entity
-extern ObjectTurbine Turbine;
+// Object Struct
+extern ObjectTurbine *Turbine;
 
 // Standard Entity Events
 void Turbine_Update();

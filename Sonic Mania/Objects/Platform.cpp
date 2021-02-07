@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlatform Platform;
+ObjectPlatform *Platform;
 
 void Platform_Update()
 {

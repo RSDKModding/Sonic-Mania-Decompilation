@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGasPlatform : Object {
+struct ObjectGasPlatform : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGasPlatform : Entity {
 
 };
 
-// Object Entity
-extern ObjectGasPlatform GasPlatform;
+// Object Struct
+extern ObjectGasPlatform *GasPlatform;
 
 // Standard Entity Events
 void GasPlatform_Update();

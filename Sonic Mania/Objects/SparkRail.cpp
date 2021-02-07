@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSparkRail SparkRail;
+ObjectSparkRail *SparkRail;
 
 void SparkRail_Update()
 {

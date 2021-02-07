@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLightBulb LightBulb;
+ObjectLightBulb *LightBulb;
 
 void LightBulb_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCrabmeat Crabmeat;
+ObjectCrabmeat *Crabmeat;
 
 void Crabmeat_Update()
 {

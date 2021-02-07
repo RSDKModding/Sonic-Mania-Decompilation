@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPKingAttack PKingAttack;
+ObjectPKingAttack *PKingAttack;
 
 void PKingAttack_Update()
 {

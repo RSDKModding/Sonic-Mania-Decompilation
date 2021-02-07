@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectReagent Reagent;
+ObjectReagent *Reagent;
 
 void Reagent_Update()
 {

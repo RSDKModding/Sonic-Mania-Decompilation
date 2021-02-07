@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPushSpring PushSpring;
+ObjectPushSpring *PushSpring;
 
 void PushSpring_Update()
 {

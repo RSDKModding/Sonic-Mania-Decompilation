@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCurrent : Object {
+struct ObjectCurrent : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCurrent : Entity {
 
 };
 
-// Object Entity
-extern ObjectCurrent Current;
+// Object Struct
+extern ObjectCurrent *Current;
 
 // Standard Entity Events
 void Current_Update();

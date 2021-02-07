@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSmog Smog;
+ObjectSmog *Smog;
 
 void Smog_Update()
 {

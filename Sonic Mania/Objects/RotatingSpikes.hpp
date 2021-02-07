@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRotatingSpikes : Object {
+struct ObjectRotatingSpikes : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityRotatingSpikes : Entity {
 
 };
 
-// Object Entity
-extern ObjectRotatingSpikes RotatingSpikes;
+// Object Struct
+extern ObjectRotatingSpikes *RotatingSpikes;
 
 // Standard Entity Events
 void RotatingSpikes_Update();

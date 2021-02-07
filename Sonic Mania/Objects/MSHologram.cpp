@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSHologram MSHologram;
+ObjectMSHologram *MSHologram;
 
 void MSHologram_Update()
 {

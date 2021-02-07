@@ -66,6 +66,7 @@ struct DevMenu {
     int option;
     int scroll;
     int timer;
+    int listPos;
 };
 
 extern DevMenu devMenu;

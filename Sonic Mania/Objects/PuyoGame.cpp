@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPuyoGame PuyoGame;
+ObjectPuyoGame *PuyoGame;
 
 void PuyoGame_Update()
 {

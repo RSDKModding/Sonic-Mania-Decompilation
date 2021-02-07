@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCylinder : Object {
+struct ObjectCylinder : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCylinder : Entity {
 
 };
 
-// Object Entity
-extern ObjectCylinder Cylinder;
+// Object Struct
+extern ObjectCylinder *Cylinder;
 
 // Standard Entity Events
 void Cylinder_Update();

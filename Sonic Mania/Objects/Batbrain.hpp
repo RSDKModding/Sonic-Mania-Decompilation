@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBatbrain : Object {
+struct ObjectBatbrain : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityBatbrain : Entity {
 
 };
 
-// Object Entity
-extern ObjectBatbrain Batbrain;
+// Object Struct
+extern ObjectBatbrain *Batbrain;
 
 // Standard Entity Events
 void Batbrain_Update();

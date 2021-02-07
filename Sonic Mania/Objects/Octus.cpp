@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectOctus Octus;
+ObjectOctus *Octus;
 
 void Octus_Update()
 {

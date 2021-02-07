@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDDWrecker : Object {
+struct ObjectDDWrecker : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityDDWrecker : Entity {
 
 };
 
-// Object Entity
-extern ObjectDDWrecker DDWrecker;
+// Object Struct
+extern ObjectDDWrecker *DDWrecker;
 
 // Standard Entity Events
 void DDWrecker_Update();

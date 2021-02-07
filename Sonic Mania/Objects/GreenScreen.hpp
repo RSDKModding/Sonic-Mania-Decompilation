@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGreenScreen : Object {
+struct ObjectGreenScreen : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGreenScreen : Entity {
 
 };
 
-// Object Entity
-extern ObjectGreenScreen GreenScreen;
+// Object Struct
+extern ObjectGreenScreen *GreenScreen;
 
 // Standard Entity Events
 void GreenScreen_Update();

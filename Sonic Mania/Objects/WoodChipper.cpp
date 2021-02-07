@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWoodChipper WoodChipper;
+ObjectWoodChipper *WoodChipper;
 
 void WoodChipper_Update()
 {

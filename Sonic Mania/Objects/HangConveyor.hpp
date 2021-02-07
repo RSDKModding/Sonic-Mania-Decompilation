@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHangConveyor : Object {
+struct ObjectHangConveyor : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHangConveyor : Entity {
 
 };
 
-// Object Entity
-extern ObjectHangConveyor HangConveyor;
+// Object Struct
+extern ObjectHangConveyor *HangConveyor;
 
 // Standard Entity Events
 void HangConveyor_Update();

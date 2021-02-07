@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFernParallax : Object {
+struct ObjectFernParallax : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFernParallax : Entity {
 
 };
 
-// Object Entity
-extern ObjectFernParallax FernParallax;
+// Object Struct
+extern ObjectFernParallax *FernParallax;
 
 // Standard Entity Events
 void FernParallax_Update();

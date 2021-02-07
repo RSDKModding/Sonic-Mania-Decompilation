@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLightBarrier : Object {
+struct ObjectLightBarrier : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLightBarrier : Entity {
 
 };
 
-// Object Entity
-extern ObjectLightBarrier LightBarrier;
+// Object Struct
+extern ObjectLightBarrier *LightBarrier;
 
 // Standard Entity Events
 void LightBarrier_Update();

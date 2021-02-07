@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSweep Sweep;
+ObjectSweep *Sweep;
 
 void Sweep_Update()
 {

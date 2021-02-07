@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectERZKing ERZKing;
+ObjectERZKing *ERZKing;
 
 void ERZKing_Update()
 {

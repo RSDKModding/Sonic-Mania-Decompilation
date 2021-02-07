@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomRuby : Object {
+struct ObjectPhantomRuby : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPhantomRuby : Entity {
 
 };
 
-// Object Entity
-extern ObjectPhantomRuby PhantomRuby;
+// Object Struct
+extern ObjectPhantomRuby *PhantomRuby;
 
 // Standard Entity Events
 void PhantomRuby_Update();

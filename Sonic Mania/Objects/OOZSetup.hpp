@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectOOZSetup : Object {
+struct ObjectOOZSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityOOZSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectOOZSetup OOZSetup;
+// Object Struct
+extern ObjectOOZSetup *OOZSetup;
 
 // Standard Entity Events
 void OOZSetup_Update();

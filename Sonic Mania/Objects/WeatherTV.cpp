@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWeatherTV WeatherTV;
+ObjectWeatherTV *WeatherTV;
 
 void WeatherTV_Update()
 {

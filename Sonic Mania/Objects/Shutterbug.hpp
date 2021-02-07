@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectShutterbug : Object {
+struct ObjectShutterbug : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityShutterbug : Entity {
 
 };
 
-// Object Entity
-extern ObjectShutterbug Shutterbug;
+// Object Struct
+extern ObjectShutterbug *Shutterbug;
 
 // Standard Entity Events
 void Shutterbug_Update();

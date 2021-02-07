@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSDashWheel SDashWheel;
+ObjectSDashWheel *SDashWheel;
 
 void SDashWheel_Update()
 {

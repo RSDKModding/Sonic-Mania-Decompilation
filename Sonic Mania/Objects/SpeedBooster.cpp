@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSpeedBooster SpeedBooster;
+ObjectSpeedBooster *SpeedBooster;
 
 void SpeedBooster_Update()
 {

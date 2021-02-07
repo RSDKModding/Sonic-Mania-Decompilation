@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectChemicalBall ChemicalBall;
+ObjectChemicalBall *ChemicalBall;
 
 void ChemicalBall_Update()
 {

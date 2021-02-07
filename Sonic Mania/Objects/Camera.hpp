@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCamera : Object {
+struct ObjectCamera : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCamera : Entity {
 
 };
 
-// Object Entity
-extern ObjectCamera Camera;
+// Object Struct
+extern ObjectCamera *Camera;
 
 // Standard Entity Events
 void Camera_Update();

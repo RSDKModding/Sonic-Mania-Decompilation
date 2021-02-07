@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBungee Bungee;
+ObjectBungee *Bungee;
 
 void Bungee_Update()
 {

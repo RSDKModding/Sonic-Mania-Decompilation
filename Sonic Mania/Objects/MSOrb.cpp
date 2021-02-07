@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMSOrb MSOrb;
+ObjectMSOrb *MSOrb;
 
 void MSOrb_Update()
 {

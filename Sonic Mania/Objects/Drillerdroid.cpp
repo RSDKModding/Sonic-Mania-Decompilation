@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDrillerdroid Drillerdroid;
+ObjectDrillerdroid *Drillerdroid;
 
 void Drillerdroid_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHeavyShinobi : Object {
+struct ObjectHeavyShinobi : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHeavyShinobi : Entity {
 
 };
 
-// Object Entity
-extern ObjectHeavyShinobi HeavyShinobi;
+// Object Struct
+extern ObjectHeavyShinobi *HeavyShinobi;
 
 // Standard Entity Events
 void HeavyShinobi_Update();

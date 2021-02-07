@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSplats : Object {
+struct ObjectSplats : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySplats : Entity {
 
 };
 
-// Object Entity
-extern ObjectSplats Splats;
+// Object Struct
+extern ObjectSplats *Splats;
 
 // Standard Entity Events
 void Splats_Update();

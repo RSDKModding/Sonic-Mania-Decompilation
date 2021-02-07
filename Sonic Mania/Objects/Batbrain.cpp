@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBatbrain Batbrain;
+ObjectBatbrain *Batbrain;
 
 void Batbrain_Update()
 {

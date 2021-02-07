@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTitleEggman TitleEggman;
+ObjectTitleEggman *TitleEggman;
 
 void TitleEggman_Update()
 {

@@ -12,6 +12,7 @@ byte graphicData[GFXDATA_MAX];
 int SCREEN_XSIZE = 424;
 int screenCount  = 1;
 ScreenInfo screens[SCREEN_MAX];
+ScreenInfo *currentScreen = NULL;
 
 char drawGroupNames[0x10][0x10]{
     "Draw Group 0", "Draw Group 1", "Draw Group 2", "Draw Group 3", "Draw Group 4", "Draw Group 5", "Draw Group 6", "Draw Group 7",
@@ -1372,8 +1373,8 @@ bool InitRenderDevice() {
 
         screens[s].width         = SCREEN_XSIZE;
         screens[s].height        = SCREEN_YSIZE;
-        screens[s].screenCenterX = SCREEN_XSIZE / 2;
-        screens[s].screenCenterY = SCREEN_YSIZE / 2;
+        screens[s].centerX = SCREEN_XSIZE / 2;
+        screens[s].centerY = SCREEN_YSIZE / 2;
         screens[s].clipBound_X1  = 0;
         screens[s].clipBound_X1  = 0;
         screens[s].clipBound_X2  = SCREEN_XSIZE;
@@ -1572,4 +1573,281 @@ void InitGFXSystem() {
     gfxSurface[1].height    = 0x400;
     gfxSurface[1].lineSize  = 3;
     gfxSurface[1].dataStart = engineTextBuffer;
+}
+
+void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative) {}
+void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
+{
+    switch (inkEffect) {
+        default: break;
+        case INK_ALPHA:
+            if (alpha > 0xFF) {
+                inkEffect = INK_NONE;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_ADD:
+        case INK_SUB:
+            if (alpha > 0xFF) {
+                alpha = 0xFF;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_LOOKUP:
+            if (!lookUpBuffer)
+                return;
+            break;
+    }
+
+    if (width + x > currentScreen->clipBound_X2)
+        width = currentScreen->clipBound_X2 - x;
+    if (x < currentScreen->clipBound_X1) {
+        width += x;
+        x = currentScreen->clipBound_X1;
+    }
+
+    if (height + y > currentScreen->clipBound_Y2)
+        height = currentScreen->clipBound_Y2 - y;
+    if (y < currentScreen->clipBound_Y1) {
+        height += y;
+        y = currentScreen->clipBound_Y1;
+    }
+
+
+    
+
+    if (!screenRelative) {
+        x = (x >> 16) - currentScreen->position.x;
+        y = (y >> 16) - currentScreen->position.y;
+        width >>= 16;
+        height >>= 16;
+    }
+
+    if (width <= 0 || height <= 0)
+        return;
+
+    int pitch              = currentScreen->pitch - width;
+    validDraw              = true;
+    ushort *frameBufferPtr = &currentScreen->frameBuffer[x + y * pitch];
+    ushort colour16          = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+    switch (inkEffect) {
+        case INK_NONE: {
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    *frameBufferPtr = colour16;
+                    ++frameBufferPtr;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_BLEND: {
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    *frameBufferPtr = colour16;
+                    ++frameBufferPtr;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_ALPHA: {
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    short *blendPtrB = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - alpha)];
+                    short *blendPtrA = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    *frameBufferPtr = (blendPtrB[*frameBufferPtr & 0x1F] + blendPtrA[colour16 & 0x1F])
+                                      | ((blendPtrB[(*frameBufferPtr & 0x7E0) >> 6] + blendPtrA[(colour16 & 0x7E0) >> 6]) << 6)
+                                      | ((blendPtrB[(*frameBufferPtr & 0xF800) >> 11] + blendPtrA[(colour16 & 0xF800) >> 11]) << 11);
+                    ++frameBufferPtr;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_ADD: {
+            short *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    int v20         = 0;
+                    int v21         = 0;
+                    int finalColour = 0;
+
+                    if (((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
+                        v20 = ((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (ushort)(*frameBufferPtr & 0xF800);
+                    else
+                        v20 = 0xF800;
+                    int v12 = ((ushort)blendTablePtr[(colour16 & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
+                    if (v12 <= 0x7E0)
+                        v21 = v12 | v20;
+                    else
+                        v21 = v20 | 0x7E0;
+                    int v13 = (ushort)blendTablePtr[colour16 & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
+                    if (v13 <= 31)
+                        finalColour = v13 | v21;
+                    else
+                        finalColour = v21 | 0x1F;
+                    *frameBufferPtr = finalColour;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_SUB: {
+            short *subBlendTable = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    ushort finalColour = 0;
+                    if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                        finalColour = 0;
+                    else
+                        finalColour = (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                    int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                    if (v12 > 0)
+                        finalColour |= v12;
+                    int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
+                    if (v13 > 0)
+                        finalColour |= v13;
+                    *frameBufferPtr = finalColour;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_LOOKUP: {
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                    ++frameBufferPtr;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_MASKED: {
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    if (*frameBufferPtr == maskColour)
+                        *frameBufferPtr = colour16;
+                    ++frameBufferPtr;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+        case INK_UNMASKED: {
+            int h = height;
+            while (h--) {
+                int w = width;
+                while (w--) {
+                    if (*frameBufferPtr != maskColour)
+                        *frameBufferPtr = colour16;
+                    ++frameBufferPtr;
+                }
+                frameBufferPtr += pitch;
+            }
+            break;
+        }
+    }
+}
+void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative) {}
+void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative) {}
+
+void DrawQuad(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect) {}
+void DrawTexturedQuad(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect) {}
+
+void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelative) {}
+void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects InkEffect, int alpha, int sheetID) {}
+void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
+                        short Rotation, InkEffects inkEffect, signed int alpha, int sheetID)
+{
+}
+
+void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative) {}
+void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height) {
+}
+
+void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8, int a9,
+              bool32 ScreenRelative)
+{
+}
+void DrawDevText(int x, const char *text, int y, int align, uint colour)
+{
+    int length      = 0;
+    ushort colour16 = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+
+    bool endFlag = false;
+    while (!endFlag) {
+        char cur = text[length];
+        endFlag  = true;
+
+        int cnt = 0;
+        if (cur != '\n') {
+            while (cur) {
+                cur = text[++length];
+                cnt++;
+                if (cur == '\n') {
+                    endFlag = false;
+                    break;
+                }
+            }
+        }
+
+        if (y >= 0 && y < currentScreen->height - 7) {
+            int drawX  = x;
+            int alignX = 0;
+            if (align == ALIGN_CENTER) {
+                alignX = 4 * cnt;
+            }
+            else if (align == ALIGN_RIGHT) {
+                alignX = 8 * cnt;
+            }
+            drawX = x - alignX;
+
+            const char *textPtr = &text[length - cnt];
+            while (cnt > 0) {
+                if (drawX >= 0 && drawX < currentScreen->width - 7) {
+                    ushort *frameBufferPtr = &currentScreen->frameBuffer[drawX + y * currentScreen->pitch];
+                    char curChar           = *textPtr;
+                    if (*textPtr < '\t' || curChar > '\n' && curChar != ' ') {
+                        byte h              = 8;
+                        byte *engineTextPtr = &engineTextBuffer[64 * *textPtr];
+                        do {
+                            --h;
+                            int w = 8;
+                            do {
+                                --w;
+                                if (*engineTextPtr)
+                                    *frameBufferPtr = colour16;
+                                ++engineTextPtr;
+                                ++frameBufferPtr;
+                            } while (w);
+                            frameBufferPtr = &frameBufferPtr[currentScreen->pitch - 8];
+                        } while (h);
+                    }
+                    ++textPtr;
+                    --cnt;
+                    drawX += 8;
+                }
+            }
+        }
+        y += 8;
+        ++length;
+    }
 }

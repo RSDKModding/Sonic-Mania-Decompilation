@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectExplosion : Object {
+struct ObjectExplosion : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityExplosion : Entity {
 
 };
 
-// Object Entity
-extern ObjectExplosion Explosion;
+// Object Struct
+extern ObjectExplosion *Explosion;
 
 // Standard Entity Events
 void Explosion_Update();

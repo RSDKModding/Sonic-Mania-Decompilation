@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTAEmerald TAEmerald;
+ObjectTAEmerald *TAEmerald;
 
 void TAEmerald_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectConveyorPlatform ConveyorPlatform;
+ObjectConveyorPlatform *ConveyorPlatform;
 
 void ConveyorPlatform_Update()
 {

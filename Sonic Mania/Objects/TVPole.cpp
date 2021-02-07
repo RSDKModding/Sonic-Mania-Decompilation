@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTVPole TVPole;
+ObjectTVPole *TVPole;
 
 void TVPole_Update()
 {

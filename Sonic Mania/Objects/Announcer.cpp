@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAnnouncer Announcer;
+ObjectAnnouncer *Announcer;
 
 void Announcer_Update()
 {

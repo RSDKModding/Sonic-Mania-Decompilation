@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectSSZSpotlight SSZSpotlight;
+ObjectSSZSpotlight *SSZSpotlight;
 
 void SSZSpotlight_Update()
 {

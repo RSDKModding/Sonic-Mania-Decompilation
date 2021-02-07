@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEggTV EggTV;
+ObjectEggTV *EggTV;
 
 void EggTV_Update()
 {

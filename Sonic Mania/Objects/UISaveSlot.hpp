@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUISaveSlot : Object {
+struct ObjectUISaveSlot : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUISaveSlot : Entity {
 
 };
 
-// Object Entity
-extern ObjectUISaveSlot UISaveSlot;
+// Object Struct
+extern ObjectUISaveSlot *UISaveSlot;
 
 // Standard Entity Events
 void UISaveSlot_Update();

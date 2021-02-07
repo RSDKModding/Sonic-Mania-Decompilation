@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpringboard : Object {
+struct ObjectSpringboard : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntitySpringboard : Entity {
 
 };
 
-// Object Entity
-extern ObjectSpringboard Springboard;
+// Object Struct
+extern ObjectSpringboard *Springboard;
 
 // Standard Entity Events
 void Springboard_Update();

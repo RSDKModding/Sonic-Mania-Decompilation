@@ -13,7 +13,7 @@ struct EntityPBL_Setup : Entity {
 
 };
 
-// Object Entity
+// Object Struct
 extern ObjectPBL_Setup PBL_Setup;
 
 // Standard Entity Events

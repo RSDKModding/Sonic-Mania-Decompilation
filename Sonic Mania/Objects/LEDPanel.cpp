@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLEDPanel LEDPanel;
+ObjectLEDPanel *LEDPanel;
 
 void LEDPanel_Update()
 {

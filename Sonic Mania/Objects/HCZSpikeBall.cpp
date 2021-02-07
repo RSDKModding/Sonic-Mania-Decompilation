@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHCZSpikeBall HCZSpikeBall;
+ObjectHCZSpikeBall *HCZSpikeBall;
 
 void HCZSpikeBall_Update()
 {

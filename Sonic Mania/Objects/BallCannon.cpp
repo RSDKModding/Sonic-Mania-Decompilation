@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBallCannon BallCannon;
+ObjectBallCannon *BallCannon;
 
 void BallCannon_Update()
 {

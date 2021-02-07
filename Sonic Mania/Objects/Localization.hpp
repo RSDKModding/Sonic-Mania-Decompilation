@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLocalization : Object {
+struct ObjectLocalization : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLocalization : Entity {
 
 };
 
-// Object Entity
-extern ObjectLocalization Localization;
+// Object Struct
+extern ObjectLocalization *Localization;
 
 // Standard Entity Events
 void Localization_Update();

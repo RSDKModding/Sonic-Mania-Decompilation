@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHiLoSign : Object {
+struct ObjectHiLoSign : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHiLoSign : Entity {
 
 };
 
-// Object Entity
-extern ObjectHiLoSign HiLoSign;
+// Object Struct
+extern ObjectHiLoSign *HiLoSign;
 
 // Standard Entity Events
 void HiLoSign_Update();

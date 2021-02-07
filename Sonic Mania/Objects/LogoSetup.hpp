@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLogoSetup : Object {
+struct ObjectLogoSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLogoSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectLogoSetup LogoSetup;
+// Object Struct
+extern ObjectLogoSetup *LogoSetup;
 
 // Standard Entity Events
 void LogoSetup_Update();

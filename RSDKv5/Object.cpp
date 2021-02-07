@@ -18,7 +18,7 @@ TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 bool32 validDraw = false;
 
-void CreateObject(Object *structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
+void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
                   void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                   void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 {
@@ -26,7 +26,7 @@ void CreateObject(Object *structPtr, const char *name, uint entitySize, uint obj
         ObjectInfo *info = &objectList[objectCount];
         if (entitySize > sizeof(EntityBase))
             printf("Class exceeds max entity memory: %s \n", name);
-        info->type = (Object*)structPtr;
+        info->type = structPtr;
         memset(hashBuffer, 0, 0x400);
         int nameLen = 0;
         while (name[nameLen]) ++nameLen;
@@ -50,7 +50,7 @@ void CreateObject(Object *structPtr, const char *name, uint entitySize, uint obj
     }
 }
 
-void CreateObjectContainer(Object *structPtr, const char *name, uint objectSize)
+void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize)
 {
     memset(hashBuffer, 0, 0x400);
     int len = StrLength(name);
@@ -58,7 +58,7 @@ void CreateObjectContainer(Object *structPtr, const char *name, uint objectSize)
 
     memcpy(hashBuffer, name, len);
     GenerateHash(hash, len);
-    AllocateStorage(objectSize, structPtr, DATASET_STG, true);
+    AllocateStorage(objectSize, (void**)structPtr, DATASET_STG, true);
     LoadStaticObject((byte *)structPtr, hash, 0);
 }
 
@@ -87,6 +87,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
     }
 
     FileInfo info;
+    MEM_ZERO(info);
     if (LoadFile(&info, buffer)) {
         uint sig = ReadInt32(&info);
 
@@ -199,10 +200,9 @@ void InitObjects()
 
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entitySlot = e;
-        Entity *entity  = &objectEntityList[e];
+        sceneInfo.entity     = &objectEntityList[e];
         if (sceneInfo.entity->type) {
             if (objectList[stageObjectIDs[sceneInfo.entity->type]].create) {
-                sceneInfo.entity = entity;
                 objectList[stageObjectIDs[sceneInfo.entity->type]].create(NULL);
             }
         }
@@ -225,7 +225,7 @@ void ProcessObjects()
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if (objInfo->type->priority == ACTIVE_ALWAYS || objInfo->type->priority == ACTIVE_NORMAL) {
+        if ((*objInfo->type)->priority == ACTIVE_ALWAYS || (*objInfo->type)->priority == ACTIVE_NORMAL) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -345,7 +345,7 @@ void ProcessPausedObjects()
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if (objInfo->type->priority == ACTIVE_ALWAYS || objInfo->type->priority == ACTIVE_PAUSED) {
+        if ((*objInfo->type)->priority == ACTIVE_ALWAYS || (*objInfo->type)->priority == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -412,7 +412,7 @@ void ProcessFrozenObjects()
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if (objInfo->type->priority == ACTIVE_ALWAYS || objInfo->type->priority == ACTIVE_PAUSED) {
+        if ((*objInfo->type)->priority == ACTIVE_ALWAYS || (*objInfo->type)->priority == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -532,7 +532,7 @@ void ProcessFrozenObjects()
 void ProcessObjectDrawLists()
 {
     if (sceneInfo.state && sceneInfo.state != ENGINESTATE_LOAD_STEPOVER) {
-        ScreenInfo *currentScreen = &screens[0];
+        currentScreen = &screens[0];
         sceneInfo.currentScreenID = 0;
         for (int s = 0; s < screenCount; ++s) {
             for (int l = 0; l < DRAWLAYER_COUNT; ++l) {

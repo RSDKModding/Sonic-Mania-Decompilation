@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectYoyoPulley : Object {
+struct ObjectYoyoPulley : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityYoyoPulley : Entity {
 
 };
 
-// Object Entity
-extern ObjectYoyoPulley YoyoPulley;
+// Object Struct
+extern ObjectYoyoPulley *YoyoPulley;
 
 // Standard Entity Events
 void YoyoPulley_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTeeterTotter : Object {
+struct ObjectTeeterTotter : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityTeeterTotter : Entity {
 
 };
 
-// Object Entity
-extern ObjectTeeterTotter TeeterTotter;
+// Object Struct
+extern ObjectTeeterTotter *TeeterTotter;
 
 // Standard Entity Events
 void TeeterTotter_Update();

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHPZEmerald : Object {
+struct ObjectHPZEmerald : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityHPZEmerald : Entity {
 
 };
 
-// Object Entity
-extern ObjectHPZEmerald HPZEmerald;
+// Object Struct
+extern ObjectHPZEmerald *HPZEmerald;
 
 // Standard Entity Events
 void HPZEmerald_Update();

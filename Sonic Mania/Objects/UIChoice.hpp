@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIChoice : Object {
+struct ObjectUIChoice : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIChoice : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIChoice UIChoice;
+// Object Struct
+extern ObjectUIChoice *UIChoice;
 
 // Standard Entity Events
 void UIChoice_Update();

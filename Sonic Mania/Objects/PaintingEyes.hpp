@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPaintingEyes : Object {
+struct ObjectPaintingEyes : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPaintingEyes : Entity {
 
 };
 
-// Object Entity
-extern ObjectPaintingEyes PaintingEyes;
+// Object Struct
+extern ObjectPaintingEyes *PaintingEyes;
 
 // Standard Entity Events
 void PaintingEyes_Update();

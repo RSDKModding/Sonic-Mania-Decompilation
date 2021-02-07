@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFrostThrower : Object {
+struct ObjectFrostThrower : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFrostThrower : Entity {
 
 };
 
-// Object Entity
-extern ObjectFrostThrower FrostThrower;
+// Object Struct
+extern ObjectFrostThrower *FrostThrower;
 
 // Standard Entity Events
 void FrostThrower_Update();

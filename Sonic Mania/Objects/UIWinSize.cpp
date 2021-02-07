@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIWinSize UIWinSize;
+ObjectUIWinSize *UIWinSize;
 
 void UIWinSize_Update()
 {

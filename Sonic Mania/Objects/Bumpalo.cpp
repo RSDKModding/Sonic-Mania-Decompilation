@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBumpalo Bumpalo;
+ObjectBumpalo *Bumpalo;
 
 void Bumpalo_Update()
 {

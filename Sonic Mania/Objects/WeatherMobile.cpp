@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectWeatherMobile WeatherMobile;
+ObjectWeatherMobile *WeatherMobile;
 
 void WeatherMobile_Update()
 {

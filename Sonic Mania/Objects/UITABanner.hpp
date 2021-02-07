@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUITABanner : Object {
+struct ObjectUITABanner : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUITABanner : Entity {
 
 };
 
-// Object Entity
-extern ObjectUITABanner UITABanner;
+// Object Struct
+extern ObjectUITABanner *UITABanner;
 
 // Standard Entity Events
 void UITABanner_Update();

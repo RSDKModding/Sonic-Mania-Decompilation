@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIChoice UIChoice;
+ObjectUIChoice *UIChoice;
 
 void UIChoice_Update()
 {

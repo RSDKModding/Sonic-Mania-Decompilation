@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectHeavyShinobi HeavyShinobi;
+ObjectHeavyShinobi *HeavyShinobi;
 
 void HeavyShinobi_Update()
 {

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLevelSelect : Object {
+struct ObjectLevelSelect : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLevelSelect : Entity {
 
 };
 
-// Object Entity
-extern ObjectLevelSelect LevelSelect;
+// Object Struct
+extern ObjectLevelSelect *LevelSelect;
 
 // Standard Entity Events
 void LevelSelect_Update();

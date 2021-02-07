@@ -33,7 +33,7 @@ struct Image {
     int field_4F;
     void* field_50;
     byte *dataPtr;
-    GifDecoder decoder;
+    GifDecoder *decoder;
 };
 
 

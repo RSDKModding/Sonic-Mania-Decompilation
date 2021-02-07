@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlowerPod : Object {
+struct ObjectFlowerPod : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityFlowerPod : Entity {
 
 };
 
-// Object Entity
-extern ObjectFlowerPod FlowerPod;
+// Object Struct
+extern ObjectFlowerPod *FlowerPod;
 
 // Standard Entity Events
 void FlowerPod_Update();

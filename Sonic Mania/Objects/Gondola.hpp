@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGondola : Object {
+struct ObjectGondola : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityGondola : Entity {
 
 };
 
-// Object Entity
-extern ObjectGondola Gondola;
+// Object Struct
+extern ObjectGondola *Gondola;
 
 // Standard Entity Events
 void Gondola_Update();

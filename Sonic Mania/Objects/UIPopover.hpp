@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIPopover : Object {
+struct ObjectUIPopover : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUIPopover : Entity {
 
 };
 
-// Object Entity
-extern ObjectUIPopover UIPopover;
+// Object Struct
+extern ObjectUIPopover *UIPopover;
 
 // Standard Entity Events
 void UIPopover_Update();

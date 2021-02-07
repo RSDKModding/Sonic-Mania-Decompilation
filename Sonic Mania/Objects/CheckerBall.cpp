@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectCheckerBall CheckerBall;
+ObjectCheckerBall *CheckerBall;
 
 void CheckerBall_Update()
 {

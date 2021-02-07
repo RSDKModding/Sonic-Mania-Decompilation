@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIVsScoreboard UIVsScoreboard;
+ObjectUIVsScoreboard *UIVsScoreboard;
 
 void UIVsScoreboard_Update()
 {

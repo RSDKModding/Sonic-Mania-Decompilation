@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPhantomShinobi PhantomShinobi;
+ObjectPhantomShinobi *PhantomShinobi;
 
 void PhantomShinobi_Update()
 {

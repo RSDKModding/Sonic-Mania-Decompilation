@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTimePost TimePost;
+ObjectTimePost *TimePost;
 
 void TimePost_Update()
 {

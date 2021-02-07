@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPauseMenu : Object {
+struct ObjectPauseMenu : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityPauseMenu : Entity {
 
 };
 
-// Object Entity
-extern ObjectPauseMenu PauseMenu;
+// Object Struct
+extern ObjectPauseMenu *PauseMenu;
 
 // Standard Entity Events
 void PauseMenu_Update();

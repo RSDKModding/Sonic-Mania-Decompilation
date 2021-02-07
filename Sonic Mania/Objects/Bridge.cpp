@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectBridge Bridge;
+ObjectBridge *Bridge;
 
 void Bridge_Update()
 {

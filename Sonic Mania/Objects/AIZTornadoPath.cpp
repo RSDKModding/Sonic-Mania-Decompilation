@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAIZTornadoPath AIZTornadoPath;
+ObjectAIZTornadoPath *AIZTornadoPath;
 
 void AIZTornadoPath_Update()
 {

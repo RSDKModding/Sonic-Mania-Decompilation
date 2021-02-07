@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectFBZStorm FBZStorm;
+ObjectFBZStorm *FBZStorm;
 
 void FBZStorm_Update()
 {

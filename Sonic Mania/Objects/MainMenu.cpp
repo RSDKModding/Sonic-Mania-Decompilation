@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectMainMenu MainMenu;
+ObjectMainMenu *MainMenu;
 
 void MainMenu_Update()
 {

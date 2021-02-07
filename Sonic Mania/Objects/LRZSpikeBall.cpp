@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectLRZSpikeBall LRZSpikeBall;
+ObjectLRZSpikeBall *LRZSpikeBall;
 
 void LRZSpikeBall_Update()
 {

@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectEggman Eggman;
+ObjectEggman *Eggman;
 
 void Eggman_Update()
 {

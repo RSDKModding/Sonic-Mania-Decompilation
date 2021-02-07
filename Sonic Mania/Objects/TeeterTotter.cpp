@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTeeterTotter TeeterTotter;
+ObjectTeeterTotter *TeeterTotter;
 
 void TeeterTotter_Update()
 {

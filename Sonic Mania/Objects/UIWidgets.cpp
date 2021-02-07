@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectUIWidgets UIWidgets;
+ObjectUIWidgets *UIWidgets;
 
 void UIWidgets_Update()
 {

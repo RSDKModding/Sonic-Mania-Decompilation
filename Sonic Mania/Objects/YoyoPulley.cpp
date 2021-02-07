@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectYoyoPulley YoyoPulley;
+ObjectYoyoPulley *YoyoPulley;
 
 void YoyoPulley_Update()
 {

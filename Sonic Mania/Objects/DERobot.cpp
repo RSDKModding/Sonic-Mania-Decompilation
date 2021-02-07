@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDERobot DERobot;
+ObjectDERobot *DERobot;
 
 void DERobot_Update()
 {

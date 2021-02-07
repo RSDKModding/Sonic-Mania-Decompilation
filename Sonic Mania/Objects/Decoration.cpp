@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDecoration Decoration;
+ObjectDecoration *Decoration;
 
 void Decoration_Update()
 {

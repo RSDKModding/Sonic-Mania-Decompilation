@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCreditsSetup : Object {
+struct ObjectCreditsSetup : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityCreditsSetup : Entity {
 
 };
 
-// Object Entity
-extern ObjectCreditsSetup CreditsSetup;
+// Object Struct
+extern ObjectCreditsSetup *CreditsSetup;
 
 // Standard Entity Events
 void CreditsSetup_Update();

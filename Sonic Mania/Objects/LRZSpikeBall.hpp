@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZSpikeBall : Object {
+struct ObjectLRZSpikeBall : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityLRZSpikeBall : Entity {
 
 };
 
-// Object Entity
-extern ObjectLRZSpikeBall LRZSpikeBall;
+// Object Struct
+extern ObjectLRZSpikeBall *LRZSpikeBall;
 
 // Standard Entity Events
 void LRZSpikeBall_Update();

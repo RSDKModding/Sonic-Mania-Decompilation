@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDNARiser DNARiser;
+ObjectDNARiser *DNARiser;
 
 void DNARiser_Update()
 {

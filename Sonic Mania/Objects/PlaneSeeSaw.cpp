@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlaneSeeSaw PlaneSeeSaw;
+ObjectPlaneSeeSaw *PlaneSeeSaw;
 
 void PlaneSeeSaw_Update()
 {

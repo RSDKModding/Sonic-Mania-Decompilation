@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectDust Dust;
+ObjectDust *Dust;
 
 void Dust_Update()
 {

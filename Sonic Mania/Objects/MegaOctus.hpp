@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMegaOctus : Object {
+struct ObjectMegaOctus : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityMegaOctus : Entity {
 
 };
 
-// Object Entity
-extern ObjectMegaOctus MegaOctus;
+// Object Struct
+extern ObjectMegaOctus *MegaOctus;
 
 // Standard Entity Events
 void MegaOctus_Update();

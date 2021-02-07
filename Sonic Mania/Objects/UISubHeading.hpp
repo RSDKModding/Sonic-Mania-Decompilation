@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUISubHeading : Object {
+struct ObjectUISubHeading : Object{
 
 };
 
@@ -13,8 +13,8 @@ struct EntityUISubHeading : Entity {
 
 };
 
-// Object Entity
-extern ObjectUISubHeading UISubHeading;
+// Object Struct
+extern ObjectUISubHeading *UISubHeading;
 
 // Standard Entity Events
 void UISubHeading_Update();

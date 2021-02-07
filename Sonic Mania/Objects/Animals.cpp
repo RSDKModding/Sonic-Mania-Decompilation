@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAnimals Animals;
+ObjectAnimals *Animals;
 
 void Animals_Update()
 {

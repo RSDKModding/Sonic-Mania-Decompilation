@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlayer Player;
+ObjectPlayer *Player;
 
 void Player_Update()
 {

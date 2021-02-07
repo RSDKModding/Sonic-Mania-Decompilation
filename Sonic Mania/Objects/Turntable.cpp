@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTurntable Turntable;
+ObjectTurntable *Turntable;
 
 void Turntable_Update()
 {

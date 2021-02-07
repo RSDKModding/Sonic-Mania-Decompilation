@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTornado Tornado;
+ObjectTornado *Tornado;
 
 void Tornado_Update()
 {

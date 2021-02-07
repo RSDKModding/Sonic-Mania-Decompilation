@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectPlatformNode PlatformNode;
+ObjectPlatformNode *PlatformNode;
 
 void PlatformNode_Update()
 {

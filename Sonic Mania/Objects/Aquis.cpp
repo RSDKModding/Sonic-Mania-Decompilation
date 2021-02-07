@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectAquis Aquis;
+ObjectAquis *Aquis;
 
 void Aquis_Update()
 {

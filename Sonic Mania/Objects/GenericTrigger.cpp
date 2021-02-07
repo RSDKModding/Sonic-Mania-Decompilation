@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGenericTrigger GenericTrigger;
+ObjectGenericTrigger *GenericTrigger;
 
 void GenericTrigger_Update()
 {
