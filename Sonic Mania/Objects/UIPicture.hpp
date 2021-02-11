@@ -15,7 +15,7 @@ struct EntityUIPicture : Entity {
     int tag;
     byte zonePalette;
     int zoneID;
-    EntityAnimationData animData;
+    EntityAnimationData data;
 };
 
 // Object Struct

@@ -7,7 +7,7 @@ void DebugMode_Update()
     EntityDebugMode *entity = (EntityDebugMode *)RSDK_sceneInfo->entity;
 
     bool flag = false;
-    User_Unknown6(0);
+    User.Unknown6(0);
     //if (Zone)
     //    Zone[2] = 0;
     if (RSDK_controller[1].keyUp.down || (RSDK_stickL[1].vDelta > 0.30000001)) {

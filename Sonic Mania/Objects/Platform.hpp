@@ -10,7 +10,30 @@ struct ObjectPlatform : Object{
 
 // Entity Class
 struct EntityPlatform : Entity {
-
+    void (*state)();
+    void (*stateCollide)();
+    int type;
+    Vector2 amplitude;
+    int speed;
+    int hasTension;
+    sbyte frameID;
+    byte collisionType;
+    byte field_76;
+    byte field_77;
+    Vector2 tileOrigin;
+    Vector2 centerPos;
+    Vector2 drawPos;
+    Vector2 collisionOffset;
+    int stood;
+    int collapseDelay;
+    int stoodAngle;
+    byte stoodPlayers;
+    byte pushPlayersL;
+    byte pushPlayersR;
+    byte field_A7;
+    Hitbox hitbox;
+    EntityAnimationData animData;
+    int childCount;
 };
 
 // Object Struct
@@ -28,6 +51,7 @@ void Platform_EditorLoad();
 void Platform_Serialize();
 
 // Extra Entity Functions
-
+void Platform_State_Falling();
+void Platform_State_OffScreenReset();
 
 #endif //!OBJ_PLATFORM_H

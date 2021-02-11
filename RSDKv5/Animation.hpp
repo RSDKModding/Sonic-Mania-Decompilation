@@ -9,13 +9,6 @@
 
 enum AnimrotationFlags { ROTFLAG_NONE, ROTFLAG_FULL, ROTFLAG_45DEG, ROTFLAG_STATICFRAMES };
 
-struct SpriteAnimation {
-    byte scope;
-    uint hash[4];
-    ushort animCount;
-    int aniListOffset;
-};
-
 struct SpriteAnimationEntry {
     uint hash[4];
     int frameListOffset;
@@ -23,8 +16,6 @@ struct SpriteAnimationEntry {
     short animationSpeed;
     byte loopIndex;
     byte rotationFlag;
-    byte field_1A;
-    byte field_1B;
 };
 
 struct Hitbox {
@@ -48,6 +39,14 @@ struct SpriteFrame {
     Hitbox hitboxes[FRAMEHITBOX_COUNT];
 };
 
+struct SpriteAnimation {
+    uint hash[4];
+    SpriteFrame *frames;
+    SpriteAnimationEntry *animations;
+    ushort animCount;
+    byte scope;
+};
+
 struct EntityAnimationData {
     SpriteFrame *framePtrs;
     int frameID;
@@ -61,22 +60,37 @@ struct EntityAnimationData {
     byte rotationFlag;
 };
 
-extern SpriteAnimation animationFileList[SPRFILE_COUNT];
-extern SpriteFrame animFrames[SPRITEFRAME_COUNT];
-extern int animFrameCount;
-extern SpriteAnimationEntry animationList[ANIMATION_COUNT];
-extern int animationCount;
+extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 
 short LoadAnimation(const char *filename, Scopes scope);
+short CreateAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope);
+
+inline ushort GetAnimation(ushort sprIndex, const char *name)
+{
+    if (sprIndex >= SPRFILE_COUNT)
+        return NULL;
+    SpriteAnimation *spr = &spriteAnimationList[sprIndex];
+
+    uint hash[4];
+    StrCopy(hashBuffer, name);
+    GenerateHash(hash, StrLength(name));
+
+    for (int a = 0; a < spr->animCount; ++a) {
+        if (memcmp(hash, spr->animations[a].hash, 4 * sizeof(uint)) == 0) {
+            return a;
+        }
+    }
+    return -1;
+}
 
 inline SpriteFrame *GetFrame(ushort sprIndex, ushort anim, int frame)
 {
     if (sprIndex >= SPRFILE_COUNT)
         return NULL;
-    SpriteAnimation *spr = &animationFileList[sprIndex];
-    if (anim + spr->aniListOffset >= ANIMATION_COUNT)
+    SpriteAnimation *spr = &spriteAnimationList[sprIndex];
+    if (anim >= spr->animCount)
         return NULL;
-    return &animFrames[frame + animationList[anim + spr->aniListOffset].frameListOffset];
+    return &spr->frames[frame + spr->animations[anim].frameListOffset];
 }
 
 inline Hitbox *GetHitbox(EntityAnimationData *data, byte hitboxID)
@@ -106,11 +120,12 @@ inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, EntityAni
     }
     if (!data)
         return;
-    if (animationID >= animationFileList[spriteIndex].animCount)
+    SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
+    if (animationID >= spr->animCount)
         return;
 
-    SpriteAnimationEntry *anim = &animationList[animationFileList[spriteIndex].aniListOffset + animationID];
-    SpriteFrame *frames        = &animFrames[anim->frameListOffset];
+    SpriteAnimationEntry *anim = &spr->animations[animationID];
+    SpriteFrame *frames        = &spr->frames[anim->frameListOffset];
     if (data->framePtrs == frames && !forceApply)
         return;
 
@@ -126,27 +141,25 @@ inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, EntityAni
     data->animationID     = animationID;
 }
 
-inline void SetModelAnimation(ushort modelAnim, EntityAnimationData *data, short animSpeed, byte loopIndex, bool forceApply, ushort frameID)
+inline void EditAnimation(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
+                   byte rotationFlag)
 {
-    if (modelAnim >= /*MODEL_MAX*/ 0x100) {
-        if (data)
-            data->framePtrs = 0;
-        return;
+    if (spriteIndex < SPRFILE_COUNT) {
+        SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
+        if (animID < spr->animCount) {
+            SpriteAnimationEntry *anim = &spr->animations[animID];
+            StrCopy(hashBuffer, name);
+            GenerateHash(anim->hash, StrLength(hashBuffer));
+            anim->frameListOffset = frameOffset;
+            anim->frameCount      = frameCount;
+            anim->animationSpeed  = animSpeed;
+            anim->loopIndex       = loopIndex;
+            anim->rotationFlag    = rotationFlag;
+        }
     }
-    if (!data)
-        return;
-
-    if (data->animationID == modelAnim && !forceApply)
-        return;
-    data->framePtrs       = (SpriteFrame *)1;
-    data->animationTimer  = 0;
-    data->frameID         = frameID;
-    data->frameCount      = 0; // ModelFrameCount[22 * modelAnim];
-    data->animationSpeed  = animSpeed;
-    data->prevAnimationID = data->animationID;
-    data->frameDelay      = 0x100;
-    data->loopIndex       = loopIndex;
-    data->animationID     = modelAnim;
 }
+
+int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
+void SetSpriteString(ushort spriteIndex, ushort animID, TextInfo *info);
 
 #endif

@@ -24,28 +24,63 @@ void LoadScene()
         drawLayers[i].layerCount  = 0;
     }
 
-    // Clear Entity List
+    for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
+        typeGroups[i].entryCount = 0;
+    }
+
+    debugValCnt = 0;
+    lookUpBuffer = NULL;
 
     if (StrComp(currentSceneFolder, sceneInfo.listData[sceneListPosition].folder)) {
         // Reload
+        ClearUnusedStorage(DATASET_STG);
+        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].modeFilter;
         return;
     }
 
     // Unload Model data
+    for (int m = 0; m < MODEL_MAX; ++m) {
+        if (modelList[m].scope != SCOPE_GLOBAL) {
+            modelList[m].scope = SCOPE_NONE;
+            memset(modelList[m].hash, 0, 4 * sizeof(int));
+        }
+    }
+
+    //Unload 3D Scenes
+    for (int m = 0; m < SCENE3D_MAX; ++m) {
+        if (scene3DList[m].scope != SCOPE_GLOBAL) {
+            scene3DList[m].scope = SCOPE_NONE;
+            memset(scene3DList[m].hash, 0, 4 * sizeof(int));
+        }
+    }
 
     // Unload animations
     for (int s = 0; s < SPRFILE_COUNT; ++s) {
-        animationFileList[s].scope = SCOPE_NONE;
-        memset(animationFileList[s].hash, 0, 4 * sizeof(int));
+        if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
+            spriteAnimationList[s].scope = SCOPE_NONE;
+            memset(spriteAnimationList[s].hash, 0, 4 * sizeof(int));
+        }
     }
 
     // Unload surfaces
     for (int s = 0; s < SURFACE_MAX; ++s) {
-        gfxSurface[s].scope = SCOPE_NONE;
-        memset(gfxSurface[s].hash, 0, 4 * sizeof(int));
+        if (gfxSurface[s].scope != SCOPE_GLOBAL) {
+            gfxSurface[s].scope = SCOPE_NONE;
+            memset(gfxSurface[s].hash, 0, 4 * sizeof(int));
+        }
     }
 
     // Unload stage SFX
+
+    // Unload object data
+    for (int o = 0; o < sceneInfo.classCount; ++o) {
+        if (objectList[stageObjectIDs[o]].type) {
+            objectList[stageObjectIDs[o]].type = NULL;
+        }
+    }
+
+    ClearUnusedStorage(DATASET_STG);
+    ClearUnusedStorage(DATASET_SFX);
 
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneListPosition];
     StrCopy(currentSceneFolder, sceneEntry->folder);
@@ -110,6 +145,7 @@ void LoadScene()
             if (obj->type && !*obj->type) {
                 AllocateStorage(obj->objectSize, (void**)obj->type, DATASET_STG, true);
                 LoadStaticObject((byte *)obj->type, obj->hash, 2);
+                (*obj->type)->objectID = o;
             }
         }
 
@@ -397,15 +433,26 @@ void LoadSceneFile() {
 
         //handle filter and stuff
         int slot = RESERVE_ENTITY_COUNT;
-        int entListPos = 0;
+        int activeSlot = RESERVE_ENTITY_COUNT;
         for (int e = 0; e < 0x800; ++e) {
             if (sceneInfo.filter & entList[e].filter) {
-                memcpy(&objectEntityList[slot], &entList[entListPos], sizeof(EntityBase));
+                if (activeSlot != slot) {
+                    memcpy(&objectEntityList[slot], &objectEntityList[e], sizeof(EntityBase));
+                    memset(&objectEntityList[e], 0, sizeof(EntityBase));
+                }
+                activeSlot++;
             }
             else {
                 memset(&objectEntityList[slot], 0, sizeof(EntityBase));
             }
-            entListPos++;
+            slot++;
+        }
+
+        slot = activeSlot;
+        for (int e = 0; e < 0x800; ++e) {
+            if (sceneInfo.filter & entList[e].filter) {
+                memcpy(&objectEntityList[slot], &entList[e], sizeof(EntityBase));
+            }
             slot++;
         }
 

@@ -267,7 +267,7 @@ void runRetroEngine()
             default: break;
             case ENGINESTATE_LOAD:
                 LoadScene();
-                // LoadSceneFile();
+                LoadSceneFile();
                 InitObjects();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
@@ -289,7 +289,7 @@ void runRetroEngine()
                 ProcessSceneTimer();
                 ProcessObjects();
                 ProcessParallaxAutoScroll();
-                for (int i = 1; i < engine.fastForwardSpeed; ++i) {
+                for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_REGULAR)
                         break;
                     ProcessSceneTimer();
@@ -301,7 +301,7 @@ void runRetroEngine()
             case ENGINESTATE_PAUSED:
                 inputDevice.ProcessInput();
                 ProcessPausedObjects();
-                for (int i = 1; i < engine.fastForwardSpeed; ++i) {
+                for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_PAUSED)
                         break;
                     ProcessPausedObjects();
@@ -311,7 +311,7 @@ void runRetroEngine()
             case ENGINESTATE_FROZEN:
                 inputDevice.ProcessInput();
                 ProcessFrozenObjects();
-                for (int i = 1; i < engine.fastForwardSpeed; ++i) {
+                for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_FROZEN)
                         break;
                     ProcessFrozenObjects();
@@ -622,6 +622,9 @@ void InitScriptSystem()
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
         if (linkGameLogic)
             linkGameLogic(&info);
+    }
+    else {
+        printLog(SEVERITY_WARN, "Failed to load game.dll");
     }
 #endif
 }

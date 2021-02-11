@@ -1,10 +1,6 @@
 #include "RetroEngine.hpp"
 
-SpriteAnimation animationFileList[SPRFILE_COUNT];
-SpriteFrame animFrames[SPRITEFRAME_COUNT];
-int animFrameCount;
-SpriteAnimationEntry animationList[ANIMATION_COUNT];
-int animationCount;
+SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 
 short LoadAnimation(const char *filename, Scopes scope)
 {
@@ -18,14 +14,14 @@ short LoadAnimation(const char *filename, Scopes scope)
     GenerateHash(hash, StrLength(filename));
 
     for (int i = 0; i < SPRFILE_COUNT; ++i) {
-        if (memcmp(hash, animationFileList[i].hash, 4 * sizeof(int)) == 0) {
+        if (memcmp(hash, spriteAnimationList[i].hash, 4 * sizeof(int)) == 0) {
             return i;
         }
     }
 
-    short id = -1;
+    ushort id = -1;
     for (id = 0; id < SPRFILE_COUNT; ++id) {
-        if (animationFileList[id].scope == SCOPE_NONE)
+        if (spriteAnimationList[id].scope == SCOPE_NONE)
             break;
     }
 
@@ -44,13 +40,12 @@ short LoadAnimation(const char *filename, Scopes scope)
             return -1;
         }
 
-        SpriteAnimation *animFile = &animationFileList[id];
-        animFile->scope           = scope;
-        memcpy(animFile->hash, hash, 4 * sizeof(int));
-        animFile->aniListOffset   = animationCount;
+        SpriteAnimation *spr = &spriteAnimationList[id];
+        spr->scope           = scope;
+        memcpy(spr->hash, hash, 4 * sizeof(uint));
 
         uint frameCount = ReadInt32(&info);
-        AllocateStorage(frameCount * sizeof(SpriteFrame), NULL, DATASET_STG, false);
+        AllocateStorage(frameCount * sizeof(SpriteFrame), (void**)&spr->frames, DATASET_STG, false);
 
         byte sheetCount = ReadInt8(&info);
         for (int s = 0; s < sheetCount; ++s) {
@@ -63,20 +58,22 @@ short LoadAnimation(const char *filename, Scopes scope)
             ReadString(&info, nameBuffer[h]);
         }
 
-        animFile->animCount = ReadInt16(&info);
-        for (int a = 0; a < animFile->animCount; ++a) {
-            SpriteAnimationEntry *animation = &animationList[animationCount++];
+        spr->animCount = ReadInt16(&info);
+        AllocateStorage(spr->animCount * sizeof(SpriteAnimationEntry), (void **)&spr->animations, DATASET_STG, false);
+        int frameID = 0;
+        for (int a = 0; a < spr->animCount; ++a) {
+            SpriteAnimationEntry *animation = &spr->animations[a];
             ReadString(&info, hashBuffer);
             GenerateHash(animation->hash, StrLength(hashBuffer));
 
-            animation->frameCount  = ReadInt16(&info);
-            animation->frameListOffset = animFrameCount;
-            animation->animationSpeed = ReadInt16(&info);
+            animation->frameCount      = ReadInt16(&info);
+            animation->frameListOffset = frameID;
+            animation->animationSpeed  = ReadInt16(&info);
             animation->loopIndex       = ReadInt8(&info);
-            animation->rotationFlag   = ReadInt8(&info);
+            animation->rotationFlag    = ReadInt8(&info);
 
             for (int f = 0; f < animation->frameCount; ++f) {
-                SpriteFrame *frame = &animFrames[animFrameCount++];
+                SpriteFrame *frame = &spr->frames[frameID++];
                 frame->sheetID     = sheetIDs[ReadInt8(&info)];
                 frame->delay       = ReadInt16(&info);
                 frame->id          = ReadInt16(&info);
@@ -104,6 +101,42 @@ short LoadAnimation(const char *filename, Scopes scope)
     return -1;
 }
 
+short CreateAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope)
+{
+    char buffer[0x100];
+    FileInfo info;
+    StrCopy(buffer, "Data/Sprites/");
+    StrAdd(buffer, filename);
+
+    uint hash[4];
+    StrCopy(hashBuffer, filename);
+    GenerateHash(hash, StrLength(filename));
+
+    for (int i = 0; i < SPRFILE_COUNT; ++i) {
+        if (memcmp(hash, spriteAnimationList[i].hash, 4 * sizeof(int)) == 0) {
+            return i;
+        }
+    }
+
+    ushort id = -1;
+    for (id = 0; id < SPRFILE_COUNT; ++id) {
+        if (spriteAnimationList[id].scope == SCOPE_NONE)
+            break;
+    }
+
+    if (id >= SPRFILE_COUNT)
+        return -1;
+
+    SpriteAnimation *spr = &spriteAnimationList[id];
+    spr->scope           = scope;
+    memcpy(spr->hash, hash, 4 * sizeof(uint));
+
+    AllocateStorage(sizeof(SpriteFrame) * (frameCount > 0x400 ? 0x400 : frameCount), (void **)&spr->frames, DATASET_STG, true);
+    AllocateStorage(sizeof(SpriteAnimationEntry) * (animCount > 0x40 ? 0x40 : animCount), (void **)&spr->animations, DATASET_STG, true);
+
+    return id;
+}
+
 void ProcessAnimation(EntityAnimationData *data)
 {
     if (data) {
@@ -125,6 +158,72 @@ void ProcessAnimation(EntityAnimationData *data)
                     if (data->frameID >= data->frameCount)
                         data->frameID = data->loopIndex;
                     data->frameDelay = data->framePtrs[data->frameID].delay;
+                }
+            }
+        }
+    }
+}
+
+int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing)
+{
+    if (sprIndex >= SPRFILE_COUNT)
+        return 0;
+    if (!info)
+        return 0;
+
+    SpriteAnimation *spr       = &spriteAnimationList[sprIndex];
+    if (animID < spr->animCount) {
+        SpriteAnimationEntry *anim = &spr->animations[animID];
+
+        if (startIndex >= 0) {
+            if (startIndex >= info->textLength)
+                startIndex = info->textLength - 1;
+        }
+        else {
+            startIndex = 0;
+        }
+
+        if (length > 0) {
+            if (length > info->textLength)
+                length = info->textLength;
+        }
+        else {
+            length = info->textLength;
+        }
+
+        int w = 0;
+        for (int c = startIndex; c < length; ++c) {
+            int charFrame = info->text[c];
+            if (charFrame < anim->frameCount) {
+                w += spr->frames[charFrame + anim->frameListOffset].width;
+                if (c + 1 >= length)
+                    return w;
+                w += spacing;
+            }
+        }
+        return w;
+    }
+    return 0;
+}
+
+void SetSpriteString(ushort spriteIndex, ushort animID, TextInfo* info) {
+    if (spriteIndex >= SPRFILE_COUNT)
+        return;
+    if (!info)
+        return;
+
+    
+    SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
+    if (animID < spr->animCount) {
+        SpriteAnimationEntry *anim = &spr->animations[animID];
+
+        for (int c = 0; c < info->textLength; ++c) {
+            int charVal = info->text[c];
+            info->text[c] = -1;
+            for (int f = 0; f < anim->frameCount; ++f) {
+                if (spr->frames[f + anim->frameListOffset].id == charVal) {
+                    info->text[c] = f;
+                    break;
                 }
             }
         }

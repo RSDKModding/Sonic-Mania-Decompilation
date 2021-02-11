@@ -178,15 +178,15 @@ enum FunctionTableIDs {
     FunctionTable_SetupMeshAnimation,
     FunctionTable_Draw3DScene,
     FunctionTable_LoadAnimation,
-    FunctionTable_AnimationDoSomething,
+    FunctionTable_CreateAnimation,
     FunctionTable_SetSpriteAnimation,
-    FunctionTable_DoSpriteAnimationSomething,
+    FunctionTable_EditAnimation,
     FunctionTable_SetSpriteString,
-    FunctionTable_DoAnimationListSomething,
+    FunctionTable_GetAnimation,
     FunctionTable_GetFrame,
     FunctionTable_GetHitbox,
     FunctionTable_GetFrameID,
-    FunctionTable_Unknown82,
+    FunctionTable_GetStringWidth,
     FunctionTable_ProcessAnimation,
     FunctionTable_GetSceneLayerID,
     FunctionTable_GetSceneLayerPtr,
@@ -252,6 +252,10 @@ enum FunctionTableIDs {
 
 SKUInfo curSKU;
 
+void NullFunc() {
+
+}
+
 void setupFunctions()
 {
     curSKU.platform = GAME_PLATFORM;
@@ -265,65 +269,65 @@ void setupFunctions()
     memset(functionTable, 0, FUNCTABLE_COUNT * sizeof(void *));
 
     // Userdata
-    userDataTable[UserdataTable_Unknown1]             = NULL;
-    userDataTable[UserdataTable_GetConfirmButtonFlip] = NULL;
-    userDataTable[UserdataTable_Unknown2]             = NULL;
-    userDataTable[UserdataTable_Unknown3]             = NULL;
-    userDataTable[UserdataTable_Unknown4]             = NULL;
-    userDataTable[UserdataTable_CheckDLC]             = NULL;
-    userDataTable[UserdataTable_Unknown5]             = NULL;
-    userDataTable[UserdataTable_UnlockAchievement]    = NULL;
-    userDataTable[UserdataTable_Missing1]             = NULL;
-    userDataTable[UserdataTable_Unknown6]             = NULL;
-    userDataTable[UserdataTable_Unknown7]             = NULL;
-    userDataTable[UserdataTable_Unknown8]             = NULL;
-    userDataTable[UserdataTable_Unknown9]             = NULL;
-    userDataTable[UserdataTable_Unknown10]            = NULL;
-    userDataTable[UserdataTable_Unknown11]            = NULL;
-    userDataTable[UserdataTable_Missing2]             = NULL;
-    userDataTable[UserdataTable_Unknown12]            = NULL;
-    userDataTable[UserdataTable_Missing3]             = NULL;
-    userDataTable[UserdataTable_Unknown13]            = NULL;
-    userDataTable[UserdataTable_PossiblyGetStrings]   = NULL;
-    userDataTable[UserdataTable_Unknown14]            = NULL;
-    userDataTable[UserdataTable_Missing4]             = NULL;
-    userDataTable[UserdataTable_Unknown15]            = NULL;
-    userDataTable[UserdataTable_Unknown16]            = NULL;
-    userDataTable[UserdataTable_Unknown17]            = NULL;
-    userDataTable[UserdataTable_Unknown18]            = NULL;
-    userDataTable[UserdataTable_Unknown19]            = NULL;
-    userDataTable[UserdataTable_Unknown20]            = NULL;
-    userDataTable[UserdataTable_Unknown21]            = NULL;
-    userDataTable[UserdataTable_Unknown22]            = NULL;
-    userDataTable[UserdataTable_Unknown23]            = NULL;
-    userDataTable[UserdataTable_Unknown24]            = NULL;
-    userDataTable[UserdataTable_Missing5]             = NULL;
-    userDataTable[UserdataTable_Unknown25]            = NULL;
-    userDataTable[UserdataTable_Unknown26]            = NULL;
-    userDataTable[UserdataTable_Unknown27]            = NULL;
-    userDataTable[UserdataTable_Unknown28]            = NULL;
-    userDataTable[UserdataTable_LoadUserFile]         = NULL;
-    userDataTable[UserdataTable_SaveUserFile]         = NULL;
-    userDataTable[UserdataTable_DeleteUserFile]       = NULL;
-    userDataTable[UserdataTable_AddUserDBEntry]       = NULL;
-    userDataTable[UserdataTable_OpenUserDB]           = NULL;
-    userDataTable[UserdataTable_SaveUserDB]           = NULL;
-    userDataTable[UserdataTable_Unknown30]            = NULL;
-    userDataTable[UserdataTable_Missing6]             = NULL;
-    userDataTable[UserdataTable_Unknown31]            = NULL;
-    userDataTable[UserdataTable_Unknown32]            = NULL;
-    userDataTable[UserdataTable_Unknown33]            = NULL;
-    userDataTable[UserdataTable_Unknown34]            = NULL;
-    userDataTable[UserdataTable_Unknown35]            = NULL;
-    userDataTable[UserdataTable_Unknown36]            = NULL;
-    userDataTable[UserdataTable_Unknown37]            = NULL;
-    userDataTable[UserdataTable_Unknown38]            = NULL;
-    userDataTable[UserdataTable_Unknown39]            = NULL;
-    userDataTable[UserdataTable_AddUserDB]            = NULL;
-    userDataTable[UserdataTable_Unknown40]            = NULL;
-    userDataTable[UserdataTable_Unknown41]            = NULL;
-    userDataTable[UserdataTable_Unknown42]            = NULL;
-    userDataTable[UserdataTable_Unknown43]            = NULL;
+    userDataTable[UserdataTable_Unknown1]             = NullFunc;
+    userDataTable[UserdataTable_GetConfirmButtonFlip] = NullFunc;
+    userDataTable[UserdataTable_Unknown2]             = NullFunc;
+    userDataTable[UserdataTable_Unknown3]             = NullFunc;
+    userDataTable[UserdataTable_Unknown4]             = NullFunc;
+    userDataTable[UserdataTable_CheckDLC]             = NullFunc;
+    userDataTable[UserdataTable_Unknown5]             = NullFunc;
+    userDataTable[UserdataTable_UnlockAchievement]    = NullFunc;
+    userDataTable[UserdataTable_Missing1]             = NullFunc;
+    userDataTable[UserdataTable_Unknown6]             = NullFunc;
+    userDataTable[UserdataTable_Unknown7]             = NullFunc;
+    userDataTable[UserdataTable_Unknown8]             = NullFunc;
+    userDataTable[UserdataTable_Unknown9]             = NullFunc;
+    userDataTable[UserdataTable_Unknown10]            = NullFunc;
+    userDataTable[UserdataTable_Unknown11]            = NullFunc;
+    userDataTable[UserdataTable_Missing2]             = NullFunc;
+    userDataTable[UserdataTable_Unknown12]            = NullFunc;
+    userDataTable[UserdataTable_Missing3]             = NullFunc;
+    userDataTable[UserdataTable_Unknown13]            = NullFunc;
+    userDataTable[UserdataTable_PossiblyGetStrings]   = NullFunc;
+    userDataTable[UserdataTable_Unknown14]            = NullFunc;
+    userDataTable[UserdataTable_Missing4]             = NullFunc;
+    userDataTable[UserdataTable_Unknown15]            = NullFunc;
+    userDataTable[UserdataTable_Unknown16]            = NullFunc;
+    userDataTable[UserdataTable_Unknown17]            = NullFunc;
+    userDataTable[UserdataTable_Unknown18]            = NullFunc;
+    userDataTable[UserdataTable_Unknown19]            = NullFunc;
+    userDataTable[UserdataTable_Unknown20]            = NullFunc;
+    userDataTable[UserdataTable_Unknown21]            = NullFunc;
+    userDataTable[UserdataTable_Unknown22]            = NullFunc;
+    userDataTable[UserdataTable_Unknown23]            = NullFunc;
+    userDataTable[UserdataTable_Unknown24]            = NullFunc;
+    userDataTable[UserdataTable_Missing5]             = NullFunc;
+    userDataTable[UserdataTable_Unknown25]            = NullFunc;
+    userDataTable[UserdataTable_Unknown26]            = NullFunc;
+    userDataTable[UserdataTable_Unknown27]            = NullFunc;
+    userDataTable[UserdataTable_Unknown28]            = NullFunc;
+    userDataTable[UserdataTable_LoadUserFile]         = NullFunc;
+    userDataTable[UserdataTable_SaveUserFile]         = NullFunc;
+    userDataTable[UserdataTable_DeleteUserFile]       = NullFunc;
+    userDataTable[UserdataTable_AddUserDBEntry]       = NullFunc;
+    userDataTable[UserdataTable_OpenUserDB]           = NullFunc;
+    userDataTable[UserdataTable_SaveUserDB]           = NullFunc;
+    userDataTable[UserdataTable_Unknown30]            = NullFunc;
+    userDataTable[UserdataTable_Missing6]             = NullFunc;
+    userDataTable[UserdataTable_Unknown31]            = NullFunc;
+    userDataTable[UserdataTable_Unknown32]            = NullFunc;
+    userDataTable[UserdataTable_Unknown33]            = NullFunc;
+    userDataTable[UserdataTable_Unknown34]            = NullFunc;
+    userDataTable[UserdataTable_Unknown35]            = NullFunc;
+    userDataTable[UserdataTable_Unknown36]            = NullFunc;
+    userDataTable[UserdataTable_Unknown37]            = NullFunc;
+    userDataTable[UserdataTable_Unknown38]            = NullFunc;
+    userDataTable[UserdataTable_Unknown39]            = NullFunc;
+    userDataTable[UserdataTable_AddUserDB]            = NullFunc;
+    userDataTable[UserdataTable_Unknown40]            = NullFunc;
+    userDataTable[UserdataTable_Unknown41]            = NullFunc;
+    userDataTable[UserdataTable_Unknown42]            = NullFunc;
+    userDataTable[UserdataTable_Unknown43]            = NullFunc;
 
     //Function Table
     functionTable[FunctionTable_InitGameOptions]              = InitGameOptions;
@@ -342,23 +346,23 @@ void setupFunctions()
     functionTable[FunctionTable_ResetEntity]                  = ResetEntity;
     functionTable[FunctionTable_SpawnEntity]                  = SpawnEntity;
     functionTable[FunctionTable_CopyEntity]                   = CopyEntity;
-    functionTable[FunctionTable_CheckOnScreen]                = NULL; // CheckOnScreen;
-    functionTable[FunctionTable_CheckPosOnScreen]             = NULL; // CheckPosOnScreen;
-    functionTable[FunctionTable_AddDrawListRef]               = NULL; // AddDrawListRef;
-    functionTable[FunctionTable_SwapDrawLayers]               = NULL; // SwapDrawLayers;
+    functionTable[FunctionTable_CheckOnScreen]                = NullFunc; // CheckOnScreen;
+    functionTable[FunctionTable_CheckPosOnScreen]             = NullFunc; // CheckPosOnScreen;
+    functionTable[FunctionTable_AddDrawListRef]               = NullFunc; // AddDrawListRef;
+    functionTable[FunctionTable_SwapDrawLayers]               = NullFunc; // SwapDrawLayers;
     functionTable[FunctionTable_SetDrawLayerProperties]       = SetDrawLayerProperties;
-    functionTable[FunctionTable_LoadScene]                    = NULL; // LoadScene;
+    functionTable[FunctionTable_LoadScene]                    = NullFunc; // LoadScene;
     functionTable[FunctionTable_SetGameMode]                  = SetEngineState;
-    functionTable[FunctionTable_Unknown53]                    = NULL; // Unknown53;
+    functionTable[FunctionTable_Unknown53]                    = NullFunc; // Unknown53;
     functionTable[FunctionTable_CheckValidScene]              = CheckValidStage;
     functionTable[FunctionTable_CheckSceneFolder]             = CheckSceneFolder;
     functionTable[FunctionTable_InitSceneLoad]                = InitSceneLoad;
     functionTable[FunctionTable_GetObjectByName]              = GetObjectByName;
     functionTable[FunctionTable_ClearScreens]                 = ClearScreens;
     functionTable[FunctionTable_AddScreen]                    = AddScreen;
-    functionTable[FunctionTable_GetSettingsValue]             = NULL; // GetSettingsValue;
-    functionTable[FunctionTable_SetSettingsValue]             = NULL; // SetSettingsValue;
-    functionTable[FunctionTable_ResizeWindow]                 = NULL; // ResizeWindow;
+    functionTable[FunctionTable_GetSettingsValue]             = NullFunc; // GetSettingsValue;
+    functionTable[FunctionTable_SetSettingsValue]             = NullFunc; // SetSettingsValue;
+    functionTable[FunctionTable_ResizeWindow]                 = NullFunc; // ResizeWindow;
     functionTable[FunctionTable_Sin1024]                      = sin1024;
     functionTable[FunctionTable_Cos1024]                      = cos1024;
     functionTable[FunctionTable_ATan1024]                     = aTan1024;
@@ -389,19 +393,19 @@ void setupFunctions()
     functionTable[FunctionTable_MatrixInverse]                = matrixInverse;
     functionTable[FunctionTable_MatrixCopy]                   = matrixCopy;
     functionTable[FunctionTable_SetText]                      = SetText; // SetText;
-    functionTable[FunctionTable_Unknown64]                    = NULL; // Unknown64;
-    functionTable[FunctionTable_Unknown65]                    = NULL; // Unknown65;
-    functionTable[FunctionTable_Unknown66]                    = NULL; // Unknown66;
-    functionTable[FunctionTable_Unknown67]                    = NULL; // Unknown67;
-    functionTable[FunctionTable_LoadStrings]                  = NULL; // LoadStrings;
-    functionTable[FunctionTable_Unknown68]                    = NULL; // Unknown68;
-    functionTable[FunctionTable_CopyString]                   = NULL; // CopyString;
-    functionTable[FunctionTable_Unknown69]                    = NULL; // Unknown69;
-    functionTable[FunctionTable_Unknown70]                    = NULL; // Unknown70;
-    functionTable[FunctionTable_Unknown71]                    = NULL; // Unknown71;
+    functionTable[FunctionTable_Unknown64]                    = NullFunc; // Unknown64;
+    functionTable[FunctionTable_Unknown65]                    = NullFunc; // Unknown65;
+    functionTable[FunctionTable_Unknown66]                    = NullFunc; // Unknown66;
+    functionTable[FunctionTable_Unknown67]                    = NullFunc; // Unknown67;
+    functionTable[FunctionTable_LoadStrings]                  = NullFunc; // LoadStrings;
+    functionTable[FunctionTable_Unknown68]                    = NullFunc; // Unknown68;
+    functionTable[FunctionTable_CopyString]                   = NullFunc; // CopyString;
+    functionTable[FunctionTable_Unknown69]                    = NullFunc; // Unknown69;
+    functionTable[FunctionTable_Unknown70]                    = NullFunc; // Unknown70;
+    functionTable[FunctionTable_Unknown71]                    = NullFunc; // Unknown71;
     functionTable[FunctionTable_SetScreenSize]                = SetScreenSize;
     functionTable[FunctionTable_SetClipBounds]                = SetClipBounds;
-    functionTable[FunctionTable_SetScreenFade]                = NULL; // SetScreenFade;
+    functionTable[FunctionTable_SetScreenFade]                = NullFunc; // SetScreenFade;
     functionTable[FunctionTable_LoadSpriteSheet]              = LoadSpriteSheet;
     functionTable[FunctionTable_SetLookupTable]               = SetLookupTable;
     functionTable[FunctionTable_SetPaletteMask]               = SetPaletteMask;
@@ -412,7 +416,7 @@ void setupFunctions()
     functionTable[FunctionTable_LoadPalette]                  = LoadPalette;
     functionTable[FunctionTable_RotatePalette]                = RotatePalette;
     functionTable[FunctionTable_SetLimitedFade]               = SetPaletteFade;
-    functionTable[FunctionTable_DoPaletteSomething3]          = NULL; // DoPaletteSomething3;
+    functionTable[FunctionTable_DoPaletteSomething3]          = NullFunc; // DoPaletteSomething3;
     functionTable[FunctionTable_DrawRect]                     = DrawRectangle;
     functionTable[FunctionTable_DrawLine]                     = DrawLine;
     functionTable[FunctionTable_DrawCircle]                   = DrawCircle;
@@ -420,80 +424,80 @@ void setupFunctions()
     functionTable[FunctionTable_DrawQuad]                     = DrawQuad;
     functionTable[FunctionTable_DrawTexturedQuad]             = DrawTexturedQuad;
     functionTable[FunctionTable_DrawSprite]                   = DrawSprite;
-    functionTable[FunctionTable_DrawUnknown]                  = // DrawUnknown;
+    functionTable[FunctionTable_DrawUnknown]                  = NullFunc; // DrawUnknown;
     functionTable[FunctionTable_DrawText]                     = DrawText;
     functionTable[FunctionTable_DrawTile]                     = DrawTile;
-    functionTable[FunctionTable_CopyTile]                     = NULL; // CopyTile;
+    functionTable[FunctionTable_CopyTile]                     = NullFunc; // CopyTile;
     functionTable[FunctionTable_DrawAniTile]                  = DrawAniTile;
-    functionTable[FunctionTable_SetPaletteThing]              = NULL; // SetPaletteThing;
-    functionTable[FunctionTable_LoadMesh]                     = NULL; // LoadMesh;
-    functionTable[FunctionTable_Create3DScene]                = NULL; // Create3DScene;
-    functionTable[FunctionTable_Init3DScene]                  = NULL; // Init3DScene;
-    functionTable[FunctionTable_View_Something1]              = NULL; // View_Something1;
-    functionTable[FunctionTable_View_Something2]              = NULL; // View_Something2;
-    functionTable[FunctionTable_View_Something3]              = NULL; // View_Something3;
-    functionTable[FunctionTable_SetupMesh]                    = NULL; // SetupMesh;
+    functionTable[FunctionTable_SetPaletteThing]              = NullFunc; // SetPaletteThing;
+    functionTable[FunctionTable_LoadMesh]                     = NullFunc; // LoadMesh;
+    functionTable[FunctionTable_Create3DScene]                = NullFunc; // Create3DScene;
+    functionTable[FunctionTable_Init3DScene]                  = NullFunc; // Init3DScene;
+    functionTable[FunctionTable_View_Something1]              = NullFunc; // View_Something1;
+    functionTable[FunctionTable_View_Something2]              = NullFunc; // View_Something2;
+    functionTable[FunctionTable_View_Something3]              = NullFunc; // View_Something3;
+    functionTable[FunctionTable_SetupMesh]                    = NullFunc; // SetupMesh;
     functionTable[FunctionTable_SetModelAnimation]            = SetModelAnimation;
-    functionTable[FunctionTable_SetupMeshAnimation]           = NULL; // SetupMeshAnimation;
-    functionTable[FunctionTable_Draw3DScene]                  = NULL; // Draw3DScene;
+    functionTable[FunctionTable_SetupMeshAnimation]           = NullFunc; // SetupMeshAnimation;
+    functionTable[FunctionTable_Draw3DScene]                  = NullFunc; // Draw3DScene;
     functionTable[FunctionTable_LoadAnimation]                = LoadAnimation;
-    functionTable[FunctionTable_AnimationDoSomething]         = NULL; // AnimationDoSomething;
+    functionTable[FunctionTable_CreateAnimation]              = CreateAnimation;
     functionTable[FunctionTable_SetSpriteAnimation]           = SetSpriteAnimation;
-    functionTable[FunctionTable_DoSpriteAnimationSomething]   = NULL; // DoSpriteAnimationSomething;
-    functionTable[FunctionTable_SetSpriteString]              = NULL; // SetSpriteString;
-    functionTable[FunctionTable_DoAnimationListSomething]     = NULL; // DoAnimationListSomething;
+    functionTable[FunctionTable_EditAnimation]                = EditAnimation;
+    functionTable[FunctionTable_SetSpriteString]              = SetSpriteString;
+    functionTable[FunctionTable_GetAnimation]                 = GetAnimation;
     functionTable[FunctionTable_GetFrame]                     = GetFrame;
     functionTable[FunctionTable_GetHitbox]                    = GetHitbox;
     functionTable[FunctionTable_GetFrameID]                   = GetFrameID;
-    functionTable[FunctionTable_Unknown82]                    = NULL; // Unknown82;
+    functionTable[FunctionTable_GetStringWidth]               = GetStringWidth;
     functionTable[FunctionTable_ProcessAnimation]             = ProcessAnimation;
-    functionTable[FunctionTable_GetSceneLayerPtr]             = NULL; // GetSceneLayerPtr;
-    functionTable[FunctionTable_GetSceneLayerID]              = NULL; // GetSceneLayerID;
-    functionTable[FunctionTable_GetLayerSize]                 = NULL; // GetLayerSize;
-    functionTable[FunctionTable_GetTileInfo]                  = NULL; // GetTileInfo;
-    functionTable[FunctionTable_SetTileInfo]                  = NULL; // SetTileInfo;
-    functionTable[FunctionTable_CopyTileLayer]                = NULL; // CopyTileLayout;
-    functionTable[FunctionTable_ProcessParallax]              = NULL; // ProcessParallaxScroll;
-    functionTable[FunctionTable_GetLinePosPtrs]               = NULL; // GetLinePositions;
-    functionTable[FunctionTable_CheckObjectCollisionTouch]    = NULL; // CheckObjectCollisionTouch;
-    functionTable[FunctionTable_CheckObjectCollisionPoint]    = NULL; // CheckObjectCollisionPoint;
-    functionTable[FunctionTable_CheckObjectCollisionBox]      = NULL; // CheckObjectCollisionBox;
-    functionTable[FunctionTable_CheckObjectCollisionPlatform] = NULL; // CheckObjectCollisionPlatform;
-    functionTable[FunctionTable_ObjectTileCollision]          = NULL; // ObjectTileCollision;
-    functionTable[FunctionTable_ObjectTileGrip]               = NULL; // ObjectTileGrip;
-    functionTable[FunctionTable_ProcessPlayerTileCollisions]  = NULL; // ProcessPlayerTileCollisions;
-    functionTable[FunctionTable_GetTileAngle]                 = NULL; // GetTileAngle;
-    functionTable[FunctionTable_SetTileAngle]                 = NULL; // SetTileAngle;
-    functionTable[FunctionTable_GetTileBehaviour]             = NULL; // GetTileBehaviour;
-    functionTable[FunctionTable_SetTileBehaviour]             = NULL; // SetTileBehaviour;
-    functionTable[FunctionTable_GetSFX]                       = NULL; // GetSoundFX;
-    functionTable[FunctionTable_PlaySFX]                      = NULL; // PlaySFX;
-    functionTable[FunctionTable_StopSFX]                      = NULL; // StopSFX;
-    functionTable[FunctionTable_PlayMusic]                    = NULL; // PlayMusicFile;
-    functionTable[FunctionTable_SetSoundAttributes]           = NULL; // SetSoundAttributes;
-    functionTable[FunctionTable_Unknown91]                    = NULL; // Unknown91;
-    functionTable[FunctionTable_Unknown92]                    = NULL; // Unknown92;
-    functionTable[FunctionTable_Unknown93]                    = NULL; // Unknown93;
-    functionTable[FunctionTable_Unknown94]                    = NULL; // Unknown94;
-    functionTable[FunctionTable_Unknown95]                    = NULL; // Unknown95;
-    functionTable[FunctionTable_Unknown96]                    = NULL; // Unknown96;
-    functionTable[FunctionTable_LoadVideo]                    = NULL; // LoadVideo;
-    functionTable[FunctionTable_LoadPNG]                      = NULL; // LoadPNG;
-    functionTable[FunctionTable_Unknown98]                    = NULL; // Unknown98;
-    functionTable[FunctionTable_Unknown99]                    = NULL; // Unknown99;
-    functionTable[FunctionTable_Unknown100]                   = NULL; // Unknown100;
-    functionTable[FunctionTable_Unknown101]                   = NULL; // Unknown101;
-    functionTable[FunctionTable_Unknown102]                   = NULL; // Unknown102;
-    functionTable[FunctionTable_Unknown103]                   = NULL; // Unknown103;
-    functionTable[FunctionTable_Unknown104]                   = NULL; // Unknown104;
-    functionTable[FunctionTable_Missing21]                    = NULL; // UserDataUnknown1;
-    functionTable[FunctionTable_Missing22]                    = NULL; // UserDataUnknown2;
-    functionTable[FunctionTable_Missing23]                    = NULL; // UserDataUnknown3;
-    functionTable[FunctionTable_Missing24]                    = NULL; // UserDataUnknown4;
-    functionTable[FunctionTable_Missing25]                    = NULL; // UserDataUnknown5;
-    functionTable[FunctionTable_Missing26]                    = NULL; // UserDataUnknown6;
-    functionTable[FunctionTable_LoadUserFile]                 = NULL; // LoadUserFile;
-    functionTable[FunctionTable_SaveUserFile]                 = NULL; // SaveUserFile;
+    functionTable[FunctionTable_GetSceneLayerPtr]             = NullFunc; // GetSceneLayerPtr;
+    functionTable[FunctionTable_GetSceneLayerID]              = NullFunc; // GetSceneLayerID;
+    functionTable[FunctionTable_GetLayerSize]                 = NullFunc; // GetLayerSize;
+    functionTable[FunctionTable_GetTileInfo]                  = NullFunc; // GetTileInfo;
+    functionTable[FunctionTable_SetTileInfo]                  = NullFunc; // SetTileInfo;
+    functionTable[FunctionTable_CopyTileLayer]                = NullFunc; // CopyTileLayout;
+    functionTable[FunctionTable_ProcessParallax]              = NullFunc; // ProcessParallaxScroll;
+    functionTable[FunctionTable_GetLinePosPtrs]               = NullFunc; // GetLinePositions;
+    functionTable[FunctionTable_CheckObjectCollisionTouch]    = NullFunc; // CheckObjectCollisionTouch;
+    functionTable[FunctionTable_CheckObjectCollisionPoint]    = NullFunc; // CheckObjectCollisionPoint;
+    functionTable[FunctionTable_CheckObjectCollisionBox]      = NullFunc; // CheckObjectCollisionBox;
+    functionTable[FunctionTable_CheckObjectCollisionPlatform] = NullFunc; // CheckObjectCollisionPlatform;
+    functionTable[FunctionTable_ObjectTileCollision]          = NullFunc; // ObjectTileCollision;
+    functionTable[FunctionTable_ObjectTileGrip]               = NullFunc; // ObjectTileGrip;
+    functionTable[FunctionTable_ProcessPlayerTileCollisions]  = NullFunc; // ProcessPlayerTileCollisions;
+    functionTable[FunctionTable_GetTileAngle]                 = NullFunc; // GetTileAngle;
+    functionTable[FunctionTable_SetTileAngle]                 = NullFunc; // SetTileAngle;
+    functionTable[FunctionTable_GetTileBehaviour]             = NullFunc; // GetTileBehaviour;
+    functionTable[FunctionTable_SetTileBehaviour]             = NullFunc; // SetTileBehaviour;
+    functionTable[FunctionTable_GetSFX]                       = NullFunc; // GetSoundFX;
+    functionTable[FunctionTable_PlaySFX]                      = NullFunc; // PlaySFX;
+    functionTable[FunctionTable_StopSFX]                      = NullFunc; // StopSFX;
+    functionTable[FunctionTable_PlayMusic]                    = NullFunc; // PlayMusicFile;
+    functionTable[FunctionTable_SetSoundAttributes]           = NullFunc; // SetSoundAttributes;
+    functionTable[FunctionTable_Unknown91]                    = NullFunc; // Unknown91;
+    functionTable[FunctionTable_Unknown92]                    = NullFunc; // Unknown92;
+    functionTable[FunctionTable_Unknown93]                    = NullFunc; // Unknown93;
+    functionTable[FunctionTable_Unknown94]                    = NullFunc; // Unknown94;
+    functionTable[FunctionTable_Unknown95]                    = NullFunc; // Unknown95;
+    functionTable[FunctionTable_Unknown96]                    = NullFunc; // Unknown96;
+    functionTable[FunctionTable_LoadVideo]                    = NullFunc; // LoadVideo;
+    functionTable[FunctionTable_LoadPNG]                      = NullFunc; // LoadPNG;
+    functionTable[FunctionTable_Unknown98]                    = NullFunc; // Unknown98;
+    functionTable[FunctionTable_Unknown99]                    = NullFunc; // Unknown99;
+    functionTable[FunctionTable_Unknown100]                   = NullFunc; // Unknown100;
+    functionTable[FunctionTable_Unknown101]                   = NullFunc; // Unknown101;
+    functionTable[FunctionTable_Unknown102]                   = NullFunc; // Unknown102;
+    functionTable[FunctionTable_Unknown103]                   = NullFunc; // Unknown103;
+    functionTable[FunctionTable_Unknown104]                   = NullFunc; // Unknown104;
+    functionTable[FunctionTable_Missing21]                    = NullFunc; // UserDataUnknown1;
+    functionTable[FunctionTable_Missing22]                    = NullFunc; // UserDataUnknown2;
+    functionTable[FunctionTable_Missing23]                    = NullFunc; // UserDataUnknown3;
+    functionTable[FunctionTable_Missing24]                    = NullFunc; // UserDataUnknown4;
+    functionTable[FunctionTable_Missing25]                    = NullFunc; // UserDataUnknown5;
+    functionTable[FunctionTable_Missing26]                    = NullFunc; // UserDataUnknown6;
+    functionTable[FunctionTable_LoadUserFile]                 = NullFunc; // LoadUserFile;
+    functionTable[FunctionTable_SaveUserFile]                 = NullFunc; // SaveUserFile;
     functionTable[FunctionTable_printLog]                     = printLog;
     functionTable[FunctionTable_printString]                  = printString;
     functionTable[FunctionTable_printText]                    = printText;
@@ -502,8 +506,8 @@ void setupFunctions()
     functionTable[FunctionTable_printFloat]                   = printFloat;
     functionTable[FunctionTable_printVector2]                 = printVector2;
     functionTable[FunctionTable_printHitbox]                  = printHitbox;
-    functionTable[FunctionTable_Unknown105]                   = NULL; // UserDataUnknown7;
-    functionTable[FunctionTable_Unknown106]                   = NULL; // UserDataUnknown8;
+    functionTable[FunctionTable_Unknown105]                   = NullFunc; // UserDataUnknown7;
+    functionTable[FunctionTable_Unknown106]                   = NullFunc; // UserDataUnknown8;
     functionTable[FunctionTable_ClearDebugValues]             = ClearDebugValues;
     functionTable[FunctionTable_SetDebugValue]                = SetDebugValue;
 }

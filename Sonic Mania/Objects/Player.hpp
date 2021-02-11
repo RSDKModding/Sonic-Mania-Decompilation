@@ -61,6 +61,14 @@ enum PLAYER_ANI {
     ANI_SWIMLIFT       = 0x36,
 };
 
+enum ShieldTypes {
+    SHIELD_NONE      = 0,
+    SHIELD_BLUE      = 1,
+    SHIELD_BUBBLE    = 2,
+    SHIELD_FIRE      = 3,
+    SHIELD_LIGHTNING = 4,
+};
+
 // Object Class
 struct ObjectPlayer : Object{
     int sonicPhysicsTable[0x40];

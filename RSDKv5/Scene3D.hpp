@@ -90,6 +90,29 @@ void matrixCopy(Matrix *matDst, Matrix* matSrc);
 ushort LoadMesh(const char *filepath, Scopes scope);
 ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
 void Init3DScene(ushort sceneID);
+
+inline void SetModelAnimation(ushort model, EntityAnimationData *data, short animSpeed, byte loopIndex, bool forceApply, ushort frameID)
+{
+    if (model >= MODEL_MAX) {
+        if (data)
+            data->framePtrs = 0;
+        return;
+    }
+    if (!data)
+        return;
+
+    if (data->animationID == model && !forceApply)
+        return;
+    data->framePtrs       = (SpriteFrame *)1;
+    data->animationTimer  = 0;
+    data->frameID         = frameID;
+    data->frameCount      = modelList[model].frameCount;
+    data->animationSpeed  = animSpeed;
+    data->prevAnimationID = data->animationID;
+    data->frameDelay      = 0x100;
+    data->loopIndex       = loopIndex;
+    data->animationID     = model;
+}
 //void View_Something1;
 //void View_Something2;
 //void View_Something3;

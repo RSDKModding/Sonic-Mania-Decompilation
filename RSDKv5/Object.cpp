@@ -235,8 +235,8 @@ void ProcessObjects()
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity    = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->type) {
             switch (sceneInfo.entity->priority) {
                 case ACTIVE_NEVER:
@@ -303,7 +303,6 @@ void ProcessObjects()
         else {
             sceneInfo.entity->inBounds = false;
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 
@@ -312,8 +311,8 @@ void ProcessObjects()
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
             typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
             typeGroups[sceneInfo.entity->type].entries[typeGroups[sceneInfo.entity->type].entryCount++] = e; //type-based slots
@@ -321,19 +320,17 @@ void ProcessObjects()
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; //extra slots
             }
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds) {
             if (objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate) {
                 objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate();
             }
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 }
@@ -355,8 +352,8 @@ void ProcessPausedObjects()
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->type) {
             if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
                 if (objectList[stageObjectIDs[sceneInfo.entity->type]].update) {
@@ -370,7 +367,6 @@ void ProcessPausedObjects()
         else {
             sceneInfo.entity->inBounds = false;
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 
@@ -379,8 +375,8 @@ void ProcessPausedObjects()
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
             typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
             typeGroups[sceneInfo.entity->type].entries[typeGroups[sceneInfo.entity->type].entryCount++] = e; // type-based slots
@@ -388,19 +384,17 @@ void ProcessPausedObjects()
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
             if (objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate) {
                 objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate();
             }
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 }
@@ -422,8 +416,8 @@ void ProcessFrozenObjects()
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->type) {
             switch (sceneInfo.entity->priority) {
                 case ACTIVE_NEVER:
@@ -493,7 +487,6 @@ void ProcessFrozenObjects()
         else {
             sceneInfo.entity->inBounds = false;
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 
@@ -502,8 +495,8 @@ void ProcessFrozenObjects()
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
             typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
             typeGroups[sceneInfo.entity->type].entries[typeGroups[sceneInfo.entity->type].entryCount++] = e; // type-based slots
@@ -511,13 +504,12 @@ void ProcessFrozenObjects()
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 
     sceneInfo.entitySlot = 0;
-    sceneInfo.entity     = &objectEntityList[0];
     for (int e = 0; e < ENTITY_COUNT; ++e) {
+        sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds) {
             if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
                 if (objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate) {
@@ -525,22 +517,21 @@ void ProcessFrozenObjects()
                 }
             }
         }
-        sceneInfo.entity++;
         sceneInfo.entitySlot++;
     }
 }
 void ProcessObjectDrawLists()
 {
     if (sceneInfo.state && sceneInfo.state != ENGINESTATE_LOAD_STEPOVER) {
-        currentScreen = &screens[0];
-        sceneInfo.currentScreenID = 0;
         for (int s = 0; s < screenCount; ++s) {
+            currentScreen             = &screens[s];
+            sceneInfo.currentScreenID = s;
             for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
                 drawLayers[l].layerCount = 0;
             }
 
             for (int t = 0; t < LAYER_COUNT; ++t) {
-                byte drawOrder = 0; // tileLayers[t].drawLayer[l];
+                byte drawOrder = tileLayers[t].drawLayer[s];
                 if (drawOrder < LAYER_COUNT)
                     drawLayers[t].layerDrawList[drawLayers[t].layerCount++] = drawOrder;
             }
@@ -577,19 +568,19 @@ void ProcessObjectDrawLists()
                     }
 
                     for (int i = 0; i < list->layerCount; ++i) {
-                        //TileLayer *layer       = &TileLayers[list->layerDrawList[i]];
-                        //
-                        //if (layer->ParallaxPtr)
-                        //    layer->ParallaxPtr(linePositions);
+                        TileLayer *layer       = &tileLayers[list->layerDrawList[i]];
+                        
+                        //if (layer->parallaxPtr)
+                        //    layer->parallaxPtr(linePositions);
                         //else
                         //    ProcessParallaxScroll(layer);
-                        //switch (layer->Behaviour) {
-                        //    case 0: DrawLayerHScroll(layer); break;
-                        //    case 1: DrawLayerVScroll(layer); break;
-                        //    case 2: DrawLayer3(layer); break;
-                        //    case 3: DrawLayer4(layer); break;
-                        //    default: break;
-                        //}
+                        switch (layer->behaviour) {
+                            //case 0: DrawLayerHScroll(layer); break;
+                            //case 1: DrawLayerVScroll(layer); break;
+                            //case 2: DrawLayer3(layer); break;
+                            //case 3: DrawLayer4(layer); break;
+                            default: break;
+                        }
                     }
                 }
 

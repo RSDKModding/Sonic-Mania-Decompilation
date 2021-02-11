@@ -102,6 +102,8 @@ struct GameOptions {
 	int hasPlusInitial;
 };
 
+extern Hitbox defaultHitbox;
+
 extern GameOptions *options;
 
 #endif //!GAME_OPTIONS_H

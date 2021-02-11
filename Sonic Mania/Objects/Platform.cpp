@@ -27,6 +27,9 @@ void Platform_Create(void* data)
 
 }
 
+void Platform_State_Falling() {}
+void Platform_State_OffScreenReset() {}
+
 void Platform_StageLoad()
 {
 

@@ -99,17 +99,16 @@ void RemoveStorageEntry(int* data) {
             for (int e = 0; e < userStorage[set].entryCount; ++e) {
                 if (data == *userStorage[set].startPtrs1[e]) {
                     *userStorage[set].startPtrs1[e] = NULL;
-                    userStorage[set].startPtrs1[e]  = NULL;
                 }
             }
 
             int c = 0;
             for (int e = 0; e < userStorage[set].entryCount; ++e) {
-                if (userStorage[set].startPtrs1[e]) {
+                if (*userStorage[set].startPtrs1[e]) {
                     if (e != c) {
                         userStorage[set].startPtrs1[c] = userStorage[set].startPtrs1[e];
-                        userStorage[set].startPtrs1[e] = NULL;
                         userStorage[set].startPtrs2[c] = userStorage[set].startPtrs2[e];
+                        userStorage[set].startPtrs1[e] = NULL;
                         userStorage[set].startPtrs2[e] = NULL;
                     }
                     c++;
@@ -135,11 +134,11 @@ void ClearUnusedStorage(StorageDataSets set)
         int totalSizeA  = 0;
         int totalSizeB  = 0;
         int usedStorage = 0;
+        int *memPtr2    = userStorage[set].memPtr;
+        int *memPtr     = userStorage[set].memPtr;
 
         for (int c = 0; c < userStorage[set].usedStorage;) {
-            int *memPtr2    = userStorage[set].memPtr;
-            int *memPtr     = userStorage[set].memPtr;
-            int startOffset = userStorage[set].memPtr[2];
+            int startOffset = memPtr2[2];
             int size        = ((uint)memPtr[3] >> 2) + 4;
             *memPtr         = false;
             int *dataPtr    = &memPtr[startOffset];
@@ -235,13 +234,13 @@ void CleanEmptyStorage(StorageDataSets set)
         DataStorage *storage = &userStorage[set];
 
         for (int e = 0; e < storage->entryCount; ++e) {
-            if (storage->startPtrs1[e])
-                storage->startPtrs1[e] = NULL;
+            if (*storage->startPtrs1[e] && *storage->startPtrs1[e] != storage->startPtrs2[e])
+                *storage->startPtrs1[e] = NULL;
         }
 
         int c = 0;
         for (int e = 0; e < storage->entryCount; ++e) {
-            if (storage->startPtrs1[e]) {
+            if (*storage->startPtrs1[e]) {
                 if (e != c) {
                     storage->startPtrs1[c] = storage->startPtrs1[e];
                     storage->startPtrs2[c] = storage->startPtrs2[e];

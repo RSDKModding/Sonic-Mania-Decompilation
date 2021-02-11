@@ -4,13 +4,16 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLogoSetup : Object{
-
+struct ObjectLogoSetup : Object {
+    int timer;
+    ushort sfx_Sega;
 };
 
 // Entity Class
 struct EntityLogoSetup : Entity {
-
+    void (*state)();
+    void (*stateDraw)();
+    int timer;
 };
 
 // Object Struct
@@ -28,6 +31,11 @@ void LogoSetup_EditorLoad();
 void LogoSetup_Serialize();
 
 // Extra Entity Functions
-
+bool32 LogoSetup_PNGCallback();
+void LogoSetup_CESAScreen();
+void LogoSetup_SegaScreen();
+void LogoSetup_Unknown2();
+void LogoSetup_Unknown3();
+void LogoSetup_Unknown4();
 
 #endif //!OBJ_LOGOSETUP_H

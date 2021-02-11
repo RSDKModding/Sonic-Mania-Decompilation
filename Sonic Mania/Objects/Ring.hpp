@@ -15,13 +15,13 @@ struct ObjectRing : Object{
 struct EntityRing : Entity {
     void (*state)();
     void (*stateDraw)();
-    int type;
+    int ringType;
     int planeFilter;
     int ringAmount;
     int timer;
     int maxFrameCount;
     int sparkleType;
-    Entity *storedPlayer;
+    EntityPlayer *storedPlayer;
     int moveType;
     Vector2 amplitude;
     int moveSpeed;
@@ -46,5 +46,22 @@ void Ring_Serialize();
 // Extra Entity Functions
 void Ring_DebugSpawn();
 void Ring_DebugDraw();
+void Ring_StateDraw_Normal();
+void Ring_StateDraw_Oscillating();
+void Ring_StateDraw_Sparkle();
+void Ring_State_Attract();
+void Ring_State_Big();
+void Ring_State_Bounce();
+void Ring_State_Circular();
+void Ring_State_Grow();
+void Ring_State_Move();
+void Ring_State_Normal();
+void Ring_State_Path();
+void Ring_State_Sparkle();
+void Ring_State_Track();
+void Ring_CheckObjectCollisions(int offsetX, int offsetY);
+byte Ring_CheckPlatformCollisions(EntityPlatform *platform);
+void Ring_Collect();
+void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder);
 
 #endif //!OBJ_RING_H
