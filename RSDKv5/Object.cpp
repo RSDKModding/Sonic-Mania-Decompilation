@@ -8,7 +8,7 @@ int stageObjectIDs[OBJECT_COUNT];
 
 EntityBase objectEntityList[ENTITY_COUNT];
 
-EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
+EditableVarInfo *editableVarList;
 int editableVarCount = 0;
 
 ForeachStackInfo foreachStackList[0x20];
@@ -693,7 +693,8 @@ void SpawnEntity(ushort type, void *data, int x, int y)
     }
 }
 
-bool32 GetActiveObjects(ushort group, Entity *entity) {
+bool32 GetActiveObjects(ushort group, Entity **entity)
+{
     if (group > 0x103u)
         return false;
     if (!entity)
@@ -703,10 +704,10 @@ bool32 GetActiveObjects(ushort group, Entity *entity) {
     bool flag       = 0;
     while (true) {
         if (nextEntity && nextEntity->type == group) {
-            entity = nextEntity;
+            *entity = nextEntity;
             return true;
         }
-        if (flag || entity) {
+        if (flag || *entity) {
             ++stackPtr->id;
         }
         else {
@@ -721,14 +722,15 @@ bool32 GetActiveObjects(ushort group, Entity *entity) {
     foreachStackPtr--;
     return false;
 }
-bool32 GetObjects(ushort type, Entity* entity) {
+bool32 GetObjects(ushort type, Entity **entity)
+{
     if (type > 0xFFu)
         return 0;
     if (!entity)
         return 0;
 
     ForeachStackInfo *stackPtr = foreachStackPtr;
-    if (entity) {
+    if (*entity) {
         ++foreachStackPtr->id;
     }
     else {
@@ -750,6 +752,6 @@ bool32 GetObjects(ushort type, Entity* entity) {
         }
     }
 
-    entity = nextEnt;
+    *entity = nextEnt;
     return true;
 }

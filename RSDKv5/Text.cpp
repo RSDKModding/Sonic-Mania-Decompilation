@@ -142,3 +142,5 @@ void GenerateHash(uint *buffer, int len)
         for (int c = 0; c < 4; ++c) buf[(i << 2) + c] = u.b[c];
     }
 }
+
+char textBuffer[0x100];

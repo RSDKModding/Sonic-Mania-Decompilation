@@ -4,9 +4,18 @@
 #define PALETTE_COUNT (0x8)
 #define PALETTE_SIZE  (0x100)
 
+union Colour {
+    byte bytes[4];
+    uint colour;
+};
+
 extern ushort rIndexes[0x100];
 extern ushort gIndexes[0x100];
 extern ushort bIndexes[0x100];
+
+extern ushort globalPalette[PALETTE_COUNT][PALETTE_SIZE];
+extern ushort activeGlobalRows[PALETTE_COUNT];
+extern ushort activeStageRows[PALETTE_COUNT];
 
 extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 

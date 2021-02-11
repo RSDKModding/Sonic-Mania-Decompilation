@@ -1,3 +1,3 @@
 #include "SonicMania.hpp"
 
-GameOptions options;
+GameOptions *options;

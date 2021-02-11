@@ -5,12 +5,17 @@
 
 // Object Class
 struct ObjectUIPicture : Object{
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityUIPicture : Entity {
-
+    int listID;
+    int frameID;
+    int tag;
+    byte zonePalette;
+    int zoneID;
+    EntityAnimationData animData;
 };
 
 // Object Struct

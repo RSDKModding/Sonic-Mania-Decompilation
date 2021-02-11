@@ -25,9 +25,11 @@ enum InkEffects {
     INK_UNMASKED,
 };
 
-enum DrawFX { FX_NONE, FX_FLIP, FX_ROTATE_NOFLIP, FX_ROTATE, FX_SCALE_NOFLIP, FX_SCALE, FX_ROTOZOOM_NOFLIP, FX_ROTOZOOM };
+enum DrawFX { FX_NONE = 0, FX_FLIP = 1, FX_ROTATE = 2, FX_SCALE = 4 };
 
 enum FlipFlags { FLIP_NONE, FLIP_X, FLIP_Y, FLIP_XY };
+
+enum RotationFlags { ROT_NONE = 0, ROT_FULL, ROT_2, ROT_3, ROT_4, ROT_STATIC, };
 
 enum Alignments {
     ALIGN_LEFT,
@@ -36,12 +38,12 @@ enum Alignments {
 };
 
 struct GFXSurface {
-    byte scope;
     uint hash[4];
+    byte *dataPtr;
     int height;
     int width;
     int lineSize;
-    byte *dataStart;
+    byte scope;
 };
 
 struct ScreenInfo {
@@ -90,6 +92,26 @@ void ReleaseRenderDevice();
 void GenerateBlendLookupTable();
 
 void InitGFXSystem();
+
+
+inline void SetScreenSize(byte screenID, ushort width, ushort height)
+{
+    if (screenCount < SCREEN_MAX) {
+        int screenHeight     = height & 0xFFF0;
+        ScreenInfo *screen   = &screens[screenID];
+        screen->pitch        = width; //(width + 15) & 0xFFFFFFF0;
+        screen->centerX      = width >> 1;
+        screen->width        = width;
+        screen->height       = screenHeight;
+        screen->centerY      = screenHeight >> 1;
+        screen->clipBound_X1 = 0;
+        screen->clipBound_X2 = width;
+        screen->clipBound_Y1 = 0;
+        screen->clipBound_Y2 = screenHeight;
+        screen->unknown      = screenHeight;
+    }
+}
+
 inline void AddScreen(int x, int y, int width, int height)
 {
     if (screenCount < SCREEN_MAX) {

@@ -21,16 +21,18 @@ struct GameInfo {
     char *gameName;
     SKUInfo *currentSKU;
     SceneInfo *sceneInfo;
-    void *activeDPad;
-    void *activeAnalogStick;
-    void *unknown1;
-    void *unknown2;
-    void *unknown3;
-    void *mousePos;
+    ControllerState *controller;
+    AnalogState *stickL;
+    AnalogState *stickR;
+    TriggerState *triggerL;
+    TriggerState *triggerR;
+    TouchMouseData *touchMouse;
     void *inputCount;
     ScreenInfo *screenInfo;
 };
 
 void setupFunctions();
+
+void LinkGameLogic(GameInfo *info);
 
 #endif

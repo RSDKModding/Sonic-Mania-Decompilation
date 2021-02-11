@@ -189,7 +189,7 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
     if (fileName) {
         if (!LoadFile(&image->info, fileName))
             return 0;
-        Seek(&image->info, 6);
+        Seek_Set(&image->info, 6);
         image->width  = ReadInt16(&image->info);
         image->height = ReadInt16(&image->info);
         if (dontLoadData)
@@ -214,18 +214,19 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
         image->info.readPos += 2;
     }
 
-    if (!image->field_50)
-        AllocateStorage(0x400, &image->field_50, DATASET_TMP, true);
+    if (!image->palette)
+        AllocateStorage(0x100 * sizeof(int), (void **)&image->palette, DATASET_TMP, true);
 
     if (!image->dataPtr)
         AllocateStorage(image->width * image->height, (void **)&image->dataPtr, DATASET_TMP, false);
 
-    if (image->field_50) {
+    if (image->palette && *image->dataPtr) {
         byte clr[3];
         int c = 0;
         do {
             ++c;
             ReadBytes(&image->info, clr, 3);
+            image->palette[c] = (clr[0] << 16) | (clr[1] << 8) | (clr[2] << 0);
         } while (c != palette_size);
 
         byte buf = ReadInt8(&image->info);
@@ -242,6 +243,7 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
             do {
                 ++c;
                 ReadBytes(&image->info, clr, 3);
+                image->palette[c] = (clr[0] << 16) | (clr[1] << 8) | (clr[2] << 0);
             } while (c != 0x100);
         }
 
@@ -269,7 +271,7 @@ short LoadSpriteSheet(const char *filename, Scopes scope)
         }
     }
 
-    short id = -1;
+    ushort id = -1;
     for (id = 0; id < SURFACE_MAX; ++id) {
         if (gfxSurface[id].scope == SCOPE_NONE)
             break;
@@ -301,9 +303,9 @@ short LoadSpriteSheet(const char *filename, Scopes scope)
             surface->lineSize = ls;
         }
 
-        byte *gfxDataPtr = NULL; //&gfxData[8 * v16];
-        AllocateStorage(surface->width * surface->height, (void **)&gfxDataPtr, DATASET_STG, false);
-        image.dataPtr = gfxDataPtr;
+        surface->dataPtr = NULL;
+        AllocateStorage(surface->width * surface->height, (void **)&surface->dataPtr, DATASET_STG, false);
+        image.dataPtr = surface->dataPtr;
         LoadGIF(&image, NULL, false);
 
         CloseFile(&image.info);

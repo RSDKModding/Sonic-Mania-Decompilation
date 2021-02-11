@@ -95,7 +95,7 @@ enum FunctionTableIDs {
     FunctionTable_CheckSceneFolder,
     FunctionTable_InitSceneLoad,
     FunctionTable_GetObjectByName,
-    FunctionTable_ResetScreenCount,
+    FunctionTable_ClearScreens,
     FunctionTable_AddScreen,
     FunctionTable_GetSettingsValue,
     FunctionTable_SetSettingsValue,
@@ -350,11 +350,11 @@ void setupFunctions()
     functionTable[FunctionTable_LoadScene]                    = NULL; // LoadScene;
     functionTable[FunctionTable_SetGameMode]                  = SetEngineState;
     functionTable[FunctionTable_Unknown53]                    = NULL; // Unknown53;
-    functionTable[FunctionTable_CheckValidScene]              = NULL; // CheckValidStage;
-    functionTable[FunctionTable_CheckSceneFolder]             = NULL; // CheckSceneFolder;
-    functionTable[FunctionTable_InitSceneLoad]                = NULL; // InitSceneLoad;
+    functionTable[FunctionTable_CheckValidScene]              = CheckValidStage;
+    functionTable[FunctionTable_CheckSceneFolder]             = CheckSceneFolder;
+    functionTable[FunctionTable_InitSceneLoad]                = InitSceneLoad;
     functionTable[FunctionTable_GetObjectByName]              = GetObjectByName;
-    functionTable[FunctionTable_ResetScreenCount]             = NULL; // ResetScreenCount;
+    functionTable[FunctionTable_ClearScreens]                 = ClearScreens;
     functionTable[FunctionTable_AddScreen]                    = AddScreen;
     functionTable[FunctionTable_GetSettingsValue]             = NULL; // GetSettingsValue;
     functionTable[FunctionTable_SetSettingsValue]             = NULL; // SetSettingsValue;
@@ -378,17 +378,17 @@ void setupFunctions()
     functionTable[FunctionTable_Random]                       = random2;
     functionTable[FunctionTable_SetRandKey]                   = setRandKey;
     functionTable[FunctionTable_ATan2]                        = ArcTanLookup;
-    functionTable[FunctionTable_SetIdentityMatrix]            = NULL; // SetIdentityMatrix;
-    functionTable[FunctionTable_MatrixMultiply]               = NULL; // MatrixMultiply;
-    functionTable[FunctionTable_MatrixTranslateXYZ]           = NULL; // MatrixTranslateXYZ;
-    functionTable[FunctionTable_MatrixScaleXYZ]               = NULL; // MatrixScaleXYZ;
-    functionTable[FunctionTable_MatrixRotateX]                = NULL; // MatrixRotateX;
-    functionTable[FunctionTable_MatrixRotateY]                = NULL; // MatrixRotateY;
-    functionTable[FunctionTable_MatrixRotateZ]                = NULL; // MatrixRotateZ;
-    functionTable[FunctionTable_MatrixRotateXYZ]              = NULL; // MatrixRotateXYZ;
-    functionTable[FunctionTable_MatrixInverse]                = NULL; // MatrixInvert;
-    functionTable[FunctionTable_MatrixCopy]                   = NULL; // MatrixCopy;
-    functionTable[FunctionTable_SetText]                      = NULL; // SetText;
+    functionTable[FunctionTable_SetIdentityMatrix]            = setIdentityMatrix;
+    functionTable[FunctionTable_MatrixMultiply]               = matrixMultiply;
+    functionTable[FunctionTable_MatrixTranslateXYZ]           = matrixTranslateXYZ;
+    functionTable[FunctionTable_MatrixScaleXYZ]               = matrixScaleXYZ;
+    functionTable[FunctionTable_MatrixRotateX]                = matrixRotateX;
+    functionTable[FunctionTable_MatrixRotateY]                = matrixRotateY;
+    functionTable[FunctionTable_MatrixRotateZ]                = matrixRotateZ;
+    functionTable[FunctionTable_MatrixRotateXYZ]              = matrixRotateXYZ;
+    functionTable[FunctionTable_MatrixInverse]                = matrixInverse;
+    functionTable[FunctionTable_MatrixCopy]                   = matrixCopy;
+    functionTable[FunctionTable_SetText]                      = SetText; // SetText;
     functionTable[FunctionTable_Unknown64]                    = NULL; // Unknown64;
     functionTable[FunctionTable_Unknown65]                    = NULL; // Unknown65;
     functionTable[FunctionTable_Unknown66]                    = NULL; // Unknown66;
@@ -399,7 +399,7 @@ void setupFunctions()
     functionTable[FunctionTable_Unknown69]                    = NULL; // Unknown69;
     functionTable[FunctionTable_Unknown70]                    = NULL; // Unknown70;
     functionTable[FunctionTable_Unknown71]                    = NULL; // Unknown71;
-    functionTable[FunctionTable_SetScreenSize]                = NULL; // SetScreenSize;
+    functionTable[FunctionTable_SetScreenSize]                = SetScreenSize;
     functionTable[FunctionTable_SetClipBounds]                = SetClipBounds;
     functionTable[FunctionTable_SetScreenFade]                = NULL; // SetScreenFade;
     functionTable[FunctionTable_LoadSpriteSheet]              = LoadSpriteSheet;
@@ -507,3 +507,6 @@ void setupFunctions()
     functionTable[FunctionTable_ClearDebugValues]             = ClearDebugValues;
     functionTable[FunctionTable_SetDebugValue]                = SetDebugValue;
 }
+
+
+void LinkGameLogic(GameInfo *info) { printLog(SEVERITY_WARN, "Internal LinkGameLogic() function called, no logic will be linked"); }

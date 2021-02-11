@@ -11,8 +11,8 @@ struct ObjectDebugMode : Object{
     EntityAnimationData debugData;
     int objID;
     int itemCount;
-    int debugActive;
-    byte debugItemSubType;
+    bool32 active;
+    byte itemSubType;
     byte subtypeCount;
     byte field_A2A;
     byte field_A2B;
@@ -39,6 +39,6 @@ void DebugMode_EditorLoad();
 void DebugMode_Serialize();
 
 // Extra Entity Functions
-
+void DebugMode_NullState();
 
 #endif //!OBJ_DEBUGMODE_H

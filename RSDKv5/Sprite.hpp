@@ -31,7 +31,7 @@ struct Image {
     int field_4D;
     int field_4E;
     int field_4F;
-    void* field_50;
+    uint* palette;
     byte *dataPtr;
     GifDecoder *decoder;
 };

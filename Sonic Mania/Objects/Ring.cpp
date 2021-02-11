@@ -4,7 +4,7 @@ ObjectRing *Ring;
 
 void Ring_Update()
 {
-    EntityRing *entity = (EntityRing *)RSDK_SceneInfo->entity;
+    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
@@ -21,7 +21,7 @@ void Ring_StaticUpdate()
 
 void Ring_Draw()
 {
-    EntityRing *entity = (EntityRing *)RSDK_SceneInfo->entity;
+    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     if (entity->stateDraw)
         entity->stateDraw();
 }

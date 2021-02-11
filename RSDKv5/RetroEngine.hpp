@@ -1,9 +1,6 @@
 #ifndef RETROENGINE_H
 #define RETROENGINE_H
 
-// Disables POSIX use c++ name blah blah stuff
-#pragma warning(disable : 4996)
-
 // ================
 // STANDARD LIBS
 // ================
@@ -34,7 +31,7 @@ enum GamePlatforms {
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
 
-#define RETRO_PLATFORM   (RETRO_WIN)
+#define RETRO_PLATFORM (RETRO_WIN)
 #define GAME_PLATFORM  (PLATFORM_WIN)
 
 #define SCREEN_YSIZE (240)
@@ -53,6 +50,23 @@ enum GamePlatforms {
 #endif
 #include <vorbis/vorbisfile.h>
 #endif
+
+enum EngineStates {
+    ENGINESTATE_LOAD             = 0,
+    ENGINESTATE_REGULAR          = 1,
+    ENGINESTATE_PAUSED           = 2,
+    ENGINESTATE_FROZEN           = 3,
+    ENGINESTATE_LOAD_STEPOVER    = 4,
+    ENGINESTATE_REGULAR_STEPOVER = 5,
+    ENGINESTATE_PAUSED_STEPOVER  = 6,
+    ENGINESTATE_FROZEN_STEPOVER  = 7,
+    ENGINESTATE_DEVMENU          = 8,
+    ENGINESTATE_VIDEOPLAYBACK    = 9,
+    ENGINESTATE_SHOWPNG          = 0x0A,
+    ENGINESTATE_ERRORMSG         = 0x0B,
+    ENGINESTATE_ERRORMSG_FATAL   = 0x0C,
+    ENGINESTATE_NULL             = 0x0D,
+};
 
 // Utils
 #include "iniparser/iniparser.h"
@@ -79,23 +93,6 @@ enum GamePlatforms {
 #include "DefaultObject.hpp"
 #include "DevOutput.hpp"
 
-enum EngineStates {
-    ENGINESTATE_LOAD             = 0,
-    ENGINESTATE_REGULAR          = 1,
-    ENGINESTATE_PAUSED           = 2,
-    ENGINESTATE_FROZEN           = 3,
-    ENGINESTATE_LOAD_STEPOVER    = 4,
-    ENGINESTATE_REGULAR_STEPOVER = 5,
-    ENGINESTATE_PAUSED_STEPOVER  = 6,
-    ENGINESTATE_FROZEN_STEPOVER  = 7,
-    ENGINESTATE_DEVMENU          = 8,
-    ENGINESTATE_VIDEOPLAYBACK    = 9,
-    ENGINESTATE_SHOWPNG          = 0x0A,
-    ENGINESTATE_ERRORMSG         = 0x0B,
-    ENGINESTATE_ERRORMSG_FATAL   = 0x0C,
-    ENGINESTATE_NULL             = 0x0D,
-};
-
 struct RetroEngine {
     RetroEngine() {}
     char gameName[0x80];
@@ -104,8 +101,10 @@ struct RetroEngine {
 
     bool useExternalCode = true;
 
-    bool devMenu   = false;
-    bool printConsole = true;
+    bool devMenu      = false;
+    bool printConsole = false;
+
+    byte language = 0;
 
     int prevEngineMode      = ENGINESTATE_LOAD;
     bool running            = false;
@@ -119,8 +118,20 @@ struct RetroEngine {
 
     bool startFullScreen = false;
     bool borderless      = false;
+    bool exclusiveFS     = false;
     bool vsync           = false;
-    int windowScale      = 2;
+    bool tripleBuffer    = false;
+    int windowWidth      = 424;
+    int windowHeight     = SCREEN_YSIZE;
+    int fsWidth          = 0;
+    int fsHeight         = 0;
+    int refreshRate      = 60;
+    bool shaderSupport   = true;
+    int screenShader     = 0;
+
+    bool streamsEnabled = true;
+    float streamVolume  = 1.0;
+    float soundFXVolume = 1.0;
 
 #if RETRO_USING_SDL2
     SDL_Window *window     = nullptr;
@@ -152,9 +163,10 @@ inline void SetEngineState(byte state)
 
 extern int *gameOptionsPtr;
 
-inline void InitGameOptions(void* options, int size) {
+inline void InitGameOptions(void *options, int size)
+{
     AllocateStorage(size, &options, DATASET_STG, true);
-    gameOptionsPtr = (int*)options;
+    gameOptionsPtr = (int *)options;
 }
 
 #include "Link.hpp"

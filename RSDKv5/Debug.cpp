@@ -174,42 +174,34 @@ void DevMenu_MainMenu()
                   true);
     DrawDevText(currentScreen->centerX - 64, "TMP", y, 0, 0xF0F080);
 
-    //Temp lol
-    bool Key_Up = false;
-    bool Key_Down = false;
-    bool Key_A = false;
-    bool Key_Enter = false;
-    if (Key_Up) {
+    if (controller[0].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
-            return;
         }
-
-        devMenu.option--;
-        if (devMenu.option >= 0) {
+        else {
+            devMenu.option--;
             devMenu.timer = ++devMenu.timer & 7;
-            return;
-        }
-        devMenu.option += 5;
-    }
-    if (Key_Down) {
-        if (devMenu.timer) {
-            devMenu.timer = ++devMenu.timer & 7;
-            return;
-        }
-
-        ++devMenu.option;
-        if (devMenu.option > 4) {
-            devMenu.timer = ++devMenu.timer & 7;
-            return;
+            if (devMenu.option < 0)
+                devMenu.option += 5;
         }
     }
 
-    devMenu.timer = 0;
-    if ((Key_Enter | Key_A)) {
+    if (controller[0].keyDown.down) {
+        if (devMenu.timer) {
+            devMenu.timer = ++devMenu.timer & 7;
+        }
+        else {
+            devMenu.option++;
+            devMenu.timer = ++devMenu.timer & 7;
+            if (devMenu.option > 4)
+                devMenu.option -= 5;
+        }
+    }
+
+    if (controller[0].keyStart.down || controller[0].keyA.down) {
         switch (devMenu.option) {
             case 0:
-                sceneInfo.state = devMenu.listPos;
+                sceneInfo.state = devMenu.stateStore;
                 break;
             case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
             case 2:
@@ -225,11 +217,172 @@ void DevMenu_MainMenu()
         }
     }
 }
-void DevMenu_ListSel() {}
-void DevMenu_SceneSel() {}
-void DevMenu_Options() {}
-void DevMenu_VideoOptions() {}
-void DevMenu_AudioOptions() {}
-void DevMenu_InputOptions() {}
-void DevMenu_ButtonsOptions() {}
-void DevMenu_DebugOptions() {}
+void DevMenu_ListSel()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "SELECT STAGE CATEGORY", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawRectangle(currentScreen->centerX - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[8];
+    optionColours[0]                               = 0x808090;
+    optionColours[1]                               = 0x808090;
+    optionColours[2]                               = 0x808090;
+    optionColours[3]                               = 0x808090;
+    optionColours[4]                               = 0x808090;
+    optionColours[5]                               = 0x808090;
+    optionColours[6]                               = 0x808090;
+    optionColours[7]                               = 0x808090;
+    optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+
+    int y = dy + 40;
+    for (int i = 0; i < 8; ++i) {
+        if (devMenu.scroll + i < sceneInfo.categoryCount) {
+            DrawDevText(currentScreen->centerX - 64, sceneInfo.listCategory[devMenu.scroll + i].name, y, 0, optionColours[i]);
+            y += 8;
+        }
+    }
+
+    if (controller[0].keyUp.down) {
+        if (devMenu.timer) {
+            devMenu.timer = (devMenu.timer + 1) & 7;
+            if (devMenu.option >= devMenu.scroll) {
+                if (devMenu.option > devMenu.scroll + 7) {
+                    devMenu.scroll = devMenu.option - 7;
+                }
+            }
+            else {
+                devMenu.scroll = devMenu.option;
+            }
+        }
+        else {
+            if (--devMenu.option < 0)
+                devMenu.option += sceneInfo.categoryCount;
+            devMenu.timer = (devMenu.timer + 1) & 7;
+            if (devMenu.option >= devMenu.scroll) {
+                if (devMenu.option > devMenu.scroll + 7) {
+                    devMenu.scroll = devMenu.option - 7;
+                }
+            }
+            else {
+                devMenu.scroll = devMenu.option;
+            }
+        }
+    }
+    
+    if (controller[0].keyDown.down) {
+        if (devMenu.timer) {
+            devMenu.timer = (devMenu.timer + 1) & 7;
+            if (devMenu.option >= devMenu.scroll) {
+                if (devMenu.option > devMenu.scroll + 7) {
+                    devMenu.scroll = devMenu.option - 7;
+                }
+            }
+            else {
+                devMenu.scroll = devMenu.option;
+            }
+        }
+        else {
+            if (++devMenu.option == sceneInfo.categoryCount)
+                devMenu.option = 0;
+            devMenu.timer = (devMenu.timer + 1) & 7;
+            if (devMenu.option >= devMenu.scroll) {
+                if (devMenu.option > devMenu.scroll + 7) {
+                    devMenu.scroll = devMenu.option - 7;
+                }
+            }
+            else {
+                devMenu.scroll = devMenu.option;
+            }
+        }
+    }
+
+    if (controller[0].keyStart.down || controller[0].keyA.down) {
+        if (sceneInfo.listCategory[devMenu.option].sceneCount) {
+            devMenu.state    = DevMenu_SceneSel;
+            devMenu.listPos  = devMenu.option;
+            devMenu.scroll   = 0;
+            devMenu.option   = 0;
+        }
+    }
+}
+void DevMenu_SceneSel()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "SELECT STAGE SCENE", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawRectangle(currentScreen->centerX - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[8];
+    optionColours[0]                               = 0x808090;
+    optionColours[1]                               = 0x808090;
+    optionColours[2]                               = 0x808090;
+    optionColours[3]                               = 0x808090;
+    optionColours[4]                               = 0x808090;
+    optionColours[5]                               = 0x808090;
+    optionColours[6]                               = 0x808090;
+    optionColours[7]                               = 0x808090;
+    optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+
+    int y               = dy + 40;
+    SceneListInfo *list = &sceneInfo.listCategory[devMenu.listPos];
+    int off = list->sceneOffsetStart;
+    for (int i = 0; i < 8; ++i) {
+        if (devMenu.scroll + i < list->sceneCount) {
+            DrawDevText(currentScreen->centerX + 96, sceneInfo.listData[off + (devMenu.scroll + i)].name, y, ALIGN_RIGHT, optionColours[i]);
+            y += 8;
+            devMenu.scroll = devMenu.scroll;
+        }
+    }
+
+    if (controller[0].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (off + devMenu.option < list->sceneOffsetStart) {
+                devMenu.option = list->sceneCount - 1;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+    }
+    else if (controller[0].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option > list->sceneCount) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+    }
+
+    if (controller[0].keyStart.down || controller[0].keyA.down) {
+        sceneInfo.activeCategory = devMenu.listPos;
+        sceneInfo.listPos        = devMenu.option;
+        sceneInfo.state          = ENGINESTATE_LOAD;
+    }
+}
+void DevMenu_Options() { currentScreen = &screens[0]; }
+void DevMenu_VideoOptions() { currentScreen = &screens[0]; }
+void DevMenu_AudioOptions() { currentScreen = &screens[0]; }
+void DevMenu_InputOptions() { currentScreen = &screens[0]; }
+void DevMenu_ButtonsOptions() { currentScreen = &screens[0]; }
+void DevMenu_DebugOptions() { currentScreen = &screens[0]; }

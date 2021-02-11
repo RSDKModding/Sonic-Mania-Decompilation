@@ -4,6 +4,10 @@ ushort rIndexes[0x100];
 ushort gIndexes[0x100];
 ushort bIndexes[0x100];
 
+ushort globalPalette[PALETTE_COUNT][PALETTE_SIZE];
+ushort activeGlobalRows[PALETTE_COUNT];
+ushort activeStageRows[PALETTE_COUNT];
+
 ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
 byte gfxLineBuffer[SCREEN_YSIZE];

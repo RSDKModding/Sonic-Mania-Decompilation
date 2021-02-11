@@ -19,6 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\dependencies\all\iniparser\dictionary.cpp" />
+    <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp" />
+    <ClCompile Include="..\dependencies\all\zlib\adler32.c" />
+    <ClCompile Include="..\dependencies\all\zlib\compress.c" />
+    <ClCompile Include="..\dependencies\all\zlib\crc32.c" />
+    <ClCompile Include="..\dependencies\all\zlib\deflate.c" />
+    <ClCompile Include="..\dependencies\all\zlib\gzclose.c" />
+    <ClCompile Include="..\dependencies\all\zlib\gzlib.c" />
+    <ClCompile Include="..\dependencies\all\zlib\gzread.c" />
+    <ClCompile Include="..\dependencies\all\zlib\gzwrite.c" />
+    <ClCompile Include="..\dependencies\all\zlib\infback.c" />
+    <ClCompile Include="..\dependencies\all\zlib\inffast.c" />
+    <ClCompile Include="..\dependencies\all\zlib\inflate.c" />
+    <ClCompile Include="..\dependencies\all\zlib\inftrees.c" />
+    <ClCompile Include="..\dependencies\all\zlib\trees.c" />
+    <ClCompile Include="..\dependencies\all\zlib\uncompr.c" />
+    <ClCompile Include="..\dependencies\all\zlib\zutil.c" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -43,6 +60,19 @@
     <ClCompile Include="RetroEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\dependencies\all\iniparser\dictionary.h" />
+    <ClInclude Include="..\dependencies\all\iniparser\iniparser.h" />
+    <ClInclude Include="..\dependencies\all\zlib\crc32.h" />
+    <ClInclude Include="..\dependencies\all\zlib\deflate.h" />
+    <ClInclude Include="..\dependencies\all\zlib\gzguts.h" />
+    <ClInclude Include="..\dependencies\all\zlib\inffast.h" />
+    <ClInclude Include="..\dependencies\all\zlib\inffixed.h" />
+    <ClInclude Include="..\dependencies\all\zlib\inflate.h" />
+    <ClInclude Include="..\dependencies\all\zlib\inftrees.h" />
+    <ClInclude Include="..\dependencies\all\zlib\trees.h" />
+    <ClInclude Include="..\dependencies\all\zlib\zconf.h" />
+    <ClInclude Include="..\dependencies\all\zlib\zlib.h" />
+    <ClInclude Include="..\dependencies\all\zlib\zutil.h" />
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Audio.hpp" />
     <ClInclude Include="Collision.hpp" />
@@ -50,6 +80,7 @@
     <ClInclude Include="DefaultObject.hpp" />
     <ClInclude Include="DevOutput.hpp" />
     <ClInclude Include="Drawing.hpp" />
+    <ClInclude Include="DevFont.hpp" />
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Link.hpp" />
     <ClInclude Include="Math.hpp" />
@@ -62,6 +93,7 @@
     <ClInclude Include="Sprite.hpp" />
     <ClInclude Include="Storage.hpp" />
     <ClInclude Include="Text.hpp" />
+    <ClInclude Include="unistd.h" />
     <ClInclude Include="Userdata.hpp" />
     <ClInclude Include="RetroEngine.hpp" />
   </ItemGroup>
@@ -141,9 +173,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,9 +197,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -189,9 +223,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -216,9 +251,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

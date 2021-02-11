@@ -2,7 +2,13 @@
 #define OBJECT_H
 
 #define OBJECT_COUNT (0x400)
-#define ENTITY_COUNT (0x940)
+
+//0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
+#define RESERVE_ENTITY_COUNT (0x40)
+#define ENTITY_COUNT         (0x940)
+#define TEMPENTITY_START     (ENTITY_COUNT - 0x100)
+#define SCENEENTITY_COUNT    (TEMPENTITY_START - RESERVE_ENTITY_COUNT)
+
 #define TYPE_COUNT (0x100)
 #define EDITABLEVAR_COUNT (0x100)
 #define TYPEGROUP_COUNT (0x104)
@@ -55,7 +61,7 @@ struct Entity {
     int angle;
     int alpha;
     int rotation;
-    int speed;
+    int groundVel;
     int depth;
     ushort group;
     ushort type;
@@ -102,7 +108,7 @@ struct EditableVarInfo {
     uint hash[4];
     int offset;
     int active;
-    byte attribType;
+    byte type;
 };
 
 struct ForeachStackInfo {
@@ -122,7 +128,7 @@ extern int stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];
 
-extern EditableVarInfo editableVarList[EDITABLEVAR_COUNT];
+extern EditableVarInfo *editableVarList;
 extern int editableVarCount;
 
 extern ForeachStackInfo foreachStackList[0x20];
@@ -143,13 +149,11 @@ inline void SetEditableVar(byte type, const char *name, byte object, int storeOf
 {
     if (editableVarCount < 255) {
         EditableVarInfo *editableVar = &editableVarList[editableVarCount];
-        memset(&hashBuffer, 0, 0x400u);
-        int len = StrLength(name);
-        memcpy(&hashBuffer, name, len);
-        GenerateHash(editableVar->hash, len);
-        editableVarList[editableVarCount].attribType = type;
-        editableVarList[editableVarCount].offset     = storeOffset;
-        editableVarList[editableVarCount].active     = 1;
+        StrCopy(hashBuffer, name);
+        GenerateHash(editableVar->hash, StrLength(name));
+        editableVarList[editableVarCount].type   = type;
+        editableVarList[editableVarCount].offset = storeOffset;
+        editableVarList[editableVarCount].active = true;
         editableVarCount++;
     }
 }
@@ -183,8 +187,8 @@ inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
     }
 }
 
-bool32 GetActiveObjects(ushort group, Entity *entity);
-bool32 GetObjects(ushort type, Entity *entity);
+bool32 GetActiveObjects(ushort group, Entity **entity);
+bool32 GetObjects(ushort type, Entity **entity);
 
 inline void NextForeachLoop() { --foreachStackPtr; }
 

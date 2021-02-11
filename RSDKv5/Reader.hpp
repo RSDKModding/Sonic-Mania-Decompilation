@@ -19,6 +19,8 @@
 #define fWrite(buffer, elementSize, elementCount, file) fwrite(buffer, elementSize, elementCount, file)
 #endif
 
+#include <zlib/zlib.h>
+
 enum Scopes {
     SCOPE_NONE,
     SCOPE_GLOBAL,
@@ -98,7 +100,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int key2);
 void DecryptBytes(FileInfo *info, void *buffer, int size);
 void SkipBytes(FileInfo *info, int size);
 
-inline void Seek(FileInfo* info, int count) {
+inline void Seek_Set(FileInfo* info, int count) {
     if (info->readPos != count) {
         info->readPos = count;
         if (info->encrypted) {
@@ -114,6 +116,23 @@ inline void Seek(FileInfo* info, int count) {
         }
         else {
             fSeek(info->file, info->readPos + info->fileOffset, SEEK_SET);
+        }
+    }
+}
+
+inline void Seek_Cur(FileInfo *info, int count)
+{
+    if (info->readPos != count) {
+        info->readPos += count;
+        if (info->encrypted) {
+            SkipBytes(info, count);
+        }
+
+        if (info->usingFileBuffer) {
+            info->fileData += count;
+        }
+        else {
+            fSeek(info->file, count, SEEK_CUR);
         }
     }
 }
@@ -205,10 +224,53 @@ inline int64 ReadInt64(FileInfo *info)
     return result;
 }
 
+inline int ReadSingle(FileInfo *info)
+{
+    float result    = 0;
+    int bytesRead = 0;
+    if (info->usingFileBuffer) {
+        bytesRead = 4;
+        result    = *info->fileData;
+        info->fileData++;
+    }
+    else {
+        bytesRead = fRead(&result, 1, 4, info->file);
+    }
+    if (info->encrypted)
+        DecryptBytes(info, &result, bytesRead);
+    info->readPos += bytesRead;
+    return result;
+}
+
 inline void ReadString(FileInfo *info, char* buffer) { 
     byte size = ReadInt8(info);
     ReadBytes(info, buffer, size);
     buffer[size] = 0;
+}
+
+inline int ReadZLib(FileInfo *info, byte **buffer)
+{
+    if (!buffer)
+        return 0;
+    uint complen      = ReadInt32(info) - 4;
+    uint decompLE     = ReadInt32(info);
+    uint destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+
+    byte *compData = NULL;
+    AllocateStorage(complen, (void**)&compData, DATASET_TMP, false);
+    AllocateStorage(destLen, (void **)buffer, DATASET_TMP, false);
+    ReadBytes(info, compData, complen);
+
+    uncompress(*buffer, (uLongf *)&destLen, compData, complen);
+    return destLen;
+}
+
+inline void ReadHash(FileInfo *info, uint *buffer)
+{
+    buffer[0] = ReadInt32(info);
+    buffer[1] = ReadInt32(info);
+    buffer[2] = ReadInt32(info);
+    buffer[3] = ReadInt32(info);
 }
 
 #endif

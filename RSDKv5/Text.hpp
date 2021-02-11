@@ -120,4 +120,33 @@ inline void StringUpperCase(char *dest, const char *src)
 extern char hashBuffer[0x400];
 void GenerateHash(uint *buffer, int len);
 
+extern char textBuffer[0x100];
+inline void SetText(TextInfo *textInfo, char *text, uint size)
+{
+    if (text) {
+        if (*text) {
+            int cnt = 0;
+            do
+                textInfo->textLength = ++cnt;
+            while (text[cnt]);
+        }
+        if (size && size >= textInfo->textLength)
+            textInfo->length = size;
+        else
+            textInfo->length = textInfo->textLength;
+        if (!textInfo->length)
+            textInfo->length = 1;
+        AllocateStorage(sizeof(ushort) * textInfo->length, (void **)textInfo, DATASET_STR, false);
+
+        char *txt = text;
+        if (*text) {
+            int cnt = 0;
+            do {
+                textInfo->text[cnt++] = *txt;
+                ++txt;
+            } while (*txt);
+        }
+    }
+}
+
 #endif

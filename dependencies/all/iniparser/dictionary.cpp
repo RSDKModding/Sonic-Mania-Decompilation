@@ -18,7 +18,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#else
+#include "../../RSDKv5/unistd.h"
+#endif
 
 /** Maximum value size for integers and doubles. */
 #define MAXVALSZ    1024

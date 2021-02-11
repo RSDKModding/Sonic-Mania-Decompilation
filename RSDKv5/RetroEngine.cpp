@@ -5,11 +5,11 @@
 
 HMODULE hLibModule = NULL;
 
-typedef void(__cdecl *linkPtr)(GameInfo*);
+typedef void(__cdecl *linkPtr)(GameInfo *);
 #endif
 
 int *gameOptionsPtr = NULL;
-RetroEngine engine = RetroEngine();
+RetroEngine engine  = RetroEngine();
 
 bool processEvents()
 {
@@ -30,8 +30,8 @@ bool processEvents()
                     case SDL_WINDOWEVENT_CLOSE: return false;
                 }
                 break;
-            //case SDL_CONTROLLERDEVICEADDED: controllerInit(SDL_NumJoysticks() - 1); break;
-            //case SDL_CONTROLLERDEVICEREMOVED: controllerClose(SDL_NumJoysticks() - 1); break;
+            case SDL_CONTROLLERDEVICEADDED: controllerInit(SDL_NumJoysticks() - 1); break;
+            case SDL_CONTROLLERDEVICEREMOVED: controllerClose(SDL_NumJoysticks() - 1); break;
             case SDL_WINDOWEVENT_CLOSE:
                 if (engine.window) {
                     SDL_DestroyWindow(engine.window);
@@ -107,8 +107,30 @@ bool processEvents()
                 switch (engine.sdlEvents.key.keysym.sym) {
                     default: break;
                     case SDLK_ESCAPE:
-                        if (engine.devMenu)
+                        if (engine.devMenu) {
+                            if (sceneInfo.state == ENGINESTATE_DEVMENU) {
+                                // v2              = ShaderSettings.field_C;
+                                sceneInfo.state = devMenu.stateStore;
+                                // if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
+                                //    v2 = 0;
+                                // ShaderSettings.field_C = v2;
+                                // ResumeSound();
+                            }
+                            else {
+                                // v1                 = ShaderSettings.field_C;
+                                devMenu.stateStore = sceneInfo.state;
+                                // if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
+                                //    v1 = 1;
+                                devMenu.state  = DevMenu_MainMenu;
+                                devMenu.option = 0;
+                                devMenu.scroll = 0;
+                                devMenu.timer  = 0;
+                                // ShaderSettings.field_C = v1;
+                                sceneInfo.state = ENGINESTATE_DEVMENU;
+                                // PauseSound();
+                            }
                             sceneInfo.state = ENGINESTATE_DEVMENU;
+                        }
                         break;
                     case SDLK_F4:
                         engine.isFullScreen ^= 1;
@@ -123,7 +145,7 @@ bool processEvents()
 #if RETRO_USING_SDL2
                             SDL_SetWindowFullscreen(engine.window, false);
                             SDL_ShowCursor(SDL_TRUE);
-                            SDL_SetWindowSize(engine.window, SCREEN_XSIZE * engine.windowScale, SCREEN_YSIZE * engine.windowScale);
+                            SDL_SetWindowSize(engine.window, engine.windowWidth, engine.windowHeight);
                             SDL_SetWindowPosition(engine.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
                             SDL_RestoreWindow(engine.window);
 #endif
@@ -133,7 +155,7 @@ bool processEvents()
                         if (engine.devMenu) {
                             activeSceneList   = 0;
                             sceneListPosition = 0;
-                            sceneInfo.state = ENGINESTATE_LOAD;
+                            sceneInfo.state   = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F2:
@@ -143,9 +165,9 @@ bool processEvents()
                                 activeSceneList--;
 
                                 if (activeSceneList < 0) {
-                                    activeSceneList = sceneListCount - 1;
+                                    activeSceneList = sceneInfo.categoryCount - 1;
                                 }
-                                sceneListPosition = sceneLists[activeSceneList].sceneCount - 1;
+                                sceneListPosition = sceneInfo.listCategory[activeSceneList].sceneCount - 1;
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
@@ -153,15 +175,15 @@ bool processEvents()
                     case SDLK_F3:
                         if (engine.devMenu) {
                             sceneListPosition++;
-                            if (sceneListPosition >= sceneLists[activeSceneList].sceneCount) {
+                            if (sceneListPosition >= sceneInfo.listCategory[activeSceneList].sceneCount) {
                                 activeSceneList++;
 
                                 sceneListPosition = 0;
-                                if (activeSceneList >= sceneListCount) {
+                                if (activeSceneList >= sceneInfo.categoryCount) {
                                     activeSceneList = 0;
                                 }
                             }
-                            sceneInfo.state       = ENGINESTATE_LOAD;
+                            sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F10:
@@ -187,8 +209,10 @@ bool processEvents()
                             engine.frameStep = true;
                         break;
                     case SDLK_F12:
-                        if (engine.devMenu)
+                        if (engine.devMenu) {
                             engine.masterPaused ^= 1;
+                            sceneInfo.state ^= ENGINESTATE_LOAD_STEPOVER;
+                        }
                         break;
 #endif
                 }
@@ -206,16 +230,13 @@ bool processEvents()
     return true;
 }
 
-void initRetroEngine() { 
+void initRetroEngine()
+{
     InitialiseUserStorage();
 
-    CheckDataFile("Data.rsdk");
-    //if (CheckDataFile("Data.rsdk"))
-    //    DevMenuEnabled = Engine_GetSettingsBool(0) != 0;
-    //else
-    //    DevMenuEnabled = 1;
+    readSettings();
 
-    startGameObjects(); 
+    startGameObjects();
 
     engine.running = true;
     if (!InitRenderDevice()) {
@@ -227,7 +248,8 @@ void initRetroEngine() {
         return;
     }
 }
-void runRetroEngine() {
+void runRetroEngine()
+{
     uint frameStart, frameEnd = SDL_GetTicks();
     float frameDelta = 0.0f;
 
@@ -235,138 +257,138 @@ void runRetroEngine() {
         frameStart = SDL_GetTicks();
         frameDelta = frameStart - frameEnd;
 
-        if (frameDelta < 1000.0f / (float)60)
-            SDL_Delay(1000.0f / (float)60 - frameDelta);
+        if (frameDelta < 1000.0f / (float)engine.refreshRate)
+            SDL_Delay(1000.0f / (float)engine.refreshRate - frameDelta);
 
         frameEnd = SDL_GetTicks();
 
         engine.running = processEvents();
-        for (int f = 0; f < engine.gameSpeed && (!engine.masterPaused || engine.frameStep); ++f) {
-            switch (sceneInfo.state) {
-                default: break;
-                case ENGINESTATE_LOAD:
-                    LoadScene();
-                    LoadSceneFile();
-                    InitObjects();
-                    for (int v = 0; v < 0x10 && v < DEBUGVAL_MAX; ++v) {
-                        DebugValueInfo *val = &debugValues[debugValCnt++];
-                        strncpy(val->name, drawGroupNames[v], 0x10);
-                        val->field_14   = 0;
-                        val->value      = &drawLayers[v].visible;
-                        val->valByteCnt = 4;
-                        val->unknown1   = 0;
-                        val->unknown2   = 1;
+        switch (sceneInfo.state) {
+            default: break;
+            case ENGINESTATE_LOAD:
+                LoadScene();
+                // LoadSceneFile();
+                InitObjects();
+                for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
+                    DebugValueInfo *val = &debugValues[debugValCnt++];
+                    strncpy(val->name, drawGroupNames[v], 0x10);
+                    val->field_14   = 0;
+                    val->value      = &drawLayers[v].visible;
+                    val->valByteCnt = 4;
+                    val->unknown1   = 0;
+                    val->unknown2   = 1;
 
-                        MEM_ZERO(drawLayers[v]);
-                        drawLayers[v].visible = true;
-                    }
-                    ProcessInput();
-                    ProcessObjects();
-                    break;
-                case ENGINESTATE_REGULAR:
-                    ProcessInput();
+                    MEM_ZERO(drawLayers[v]);
+                    drawLayers[v].visible = true;
+                }
+                inputDevice.ProcessInput();
+                ProcessObjects();
+                break;
+            case ENGINESTATE_REGULAR:
+                inputDevice.ProcessInput();
+                ProcessSceneTimer();
+                ProcessObjects();
+                ProcessParallaxAutoScroll();
+                for (int i = 1; i < engine.fastForwardSpeed; ++i) {
+                    if (sceneInfo.state != ENGINESTATE_REGULAR)
+                        break;
                     ProcessSceneTimer();
                     ProcessObjects();
                     ProcessParallaxAutoScroll();
-                    for (int i = 1; i < engine.fastForwardSpeed; ++i) {
-                        if (sceneInfo.state != ENGINESTATE_REGULAR)
-                            break;
-                        ProcessSceneTimer();
-                        ProcessObjects();
-                        ProcessParallaxAutoScroll();
-                    }
-                    ProcessObjectDrawLists();
-                    break;
-                case ENGINESTATE_PAUSED:
-                    ProcessInput();
+                }
+                ProcessObjectDrawLists();
+                break;
+            case ENGINESTATE_PAUSED:
+                inputDevice.ProcessInput();
+                ProcessPausedObjects();
+                for (int i = 1; i < engine.fastForwardSpeed; ++i) {
+                    if (sceneInfo.state != ENGINESTATE_PAUSED)
+                        break;
                     ProcessPausedObjects();
-                    for (int i = 1; i < engine.fastForwardSpeed; ++i) {
-                        if (sceneInfo.state != ENGINESTATE_PAUSED)
-                            break;
-                        ProcessPausedObjects();
-                    }
-                    ProcessObjectDrawLists();
-                    break;
-                case ENGINESTATE_FROZEN:
-                    ProcessInput();
+                }
+                ProcessObjectDrawLists();
+                break;
+            case ENGINESTATE_FROZEN:
+                inputDevice.ProcessInput();
+                ProcessFrozenObjects();
+                for (int i = 1; i < engine.fastForwardSpeed; ++i) {
+                    if (sceneInfo.state != ENGINESTATE_FROZEN)
+                        break;
                     ProcessFrozenObjects();
-                    for (int i = 1; i < engine.fastForwardSpeed; ++i) {
-                        if (sceneInfo.state != ENGINESTATE_PAUSED)
-                            break;
-                        ProcessFrozenObjects();
-                    }
-                    ProcessObjectDrawLists();
-                    break;
-                case ENGINESTATE_LOAD_STEPOVER:
-                    LoadScene();
-                    LoadSceneFile();
-                    InitObjects();
-                    for (int v = 0; v < 0x10 && v < DEBUGVAL_MAX; ++v) {
-                        DebugValueInfo *val = &debugValues[debugValCnt++];
-                        strncpy(val->name, drawGroupNames[v], 0x10);
-                        val->field_14   = 0;
-                        val->value      = &drawLayers[v].visible;
-                        val->valByteCnt = 4;
-                        val->unknown1   = 0;
-                        val->unknown2   = 1;
+                }
+                ProcessObjectDrawLists();
+                break;
+            case ENGINESTATE_LOAD_STEPOVER:
+                LoadScene();
+                LoadSceneFile();
+                InitObjects();
+                for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
+                    DebugValueInfo *val = &debugValues[debugValCnt++];
+                    strncpy(val->name, drawGroupNames[v], 0x10);
+                    val->field_14   = 0;
+                    val->value      = &drawLayers[v].visible;
+                    val->valByteCnt = 4;
+                    val->unknown1   = 0;
+                    val->unknown2   = 1;
 
-                        MEM_ZERO(drawLayers[v]);
-                        drawLayers[v].visible = true;
-                    }
-                    ProcessInput();
+                    MEM_ZERO(drawLayers[v]);
+                    drawLayers[v].visible = true;
+                }
+                inputDevice.ProcessInput();
+                ProcessObjects();
+                sceneInfo.state = ENGINESTATE_REGULAR_STEPOVER;
+                break;
+            case ENGINESTATE_REGULAR_STEPOVER:
+                inputDevice.ProcessInput();
+                if (engine.frameStep) {
+                    ProcessSceneTimer();
                     ProcessObjects();
-                    sceneInfo.state = ENGINESTATE_REGULAR_STEPOVER;
-                    break;
-                case ENGINESTATE_REGULAR_STEPOVER:
-                    ProcessInput();
-                    if (engine.frameStep) {
-                        ProcessSceneTimer();
-                        ProcessObjects();
-                        ProcessParallaxAutoScroll();
-                        ProcessObjectDrawLists();
-                        engine.frameStep = false;
-                    }
-                    break;
-                case ENGINESTATE_PAUSED_STEPOVER:
-                    ProcessInput();
-                    if (engine.frameStep) {
-                        ProcessPausedObjects();
-                        ProcessObjectDrawLists();
-                        engine.frameStep = false;
-                    }
-                    break;
-                case ENGINESTATE_FROZEN_STEPOVER:
-                    ProcessInput();
-                    if (engine.frameStep) {
-                        ProcessFrozenObjects();
-                        ProcessObjectDrawLists();
-                        engine.frameStep = false;
-                    }
-                    break;
-                case ENGINESTATE_DEVMENU:
-                    ProcessInput();
-                    //activeScreen = screens;
-                    if (devMenu.state)
-                        devMenu.state();
-                    break;
-                case ENGINESTATE_VIDEOPLAYBACK: break;
-                case ENGINESTATE_SHOWPNG: break;
-                case ENGINESTATE_ERRORMSG: break;
-                case ENGINESTATE_ERRORMSG_FATAL: break;
-            }
+                    ProcessParallaxAutoScroll();
+                    ProcessObjectDrawLists();
+                    engine.frameStep = false;
+                }
+                break;
+            case ENGINESTATE_PAUSED_STEPOVER:
+                inputDevice.ProcessInput();
+                if (engine.frameStep) {
+                    ProcessPausedObjects();
+                    ProcessObjectDrawLists();
+                    engine.frameStep = false;
+                }
+                break;
+            case ENGINESTATE_FROZEN_STEPOVER:
+                inputDevice.ProcessInput();
+                if (engine.frameStep) {
+                    ProcessFrozenObjects();
+                    ProcessObjectDrawLists();
+                    engine.frameStep = false;
+                }
+                break;
+            case ENGINESTATE_DEVMENU:
+                inputDevice.ProcessInput();
+                currentScreen = &screens[0];
+                if (devMenu.state)
+                    devMenu.state();
+                break;
+            case ENGINESTATE_VIDEOPLAYBACK: break;
+            case ENGINESTATE_SHOWPNG: break;
+            case ENGINESTATE_ERRORMSG: break;
+            case ENGINESTATE_ERRORMSG_FATAL: break;
         }
+
+        FlipScreen();
     }
 
+    // Shutdown
     ReleaseAudioDevice();
     ReleaseRenderDevice();
-    //writeSettings();
+    writeSettings();
     ReleaseUserStorage();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
     SDL_Quit();
 #endif
 
-    //Shutdown
 #if RETRO_PLATFORM == RETRO_WIN
     if (hLibModule) {
         FreeLibrary(hLibModule);
@@ -378,47 +400,55 @@ void runRetroEngine() {
 void parseArguments(int argc, char *argv[])
 {
     for (int a = 0; a < argc; ++a) {
+        const char *find = "";
 
-        if (StrComp(argv[a], "stage=")) {
+        find = strstr(argv[a], "stage=");
+        if (find) {
             char buf[0x40];
 
             int b = 0;
             int c = 7;
-            while (argv[a][c] && argv[a][c] != ';') {
-                buf[b++] = argv[a][c++];
+            while (find[c] && find[c] != ';') {
+                buf[b++] = find[c++];
             }
             buf[b] = 0;
         }
-        if (StrComp(argv[a], "scene=")) {
+
+        find = strstr(argv[a], "scene=");
+        if (find) {
             char buf[0x40];
 
             int b = 0;
             int c = 7;
-            while (argv[a][c] && argv[a][c] != ';') {
-                buf[b++] = argv[a][c++];
+            while (find[c] && find[c] != ';') {
+                buf[b++] = find[c++];
             }
             buf[b] = 0;
         }
-        if (StrComp(argv[a], "filter=")) {
+
+        find = strstr(argv[a], "filter=");
+        if (find) {
             char buf[0x10];
 
             int b = 0;
             int c = 7;
-            while (argv[a][c] && argv[a][c] != ';') {
-                buf[b++] = argv[a][c++];
+            while (argv[a][c] && find[c] != ';') {
+                buf[b++] = find[c++];
             }
             buf[b]           = 0;
             sceneInfo.filter = atoi(buf);
         }
 
-        if (StrComp(argv[a], "console=true")) {
+        find = strstr(argv[a], "console=true");
+        if (find) {
             engine.printConsole = true;
             engine.devMenu      = true;
         }
     }
 }
 
-void startGameObjects() {
+void startGameObjects()
+{
     memset(&objectList, 0, OBJECT_COUNT * sizeof(ObjectInfo));
     sceneInfo.classCount     = 0;
     sceneInfo.activeCategory = 0;
@@ -426,7 +456,7 @@ void startGameObjects() {
     sceneInfo.state          = 0;
     sceneInfo.inEditor       = 0;
     sceneInfo.debugMode      = engine.devMenu;
-    devMenu.state = DevMenu_MainMenu;
+    devMenu.state            = DevMenu_MainMenu;
     InitScriptSystem();
     LoadGameConfig();
 }
@@ -476,19 +506,19 @@ void LoadGameConfig()
         }
 
         for (int i = 0; i < PALETTE_COUNT; ++i) {
-            ushort activeRows = ReadInt16(&info);
+            activeGlobalRows[i] = ReadInt16(&info);
             for (int r = 0; r < 0x10; ++r) {
-                if ((activeRows >> r & 1)) {
+                if ((activeGlobalRows[i] >> r & 1)) {
                     for (int c = 0; c < 0x10; ++c) {
-                        byte red        = ReadInt8(&info);
-                        byte green      = ReadInt8(&info);
-                        byte blue       = ReadInt8(&info);
-                        fullPalette[i][(r << 4) + c] = bIndexes[buffer[2]] | gIndexes[buffer[1]] | rIndexes[buffer[0]];
+                        byte red                       = ReadInt8(&info);
+                        byte green                     = ReadInt8(&info);
+                        byte blue                      = ReadInt8(&info);
+                        globalPalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
                     }
                 }
                 else {
                     for (int c = 0; c < 0x10; ++c) {
-                        fullPalette[i][(r << 4) + c] = bIndexes[0x00] | gIndexes[0x00] | rIndexes[0x00];
+                        globalPalette[i][(r << 4) + c] = 0;
                     }
                 }
             }
@@ -498,29 +528,44 @@ void LoadGameConfig()
         for (int i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
             byte maxConcurrentPlays = ReadInt8(&info);
-            //LoadWAV(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
+            // LoadWAV(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
         }
 
-        sceneCount = ReadInt16(&info);
+        ushort totalSceneCount = ReadInt16(&info);
+
+        if (!totalSceneCount)
+            totalSceneCount = 1;
+
+        AllocateStorage(sizeof(SceneListEntry) * totalSceneCount, (void **)&sceneInfo.listData, DATASET_STG, false);
+
         sceneInfo.categoryCount = ReadInt8(&info);
+        sceneInfo.listPos       = 0;
+
+        int catSize = sceneInfo.categoryCount;
+        if (!catSize)
+            catSize = 1;
+        AllocateStorage(sizeof(SceneListInfo) * catSize, (void **)&sceneInfo.listCategory, DATASET_STG, false);
 
         int sceneID = 0;
         for (int i = 0; i < sceneInfo.categoryCount; ++i) {
-            ReadString(&info, hashBuffer);
-            GenerateHash(sceneLists[i].hash, StrLength(hashBuffer));
+            ReadString(&info, sceneInfo.listCategory[i].name);
+            StrCopy(hashBuffer, sceneInfo.listCategory[i].name);
+            GenerateHash(sceneInfo.listCategory[i].hash, StrLength(hashBuffer));
 
-            sceneLists[i].sceneOffset = sceneID;
-            sceneLists[i].sceneCount = ReadInt8(&info);
-            for (int s = 0; s < sceneLists[i].sceneCount; ++s) {
-                ReadString(&info, hashBuffer);
-                GenerateHash(sceneListEntries[sceneID + s].nameHash, StrLength(hashBuffer));
+            sceneInfo.listCategory[i].sceneOffsetStart = sceneID;
+            sceneInfo.listCategory[i].sceneCount       = ReadInt8(&info);
+            for (int s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
+                ReadString(&info, sceneInfo.listData[sceneID + s].name);
+                StrCopy(hashBuffer, sceneInfo.listData[sceneID + s].name);
+                GenerateHash(sceneInfo.listData[sceneID + s].hash, StrLength(hashBuffer));
 
-                ReadString(&info, sceneListEntries[sceneID + s].folder);
-                ReadString(&info, sceneListEntries[sceneID + s].sceneID);
+                ReadString(&info, sceneInfo.listData[sceneID + s].folder);
+                ReadString(&info, sceneInfo.listData[sceneID + s].sceneID);
 
-                sceneListEntries[sceneID + s].modeFilter = ReadInt8(&info);
+                sceneInfo.listData[sceneID + s].modeFilter = ReadInt8(&info);
             }
-            sceneID += sceneLists[i].sceneCount;
+            sceneInfo.listCategory[i].sceneOffsetEnd = sceneInfo.listCategory[i].sceneOffsetStart + sceneInfo.listCategory[i].sceneCount;
+            sceneID += sceneInfo.listCategory[i].sceneCount;
         }
 
         byte cfmCount = ReadInt8(&info);
@@ -540,8 +585,8 @@ void InitScriptSystem()
 {
     setupFunctions();
 
-    CreateObject((Object**)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL, NULL, NULL,
-                 DefaultObject_Create, NULL, NULL, NULL, NULL);
+    CreateObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
+                 NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
     CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
     globalObjectIDs[0] = 0;
@@ -551,22 +596,22 @@ void InitScriptSystem()
 
     GameInfo info;
 
-    info.functionPtrs      = functionTable;
-    info.userdataPtrs      = userDataTable;
-    info.gameName          = engine.gameName;
-    info.currentSKU        = &curSKU;
-    info.sceneInfo         = &sceneInfo;
-    info.activeDPad        = NULL; //(GameInput *)&Key_Up;
-    info.activeAnalogStick = NULL; //(GameInput *)&Engine_AnalogStickP1;
-    info.unknown1          = NULL; //&Engine_AnalogStickP2;
-    info.unknown2          = NULL; //&Engine_AnalogStickP3;
-    info.unknown3          = NULL; //&Engine_AnalogStickP4;
-    info.mousePos          = NULL; //&Engine_MousePos;
-    info.inputCount        = NULL; //(int *)&Engine_InputCount;
-    info.screenInfo        = screens;
+    info.functionPtrs = functionTable;
+    info.userdataPtrs = userDataTable;
+    info.gameName     = engine.gameName;
+    info.currentSKU   = &curSKU;
+    info.sceneInfo    = &sceneInfo;
+    info.controller   = controller;
+    info.stickL       = stickR;
+    info.stickR       = stickR;
+    info.triggerL     = triggerL;
+    info.triggerR     = triggerR;
+    info.touchMouse   = &touchMouseData;
+    info.inputCount   = NULL; //(int *)&Engine_InputCount;
+    info.screenInfo   = screens;
 
     if (!engine.useExternalCode) {
-        //return linkGameLogic(&info);
+        return LinkGameLogic(&info);
     }
 
 #if RETRO_PLATFORM == RETRO_WIN

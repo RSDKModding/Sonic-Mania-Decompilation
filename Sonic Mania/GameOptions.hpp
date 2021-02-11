@@ -2,11 +2,36 @@
 #define GAME_OPTIONS_H
 
 enum GameModes {
-	GAMEMODE_MANIA,
-	GAMEMODE_ENCORE,
-	GAMEMODE_TATTACK,
-	GAMEMODE_COMPETITION,
+    MODE_MANIA,
+    MODE_ENCORE,
+    MODE_TIMEATTACK,
+    MODE_COMPETITION,
 };
+
+enum CategoryIDS { MEDIA_DEMO };
+
+enum PlayerIDs {
+    MAX_PLAYERS       = 4,
+    ID_SONIC          = 0x01,
+    ID_TAILS          = 0x02,
+    ID_KNUCKLES       = 0x04,
+    ID_MIGHTY         = 0x08,
+    ID_RAY            = 0x10,
+    ID_TAILS_ASSIST   = 0x200,
+    ID_DEFAULT_PLAYER = 0x201,
+};
+
+enum ItemModes { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT };
+
+enum MedalMods { MEDAL_DEBUGMODE, MEDAL_ANDKNUCKLES, MEDAL_PEELOUT, MEDAL_INSTASHIELD, MEDAL_DROPDASH };
+
+enum ScreenSplit { FORCE_SPLIT = 2 };
+
+enum ScreenSizes { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 };
+
+enum SaveSlots { NO_SAVE_SLOT = 255 };
+
+enum ModeFilters { FILTER_MANIA = 2, FILTER_ENCORE = 4 };
 
 struct GameOptions {
 	int gameMode;
@@ -77,6 +102,6 @@ struct GameOptions {
 	int hasPlusInitial;
 };
 
-extern GameOptions options;
+extern GameOptions *options;
 
 #endif //!GAME_OPTIONS_H

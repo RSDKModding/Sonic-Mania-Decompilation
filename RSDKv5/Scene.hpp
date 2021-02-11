@@ -14,21 +14,24 @@ extern byte tilesetGFXData[TILESET_SIZE];
 
 struct SceneListInfo {
     uint hash[4];
-    ushort sceneOffset;
+    char name[0x20];
+    ushort sceneOffsetStart;
+    ushort sceneOffsetEnd;
     byte sceneCount;
 };
 
 struct SceneListEntry {
-    uint nameHash[4];
-    char folder[0x11];
-    char sceneID[8];
+    uint hash[4];
+    char name[0x20];
+    char folder[0x10];
+    char sceneID[0x08];
     byte modeFilter;
 };
 
 struct SceneInfo {
     Entity *entity;
-    void *listData;
-    void *listCategory;
+    SceneListEntry *listData;
+    SceneListInfo *listCategory;
     int timeCounter;
     int currentDrawGroup;
     int currentScreenID;
@@ -50,10 +53,57 @@ struct SceneInfo {
     byte minutes;
 };
 
-extern SceneListInfo sceneLists[0x40];
-extern SceneListEntry sceneListEntries[0x400];
-extern int sceneListCount;
-extern int sceneCount;
+struct ScrollInfo {
+    int parallaxFactor;
+    int scrollSpeed;
+    int scrollPos;
+    int behaviour;
+    int deform;
+};
+
+struct LinePositionInfo {
+    Vector2 position;
+    int width;
+    int height;
+};
+
+struct TileLayer {
+    byte behaviour;
+    byte drawLayer[4];
+    byte widthShift;
+    byte heightShift;
+    byte field_7;
+    ushort width;
+    ushort height;
+    Vector2 position;
+    int parallaxFactor;
+    int scrollSpeed;
+    int scrollPos;
+    int angle;
+    int field_24;
+    byte field_28[0x2000];
+    void(*parallaxPtr)(LinePositionInfo *);
+    ushort scrollIndexCount;
+    char field_202E;
+    char field_202F;
+    ScrollInfo scrollInfo[0x100];
+    uint name[4];
+    ushort *layout;
+    byte *lineScroll;
+};
+
+struct CollisionMasks {
+    byte floorMasks[TILE_COUNT * TILE_SIZE];
+    byte lWallMasks[TILE_COUNT * TILE_SIZE];
+    byte rWallMasks[TILE_COUNT * TILE_SIZE];
+    byte roofMasks[TILE_COUNT * TILE_SIZE];
+    uint angles[TILE_COUNT];
+    byte flags[TILE_COUNT];
+};
+
+extern TileLayer tileLayers[LAYER_COUNT];
+
+extern CollisionMasks collisionMasks[2];
 
 extern int activeSceneList;
 extern int sceneListPosition;
@@ -71,5 +121,22 @@ void LoadStageGIF(char *filepath);
 
 void ProcessParallaxAutoScroll();
 void ProcessSceneTimer();
+
+inline void InitSceneLoad() { sceneInfo.state = sceneInfo.state < ENGINESTATE_LOAD_STEPOVER ? ENGINESTATE_LOAD : ENGINESTATE_LOAD_STEPOVER; }
+
+inline bool32 CheckValidStage()
+{
+    return sceneInfo.activeCategory < sceneInfo.categoryCount && sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart
+           && sceneInfo.listPos <= sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
+}
+
+inline bool32 CheckSceneFolder(const char *folderName)
+{
+    int res = strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder);
+    if (res)
+        return (-(res < 0) | 1) == 0;
+    else
+        return 1;
+}
 
 #endif
