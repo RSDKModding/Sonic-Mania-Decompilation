@@ -84,24 +84,24 @@ struct RSDKFunctionTable {
     int (*DestroyEntity)(Entity *entity, ushort type, void *data);
     int (*ResetEntity)(ushort slotID, ushort type, void *data);
     int (*SpawnEntity)(ushort type, void *data, int x, int y);
-    void (*CopyEntity)(Entity *destEntity, Entity *srcEntity, bool32 clearSrcEntity);
+    void (*CopyEntity)(void *destEntity, Entity *srcEntity, bool32 clearSrcEntity);
     void (*CheckOnScreen)(void);
     void (*CheckPosOnScreen)(void);
     void (*AddDrawListRef)(void);
     void (*SwapDrawLayers)(void);
-    int (*SetDrawLayerProperties)(void *, void *, void *);
-    int (*LoadScene)(void *, void *);
+    void (*SetDrawLayerProperties)(byte layer, int active, void (*initDrawPtr)(void));
+    void (*LoadScene)(const char* categoryName, const char* sceneName);
     void (*SetGameMode)(void);
-    int (*Unknown53)(void *);
+    void (*SetHardResetFlag)(bool set);
     void (*CheckValidScene)(void);
     int (*CheckStageFolder)(const char *folderName);
     int (*InitSceneLoad)(void);
     void (*GetObjectIDByName)(void);
-    void (*Unknown57)(void);
-    int (*Unknown58)(void *, void *, void *, void *);
-    void (*GetSettingsValue)(void);
-    void (*SetSettingsValue)(void);
-    void (*ResizeWindow)(void);
+    void (*ClearScreens)(void);
+    void (*AddScreen)(int x, int y, int w, int h);
+    int (*GetSettingsValue)(int id);
+    void (*SetSettingsValue)(int id, int val);
+    void (*UpdateWindow)(void);
     int (*Sin1024)(int angle);
     int (*Cos1024)(int angle);
     int (*ATan1024)(int angle);
@@ -144,7 +144,7 @@ struct RSDKFunctionTable {
     void (*Unknown71)(void);
     int (*SetScreenSize)(void *, void *, void *, void *, void *);
     void (*SetClipBounds)(byte screenID, int x1, int y1, int x2, int y2);
-    void (*ScreenUnknown)(void);
+    void (*SetScreenUnknown)(byte, byte, byte, byte, byte);
     short (*LoadSpriteSheet)(const char *path, Scopes scope);
     void (*SetLookupTable)(ushort *tablePtr);
     void (*SetPaletteMask)(uint maskColour);
@@ -155,7 +155,7 @@ struct RSDKFunctionTable {
     void (*LoadPalette)(const char *filePath, int paletteID, int startPaletteIndex, int startIndex, int endIndex);
     void (*RotatePalette)(byte palID, byte startIndex, byte endIndex, bool right);
     void (*SetLimitedFade)(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
-    void (*DoPaletteSomething3)(void);
+    void (*BlendColours)(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
     void (*DrawRect)(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawLine)(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawCircle)(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
@@ -169,7 +169,7 @@ struct RSDKFunctionTable {
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTile)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
-    int (*SetScreenFade)(int a, int r, int g, int b);
+    int (*FillScreen)(int a1, int a2, int a3, int a4);
     void (*LoadMesh)(void);
     void (*Create3DScene)(void);
     void (*Init3DScene)(void);
@@ -192,14 +192,14 @@ struct RSDKFunctionTable {
     short (*GetFrameID)(EntityAnimationData *data);
     void (*GetStringWidth)(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
     void (*ProcessAnimation)(EntityAnimationData *data);
-    int(*GetSceneLayerID)(int layerID);
-    TileLayer* (*GetSceneLayerPtr)(const char *name);
+    TileLayer *(*GetSceneLayer)(int layerID);
+    int (*GetSceneLayerID)(const char *name);
     void (*GetLayerSize)(ushort layer, Vector2 *size, bool32 pixelSize);
     void (*GetTileInfo)(ushort layer, int x, int y);
     void (*SetTileInfo)(ushort layer, int x, int y, ushort tile);
-    int (*CopyTileLayer)(ushort layer1ID, int a2, int a3, ushort layer2ID, int a5, int a6, int a7, int a8);
+    int (*CopyTileLayer)(ushort dstLayer, int startX1, int startY1, ushort srcLayer, int startX2, int startY2, int countX, int countY);
     void (*ProcessParallax)(TileLayer *TileLayer);
-    int (*GetLinePosPtrs)(void);
+    ScanlineInfo* (*GetScanlines)(void);
     bool32 (*CheckObjectCollisionTouchBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox);
     bool32 (*CheckObjectCollisionTouchCircle)(Entity *thisEntity, int thisOffset, Entity *otherEntity, int otherOffset);
     int (*CheckObjectCollisionBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setPos);
@@ -207,7 +207,7 @@ struct RSDKFunctionTable {
     bool32 (*ObjectTileCollision)(Entity *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                                 bool32 setPos);
     bool32 (*ObjectTileGrip)(Entity *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
-                           sbyte tolerance);
+                             sbyte tolerance);
     void (*ProcessPlayerTileCollisions)(Entity *entity, Hitbox *outer, Hitbox *inner);
     void (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
     void (*SetTileAngle)(ushort tileID, byte cPlane, byte cMode, byte value);

@@ -67,10 +67,10 @@ void UIPicture_EditorLoad()
 
 void UIPicture_Serialize()
 {
-    RSDK.SetEditableVar(ATTRIBUTE_VAR, "listID", UIPicture->objectID, offsetof(EntityUIPicture, listID));
-    RSDK.SetEditableVar(ATTRIBUTE_VAR, "frameID", UIPicture->objectID, offsetof(EntityUIPicture, frameID));
-    RSDK.SetEditableVar(ATTRIBUTE_VAR, "tag", UIPicture->objectID, offsetof(EntityUIPicture, tag));
-    RSDK.SetEditableVar(ATTRIBUTE_BOOL, "zonePalette", UIPicture->objectID, offsetof(EntityUIPicture, zonePalette));
-    RSDK.SetEditableVar(ATTRIBUTE_U8, "zoneID", UIPicture->objectID, offsetof(EntityUIPicture, zoneID));
+    RSDK_EDITABLE_VAR(UIPicture, VAR_ENUM, listID);
+    RSDK_EDITABLE_VAR(UIPicture, VAR_ENUM, frameID);
+    RSDK_EDITABLE_VAR(UIPicture, VAR_ENUM, tag);
+    RSDK_EDITABLE_VAR(UIPicture, VAR_BOOL, zonePalette);
+    RSDK_EDITABLE_VAR(UIPicture, VAR_UINT8, zoneID);
 }
 

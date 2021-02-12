@@ -64,3 +64,28 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
         ++dst;
     }
 }
+
+void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int alpha, int index, int count) {
+    if (paletteID <= PALETTE_COUNT && coloursA && coloursB) {
+        if (alpha >= 0) {
+            if (alpha > 0xFF)
+                alpha = 0xFF;
+        }
+        else {
+            alpha = 0;
+        }
+        
+        byte alpha2        = 0xFF - alpha;
+        ushort *palettePtr = &fullPalette[paletteID][index];
+        for (int i = index; i < index + count; ++i) {
+            // bgrx formatted array
+            int r = alpha * coloursB[2] + alpha2 * coloursA[2];
+            int g = alpha * coloursB[1] + alpha2 * coloursA[1];
+            int b = alpha * coloursB[0] + alpha2 * coloursA[0];
+            coloursA += 4;
+            coloursB += 4;
+            *palettePtr = rIndexes[(r >> 8) & 0xFF] | gIndexes[(g >> 8) & 0xFF] | bIndexes[(b >> 8) & 0xFF];
+            ++palettePtr;
+        }
+    }
+}

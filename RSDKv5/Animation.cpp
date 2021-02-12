@@ -10,11 +10,10 @@ short LoadAnimation(const char *filename, Scopes scope)
     StrAdd(buffer, filename);
 
     uint hash[4];
-    StrCopy(hashBuffer, filename);
-    GenerateHash(hash, StrLength(filename));
+    GEN_HASH(filename, hash);
 
     for (int i = 0; i < SPRFILE_COUNT; ++i) {
-        if (memcmp(hash, spriteAnimationList[i].hash, 4 * sizeof(int)) == 0) {
+        if (HASH_MATCH(spriteAnimationList[i].hash, hash)) {
             return i;
         }
     }
@@ -109,11 +108,10 @@ short CreateAnimation(const char *filename, uint frameCount, uint animCount, Sco
     StrAdd(buffer, filename);
 
     uint hash[4];
-    StrCopy(hashBuffer, filename);
-    GenerateHash(hash, StrLength(filename));
+    GEN_HASH(filename, hash);
 
     for (int i = 0; i < SPRFILE_COUNT; ++i) {
-        if (memcmp(hash, spriteAnimationList[i].hash, 4 * sizeof(int)) == 0) {
+        if (HASH_MATCH(spriteAnimationList[i].hash, hash)) {
             return i;
         }
     }

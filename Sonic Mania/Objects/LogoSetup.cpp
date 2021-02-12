@@ -29,7 +29,7 @@ void LogoSetup_Draw()
 void LogoSetup_Create(void* data)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
-    if (RSDK_sceneInfo->inEditor != 1) {
+    if (!RSDK_sceneInfo->inEditor) {
         entity->priority  = ACTIVE_ALWAYS;
         entity->visible   = 1;
         entity->drawOrder = 12;
@@ -126,7 +126,7 @@ void LogoSetup_Unknown3()
 void LogoSetup_Unknown4()
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
-    RSDK.SetScreenFade(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
+    RSDK.FillScreen(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
 }
 
 void LogoSetup_EditorDraw()

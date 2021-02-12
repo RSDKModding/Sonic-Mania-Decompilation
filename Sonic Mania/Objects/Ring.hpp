@@ -24,7 +24,7 @@ struct EntityRing : Entity {
     EntityPlayer *storedPlayer;
     int moveType;
     Vector2 amplitude;
-    int moveSpeed;
+    int speed;
     Vector2 offset;
     EntityAnimationData animData;
 };

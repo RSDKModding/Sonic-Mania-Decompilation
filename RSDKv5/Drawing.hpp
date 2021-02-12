@@ -73,8 +73,8 @@ struct DrawList {
 extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];
 
-extern short blendLookupTable[BLENDTABLE_SIZE];
-extern short subtractLookupTable[BLENDTABLE_SIZE];
+extern ushort blendLookupTable[BLENDTABLE_SIZE];
+extern ushort subtractLookupTable[BLENDTABLE_SIZE];
 
 extern int gfxDataPosition;
 extern GFXSurface gfxSurface[SURFACE_MAX];
@@ -88,6 +88,7 @@ extern ScreenInfo *currentScreen;
 bool InitRenderDevice();
 void FlipScreen();
 void ReleaseRenderDevice();
+void UpdateWindow();
 
 void GenerateBlendLookupTable();
 
@@ -161,6 +162,12 @@ inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
     }
 }
 
+inline void AddDrawListRef(byte layer, ushort entityID) {
+    if (layer < DRAWLAYER_COUNT) {
+        drawLayers[layer].entries[drawLayers[layer].entityCount++] = entityID;
+    }
+}
+
 inline ushort GetDrawListRef(byte layerID, ushort entityID)
 {
     DrawList *listPtr = &drawLayers[layerID];
@@ -188,6 +195,10 @@ inline void SetDrawLayerProperties(byte layer, int active, void (*initDrawPtr)(v
     }
 }
 
+void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count);
+
+void FillScreen(int a1, int a2, int a3, int a4);
+
 void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
@@ -197,9 +208,11 @@ void DrawQuad(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha,
 void DrawTexturedQuad(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
 
 void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelative);
-void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects InkEffect, int alpha, int sheetID);
+void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);
 void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
                         short Rotation, InkEffects inkEffect, signed int alpha, int sheetID);
+
+void DrawDeformedSprite(ushort spriteIndex, InkEffects inkEffect, int alpha);
 
 void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);

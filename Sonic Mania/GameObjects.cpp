@@ -10,6 +10,8 @@ TriggerState *RSDK_triggerL      = NULL;
 TriggerState *RSDK_triggerR      = NULL;
 TouchMouseData *RSDK_touchMouse  = NULL;
 
+char textBuffer[0x400];
+
 UserFunctionTable User;
 RSDKFunctionTable RSDK;
 

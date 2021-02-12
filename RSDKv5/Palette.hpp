@@ -87,5 +87,6 @@ inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool right
 }
 
 void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
+void BlendColours(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
 
 #endif

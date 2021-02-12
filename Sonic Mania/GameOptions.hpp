@@ -23,7 +23,7 @@ enum PlayerIDs {
 
 enum ItemModes { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT };
 
-enum MedalMods { MEDAL_DEBUGMODE, MEDAL_ANDKNUCKLES, MEDAL_PEELOUT, MEDAL_INSTASHIELD, MEDAL_DROPDASH };
+enum MedalMods { MEDAL_DEBUGMODE, MEDAL_ANDKNUCKLES, MEDAL_PEELOUT, MEDAL_INSTASHIELD, MEDAL_DROPDASH, MEDAL_NOTIMEOVER };
 
 enum ScreenSplit { FORCE_SPLIT = 2 };
 
@@ -32,6 +32,19 @@ enum ScreenSizes { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 };
 enum SaveSlots { NO_SAVE_SLOT = 255 };
 
 enum ModeFilters { FILTER_MANIA = 2, FILTER_ENCORE = 4 };
+
+enum ReservedEntities {
+    SLOT_PLAYER1        = 0,
+    SLOT_PLAYER2        = 1,
+    SLOT_PLAYER3        = 2,
+    SLOT_PLAYER4        = 3,
+    SLOT_MUSIC          = 9,
+    SLOT_BSS_MESSAGE    = 11,
+    SLOT_ZONE           = 12,
+    SLOT_PAUSEMENU      = 16,
+    SLOT_REPLAYRECORDER = 37,
+};
+
 
 struct GameOptions {
 	int gameMode;

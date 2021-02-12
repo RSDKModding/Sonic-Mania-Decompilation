@@ -61,10 +61,9 @@ struct ScrollInfo {
     int deform;
 };
 
-struct LinePositionInfo {
+struct ScanlineInfo {
     Vector2 position;
-    int width;
-    int height;
+    Vector2 deform;
 };
 
 struct TileLayer {
@@ -82,7 +81,7 @@ struct TileLayer {
     int angle;
     int field_24;
     byte field_28[0x2000];
-    void(*parallaxPtr)(LinePositionInfo *);
+    void (*scanlineCallback)(ScanlineInfo *);
     ushort scrollIndexCount;
     char field_202E;
     char field_202F;
@@ -101,13 +100,12 @@ struct CollisionMasks {
     byte flags[TILE_COUNT];
 };
 
+extern ScanlineInfo scanlines[SCREEN_YSIZE];
 extern TileLayer tileLayers[LAYER_COUNT];
 
 extern CollisionMasks collisionMasks[2];
 
-extern int activeSceneList;
-extern int sceneListPosition;
-
+extern bool hardResetFlag;
 extern char currentSceneFolder[0x10];
 
 extern SceneInfo sceneInfo;
@@ -120,9 +118,13 @@ void LoadTileConfig(char *filepath);
 void LoadStageGIF(char *filepath);
 
 void ProcessParallaxAutoScroll();
+void ProcessParallax(TileLayer *layer);
 void ProcessSceneTimer();
 
+void LoadSceneByName(const char *categoryName, const char *sceneName);
 inline void InitSceneLoad() { sceneInfo.state = sceneInfo.state < ENGINESTATE_LOAD_STEPOVER ? ENGINESTATE_LOAD : ENGINESTATE_LOAD_STEPOVER; }
+
+inline void SetHardResetFlag(bool set) { hardResetFlag = set; }
 
 inline bool32 CheckValidStage()
 {
@@ -138,5 +140,87 @@ inline bool32 CheckSceneFolder(const char *folderName)
     else
         return 1;
 }
+
+inline ushort GetSceneLayerID(const char *name)
+{
+    uint hash[4];
+    GEN_HASH(name, hash);
+
+    for (int i = 0; i < LAYER_COUNT; ++i) {
+        if (HASH_MATCH(tileLayers[i].name, hash))
+            return i;
+    }
+    return -1;
+}
+
+inline TileLayer *GetSceneLayer(ushort LayerID)
+{
+    if (LayerID < LAYER_COUNT)
+        return &tileLayers[LayerID];
+    else
+        return NULL;
+}
+
+inline void GetLayerSize(ushort layerID, Vector2 *size, bool32 pixelSize)
+{
+    if (layerID < LAYER_COUNT && size) {
+        TileLayer *layer = &tileLayers[layerID];
+        if (pixelSize == 1) {
+            size->x = TILE_SIZE * layer->width;
+            size->y = TILE_SIZE * layer->height;
+        }
+        else {
+            size->x = layer->width;
+            size->y = layer->height;
+        }
+    }
+}
+
+inline ushort GetTileInfo(ushort layerID, int tileX, int tileY)
+{
+    if (layerID < 8u) {
+        TileLayer *layer = &tileLayers[layerID];
+        if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
+            return layer->layout[tileX + (tileY << layer->widthShift)];
+        }
+    }
+    return 0xFFFF;
+}
+
+inline void SetTileInfo(ushort layerID, int tileX, int tileY, ushort tile)
+{
+    if (layerID < 8u) {
+        TileLayer* layer = &tileLayers[layerID];
+        if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
+            layer->layout[tileX + (tileY << layer->widthShift)] = tile;
+        }
+    }
+}
+
+void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayerID, int startX2, int startY2, int countX, int countY);
+
+inline void CopyTile(ushort dest, ushort src, ushort count)
+{
+    if (dest > TILE_COUNT)
+        dest = TILE_COUNT - 1;
+    if (src > TILE_COUNT)
+        src = TILE_COUNT - 1;
+    if (count > TILE_COUNT)
+        count = TILE_COUNT - 1;
+
+    byte *destPtr = &tilesetGFXData[TILE_DATASIZE * dest];
+    byte *srcPtr  = &tilesetGFXData[TILE_DATASIZE * src];
+    while (count--) {
+        int pxCnt = TILE_DATASIZE;
+        while (pxCnt--) *destPtr++ = *srcPtr++;
+    }
+}
+
+inline ScanlineInfo *GetLinePositions() { return scanlines; }
+
+void DrawLayerHScroll(TileLayer *layer);
+void DrawLayerVScroll(TileLayer *layer);
+void DrawLayerRotozoom(TileLayer *layer);
+void DrawLayerBasic(TileLayer *layer);
 
 #endif

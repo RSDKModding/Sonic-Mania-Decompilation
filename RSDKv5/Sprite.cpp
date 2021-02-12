@@ -1,6 +1,5 @@
 #include "RetroEngine.hpp"
 
-
 const int LOADING_IMAGE = 0;
 const int LOAD_COMPLETE = 1;
 const int LZ_MAX_CODE   = 4095;
@@ -16,7 +15,7 @@ byte TraceGifPrefix(uint *prefix, int code, int clearCode);
 
 void InitGifDecoder(Image *image)
 {
-    byte val                      = ReadInt8(&image->info);
+    byte val                       = ReadInt8(&image->info);
     image->decoder->fileState      = LOADING_IMAGE;
     image->decoder->position       = 0;
     image->decoder->bufferSize     = 0;
@@ -33,7 +32,7 @@ void InitGifDecoder(Image *image)
     image->decoder->shiftData      = 0u;
     for (int i = 0; i <= LZ_MAX_CODE; ++i) image->decoder->prefix[i] = (byte)NO_SUCH_CODE;
 }
-void ReadGifLine(Image* image, byte *line, int length, int offset)
+void ReadGifLine(Image *image, byte *line, int length, int offset)
 {
     int i         = 0;
     int stackPtr  = image->decoder->stackPtr;
@@ -65,7 +64,7 @@ void ReadGifLine(Image* image, byte *line, int length, int offset)
                 image->decoder->runningCode    = image->decoder->eofCode + 1;
                 image->decoder->runningBits    = image->decoder->depth + 1;
                 image->decoder->maxCodePlusOne = 1 << image->decoder->runningBits;
-                prevCode                  = (image->decoder->prevCode = NO_SUCH_CODE);
+                prevCode                       = (image->decoder->prevCode = NO_SUCH_CODE);
             }
             else {
                 if (gifCode < clearCode) {
@@ -91,7 +90,7 @@ void ReadGifLine(Image* image, byte *line, int length, int offset)
                     int c = 0;
                     while (c++ <= LZ_MAX_CODE && code > clearCode && code <= LZ_MAX_CODE) {
                         image->decoder->stack[stackPtr++] = image->decoder->suffix[code];
-                        code                         = image->decoder->prefix[code];
+                        code                              = image->decoder->prefix[code];
                     }
                     if (c >= LZ_MAX_CODE | code > LZ_MAX_CODE) {
                         return;
@@ -146,14 +145,14 @@ byte ReadGifByte(Image *image)
 
     byte b;
     if (image->decoder->position == image->decoder->bufferSize) {
-        b                         = ReadInt8(&image->info);
+        b                          = ReadInt8(&image->info);
         image->decoder->bufferSize = (int)b;
         if (image->decoder->bufferSize == 0) {
             image->decoder->fileState = LOAD_COMPLETE;
             return c;
         }
         ReadBytes(&image->info, image->decoder->buffer, image->decoder->bufferSize);
-        b                   = image->decoder->buffer[0];
+        b                        = image->decoder->buffer[0];
         image->decoder->position = 1;
     }
     else {
@@ -185,7 +184,8 @@ void ReadGifPictureData(Image *image, int width, int height, bool interlaced, by
     for (int h = 0; h < height; ++h) ReadGifLine(image, gfxData, width, h * width);
 }
 
-bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
+bool LoadGIF(Image *image, const char *fileName, bool dontLoadData)
+{
     if (fileName) {
         if (!LoadFile(&image->info, fileName))
             return 0;
@@ -196,7 +196,7 @@ bool LoadGIF(Image* image, const char* fileName, bool dontLoadData) {
             return 1;
     }
 
-    int data      = ReadInt8(&image->info);
+    int data         = ReadInt8(&image->info);
     int has_pallete  = (data & 0x80) >> 7;
     int colors       = ((data & 0x70) >> 4) + 1;
     int palette_size = (data & 0x7) + 1;
@@ -262,11 +262,10 @@ short LoadSpriteSheet(const char *filename, Scopes scope)
     StrAdd(buffer, filename);
 
     uint hash[4];
-    StrCopy(hashBuffer, filename);
-    GenerateHash(hash, StrLength(filename));
+    GEN_HASH(filename, hash);
 
     for (int i = 0; i < SURFACE_MAX; ++i) {
-        if (memcmp(hash, gfxSurface[i].hash, 4 * sizeof(int)) == 0) {
+        if (HASH_MATCH(gfxSurface[i].hash, hash)) {
             return i;
         }
     }

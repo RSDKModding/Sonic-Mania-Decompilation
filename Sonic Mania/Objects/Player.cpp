@@ -84,7 +84,7 @@ void Player_Create(void* data)
         entity->priority       = ACTIVE_NORMAL;
         entity->tileCollisions = true;
         entity->visible        = true;
-        //entity->drawOrder      = Zone[94].ObjectID;
+        entity->drawOrder      = Zone->playerDrawLow;
         entity->scale.x             = 0x200;
         entity->scale.y             = 0x200;
         entity->controllerID        = entity->playerID + 1;
@@ -176,7 +176,7 @@ void Player_StageLoad()
     if (options->gameMode == MODE_ENCORE) {
         Player->playerCount                     = 2;
         EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetObjectByID(1);
-        sidekick->playerID     = ID_SONIC;
+        sidekick->characterID     = ID_SONIC;
     }
     else {
         Player->playerCount = RSDK.GetEntityCount(Player->objectID, 0);
@@ -254,8 +254,7 @@ void Player_EditorLoad()
 
 }
 
-void Player_Serialize() { RSDK.SetEditableVar(ATTRIBUTE_VAR, "characterID", Player->objectID, offsetof(EntityPlayer, playerID)); }
-
+void Player_Serialize() { RSDK_EDITABLE_VAR(Player, VAR_ENUM, characterID); }
 
 void Player_LoadSprites()
 {

@@ -143,4 +143,4 @@ void GenerateHash(uint *buffer, int len)
     }
 }
 
-char textBuffer[0x100];
+char textBuffer[0x400];

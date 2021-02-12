@@ -105,14 +105,14 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                 dataType &= 0x7F;
 
                 switch (dataType) {
-                    case ATTRIBUTE_U8:
-                    case ATTRIBUTE_S8: 
+                    case VAR_UINT8:
+                    case VAR_INT8: 
                         if (info.readPos + dataSize <= info.fileSize) {
                             ReadBytes(&info, &obj[dataPos], sizeof(byte));
                         }
                         break;
-                    case ATTRIBUTE_U16:
-                    case ATTRIBUTE_S16: {
+                    case VAR_UINT16:
+                    case VAR_INT16: {
                         int tmp = (dataPos & 0xFFFFFFFE) + 2;
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
@@ -122,9 +122,9 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         }
                         break;
                     }
-                    case ATTRIBUTE_U32:
-                    case ATTRIBUTE_S32: 
-                    case ATTRIBUTE_VAR: {
+                    case VAR_UINT32:
+                    case VAR_INT32: 
+                    case VAR_ENUM: {
                         int tmp = (dataPos & 0xFFFFFFFC) + 2;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
@@ -570,15 +570,15 @@ void ProcessObjectDrawLists()
                     for (int i = 0; i < list->layerCount; ++i) {
                         TileLayer *layer       = &tileLayers[list->layerDrawList[i]];
                         
-                        //if (layer->parallaxPtr)
-                        //    layer->parallaxPtr(linePositions);
-                        //else
-                        //    ProcessParallaxScroll(layer);
+                        if (layer->scanlineCallback)
+                            layer->scanlineCallback(scanlines);
+                        else
+                            ProcessParallax(layer);
                         switch (layer->behaviour) {
-                            //case 0: DrawLayerHScroll(layer); break;
-                            //case 1: DrawLayerVScroll(layer); break;
-                            //case 2: DrawLayer3(layer); break;
-                            //case 3: DrawLayer4(layer); break;
+                            case 0: DrawLayerHScroll(layer); break;
+                            case 1: DrawLayerVScroll(layer); break;
+                            case 2: DrawLayerRotozoom(layer); break;
+                            case 3: DrawLayerBasic(layer); break;
                             default: break;
                         }
                     }
@@ -745,4 +745,46 @@ bool32 GetObjects(ushort type, Entity **entity)
 
     *entity = nextEnt;
     return true;
+}
+
+
+bool32 CheckOnScreen(Entity *entity, Vector2 *range)
+{
+    if (!entity)
+        return false;
+
+    if (range) {
+        for (int s = 0; s < screenCount; ++s) {
+            int sx = sceneInfo.entity->position.x - screens[s].position.x;
+            int sy = sceneInfo.entity->position.y - screens[s].position.y;
+            if (sx >= 0 && sy >= 0 && sx >= range->x + screens[s].width && sy >= range->y + screens[s].height) {
+                return true;
+            }
+        }
+    }
+    else {
+        for (int s = 0; s < screenCount; ++s) {
+            int sx = sceneInfo.entity->position.x - screens[s].position.x;
+            int sy = sceneInfo.entity->position.y - screens[s].position.y;
+            if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screens[s].width
+                && sy >= sceneInfo.entity->updateRange.y + screens[s].height) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range) {
+    if (!position || !range)
+        return false;
+
+    for (int s = 0; s < screenCount; ++s) {
+        int sx = position->x - screens[s].position.x;
+        int sy = position->y - screens[s].position.y;
+        if (sx >= 0 && sy >= 0 && sx >= range->x + screens[s].width && sy >= range->y + screens[s].height) {
+            return true;
+        }
+    }
+
+    return false; 
 }

@@ -120,7 +120,11 @@ inline void StringUpperCase(char *dest, const char *src)
 extern char hashBuffer[0x400];
 void GenerateHash(uint *buffer, int len);
 
-extern char textBuffer[0x100];
+#define HASH_SIZE            (4 * sizeof(uint))
+#define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
+#define GEN_HASH(text, hash) StrCopy(hashBuffer, text); GenerateHash(hash, StrLength(hashBuffer));
+
+extern char textBuffer[0x400];
 inline void SetText(TextInfo *textInfo, char *text, uint size)
 {
     if (text) {

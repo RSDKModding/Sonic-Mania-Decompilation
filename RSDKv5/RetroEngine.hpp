@@ -27,6 +27,8 @@ enum GamePlatforms {
     PLATFORM_DEV    = 0xFF,
 };
 
+#define RETRO_USE_ORIGINAL_CODE (0)
+
 #define RETRO_WIN   (0)
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
@@ -126,8 +128,11 @@ struct RetroEngine {
     int fsWidth          = 0;
     int fsHeight         = 0;
     int refreshRate      = 60;
+
     bool shaderSupport   = true;
     int screenShader     = 0;
+    int shaderUnknown    = 0;
+    int dimTimer         = 0;
 
     bool streamsEnabled = true;
     float streamVolume  = 1.0;

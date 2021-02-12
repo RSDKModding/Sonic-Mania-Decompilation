@@ -2,12 +2,11 @@
 
 byte tilesetGFXData[TILESET_SIZE];
 
+ScanlineInfo scanlines[SCREEN_YSIZE];
 TileLayer tileLayers[LAYER_COUNT];
 CollisionMasks collisionMasks[2];
 
-int activeSceneList   = 0;
-int sceneListPosition = 0;
-
+bool hardResetFlag = false;
 char currentSceneFolder[0x10];
 
 SceneInfo sceneInfo;
@@ -31,7 +30,7 @@ void LoadScene()
     debugValCnt = 0;
     lookUpBuffer = NULL;
 
-    if (StrComp(currentSceneFolder, sceneInfo.listData[sceneListPosition].folder)) {
+    if (StrComp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].modeFilter;
@@ -42,7 +41,7 @@ void LoadScene()
     for (int m = 0; m < MODEL_MAX; ++m) {
         if (modelList[m].scope != SCOPE_GLOBAL) {
             modelList[m].scope = SCOPE_NONE;
-            memset(modelList[m].hash, 0, 4 * sizeof(int));
+            memset(modelList[m].hash, 0, 4 * sizeof(uint));
         }
     }
 
@@ -58,7 +57,7 @@ void LoadScene()
     for (int s = 0; s < SPRFILE_COUNT; ++s) {
         if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
             spriteAnimationList[s].scope = SCOPE_NONE;
-            memset(spriteAnimationList[s].hash, 0, 4 * sizeof(int));
+            memset(spriteAnimationList[s].hash, 0, 4 * sizeof(uint));
         }
     }
 
@@ -66,7 +65,7 @@ void LoadScene()
     for (int s = 0; s < SURFACE_MAX; ++s) {
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
             gfxSurface[s].scope = SCOPE_NONE;
-            memset(gfxSurface[s].hash, 0, 4 * sizeof(int));
+            memset(gfxSurface[s].hash, 0, 4 * sizeof(uint));
         }
     }
 
@@ -82,8 +81,9 @@ void LoadScene()
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 
-    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneListPosition];
+    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     StrCopy(currentSceneFolder, sceneEntry->folder);
+    hardResetFlag = false;
     sceneInfo.filter = sceneEntry->modeFilter;
 
     char buffer[0x40];
@@ -175,7 +175,7 @@ void LoadScene()
         for (int i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
             byte maxConcurrentPlays = ReadInt8(&info);
-            // LoadWAV(buffer, maxConcurrentPlays, SCOPE_STAGE);
+            LoadSfx(buffer, maxConcurrentPlays, SCOPE_STAGE);
         }
 
         CloseFile(&info);
@@ -190,7 +190,7 @@ void LoadSceneFile() {
 
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
-    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneListPosition];
+    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     char buffer[0x40];
     StrCopy(buffer, "Data/Stages/");
     StrAdd(buffer, currentSceneFolder);
@@ -205,6 +205,8 @@ void LoadSceneFile() {
     //    memset(gfxLineBuffer, 0, dword_B82A94);
     //}
     
+    memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
+
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer)) {
@@ -316,7 +318,7 @@ void LoadSceneFile() {
             AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, DATASET_TMP, false);
             if (objID) {
                 editableVarCount = 0;
-                SetEditableVar(ATTRIBUTE_U8, "filter", objID, offsetof(Entity, filter));
+                SetEditableVar(VAR_UINT8, "filter", objID, offsetof(Entity, filter));
                 if (obj->serialize)
                     obj->serialize();
             }
@@ -356,8 +358,8 @@ void LoadSceneFile() {
 
                 for (int v = 1; v < varCnt; ++v) {
                     switch (varList[v].type) {
-                        case ATTRIBUTE_U8:
-                        case ATTRIBUTE_S8:
+                        case VAR_UINT8:
+                        case VAR_INT8:
                             if (varList[v].active) {
                                 byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(byte));
@@ -366,8 +368,8 @@ void LoadSceneFile() {
                                 ReadInt8(&info);
                             }
                             break;
-                        case ATTRIBUTE_U16:
-                        case ATTRIBUTE_S16:
+                        case VAR_UINT16:
+                        case VAR_INT16:
                             if (varList[v].active) {
                                 byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(short));
@@ -376,11 +378,11 @@ void LoadSceneFile() {
                                 ReadInt16(&info);
                             }
                             break;
-                        case ATTRIBUTE_U32:
-                        case ATTRIBUTE_S32:
-                        case ATTRIBUTE_VAR: 
-                        case ATTRIBUTE_BOOL: 
-                        case ATTRIBUTE_COLOUR:
+                        case VAR_UINT32:
+                        case VAR_INT32:
+                        case VAR_ENUM: 
+                        case VAR_BOOL: 
+                        case VAR_COLOUR:
                             if (varList[v].active) {
                                 byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
@@ -389,7 +391,7 @@ void LoadSceneFile() {
                                 ReadInt32(&info);
                             }
                             break;
-                        case ATTRIBUTE_STRING:
+                        case VAR_STRING:
                             if (varList[v].active) {
                                 byte *ptr      = (byte *)entity;
                                 TextInfo *text = (TextInfo *)&ptr[varList[v].offset];
@@ -406,7 +408,7 @@ void LoadSceneFile() {
                                 Seek_Cur(&info, cnt * sizeof(ushort));
                             }
                             break;
-                        case ATTRIBUTE_VECTOR2:
+                        case VAR_VECTOR2:
                             if (varList[v].active) {
                                 byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
@@ -417,7 +419,7 @@ void LoadSceneFile() {
                                 ReadInt32(&info); //y
                             }
                             break;
-                        case ATTRIBUTE_UNKNOWN:
+                        case VAR_UNKNOWN:
                             if (varList[v].active) {
                                 byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
@@ -624,7 +626,31 @@ void LoadStageGIF(char *filepath)
     }
 }
 
-void ProcessParallaxAutoScroll() {}
+void ProcessParallaxAutoScroll()
+{
+    for (int l = 0; l < LAYER_COUNT; ++l) {
+        TileLayer *layer = &tileLayers[l];
+        if (layer->layout) {
+            layer->scrollPos += layer->scrollSpeed;
+            for (int s = 0; s < layer->scrollIndexCount; ++s) {
+                layer->scrollInfo[s].scrollPos += layer->scrollInfo[s].scrollSpeed;
+            }
+        }
+    }
+}
+void ProcessParallax(TileLayer *layer)
+{
+    int pixelWidth  = TILE_SIZE * layer->width;
+    int pixelHeight = TILE_SIZE * layer->height;
+    switch (layer->behaviour) {
+        default: break;
+        case 0: break;
+        case 1: break;
+        case 2: break;
+        case 3: break;
+    }
+}
+
 void ProcessSceneTimer()
 {
     if (sceneInfo.timeEnabled) {
@@ -639,5 +665,518 @@ void ProcessSceneTimer()
             }
         }
         sceneInfo.milliseconds = sceneInfo.timeCounter / engine.refreshRate;
+    }
+}
+
+void LoadSceneByName(const char *categoryName, const char *sceneName)
+{
+    uint hash[4];
+    GEN_HASH(categoryName, hash);
+
+    for (int i = 0; i < sceneInfo.categoryCount; ++i) {
+        if (HASH_MATCH(sceneInfo.listCategory[i].hash, hash)) {
+            sceneInfo.activeCategory = i;
+            GEN_HASH(sceneName, hash);
+
+            for (int s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
+                if (HASH_MATCH(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + i].hash, hash)) {
+                    sceneInfo.listPos = s;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
+void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayerID, int startX2, int startY2, int countX, int countY)
+{
+    if (dstLayerID < LAYER_COUNT && srcLayerID < LAYER_COUNT) {
+        TileLayer *dstLayer = &tileLayers[dstLayerID];
+        TileLayer *srcLayer = &tileLayers[srcLayerID];
+
+        if (startX1 >= 0 && startX1 < dstLayer->width) {
+            if (startY1 >= 0 && startY1 < dstLayer->height) {
+                if (startX2 >= 0 && startX2 < srcLayer->width) {
+                    if (startY2 >= 0 && startY2 < srcLayer->height) {
+
+                        if (startX1 + countX > dstLayer->width) {
+                            countX = dstLayer->width - startX1;
+                        }
+
+                        if (startY1 + countY > dstLayer->height) {
+                            countY = dstLayer->height - startY1;
+                        }
+
+                        if (startX2 + countX > srcLayer->width) {
+                            countX = srcLayer->width - startX2;
+                        }
+
+                        if (startY2 + countY > srcLayer->height) {
+                            countY = srcLayer->height - startY2;
+                        }
+
+                        for (int y = 0; y < countY; ++y) {
+                            for (int x = 0; x < countX; ++x) {
+                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
+                                dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void DrawLayerHScroll(TileLayer *layer)
+{
+    int screenwidth16            = (currentScreen->pitch >> 4) - 1;
+    byte *lineBuffer             = &gfxLineBuffer[currentScreen->clipBound_Y1];
+    ScanlineInfo *tilePosPtr = &scanlines[currentScreen->clipBound_Y1];
+    ushort *frameBufferPtr       = &currentScreen->frameBuffer[currentScreen->pitch * currentScreen->clipBound_Y1];
+
+    int cy = currentScreen->clipBound_Y1;
+    if (cy < currentScreen->clipBound_Y2) {
+        do {
+            int x              = tilePosPtr->position.x;
+            int y              = tilePosPtr->position.y;
+            int tileX          = tilePosPtr->position.x >> 16;
+            ushort *palettePtr = fullPalette[*lineBuffer++];
+            if (tileX >= 0) {
+                if (tileX >= 16 * layer->width)
+                    x = (tileX - 16 * layer->width) << 16;
+            }
+            else {
+                x = (tileX + 16 * layer->width) << 16;
+            }
+            int cnt  = 16 - (x >> 16) & 0xF;
+            int cntX = (x >> 16) & 0xF;
+            int cntY = 16 * ((y >> 16) & 0xF);
+
+            int tx                = (x >> 20);
+            ushort *tileLayoutPtr = &layer->layout[tx + (y >> 20 << layer->widthShift)];
+            if (*tileLayoutPtr >= 0xFFFF) {
+                frameBufferPtr += cnt;
+            }
+            else {
+                for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntX + cntY]; cnt; ++frameBufferPtr) {
+                    --cnt;
+                    if (*i)
+                        *frameBufferPtr = palettePtr[*i];
+                    ++i;
+                }
+            }
+
+            for (int i = screenwidth16; i; frameBufferPtr += TILE_SIZE, --i) {
+                ++tileLayoutPtr;
+                ++tx;
+
+                if (tx == layer->width) {
+                    tx = 0;
+                    tileLayoutPtr -= layer->width;
+                }
+                if (*tileLayoutPtr < 0xFFFFu) {
+                    byte *tilesetData = &tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntY];
+                    if (*tilesetData)
+                        *frameBufferPtr = palettePtr[tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntY]];
+
+                    byte index = tilesetData[1];
+                    if (index)
+                        frameBufferPtr[1] = palettePtr[index];
+
+                    index = tilesetData[2];
+                    if (index)
+                        frameBufferPtr[2] = palettePtr[index];
+
+                    index = tilesetData[3];
+                    if (index)
+                        frameBufferPtr[3] = palettePtr[index];
+
+                    index = tilesetData[4];
+                    if (index)
+                        frameBufferPtr[4] = palettePtr[index];
+
+                    index = tilesetData[5];
+                    if (index)
+                        frameBufferPtr[5] = palettePtr[index];
+
+                    index = tilesetData[6];
+                    if (index)
+                        frameBufferPtr[6] = palettePtr[index];
+
+                    index = tilesetData[7];
+                    if (index)
+                        frameBufferPtr[7] = palettePtr[index];
+
+                    index = tilesetData[8];
+                    if (index)
+                        frameBufferPtr[8] = palettePtr[index];
+
+                    index = tilesetData[9];
+                    if (index)
+                        frameBufferPtr[9] = palettePtr[index];
+
+                    index = tilesetData[10];
+                    if (index)
+                        frameBufferPtr[10] = palettePtr[index];
+
+                    index = tilesetData[11];
+                    if (index)
+                        frameBufferPtr[11] = palettePtr[index];
+
+                    index = tilesetData[12];
+                    if (index)
+                        frameBufferPtr[12] = palettePtr[index];
+
+                    index = tilesetData[13];
+                    if (index)
+                        frameBufferPtr[13] = palettePtr[index];
+
+                    index = tilesetData[14];
+                    if (index)
+                        frameBufferPtr[14] = palettePtr[index];
+
+                    index = tilesetData[15];
+                    if (index)
+                        frameBufferPtr[15] = palettePtr[index];
+                }
+            }
+            ++tileLayoutPtr;
+
+            if (tx + 1 == layer->width)
+                tileLayoutPtr -= layer->width;
+
+            if (*tileLayoutPtr >= 0xFFFFu) {
+                frameBufferPtr += cntX;
+            }
+            else {
+                for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntY]; cntX; ++frameBufferPtr) {
+                    --cntX;
+                    if (*i)
+                        *frameBufferPtr = palettePtr[*i];
+                    ++i;
+                }
+            }
+
+            ++tilePosPtr;
+        } while (++cy < currentScreen->clipBound_Y2);
+    }
+}
+void DrawLayerVScroll(TileLayer *layer)
+{
+    int width          = 1 << layer->widthShift;
+    int screenHeight16 = (currentScreen->height >> 4) - 1;
+    int clipX1         = currentScreen->clipBound_X1;
+    ushort* frameBuffer         = &currentScreen->frameBuffer[clipX1];
+    ScanlineInfo *scanLines      = &scanlines[currentScreen->clipBound_X1];
+    ushort *palettePtr     = fullPalette[gfxLineBuffer[0]];
+    if (clipX1 < currentScreen->clipBound_X2) {
+        do {
+            int x = scanLines->position.x;
+            int y = scanLines->position.y;
+            if (y >= 0) {
+                if (y >= TILE_SIZE * layer->height)
+                    y -= (TILE_SIZE * layer->height) << 0x10;
+            }
+            else {
+                y += (TILE_SIZE * layer->height) << 0x10;
+            }
+
+            int cnt  = 16 - (y >> 16) & 0xF;
+            int cntX = (y >> 16) & 0xF;
+            int cntY = 16 * ((x >> 16) & 0xF);
+
+            ushort *layout = &layer->layout[(x >> 20) + ((y >> 20) << layer->widthShift)];
+            if (*layout >= 0xFFFFu) {
+                frameBuffer += currentScreen->pitch * cnt;
+            }
+            else {
+                for (byte *i = &tilesetGFXData[16 * (cntX + 16 * (*layout & 0xFFF)) + cntY]; cnt; frameBuffer += currentScreen->pitch) {
+                    --cnt;
+                    if (*i)
+                        *frameBuffer = palettePtr[*i];
+                    i += 16;
+                }
+            }
+            
+            int tileCnt = screenHeight16;
+            int tileY   = y >> 20;
+            if (screenHeight16) {
+                do {
+                    layout += width;
+                    ++tileY;
+
+                    if (tileY == layer->height) {
+                        tileY = 0;
+                        layout -= layer->height << layer->widthShift;
+                    }
+                    if (*layout >= 0xFFFFu) {
+                        frameBuffer += TILE_SIZE * currentScreen->pitch;
+                    }
+                    else {
+                        byte *gfxPtr = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntY];
+                        if (*gfxPtr)
+                            *frameBuffer = palettePtr[tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntY]];
+                        ushort *fb = &frameBuffer[currentScreen->pitch];
+
+                        if (gfxPtr[16])
+                            *fb = palettePtr[gfxPtr[16]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[32])
+                            *fb = palettePtr[gfxPtr[32]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[48])
+                            *fb = palettePtr[gfxPtr[48]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[64])
+                            *fb = palettePtr[gfxPtr[64]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[80])
+                            *fb = palettePtr[gfxPtr[80]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[96])
+                            *fb = palettePtr[gfxPtr[96]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[112])
+                            *fb = palettePtr[gfxPtr[112]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[128])
+                            *fb = palettePtr[gfxPtr[128]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[144])
+                            *fb = palettePtr[gfxPtr[144]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[160])
+                            *fb = palettePtr[gfxPtr[160]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[176])
+                            *fb = palettePtr[gfxPtr[176]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[192])
+                            *fb = palettePtr[gfxPtr[192]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[208])
+                            *fb = palettePtr[gfxPtr[208]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[224])
+                            *fb = palettePtr[gfxPtr[224]];
+
+                        fb = &fb[currentScreen->pitch];
+                        if (gfxPtr[240])
+                            *fb = palettePtr[gfxPtr[240]];
+
+                        frameBuffer = &fb[currentScreen->pitch];
+                    }
+                    tileCnt--;
+                } while (tileCnt);
+            }
+            layout = &layout[width];
+
+            if (tileY + 1 == layer->height)
+                layout -= layer->height << layer->widthShift;
+            ushort tile = *layout;
+            if (*layout >= 0xFFFF) {
+                frameBuffer += currentScreen->pitch * cntX;
+            }
+            else {
+                for (byte *i = &tilesetGFXData[TILE_DATASIZE * (tile & 0xFFF) + cntY]; cntX; frameBuffer += currentScreen->pitch) {
+                    --cntX;
+                    if (*i)
+                        *frameBuffer = palettePtr[*i];
+                    i += 0x10;
+                }
+            }
+            ++scanLines;
+            ++clipX1;
+            frameBuffer -= currentScreen->pitch * currentScreen->height - 2;
+        } while (clipX1 < currentScreen->clipBound_X2);
+    }
+}
+void DrawLayerRotozoom(TileLayer *layer)
+{
+    ushort* layout        = layer->layout;
+    int clipX1        = currentScreen->clipBound_X1;
+    int clipY1        = currentScreen->clipBound_Y1;
+    int countX        = currentScreen->clipBound_X2 - clipX1;
+    byte *lineBuffer = &gfxLineBuffer[clipY1];
+    ScanlineInfo* scanlinePtr = &scanlines[clipY1];
+    clipY1        = currentScreen->clipBound_Y1;
+    scanlinePtr   = &scanlines[clipY1];
+    ushort *frameBuffer   = &currentScreen->frameBuffer[clipX1 + clipY1 * currentScreen->pitch];
+    int width         = (16 << layer->widthShift) - 1;
+    int height        = (16 << layer->heightShift) - 1;
+
+    if (clipY1 < currentScreen->clipBound_Y2) {
+        do {
+            int defX       = scanlinePtr->deform.x;
+            int defY       = scanlinePtr->deform.y;
+            ushort *palettePtr = fullPalette[*lineBuffer];
+            int posX       = scanlinePtr->position.x;
+            ++lineBuffer;
+            for (int posY = scanlinePtr->position.y; countX; posY += defY) {
+                --countX;
+                int x1   = posX >> 20;
+                int y1   = posY >> 20;
+                int x2   = (posX >> 8) & 0xF;
+                int y2   = (posY >> 8) & 0xF;
+                byte idx =
+                    tilesetGFXData[0x10 * (y2 + 0x10 * (layout[((width >> 4) & x1) + (((height >> 4) & y1) << layer->widthShift)] & 0xFFF)) + x2];
+                if (idx)
+                    *frameBuffer = palettePtr[idx];
+                posX += defX;
+                ++frameBuffer;
+            }
+
+            ++clipY1;
+            frameBuffer += currentScreen->pitch - countX;
+            ++scanlinePtr;
+        } while (clipY1 < currentScreen->clipBound_Y2);
+    }
+}
+void DrawLayerBasic(TileLayer *layer) {
+    int screenwidth16        = (currentScreen->pitch >> 4) - 1;
+    byte *lineBuffer         = &gfxLineBuffer[currentScreen->clipBound_Y1];
+    ScanlineInfo *tilePosPtr = &scanlines[currentScreen->clipBound_Y1];
+    ushort *frameBufferPtr   = &currentScreen->frameBuffer[currentScreen->pitch * currentScreen->clipBound_Y1];
+
+    int cy = currentScreen->clipBound_Y1;
+    if (cy < currentScreen->clipBound_Y2) {
+        do {
+            int x              = tilePosPtr->position.x;
+            int y              = tilePosPtr->position.y;
+            int tileX          = tilePosPtr->position.x >> 16;
+            ushort *palettePtr = fullPalette[*lineBuffer++];
+            if (tileX >= 0) {
+                if (tileX >= 16 * layer->width)
+                    x = (tileX - 16 * layer->width) << 16;
+            }
+            else {
+                x = (tileX + 16 * layer->width) << 16;
+            }
+            int cnt  = 16 - (x >> 16) & 0xF;
+            int cntX = (x >> 16) & 0xF;
+            int cntY = 16 * ((y >> 16) & 0xF);
+
+            int tx                = (x >> 20);
+            ushort *tileLayoutPtr = &layer->layout[tx + (y >> 20 << layer->widthShift)];
+            if (*tileLayoutPtr >= 0xFFFF) {
+                frameBufferPtr += cnt;
+            }
+            else {
+                for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntX + cntY]; cnt; ++frameBufferPtr) {
+                    --cnt;
+                    if (*i)
+                        *frameBufferPtr = palettePtr[*i];
+                    ++i;
+                }
+            }
+
+            for (int i = screenwidth16; i; frameBufferPtr += TILE_SIZE, --i) {
+                ++tileLayoutPtr;
+                ++tx;
+
+                if (tx == layer->width) {
+                    tx = 0;
+                    tileLayoutPtr -= layer->width;
+                }
+                if (*tileLayoutPtr < 0xFFFFu) {
+                    byte *tilesetData = &tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntY];
+                    if (*tilesetData)
+                        *frameBufferPtr = palettePtr[tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntY]];
+
+                    byte index = tilesetData[1];
+                    if (index)
+                        frameBufferPtr[1] = palettePtr[index];
+
+                    index = tilesetData[2];
+                    if (index)
+                        frameBufferPtr[2] = palettePtr[index];
+
+                    index = tilesetData[3];
+                    if (index)
+                        frameBufferPtr[3] = palettePtr[index];
+
+                    index = tilesetData[4];
+                    if (index)
+                        frameBufferPtr[4] = palettePtr[index];
+
+                    index = tilesetData[5];
+                    if (index)
+                        frameBufferPtr[5] = palettePtr[index];
+
+                    index = tilesetData[6];
+                    if (index)
+                        frameBufferPtr[6] = palettePtr[index];
+
+                    index = tilesetData[7];
+                    if (index)
+                        frameBufferPtr[7] = palettePtr[index];
+
+                    index = tilesetData[8];
+                    if (index)
+                        frameBufferPtr[8] = palettePtr[index];
+
+                    index = tilesetData[9];
+                    if (index)
+                        frameBufferPtr[9] = palettePtr[index];
+
+                    index = tilesetData[10];
+                    if (index)
+                        frameBufferPtr[10] = palettePtr[index];
+
+                    index = tilesetData[11];
+                    if (index)
+                        frameBufferPtr[11] = palettePtr[index];
+
+                    index = tilesetData[12];
+                    if (index)
+                        frameBufferPtr[12] = palettePtr[index];
+
+                    index = tilesetData[13];
+                    if (index)
+                        frameBufferPtr[13] = palettePtr[index];
+
+                    index = tilesetData[14];
+                    if (index)
+                        frameBufferPtr[14] = palettePtr[index];
+
+                    index = tilesetData[15];
+                    if (index)
+                        frameBufferPtr[15] = palettePtr[index];
+                }
+            }
+            ++tileLayoutPtr;
+
+            if (tx + 1 == layer->width)
+                tileLayoutPtr -= layer->width;
+
+            if (*tileLayoutPtr >= 0xFFFFu) {
+                frameBufferPtr += cntX;
+            }
+            else {
+                for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*tileLayoutPtr & 0xFFF) + cntY]; cntX; ++frameBufferPtr) {
+                    --cntX;
+                    if (*i)
+                        *frameBufferPtr = palettePtr[*i];
+                    ++i;
+                }
+            }
+
+            ++tilePosPtr;
+        } while (++cy < currentScreen->clipBound_Y2);
     }
 }

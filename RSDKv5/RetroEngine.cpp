@@ -153,34 +153,34 @@ bool processEvents()
                         break;
                     case SDLK_F1:
                         if (engine.devMenu) {
-                            activeSceneList   = 0;
-                            sceneListPosition = 0;
+                            sceneInfo.activeCategory = 0;
+                            sceneInfo.listPos = 0;
                             sceneInfo.state   = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F2:
                         if (engine.devMenu) {
-                            sceneListPosition--;
-                            if (sceneListPosition < 0) {
-                                activeSceneList--;
+                            sceneInfo.listPos--;
+                            if (sceneInfo.listPos < 0) {
+                                sceneInfo.activeCategory--;
 
-                                if (activeSceneList < 0) {
-                                    activeSceneList = sceneInfo.categoryCount - 1;
+                                if (sceneInfo.activeCategory < 0) {
+                                    sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
                                 }
-                                sceneListPosition = sceneInfo.listCategory[activeSceneList].sceneCount - 1;
+                                sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount - 1;
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
                     case SDLK_F3:
                         if (engine.devMenu) {
-                            sceneListPosition++;
-                            if (sceneListPosition >= sceneInfo.listCategory[activeSceneList].sceneCount) {
-                                activeSceneList++;
+                            sceneInfo.listPos++;
+                            if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount) {
+                                sceneInfo.activeCategory++;
 
-                                sceneListPosition = 0;
-                                if (activeSceneList >= sceneInfo.categoryCount) {
-                                    activeSceneList = 0;
+                                sceneInfo.listPos = 0;
+                                if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                                    sceneInfo.activeCategory = 0;
                                 }
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
@@ -382,7 +382,7 @@ void runRetroEngine()
     // Shutdown
     ReleaseAudioDevice();
     ReleaseRenderDevice();
-    writeSettings();
+    writeSettings(true);
     ReleaseUserStorage();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
@@ -528,7 +528,7 @@ void LoadGameConfig()
         for (int i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
             byte maxConcurrentPlays = ReadInt8(&info);
-            // LoadWAV(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
+            LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
         }
 
         ushort totalSceneCount = ReadInt16(&info);

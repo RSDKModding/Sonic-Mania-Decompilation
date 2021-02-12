@@ -90,7 +90,7 @@ enum FunctionTableIDs {
     FunctionTable_SetDrawLayerProperties,
     FunctionTable_LoadScene,
     FunctionTable_SetGameMode,
-    FunctionTable_Unknown53,
+    FunctionTable_SetHardResetFlag,
     FunctionTable_CheckValidScene,
     FunctionTable_CheckSceneFolder,
     FunctionTable_InitSceneLoad,
@@ -99,7 +99,7 @@ enum FunctionTableIDs {
     FunctionTable_AddScreen,
     FunctionTable_GetSettingsValue,
     FunctionTable_SetSettingsValue,
-    FunctionTable_ResizeWindow,
+    FunctionTable_UpdateWindow,
     FunctionTable_Sin1024,
     FunctionTable_Cos1024,
     FunctionTable_ATan1024,
@@ -142,7 +142,7 @@ enum FunctionTableIDs {
     FunctionTable_Unknown71,
     FunctionTable_SetScreenSize,
     FunctionTable_SetClipBounds,
-    FunctionTable_SetScreenFade,
+    FunctionTable_SetScreenUnknown,
     FunctionTable_LoadSpriteSheet,
     FunctionTable_SetLookupTable,
     FunctionTable_SetPaletteMask,
@@ -153,7 +153,7 @@ enum FunctionTableIDs {
     FunctionTable_LoadPalette,
     FunctionTable_RotatePalette,
     FunctionTable_SetLimitedFade,
-    FunctionTable_DoPaletteSomething3,
+    FunctionTable_BlendColours,
     FunctionTable_DrawRect,
     FunctionTable_DrawLine,
     FunctionTable_DrawCircle,
@@ -166,7 +166,7 @@ enum FunctionTableIDs {
     FunctionTable_DrawTile,
     FunctionTable_CopyTile,
     FunctionTable_DrawAniTile,
-    FunctionTable_SetPaletteThing,
+    FunctionTable_FillScreen,
     FunctionTable_LoadMesh,
     FunctionTable_Create3DScene,
     FunctionTable_Init3DScene,
@@ -189,7 +189,7 @@ enum FunctionTableIDs {
     FunctionTable_GetStringWidth,
     FunctionTable_ProcessAnimation,
     FunctionTable_GetSceneLayerID,
-    FunctionTable_GetSceneLayerPtr,
+    FunctionTable_GetSceneLayer,
     FunctionTable_GetLayerSize,
     FunctionTable_GetTileInfo,
     FunctionTable_SetTileInfo,
@@ -346,23 +346,23 @@ void setupFunctions()
     functionTable[FunctionTable_ResetEntity]                  = ResetEntity;
     functionTable[FunctionTable_SpawnEntity]                  = SpawnEntity;
     functionTable[FunctionTable_CopyEntity]                   = CopyEntity;
-    functionTable[FunctionTable_CheckOnScreen]                = NullFunc; // CheckOnScreen;
-    functionTable[FunctionTable_CheckPosOnScreen]             = NullFunc; // CheckPosOnScreen;
-    functionTable[FunctionTable_AddDrawListRef]               = NullFunc; // AddDrawListRef;
-    functionTable[FunctionTable_SwapDrawLayers]               = NullFunc; // SwapDrawLayers;
+    functionTable[FunctionTable_CheckOnScreen]                = CheckOnScreen;
+    functionTable[FunctionTable_CheckPosOnScreen]             = CheckPosOnScreen;
+    functionTable[FunctionTable_AddDrawListRef]               = AddDrawListRef;
+    functionTable[FunctionTable_SwapDrawLayers]               = SwapDrawLayers;
     functionTable[FunctionTable_SetDrawLayerProperties]       = SetDrawLayerProperties;
-    functionTable[FunctionTable_LoadScene]                    = NullFunc; // LoadScene;
+    functionTable[FunctionTable_LoadScene]                    = LoadSceneByName;
     functionTable[FunctionTable_SetGameMode]                  = SetEngineState;
-    functionTable[FunctionTable_Unknown53]                    = NullFunc; // Unknown53;
+    functionTable[FunctionTable_SetHardResetFlag]             = SetHardResetFlag;
     functionTable[FunctionTable_CheckValidScene]              = CheckValidStage;
     functionTable[FunctionTable_CheckSceneFolder]             = CheckSceneFolder;
     functionTable[FunctionTable_InitSceneLoad]                = InitSceneLoad;
     functionTable[FunctionTable_GetObjectByName]              = GetObjectByName;
     functionTable[FunctionTable_ClearScreens]                 = ClearScreens;
     functionTable[FunctionTable_AddScreen]                    = AddScreen;
-    functionTable[FunctionTable_GetSettingsValue]             = NullFunc; // GetSettingsValue;
-    functionTable[FunctionTable_SetSettingsValue]             = NullFunc; // SetSettingsValue;
-    functionTable[FunctionTable_ResizeWindow]                 = NullFunc; // ResizeWindow;
+    functionTable[FunctionTable_GetSettingsValue]             = GetSettingsValue;
+    functionTable[FunctionTable_SetSettingsValue]             = SetSettingsValue;
+    functionTable[FunctionTable_UpdateWindow]                 = UpdateWindow;
     functionTable[FunctionTable_Sin1024]                      = sin1024;
     functionTable[FunctionTable_Cos1024]                      = cos1024;
     functionTable[FunctionTable_ATan1024]                     = aTan1024;
@@ -392,7 +392,7 @@ void setupFunctions()
     functionTable[FunctionTable_MatrixRotateXYZ]              = matrixRotateXYZ;
     functionTable[FunctionTable_MatrixInverse]                = matrixInverse;
     functionTable[FunctionTable_MatrixCopy]                   = matrixCopy;
-    functionTable[FunctionTable_SetText]                      = SetText; // SetText;
+    functionTable[FunctionTable_SetText]                      = SetText;
     functionTable[FunctionTable_Unknown64]                    = NullFunc; // Unknown64;
     functionTable[FunctionTable_Unknown65]                    = NullFunc; // Unknown65;
     functionTable[FunctionTable_Unknown66]                    = NullFunc; // Unknown66;
@@ -405,7 +405,7 @@ void setupFunctions()
     functionTable[FunctionTable_Unknown71]                    = NullFunc; // Unknown71;
     functionTable[FunctionTable_SetScreenSize]                = SetScreenSize;
     functionTable[FunctionTable_SetClipBounds]                = SetClipBounds;
-    functionTable[FunctionTable_SetScreenFade]                = NullFunc; // SetScreenFade;
+    functionTable[FunctionTable_SetScreenUnknown]             = NullFunc; // SetScreenUnknown;
     functionTable[FunctionTable_LoadSpriteSheet]              = LoadSpriteSheet;
     functionTable[FunctionTable_SetLookupTable]               = SetLookupTable;
     functionTable[FunctionTable_SetPaletteMask]               = SetPaletteMask;
@@ -416,7 +416,7 @@ void setupFunctions()
     functionTable[FunctionTable_LoadPalette]                  = LoadPalette;
     functionTable[FunctionTable_RotatePalette]                = RotatePalette;
     functionTable[FunctionTable_SetLimitedFade]               = SetPaletteFade;
-    functionTable[FunctionTable_DoPaletteSomething3]          = NullFunc; // DoPaletteSomething3;
+    functionTable[FunctionTable_BlendColours]                 = BlendColours;
     functionTable[FunctionTable_DrawRect]                     = DrawRectangle;
     functionTable[FunctionTable_DrawLine]                     = DrawLine;
     functionTable[FunctionTable_DrawCircle]                   = DrawCircle;
@@ -427,10 +427,10 @@ void setupFunctions()
     functionTable[FunctionTable_DrawUnknown]                  = NullFunc; // DrawUnknown;
     functionTable[FunctionTable_DrawText]                     = DrawText;
     functionTable[FunctionTable_DrawTile]                     = DrawTile;
-    functionTable[FunctionTable_CopyTile]                     = NullFunc; // CopyTile;
+    functionTable[FunctionTable_CopyTile]                     = CopyTile;
     functionTable[FunctionTable_DrawAniTile]                  = DrawAniTile;
-    functionTable[FunctionTable_SetPaletteThing]              = NullFunc; // SetPaletteThing;
-    functionTable[FunctionTable_LoadMesh]                     = NullFunc; // LoadMesh;
+    functionTable[FunctionTable_FillScreen]                   = FillScreen;
+    functionTable[FunctionTable_LoadMesh]                     = LoadMesh;
     functionTable[FunctionTable_Create3DScene]                = NullFunc; // Create3DScene;
     functionTable[FunctionTable_Init3DScene]                  = NullFunc; // Init3DScene;
     functionTable[FunctionTable_View_Something1]              = NullFunc; // View_Something1;
@@ -451,14 +451,14 @@ void setupFunctions()
     functionTable[FunctionTable_GetFrameID]                   = GetFrameID;
     functionTable[FunctionTable_GetStringWidth]               = GetStringWidth;
     functionTable[FunctionTable_ProcessAnimation]             = ProcessAnimation;
-    functionTable[FunctionTable_GetSceneLayerPtr]             = NullFunc; // GetSceneLayerPtr;
-    functionTable[FunctionTable_GetSceneLayerID]              = NullFunc; // GetSceneLayerID;
-    functionTable[FunctionTable_GetLayerSize]                 = NullFunc; // GetLayerSize;
-    functionTable[FunctionTable_GetTileInfo]                  = NullFunc; // GetTileInfo;
-    functionTable[FunctionTable_SetTileInfo]                  = NullFunc; // SetTileInfo;
-    functionTable[FunctionTable_CopyTileLayer]                = NullFunc; // CopyTileLayout;
-    functionTable[FunctionTable_ProcessParallax]              = NullFunc; // ProcessParallaxScroll;
-    functionTable[FunctionTable_GetLinePosPtrs]               = NullFunc; // GetLinePositions;
+    functionTable[FunctionTable_GetSceneLayer]                = GetSceneLayer;
+    functionTable[FunctionTable_GetSceneLayerID]              = GetSceneLayerID;
+    functionTable[FunctionTable_GetLayerSize]                 = GetLayerSize;
+    functionTable[FunctionTable_GetTileInfo]                  = GetTileInfo;
+    functionTable[FunctionTable_SetTileInfo]                  = SetTileInfo;
+    functionTable[FunctionTable_CopyTileLayer]                = CopyTileLayout;
+    functionTable[FunctionTable_ProcessParallax]              = ProcessParallax;
+    functionTable[FunctionTable_GetLinePosPtrs]               = GetLinePositions;
     functionTable[FunctionTable_CheckObjectCollisionTouch]    = NullFunc; // CheckObjectCollisionTouch;
     functionTable[FunctionTable_CheckObjectCollisionPoint]    = NullFunc; // CheckObjectCollisionPoint;
     functionTable[FunctionTable_CheckObjectCollisionBox]      = NullFunc; // CheckObjectCollisionBox;
@@ -470,7 +470,7 @@ void setupFunctions()
     functionTable[FunctionTable_SetTileAngle]                 = NullFunc; // SetTileAngle;
     functionTable[FunctionTable_GetTileBehaviour]             = NullFunc; // GetTileBehaviour;
     functionTable[FunctionTable_SetTileBehaviour]             = NullFunc; // SetTileBehaviour;
-    functionTable[FunctionTable_GetSFX]                       = NullFunc; // GetSoundFX;
+    functionTable[FunctionTable_GetSFX]                       = GetSFX;
     functionTable[FunctionTable_PlaySFX]                      = NullFunc; // PlaySFX;
     functionTable[FunctionTable_StopSFX]                      = NullFunc; // StopSFX;
     functionTable[FunctionTable_PlayMusic]                    = NullFunc; // PlayMusicFile;

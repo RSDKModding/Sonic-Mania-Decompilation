@@ -22,18 +22,18 @@ enum TypeGroups {
 };
 
 enum AttributeTypes {
-	ATTRIBUTE_U8,
-	ATTRIBUTE_U16,
-	ATTRIBUTE_U32,
-	ATTRIBUTE_S8,
-	ATTRIBUTE_S16,
-	ATTRIBUTE_S32,
-	ATTRIBUTE_VAR,
-	ATTRIBUTE_BOOL,
-	ATTRIBUTE_STRING,
-	ATTRIBUTE_VECTOR2,
-	ATTRIBUTE_UNKNOWN,
-	ATTRIBUTE_COLOUR,
+	VAR_UINT8,
+	VAR_UINT16,
+	VAR_UINT32,
+	VAR_INT8,
+	VAR_INT16,
+	VAR_INT32,
+	VAR_ENUM,
+	VAR_BOOL,
+	VAR_STRING,
+	VAR_VECTOR2,
+	VAR_UNKNOWN,
+	VAR_COLOUR,
 };
 
 enum ActiveFlags {
@@ -145,6 +145,8 @@ void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos);
 
+#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
+
 inline void SetEditableVar(byte type, const char *name, byte object, int storeOffset)
 {
     if (editableVarCount < 255) {
@@ -191,5 +193,8 @@ bool32 GetActiveObjects(ushort group, Entity **entity);
 bool32 GetObjects(ushort type, Entity **entity);
 
 inline void NextForeachLoop() { --foreachStackPtr; }
+
+bool32 CheckOnScreen(Entity *entity, Vector2 *range);
+bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range);
 
 #endif // !OBJECT_H
