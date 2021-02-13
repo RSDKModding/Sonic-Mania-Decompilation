@@ -14,7 +14,7 @@ struct EntityTMZ2Setup : Entity {
 };
 
 // Object Struct
-extern ObjectTMZ2Setup TMZ2Setup;
+extern ObjectTMZ2Setup *TMZ2Setup;
 
 // Standard Entity Events
 void TMZ2Setup_Update();

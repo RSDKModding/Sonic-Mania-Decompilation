@@ -4,25 +4,25 @@ ObjectDefaultObject *DefaultObject;
 
 void DefaultObject_Update()
 {
-    //if (Key_Up) {
-    //    if (unkY > 0)
-    //        unkY -= 4;
-    //}
-    //else if (Key_Down) {
-    //    unkY += 4;
-    //}
-    //if (Key_Left) {
-    //    if (unkX > 0)
-    //        unkX -= 4;
-    //}
-    //else if (Key_Right) {
-    //    unkX += 4;
-    //}
+    if (controller[0].keyUp.down) {
+        if (screens[0].position.y > 0)
+            screens[0].position.y -= 4;
+    }
+    else if (controller[0].keyDown.down) {
+        screens[0].position.y += 4;
+    }
+
+    if (controller[0].keyLeft.down) {
+        if (screens[0].position.x > 0)
+            screens[0].position.x -= 4;
+    }
+    else if (controller[0].keyRight.down) {
+        screens[0].position.x += 4;
+    }
 }
 
 void DefaultObject_Create(void* data)
 {
-    EntityDefaultObject *entity = (EntityDefaultObject *)sceneInfo.entity;
-    entity->priority            = ACTIVE_ALWAYS;
+    sceneInfo.entity->priority  = ACTIVE_ALWAYS;
 }
 

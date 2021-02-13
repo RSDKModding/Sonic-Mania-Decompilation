@@ -248,7 +248,7 @@ inline void ReadString(FileInfo *info, char* buffer) {
     buffer[size] = 0;
 }
 
-inline int ReadZLib(FileInfo *info, byte **buffer)
+inline int ReadZLibRSDK(FileInfo *info, byte **buffer)
 {
     if (!buffer)
         return 0;
@@ -262,6 +262,24 @@ inline int ReadZLib(FileInfo *info, byte **buffer)
     ReadBytes(info, compData, complen);
 
     uncompress(*buffer, (uLongf *)&destLen, compData, complen);
+    compData = NULL;
+    return destLen;
+}
+
+inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
+{
+    if (!buffer)
+        return 0;
+    uint complen  = cSize;
+    uint decompLE = size;
+    uint destLen  = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+
+    byte *compData = NULL;
+    AllocateStorage(complen, (void **)&compData, DATASET_TMP, false);
+    ReadBytes(info, compData, complen);
+
+    uncompress(*buffer, (uLongf *)&destLen, compData, complen);
+    compData = NULL;
     return destLen;
 }
 

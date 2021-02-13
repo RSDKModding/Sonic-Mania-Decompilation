@@ -447,3 +447,325 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
     }
     return status;
 }
+
+
+bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPlane, int xOffset, int yOffset, bool32 setPos)
+{
+    int layerID     = 1;
+    bool32 collided = 0;
+    int posX     = (xOffset + entity->position.x) >> 16;
+    int posY     = (yOffset + entity->position.y) >> 16;
+    switch (cMode) {
+        default: return false;
+        case CMODE_FLOOR: {
+            int solid = 0x1000;
+            if (cPlane)
+                solid = 0x4000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cy           = (colX & 0xFFFFFFF0) - 16;
+                    if (colX >= 0 && colX < TILE_SIZE * layer->width) {
+                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cy >= 0 && cy < TILE_SIZE * layer->height) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int ty = cy + collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
+                                    if (colY >= ty && abs(colY - ty) <= 14) {
+                                        collided = true;
+                                        colY     = ty;
+                                        i        = 3;
+                                    }
+                                }
+                            }
+                            layout += layer->width;
+                            cy += 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            if (setPos)
+                entity->position.y = (posY << 16) - yOffset;
+            return collided;
+        }
+        case CMODE_LWALL: {
+            int solid = 0x2000;
+            if (cPlane)
+                solid = 0x8000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cx           = (colX & 0xFFFFFFF0) - 16;
+                    if (colY >= 0 && colY < TILE_SIZE * layer->height) {
+                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cx >= 0 && cx < TILE_SIZE * layer->width) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int tx = cx + collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
+                                    if (colX >= tx && abs(colX - tx) <= 14) {
+                                        collided = true;
+                                        colX     = tx;
+                                        i        = 3;
+                                    }
+                                }
+                            }
+                            layout++;
+                            cx += 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            if (setPos)
+                entity->position.x = (posX << 16) - xOffset;
+            return collided;
+        }
+        case CMODE_ROOF: {
+            int solid = 0x1000;
+            if (cPlane)
+                solid = 0x4000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cy           = (colX & 0xFFFFFFF0) + 16;
+                    if (colX >= 0 && colX < TILE_SIZE * layer->width) {
+                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cy >= 0 && cy < TILE_SIZE * layer->height) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int ty = cy + collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
+                                    if (colY <= ty && abs(colY - ty) <= 14) {
+                                        collided = true;
+                                        colY     = ty;
+                                        i        = 3;
+                                    }
+                                }
+                            }
+                            layout -= layer->width;
+                            cy -= 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            if (setPos)
+                entity->position.y = (posY << 16) - yOffset;
+            return collided;
+        }
+        case CMODE_RWALL: {
+            int solid = 0x2000;
+            if (cPlane)
+                solid = 0x8000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cx           = (colX & 0xFFFFFFF0) + 16;
+                    if (colY >= 0 && colY < TILE_SIZE * layer->height) {
+                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cx >= 0 && cx < TILE_SIZE * layer->width) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                                    if (colX >= tx && abs(colX - tx) <= 14) {
+                                        collided = true;
+                                        colX     = tx;
+                                        i        = 3;
+                                    }
+                                }
+                            }
+                            layout--;
+                            cx -= 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            if (setPos)
+                entity->position.x = (posX << 16) - xOffset;
+            return collided;
+        }
+    }
+}
+bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, int xOffset, int yOffset, int tolerance)
+{
+    int layerID     = 1;
+    bool32 collided = 0;
+    int posX        = (xOffset + entity->position.x) >> 16;
+    int posY        = (yOffset + entity->position.y) >> 16;
+    switch (cMode) {
+        default: return false;
+        case CMODE_FLOOR: {
+            int solid = 0x1000;
+            if (cPlane)
+                solid = 0x4000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cy           = (colX & 0xFFFFFFF0) - 16;
+                    if (colX >= 0 && colX < TILE_SIZE * layer->width) {
+                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cy >= 0 && cy < TILE_SIZE * layer->height) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int ty = cy + collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
+                                    if (collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF] < 0xFF) {
+                                        if (abs(colY - ty) <= tolerance) {
+                                            collided = true;
+                                            colY     = ty;
+                                        }
+                                        i = 3;
+                                    }
+                                }
+                            }
+                            layout += layer->width;
+                            cy += 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            entity->position.y = (posY << 16) - yOffset;
+            return collided;
+        }
+        case CMODE_LWALL: {
+            int solid = 0x2000;
+            if (cPlane)
+                solid = 0x8000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cx           = (colX & 0xFFFFFFF0) - 16;
+                    if (colY >= 0 && colY < TILE_SIZE * layer->height) {
+                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cx >= 0 && cx < TILE_SIZE * layer->width) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                                    if (collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF] < 0xFF) {
+                                        if (abs(colX - tx) <= tolerance) {
+                                            collided = true;
+                                            colX     = tx;
+                                        }
+                                        i = 3;
+                                    }
+                                }
+                            }
+                            layout++;
+                            cx += 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            entity->position.x = (posX << 16) - xOffset;
+            return collided;
+        }
+        case CMODE_ROOF: {
+            int solid = 0x1000;
+            if (cPlane)
+                solid = 0x4000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cy           = (colX & 0xFFFFFFF0) + 16;
+                    if (colX >= 0 && colX < TILE_SIZE * layer->width) {
+                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cy >= 0 && cy < TILE_SIZE * layer->height) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int ty = cy + collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
+                                    if (collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF] < 0xFF) {
+                                        if (colY <= ty && abs(colY - ty) <= 14) {
+                                            collided = true;
+                                            colY     = ty;
+                                        }
+                                        i = 3;
+                                    }
+                                }
+                            }
+                            layout -= layer->width;
+                            cy -= 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            entity->position.y = (posY << 16) - yOffset;
+            return collided;
+        }
+        case CMODE_RWALL: {
+            int solid = 0x2000;
+            if (cPlane)
+                solid = 0x8000;
+            for (int l = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+                if (cLayers & layerID) {
+                    TileLayer *layer = &tileLayers[l];
+                    int colX         = posX - layer->position.x;
+                    int colY         = posY - layer->position.y;
+                    int cx           = (colX & 0xFFFFFFF0) + 16;
+                    if (colY >= 0 && colY < TILE_SIZE * layer->height) {
+                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
+                        for (int i = 0; i < 3; ++i) {
+                            if (cx >= 0 && cx < TILE_SIZE * layer->width) {
+                                ushort tile = *layout;
+                                if (tile < 0xFFFF && tile & solid) {
+                                    int tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                                    if (collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF] < 0xFF) {
+                                        if (colX >= tx && abs(colX - tx) <= tolerance) {
+                                            collided = true;
+                                            colX     = tx;
+                                        }
+                                        i = 3;
+                                    }
+                                }
+                            }
+                            layout--;
+                            cx -= 16;
+                        }
+                    }
+                    posX = layer->position.x + colX;
+                    posY = layer->position.y + colY;
+                }
+            }
+
+            entity->position.x = (posX << 16) - xOffset;
+            return collided;
+        }
+    }
+}

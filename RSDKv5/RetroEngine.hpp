@@ -101,7 +101,7 @@ struct RetroEngine {
     char gameSubName[0x80];
     char gameVersion[0x20];
 
-    bool useExternalCode = true;
+    bool useExternalCode = false;
 
     bool devMenu      = false;
     bool printConsole = false;
@@ -128,6 +128,12 @@ struct RetroEngine {
     int fsWidth          = 0;
     int fsHeight         = 0;
     int refreshRate      = 60;
+
+    //Image/Video support
+    float displayTime;
+    float imageDelta;
+    float imageUnknown;
+    bool32 (*skipCallback)();
 
     bool shaderSupport   = true;
     int screenShader     = 0;

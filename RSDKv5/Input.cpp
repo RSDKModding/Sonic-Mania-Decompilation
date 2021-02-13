@@ -20,16 +20,16 @@ bool getControllerButton(byte inputID, byte buttonID)
 
     //switch (buttonID) {
     //    default: break;
-    //    case SDL_CONTROLLER_BUTTON_ZL: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > LTRIGGER_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_ZR: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > RTRIGGER_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_UP: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY) < -LSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_DOWN: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY) > LSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_LEFT: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX) < -LSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_RIGHT: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX) > LSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_UP: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY) < -RSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_DOWN: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY) > RSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_LEFT: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX) < -RSTICK_DEADZONE;
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_RIGHT: return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX) > RSTICK_DEADZONE;
+    //    case SDL_CONTROLLER_BUTTON_ZL: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_TRIGGERLEFT) > inputDevice.LTRIGGER_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_ZR: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > inputDevice.RTRIGGER_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_LSTICK_UP: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTY) < -inputDevice.LSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_LSTICK_DOWN: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTY) > inputDevice.LSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_LSTICK_LEFT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTX) < -inputDevice.LSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_LSTICK_RIGHT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTX) > inputDevice.LSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_RSTICK_UP: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTY) < -inputDevice.RSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_RSTICK_DOWN: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTY) > inputDevice.RSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_RSTICK_LEFT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTX) < -inputDevice.RSTICK_DEADZONE[inputID];
+    //    case SDL_CONTROLLER_BUTTON_RSTICK_RIGHT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTX) > inputDevice.RSTICK_DEADZONE[inputID];
     //}
 
     return false;
@@ -56,24 +56,20 @@ void InputDevice::ProcessInput()
         if (inputDevice.inputType[c] == 0) {
             for (int i = 0; i < KEY_MAX; i++) {
                 if (keyState[buttons[i]->keyMap]) {
-                    buttons[i]->press = !buttons[i]->down;
-                    buttons[i]->down  = true;
+                    buttons[i]->setHeld();
                 }
                 else if (buttons[i]->down) {
-                    buttons[i]->press = false;
-                    buttons[i]->down  = false;
+                    buttons[i]->setReleased();
                 }
             }
         }
         else if (inputDevice.inputType[c] == 1) {
             for (int i = 0; i < KEY_MAX; i++) {
                 if (getControllerButton(c, buttonMap[i])) {
-                    buttons[i]->press = !buttons[i]->down;
-                    buttons[i]->down  = true;
+                    buttons[i]->setHeld();
                 }
                 else if (buttons[i]->down) {
-                    buttons[i]->press = false;
-                    buttons[i]->down  = false;
+                    buttons[i]->setReleased();
                 }
             }
         }

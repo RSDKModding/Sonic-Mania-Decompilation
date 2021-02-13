@@ -40,6 +40,10 @@ void ReleaseUserStorage()
 void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 clear) {
     int **data = (int **)dataPtr;
     *data       = NULL;
+
+    if (dataSet == DATASET_STG)
+        printf("");
+
     if (dataSet < DATASET_MAX) {
         DataStorage *storage = &userStorage[dataSet];
 
@@ -139,9 +143,9 @@ void ClearUnusedStorage(StorageDataSets set)
 
         for (int c = 0; c < userStorage[set].usedStorage;) {
             int startOffset = memPtr2[2];
-            int size        = ((uint)memPtr[3] >> 2) + 4;
-            *memPtr         = false;
-            int *dataPtr    = &memPtr[startOffset];
+            int size        = ((uint)memPtr2[3] >> 2) + 4;
+            *memPtr2         = false;
+            int *dataPtr    = &userStorage[set].memPtr[startOffset];
 
             if (!userStorage[set].entryCount) {
                 memPtr2 += size;
@@ -153,22 +157,22 @@ void ClearUnusedStorage(StorageDataSets set)
             else {
                 for (int e = 0; e < userStorage[set].entryCount; ++e) {
                     if (dataPtr == userStorage[set].startPtrs2[e])
-                        *memPtr = true;
+                        *memPtr2 = true;
                 }
 
-                if (*memPtr) {
+                if (*memPtr2) {
                     c = size + totalSizeA;
                     totalSizeA += size;
-                    if (memPtr <= memPtr2) {
+                    if (memPtr2 <= memPtr) {
                         memPtr += size;
                         memPtr2 += size;
                     }
                     else {
                         for (; size; --size) {
-                            int store = *memPtr;
-                            ++memPtr;
-                            *memPtr2 = store;
+                            int store = *memPtr2;
                             ++memPtr2;
+                            *memPtr = store;
+                            ++memPtr;
                         }
                     }
                     usedStorage = totalSizeB;
@@ -190,7 +194,7 @@ void ClearUnusedStorage(StorageDataSets set)
             int *memPtr = userStorage[set].memPtr;
 
             if (!flag) {
-                for (int offset = 0; offset < userStorage[set].usedStorage; ++offset) {
+                for (int offset = 0; offset < userStorage[set].usedStorage;) {
                     int *ptr = &userStorage[set].memPtr[memPtr[2]];
                     int size = ((uint)memPtr[3] >> 2) + 4;
 
@@ -201,8 +205,8 @@ void ClearUnusedStorage(StorageDataSets set)
                         }
                     }
 
-                    offset += size;
                     memPtr[2] = offset + 4; // offset
+                    offset += size;
                     memPtr += size;
                 }
             }

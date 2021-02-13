@@ -4,7 +4,7 @@ byte tilesetGFXData[TILESET_SIZE];
 
 ScanlineInfo scanlines[SCREEN_YSIZE];
 TileLayer tileLayers[LAYER_COUNT];
-CollisionMasks collisionMasks[2];
+CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
 
 bool hardResetFlag = false;
 char currentSceneFolder[0x10];
@@ -33,48 +33,51 @@ void LoadScene()
     if (StrComp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].modeFilter;
+        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
+        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name,
+                 sceneInfo.listData[sceneInfo.listPos].name, sceneInfo.listData[sceneInfo.listPos].filter);
         return;
     }
 
     // Unload Model data
     for (int m = 0; m < MODEL_MAX; ++m) {
         if (modelList[m].scope != SCOPE_GLOBAL) {
-            modelList[m].scope = SCOPE_NONE;
-            memset(modelList[m].hash, 0, 4 * sizeof(uint));
+            MEM_ZERO(modelList[m]);
         }
     }
 
     //Unload 3D Scenes
-    for (int m = 0; m < SCENE3D_MAX; ++m) {
-        if (scene3DList[m].scope != SCOPE_GLOBAL) {
-            scene3DList[m].scope = SCOPE_NONE;
-            memset(scene3DList[m].hash, 0, 4 * sizeof(int));
+    for (int s = 0; s < SCENE3D_MAX; ++s) {
+        if (scene3DList[s].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(scene3DList[s]);
         }
     }
 
     // Unload animations
     for (int s = 0; s < SPRFILE_COUNT; ++s) {
         if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
-            spriteAnimationList[s].scope = SCOPE_NONE;
-            memset(spriteAnimationList[s].hash, 0, 4 * sizeof(uint));
+            MEM_ZERO(spriteAnimationList[s]);
         }
     }
 
     // Unload surfaces
     for (int s = 0; s < SURFACE_MAX; ++s) {
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
-            gfxSurface[s].scope = SCOPE_NONE;
-            memset(gfxSurface[s].hash, 0, 4 * sizeof(uint));
+            MEM_ZERO(gfxSurface[s]);
         }
     }
 
     // Unload stage SFX
+    for (int s = 0; s < SFX_COUNT; ++s) {
+        if (sfxList[s].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(sfxList[s]);
+        }
+    }
 
     // Unload object data
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         if (objectList[stageObjectIDs[o]].type) {
-            objectList[stageObjectIDs[o]].type = NULL;
+            *objectList[stageObjectIDs[o]].type = NULL;
         }
     }
 
@@ -84,7 +87,9 @@ void LoadScene()
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     StrCopy(currentSceneFolder, sceneEntry->folder);
     hardResetFlag = false;
-    sceneInfo.filter = sceneEntry->modeFilter;
+    sceneInfo.filter = sceneEntry->filter;
+
+    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name, sceneEntry->name, sceneEntry->filter);
 
     char buffer[0x40];
     StrCopy(buffer, "Data/Stages/");
@@ -240,10 +245,10 @@ void LoadSceneFile() {
             int w        = layer->width;
             if (w > 1) {
                 int ls = 0;
-                do {
+                while (w > 1) {
                     w >>= 1;
                     ++ls;
-                } while (w > 1);
+                }
                 layer->widthShift = ls;
             }
 
@@ -251,10 +256,10 @@ void LoadSceneFile() {
             int h         = layer->height;
             if (h > 1) {
                 int ls = 0;
-                do {
+                while (h > 1) {
                     h >>= 1;
                     ++ls;
-                } while (h > 1);
+                }
                 layer->heightShift = ls;
             }
 
@@ -262,16 +267,16 @@ void LoadSceneFile() {
             layer->scrollSpeed    = ReadInt16(&info) << 8;
             layer->scrollPos      = 0;
 
-            AllocateStorage(sizeof(ushort) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout, DATASET_STG, true);
-            memset(layer->layout, 0xFF, sizeof(ushort) * (1 << layer->widthShift) * (1 << layer->heightShift));
+            AllocateStorage(sizeof(ushort) * layer->width * layer->height, (void **)&layer->layout, DATASET_STG, true);
+            memset(layer->layout, 0xFF, sizeof(ushort) * layer->width * layer->height);
 
             int size           = layer->width;
             if (size <= layer->height)
                 size = layer->height;
             AllocateStorage(TILE_SIZE * size, (void **)&layer->lineScroll, DATASET_STG, true);
 
-            layer->scrollIndexCount = ReadInt16(&info);
-            for (int s = 0; s < layer->scrollIndexCount; ++s) {
+            layer->scrollInfoCount = ReadInt16(&info);
+            for (int s = 0; s < layer->scrollInfoCount; ++s) {
                 layer->scrollInfo[i].parallaxFactor = ReadInt16(&info);
                 layer->scrollInfo[i].scrollSpeed    = ReadInt16(&info) << 8;
                 layer->scrollInfo[i].scrollPos      = 0;
@@ -280,11 +285,11 @@ void LoadSceneFile() {
             }
 
             byte *scrollIndexes = NULL;
-            ReadZLib(&info, (byte**)&scrollIndexes);
-            memcpy(layer->lineScroll, scrollIndexes, size * sizeof(byte));
+            ReadZLibRSDK(&info, (byte**)&scrollIndexes);
+            memcpy(layer->lineScroll, scrollIndexes, TILE_SIZE * size * sizeof(byte));
 
             byte *tileLayout = NULL;
-            ReadZLib(&info, (byte **)&tileLayout);
+            ReadZLibRSDK(&info, (byte **)&tileLayout);
 
             int id = 0;
             for (int y = 0; y < layer->height; ++y) {
@@ -316,8 +321,8 @@ void LoadSceneFile() {
             byte varCnt     = ReadInt8(&info);
             EditableVarInfo *varList = NULL;
             AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, DATASET_TMP, false);
+            editableVarCount = 0;
             if (objID) {
-                editableVarCount = 0;
                 SetEditableVar(VAR_UINT8, "filter", objID, offsetof(Entity, filter));
                 if (obj->serialize)
                     obj->serialize();
@@ -327,6 +332,8 @@ void LoadSceneFile() {
                 ReadHash(&info, hashBuf);
 
                 int varID = 0;
+                MEM_ZERO(editableVarList[e]);
+                MEM_ZERO(varList[e]);
                 editableVarList[e].active = false;
                 for (int v = 0; v < editableVarCount; ++v) {
                     if (memcmp(hashBuf, editableVarList[v].hash, 4 * sizeof(int)) == 0) {
@@ -473,11 +480,12 @@ void LoadTileConfig(char *filepath)
         }
 
         byte *buffer = NULL;
-        ReadZLib(&info, &buffer);
+        ReadZLibRSDK(&info, &buffer);
 
         int bufPos    = 0;
         for (int p = 0; p < CPATH_COUNT; ++p) {
             int tileIndex = 0;
+            //No Flip/Stored in file
             for (int t = 0; t < TILE_COUNT; ++t) {
                 byte collision[0x10];
                 byte hasCollision[0x10];
@@ -487,23 +495,23 @@ void LoadTileConfig(char *filepath)
                 memcpy(hasCollision, buffer + bufPos, 0x10 * sizeof(byte));
                 bufPos += 0x10;
 
-                bool isCeiling              = buffer[bufPos++];
-                collisionMasks[p].angles[t] = buffer[bufPos++] << 0;
-                collisionMasks[p].angles[t] += buffer[bufPos++] << 8;
-                collisionMasks[p].angles[t] += buffer[bufPos++] << 16;
-                collisionMasks[p].angles[t] += buffer[bufPos++] << 24;
-                collisionMasks[p].flags[t] = buffer[bufPos++];
+                bool isCeiling             = buffer[bufPos++];
+                collisionMasks[p][t].floorAngle = buffer[bufPos++];
+                collisionMasks[p][t].lWallAngle = buffer[bufPos++];
+                collisionMasks[p][t].rWallAngle = buffer[bufPos++];
+                collisionMasks[p][t].roofAngle = buffer[bufPos++];
+                collisionMasks[p][t].flag = buffer[bufPos++];
 
                 if (isCeiling) // Ceiling Tile
                 {
                     for (int c = 0; c < TILE_SIZE; c++) {
                         if (hasCollision[c]) {
-                            collisionMasks[p].roofMasks[c + tileIndex]  = collision[c];
-                            collisionMasks[p].floorMasks[c + tileIndex] = 0;
+                            collisionMasks[p][t].roofMasks[c]  = collision[c];
+                            collisionMasks[p][t].floorMasks[c] = 0;
                         }
                         else {
-                            collisionMasks[p].floorMasks[c + tileIndex] = 0xFF;
-                            collisionMasks[p].roofMasks[c + tileIndex]  = 0xFF;
+                            collisionMasks[p][t].floorMasks[c] = 0xFF;
+                            collisionMasks[p][t].roofMasks[c]  = 0xFF;
                         }
                     }
 
@@ -512,15 +520,15 @@ void LoadTileConfig(char *filepath)
                         int h = 0;
                         while (h > -1) {
                             if (h == TILE_SIZE) {
-                                collisionMasks[p].lWallMasks[c + tileIndex] = 0xFF;
-                                h                                           = -1;
+                                collisionMasks[p][t].lWallMasks[c] = 0xFF;
+                                h                                  = -1;
                             }
-                            else if (c > collisionMasks[p].roofMasks[h + tileIndex]) {
+                            else if (c > collisionMasks[p][t].roofMasks[h]) {
                                 ++h;
                             }
                             else {
-                                collisionMasks[p].lWallMasks[c + tileIndex] = h;
-                                h                                           = -1;
+                                collisionMasks[p][t].lWallMasks[c] = h;
+                                h                                  = -1;
                             }
                         }
                     }
@@ -530,30 +538,47 @@ void LoadTileConfig(char *filepath)
                         int h = TILE_SIZE - 1;
                         while (h < TILE_SIZE) {
                             if (h == -1) {
-                                collisionMasks[p].rWallMasks[c + tileIndex] = 0xFF;
-                                h                                           = TILE_SIZE;
+                                collisionMasks[p][t].rWallMasks[c] = 0xFF;
+                                h                                  = TILE_SIZE;
                             }
-                            else if (c > collisionMasks[p].roofMasks[h + tileIndex]) {
+                            else if (c > collisionMasks[p][t].roofMasks[h]) {
                                 --h;
                             }
                             else {
-                                collisionMasks[p].rWallMasks[c + tileIndex] = h;
-                                h                                           = TILE_SIZE;
+                                collisionMasks[p][t].rWallMasks[c] = h;
+                                h                                  = TILE_SIZE;
+                            }
+                        }
+                    }
+
+                    for (int c = 0; c < TILE_SIZE; ++c) {
+                        int h = TILE_SIZE - 1;
+                        while (h < TILE_SIZE) {
+                            if (h == -1) {
+                                collisionMasks[p][t].rWallMasks[c] = 0xFF;
+                                h                                  = TILE_SIZE;
+                            }
+                            else if (c > collisionMasks[p][t].roofMasks[h]) {
+                                --h;
+                            }
+                            else {
+                                collisionMasks[p][t].rWallMasks[c] = h;
+                                h                                  = TILE_SIZE;
                             }
                         }
                     }
                 }
                 else // Regular Tile
                 {
-                    //Collision heights
+                    // Collision heights
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         if (hasCollision[c]) {
-                            collisionMasks[p].floorMasks[c + tileIndex] = collision[c];
-                            collisionMasks[p].roofMasks[c + tileIndex]  = 0x0F;
+                            collisionMasks[p][t].floorMasks[c] = collision[c];
+                            collisionMasks[p][t].roofMasks[c]  = 0x0F;
                         }
                         else {
-                            collisionMasks[p].floorMasks[c + tileIndex] = 0xFF;
-                            collisionMasks[p].roofMasks[c + tileIndex]  = 0xFF;
+                            collisionMasks[p][t].floorMasks[c] = 0xFF;
+                            collisionMasks[p][t].roofMasks[c]  = 0xFF;
                         }
                     }
 
@@ -562,15 +587,15 @@ void LoadTileConfig(char *filepath)
                         int h = 0;
                         while (h > -1) {
                             if (h == TILE_SIZE) {
-                                collisionMasks[p].lWallMasks[c + tileIndex] = 0xFF;
-                                h                                           = -1;
+                                collisionMasks[p][t].lWallMasks[c] = 0xFF;
+                                h                                  = -1;
                             }
-                            else if (c < collisionMasks[p].floorMasks[h + tileIndex]) {
+                            else if (c < collisionMasks[p][t].floorMasks[h]) {
                                 ++h;
                             }
                             else {
-                                collisionMasks[p].lWallMasks[c + tileIndex] = h;
-                                h                                           = -1;
+                                collisionMasks[p][t].lWallMasks[c] = h;
+                                h                                  = -1;
                             }
                         }
                     }
@@ -580,20 +605,96 @@ void LoadTileConfig(char *filepath)
                         int h = TILE_SIZE - 1;
                         while (h < TILE_SIZE) {
                             if (h == -1) {
-                                collisionMasks[p].rWallMasks[c + tileIndex] = 0xFF;
-                                h                                           = TILE_SIZE;
+                                collisionMasks[p][t].rWallMasks[c] = 0xFF;
+                                h                                  = TILE_SIZE;
                             }
-                            else if (c < collisionMasks[p].floorMasks[h + tileIndex]) {
+                            else if (c < collisionMasks[p][t].floorMasks[h]) {
                                 --h;
                             }
                             else {
-                                collisionMasks[p].rWallMasks[c + tileIndex] = h;
-                                h                                           = TILE_SIZE;
+                                collisionMasks[p][t].rWallMasks[c] = h;
+                                h                                  = TILE_SIZE;
                             }
                         }
                     }
                 }
                 tileIndex += 16;
+            }
+
+            //FlipX
+            for (int t = 0; t < TILE_COUNT; ++t) {
+                int off                               = (FLIP_X * TILE_COUNT);
+                collisionMasks[p][t + off].flag       = collisionMasks[p][t].flag;
+                collisionMasks[p][t + off].floorAngle = -collisionMasks[p][t].floorAngle;
+                collisionMasks[p][t + off].lWallAngle = -collisionMasks[p][t].lWallAngle;
+                collisionMasks[p][t + off].rWallAngle = -collisionMasks[p][t].rWallAngle;
+                collisionMasks[p][t + off].roofAngle  = -collisionMasks[p][t].roofAngle;
+
+                for (int c = 0; c < TILE_SIZE; ++c) {
+                    collisionMasks[p][t + off].lWallMasks[0xF - c] = collisionMasks[p][t].rWallMasks[c];
+                    collisionMasks[p][t + off].rWallMasks[0xF - c] = collisionMasks[p][t].lWallMasks[c];
+
+                    if (collisionMasks[p][t].floorMasks[c] >= 0xFF)
+                        collisionMasks[p][t + off].floorMasks[0xF - c] = 0xFF;
+                    else
+                        collisionMasks[p][t + off].floorMasks[0xF - c] = 0xF - collisionMasks[p][t].floorMasks[c];
+
+                    if (collisionMasks[p][t].roofMasks[c] >= 0xFF)
+                        collisionMasks[p][t + off].roofMasks[0xF - c] = 0xFF;
+                    else
+                        collisionMasks[p][t + off].roofMasks[0xF - c] = 0xF - collisionMasks[p][t].roofMasks[c];
+                }
+            }
+
+            // FlipY
+            for (int t = 0; t < TILE_COUNT; ++t) {
+                int off                               = (FLIP_Y * TILE_COUNT);
+                collisionMasks[p][t + off].flag       = collisionMasks[p][t].flag;
+                collisionMasks[p][t + off].floorAngle = -0x80 - collisionMasks[p][t].floorAngle;
+                collisionMasks[p][t + off].lWallAngle = -0x80 - collisionMasks[p][t].lWallAngle;
+                collisionMasks[p][t + off].roofAngle  = -0x80 - collisionMasks[p][t].roofAngle;
+                collisionMasks[p][t + off].rWallAngle = -0x80 - collisionMasks[p][t].rWallAngle;
+
+                for (int c = 0; c < TILE_SIZE; ++c) {
+                    collisionMasks[p][t + off].floorMasks[0xF - c] = collisionMasks[p][t].roofMasks[c];
+                    collisionMasks[p][t + off].roofMasks[0xF - c]  = collisionMasks[p][t].floorMasks[c];
+
+                    if (collisionMasks[p][t].lWallMasks[c] >= 0xFF)
+                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xFF;
+                    else
+                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xF - collisionMasks[p][t].lWallMasks[c];
+
+                    if (collisionMasks[p][t].rWallMasks[c] >= 0xFF)
+                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xFF;
+                    else
+                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xF - collisionMasks[p][t].rWallMasks[c];
+                }
+            }
+
+            // FlipXY
+            for (int t = 0; t < TILE_COUNT; ++t) {
+                int off                                                  = (FLIP_XY * TILE_COUNT);
+                int offX                                                  = (FLIP_X * TILE_COUNT);
+                collisionMasks[p][t + off].flag                           = collisionMasks[p][t + offX].flag;
+                collisionMasks[p][t + off].floorAngle                    = -collisionMasks[p][t + offX].floorAngle;
+                collisionMasks[p][t + off].lWallAngle                    = -collisionMasks[p][t + offX].lWallAngle;
+                collisionMasks[p][t + off].rWallAngle                    = -collisionMasks[p][t + offX].rWallAngle;
+                collisionMasks[p][t + off].roofAngle                      = -collisionMasks[p][t + offX].roofAngle;
+
+                for (int c = 0; c < TILE_SIZE; ++c) {
+                    collisionMasks[p][t + off].floorMasks[0xF - c] = collisionMasks[p][t + offX].roofMasks[c];
+                    collisionMasks[p][t + off].roofMasks[0xF - c]  = collisionMasks[p][t + offX].floorMasks[c];
+
+                    if (collisionMasks[p][t + offX].lWallMasks[c] >= 0xFF)
+                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xFF;
+                    else
+                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xF - collisionMasks[p][t + offX].lWallMasks[c];
+
+                    if (collisionMasks[p][t + offX].rWallMasks[c] >= 0xFF)
+                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xFF;
+                    else
+                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xF - collisionMasks[p][t + offX].rWallMasks[c];
+                }
             }
         }
         CloseFile(&info);
@@ -601,7 +702,7 @@ void LoadTileConfig(char *filepath)
 }
 void LoadStageGIF(char *filepath)
 {
-    Image tileset;
+    ImageGIF tileset;
     MEM_ZERO(tileset);
 
     AllocateStorage(sizeof(GifDecoder), (void **)&tileset.decoder, DATASET_TMP, true);
@@ -622,6 +723,9 @@ void LoadStageGIF(char *filepath)
             }
         }
 
+        tileset.palette = NULL;
+        tileset.decoder = NULL;
+        tileset.dataPtr = NULL;
         // TODO: theres more stuff here but its unreadable so make sure to look back at it eventually
     }
 }
@@ -632,7 +736,7 @@ void ProcessParallaxAutoScroll()
         TileLayer *layer = &tileLayers[l];
         if (layer->layout) {
             layer->scrollPos += layer->scrollSpeed;
-            for (int s = 0; s < layer->scrollIndexCount; ++s) {
+            for (int s = 0; s < layer->scrollInfoCount; ++s) {
                 layer->scrollInfo[s].scrollPos += layer->scrollInfo[s].scrollSpeed;
             }
         }
@@ -640,14 +744,87 @@ void ProcessParallaxAutoScroll()
 }
 void ProcessParallax(TileLayer *layer)
 {
-    int pixelWidth  = TILE_SIZE * layer->width;
-    int pixelHeight = TILE_SIZE * layer->height;
+    int pixelWidth            = TILE_SIZE * layer->width;
+    int pixelHeight           = TILE_SIZE * layer->height;
+    ScanlineInfo *scanlinePtr = scanlines;
+    ScrollInfo *scrollInfo    = layer->scrollInfo;
+
     switch (layer->behaviour) {
         default: break;
-        case 0: break;
-        case 1: break;
-        case 2: break;
-        case 3: break;
+        case 0: {
+            for (int i = 0; i < layer->scrollInfoCount; ++i) {
+                scrollInfo->scrollPos += (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
+                int pos               = (scrollInfo->scrollPos >> 16) % pixelWidth;
+                if ((pos & 0x8000) != 0)
+                    pos += pixelWidth;
+                scrollInfo->scrollPos = pos << 0x10;
+                ++scrollInfo;
+            }
+
+            short v7 = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
+            if ((v7 & 0x8000) != 0)
+                v7 += pixelHeight;
+
+            byte *lineScrollPtr = &layer->lineScroll[v7];
+
+            //Above water
+            for (int i = 0; i < currentScreen->waterDrawPos; ++i) {
+                if (layer->scrollInfo[*lineScrollPtr].deform) {
+                    
+                }
+                else {
+                
+                }
+
+                if (++v7 == pixelHeight) {
+                    lineScrollPtr = layer->lineScroll;
+                    v7    = 0;
+                }
+                else {
+                    ++lineScrollPtr;
+                }
+            }
+
+            //Under water
+            for (int i = currentScreen->waterDrawPos; i < currentScreen->height; ++i) {
+                if (layer->scrollInfo[*lineScrollPtr].deform) {
+                }
+                else {
+                }
+
+                if (++v7 == pixelHeight) {
+                    lineScrollPtr = layer->lineScroll;
+                    v7            = 0;
+                }
+                else {
+                    ++lineScrollPtr;
+                }
+            }
+            break;
+        }
+        case 1: {
+            for (int i = 0; i < layer->scrollInfoCount; ++i) {
+                scrollInfo->scrollPos += (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
+                int pos = (scrollInfo->scrollPos >> 16) % pixelWidth;
+                scrollInfo->scrollPos = pos << 0x10;
+                ++scrollInfo;
+            }
+            break;
+        }
+        case 2: {
+            break;
+        }
+        case 3: {
+            for (int i = 0; i < layer->scrollInfoCount; ++i) {
+                scrollInfo->scrollPos += (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
+                int pos = (scrollInfo->scrollPos >> 16) % pixelWidth;
+                if ((pos & 0x8000) != 0)
+                    pos += pixelWidth;
+                scrollInfo->scrollPos = pos << 0x10;
+                ++scrollInfo;
+            }
+            break;
+        }
     }
 }
 
@@ -718,8 +895,8 @@ void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayer
 
                         for (int y = 0; y < countY; ++y) {
                             for (int x = 0; x < countX; ++x) {
-                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
-                                dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
+                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) * srcLayer->width)];
+                                dstLayer->layout[(x + startX1) + ((y + startY1) * dstLayer->width)] = tile;
                             }
                         }
                     }
@@ -731,17 +908,19 @@ void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayer
 
 void DrawLayerHScroll(TileLayer *layer)
 {
+    if (!layer->width || !layer->height)
+        return;
     int screenwidth16            = (currentScreen->pitch >> 4) - 1;
     byte *lineBuffer             = &gfxLineBuffer[currentScreen->clipBound_Y1];
-    ScanlineInfo *tilePosPtr = &scanlines[currentScreen->clipBound_Y1];
+    ScanlineInfo *scanlinePtr     = &scanlines[currentScreen->clipBound_Y1];
     ushort *frameBufferPtr       = &currentScreen->frameBuffer[currentScreen->pitch * currentScreen->clipBound_Y1];
 
     int cy = currentScreen->clipBound_Y1;
     if (cy < currentScreen->clipBound_Y2) {
         do {
-            int x              = tilePosPtr->position.x;
-            int y              = tilePosPtr->position.y;
-            int tileX          = tilePosPtr->position.x >> 16;
+            int x              = scanlinePtr->position.x;
+            int y              = scanlinePtr->position.y;
+            int tileX          = scanlinePtr->position.x >> 16;
             ushort *palettePtr = fullPalette[*lineBuffer++];
             if (tileX >= 0) {
                 if (tileX >= 16 * layer->width)
@@ -755,7 +934,7 @@ void DrawLayerHScroll(TileLayer *layer)
             int cntY = 16 * ((y >> 16) & 0xF);
 
             int tx                = (x >> 20);
-            ushort *tileLayoutPtr = &layer->layout[tx + (y >> 20 << layer->widthShift)];
+            ushort *tileLayoutPtr = &layer->layout[tx + ((y >> 20) * layer->width)];
             if (*tileLayoutPtr >= 0xFFFF) {
                 frameBufferPtr += cnt;
             }
@@ -859,13 +1038,14 @@ void DrawLayerHScroll(TileLayer *layer)
                 }
             }
 
-            ++tilePosPtr;
+            ++scanlinePtr;
         } while (++cy < currentScreen->clipBound_Y2);
     }
 }
 void DrawLayerVScroll(TileLayer *layer)
 {
-    int width          = 1 << layer->widthShift;
+    if (!layer->width || !layer->height)
+        return;
     int screenHeight16 = (currentScreen->height >> 4) - 1;
     int clipX1         = currentScreen->clipBound_X1;
     ushort* frameBuffer         = &currentScreen->frameBuffer[clipX1];
@@ -887,7 +1067,7 @@ void DrawLayerVScroll(TileLayer *layer)
             int cntX = (y >> 16) & 0xF;
             int cntY = 16 * ((x >> 16) & 0xF);
 
-            ushort *layout = &layer->layout[(x >> 20) + ((y >> 20) << layer->widthShift)];
+            ushort *layout = &layer->layout[(x >> 20) + ((y >> 20) * layer->width)];
             if (*layout >= 0xFFFFu) {
                 frameBuffer += currentScreen->pitch * cnt;
             }
@@ -904,12 +1084,12 @@ void DrawLayerVScroll(TileLayer *layer)
             int tileY   = y >> 20;
             if (screenHeight16) {
                 do {
-                    layout += width;
+                    layout += layer->width;
                     ++tileY;
 
                     if (tileY == layer->height) {
                         tileY = 0;
-                        layout -= layer->height << layer->widthShift;
+                        layout -= layer->width;
                     }
                     if (*layout >= 0xFFFFu) {
                         frameBuffer += TILE_SIZE * currentScreen->pitch;
@@ -984,10 +1164,10 @@ void DrawLayerVScroll(TileLayer *layer)
                     tileCnt--;
                 } while (tileCnt);
             }
-            layout = &layout[width];
+            layout = &layout[layer->width];
 
             if (tileY + 1 == layer->height)
-                layout -= layer->height << layer->widthShift;
+                layout -= layer->width;
             ushort tile = *layout;
             if (*layout >= 0xFFFF) {
                 frameBuffer += currentScreen->pitch * cntX;
@@ -1008,6 +1188,8 @@ void DrawLayerVScroll(TileLayer *layer)
 }
 void DrawLayerRotozoom(TileLayer *layer)
 {
+    if (!layer->width || !layer->height)
+        return;
     ushort* layout        = layer->layout;
     int clipX1        = currentScreen->clipBound_X1;
     int clipY1        = currentScreen->clipBound_Y1;
@@ -1017,8 +1199,8 @@ void DrawLayerRotozoom(TileLayer *layer)
     clipY1        = currentScreen->clipBound_Y1;
     scanlinePtr   = &scanlines[clipY1];
     ushort *frameBuffer   = &currentScreen->frameBuffer[clipX1 + clipY1 * currentScreen->pitch];
-    int width         = (16 << layer->widthShift) - 1;
-    int height        = (16 << layer->heightShift) - 1;
+    int width         = (TILE_SIZE * layer->width) - 1;
+    int height        = (TILE_SIZE * layer->height) - 1;
 
     if (clipY1 < currentScreen->clipBound_Y2) {
         do {
@@ -1033,8 +1215,7 @@ void DrawLayerRotozoom(TileLayer *layer)
                 int y1   = posY >> 20;
                 int x2   = (posX >> 8) & 0xF;
                 int y2   = (posY >> 8) & 0xF;
-                byte idx =
-                    tilesetGFXData[0x10 * (y2 + 0x10 * (layout[((width >> 4) & x1) + (((height >> 4) & y1) << layer->widthShift)] & 0xFFF)) + x2];
+                byte idx = tilesetGFXData[0x10 * (y2 + 0x10 * (layout[((width >> 4) & x1) + (((height >> 4) & y1) * layer->width)] & 0xFFF)) + x2];
                 if (idx)
                     *frameBuffer = palettePtr[idx];
                 posX += defX;
@@ -1047,18 +1228,21 @@ void DrawLayerRotozoom(TileLayer *layer)
         } while (clipY1 < currentScreen->clipBound_Y2);
     }
 }
-void DrawLayerBasic(TileLayer *layer) {
+void DrawLayerBasic(TileLayer *layer)
+{
+    if (!layer->width || !layer->height)
+        return;
     int screenwidth16        = (currentScreen->pitch >> 4) - 1;
     byte *lineBuffer         = &gfxLineBuffer[currentScreen->clipBound_Y1];
-    ScanlineInfo *tilePosPtr = &scanlines[currentScreen->clipBound_Y1];
+    ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
     ushort *frameBufferPtr   = &currentScreen->frameBuffer[currentScreen->pitch * currentScreen->clipBound_Y1];
 
     int cy = currentScreen->clipBound_Y1;
     if (cy < currentScreen->clipBound_Y2) {
         do {
-            int x              = tilePosPtr->position.x;
-            int y              = tilePosPtr->position.y;
-            int tileX          = tilePosPtr->position.x >> 16;
+            int x              = scanlinePtr->position.x;
+            int y              = scanlinePtr->position.y;
+            int tileX          = scanlinePtr->position.x >> 16;
             ushort *palettePtr = fullPalette[*lineBuffer++];
             if (tileX >= 0) {
                 if (tileX >= 16 * layer->width)
@@ -1072,7 +1256,7 @@ void DrawLayerBasic(TileLayer *layer) {
             int cntY = 16 * ((y >> 16) & 0xF);
 
             int tx                = (x >> 20);
-            ushort *tileLayoutPtr = &layer->layout[tx + (y >> 20 << layer->widthShift)];
+            ushort *tileLayoutPtr = &layer->layout[tx + ((y >> 20) * layer->width)];
             if (*tileLayoutPtr >= 0xFFFF) {
                 frameBufferPtr += cnt;
             }
@@ -1176,7 +1360,7 @@ void DrawLayerBasic(TileLayer *layer) {
                 }
             }
 
-            ++tilePosPtr;
+            ++scanlinePtr;
         } while (++cy < currentScreen->clipBound_Y2);
     }
 }

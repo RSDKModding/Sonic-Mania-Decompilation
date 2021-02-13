@@ -161,13 +161,16 @@ bool processEvents()
                     case SDLK_F2:
                         if (engine.devMenu) {
                             sceneInfo.listPos--;
+                            SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
                             if (sceneInfo.listPos < 0) {
-                                sceneInfo.activeCategory--;
-
-                                if (sceneInfo.activeCategory < 0) {
+                                if (sceneInfo.activeCategory - 1 < 0) {
                                     sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
                                 }
-                                sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount - 1;
+                                else {
+                                    sceneInfo.activeCategory--;
+                                }
+                                list = &sceneInfo.listCategory[sceneInfo.activeCategory];
+                                sceneInfo.listPos = list->sceneOffsetStart + list->sceneCount - 1;
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
@@ -175,13 +178,14 @@ bool processEvents()
                     case SDLK_F3:
                         if (engine.devMenu) {
                             sceneInfo.listPos++;
-                            if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount) {
+                            SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
+                            if (sceneInfo.listPos >= list->sceneCount) {
                                 sceneInfo.activeCategory++;
-
-                                sceneInfo.listPos = 0;
                                 if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
                                     sceneInfo.activeCategory = 0;
                                 }
+                                list = &sceneInfo.listCategory[sceneInfo.activeCategory];
+                                sceneInfo.listPos = list->sceneOffsetStart;
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
@@ -370,10 +374,57 @@ void runRetroEngine()
                 if (devMenu.state)
                     devMenu.state();
                 break;
-            case ENGINESTATE_VIDEOPLAYBACK: break;
-            case ENGINESTATE_SHOWPNG: break;
-            case ENGINESTATE_ERRORMSG: break;
-            case ENGINESTATE_ERRORMSG_FATAL: break;
+            case ENGINESTATE_VIDEOPLAYBACK:
+                //if (ProcessVideo() == 1)
+                //    sceneInfo.state = engine.prevEngineMode;
+                break;
+            case ENGINESTATE_SHOWPNG: 
+                if (engine.imageDelta <= 0.0 || engine.imageUnknown >= 1.0) {
+                    if (engine.displayTime <= 0.0) {
+                        engine.imageUnknown += engine.imageDelta;
+                        if (engine.imageUnknown <= 0.0) {
+                            // ShaderSettings.ShaderID = prevScreenShader;
+                            // ShaderSettings.field_C  = 1;
+                            sceneInfo.state     = engine.prevEngineMode;
+                            engine.imageUnknown = 1.0;
+                        }
+                    }
+                    else {
+                        engine.displayTime -= 0.01666666666666667;
+                        if (engine.skipCallback) {
+                            if (engine.skipCallback())
+                                engine.displayTime = 0.0;
+                        }
+                    }
+                }
+                else {
+                    engine.imageUnknown += engine.imageDelta;
+                    if (engine.imageUnknown >= 1.0) {
+                        engine.imageDelta   = 1.0;
+                        engine.imageUnknown = 1.0;
+                    }
+                }
+                break;
+            case ENGINESTATE_ERRORMSG: {
+                inputDevice.ProcessInput();
+                if (controller[0].keyStart.down)
+                    sceneInfo.state = engine.prevEngineMode;
+                currentScreen = &screens[0];
+                int yOff      = DevOutput_GetStringYOffset(outputString);
+                DrawRectangle(0, currentScreen->centerY - (yOff >> 1), currentScreen->width, yOff, 128, 255, INK_NONE, true);
+                DrawDevText(8, outputString, currentScreen->centerY - (yOff >> 1) + 8, 0, 0xF0F0F0);
+                break;
+            }
+            case ENGINESTATE_ERRORMSG_FATAL: {
+                inputDevice.ProcessInput();
+                currentScreen = &screens[0];
+                if (controller[0].keyStart.down)
+                    engine.running = false;
+                int yOff = DevOutput_GetStringYOffset(outputString);
+                DrawRectangle(0, currentScreen->centerY - (yOff >> 1), currentScreen->width, yOff, 0xF00000, 255, INK_NONE, true);
+                DrawDevText(8, outputString, currentScreen->centerY - (yOff >> 1) + 8, 0, 0xF0F0F0);
+                break;
+            }
         }
 
         FlipScreen();
@@ -527,8 +578,7 @@ void LoadGameConfig()
         byte sfxCnt = ReadInt8(&info);
         for (int i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
-            byte maxConcurrentPlays = ReadInt8(&info);
-            LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
+            ReadInt8(&info);
         }
 
         ushort totalSceneCount = ReadInt16(&info);
@@ -562,7 +612,7 @@ void LoadGameConfig()
                 ReadString(&info, sceneInfo.listData[sceneID + s].folder);
                 ReadString(&info, sceneInfo.listData[sceneID + s].sceneID);
 
-                sceneInfo.listData[sceneID + s].modeFilter = ReadInt8(&info);
+                sceneInfo.listData[sceneID + s].filter = ReadInt8(&info);
             }
             sceneInfo.listCategory[i].sceneOffsetEnd = sceneInfo.listCategory[i].sceneOffsetStart + sceneInfo.listCategory[i].sceneCount;
             sceneID += sceneInfo.listCategory[i].sceneCount;
@@ -614,17 +664,21 @@ void InitScriptSystem()
         return LinkGameLogic(&info);
     }
 
+    bool linked = false;
 #if RETRO_PLATFORM == RETRO_WIN
     if (!hLibModule)
         hLibModule = LoadLibraryA("Game");
 
     if (hLibModule) {
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
-        if (linkGameLogic)
+        if (linkGameLogic) {
             linkGameLogic(&info);
-    }
-    else {
-        printLog(SEVERITY_WARN, "Failed to load game.dll");
+            linked = true;
+        }
     }
 #endif
+
+    if (!linked) {
+        printLog(SEVERITY_WARN, "Failed to link game logic!");
+    }
 }

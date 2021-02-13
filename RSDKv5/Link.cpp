@@ -161,7 +161,7 @@ enum FunctionTableIDs {
     FunctionTable_DrawQuad,
     FunctionTable_DrawTexturedQuad,
     FunctionTable_DrawSprite,
-    FunctionTable_DrawUnknown,
+    FunctionTable_DrawDeformed,
     FunctionTable_DrawText,
     FunctionTable_DrawTile,
     FunctionTable_CopyTile,
@@ -424,7 +424,7 @@ void setupFunctions()
     functionTable[FunctionTable_DrawQuad]                     = DrawQuad;
     functionTable[FunctionTable_DrawTexturedQuad]             = DrawTexturedQuad;
     functionTable[FunctionTable_DrawSprite]                   = DrawSprite;
-    functionTable[FunctionTable_DrawUnknown]                  = NullFunc; // DrawUnknown;
+    functionTable[FunctionTable_DrawDeformed]                  = DrawDeformedSprite;
     functionTable[FunctionTable_DrawText]                     = DrawText;
     functionTable[FunctionTable_DrawTile]                     = DrawTile;
     functionTable[FunctionTable_CopyTile]                     = CopyTile;
@@ -459,17 +459,17 @@ void setupFunctions()
     functionTable[FunctionTable_CopyTileLayer]                = CopyTileLayout;
     functionTable[FunctionTable_ProcessParallax]              = ProcessParallax;
     functionTable[FunctionTable_GetLinePosPtrs]               = GetLinePositions;
-    functionTable[FunctionTable_CheckObjectCollisionTouch]    = NullFunc; // CheckObjectCollisionTouch;
-    functionTable[FunctionTable_CheckObjectCollisionPoint]    = NullFunc; // CheckObjectCollisionPoint;
-    functionTable[FunctionTable_CheckObjectCollisionBox]      = NullFunc; // CheckObjectCollisionBox;
-    functionTable[FunctionTable_CheckObjectCollisionPlatform] = NullFunc; // CheckObjectCollisionPlatform;
-    functionTable[FunctionTable_ObjectTileCollision]          = NullFunc; // ObjectTileCollision;
-    functionTable[FunctionTable_ObjectTileGrip]               = NullFunc; // ObjectTileGrip;
-    functionTable[FunctionTable_ProcessPlayerTileCollisions]  = NullFunc; // ProcessPlayerTileCollisions;
-    functionTable[FunctionTable_GetTileAngle]                 = NullFunc; // GetTileAngle;
-    functionTable[FunctionTable_SetTileAngle]                 = NullFunc; // SetTileAngle;
-    functionTable[FunctionTable_GetTileBehaviour]             = NullFunc; // GetTileBehaviour;
-    functionTable[FunctionTable_SetTileBehaviour]             = NullFunc; // SetTileBehaviour;
+    functionTable[FunctionTable_CheckObjectCollisionTouch]    = CheckObjectCollisionTouch;
+    functionTable[FunctionTable_CheckObjectCollisionPoint]    = CheckObjectCollisionCircle;
+    functionTable[FunctionTable_CheckObjectCollisionBox]      = CheckObjectCollisionBox;
+    functionTable[FunctionTable_CheckObjectCollisionPlatform] = CheckObjectCollisionPlatform;
+    functionTable[FunctionTable_ObjectTileCollision]          = ObjectTileCollision;
+    functionTable[FunctionTable_ObjectTileGrip]               = ObjectTileGrip;
+    functionTable[FunctionTable_ProcessPlayerTileCollisions]  = NullFunc; // ProcessTileCollisions;
+    functionTable[FunctionTable_GetTileAngle]                 = GetTileAngle;
+    functionTable[FunctionTable_SetTileAngle]                 = SetTileAngle;
+    functionTable[FunctionTable_GetTileBehaviour]             = GetTileBehaviour;
+    functionTable[FunctionTable_SetTileBehaviour]             = SetTileBehaviour;
     functionTable[FunctionTable_GetSFX]                       = GetSFX;
     functionTable[FunctionTable_PlaySFX]                      = NullFunc; // PlaySFX;
     functionTable[FunctionTable_StopSFX]                      = NullFunc; // StopSFX;

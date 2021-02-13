@@ -173,9 +173,9 @@ struct ObjectPlayer : Object{
 
 // Entity Class
 struct EntityPlayer : Entity {
-    void *state;
-    int stateDraw;
-    int field_60;
+    void (*state)();
+    void (*stateDraw)();
+    void (*stateUnknown)();
     EntityCamera *camera;
     EntityAnimationData playerAnimData;
     EntityAnimationData tailSpriteAnimData;
@@ -242,7 +242,7 @@ struct EntityPlayer : Entity {
     int sensorY;
     Vector2 field_194;
     void (*inputState2)(void);
-    void (*inputStatus)(void);
+    void (*inputState)(void);
     int controllerID;
     int glideTimer;
     int up;

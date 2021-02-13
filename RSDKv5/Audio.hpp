@@ -12,7 +12,7 @@
 #define MAX_VOLUME (100)
 
 struct SFXInfo {
-    uint hash[0x10];
+    uint hash[4];
     Sint16 *buffer;
     size_t length;
     byte maxConcurrentPlays;

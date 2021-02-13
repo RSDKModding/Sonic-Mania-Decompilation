@@ -87,6 +87,7 @@
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="Palette.hpp" />
     <ClInclude Include="Reader.hpp" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Scene3D.hpp" />
     <ClInclude Include="Shader.hpp" />
@@ -96,6 +97,9 @@
     <ClInclude Include="unistd.h" />
     <ClInclude Include="Userdata.hpp" />
     <ClInclude Include="RetroEngine.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RSDKv5.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

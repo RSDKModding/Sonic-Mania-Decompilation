@@ -244,5 +244,13 @@
     <ClInclude Include="unistd.h">
       <Filter>Source Files\iniparser</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RSDKv5.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -23,6 +23,17 @@ struct InputState {
     bool32 down;
     bool32 press;
     int keyMap;
+
+    inline void setHeld()
+    {
+        press = !down;
+        down  = true;
+    }
+    inline void setReleased()
+    {
+        press = false;
+        down  = false;
+    }
 };
 
 struct ControllerState {

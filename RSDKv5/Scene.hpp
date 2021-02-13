@@ -25,7 +25,7 @@ struct SceneListEntry {
     char name[0x20];
     char folder[0x10];
     char sceneID[0x08];
-    byte modeFilter;
+    byte filter;
 };
 
 struct SceneInfo {
@@ -82,7 +82,7 @@ struct TileLayer {
     int field_24;
     byte field_28[0x2000];
     void (*scanlineCallback)(ScanlineInfo *);
-    ushort scrollIndexCount;
+    ushort scrollInfoCount;
     char field_202E;
     char field_202F;
     ScrollInfo scrollInfo[0x100];
@@ -91,19 +91,22 @@ struct TileLayer {
     byte *lineScroll;
 };
 
-struct CollisionMasks {
-    byte floorMasks[TILE_COUNT * TILE_SIZE];
-    byte lWallMasks[TILE_COUNT * TILE_SIZE];
-    byte rWallMasks[TILE_COUNT * TILE_SIZE];
-    byte roofMasks[TILE_COUNT * TILE_SIZE];
-    uint angles[TILE_COUNT];
-    byte flags[TILE_COUNT];
+struct CollisionMask {
+    byte floorMasks[TILE_SIZE];
+    byte lWallMasks[TILE_SIZE];
+    byte roofMasks[TILE_SIZE];
+    byte rWallMasks[TILE_SIZE];
+    byte floorAngle;
+    byte lWallAngle;
+    byte rWallAngle;
+    byte roofAngle;
+    byte flag;
 };
 
 extern ScanlineInfo scanlines[SCREEN_YSIZE];
 extern TileLayer tileLayers[LAYER_COUNT];
 
-extern CollisionMasks collisionMasks[2];
+extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction
 
 extern bool hardResetFlag;
 extern char currentSceneFolder[0x10];
@@ -196,6 +199,29 @@ inline void SetTileInfo(ushort layerID, int tileX, int tileY, ushort tile)
         }
     }
 }
+
+inline int GetTileAngle(ushort tile, byte cLayer, byte cMode) { 
+    switch (cMode) {
+        default: return 0;
+        case CMODE_FLOOR: return collisionMasks[cLayer & 1][tile & 0x3FF].floorAngle;
+        case CMODE_LWALL: return collisionMasks[cLayer & 1][tile & 0x3FF].lWallAngle;
+        case CMODE_ROOF: return collisionMasks[cLayer & 1][tile & 0x3FF].roofAngle;
+        case CMODE_RWALL: return collisionMasks[cLayer & 1][tile & 0x3FF].rWallAngle;
+    }
+}
+inline void SetTileAngle(ushort tile, byte cLayer, byte cMode, int value)
+{
+    switch (cMode) {
+        default: break;
+        case CMODE_FLOOR: collisionMasks[cLayer & 1][tile & 0x3FF].floorAngle = value;
+        case CMODE_LWALL: collisionMasks[cLayer & 1][tile & 0x3FF].lWallAngle = value;
+        case CMODE_ROOF: collisionMasks[cLayer & 1][tile & 0x3FF].roofAngle = value;
+        case CMODE_RWALL: collisionMasks[cLayer & 1][tile & 0x3FF].rWallAngle = value;
+    }
+}
+
+inline byte GetTileBehaviour(ushort tile, byte cLayer) { return collisionMasks[cLayer & 1][tile & 0x3FF].flag; }
+inline void SetTileBehaviour(ushort tile, byte cLayer, byte value) { collisionMasks[cLayer & 1][tile & 0x3FF].flag = value; }
 
 void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayerID, int startX2, int startY2, int countX, int countY);
 

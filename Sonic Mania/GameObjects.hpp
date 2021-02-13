@@ -8,7 +8,7 @@ struct UserFunctionTable {
     void (*Unknown2)(void);
     void (*Unknown3)(void);
     void (*Unknown4)(int a1);
-    void (*CheckDLC)(GameDLC dlc);
+    bool32 (*CheckDLC)(GameDLC dlc);
     void (*Unknown5)(int a1);
     void (*UnlockAchievement)(const char *achName);
     void (*Missing0)(void);
@@ -91,7 +91,7 @@ struct RSDKFunctionTable {
     void (*SwapDrawLayers)(void);
     void (*SetDrawLayerProperties)(byte layer, int active, void (*initDrawPtr)(void));
     void (*LoadScene)(const char* categoryName, const char* sceneName);
-    void (*SetGameMode)(void);
+    void (*SetGameMode)(byte mode);
     void (*SetHardResetFlag)(bool set);
     void (*CheckValidScene)(void);
     int (*CheckStageFolder)(const char *folderName);
@@ -163,7 +163,7 @@ struct RSDKFunctionTable {
     void (*DrawQuad)(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
     void (*DrawTexturedQuad)(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
     void (*DrawSprite)(EntityAnimationData *data, Vector2 *position, bool32 screenRelative);
-    void (*DrawUnknown)(void *, void *, void *);
+    void (*DrawDeformedSprite)(ushort sheet, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8,
                      int a9, bool32 ScreenRelative);
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
@@ -208,7 +208,7 @@ struct RSDKFunctionTable {
                                 bool32 setPos);
     bool32 (*ObjectTileGrip)(Entity *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                              sbyte tolerance);
-    void (*ProcessPlayerTileCollisions)(Entity *entity, Hitbox *outer, Hitbox *inner);
+    void (*ProcessTileCollisions)(Entity *entity, Hitbox *outer, Hitbox *inner);
     void (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
     void (*SetTileAngle)(ushort tileID, byte cPlane, byte cMode, byte value);
     void (*GetTileBehaviour)(ushort tileID, byte cPlane);
@@ -225,7 +225,7 @@ struct RSDKFunctionTable {
     void (*Unknown95)(int a1);
     void (*Unknown96)(int a1);
     void (*LoadVideo)(const char *filename, int64 a2, int (*a3)(void));
-    void (*LoadPNG)(const char *filename, double a2, double a3, int (*a4)(void));
+    bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
     void (*Unknown98)(int a1, int a2, uint a3);
     void (*Unknown99)(int a1, int a2, uint a3);
     void (*Unknown100)(int a1);

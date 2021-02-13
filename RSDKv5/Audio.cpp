@@ -67,6 +67,54 @@ bool InitAudioDevice()
 #endif // !RETRO_USING_SDL1
 #endif
 #endif
+
+    
+    FileInfo info;
+    MEM_ZERO(info);
+
+    if (LoadFile(&info, "Data/Game/GameConfig.bin")) {
+        char buffer[0x100];
+        uint sig = ReadInt32(&info);
+
+        if (sig != 0x474643) {
+            CloseFile(&info);
+            return true;
+        }
+
+        ReadString(&info, buffer);
+        ReadString(&info, buffer);
+        ReadString(&info, buffer);
+
+        ReadInt8(&info);
+        ReadInt16(&info);
+
+        byte objCnt = ReadInt8(&info);
+        for (int i = 0; i < objCnt; ++i) {
+            ReadString(&info, buffer);
+        }
+
+        for (int i = 0; i < PALETTE_COUNT; ++i) {
+            byte rows = ReadInt16(&info);
+            for (int r = 0; r < 0x10; ++r) {
+                if ((rows >> r & 1)) {
+                    for (int c = 0; c < 0x10; ++c) {
+                        ReadInt8(&info);
+                        ReadInt8(&info);
+                        ReadInt8(&info);
+                    }
+                }
+            }
+        }
+
+        byte sfxCnt = ReadInt8(&info);
+        for (int i = 0; i < sfxCnt; ++i) {
+            ReadString(&info, buffer);
+            byte maxConcurrentPlays = ReadInt8(&info);
+            LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
+        }
+        CloseFile(&info);
+    }
+
     //for (int i = 0; i < CHANNEL_COUNT; ++i) sfxChannels[i].sfxID = -1;
 
     return true;

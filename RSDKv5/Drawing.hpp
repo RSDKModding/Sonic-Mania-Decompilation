@@ -58,7 +58,7 @@ struct ScreenInfo {
     int clipBound_Y1;
     int clipBound_X2;
     int clipBound_Y2;
-    int unknown;
+    int waterDrawPos;
 };
 
 struct DrawList {
@@ -109,7 +109,7 @@ inline void SetScreenSize(byte screenID, ushort width, ushort height)
         screen->clipBound_X2 = width;
         screen->clipBound_Y1 = 0;
         screen->clipBound_Y2 = screenHeight;
-        screen->unknown      = screenHeight;
+        screen->waterDrawPos      = screenHeight;
     }
 }
 

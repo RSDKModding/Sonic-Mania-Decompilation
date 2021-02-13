@@ -97,7 +97,6 @@ void SetDebugValue(const char* name, int valPtr, int type, int unknown1, int unk
     }
 }
 
-
 void DevMenu_MainMenu()
 {
     uint optionColours[5];
@@ -138,43 +137,49 @@ void DevMenu_MainMenu()
     //Stage Storage
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (4 * userStorage[DATASET_STG].usedStorage) / (float)userStorage[DATASET_STG].storageLimit * 126.0, 6, 0xF0F0F0, 255, INK_NONE,
-                  true);
+                  (sizeof(int) * userStorage[DATASET_STG].usedStorage) / (float)userStorage[DATASET_STG].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "STG", y, 0, 0xF0F080);
 
     //Music Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (4 * userStorage[DATASET_MUS].usedStorage) / (float)userStorage[DATASET_MUS].storageLimit * 126.0, 6, 0xF0F0F0, 255, INK_NONE,
-                  true);
+                  (sizeof(int) * userStorage[DATASET_MUS].usedStorage) / (float)userStorage[DATASET_MUS].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "MUS", y, 0, 0xF0F080);
 
     //SoundFX Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (4 * userStorage[DATASET_SFX].usedStorage) / (float)userStorage[DATASET_SFX].storageLimit * 126.0, 6, 0xF0F0F0, 255, INK_NONE,
-                  true);
+                  (sizeof(int) * userStorage[DATASET_SFX].usedStorage) / (float)userStorage[DATASET_SFX].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "SFX", y, 0, 0xF0F080);
 
     //String Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (4 * userStorage[DATASET_STR].usedStorage) / (float)userStorage[DATASET_STR].storageLimit * 126.0, 6, 0xF0F0F0, 255, INK_NONE,
-                  true);
+                  (sizeof(int) * userStorage[DATASET_STR].usedStorage) / (float)userStorage[DATASET_STR].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "STR", y, 0, 0xF0F080);
 
     //Temp Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (4 * userStorage[DATASET_TMP].usedStorage) / (float)userStorage[DATASET_TMP].storageLimit * 126.0, 6, 0xF0F0F0, 255, INK_NONE,
-                  true);
+                  (sizeof(int) * userStorage[DATASET_TMP].usedStorage) / (float)userStorage[DATASET_TMP].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "TMP", y, 0, 0xF0F080);
 
-    if (controller[0].keyUp.down) {
+    if (controller[0].keyUp.press) {
+        devMenu.option--;
+        devMenu.timer = 1;
+        if (devMenu.option < 0)
+            devMenu.option += 5;
+    }
+    else if (controller[0].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
         }
@@ -186,7 +191,13 @@ void DevMenu_MainMenu()
         }
     }
 
-    if (controller[0].keyDown.down) {
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        devMenu.timer = 1;
+        if (devMenu.option > 4)
+            devMenu.option -= 5;
+    }
+    else if (controller[0].keyDown.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
         }
@@ -198,7 +209,7 @@ void DevMenu_MainMenu()
         }
     }
 
-    if (controller[0].keyStart.down || controller[0].keyA.down) {
+    if (controller[0].keyStart.press || controller[0].keyA.press) {
         switch (devMenu.option) {
             case 0:
                 sceneInfo.state = devMenu.stateStore;
@@ -207,10 +218,12 @@ void DevMenu_MainMenu()
             case 2:
                 devMenu.state  = DevMenu_ListSel;
                 devMenu.option = 0;
+                devMenu.timer  = 1;
                 break;
             case 3:
                 devMenu.state  = DevMenu_Options;
                 devMenu.option = 0;
+                devMenu.timer  = 1;
                 break;
             case 4: engine.running = false; break;
             default: break;
@@ -244,6 +257,20 @@ void DevMenu_ListSel()
         }
     }
 
+    if (controller[0].keyUp.press) {
+        if (--devMenu.option < 0)
+            devMenu.option += sceneInfo.categoryCount;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else 
     if (controller[0].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
@@ -270,8 +297,21 @@ void DevMenu_ListSel()
             }
         }
     }
-    
-    if (controller[0].keyDown.down) {
+
+    if (controller[0].keyDown.press) {
+        if (++devMenu.option == sceneInfo.categoryCount)
+            devMenu.option = 0;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyDown.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
             if (devMenu.option >= devMenu.scroll) {
@@ -298,7 +338,7 @@ void DevMenu_ListSel()
         }
     }
 
-    if (controller[0].keyStart.down || controller[0].keyA.down) {
+    if (controller[0].keyStart.press || controller[0].keyA.press) {
         if (sceneInfo.listCategory[devMenu.option].sceneCount) {
             devMenu.state    = DevMenu_SceneSel;
             devMenu.listPos  = devMenu.option;
@@ -337,7 +377,25 @@ void DevMenu_SceneSel()
         }
     }
 
-    if (controller[0].keyUp.down) {
+    if (controller[0].keyUp.press) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (off + devMenu.option < list->sceneOffsetStart) {
+                devMenu.option = list->sceneCount - 1;
+            }
+        }
+
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (off + devMenu.option < list->sceneOffsetStart) {
@@ -354,6 +412,23 @@ void DevMenu_SceneSel()
         else {
             devMenu.scroll = devMenu.option;
         }
+    }
+    
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option > list->sceneCount) {
+            devMenu.option = 0;
+        }
+
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
     }
     else if (controller[0].keyDown.down) {
         if (!devMenu.timer) {
@@ -374,9 +449,9 @@ void DevMenu_SceneSel()
         }
     }
 
-    if (controller[0].keyStart.down || controller[0].keyA.down) {
+    if (controller[0].keyStart.press || controller[0].keyA.press) {
         sceneInfo.activeCategory = devMenu.listPos;
-        sceneInfo.listPos        = devMenu.option;
+        sceneInfo.listPos        = devMenu.option + sceneInfo.listCategory[devMenu.listPos].sceneOffsetStart;
         sceneInfo.state          = ENGINESTATE_LOAD;
     }
 }

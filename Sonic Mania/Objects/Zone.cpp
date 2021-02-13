@@ -2,15 +2,9 @@
 
 ObjectZone *Zone;
 
-void Zone_Update()
-{
+void Zone_Update() {}
 
-}
-
-void Zone_LateUpdate()
-{
-
-}
+void Zone_LateUpdate() {}
 
 void Zone_StaticUpdate()
 {
@@ -49,7 +43,7 @@ void Zone_Draw()
     }
 }
 
-void Zone_Create(void* data)
+void Zone_Create(void *data)
 {
     EntityZone *entity               = (EntityZone *)RSDK_sceneInfo->entity;
     RSDK_sceneInfo->entity->priority = ACTIVE_ALWAYS;
@@ -62,13 +56,13 @@ void Zone_Create(void* data)
 void Zone_StageLoad()
 {
 
-    //TODO: this junk here
+    // TODO: this junk here
 
-    Zone->timer             = 0;
-    Zone->field_154         = 0;
-    Zone->ringFrame         = 0;
-    Zone->field_15C         = 0;
-    Zone->field_50           = 0;
+    Zone->timer          = 0;
+    Zone->field_154      = 0;
+    Zone->ringFrame      = 0;
+    Zone->field_15C      = 0;
+    Zone->field_50       = 0;
     Zone->fgLayerLow     = 0;
     Zone->drawOrderLow   = 2;
     Zone->playerDrawLow  = 4;
@@ -77,9 +71,9 @@ void Zone_StageLoad()
     Zone->uiDrawLow      = 12;
     Zone->uiDrawHigh     = 14;
 
-    Zone->fgLow = RSDK.GetSceneLayerID("FG Low");
-    Zone->fgHigh = RSDK.GetSceneLayerID("FG High");
-    Zone->moveLayer = RSDK.GetSceneLayerID("Move");
+    Zone->fgLow        = RSDK.GetSceneLayerID("FG Low");
+    Zone->fgHigh       = RSDK.GetSceneLayerID("FG High");
+    Zone->moveLayer    = RSDK.GetSceneLayerID("Move");
     Zone->scratchLayer = RSDK.GetSceneLayerID("Scratch");
 
     if (Zone->fgLowID) {
@@ -116,7 +110,7 @@ void Zone_StageLoad()
                 RSDK.SetSettingsValue(12, 1);
             }
             else {
-                ///Competition_Unknown2();
+                /// Competition_Unknown2();
                 RSDK.SetSettingsValue(12, 1);
             }
         }
@@ -133,32 +127,33 @@ void Zone_StageLoad()
         }
     }
     else {
-        //Competition_Unknown2();
+        // Competition_Unknown2();
         RSDK.SetSettingsValue(12, 1);
     }
     switch (options->gameMode) {
         case MODE_MANIA:
-            //Localization_Unknown1(&textInfo, 0x3Fu);
-            //User.PossiblyGetStrings(2, &textInfo);
+            // Localization_Unknown1(&textInfo, 0x3Fu);
+            // User.PossiblyGetStrings(2, &textInfo);
             break;
         case MODE_ENCORE:
-            //Localization_Unknown1(&textInfo, 0x40u);
-            //User.PossiblyGetStrings(3, &textInfo);
+            // Localization_Unknown1(&textInfo, 0x40u);
+            // User.PossiblyGetStrings(3, &textInfo);
             break;
         case MODE_TIMEATTACK:
-            //Localization_Unknown1(&textInfo, 0x41u);
-            //User.PossiblyGetStrings(4, &textInfo);
+            // Localization_Unknown1(&textInfo, 0x41u);
+            // User.PossiblyGetStrings(4, &textInfo);
             break;
         case MODE_COMPETITION:
-            //Localization_Unknown1(&textInfo, 0x42u);
-            //User.PossiblyGetStrings(5, &textInfo);
+            // Localization_Unknown1(&textInfo, 0x42u);
+            // User.PossiblyGetStrings(5, &textInfo);
             break;
         default: break;
     }
     Zone->sfx_fail = RSDK.GetSFX("Stage/Fail.wav");
 }
 
-int Zone_GetZoneID() {
+int Zone_GetZoneID()
+{
     if (RSDK.CheckStageFolder("GHZ"))
         return 0;
     if (RSDK.CheckStageFolder("CPZ"))
@@ -192,7 +187,7 @@ int Zone_GetZoneID() {
 
 void Zone_StoreEntities(int xOffset, int yOffset)
 {
-    int count = 0;
+    int count      = 0;
     Entity *entity = NULL;
     if (RSDK.GetActiveObjects(Player->objectID, &entity)) {
         int pos = 0;
@@ -213,7 +208,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            int id                       = RSDK.GetEntityID(entity);
+            int id                        = RSDK.GetEntityID(entity);
             options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
@@ -227,7 +222,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            int id                       = RSDK.GetEntityID(entity);
+            int id                        = RSDK.GetEntityID(entity);
             options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
@@ -258,16 +253,16 @@ void Zone_Unknown1(int fade1, int fade2)
 
 void Zone_Unknown2()
 {
-    EntityZone *entity     = (EntityZone *)RSDK.GetObjectByID(SLOT_ZONE);
-    entity->screenID       = 4;
-    entity->timer          = 0;
-    entity->fade1          = 10;
-    entity->fade2          = 0;
-    entity->state          = Zone_Unknown13;
-    entity->stateDraw      = Zone_Unknown12;
-    entity->visible   = true;
-    entity->drawOrder = 15;
-    //if (Music->ActiveTrack != 8) {
+    EntityZone *entity = (EntityZone *)RSDK.GetObjectByID(SLOT_ZONE);
+    entity->screenID   = 4;
+    entity->timer      = 0;
+    entity->fade1      = 10;
+    entity->fade2      = 0;
+    entity->state      = Zone_Unknown13;
+    entity->stateDraw  = Zone_Unknown12;
+    entity->visible    = true;
+    entity->drawOrder  = 15;
+    // if (Music->ActiveTrack != 8) {
     //    RSDK.DestroyEntity(music, Music->objectID, 0);
     //    EntityMusic *music = (EntityMusic *)RSDK.GetObjectByID(SLOT_MUSIC);
     //    music->state    = Music_Unknown14;
@@ -289,20 +284,20 @@ void Zone_Unknown3(EntityPlaneSwitch *planeSwitch, EntityPlayer *player, int ang
 
 void Zone_Unknown4(int screen)
 {
-    EntityZone *entity           = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
-    entity->screenID = screen;
-    entity->timer    = 640;
-    entity->fade1    = 16;
-    entity->fade2    = 0xF0F0F0;
+    EntityZone *entity = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
+    entity->screenID   = screen;
+    entity->timer      = 640;
+    entity->fade1      = 16;
+    entity->fade2      = 0xF0F0F0;
     if (options->gameMode != MODE_ENCORE || EncoreIntro) {
-        entity->state          = Zone_Unknown18;
-        entity->stateDraw      = Zone_Unknown12;
-        entity->visible        = true;
+        entity->state     = Zone_Unknown18;
+        entity->stateDraw = Zone_Unknown12;
+        entity->visible   = true;
         entity->drawOrder = 15;
     }
     else {
-        entity->state          = Zone_Unknown17;
-        entity->stateDraw      = Zone_Unknown12;
+        entity->state     = Zone_Unknown17;
+        entity->stateDraw = Zone_Unknown12;
         entity->visible   = true;
         entity->drawOrder = 15;
     }
@@ -310,15 +305,15 @@ void Zone_Unknown4(int screen)
 
 void Zone_Unknown5()
 {
-    EntityZone *entity     = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
-    entity->screenID       = 4;
-    entity->timer          = 640;
-    entity->fade1          = 16;
-    entity->fade2          = 0xF0F0F0;
-    entity->state          = Zone_Unknown20;
-    entity->stateDraw      = Zone_Unknown12;
-    entity->visible   = true;
-    entity->drawOrder = 15;
+    EntityZone *entity = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
+    entity->screenID   = 4;
+    entity->timer      = 640;
+    entity->fade1      = 16;
+    entity->fade2      = 0xF0F0F0;
+    entity->state      = Zone_Unknown20;
+    entity->stateDraw  = Zone_Unknown12;
+    entity->visible    = true;
+    entity->drawOrder  = 15;
     Zone->field_4724   = 1;
 }
 
@@ -376,7 +371,7 @@ void Zone_Unknown12()
 
 void Zone_Unknown13()
 {
-    //TODO
+    // TODO
 }
 
 void Zone_Unknown14()
@@ -418,7 +413,7 @@ void Zone_Unknown16()
     entityZone->screenID       = 0;
     entityZone->timer          = 640;
     entityZone->fade1          = 16;
-    entityZone->fade2          = 15790320;
+    entityZone->fade2          = 0xF0F0F0;
     entityZone->state          = Zone_Unknown18;
     entityZone->stateDraw      = Zone_Unknown12;
     entityZone->visible        = true;
@@ -431,14 +426,14 @@ void Zone_Unknown16()
 
 void Zone_Unknown17()
 {
-    EntityPlayer *entity          = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER1);
-    //LOBYTE(StarPost[15].objectID) = RSDK_sceneInfo->minutes;
-    //HIBYTE(StarPost[15].objectID) = RSDK_sceneInfo->seconds;
-    StarPost[15].priority         = RSDK_sceneInfo->milliseconds;
-    options->suppressAutoMusic    = true;
-    options->suppressTitlecard    = true;
-    //TitleCard->pfuncC             = Zone_Unknown16;
-    //SaveGame_Unknown8();
+    EntityPlayer *entity = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER1);
+    // LOBYTE(StarPost[15].objectID) = RSDK_sceneInfo->minutes;
+    // HIBYTE(StarPost[15].objectID) = RSDK_sceneInfo->seconds;
+    StarPost[15].priority      = RSDK_sceneInfo->milliseconds;
+    options->suppressAutoMusic = true;
+    options->suppressTitlecard = true;
+    // TitleCard->pfuncC             = Zone_Unknown16;
+    // SaveGame_Unknown8();
     Player->rings = entity->rings;
     RSDK.InitSceneLoad();
 }
@@ -475,18 +470,8 @@ void Zone_Unknown21()
     }
 }
 
-void Zone_EditorDraw()
-{
+void Zone_EditorDraw() {}
 
-}
+void Zone_EditorLoad() {}
 
-void Zone_EditorLoad()
-{
-
-}
-
-void Zone_Serialize()
-{
-
-}
-
+void Zone_Serialize() {}

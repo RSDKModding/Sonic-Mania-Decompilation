@@ -23,7 +23,7 @@ struct GifDecoder {
     uint prefix[4096];
 };
 
-struct Image {
+struct ImageGIF {
     FileInfo info;
     int width;
     int height;
@@ -36,9 +36,29 @@ struct Image {
     GifDecoder *decoder;
 };
 
+struct ImagePNG {
+    FileInfo info;
+    int width;
+    int height;
+    int depth;
+    int *palette;
+    byte *dataPtr;
+    byte bitDepth;
+    byte clrType;
+    byte compression;
+    byte filter;
+    byte interlaced;
+    int chunkHeader;
+    int chunkSize;
+    int chunkCRC;
+    int dataSize;
+    byte *dataBuffer;
+};
 
-bool LoadGIF(Image *image, const char *fileName, bool dontLoadData);
+bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);
+bool32 LoadPNG(ImagePNG *image, const char *fileName, bool32 loadHeader);
 
-short LoadSpriteSheet(const char *filename, Scopes scope);
+ushort LoadSpriteSheet(const char *filename, Scopes scope);
+void LoadImage(const char *filename, double displayTime, double delta, int (*callback)(void));
 
 #endif // SPRITE_H

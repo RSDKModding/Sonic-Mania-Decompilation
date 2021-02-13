@@ -4,17 +4,391 @@ ObjectPlayer *Player;
 
 void Player_Update()
 {
+    EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
+    //if (!User.CheckDLC(DLC_PLUS) && entity->characterID > ID_KNUCKLES)
+    //    Player_ChangeCharacter(entity);
 
+    if (entity->inputState2)
+        entity->inputState2();
+
+    if (entity->inputState)
+        entity->inputState();
+    if (entity->type == Player->objectID) {
+        EntityCamera *camera = entity->camera;
+        if (camera) {
+            /*if (entity->scrollDelay > 0) {
+                entity->scrollDelay--;
+                if (!entity->scrollDelay)
+                    camera->state = Camera_Unknown8;
+            }
+            else if (entity->state != PlayerState_LookUp && entity->state != PlayerState_Crouch) {
+                if (camera->lookPos.y > 0) {
+                    camera->lookPos.y -= 2;
+                }
+                else if (v6 < 0) {
+                    camera->lookPos.y += 2;
+                }
+            }*/
+        }
+
+        if (entity->invincibleTimer) {
+            if (entity->invincibleTimer <= 0) {
+                entity->invincibleTimer++;
+            }
+            else {
+                entity->invincibleTimer--;
+                if (!entity->invincibleTimer) {
+                    //Player_ApplyShieldEffect(entity);
+                    if (options->gameMode != MODE_ENCORE || !entity->sidekick) {
+                        EntityPlayer *player = NULL;
+                        bool32 flag      = false;
+                        while (RSDK.GetActiveObjects(Player->objectID, (Entity**)&player)) {
+                            if (player->invincibleTimer > 0)
+                                flag = false;
+                        }
+                        //if (flag)
+                        //    Music_Unknown6(1, 1);
+                    }
+                }
+            }
+        }
+
+        if (entity->speedShoesTimer > 0) {
+            entity->speedShoesTimer--;
+            if (!entity->speedShoesTimer) {
+                //Player_ChangePhysicsState(entity);
+                EntityPlayer *player = NULL;
+                bool32 flag          = false;
+                while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+                    if (player->speedShoesTimer > 0)
+                        flag = false;
+                }
+                //if (flag)
+                //    Music_Unknown6(2, 1);
+            }
+        }
+
+        //if (entity->state != PlayerState_Hit) {
+        //    if (entity->blinkTimer > 0) {
+        //        entity->blinkTimer--;
+        //        entity->visible = (entity->blinkTimer & 4) == 0;
+        //    }
+        //}
+
+        //if (entity->characterID == ID_RAY && entity->state != PlayerState_RayGlide && !entity->field_1F0) {
+        //    Player->raySwoopTimer = 0;
+        //    Player->rayDiveTimer  = 0;
+        //}
+
+        if (entity->uncurlTimer > 0)
+            entity->uncurlTimer--;
+
+        //Player_HandleSuperPalette();
+        //if (entity->characterID == ID_TAILS && entity->state != PlayerState_TailsFlight && entity->glideSpeedStore)
+        //    entity->glideSpeedStore = 0;
+       
+        if (entity->killFlagA == 3 || entity->killFlagB == 3)
+            entity->hurtFlag = 1;
+
+        entity->killFlagA = 0;
+        entity->killFlagB = 0;
+        if (entity->collisionLayers & Zone->moveID) {
+            TileLayer* move             = RSDK.GetSceneLayer(Zone->moveLayer);
+            move->position.x = -entity->field_194.x >> 16;
+            move->position.y            = -entity->field_194.y >> 16;
+        }
+
+        //if (entity->field_1EC)
+        //    entity->state = Player_Unknown8;
+        //if (entity->forceTransform)
+        //    entity->state = PlayerState_Transform;
+
+        if (entity->state)
+            entity->state();
+
+        if (entity->type == Player->objectID) {
+            entity->flailing = 0;
+            entity->flipY    = 0;
+            if (entity->outerbox) {
+                entity->groundedStore = entity->onGround;
+                RSDK.ProcessTileCollisions(entity, entity->outerbox, entity->innerbox);
+            }
+            else {
+                entity->outerbox      = RSDK.GetHitbox(&entity->playerAnimData, 0);
+                entity->innerbox      = RSDK.GetHitbox(&entity->playerAnimData, 1);
+                entity->groundedStore = entity->onGround;
+                RSDK.ProcessTileCollisions(entity, entity->outerbox, entity->innerbox);
+                entity->outerbox = 0;
+            }
+            entity->collisionLayers &= ~Zone->moveID;
+            if (entity->onGround && !entity->collisionMode)
+                entity->killFlagB |= 1;
+        }
+    }
 }
 
 void Player_LateUpdate()
 {
+    EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
+    //if (entity->superState == 1 && entity->state != PlayerState_Transform)
+    //    Player_CheckGoSuper((EntityPlayer *)RSDK_sceneInfo->entity, 127);
+    //if (entity->state == PlayerState_FlyCarried) {
+    //    entity->leaderPosition.x         = entity->position.x >> 0x10 << 0x10;
+    //    entity->leaderPosition.y         = entity->position.y >> 0x10 << 0x10;
+    //}
 
+    if (entity->hurtFlag) {
+        entity->maxGlideSpeed = 0;
+        //if (!entity->sidekick)
+        //    RSDK_CopyEntity(&Zone->data[1114], entity, 0);
+        if (entity->sidekick == 1 || options->gameMode == MODE_COMPETITION || options->gameMode == 1) {
+            if (entity->invincibleTimer > 1)
+                entity->invincibleTimer = 1;
+            if (entity->speedShoesTimer > 1)
+                entity->speedShoesTimer = 1;
+        }
+        else {
+            entity->invincibleTimer = 0;
+            entity->speedShoesTimer = 0;
+        }
+        if (entity->gravityStrength <= 1)
+            entity->direction |= FLIP_Y;
+        else
+            entity->direction &= FLIP_X;
+        entity->visible        = 1;
+        entity->onGround       = 0;
+        entity->groundVel      = 0;
+        entity->velocity.x     = 0;
+        entity->stateUnknown            = 0;
+        entity->stateDraw           = 0;
+        entity->interaction    = 0;
+        entity->tileCollisions = 0;
+        if (options->gameMode != MODE_COMPETITION)
+            entity->priority = ACTIVE_ALWAYS;
+        entity->shield     = 0;
+        entity->killFlagA  = 0;
+        entity->killFlagB  = 0;
+        entity->underwater = 0;
+        //Player_ChangePhysicsState(entity);
+        Entity* powerup = RSDK.GetObjectByID((unsigned __int16)(Player->playerCount + RSDK.GetEntityID(entity)));
+        RSDK.DestroyEntity(powerup, 0, 0);
+        if (entity->hurtFlag == 1) {
+            RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
+        }
+        else if (entity->hurtFlag != 2) {
+            if (entity->hurtFlag == 3) {
+                entity->hurtFlag        = 0;
+                entity->gravityStrength = 0x1000;
+                entity->velocity.y = 0;
+                RSDK.PlaySFX(*(unsigned __int16 *)&Water[42].priority, 0, 255);
+                //entity->state = PlayerState_Drown;
+                if (!entity->sidekick) {
+                    if (options->gameMode == MODE_COMPETITION) {
+                        //Music_Unknown6(8, 0);
+                    }
+                    else if (options->gameMode != MODE_ENCORE) {
+                        RSDK_sceneInfo->timeEnabled = false;
+
+                        if (entity->camera) {
+                            entity->scrollDelay   = 2;
+                            //entity->camera->state = NULL;
+                        }
+                    }
+                    else {
+                        EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER2);
+                        if (options->stock == 0 && !sidekick->type) {
+                            RSDK_sceneInfo->timeEnabled = false;
+                        }
+
+                        if (entity->camera) {
+                            entity->scrollDelay   = 2;
+                            //entity->camera->state = NULL;
+                        }
+                    }
+                }
+            }
+            if (entity->camera) {
+                entity->scrollDelay = 2;
+                //entity->camera->state = NULL;
+            }
+        }
+        else if (entity->hurtFlag == 2) {
+            entity->hurtFlag   = 0;
+            entity->velocity.y = -0x68000;
+            //entity->state      = PlayerState_Die;
+            if ((entity->drawFX & FX_SCALE) == 0 || entity->scale.x == 0x200)
+                entity->drawOrder = Zone->uiDrawLow;
+            if (entity->sidekick) {
+                if (entity->camera) {
+                    entity->scrollDelay   = 2;
+                    //entity->camera->state = NULL;
+                }
+            }
+            else if (options->gameMode == MODE_ENCORE) {
+                EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER2);
+                if (options->stock == 0 && !sidekick->type) {
+
+                    if (entity->camera) {
+                        entity->scrollDelay   = 2;
+                        //entity->camera->state = NULL;
+                    }
+                }
+            }
+            else if (options->gameMode == MODE_COMPETITION) {
+                if (entity->camera) {
+                    entity->scrollDelay   = 2;
+                    //entity->camera->state = NULL;
+                }
+            }
+            else {
+                RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                RSDK_sceneInfo->timeEnabled = false;
+                if (entity->camera) {
+                    entity->scrollDelay   = 2;
+                    //entity->camera->state = NULL;
+                }
+            }
+        }
+    }
+
+    if (entity->onGround) {
+        if (entity->stateUnknown) {
+            entity->state    = entity->stateUnknown;
+            entity->stateUnknown = NULL;
+            if (entity->sidekick) {
+                EntityPlayer *player = (EntityPlayer*)RSDK.GetObjectByID(SLOT_PLAYER1);
+                player->scoreBonus = 0;
+            }
+            else {
+                EntityPlayer *player = entity;
+                player->scoreBonus = 0;
+            }
+        }
+        if (entity->camera) {
+            //if (entity->playerAnimData.animationID == ANI_JUMP)
+            //    entity->camera->adjustY = entity->cameraOffset;
+            //else
+            //    entity->camera->adjustY = 0;
+        }
+    }
+    else {
+        if (entity->stateDraw) {
+            entity->state     = entity->stateDraw;
+            entity->stateDraw = NULL;
+        }
+    }
+
+    if (entity->tailSpriteIndex != 0xFFFF) {
+        switch (entity->playerAnimData.animationID) {
+            case ANI_IDLE:
+            case ANI_BORED1:
+            case ANI_LOOKUP:
+            case ANI_CROUCH:
+                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 0, &entity->tailSpriteAnimData, 0, 0);
+                entity->tailDirection = (unsigned __int8)entity->direction;
+                entity->tailRotation  = entity->rotation;
+                break;
+            case ANI_JUMP:
+                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 1, &entity->tailSpriteAnimData, 0, 0);
+                if (entity->onGround) {
+                    entity->tailRotation  = entity->rotation;
+                    entity->tailDirection = entity->groundVel <= 0;
+                }
+                else {
+                    entity->tailRotation = RSDK.ATan2(entity->velocity.x, entity->velocity.y) << 1;
+                    if (entity->direction == FLIP_X)
+                        entity->tailRotation = (entity->tailRotation - 256) & 0x1FF;
+                    entity->tailDirection = entity->direction;
+                }
+                break;
+            case ANI_SKID:
+            case ANI_PUSH:
+            case ANI_HANG:
+                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 3, &entity->tailSpriteAnimData, 0, 0);
+                entity->tailDirection = entity->direction;
+                break;
+            case ANI_SPINDASH:
+                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 2, &entity->tailSpriteAnimData, 0, 0);
+                entity->tailDirection = entity->direction;
+                break;
+            case ANI_HANGMOVE:
+                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 4, &entity->tailSpriteAnimData, 0, 0);
+                entity->tailDirection = entity->direction;
+                break;
+            case ANI_PULLEYHOLD:
+                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 5, &entity->tailSpriteAnimData, 0, 0);
+                entity->tailDirection = entity->direction;
+                if (entity->tailDirection)
+                    entity->tailRotation = entity->rotation + 32;
+                else
+                    entity->tailRotation = entity->rotation - 32;
+                break;
+            default:
+                RSDK.SetSpriteAnimation(-1, 0, &entity->tailSpriteAnimData, 0, 0);
+                break;
+        }
+        RSDK.ProcessAnimation(&entity->tailSpriteAnimData);
+    }
+    RSDK.ProcessAnimation(&entity->playerAnimData);
 }
 
 void Player_StaticUpdate()
 {
+    if (Player->field_A70 > 0) {
+        RSDK.GetObjectByID(SLOT_PLAYER1);
+        EntityHUD *hud = NULL;
+        if (RSDK.GetObjects(HUD->objectID, (Entity**)&hud)) {
+            RSDK.NextForEachLoop();
+            // if (hud)
+            //    *(_DWORD *)&hud[3].priority = 1;
+        }
+        --Player->field_A70;
+    }
 
+    bool flying = false;
+    bool tired  = false;
+    if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+        EntityPlayer *player = NULL;
+        if (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+            do {
+                if (player->characterID == ID_TAILS) {
+                    int anim = player->playerAnimData.animationID;
+                    if (anim == ANI_FLY || anim == ANI_FLYLIFT)
+                        flying = true;
+                    if (anim == ANI_FLYTIRED || anim == ANI_FLYLIFTTIRED)
+                        tired = true;
+                }
+            } while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player));
+
+            if (flying) {
+                if (!Player->playingFlySFX) {
+                    RSDK.PlaySFX(Player->sfx_Flying, 1, 255);
+                    Player->playingFlySFX = true;
+                }
+            }
+        }
+    }
+    else if (Player->playingFlySFX) {
+        RSDK.StopSFX(Player->sfx_Flying);
+        Player->playingFlySFX = false;
+    }
+
+    if (tired && !Player->playingTiredSFX) {
+        RSDK.PlaySFX(Player->sfx_Tired, 1, 255);
+        Player->playingTiredSFX = true;
+    }
+    else if (Player->playingTiredSFX) {
+        RSDK.StopSFX(Player->sfx_Tired);
+        Player->playingTiredSFX = false;
+    }
+
+    Player->raySwoopTimer -= 8;
+    if (Player->raySwoopTimer < 0)
+        Player->raySwoopTimer = 0;
+
+    Player->rayDiveTimer -= 16;
+    if (Player->rayDiveTimer < 0)
+        Player->rayDiveTimer = 0;
 }
 
 void Player_Draw()
@@ -93,7 +467,7 @@ void Player_Create(void* data)
         if (RSDK_sceneInfo->entitySlot && options->gameMode != MODE_COMPETITION) {
             if (RSDK_sceneInfo->entitySlot != 1 || options->gameMode != MODE_TIMEATTACK) {
                 RSDK.Unknown102(entity->controllerID, -1);
-                //entity->inputStatus = (void (*)(void))Player_GetP2Inputs;
+                //entity->inputState = (void (*)(void))Player_GetP2Inputs;
                 entity->sidekick    = 1;
             }
             else {
@@ -101,7 +475,7 @@ void Player_Create(void* data)
             }
         }
         else {
-            //entity->inputStatus = (void (*)(void))Player_GetP1Inputs;
+            //entity->inputState = (void (*)(void))Player_GetP1Inputs;
         }
         RSDK_stickL[entity->controllerID].unknown = 0.30000001;
         entity->rings                             = Player->rings;

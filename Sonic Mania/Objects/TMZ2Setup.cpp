@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectTMZ2Setup TMZ2Setup;
+ObjectTMZ2Setup *TMZ2Setup;
 
 void TMZ2Setup_Update()
 {

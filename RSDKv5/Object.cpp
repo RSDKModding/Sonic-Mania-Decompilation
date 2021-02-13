@@ -193,6 +193,7 @@ void InitObjects()
 {
     sceneInfo.entitySlot = 0;
     sceneInfo.createSlot = ENTITY_COUNT - 0x100;
+
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         if (objectList[stageObjectIDs[o]].stageLoad)
             objectList[stageObjectIDs[o]].stageLoad();
@@ -203,6 +204,7 @@ void InitObjects()
         sceneInfo.entity     = &objectEntityList[e];
         if (sceneInfo.entity->type) {
             if (objectList[stageObjectIDs[sceneInfo.entity->type]].create) {
+                sceneInfo.entity->interaction = true;
                 objectList[stageObjectIDs[sceneInfo.entity->type]].create(NULL);
             }
         }
@@ -533,7 +535,7 @@ void ProcessObjectDrawLists()
             for (int t = 0; t < LAYER_COUNT; ++t) {
                 byte drawOrder = tileLayers[t].drawLayer[s];
                 if (drawOrder < LAYER_COUNT)
-                    drawLayers[t].layerDrawList[drawLayers[t].layerCount++] = drawOrder;
+                    drawLayers[drawOrder].layerDrawList[drawLayers[drawOrder].layerCount++] = t;
             }
 
             sceneInfo.currentDrawGroup = 0;
@@ -583,6 +585,35 @@ void ProcessObjectDrawLists()
                         }
                     }
                 }
+
+                /*v29 = 0;
+                if (ScreenWidth < 0)
+                    v29 = ScreenWidth;
+                ScreenClipX1 = v29;
+                v30          = 0;
+                if ((ScreenHeight & 0x80000000) != 0)
+                    v30 = ScreenHeight;
+                ScreenClipY1 = v30;
+
+                if (currentScreen->width >= 0) {
+                    v31 = ScreenWidth;
+                    if (currentScreen->width < ScreenWidth)
+                        v31 = currentScreen->width;
+                    ScreenClipX2 = v31;
+                }
+                else {
+                    ScreenClipX2 = 0;
+                }
+
+                if (currentScreen->height >= 0) {
+                    v32 = ScreenHeight;
+                    if (currentScreen->height < ScreenHeight)
+                        v32 = currentScreen->height;
+                    ScreenClipY2 = v32;
+                }
+                else {
+                    ScreenClipY2 = 0;
+                }*/
 
                 sceneInfo.currentDrawGroup++;
             }
