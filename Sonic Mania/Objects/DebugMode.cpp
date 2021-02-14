@@ -40,7 +40,7 @@ void DebugMode_Update()
     }
     else if (RSDK_controller[1].keyX.press == 1) {
         EntityPlayer *player        = (EntityPlayer *)RSDK_sceneInfo->entity;
-        player->type               = Player->objectID;
+        player->objectID               = Player->objectID;
         player->groundVel          = 0;
         player->velocity.x         = 0;
         player->velocity.y         = 0;
@@ -104,7 +104,7 @@ void DebugMode_Draw()
 void DebugMode_Create(void* data)
 {
     EntityDebugMode *entity = (EntityDebugMode *)RSDK_sceneInfo->entity;
-    entity->priority        = ACTIVE_NORMAL;
+    entity->active        = ACTIVE_NORMAL;
     entity->visible         = true;
 }
 

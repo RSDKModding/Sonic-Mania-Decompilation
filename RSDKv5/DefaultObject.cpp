@@ -23,6 +23,7 @@ void DefaultObject_Update()
 
 void DefaultObject_Create(void* data)
 {
-    sceneInfo.entity->priority  = ACTIVE_ALWAYS;
+    sceneInfo.entity->active  = ACTIVE_ALWAYS;
+    DefaultObject->active  = ACTIVE_ALWAYS;
 }
 

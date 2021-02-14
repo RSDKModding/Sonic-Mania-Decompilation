@@ -5,12 +5,18 @@
 
 // Object Class
 struct ObjectAnimalHBH : Object{
-
+    int palID;
+    int palCnt;
+    ushort animalHBHSprite;
+    ushort silhouetteSprite;
 };
 
 // Entity Class
 struct EntityAnimalHBH : Entity {
-
+    byte type;
+    int timer;
+    EntityAnimationData animalHBHData;
+    EntityAnimationData silhouetteData;
 };
 
 // Object Struct

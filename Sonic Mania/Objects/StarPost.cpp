@@ -51,7 +51,7 @@ void StarPost_Create(void* data)
         if (!RSDK_sceneInfo->inEditor) {
             entity->visible       = true;
             entity->drawOrder     = Zone->drawOrderLow;
-            entity->priority      = ACTIVE_BOUNDS;
+            entity->active      = ACTIVE_BOUNDS;
             entity->updateRange.x = 0x400000;
             entity->updateRange.y = 0x400000;
             entity->state         = StarPost_State_Idle;
@@ -186,7 +186,7 @@ void StarPost_CheckBonusStageEntry()
     if (++entity->timer2 == 600) {
         entity->timer2        = 0;
         entity->starTimer     = 0;
-        entity->priority = ACTIVE_BOUNDS;
+        entity->active = ACTIVE_BOUNDS;
     }
     entity->starData.frameID  = (entity->starAngle >> 3) & 3;
     entity->starHitbox.left   = -(entity->starOffset >> 2);
@@ -333,7 +333,7 @@ void StarPost_CheckCollisions()
             entity->ballData.animationSpeed = 0;
         }
         entity->activated |= 1 << playerSlot;
-        entity->priority = ACTIVE_NORMAL;
+        entity->active = ACTIVE_NORMAL;
         RSDK.PlaySFX(StarPost->sfx_StarPost, 0, 255);
     }
 }
@@ -389,7 +389,7 @@ void StarPost_State_BallSpin()
         entity->ballSpeed               = 0;
         entity->angle              = 256;
         if (entity->starTimer == 0)
-            entity->priority = ACTIVE_BOUNDS;
+            entity->active = ACTIVE_BOUNDS;
     }
 
     if (entity->starTimer > 0)

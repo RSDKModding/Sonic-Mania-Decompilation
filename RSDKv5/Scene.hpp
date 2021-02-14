@@ -10,7 +10,12 @@
 
 #define CPATH_COUNT (2)
 
-extern byte tilesetGFXData[TILESET_SIZE];
+enum LayerTypes {
+    LAYER_HSCROLL,
+    LAYER_VSCROLL,
+    LAYER_ROTOZOOM,
+    LAYER_BASIC,
+};
 
 struct SceneListInfo {
     uint hash[4];
@@ -54,11 +59,11 @@ struct SceneInfo {
 };
 
 struct ScrollInfo {
+    int unknown;
     int parallaxFactor;
     int scrollSpeed;
     int scrollPos;
-    int behaviour;
-    int deform;
+    bool32 deform;
 };
 
 struct ScanlineInfo {
@@ -78,9 +83,10 @@ struct TileLayer {
     int parallaxFactor;
     int scrollSpeed;
     int scrollPos;
-    int angle;
-    int field_24;
-    byte field_28[0x2000];
+    int deformationOffset;
+    int deformationOffsetW;
+    int deformationData[0x400];
+    int deformationDataW[0x400];
     void (*scanlineCallback)(ScanlineInfo *);
     ushort scrollInfoCount;
     char field_202E;
@@ -113,7 +119,7 @@ extern char currentSceneFolder[0x10];
 
 extern SceneInfo sceneInfo;
 
-extern byte tilesetGFXData[TILESET_SIZE];
+extern byte tilesetGFXData[TILESET_SIZE * 4];
 
 void LoadScene();
 void LoadSceneFile();

@@ -59,6 +59,6 @@ bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);
 bool32 LoadPNG(ImagePNG *image, const char *fileName, bool32 loadHeader);
 
 ushort LoadSpriteSheet(const char *filename, Scopes scope);
-void LoadImage(const char *filename, double displayTime, double delta, int (*callback)(void));
+bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void));
 
 #endif // SPRITE_H

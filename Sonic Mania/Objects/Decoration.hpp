@@ -5,12 +5,17 @@
 
 // Object Class
 struct ObjectDecoration : Object{
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityDecoration : Entity {
-
+    EntityAnimationData data;
+    byte type;
+    int rotSpeed;
+    Vector2 repeatTimes;
+    Vector2 repeatSpacing;
+    bool32 tmzFlag;
 };
 
 // Object Struct
@@ -28,6 +33,6 @@ void Decoration_EditorLoad();
 void Decoration_Serialize();
 
 // Extra Entity Functions
-
+void Decoration_DrawSprite();
 
 #endif //!OBJ_DECORATION_H

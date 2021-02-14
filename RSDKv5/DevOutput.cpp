@@ -44,7 +44,7 @@ void DevOutput_Draw()
 void DevOutput_Create(void* source)
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
-    entity->priority        = ACTIVE_ALWAYS;
+    entity->active        = ACTIVE_ALWAYS;
     entity->visible         = 1;
     entity->field_3C        = 1;
     entity->drawOrder       = 15;

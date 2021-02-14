@@ -38,7 +38,7 @@ void Ring_Create(void *data)
     }
 
     if (data) {
-        entity->priority = ACTIVE_NORMAL;
+        entity->active = ACTIVE_NORMAL;
         RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &entity->animData, 1, 0);
     }
     else {
@@ -48,7 +48,7 @@ void Ring_Create(void *data)
         entity->amplitude.y >>= 10;
         int ax           = entity->amplitude.x;
         int ay           = entity->amplitude.y;
-        entity->priority = ACTIVE_BOUNDS;
+        entity->active = ACTIVE_BOUNDS;
         switch (entity->moveType) {
             case 1:
                 if (ax < 0)
@@ -83,7 +83,7 @@ void Ring_Create(void *data)
             case 4:
                 entity->updateRange.x = 0x400000;
                 entity->updateRange.y = 0x400000;
-                entity->priority      = 0;
+                entity->active      = 0;
                 entity->state         = Ring_State_Track;
                 entity->stateDraw     = Ring_StateDraw_Oscillating;
                 break;
@@ -222,7 +222,7 @@ void Ring_State_Big()
             (EntityRing *)RSDK.SpawnEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(-x, x), entity->position.y + RSDK.Rand(-y, y));
         sparkle->state     = Ring_State_Sparkle;
         sparkle->stateDraw = Ring_StateDraw_Sparkle;
-        sparkle->priority  = 2;
+        sparkle->active  = 2;
         sparkle->visible   = 0;
         RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &sparkle->animData, true, 0);
         int frameCount = sparkle->animData.frameCount;
@@ -500,7 +500,7 @@ void Ring_Collect()
             entity->offset.x     = 0;
             entity->state        = Ring_State_Attract;
             entity->stateDraw    = Ring_StateDraw_Normal;
-            entity->priority     = ACTIVE_NORMAL;
+            entity->active     = ACTIVE_NORMAL;
             entity->storedPlayer = player;
             return RSDK.NextForEachLoop();
         }
@@ -539,7 +539,7 @@ void Ring_Collect()
             (EntityRing *)RSDK.SpawnEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(min, max), entity->position.y + RSDK.Rand(min, max));
         sparkle->state     = Ring_State_Sparkle;
         sparkle->stateDraw = Ring_StateDraw_Sparkle;
-        sparkle->priority  = 2;
+        sparkle->active  = 2;
         sparkle->visible   = 0;
         if (entity->drawOrder == 1)
             sparkle->drawOrder = 1;
@@ -556,7 +556,7 @@ void Ring_Collect()
         sparkle->timer                   = 2 * i++;
     }
     RSDK.DestroyEntity(entity, 0, 0);
-    entity->priority = -1;
+    entity->active = -1;
     return RSDK.NextForEachLoop();
 }
 void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)

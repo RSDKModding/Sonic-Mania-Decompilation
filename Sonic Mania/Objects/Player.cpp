@@ -13,7 +13,7 @@ void Player_Update()
 
     if (entity->inputState)
         entity->inputState();
-    if (entity->type == Player->objectID) {
+    if (entity->objectID == Player->objectID) {
         EntityCamera *camera = entity->camera;
         if (camera) {
             /*if (entity->scrollDelay > 0) {
@@ -106,7 +106,7 @@ void Player_Update()
         if (entity->state)
             entity->state();
 
-        if (entity->type == Player->objectID) {
+        if (entity->objectID == Player->objectID) {
             entity->flailing = 0;
             entity->flipY    = 0;
             if (entity->outerbox) {
@@ -164,7 +164,7 @@ void Player_LateUpdate()
         entity->interaction    = 0;
         entity->tileCollisions = 0;
         if (options->gameMode != MODE_COMPETITION)
-            entity->priority = ACTIVE_ALWAYS;
+            entity->active = ACTIVE_ALWAYS;
         entity->shield     = 0;
         entity->killFlagA  = 0;
         entity->killFlagB  = 0;
@@ -180,7 +180,7 @@ void Player_LateUpdate()
                 entity->hurtFlag        = 0;
                 entity->gravityStrength = 0x1000;
                 entity->velocity.y = 0;
-                RSDK.PlaySFX(*(unsigned __int16 *)&Water[42].priority, 0, 255);
+                RSDK.PlaySFX(*(unsigned __int16 *)&Water[42].active, 0, 255);
                 //entity->state = PlayerState_Drown;
                 if (!entity->sidekick) {
                     if (options->gameMode == MODE_COMPETITION) {
@@ -196,7 +196,7 @@ void Player_LateUpdate()
                     }
                     else {
                         EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER2);
-                        if (options->stock == 0 && !sidekick->type) {
+                        if (options->stock == 0 && !sidekick->objectID) {
                             RSDK_sceneInfo->timeEnabled = false;
                         }
 
@@ -226,7 +226,7 @@ void Player_LateUpdate()
             }
             else if (options->gameMode == MODE_ENCORE) {
                 EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER2);
-                if (options->stock == 0 && !sidekick->type) {
+                if (options->stock == 0 && !sidekick->objectID) {
 
                     if (entity->camera) {
                         entity->scrollDelay   = 2;
@@ -455,7 +455,7 @@ void Player_Create(void* data)
         entity->sensorX[2]          = 0;
         entity->sensorX[3]          = -0x50000;
         entity->sensorX[4]          = -0xA0000;
-        entity->priority       = ACTIVE_NORMAL;
+        entity->active       = ACTIVE_NORMAL;
         entity->tileCollisions = true;
         entity->visible        = true;
         entity->drawOrder      = Zone->playerDrawLow;
@@ -542,7 +542,7 @@ void Player_StageLoad()
         options->playerID += 1024;
     }
     Player->playerCount = 0;
-    Player->priority    = ACTIVE_ALWAYS;
+    Player->active    = ACTIVE_ALWAYS;
     if (options->gameMode == MODE_COMPETITION)
         Player_LoadSpritesVS();
     else
@@ -671,7 +671,7 @@ void Player_LoadSprites()
         for (int i = 0; i < 0x10; ++i) {
             Player->flyCarryPositions[i] = entity->position;
         }
-        sidekick->type       = Player->objectID;
+        sidekick->objectID       = Player->objectID;
         sidekick->position.x = entity->position.x;
         sidekick->position.y = entity->position.y;
 

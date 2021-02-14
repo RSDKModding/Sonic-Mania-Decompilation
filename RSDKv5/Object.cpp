@@ -202,13 +202,15 @@ void InitObjects()
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entitySlot = e;
         sceneInfo.entity     = &objectEntityList[e];
-        if (sceneInfo.entity->type) {
-            if (objectList[stageObjectIDs[sceneInfo.entity->type]].create) {
+        if (sceneInfo.entity->objectID) {
+            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].create) {
                 sceneInfo.entity->interaction = true;
-                objectList[stageObjectIDs[sceneInfo.entity->type]].create(NULL);
+                objectList[stageObjectIDs[sceneInfo.entity->objectID]].create(NULL);
             }
         }
     }
+
+    SpawnEntity(DefaultObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
@@ -227,7 +229,7 @@ void ProcessObjects()
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if ((*objInfo->type)->priority == ACTIVE_ALWAYS || (*objInfo->type)->priority == ACTIVE_NORMAL) {
+        if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_NORMAL) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -239,8 +241,8 @@ void ProcessObjects()
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->type) {
-            switch (sceneInfo.entity->priority) {
+        if (sceneInfo.entity->objectID) {
+            switch (sceneInfo.entity->active) {
                 case ACTIVE_NEVER:
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;
                 case ACTIVE_ALWAYS:
@@ -294,8 +296,8 @@ void ProcessObjects()
             }
 
             if (sceneInfo.entity->inBounds) {
-                if (objectList[stageObjectIDs[sceneInfo.entity->type]].update) {
-                    objectList[stageObjectIDs[sceneInfo.entity->type]].update();
+                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].update) {
+                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].update();
                 }
 
                 if (sceneInfo.entity->drawOrder < DRAWLAYER_COUNT)
@@ -317,7 +319,7 @@ void ProcessObjects()
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
             typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
-            typeGroups[sceneInfo.entity->type].entries[typeGroups[sceneInfo.entity->type].entryCount++] = e; //type-based slots
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; //type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; //extra slots
             }
@@ -329,8 +331,8 @@ void ProcessObjects()
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds) {
-            if (objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate) {
-                objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate();
+            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate) {
+                objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
             }
         }
         sceneInfo.entitySlot++;
@@ -344,7 +346,7 @@ void ProcessPausedObjects()
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if ((*objInfo->type)->priority == ACTIVE_ALWAYS || (*objInfo->type)->priority == ACTIVE_PAUSED) {
+        if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -356,10 +358,10 @@ void ProcessPausedObjects()
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->type) {
-            if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
-                if (objectList[stageObjectIDs[sceneInfo.entity->type]].update) {
-                    objectList[stageObjectIDs[sceneInfo.entity->type]].update();
+        if (sceneInfo.entity->objectID) {
+            if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
+                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].update) {
+                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].update();
                 }
 
                 if (sceneInfo.entity->drawOrder < DRAWLAYER_COUNT)
@@ -381,7 +383,7 @@ void ProcessPausedObjects()
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
             typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
-            typeGroups[sceneInfo.entity->type].entries[typeGroups[sceneInfo.entity->type].entryCount++] = e; // type-based slots
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
@@ -392,9 +394,9 @@ void ProcessPausedObjects()
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
-            if (objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate) {
-                objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate();
+        if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
+            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate) {
+                objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
             }
         }
         sceneInfo.entitySlot++;
@@ -408,7 +410,7 @@ void ProcessFrozenObjects()
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
-        if ((*objInfo->type)->priority == ACTIVE_ALWAYS || (*objInfo->type)->priority == ACTIVE_PAUSED) {
+        if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
@@ -420,8 +422,8 @@ void ProcessFrozenObjects()
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
-        if (sceneInfo.entity->type) {
-            switch (sceneInfo.entity->priority) {
+        if (sceneInfo.entity->objectID) {
+            switch (sceneInfo.entity->active) {
                 case ACTIVE_NEVER:
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;
                 case ACTIVE_ALWAYS:
@@ -476,9 +478,9 @@ void ProcessFrozenObjects()
             }
 
             if (sceneInfo.entity->inBounds) {
-                if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
-                    if (objectList[stageObjectIDs[sceneInfo.entity->type]].update) {
-                        objectList[stageObjectIDs[sceneInfo.entity->type]].update();
+                if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
+                    if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].update) {
+                        objectList[stageObjectIDs[sceneInfo.entity->objectID]].update();
                     }
                 }
 
@@ -501,7 +503,7 @@ void ProcessFrozenObjects()
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
             typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
-            typeGroups[sceneInfo.entity->type].entries[typeGroups[sceneInfo.entity->type].entryCount++] = e; // type-based slots
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
@@ -513,9 +515,9 @@ void ProcessFrozenObjects()
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds) {
-            if (sceneInfo.entity->priority == ACTIVE_ALWAYS || sceneInfo.entity->priority == ACTIVE_PAUSED) {
-                if (objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate) {
-                    objectList[stageObjectIDs[sceneInfo.entity->type]].lateUpdate();
+            if (sceneInfo.entity->active == ACTIVE_ALWAYS || sceneInfo.entity->active == ACTIVE_PAUSED) {
+                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate) {
+                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
                 }
             }
         }
@@ -562,8 +564,8 @@ void ProcessObjectDrawLists()
                         validDraw            = false;
                         sceneInfo.entity     = &objectEntityList[list->entries[i]];
                         if (sceneInfo.entity->visible) {
-                            if (objectList[stageObjectIDs[sceneInfo.entity->type]].draw) {
-                                objectList[stageObjectIDs[sceneInfo.entity->type]].draw();
+                            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
+                                objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
                             }
                             sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
                         }
@@ -571,16 +573,16 @@ void ProcessObjectDrawLists()
 
                     for (int i = 0; i < list->layerCount; ++i) {
                         TileLayer *layer       = &tileLayers[list->layerDrawList[i]];
-                        
+
                         if (layer->scanlineCallback)
                             layer->scanlineCallback(scanlines);
                         else
                             ProcessParallax(layer);
                         switch (layer->behaviour) {
-                            case 0: DrawLayerHScroll(layer); break;
-                            case 1: DrawLayerVScroll(layer); break;
-                            case 2: DrawLayerRotozoom(layer); break;
-                            case 3: DrawLayerBasic(layer); break;
+                            case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
+                            case LAYER_VSCROLL: DrawLayerVScroll(layer); break;
+                            case LAYER_ROTOZOOM: DrawLayerRotozoom(layer); break;
+                            case LAYER_BASIC: DrawLayerBasic(layer); break;
                             default: break;
                         }
                     }
@@ -591,7 +593,7 @@ void ProcessObjectDrawLists()
                     v29 = ScreenWidth;
                 ScreenClipX1 = v29;
                 v30          = 0;
-                if ((ScreenHeight & 0x80000000) != 0)
+                if (ScreenHeight < 0)
                     v30 = ScreenHeight;
                 ScreenClipY1 = v30;
 
@@ -617,6 +619,22 @@ void ProcessObjectDrawLists()
 
                 sceneInfo.currentDrawGroup++;
             }
+
+#if !RETRO_USE_ORIGINAL_CODE
+            if (engine.showPaletteOverlay) {
+                for (int p = 0; p < PALETTE_COUNT; ++p) {
+                    int x = (SCREEN_XSIZE - (0xF << 3));
+                    int y = (SCREEN_YSIZE - (0xF << 2));
+                    for (int c = 0; c < PALETTE_SIZE; ++c) {
+                        uint clr = GetPaletteEntry(p, c);
+
+                        DrawRectangle(x + ((c & 0xF) << 1) + ((p % (PALETTE_COUNT / 2)) * (2 * 16)),
+                                      y + ((c >> 4) << 1) + ((p / (PALETTE_COUNT / 2)) * (2 * 16)), 2, 2, clr, 0xFF, INK_NONE, true);
+                    }
+                }
+            }
+#endif
+
             currentScreen++;
             sceneInfo.currentScreenID++;
         }
@@ -645,7 +663,7 @@ int GetEntityCount(ushort type, bool32 isActive)
 
     int cnt = 0;
     for (int i = 0; i < ENTITY_COUNT; ++i) {
-        if (objectEntityList[i].type == type)
+        if (objectEntityList[i].objectID == type)
             cnt++;
     }
     return cnt;
@@ -663,7 +681,7 @@ void DestroyEntity(Entity *entity, ushort type, void *data)
             info->create(data);
             sceneInfo.entity = curEnt;
         }
-        sceneInfo.entity->type = type;
+        sceneInfo.entity->objectID = type;
     }
 }
 
@@ -681,10 +699,10 @@ void ResetEntity(ushort slotID, ushort type, void *data)
         entityPtr->interaction = true;
         objInfo->create(data);
         sceneInfo.entity = curEnt;
-        entityPtr->type  = type;
+        entityPtr->objectID  = type;
     }
     else {
-        entityPtr->type = type;
+        entityPtr->objectID = type;
     }
 }
 
@@ -706,11 +724,11 @@ void SpawnEntity(ushort type, void *data, int x, int y)
         sceneInfo.entity = entityPtr;
         objInfo->create(data);
         sceneInfo.entity    = curEnt;
-        entityPtr->type = type;
+        entityPtr->objectID = type;
     }
     else {
-        entityPtr->type = type;
-        entityPtr->priority = ACTIVE_NORMAL;
+        entityPtr->objectID = type;
+        entityPtr->active = ACTIVE_NORMAL;
         entityPtr->visible  = true;
     }
 }
@@ -725,7 +743,7 @@ bool32 GetActiveObjects(ushort group, Entity **entity)
     Entity* nextEntity = 0;
     bool flag       = 0;
     while (true) {
-        if (nextEntity && nextEntity->type == group) {
+        if (nextEntity && nextEntity->objectID == group) {
             *entity = nextEntity;
             return true;
         }
@@ -765,7 +783,7 @@ bool32 GetObjects(ushort type, Entity **entity)
         foreachStackPtr = stackPtr - 1;
         return false;
     }
-    while (nextEnt->type != type) {
+    while (nextEnt->objectID != type) {
         ++stackPtr->id;
         ++nextEnt;
         if (stackPtr->id >= ENTITY_COUNT) {

@@ -47,9 +47,14 @@ enum ActiveFlags {
     ACTIVE_RBOUNDS,
 };
 
+enum DefaultObjects {
+    TYPE_DEFAULTOBJECT = 0,
+    TYPE_DEVOUTPUT     = 1,
+};
+
 struct Object {
     short objectID;
-    byte priority;
+    byte active;
     byte field_3;
 };
 
@@ -64,13 +69,13 @@ struct Entity {
     int groundVel;
     int depth;
     ushort group;
-    ushort type;
+    ushort objectID;
     bool32 inBounds;
     int field_3C;
     bool32 tileCollisions;
     bool32 interaction;
     bool32 onGround;
-    byte priority;
+    byte active;
     byte filter;
     byte direction;
     byte drawOrder;

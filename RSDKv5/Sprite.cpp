@@ -215,9 +215,9 @@ bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader)
         byte clr[3];
         int c = 0;
         do {
-            ++c;
             ReadBytes(&image->info, clr, 3);
             image->palette[c] = (clr[0] << 16) | (clr[1] << 8) | (clr[2] << 0);
+            ++c;
         } while (c != palette_size);
 
         byte buf = ReadInt8(&image->info);
@@ -738,7 +738,7 @@ ushort LoadSpriteSheet(const char *filename, Scopes scope)
     }
 }
 
-bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*callback)(void))
+bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void))
 {
     char buffer[0x100];
     StrCopy(buffer, "Data/Images/");
@@ -748,21 +748,21 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
     MEM_ZERO(image);
 
     if (LoadPNG(&image, buffer, false)) {
-        //if (image.width == 1024 && image.height == 512)
+        // if (image.width == 1024 && image.height == 512)
         //    Engine_Unknown193(image.dataPtr);
 
-        engine.displayTime           = displayTime;
-        //engine.prevScreenShader = ShaderSettings.ShaderID;
-        engine.prevEngineMode           = sceneInfo.state;
-        //ScreenSettings.field_8  = 0.0;
-        //ShaderSettings.ShaderID = 7;
-        //ShaderSettings.field_C  = 0;
-        engine.skipCallback     = callback;
-        sceneInfo.state         = ENGINESTATE_SHOWPNG;
-        engine.imageDelta       = delta / 60.0;
+        engine.displayTime = displayTime;
+        // engine.prevScreenShader = ShaderSettings.ShaderID;
+        engine.prevEngineMode = sceneInfo.state;
+        // ScreenSettings.field_8  = 0.0;
+        // ShaderSettings.ShaderID = 7;
+        // ShaderSettings.field_C  = 0;
+        engine.skipCallback = skipCallback;
+        sceneInfo.state     = ENGINESTATE_SHOWPNG;
+        engine.imageDelta   = delta / 60.0;
 
-        image.palette           = NULL;
-        image.dataPtr           = NULL;
+        image.palette = NULL;
+        image.dataPtr = NULL;
         CloseFile(&image.info);
         return true;
     }

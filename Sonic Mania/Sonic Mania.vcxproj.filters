@@ -1754,6 +1754,15 @@
     <ClInclude Include="Objects\TimeAttackData.hpp">
       <Filter>Sources\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Palette.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Ink.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\InkWipe.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.cpp">
@@ -3491,6 +3500,15 @@
       <Filter>Sources\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Objects\TimeAttackData.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Palette.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Ink.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\InkWipe.cpp">
       <Filter>Sources\Objects</Filter>
     </ClCompile>
   </ItemGroup>

@@ -153,4 +153,22 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
     }
 }
 
+inline void CopyString(char *dest, TextInfo *info)
+{
+    if (!info->text)
+        return;
+
+    char* text = textBuffer;
+    if (dest)
+        text = dest;
+    int textLen = 0x400;
+    if (dest)
+        textLen = info->textLength;
+
+    for (int c = 0; c < textLen; ++c) {
+        *text++ = info->text[c];
+    }
+    text[textLen] = 0;
+}
+
 #endif

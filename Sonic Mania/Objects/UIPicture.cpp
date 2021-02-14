@@ -32,13 +32,13 @@ void UIPicture_Create(void* data)
     RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->data, true, entity->frameID);
     if (!RSDK_sceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
-            entity->priority  = ACTIVE_BOUNDS;
+            entity->active  = ACTIVE_BOUNDS;
             entity->visible   = 1;
             entity->drawOrder = 2;
         }
         else {
             if (RSDK.CheckStageFolder("Logos") || RSDK.CheckStageFolder("LSelect") || RSDK.CheckStageFolder("Summary"))
-                entity->priority = ACTIVE_NORMAL;
+                entity->active = ACTIVE_NORMAL;
             entity->visible   = true;
             entity->drawOrder = 2;
         }

@@ -224,6 +224,8 @@
     <ClInclude Include="Objects\IceBomba.hpp" />
     <ClInclude Include="Objects\IceSpring.hpp" />
     <ClInclude Include="Objects\ImageTrail.hpp" />
+    <ClInclude Include="Objects\Ink.hpp" />
+    <ClInclude Include="Objects\InkWipe.hpp" />
     <ClInclude Include="Objects\InvincibleStars.hpp" />
     <ClInclude Include="Objects\InvisibleBlock.hpp" />
     <ClInclude Include="Objects\ItemBox.hpp" />
@@ -321,6 +323,7 @@
     <ClInclude Include="Objects\OptionsMenu.hpp" />
     <ClInclude Include="Objects\OrbitSpike.hpp" />
     <ClInclude Include="Objects\PaintingEyes.hpp" />
+    <ClInclude Include="Objects\Palette.hpp" />
     <ClInclude Include="Objects\PaperRoller.hpp" />
     <ClInclude Include="Objects\ParallaxSprite.hpp" />
     <ClInclude Include="Objects\PathInverter.hpp" />
@@ -806,6 +809,8 @@
     <ClCompile Include="Objects\IceBomba.cpp" />
     <ClCompile Include="Objects\IceSpring.cpp" />
     <ClCompile Include="Objects\ImageTrail.cpp" />
+    <ClCompile Include="Objects\Ink.cpp" />
+    <ClCompile Include="Objects\InkWipe.cpp" />
     <ClCompile Include="Objects\InvincibleStars.cpp" />
     <ClCompile Include="Objects\InvisibleBlock.cpp" />
     <ClCompile Include="Objects\ItemBox.cpp" />
@@ -903,6 +908,7 @@
     <ClCompile Include="Objects\OptionsMenu.cpp" />
     <ClCompile Include="Objects\OrbitSpike.cpp" />
     <ClCompile Include="Objects\PaintingEyes.cpp" />
+    <ClCompile Include="Objects\Palette.cpp" />
     <ClCompile Include="Objects\PaperRoller.cpp" />
     <ClCompile Include="Objects\ParallaxSprite.cpp" />
     <ClCompile Include="Objects\PathInverter.cpp" />

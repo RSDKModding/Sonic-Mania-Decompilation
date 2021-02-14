@@ -378,11 +378,9 @@ void DevMenu_SceneSel()
     }
 
     if (controller[0].keyUp.press) {
-        if (!devMenu.timer) {
-            devMenu.option--;
-            if (off + devMenu.option < list->sceneOffsetStart) {
-                devMenu.option = list->sceneCount - 1;
-            }
+        devMenu.option--;
+        if (off + devMenu.option < list->sceneOffsetStart) {
+            devMenu.option = list->sceneCount - 1;
         }
 
         if (devMenu.option >= devMenu.scroll) {

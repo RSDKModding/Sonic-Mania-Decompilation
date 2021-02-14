@@ -574,8 +574,12 @@ void LinkGameLogicDLL(GameInfo *info)
                  IceSpring_StaticUpdate, IceSpring_Draw, IceSpring_Create, IceSpring_StageLoad, IceSpring_EditorDraw, IceSpring_EditorLoad,
                  IceSpring_Serialize);
     RSDK.CreateObject((Object**)&ImageTrail, "ImageTrail", sizeof(EntityImageTrail), sizeof(ObjectImageTrail), ImageTrail_Update, ImageTrail_LateUpdate,
-                 ImageTrail_StaticUpdate, ImageTrail_Draw, ImageTrail_Create, ImageTrail_StageLoad, ImageTrail_EditorDraw, ImageTrail_EditorLoad,
-                 ImageTrail_Serialize);
+                 ImageTrail_StaticUpdate, ImageTrail_Draw, ImageTrail_Create, ImageTrail_StageLoad, ImageTrail_EditorDraw, ImageTrail_EditorLoad, ImageTrail_Serialize);
+    RSDK.CreateObject((Object **)&Ink, "Ink", sizeof(EntityInk), sizeof(ObjectInk), Ink_Update, Ink_LateUpdate, Ink_StaticUpdate, Ink_Draw,
+                      Ink_Create, Ink_StageLoad, Ink_EditorDraw, Ink_EditorLoad, Ink_Serialize);
+    RSDK.CreateObject((Object **)&InkWipe, "InkWipe", sizeof(EntityInkWipe), sizeof(ObjectInkWipe), InkWipe_Update, InkWipe_LateUpdate,
+                      InkWipe_StaticUpdate, InkWipe_Draw, InkWipe_Create, InkWipe_StageLoad, InkWipe_EditorDraw, InkWipe_EditorLoad,
+                      InkWipe_Serialize);
     RSDK.CreateObject((Object**)&InvincibleStars, "InvincibleStars", sizeof(EntityInvincibleStars), sizeof(ObjectInvincibleStars), InvincibleStars_Update,
                  InvincibleStars_LateUpdate, InvincibleStars_StaticUpdate, InvincibleStars_Draw, InvincibleStars_Create, InvincibleStars_StageLoad,
                  InvincibleStars_EditorDraw, InvincibleStars_EditorLoad, InvincibleStars_Serialize);
@@ -837,8 +841,10 @@ void LinkGameLogicDLL(GameInfo *info)
                  OrbitSpike_StaticUpdate, OrbitSpike_Draw, OrbitSpike_Create, OrbitSpike_StageLoad, OrbitSpike_EditorDraw, OrbitSpike_EditorLoad,
                  OrbitSpike_Serialize);
     RSDK.CreateObject((Object**)&PaintingEyes, "PaintingEyes", sizeof(EntityPaintingEyes), sizeof(ObjectPaintingEyes), PaintingEyes_Update, PaintingEyes_LateUpdate,
-                 PaintingEyes_StaticUpdate, PaintingEyes_Draw, PaintingEyes_Create, PaintingEyes_StageLoad, PaintingEyes_EditorDraw,
-                 PaintingEyes_EditorLoad, PaintingEyes_Serialize);
+                 PaintingEyes_StaticUpdate, PaintingEyes_Draw, PaintingEyes_Create, PaintingEyes_StageLoad, PaintingEyes_EditorDraw, PaintingEyes_EditorLoad, PaintingEyes_Serialize);
+    RSDK.CreateObject((Object **)&Palette, "Palette", sizeof(EntityPalette), sizeof(ObjectPalette), Palette_Update,
+                      Palette_LateUpdate, Palette_StaticUpdate, Palette_Draw, Palette_Create, Palette_StageLoad,
+                      Palette_EditorDraw, Palette_EditorLoad, Palette_Serialize);
     RSDK.CreateObject((Object**)&PaperRoller, "PaperRoller", sizeof(EntityPaperRoller), sizeof(ObjectPaperRoller), PaperRoller_Update, PaperRoller_LateUpdate,
                  PaperRoller_StaticUpdate, PaperRoller_Draw, PaperRoller_Create, PaperRoller_StageLoad, PaperRoller_EditorDraw, PaperRoller_EditorLoad,
                  PaperRoller_Serialize);

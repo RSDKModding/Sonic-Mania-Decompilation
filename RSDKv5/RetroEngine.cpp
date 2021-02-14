@@ -129,7 +129,6 @@ bool processEvents()
                                 sceneInfo.state = ENGINESTATE_DEVMENU;
                                 // PauseSound();
                             }
-                            sceneInfo.state = ENGINESTATE_DEVMENU;
                         }
                         break;
                     case SDLK_F4:
@@ -154,7 +153,7 @@ bool processEvents()
                     case SDLK_F1:
                         if (engine.devMenu) {
                             sceneInfo.activeCategory = 0;
-                            sceneInfo.listPos = 0;
+                            sceneInfo.listPos        = 0;
                             sceneInfo.state   = ENGINESTATE_LOAD;
                         }
                         break;
@@ -636,7 +635,7 @@ void InitScriptSystem()
     setupFunctions();
 
     CreateObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
-                 NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
+                 DefaultObject_Update, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
     CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
     globalObjectIDs[0] = 0;

@@ -138,7 +138,7 @@ struct RSDKFunctionTable {
     void (*Unknown67)(void);
     void (*LoadStrings)(void);
     void (*Unknown68)(void);
-    void (*CopyString)(void);
+    void (*CopyString)(char *text, TextInfo *info);
     void (*Unknown69)(void);
     void (*Unknown70)(void);
     void (*Unknown71)(void);
@@ -152,7 +152,7 @@ struct RSDKFunctionTable {
     uint (*GetPaletteEntry)(byte paletteID, byte index);
     void (*SetActivePalette)(byte newActivePal, int startLine, int endLine);
     void (*CopyPalette)(byte sourcePalette, byte srcPaletteStart, byte destinationPalette, byte destPaletteStart, ushort count);
-    void (*LoadPalette)(const char *filePath, int paletteID, int startPaletteIndex, int startIndex, int endIndex);
+    void (*LoadPalette)(byte bank, char *path, ushort rowFlags);
     void (*RotatePalette)(byte palID, byte startIndex, byte endIndex, bool right);
     void (*SetLimitedFade)(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
     void (*BlendColours)(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
@@ -461,6 +461,8 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/IceBomba.hpp"
 #include "Objects/IceSpring.hpp"
 #include "Objects/ImageTrail.hpp"
+#include "Objects/Ink.hpp"
+#include "Objects/InkWipe.hpp"
 #include "Objects/InvincibleStars.hpp"
 #include "Objects/InvisibleBlock.hpp"
 #include "Objects/ItemBox.hpp"
@@ -558,6 +560,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/OptionsMenu.hpp"
 #include "Objects/OrbitSpike.hpp"
 #include "Objects/PaintingEyes.hpp"
+#include "Objects/Palette.hpp"
 #include "Objects/PaperRoller.hpp"
 #include "Objects/ParallaxSprite.hpp"
 #include "Objects/PathInverter.hpp"

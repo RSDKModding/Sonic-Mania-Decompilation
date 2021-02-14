@@ -16,28 +16,34 @@ int maskColour = 0;
 ushort *lookUpBuffer = NULL;
 
 
-void LoadPalette(const char *filePath, int paletteID, int startPaletteIndex, int startIndex, int endIndex)
+void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)
 {
-    //FileInfo info;
-    //char fullPath[0x80];
+    FileInfo info;
+    MEM_ZERO(info);
 
-    
-    // StrCopy(fullPath, "Data/Palettes/");
-    // StrAdd(fullPath, filePath);
+    char buffer[0x80];    
+    StrCopy(buffer, "Data/Palettes/");
+    StrAdd(buffer, filePath);
 
-    //if (LoadFile(fullPath, &info)) {
-        //SetFilePosition(3 * startIndex);
-        if (paletteID >= PALETTE_COUNT || paletteID < 0)
-            paletteID = 0;
-
-        byte colour[3];
-        for (int i = startIndex; i < endIndex; ++i) {
-            //FileRead(&colour, 3);
-            SetPaletteEntryInternal(paletteID, startPaletteIndex++, colour[0], colour[1], colour[2]);
+    if (LoadFile(&info, buffer)) {
+        for (int r = 0; r < 0x10; ++r) {
+            for (int r = 0; r < 0x10; ++r) {
+                if (!(rowFlags >> r & 1)) {
+                    for (int c = 0; c < 0x10; ++c) {
+                        byte red                       = ReadInt8(&info);
+                        byte green                     = ReadInt8(&info);
+                        byte blue                      = ReadInt8(&info);
+                        fullPalette[paletteID][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                    }
+                }
+                else {
+                    Seek_Cur(&info, 0x10 * (3 * sizeof(byte)));
+                }
+            }
         }
 
-        //CloseFile();
-    //}
+        CloseFile(&info);
+    }
 }
 
 void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex)
@@ -45,8 +51,8 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
     if (destPaletteID >= PALETTE_COUNT || srcPaletteA >= PALETTE_COUNT || srcPaletteB >= PALETTE_COUNT)
         return;
 
-    if (blendAmount >= PALETTE_SIZE) {
-        blendAmount = PALETTE_SIZE - 1;
+    if (blendAmount > 0xFF) {
+        blendAmount = 0xFF;
     }
 
     if (startIndex >= endIndex)
@@ -66,26 +72,27 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
 }
 
 void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int alpha, int index, int count) {
-    if (paletteID <= PALETTE_COUNT && coloursA && coloursB) {
-        if (alpha >= 0) {
-            if (alpha > 0xFF)
-                alpha = 0xFF;
-        }
-        else {
-            alpha = 0;
-        }
-        
-        byte alpha2        = 0xFF - alpha;
-        ushort *palettePtr = &fullPalette[paletteID][index];
-        for (int i = index; i < index + count; ++i) {
-            // bgrx formatted array
-            int r = alpha * coloursB[2] + alpha2 * coloursA[2];
-            int g = alpha * coloursB[1] + alpha2 * coloursA[1];
-            int b = alpha * coloursB[0] + alpha2 * coloursA[0];
-            coloursA += 4;
-            coloursB += 4;
-            *palettePtr = rIndexes[(r >> 8) & 0xFF] | gIndexes[(g >> 8) & 0xFF] | bIndexes[(b >> 8) & 0xFF];
-            ++palettePtr;
-        }
+
+    if (paletteID >= PALETTE_COUNT || !coloursA || !coloursB)
+        return;
+
+    if (alpha > 0xFF) {
+        alpha = 0xFF;
+    }
+    else if (alpha < 0) {
+        alpha = 0;
+    }
+
+    byte alpha2        = 0xFF - alpha;
+    ushort *palettePtr = &fullPalette[paletteID][index];
+    for (int i = index; i < index + count; ++i) {
+        // bgrx formatted array
+        int r = alpha * coloursB[2] + alpha2 * coloursA[2];
+        int g = alpha * coloursB[1] + alpha2 * coloursA[1];
+        int b = alpha * coloursB[0] + alpha2 * coloursA[0];
+        coloursA += 4;
+        coloursB += 4;
+        *palettePtr = rIndexes[(r >> 8) & 0xFF] | gIndexes[(g >> 8) & 0xFF] | bIndexes[(b >> 8) & 0xFF];
+        ++palettePtr;
     }
 }

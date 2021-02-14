@@ -219,7 +219,7 @@ enum FunctionTableIDs {
     FunctionTable_Unknown95,
     FunctionTable_Unknown96,
     FunctionTable_LoadVideo,
-    FunctionTable_LoadPNG,
+    FunctionTable_LoadImage,
     FunctionTable_Unknown98,
     FunctionTable_Unknown99,
     FunctionTable_Unknown100,
@@ -252,9 +252,7 @@ enum FunctionTableIDs {
 
 SKUInfo curSKU;
 
-void NullFunc() {
-
-}
+void NullFunc() {}
 
 void setupFunctions()
 {
@@ -329,7 +327,7 @@ void setupFunctions()
     userDataTable[UserdataTable_Unknown42]            = NullFunc;
     userDataTable[UserdataTable_Unknown43]            = NullFunc;
 
-    //Function Table
+    // Function Table
     functionTable[FunctionTable_InitGameOptions]              = InitGameOptions;
     functionTable[FunctionTable_CreateObject]                 = CreateObject;
     functionTable[FunctionTable_CreateObjectContainer]        = CreateObjectContainer;
@@ -424,7 +422,7 @@ void setupFunctions()
     functionTable[FunctionTable_DrawQuad]                     = DrawQuad;
     functionTable[FunctionTable_DrawTexturedQuad]             = DrawTexturedQuad;
     functionTable[FunctionTable_DrawSprite]                   = DrawSprite;
-    functionTable[FunctionTable_DrawDeformed]                  = DrawDeformedSprite;
+    functionTable[FunctionTable_DrawDeformed]                 = DrawDeformedSprite;
     functionTable[FunctionTable_DrawText]                     = DrawText;
     functionTable[FunctionTable_DrawTile]                     = DrawTile;
     functionTable[FunctionTable_CopyTile]                     = CopyTile;
@@ -482,7 +480,7 @@ void setupFunctions()
     functionTable[FunctionTable_Unknown95]                    = NullFunc; // Unknown95;
     functionTable[FunctionTable_Unknown96]                    = NullFunc; // Unknown96;
     functionTable[FunctionTable_LoadVideo]                    = NullFunc; // LoadVideo;
-    functionTable[FunctionTable_LoadPNG]                      = NullFunc; // LoadPNG;
+    functionTable[FunctionTable_LoadImage]                    = LoadImage;
     functionTable[FunctionTable_Unknown98]                    = NullFunc; // Unknown98;
     functionTable[FunctionTable_Unknown99]                    = NullFunc; // Unknown99;
     functionTable[FunctionTable_Unknown100]                   = NullFunc; // Unknown100;
@@ -511,6 +509,5 @@ void setupFunctions()
     functionTable[FunctionTable_ClearDebugValues]             = ClearDebugValues;
     functionTable[FunctionTable_SetDebugValue]                = SetDebugValue;
 }
-
 
 void LinkGameLogic(GameInfo *info) { printLog(SEVERITY_WARN, "Internal LinkGameLogic() function called, no logic will be linked"); }

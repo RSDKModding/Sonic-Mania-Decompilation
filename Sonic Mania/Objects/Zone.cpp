@@ -46,7 +46,7 @@ void Zone_Draw()
 void Zone_Create(void *data)
 {
     EntityZone *entity               = (EntityZone *)RSDK_sceneInfo->entity;
-    RSDK_sceneInfo->entity->priority = ACTIVE_ALWAYS;
+    RSDK_sceneInfo->entity->active = ACTIVE_ALWAYS;
     if (!entity->stateDraw) {
         entity->visible   = 0;
         entity->drawOrder = -1;
@@ -427,9 +427,9 @@ void Zone_Unknown16()
 void Zone_Unknown17()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER1);
-    // LOBYTE(StarPost[15].objectID) = RSDK_sceneInfo->minutes;
-    // HIBYTE(StarPost[15].objectID) = RSDK_sceneInfo->seconds;
-    StarPost[15].priority      = RSDK_sceneInfo->milliseconds;
+    StarPost->storedMinutes    = RSDK_sceneInfo->minutes;
+    StarPost->storedSeconds    = RSDK_sceneInfo->seconds;
+    StarPost->storedMS         = RSDK_sceneInfo->milliseconds;
     options->suppressAutoMusic = true;
     options->suppressTitlecard = true;
     // TitleCard->pfuncC             = Zone_Unknown16;

@@ -28,7 +28,7 @@ extern ushort* lookUpBuffer;
 
 #define PACK_RGB888(r, g, b) RGB888_TO_RGB565(r, g, b)
 
-void LoadPalette(const char *filePath, int paletteID, int startPaletteIndex, int startIndex, int endIndex);
+void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags);
 
 inline void SetActivePalette(byte newActivePal, int startLine, int endLine)
 {
@@ -40,11 +40,6 @@ inline uint GetPaletteEntry(byte paletteID, byte index)
 {
     ushort clr = fullPalette[(paletteID & 7)][index];
     return 8 * (clr & 0x1F | 4 * (clr & 0x7E0 | 8 * (clr & 0xF800)));
-}
-
-inline void SetPaletteEntryInternal(byte paletteID, byte index, byte r, byte g, byte b)
-{
-    fullPalette[paletteID][index] = bIndexes[b] | gIndexes[g] | rIndexes[r];
 }
 
 inline void SetPaletteEntry(byte paletteID, byte index, uint colour)
@@ -63,26 +58,25 @@ inline void CopyPalette(byte sourcePalette, byte srcPaletteStart, byte destinati
 {
     if (sourcePalette < PALETTE_COUNT && destinationPalette < PALETTE_COUNT) {
         for (int i = 0; i < count; ++i) {
-            fullPalette[destinationPalette][srcPaletteStart + i]   = fullPalette[sourcePalette][destPaletteStart + i];
+            fullPalette[destinationPalette][srcPaletteStart + i] = fullPalette[sourcePalette][destPaletteStart + i];
         }
     }
 }
 
 inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool right)
 {
+    ushort startClr = fullPalette[palID][endIndex];
     if (right) {
-        ushort startClr         = fullPalette[palID][endIndex];
         for (int i = endIndex; i > startIndex; --i) {
-            fullPalette[palID][i]   = fullPalette[palID][i - 1];
+            fullPalette[palID][i] = fullPalette[palID][i - 1];
         }
-        fullPalette[palID][startIndex]   = startClr;
+        fullPalette[palID][startIndex] = startClr;
     }
     else {
-        ushort startClr         = fullPalette[palID][startIndex];
         for (int i = startIndex; i < endIndex; ++i) {
-            fullPalette[palID][i]   = fullPalette[palID][i + 1];
+            fullPalette[palID][i] = fullPalette[palID][i + 1];
         }
-        fullPalette[palID][endIndex]   = startClr;
+        fullPalette[palID][endIndex] = startClr;
     }
 }
 
