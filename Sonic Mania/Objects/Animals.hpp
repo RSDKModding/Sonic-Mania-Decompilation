@@ -5,12 +5,25 @@
 
 // Object Class
 struct ObjectAnimals : Object{
-
+    int hitboxes[12];
+    int gravityStrength[12];
+    int yVelocity[12];
+    int xVelocity[12];
+    ushort spriteIndex;
+    int animalType1;
+    int animalType2;
+    bool32 hasPlatform;
+    bool32 hasBridge;
 };
 
 // Entity Class
 struct EntityAnimals : Entity {
-
+    void(*state)();
+    int delay;
+    int type;
+    int behaviour;
+    EntityAnimationData data;
+    Hitbox hitbox;
 };
 
 // Object Struct

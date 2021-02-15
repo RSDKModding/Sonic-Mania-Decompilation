@@ -210,7 +210,7 @@ void InitObjects()
         }
     }
 
-    SpawnEntity(DefaultObject->objectID, NULL, 0, 0);
+    SpawnEntity(TestObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
@@ -651,7 +651,7 @@ ushort GetObjectByName(const char *name)
         if (memcmp(hash, objectList[stageObjectIDs[o]].hash, 4 * sizeof(int)) == 0)
             return o;
     }
-    return 0xFFFF;
+    return 0;
 }
 
 int GetEntityCount(ushort type, bool32 isActive)

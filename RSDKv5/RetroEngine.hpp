@@ -94,6 +94,7 @@ enum EngineStates {
 
 #include "DefaultObject.hpp"
 #include "DevOutput.hpp"
+#include "TestObject.hpp"
 
 struct RetroEngine {
     RetroEngine() {}

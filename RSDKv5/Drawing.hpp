@@ -217,8 +217,8 @@ void DrawDeformedSprite(ushort spriteIndex, InkEffects inkEffect, int alpha);
 void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
 
-void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8, int a9,
-              bool32 ScreenRelative);
+void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags align, int spacing, int a8,
+              Vector2 *charPositions, bool32 screenRelative);
 void DrawDevText(int x, const char *text, int y, int align, uint colour);
 
 #endif // !DRAWING_H

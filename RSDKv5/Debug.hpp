@@ -70,6 +70,7 @@ struct DevMenu {
     int stateStore;
     int winScale;
     int winAspect;
+    bool32 windowed;
 };
 
 extern DevMenu devMenu;
@@ -81,7 +82,7 @@ void DevMenu_Options();
 void DevMenu_VideoOptions();
 void DevMenu_AudioOptions();
 void DevMenu_InputOptions();
-void DevMenu_ButtonsOptions();
+void DevMenu_MappingsOptions();
 void DevMenu_DebugOptions();
 
 #endif

@@ -5,12 +5,14 @@
 
 // Object Class
 struct ObjectERZSetup : Object{
-
+    int aniTileTimer;
+    int timer;
+    ushort skySheet;
 };
 
 // Entity Class
 struct EntityERZSetup : Entity {
-
+	//Nothin
 };
 
 // Object Struct
@@ -28,6 +30,6 @@ void ERZSetup_EditorLoad();
 void ERZSetup_Serialize();
 
 // Extra Entity Functions
-
+void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines);
 
 #endif //!OBJ_ERZSETUP_H

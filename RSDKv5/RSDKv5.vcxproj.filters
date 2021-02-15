@@ -134,6 +134,9 @@
     <ClCompile Include="..\dependencies\all\iniparser\iniparser.cpp">
       <Filter>Source Files\iniparser</Filter>
     </ClCompile>
+    <ClCompile Include="TestObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -245,6 +248,9 @@
       <Filter>Source Files\iniparser</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestObject.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

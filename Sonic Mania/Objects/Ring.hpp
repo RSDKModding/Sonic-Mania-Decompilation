@@ -15,7 +15,7 @@ struct ObjectRing : Object{
 struct EntityRing : Entity {
     void (*state)();
     void (*stateDraw)();
-    int ringType;
+    int type;
     int planeFilter;
     int ringAmount;
     int timer;

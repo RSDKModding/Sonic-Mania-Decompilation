@@ -3,11 +3,133 @@
 Model modelList[MODEL_MAX];
 Scene3D scene3DList[SCENE3D_MAX];
 
+ScanEdge scanEdgeBuffer[SCREEN_YSIZE];
+
 enum ModelFlags {
     MODEL_USENORMALS = 1,
     MODEL_USETEXTURES = 2,
     MODEL_USECOLOURS = 4,
 };
+
+void ProcessScanEdge(int x1, int y1, int x2, int y2)
+{
+    int iy1    = y1 >> 16;
+    int iy2    = y2 >> 16;
+    int ix2    = x2 >> 16;
+    int ix1    = x1 >> 16;
+    if (y1 >> 16 != y2 >> 16) {
+        if (y1 >> 16 > y2 >> 16) {
+            ix1 = x2 >> 16;
+            ix2 = x1 >> 16;
+            iy1 = y2 >> 16;
+            iy2 = y1 >> 16;
+        }
+
+        int end     = iy2 + 1;
+        if (iy1 < currentScreen->clipBound_Y2 && end >= currentScreen->clipBound_Y1) {
+            if (end > currentScreen->clipBound_Y2)
+                end = currentScreen->clipBound_Y2;
+            int scanPos = ix1 << 16;
+            int dif     = ((ix2 - ix1) << 16) / (iy2 - iy1);
+            if (iy1 < 0) {
+                scanPos -= iy1 * dif;
+                iy1 = 0;
+            }
+
+            ScanEdge *edge = &scanEdgeBuffer[iy1];
+            if (iy1 < end) {
+                for (int i = 0; i < end - iy1; ++i) {
+                    if (scanPos >> 16 < edge->start)
+                        edge->start = scanPos >> 16;
+                    if (scanPos >> 16 > edge->end)
+                        edge->end = scanPos >> 16;
+                    scanPos += dif;
+                    ++edge;
+                }
+            }
+        }
+    }
+}
+
+void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2) {
+    int iy1 = y1 >> 16;
+    int iy2 = y2 >> 16;
+    int ix1 = x1 >> 16;
+    int ix2 = x2 >> 16;
+
+    int y = y1 >> 16;
+    int uv = v;
+    if (y1 >> 16 != y2 >> 16) {
+        if (y1 >> 16 > y2 >> 16) {
+            y   = y2 >> 16;
+            ix1 = x2 >> 16;
+            ix2 = x1 >> 16;
+            iy1 = y2 >> 16;
+            iy2 = y1 >> 16;
+            uv  = u;
+        }
+
+        int end = iy2 + 1;
+        if (iy1 < currentScreen->clipBound_Y2 && end >= currentScreen->clipBound_Y1) {
+            if (end > currentScreen->clipBound_Y2)
+                end = currentScreen->clipBound_Y2;
+
+            int yDif       = iy2 - iy1;
+            int scanPos1   = u & 0xFF0000;
+            int scanPos    = ix1 << 16;
+            int scanOffset = ((ix2 - ix1) << 16) / yDif;
+
+            int scanOffset1 = 0;
+            if ((uv & 0xFF0000) == (u & 0xFF0000))
+                scanOffset1 = 0;
+            else
+                scanOffset1 = ((u & 0xFF0000) - scanPos1) / yDif;
+
+            int scanPos2    = (ushort)(uv & 0xFF00) << 8;
+            int scanOffset2 = 0;
+            if (scanPos2 == (ushort)(u & 0xFF00) << 8)
+                scanOffset2 = 0;
+            else
+                scanOffset2 = (((ushort)(u & 0xFF00) << 8) - scanPos2) / yDif;
+
+            int scanPos3    = (byte)uv << 16;
+            int scanOffset3 = 0;
+            if (scanPos3 == (byte)u << 16)
+                scanOffset3 = 0;
+            else
+                scanOffset3 = (((byte)u << 16) - ((byte)uv << 16)) / yDif;
+
+            if (y < 0) {
+                scanPos -= y * scanOffset;
+                scanPos2 -= y * scanOffset2;
+                scanPos1 -= y * scanOffset1;
+                scanPos3 = ((byte)uv << 16) - y * scanOffset3;
+                y        = 0;
+            }
+
+            ScanEdge *scanEdge = &scanEdgeBuffer[y];
+            for (int i = 0; i < end - y; ++i) {
+                if (scanPos >> 16 < scanEdge->start) {
+                    scanEdge->start  = scanPos >> 16;
+                    scanEdge->start1 = scanPos1;
+                    scanEdge->start2 = scanPos2;
+                    scanEdge->start3 = scanPos3;
+                }
+                if (scanPos >> 16 > scanEdge->end) {
+                    scanEdge->end  = scanPos >> 16;
+                    scanEdge->end1 = scanPos1;
+                    scanEdge->end2 = scanPos2;
+                    scanEdge->end3 = scanPos3;
+                }
+                scanPos += scanOffset;
+                ++scanEdge;
+                scanPos1 += scanOffset1;
+                scanPos2 += scanOffset2;
+                scanPos3 += scanOffset3;
+            }
+        }
+    }
+}
 
 void setIdentityMatrix(Matrix *matrix)
 {

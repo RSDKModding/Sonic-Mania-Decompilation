@@ -635,13 +635,17 @@ void InitScriptSystem()
     setupFunctions();
 
     CreateObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
-                 DefaultObject_Update, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
+                 NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
     CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
+    CreateObject((Object **)&TestObject, ":TestObject:", sizeof(EntityTestObject), sizeof(ObjectTestObject), TestObject_Update,
+                 TestObject_LateUpdate, TestObject_StaticUpdate, TestObject_Draw, TestObject_Create, TestObject_StageLoad, TestObject_EditorDraw,
+                 TestObject_EditorLoad, TestObject_Serialize);
     globalObjectIDs[0] = 0;
     globalObjectIDs[1] = 1;
+    globalObjectIDs[2] = 2;
 
-    globalObjectCount = 2;
+    globalObjectCount = 3;
 
     GameInfo info;
 

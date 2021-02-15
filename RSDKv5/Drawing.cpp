@@ -30,6 +30,10 @@ bool InitRenderDevice()
         memset(screens[s].frameBuffer, 0, (screens[s].width * screens[s].height) * sizeof(ushort));
     }
 
+    int size = SCREEN_XSIZE >= SCREEN_YSIZE ? SCREEN_XSIZE : SCREEN_YSIZE;
+    scanlines = (ScanlineInfo*)malloc(size * sizeof(ScanlineInfo));
+    memset(scanlines, 0, size * sizeof(ScanlineInfo));
+
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -176,6 +180,11 @@ void ReleaseRenderDevice()
         engine.screenBuffer[s] = NULL;
 #endif
     }
+
+    if (scanlines)
+        free(scanlines);
+    scanlines = NULL;
+
 #if RETRO_USING_SDL2
     SDL_DestroyRenderer(engine.renderer);
     SDL_DestroyWindow(engine.window);
@@ -545,13 +554,14 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
     int sizeX = abs(clipX1 - drawX1);
     int sizeY = abs(clipY1 - drawY1);
     int max   = sizeY;
-    if (sizeX <= sizeY)
-        sizeX = -sizeY;
+    //if (sizeX <= sizeY)
+    //    sizeX = -sizeY;
 
     int hSize = sizeX >> 2;
     if (clipX1 < drawX1) {
+        int v  = clipX1;
         clipX1 = drawX1;
-        drawX1 = val;
+        drawX1 = v;
         clipY1 = drawY1;
         drawY1 = clipY1;
     }
@@ -578,11 +588,9 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (true) {
+                while (drawX1 < clipX1 && drawY1 < clipY1) {
                     *frameBufferPtr = colour16;
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -1135,6 +1143,124 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                 return;
             break;
     }
+
+    if (!screenRelative)  {
+        x = (x >> 16) - currentScreen->position.x;
+        y = (y >> 16) - currentScreen->position.y;
+    }
+
+    int yRadiusBottom = y + radius;
+    int bottom        = currentScreen->clipBound_Y1;
+    int yRadiusTop    = y - radius;
+    int top = top = y - radius;
+    if (y - radius >= bottom) {
+        top = y - radius;
+        if (top > currentScreen->clipBound_Y2)
+            top = currentScreen->clipBound_Y2;
+    }
+    else {
+        top = currentScreen->clipBound_Y1;
+    }
+
+    if (yRadiusBottom >= bottom) {
+        bottom = y + radius;
+        if (bottom > currentScreen->clipBound_Y2)
+            bottom = currentScreen->clipBound_Y2;
+    }
+
+    if (top != bottom) {
+        for (int i = top; i < bottom; ++i) {
+            scanEdgeBuffer[i].start = 0x7FFF;
+            scanEdgeBuffer[i].end   = -1;
+        }
+
+        int r     = 3 - 2 * radius;
+        if (radius >= 0) {
+            int xRad      = x - radius;
+            int y1      = y + 1;
+            int x1                    = x;
+            int start                 = yRadiusTop + 1;
+            ScanEdge *scanEdgeTop = &scanEdgeBuffer[yRadiusTop];
+            ScanEdge *scanEdgeBottom  = &scanEdgeBuffer[yRadiusBottom];
+            ScanEdge *scanEdge  = &scanEdgeBuffer[y];
+            int dif       = x - y;
+
+            for (int i = 0; i < radius + 1; ++i) {
+                int xPos = i + x1;
+                if (yRadiusBottom >= top && yRadiusBottom <= bottom && xPos > scanEdgeBottom->end)
+                    scanEdgeBottom->end = xPos;
+                if (start >= top && start <= bottom && xPos > scanEdgeTop->end)
+                    scanEdgeTop->end = xPos;
+
+                int yPos = i + y;
+                if (yPos >= top && yPos <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[yPos];
+                    if (yRadiusBottom + dif > edge->end)
+                        edge->end = yRadiusBottom + dif;
+                }
+
+                if (y1 >= top && y1 <= bottom && yRadiusBottom + dif > scanEdge->end)
+                    scanEdge->end = yRadiusBottom + dif;
+                if (yRadiusBottom >= top && yRadiusBottom <= bottom && x < scanEdgeBottom->start)
+                    scanEdgeBottom->start = x;
+                if (start >= top && start <= bottom && x < scanEdgeTop->start)
+                    scanEdgeTop->start = x;
+
+                if (yPos >= top && yPos <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[yPos];
+                    if (xRad < edge->start)
+                        edge->start = xRad;
+                }
+
+                if (y1 >= top && y1 <= bottom && xRad < scanEdge->start)
+                    scanEdge->start = xRad;
+
+                if (r >= 0) {
+                    --yRadiusBottom;
+                    --scanEdgeBottom;
+                    ++start;
+                    r += 4 * (i - radius) + 10;
+                    ++scanEdgeTop;
+                    --radius;
+                    ++xRad;
+                }
+                else {
+                    r += 4 * i + 6;
+                }
+                --y1;
+                --scanEdge;
+                --x;
+            }
+        }
+
+        //validDraw              = true;
+        ushort *frameBufferPtr = &currentScreen->frameBuffer[top * currentScreen->pitch];
+        ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+
+        switch (inkEffect) {
+            default: break;
+            case INK_NONE:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt        = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            frameBufferPtr[edge->start + x] = colour16;
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+        }
+    }
 }
 void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
@@ -1549,15 +1675,16 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
                                           FLIP_NONE, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                         break;
                     case FLIP_X:
-                        DrawSpriteFlipped(pos.x + frame->pivotX, pos.y - frame->pivotY - frame->width, frame->width, frame->height, frame->sprX,
+                        DrawSpriteFlipped(pos.x - frame->width - frame->pivotX, pos.y + frame->pivotY, frame->width, frame->height, frame->sprX,
                                           frame->sprY, FLIP_X, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                         break;
                     case FLIP_Y:
-                        DrawSpriteFlipped(pos.x - frame->pivotX - frame->height, pos.y + frame->pivotY, frame->width, frame->height, frame->sprX,
-                                          frame->sprY, FLIP_Y, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
+                        DrawSpriteFlipped(pos.x + frame->pivotX, pos.y - frame->height - frame->pivotY, frame->width, frame->height,
+                                          frame->sprX, frame->sprY, FLIP_Y, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
+                                          frame->sheetID);
                         break;
                     case FLIP_XY:
-                        DrawSpriteFlipped(pos.x - frame->pivotX - frame->height, pos.y - frame->pivotY - frame->width, frame->width, frame->height,
+                        DrawSpriteFlipped(pos.x - frame->width - frame->pivotX, pos.y - frame->height - frame->pivotY, frame->width, frame->height,
                                           frame->sprX, frame->sprY, FLIP_XY, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
                                           frame->sheetID);
                         break;
@@ -1565,11 +1692,11 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
                 }
                 break;
             case FX_ROTATE:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY, 512, 512,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
                                    FLIP_NONE, rotation, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                 break;
             case FX_ROTATE | FX_FLIP:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY, 512, 512,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
                                    FlipFlags(sceneInfo.entity->direction & FLIP_X), rotation, (InkEffects)sceneInfo.entity->inkEffect,
                                    sceneInfo.entity->alpha, frame->sheetID);
                 break;
@@ -1627,23 +1754,26 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     if (width + x > currentScreen->clipBound_X2)
         width = currentScreen->clipBound_X2 - x;
     if (x < currentScreen->clipBound_X1) {
+        sprX -= x;
         width += x;
-        x = currentScreen->clipBound_X1;
         widthFlip += x + x;
+        x = currentScreen->clipBound_X1;
     }
 
     if (height + y > currentScreen->clipBound_Y2)
         height = currentScreen->clipBound_Y2 - y;
     if (y < currentScreen->clipBound_Y1) {
+        sprY -= y;
         height += y;
-        y = currentScreen->clipBound_Y1;
         heightFlip += y + y;
+        y = currentScreen->clipBound_Y1;
     }
 
     if (width <= 0 || height <= 0)
         return;
 
     GFXSurface *surface    = &gfxSurface[sheetID];
+    validDraw              = true;
     int pitch              = 0;
     int gfxPitch           = 0;
     byte *lineBuffer       = NULL;
@@ -2390,6 +2520,9 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
     if (width <= 0 || height <= 0)
         return;
+
+
+    validDraw = true;
 }
 
 void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
@@ -2436,8 +2569,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex)
                         *frameBufferPtr = palettePtr[palIndex];
@@ -2454,8 +2586,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex)
                         *frameBufferPtr = ((palettePtr[palIndex] & 0xF7DE) >> 1) + ((*frameBufferPtr & 0xF7DE) >> 1);
@@ -2472,8 +2603,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex) {
                         ushort colour          = palettePtr[palIndex];
@@ -2497,8 +2627,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex) {
                         ushort colour   = palettePtr[palIndex];
@@ -2537,8 +2666,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex) {
                         ushort colour      = palettePtr[palIndex];
@@ -2569,8 +2697,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex)
                         *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
@@ -2587,8 +2714,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex && *frameBufferPtr == maskColour)
                         *frameBufferPtr = palettePtr[palIndex];
@@ -2605,8 +2731,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
-                for (int i = currentScreen->pitch; i; ly += dy) {
-                    --i;
+                for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex && *frameBufferPtr != maskColour)
                         *frameBufferPtr = palettePtr[palIndex];
@@ -2646,24 +2771,17 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
                     drawY = y - 8 * countY;
                 }
 
-                if (countY > 0) {
-                    int cx = countX;
-                    do {
-                        if (cx > 0) {
-                            do {
-                                if (*tileInfo < 0xFFFF) {
-                                    DrawSpriteFlipped(drawX, drawY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0xFFF), FLIP_NONE,
-                                                      (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                }
-                                drawX += 16;
-                                ++tileInfo;
-                            } while (--cx);
-                            countY = countX;
-                            cx     = countX;
+                for (int ty = 0; ty < countY; ++ty) {
+                    for (int tx = 0; tx < countX; ++tx) {
+                        if (*tileInfo < 0xFFFF) {
+                            DrawSpriteFlipped(drawX, drawY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0xFFF), FLIP_NONE,
+                                              (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
                         }
-                        drawX -= 16 * countX;
-                        drawY += 16;
-                    } while (--countY);
+                        drawX += TILE_SIZE;
+                        ++tileInfo;
+                    }
+                    drawX -= TILE_SIZE * countX;
+                    drawY += TILE_SIZE;
                 }
                 break;
             }
@@ -2838,11 +2956,165 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
         }
     }
 }
-void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height) {}
+void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height) {
 
-void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8, int a9,
-              bool32 ScreenRelative)
+   if (sheetID < 0x40 && tileIndex < 0x400) {
+        GFXSurface *surface       = &gfxSurface[sheetID];
+
+        //FLIP_NONE
+        byte *tileGFXData = &tilesetGFXData[tileIndex << 8];
+        for (int fy = 0; fy < height; fy += 0x10) {
+            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
+            for (int fx = 0; fx < width; fx += 0x10) {
+                byte *gfxDataPtr = &gfxData[fx];
+                for (int ty = 0; ty < TILE_SIZE; ++ty) {
+                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
+                        *tileGFXData++ = *gfxDataPtr++;
+                    }
+                    gfxDataPtr += surface->width - TILE_SIZE;
+                }
+            }
+        }
+
+        //FLIP_X
+        tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_X * TILESET_SIZE)];
+        for (int fy = 0; fy < height; fy += 0x10) {
+            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
+            for (int fx = 0; fx < width; fx += 0x10) {
+                byte *gfxDataPtr = &gfxData[fx];
+                for (int ty = 0; ty < TILE_SIZE; ++ty) {
+                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
+                        tileGFXData[(TILE_SIZE - 1) - tx] = *gfxDataPtr++;
+                    }
+                    tileGFXData += TILE_SIZE;
+                    gfxDataPtr += surface->width - TILE_SIZE;
+                }
+            }
+        }
+
+        //FLIP_Y
+        tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE)];
+        for (int fy = 0; fy < height; fy += 0x10) {
+            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
+            for (int fx = 0; fx < width; fx += 0x10) {
+                byte *gfxDataPtr = &gfxData[fx];
+                for (int ty = 0; ty < TILE_SIZE; ++ty) {
+                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
+                        tileGFXData[(((TILE_SIZE - 1) * TILE_SIZE) - ty) + tx] = *gfxDataPtr++;
+                    }
+                    gfxDataPtr += surface->width - TILE_SIZE;
+                }
+                tileGFXData += TILE_DATASIZE;
+            }
+        }
+
+        //FLIP_XY
+        tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_XY * TILESET_SIZE)];
+        for (int fy = 0; fy < height; fy += 0x10) {
+            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
+            for (int fx = 0; fx < width; fx += 0x10) {
+                byte *gfxDataPtr = &gfxData[fx];
+                tileGFXData += TILE_DATASIZE - 1;
+                for (int ty = 0; ty < TILE_SIZE; ++ty) {
+                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
+                        tileGFXData[(((TILE_SIZE - 1) * TILE_SIZE) - ty) + ((TILE_SIZE - 1) * tx)] = *gfxDataPtr++;
+                    }
+                    gfxDataPtr += surface->width - TILE_SIZE;
+                }
+                tileGFXData += TILE_DATASIZE;
+            }
+        }
+   }
+
+}
+
+void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags align, int spacing, int a8,
+              Vector2 *charPositions, bool32 screenRelative)
 {
+    if (data && info && data->framePtrs) {
+        if (!position)
+            position = &sceneInfo.entity->position;
+        Entity* entity = sceneInfo.entity;
+
+        int x      = position->x >> 0x10;
+        int y      = position->y >> 0x10;
+        if (!screenRelative) {
+            x -= currentScreen->position.x;
+            y -= currentScreen->position.y;
+        }
+
+        if (endFrame >= 0) {
+            if (endFrame >= info->textLength)
+                endFrame = info->textLength - 1;
+        }
+        else {
+            endFrame = 0;
+        }
+
+        if (textLength > 0) {
+            if (textLength > info->textLength)
+                textLength = info->textLength;
+        }
+        else {
+            textLength = info->textLength;
+        }
+
+        switch (align) {
+            case ALIGN_LEFT:
+                if (charPositions) {
+                    for (; endFrame < textLength; ++endFrame) {
+                        ushort curChar = info->text[endFrame];
+                        if (curChar < data->frameCount) {
+                            SpriteFrame *frame = &data->framePtrs[curChar];
+                            DrawSpriteFlipped(x + (charPositions->x >> 0x10), y + frame->pivotY + (charPositions->y >> 0x10), frame->width,
+                                              frame->height, frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha,
+                                              frame->sheetID);
+                            x += spacing + frame->width;
+                            ++charPositions;
+                        }
+                    }
+                }
+                else {
+                    for (; endFrame < textLength; ++endFrame) {
+                        ushort curChar = info->text[endFrame];
+                        if (curChar < data->frameCount) {
+                            SpriteFrame *frame = &data->framePtrs[curChar];
+                            DrawSpriteFlipped(y + frame->pivotY, x, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
+                                              (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
+                            x += spacing + frame->width;
+                        }
+                    }
+                }
+                break;
+            case ALIGN_RIGHT: break;
+            case ALIGN_CENTER:
+                --textLength;
+                if (charPositions) {
+                    for (Vector2 *pos = &charPositions[textLength]; textLength >= endFrame; --textLength) {
+                        ushort curChar = info->text[textLength];
+                        if (curChar < data->frameCount) {
+                            SpriteFrame *frame = &data->framePtrs[curChar];
+                            DrawSpriteFlipped(y + frame->pivotY + (pos->y >> 0x10), (pos->x >> 0x10), frame->width, frame->height, frame->sprX,
+                                              frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
+                            x += spacing + frame->width;
+                            --pos;
+                        }
+                    }
+                }
+                else {
+                    for (; textLength >= endFrame; --textLength) {
+                        ushort curChar = info->text[textLength];
+                        if (curChar < data->frameCount) {
+                            SpriteFrame *frame = &data->framePtrs[curChar];
+                            DrawSpriteFlipped(y + frame->pivotY, x, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
+                                              (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
+                            x += spacing + frame->width;
+                        }
+                    }
+                }
+                break;
+        }
+    }
 }
 void DrawDevText(int x, const char *text, int y, int align, uint colour)
 {

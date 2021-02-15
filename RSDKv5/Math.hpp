@@ -11,24 +11,21 @@ struct Vector2 {
 
 extern int sinVal1024[0x400];
 extern int cosVal1024[0x400];
-
-extern int ATanVal1024[0x400];
-extern int ASinVal1024[0x400];
-extern int ACosVal1024[0x400];
+extern int tanVal1024[0x400];
+extern int aSinVal1024[0x400];
+extern int aCosVal1024[0x400];
 
 extern int sinVal512[0x200];
 extern int cosVal512[0x200];
-
-extern int ATanVal512[0x200];
-extern int ASinVal512[0x200];
-extern int ACosVal512[0x200];
+extern int tanVal512[0x200];
+extern int aSinVal512[0x200];
+extern int aCosVal512[0x200];
 
 extern int sinVal256[0x100];
 extern int cosVal256[0x100];
-
-extern int ATanVal256[0x100];
-extern int ASinVal256[0x100];
-extern int ACosVal256[0x100];
+extern int tanVal256[0x100];
+extern int aSinVal256[0x100];
+extern int aCosVal256[0x100];
 
 extern byte atanVal256[0x100 * 0x100];
 
@@ -51,6 +48,25 @@ inline int cos1024(int angle)
     return cosVal1024[angle];
 }
 
+inline int tan1024(short angle) { return tanVal1024[angle & 0x3FF]; }
+
+inline int aSin1024(int angle)
+{
+    if (angle > 0x3FF)
+        return 0;
+    if (angle < 0)
+        return -aSinVal1024[-angle];
+    return aSinVal1024[angle];
+}
+inline int aCos1024(int angle)
+{
+    if (angle > 0x3FF)
+        return 0;
+    if (angle < 0)
+        return -aCosVal1024[-angle];
+    return aCosVal1024[angle];
+}
+
 inline int sin512(int angle)
 {
     if (angle < 0)
@@ -65,6 +81,24 @@ inline int cos512(int angle)
         angle = 0x200 - angle;
     angle &= 0x1FF;
     return cosVal512[angle];
+}
+
+inline int tan512(short angle) { return tanVal512[angle & 0x1FF]; }
+inline int aSin512(int angle)
+{
+    if (angle > 0x1FF)
+        return 0;
+    if (angle < 0)
+        return -aSinVal512[-angle];
+    return aSinVal512[angle];
+}
+inline int aCos512(int angle)
+{
+    if (angle > 0x1FF)
+        return 0;
+    if (angle < 0)
+        return -aCosVal512[-angle];
+    return aCosVal512[angle];
 }
 
 inline int sin256(int angle)
@@ -82,59 +116,22 @@ inline int cos256(int angle)
     angle &= 0xFF;
     return cosVal256[angle];
 }
-
-inline int aTan1024(short angle) { return ATanVal1024[angle & 0x3FF]; }
-
-inline int aSin1024(int angle)
-{
-    if (angle > 0x3FF)
-        return 0;
-    if (angle < 0)
-        return -ASinVal1024[-angle];
-    return ASinVal1024[angle];
-}
-inline int aCos1024(int angle)
-{
-    if (angle > 0x3FF)
-        return 0;
-    if (angle < 0)
-        return -ACosVal1024[-angle];
-    return ACosVal1024[angle];
-}
-
-inline int aTan512(short angle) { return ATanVal512[angle & 0x1FF]; }
-inline int aSin512(int angle)
-{
-    if (angle > 0x1FF)
-        return 0;
-    if (angle < 0)
-        return -ASinVal512[-angle];
-    return ASinVal512[angle];
-}
-inline int aCos512(int angle)
-{
-    if (angle > 0x1FF)
-        return 0;
-    if (angle < 0)
-        return -ACosVal512[-angle];
-    return ACosVal512[angle];
-}
-inline int aTan256(byte angle) { return ATanVal256[angle]; }
+inline int tan256(byte angle) { return tanVal256[angle]; }
 inline int aSin256(int angle)
 {
     if (angle > 0xFF)
         return 0;
     if (angle < 0)
-        return -ASinVal256[-angle];
-    return ASinVal256[angle];
+        return -aSinVal256[-angle];
+    return aSinVal256[angle];
 }
 inline int aCos256(int angle)
 {
     if (angle > 0xFF)
         return 0;
     if (angle < 0)
-        return -ACosVal256[-angle];
-    return ACosVal256[angle];
+        return -aCosVal256[-angle];
+    return aCosVal256[angle];
 }
 
 // Get Arc Tan value

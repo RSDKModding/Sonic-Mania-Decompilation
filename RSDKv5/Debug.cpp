@@ -8,7 +8,8 @@ DebugValueInfo debugValues[DEBUGVAL_MAX];
 
 DevMenu devMenu = DevMenu();
 
-void printLog(SeverityModes severity, const char* message, ...) {
+void printLog(SeverityModes severity, const char *message, ...)
+{
 #ifndef RETRO_DISABLE_LOG
     if (engineDebugMode) {
         char buffer[0x100];
@@ -29,19 +30,19 @@ void printLog(SeverityModes severity, const char* message, ...) {
         else if (severity == SEVERITY_ERROR) {
             if (sceneInfo.state & ENGINESTATE_FROZEN) {
                 engine.prevEngineMode = sceneInfo.state;
-                sceneInfo.state = ENGINESTATE_ERRORMSG;
+                sceneInfo.state       = ENGINESTATE_ERRORMSG;
                 return;
             }
         }
         else if (severity == SEVERITY_FATAL && sceneInfo.state & ENGINESTATE_FROZEN) {
-            engine.prevEngineMode           = sceneInfo.state;
-            sceneInfo.state = ENGINESTATE_ERRORMSG_FATAL;
+            engine.prevEngineMode = sceneInfo.state;
+            sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
             return;
         }
 
         if (engine.printConsole)
             printConsole(outputString);
-        //else
+        // else
         //    OutputDebugStringA(outputString);
 
         char pathBuffer[0x100];
@@ -55,7 +56,8 @@ void printLog(SeverityModes severity, const char* message, ...) {
 #endif
 }
 
-void SetDebugValue(const char* name, int valPtr, int type, int unknown1, int unknown2) {
+void SetDebugValue(const char *name, int valPtr, int type, int unknown1, int unknown2)
+{
     if (debugValCnt < 0x900) {
         DebugValueInfo *value = &debugValues[debugValCnt];
         strncpy(value->name, name, 0x10u);
@@ -107,7 +109,7 @@ void DevMenu_MainMenu()
     optionColours[4]              = 0x808090;
     optionColours[devMenu.option] = 0xF0F0F0;
 
-    //Info Box
+    // Info Box
     int y = currentScreen->centerY - 80;
     DrawRectangle(currentScreen->centerX - 128, currentScreen->centerY - 84, 256, 48, 128, 255, INK_NONE, true);
     DrawDevText(currentScreen->centerX, "RETRO ENGINE v5", y, ALIGN_CENTER, 0xF0F0F0);
@@ -119,7 +121,7 @@ void DevMenu_MainMenu()
     DrawDevText(currentScreen->centerX, engine.gameVersion, y, ALIGN_CENTER, 0x808090);
     y += 24;
 
-    //Options Box
+    // Options Box
     DrawRectangle(currentScreen->centerX - 128, y - 8, 256, 72, 128, 255, INK_NONE, true);
     DrawDevText(currentScreen->centerX, "Resume", y, ALIGN_CENTER, optionColours[0]);
     y += 12;
@@ -134,14 +136,14 @@ void DevMenu_MainMenu()
 
     // Storage box
 
-    //Stage Storage
+    // Stage Storage
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
                   (sizeof(int) * userStorage[DATASET_STG].usedStorage) / (float)userStorage[DATASET_STG].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "STG", y, 0, 0xF0F080);
 
-    //Music Storage
+    // Music Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
@@ -149,7 +151,7 @@ void DevMenu_MainMenu()
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "MUS", y, 0, 0xF0F080);
 
-    //SoundFX Storage
+    // SoundFX Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
@@ -157,7 +159,7 @@ void DevMenu_MainMenu()
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "SFX", y, 0, 0xF0F080);
 
-    //String Storage
+    // String Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
@@ -165,7 +167,7 @@ void DevMenu_MainMenu()
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "STR", y, 0, 0xF0F080);
 
-    //Temp Storage
+    // Temp Storage
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
@@ -211,9 +213,7 @@ void DevMenu_MainMenu()
 
     if (controller[0].keyStart.press || controller[0].keyA.press) {
         switch (devMenu.option) {
-            case 0:
-                sceneInfo.state = devMenu.stateStore;
-                break;
+            case 0: sceneInfo.state = devMenu.stateStore; break;
             case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
             case 2:
                 devMenu.state  = DevMenu_ListSel;
@@ -270,8 +270,7 @@ void DevMenu_ListSel()
         }
         devMenu.timer = 1;
     }
-    else 
-    if (controller[0].keyUp.down) {
+    else if (controller[0].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
             if (devMenu.option >= devMenu.scroll) {
@@ -340,10 +339,10 @@ void DevMenu_ListSel()
 
     if (controller[0].keyStart.press || controller[0].keyA.press) {
         if (sceneInfo.listCategory[devMenu.option].sceneCount) {
-            devMenu.state    = DevMenu_SceneSel;
-            devMenu.listPos  = devMenu.option;
-            devMenu.scroll   = 0;
-            devMenu.option   = 0;
+            devMenu.state   = DevMenu_SceneSel;
+            devMenu.listPos = devMenu.option;
+            devMenu.scroll  = 0;
+            devMenu.option  = 0;
         }
     }
 }
@@ -368,7 +367,7 @@ void DevMenu_SceneSel()
 
     int y               = dy + 40;
     SceneListInfo *list = &sceneInfo.listCategory[devMenu.listPos];
-    int off = list->sceneOffsetStart;
+    int off             = list->sceneOffsetStart;
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < list->sceneCount) {
             DrawDevText(currentScreen->centerX + 96, sceneInfo.listData[off + (devMenu.scroll + i)].name, y, ALIGN_RIGHT, optionColours[i]);
@@ -411,7 +410,7 @@ void DevMenu_SceneSel()
             devMenu.scroll = devMenu.option;
         }
     }
-    
+
     if (controller[0].keyDown.press) {
         devMenu.option++;
         if (devMenu.option > list->sceneCount) {
@@ -453,9 +452,441 @@ void DevMenu_SceneSel()
         sceneInfo.state          = ENGINESTATE_LOAD;
     }
 }
-void DevMenu_Options() { currentScreen = &screens[0]; }
-void DevMenu_VideoOptions() { currentScreen = &screens[0]; }
-void DevMenu_AudioOptions() { currentScreen = &screens[0]; }
-void DevMenu_InputOptions() { currentScreen = &screens[0]; }
-void DevMenu_ButtonsOptions() { currentScreen = &screens[0]; }
-void DevMenu_DebugOptions() { currentScreen = &screens[0]; }
+void DevMenu_Options()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "OPTIONS", dy, ALIGN_CENTER, 0xF0F0F0);
+    dy += 44;
+    DrawRectangle(currentScreen->centerX - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[5];
+    optionColours[0]              = 0x808090;
+    optionColours[1]              = 0x808090;
+    optionColours[2]              = 0x808090;
+    optionColours[3]              = 0x808090;
+    optionColours[4]              = 0x808090;
+    optionColours[devMenu.option] = 0xF0F0F0;
+
+    DrawDevText(currentScreen->centerX, "Video Settings", dy, ALIGN_CENTER, optionColours[0]);
+    dy += 12;
+    DrawDevText(currentScreen->centerX, "Audio Settings", dy, ALIGN_CENTER, optionColours[1]);
+    dy += 12;
+    DrawDevText(currentScreen->centerX, "Configure Input", dy, ALIGN_CENTER, optionColours[2]);
+    dy += 12;
+    DrawDevText(currentScreen->centerX, "Debug Flags", dy, ALIGN_CENTER, optionColours[3]);
+    DrawDevText(currentScreen->centerX, "Back", dy + 12, ALIGN_CENTER, optionColours[4]);
+
+    if (controller[0].keyUp.press) {
+        devMenu.option--;
+        if (devMenu.option < 0) {
+            devMenu.option = 4;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (devMenu.option < 0) {
+                devMenu.option = 4;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option > 4) {
+            devMenu.option = 0;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option > 4) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    if (controller[0].keyStart.press || controller[0].keyA.press) {
+        switch (devMenu.option) {
+            case 0: {
+                devMenu.windowed = !engine.isFullScreen;
+                devMenu.winScale = (engine.windowWidth / SCREEN_XSIZE) - 1;
+                int aspect       = (int)((engine.windowWidth / (float)engine.windowHeight) * (float)SCREEN_YSIZE) >> 3;
+                switch (aspect) {
+                    case 40: devMenu.winAspect = 0; break;
+                    case 45: devMenu.winAspect = 1; break;
+                    case 48: devMenu.winAspect = 2; break;
+                    case 50: devMenu.winAspect = 3; break;
+                    default: devMenu.winAspect = aspect != 53 ? 0 : 4; break;
+                }
+                devMenu.state  = DevMenu_VideoOptions;
+                devMenu.option = 0;
+            } break;
+            case 1:
+                devMenu.state  = DevMenu_AudioOptions;
+                devMenu.option = 0;
+                break;
+            case 2:
+                devMenu.state  = DevMenu_InputOptions;
+                devMenu.option = 0;
+                break;
+            case 3:
+                devMenu.state  = DevMenu_DebugOptions;
+                devMenu.option = 0;
+                break;
+            case 4:
+                devMenu.state  = DevMenu_MainMenu;
+                devMenu.option = 0;
+                break;
+        }
+    }
+}
+void DevMenu_VideoOptions()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "VIDEO SETTINGS", dy, ALIGN_CENTER, 0xF0F0F0);
+    dy += 44;
+    DrawRectangle(currentScreen->centerX - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[6];
+    optionColours[0]              = 0x808090;
+    optionColours[1]              = 0x808090;
+    optionColours[2]              = 0x808090;
+    optionColours[3]              = 0x808090;
+    optionColours[4]              = 0x808090;
+    optionColours[5]              = 0x808090;
+    optionColours[devMenu.option] = 0xF0F0F0;
+
+    DrawDevText(currentScreen->centerX - 96, "Window Size:", dy, 0, optionColours[0]);
+
+    const char *winScale = "unknown";
+    switch (devMenu.winScale) {
+        case 0: winScale = "1x"; break;
+        case 1: winScale = "2x"; break;
+        case 2: winScale = "3x"; break;
+        case 3: winScale = "4x"; break;
+        default: break;
+    }
+    DrawDevText(currentScreen->centerX + 80, winScale, dy, ALIGN_CENTER, 0xF0F080);
+    dy += 8;
+    DrawDevText(currentScreen->centerX - 96, "Window Aspect:", dy, 0, optionColours[1]);
+
+    const char *winAspect = "unknown";
+    switch (devMenu.winAspect) {
+        case 0: winAspect = "4:3"; break;
+        case 1: winAspect = "3:2"; break;
+        case 2: winAspect = "16:10"; break;
+        case 3: winAspect = "5:3"; break;
+        case 4: winAspect = "16:9"; break;
+        default: break;
+    }
+    DrawDevText(currentScreen->centerX + 80, winAspect, dy, ALIGN_CENTER, 0xF0F080);
+    dy += 8;
+    DrawDevText(currentScreen->centerX - 96, "Fullscreen:", dy, 0, optionColours[2]);
+    const char *fsOpt = "NO";
+    if (devMenu.windowed != 1)
+        fsOpt = "YES";
+    DrawDevText(currentScreen->centerX + 80, fsOpt, dy, ALIGN_CENTER, 0xF0F080);
+    dy += 8;
+    DrawDevText(currentScreen->centerX - 96, "Screen Shader:", dy, 0, optionColours[3]);
+    // v10 = ShaderSettings.ShaderID;
+    // DrawDevText(v0->centerX + 80, (const char *)&ShaderNames + 52 * ShaderSettings.ShaderID, v9, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(currentScreen->centerX + 80, "None", dy, ALIGN_CENTER, 0xF0F080);
+    dy += 16;
+    DrawDevText(currentScreen->centerX, "Confirm", dy, ALIGN_CENTER, optionColours[4]);
+    DrawDevText(currentScreen->centerX, "Cancel", dy + 8, ALIGN_CENTER, optionColours[5]);
+
+    if (controller[0].keyUp.press) {
+        devMenu.option--;
+        if (devMenu.option < 0) {
+            devMenu.option = 5;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (devMenu.option < 0) {
+                devMenu.option = 5;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option > 5) {
+            devMenu.option = 0;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option > 5) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    switch (devMenu.option) {
+        case 0: // scale
+            break;
+        case 1: // aspect
+            break;
+        case 2: // fullscreen
+            break;
+        case 3: // screenShader
+            break;
+        case 4: // confirm
+            if (controller[0].keyStart.press || controller[0].keyA.press) {
+                // do confirm
+                devMenu.state  = DevMenu_Options;
+                devMenu.option = 1;
+            }
+            break;
+        case 5: // cancel
+            if (controller[0].keyStart.press || controller[0].keyA.press) {
+                devMenu.state  = DevMenu_Options;
+                devMenu.option = 0;
+            }
+            break;
+    }
+}
+void DevMenu_AudioOptions()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "AUDIO SETTINGS", dy, ALIGN_CENTER, 0xF0F0F0);
+    dy += 44;
+    DrawRectangle(currentScreen->centerX - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[4];
+    optionColours[0]              = 0x808090;
+    optionColours[1]              = 0x808090;
+    optionColours[2]              = 0x808090;
+    optionColours[3]              = 0x808090;
+    optionColours[devMenu.option] = 0xF0F0F0;
+
+    DrawDevText(currentScreen->centerX - 96, "Streams Enabled:", dy, 0, optionColours[0]);
+
+    const char *strmEnabled = "YES";
+    if (!engine.streamsEnabled)
+        strmEnabled = "NO";
+    DrawDevText(currentScreen->centerX + 80, strmEnabled, dy, ALIGN_CENTER, 15790208);
+    dy += 16;
+
+    DrawDevText(currentScreen->centerX - 96, "Streams Vol:", dy, 0, optionColours[1]);
+    DrawRectangle(currentScreen->centerX + 8, dy, 112, 8, 0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->centerX + 9, dy + 1, engine.streamVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    dy += 16;
+
+    DrawDevText(currentScreen->centerX - 96, "SoundFX Vol:", dy, 0, optionColours[2]);
+    DrawRectangle(currentScreen->centerX + 8, dy, 112, 8, 0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->centerX + 9, dy + 1, engine.soundFXVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawDevText(currentScreen->centerX, "Back", dy + 16, ALIGN_CENTER, optionColours[3]);
+
+    if (controller[0].keyUp.press) {
+        devMenu.option--;
+        if (devMenu.option < 0) {
+            devMenu.option = 3;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (devMenu.option < 0) {
+                devMenu.option = 3;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option > 3) {
+            devMenu.option = 0;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option > 3) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    switch (devMenu.option) {
+        case 0:
+            if (controller[0].keyLeft.press || controller[0].keyRight.press) {
+                engine.streamsEnabled ^= 1;
+                settingsChanged = 1;
+            }
+            break;
+        case 1:
+            if (controller[0].keyLeft.down) {
+                engine.streamVolume -= 0.015625;
+                if (engine.streamVolume < 0.0)
+                    engine.streamVolume = 0.0;
+                settingsChanged = 1;
+            }
+            else {
+                if (controller[0].keyRight.down) {
+                    engine.streamVolume += 0.015625;
+                    if (engine.streamVolume > 1.0)
+                        engine.streamVolume = 1.0;
+                    settingsChanged = 1;
+                }
+            }
+            break;
+        case 2:
+            if (controller[0].keyLeft.down) {
+                engine.soundFXVolume -= 0.015625;
+                if (engine.soundFXVolume < 0.0)
+                    engine.soundFXVolume = 0.0;
+                settingsChanged = 1;
+            }
+            else {
+                if (controller[0].keyRight.down) {
+                    engine.soundFXVolume += 0.015625;
+                    if (engine.soundFXVolume > 1.0)
+                        engine.soundFXVolume = 1.0;
+                    settingsChanged = 1;
+                }
+            }
+            break;
+        case 3:
+            if (controller[0].keyStart.press || controller[0].keyA.press) {
+                devMenu.state  = DevMenu_Options;
+                devMenu.option = 1;
+            }
+            break;
+    }
+}
+void DevMenu_InputOptions()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "CONFIGURE INPUT", dy, ALIGN_CENTER, 0xF0F0F0);
+    dy += 44;
+    DrawRectangle(currentScreen->centerX - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[6];
+    optionColours[0]              = 0x808090;
+    optionColours[1]              = 0x808090;
+    optionColours[2]              = 0x808090;
+    optionColours[3]              = 0x808090;
+    optionColours[4]              = 0x808090;
+    optionColours[devMenu.option] = 0xF0F0F0;
+
+    DrawDevText(currentScreen->centerX, "Set Keys For Input 1", dy, ALIGN_CENTER, optionColours[0]);
+    dy += 10;
+    DrawDevText(currentScreen->centerX, "Set Keys For Input 2", dy, ALIGN_CENTER, optionColours[1]);
+    dy += 10;
+    DrawDevText(currentScreen->centerX, "Set Keys For Input 3", dy, ALIGN_CENTER, optionColours[2]);
+    dy += 10;
+    DrawDevText(currentScreen->centerX, "Set Keys For Input 4", dy, ALIGN_CENTER, optionColours[3]);
+    DrawDevText(currentScreen->centerX, "Back", dy + 18, ALIGN_CENTER, optionColours[4]);
+
+    if (controller[0].keyUp.press) {
+        devMenu.option--;
+        if (devMenu.option < 0) {
+            devMenu.option = 4;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (devMenu.option < 0) {
+                devMenu.option = 4;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option > 4) {
+            devMenu.option = 0;
+        }
+
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option > 4) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+    }
+
+    if (controller[0].keyStart.press || controller[0].keyA.press) {
+        if (devMenu.option == 4) {
+            devMenu.state  = DevMenu_Options;
+            devMenu.option = 3;
+        }
+        else {
+            devMenu.state   = DevMenu_MappingsOptions;
+            devMenu.scroll  = 0;
+            settingsChanged = 1;
+            //*(&key_Up_P2.press + 36 * devMenu.option) = -1;
+        }
+    }
+}
+void DevMenu_MappingsOptions() {}
+void DevMenu_DebugOptions()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "CONFIGURE DEBUG FLAGS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawRectangle(currentScreen->centerX - 128, (dy + 40) - 4, 256, 72, 128, 255, INK_NONE, true);
+    dy += 40;
+    uint optionColours[8];
+    optionColours[0]                               = 0x808090;
+    optionColours[1]                               = 0x808090;
+    optionColours[2]                               = 0x808090;
+    optionColours[3]                               = 0x808090;
+    optionColours[4]                               = 0x808090;
+    optionColours[5]                               = 0x808090;
+    optionColours[6]                               = 0x808090;
+    optionColours[7]                               = 0x808090;
+    optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+
+    // v3                                             = devMenu.scroll;
+    // v4                                             = debugValCnt;
+    // v5                                             = 0;
+}

@@ -5,7 +5,7 @@ ObjectDecoration *Decoration;
 void Decoration_Update()
 {
     EntityDecoration *entity = (EntityDecoration *)RSDK_sceneInfo->entity;
-    RSDK, ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->data);
     entity->rotation += entity->rotSpeed;
     entity->rotation &= 0x1FF;
 }

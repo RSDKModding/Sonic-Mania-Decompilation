@@ -4,6 +4,17 @@
 #define SCENE3D_MAX (0x20)
 #define MODEL_MAX   (0x100)
 
+struct ScanEdge {
+    int start;
+    int end;
+    int start1;
+    int end1;
+    int start2;
+    int end2;
+    int start3;
+    int end3;
+};
+
 struct Matrix {
     int values[4][4];
 };
@@ -75,6 +86,11 @@ struct Scene3D {
 
 extern Model modelList[MODEL_MAX];
 extern Scene3D scene3DList[SCENE3D_MAX];
+
+extern ScanEdge scanEdgeBuffer[SCREEN_YSIZE];
+
+void ProcessScanEdge(int x1, int y1, int x2, int y2);
+void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2);
 
 void setIdentityMatrix(Matrix *matrix);
 void matrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB);

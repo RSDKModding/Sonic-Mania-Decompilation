@@ -29,7 +29,11 @@ void Animals_Create(void* data)
 
 void Animals_StageLoad()
 {
-
+    Animals->spriteIndex = RSDK.LoadAnimation("Global/Animals.bin", SCOPE_STAGE);
+    if (RSDK.GetObjectIDByName("Platform"))
+        Animals->hasPlatform = true;
+    if (RSDK.GetObjectIDByName("Bridge"))
+        Animals->hasBridge = true;
 }
 
 void Animals_EditorDraw()
@@ -44,6 +48,7 @@ void Animals_EditorLoad()
 
 void Animals_Serialize()
 {
-
+    RSDK_EDITABLE_VAR(Animals, VAR_ENUM, type);
+    RSDK_EDITABLE_VAR(Animals, VAR_ENUM, behaviour);
 }
 

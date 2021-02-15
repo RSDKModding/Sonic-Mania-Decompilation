@@ -7,24 +7,21 @@
 
 int sinVal1024[0x400];
 int cosVal1024[0x400];
-
-int ATanVal1024[0x400];
-int ASinVal1024[0x400];
-int ACosVal1024[0x400];
+int tanVal1024[0x400];
+int aSinVal1024[0x400];
+int aCosVal1024[0x400];
 
 int sinVal512[0x200];
 int cosVal512[0x200];
-
-int ATanVal512[0x200];
-int ASinVal512[0x200];
-int ACosVal512[0x200];
+int tanVal512[0x200];
+int aSinVal512[0x200];
+int aCosVal512[0x200];
 
 int sinVal256[0x100];
 int cosVal256[0x100];
-
-int ATanVal256[0x100];
-int ASinVal256[0x100];
-int ACosVal256[0x100];
+int tanVal256[0x100];
+int aSinVal256[0x100];
+int aCosVal256[0x100];
 
 byte atanVal256[0x100 * 0x100];
 
@@ -34,42 +31,53 @@ void CalculateTrigAngles()
 {
     randKey = rand();
 
-    cosVal1024[0]   = 0x400;
-    cosVal1024[256] = 0;
-    cosVal1024[512] = -0x400;
-    cosVal1024[768] = 0;
-    sinVal1024[0]   = 0;
-    sinVal1024[256] = 0x400;
-    sinVal1024[512] = 0;
-    sinVal1024[768] = -0x400;
+    for (int i = 0; i < 0x400; ++i) {
+        sinVal1024[i]  = sinf((i / 512.0) * M_PI) * 1024.0;
+        cosVal1024[i]  = cosf((i / 512.0) * M_PI) * 1024.0;
+        tanVal1024[i]  = tanf((i / 512.0) * M_PI) * 1024.0;
+        aSinVal1024[i] = (asin(i / 1023.0) * 512.0) / M_PI;
+        aCosVal1024[i] = (acos(i / 1023.0) * 512.0) / M_PI;
+    }
+
+    cosVal1024[0x000] = 0x400;
+    cosVal1024[0x100] = 0;
+    cosVal1024[0x200] = -0x400;
+    cosVal1024[0x300] = 0;
+    sinVal1024[0x000] = 0;
+    sinVal1024[0x100] = 0x400;
+    sinVal1024[0x200] = 0;
+    sinVal1024[0x300] = -0x400;
 
     for (int i = 0; i < 0x200; ++i) {
-        float val    = sinf(((float)i / 256) * M_PI);
-        sinVal512[i] = (signed int)(val * 512.0);
-        val          = cosf(((float)i / 256) * M_PI);
-        cosVal512[i] = (signed int)(val * 512.0);
+        sinVal512[i]   = sinf((i / 256.0) * M_PI) * 512.0;
+        cosVal512[i]   = cosf((i / 256.0) * M_PI) * 512.0;
+        tanVal512[i]   = tanf((i / 256.0) * M_PI) * 512.0;
+        aSinVal512[i]  = (asin(i / 511.0) * 256.0) / M_PI;
+        aCosVal512[i]  = (acos(i / 511.0) * 256.0) / M_PI;
     }
 
-    cosVal512[0]   = 0x200;
-    cosVal512[128] = 0;
-    cosVal512[256] = -0x200;
-    cosVal512[384] = 0;
-    sinVal512[0]   = 0;
-    sinVal512[128] = 0x200;
-    sinVal512[256] = 0;
-    sinVal512[384] = -0x200;
+    cosVal512[0x00]  = 0x200;
+    cosVal512[0x80]  = 0;
+    cosVal512[0x100] = -0x200;
+    cosVal512[0x180] = 0;
+    sinVal512[0x00]  = 0;
+    sinVal512[0x80]  = 0x200;
+    sinVal512[0x100] = 0;
+    sinVal512[0x180] = -0x200;
 
     for (int i = 0; i < 0x100; i++) {
-        sinVal256[i] = (sinVal512[i * 2] >> 1);
-        cosVal256[i] = (cosVal512[i * 2] >> 1);
+        sinVal256[i]  = (sinVal512[i * 2] >> 1);
+        cosVal256[i]  = (cosVal512[i * 2] >> 1);
+        tanVal256[i]  = (tanVal512[i * 2] >> 1);
+        aSinVal256[i] = (asin(i / 255.0) * 128.0) / M_PI;
+        aCosVal256[i] = (acos(i / 255.0) * 128.0) / M_PI;
     }
 
-    for (int Y = 0; Y < 0x100; ++Y) {
-        byte *ATan = (byte *)&atanVal256[Y];
-        for (int X = 0; X < 0x100; ++X) {
-            float angle = atan2f(Y, X);
-            *ATan       = (signed int)(angle * 40.743664f);
-            ATan += 0x100;
+    for (int y = 0; y < 0x100; ++y) {
+        byte *arcTan = (byte *)&atanVal256[y];
+        for (int x = 0; x < 0x100; ++x) {
+            *arcTan = atan2f(y, x) * 40.743664f;
+            arcTan += 0x100;
         }
     }
 }

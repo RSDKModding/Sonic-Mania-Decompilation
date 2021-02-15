@@ -109,7 +109,7 @@ struct CollisionMask {
     byte flag;
 };
 
-extern ScanlineInfo scanlines[SCREEN_YSIZE];
+extern ScanlineInfo *scanlines;
 extern TileLayer tileLayers[LAYER_COUNT];
 
 extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction

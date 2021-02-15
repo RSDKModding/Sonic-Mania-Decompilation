@@ -32,7 +32,7 @@ void Ring_Create(void *data)
         layer = Zone->drawOrderLow;
 
     entity->drawOrder = layer + 1;
-    if (entity->ringType == 1) {
+    if (entity->type == 1) {
         entity->drawFX |= FX_FLIP;
         entity->ringAmount = 5;
     }
@@ -42,7 +42,7 @@ void Ring_Create(void *data)
         RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &entity->animData, 1, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->ringType, &entity->animData, 1, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->type, &entity->animData, 1, 0);
 
         entity->amplitude.x >>= 10;
         entity->amplitude.y >>= 10;
@@ -523,16 +523,16 @@ void Ring_Collect()
         player = (EntityPlayer *)RSDK.GetObjectByID(0);
 
     int ringAmount = 1;
-    if (entity->ringType == 1) {
+    if (entity->type == 1) {
         player->ringExtraLife += 100 * (entity->ringAmount / 100);
         ringAmount = entity->ringAmount;
     }
     // Player_GiveRings(ringAmount, player, 1);
     int max = 0x100000;
-    if (entity->ringType != 1)
+    if (entity->type != 1)
         max = 0x80000;
 
-    int cnt = 4 * (entity->ringType == 1) + 4;
+    int cnt = 4 * (entity->type == 1) + 4;
     int min = -max;
     for (int i = 0; i < cnt; ++i) {
         EntityRing *sparkle =
