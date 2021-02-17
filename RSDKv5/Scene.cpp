@@ -205,7 +205,7 @@ void LoadSceneFile() {
     StrAdd(buffer, ".bin");
 
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
-    userStorage[DATASET_TMP].usedStorage = 0;
+    dataStorage[DATASET_TMP].usedStorage = 0;
 
     for (int s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].height;
 

@@ -9,6 +9,8 @@
 #define DLLExport
 #endif
 
+#define RETRO_USE_PLUS (0) //idk, might use this, mostly just a marker for what stuff plus/1.05 changed
+
 enum GameDLC {
 	DLC_PLUS
 };
@@ -35,7 +37,7 @@ inline void Game_Print(const char *message, ...)
         va_list args;
         va_start(args, message);
         vsprintf(buffer, message, args);
-        RSDK.printString(SEVERITY_NONE, buffer);
+        RSDK.PrintString(SEVERITY_NONE, buffer);
     }
 }
 

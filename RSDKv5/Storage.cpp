@@ -1,32 +1,32 @@
 #include "RetroEngine.hpp"
 
-DataStorage userStorage[DATASET_MAX];
+DataStorage dataStorage[DATASET_MAX];
 
-void InitialiseUserStorage()
+void InitStorage()
 {
-    // storage limit (in bytes)
-    userStorage[DATASET_STG].storageLimit = 0x1800000; 
-    userStorage[DATASET_MUS].storageLimit = 0x800000; 
-    userStorage[DATASET_SFX].storageLimit = 0x2000000;
-    userStorage[DATASET_STR].storageLimit = 0x200000; 
-    userStorage[DATASET_TMP].storageLimit = 0x800000; 
+    // storage limit (in ints)
+    dataStorage[DATASET_STG].storageLimit = 0x1800000; 
+    dataStorage[DATASET_MUS].storageLimit = 0x800000; 
+    dataStorage[DATASET_SFX].storageLimit = 0x2000000;
+    dataStorage[DATASET_STR].storageLimit = 0x200000; 
+    dataStorage[DATASET_TMP].storageLimit = 0x800000; 
     
     for (int s = 0; s < DATASET_MAX; ++s) {
-        userStorage[s].memPtr = (int*)malloc(userStorage[s].storageLimit);
-        userStorage[s].usedStorage = 0;
-        userStorage[s].entryCount  = 0;
-        userStorage[s].unknown    = 0;
+        dataStorage[s].memPtr = (int*)malloc(dataStorage[s].storageLimit);
+        dataStorage[s].usedStorage = 0;
+        dataStorage[s].entryCount  = 0;
+        dataStorage[s].unknown    = 0;
     }
 }
 
-void ReleaseUserStorage()
+void ReleaseStorage()
 {
     for (int s = 0; s < DATASET_MAX; ++s) {
-        if (userStorage[s].memPtr)
-            free(userStorage[s].memPtr);
-        userStorage[s].usedStorage = 0;
-        userStorage[s].entryCount  = 0;
-        userStorage[s].unknown    = 0;
+        if (dataStorage[s].memPtr)
+            free(dataStorage[s].memPtr);
+        dataStorage[s].usedStorage = 0;
+        dataStorage[s].entryCount  = 0;
+        dataStorage[s].unknown    = 0;
     }
 }
 
@@ -45,7 +45,7 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
         printf("");
 
     if (dataSet < DATASET_MAX) {
-        DataStorage *storage = &userStorage[dataSet];
+        DataStorage *storage = &dataStorage[dataSet];
 
         if ((size & 0xFFFFFFFC) < size)
             size &= 0xFFFFFFFC;
@@ -95,59 +95,63 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
     }
 }
 
-void RemoveStorageEntry(int* data) {
-    if (data) {
-        if (data) {
-            int set = data[-3];
+void RemoveStorageEntry(void **dataPtr)
+{
+    if (dataPtr) {
+        if (*dataPtr) {
+            int **data = (int **)dataPtr;
+            *data      = NULL;
 
-            for (int e = 0; e < userStorage[set].entryCount; ++e) {
-                if (data == *userStorage[set].startPtrs1[e]) {
-                    *userStorage[set].startPtrs1[e] = NULL;
+            int set = *data[-3];
+
+            for (int e = 0; e < dataStorage[set].entryCount; ++e) {
+                if (data == dataStorage[set].startPtrs1[e]) {
+                    *dataStorage[set].startPtrs1[e] = NULL;
                 }
             }
 
             int c = 0;
-            for (int e = 0; e < userStorage[set].entryCount; ++e) {
-                if (*userStorage[set].startPtrs1[e]) {
+            for (int e = 0; e < dataStorage[set].entryCount; ++e) {
+                if (*dataStorage[set].startPtrs1[e]) {
                     if (e != c) {
-                        userStorage[set].startPtrs1[c] = userStorage[set].startPtrs1[e];
-                        userStorage[set].startPtrs2[c] = userStorage[set].startPtrs2[e];
-                        userStorage[set].startPtrs1[e] = NULL;
-                        userStorage[set].startPtrs2[e] = NULL;
+                        dataStorage[set].startPtrs1[c] = dataStorage[set].startPtrs1[e];
+                        dataStorage[set].startPtrs2[c] = dataStorage[set].startPtrs2[e];
+                        dataStorage[set].startPtrs1[e] = NULL;
+                        dataStorage[set].startPtrs2[e] = NULL;
                     }
                     c++;
                 }
             }
-            userStorage[set].entryCount = c;
+            dataStorage[set].entryCount = c;
 
-            for (int e = userStorage[set].entryCount; e < 0x1000; ++e) {
-                userStorage[set].startPtrs1[e] = NULL;
-                userStorage[set].startPtrs2[e] = NULL;
+            for (int e = dataStorage[set].entryCount; e < 0x1000; ++e) {
+                dataStorage[set].startPtrs1[e] = NULL;
+                dataStorage[set].startPtrs2[e] = NULL;
             }
-            data[-4] = false;
+            *data[-4] = false;
         }
     }
 }
 
 void ClearUnusedStorage(StorageDataSets set)
 {
-    ++userStorage[set].unknown;
+    ++dataStorage[set].unknown;
     CleanEmptyStorage(set);
 
-    if (userStorage[set].usedStorage) {
+    if (dataStorage[set].usedStorage) {
         int totalSizeA  = 0;
         int totalSizeB  = 0;
         int usedStorage = 0;
-        int *memPtr2    = userStorage[set].memPtr;
-        int *memPtr     = userStorage[set].memPtr;
+        int *memPtr2    = dataStorage[set].memPtr;
+        int *memPtr     = dataStorage[set].memPtr;
 
-        for (int c = 0; c < userStorage[set].usedStorage;) {
+        for (int c = 0; c < dataStorage[set].usedStorage;) {
             int startOffset = memPtr2[2];
             int size        = ((uint)memPtr2[3] >> 2) + 4;
             *memPtr2         = false;
-            int *dataPtr    = &userStorage[set].memPtr[startOffset];
+            int *dataPtr    = &dataStorage[set].memPtr[startOffset];
 
-            if (!userStorage[set].entryCount) {
+            if (!dataStorage[set].entryCount) {
                 memPtr2 += size;
                 c           = size + totalSizeA;
                 usedStorage = size + totalSizeA;
@@ -155,8 +159,8 @@ void ClearUnusedStorage(StorageDataSets set)
                 totalSizeA += size;
             }
             else {
-                for (int e = 0; e < userStorage[set].entryCount; ++e) {
-                    if (dataPtr == userStorage[set].startPtrs2[e])
+                for (int e = 0; e < dataStorage[set].entryCount; ++e) {
+                    if (dataPtr == dataStorage[set].startPtrs2[e])
                         *memPtr2 = true;
                 }
 
@@ -188,20 +192,20 @@ void ClearUnusedStorage(StorageDataSets set)
         }
 
         if (usedStorage) {
-            bool flag = userStorage[set].usedStorage == usedStorage;
-            userStorage[set].usedStorage -= usedStorage;
+            bool flag = dataStorage[set].usedStorage == usedStorage;
+            dataStorage[set].usedStorage -= usedStorage;
             int offset  = 0;
-            int *memPtr = userStorage[set].memPtr;
+            int *memPtr = dataStorage[set].memPtr;
 
             if (!flag) {
-                for (int offset = 0; offset < userStorage[set].usedStorage;) {
-                    int *ptr = &userStorage[set].memPtr[memPtr[2]];
+                for (int offset = 0; offset < dataStorage[set].usedStorage;) {
+                    int *ptr = &dataStorage[set].memPtr[memPtr[2]];
                     int size = ((uint)memPtr[3] >> 2) + 4;
 
-                    for (int c = 0; c < userStorage[set].entryCount; ++c) {
-                        if (ptr == userStorage[set].startPtrs2[c]) {
-                            *userStorage[set].startPtrs1[c] = memPtr + 4;
-                            userStorage[set].startPtrs2[c]  = memPtr + 4;
+                    for (int c = 0; c < dataStorage[set].entryCount; ++c) {
+                        if (ptr == dataStorage[set].startPtrs2[c]) {
+                            *dataStorage[set].startPtrs1[c] = memPtr + 4;
+                            dataStorage[set].startPtrs2[c]  = memPtr + 4;
                         }
                     }
 
@@ -221,12 +225,12 @@ void CopyStorage(int **src, int **dst)
         *src        = *dst;
         int dstSet  = dstPtr[-3];
 
-        if (userStorage[dstSet].entryCount < 0x1000) {
-            userStorage[dstSet].startPtrs1[userStorage[dstSet].entryCount] = src;
-            userStorage[dstSet].startPtrs2[userStorage[dstSet].entryCount] = *src;
+        if (dataStorage[dstSet].entryCount < 0x1000) {
+            dataStorage[dstSet].startPtrs1[dataStorage[dstSet].entryCount] = src;
+            dataStorage[dstSet].startPtrs2[dataStorage[dstSet].entryCount] = *src;
 
             dstSet = dstPtr[-3];
-            if (userStorage[dstSet].entryCount >= 0x1000)
+            if (dataStorage[dstSet].entryCount >= 0x1000)
                 CleanEmptyStorage((StorageDataSets)dstSet);
         }
     }
@@ -235,7 +239,7 @@ void CopyStorage(int **src, int **dst)
 void CleanEmptyStorage(StorageDataSets set)
 {
     if (set < DATASET_MAX) {
-        DataStorage *storage = &userStorage[set];
+        DataStorage *storage = &dataStorage[set];
 
         for (int e = 0; e < storage->entryCount; ++e) {
             if (*storage->startPtrs1[e] && *storage->startPtrs1[e] != storage->startPtrs2[e])

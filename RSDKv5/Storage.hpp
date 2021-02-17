@@ -20,14 +20,14 @@ struct DataStorage {
     uint unknown;
 };
 
-extern DataStorage userStorage[DATASET_MAX];
+extern DataStorage dataStorage[DATASET_MAX];
 
-void InitialiseUserStorage();
-void ReleaseUserStorage();
+void InitStorage();
+void ReleaseStorage();
 
 void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 clear);
 void ClearUnusedStorage(StorageDataSets set);
-void RemoveStorageEntry(int *data);
+void RemoveStorageEntry(void **dataPtr);
 void CopyStorage(int **src, int **dst);
 void CleanEmptyStorage(StorageDataSets dataSet);
 

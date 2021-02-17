@@ -107,8 +107,6 @@ struct RetroEngine {
     bool devMenu      = false;
     bool printConsole = false;
 
-    byte language = 0;
-
     int prevEngineMode      = ENGINESTATE_LOAD;
     bool running            = false;
     int gameSpeed           = 1;

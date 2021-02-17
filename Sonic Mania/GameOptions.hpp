@@ -97,6 +97,7 @@ struct GameOptions {
 	int continues;
 	int initCoolBonus;
 	int coolBonus[4];
+#if !RETRO_USE_PLUS
 	int replayWriteBuffer[0x40000];
 	int replayReadBuffer[0x40000];
 	int replayTempWBuffer[0x40000];
@@ -113,6 +114,7 @@ struct GameOptions {
 	int superMusicEnabled;
 	int lastHasPlus;
 	int hasPlusInitial;
+#endif
 };
 
 extern Hitbox defaultHitbox;

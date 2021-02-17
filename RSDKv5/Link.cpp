@@ -4,34 +4,34 @@ void *functionTable[FUNCTABLE_COUNT];
 void *userDataTable[UDATATABLE_COUNT];
 
 enum UserdataTableIDs {
-    UserdataTable_Unknown1,
+    UserdataTable_GetUserLanguage,
     UserdataTable_GetConfirmButtonFlip,
-    UserdataTable_Unknown2,
-    UserdataTable_Unknown3,
+    UserdataTable_ExitGame,
+    UserdataTable_LaunchManual,
     UserdataTable_Unknown4,
     UserdataTable_CheckDLC,
-    UserdataTable_Unknown5,
+    UserdataTable_ClearAchievements,
     UserdataTable_UnlockAchievement,
-    UserdataTable_Missing1,
-    UserdataTable_Unknown6,
+    UserdataTable_GetAchievementsActive,
+    UserdataTable_SetAchievementsActive,
     UserdataTable_Unknown7,
-    UserdataTable_Unknown8,
-    UserdataTable_Unknown9,
+    UserdataTable_FetchLeaderboard,
+    UserdataTable_TrackScore,
     UserdataTable_Unknown10,
     UserdataTable_Unknown11,
     UserdataTable_Missing2,
     UserdataTable_Unknown12,
     UserdataTable_Missing3,
     UserdataTable_Unknown13,
-    UserdataTable_PossiblyGetStrings,
-    UserdataTable_Unknown14,
-    UserdataTable_Missing4,
-    UserdataTable_Unknown15,
+    UserdataTable_SetPresence,
+    UserdataTable_TryTrackStat,
+    UserdataTable_GetStatsActive,
+    UserdataTable_SetStatsActive,
     UserdataTable_Unknown16,
-    UserdataTable_Unknown17,
-    UserdataTable_Unknown18,
+    UserdataTable_TryAuth,
+    UserdataTable_GetUserStorageActive,
     UserdataTable_Unknown19,
-    UserdataTable_Unknown20,
+    UserdataTable_TryInitStorage,
     UserdataTable_Unknown21,
     UserdataTable_Unknown22,
     UserdataTable_Unknown23,
@@ -267,65 +267,65 @@ void setupFunctions()
     memset(functionTable, 0, FUNCTABLE_COUNT * sizeof(void *));
 
     // Userdata
-    userDataTable[UserdataTable_Unknown1]             = NullFunc;
-    userDataTable[UserdataTable_GetConfirmButtonFlip] = NullFunc;
-    userDataTable[UserdataTable_Unknown2]             = NullFunc;
-    userDataTable[UserdataTable_Unknown3]             = NullFunc;
-    userDataTable[UserdataTable_Unknown4]             = NullFunc;
-    userDataTable[UserdataTable_CheckDLC]             = NullFunc;
-    userDataTable[UserdataTable_Unknown5]             = NullFunc;
-    userDataTable[UserdataTable_UnlockAchievement]    = NullFunc;
-    userDataTable[UserdataTable_Missing1]             = NullFunc;
-    userDataTable[UserdataTable_Unknown6]             = NullFunc;
-    userDataTable[UserdataTable_Unknown7]             = NullFunc;
-    userDataTable[UserdataTable_Unknown8]             = NullFunc;
-    userDataTable[UserdataTable_Unknown9]             = NullFunc;
-    userDataTable[UserdataTable_Unknown10]            = NullFunc;
-    userDataTable[UserdataTable_Unknown11]            = NullFunc;
-    userDataTable[UserdataTable_Missing2]             = NullFunc;
-    userDataTable[UserdataTable_Unknown12]            = NullFunc;
-    userDataTable[UserdataTable_Missing3]             = NullFunc;
-    userDataTable[UserdataTable_Unknown13]            = NullFunc;
-    userDataTable[UserdataTable_PossiblyGetStrings]   = NullFunc;
-    userDataTable[UserdataTable_Unknown14]            = NullFunc;
-    userDataTable[UserdataTable_Missing4]             = NullFunc;
-    userDataTable[UserdataTable_Unknown15]            = NullFunc;
-    userDataTable[UserdataTable_Unknown16]            = NullFunc;
-    userDataTable[UserdataTable_Unknown17]            = NullFunc;
-    userDataTable[UserdataTable_Unknown18]            = NullFunc;
-    userDataTable[UserdataTable_Unknown19]            = NullFunc;
-    userDataTable[UserdataTable_Unknown20]            = NullFunc;
-    userDataTable[UserdataTable_Unknown21]            = NullFunc;
-    userDataTable[UserdataTable_Unknown22]            = NullFunc;
-    userDataTable[UserdataTable_Unknown23]            = NullFunc;
-    userDataTable[UserdataTable_Unknown24]            = NullFunc;
-    userDataTable[UserdataTable_Missing5]             = NullFunc;
-    userDataTable[UserdataTable_Unknown25]            = NullFunc;
-    userDataTable[UserdataTable_Unknown26]            = NullFunc;
-    userDataTable[UserdataTable_Unknown27]            = NullFunc;
-    userDataTable[UserdataTable_Unknown28]            = NullFunc;
-    userDataTable[UserdataTable_LoadUserFile]         = NullFunc;
-    userDataTable[UserdataTable_SaveUserFile]         = NullFunc;
-    userDataTable[UserdataTable_DeleteUserFile]       = NullFunc;
-    userDataTable[UserdataTable_AddUserDBEntry]       = NullFunc;
-    userDataTable[UserdataTable_OpenUserDB]           = NullFunc;
-    userDataTable[UserdataTable_SaveUserDB]           = NullFunc;
-    userDataTable[UserdataTable_Unknown30]            = NullFunc;
-    userDataTable[UserdataTable_Missing6]             = NullFunc;
-    userDataTable[UserdataTable_Unknown31]            = NullFunc;
-    userDataTable[UserdataTable_Unknown32]            = NullFunc;
-    userDataTable[UserdataTable_Unknown33]            = NullFunc;
-    userDataTable[UserdataTable_Unknown34]            = NullFunc;
-    userDataTable[UserdataTable_Unknown35]            = NullFunc;
-    userDataTable[UserdataTable_Unknown36]            = NullFunc;
-    userDataTable[UserdataTable_Unknown37]            = NullFunc;
-    userDataTable[UserdataTable_Unknown38]            = NullFunc;
-    userDataTable[UserdataTable_Unknown39]            = NullFunc;
-    userDataTable[UserdataTable_AddUserDB]            = NullFunc;
-    userDataTable[UserdataTable_Unknown40]            = NullFunc;
-    userDataTable[UserdataTable_Unknown41]            = NullFunc;
-    userDataTable[UserdataTable_Unknown42]            = NullFunc;
-    userDataTable[UserdataTable_Unknown43]            = NullFunc;
+    userDataTable[UserdataTable_GetUserLanguage]       = userCore->GetUserLanguage;
+    userDataTable[UserdataTable_GetConfirmButtonFlip]  = userCore->GetConfirmButtonFlip;
+    userDataTable[UserdataTable_ExitGame]              = userCore->ExitGame;
+    userDataTable[UserdataTable_LaunchManual]          = userCore->ExitGame;
+    userDataTable[UserdataTable_Unknown4]              = NullFunc;
+    userDataTable[UserdataTable_CheckDLC]              = userCore->CheckDLC;
+    userDataTable[UserdataTable_ClearAchievements]     = NullFunc;
+    userDataTable[UserdataTable_UnlockAchievement]     = achievements->UnlockAchievement;
+    userDataTable[UserdataTable_GetAchievementsActive] = NullFunc;
+    userDataTable[UserdataTable_SetAchievementsActive] = NullFunc;
+    userDataTable[UserdataTable_Unknown7]              = NullFunc;
+    userDataTable[UserdataTable_FetchLeaderboard]      = leaderboards->FetchLeaderboard;
+    userDataTable[UserdataTable_TrackScore]            = leaderboards->TrackScore;
+    userDataTable[UserdataTable_Unknown10]             = NullFunc;
+    userDataTable[UserdataTable_Unknown11]             = NullFunc;
+    userDataTable[UserdataTable_Missing2]              = NullFunc;
+    userDataTable[UserdataTable_Unknown12]             = NullFunc;
+    userDataTable[UserdataTable_Missing3]              = NullFunc;
+    userDataTable[UserdataTable_Unknown13]             = NullFunc;
+    userDataTable[UserdataTable_SetPresence]           = richPresence->SetPresence;
+    userDataTable[UserdataTable_TryTrackStat]          = NullFunc;
+    userDataTable[UserdataTable_GetStatsActive]        = NullFunc;
+    userDataTable[UserdataTable_SetStatsActive]        = NullFunc;
+    userDataTable[UserdataTable_Unknown16]             = NullFunc;
+    userDataTable[UserdataTable_TryAuth]               = NullFunc;
+    userDataTable[UserdataTable_GetUserStorageActive]  = NullFunc;
+    userDataTable[UserdataTable_Unknown19]             = NullFunc;
+    userDataTable[UserdataTable_TryInitStorage]        = NullFunc;
+    userDataTable[UserdataTable_Unknown21]             = NullFunc;
+    userDataTable[UserdataTable_Unknown22]             = NullFunc;
+    userDataTable[UserdataTable_Unknown23]             = NullFunc;
+    userDataTable[UserdataTable_Unknown24]             = NullFunc;
+    userDataTable[UserdataTable_Missing5]              = NullFunc;
+    userDataTable[UserdataTable_Unknown25]             = NullFunc;
+    userDataTable[UserdataTable_Unknown26]             = NullFunc;
+    userDataTable[UserdataTable_Unknown27]             = NullFunc;
+    userDataTable[UserdataTable_Unknown28]             = NullFunc;
+    userDataTable[UserdataTable_LoadUserFile]          = NullFunc;
+    userDataTable[UserdataTable_SaveUserFile]          = NullFunc;
+    userDataTable[UserdataTable_DeleteUserFile]        = NullFunc;
+    userDataTable[UserdataTable_AddUserDBEntry]        = NullFunc;
+    userDataTable[UserdataTable_OpenUserDB]            = NullFunc;
+    userDataTable[UserdataTable_SaveUserDB]            = NullFunc;
+    userDataTable[UserdataTable_Unknown30]             = NullFunc;
+    userDataTable[UserdataTable_Missing6]              = NullFunc;
+    userDataTable[UserdataTable_Unknown31]             = NullFunc;
+    userDataTable[UserdataTable_Unknown32]             = NullFunc;
+    userDataTable[UserdataTable_Unknown33]             = NullFunc;
+    userDataTable[UserdataTable_Unknown34]             = NullFunc;
+    userDataTable[UserdataTable_Unknown35]             = NullFunc;
+    userDataTable[UserdataTable_Unknown36]             = NullFunc;
+    userDataTable[UserdataTable_Unknown37]             = NullFunc;
+    userDataTable[UserdataTable_Unknown38]             = NullFunc;
+    userDataTable[UserdataTable_Unknown39]             = NullFunc;
+    userDataTable[UserdataTable_AddUserDB]             = NullFunc;
+    userDataTable[UserdataTable_Unknown40]             = NullFunc;
+    userDataTable[UserdataTable_Unknown41]             = NullFunc;
+    userDataTable[UserdataTable_Unknown42]             = NullFunc;
+    userDataTable[UserdataTable_Unknown43]             = NullFunc;
 
     // Function Table
     functionTable[FunctionTable_InitGameOptions]              = InitGameOptions;

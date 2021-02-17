@@ -242,10 +242,10 @@ struct RSDKFunctionTable {
     void (*LoadUserFile)(const char *filename, void *buffer, int filesize);
     void (*SaveUserFile)(const char *fileName, void *buffer, size_t size);
     void (*printLog)(SeverityModes severity, const char *message, ...);
-    void (*printString)(SeverityModes severity, const char *message);
+    void (*PrintString)(SeverityModes severity, const char *message);
     void (*printText)(SeverityModes severity, const char *message, TextInfo *text);
     void (*printIntegerUnsigned)(SeverityModes severity, const char *message, uint integer);
-    void (*printInteger)(SeverityModes severity, const char *message, int integer);
+    void (*PrintInteger)(SeverityModes severity, const char *message, int integer);
     void (*printFloat)(SeverityModes severity, const char *message, float f);
     void (*printVector2)(SeverityModes severity, const char *message, int x, int y);
     void (*printHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);

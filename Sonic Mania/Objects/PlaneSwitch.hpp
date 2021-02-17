@@ -5,12 +5,16 @@
 
 // Object Class
 struct ObjectPlaneSwitch : Object{
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityPlaneSwitch : Entity {
-
+    int flags;
+    int size;
+    bool32 onPath;
+    int negAngle;
+    EntityAnimationData data;
 };
 
 // Object Struct

@@ -235,7 +235,8 @@ bool processEvents()
 
 void initRetroEngine()
 {
-    InitialiseUserStorage();
+    InitStorage();
+    initUserData();
 
     readSettings();
 
@@ -272,6 +273,7 @@ void runRetroEngine()
                 LoadScene();
                 LoadSceneFile();
                 InitObjects();
+                userCore->SetupDebugValues();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
@@ -325,6 +327,7 @@ void runRetroEngine()
                 LoadScene();
                 LoadSceneFile();
                 InitObjects();
+                userCore->SetupDebugValues();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
@@ -433,7 +436,8 @@ void runRetroEngine()
     ReleaseAudioDevice();
     ReleaseRenderDevice();
     writeSettings(true);
-    ReleaseUserStorage();
+    releaseUserData();
+    ReleaseStorage();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
     SDL_Quit();
@@ -507,6 +511,7 @@ void startGameObjects()
     sceneInfo.inEditor       = 0;
     sceneInfo.debugMode      = engine.devMenu;
     devMenu.state            = DevMenu_MainMenu;
+    setupFunctions();
     InitScriptSystem();
     LoadGameConfig();
 }
@@ -632,8 +637,6 @@ void LoadGameConfig()
 
 void InitScriptSystem()
 {
-    setupFunctions();
-
     CreateObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
                  NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
     CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,

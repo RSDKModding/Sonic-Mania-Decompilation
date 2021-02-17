@@ -69,7 +69,7 @@ struct ObjectZone : Object{
     byte playerDrawLow;
     byte uiDrawLow;
     byte uiDrawHigh;
-    char field_17B;
+    byte field_17B;
     ushort sfx_fail;
     byte data[17826];
     int swapGameMode;
@@ -106,7 +106,7 @@ int Zone_GetZoneID();
 void Zone_StoreEntities(int xOffset, int yOffset);
 void Zone_Unknown1(int fade1, int fade2);
 void Zone_Unknown2();
-void Zone_Unknown3(EntityPlaneSwitch *planeSwitch, EntityPlayer *player, int angle);
+void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
 void Zone_Unknown4(int screen);
 void Zone_Unknown5();
 void Zone_Unknown6();

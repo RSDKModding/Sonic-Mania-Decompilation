@@ -271,15 +271,15 @@ void Zone_Unknown2()
     //}
 }
 
-void Zone_Unknown3(EntityPlaneSwitch *planeSwitch, EntityPlayer *player, int angle)
+void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)
 {
-    int v5             = (player->position.x - planeSwitch->position.x) >> 8;
-    int v6             = (player->position.y - planeSwitch->position.y) >> 8;
-    int v7             = v6 * RSDK.Sin256(angle);
-    player->position.x = v7 + v5 * RSDK.Cos256(angle) + planeSwitch->position.x;
-    int v8             = v6 * RSDK.Cos256(angle);
-    int v9             = v8 - v5 * RSDK.Sin256(angle);
-    player->position.y = v9 + planeSwitch->position.y;
+    int v5 = (pos->x - entity->position.x) >> 8;
+    int v6 = (pos->y - entity->position.y) >> 8;
+    int v7 = v6 * RSDK.Sin256(angle);
+    pos->x = v7 + v5 * RSDK.Cos256(angle) + entity->position.x;
+    int v8 = v6 * RSDK.Cos256(angle);
+    int v9 = v8 - v5 * RSDK.Sin256(angle);
+    pos->y = v9 + entity->position.y;
 }
 
 void Zone_Unknown4(int screen)

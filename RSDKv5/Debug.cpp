@@ -139,7 +139,7 @@ void DevMenu_MainMenu()
     // Stage Storage
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (sizeof(int) * userStorage[DATASET_STG].usedStorage) / (float)userStorage[DATASET_STG].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  (sizeof(int) * dataStorage[DATASET_STG].usedStorage) / (float)dataStorage[DATASET_STG].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "STG", y, 0, 0xF0F080);
 
@@ -147,7 +147,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (sizeof(int) * userStorage[DATASET_MUS].usedStorage) / (float)userStorage[DATASET_MUS].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  (sizeof(int) * dataStorage[DATASET_MUS].usedStorage) / (float)dataStorage[DATASET_MUS].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "MUS", y, 0, 0xF0F080);
 
@@ -155,7 +155,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (sizeof(int) * userStorage[DATASET_SFX].usedStorage) / (float)userStorage[DATASET_SFX].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  (sizeof(int) * dataStorage[DATASET_SFX].usedStorage) / (float)dataStorage[DATASET_SFX].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "SFX", y, 0, 0xF0F080);
 
@@ -163,7 +163,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (sizeof(int) * userStorage[DATASET_STR].usedStorage) / (float)userStorage[DATASET_STR].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  (sizeof(int) * dataStorage[DATASET_STR].usedStorage) / (float)dataStorage[DATASET_STR].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "STR", y, 0, 0xF0F080);
 
@@ -171,7 +171,7 @@ void DevMenu_MainMenu()
     y += 10;
     DrawRectangle(currentScreen->centerX - 40, y, 128, 8, 128, 255, INK_NONE, true);
     DrawRectangle(currentScreen->centerX - 39, y + 1,
-                  (sizeof(int) * userStorage[DATASET_TMP].usedStorage) / (float)userStorage[DATASET_TMP].storageLimit * 126.0, 6, 0xF0F0F0, 255,
+                  (sizeof(int) * dataStorage[DATASET_TMP].usedStorage) / (float)dataStorage[DATASET_TMP].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "TMP", y, 0, 0xF0F080);
 
