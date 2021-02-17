@@ -12,7 +12,7 @@ enum SeverityModes {
     SEVERITY_FATAL,
 };
 
-extern bool engineDebugMode;
+extern bool32 engineDebugMode;
 extern char outputString[0x400];
 
 void printLog(SeverityModes severity, const char *message, ...);
@@ -49,17 +49,17 @@ inline void printHitbox(SeverityModes severity, const char *message, Hitbox *hit
 struct DebugValueInfo {
     char name[0x10];
     void *value;
-    int field_14;
+    int isSigned;
     int valByteCnt;
-    int unknown1;
-    int unknown2;
+    int min;
+    int max;
 };
 
 extern int debugValCnt;
 extern DebugValueInfo debugValues[DEBUGVAL_MAX];
 
 inline void ClearDebugValues() { debugValCnt = 0; }
-void SetDebugValue(const char *name, int valPtr, int type, int unknown1, int unknown2);
+void SetDebugValue(const char *name, void *valPtr, int type, int min, int max);
 
 struct DevMenu {
     void (*state)(void);

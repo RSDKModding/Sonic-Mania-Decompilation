@@ -48,7 +48,7 @@ struct RSDKFileInfo {
     uint hash[0x4];
     int offset;
     int filesize;
-    bool encrypted;
+    bool32 encrypted;
     int fileID;
 };
 
@@ -60,12 +60,12 @@ struct RSDKContainer {
 extern RSDKContainer rsdkContainer;
 extern char rsdkName[0x400];
 
-extern bool useDataFile;
+extern bool32 useDataFile;
 
-bool CheckDataFile(const char *filename);
-bool OpenDataFile(FileInfo *info, const char *filename);
+bool32 CheckDataFile(const char *filename);
+bool32 OpenDataFile(FileInfo *info, const char *filename);
 
-inline bool LoadFile(FileInfo *info, const char *filename)
+inline bool32 LoadFile(FileInfo *info, const char *filename)
 {
     char filePath[0x400];
 

@@ -12,7 +12,7 @@ TriggerState triggerR[PLAYER_COUNT];
 TouchMouseData touchMouseData;
 
 #if RETRO_USING_SDL2
-bool getControllerButton(byte inputID, byte buttonID)
+bool32 getControllerButton(byte inputID, byte buttonID)
 {
     if (SDL_GameControllerGetButton(inputDevice.controllers[inputID], (SDL_GameControllerButton)buttonID)) {
         return true;
@@ -74,7 +74,7 @@ void InputDevice::ProcessInput()
             }
         }
 
-        bool isPressed = false;
+        bool32 isPressed = false;
         for (int i = 0; i < KEY_MAX; i++) {
             if (keyState[buttons[i]->keyMap]) {
                 isPressed = true;

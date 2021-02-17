@@ -53,7 +53,7 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
     int otherIX = otherEntity->position.x >> 0x10;
     int otherIY = otherEntity->position.y >> 0x10;
 
-    bool result = false;
+    bool32 result = false;
     if (thisIX + thisHitbox->left >= otherIX + otherHitbox->right || thisIX + thisHitbox->right <= otherIX + otherHitbox->left
         || thisIY + thisHitbox->top >= otherIY + otherHitbox->bottom || thisIY + thisHitbox->bottom <= otherIY + otherHitbox->top) {
         result = 0;

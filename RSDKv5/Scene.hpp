@@ -114,7 +114,7 @@ extern TileLayer tileLayers[LAYER_COUNT];
 
 extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction
 
-extern bool hardResetFlag;
+extern bool32 hardResetFlag;
 extern char currentSceneFolder[0x10];
 
 extern SceneInfo sceneInfo;
@@ -133,7 +133,7 @@ void ProcessSceneTimer();
 void LoadSceneByName(const char *categoryName, const char *sceneName);
 inline void InitSceneLoad() { sceneInfo.state = sceneInfo.state < ENGINESTATE_LOAD_STEPOVER ? ENGINESTATE_LOAD : ENGINESTATE_LOAD_STEPOVER; }
 
-inline void SetHardResetFlag(bool set) { hardResetFlag = set; }
+inline void SetHardResetFlag(bool32 set) { hardResetFlag = set; }
 
 inline bool32 CheckValidStage()
 {

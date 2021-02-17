@@ -6,7 +6,7 @@
 
 SFXInfo sfxList[SFX_COUNT];
 
-bool audioEnabled = false;
+bool32 audioEnabled = false;
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
 
@@ -32,7 +32,7 @@ SDL_AudioSpec audioDeviceFormat;
 
 #define MIX_BUFFER_SAMPLES (256)
 
-bool InitAudioDevice()
+bool32 InitAudioDevice()
 {
     //StopAllSfx(); //"init"
 #if !RETRO_USE_ORIGINAL_CODE

@@ -168,7 +168,7 @@ byte TraceGifPrefix(uint *prefix, int code, int clearCode)
 
     return code;
 }
-void ReadGifPictureData(ImageGIF *image, int width, int height, bool interlaced, byte *gfxData)
+void ReadGifPictureData(ImageGIF *image, int width, int height, bool32 interlaced, byte *gfxData)
 {
     int array[]  = { 0, 4, 2, 1 };
     int array2[] = { 8, 8, 4, 2 };
@@ -228,7 +228,7 @@ bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader)
         ReadInt16(&image->info);
         ReadInt16(&image->info);
         data            = ReadInt8(&image->info);
-        bool interlaced = (data & 0x40) >> 6;
+        bool32 interlaced = (data & 0x40) >> 6;
         if (data >> 7 == 1) {
             int c = 0x80;
             do {
@@ -349,7 +349,7 @@ void PNGDecodeData(ImagePNG *image, byte *dataPtr) {
     int v51;       
     char v52;      
     byte v53;      
-    bool v54;      
+    bool32 v54;      
     int v55;       
     byte v56;      
     int v57;       
@@ -607,7 +607,7 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
         image->chunkSize   = ReadInt32(&image->info);
         image->chunkHeader = ReadInt32(&image->info);
 
-        bool endFlag = false;
+        bool32 endFlag = false;
         if (image->chunkHeader == 'DNEI') {
             endFlag = true;
         }

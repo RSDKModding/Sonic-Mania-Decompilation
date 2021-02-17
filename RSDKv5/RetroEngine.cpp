@@ -11,7 +11,7 @@ typedef void(__cdecl *linkPtr)(GameInfo *);
 int *gameOptionsPtr = NULL;
 RetroEngine engine  = RetroEngine();
 
-bool processEvents()
+bool32 processEvents()
 {
 #if RETRO_USING_SDL2
     while (SDL_PollEvent(&engine.sdlEvents)) {
@@ -277,11 +277,11 @@ void runRetroEngine()
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
-                    val->field_14   = 0;
+                    val->isSigned   = 0;
                     val->value      = &drawLayers[v].visible;
                     val->valByteCnt = 4;
-                    val->unknown1   = 0;
-                    val->unknown2   = 1;
+                    val->min   = 0;
+                    val->max   = 1;
 
                     MEM_ZERO(drawLayers[v]);
                     drawLayers[v].visible = true;
@@ -331,11 +331,11 @@ void runRetroEngine()
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
-                    val->field_14   = 0;
+                    val->isSigned   = 0;
                     val->value      = &drawLayers[v].visible;
                     val->valByteCnt = 4;
-                    val->unknown1   = 0;
-                    val->unknown2   = 1;
+                    val->min   = 0;
+                    val->max   = 1;
 
                     MEM_ZERO(drawLayers[v]);
                     drawLayers[v].visible = true;
@@ -670,7 +670,7 @@ void InitScriptSystem()
         return LinkGameLogic(&info);
     }
 
-    bool linked = false;
+    bool32 linked = false;
 #if RETRO_PLATFORM == RETRO_WIN
     if (!hLibModule)
         hLibModule = LoadLibraryA("Game");

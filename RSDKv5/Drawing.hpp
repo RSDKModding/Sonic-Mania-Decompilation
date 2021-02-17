@@ -65,7 +65,7 @@ struct DrawList {
     ushort entries[ENTITY_COUNT];
     ushort layerDrawList[LAYER_COUNT];
     void (*initDrawPtr)(void);
-    int visible;
+    bool32 visible;
     int entityCount;
     int layerCount;
 };
@@ -85,7 +85,7 @@ extern int screenCount;
 extern ScreenInfo screens[SCREEN_MAX];
 extern ScreenInfo *currentScreen;
 
-bool InitRenderDevice();
+bool32 InitRenderDevice();
 void FlipScreen();
 void ReleaseRenderDevice();
 void UpdateWindow();

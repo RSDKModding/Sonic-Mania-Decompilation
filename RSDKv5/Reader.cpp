@@ -3,9 +3,9 @@
 RSDKContainer rsdkContainer;
 char rsdkName[0x400];
 
-bool useDataFile = false;
+bool32 useDataFile = false;
 
-bool CheckDataFile(const char *filePath)
+bool32 CheckDataFile(const char *filePath)
 {
     MEM_ZERO(rsdkContainer);
     MEM_ZERO(rsdkName);
@@ -38,7 +38,7 @@ bool CheckDataFile(const char *filePath)
             rsdkContainer.files[f].offset  = ReadInt32(&info);
             rsdkContainer.files[f].filesize = ReadInt32(&info);
 
-            rsdkContainer.files[f].encrypted = (rsdkContainer.files[f].filesize & 0x80000000);
+            rsdkContainer.files[f].encrypted = (rsdkContainer.files[f].filesize & 0x80000000) != 0;
             rsdkContainer.files[f].filesize &= 0x7FFFFFFF;
 
             rsdkContainer.files[f].fileID = f;
@@ -54,7 +54,7 @@ bool CheckDataFile(const char *filePath)
     }
 }
 
-bool OpenDataFile(FileInfo *info, const char *filename)
+bool32 OpenDataFile(FileInfo *info, const char *filename)
 {
     memset(hashBuffer, 0, 0x400);
     StringLowerCase(hashBuffer, filename);
@@ -65,7 +65,7 @@ bool OpenDataFile(FileInfo *info, const char *filename)
     for (int f = 0; f < rsdkContainer.fileCount; ++f) {
         RSDKFileInfo *file = &rsdkContainer.files[f];
 
-        bool match = true;
+        bool32 match = true;
         for (int h = 0; h < 4; ++h) {
             if (buffer[h] != file->hash[h]) {
                 match = false;

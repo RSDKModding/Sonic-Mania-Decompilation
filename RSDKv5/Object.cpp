@@ -741,7 +741,7 @@ bool32 GetActiveObjects(ushort group, Entity **entity)
         return false;
     ForeachStackInfo *stackPtr   = foreachStackPtr;
     Entity* nextEntity = 0;
-    bool flag       = 0;
+    bool32 flag                  = 0;
     while (true) {
         if (nextEntity && nextEntity->objectID == group) {
             *entity = nextEntity;

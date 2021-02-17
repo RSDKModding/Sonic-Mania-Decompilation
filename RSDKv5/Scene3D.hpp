@@ -107,7 +107,7 @@ ushort LoadMesh(const char *filepath, Scopes scope);
 ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
 void Init3DScene(ushort sceneID);
 
-inline void SetModelAnimation(ushort model, EntityAnimationData *data, short animSpeed, byte loopIndex, bool forceApply, ushort frameID)
+inline void SetModelAnimation(ushort model, EntityAnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
 {
     if (model >= MODEL_MAX) {
         if (data)

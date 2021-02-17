@@ -34,7 +34,7 @@ struct ChannelInfo {
 
 extern SFXInfo sfxList[SFX_COUNT];
 
-bool InitAudioDevice();
+bool32 InitAudioDevice();
 void ReleaseAudioDevice();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2

@@ -102,26 +102,29 @@ struct RetroEngine {
     char gameSubName[0x80];
     char gameVersion[0x20];
 
-    bool useExternalCode = false;
+    bool32 useExternalCode = false;
 
-    bool devMenu      = false;
-    bool printConsole = false;
+    bool32 devMenu    = false;
+    bool32 printConsole = false;
+
+    int hasPlus     = 1;
+    int confirmFlip = 0;
 
     int prevEngineMode      = ENGINESTATE_LOAD;
-    bool running            = false;
+    bool32 running          = false;
     int gameSpeed           = 1;
     int fastForwardSpeed    = 8;
-    bool frameStep          = false;
-    bool masterPaused       = false;
-    bool showPaletteOverlay = false;
+    bool32 frameStep        = false;
+    bool32 masterPaused     = false;
+    bool32 showPaletteOverlay = false;
 
-    bool isFullScreen = false;
+    bool32 isFullScreen = false;
 
-    bool startFullScreen = false;
-    bool borderless      = false;
-    bool exclusiveFS     = false;
-    bool vsync           = false;
-    bool tripleBuffer    = false;
+    bool32 startFullScreen = false;
+    bool32 borderless      = false;
+    bool32 exclusiveFS     = false;
+    bool32 vsync           = false;
+    bool32 tripleBuffer    = false;
     int windowWidth      = 424;
     int windowHeight     = SCREEN_YSIZE;
     int fsWidth          = 0;
@@ -134,12 +137,12 @@ struct RetroEngine {
     float imageUnknown;
     bool32 (*skipCallback)();
 
-    bool shaderSupport   = true;
+    bool32 shaderSupport = true;
     int screenShader     = 0;
     int shaderUnknown    = 0;
     int dimTimer         = 0;
 
-    bool streamsEnabled = true;
+    bool32 streamsEnabled = true;
     float streamVolume  = 1.0;
     float soundFXVolume = 1.0;
 

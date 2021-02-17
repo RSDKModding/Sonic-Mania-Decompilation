@@ -1,6 +1,6 @@
 #include "RetroEngine.hpp"
 
-bool settingsChanged = false;
+bool32 settingsChanged = false;
 
 DummyCore *dummmyCore = NULL;
 DummyCore *userCore   = NULL;
@@ -44,11 +44,11 @@ void initUserData()
         userCore->ExitGame             = exitGame;
         userCore->SetupDebugValues     = setupUserDebugValues;
 
-        userCore->values[0]   = true;
-        userCore->values[1]   = curSKU.platform;
-        userCore->values[2]   = curSKU.region;
-        userCore->values[3]   = curSKU.language;
-        userCore->values[4]   = false;
+        userCore->values[0]   = &engine.hasPlus;
+        userCore->values[1]   = &curSKU.platform;
+        userCore->values[2]   = &curSKU.region;
+        userCore->values[3]   = &curSKU.language;
+        userCore->values[4]   = &engine.confirmFlip;
         userCore->debugValCnt = 5;
 
         achievements->UnlockAchievement = unlockAchievement;
@@ -104,7 +104,7 @@ void setPresence(byte a2, TextInfo *info)
     RemoveStorageEntry((void **)&text);
 }
 
-const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYSTEM_CONFIRM_FLIP" };
+const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
 void setupUserDebugValues()
 {
     if (achievements->SetDebugValues)
@@ -119,13 +119,13 @@ void setupUserDebugValues()
         //userStorage->unknown1();
 
     for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
-        DebugValueInfo *val = &debugValues[i];
+        DebugValueInfo *val = &debugValues[debugValCnt++];
         StrCopy(val->name, userDebugValNames[i]);
-        val->field_14   = 0;
+        val->isSigned   = 0;
         val->valByteCnt = 4;
-        val->value      = &userCore->values[i];
-        val->unknown1   = 0;
-        val->unknown2   = 1;
+        val->value      = userCore->values[i];
+        val->min   = 0;
+        val->max   = 1;
     }
 }
 
@@ -158,7 +158,7 @@ int GetSettingsValue(int id)
 
 void SetSettingsValue(int id, int val)
 {
-    bool bVal = val;
+    bool32 bVal = val;
     switch (id) {
         case 0:
             if (!engine.isFullScreen != bVal) {
@@ -343,7 +343,7 @@ void readSettings()
     }
     iniparser_freedict(ini);
 }
-void writeSettings(bool writeToFile)
+void writeSettings(bool32 writeToFile)
 {
 
     if (settingsChanged || writeToFile) {

@@ -63,7 +63,7 @@ inline void CopyPalette(byte sourcePalette, byte srcPaletteStart, byte destinati
     }
 }
 
-inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool right)
+inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool32 right)
 {
     ushort startClr = fullPalette[palID][endIndex];
     if (right) {

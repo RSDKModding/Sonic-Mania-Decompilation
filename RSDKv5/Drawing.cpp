@@ -21,7 +21,7 @@ char drawGroupNames[0x10][0x10]{
 
 #include "DevFont.hpp"
 
-bool InitRenderDevice()
+bool32 InitRenderDevice()
 {
     for (int s = 0; s < SCREEN_MAX; ++s) {
         SetScreenSize(s, SCREEN_XSIZE, SCREEN_YSIZE);
@@ -3121,7 +3121,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
     int length      = 0;
     ushort colour16 = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 
-    bool endFlag = false;
+    bool32 endFlag = false;
     while (!endFlag) {
         char cur = text[length];
         endFlag  = true;

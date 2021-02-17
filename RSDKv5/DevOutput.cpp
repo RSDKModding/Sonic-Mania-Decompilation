@@ -64,7 +64,7 @@ int DevOutput_GetStringYOffset(char *string)
         return 24;
 
     do {
-        bool isNewLine  = cur == '\n';
+        bool32 isNewLine = cur == '\n';
         cur = *++string;
         v4 = v2 + 1;
         if (!isNewLine)

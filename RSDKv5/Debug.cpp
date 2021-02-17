@@ -1,6 +1,6 @@
 #include "RetroEngine.hpp"
 
-bool engineDebugMode = true;
+bool32 engineDebugMode = true;
 char outputString[0x400];
 
 int debugValCnt = 0;
@@ -56,46 +56,45 @@ void printLog(SeverityModes severity, const char *message, ...)
 #endif
 }
 
-void SetDebugValue(const char *name, int valPtr, int type, int unknown1, int unknown2)
+void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
 {
-    if (debugValCnt < 0x900) {
-        DebugValueInfo *value = &debugValues[debugValCnt];
-        strncpy(value->name, name, 0x10u);
-        value->value = (int *)valPtr;
+    if (debugValCnt < DEBUGVAL_MAX) {
+        DebugValueInfo *value = &debugValues[debugValCnt++];
+        strncpy(value->name, name, 0x10);
+        value->value = valPtr;
         switch (type) {
-            case 1:
-                value->field_14   = 0;
+            case 1: //bool
+                value->isSigned   = 0;
                 value->valByteCnt = 4;
                 break;
-            case 2:
-                value->field_14   = 1;
+            case 2: //byte
+                value->isSigned   = 1;
                 value->valByteCnt = 1;
                 break;
-            case 3:
-                value->field_14   = 1;
+            case 3: //ushort
+                value->isSigned   = 1;
                 value->valByteCnt = 2;
                 break;
-            case 4:
-                value->field_14   = 1;
+            case 4: //uint
+                value->isSigned   = 1;
                 value->valByteCnt = 4;
                 break;
-            case 6:
-                value->field_14   = 2;
+            case 6: //sbyte
+                value->isSigned   = 2;
                 value->valByteCnt = 1;
                 break;
-            case 7:
-                value->field_14   = 2;
+            case 7: //short
+                value->isSigned   = 2;
                 value->valByteCnt = 2;
                 break;
-            case 8:
-                value->field_14   = 2;
+            case 8: //int
+                value->isSigned   = 2;
                 value->valByteCnt = 4;
                 break;
             default: break;
         }
-        value->unknown1 = unknown1;
-        value->unknown2 = unknown2;
-        ++debugValCnt;
+        value->min = min;
+        value->max = max;
     }
 }
 
@@ -873,8 +872,8 @@ void DevMenu_DebugOptions()
     DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
     DrawDevText(currentScreen->centerX, "CONFIGURE DEBUG FLAGS", dy, ALIGN_CENTER, 0xF0F0F0);
-    DrawRectangle(currentScreen->centerX - 128, (dy + 40) - 4, 256, 72, 128, 255, INK_NONE, true);
     dy += 40;
+    DrawRectangle(currentScreen->centerX - 128, dy - 4, 256, 72, 128, 255, INK_NONE, true);
     uint optionColours[8];
     optionColours[0]                               = 0x808090;
     optionColours[1]                               = 0x808090;
@@ -886,7 +885,267 @@ void DevMenu_DebugOptions()
     optionColours[7]                               = 0x808090;
     optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
 
-    // v3                                             = devMenu.scroll;
-    // v4                                             = debugValCnt;
-    // v5                                             = 0;
+    bool32 confirm = controller[0].keyStart.press || controller[0].keyA.press;
+
+    for (int i = 0; i < 8; ++i) {
+        if (devMenu.scroll + i < debugValCnt) {
+            DebugValueInfo *val = &debugValues[devMenu.scroll + i];
+            DrawDevText(currentScreen->centerX - 96, val->name, dy, ALIGN_LEFT, optionColours[i]);
+            if (!val->value) {
+                DrawDevText(currentScreen->centerX + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080);
+            }
+            else {
+                char valBuf[0x10];
+                StrCopy(valBuf, "--------");
+                switch (val->valByteCnt) {
+                    default: DrawDevText(currentScreen->centerX + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
+                    case sizeof(sbyte): {
+                        sbyte *v = (sbyte *)val->value;
+                        if (val->isSigned == 2) {
+                            valBuf[0] = ' ';
+                            if (*v > 0x7F)
+                                valBuf[0] = '-';
+                            *v &= 0x7FFF;
+                        }
+                        else if (!val->isSigned) {
+                            valBuf[0] = 'Y';
+                            if (!*v)
+                                valBuf[0] = 'N';
+                            valBuf[1] = 0;
+                        }
+                            break;
+                    }
+                    case sizeof(short): {
+                        short *v = (short *)val->value;
+                        if (val->isSigned == 2) {
+                            valBuf[0] = ' ';
+                            if (*v > 0x7FFF)
+                                valBuf[0] = '-';
+                            *v &= 0x7FFF;
+                        }
+                        else if (!val->isSigned) {
+                            short *v  = (short *)val->value;
+                            valBuf[0] = 'Y';
+                            if (!*v)
+                                valBuf[0] = 'N';
+                            valBuf[1] = 0;
+                        }
+                        break;
+                    }
+                    case sizeof(int): {
+                        int *v = (int *)val->value;
+                        if (val->isSigned == 2) {
+                            valBuf[0] = ' ';
+                            if (*v > 0x7FFFFFFF)
+                                valBuf[0] = '-';
+                            *v &= 0x7FFFFFFF;
+                        }
+                        else if (!val->isSigned) {
+                            valBuf[0] = 'Y';
+                            if (!*v)
+                                valBuf[0] = 'N';
+                            valBuf[1] = 0;
+                        }
+                        break;
+                    }
+                }
+
+                if (val->isSigned) {
+                    if (2 * val->valByteCnt) {
+                        char *bufPtr = &valBuf[2 * val->valByteCnt];
+                        valBuf[(2 * val->valByteCnt) + 1] = 0;
+
+                        switch (val->valByteCnt) {
+                            default: break;
+                            case sizeof(sbyte): {
+                                sbyte *value = (sbyte *)val->value;
+                                for (int v = 0; v < 2 * val->valByteCnt; ++v) {
+                                    *bufPtr-- = ((v & 0xF) > 9 ? '7' : '0') + ((*value >> 4 * v) & 0xF);
+                                }
+                                break;
+                            }
+                            case sizeof(short): {
+                                short *value = (short *)val->value;
+                                for (int v = 0; v < 2 * val->valByteCnt; ++v) {
+                                    *bufPtr-- = ((v & 0xF) > 9 ? '7' : '0') + ((*value >> 4 * v) & 0xF);
+                                }
+                                break;
+                            }
+                            case sizeof(int): {
+                                int *value = (int *)val->value;
+                                for (int v = 0; v < 2 * val->valByteCnt; ++v) {
+                                    *bufPtr-- = ((v & 0xF) > 9 ? '7' : '0') + ((*value >> 4 * v) & 0xF);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                DrawDevText(currentScreen->centerX + 96, valBuf, dy, ALIGN_CENTER, optionColours[i]);
+            }
+            dy += 8;
+        }
+        else {
+            DrawDevText(currentScreen->centerX, "Back", dy, ALIGN_CENTER, optionColours[i]);
+        }
+    }
+
+    if (controller[0].keyUp.press) {
+        devMenu.option--;
+        if (devMenu.option < 0) {
+            devMenu.option = debugValCnt;
+        }
+
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (devMenu.option < 0) {
+                devMenu.option = debugValCnt;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+    }
+
+    if (controller[0].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option > debugValCnt) {
+            devMenu.option = 0;
+        }
+
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else if (controller[0].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option >= debugValCnt) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+    }
+
+    if (devMenu.option < debugValCnt) {
+        DebugValueInfo *val = &debugValues[devMenu.option];
+        switch (val->valByteCnt) {
+            default: DrawDevText(currentScreen->centerX + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
+            case sizeof(sbyte): {
+                sbyte *v = (sbyte *)val->value;
+                if (controller[0].keyLeft.press) {
+                    if (!val->isSigned) {
+                        *v ^= 1;
+                    }
+                    else {
+                        if (*v - 1 >= val->min) {
+                            *v -= 1;
+                        }
+                    }
+                }
+
+                if (controller[0].keyRight.press) {
+                    if (!val->isSigned) {
+                        *v ^= 1;
+                    }
+                    else {
+                        if (*v + 1 <= val->max) {
+                            *v += 1;
+                        }
+                    }
+                }
+                break;
+            }
+            case sizeof(short): {
+                short *v = (short *)val->value;
+                if (controller[0].keyLeft.press) {
+                    if (!val->isSigned) {
+                        *v ^= 1;
+                    }
+                    else {
+                        if (*v - 1 >= val->min) {
+                            *v -= 1;
+                        }
+                    }
+                }
+
+                if (controller[0].keyRight.press) {
+                    if (!val->isSigned) {
+                        *v ^= 1;
+                    }
+                    else {
+                        if (*v + 1 <= val->max) {
+                            *v += 1;
+                        }
+                    }
+                }
+                break;
+            }
+            case sizeof(int): {
+                int *v = (int *)val->value;
+                if (controller[0].keyLeft.press) {
+                    if (!val->isSigned) {
+                        *v ^= 1;
+                    }
+                    else {
+                        if (*v - 1 >= val->min) {
+                            *v -= 1;
+                        }
+                    }
+                }
+
+                if (controller[0].keyRight.press) {
+                    if (!val->isSigned) {
+                        *v ^= 1;
+                    }
+                    else {
+                        if (*v + 1 <= val->max) {
+                            *v += 1;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
+    else {
+        if (confirm) {
+            devMenu.state  = DevMenu_Options;
+            devMenu.option = 4;
+        }
+    }
+
 }

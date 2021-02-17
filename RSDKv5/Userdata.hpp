@@ -20,7 +20,7 @@ struct DummyCore {
     void (*CheckDLC)();
     void (*unknown17)();
 
-    int values[8];
+    int* values[8];
     byte debugValCnt;
     ushort field_25;
     byte field_27;
@@ -111,7 +111,7 @@ void exitGame();
 inline int checkDLC(byte dlcID)
 {
     if (dlcID < 8)
-        return userCore->values[dlcID];
+        return *userCore->values[dlcID];
     else
         return 0;
 }
@@ -125,12 +125,12 @@ void setPresence(byte a2, TextInfo *info);
 
 void setupUserDebugValues();
 
-extern bool settingsChanged;
+extern bool32 settingsChanged;
 
 int GetSettingsValue(int id);
 void SetSettingsValue(int id, int val);
 
 void readSettings();
-void writeSettings(bool writeToFile);
+void writeSettings(bool32 writeToFile);
 
 #endif

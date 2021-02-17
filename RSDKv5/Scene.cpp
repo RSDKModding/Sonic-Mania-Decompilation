@@ -6,7 +6,7 @@ ScanlineInfo *scanlines = NULL;
 TileLayer tileLayers[LAYER_COUNT];
 CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
 
-bool hardResetFlag = false;
+bool32 hardResetFlag = false;
 char currentSceneFolder[0x10];
 
 SceneInfo sceneInfo;
@@ -501,7 +501,7 @@ void LoadTileConfig(char *filepath)
                 memcpy(hasCollision, buffer + bufPos, 0x10 * sizeof(byte));
                 bufPos += 0x10;
 
-                bool isCeiling             = buffer[bufPos++];
+                bool32 isCeiling                = buffer[bufPos++];
                 collisionMasks[p][t].floorAngle = buffer[bufPos++];
                 collisionMasks[p][t].lWallAngle = buffer[bufPos++];
                 collisionMasks[p][t].rWallAngle = buffer[bufPos++];
