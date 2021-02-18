@@ -264,7 +264,7 @@ void setupFunctions()
     GenerateBlendLookupTable();
     InitGFXSystem();
 
-    memset(functionTable, 0, FUNCTABLE_COUNT * sizeof(void *));
+    memset(functionTable, NULL, FUNCTABLE_COUNT * sizeof(void *));
 
     // Userdata
     userDataTable[UserdataTable_GetUserLanguage]       = userCore->GetUserLanguage;

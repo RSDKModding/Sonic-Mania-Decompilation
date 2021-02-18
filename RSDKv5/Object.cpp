@@ -11,15 +11,12 @@ EntityBase objectEntityList[ENTITY_COUNT];
 EditableVarInfo *editableVarList;
 int editableVarCount = 0;
 
-ForeachStackInfo foreachStackList[0x20];
-ForeachStackInfo *foreachStackPtr = NULL;
-
 TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 bool32 validDraw = false;
 
 void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
-                  void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
+                  void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void),
                   void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
 {
     if (objectCount < OBJECT_COUNT) {
@@ -743,7 +740,7 @@ bool32 GetActiveObjects(ushort group, Entity **entity)
     Entity* nextEntity = 0;
     bool32 flag                  = 0;
     while (true) {
-        if (nextEntity && nextEntity->objectID == group) {
+        if (nextEntity && nextEntity->group == group) {
             *entity = nextEntity;
             return true;
         }
