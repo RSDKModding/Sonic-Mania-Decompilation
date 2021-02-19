@@ -33,7 +33,7 @@ enum GamePlatforms {
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
 
-#define RETRO_PLATFORM (RETRO_WIN)
+#define RETRO_PLATFORM (RETRO_OSX)
 #define GAME_PLATFORM  (PLATFORM_WIN)
 
 #define SCREEN_YSIZE (240)
@@ -50,7 +50,12 @@ enum GamePlatforms {
 #if RETRO_USING_SDL2
 #include <SDL.h>
 #endif
-#include <vorbis/vorbisfile.h>
+//#include <vorbis/vorbisfile.h>
+#endif
+
+#if RETRO_PLATFORM == RETRO_OSX
+#include <SDL2/SDL.h>
+//#include <vorbis/vorbisfile.h>
 #endif
 
 enum EngineStates {
@@ -170,7 +175,7 @@ void InitScriptSystem();
 inline void SetEngineState(byte state)
 {
     if (state < 4) {
-        sceneInfo.state = state | sceneInfo.state & 4;
+        sceneInfo.state = (state | sceneInfo.state) & 4;
     }
 }
 

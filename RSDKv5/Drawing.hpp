@@ -29,8 +29,6 @@ enum DrawFX { FX_NONE = 0, FX_FLIP = 1, FX_ROTATE = 2, FX_SCALE = 4 };
 
 enum FlipFlags { FLIP_NONE, FLIP_X, FLIP_Y, FLIP_XY };
 
-enum RotationFlags { ROT_NONE = 0, ROT_FULL, ROT_2, ROT_3, ROT_4, ROT_STATIC, };
-
 enum Alignments {
     ALIGN_LEFT,
     ALIGN_RIGHT,
@@ -217,7 +215,7 @@ void DrawDeformedSprite(ushort spriteIndex, InkEffects inkEffect, int alpha);
 void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
 
-void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags align, int spacing, int a8,
+void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative);
 void DrawDevText(int x, const char *text, int y, int align, uint colour);
 

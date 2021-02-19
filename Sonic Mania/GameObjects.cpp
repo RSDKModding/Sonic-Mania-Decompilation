@@ -17,14 +17,14 @@ RSDKFunctionTable RSDK;
 
 void LinkGameLogicDLL(GameInfo *info)
 {
-    MEM_ZERO(RSDK);
-    MEM_ZERO(User);
+    memset(&User, 0, sizeof(UserFunctionTable));
+    memset(&RSDK, 0, sizeof(RSDKFunctionTable));
 
     if (info->functionPtrs)
-        memcpy(&RSDK, info->functionPtrs, FUNCTABLE_COUNT * sizeof(void *));
+        memcpy(&RSDK, info->functionPtrs, sizeof(RSDKFunctionTable));
     void* uData = info->userdataPtrs;
     if (info->userdataPtrs)
-        memcpy(&User, info->userdataPtrs, UDATATABLE_COUNT * sizeof(void *));
+        memcpy(&User, info->userdataPtrs, sizeof(UserFunctionTable));
     RSDK_sku        = info->currentSKU;
     RSDK_sceneInfo  = info->sceneInfo;
     RSDK_controller = info->controller;

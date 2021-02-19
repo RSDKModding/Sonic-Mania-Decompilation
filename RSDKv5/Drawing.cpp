@@ -1,4 +1,4 @@
-#include "Retroengine.hpp"
+#include "RetroEngine.hpp"
 
 DrawList drawLayers[DRAWLAYER_COUNT];
 
@@ -1592,29 +1592,29 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
         int drawFX   = sceneInfo.entity->drawFX;
         if (sceneInfo.entity->drawFX & FX_ROTATE) {
             switch (data->rotationFlag) {
-                case ROT_NONE:
+                case ROTFLAG_NONE:
                     rotation = 0;
-                    if (!(sceneInfo.entity->drawFX & FX_SCALE) == FX_NONE)
+                    if ((sceneInfo.entity->drawFX & FX_SCALE) != FX_NONE)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROT_FULL:
+                case ROTFLAG_FULL:
                     rotation = sceneInfo.entity->rotation & 0x1FF;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
-                case ROT_2:
+                case ROTFLAG_2:
                     rotation = (sceneInfo.entity->rotation + 0x20) & 0x1C0;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
-                case ROT_3:
+                case ROTFLAG_3:
                     rotation = (sceneInfo.entity->rotation + 0x40) & 0x180;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
-                case ROT_4:
+                case ROTFLAG_4:
                     rotation = (sceneInfo.entity->rotation + 0x80) & 0x100;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROT_STATIC:
+                case ROTFLAG_STATICFRAMES:
                     if (sceneInfo.entity->rotation >= 0x100) {
                         rotation = 0x08 - ((0x214 - sceneInfo.entity->rotation) >> 6);
                     }
@@ -1626,7 +1626,7 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
                         case 0:
                         case 8:
                             rotation = 0x00;
-                            if (!(sceneInfo.entity->drawFX & FX_SCALE) == FX_NONE)
+                            if ((sceneInfo.entity->drawFX & FX_SCALE) != FX_NONE)
                                 drawFX ^= FX_ROTATE;
                             break;
                         case 1:
@@ -1908,7 +1908,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 }
                 case INK_LOOKUP:
                     while (height--) {
-                        ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
                         int w = width;
                         while (w--) {
@@ -2081,7 +2080,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 }
                 case INK_LOOKUP:
                     while (height--) {
-                        ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
                         int w = width;
                         while (w--) {
@@ -2254,7 +2252,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 }
                 case INK_LOOKUP:
                     while (height--) {
-                        ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
                         int w = width;
                         while (w--) {
@@ -2427,7 +2424,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 }
                 case INK_LOOKUP:
                     while (height--) {
-                        ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
                         int w = width;
                         while (w--) {
@@ -2693,7 +2689,6 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
         case INK_LOOKUP:
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
                 int ly             = scanlinePtr->position.y;
-                ushort *palettePtr = fullPalette[*lineBuffer++];
                 int lx             = scanlinePtr->position.x;
                 int dx             = scanlinePtr->deform.x;
                 int dy             = scanlinePtr->deform.y;
@@ -3028,7 +3023,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
 }
 
-void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags align, int spacing, int a8,
+void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative)
 {
     if (data && info && data->framePtrs) {

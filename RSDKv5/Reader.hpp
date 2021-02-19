@@ -67,8 +67,6 @@ bool32 OpenDataFile(FileInfo *info, const char *filename);
 
 inline bool32 LoadFile(FileInfo *info, const char *filename)
 {
-    char filePath[0x400];
-
     if (info->file)
         return 0;
     if (info->externalFile || !useDataFile) {
@@ -78,7 +76,7 @@ inline bool32 LoadFile(FileInfo *info, const char *filename)
         info->readPos = 0;
         info->fileSize = 0;
         fSeek(info->file, 0, SEEK_END);
-        info->fileSize = fTell(info->file);
+        info->fileSize = (int)fTell(info->file);
         fSeek(info->file, 0, SEEK_SET);
         return info->file != NULL;
     }
@@ -97,7 +95,7 @@ inline void CloseFile(FileInfo *info)
 }
 
 void GenerateELoadKeys(FileInfo *info, const char *key1, int key2);
-void DecryptBytes(FileInfo *info, void *buffer, int size);
+void DecryptBytes(FileInfo *info, void *buffer, size_t size);
 void SkipBytes(FileInfo *info, int size);
 
 inline void Seek_Set(FileInfo* info, int count) {
@@ -139,7 +137,7 @@ inline void Seek_Cur(FileInfo *info, int count)
 
 inline void ReadBytes(FileInfo *info, void* data, int count)
 {
-    int bytesRead = 0;
+    size_t bytesRead = 0;
     if (info->usingFileBuffer) {
         bytesRead = count;
         memcpy(data, info->fileData, count);
@@ -156,7 +154,7 @@ inline void ReadBytes(FileInfo *info, void* data, int count)
 inline byte ReadInt8(FileInfo *info)
 {
     byte result = 0;
-    int bytesRead = 0;
+    size_t bytesRead = 0;
     if (info->usingFileBuffer) {
         bytesRead          = 1;
         result             = *info->fileData;
@@ -174,7 +172,7 @@ inline byte ReadInt8(FileInfo *info)
 inline short ReadInt16(FileInfo *info)
 {
     short result  = 0;
-    int bytesRead = 0;
+    size_t bytesRead = 0;
     if (info->usingFileBuffer) {
         bytesRead = 2;
         result    = *info->fileData;
@@ -192,7 +190,7 @@ inline short ReadInt16(FileInfo *info)
 inline int ReadInt32(FileInfo *info)
 {
     int result   = 0;
-    int bytesRead = 0;
+    size_t bytesRead = 0;
     if (info->usingFileBuffer) {
         bytesRead = 4;
         result    = *info->fileData;
@@ -209,7 +207,7 @@ inline int ReadInt32(FileInfo *info)
 inline int64 ReadInt64(FileInfo *info)
 {
     int64 result  = 0;
-    int bytesRead = 0;
+    size_t bytesRead = 0;
     if (info->usingFileBuffer) {
         bytesRead = 8;
         result    = *info->fileData;
@@ -227,7 +225,7 @@ inline int64 ReadInt64(FileInfo *info)
 inline int ReadSingle(FileInfo *info)
 {
     float result    = 0;
-    int bytesRead = 0;
+    size_t bytesRead = 0;
     if (info->usingFileBuffer) {
         bytesRead = 4;
         result    = *info->fileData;

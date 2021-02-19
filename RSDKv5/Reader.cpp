@@ -133,7 +133,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int key2)
     }
 }
 
-void DecryptBytes(FileInfo *info, void *buffer, int size)
+void DecryptBytes(FileInfo *info, void *buffer, size_t size)
 {
     if (size) {
         byte *data = (byte *)buffer;

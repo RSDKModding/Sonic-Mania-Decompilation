@@ -104,7 +104,7 @@ void Zone_StageLoad()
     }
 
     RSDK.ResetEntity(SLOT_ZONE, Zone->objectID, 0);
-    if (options->gameMode = MODE_COMPETITION) {
+    if (options->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (options->gameMode == MODE_COMPETITION) {
                 RSDK.SetSettingsValue(12, 1);
@@ -194,7 +194,6 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            int id                        = RSDK.GetEntityID(entity);
             options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
@@ -208,7 +207,6 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            int id                        = RSDK.GetEntityID(entity);
             options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
@@ -222,7 +220,6 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            int id                        = RSDK.GetEntityID(entity);
             options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
@@ -319,16 +316,16 @@ void Zone_Unknown5()
 
 bool32 Zone_Unknown8()
 {
-    if (RSDK.CheckStageFolder("GHZ") && Zone->actID == 1 || RSDK.CheckStageFolder("CPZ") && Zone->actID == 1 || RSDK.CheckStageFolder("SPZ2")
-        || RSDK.CheckStageFolder("FBZ") && Zone->actID == 1 || RSDK.CheckStageFolder("PSZ2")) {
+    if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
+        || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2")) {
         return true;
     }
     if (RSDK.CheckStageFolder("SSZ2")) {
         if (RSDK.GetSceneLayerID("Tower") < LAYER_COUNT)
             return true;
     }
-    else if (RSDK.CheckStageFolder("HCZ") && Zone->actID == 1 || RSDK.CheckStageFolder("MSZ") && Zone->actID == 1 || RSDK.CheckStageFolder("OOZ2")
-             || RSDK.CheckStageFolder("LRZ3") || RSDK.CheckStageFolder("MMZ") && Zone->actID == 1 || RSDK.CheckStageFolder("TMZ3")
+    else if ((RSDK.CheckStageFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("MSZ") && Zone->actID == 1) || RSDK.CheckStageFolder("OOZ2")
+             || RSDK.CheckStageFolder("LRZ3") || (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1) || RSDK.CheckStageFolder("TMZ3")
              || RSDK.CheckStageFolder("ERZ")) {
         return true;
     }

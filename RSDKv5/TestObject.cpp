@@ -29,8 +29,8 @@ void TestObject_StaticUpdate()
     //DrawAniTile(TestObject->sheetIndex, 2, 0, 32 * (TestObject->timer % 8), 32, 32);
 }
 void TestObject_Draw() { 
-    EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
-    Vector2 drawPos;
+    //EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
+    //Vector2 drawPos;
     //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + (sin(TestObject->timer / 0x08) * 0x10),
     //         currentScreen->centerY + (cos(TestObject->timer / 0x08) * 0x10), 0x00FF00, 0xFF, INK_NONE, true); 
     //DrawRectangle(currentScreen->centerX, currentScreen->centerY, 0x40 + (TestObject->timer / 0x08) % 0x80, 0x40 + (TestObject->timer / 0x04) % 0x80,

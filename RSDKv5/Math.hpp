@@ -141,7 +141,7 @@ extern uint randKey;
 
 inline void setRandKey(int key) { randKey = key; }
 
-inline int random(int min, int max)
+inline int RSDK_random(int min, int max)
 {
     int v2;        
     uint v4; 
@@ -157,7 +157,7 @@ inline int random(int min, int max)
         return min + (v5 % (max - min));
 }
 
-inline int random2(int min, int max, int *randKey)
+inline int RSDK_random2(int min, int max, int *randKey)
 {
     int v4;
     int v5;
@@ -174,7 +174,7 @@ inline int random2(int min, int max, int *randKey)
     v7       = (((v5 >> 16) & 0x7FF) << 10) ^ (v6 >> 16) & 0x7FF;
     v8       = 1103515245 * v6 + 12345;
     *randKey = v8;
-    v9       = (v7 << 10) ^ (v8 >> 16) & 0x7FF;
+    v9       = ((v7 << 10) ^ (v8 >> 16)) & 0x7FF;
     if (min >= max)
         return max + (v9 % (min - max));
     else

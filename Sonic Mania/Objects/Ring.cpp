@@ -385,8 +385,8 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 {
     int flags          = 0;
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
-    int xVel           = entity->velocity.x;
-    int yVel           = entity->velocity.y;
+    //int xVel           = entity->velocity.x;
+    //int yVel           = entity->velocity.y;
 
     if (Platform) {
         EntityPlatform *colEnt = NULL;
@@ -408,7 +408,7 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
     }
 
     if (Spikes) {
-        EntitySpikes *colEnt = NULL;
+        //EntitySpikes *colEnt = NULL;
         // for (colEnt = 0; RSDK.GetActiveObjects(Spikes->objectID, (Entity **)&colEnt) == 1;
         //     flags |= 1 << RSDK.CheckObjectCollisionBox(colEnt, colEnt->hitbox, entity, &Ring->hitbox, 1)) {
         //    ;

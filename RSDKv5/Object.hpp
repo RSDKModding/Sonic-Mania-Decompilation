@@ -177,7 +177,7 @@ inline Entity* GetObjectByID(ushort objectID)
     return &objectEntityList[objectID < ENTITY_COUNT ? objectID : (ENTITY_COUNT - 1)];
 }
 
-inline int GetEntityID(EntityBase *entityPtr) { return entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0; }
+inline int GetEntityID(EntityBase *entityPtr) { return (int)(entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0); }
 
 int GetEntityCount(ushort type, bool32 isActive);
 

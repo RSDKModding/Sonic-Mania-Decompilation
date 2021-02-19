@@ -1,9 +1,9 @@
 #ifndef SONIC_MANIA_H
 #define SONIC_MANIA_H
 
-#include "../RSDKv5/RetroEngine.hpp"
+#include "GameLink.hpp"
 
-#if RETRO_PLATFORM == RETRO_WIN
+#ifdef _MSC_VER
 #define DLLExport __declspec(dllexport)
 #else
 #define DLLExport
@@ -28,6 +28,7 @@ extern TriggerState *RSDK_triggerL;
 extern TriggerState *RSDK_triggerR;
 extern TouchMouseData *RSDK_touchMouse;
 
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 inline void Game_Print(const char *message, ...)
 {
     if (!RSDK_sceneInfo->inEditor) {

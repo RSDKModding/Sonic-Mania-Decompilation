@@ -44,7 +44,7 @@ void StarPost_Draw()
 void StarPost_Create(void* data)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
-    if (options->gameMode == MODE_TIMEATTACK || options->gameMode == MODE_COMPETITION && entity->vsRemove) {
+    if (options->gameMode == MODE_TIMEATTACK || (options->gameMode == MODE_COMPETITION && entity->vsRemove)) {
         RSDK.DestroyEntity(entity, 0, 0);
     }
     else {
@@ -323,8 +323,8 @@ void StarPost_CheckCollisions()
                 entity->starAngle2 = 0;
                 entity->starOffset = 0;
                 //TODO: what the fuck does this even work
-                int v15            = (int)(player->rings - 20 + ((unsigned __int64)(-2004318071i64 * (player->rings - 20)) >> 32)) >> 3;
-                entity->starTimer  = (int)(v15 + (v15 >> 31)) % 3 + 1;
+                //int v15            = (int)(player->rings - 20 + ((unsigned __int64)(-2004318071i64 * (player->rings - 20)) >> 32)) >> 3;
+                //entity->starTimer  = (int)(v15 + (v15 >> 31)) % 3 + 1;
             }
         }
 

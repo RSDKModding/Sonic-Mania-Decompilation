@@ -1,4 +1,4 @@
-﻿#include "RetroEngine.hpp"
+#include "RetroEngine.hpp"
 
 const int LOADING_IMAGE = 0;
 const int LOAD_COMPLETE = 1;
@@ -197,8 +197,8 @@ bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader)
     }
 
     int data         = ReadInt8(&image->info);
-    int has_pallete  = (data & 0x80) >> 7;
-    int colors       = ((data & 0x70) >> 4) + 1;
+    //int has_pallete  = (data & 0x80) >> 7;
+    //int colors       = ((data & 0x70) >> 4) + 1;
     int palette_size = (data & 0x7) + 1;
     if (palette_size > 0)
         palette_size = 1 << palette_size;
@@ -572,7 +572,7 @@ LABEL_30:
 bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
     if (fileName) {
         if (LoadFile(&image->info, fileName)) {
-            if (ReadInt64(&image->info) == 0xA1A0A0D474E5089i64) {
+            if (ReadInt64(&image->info) == 0xA1A0A0D474E5089LL) {
                 image->chunkSize   = ReadInt32(&image->info);
                 image->chunkHeader = ReadInt32(&image->info);
                 if (image->chunkHeader == 'RDHI' && image->chunkSize == 13) {
@@ -589,6 +589,7 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
                     }
                     image->depth    = 32;
                     image->chunkCRC = ReadInt32(&image->info);
+                    CloseFile(&image->info);
                     if (loadHeader)
                         return true;
                 }
@@ -668,11 +669,12 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
             Seek_Cur(&image->info, image->chunkSize);
         }
         image->chunkCRC = ReadInt32(&image->info);
-        if (endFlag)
+        if (endFlag) {
+            CloseFile(&image->info);
             return true;
+        }
     }
 
-    CloseFile(&image->info);
     return false;
 }
 

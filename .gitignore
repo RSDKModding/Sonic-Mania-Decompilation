@@ -27,10 +27,22 @@ bld/
 bin/
 [Bb]in/
 [Oo]bj/
+cmake/
 
-#safety
+#dependencies
+[Dd]ependencies/windows-uwp/**
+[Dd]ependencies/windows/*
+[Dd]ependencies/mac/*
+[Dd]ependencies/all/*
+![Dd]ependencies/all/dependencies.txt
+
+# UWP
+**/Generated Files
+**/BundleArtifacts
+**/AppPackages
+
+# safety
 *.rsdk
-*.ogv
 
 #OSX files
 *.DS_Store
@@ -45,10 +57,6 @@ bin/
 *.pcm
 *.timestamp
 *.xcbkptlist
-*.xcsettings
-
-#dependencies
-[Dd]ependencies/windows/*
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -241,3 +249,6 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 Ignored/
+
+# Compiled object files
+objects/

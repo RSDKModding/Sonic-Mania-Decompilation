@@ -194,7 +194,6 @@ void ClearUnusedStorage(StorageDataSets set)
         if (usedStorage) {
             bool32 flag = dataStorage[set].usedStorage == usedStorage;
             dataStorage[set].usedStorage -= usedStorage;
-            int offset  = 0;
             int *memPtr = dataStorage[set].memPtr;
 
             if (!flag) {

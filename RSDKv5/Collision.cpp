@@ -110,7 +110,6 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
 byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
     int store, store2, store3;
-    int thisIX, thisIY, otherIX, otherIY;
     int collisionResult, collisionDir;
 
     if (thisEntity && otherEntity && thisHitbox && otherHitbox) {

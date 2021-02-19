@@ -103,7 +103,6 @@ short LoadAnimation(const char *filename, Scopes scope)
 short CreateAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope)
 {
     char buffer[0x100];
-    FileInfo info;
     StrCopy(buffer, "Data/Sprites/");
     StrAdd(buffer, filename);
 

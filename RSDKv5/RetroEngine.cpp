@@ -1,11 +1,19 @@
-#include "Retroengine.hpp"
+#include "RetroEngine.hpp"
 
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
 
 HMODULE hLibModule = NULL;
 
-typedef void(__cdecl *linkPtr)(GameInfo *);
+typedef void(*linkPtr)(GameInfo *);
+#endif
+
+#if RETRO_PLATFORM == RETRO_OSX
+#include <dlfcn.h>
+
+void* link_handle = NULL;
+
+typedef void(*linkPtr)(GameInfo *);
 #endif
 
 int *gameOptionsPtr = NULL;
@@ -449,6 +457,12 @@ void runRetroEngine()
         hLibModule = NULL;
     }
 #endif
+    
+#if RETRO_PLATFORM == RETRO_OSX
+    if (link_handle)
+        dlclose(link_handle);
+#endif
+    
 }
 
 void parseArguments(int argc, char *argv[])
@@ -677,6 +691,18 @@ void InitScriptSystem()
 
     if (hLibModule) {
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
+        if (linkGameLogic) {
+            linkGameLogic(&info);
+            linked = true;
+        }
+    }
+#endif
+#if RETRO_PLATFORM == RETRO_OSX
+    if (!link_handle)
+        link_handle = dlopen("Game.dylib", RTLD_LOCAL|RTLD_LAZY);
+
+    if (link_handle) {
+        linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
         if (linkGameLogic) {
             linkGameLogic(&info);
             linked = true;

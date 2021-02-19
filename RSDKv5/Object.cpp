@@ -15,6 +15,9 @@ TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 bool32 validDraw = false;
 
+ForeachStackInfo foreachStackList[0x20];
+ForeachStackInfo *foreachStackPtr = NULL;
+
 void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
                   void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void),
                   void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))

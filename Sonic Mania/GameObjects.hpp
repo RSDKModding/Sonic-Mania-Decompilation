@@ -59,7 +59,7 @@ struct UserFunctionTable {
     void (*Unknown39)(short a1, int a2, int a3, int a4, void *dst);
     void (*AddUserDB)(void *, void *);
     void (*Unknown40)(ushort a1, int a2);
-    void (*GetTimeFormat)(ushort a1, int a2, const char *Buf, size_t sizeInBytes, const char *format);
+    void (*GetTimeFormat)(ushort a1, int a2, const char *Buf, uint sizeInBytes, const char *format);
     void (*Unknown42)(ushort a1, int a2);
     void (*Unknown43)(short a1);
     // count: 59
@@ -83,7 +83,7 @@ struct RSDKFunctionTable {
     Entity *(*GetDrawListRefPtr)(byte layerID, ushort entityID);
     int (*DestroyEntity)(Entity *entity, ushort type, void *data);
     int (*ResetEntity)(ushort slotID, ushort type, void *data);
-    int (*SpawnEntity)(ushort type, void *data, int x, int y);
+    Entity* (*SpawnEntity)(ushort type, void *data, int x, int y);
     void (*CopyEntity)(void *destEntity, Entity *srcEntity, bool32 clearSrcEntity);
     void (*CheckOnScreen)(void);
     void (*CheckPosOnScreen)(void);
@@ -240,7 +240,7 @@ struct RSDKFunctionTable {
     void (*Unknown103)(byte a1);
     void (*Unknown104)(void);
     void (*LoadUserFile)(const char *filename, void *buffer, int filesize);
-    void (*SaveUserFile)(const char *fileName, void *buffer, size_t size);
+    void (*SaveUserFile)(const char *fileName, void *buffer, uint size);
     void (*printLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
     void (*printText)(SeverityModes severity, const char *message, TextInfo *text);
@@ -838,6 +838,9 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/YoyoPulley.hpp"
 #include "Objects/ZipLine.hpp"
 #include "Objects/Zone.hpp"
+
+
+#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
 
 extern "C" {
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);

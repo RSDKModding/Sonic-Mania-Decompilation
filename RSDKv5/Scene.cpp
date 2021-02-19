@@ -218,7 +218,6 @@ void LoadSceneFile() {
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer)) {
-        char buffer[0x100];
         uint sig = ReadInt32(&info);
 
         if (sig != 0x4E4353) {
@@ -234,7 +233,7 @@ void LoadSceneFile() {
         for (int i = 0; i < layerCount; ++i) {
             TileLayer* layer = &tileLayers[i];
 
-            byte unknown = ReadInt8(&info);
+            ReadInt8(&info);
             ReadString(&info, hashBuffer);
             GenerateHash(layer->name, StrLength(hashBuffer));
 

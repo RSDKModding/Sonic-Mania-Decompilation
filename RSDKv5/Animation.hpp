@@ -7,7 +7,7 @@
 
 #define FRAMEHITBOX_COUNT (0x8)
 
-enum AnimrotationFlags { ROTFLAG_NONE, ROTFLAG_FULL, ROTFLAG_45DEG, ROTFLAG_STATICFRAMES };
+enum RotationFlags { ROTFLAG_NONE, ROTFLAG_FULL, ROTFLAG_2, ROTFLAG_3, ROTFLAG_4, ROTFLAG_STATICFRAMES };
 
 struct SpriteAnimationEntry {
     uint hash[4];

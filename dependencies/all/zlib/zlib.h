@@ -78,6 +78,10 @@ extern "C" {
   even in the case of corrupted input.
 */
 
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif
+
 typedef voidpf (*alloc_func) OF((voidpf opaque, uInt items, uInt size));
 typedef void   (*free_func)  OF((voidpf opaque, voidpf address));
 

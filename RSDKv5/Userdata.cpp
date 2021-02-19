@@ -161,13 +161,13 @@ void SetSettingsValue(int id, int val)
     bool32 bVal = val;
     switch (id) {
         case 0:
-            if (!engine.isFullScreen != bVal) {
+            if ((!engine.isFullScreen) != bVal) {
                 settingsChanged     = true;
                 engine.isFullScreen = !bVal;
             }
             break;
         case 1:
-            if (!engine.borderless != bVal) {
+            if ((!engine.borderless) != bVal) {
                 settingsChanged   = true;
                 engine.borderless = !bVal;
             }
@@ -260,7 +260,7 @@ void readSettings()
 
     const char *result = "";
 
-    curSKU.language = strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+    curSKU.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 
     result = iniparser_getstring(ini, "Game:dataFile", "Data.rsdk");
     if (CheckDataFile(result))
@@ -275,15 +275,15 @@ void readSettings()
     engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
     result       = iniparser_getstring(ini, "Video:pixWidth", "424");
-    SCREEN_XSIZE = strtol(result, NULL, 0);
+    SCREEN_XSIZE = (int)strtol(result, NULL, 0);
 
-    engine.windowWidth   = strtol(iniparser_getstring(ini, "Video:winWidth", "424"), NULL, 0);
-    engine.windowHeight  = strtol(iniparser_getstring(ini, "Video:winHeight", "240"), NULL, 0);
-    engine.fsWidth       = strtol(iniparser_getstring(ini, "Video:fsWidth", "0"), NULL, 0);
-    engine.fsHeight      = strtol(iniparser_getstring(ini, "Video:fsHeight", "0"), NULL, 0);
-    engine.refreshRate   = strtol(iniparser_getstring(ini, "Video:refreshRate", "60"), NULL, 0);
+    engine.windowWidth   = (int)strtol(iniparser_getstring(ini, "Video:winWidth", "424"), NULL, 0);
+    engine.windowHeight  = (int)strtol(iniparser_getstring(ini, "Video:winHeight", "240"), NULL, 0);
+    engine.fsWidth       = (int)strtol(iniparser_getstring(ini, "Video:fsWidth", "0"), NULL, 0);
+    engine.fsHeight      = (int)strtol(iniparser_getstring(ini, "Video:fsHeight", "0"), NULL, 0);
+    engine.refreshRate   = (int)strtol(iniparser_getstring(ini, "Video:refreshRate", "60"), NULL, 0);
     engine.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
-    engine.screenShader  = strtol(iniparser_getstring(ini, "Video:refreshRate", "0"), NULL, 0);
+    engine.screenShader  = (int)strtol(iniparser_getstring(ini, "Video:refreshRate", "0"), NULL, 0);
 
     engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
     engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 1.0);

@@ -170,7 +170,7 @@ void Player_LateUpdate()
         entity->killFlagB  = 0;
         entity->underwater = 0;
         //Player_ChangePhysicsState(entity);
-        Entity* powerup = RSDK.GetObjectByID((unsigned __int16)(Player->playerCount + RSDK.GetEntityID(entity)));
+        Entity* powerup = RSDK.GetObjectByID(Player->playerCount + RSDK.GetEntityID(entity));
         RSDK.DestroyEntity(powerup, 0, 0);
         if (entity->hurtFlag == 1) {
             RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
@@ -180,7 +180,7 @@ void Player_LateUpdate()
                 entity->hurtFlag        = 0;
                 entity->gravityStrength = 0x1000;
                 entity->velocity.y = 0;
-                RSDK.PlaySFX(*(unsigned __int16 *)&Water[42].active, 0, 255);
+                //RSDK.PlaySFX(*(unsigned __int16 *)&Water[42].active, 0, 255);
                 //entity->state = PlayerState_Drown;
                 if (!entity->sidekick) {
                     if (options->gameMode == MODE_COMPETITION) {
@@ -285,7 +285,7 @@ void Player_LateUpdate()
             case ANI_LOOKUP:
             case ANI_CROUCH:
                 RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 0, &entity->tailSpriteAnimData, 0, 0);
-                entity->tailDirection = (unsigned __int8)entity->direction;
+                entity->tailDirection = entity->direction;
                 entity->tailRotation  = entity->rotation;
                 break;
             case ANI_JUMP:

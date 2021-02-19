@@ -394,7 +394,6 @@ ushort LoadMesh(const char *filename, Scopes scope)
         model->vertCount  = ReadInt16(&info);
         model->frameCount = ReadInt16(&info);
 
-        int vertSize = 0;
         AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, DATASET_STG, true);
         if (model->flags & MODEL_USETEXTURES)
             AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, DATASET_STG, true);

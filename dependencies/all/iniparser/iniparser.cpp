@@ -81,13 +81,6 @@ static char * xstrdup(const char * s)
     return t ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Remove blanks at the beginning and the end of a string.
-  @param    str  String to parse and alter.
-  @return   unsigned New size of the string.
- */
-/*--------------------------------------------------------------------------*/
 static unsigned strstrip(char * s)
 {
     char *last = NULL ;
@@ -108,11 +101,6 @@ static unsigned strstrip(char * s)
     return last - s;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Default error callback for iniparser: wraps `fprintf(stderr, ...)`.
- */
-/*--------------------------------------------------------------------------*/
 static int default_error_callback(const char *format, ...)
 {
   int ret;
@@ -125,15 +113,6 @@ static int default_error_callback(const char *format, ...)
 
 static int (*iniparser_error_callback)(const char*, ...) = default_error_callback;
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Configure a function to receive the error messages.
-  @param    errback  Function to call.
-
-  By default, the error will be printed on stderr. If a null pointer is passed
-  as errback the error callback will be switched back to default.
- */
-/*--------------------------------------------------------------------------*/
 void iniparser_set_error_callback(int (*errback)(const char *, ...))
 {
   if (errback) {
@@ -214,19 +193,6 @@ const char * iniparser_getsecname(const dictionary * d, int n)
     return d->key[i] ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Dump a dictionary to an opened file pointer.
-  @param    d   Dictionary to dump.
-  @param    f   Opened file pointer to dump to.
-  @return   void
-
-  This function prints out the contents of a dictionary, one element by
-  line, onto the provided file pointer. It is OK to specify @c stderr
-  or @c stdout as output files. This function is meant for debugging
-  purposes mostly.
- */
-/*--------------------------------------------------------------------------*/
 void iniparser_dump(const dictionary * d, FILE * f)
 {
     int     i ;
@@ -244,17 +210,6 @@ void iniparser_dump(const dictionary * d, FILE * f)
     return ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Save a dictionary to a loadable ini file
-  @param    d   Dictionary to dump
-  @param    f   Opened file pointer to dump to
-  @return   void
-
-  This function dumps a given dictionary into a loadable ini file.
-  It is Ok to specify @c stderr or @c stdout as output files.
- */
-/*--------------------------------------------------------------------------*/
 void iniparser_dump_ini(const dictionary * d, FILE * f)
 {
     int          i ;
@@ -281,18 +236,6 @@ void iniparser_dump_ini(const dictionary * d, FILE * f)
     return ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Save a dictionary section to a loadable ini file
-  @param    d   Dictionary to dump
-  @param    s   Section name of dictionary to dump
-  @param    f   Opened file pointer to dump to
-  @return   void
-
-  This function dumps a given section of a given dictionary into a loadable ini
-  file.  It is Ok to specify @c stderr or @c stdout as output files.
- */
-/*--------------------------------------------------------------------------*/
 void iniparser_dumpsection_ini(const dictionary * d, const char * s, FILE * f)
 {
     int     j ;
@@ -564,18 +507,6 @@ int iniparser_getboolean(const dictionary * d, const char * key, int notfound)
     return ret;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Finds out if a given entry exists in a dictionary
-  @param    ini     Dictionary to search
-  @param    entry   Name of the entry to look for
-  @return   integer 1 if entry exists, 0 otherwise
-
-  Finds out if a given entry exists in the dictionary. Since sections
-  are stored as keys with NULL associated values, this is the only way
-  of querying for the presence of sections in a dictionary.
- */
-/*--------------------------------------------------------------------------*/
 int iniparser_find_entry(const dictionary * ini, const char * entry)
 {
     int found=0 ;
@@ -585,51 +516,18 @@ int iniparser_find_entry(const dictionary * ini, const char * entry)
     return found ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Set an entry in a dictionary.
-  @param    ini     Dictionary to modify.
-  @param    entry   Entry to modify (entry name)
-  @param    val     New value to associate to the entry.
-  @return   int 0 if Ok, -1 otherwise.
-
-  If the given entry can be found in the dictionary, it is modified to
-  contain the provided value. If it cannot be found, the entry is created.
-  It is Ok to set val to NULL.
- */
-/*--------------------------------------------------------------------------*/
 int iniparser_set(dictionary * ini, const char * entry, const char * val)
 {
     char tmp_str[ASCIILINESZ+1];
     return dictionary_set(ini, strlwc(entry, tmp_str, sizeof(tmp_str)), val) ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Delete an entry in a dictionary
-  @param    ini     Dictionary to modify
-  @param    entry   Entry to delete (entry name)
-  @return   void
-
-  If the given entry can be found, it is deleted from the dictionary.
- */
-/*--------------------------------------------------------------------------*/
 void iniparser_unset(dictionary * ini, const char * entry)
 {
     char tmp_str[ASCIILINESZ+1];
     dictionary_unset(ini, strlwc(entry, tmp_str, sizeof(tmp_str)));
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Load a single line from an INI file
-  @param    input_line  Input line, may be concatenated multi-line input
-  @param    section     Output space to store section
-  @param    key         Output space to store key
-  @param    value       Output space to store value
-  @return   line_status value
- */
-/*--------------------------------------------------------------------------*/
 static line_status iniparser_line(
     const char * input_line,
     char * section,
@@ -819,17 +717,6 @@ dictionary * iniparser_load(const char * ininame)
     return dict ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Free all memory associated to an ini dictionary
-  @param    d Dictionary to free
-  @return   void
-
-  Free all memory associated to an ini dictionary.
-  It is mandatory to call this function before the dictionary object
-  gets out of the current context.
- */
-/*--------------------------------------------------------------------------*/
 void iniparser_freedict(dictionary * d)
 {
     dictionary_del(d);

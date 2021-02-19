@@ -18,13 +18,12 @@ void Palette_Create(void *data)
     if (!RSDK_sceneInfo->inEditor && (!entity->loadOnce || Palette->count <= 1)) {
         RSDK.CopyString(text, &entity->paletteFile);
         RSDK.LoadPalette(entity->bankID, text, entity->rowFlags);
-        RSDK.DestroyEntity(entity, TYPE_DEFAULTOBJECT, NULL);
+        RSDK.DestroyEntity(entity, 0, NULL);
     }
 }
 
 void Palette_StageLoad()
 {
-    Palette->count;
     if (Palette->count < 2)
         Palette->count++;
 }
