@@ -169,15 +169,6 @@ dictionary * dictionary_new(size_t size)
     return d ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Delete a dictionary object
-  @param    d   dictionary object to deallocate.
-  @return   void
-
-  Deallocate a dictionary object and all memory associated to it.
- */
-/*--------------------------------------------------------------------------*/
 void dictionary_del(dictionary * d)
 {
     ssize_t  i ;
@@ -196,20 +187,6 @@ void dictionary_del(dictionary * d)
     return ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Get a value from a dictionary.
-  @param    d       dictionary object to search.
-  @param    key     Key to look for in the dictionary.
-  @param    def     Default value to return if key not found.
-  @return   1 pointer to internally allocated character string.
-
-  This function locates a key in a dictionary and returns a pointer to its
-  value, or the passed 'def' pointer if no such key can be found in
-  dictionary. The returned character pointer points to data internal to the
-  dictionary object, you should not try to free it or modify it.
- */
-/*--------------------------------------------------------------------------*/
 const char * dictionary_get(const dictionary * d, const char * key, const char * def)
 {
     unsigned    hash ;
@@ -230,32 +207,6 @@ const char * dictionary_get(const dictionary * d, const char * key, const char *
     return def ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Set a value in a dictionary.
-  @param    d       dictionary object to modify.
-  @param    key     Key to modify or add.
-  @param    val     Value to add.
-  @return   int     0 if Ok, anything else otherwise
-
-  If the given key is found in the dictionary, the associated value is
-  replaced by the provided one. If the key cannot be found in the
-  dictionary, it is added to it.
-
-  It is Ok to provide a NULL value for val, but NULL values for the dictionary
-  or the key are considered as errors: the function will return immediately
-  in such a case.
-
-  Notice that if you dictionary_set a variable to NULL, a call to
-  dictionary_get will return a NULL value: the variable will be found, and
-  its value (NULL) is returned. In other words, setting the variable
-  content to NULL is equivalent to deleting the variable from the
-  dictionary. It is not possible (in this implementation) to have a key in
-  the dictionary without value.
-
-  This function returns non-zero in case of failure.
- */
-/*--------------------------------------------------------------------------*/
 int dictionary_set(dictionary * d, const char * key, const char * val)
 {
     ssize_t         i ;
@@ -304,17 +255,6 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
     return 0 ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Delete a key in a dictionary
-  @param    d       dictionary object to modify.
-  @param    key     Key to remove.
-  @return   void
-
-  This function deletes a key in a dictionary. Nothing is done if the
-  key cannot be found.
- */
-/*--------------------------------------------------------------------------*/
 void dictionary_unset(dictionary * d, const char * key)
 {
     unsigned    hash ;
@@ -352,18 +292,6 @@ void dictionary_unset(dictionary * d, const char * key)
     return ;
 }
 
-/*-------------------------------------------------------------------------*/
-/**
-  @brief    Dump a dictionary to an opened file pointer.
-  @param    d   Dictionary to dump
-  @param    f   Opened file pointer.
-  @return   void
-
-  Dumps a dictionary onto an opened file pointer. Key pairs are printed out
-  as @c [Key]=[Value], one per line. It is Ok to provide stdout or stderr as
-  output file pointers.
- */
-/*--------------------------------------------------------------------------*/
 void dictionary_dump(const dictionary * d, FILE * out)
 {
     ssize_t  i ;
