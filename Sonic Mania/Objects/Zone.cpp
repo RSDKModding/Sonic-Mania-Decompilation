@@ -100,7 +100,8 @@ void Zone_StageLoad()
         options->initCoolBonus = true;
     }
 
-    for (EntityZone *Ent = NULL; RSDK.GetObjects(Zone->objectID, (Entity **)&Ent); RSDK.DestroyEntity(Ent, 0, 0)) {
+    EntityZone *Ent = NULL;
+    for (; RSDK.GetObjects(Zone->objectID, (Entity **)&Ent); RSDK.DestroyEntity(Ent, 0, 0)) {
     }
 
     RSDK.ResetEntity(SLOT_ZONE, Zone->objectID, 0);

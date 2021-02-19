@@ -16,7 +16,7 @@ void* link_handle = NULL;
 typedef void(*linkPtr)(GameInfo *);
 #endif
 
-int *gameOptionsPtr = NULL;
+byte *gameOptionsPtr = NULL;
 RetroEngine engine  = RetroEngine();
 
 bool32 processEvents()
@@ -275,6 +275,7 @@ void runRetroEngine()
         frameEnd = SDL_GetTicks();
 
         engine.running = processEvents();
+        foreachStackPtr = foreachStackList;
         switch (sceneInfo.state) {
             default: break;
             case ENGINESTATE_LOAD:
@@ -641,7 +642,7 @@ void LoadGameConfig()
             int offset = ReadInt32(&info);
             int count  = ReadInt32(&info);
             for (int v = 0; v < count; ++v) {
-                gameOptionsPtr[offset + v] = ReadInt32(&info);
+                ReadBytes(&info, &gameOptionsPtr[offset + v], sizeof(int));
             }
         }
 
@@ -662,7 +663,7 @@ void InitScriptSystem()
     globalObjectIDs[1] = 1;
     globalObjectIDs[2] = 2;
 
-    globalObjectCount = 3;
+    globalObjectCount = DEFAULT_OBJECT_COUNT;
 
     GameInfo info;
 

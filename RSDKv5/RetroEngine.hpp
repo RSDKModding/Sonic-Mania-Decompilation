@@ -33,7 +33,7 @@ enum GamePlatforms {
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
 
-#define RETRO_PLATFORM (RETRO_OSX)
+#define RETRO_PLATFORM (RETRO_WIN)
 #define GAME_PLATFORM  (PLATFORM_WIN)
 
 #define SCREEN_YSIZE (240)
@@ -179,12 +179,12 @@ inline void SetEngineState(byte state)
     }
 }
 
-extern int *gameOptionsPtr;
+extern byte *gameOptionsPtr;
 
-inline void InitGameOptions(void *options, int size)
+inline void InitGameOptions(void **options, int size)
 {
-    AllocateStorage(size, &options, DATASET_STG, true);
-    gameOptionsPtr = (int *)options;
+    AllocateStorage(size, options, DATASET_STG, true);
+    gameOptionsPtr = (byte *)*options;
 }
 
 #include "Link.hpp"

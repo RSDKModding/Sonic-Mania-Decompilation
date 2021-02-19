@@ -144,3 +144,93 @@ void GenerateHash(uint *buffer, int len)
 }
 
 char textBuffer[0x400];
+
+void Unknown64(TextInfo *textA, TextInfo *textB)
+{
+    int textLen = textB->textLength;
+    if (textA->length >= textLen) {
+        if (!textA->text) {
+            AllocateStorage(sizeof(ushort) * textA->length, (void **)textA, DATASET_STR, false);
+        }
+    }
+    else {
+        textA->length = textLen;
+        AllocateStorage(sizeof(ushort) * textA->length, (void **)textA, DATASET_STR, false);
+    }
+
+    textA->textLength = textB->textLength;
+    int id                = 0;
+    if (textB->textLength > 0u) {
+        do {
+            textA->text[id] = textB->text[id];
+            ++id;
+        } while (id < textA->textLength);
+    }
+}
+
+void Unknown66(TextInfo *textA, TextInfo *textB)
+{
+    uint charID   = 0;
+    uint totalLen = textB->textLength + textA->textLength;
+    if (textA->length < totalLen || !textA->text) {
+        AllocateStorage(sizeof(ushort) * totalLen, (void **)&textA, DATASET_STR, 0);
+        if (textA->textLength > 0u) {
+            do {
+                textA->text[charID] = textA->text[charID];
+                ++charID;
+            } while (charID < textA->textLength);
+        }
+        CopyStorage((int **)textA, (int **)&textA);
+        textA->length = textB->textLength + textA->textLength;
+    }
+
+    int textLen           = textA->textLength;
+    textA->textLength = textLen + textB->textLength;
+    if (textLen < textA->textLength) {
+        int id = 0;
+        do {
+            ++id;
+            textA->text[textLen++] = textB->text[id - 1];
+        } while (textLen < textA->textLength);
+    }
+}
+
+bool32 Unknown69(TextInfo *textA, TextInfo *textB, byte a3)
+{
+    int lengthA = textA->textLength;
+    if (lengthA != textB->textLength)
+        return 0;
+    ushort *textPtrA = textA->text;
+    int id           = 0;
+    ushort *textPtrB = textB->text;
+    if (a3) {
+        if (lengthA > 0u) {
+            int dif = (char *)textPtrB - (char *)textPtrA;
+            while (*textPtrA == textPtrA[dif]) {
+                ++id;
+                ++textPtrA;
+                if (id >= lengthA)
+                    return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    if (lengthA <= 0)
+        return true;
+    int dif = (char *)textPtrB - (char *)textPtrA;
+    while (true) {
+        int v9 = textPtrA[dif];
+        if (*textPtrA != v9) {
+            ushort cur = *textPtrA;
+            if (cur != v9 + ' ' && cur != v9 - ' ')
+                break;
+        }
+        ++id;
+        ++textPtrA;
+        if (id >= lengthA)
+            return true;
+    }
+    return false;
+}

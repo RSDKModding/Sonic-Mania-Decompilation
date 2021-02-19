@@ -67,7 +67,7 @@ struct UserFunctionTable {
 
 // Function Table
 struct RSDKFunctionTable {
-    void (*InitGameOptions)(void *options, int size);
+    void (*InitGameOptions)(void **options, int size);
     void (*CreateObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                          void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));

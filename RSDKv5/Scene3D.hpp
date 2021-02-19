@@ -4,6 +4,21 @@
 #define SCENE3D_MAX (0x20)
 #define MODEL_MAX   (0x100)
 
+enum Scene3DDrawTypes {
+    S3D_TYPE_WORLD_WIREFRAME = 0x0,
+    S3D_TYPE_WORLD         = 0x1,
+    S3D_TYPE_2         = 0x2,
+    S3D_TYPE_3         = 0x3,
+    S3D_TYPE_4         = 0x4,
+    S3D_TYPE_5         = 0x5,
+    S3D_TYPE_6         = 0x6,
+    S3D_TYPE_7         = 0x7,
+    S3D_TYPE_8         = 0x8,
+    S3D_TYPE_9         = 0x9,
+    S3D_TYPE_A         = 0xA,
+    S3D_TYPE_B         = 0xB,
+};
+
 struct ScanEdge {
     int start;
     int end;
@@ -20,17 +35,17 @@ struct Matrix {
 };
 
 struct ModelVertex {
-    float x;
-    float y;
-    float z;
-    float nx;
-    float ny;
-    float nz;
+    int x;
+    int y;
+    int z;
+    int nx;
+    int ny;
+    int nz;
 };
 
 struct TexCoord {
-    float x;
-    float y;
+    int x;
+    int y;
 };
 
 struct Model {
@@ -59,12 +74,16 @@ struct Scene3DVertex {
     uint colour;
 };
 
+struct ZBufferEntry {
+    int depth;
+    int index;
+};
 
 struct Scene3D {
     uint hash[4];
     Scene3DVertex *vertices;
     int field_14;
-    int field_18;
+    ZBufferEntry *zBuffer;
     byte *faceVertCounts;
     int unknown1;
     int unknown2;
@@ -79,7 +98,7 @@ struct Scene3D {
     int unknown11;
     ushort field_4C;
     ushort indexCount;
-    ushort field_50;
+    ushort indCnt;
     byte drawMode;
     byte scope;
 };
@@ -105,7 +124,13 @@ void matrixCopy(Matrix *matDst, Matrix* matSrc);
 
 ushort LoadMesh(const char *filepath, Scopes scope);
 ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
-void Init3DScene(ushort sceneID);
+inline void Init3DScene(ushort sceneID)
+{
+    if (sceneID < SCENE3D_MAX) {
+        Scene3D *scn  = &scene3DList[sceneID];
+        scn->indexCount = 0;
+    }
+}
 
 inline void SetModelAnimation(ushort model, EntityAnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
 {
@@ -129,9 +154,33 @@ inline void SetModelAnimation(ushort model, EntityAnimationData *data, short ani
     data->loopIndex       = loopIndex;
     data->animationID     = model;
 }
-//void View_Something1;
-//void View_Something2;
-//void View_Something3;
+inline void View_Something1(ushort sceneID, byte x, byte y, byte z)
+{
+    if (sceneID < SCENE3D_MAX) {
+        Scene3D *scn  = &scene3DList[sceneID];
+        scn->unknown3 = x;
+        scn->unknown4 = y;
+        scn->unknown5 = z;
+    }
+}
+inline void View_Something2(ushort sceneID, byte x, byte y, byte z)
+{
+    if (sceneID < SCENE3D_MAX) {
+        Scene3D *scn  = &scene3DList[sceneID];
+        scn->unknown6 = x;
+        scn->unknown7 = y;
+        scn->unknown8 = z;
+    }
+}
+inline void View_Something3(ushort sceneID, byte x, byte y, byte z)
+{
+    if (sceneID < SCENE3D_MAX) {
+        Scene3D *scn   = &scene3DList[sceneID];
+        scn->unknown9  = x;
+        scn->unknown10 = y;
+        scn->unknown11 = z;
+    }
+}
 void SetupMesh(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void SetupMeshAnimation(ushort animID, ushort sceneID, EntityAnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void Draw3DScene(ushort sceneID);

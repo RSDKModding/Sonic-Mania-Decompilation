@@ -135,7 +135,7 @@ inline void Seek_Cur(FileInfo *info, int count)
     }
 }
 
-inline void ReadBytes(FileInfo *info, void* data, int count)
+inline size_t ReadBytes(FileInfo *info, void* data, int count)
 {
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
@@ -149,6 +149,7 @@ inline void ReadBytes(FileInfo *info, void* data, int count)
     if (info->encrypted)
         DecryptBytes(info, data, bytesRead);
     info->readPos += bytesRead;
+    return bytesRead;
 }
 
 inline byte ReadInt8(FileInfo *info)

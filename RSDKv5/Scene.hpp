@@ -162,10 +162,10 @@ inline ushort GetSceneLayerID(const char *name)
     return -1;
 }
 
-inline TileLayer *GetSceneLayer(ushort LayerID)
+inline TileLayer *GetSceneLayer(ushort layerID)
 {
-    if (LayerID < LAYER_COUNT)
-        return &tileLayers[LayerID];
+    if (layerID < LAYER_COUNT)
+        return &tileLayers[layerID];
     else
         return NULL;
 }

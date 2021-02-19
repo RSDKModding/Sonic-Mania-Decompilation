@@ -35,7 +35,7 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK_touchMouse = info->touchMouse;
     // GameInfo_Unknown5      = (int)info->InputCount;
     RSDK_screens = info->screenInfo;
-    RSDK.InitGameOptions(&options, sizeof(GameOptions));
+    RSDK.InitGameOptions((void**)&options, sizeof(GameOptions));
 
     defaultHitbox.left   = -10;
     defaultHitbox.top    = -20;

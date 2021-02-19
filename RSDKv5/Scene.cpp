@@ -117,12 +117,13 @@ void LoadScene()
             for (int o = 0; o < globalObjectCount; ++o) {
                 stageObjectIDs[o] = globalObjectIDs[o];
             }
+            sceneInfo.classCount = DEFAULT_OBJECT_COUNT + globalObjectCount;
         }
         else {
             stageObjectIDs[0]    = globalObjectIDs[0];
             stageObjectIDs[1]    = globalObjectIDs[1];
             stageObjectIDs[2]    = globalObjectIDs[2];
-            sceneInfo.classCount = 3;
+            sceneInfo.classCount = DEFAULT_OBJECT_COUNT;
         }
 
         byte objCnt = ReadInt8(&info);
@@ -152,6 +153,8 @@ void LoadScene()
                 AllocateStorage(obj->objectSize, (void**)obj->type, DATASET_STG, true);
                 LoadStaticObject((byte *)obj->type, obj->hash, 2);
                 (*obj->type)->objectID = o;
+                if (o >= DEFAULT_OBJECT_COUNT)
+                    (*obj->type)->active = ACTIVE_NORMAL;
             }
         }
 
@@ -853,7 +856,7 @@ void ProcessParallax(TileLayer *layer)
         case LAYER_VSCROLL: {
             for (int i = 0; i < layer->scrollInfoCount; ++i) {
                 scrollInfo->unknown = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
-                scrollInfo->unknown = (scrollInfo->unknown >> 16) % pixelWidth;
+                scrollInfo->unknown = (scrollInfo->unknown >> 16) % pixelHeight;
                 scrollInfo->unknown <<= 0x10;
                 ++scrollInfo;
             }
@@ -886,6 +889,7 @@ void ProcessParallax(TileLayer *layer)
             short posX = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 0x10) % pixelWidth;
             if (posX < 0)
                 posX += pixelWidth;
+
             short posY = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 0x10) % pixelHeight;
             if (posY < 0)
                 posY += pixelHeight;
@@ -1194,24 +1198,23 @@ void DrawLayerVScroll(TileLayer *layer)
     ScanlineInfo *scanLines = &scanlines[currentScreen->clipBound_X1];
     ushort *palettePtr      = fullPalette[gfxLineBuffer[0]];
     for (int cx = currentScreen->clipBound_X1; cx < currentScreen->clipBound_X2; ++cx) {
-        frameBuffer = &currentScreen->frameBuffer[cx];
         int x       = scanLines->position.x;
         int y       = scanLines->position.y;
         int tileY   = y >> 0x10;
-        if (tileY >= 0) {
-            if (tileY >= TILE_SIZE * layer->height)
-                y -= (TILE_SIZE * layer->height) << 0x10;
+        if (tileY >= TILE_SIZE * layer->height) {
+            y -= (TILE_SIZE * layer->height) << 0x10;
         }
-        else {
+        else if (tileY < 0) {
             y += (TILE_SIZE * layer->height) << 0x10;
         }
 
         int cnt        = TILE_SIZE - ((y >> 16) & 0xF);
         int cntY       = (y >> 16) & 0xF;
-        int cntX       = ((x >> 16) & 0xF);
+        int cntX       = (x >> 16) & 0xF;
         int lineRemain = currentScreen->height;
 
         ushort *layout = &layer->layout[(x >> 20) + ((y >> 20) * layer->width)];
+        lineRemain -= cnt;
         if (*layout >= 0xFFFF) {
             frameBuffer += currentScreen->pitch * cnt;
         }
@@ -1223,7 +1226,6 @@ void DrawLayerVScroll(TileLayer *layer)
                 i += TILE_SIZE;
             }
         }
-        lineRemain -= TILE_SIZE;
 
         tileY   = y >> 20;
         for (int i = 0; i < lineTileCount; ++i) {
@@ -1325,31 +1327,29 @@ void DrawLayerRotozoom(TileLayer *layer)
 {
     if (!layer->width || !layer->height)
         return;
-    ushort* layout        = layer->layout;
-    int clipX1        = currentScreen->clipBound_X1;
-    int clipY1        = currentScreen->clipBound_Y1;
-    int countX        = currentScreen->clipBound_X2 - clipX1;
-    byte *lineBuffer = &gfxLineBuffer[clipY1];
-    ScanlineInfo* scanlinePtr = &scanlines[clipY1];
-    clipY1        = currentScreen->clipBound_Y1;
-    scanlinePtr   = &scanlines[clipY1];
-    ushort *frameBuffer   = &currentScreen->frameBuffer[clipX1 + clipY1 * currentScreen->pitch];
+    ushort *layout            = layer->layout;
+    int countX                = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
+    byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
+    ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
+    scanlinePtr               = &scanlines[currentScreen->clipBound_Y1];
+    ushort *frameBuffer       = &currentScreen->frameBuffer[currentScreen->clipBound_X1 + currentScreen->clipBound_Y1 * currentScreen->pitch];
     int width         = (TILE_SIZE * layer->width) - 1;
     int height        = (TILE_SIZE * layer->height) - 1;
 
-    for (int cy = clipY1; cy < currentScreen->clipBound_Y2; ++cy) {
+    for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
         int defX           = scanlinePtr->deform.x;
         int defY           = scanlinePtr->deform.y;
         ushort *palettePtr = fullPalette[*lineBuffer];
         int posX           = scanlinePtr->position.x;
         ++lineBuffer;
         int fbOffset = currentScreen->pitch - countX;
-        for (int posY = scanlinePtr->position.y; countX; posY += defY) {
-            --countX;
+        int cnt      = countX;
+        for (int posY = scanlinePtr->position.y; cnt; posY += defY) {
+            --cnt;
             int tx   = posX >> 20;
             int ty   = posY >> 20;
-            int x   = (posX >> 8) & 0xF;
-            int y   = (posY >> 8) & 0xF;
+            int x   = (posX >> 16) & 0xF;
+            int y   = (posY >> 16) & 0xF;
             byte idx =
                 tilesetGFXData[TILE_SIZE * (y + TILE_SIZE * (layout[((width >> 4) & tx) + (((height >> 4) & ty) * layer->width)] & 0xFFF)) + x];
             if (idx)
@@ -1358,7 +1358,6 @@ void DrawLayerRotozoom(TileLayer *layer)
             ++frameBuffer;
         }
 
-        ++clipY1;
         frameBuffer += fbOffset;
         ++scanlinePtr;
     }

@@ -171,4 +171,9 @@ inline void CopyString(char *dest, TextInfo *info)
     text[textLen] = 0;
 }
 
+
+void Unknown64(TextInfo *textA, TextInfo *textB);
+void Unknown66(TextInfo *textA, TextInfo *textB);
+bool32 Unknown69(TextInfo *textA, TextInfo *textB, byte a3);
+
 #endif

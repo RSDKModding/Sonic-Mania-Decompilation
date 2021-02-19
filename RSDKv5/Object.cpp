@@ -588,34 +588,27 @@ void ProcessObjectDrawLists()
                     }
                 }
 
-                /*v29 = 0;
-                if (ScreenWidth < 0)
-                    v29 = ScreenWidth;
-                ScreenClipX1 = v29;
-                v30          = 0;
-                if (ScreenHeight < 0)
-                    v30 = ScreenHeight;
-                ScreenClipY1 = v30;
+                if (currentScreen->clipBound_X1 > 0)
+                    currentScreen->clipBound_X1 = 0;
+
+                if (currentScreen->clipBound_Y1 > 0)
+                    currentScreen->clipBound_Y1 = 0;
 
                 if (currentScreen->width >= 0) {
-                    v31 = ScreenWidth;
-                    if (currentScreen->width < ScreenWidth)
-                        v31 = currentScreen->width;
-                    ScreenClipX2 = v31;
+                    if (currentScreen->clipBound_X2 < currentScreen->width)
+                        currentScreen->clipBound_X2 = currentScreen->width;
                 }
                 else {
-                    ScreenClipX2 = 0;
+                    currentScreen->clipBound_X2 = 0;
                 }
 
                 if (currentScreen->height >= 0) {
-                    v32 = ScreenHeight;
-                    if (currentScreen->height < ScreenHeight)
-                        v32 = currentScreen->height;
-                    ScreenClipY2 = v32;
+                    if (currentScreen->clipBound_Y2 < currentScreen->height)
+                        currentScreen->clipBound_Y2 = currentScreen->height;
                 }
                 else {
-                    ScreenClipY2 = 0;
-                }*/
+                    currentScreen->clipBound_Y2 = 0;
+                }
 
                 sceneInfo.currentDrawGroup++;
             }

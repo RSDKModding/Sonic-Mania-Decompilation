@@ -152,7 +152,7 @@ inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
         }
 
         if (y2 >= 0) {
-            screen->clipBound_X2 = y2 < screen->height ? y2 : screen->height;
+            screen->clipBound_Y2 = y2 < screen->height ? y2 : screen->height;
         }
         else {
             screen->clipBound_Y2 = 0;
@@ -202,8 +202,8 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
 void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 
-void DrawQuad(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
-void DrawTexturedQuad(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
+void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
+void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
 
 void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelative);
 void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);

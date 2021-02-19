@@ -1259,6 +1259,190 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                     }
                 }
                 break;
+            case INK_BLEND:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            frameBufferPtr[edge->start + x] = ((colour16 & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            case INK_ALPHA:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
+                            ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                            frameBufferPtr[edge->start + x] =
+                                (blendTablePtrA[frameBufferPtr[edge->start + x] & (BLENDTABLE_XSIZE - 1)]
+                                 + blendTablePtrB[colour16 & (BLENDTABLE_XSIZE - 1)])
+                                | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0x7E0) >> 6] + blendTablePtrB[(colour16 & 0x7E0) >> 6]) << 6)
+                                | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0xF800) >> 11] + blendTablePtrB[(colour16 & 0xF800) >> 11])
+                                   << 11);
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            case INK_ADD: {
+                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            int v20         = 0;
+                            int v21         = 0;
+                            int finalColour = 0;
+
+                            if (((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (frameBufferPtr[edge->start + x] & 0xF800) <= 0xF800)
+                                v20 = ((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (ushort)(frameBufferPtr[edge->start + x] & 0xF800);
+                            else
+                                v20 = 0xF800;
+                            int v12 = ((ushort)blendTablePtr[(colour16 & 0x7E0) >> 6] << 6) + (frameBufferPtr[edge->start + x] & 0x7E0);
+                            if (v12 <= 0x7E0)
+                                v21 = v12 | v20;
+                            else
+                                v21 = v20 | 0x7E0;
+                            int v13 = (ushort)blendTablePtr[colour16 & (BLENDTABLE_XSIZE - 1)] + (frameBufferPtr[edge->start + x] & 0x1F);
+                            if (v13 <= 31)
+                                finalColour = v13 | v21;
+                            else
+                                finalColour = v21 | 0x1F;
+                            frameBufferPtr[edge->start + x] = finalColour;
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            }
+            case INK_SUB: {
+                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            ushort finalColour = 0;
+                            if ((frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                                finalColour = 0;
+                            else
+                                finalColour =
+                                    (ushort)(frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                            int v12 = (frameBufferPtr[edge->start + x] & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                            if (v12 > 0)
+                                finalColour |= v12;
+                            int v13 =
+                                (frameBufferPtr[edge->start + x] & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
+                            if (v13 > 0)
+                                finalColour |= v13;
+                            frameBufferPtr[edge->start + x] = finalColour;
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            }
+            case INK_LOOKUP:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            case INK_MASKED:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            if (frameBufferPtr[edge->start + x] == maskColour)
+                                frameBufferPtr[edge->start + x] = colour16;
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            case INK_UNMASKED:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X1;
+
+                        if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int xCnt = edge->end - edge->start;
+                        for (int x = 0; x < xCnt; ++x) {
+                            if (frameBufferPtr[edge->start + x] != maskColour)
+                                frameBufferPtr[edge->start + x] = colour16;
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
         }
     }
 }
@@ -1570,8 +1754,686 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
     }
 }
 
-void DrawQuad(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect) {}
-void DrawTexturedQuad(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect) {}
+void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect)
+{
+    switch (inkEffect) {
+        default: break;
+        case INK_ALPHA:
+            if (alpha > 0xFF) {
+                inkEffect = INK_NONE;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_ADD:
+        case INK_SUB:
+            if (alpha > 0xFF) {
+                alpha = 0xFF;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_LOOKUP:
+            if (!lookUpBuffer)
+                return;
+            break;
+    }
+
+    int top    = 0x7FFFFFFF;
+    int bottom = -0x10000;
+    for (int v = 0; v < vertCount; ++v) {
+        if (vertices[v].y < top)
+            top = vertices[v].y;
+        if (vertices[v].y > bottom)
+            bottom = vertices[v].y;
+    }
+
+    int topScreen    = top >> 16;
+    int bottomScreen = bottom >> 16;
+
+    if (topScreen < currentScreen->clipBound_Y1)
+        topScreen = currentScreen->clipBound_Y1;
+    if (topScreen > currentScreen->clipBound_Y2)
+        topScreen = currentScreen->clipBound_Y2;
+    if (bottomScreen < currentScreen->clipBound_Y1)
+        bottomScreen = currentScreen->clipBound_Y1;
+    if (bottomScreen > currentScreen->clipBound_Y2)
+        bottomScreen = currentScreen->clipBound_Y2;
+
+    if (topScreen != bottomScreen) {
+        ScanEdge *edge = &scanEdgeBuffer[topScreen];
+        for (int s = topScreen; s < bottomScreen; ++s) {
+            edge->start = 0x7FFF;
+            edge->end   = -1;
+            ++edge;
+        }
+
+        for (int v = 0; v < vertCount - 1; ++v) {
+            ProcessScanEdge(vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
+        }
+        ProcessScanEdge(vertices[0].x, vertices[0].y, vertices[vertCount - 1].x, vertices[vertCount - 1].y);
+
+        ushort *frameBufferPtr = &currentScreen->frameBuffer[topScreen * currentScreen->pitch];
+        ushort colour16        = bIndexes[b] | gIndexes[g] | rIndexes[r];
+
+        edge = &scanEdgeBuffer[topScreen];
+        switch (inkEffect) {
+            default: break;
+            case INK_NONE:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        frameBufferPtr[edge->start + x] = colour16;
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            case INK_BLEND:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        frameBufferPtr[edge->start + x] = ((colour16 & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            case INK_ALPHA:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
+                        ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                        frameBufferPtr[edge->start + x] =
+                            (blendTablePtrA[frameBufferPtr[edge->start + x] & (BLENDTABLE_XSIZE - 1)]
+                             + blendTablePtrB[colour16 & (BLENDTABLE_XSIZE - 1)])
+                            | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0x7E0) >> 6] + blendTablePtrB[(colour16 & 0x7E0) >> 6]) << 6)
+                            | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0xF800) >> 11] + blendTablePtrB[(colour16 & 0xF800) >> 11]) << 11);
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            case INK_ADD: {
+                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        int v20         = 0;
+                        int v21         = 0;
+                        int finalColour = 0;
+
+                        if (((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (frameBufferPtr[edge->start + x] & 0xF800) <= 0xF800)
+                            v20 = ((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (ushort)(frameBufferPtr[edge->start + x] & 0xF800);
+                        else
+                            v20 = 0xF800;
+                        int v12 = ((ushort)blendTablePtr[(colour16 & 0x7E0) >> 6] << 6) + (frameBufferPtr[edge->start + x] & 0x7E0);
+                        if (v12 <= 0x7E0)
+                            v21 = v12 | v20;
+                        else
+                            v21 = v20 | 0x7E0;
+                        int v13 = (ushort)blendTablePtr[colour16 & (BLENDTABLE_XSIZE - 1)] + (frameBufferPtr[edge->start + x] & 0x1F);
+                        if (v13 <= 31)
+                            finalColour = v13 | v21;
+                        else
+                            finalColour = v21 | 0x1F;
+                        frameBufferPtr[edge->start + x] = finalColour;
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            }
+            case INK_SUB: {
+                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        ushort finalColour = 0;
+                        if ((frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                            finalColour = 0;
+                        else
+                            finalColour = (ushort)(frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                        int v12 = (frameBufferPtr[edge->start + x] & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                        if (v12 > 0)
+                            finalColour |= v12;
+                        int v13 = (frameBufferPtr[edge->start + x] & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
+                        if (v13 > 0)
+                            finalColour |= v13;
+                        frameBufferPtr[edge->start + x] = finalColour;
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            }
+            case INK_LOOKUP:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            case INK_MASKED:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        if (frameBufferPtr[edge->start + x] == maskColour)
+                            frameBufferPtr[edge->start + x] = colour16;
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+            case INK_UNMASKED:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X1;
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                        edge->end = currentScreen->clipBound_X2;
+
+                    int xCnt = edge->end - edge->start;
+                    for (int x = 0; x < xCnt; ++x) {
+                        if (frameBufferPtr[edge->start + x] != maskColour)
+                            frameBufferPtr[edge->start + x] = colour16;
+                    }
+                    ++edge;
+                    frameBufferPtr += currentScreen->pitch;
+                }
+                break;
+        }
+    }
+}
+void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect)
+{
+    switch (inkEffect) {
+        default: break;
+        case INK_ALPHA:
+            if (alpha > 0xFF) {
+                inkEffect = INK_NONE;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_ADD:
+        case INK_SUB:
+            if (alpha > 0xFF) {
+                alpha = 0xFF;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_LOOKUP:
+            if (!lookUpBuffer)
+                return;
+            break;
+    }
+
+    int top    = 0x7FFFFFFF;
+    int bottom = -0x10000;
+    for (int v = 0; v < vertCount; ++v) {
+        if (vertices[v].y < top)
+            top = vertices[v].y;
+        if (vertices[v].y > bottom)
+            bottom = vertices[v].y;
+    }
+
+    int topScreen    = top >> 16;
+    int bottomScreen = bottom >> 16;
+
+    if (topScreen < currentScreen->clipBound_Y1)
+        topScreen = currentScreen->clipBound_Y1;
+    if (topScreen > currentScreen->clipBound_Y2)
+        topScreen = currentScreen->clipBound_Y2;
+    if (bottomScreen < currentScreen->clipBound_Y1)
+        bottomScreen = currentScreen->clipBound_Y1;
+    if (bottomScreen > currentScreen->clipBound_Y2)
+        bottomScreen = currentScreen->clipBound_Y2;
+
+    if (topScreen != bottomScreen) {
+        ScanEdge *edge = &scanEdgeBuffer[topScreen];
+        for (int s = topScreen; s < bottomScreen; ++s) {
+            edge->start = 0x7FFF;
+            edge->end   = -1;
+            ++edge;
+        }
+
+        for (int v = 0; v < vertCount - 1; ++v) {
+            ProcessScanEdgeUV(vertices[v + 0].y, vertices[v + 0].x, vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
+        }
+        ProcessScanEdgeUV(vertices[vertCount - 1].y, vertices[vertCount - 1].x, vertices[0].x, vertices[0].y, vertices[vertCount - 1].x,
+                          vertices[vertCount - 1].y);
+
+        ushort *frameBufferPtr = &currentScreen->frameBuffer[topScreen * currentScreen->pitch];
+
+        edge = &scanEdgeBuffer[topScreen];
+        switch (inkEffect) {
+            default: break;
+            case INK_NONE:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start = edge->start;
+                    int count    = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1   = edge->start1;
+                    int start2   = edge->start2;
+                    int start3   = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        frameBufferPtr[edge->start + x] = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                    }
+                    ++edge;
+                }
+                break;
+            case INK_BLEND:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        ushort colour                   = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        frameBufferPtr[edge->start + x] = ((colour & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
+                    }
+                    ++edge;
+                }
+                break;
+            case INK_ALPHA:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        ushort colour                      = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        ushort *blendTablePtrA          = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
+                        ushort *blendTablePtrB          = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                        frameBufferPtr[edge->start + x] =
+                            (blendTablePtrA[frameBufferPtr[edge->start + x] & (BLENDTABLE_XSIZE - 1)]
+                             + blendTablePtrB[colour & (BLENDTABLE_XSIZE - 1)])
+                            | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0x7E0) >> 6] + blendTablePtrB[(colour & 0x7E0) >> 6]) << 6)
+                            | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0xF800) >> 11] + blendTablePtrB[(colour & 0xF800) >> 11]) << 11);
+                    }
+                    ++edge;
+                }
+                break;
+            case INK_ADD: {
+                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        ushort colour   = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        int v20         = 0;
+                        int v21         = 0;
+                        int finalColour = 0;
+
+                        if (((ushort)blendTablePtr[(colour & 0xF800) >> 11] << 11) + (frameBufferPtr[edge->start + x] & 0xF800) <= 0xF800)
+                            v20 = ((ushort)blendTablePtr[(colour & 0xF800) >> 11] << 11) + (ushort)(frameBufferPtr[edge->start + x] & 0xF800);
+                        else
+                            v20 = 0xF800;
+                        int v12 = ((ushort)blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (frameBufferPtr[edge->start + x] & 0x7E0);
+                        if (v12 <= 0x7E0)
+                            v21 = v12 | v20;
+                        else
+                            v21 = v20 | 0x7E0;
+                        int v13 = (ushort)blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (frameBufferPtr[edge->start + x] & 0x1F);
+                        if (v13 <= 31)
+                            finalColour = v13 | v21;
+                        else
+                            finalColour = v21 | 0x1F;
+                        frameBufferPtr[edge->start + x] = finalColour;
+                    }
+                    ++edge;
+                }
+                break;
+            }
+            case INK_SUB: {
+                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        ushort colour      = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        ushort finalColour = 0;
+                        if ((frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)
+                            finalColour = 0;
+                        else
+                            finalColour = (ushort)(frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour & 0xF800) >> 11] << 11);
+                        int v12 = (frameBufferPtr[edge->start + x] & 0x7E0) - ((ushort)subBlendTable[(colour & 0x7E0) >> 6] << 6);
+                        if (v12 > 0)
+                            finalColour |= v12;
+                        int v13 = (frameBufferPtr[edge->start + x] & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour & (BLENDTABLE_XSIZE - 1)];
+                        if (v13 > 0)
+                            finalColour |= v13;
+                        frameBufferPtr[edge->start + x] = finalColour;
+                    }
+                    ++edge;
+                }
+                break;
+            }
+            case INK_LOOKUP:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
+                    }
+                    ++edge;
+                }
+                break;
+            case INK_MASKED:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        ushort colour = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        if (frameBufferPtr[edge->start + x] == maskColour)
+                            frameBufferPtr[edge->start + x] = colour;
+                    }
+                    ++edge;
+                }
+                break;
+            case INK_UNMASKED:
+                for (int s = topScreen; s < bottomScreen; ++s) {
+                    int start        = edge->start;
+                    int count        = edge->end - edge->start;
+                    int bufferedPos1 = 0;
+                    int bufferedPos2 = 0;
+                    int bufferedPos3 = 0;
+                    if (count > 0) {
+                        bufferedPos1 = (edge->end1 - edge->start1) / count;
+                        bufferedPos2 = (edge->end2 - edge->start2) / count;
+                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                    }
+                    int start1 = edge->start1;
+                    int start2 = edge->start2;
+                    int start3 = edge->start3;
+
+                    if (start > currentScreen->clipBound_X2) {
+                        edge->start = currentScreen->clipBound_X2;
+                    }
+                    if (start < currentScreen->clipBound_X1) {
+                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
+                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
+                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        count -= (currentScreen->clipBound_X1 - edge->start);
+                        edge->start = currentScreen->clipBound_X1;
+                    }
+
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X2;
+                        count     = currentScreen->clipBound_X2 - edge->start;
+                    }
+
+                    for (int x = 0; x < count; ++x) {
+                        start1 += bufferedPos1;
+                        start2 += bufferedPos2;
+                        start3 += bufferedPos3;
+                        ushort colour = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        if (frameBufferPtr[edge->start + x] != maskColour)
+                            frameBufferPtr[edge->start + x] = colour;
+                    }
+                    ++edge;
+                }
+                break;
+        }
+    }
+}
 
 void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelative)
 {

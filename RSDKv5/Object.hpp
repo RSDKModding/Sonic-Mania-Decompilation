@@ -13,6 +13,8 @@
 #define EDITABLEVAR_COUNT (0x100)
 #define TYPEGROUP_COUNT (0x104)
 
+#define DEFAULT_OBJECT_COUNT (3) //usually 2 but test object is being used rn
+
 enum TypeGroups {
     GROUP_ALL     = 0,
     GROUP_CUSTOM1 = TYPE_COUNT,

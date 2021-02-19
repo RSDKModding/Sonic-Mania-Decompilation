@@ -6,17 +6,18 @@ Scene3D scene3DList[SCENE3D_MAX];
 ScanEdge scanEdgeBuffer[SCREEN_YSIZE];
 
 enum ModelFlags {
-    MODEL_USENORMALS = 1,
+    MODEL_NORMAL      = 0,
+    MODEL_USENORMALS  = 1,
     MODEL_USETEXTURES = 2,
-    MODEL_USECOLOURS = 4,
+    MODEL_USECOLOURS  = 4,
 };
 
 void ProcessScanEdge(int x1, int y1, int x2, int y2)
 {
-    int iy1    = y1 >> 16;
-    int iy2    = y2 >> 16;
-    int ix2    = x2 >> 16;
-    int ix1    = x1 >> 16;
+    int iy1 = y1 >> 16;
+    int iy2 = y2 >> 16;
+    int ix2 = x2 >> 16;
+    int ix1 = x1 >> 16;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
             ix1 = x2 >> 16;
@@ -25,7 +26,7 @@ void ProcessScanEdge(int x1, int y1, int x2, int y2)
             iy2 = y1 >> 16;
         }
 
-        int end     = iy2 + 1;
+        int end = iy2 + 1;
         if (iy1 < currentScreen->clipBound_Y2 && end >= currentScreen->clipBound_Y1) {
             if (end > currentScreen->clipBound_Y2)
                 end = currentScreen->clipBound_Y2;
@@ -38,7 +39,7 @@ void ProcessScanEdge(int x1, int y1, int x2, int y2)
 
             ScanEdge *edge = &scanEdgeBuffer[iy1];
             if (iy1 < end) {
-                for (int i = 0; i < end - iy1; ++i) {
+                for (int i = iy1; i < end; ++i) {
                     if (scanPos >> 16 < edge->start)
                         edge->start = scanPos >> 16;
                     if (scanPos >> 16 > edge->end)
@@ -51,13 +52,14 @@ void ProcessScanEdge(int x1, int y1, int x2, int y2)
     }
 }
 
-void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2) {
+void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2)
+{
     int iy1 = y1 >> 16;
     int iy2 = y2 >> 16;
     int ix1 = x1 >> 16;
     int ix2 = x2 >> 16;
 
-    int y = y1 >> 16;
+    int y  = y1 >> 16;
     int uv = v;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
@@ -344,10 +346,7 @@ void matrixInverse(Matrix *dest, Matrix *matrix)
     for (int i = 0; i < 0x10; ++i) inv[i] = (int)((inv[i] * det) * 256);
     for (int i = 0; i < 0x10; ++i) dest->values[i / 4][i % 4] = inv[i];
 }
-void matrixCopy(Matrix *matDst, Matrix *matSrc)
-{
-    memcpy(matDst, matSrc, sizeof(Matrix));
-}
+void matrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
 
 ushort LoadMesh(const char *filename, Scopes scope)
 {
@@ -420,17 +419,17 @@ ushort LoadMesh(const char *filename, Scopes scope)
 
         for (int f = 0; f < model->frameCount; ++f) {
             for (int v = 0; v < model->vertCount; ++v) {
-                model->vertices[(f * model->vertCount) + v].x = ReadSingle(&info);
-                model->vertices[(f * model->vertCount) + v].y = ReadSingle(&info);
-                model->vertices[(f * model->vertCount) + v].z = ReadSingle(&info);
+                model->vertices[(f * model->vertCount) + v].x = ReadSingle(&info) * 256.0;
+                model->vertices[(f * model->vertCount) + v].y = ReadSingle(&info) * 256.0;
+                model->vertices[(f * model->vertCount) + v].z = ReadSingle(&info) * 256.0;
 
-                model->vertices[(f * model->vertCount) + v].nx = 0.0f;
-                model->vertices[(f * model->vertCount) + v].ny = 0.0f;
-                model->vertices[(f * model->vertCount) + v].nz = 0.0f;
+                model->vertices[(f * model->vertCount) + v].nx = 0;
+                model->vertices[(f * model->vertCount) + v].ny = 0;
+                model->vertices[(f * model->vertCount) + v].nz = 0;
                 if (model->flags & MODEL_USENORMALS) {
-                    model->vertices[(f * model->vertCount) + v].nx = ReadSingle(&info);
-                    model->vertices[(f * model->vertCount) + v].ny = ReadSingle(&info);
-                    model->vertices[(f * model->vertCount) + v].nz = ReadSingle(&info);
+                    model->vertices[(f * model->vertCount) + v].nx = ReadSingle(&info) * 65536.0;
+                    model->vertices[(f * model->vertCount) + v].ny = ReadSingle(&info) * 65536.0;
+                    model->vertices[(f * model->vertCount) + v].nz = ReadSingle(&info) * 65536.0;
                 }
             }
         }
@@ -472,10 +471,396 @@ ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope)
 
     return id;
 }
-void Init3DScene(ushort sceneID) {}
-// void View_Something1;
-// void View_Something2;
-// void View_Something3;
-void SetupMesh(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour) {}
-void SetupMeshAnimation(ushort animID, ushort sceneID, EntityAnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour) {}
-void Draw3DScene(ushort sceneID) {}
+void SetupMesh(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+{
+    if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
+        if (matWorld) {
+            Model *mdl            = &modelList[modelID];
+            Scene3D *scn          = &scene3DList[sceneID];
+            ushort *indices       = mdl->indices;
+            int vertID            = scn->indexCount;
+            Scene3DVertex *vertex = &scn->vertices[vertID];
+            byte *faceVertCounts  = &scn->faceVertCounts[scn->indCnt];
+            int indCnt            = mdl->indexCount;
+            if (scn->field_4C - vertID >= indCnt) {
+                scn->indexCount += mdl->indexCount;
+                scn->drawMode = drawMode;
+                scn->indCnt += indCnt / mdl->faceVertCount;
+
+                switch (mdl->flags) {
+                    default: break;
+                    case MODEL_NORMAL:
+                        for (; *indices < 0xFFFF;) {
+                            int faceVertCount = mdl->faceVertCount;
+                            *faceVertCounts++ = faceVertCount;
+                            for (int c = 0; c < faceVertCount; ++c) {
+                                ushort index = *indices;
+                                ++indices;
+                                ModelVertex *modelVert = &mdl->vertices[index];
+                                vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
+                                            + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
+                                vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
+                                            + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
+                                vertex->colour = colour;
+                                vertex->z      = matWorld->values[2][3] + ((modelVert->x * matWorld->values[2][0]) >> 8)
+                                            + ((matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+                                ++vertex;
+                            }
+                        }
+                        break;
+                    case MODEL_USENORMALS:
+                        if (matView) {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ModelVertex *modelVert = &mdl->vertices[*indices];
+                                    vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
+                                                + (modelVert->x * matWorld->values[0][0] >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
+                                    vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
+                                                + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->z * matWorld->values[1][2] >> 8);
+                                    vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
+                                                + (matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8);
+                                    vertex->nx = (modelVert->nz * matView->values[0][2] >> 8) + (modelVert->nx * matView->values[0][0] >> 8)
+                                                 + (matView->values[0][1] * modelVert->ny >> 8);
+                                    vertex->ny = (modelVert->ny * matView->values[1][1] >> 8) + (modelVert->nz * matView->values[1][2] >> 8)
+                                                 + (modelVert->nx * matView->values[1][0] >> 8);
+                                    ++indices;
+                                    vertex->colour = colour;
+                                    vertex->nz     = ((modelVert->ny * matView->values[2][1]) >> 8)
+                                                 + ((matView->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matView->values[2][2] >> 8));
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        else {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index = *indices;
+                                    ++indices;
+                                    ModelVertex *modelVert = &mdl->vertices[index];
+                                    vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
+                                                + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
+                                    vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
+                                                + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
+                                    vertex->colour = colour;
+                                    vertex->z      = matWorld->values[2][3] + ((matWorld->values[2][2] * modelVert->z) >> 8)
+                                                + ((matWorld->values[2][0] * modelVert->x >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        break;
+                    case MODEL_USENORMALS | MODEL_USECOLOURS:
+                        if (matView) {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index           = *indices;
+                                    ModelVertex *modelVert = &mdl->vertices[index];
+                                    Colour *modelColour    = &mdl->colours[index];
+                                    vertex->x              = matWorld->values[0][3] + (matWorld->values[0][2] * modelVert->z >> 8)
+                                                + (modelVert->y * matWorld->values[0][1] >> 8) + (matWorld->values[0][0] * modelVert->x >> 8);
+                                    vertex->y = matWorld->values[1][3] + (matWorld->values[1][2] * modelVert->z >> 8)
+                                                + (modelVert->y * matWorld->values[1][1] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
+                                    vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
+                                                + (modelVert->y * matWorld->values[2][1] >> 8) + (matWorld->values[2][2] * modelVert->z >> 8);
+                                    vertex->nx = (matView->values[0][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[0][1] >> 8)
+                                                 + (matView->values[0][2] * modelVert->nz >> 8);
+                                    vertex->ny = (matView->values[1][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[1][1] >> 8)
+                                                 + (matView->values[1][2] * modelVert->nz >> 8);
+                                    ++indices;
+                                    vertex->nz = ((matView->values[2][2] * modelVert->nz) >> 8)
+                                                 + ((modelVert->ny * matView->values[2][1] >> 8) + (matView->values[2][0] * modelVert->nx >> 8));
+                                    vertex->colour = modelColour->colour;
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        else {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index           = *indices;
+                                    ModelVertex *modelVert = &mdl->vertices[index];
+                                    Colour *modelColour    = &mdl->colours[index];
+                                    vertex->x              = matWorld->values[0][3] + (matWorld->values[0][0] * modelVert->x >> 8)
+                                                + (modelVert->y * matWorld->values[0][1] >> 8) + (modelVert->z * matWorld->values[0][2] >> 8);
+                                    vertex->y = matWorld->values[1][3] + (modelVert->z * matWorld->values[1][2] >> 8)
+                                                + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->y * matWorld->values[1][1] >> 8);
+                                    ++indices;
+                                    vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * modelVert->z >> 8)
+                                                + (modelVert->y * matWorld->values[2][1] >> 8) + (modelVert->x * matWorld->values[2][0] >> 8);
+                                    vertex->colour = modelColour->colour;
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+}
+void SetupMeshAnimation(ushort modelID, ushort sceneID, EntityAnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+{
+    if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
+        if (matWorld && data) {
+            Model *mdl            = &modelList[modelID];
+            Scene3D *scn          = &scene3DList[sceneID];
+            ushort *indices       = mdl->indices;
+            int vertID            = scn->indexCount;
+            Scene3DVertex *vertex = &scn->vertices[vertID];
+            byte *faceVertCounts  = &scn->faceVertCounts[scn->indCnt];
+            int indCnt            = mdl->indexCount;
+            if (scn->field_4C - vertID >= indCnt) {
+                scn->indexCount += mdl->indexCount;
+                scn->drawMode = drawMode;
+                scn->indCnt += indCnt / mdl->faceVertCount;
+
+                int frame = data->frameID + 1;
+                if (data->frameID + 1 >= data->frameCount)
+                    frame = data->loopIndex;
+                int frameOffset = frame * mdl->vertCount;
+
+                switch (mdl->flags) {
+                    default: break;
+                    case MODEL_NORMAL:
+                        for (; *indices < 0xFFFF;) {
+                            int faceVertCount = mdl->faceVertCount;
+                            *faceVertCounts++ = faceVertCount;
+                            for (int c = 0; c < faceVertCount; ++c) {
+                                ushort index = *indices;
+                                ++indices;
+                                ModelVertex *modelVert = &mdl->vertices[frameOffset + index];
+                                vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
+                                            + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
+                                vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
+                                            + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
+                                vertex->colour = colour;
+                                vertex->z      = matWorld->values[2][3] + ((modelVert->x * matWorld->values[2][0]) >> 8)
+                                            + ((matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+                                ++vertex;
+                            }
+                        }
+                        break;
+                    case MODEL_USENORMALS:
+                        if (matView) {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index = *indices;
+                                    ++indices;
+                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + index];
+                                    vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
+                                                + (modelVert->x * matWorld->values[0][0] >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
+                                    vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
+                                                + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->z * matWorld->values[1][2] >> 8);
+                                    vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
+                                                + (matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8);
+                                    vertex->nx = (modelVert->nz * matView->values[0][2] >> 8) + (modelVert->nx * matView->values[0][0] >> 8)
+                                                 + (matView->values[0][1] * modelVert->ny >> 8);
+                                    vertex->ny = (modelVert->ny * matView->values[1][1] >> 8) + (modelVert->nz * matView->values[1][2] >> 8)
+                                                 + (modelVert->nx * matView->values[1][0] >> 8);
+                                    vertex->colour = colour;
+                                    vertex->nz     = ((modelVert->ny * matView->values[2][1]) >> 8)
+                                                 + ((matView->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matView->values[2][2] >> 8));
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        else {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index = *indices;
+                                    ++indices;
+                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + index];
+                                    vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
+                                                + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
+                                    vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
+                                                + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
+                                    vertex->colour = colour;
+                                    vertex->z      = matWorld->values[2][3] + ((matWorld->values[2][2] * modelVert->z) >> 8)
+                                                + ((matWorld->values[2][0] * modelVert->x >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        break;
+                    case MODEL_USENORMALS | MODEL_USECOLOURS:
+                        if (matView) {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index           = *indices;
+                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + index];
+                                    Colour *modelColour    = &mdl->colours[index];
+                                    vertex->x              = matWorld->values[0][3] + (matWorld->values[0][2] * modelVert->z >> 8)
+                                                + (modelVert->y * matWorld->values[0][1] >> 8) + (matWorld->values[0][0] * modelVert->x >> 8);
+                                    vertex->y = matWorld->values[1][3] + (matWorld->values[1][2] * modelVert->z >> 8)
+                                                + (modelVert->y * matWorld->values[1][1] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
+                                    vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
+                                                + (modelVert->y * matWorld->values[2][1] >> 8) + (matWorld->values[2][2] * modelVert->z >> 8);
+                                    vertex->nx = (matView->values[0][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[0][1] >> 8)
+                                                 + (matView->values[0][2] * modelVert->nz >> 8);
+                                    vertex->ny = (matView->values[1][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[1][1] >> 8)
+                                                 + (matView->values[1][2] * modelVert->nz >> 8);
+                                    ++indices;
+                                    vertex->nz = ((matView->values[2][2] * modelVert->nz) >> 8)
+                                                 + ((modelVert->ny * matView->values[2][1] >> 8) + (matView->values[2][0] * modelVert->nx >> 8));
+                                    vertex->colour = modelColour->colour;
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        else {
+                            for (; *indices < 0xFFFF;) {
+                                byte faceVertCount = mdl->faceVertCount;
+                                *faceVertCounts++  = faceVertCount;
+
+                                for (int c = 0; c < faceVertCount; ++c) {
+                                    ushort index           = *indices;
+                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + index];
+                                    Colour *modelColour    = &mdl->colours[index];
+                                    vertex->x              = matWorld->values[0][3] + (matWorld->values[0][0] * modelVert->x >> 8)
+                                                + (modelVert->y * matWorld->values[0][1] >> 8) + (modelVert->z * matWorld->values[0][2] >> 8);
+                                    vertex->y = matWorld->values[1][3] + (modelVert->z * matWorld->values[1][2] >> 8)
+                                                + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->y * matWorld->values[1][1] >> 8);
+                                    ++indices;
+                                    vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * modelVert->z >> 8)
+                                                + (modelVert->y * matWorld->values[2][1] >> 8) + (modelVert->x * matWorld->values[2][0] >> 8);
+                                    vertex->colour = modelColour->colour;
+                                    ++vertex;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+}
+void Draw3DScene(ushort sceneID)
+{
+    if (sceneID < SCENE3D_MAX) {
+        Entity *entity = sceneInfo.entity;
+        Scene3D *scn   = &scene3DList[sceneID];
+
+        byte *vertCnt           = scn->faceVertCounts;
+        Scene3DVertex *vertices = scn->vertices;
+        ZBufferEntry *zBuffer   = scn->zBuffer;
+        int vertID              = 0;
+        for (int i = 0; i < scn->indCnt; ++i) {
+            switch (*vertCnt) {
+                default: break;
+                case 1:
+                    zBuffer->depth = vertices->z;
+                    vertices++;
+                    break;
+                case 2:
+                    zBuffer->depth = vertices[0].z >> 1;
+                    zBuffer->depth += vertices[1].z >> 1;
+                    vertices += 2;
+                    break;
+                case 3:
+                    zBuffer->depth = vertices[0].z >> 1;
+                    zBuffer->depth += vertices[1].z >> 1;
+                    zBuffer->depth += vertices[2].z >> 1;
+                    vertices += 3;
+                    break;
+                case 4:
+                    zBuffer->depth = vertices[0].z >> 2;
+                    zBuffer->depth += vertices[1].z >> 2;
+                    zBuffer->depth += vertices[2].z >> 2;
+                    zBuffer->depth += vertices[3].z >> 2;
+                    vertices += 4;
+                    break;
+            }
+            zBuffer->index = vertID;
+            zBuffer++;
+            vertID += *vertCnt++;
+        }
+
+        for (int i = 0; i < scn->indCnt; ++i) {
+            for (int j = scn->indCnt - 1; j > i; --j) {
+                if (scn->zBuffer[j].depth > scn->zBuffer[j - 1].depth) {
+                    int index                 = scn->zBuffer[j].index;
+                    int depth                 = scn->zBuffer[j].depth;
+                    scn->zBuffer[j].index     = scn->zBuffer[j - 1].index;
+                    scn->zBuffer[j].depth     = scn->zBuffer[j - 1].depth;
+                    scn->zBuffer[j - 1].index = index;
+                    scn->zBuffer[j - 1].depth = depth;
+                }
+            }
+        }
+
+        vertCnt = scn->faceVertCounts;
+        Vector2 vertPos[4];
+        switch (scn->drawMode) {
+            default: break;
+            case S3D_TYPE_WORLD_WIREFRAME:
+                for (int i = 0; i < scn->indCnt; ++i) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    for (int v = 0; v < *vertCnt - 1; ++v) {
+                        DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].colour,
+                                 entity->alpha, (InkEffects)entity->inkEffect, false);
+                    }
+                    DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, drawVert[0].colour,
+                             entity->alpha, (InkEffects)entity->inkEffect, false);
+                    vertCnt++;
+                }
+                break;
+            case S3D_TYPE_WORLD:
+                for (int i = 0; i < scn->indCnt; ++i) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    for (int v = 0; v < *vertCnt - 1; ++v) {
+                        vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
+                        vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
+                    }
+                    DrawQuad(vertPos, *vertCnt, (drawVert->colour >> 16) & 0xFF, (drawVert->colour >> 8) & 0xFF, (drawVert->colour >> 0) & 0xFF,
+                             entity->alpha, (InkEffects)entity->inkEffect);
+                    vertCnt++;
+                }
+                break;
+            case S3D_TYPE_2: break;
+            case S3D_TYPE_3: break;
+            case S3D_TYPE_4:
+                // TODO
+                break;
+            case S3D_TYPE_5:
+                // TODO
+                break;
+            case S3D_TYPE_6:
+                // TODO
+                break;
+            case S3D_TYPE_7:
+                // TODO
+                break;
+            case S3D_TYPE_8:
+                // TODO
+                break;
+            case S3D_TYPE_9:
+                // TODO
+                break;
+            case S3D_TYPE_A:
+                // TODO
+                break;
+            case S3D_TYPE_B:
+                // TODO
+                break;
+        }
+    }
+}
