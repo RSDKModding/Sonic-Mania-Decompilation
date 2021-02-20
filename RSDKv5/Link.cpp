@@ -202,7 +202,7 @@ enum FunctionTableIDs {
     FunctionTable_CheckObjectCollisionPlatform,
     FunctionTable_ObjectTileCollision,
     FunctionTable_ObjectTileGrip,
-    FunctionTable_ProcessPlayerTileCollisions,
+    FunctionTable_ProcessTileCollisions,
     FunctionTable_GetTileAngle,
     FunctionTable_SetTileAngle,
     FunctionTable_GetTileBehaviour,
@@ -463,7 +463,7 @@ void setupFunctions()
     functionTable[FunctionTable_CheckObjectCollisionPlatform] = (void *)CheckObjectCollisionPlatform;
     functionTable[FunctionTable_ObjectTileCollision]          = (void *)ObjectTileCollision;
     functionTable[FunctionTable_ObjectTileGrip]               = (void *)ObjectTileGrip;
-    functionTable[FunctionTable_ProcessPlayerTileCollisions]  = (void *)NullFunc; // ProcessTileCollisions;
+    functionTable[FunctionTable_ProcessTileCollisions]        = (void *)ProcessTileCollisions;
     functionTable[FunctionTable_GetTileAngle]                 = (void *)GetTileAngle;
     functionTable[FunctionTable_SetTileAngle]                 = (void *)SetTileAngle;
     functionTable[FunctionTable_GetTileBehaviour]             = (void *)GetTileBehaviour;
@@ -472,7 +472,7 @@ void setupFunctions()
     functionTable[FunctionTable_PlaySFX]                      = (void *)PlaySfx;
     functionTable[FunctionTable_StopSFX]                      = (void *)StopSfx;
     functionTable[FunctionTable_PlayMusic]                    = (void *)NullFunc; // PlayMusicFile;
-    functionTable[FunctionTable_SetSoundAttributes]           = (void *)NullFunc; // SetSoundAttributes;
+    functionTable[FunctionTable_SetSoundAttributes]           = (void *)SetSoundAttributes;
     functionTable[FunctionTable_Unknown91]                    = (void *)SoundUnknown1;
     functionTable[FunctionTable_PauseChannel]                 = (void *)PauseChannel;
     functionTable[FunctionTable_ResumeChannel]                = (void *)ResumeChannel;

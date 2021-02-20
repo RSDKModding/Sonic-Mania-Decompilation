@@ -343,6 +343,13 @@ enum LayerTypes {
     LAYER_BASIC,
 };
 
+enum CModes {
+    CMODE_FLOOR,
+    CMODE_LWALL,
+    CMODE_ROOF,
+    CMODE_RWALL,
+};
+
 enum EngineStates {
     ENGINESTATE_LOAD             = 0,
     ENGINESTATE_REGULAR          = 1,

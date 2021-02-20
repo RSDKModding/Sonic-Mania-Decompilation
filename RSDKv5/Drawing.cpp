@@ -362,7 +362,8 @@ void FillScreen(int a1, int a2, int a3, int a4)
         validDraw    = true;
         ushort a2Val = blendLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(a1 >> 0x10) & 0xFF]];
         ushort a3Val = blendLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]];
-        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]];
+        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]]
+                       + subtractLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]];
 
         int cnt = currentScreen->height * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
@@ -2446,8 +2447,8 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
             pos = *position;
 
         if (!screenRelative) {
-            pos.x -= currentScreen->position.x;
-            pos.y -= currentScreen->position.y;
+            pos.x = (pos.x >> 0x10) - currentScreen->position.x;
+            pos.y = (pos.y >> 0x10) - currentScreen->position.y;
         }
 
         int rotation = sceneInfo.entity->rotation;

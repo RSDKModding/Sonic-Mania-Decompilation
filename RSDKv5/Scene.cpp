@@ -451,7 +451,7 @@ void LoadSceneFile() {
         //handle filter and stuff
         int slot = RESERVE_ENTITY_COUNT;
         int activeSlot = RESERVE_ENTITY_COUNT;
-        for (int e = 0; e < 0x800; ++e) {
+        for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
             if (sceneInfo.filter & entList[e].filter) {
                 if (activeSlot != slot) {
                     memcpy(&objectEntityList[slot], &objectEntityList[e], sizeof(EntityBase));
@@ -466,10 +466,10 @@ void LoadSceneFile() {
         }
 
         slot = activeSlot;
-        for (int e = 0; e < 0x800; ++e) {
-            if (sceneInfo.filter & entList[e].filter) {
+        for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
+            //if (sceneInfo.filter & entList[e].filter) {
                 memcpy(&objectEntityList[slot], &entList[e], sizeof(EntityBase));
-            }
+            //}
             slot++;
         }
 

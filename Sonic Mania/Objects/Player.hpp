@@ -125,7 +125,7 @@ struct ObjectPlayer : Object{
     int powerups;
     int savedLives;
     int savedScore;
-    int savedTargetScore;
+    int savedScore1UP;
     ushort sonicSpriteIndex;
     ushort superSpriteIndex;
     ushort tailsSpriteIndex;
@@ -197,7 +197,7 @@ struct EntityPlayer : Entity {
     int shield;
     int lives;
     int score;
-    int targetScore;
+    int score1UP;
     int hyperRing;
     int timer;
     int outtaHereTimer;
@@ -246,15 +246,15 @@ struct EntityPlayer : Entity {
     int controllerID;
     int glideTimer;
     int up;
-    int fown;
+    int down;
     int left;
     int right;
     int jumpPress;
     int jumpHold;
     int jumpAbility;
     int jumpAbilityTimer;
-    int movesetPtr;
-    int move_Peelout;
+    void (*movesetPtr)(void);
+    void (*move_Peelout)(void);
     int field_1D4;
     int field_1D8;
     int field_1DC;
@@ -340,5 +340,26 @@ void Player_Serialize();
 // Extra Entity Functions
 void Player_LoadSprites();
 void Player_LoadSpritesVS();
+void Player_SaveValues();
+void Player_GiveLife(EntityPlayer *entity);
+
+//State helpers
+void Player_HandleGroundMovement();
+void Player_HandleGroundRotation();
+void Player_HandleAirMovement();
+void Player_HandleAirFriction();
+void Player_StartJump(EntityPlayer *entity);
+void Player_StartRoll();
+void Player_HandleRollDeceleration();
+
+//States
+void Player_State_Ground();
+void Player_State_Air();
+void Player_State_Roll();
+void Player_State_ForceRoll();
+void Player_State_RollLock();
+void Player_State_LookUp();
+void Player_State_Crouch();
+void Player_State_OuttaHere();
 
 #endif //!OBJ_PLAYER_H

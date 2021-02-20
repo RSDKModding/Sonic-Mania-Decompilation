@@ -141,7 +141,7 @@ void ProcessAnimation(EntityAnimationData *data)
             data->animationTimer += data->animationSpeed;
             if (data->framePtrs == (SpriteFrame *)1) {
                 int delay = data->frameDelay;
-                while (data->animationTimer <= delay) {
+                while (data->animationTimer < delay) {
                     ++data->frameID;
                     data->animationTimer = data->animationTimer - delay;
                     if (data->frameID >= data->frameCount)
@@ -149,7 +149,7 @@ void ProcessAnimation(EntityAnimationData *data)
                 }
             }
             else {
-                while (data->animationTimer <= data->frameDelay) {
+                while (data->animationTimer < data->frameDelay) {
                     ++data->frameID;
                     data->animationTimer = data->animationTimer - data->frameDelay;
                     if (data->frameID >= data->frameCount)

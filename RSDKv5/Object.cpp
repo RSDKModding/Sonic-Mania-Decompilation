@@ -728,7 +728,7 @@ void SpawnEntity(ushort type, void *data, int x, int y)
 
 bool32 GetActiveObjects(ushort group, Entity **entity)
 {
-    if (group > 0x103u)
+    if (group >= TYPEGROUP_COUNT)
         return false;
     if (!entity)
         return false;
@@ -757,7 +757,7 @@ bool32 GetActiveObjects(ushort group, Entity **entity)
 }
 bool32 GetObjects(ushort type, Entity **entity)
 {
-    if (type > 0xFFu)
+    if (type >= OBJECT_COUNT)
         return 0;
     if (!entity)
         return 0;
