@@ -467,9 +467,9 @@ void LoadSceneFile() {
 
         slot = activeSlot;
         for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
-            //if (sceneInfo.filter & entList[e].filter) {
+            if (sceneInfo.filter & entList[e].filter) {
                 memcpy(&objectEntityList[slot], &entList[e], sizeof(EntityBase));
-            //}
+            }
             slot++;
         }
 
