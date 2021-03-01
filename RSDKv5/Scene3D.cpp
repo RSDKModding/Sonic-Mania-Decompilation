@@ -419,17 +419,17 @@ ushort LoadMesh(const char *filename, Scopes scope)
 
         for (int f = 0; f < model->frameCount; ++f) {
             for (int v = 0; v < model->vertCount; ++v) {
-                model->vertices[(f * model->vertCount) + v].x = ReadSingle(&info) * 256.0;
-                model->vertices[(f * model->vertCount) + v].y = ReadSingle(&info) * 256.0;
-                model->vertices[(f * model->vertCount) + v].z = ReadSingle(&info) * 256.0;
+                model->vertices[(f * model->vertCount) + v].x = ReadSingle(&info) * 256.0f;
+                model->vertices[(f * model->vertCount) + v].y = ReadSingle(&info) * 256.0f;
+                model->vertices[(f * model->vertCount) + v].z = ReadSingle(&info) * 256.0f;
 
                 model->vertices[(f * model->vertCount) + v].nx = 0;
                 model->vertices[(f * model->vertCount) + v].ny = 0;
                 model->vertices[(f * model->vertCount) + v].nz = 0;
                 if (model->flags & MODEL_USENORMALS) {
-                    model->vertices[(f * model->vertCount) + v].nx = ReadSingle(&info) * 65536.0;
-                    model->vertices[(f * model->vertCount) + v].ny = ReadSingle(&info) * 65536.0;
-                    model->vertices[(f * model->vertCount) + v].nz = ReadSingle(&info) * 65536.0;
+                    model->vertices[(f * model->vertCount) + v].nx = ReadSingle(&info) * 65536.0f;
+                    model->vertices[(f * model->vertCount) + v].ny = ReadSingle(&info) * 65536.0f;
+                    model->vertices[(f * model->vertCount) + v].nz = ReadSingle(&info) * 65536.0f;
                 }
             }
         }

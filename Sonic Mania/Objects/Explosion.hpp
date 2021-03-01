@@ -4,13 +4,15 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectExplosion : Object{
-
+struct ObjectExplosion : Object {
+    ushort spriteIndex;
+    ushort sfx_Destroy;
 };
 
 // Entity Class
 struct EntityExplosion : Entity {
-
+    EntityAnimationData data;
+    int planeFilter;
 };
 
 // Object Struct

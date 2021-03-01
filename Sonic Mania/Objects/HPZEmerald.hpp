@@ -5,12 +5,18 @@
 
 // Object Class
 struct ObjectHPZEmerald : Object{
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityHPZEmerald : Entity {
-
+    int field_58;
+    int type;
+    int field_60;
+    Vector2 startPos;
+    Hitbox *hitbox;
+    EntityAnimationData data2;
+    EntityAnimationData data;
 };
 
 // Object Struct

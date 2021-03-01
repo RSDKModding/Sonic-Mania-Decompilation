@@ -184,7 +184,7 @@ void ClearUnusedStorage(StorageDataSets set)
                 else {
                     memPtr2 += size;
                     c           = size + totalSizeA;
-                    usedStorage = size + totalSizeA;
+                    usedStorage = size + totalSizeB;
                     totalSizeB += size;
                     totalSizeA += size;
                 }

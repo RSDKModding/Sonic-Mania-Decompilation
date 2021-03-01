@@ -695,12 +695,12 @@ void DevMenu_AudioOptions()
 
     DrawDevText(currentScreen->centerX - 96, "Streams Vol:", dy, 0, optionColours[1]);
     DrawRectangle(currentScreen->centerX + 8, dy, 112, 8, 0, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->centerX + 9, dy + 1, engine.streamVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->centerX + 9, dy + 1, (int)(engine.streamVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     dy += 16;
 
     DrawDevText(currentScreen->centerX - 96, "SoundFX Vol:", dy, 0, optionColours[2]);
     DrawRectangle(currentScreen->centerX + 8, dy, 112, 8, 0, 255, INK_NONE, true);
-    DrawRectangle(currentScreen->centerX + 9, dy + 1, engine.soundFXVolume * 110.0, 6, 0xF0F0F0, 255, INK_NONE, true);
+    DrawRectangle(currentScreen->centerX + 9, dy + 1, (int)(engine.soundFXVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     DrawDevText(currentScreen->centerX, "Back", dy + 16, ALIGN_CENTER, optionColours[3]);
 
     if (controller[0].keyUp.press) {

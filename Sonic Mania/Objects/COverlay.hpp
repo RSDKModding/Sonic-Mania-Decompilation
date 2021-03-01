@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectCOverlay : Object{
-
+    ushort spriteIndex;
 };
 
 // Entity Class
@@ -28,6 +28,8 @@ void COverlay_EditorLoad();
 void COverlay_Serialize();
 
 // Extra Entity Functions
-
+void COverlay_DebugDraw();
+void COverlay_DebugSpawn();
+void COverlay_DrawTile();
 
 #endif //!OBJ_COVERLAY_H

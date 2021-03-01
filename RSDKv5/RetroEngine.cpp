@@ -263,14 +263,14 @@ void initRetroEngine()
 void runRetroEngine()
 {
     uint frameStart, frameEnd = SDL_GetTicks();
-    float frameDelta = 0.0f;
+    int frameDelta = 0;
 
     while (engine.running) {
         frameStart = SDL_GetTicks();
         frameDelta = frameStart - frameEnd;
 
         if (frameDelta < 1000.0f / (float)engine.refreshRate)
-            SDL_Delay(1000.0f / (float)engine.refreshRate - frameDelta);
+            SDL_Delay((1000.0f / engine.refreshRate) - frameDelta);
 
         frameEnd = SDL_GetTicks();
 
@@ -401,7 +401,7 @@ void runRetroEngine()
                         }
                     }
                     else {
-                        engine.displayTime -= 0.01666666666666667;
+                        engine.displayTime -= 0.01666666666666667f;
                         if (engine.skipCallback) {
                             if (engine.skipCallback())
                                 engine.displayTime = 0.0;

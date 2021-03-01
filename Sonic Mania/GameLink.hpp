@@ -21,6 +21,7 @@ typedef unsigned int bool32;
 #define SCREEN_YSIZE    (240)
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
+#define PLAYER_MAX      (4)
 
 struct Vector2 {
     int x;
@@ -59,7 +60,7 @@ struct Entity {
 };
 
 struct Object {
-    short objectID;
+    ushort objectID;
     byte active;
     byte field_3;
 };

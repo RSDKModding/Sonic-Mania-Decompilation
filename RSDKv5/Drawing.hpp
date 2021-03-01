@@ -59,6 +59,13 @@ struct ScreenInfo {
     int waterDrawPos;
 };
 
+struct ScreenUnknown {
+    Vector2 *targetPos;
+    Vector2 position;
+    Vector2 offset;
+    bool32 worldRelative;
+};
+
 struct DrawList {
     ushort entries[ENTITY_COUNT];
     ushort layerDrawList[LAYER_COUNT];
@@ -81,6 +88,7 @@ extern byte graphicData[GFXDATA_MAX];
 extern int SCREEN_XSIZE;
 extern int screenCount;
 extern ScreenInfo screens[SCREEN_MAX];
+extern ScreenUnknown screenUnknown[SCREEN_MAX];
 extern ScreenInfo *currentScreen;
 
 bool32 InitRenderDevice();
@@ -111,13 +119,19 @@ inline void SetScreenSize(byte screenID, ushort width, ushort height)
     }
 }
 
-inline void AddScreen(int x, int y, int width, int height)
+inline void AddScreen(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative)
 {
     if (screenCount < SCREEN_MAX) {
-        screens[screenCount].position.x = x;
-        screens[screenCount].position.y = y;
-        screens[screenCount].width = width;
-        screens[screenCount].height = height;
+        screenUnknown[screenCount].targetPos     = pos;
+        screenUnknown[screenCount].offset.x      = offsetX;
+        screenUnknown[screenCount].offset.y      = offsetY;
+        screenUnknown[screenCount].worldRelative = worldRelative;
+        ++screenCount;
+
+        //screens[screenCount].position.x = x;
+        //screens[screenCount].position.y = y;
+        //screens[screenCount].width = width;
+        //screens[screenCount].height = height;
     }
 }
 

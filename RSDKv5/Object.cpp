@@ -59,13 +59,13 @@ void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize
     memcpy(hashBuffer, name, len);
     GenerateHash(hash, len);
     AllocateStorage(objectSize, (void**)structPtr, DATASET_STG, true);
-    LoadStaticObject((byte *)structPtr, hash, 0);
+    LoadStaticObject((byte *)*structPtr, hash, 0);
 }
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 {
     char buffer[0x40];
-    const char *hexChars = "FEDCBA9876543210";
+    const char *hexChars = "0123456789ABCDEF";
     StrCopy(buffer, "Data/Objects/Static/00000000000000000000000000000000.bin");
 
     int strPos = 20;
@@ -107,9 +107,14 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                 switch (dataType) {
                     case VAR_UINT8:
                     case VAR_INT8: 
-                        if (info.readPos + dataSize <= info.fileSize) {
-                            ReadBytes(&info, &obj[dataPos], sizeof(byte));
+                        if (info.readPos + dataSize <= info.fileSize && &obj[dataPos]) {
+                            for (int i = 0; i < dataSize * sizeof(byte); i += sizeof(byte)) ReadBytes(&info, &obj[dataPos + i], sizeof(byte));
                         }
+                        else {
+                            for (int i = 0; i < dataSize * sizeof(byte); ++i)
+                                ReadInt8(&info);
+                        }
+                        dataPos += arraySize;
                         break;
                     case VAR_UINT16:
                     case VAR_INT16: {
@@ -117,9 +122,14 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
-                        if (info.readPos + (dataSize * sizeof(short)) <= info.fileSize) {
-                            ReadBytes(&info, &obj[dataPos], sizeof(short));
+                        if (info.readPos + (dataSize * sizeof(short)) <= info.fileSize && &obj[dataPos]) {
+                            for (int i = 0; i < dataSize * sizeof(short); i += sizeof(short)) ReadBytes(&info, &obj[dataPos + i], sizeof(short));
                         }
+                        else {
+                            for (int i = 0; i < dataSize * sizeof(short); ++i)
+                                ReadInt8(&info);
+                        }
+                        dataPos = tmp + sizeof(short) * arraySize;
                         break;
                     }
                     case VAR_UINT32:
@@ -129,9 +139,14 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
-                        if (info.readPos + (dataSize * sizeof(int)) <= info.fileSize) {
-                            ReadBytes(&info, &obj[dataPos], sizeof(int));
+                        if (info.readPos + (dataSize * sizeof(int)) <= info.fileSize && &obj[dataPos]) {
+                            for (int i = 0; i < dataSize * sizeof(int); i += sizeof(int)) ReadBytes(&info, &obj[dataPos + i], sizeof(int));
                         }
+                        else {
+                            for (int i = 0; i < dataSize * sizeof(int); ++i)
+                                ReadInt8(&info);
+                        }
+                        dataPos = tmp + sizeof(int) * arraySize;
                         break;
                     }
                 }
@@ -140,21 +155,22 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                 int tmp = 0;
                 switch (dataType) {
                     case 0:
-                    case 3: dataPos += arraySize;
+                    case 3: dataPos += arraySize; break;
                     case 1:
                     case 4:
-                        tmp = (dataPos & 0xFFFFFFFE) + 2;
+                        tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 2 * arraySize;
+                        dataPos = tmp + sizeof(short) * arraySize;
+                        break;
                     case 2:
                     case 5:
                     case 6:
                     case 7:
-                        tmp = (dataPos & 0xFFFFFFFC) + 4;
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 4 * arraySize;
+                        dataPos = tmp + sizeof(int) * arraySize;
                         break;
                     case 8:
                     case 9:
@@ -193,6 +209,7 @@ void InitObjects()
 {
     sceneInfo.entitySlot = 0;
     sceneInfo.createSlot = ENTITY_COUNT - 0x100;
+    screenCount          = 0;
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
         if (objectList[stageObjectIDs[o]].stageLoad)
@@ -210,15 +227,15 @@ void InitObjects()
         }
     }
 
-    SpawnEntity(TestObject->objectID, NULL, 0, 0);
+    //SpawnEntity(TestObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
-        screens[0].position.x = 0;
-        screens[0].position.y = 0;
-        screens[0].width      = SCREEN_XSIZE;
-        screens[0].height     = SCREEN_YSIZE;
-        screenCount           = 1;
+        screenUnknown[0].targetPos     = &screens[0].position;
+        screenUnknown[0].offset.x      = screens[0].centerX / 2;
+        screenUnknown[0].offset.y      = screens[0].centerY / 2;
+        screenUnknown[0].worldRelative = false;
+        screenCount                    = 1;
     }
 }
 void ProcessObjects()
@@ -236,6 +253,21 @@ void ProcessObjects()
     }
 
     for (int s = 0; s < screenCount; ++s) {
+        ScreenUnknown *screen = &screenUnknown[s];
+        if (screen->targetPos) {
+            if (screen->worldRelative) {
+                screen->position.x = screen->targetPos->x;
+                screen->position.y = screen->targetPos->y;
+            }
+            else {
+                screen->position.x = screen->targetPos->x << 0x10;
+                screen->position.y = screen->targetPos->y << 0x10;
+            }
+            screens[s].position.x = screen->position.x >> 0x10;
+            screens[s].position.y = screen->position.y >> 0x10;
+            screens[s].position.x -= screen->offset.x >> 0x10;
+            screens[s].position.y -= screen->offset.y >> 0x10;
+        }
     }
 
     sceneInfo.entitySlot = 0;
@@ -352,9 +384,6 @@ void ProcessPausedObjects()
         }
     }
 
-    for (int s = 0; s < screenCount; ++s) {
-    }
-
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
@@ -417,6 +446,17 @@ void ProcessFrozenObjects()
     }
 
     for (int s = 0; s < screenCount; ++s) {
+        ScreenUnknown *screen = &screenUnknown[s];
+        if (screen->targetPos) {
+            if (screen->worldRelative) {
+                screen->position.x = screen->targetPos->x;
+                screen->position.y = screen->targetPos->y;
+            }
+            else {
+                screen->position.x = screen->targetPos->x << 0x10;
+                screen->position.y = screen->targetPos->y << 0x10;
+            }
+        }
     }
 
     sceneInfo.entitySlot = 0;
@@ -668,13 +708,14 @@ void DestroyEntity(Entity *entity, ushort type, void *data)
         ObjectInfo *info = &objectList[stageObjectIDs[type]];
         memset(entity, 0, info->entitySize);
         if (info->create) {
-            Entity *curEnt      = sceneInfo.entity;
-            sceneInfo.entity    = entity;
-            sceneInfo.entity->interaction = 1;
+            Entity *curEnt                = sceneInfo.entity;
+            sceneInfo.entity              = entity;
+            sceneInfo.entity->interaction = true;
             info->create(data);
-            sceneInfo.entity = curEnt;
+            sceneInfo.entity->objectID = type;
+            sceneInfo.entity           = curEnt;
         }
-        sceneInfo.entity->objectID = type;
+        entity->objectID = type;
     }
 }
 
@@ -732,37 +773,7 @@ bool32 GetActiveObjects(ushort group, Entity **entity)
         return false;
     if (!entity)
         return false;
-    ForeachStackInfo *stackPtr   = foreachStackPtr;
-    Entity* nextEntity = 0;
-    bool32 flag                  = 0;
-    while (true) {
-        if (nextEntity && nextEntity->group == group) {
-            *entity = nextEntity;
-            return true;
-        }
-        if (flag || *entity) {
-            ++stackPtr->id;
-        }
-        else {
-            foreachStackPtr++;
-            stackPtr->id = 0;
-        }
-        if (stackPtr->id >= typeGroups[group].entryCount)
-            break;
-        flag       = true;
-        nextEntity = &objectEntityList[typeGroups[group].entries[stackPtr->id]];
-    }
-    foreachStackPtr--;
-    return false;
-}
-bool32 GetObjects(ushort type, Entity **entity)
-{
-    if (type >= OBJECT_COUNT)
-        return 0;
-    if (!entity)
-        return 0;
 
-    ForeachStackInfo *stackPtr = foreachStackPtr;
     if (*entity) {
         ++foreachStackPtr->id;
     }
@@ -770,23 +781,41 @@ bool32 GetObjects(ushort type, Entity **entity)
         foreachStackPtr++;
         foreachStackPtr->id = 0;
     }
-    
-    Entity* nextEnt = &objectEntityList[stackPtr->id];
-    if (stackPtr->id >= ENTITY_COUNT) {
-        foreachStackPtr = stackPtr - 1;
-        return false;
-    }
-    while (nextEnt->objectID != type) {
-        ++stackPtr->id;
-        ++nextEnt;
-        if (stackPtr->id >= ENTITY_COUNT) {
-            foreachStackPtr = stackPtr - 1;
-            return false;
+
+    for (Entity *nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]; foreachStackPtr->id < typeGroups[group].entryCount;
+         ++foreachStackPtr->id, nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]) {
+        if (nextEnt->objectID == group) {
+            *entity = nextEnt;
+            return true;
         }
     }
+    foreachStackPtr--;
+    return false;
+}
+bool32 GetObjects(ushort type, Entity **entity)
+{
+    if (type >= OBJECT_COUNT)
+        return false;
+    if (!entity)
+        return false;
 
-    *entity = nextEnt;
-    return true;
+    if (*entity) {
+        ++foreachStackPtr->id;
+    }
+    else {
+        foreachStackPtr++;
+        foreachStackPtr->id = 0;
+    }
+
+    for (Entity *nextEnt = &objectEntityList[foreachStackPtr->id]; foreachStackPtr->id < ENTITY_COUNT;
+         ++foreachStackPtr->id, nextEnt = &objectEntityList[foreachStackPtr->id]) {
+        if (nextEnt->objectID == type) {
+            *entity = nextEnt;
+            return true;
+        }
+    }
+    foreachStackPtr--;
+    return false;
 }
 
 
@@ -797,19 +826,19 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
 
     if (range) {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = sceneInfo.entity->position.x - screens[s].position.x;
-            int sy = sceneInfo.entity->position.y - screens[s].position.y;
-            if (sx >= 0 && sy >= 0 && sx >= range->x + screens[s].width && sy >= range->y + screens[s].height) {
+            int sx = sceneInfo.entity->position.x - screenUnknown[s].position.x;
+            int sy = sceneInfo.entity->position.y - screenUnknown[s].position.y;
+            if (sx >= 0 && sy >= 0 && sx >= range->x + screenUnknown[s].offset.x && sy >= range->y + screenUnknown[s].offset.y) {
                 return true;
             }
         }
     }
     else {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = sceneInfo.entity->position.x - screens[s].position.x;
-            int sy = sceneInfo.entity->position.y - screens[s].position.y;
-            if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screens[s].width
-                && sy >= sceneInfo.entity->updateRange.y + screens[s].height) {
+            int sx = sceneInfo.entity->position.x - screenUnknown[s].position.x;
+            int sy = sceneInfo.entity->position.y - screenUnknown[s].position.y;
+            if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
+                && sy >= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
                 return true;
             }
         }
@@ -821,9 +850,9 @@ bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range) {
         return false;
 
     for (int s = 0; s < screenCount; ++s) {
-        int sx = position->x - screens[s].position.x;
-        int sy = position->y - screens[s].position.y;
-        if (sx >= 0 && sy >= 0 && sx >= range->x + screens[s].width && sy >= range->y + screens[s].height) {
+        int sx = position->x - screenUnknown[s].position.x;
+        int sy = position->y - screenUnknown[s].position.y;
+        if (sx >= 0 && sy >= 0 && sx >= range->x + screenUnknown[s].offset.x && sy >= range->y + screenUnknown[s].offset.y) {
             return true;
         }
     }

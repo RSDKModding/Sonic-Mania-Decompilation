@@ -138,8 +138,7 @@ void LoadScene()
                 int objID                            = 0;
                 stageObjectIDs[sceneInfo.classCount] = 0;
                 do {
-                    if (hash[0] == objectList[objID].hash[0] && hash[1] == objectList[objID].hash[1] && hash[2] == objectList[objID].hash[2]
-                        && hash[3] == objectList[objID].hash[3]) {
+                    if (HASH_MATCH(hash, objectList[objID].hash)) {
                         stageObjectIDs[sceneInfo.classCount++] = objID;
                     }
                     ++objID;
@@ -151,7 +150,7 @@ void LoadScene()
             ObjectInfo *obj = &objectList[stageObjectIDs[o]];
             if (obj->type && !*obj->type) {
                 AllocateStorage(obj->objectSize, (void**)obj->type, DATASET_STG, true);
-                LoadStaticObject((byte *)obj->type, obj->hash, 2);
+                LoadStaticObject((byte *)*obj->type, obj->hash, sizeof(Object));
                 (*obj->type)->objectID = o;
                 if (o >= DEFAULT_OBJECT_COUNT)
                     (*obj->type)->active = ACTIVE_NORMAL;
@@ -340,13 +339,11 @@ void LoadSceneFile() {
                 ReadHash(&info, hashBuf);
 
                 int varID = 0;
-                MEM_ZERO(editableVarList[e]);
                 MEM_ZERO(varList[e]);
-                editableVarList[e].active = false;
                 for (int v = 0; v < editableVarCount; ++v) {
                     if (HASH_MATCH(hashBuf, editableVarList[v].hash)) {
                         varID = v;
-                        memcpy(varList[e].hash, editableVarList[v].hash, 4 * sizeof(int));
+                        memcpy(varList[e].hash, editableVarList[v].hash, 4 * sizeof(uint));
                         varList[e].offset = editableVarList[v].offset;
                         varList[e].active = true;
                         break;
@@ -645,12 +642,12 @@ void LoadTileConfig(char *filepath)
                     if (collisionMasks[p][t].floorMasks[c] >= 0xFF)
                         collisionMasks[p][t + off].floorMasks[0xF - c] = 0xFF;
                     else
-                        collisionMasks[p][t + off].floorMasks[0xF - c] = 0xF - collisionMasks[p][t].floorMasks[c];
+                        collisionMasks[p][t + off].floorMasks[0xF - c] = collisionMasks[p][t].floorMasks[c];
 
                     if (collisionMasks[p][t].roofMasks[c] >= 0xFF)
                         collisionMasks[p][t + off].roofMasks[0xF - c] = 0xFF;
                     else
-                        collisionMasks[p][t + off].roofMasks[0xF - c] = 0xF - collisionMasks[p][t].roofMasks[c];
+                        collisionMasks[p][t + off].roofMasks[0xF - c] = collisionMasks[p][t].roofMasks[c];
                 }
             }
 
@@ -670,12 +667,12 @@ void LoadTileConfig(char *filepath)
                     if (collisionMasks[p][t].lWallMasks[c] >= 0xFF)
                         collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xFF;
                     else
-                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xF - collisionMasks[p][t].lWallMasks[c];
+                        collisionMasks[p][t + off].lWallMasks[0xF - c] = collisionMasks[p][t].lWallMasks[c];
 
                     if (collisionMasks[p][t].rWallMasks[c] >= 0xFF)
                         collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xFF;
                     else
-                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xF - collisionMasks[p][t].rWallMasks[c];
+                        collisionMasks[p][t + off].rWallMasks[0xF - c] = collisionMasks[p][t].rWallMasks[c];
                 }
             }
 
@@ -690,18 +687,18 @@ void LoadTileConfig(char *filepath)
                 collisionMasks[p][t + off].roofAngle                      = -collisionMasks[p][t + offX].roofAngle;
 
                 for (int c = 0; c < TILE_SIZE; ++c) {
-                    collisionMasks[p][t + off].floorMasks[0xF - c] = collisionMasks[p][t + offX].roofMasks[c];
-                    collisionMasks[p][t + off].roofMasks[0xF - c]  = collisionMasks[p][t + offX].floorMasks[c];
+                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t + offX].roofMasks[c];
+                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t + offX].floorMasks[c];
 
                     if (collisionMasks[p][t + offX].lWallMasks[c] >= 0xFF)
                         collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xFF;
                     else
-                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xF - collisionMasks[p][t + offX].lWallMasks[c];
+                        collisionMasks[p][t + off].lWallMasks[0xF - c] = collisionMasks[p][t + offX].lWallMasks[c];
 
                     if (collisionMasks[p][t + offX].rWallMasks[c] >= 0xFF)
                         collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xFF;
                     else
-                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xF - collisionMasks[p][t + offX].rWallMasks[c];
+                        collisionMasks[p][t + off].rWallMasks[0xF - c] = collisionMasks[p][t + offX].rWallMasks[c];
                 }
             }
         }

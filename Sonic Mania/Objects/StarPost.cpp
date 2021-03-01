@@ -89,8 +89,8 @@ void StarPost_StageLoad()
 
     for (int i = 0; i < Player->playerCount; ++i) {
         if (StarPost->postIDs[i]) {
-            EntityPlayer *player          = (EntityPlayer *)RSDK.GetObjectByID(i);
-            EntityStarPost *savedStarPost = (EntityStarPost *)RSDK.GetObjectByID(StarPost->postIDs[i]);
+            EntityPlayer *player          = (EntityPlayer *)RSDK.GetEntityByID(i);
+            EntityStarPost *savedStarPost = (EntityStarPost *)RSDK.GetEntityByID(StarPost->postIDs[i]);
             if (!TMZ2Setup) {
                 EntityStarPost *starPost = NULL;
                 while (RSDK.GetObjects(StarPost->objectID, (Entity**)&starPost)) {
@@ -119,7 +119,7 @@ void StarPost_StageLoad()
                 player->position.y += 0x100000;
                 player->direction = StarPost->playerDirections[i];
                 if (!i) {
-                    EntityPlayer *sideKick = (EntityPlayer *)RSDK.GetObjectByID(1);
+                    EntityPlayer *sideKick = (EntityPlayer *)RSDK.GetEntityByID(1);
                     if (options->gameMode != MODE_COMPETITION) {
                         sideKick->position.x = player->position.x;
                         sideKick->position.y = player->position.y;
@@ -140,7 +140,7 @@ void StarPost_StageLoad()
         }
 
         if (options->gameMode == MODE_COMPETITION || options->gameMode == MODE_ENCORE) {
-            EntityPlayer *player                         = (EntityPlayer *)RSDK.GetObjectByID(i);
+            EntityPlayer *player                         = (EntityPlayer *)RSDK.GetEntityByID(i);
             StarPost->playerPositions[i].x = player->position.x;
             StarPost->playerPositions[i].y = player->position.y;
             StarPost->playerPositions[i].y -= 0x100000;
@@ -197,7 +197,7 @@ void StarPost_CheckBonusStageEntry()
 
         if (!options->recallEntities) {
             //TODO
-            /*if (Player_CheckCollisionTouch(RSDK.GetObjectByID(SLOT_PLAYER1), entity, &entity->starHitbox)) {
+            /*if (Player_CheckCollisionTouch(RSDK.GetEntityByID(SLOT_PLAYER1), entity, &entity->starHitbox)) {
                 SaveGame_Unknown7();
                 RSDK.PlaySFX(StarPost->sfx_Warp, 0, 254);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -205,7 +205,7 @@ void StarPost_CheckBonusStageEntry()
                 if (User.CheckDLC(DLC_PLUS) && v10 && *(_DWORD *)(v10 + 120) || options->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Pinball", textBuffer);
-                    EntityZone *entityZone     = (EntityZone *)RSDK.GetObjectByID(SLOT_ZONE);
+                    EntityZone *entityZone     = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
                     entityZone->screenID       = 4;
                     entityZone->timer          = 0;
                     entityZone->fade1          = 10;
@@ -220,7 +220,7 @@ void StarPost_CheckBonusStageEntry()
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Blue Spheres", textBuffer);
                     RSDK_sceneInfo->listPos += options->blueSpheresID;
-                    EntityZone *entityZone     = (EntityZone *)RSDK.GetObjectByID(SLOT_ZONE);
+                    EntityZone *entityZone     = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
                     entityZone->screenID       = 4;
                     entityZone->timer          = 0;
                     entityZone->fade1          = 10;

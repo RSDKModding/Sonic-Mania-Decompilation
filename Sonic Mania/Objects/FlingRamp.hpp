@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectFlingRamp : Object{
-
+    Hitbox hitbox;
 };
 
 // Entity Class

@@ -358,7 +358,7 @@ void Ring_State_Track()
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->offset.x += entity->velocity.x;
     entity->offset.y += entity->velocity.y;
-    Entity *track = RSDK.GetObjectByID(entity->speed);
+    Entity *track = RSDK.GetEntityByID(entity->speed);
 
     if (entity->velocity.x <= 0) {
         if (entity->offset.x < track->position.x) {
@@ -484,17 +484,8 @@ void Ring_Collect()
         return;
     }
     while (true) {
-        Hitbox *thisHitbox = &Ring->hitbox;
-        if (!player->field_1F0) {
-            Hitbox *plrHitbox = player->outerbox;
-            if (!plrHitbox)
-                plrHitbox = RSDK.GetHitbox(&player->playerAnimData, 0);
-            Hitbox *playerHitbox = &defaultHitbox;
-            if (plrHitbox)
-                playerHitbox = (Hitbox *)plrHitbox;
-            if (RSDK.CheckObjectCollisionTouchBox(entity, thisHitbox, player, playerHitbox))
-                break;
-        }
+        if (Player_CheckCollisionTouch(player, entity, &Ring->hitbox))
+            break;
         if (entity->state != Ring_State_Attract && player->shield == SHIELD_LIGHTNING
             && RSDK.CheckObjectCollisionTouchCircle(entity, 0x500000, player, 0x10000)) {
             entity->offset.x     = 0;
@@ -520,7 +511,7 @@ void Ring_Collect()
         }
     }
     if (player->sidekick)
-        player = (EntityPlayer *)RSDK.GetObjectByID(0);
+        player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
 
     int ringAmount = 1;
     if (entity->type == 1) {

@@ -61,7 +61,7 @@ bool32 InitAudioDevice()
         SDL_PauseAudio(0);
     }
     else {
-        printLog("Unable to open audio device: %s", SDL_GetError());
+        PrintLog("Unable to open audio device: %s", SDL_GetError());
         audioEnabled = false;
         return true; // no audio but game wont crash now
     }
@@ -253,7 +253,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len) {
             musInfo.stream = SDL_NewAudioStream(AUDIO_S16, musInfo.vorbisFile.vi->channels, musInfo.vorbisFile.vi->rate, audioDeviceFormat.format,
                                                 audioDeviceFormat.channels, audioDeviceFormat.freq);
             if (!musInfo.stream) {
-                printLog("Failed to create stream: %s", SDL_GetError());
+                PrintLog("Failed to create stream: %s", SDL_GetError());
             }
 #endif
 
@@ -556,7 +556,7 @@ void SetSoundAttributes(sbyte a1, byte slot, float volume, float panning, float 
         //BYTE1(result)   = a1;
         // channels[slot].unknown3 = a1; // Maybe ??
         if (speed > 0.0) {
-            channels[slot].speed = speed * 65536.0;
+            channels[slot].speed = (int)(speed * 65536.0f);
         }
         else if (speed == 1.0) {
             channels[slot].speed = 0x10000;

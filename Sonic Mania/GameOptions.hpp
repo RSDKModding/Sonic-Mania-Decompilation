@@ -24,6 +24,7 @@ enum PlayerIDs {
 enum ItemModes { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT };
 
 enum MedalMods { MEDAL_DEBUGMODE, MEDAL_ANDKNUCKLES, MEDAL_PEELOUT, MEDAL_INSTASHIELD, MEDAL_DROPDASH, MEDAL_NOTIMEOVER };
+#define getMod(medal) (1 << medal)
 
 enum ScreenSplit { FORCE_SPLIT = 2 };
 
@@ -41,8 +42,39 @@ enum ReservedEntities {
     SLOT_MUSIC          = 9,
     SLOT_BSS_MESSAGE    = 11,
     SLOT_ZONE           = 12,
+    SLOT_CUTSCENESEQ    = 15,
     SLOT_PAUSEMENU      = 16,
     SLOT_REPLAYRECORDER = 37,
+    SLOT_CAMERA1        = 60,
+    SLOT_CAMERA2        = 61,
+    SLOT_CAMERA3        = 62,
+    SLOT_CAMERA4        = 63,
+};
+
+enum SettingsValues {
+    SETTINGS_WINDOWED        = 0x0,
+    SETTINGS_BORDERED        = 0x1,
+    SETTINGS_EXCLUSIVEFS     = 0x2,
+    SETTINGS_VSYNC           = 0x3,
+    SETTINGS_TRIPLEBUFFERED  = 0x4,
+    SETTINGS_WINDOW_WIDTH    = 0x5,
+    SETTINGS_WINDOW_HEIGHT   = 0x6,
+    SETTINGS_FSWIDTH         = 0x7,
+    SETTINGS_FSHEIGHT        = 0x8,
+    SETTINGS_REFRESHRATE     = 0x9,
+    SETTINGS_SHADERSUPPORT   = 0xA,
+    SETTINGS_SHADERID        = 0xB,
+    SETTINGS_C               = 0xC,
+    SETTINGS_DIMTIMER        = 0xD,
+    SETTINGS_STREAMSENABLED  = 0xE,
+    SETTINGS_STREAM_VOL      = 0xF,
+    SETTINGS_SFX_VOL         = 0x10,
+    SETTINGS_LANGUAGE        = 0x11,
+    SETTINGS_12              = 0x12,
+    SETTINGS_13              = 0x13,
+    SETTINGS_14              = 0x14,
+    SETTINGS_SETTINGSCHANGED = 0x15,
+    SETTINGS_WRITE           = 0x16,
 };
 
 

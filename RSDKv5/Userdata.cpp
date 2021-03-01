@@ -147,8 +147,8 @@ int GetSettingsValue(int id)
         case 12: return engine.shaderUnknown;
         case 13: return engine.dimTimer;
         case 14: return engine.streamsEnabled;
-        case 15: return (engine.streamVolume * 1024.0); break;
-        case 16: return (engine.soundFXVolume * 1024.0); break;
+        case 15: return (int)(engine.streamVolume * 1024.0); break;
+        case 16: return (int)(engine.soundFXVolume * 1024.0); break;
         case 17: return curSKU.language; break;
         case 20: return settingsChanged; break;
         default: break;
@@ -291,7 +291,7 @@ void readSettings()
 
 #if RETRO_USING_SDL2
     int defKeyMaps[PLAYER_COUNT][12] = {
-        { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_B, SDL_SCANCODE_UNKNOWN,
+        { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_UNKNOWN,
           SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_RETURN, SDL_SCANCODE_TAB },
         { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
           SDL_SCANCODE_U, SDL_SCANCODE_I, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_LEFTBRACKET, SDL_SCANCODE_RIGHTBRACKET },

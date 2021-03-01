@@ -4,13 +4,14 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectScoreBonus : Object{
-
+struct ObjectScoreBonus : Object {
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityScoreBonus : Entity {
-
+    int timer;
+    EntityAnimationData data;
 };
 
 // Object Struct

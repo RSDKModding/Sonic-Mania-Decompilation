@@ -4,13 +4,15 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSuperSparkle : Object{
-
+struct ObjectSuperSparkle : Object {
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntitySuperSparkle : Entity {
-
+    EntityPlayer *player;
+    int timer;
+    bool32 activeFlag;
 };
 
 // Object Struct

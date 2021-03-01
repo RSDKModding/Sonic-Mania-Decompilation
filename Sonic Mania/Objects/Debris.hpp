@@ -4,13 +4,19 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDebris : Object{
-
+struct ObjectDebris : Object {
+	//nothin special
 };
 
 // Entity Class
 struct EntityDebris : Entity {
-
+    void (*state)(void);
+    int timer;
+    int gravity;
+    int rotSpeed;
+    Vector2 scaleInc;
+    int cooldown;
+    EntityAnimationData data;
 };
 
 // Object Struct
@@ -28,6 +34,11 @@ void Debris_EditorLoad();
 void Debris_Serialize();
 
 // Extra Entity Functions
+void Debris_State_Fall();
+void Debris_State_LightningSpark();
+void Debris_State_Unknkown();
 
+void Debris_Unknkown1(int spriteIndex, int *a2, int animationID);
+void Debris_Unknkown2(int spriteIndex, int *a2);
 
 #endif //!OBJ_DEBRIS_H

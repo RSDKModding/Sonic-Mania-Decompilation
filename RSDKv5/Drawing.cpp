@@ -10,8 +10,9 @@ GFXSurface gfxSurface[SURFACE_MAX];
 byte graphicData[GFXDATA_MAX];
 
 int SCREEN_XSIZE = 424;
-int screenCount  = 1;
+int screenCount  = 0;
 ScreenInfo screens[SCREEN_MAX];
+ScreenUnknown screenUnknown[SCREEN_MAX];
 ScreenInfo *currentScreen = NULL;
 
 char drawGroupNames[0x10][0x10]{
@@ -97,6 +98,7 @@ void FlipScreen()
     SDL_Rect destScreenPos[SCREEN_MAX];
 
     switch (screenCount) {
+        default: break;
         case 1:
             destScreenPos[0].x = 0;
             destScreenPos[0].y = 0;
@@ -2464,14 +2466,17 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
                     rotation = sceneInfo.entity->rotation & 0x1FF;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
+                    break;
                 case ROTFLAG_2:
                     rotation = (sceneInfo.entity->rotation + 0x20) & 0x1C0;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
+                    break;
                 case ROTFLAG_3:
                     rotation = (sceneInfo.entity->rotation + 0x40) & 0x180;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
+                    break;
                 case ROTFLAG_4:
                     rotation = (sceneInfo.entity->rotation + 0x80) & 0x100;
                     if (rotation == 0)

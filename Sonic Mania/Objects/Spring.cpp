@@ -37,11 +37,11 @@ void Spring_Create(void *data)
             entity->flipFlag = (*pv >> 8) & 0xFF;
         }
         RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->data, true, 0);
-        entity->active              = 4;
+        entity->active              = ACTIVE_BOUNDS;
         entity->data.animationSpeed = 0;
         entity->updateRange.x       = 0x600000;
         entity->updateRange.y       = 0x600000;
-        entity->visible             = 1;
+        entity->visible             = true;
         if (entity->planeFilter && ((byte)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
@@ -115,9 +115,9 @@ void Spring_Unknown1()
         for (result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player); result;
              result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
             if (!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1)) {
-                int col = 0; // entity->type != 0xFF || player->velocity.y >= -0x50000
-                          //    ? Player_CheckCollisionBox(player, &entity->base, &entity->hitbox)
-                          //    : Player_CheckCollisionPlatform(player, &entity->base, &entity->hitbox);
+                int col = 0;
+                entity->type != 0xFF || player->velocity.y >= -0x50000 ? Player_CheckCollisionBox(player, entity, &entity->hitbox)
+                                                                       : Player_CheckCollisionPlatform(player, entity, &entity->hitbox);
                 if (col == 1) {
                     int anim = player->playerAnimData.animationID;
                     if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
@@ -125,15 +125,15 @@ void Spring_Unknown1()
                     else
                         player->storedAnim = ANI_WALK;
 
-                    /*if (player->state != Ice_StateFrozenPlayer) {
-                        if (player->state == PlayerState_RollLock || player->state == PlayerState_ForceRoll) {
-                            player->state = PlayerState_RollLock;
+                    //if (player->state != Ice_StateFrozenPlayer) {
+                        if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
+                            player->state = Player_State_RollLock;
                         }
                         else {
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimData, true, 0);
-                            player->state = PlayerState_Air;
+                            player->state = Player_State_Air;
                         }
-                    }*/
+                    //}
                     player->onGround                        = 0;
                     player->velocity.y                      = entity->velocity.y;
                     player->tileCollisions                  = 1;
@@ -152,14 +152,14 @@ void Spring_Unknown1()
         bool32 result = false;
         for (result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player); result;
              result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
-            /*if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1))
+            if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
-                if (player->state != Ice_StateFrozenPlayer) {
-                    if (player->state == PlayerState_RollLock || player->state == PlayerState_ForceRoll)
-                        player->state = PlayerState_RollLock;
+                //if (player->state != Ice_StateFrozenPlayer) {
+                    if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll)
+                        player->state = Player_State_RollLock;
                     else
-                        player->state = PlayerState_Air;
-                }
+                        player->state = Player_State_Air;
+                //}
                 player->onGround                        = 0;
                 player->velocity.y                      = entity->velocity.y;
                 player->tileCollisions                  = 1;
@@ -170,7 +170,7 @@ void Spring_Unknown1()
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
-            }*/
+            }
         }
     }
 }
@@ -182,8 +182,8 @@ void Spring_Unknown2()
         bool32 result = false;
         for (result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player); result;
              result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
-            /*if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1))
-                && Player_CheckCollisionBox(player, &entity->base, &entity->hitbox) == 3 && (!entity->onGround || player->onGround)) {
+            if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1))
+                && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 3 && (!entity->onGround || player->onGround)) {
                 if (player->collisionMode == CMODE_ROOF) {
                     player->velocity.x = -entity->velocity.x;
                     player->groundVel  = -entity->velocity.x;
@@ -193,17 +193,17 @@ void Spring_Unknown2()
                     player->groundVel  = player->velocity.x;
                 }
 
-                if (player->state != Ice_StateFrozenPlayer) {
-                    if (player->state != PlayerState_Roll && player->state != PlayerState_RollLock && player->state != PlayerState_ForceRoll) {
+                //if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Player_State_Roll && player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
                         if (player->onGround == 1)
-                            player->state = PlayerState_Ground;
+                            player->state = Player_State_Ground;
                         else
-                            player->state = PlayerState_Air;
+                            player->state = Player_State_Air;
                     }
                     int anim = player->playerAnimData.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimData.animationID = ANI_WALK;
-                }
+                //}
                 player->glideTimer          = 16;
                 player->skidding            = 0;
                 player->pushing             = 0;
@@ -216,7 +216,7 @@ void Spring_Unknown2()
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
-            }*/
+            }
         }
     }
     else {
@@ -224,7 +224,7 @@ void Spring_Unknown2()
         for (result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player); result;
              result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
 
-            /*if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1))
+            if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2 && (entity->onGround == false || player->onGround == 1)) {
                 if (player->collisionMode == CMODE_ROOF) {
                     player->velocity.x = -entity->velocity.x;
@@ -235,17 +235,17 @@ void Spring_Unknown2()
                     player->groundVel  = player->velocity.x;
                 }
 
-                if (player->state != Ice_StateFrozenPlayer) {
-                    if (player->state != PlayerState_Roll && player->state != PlayerState_RollLock && player->state != PlayerState_ForceRoll) {
+                //if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Player_State_Roll && player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
                         if (player->onGround)
-                            player->state = PlayerState_Ground;
+                            player->state = Player_State_Ground;
                         else
-                            player->state = PlayerState_Air;
+                            player->state = Player_State_Air;
                     }
                     int anim = player->playerAnimData.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimData.animationID = ANI_WALK;
-                }
+                //}
                 player->glideTimer          = 16;
                 player->skidding            = 0;
                 player->pushing             = 0;
@@ -258,7 +258,7 @@ void Spring_Unknown2()
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
-            }*/
+            }
         }
     }
 }
@@ -270,13 +270,7 @@ void Spring_Unknown3()
     for (result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player); result;
          result = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
         if ((!entity->planeFilter || player->collisionPlane == ((entity->planeFilter - 1) & 1)) && !player->field_1F0) {
-            Hitbox *playerHitbox = player->outerbox;
-            if (!playerHitbox)
-                playerHitbox = RSDK.GetHitbox(&player->playerAnimData, 0);
-            Hitbox *otherHitbox = &defaultHitbox;
-            if (playerHitbox)
-                otherHitbox = playerHitbox;
-            if (RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, player, otherHitbox)) {
+            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 bool flag = false;
                 if (player->onGround) {
                     flag = true;
@@ -294,26 +288,26 @@ void Spring_Unknown3()
                     }
                 }
                 if (flag) {
-                    //if (player->state != Ice_StateFrozenPlayer) {
-                    //    if (player->state == PlayerState_RollLock || player->state == PlayerState_ForceRoll) {
-                    //        player->state = PlayerState_RollLock;
-                    //    }
-                    //    else {
-                    //        player->state = PlayerState_Air;
-                    //        int anim      = player->playerAnimData.animationID;
-                    //        if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                    //            player->playerAnimData.animationID = ANI_WALK;
-                    //    }
+                    // if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
+                        player->state = Player_State_RollLock;
+                    }
+                    else {
+                        player->state = Player_State_Air;
+                        int anim      = player->playerAnimData.animationID;
+                        if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
+                            player->playerAnimData.animationID = ANI_WALK;
+                    }
                     //}
                     if (entity->direction < FLIP_Y) {
-                        //if (player->state != PlayerState_RollLock && player->state != PlayerState_ForceRoll) {
-                        //    int anim = player->playerAnimData.animationID;
-                        //    if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
-                        //        player->storedAnim = player->playerAnimData.animationID;
-                        //    else
-                        //        player->storedAnim = ANI_WALK;
-                        //    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimData, true, 0);
-                        //}
+                        if (player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
+                            int anim = player->playerAnimData.animationID;
+                            if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
+                                player->storedAnim = player->playerAnimData.animationID;
+                            else
+                                player->storedAnim = ANI_WALK;
+                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimData, true, 0);
+                        }
                     }
                     player->direction           = entity->direction & 1;
                     player->onGround            = 0;

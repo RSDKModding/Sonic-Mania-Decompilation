@@ -3,9 +3,17 @@
 
 // Object Class
 struct ObjectTestObject : Object {
+    ushort entityID;
     uint timer;
     ushort spriteIndex;
     ushort sheetIndex;
+    Hitbox hitboxOuter;
+    Hitbox hitboxInner;
+    ushort fgLayers;
+    ushort fgLow;
+    ushort fgHigh;
+    ushort fgLowID;
+    ushort fgHighID;
 };
 
 // Entity Class

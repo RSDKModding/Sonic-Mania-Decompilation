@@ -149,7 +149,7 @@ void ProcessAnimation(EntityAnimationData *data)
                 }
             }
             else {
-                while (data->animationTimer < data->frameDelay) {
+                while (data->animationTimer > data->frameDelay) {
                     ++data->frameID;
                     data->animationTimer = data->animationTimer - data->frameDelay;
                     if (data->frameID >= data->frameCount)

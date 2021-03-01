@@ -107,7 +107,7 @@ struct RetroEngine {
     char gameSubName[0x80];
     char gameVersion[0x20];
 
-    bool32 useExternalCode = false;
+    bool32 useExternalCode = true;
 
     bool32 devMenu    = false;
     bool32 printConsole = false;

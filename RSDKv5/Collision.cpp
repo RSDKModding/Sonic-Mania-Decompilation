@@ -473,17 +473,17 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
     switch (cMode) {
         default: return false;
         case CMODE_FLOOR: {
-            int solid = 0x1000;
+            int solid = 1 << 12;
             if (cPlane)
-                solid = 0x4000;
+                solid = 1 << 14;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
                     int colX         = posX - layer->position.x;
                     int colY         = posY - layer->position.y;
-                    int cy           = (colX & 0xFFFFFFF0) - 16;
+                    int cy           = (colY & 0xFFFFFFF0) - 16;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
+                        ushort *layout = &layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->height) {
                                 ushort tile = *layout;
@@ -555,7 +555,7 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                     TileLayer *layer = &tileLayers[l];
                     int colX         = posX - layer->position.x;
                     int colY         = posY - layer->position.y;
-                    int cy           = (colX & 0xFFFFFFF0) + 16;
+                    int cy           = (colY & 0xFFFFFFF0) + 16;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                         ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
@@ -625,23 +625,23 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
 bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, int xOffset, int yOffset, int tolerance)
 {
     int layerID     = 1;
-    bool32 collided = 0;
+    bool32 collided = false;
     int posX        = (xOffset + entity->position.x) >> 16;
     int posY        = (yOffset + entity->position.y) >> 16;
     switch (cMode) {
         default: return false;
         case CMODE_FLOOR: {
-            int solid = 0x1000;
+            int solid = 1 << 12;
             if (cPlane)
-                solid = 0x4000;
+                solid = 1 << 14;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
                     int colX         = posX - layer->position.x;
                     int colY         = posY - layer->position.y;
-                    int cy           = (colX & 0xFFFFFFF0) - 16;
+                    int cy           = (colY & 0xFFFFFFF0) - 16;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
+                        ushort *layout = &layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->height) {
                                 ushort tile = *layout;
@@ -715,7 +715,7 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                     TileLayer *layer = &tileLayers[l];
                     int colX         = posX - layer->position.x;
                     int colY         = posY - layer->position.y;
-                    int cy           = (colX & 0xFFFFFFF0) + 16;
+                    int cy           = (colY & 0xFFFFFFF0) + 16;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                         ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
@@ -985,10 +985,10 @@ void ProcessAirCollision()
     }
 
     if (movingRight < 2 && movingLeft < 2)
-        collisionEntity->position.x = collisionEntity->position.x + collisionEntity->velocity.x;
+        collisionEntity->position.x += collisionEntity->velocity.x;
 
     if (movingUp < 2 && movingDown < 2) {
-        collisionEntity->position.y = collisionEntity->position.y + collisionEntity->velocity.y;
+        collisionEntity->position.y += collisionEntity->velocity.y;
         return;
     }
 
@@ -1111,7 +1111,7 @@ void ProcessPathGrip()
     int sinValue256;
     sensors[4].pos.x = collisionEntity->position.x;
     sensors[4].pos.y = collisionEntity->position.y;
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 6; ++i) {
         sensors[i].angle    = collisionEntity->angle;
         sensors[i].collided = false;
     }
@@ -1140,7 +1140,6 @@ void ProcessPathGrip()
         sensors[1].collided = false;
         sensors[2].collided = false;
         sensors[5].collided = false;
-        sensors[6].collided = false;
         sensors[4].pos.x += cosValue256;
         sensors[4].pos.y += sinValue256;
         int tileDistance = -1;
@@ -1626,7 +1625,7 @@ void FindFloorPosition(CollisionSensor *sensor)
             TileLayer *layer = &tileLayers[l];
             int colX         = posX - layer->position.x;
             int colY         = posY - layer->position.y;
-            int cy           = (colX & 0xFFFFFFF0) - 16;
+            int cy           = (colY & 0xFFFFFFF0) - 16;
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                 for (int i = 0; i < 3; ++i) {
@@ -1723,7 +1722,7 @@ void FindRoofPosition(CollisionSensor *sensor)
             TileLayer *layer = &tileLayers[l];
             int colX         = posX - layer->position.x;
             int colY         = posY - layer->position.y;
-            int cy           = (colX & 0xFFFFFFF0) + 16;
+            int cy           = (colY & 0xFFFFFFF0) + 16;
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                 for (int i = 0; i < 3; ++i) {
@@ -1820,7 +1819,7 @@ void FloorCollision(CollisionSensor *sensor)
             TileLayer *layer = &tileLayers[l];
             int colX         = posX - layer->position.x;
             int colY         = posY - layer->position.y;
-            int cy           = (colX & 0xFFFFFFF0) - 16;
+            int cy           = (colY & 0xFFFFFFF0) - 16;
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                 for (int i = 0; i < 3; ++i) {
@@ -1892,7 +1891,7 @@ void RoofCollision(CollisionSensor *sensor)
             TileLayer *layer = &tileLayers[l];
             int colX         = posX - layer->position.x;
             int colY         = posY - layer->position.y;
-            int cy           = (colX & 0xFFFFFFF0) + 16;
+            int cy           = (colY & 0xFFFFFFF0) + 16;
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                 for (int i = 0; i < 3; ++i) {
@@ -1930,7 +1929,7 @@ void RWallCollision(CollisionSensor *sensor)
             int colY         = posY - layer->position.y;
             int cx           = (colX & 0xFFFFFFF0) + 16;
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
+                ushort *layout = &layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
                 for (int i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
                         ushort tile = *layout;

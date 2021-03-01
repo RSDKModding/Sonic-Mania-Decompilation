@@ -146,7 +146,7 @@ extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 extern bool32 validDraw;
 
 void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
-                  void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                  void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
 void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize);
 
@@ -160,9 +160,9 @@ inline void SetEditableVar(byte type, const char *name, byte object, int storeOf
         EditableVarInfo *editableVar = &editableVarList[editableVarCount];
         StrCopy(hashBuffer, name);
         GenerateHash(editableVar->hash, StrLength(name));
-        editableVarList[editableVarCount].type   = type;
-        editableVarList[editableVarCount].offset = storeOffset;
-        editableVarList[editableVarCount].active = true;
+        editableVar->type   = type;
+        editableVar->offset = storeOffset;
+        editableVar->active = true;
         editableVarCount++;
     }
 }

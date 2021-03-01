@@ -70,11 +70,11 @@ enum ShieldTypes {
 };
 
 // Object Class
-struct ObjectPlayer : Object{
+struct ObjectPlayer : Object {
     int sonicPhysicsTable[0x40];
     int tailsPhysicsTable[0x40];
     int knuxPhysicsTable[0x40];
-    int nightyPhysicsTable[0x40];
+    int mightyPhysicsTable[0x40];
     int rayPhysicsTable[0x40];
     uint superPalette_Sonic[18];
     uint superPalette_Sonic_CPZ[18];
@@ -102,18 +102,9 @@ struct ObjectPlayer : Object{
     int field_950;
     int field_954;
     Vector2 flyCarryPositions[0x10];
-    char field_9D8;
-    char field_9D9;
-    char field_9DA;
-    char field_9DB;
-    char field_9DC;
-    char field_9DD;
-    char field_9DE;
-    char field_9DF;
-    char field_9E0;
-    char field_9E1;
-    char field_9E2;
-    char field_9E3;
+    int field_9D8;
+    int field_9DC;
+    int field_9E0;
     int field_9E4;
     char p2InputDelay;
     char field_9E9;
@@ -162,10 +153,7 @@ struct ObjectPlayer : Object{
     ushort sfx_MightyUnspin;
     int raySwoopTimer;
     int rayDiveTimer;
-    int gotHit;
-    int field_A5C;
-    int field_A60;
-    int field_A64;
+    bool32 gotHit[PLAYER_MAX];
     void (*replayState)(void);
     void (*field_A6C)(void);
     int field_A70;
@@ -343,7 +331,20 @@ void Player_LoadSpritesVS();
 void Player_SaveValues();
 void Player_GiveLife(EntityPlayer *entity);
 
+// Collision
+Hitbox *Player_GetHitbox(EntityPlayer *player);
+bool32 Player_CheckCollisionTouch(EntityPlayer *player, Entity *entity, Hitbox *entityHitbox);
+bool32 Player_CheckCollisionBox(EntityPlayer *player, Entity *entity, Hitbox *entityHitbox);
+bool32 Player_CheckCollisionPlatform(EntityPlayer *player, Entity *entity, Hitbox *entityHitbox);
+
+bool32 Player_CheckHit(EntityPlayer *player, Entity *entity);
+bool32 Player_CheckBadnikHit(EntityPlayer *player, Entity *entity, Hitbox *entityHitbox);
+bool32 Player_CheckBossHit(EntityPlayer *player, Entity *entity);
+bool32 Player_CheckProjectileHit(EntityPlayer *player, Entity *projectile);
+bool32 Player_CheckHit2(EntityPlayer *player, Entity *entity, bool32 flag);
+
 //State helpers
+void Player_ChangePhysicsState(EntityPlayer *entity);
 void Player_HandleGroundMovement();
 void Player_HandleGroundRotation();
 void Player_HandleAirMovement();
@@ -351,8 +352,11 @@ void Player_HandleAirFriction();
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll();
 void Player_HandleRollDeceleration();
+void Player_Hit(EntityPlayer *player);
+bool32 Player_CheckValidState(EntityPlayer *player);
 
 //States
+void Player_State_None();
 void Player_State_Ground();
 void Player_State_Air();
 void Player_State_Roll();
@@ -361,5 +365,13 @@ void Player_State_RollLock();
 void Player_State_LookUp();
 void Player_State_Crouch();
 void Player_State_OuttaHere();
+void Player_State_Hit();
+void Player_State_Die();
+void Player_State_Drown();
+void Player_State_MightyUnspin();
+
+//Input States
+void Player_GetP1Inputs();
+void Player_GetP2Inputs();
 
 #endif //!OBJ_PLAYER_H

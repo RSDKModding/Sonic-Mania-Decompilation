@@ -5,31 +5,89 @@ ObjectTestObject *TestObject;
 
 void TestObject_Update()
 {
+    EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
+
+    entity->velocity.x = 0;
+    entity->velocity.y = 0;
+    entity->groundVel  = 0;
+    if (controller[0].keyUp.down) {
+        if (entity->position.y > 0) {
+            // entity->position.y -= 4 << 0x10;
+            entity->velocity.y = -(4 << 0x10);
+        }
+    }
+    else if (controller[0].keyDown.down) {
+        // entity->position.y += 4 << 0x10;
+        entity->velocity.y = (4 << 0x10);
+    }
+
+    if (controller[0].keyLeft.down) {
+        if (entity->position.x > 0) {
+            // entity->position.x -= 4 << 0x10;
+            entity->groundVel  = -(4 << 0x10);
+            entity->velocity.x = -(4 << 0x10);
+        }
+    }
+    else if (controller[0].keyRight.down) {
+        // entity->position.x += 4 << 0x10;
+        entity->groundVel  = (4 << 0x10);
+        entity->velocity.x = (4 << 0x10);
+    }
+
+    if (controller[0].keyA.press) {
+        entity->direction++;
+        entity->direction &= 3;
+        if (!entity->direction) {
+            entity->drawFX &= ~FX_FLIP;
+        }
+        else {
+            entity->drawFX |= FX_FLIP;
+        }
+    }
+
+    //entity->sensorY = 0x100000;
+    //entity->sensorX[0] = 0xA0000;
+    //entity->sensorX[1] = 0x50000;
+    //entity->sensorX[2] = 0;
+    //entity->sensorX[3] = -0x50000;
+    //entity->sensorX[4] = -0xA0000;
+
+    entity->tileCollisions = !controller[0].keyB.down;
+    ProcessTileCollisions(entity, &TestObject->hitboxOuter, &TestObject->hitboxInner);
+    //ObjectTileGrip(entity, TestObject->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 10);
 }
 void TestObject_LateUpdate() {}
 void TestObject_StaticUpdate()
 {
-    if (controller[0].keyUp.down) {
-        if (screens[0].position.y > 0)
-            screens[0].position.y -= 4;
-    }
-    else if (controller[0].keyDown.down) {
-        screens[0].position.y += 4;
-    }
+    Entity *entity        = GetObjectByID(TestObject->entityID);
+    screens[0].position.x = (entity->position.x >> 0x10) - screens[0].centerX;
+    screens[0].position.y = (entity->position.y >> 0x10) - screens[0].centerY;
 
-    if (controller[0].keyLeft.down) {
-        if (screens[0].position.x > 0)
-            screens[0].position.x -= 4;
-    }
-    else if (controller[0].keyRight.down) {
-        screens[0].position.x += 4;
-    }
+    if (screens[0].position.y < 0)
+        screens[0].position.y = 0;
+    if (screens[0].position.x < 0)
+        screens[0].position.x = 0;
+    //if (controller[0].keyUp.down) {
+    //    if (screens[0].position.y > 0)
+    //        screens[0].position.y -= 4;
+    //}
+    //else if (controller[0].keyDown.down) {
+    //    screens[0].position.y += 4;
+    //}
+    //
+    //if (controller[0].keyLeft.down) {
+    //    if (screens[0].position.x > 0)
+    //        screens[0].position.x -= 4;
+    //}
+    //else if (controller[0].keyRight.down) {
+    //    screens[0].position.x += 4;
+    //}
 
     TestObject->timer++;
     //DrawAniTile(TestObject->sheetIndex, 2, 0, 32 * (TestObject->timer % 8), 32, 32);
 }
 void TestObject_Draw() { 
-    //EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
+    EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
     //Vector2 drawPos;
     //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + (sin(TestObject->timer / 0x08) * 0x10),
     //         currentScreen->centerY + (cos(TestObject->timer / 0x08) * 0x10), 0x00FF00, 0xFF, INK_NONE, true); 
@@ -40,7 +98,7 @@ void TestObject_Draw() {
     //drawPos.y = currentScreen->centerY;
     //entity->drawFX    = FX_FLIP;
     //entity->direction = (TestObject->timer / 4) % 4;
-    //DrawSprite(&entity->data, &drawPos, false);
+    DrawSprite(&entity->data, NULL, false);
     //DrawDeformedSprite(2, INK_NONE, 0xFF);
 
     //if (tileLayers[0].layout)
@@ -67,7 +125,10 @@ void TestObject_Create(void *data)
     entity->active = ACTIVE_ALWAYS;
     entity->visible   = true;
     entity->drawOrder = 4;
+    entity->tileCollisions      = true;
+    entity->collisionLayers     = TestObject->fgLayers;
     SetSpriteAnimation(TestObject->spriteIndex, 0, &entity->data, true, 0);
+    TestObject->entityID = GetEntityID((EntityBase*)entity);
 }
 void TestObject_StageLoad()
 {
@@ -75,6 +136,30 @@ void TestObject_StageLoad()
     TestObject->active      = ACTIVE_ALWAYS;
     TestObject->spriteIndex = LoadAnimation("Players/Sonic.bin", SCOPE_STAGE);
     TestObject->sheetIndex  = LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
+
+    TestObject->hitboxOuter.left   = -10;
+    TestObject->hitboxOuter.top    = -20;
+    TestObject->hitboxOuter.right  = 10;
+    TestObject->hitboxOuter.bottom = 20;
+
+    TestObject->hitboxInner.left   = -9;
+    TestObject->hitboxInner.top    = -20;
+    TestObject->hitboxInner.right  = 9;
+    TestObject->hitboxInner.bottom = 20;
+
+    TestObject->fgLow  = GetSceneLayerID("FG Low");
+    TestObject->fgHigh = GetSceneLayerID("FG High");
+
+    if (TestObject->fgLowID) {
+        TestObject->fgLowID = 1 << TestObject->fgLowID;
+    }
+
+    if (TestObject->fgHigh) {
+        TestObject->fgHighID = 1 << TestObject->fgHigh;
+    }
+
+    TestObject->fgLayers = 1 << TestObject->fgLow;
+    TestObject->fgLayers |= 1 << TestObject->fgHigh;
 }
 void TestObject_EditorDraw() {}
 void TestObject_EditorLoad() {}

@@ -1,4 +1,5 @@
 #include "../SonicMania.hpp"
+#include <time.h>
 
 ObjectZone *Zone;
 
@@ -37,7 +38,7 @@ void Zone_StaticUpdate()
 void Zone_Draw()
 {
     EntityZone *entity = (EntityZone *)RSDK_sceneInfo->entity;
-    if (entity->screenID >= 4 || entity->screenID == RSDK_sceneInfo->currentScreenID) {
+    if (entity->screenID >= PLAYER_MAX || entity->screenID == RSDK_sceneInfo->currentScreenID) {
         if (entity->stateDraw)
             entity->stateDraw();
     }
@@ -45,7 +46,7 @@ void Zone_Draw()
 
 void Zone_Create(void *data)
 {
-    EntityZone *entity               = (EntityZone *)RSDK_sceneInfo->entity;
+    EntityZone *entity             = (EntityZone *)RSDK_sceneInfo->entity;
     RSDK_sceneInfo->entity->active = ACTIVE_ALWAYS;
     if (!entity->stateDraw) {
         entity->visible   = 0;
@@ -55,8 +56,11 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad()
 {
-
+    int *saveRAM    = SaveGame->saveRAM;
+    Zone->timeStart = time(0);
     // TODO: this junk here
+    if (options->gameMode == MODE_ENCORE) {
+    }
 
     Zone->timer          = 0;
     Zone->field_154      = 0;
@@ -92,6 +96,25 @@ void Zone_StageLoad()
     Vector2 layerSize;
     RSDK.GetLayerSize(Zone->fgLow, &layerSize, true);
 
+    if (!Zone->swapGameMode) {
+        for (int s = 0; s < PLAYER_MAX; ++s) {
+            Zone->screenBoundsL1[s] = 0;
+            Zone->screenBoundsR1[s] = layerSize.x;
+            Zone->screenBoundsT1[s] = 0;
+            Zone->screenBoundsB1[s] = layerSize.y;
+
+            Zone->screenBoundsL2[s] = Zone->screenBoundsL1[s] << 0x10;
+            Zone->screenBoundsR2[s] = Zone->screenBoundsR1[s] << 0x10;
+            Zone->screenBoundsT2[s] = Zone->screenBoundsT1[s] << 0x10;
+            Zone->screenBoundsB2[s] = Zone->screenBoundsB1[s] << 0x10;
+
+            Zone->screenUnknownA[s] = Zone->screenBoundsT1[s] << 0x10;
+            Zone->screenUnknownB[s] = Zone->screenBoundsT1[s] << 0x10;
+            Zone->screenUnknownC[s] = 1;
+            Zone->screenUnknownD[s] = 0;
+        }
+    }
+
     if (!options->initCoolBonus) {
         options->coolBonus[0]  = 10000;
         options->coolBonus[1]  = 10000;
@@ -100,30 +123,30 @@ void Zone_StageLoad()
         options->initCoolBonus = true;
     }
 
-    EntityZone *Ent = NULL;
-    for (; RSDK.GetObjects(Zone->objectID, (Entity **)&Ent); RSDK.DestroyEntity(Ent, 0, 0)) {
+    EntityZone *ent = NULL;
+    for (; RSDK.GetObjects(Zone->objectID, (Entity **)&ent); RSDK.DestroyEntity(ent, 0, 0)) {
     }
 
     RSDK.ResetEntity(SLOT_ZONE, Zone->objectID, 0);
     if (options->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (options->gameMode == MODE_COMPETITION) {
-                RSDK.SetSettingsValue(12, 1);
+                RSDK.SetSettingsValue(SETTINGS_C, 1);
             }
             else {
                 /// Competition_Unknown2();
-                RSDK.SetSettingsValue(12, 1);
+                RSDK.SetSettingsValue(SETTINGS_C, 1);
             }
         }
         else {
             if (options->competitionSession[23] >= 2) {
                 if (options->competitionSession[23] > 4)
                     options->competitionSession[23] = 4;
-                RSDK.SetSettingsValue(12, options->competitionSession[23]);
+                RSDK.SetSettingsValue(SETTINGS_C, options->competitionSession[23]);
             }
             else {
                 options->competitionSession[23] = 2;
-                RSDK.SetSettingsValue(12, options->competitionSession[23]);
+                RSDK.SetSettingsValue(SETTINGS_C, options->competitionSession[23]);
             }
         }
     }
@@ -228,7 +251,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         } while (RSDK.GetActiveObjects(ItemBox->objectID, &entity));
     }
 
-    EntityPlayer *player     = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER1);
+    EntityPlayer *player     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     options->restartLives[0] = player->lives;
     options->restartScore    = player->score;
     options->restartShield   = player->shield;
@@ -238,10 +261,10 @@ void Zone_StoreEntities(int xOffset, int yOffset)
 
 void Zone_Unknown1(int fade1, int fade2)
 {
-    EntityZone *zone = (EntityZone *)RSDK.GetObjectByID(SLOT_ZONE);
+    EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
     zone->fade2      = fade2;
     zone->fade1      = fade1;
-    zone->screenID   = 4;
+    zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
     zone->state      = Zone_Unknown13;
     zone->stateDraw  = Zone_Unknown12;
@@ -251,8 +274,8 @@ void Zone_Unknown1(int fade1, int fade2)
 
 void Zone_Unknown2()
 {
-    EntityZone *entity = (EntityZone *)RSDK.GetObjectByID(SLOT_ZONE);
-    entity->screenID   = 4;
+    EntityZone *entity = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
+    entity->screenID   = PLAYER_MAX;
     entity->timer      = 0;
     entity->fade1      = 10;
     entity->fade2      = 0;
@@ -262,7 +285,7 @@ void Zone_Unknown2()
     entity->drawOrder  = 15;
     // if (Music->ActiveTrack != 8) {
     //    RSDK.DestroyEntity(music, Music->objectID, 0);
-    //    EntityMusic *music = (EntityMusic *)RSDK.GetObjectByID(SLOT_MUSIC);
+    //    EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
     //    music->state    = Music_Unknown14;
     //    music->field_88 = 1.0;
     //    music->field_8C = 0.025;
@@ -424,7 +447,7 @@ void Zone_Unknown16()
 
 void Zone_Unknown17()
 {
-    EntityPlayer *entity = (EntityPlayer *)RSDK.GetObjectByID(SLOT_PLAYER1);
+    EntityPlayer *entity       = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     StarPost->storedMinutes    = RSDK_sceneInfo->minutes;
     StarPost->storedSeconds    = RSDK_sceneInfo->seconds;
     StarPost->storedMS         = RSDK_sceneInfo->milliseconds;

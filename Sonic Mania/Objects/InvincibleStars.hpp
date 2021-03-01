@@ -4,13 +4,17 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectInvincibleStars : Object{
-
+struct ObjectInvincibleStars : Object {
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityInvincibleStars : Entity {
-
+    Entity *parent;
+    Vector2 starPos[8];
+    int starAngle[4];
+    int starOffset;
+    EntityAnimationData starsData[4];
 };
 
 // Object Struct

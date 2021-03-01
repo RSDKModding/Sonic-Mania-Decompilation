@@ -4,13 +4,16 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBoundsMarker : Object{
-
+struct ObjectBoundsMarker : Object {
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityBoundsMarker : Entity {
-
+    byte type;
+    int width;
+    bool32 vsDisable;
+    int offset;
 };
 
 // Object Struct
@@ -28,6 +31,7 @@ void BoundsMarker_EditorLoad();
 void BoundsMarker_Serialize();
 
 // Extra Entity Functions
-
+void BoundsMarker_CheckBounds(Entity *player, EntityBoundsMarker *entity, bool32 setPos);
+void BoundsMarker_CheckAllBounds(Entity *player, bool32 setPos);
 
 #endif //!OBJ_BOUNDSMARKER_H

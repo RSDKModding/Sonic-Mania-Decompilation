@@ -223,7 +223,7 @@ inline int64 ReadInt64(FileInfo *info)
     return result;
 }
 
-inline int ReadSingle(FileInfo *info)
+inline float ReadSingle(FileInfo *info)
 {
     float result    = 0;
     size_t bytesRead = 0;

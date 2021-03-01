@@ -4,13 +4,22 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSoundboard : Object{
-
+struct ObjectSoundboard : Object {
+    int sfxCount;
+    ushort sfxList[32];
+    int sfxLoopPoint[32];
+    void *sfxCheckCallback[32];
+    void *sfxChangeCallback[32];
+    bool32 sfxUnknown4[32];
+    int sfxUnknownVal[32];
+    int sfxUnknown6[32];
+    int sfxUnknown7[32];
+    int sfxUnknown8[32];
 };
 
 // Entity Class
 struct EntitySoundboard : Entity {
-
+    //nothin extra
 };
 
 // Object Struct
@@ -28,6 +37,6 @@ void Soundboard_EditorLoad();
 void Soundboard_Serialize();
 
 // Extra Entity Functions
-
+byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, void *checkCallback, void *changeCallback);
 
 #endif //!OBJ_SOUNDBOARD_H

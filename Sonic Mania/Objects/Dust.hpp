@@ -4,13 +4,16 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDust : Object{
-
+struct ObjectDust : Object {
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityDust : Entity {
-
+    void (*state)();
+    int timer;
+    Entity *parent;
+    EntityAnimationData data;
 };
 
 // Object Struct
@@ -28,6 +31,11 @@ void Dust_EditorLoad();
 void Dust_Serialize();
 
 // Extra Entity Functions
-
+void Dust_State_DropDash();
+void Dust_State_HammerDrop();
+void Dust_State_GlideSlide();
+void Dust_State_Skid();
+void Dust_State_Spindash();
+void Dust_State_EggLoco();
 
 #endif //!OBJ_DUST_H

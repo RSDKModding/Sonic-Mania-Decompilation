@@ -1,6 +1,9 @@
 #ifndef GAMEOBJECTS_H
 #define GAMEOBJECTS_H
 
+#define maxVal(a, b) (a >= b ? a : b)
+#define minVal(a, b) (a <= b ? a : b)
+
 // Userdata Table
 struct UserFunctionTable {
     void (*Unknown1)(void);
@@ -76,7 +79,7 @@ struct RSDKFunctionTable {
     bool32 (*GetObjects)(ushort type, Entity **entity);
     void (*NextForEachLoop)(void);
     void (*SetEditableVar)(byte type, const char *name, byte object, int storeOffset);
-    Entity *(*GetObjectByID)(ushort objectID);
+    Entity *(*GetEntityByID)(ushort objectID);
     int (*GetEntityID)(Entity *entityPtr);
     int (*GetEntityCount)(ushort type, bool32 isActive);
     int (*GetDrawListRef)(byte layerID, ushort entityID);
@@ -85,11 +88,11 @@ struct RSDKFunctionTable {
     int (*ResetEntity)(ushort slotID, ushort type, void *data);
     Entity* (*SpawnEntity)(ushort type, void *data, int x, int y);
     void (*CopyEntity)(void *destEntity, Entity *srcEntity, bool32 clearSrcEntity);
-    void (*CheckOnScreen)(void);
-    void (*CheckPosOnScreen)(void);
-    void (*AddDrawListRef)(void);
-    void (*SwapDrawLayers)(void);
-    void (*SetDrawLayerProperties)(byte layer, int active, void (*initDrawPtr)(void));
+    bool (*CheckOnScreen)(Entity *entity, Vector2 *range);
+    bool (*CheckPosOnScreen)(Vector2 *pos, Vector2 *range);
+    void (*AddDrawListRef)(byte layer, ushort entityID);
+    void (*SwapDrawLayers)(byte layer, ushort entityID);
+    void (*SetDrawLayerProperties)(byte layer, bool32 active, void (*initDrawPtr)(void));
     void (*LoadScene)(const char* categoryName, const char* sceneName);
     void (*SetGameMode)(byte mode);
     void (*SetHardResetFlag)(bool set);
@@ -98,7 +101,7 @@ struct RSDKFunctionTable {
     int (*InitSceneLoad)(void);
     int (*GetObjectIDByName)(const char* name);
     void (*ClearScreens)(void);
-    void (*AddScreen)(int x, int y, int w, int h);
+    void (*AddScreen)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);
     int (*GetSettingsValue)(int id);
     void (*SetSettingsValue)(int id, int val);
     void (*UpdateWindow)(void);
@@ -241,7 +244,7 @@ struct RSDKFunctionTable {
     void (*Unknown104)(void);
     void (*LoadUserFile)(const char *filename, void *buffer, int filesize);
     void (*SaveUserFile)(const char *fileName, void *buffer, uint size);
-    void (*printLog)(SeverityModes severity, const char *message, ...);
+    void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
     void (*printText)(SeverityModes severity, const char *message, TextInfo *text);
     void (*printIntegerUnsigned)(SeverityModes severity, const char *message, uint integer);
