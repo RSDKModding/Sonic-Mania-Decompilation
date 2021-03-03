@@ -63,7 +63,7 @@ void InvincibleStars_Draw()
     EntityInvincibleStars *entity = (EntityInvincibleStars *)RSDK_sceneInfo->entity;
     EntityPlayer *player          = (EntityPlayer *)entity->parent;
     if (player) {
-        if (player->transforming) {
+        if (player->isChibi) {
             entity->drawFX |= FX_SCALE;
             entity->scale.x = 0x100;
             entity->scale.y = 0x100;

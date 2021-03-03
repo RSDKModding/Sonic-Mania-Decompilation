@@ -4,13 +4,23 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBGSwitch : Object{
-
+struct ObjectBGSwitch : Object {
+    int layerID;
+    int layerIDs[8];
+    void (*switchCallback[8])();
+    int field_48;
 };
 
 // Entity Class
 struct EntityBGSwitch : Entity {
-
+    Vector2 size;
+    byte bgID;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int field_78;
 };
 
 // Object Struct

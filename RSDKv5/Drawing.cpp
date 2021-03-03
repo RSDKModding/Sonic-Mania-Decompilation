@@ -2459,7 +2459,7 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
             switch (data->rotationFlag) {
                 case ROTFLAG_NONE:
                     rotation = 0;
-                    if ((sceneInfo.entity->drawFX & FX_SCALE) != FX_NONE)
+                    if ((sceneInfo.entity->drawFX & FX_ROTATE) != FX_NONE)
                         drawFX ^= FX_ROTATE;
                     break;
                 case ROTFLAG_FULL:
@@ -2720,18 +2720,18 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                                 int v21         = 0;
                                 int finalColour = 0;
 
-                                if (((ushort)blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
-                                    v20 = ((ushort)blendTablePtr[(colour & 0xF800) >> 11] << 11) + (ushort)(*frameBufferPtr & 0xF800);
+                                if ((blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
+                                    v20 = (blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800);
                                 else
                                     v20 = 0xF800;
-                                int v12 = ((ushort)blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
+                                int v12 = (blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
                                 if (v12 <= 0x7E0)
                                     v21 = v12 | v20;
                                 else
                                     v21 = v20 | 0x7E0;
-                                int v13 = (ushort)blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
+                                int v13 = blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
                                 if (v13 <= 31)
-                                    finalColour = v13 | v21;
+                                    finalColour = v21 | v13;
                                 else
                                     finalColour = v21 | 0x1F;
                                 *frameBufferPtr = finalColour;

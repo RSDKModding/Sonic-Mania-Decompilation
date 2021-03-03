@@ -1,6 +1,6 @@
 #include "../SonicMania.hpp"
 
-ObjectGHZ2Outro GHZ2Outro;
+ObjectGHZ2Outro *GHZ2Outro;
 
 void GHZ2Outro_Update()
 {

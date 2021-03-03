@@ -38,8 +38,8 @@ void Spring_EditorLoad();
 void Spring_Serialize();
 
 // Extra Entity Functions
-void Spring_Unknown1();
-void Spring_Unknown2();
-void Spring_Unknown3();
+void Spring_State_Vertical();
+void Spring_State_Horizontal();
+void Spring_State_Diagonal();
 
 #endif //!OBJ_SPRING_H

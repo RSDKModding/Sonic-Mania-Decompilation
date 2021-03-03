@@ -21,11 +21,10 @@ struct EntityItemBox : Entity {
     void (*state)();
     int type;
     Vector2 contentsPos;
-    int field_68;
-    int field_6C;
+    Vector2 unknownPos;
     int contentsSpeed;
     Entity *storedEntity;
-    int randomValue;
+    int timer;
     bool32 isFalling;
     bool32 isContents;
     bool32 hidden;
@@ -55,11 +54,19 @@ void ItemBox_Serialize();
 // Extra Entity Functions
 void ItemBox_DebugDraw();
 void ItemBox_DebugSpawn();
+void ItemBox_CheckHit();
+void ItemBox_GivePowerup();
+void ItemBox_Break(EntityItemBox *itemBox, void *p);
+bool32 ItemBox_HandleFallingCollision();
+bool32 ItemBox_HandlePlatformCollision(void *p);
+void ItemBox_HandleObjectCollisions();
 
 //Entity States
 void ItemBox_State_Broken();
 void ItemBox_State_Contents();
-void ItemBox_Unknown5();
-void Itembox_State_Normal();
+void ItemBox_State_Unknown();
+void ItemBox_State_Normal();
+void ItemBox_State_Falling();
+void ItemBox_State_Conveyor();
 
 #endif //!OBJ_ITEMBOX_H

@@ -227,7 +227,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
 
     entity = NULL;
     if (RSDK.GetActiveObjects(SignPost->objectID, &entity)) {
-        int pos = count << 11;
+        int pos = count << 9;
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
@@ -240,7 +240,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
 
     entity = NULL;
     if (RSDK.GetActiveObjects(ItemBox->objectID, &entity)) {
-        int pos = count << 11;
+        int pos = count << 9;
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
@@ -257,6 +257,54 @@ void Zone_StoreEntities(int xOffset, int yOffset)
     options->restartShield   = player->shield;
     options->atlEntityCount  = count;
     options->atlEnabled      = true;
+}
+
+void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag) {
+    for (int e = 0; e < options->atlEntityCount; ++e) {
+        Entity* entityData = (Entity *)&options->atlEntityData[e << 9];
+        Entity *entity;
+        if (options->atlEntitySlot[e] >= 12)
+            entity = (Entity *)RSDK.SpawnEntity(0, 0, 0, 0);
+        else
+            entity = (Entity *)RSDK.GetEntityByID(options->atlEntitySlot[e]);
+        if (entityData->objectID == Player->objectID) {
+            EntityPlayer *playerData = (EntityPlayer*)entityData;
+            EntityPlayer *player     = (EntityPlayer *)entity;
+            player->shield      = playerData->shield;
+            if (player->shield && player->superState != 2 && player->shield <= 0) {
+                int id = RSDK.GetEntityID(player);
+                Entity* shield    = (Entity *)RSDK.GetEntityByID(Player->playerCount + id);
+                RSDK.DestroyEntity(shield, Shield->objectID, player);
+            }
+        }
+        else {
+            RSDK.CopyEntity(entity, entityData, 0);
+        }
+        entity->position.x = xOffset + entityData->position.x;
+        entity->position.y = yOffset + entityData->position.y;
+    }
+
+    memset(options->atlEntityData, 0, options->atlEntityCount << 9);
+    Zone->field_158 = flag;
+    if (flag == 1) {
+        EntityPlayer *player                                = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        player->camera                                      = NULL;
+        EntityCamera *camera                                = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
+        camera->position.x                                  = yOffset;
+        camera->position.y                                  = xOffset;
+        camera->state                                       = 0;
+        camera->targetPosPtr                                = 0;
+        camera->boundsL                                     = (xOffset >> 16) - RSDK_screens->centerX;
+        camera->boundsR                                     = (xOffset >> 16) + RSDK_screens->centerX;
+        camera->boundsT                                     = (yOffset >> 16) - RSDK_screens->height;
+        camera->boundsB                                     = yOffset >> 16;
+        Camera->centerBounds.x                              = 0x80000;
+        Camera->centerBounds.y                              = 0x40000;
+    }
+    Player->savedLives  = options->restartLives[0];
+    Player->savedScore  = options->restartScore;
+    Player->powerups    = options->restartShield;
+    options->atlEntityCount = 0;
 }
 
 void Zone_Unknown1(int fade1, int fade2)
@@ -489,6 +537,52 @@ void Zone_Unknown21()
         entity->timer -= entity->fade1;
         Zone->field_4724 = true;
     }
+}
+
+
+bool32 Game_CheckAct1()
+{
+    if ((RSDK.CheckStageFolder("GHZ") && !Zone->actID) || (RSDK.CheckStageFolder("CPZ") && !Zone->actID) || RSDK.CheckStageFolder("SPZ1")
+        || (RSDK.CheckStageFolder("FBZ") && !Zone->actID) || RSDK.CheckStageFolder("PSZ1") || RSDK.CheckStageFolder("SSZ1")
+        || (RSDK.CheckStageFolder("HCZ") && !Zone->actID) || (RSDK.CheckStageFolder("MSZ") && !Zone->actID)
+        || (RSDK.CheckStageFolder("OOZ") && !Zone->actID) || RSDK.CheckStageFolder("LRZ1") || (RSDK.CheckStageFolder("MMZ") && !Zone->actID)
+        || RSDK.CheckStageFolder("TMZ1")) {
+        return true;
+    }
+    return false;
+}
+bool32 Game_CheckAct2()
+{
+    if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
+        || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2") || RSDK.CheckStageFolder("SSZ2")
+        || (RSDK.CheckStageFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("MSZ") && Zone->actID == 1) || RSDK.CheckStageFolder("OOZ2")
+        || RSDK.CheckStageFolder("LRZ3") || (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1) || RSDK.CheckStageFolder("TMZ2")) {
+        return true;
+    }
+    return false;
+}
+bool32 Game_CheckStageReload()
+{
+    if (StarPost && Player->playerCount > 0) {
+        for (int p = 0; p < Player->playerCount; ++p) {
+            if (StarPost->postIDs[p]) {
+                return true;
+            }
+        }
+    }
+
+    if (SpecialRing && options->specialRingID > 0) {
+        EntitySpecialRing *specialRing = NULL;
+        while (RSDK.GetObjects(SpecialRing->objectID, (Entity **)&specialRing)) {
+            // if (SpecialRing->ringID > 0 && options->specialRingID == SpecialRing->ringID)
+            //    return true;
+        }
+    }
+    return false;
+}
+bool32 Game_CheckIntro()
+{
+    return (options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && options->enableIntro && !Game_CheckStageReload();
 }
 
 void Zone_EditorDraw() {}

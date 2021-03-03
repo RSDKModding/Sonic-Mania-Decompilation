@@ -65,7 +65,7 @@ void ImageTrail_LateUpdate()
     entity->currentRotation  = player->rotation;
     entity->currentDirection = player->direction;
     memcpy(&entity->currentAnimData, &player->playerAnimData, sizeof(EntityAnimationData));
-    if (player->transforming || !(player->drawFX & FX_SCALE))
+    if (player->isChibi || !(player->drawFX & FX_SCALE))
         entity->currentScale = 0x200;
     else
         entity->currentScale = player->scale.x;

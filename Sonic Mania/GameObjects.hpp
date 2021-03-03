@@ -155,7 +155,7 @@ struct RSDKFunctionTable {
     uint (*GetPaletteEntry)(byte paletteID, byte index);
     void (*SetActivePalette)(byte newActivePal, int startLine, int endLine);
     void (*CopyPalette)(byte sourcePalette, byte srcPaletteStart, byte destinationPalette, byte destPaletteStart, ushort count);
-    void (*LoadPalette)(byte bank, char *path, ushort rowFlags);
+    void (*LoadPalette)(byte bank, const char *path, ushort rowFlags);
     void (*RotatePalette)(byte palID, byte startIndex, byte endIndex, bool right);
     void (*SetLimitedFade)(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
     void (*BlendColours)(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
@@ -205,7 +205,7 @@ struct RSDKFunctionTable {
     ScanlineInfo* (*GetScanlines)(void);
     bool32 (*CheckObjectCollisionTouchBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox);
     bool32 (*CheckObjectCollisionTouchCircle)(Entity *thisEntity, int thisOffset, Entity *otherEntity, int otherOffset);
-    int (*CheckObjectCollisionBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setPos);
+    byte (*CheckObjectCollisionBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*CheckObjectCollisionPlatform)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*ObjectTileCollision)(Entity *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                                 bool32 setPos);

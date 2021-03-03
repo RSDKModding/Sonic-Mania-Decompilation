@@ -32,8 +32,8 @@ struct ObjectZone : Object{
     char field_67;
     int field_68;
     int field_6C;
-    int field_70;
-    int field_74;
+    int listPos;
+    int prevListPos;
     int ringFrame;
     int timer;
     int timer2;
@@ -107,6 +107,7 @@ void Zone_Serialize();
 // Extra Entity Functions
 int Zone_GetZoneID();
 void Zone_StoreEntities(int xOffset, int yOffset);
+void Zone_ReloadStoredEntities(int xOffset, int yOffset, bool32 flag);
 void Zone_Unknown1(int fade1, int fade2);
 void Zone_Unknown2();
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
@@ -128,5 +129,10 @@ void Zone_Unknown18();
 void Zone_Unknown19();
 void Zone_Unknown20();
 void Zone_Unknown21();
+
+bool32 Game_CheckAct1();
+bool32 Game_CheckAct2();
+bool32 Game_CheckStageReload();
+bool32 Game_CheckIntro();
 
 #endif //!OBJ_ZONE_H

@@ -17,7 +17,7 @@ struct DummyCore {
     void (*ExitGame)();
     void (*unknown14)();
     void (*unknown15)();
-    void (*CheckDLC)();
+    bool32 (*CheckDLC)(byte id);
     void (*unknown17)();
 
     int* values[8];
@@ -108,7 +108,7 @@ int getUserLanguage();
 int getConfirmButtonFlip();
 void launchManual();
 void exitGame();
-inline int checkDLC(byte dlcID)
+inline bool32 checkDLC(byte dlcID)
 {
     if (dlcID < 8)
         return *userCore->values[dlcID];

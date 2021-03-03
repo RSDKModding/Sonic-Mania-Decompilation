@@ -32,7 +32,7 @@ void Shield_Draw()
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     EntityPlayer *player = (EntityPlayer *)entity->player;
     if (player) {
-        if (player->transforming) {
+        if (player->isChibi) {
             entity->drawFX |= FX_SCALE;
             entity->scale.x = 0x100;
             entity->scale.y = 0x100;

@@ -123,8 +123,8 @@ void Dust_State_Spindash()
         entity->drawOrder = player->drawOrder;
         entity->rotation  = player->rotation;
         RSDK.ProcessAnimation(&entity->data);
-        //if (player->state != Player_State_Spindash)
-        //    RSDK.DestroyEntity(entity, 0, 0);
+        if (player->state != Player_State_Spindash)
+            RSDK.DestroyEntity(entity, 0, 0);
     }
 }
 void Dust_State_EggLoco()

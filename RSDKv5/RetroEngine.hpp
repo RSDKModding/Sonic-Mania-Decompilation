@@ -112,7 +112,7 @@ struct RetroEngine {
     bool32 devMenu    = false;
     bool32 printConsole = false;
 
-    int hasPlus     = 1;
+    int hasPlus  = true;
     int confirmFlip = 0;
 
     int prevEngineMode      = ENGINESTATE_LOAD;
@@ -175,7 +175,7 @@ void InitScriptSystem();
 inline void SetEngineState(byte state)
 {
     if (state < 4) {
-        sceneInfo.state = (state | sceneInfo.state) & 4;
+        sceneInfo.state = state & 3;
     }
 }
 

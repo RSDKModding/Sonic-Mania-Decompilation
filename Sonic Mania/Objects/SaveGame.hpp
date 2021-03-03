@@ -14,4 +14,8 @@ struct ObjectSaveGame : Object {
 
 extern ObjectSaveGame *SaveGame;
 
+//Funcs
+int *SaveGame_GetDataPtr(int slot, bool32 encore);
+void SaveGame_LoadSaveData();
+
 #endif //!OBJ_SAVEGAME_H

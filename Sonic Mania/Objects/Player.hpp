@@ -155,15 +155,15 @@ struct ObjectPlayer : Object {
     int rayDiveTimer;
     bool32 gotHit[PLAYER_MAX];
     void (*replayState)(void);
-    void (*field_A6C)(void);
+    bool32 (*field_A6C)(void);
     int field_A70;
 };
 
 // Entity Class
 struct EntityPlayer : Entity {
     void (*state)();
-    void (*stateDraw)();
-    void (*stateUnknown)();
+    void (*nextAirState)();
+    void (*nextGroundState)();
     EntityCamera *camera;
     EntityAnimationData playerAnimData;
     EntityAnimationData tailSpriteAnimData;
@@ -202,7 +202,7 @@ struct EntityPlayer : Entity {
     int underwater;
     int groundedStore;
     int flipY;
-    int transforming;
+    int isChibi;
     int forceTransform;
     int superState;
     int superSecondTimer;
@@ -329,7 +329,11 @@ void Player_Serialize();
 void Player_LoadSprites();
 void Player_LoadSpritesVS();
 void Player_SaveValues();
+void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX);
 void Player_GiveLife(EntityPlayer *entity);
+void Player_ApplyShieldEffect(EntityPlayer *player);
+void Player_ChangeCharacter(EntityPlayer *entity, int character);
+bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags);
 
 // Collision
 Hitbox *Player_GetHitbox(EntityPlayer *player);
@@ -351,6 +355,7 @@ void Player_HandleAirMovement();
 void Player_HandleAirFriction();
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll();
+void Player_State_StartPeelout();
 void Player_HandleRollDeceleration();
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
@@ -364,11 +369,22 @@ void Player_State_ForceRoll();
 void Player_State_RollLock();
 void Player_State_LookUp();
 void Player_State_Crouch();
+void Player_State_Spindash();
+void Player_State_Peelout();
 void Player_State_OuttaHere();
+void Player_State_Transform();
 void Player_State_Hit();
 void Player_State_Die();
 void Player_State_Drown();
+void Player_State_DropDash();
+void Player_State_BubbleBounce();
 void Player_State_MightyUnspin();
+
+void Player_SonicJumpAbility();
+void Player_TailsJumpAbility();
+void Player_KnuxJumpAbility();
+void Player_MightyJumpAbility();
+void Player_RayJumpAbility();
 
 //Input States
 void Player_GetP1Inputs();

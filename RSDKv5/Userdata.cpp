@@ -38,6 +38,7 @@ void initUserData()
         MEM_ZEROP(stats);
         stats->active = true;
 
+        userCore->CheckDLC             = checkDLC;
         userCore->GetUserLanguage      = getUserLanguage;
         userCore->GetConfirmButtonFlip = getConfirmButtonFlip;
         userCore->LaunchManual         = launchManual;

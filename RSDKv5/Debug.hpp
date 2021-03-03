@@ -18,13 +18,12 @@ extern char outputString[0x400];
 void printLog(SeverityModes severity, const char *message, ...);
 inline void printConsole(const char *message) { printf(message); }
 
-inline void printString(SeverityModes severity, const char *message) { printLog(severity, "%s\n", message); }
+inline void printString(SeverityModes severity, const char *message) { printLog(severity, "%s", message); }
 inline void printText(SeverityModes severity, const char *message, TextInfo *text)
 {
     for (int c = 0; c < text->textLength; ++c) {
         printLog(severity, "%c", text->text[c]);
     }
-    printLog(severity, "\n");
 }
 inline void printIntegerUnsigned(SeverityModes severity, const char *message, uint integer) { printLog(severity, "%s: %d", message, integer); }
 inline void printInteger(SeverityModes severity, const char *message, int integer) { printLog(severity, "%s: %d", message, integer); }

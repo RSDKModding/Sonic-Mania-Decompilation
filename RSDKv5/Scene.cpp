@@ -512,7 +512,7 @@ void LoadTileConfig(char *filepath)
                     for (int c = 0; c < TILE_SIZE; c++) {
                         if (hasCollision[c]) {
                             collisionMasks[p][t].roofMasks[c]  = collision[c];
-                            collisionMasks[p][t].floorMasks[c] = 0;
+                            collisionMasks[p][t].floorMasks[c] = 0xFF;
                         }
                         else {
                             collisionMasks[p][t].floorMasks[c] = 0xFF;
@@ -579,7 +579,7 @@ void LoadTileConfig(char *filepath)
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         if (hasCollision[c]) {
                             collisionMasks[p][t].floorMasks[c] = collision[c];
-                            collisionMasks[p][t].roofMasks[c]  = 0x0F;
+                            collisionMasks[p][t].roofMasks[c]  = 0xFF;
                         }
                         else {
                             collisionMasks[p][t].floorMasks[c] = 0xFF;

@@ -127,12 +127,11 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
 
 byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
-    int store, store2, store3;
-    int collisionResult, collisionDir;
-
     if (thisEntity && otherEntity && thisHitbox && otherHitbox) {
-        collisionResult = 0;
-        collisionDir    = 0;
+        int store, store2, store3;
+        int collisionResultX = 0;
+        int collisionResultY = 0;
+
         int otherX      = otherEntity->position.x;
         int otherY      = otherEntity->position.y;
         int otherX2     = otherEntity->position.x;
@@ -190,13 +189,13 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
         if (otherIX <= (thisHitbox->right + thisHitbox->left + 2 * thisIX) >> 1) {
             if (otherHitbox->right + otherIX >= thisHitbox->left + thisIX && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom
                 && thisIY + thisHitbox->bottom > otherIY + otherHitbox->top) {
-                collisionResult = 2;
+                collisionResultX = 2;
                 otherX          = thisEntity->position.x + ((thisHitbox->left - otherHitbox->right) << 16);
             }
         }
         else if (otherHitbox->left + otherIX < thisHitbox->right + thisIX && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom
                  && thisIY + thisHitbox->bottom > otherIY + otherHitbox->top) {
-            collisionResult = 3;
+            collisionResultX = 3;
             otherX          = thisEntity->position.x + ((thisHitbox->right - otherHitbox->left) << 16);
         }
         otherHitbox->bottom++;
@@ -207,14 +206,14 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
         if (otherIY >= (thisHitbox->top + thisHitbox->bottom + 2 * thisIY) >> 1) {
             if (otherHitbox->top + otherIY < thisHitbox->bottom + thisIY && thisIX + thisHitbox->left < otherIX + otherHitbox->right) {
                 if (otherIX + otherHitbox->left < thisIX + thisHitbox->right) {
-                    collisionDir = 4;
+                    collisionResultY = 4;
                     otherY2      = thisEntity->position.y + ((thisHitbox->bottom - otherHitbox->top) << 16);
                 }
             }
         }
         else if (otherHitbox->bottom + otherIY >= thisHitbox->top + thisIY && thisIX + thisHitbox->left < otherIX + otherHitbox->right
                  && thisIX + thisHitbox->right > otherIX + otherHitbox->left) {
-            collisionDir = 1;
+            collisionResultY = 1;
             otherY2      = thisEntity->position.y + ((thisHitbox->top - otherHitbox->bottom) << 16);
         }
 
@@ -263,61 +262,55 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
                 break;
         }
 
-        int ox  = ((otherX - otherEntity->position.x) >> 16);
-        int oy  = ((otherY - otherEntity->position.y) >> 16);
-        int ox2 = ((otherX2 - otherEntity->position.x) >> 16);
-        int oy2 = ((otherY2 - otherEntity->position.y) >> 16);
+        int ox  = ((otherX - otherEntity->position.x) >> 0x10);
+        int oy  = ((otherY - otherEntity->position.y) >> 0x10);
+        int ox2 = ((otherX2 - otherEntity->position.x) >> 0x10);
+        int oy2 = ((otherY2 - otherEntity->position.y) >> 0x10);
         if (ox * ox + oy * oy >= ox2 * ox2 + oy2 * oy2) {
-            if (collisionDir || !collisionResult) {
+            if (collisionResultY || !collisionResultX) {
                 otherEntity->position.x = otherX2;
                 otherEntity->position.y = otherY2;
                 if (setValues) {
-                    if (collisionDir != 1) {
-                        if (collisionDir == 4 && otherEntity->velocity.y < 0) {
+                    if (collisionResultY == 1) {
+                        if (otherEntity->velocity.y > 0)
                             otherEntity->velocity.y = 0;
-                            return collisionDir;
+                        if (!otherEntity->onGround && otherEntity->velocity.y >= 0) {
+                            otherEntity->groundVel = otherEntity->velocity.x;
+                            otherEntity->angle     = 0;
+                            otherEntity->onGround  = true;
                         }
-                        return collisionDir;
                     }
-
-                    if (otherEntity->velocity.y > 0)
+                    else if (collisionResultY == 4 && otherEntity->velocity.y < 0) {
                         otherEntity->velocity.y = 0;
-                    if (otherEntity->onGround == false && otherEntity->velocity.y >= 0) {
-                        otherEntity->groundVel = otherEntity->velocity.x;
-                        otherEntity->angle     = 0;
-                        otherEntity->onGround  = 1;
                     }
                 }
-                return collisionDir;
+                return collisionResultY;
             }
         }
-        else if (!collisionResult && collisionDir) {
+        else if (!collisionResultX && collisionResultY) {
             otherEntity->position.x = otherX2;
             otherEntity->position.y = otherY2;
             if (setValues) {
-                if (collisionDir != 1) {
-                    if (collisionDir == 4 && otherEntity->velocity.y < 0) {
+                if (collisionResultY == 1) {
+                    if (otherEntity->velocity.y > 0)
                         otherEntity->velocity.y = 0;
-                        return collisionDir;
+                    if (!otherEntity->onGround && otherEntity->velocity.y >= 0) {
+                        otherEntity->groundVel = otherEntity->velocity.x;
+                        otherEntity->angle     = 0;
+                        otherEntity->onGround  = true;
                     }
-                    return collisionDir;
                 }
-
-                if (otherEntity->velocity.y > 0)
+                else if (collisionResultY == 4 && otherEntity->velocity.y < 0) {
                     otherEntity->velocity.y = 0;
-                if (!otherEntity->onGround && otherEntity->velocity.y >= 0) {
-                    otherEntity->groundVel = otherEntity->velocity.x;
-                    otherEntity->angle     = 0;
-                    otherEntity->onGround  = true;
                 }
             }
-            return collisionDir;
+            return collisionResultY;
         }
 
         otherEntity->position.x = otherX;
         otherEntity->position.y = otherY;
         if (!setValues)
-            return collisionResult;
+            return collisionResultX;
 
         int vel = 0;
         if (otherEntity->onGround) {
@@ -329,16 +322,16 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
             vel = otherEntity->velocity.x;
         }
 
-        if (collisionResult == 2) {
+        if (collisionResultX == 2) {
             if (vel <= 0)
-                return collisionResult;
+                return collisionResultX;
         }
-        else if (collisionResult != 3 || vel >= 0) {
-            return collisionResult;
+        else if (collisionResultX != 3 || vel >= 0) {
+            return collisionResultX;
         }
         otherEntity->groundVel  = 0;
         otherEntity->velocity.x = 0;
-        return collisionResult;
+        return collisionResultX;
     }
     return 0;
 }
@@ -505,7 +498,7 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                 }
             }
 
-            if (setPos)
+            if (setPos && collided)
                 entity->position.y = (posY << 16) - yOffset;
             return collided;
         }
@@ -542,7 +535,7 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                 }
             }
 
-            if (setPos)
+            if (setPos && collided)
                 entity->position.x = (posX << 16) - xOffset;
             return collided;
         }
@@ -579,7 +572,7 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                 }
             }
 
-            if (setPos)
+            if (setPos && collided)
                 entity->position.y = (posY << 16) - yOffset;
             return collided;
         }
@@ -616,7 +609,7 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                 }
             }
 
-            if (setPos)
+            if (setPos && collided)
                 entity->position.x = (posX << 16) - xOffset;
             return collided;
         }
@@ -665,7 +658,8 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                 }
             }
 
-            entity->position.y = (posY << 16) - yOffset;
+            if (collided)
+                entity->position.y = (posY << 16) - yOffset;
             return collided;
         }
         case CMODE_LWALL: {
@@ -703,7 +697,8 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                 }
             }
 
-            entity->position.x = (posX << 16) - xOffset;
+            if (collided)
+                entity->position.x = (posX << 16) - xOffset;
             return collided;
         }
         case CMODE_ROOF: {
@@ -741,7 +736,8 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                 }
             }
 
-            entity->position.y = (posY << 16) - yOffset;
+            if (collided)
+                entity->position.y = (posY << 16) - yOffset;
             return collided;
         }
         case CMODE_RWALL: {
@@ -779,7 +775,8 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                 }
             }
 
-            entity->position.x = (posX << 16) - xOffset;
+            if (collided)
+                entity->position.x = (posX << 16) - xOffset;
             return collided;
         }
     }
@@ -1004,11 +1001,11 @@ void ProcessAirCollision()
                 collisionEntity->angle      = sensors[2].angle;
             }
         }
-        else if (sensors[2].collided == 1) {
+        else if (sensors[2].collided) {
             collisionEntity->position.y = (sensors[2].pos.y - collisionBottom_Outer) << 16;
             collisionEntity->angle      = sensors[2].angle;
         }
-        else if (sensors[3].collided == 1) {
+        else if (sensors[3].collided) {
             collisionEntity->position.y = (sensors[3].pos.y - collisionBottom_Outer) << 16;
             collisionEntity->angle      = sensors[3].angle;
         }

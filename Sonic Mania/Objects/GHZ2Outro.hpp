@@ -14,7 +14,7 @@ struct EntityGHZ2Outro : Entity {
 };
 
 // Object Struct
-extern ObjectGHZ2Outro GHZ2Outro;
+extern ObjectGHZ2Outro *GHZ2Outro;
 
 // Standard Entity Events
 void GHZ2Outro_Update();

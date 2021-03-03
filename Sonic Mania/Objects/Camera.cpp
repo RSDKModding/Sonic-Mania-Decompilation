@@ -217,14 +217,14 @@ void Camera_HandleVBounds()
     }
 
     if (Zone->screenBoundsB1[entity->screenID] < entity->boundsB) {
-        if (screen[entity->screenID].width + screen[entity->screenID].position.y < Zone->screenBoundsB1[entity->screenID])
+        if (screen[entity->screenID].height + screen[entity->screenID].position.y < Zone->screenBoundsB1[entity->screenID])
             entity->boundsB = Zone->screenBoundsB1[entity->screenID];
         else
-            entity->boundsB = screen[entity->screenID].width + screen[entity->screenID].position.y;
+            entity->boundsB = screen[entity->screenID].height + screen[entity->screenID].position.y;
     }
 
     if (Zone->screenBoundsB1[entity->screenID] > entity->boundsB) {
-        if (screen[entity->screenID].width + screen[entity->screenID].position.y >= entity->boundsB) {
+        if (screen[entity->screenID].height + screen[entity->screenID].position.y >= entity->boundsB) {
             entity->boundsB += entity->boundsOffset.y;
             if (entity->velocity.y > 0) {
                 entity->boundsB = (entity->velocity.y >> 0x10) + entity->boundsB;
@@ -237,7 +237,7 @@ void Camera_HandleVBounds()
         }
     }
 
-    Zone->screenBoundsT2[entity->screenID] = entity->boundsL << 16;
+    Zone->screenBoundsT2[entity->screenID] = entity->boundsT << 16;
     Zone->screenBoundsB2[entity->screenID] = entity->boundsB << 16;
 }
 

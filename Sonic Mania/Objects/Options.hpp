@@ -5,9 +5,16 @@
 
 // Object Class
 struct ObjectOptions : Object {
-
+    void* func;
+    Entity* entityPtr;
+    void (*callback)(bool32);
+    int state;
 };
 
 extern ObjectOptions *Options;
+
+//Funcs
+void Options_Reload();
+void Options_GetWinSize();
 
 #endif //!OBJ_OPTIONS_H
