@@ -4,13 +4,32 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSizeLaser : Object{
-
+struct ObjectSizeLaser : Object {
+    Hitbox hitbox;
+    Hitbox playerOuterBox[4];
+    Hitbox playerInnerBox[4];
+    Vector2 playerPositions[4];
+    ushort spriteIndex;
+    ushort sonicIndex;
+    ushort tailsIndex;
+    ushort tailSpriteIndex;
+    ushort knuxIndex;
+    ushort mightyIndex;
+    ushort rayIndex;
+    ushort sfx_Shrink2;
+    ushort sfx_Grow2;
 };
 
 // Entity Class
 struct EntitySizeLaser : Entity {
-
+    void (*state)();
+    byte type;
+    byte orientation;
+    int timer;
+    Vector2 storedPos;
+    int extend;
+    EntityAnimationData animData1;
+    EntityAnimationData animData2;
 };
 
 // Object Struct
@@ -28,6 +47,6 @@ void SizeLaser_EditorLoad();
 void SizeLaser_Serialize();
 
 // Extra Entity Functions
-
+bool32 SizeLaser_SizeChangeSFXCheck();
 
 #endif //!OBJ_SIZELASER_H

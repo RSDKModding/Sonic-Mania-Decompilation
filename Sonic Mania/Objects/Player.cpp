@@ -45,8 +45,8 @@ void Player_Update()
                             if (player->invincibleTimer > 0)
                                 flag = false;
                         }
-                        // if (flag)
-                        //    Music_Unknown6(1, 1);
+                        if (flag)
+                           Music_Unknown6(TRACK_INVINCIBLE, 1);
                     }
                 }
             }
@@ -62,8 +62,8 @@ void Player_Update()
                     if (player->speedShoesTimer > 0)
                         flag = false;
                 }
-                // if (flag)
-                //    Music_Unknown6(2, 1);
+                if (flag)
+                   Music_Unknown6(TRACK_SNEAKERS, 1);
             }
         }
 
@@ -183,7 +183,7 @@ void Player_LateUpdate()
                 entity->state = Player_State_Drown;
                 if (!entity->sidekick) {
                     if (options->gameMode == MODE_COMPETITION) {
-                        // Music_Unknown6(8, 0);
+                        Music_Unknown6(TRACK_DROWNING, 0);
                     }
                     else if (options->gameMode != MODE_ENCORE) {
                         RSDK_sceneInfo->timeEnabled = false;
@@ -605,7 +605,7 @@ void Player_StageLoad()
     }
 
     RSDK_sceneInfo->debugMode = (options->medalMods & getMod(MEDAL_DEBUGMODE)) > 0;
-    RSDK.SetDebugValue("Debug Mode", RSDK_sceneInfo->debugMode, 1, 0, 1);
+    RSDK.SetDebugValue("Debug Mode", &RSDK_sceneInfo->debugMode, 1, 0, 1);
     if (options->medalMods & getMod(MEDAL_ANDKNUCKLES)) {
         options->playerID &= 0xFF;
         options->playerID |= (ID_KNUCKLES << 8);
@@ -796,7 +796,7 @@ void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
         if (options->gameMode != MODE_TIMEATTACK && options->gameMode != MODE_ENCORE) {
             if (player->lives < 99)
                 player->lives++;
-            //Music_PlayMusicTrack(13);
+            Music_PlayMusicTrack(TRACK_1UP);
         }
         player->ringExtraLife += 100;
         if (player->ringExtraLife > 300)
@@ -821,7 +821,7 @@ void Player_GiveLife(EntityPlayer *entity)
     if (options->gameMode != MODE_TIMEATTACK && options->gameMode != MODE_ENCORE) {
         if (entity->lives < 99)
             entity->lives++;
-        // Music_PlayMusicTrack(13);
+        Music_PlayMusicTrack(TRACK_1UP);
     }
 }
 void Player_ApplyShieldEffect(EntityPlayer *player)
@@ -1079,8 +1079,8 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
         player->interaction     = 0;
         player->state           = Player_State_Transform;
         player->forceTransform  = 1;
-        // if (!ERZStart && options->superMusicEnabled)
-        //   Music_Unknown10(0.079999998);
+        if (!ERZStart && options->superMusicEnabled)
+          Music_Unknown10(0.8);
         player->jumpAbilityTimer = 0;
         player->superState       = 1;
     }
@@ -2775,10 +2775,9 @@ void Player_State_Transform()
                 entity->interaction    = 1;
                 entity->state          = Player_State_Air;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimData, 0, 3);
-                if (!ERZStart) {
-                    // if (options->superMusicEnabled)
-                    //    Music_PlayMusicTrack(10);
-                }
+
+                if (!ERZStart && options->superMusicEnabled)
+                    Music_PlayMusicTrack(TRACK_SUPER);
             }
         }
     }
@@ -2798,11 +2797,9 @@ void Player_State_Transform()
                 entity->forceTransform = 0;
                 entity->interaction    = 1;
                 entity->state          = Player_State_Air;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimData, 0, 3);
-                if (!ERZStart) {
-                    // if (options->superMusicEnabled)
-                    //    Music_PlayMusicTrack(10);
-                }
+
+                if (!ERZStart && options->superMusicEnabled)
+                    Music_PlayMusicTrack(TRACK_SUPER);
             }
         }
         else {
@@ -2810,7 +2807,7 @@ void Player_State_Transform()
             entity->interaction    = true;
             entity->state          = Player_State_Air;
             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimData, 0, 3);
-            // Music_PlayMusicTrack(10);
+            Music_PlayMusicTrack(TRACK_SUPER);
         }
     }
 }

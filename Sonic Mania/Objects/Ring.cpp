@@ -518,7 +518,7 @@ void Ring_Collect()
         player->ringExtraLife += 100 * (entity->ringAmount / 100);
         ringAmount = entity->ringAmount;
     }
-    // Player_GiveRings(ringAmount, player, 1);
+    Player_GiveRings(ringAmount, player, 1);
     int max = 0x100000;
     if (entity->type != 1)
         max = 0x80000;

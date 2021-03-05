@@ -219,14 +219,14 @@ struct RSDKFunctionTable {
     int (*GetSFX)(const char *path);
     int (*PlaySFX)(ushort sfx, int loop, int pan);
     void (*StopSFX)(ushort sfx);
-    void (*PlayMusic)(const char *filename, uint slot, int a3, uint loopStart, bool32 loop);
+    int (*PlayMusic)(const char *filename, uint slot, int a3, uint loopStart, bool32 loop);
     int (*SetSoundAttributes)(byte a1, uint slot, float volume, float pan, float playbackSpeed);
-    void (*Unknown91)(int a1);
-    void (*Unknown92)(int a1);
-    void (*Unknown93)(int a1);
-    void (*Unknown94)(short a1);
-    void (*Unknown95)(int a1);
-    void (*Unknown96)(int a1);
+    void (*SoundUnknown1)(byte slot);
+    void (*PauseChannel)(byte slot);
+    void (*ResumeChannel)(byte slot);
+    bool32 (*SoundPlaying)(byte slot);
+    bool32 (*ChannelPlaying)(byte slot);
+    bool32 (*TrackPlaying)(byte slot);
     void (*LoadVideo)(const char *filename, int64 a2, int (*a3)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
     void (*Unknown98)(int a1, int a2, uint a3);
@@ -255,7 +255,7 @@ struct RSDKFunctionTable {
     void (*Unknown105)(void);
     void (*Unknown106)(void);
     void (*ClearDebugValues)(void);
-    void (*SetDebugValue)(const char *name, int valPtr, int type, int unknown1, int unknown2);
+    void (*SetDebugValue)(const char *name, void *valPtr, int type, int unknown1, int unknown2);
 };
 
 extern UserFunctionTable User;
