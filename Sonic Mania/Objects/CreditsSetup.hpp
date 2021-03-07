@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCreditsSetup : Object{
+struct ObjectCreditsSetup : Object {
 
 };
 

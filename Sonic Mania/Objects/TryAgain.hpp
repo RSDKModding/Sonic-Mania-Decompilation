@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTryAgain : Object{
+struct ObjectTryAgain : Object {
 
 };
 

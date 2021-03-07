@@ -4,8 +4,25 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSZCutsceneST : Object{
-
+struct ObjectMSZCutsceneST : Object {
+    int value1[6]; //= { -65536, -65536, 0, 0, 0, -65536 };
+    ushort value2;
+    ushort value3;
+    TextInfo value4;
+    byte value5;
+    bool32 value6;
+    bool32 value7;
+    bool32 value8;
+    bool32 value9;
+    bool32 value10;
+    bool32 value11;
+    bool32 value12;
+    byte value13;
+    byte value14;
+    ushort value15;
+    ushort value16;
+    ushort value17;
+    byte value18;
 };
 
 // Entity Class

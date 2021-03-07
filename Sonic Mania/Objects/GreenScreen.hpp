@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGreenScreen : Object{
+struct ObjectGreenScreen : Object {
 
 };
 

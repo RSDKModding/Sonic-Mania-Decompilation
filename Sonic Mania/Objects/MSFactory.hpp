@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSFactory : Object{
+struct ObjectMSFactory : Object {
 
 };
 

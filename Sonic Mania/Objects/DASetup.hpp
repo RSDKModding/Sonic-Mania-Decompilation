@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDASetup : Object{
+struct ObjectDASetup : Object {
 
 };
 

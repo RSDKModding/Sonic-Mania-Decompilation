@@ -4,8 +4,21 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHCZSetup : Object{
-
+struct ObjectHCZSetup : Object {
+    int value1[14]; //= { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 };
+    int value2;
+    int value3;
+    int value4;
+    int value5;
+    ushort value6;
+    ushort value7;
+    ushort value8;
+    bool32 value9;
+    int value10;
+    byte value11;
+    int value12;
+    ushort value13;
+    ushort value14;
 };
 
 // Entity Class

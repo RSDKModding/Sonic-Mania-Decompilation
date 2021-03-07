@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpecialClear : Object{
+struct ObjectSpecialClear : Object {
 
 };
 

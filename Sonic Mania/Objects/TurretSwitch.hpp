@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurretSwitch : Object{
+struct ObjectTurretSwitch : Object {
 
 };
 

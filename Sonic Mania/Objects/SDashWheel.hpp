@@ -4,8 +4,12 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSDashWheel : Object{
-
+struct ObjectSDashWheel : Object {
+    ushort value1;
+    colour value2;
+    int value3[33]; //= { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 };
+    ushort value4;
+    ushort value5;
 };
 
 // Entity Class

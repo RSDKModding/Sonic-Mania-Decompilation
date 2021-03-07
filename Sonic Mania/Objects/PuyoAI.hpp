@@ -4,8 +4,15 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoAI : Object{
-
+struct ObjectPuyoAI : Object {
+    int value1[5]; //= { 16, 12, 8, 4, 0 };
+    int value2[5]; //= { 40, 30, 20, 10, 0 };
+    byte value3;
+    int value4;
+    int value5;
+    int value6;
+    int value7;
+    int value8;
 };
 
 // Entity Class

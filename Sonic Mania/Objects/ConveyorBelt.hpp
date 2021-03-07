@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectConveyorBelt : Object{
+struct ObjectConveyorBelt : Object {
 
 };
 

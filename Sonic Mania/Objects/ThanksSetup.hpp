@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectThanksSetup : Object{
+struct ObjectThanksSetup : Object {
 
 };
 

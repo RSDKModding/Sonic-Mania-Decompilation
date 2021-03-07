@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMenuParam : Object{
+struct ObjectMenuParam : Object {
 
 };
 

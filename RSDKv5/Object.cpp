@@ -154,42 +154,54 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
             else {
                 int tmp = 0;
                 switch (dataType) {
-                    case 0:
-                    case 3: dataPos += arraySize; break;
-                    case 1:
-                    case 4:
+                    case VAR_UINT8:
+                    case VAR_INT8:
+                        dataPos += sizeof(byte) * arraySize;
+                        break;
+                    case VAR_UINT16:
+                    case VAR_INT16:
                         tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(short) * arraySize;
                         break;
-                    case 2:
-                    case 5:
-                    case 6:
-                    case 7:
+                    case VAR_UINT32:
+                    case VAR_INT32:
+                    case VAR_ENUM:
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
-                    case 8:
-                    case 9:
+                    case VAR_BOOL:
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(bool32);
+                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                            tmp = dataPos;
+                        dataPos = tmp + sizeof(bool32) * arraySize;
+                        break;
+                    case VAR_STRING:
                         tmp = (dataPos & 0xFFFFFFFC) + 4;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 8 * arraySize;
+                        dataPos = tmp + sizeof(TextInfo) * arraySize; //8
+                        break;
+                    case VAR_VECTOR2:
+                        tmp = (dataPos & 0xFFFFFFFC) + 4;
+                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                            tmp = dataPos;
+                        dataPos = tmp + sizeof(Vector2) * arraySize; //8
                         break;
                     case 10:
                         tmp = (dataPos & 0xFFFFFFFC) + 4;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 24 * arraySize;
+                        dataPos = tmp + sizeof(EntityAnimationData) * arraySize; //24
                         break;
                     case 11:
                         tmp = (dataPos & 0xFFFFFFFE) + 2;
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 8 * arraySize;
+                        dataPos = tmp + sizeof(Hitbox) * arraySize; //8
                         break;
                     case 12:
                         tmp = (dataPos & 0xFFFFFFFE) + 2;

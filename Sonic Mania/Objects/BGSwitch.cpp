@@ -15,12 +15,11 @@ void BGSwitch_Update()
                 BGSwitch->layerIDs[BGSwitch->layerID] = entity->bgID;
         }
 
-        int layerID1 = BGSwitch->layerIDs[BGSwitch->layerID];
-        int layerID2 = BGSwitch->layerIDs[BGSwitch->layerID + 4];
-        if (layerID1 != layerID2) {
-            BGSwitch->layerIDs[BGSwitch->layerID + 4] = layerID1;
-            if (BGSwitch->switchCallback[layerID1])
-                BGSwitch->switchCallback[layerID1]();
+        int id = BGSwitch->layerIDs[BGSwitch->layerID];
+        if (id != BGSwitch->layerIDs[BGSwitch->layerID + 4]) {
+            BGSwitch->layerIDs[BGSwitch->layerID + 4] = id;
+            if (BGSwitch->switchCallback[id])
+                BGSwitch->switchCallback[id]();
         }
     }
 }

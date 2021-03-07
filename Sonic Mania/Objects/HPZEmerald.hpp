@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHPZEmerald : Object{
+struct ObjectHPZEmerald : Object {
     ushort spriteIndex;
 };
 

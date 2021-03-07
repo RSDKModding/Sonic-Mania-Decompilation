@@ -4,8 +4,14 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZStorm : Object{
-
+struct ObjectFBZStorm : Object {
+    int value1[20]; //= { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 };
+    TextInfo value2;
+    ushort value3;
+    ushort value4;
+    byte value5;
+    ushort value6;
+    byte value7; //= 1;
 };
 
 // Entity Class

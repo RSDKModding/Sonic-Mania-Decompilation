@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoScore : Object{
+struct ObjectPuyoScore : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTransportTube : Object{
+struct ObjectTransportTube : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVideo : Object{
+struct ObjectUIVideo : Object {
 
 };
 

@@ -4,8 +4,9 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZTornado : Object{
-
+struct ObjectAIZTornado : Object {
+    int value1[5]; // = { -131072, -65536, 0, 65536, 131072 };
+    ushort value2;
 };
 
 // Entity Class

@@ -155,7 +155,7 @@ void ProcessMusicStream(Sint32 *stream, size_t bytes_wanted)
     if (!engine.streamsEnabled)
         return;
 
-    int musVol = engine.streamVolume * MAX_VOLUME;
+    //int musVol = engine.streamVolume * MAX_VOLUME;
     /*if (!musInfo.loaded)
         return;
     switch (musicStatus) {

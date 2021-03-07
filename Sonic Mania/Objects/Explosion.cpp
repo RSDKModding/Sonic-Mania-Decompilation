@@ -37,7 +37,7 @@ void Explosion_Create(void* data)
         entity->drawOrder = Zone->drawOrderHigh;
     else
         entity->drawOrder = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(Explosion->spriteIndex, (int)data, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(Explosion->spriteIndex, (int)(size_t)data, &entity->data, true, 0);
 }
 
 void Explosion_StageLoad()

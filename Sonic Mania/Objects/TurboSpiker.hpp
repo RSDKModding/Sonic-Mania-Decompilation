@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurboSpiker : Object{
+struct ObjectTurboSpiker : Object {
 
 };
 

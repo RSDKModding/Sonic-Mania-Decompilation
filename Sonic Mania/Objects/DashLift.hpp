@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDashLift : Object{
+struct ObjectDashLift : Object {
 
 };
 

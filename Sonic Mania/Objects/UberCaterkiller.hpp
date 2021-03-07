@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUberCaterkiller : Object{
+struct ObjectUberCaterkiller : Object {
 
 };
 

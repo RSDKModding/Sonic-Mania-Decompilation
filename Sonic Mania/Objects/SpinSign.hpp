@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpinSign : Object{
+struct ObjectSpinSign : Object {
 
 };
 

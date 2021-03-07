@@ -19,10 +19,9 @@ void LinkGameLogicDLL(GameInfo *info)
 {
     memset(&User, 0, sizeof(UserFunctionTable));
     memset(&RSDK, 0, sizeof(RSDKFunctionTable));
-
+    
     if (info->functionPtrs)
         memcpy(&RSDK, info->functionPtrs, sizeof(RSDKFunctionTable));
-    void* uData = info->userdataPtrs;
     if (info->userdataPtrs)
         memcpy(&User, info->userdataPtrs, sizeof(UserFunctionTable));
     RSDK_sku        = info->currentSKU;

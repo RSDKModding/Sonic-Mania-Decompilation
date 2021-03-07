@@ -18,6 +18,11 @@ typedef long long int64;
 typedef unsigned long long uint64;
 typedef unsigned int bool32;
 
+typedef uint colour;
+typedef uint color;
+
+typedef int unknown; //temp until I figure it out lol
+
 #define SCREEN_YSIZE    (240)
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
@@ -100,17 +105,6 @@ struct InputState {
     bool32 down;
     bool32 press;
     int keyMap;
-
-    inline void setHeld()
-    {
-        press = !down;
-        down  = true;
-    }
-    inline void setReleased()
-    {
-        press = false;
-        down  = false;
-    }
 };
 
 struct ControllerState {
@@ -246,7 +240,6 @@ struct TileLayer {
     byte drawLayer[4];
     byte widthShift;
     byte heightShift;
-    byte field_7;
     ushort width;
     ushort height;
     Vector2 position;
@@ -259,8 +252,6 @@ struct TileLayer {
     int deformationDataW[0x400];
     void (*scanlineCallback)(ScanlineInfo *);
     ushort scrollInfoCount;
-    char field_202E;
-    char field_202F;
     ScrollInfo scrollInfo[0x100];
     uint name[4];
     ushort *layout;

@@ -56,8 +56,8 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad()
 {
-    int *saveRAM    = SaveGame->saveRAM;
-    Zone->timeStart = time(0);
+    //int *saveRAM    = SaveGame->saveRAM;
+    Zone->timeStart = (uint)time(0);
     // TODO: this junk here
     if (options->gameMode == MODE_ENCORE) {
     }
@@ -124,7 +124,8 @@ void Zone_StageLoad()
     }
 
     EntityZone *ent = NULL;
-    for (; RSDK.GetObjects(Zone->objectID, (Entity **)&ent); RSDK.DestroyEntity(ent, 0, 0)) {
+    while (RSDK.GetObjects(Zone->objectID, (Entity**)ent)) {
+        RSDK.DestroyEntity(ent, 0, 0);
     }
 
     RSDK.ResetEntity(SLOT_ZONE, Zone->objectID, 0);
@@ -152,7 +153,7 @@ void Zone_StageLoad()
     }
     else {
         // Competition_Unknown2();
-        RSDK.SetSettingsValue(12, 1);
+        RSDK.SetSettingsValue(SETTINGS_C, 1);
     }
     switch (options->gameMode) {
         case MODE_MANIA:
@@ -342,13 +343,10 @@ void Zone_Unknown2()
 
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)
 {
-    int v5 = (pos->x - entity->position.x) >> 8;
-    int v6 = (pos->y - entity->position.y) >> 8;
-    int v7 = v6 * RSDK.Sin256(angle);
-    pos->x = v7 + v5 * RSDK.Cos256(angle) + entity->position.x;
-    int v8 = v6 * RSDK.Cos256(angle);
-    int v9 = v8 - v5 * RSDK.Sin256(angle);
-    pos->y = v9 + entity->position.y;
+    int x = (pos->x - entity->position.x) >> 8;
+    int y = (pos->y - entity->position.y) >> 8;
+    pos->x = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + entity->position.x;
+    pos->y = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + entity->position.y;
 }
 
 void Zone_Unknown4(int screen)

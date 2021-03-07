@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectParallaxSprite : Object{
+struct ObjectParallaxSprite : Object {
 
 };
 

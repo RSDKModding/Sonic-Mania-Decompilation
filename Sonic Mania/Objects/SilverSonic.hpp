@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSilverSonic : Object{
+struct ObjectSilverSonic : Object {
 
 };
 

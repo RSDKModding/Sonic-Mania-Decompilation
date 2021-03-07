@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMatryoshkaBom : Object{
+struct ObjectMatryoshkaBom : Object {
 
 };
 

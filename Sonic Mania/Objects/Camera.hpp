@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCamera : Object{
+struct ObjectCamera : Object {
     Vector2 centerBounds;
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlameSpring : Object{
+struct ObjectFlameSpring : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPaperRoller : Object{
+struct ObjectPaperRoller : Object {
 
 };
 

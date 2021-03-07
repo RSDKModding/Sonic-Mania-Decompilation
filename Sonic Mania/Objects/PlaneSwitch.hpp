@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlaneSwitch : Object{
+struct ObjectPlaneSwitch : Object {
     ushort spriteIndex;
 };
 

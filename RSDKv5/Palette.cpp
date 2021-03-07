@@ -59,13 +59,18 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
         return;
 
     uint blendA         = 0xFF - blendAmount;
-    ushort *srcA        = &fullPalette[srcPaletteA][startIndex];
-    ushort *srcB        = &fullPalette[srcPaletteB][startIndex];
     ushort *dst         = &fullPalette[destPaletteID][startIndex];
     for (int l = startIndex; l < endIndex; ++l) {
-        *dst = rIndexes[((blendAmount * *srcB & 0xF8) + (blendA * *srcA & 0xF8)) >> 8]
-               | gIndexes[((blendAmount * *srcB & 0xFFFC) + (blendA * *srcA & 0xFFFC)) >> 8]
-               | bIndexes[((blendAmount * (*srcB << 3)) + (blendA * (*srcA << 3))) >> 8];
+        int rA = (GetPaletteEntry(srcPaletteA, l) >> 16) & 0xFF;
+        int rB = (GetPaletteEntry(srcPaletteB, l) >> 16) & 0xFF;
+        int gA = (GetPaletteEntry(srcPaletteA, l) >> 8) & 0xFF;
+        int gB = (GetPaletteEntry(srcPaletteB, l) >> 8) & 0xFF;
+        int bA = (GetPaletteEntry(srcPaletteA, l) >> 0) & 0xFF;
+        int bB = (GetPaletteEntry(srcPaletteB, l) >> 0) & 0xFF;
+        
+        *dst = RGB888_TO_RGB565((byte)((ushort)(rB * blendAmount + blendA * rA) >> 8),
+                                (byte)((ushort)(gB * blendAmount + blendA * gA) >> 8),
+                                (byte)((ushort)(bB * blendAmount + blendA * bA) >> 8));
 
         ++dst;
     }
@@ -92,7 +97,7 @@ void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int alpha, int
         int b = alpha * coloursB[0] + alpha2 * coloursA[0];
         coloursA += 4;
         coloursB += 4;
-        *palettePtr = rIndexes[(r >> 8) & 0xFF] | gIndexes[(g >> 8) & 0xFF] | bIndexes[(b >> 8) & 0xFF];
+        *palettePtr = RGB888_TO_RGB565((byte)(r >> 8), (byte)(g >> 8), (byte)(b >> 8));
         ++palettePtr;
     }
 }

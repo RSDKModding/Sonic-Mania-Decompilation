@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCPZShutter : Object{
+struct ObjectCPZShutter : Object {
 
 };
 

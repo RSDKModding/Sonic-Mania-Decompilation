@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCutsceneSeq : Object{
+struct ObjectCutsceneSeq : Object {
 
 };
 

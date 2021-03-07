@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleLogo : Object{
+struct ObjectTitleLogo : Object {
 
 };
 

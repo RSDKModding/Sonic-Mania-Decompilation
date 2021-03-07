@@ -5,7 +5,14 @@
 
 // Object Class
 struct ObjectLRZ1Setup : Object {
-
+    int value1;
+    int value2;
+    bool32 value3;
+    bool32 value4;
+    bool32 value5;
+    bool32 value6;
+    int value7[32]; //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    int value8[32]; //= { -2, -2, -2, 0, -2, 0, -4, -2, 0, -4, -4, -1, 0, 0, -3, -4, -4, -1, -4, -4, -3, -4, -1, 0, 0, 0, -3, -1, -1, -1, -2, 0 };
 };
 
 // Entity Class

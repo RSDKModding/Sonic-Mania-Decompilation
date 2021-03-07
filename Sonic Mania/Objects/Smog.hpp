@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSmog : Object{
+struct ObjectSmog : Object {
 
 };
 

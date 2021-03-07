@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIKeyBinder : Object{
+struct ObjectUIKeyBinder : Object {
 
 };
 

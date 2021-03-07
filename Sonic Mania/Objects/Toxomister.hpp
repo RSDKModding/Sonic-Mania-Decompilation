@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectToxomister : Object{
+struct ObjectToxomister : Object {
 
 };
 

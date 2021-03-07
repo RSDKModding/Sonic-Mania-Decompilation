@@ -57,7 +57,7 @@ inline ushort GetSFX(const char* sfxName) {
     GEN_HASH(sfxName, hash);
 
     for (int s = 0; s < SFX_COUNT; ++s) {
-        if (HASH_MATCH(sfxList[s].hash, sfxName))
+        if (HASH_MATCH(sfxList[s].hash, hash))
             return s;
     }
 

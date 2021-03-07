@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTVVan : Object{
+struct ObjectTVVan : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEscapeCar : Object{
+struct ObjectEscapeCar : Object {
 
 };
 

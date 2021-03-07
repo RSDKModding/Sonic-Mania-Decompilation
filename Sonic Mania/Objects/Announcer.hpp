@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAnnouncer : Object{
+struct ObjectAnnouncer : Object {
 
 };
 

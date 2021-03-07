@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUILeaderboard : Object{
+struct ObjectUILeaderboard : Object {
 
 };
 

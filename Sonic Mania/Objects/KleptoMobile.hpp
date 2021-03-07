@@ -4,8 +4,21 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectKleptoMobile : Object{
-
+struct ObjectKleptoMobile : Object {
+    int value1[29]; //= { 4, 0, 0, -131072, -163840, 1, 0, -131072, -163840, 2, 0, 131072, -131072, 3, 0, 163840, -131072, 4, 0, -65536, -65536, 5, 0, 65536, -65536, 6, 0, -32768, -65536 };
+    int value2;
+    int value3;
+    int value4;
+    int value5;
+    int value6;
+    ushort value7;
+    ushort value8;
+    ushort value9;
+    ushort value10;
+    ushort value11;
+    ushort value12;
+    ushort value13;
+    byte value14;
 };
 
 // Entity Class

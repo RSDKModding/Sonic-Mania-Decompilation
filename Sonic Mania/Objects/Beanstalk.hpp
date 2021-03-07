@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBeanstalk : Object{
+struct ObjectBeanstalk : Object {
 
 };
 

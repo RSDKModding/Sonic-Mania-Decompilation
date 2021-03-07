@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRotatingStair : Object{
+struct ObjectRotatingStair : Object {
 
 };
 

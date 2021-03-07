@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSwingRope : Object{
+struct ObjectSwingRope : Object {
 
 };
 

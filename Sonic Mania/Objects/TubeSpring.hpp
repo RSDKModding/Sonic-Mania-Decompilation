@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTubeSpring : Object{
+struct ObjectTubeSpring : Object {
 
 };
 

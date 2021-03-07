@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTornadoPath : Object{
+struct ObjectTornadoPath : Object {
 
 };
 

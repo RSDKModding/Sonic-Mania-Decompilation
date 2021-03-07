@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlayerProbe : Object{
+struct ObjectPlayerProbe : Object {
     ushort spriteIndex;
 };
 

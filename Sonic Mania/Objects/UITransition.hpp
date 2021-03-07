@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUITransition : Object{
+struct ObjectUITransition : Object {
 
 };
 

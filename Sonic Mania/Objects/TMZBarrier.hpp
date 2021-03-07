@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTMZBarrier : Object{
+struct ObjectTMZBarrier : Object {
 
 };
 

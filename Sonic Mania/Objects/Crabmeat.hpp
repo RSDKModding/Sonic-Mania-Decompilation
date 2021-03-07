@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCrabmeat : Object{
+struct ObjectCrabmeat : Object {
 
 };
 

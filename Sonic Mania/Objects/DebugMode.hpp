@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDebugMode : Object{
+struct ObjectDebugMode : Object {
     short objectIDs[0x100];
     void (*draw[0x100])();
     void (*spawn[0x100])();

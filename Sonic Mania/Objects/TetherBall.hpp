@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTetherBall : Object{
+struct ObjectTetherBall : Object {
 
 };
 

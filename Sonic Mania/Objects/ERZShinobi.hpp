@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectERZShinobi : Object{
+struct ObjectERZShinobi : Object {
 
 };
 

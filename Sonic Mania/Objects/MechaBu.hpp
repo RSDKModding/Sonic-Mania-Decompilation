@@ -4,8 +4,13 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMechaBu : Object{
-
+struct ObjectMechaBu : Object {
+    int value1[10]; //= { -1376256, -983040, -1507328, -917504, -1638400, -655360, -1703936, -327680, -1703936, -262144 };
+    colour value2;
+    colour value3;
+    ushort value4;
+    ushort value5;
+    ushort value6;
 };
 
 // Entity Class

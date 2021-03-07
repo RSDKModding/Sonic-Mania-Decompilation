@@ -178,7 +178,7 @@ void Shield_State_Lightning()
         entity->position.y = entity->player->position.y;
     }
 
-    EntityDebris *debris = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    EntityDebris *debris = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, (void*)Debris_State_LightningSpark, entity->position.x, entity->position.y);
     debris->timer        = 22;
     debris->velocity.x   = -0x20000;
     debris->velocity.y   = -0x20000;
@@ -190,7 +190,7 @@ void Shield_State_Lightning()
         debris->scale.y = entity->scale.y;
     }
 
-    debris             = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris             = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, (void*)Debris_State_LightningSpark, entity->position.x, entity->position.y);
     debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = -0x20000;
@@ -202,7 +202,7 @@ void Shield_State_Lightning()
         debris->scale.y = entity->scale.y;
     }
 
-    debris             = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris             = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, (void*)Debris_State_LightningSpark, entity->position.x, entity->position.y);
     debris->timer      = 22;
     debris->velocity.x = -0x20000;
     debris->velocity.y = 0x20000;
@@ -214,7 +214,7 @@ void Shield_State_Lightning()
         debris->scale.y = entity->scale.y;
     }
 
-    debris             = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris             = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, (void*)Debris_State_LightningSpark, entity->position.x, entity->position.y);
     debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = 0x20000;

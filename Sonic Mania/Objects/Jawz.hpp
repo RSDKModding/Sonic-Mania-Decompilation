@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJawz : Object{
+struct ObjectJawz : Object {
 
 };
 

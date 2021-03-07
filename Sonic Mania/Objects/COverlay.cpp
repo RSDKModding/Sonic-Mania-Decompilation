@@ -74,7 +74,6 @@ void COverlay_DrawTile()
     EntityPlayer *player   = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     int tx                 = 0;
     for (int x = 0; x < 0x10; ++x) {
-        int y    = 0;
         int ty   = -1;
         int th2  = -1;
         int ty2  = -1;

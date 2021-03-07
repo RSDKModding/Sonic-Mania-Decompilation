@@ -16,7 +16,7 @@ extern bool32 engineDebugMode;
 extern char outputString[0x400];
 
 void printLog(SeverityModes severity, const char *message, ...);
-inline void printConsole(const char *message) { printf(message); }
+inline void printConsole(const char *message) { printf("%s", message); }
 
 inline void printString(SeverityModes severity, const char *message) { printLog(severity, "%s", message); }
 inline void printText(SeverityModes severity, const char *message, TextInfo *text)

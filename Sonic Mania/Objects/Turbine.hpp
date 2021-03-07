@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTurbine : Object{
+struct ObjectTurbine : Object {
 
 };
 

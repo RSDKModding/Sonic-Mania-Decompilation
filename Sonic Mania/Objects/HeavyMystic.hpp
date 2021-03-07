@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectHeavyMystic : Object{
+struct ObjectHeavyMystic : Object {
 
 };
 

@@ -4,8 +4,23 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoBean : Object{
-
+struct ObjectPuyoBean : Object {
+    int value1[5]; //= { 16, 12, 8, 4, 2 };
+    colour value2;
+    int value3;
+    byte value4;
+    bool32 value5;
+    int value6;
+    TextInfo value7;
+    byte value8;
+    int value9;
+    unknown value10;
+    ushort value11;
+    ushort value12;
+    ushort value13;
+    ushort value14;
+    ushort value15;
+    ushort value16;
 };
 
 // Entity Class

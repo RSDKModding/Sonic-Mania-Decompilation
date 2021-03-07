@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSideBarrel : Object{
+struct ObjectSideBarrel : Object {
 
 };
 

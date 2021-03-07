@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRexon : Object{
+struct ObjectRexon : Object {
 
 };
 

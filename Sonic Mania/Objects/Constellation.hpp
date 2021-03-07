@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectConstellation : Object{
+struct ObjectConstellation : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJunctionWheel : Object{
+struct ObjectJunctionWheel : Object {
 
 };
 

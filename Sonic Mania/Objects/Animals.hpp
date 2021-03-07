@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAnimals : Object{
+struct ObjectAnimals : Object {
     int hitboxes[12];
     int gravityStrength[12];
     int yVelocity[12];

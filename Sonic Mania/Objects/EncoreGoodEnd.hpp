@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEncoreGoodEnd : Object{
+struct ObjectEncoreGoodEnd : Object {
 
 };
 

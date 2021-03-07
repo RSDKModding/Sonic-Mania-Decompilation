@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXSpinRay : Object{
+struct ObjectFXSpinRay : Object {
 
 };
 

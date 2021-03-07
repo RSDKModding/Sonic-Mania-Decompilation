@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBouncePlant : Object{
+struct ObjectBouncePlant : Object {
 
 };
 

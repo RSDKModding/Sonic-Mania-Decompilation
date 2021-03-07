@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFarPlane : Object{
+struct ObjectFarPlane : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUISubHeading : Object{
+struct ObjectUISubHeading : Object {
 
 };
 

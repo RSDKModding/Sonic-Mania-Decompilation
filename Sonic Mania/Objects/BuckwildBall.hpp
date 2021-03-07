@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBuckwildBall : Object{
+struct ObjectBuckwildBall : Object {
 
 };
 

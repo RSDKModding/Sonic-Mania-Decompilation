@@ -5,7 +5,13 @@
 
 // Object Class
 struct ObjectPSZ2Setup : Object {
-
+    int value1[8]; //= { 9, 7, 6, 7, 9, 7, 6, 7 };
+    int value2;
+    int value3;
+    byte value4;
+    short value5;
+    ushort value6;
+    ushort value7;
 };
 
 // Entity Class

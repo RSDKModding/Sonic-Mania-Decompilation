@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectInkWipe : Object{
+struct ObjectInkWipe : Object {
     ushort spriteIndex;
 };
 

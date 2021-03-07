@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMSPanel : Object{
+struct ObjectMSPanel : Object {
 
 };
 

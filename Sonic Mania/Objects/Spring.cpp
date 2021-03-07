@@ -117,7 +117,7 @@ void Spring_State_Vertical()
                                                                                  : Player_CheckCollisionPlatform(player, entity, &entity->hitbox);
                 if (col == 1) {
                     int anim = player->playerAnimData.animationID;
-                    if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
+                    if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                         player->storedAnim = player->playerAnimData.animationID;
                     else
                         player->storedAnim = ANI_WALK;
@@ -290,7 +290,7 @@ void Spring_State_Diagonal()
                     if (entity->direction < FLIP_Y) {
                         if (player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
                             int anim = player->playerAnimData.animationID;
-                            if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
+                            if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                                 player->storedAnim = player->playerAnimData.animationID;
                             else
                                 player->storedAnim = ANI_WALK;

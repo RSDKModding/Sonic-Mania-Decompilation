@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSkyTeleporter : Object{
+struct ObjectSkyTeleporter : Object {
 
 };
 

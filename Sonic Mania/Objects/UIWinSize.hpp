@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIWinSize : Object{
+struct ObjectUIWinSize : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectClapperboard : Object{
+struct ObjectClapperboard : Object {
 
 };
 

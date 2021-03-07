@@ -395,9 +395,7 @@ void Music_Unknown7(EntityMusic *entity)
 }
 void Music_Unknown8()
 {
-    bool32 flag = false;
     for (int slot = 40; slot < 48; ++slot) {
-        EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(slot);
         RSDK.DestroyEntity(RSDK.GetEntityByID(slot), 0, 0);
     }
 }

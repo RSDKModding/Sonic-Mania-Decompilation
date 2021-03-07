@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRing : Object{
+struct ObjectRing : Object {
     Hitbox hitbox;
     int pan;
     short spriteIndex;

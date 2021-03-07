@@ -5,7 +5,30 @@
 
 // Object Class
 struct ObjectPSZ1Setup : Object {
-
+    int value1[7]; //= { 64, 2, 1, 2, 2, 6, 2 };
+    int value2[14]; //= { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 };
+    byte value3;
+    int value4;
+    int value5;
+    int value6;
+    int value7;
+    int value8;
+    int value9;
+    int value10;
+    int value11;
+    int value12;
+    int value13;
+    int value14;
+    int value15;
+    int value16;
+    int value17;
+    int value18;
+    int value19;
+    byte value20;
+    byte value21;
+    ushort value22;
+    ushort value23;
+    ushort value24;
 };
 
 // Entity Class

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoIndicator : Object{
+struct ObjectPuyoIndicator : Object {
 
 };
 

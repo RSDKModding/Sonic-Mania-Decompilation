@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVsRoundPicker : Object{
+struct ObjectUIVsRoundPicker : Object {
 
 };
 

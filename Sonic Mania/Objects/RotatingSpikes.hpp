@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRotatingSpikes : Object{
+struct ObjectRotatingSpikes : Object {
 
 };
 

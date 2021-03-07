@@ -4,8 +4,16 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZMissile : Object{
-
+struct ObjectFBZMissile : Object {
+    colour value1;
+    colour value2;
+    colour value3;
+    int value4[8]; //= { 65536, 57344, 73728, 81920, 65536, 57344, 49152, 57344 };
+    int value5;
+    ushort value6;
+    ushort value7;
+    ushort value8;
+    ushort value9;
 };
 
 // Entity Class

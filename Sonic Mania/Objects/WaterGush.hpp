@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWaterGush : Object{
+struct ObjectWaterGush : Object {
 
 };
 

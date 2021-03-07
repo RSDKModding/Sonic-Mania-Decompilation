@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXExpandRing : Object{
+struct ObjectFXExpandRing : Object {
 
 };
 

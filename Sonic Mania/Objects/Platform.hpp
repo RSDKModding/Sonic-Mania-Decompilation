@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPlatform : Object{
+struct ObjectPlatform : Object {
 
 };
 

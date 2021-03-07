@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFirework : Object{
+struct ObjectFirework : Object {
 
 };
 

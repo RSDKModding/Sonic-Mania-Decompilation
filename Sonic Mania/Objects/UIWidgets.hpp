@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIWidgets : Object{
+struct ObjectUIWidgets : Object {
 
 };
 

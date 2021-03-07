@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimePost : Object{
+struct ObjectTimePost : Object {
 
 };
 

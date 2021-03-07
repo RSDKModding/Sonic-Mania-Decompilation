@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSyringe : Object{
+struct ObjectSyringe : Object {
 
 };
 

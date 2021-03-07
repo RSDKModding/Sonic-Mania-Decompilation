@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZEggRobo : Object{
+struct ObjectAIZEggRobo : Object {
 
 };
 

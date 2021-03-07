@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFXWaveRing : Object{
+struct ObjectFXWaveRing : Object {
 
 };
 

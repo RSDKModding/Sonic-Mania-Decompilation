@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBloominator : Object{
+struct ObjectBloominator : Object {
 
 };
 

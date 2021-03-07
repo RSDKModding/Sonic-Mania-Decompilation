@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIReplayCarousel : Object{
+struct ObjectUIReplayCarousel : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectOctus : Object{
+struct ObjectOctus : Object {
 
 };
 

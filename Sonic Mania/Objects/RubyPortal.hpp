@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRubyPortal : Object{
+struct ObjectRubyPortal : Object {
 
 };
 

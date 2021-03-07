@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZFan : Object{
+struct ObjectFBZFan : Object {
 
 };
 

@@ -7,7 +7,7 @@
 #define ImageTrail_trackCount 7
 
 // Object Class
-struct ObjectImageTrail : Object{
+struct ObjectImageTrail : Object {
 	//straight nothin!
 };
 

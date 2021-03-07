@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLocalization : Object{
+struct ObjectLocalization : Object {
 
 };
 

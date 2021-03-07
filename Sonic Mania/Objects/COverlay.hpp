@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCOverlay : Object{
+struct ObjectCOverlay : Object {
     ushort spriteIndex;
 };
 

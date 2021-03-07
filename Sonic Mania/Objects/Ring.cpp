@@ -384,7 +384,7 @@ void Ring_State_Track()
 void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 {
     int flags          = 0;
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    //EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     //int xVel           = entity->velocity.x;
     //int yVel           = entity->velocity.y;
 

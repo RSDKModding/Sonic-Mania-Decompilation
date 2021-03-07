@@ -4,8 +4,18 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMMZSetup : Object{
-
+struct ObjectMMZSetup : Object {
+    int value1;
+    int value2; //= 60;
+    int value3[12]; //= { 9, 4, 4, 2, 2, 2, 9, 4, 4, 2, 2, 2 };
+    byte value4;
+    byte value5;
+    byte value6;
+    byte value7;
+    int value8;
+    int value9;
+    int value10;
+    ushort value11;
 };
 
 // Entity Class

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectZone : Object{
+struct ObjectZone : Object {
     int actID;
     void (*stageFinishCallback)();
     int field_C;

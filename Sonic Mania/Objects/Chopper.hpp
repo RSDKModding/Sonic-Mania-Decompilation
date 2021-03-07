@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectChopper : Object{
+struct ObjectChopper : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikeCorridor : Object{
+struct ObjectSpikeCorridor : Object {
 
 };
 

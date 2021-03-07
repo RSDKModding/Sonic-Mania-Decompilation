@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSignPost : Object{
+struct ObjectSignPost : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEncoreIntro : Object{
+struct ObjectEncoreIntro : Object {
 
 };
 

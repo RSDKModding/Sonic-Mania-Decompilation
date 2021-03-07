@@ -4,8 +4,10 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPullChain : Object{
-
+struct ObjectPullChain : Object {
+    int value1[18]; //= { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 };
+    ushort value2;
+    ushort value3;
 };
 
 // Entity Class

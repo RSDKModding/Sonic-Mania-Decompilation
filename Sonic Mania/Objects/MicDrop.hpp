@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMicDrop : Object{
+struct ObjectMicDrop : Object {
 
 };
 

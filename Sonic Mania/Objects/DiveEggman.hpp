@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDiveEggman : Object{
+struct ObjectDiveEggman : Object {
 
 };
 

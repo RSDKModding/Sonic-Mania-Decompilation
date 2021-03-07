@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlipper : Object{
+struct ObjectFlipper : Object {
 
 };
 

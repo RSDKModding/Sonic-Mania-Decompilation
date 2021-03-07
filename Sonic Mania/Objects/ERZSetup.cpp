@@ -52,7 +52,6 @@ void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
     int a           = 0x1000000;
     int posX        = screen->position.x << 14;
     int sineAngle   = RSDK.Sin256(0);
-    int cnt         = 160;
     int cosineAngle = RSDK.Cos256(0);
     int timer       = ERZSetup->timer;
     for (int i = 160; i > 16; --i) {

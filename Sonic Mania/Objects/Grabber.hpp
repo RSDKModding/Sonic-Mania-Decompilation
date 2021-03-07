@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGrabber : Object{
+struct ObjectGrabber : Object {
 
 };
 

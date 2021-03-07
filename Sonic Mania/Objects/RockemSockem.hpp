@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRockemSockem : Object{
+struct ObjectRockemSockem : Object {
 
 };
 

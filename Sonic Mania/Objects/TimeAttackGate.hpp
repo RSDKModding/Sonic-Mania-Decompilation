@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimeAttackGate : Object{
+struct ObjectTimeAttackGate : Object {
 
 };
 

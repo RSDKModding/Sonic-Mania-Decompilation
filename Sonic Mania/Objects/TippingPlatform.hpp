@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTippingPlatform : Object{
+struct ObjectTippingPlatform : Object {
 
 };
 

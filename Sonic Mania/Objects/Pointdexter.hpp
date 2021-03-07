@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPointdexter : Object{
+struct ObjectPointdexter : Object {
 
 };
 

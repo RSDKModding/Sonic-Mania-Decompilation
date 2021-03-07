@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectReagent : Object{
+struct ObjectReagent : Object {
 
 };
 

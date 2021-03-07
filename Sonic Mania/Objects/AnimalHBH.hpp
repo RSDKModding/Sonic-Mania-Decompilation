@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAnimalHBH : Object{
+struct ObjectAnimalHBH : Object {
     int palID;
     int palCnt;
     ushort animalHBHSprite;

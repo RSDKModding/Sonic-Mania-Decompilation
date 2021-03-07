@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUISaveSlot : Object{
+struct ObjectUISaveSlot : Object {
 
 };
 

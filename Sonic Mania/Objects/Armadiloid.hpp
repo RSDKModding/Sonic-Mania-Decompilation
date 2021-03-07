@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectArmadiloid : Object{
+struct ObjectArmadiloid : Object {
 
 };
 

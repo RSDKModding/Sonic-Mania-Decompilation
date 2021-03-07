@@ -48,7 +48,7 @@ void FXFade_Create(void *data)
         if (!entity->speedOut)
             entity->speedOut = 32;
         if (!entity->color)
-            entity->color = (uint)data;
+            entity->color = (uint)(size_t)data;
         if (!entity->eventOnly) {
             entity->dword80 = 0;
             if (entity->timer <= 0)

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBladePole : Object{
+struct ObjectBladePole : Object {
 
 };
 

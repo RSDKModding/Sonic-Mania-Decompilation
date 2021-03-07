@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLauncher : Object{
+struct ObjectLauncher : Object {
 
 };
 

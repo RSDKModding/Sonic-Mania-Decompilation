@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimeTravelSetup : Object{
+struct ObjectTimeTravelSetup : Object {
 
 };
 

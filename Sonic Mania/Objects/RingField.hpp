@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRingField : Object{
+struct ObjectRingField : Object {
 
 };
 

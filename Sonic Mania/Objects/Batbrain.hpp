@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectBatbrain : Object{
+struct ObjectBatbrain : Object {
 
 };
 

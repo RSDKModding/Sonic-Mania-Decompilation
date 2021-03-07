@@ -4,8 +4,16 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectChemicalPool : Object{
-
+struct ObjectChemicalPool : Object {
+    int value1[4]; //= { 15790320, 15790320, 14737632, 14737632 };
+    ushort value2;
+    int value3;
+    int value4;
+    int value5;
+    ushort value6;
+    ushort value7;
+    ushort value8;
+    ushort value9;
 };
 
 // Entity Class

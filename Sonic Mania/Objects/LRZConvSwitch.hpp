@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZConvSwitch : Object{
+struct ObjectLRZConvSwitch : Object {
 
 };
 

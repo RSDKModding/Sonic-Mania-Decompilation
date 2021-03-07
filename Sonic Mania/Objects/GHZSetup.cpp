@@ -75,9 +75,9 @@ void GHZSetup_StageLoad()
         TileLayer *bg             = RSDK.GetSceneLayer(0);
         bg->scrollPos             = 0x180000;
         bg->parallaxFactor        = -bg->parallaxFactor;
-        BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchB2;
-        BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchB1;
-        if (options->gameMode && options->gameMode != MODE_ENCORE || !options->atlEnabled || Game_CheckStageReload()) {
+        BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchB1;
+        BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchB2;
+        if (!(options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) || !options->atlEnabled || Game_CheckStageReload()) {
             BGSwitch->layerIDs[0] = 0;
             BGSwitch->layerIDs[1] = 0;
             BGSwitch->layerIDs[2] = 0;
@@ -89,7 +89,7 @@ void GHZSetup_StageLoad()
         if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct1())
             Zone->stageFinishCallback = GHZSetup_SetupActTransition;
     }
-    if (RSDK_sceneInfo->filter & 4 || RSDK.CheckStageFolder("GHZCutscene") && options->gameMode == MODE_ENCORE) {
+    if (RSDK_sceneInfo->filter & 4 || (RSDK.CheckStageFolder("GHZCutscene") && options->gameMode == MODE_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 2, 128, 80);
@@ -97,9 +97,9 @@ void GHZSetup_StageLoad()
         RSDK.RotatePalette(2, 197, 200, true);
         if (Water) {
             for (EntityWater *water = 0; RSDK.GetObjects(Water->objectID, (Entity **)&water);) {
-                //water->r = 0xA0u;
-                //water->g = 0xA0u;
-                //water->b = 0xE0u;
+                //water->r = 0xA0;
+                //water->g = 0xA0;
+                //water->b = 0xE0;
             }
         }
     }

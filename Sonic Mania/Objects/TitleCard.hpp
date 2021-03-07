@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleCard : Object{
+struct ObjectTitleCard : Object {
 
 };
 

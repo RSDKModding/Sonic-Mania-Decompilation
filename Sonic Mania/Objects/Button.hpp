@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectButton : Object{
+struct ObjectButton : Object {
 
 };
 

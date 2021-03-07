@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPropellerShaft : Object{
+struct ObjectPropellerShaft : Object {
 
 };
 

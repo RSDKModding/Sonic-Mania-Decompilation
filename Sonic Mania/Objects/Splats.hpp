@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSplats : Object{
+struct ObjectSplats : Object {
 
 };
 

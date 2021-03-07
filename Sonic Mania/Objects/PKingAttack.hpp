@@ -4,8 +4,10 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPKingAttack : Object{
-
+struct ObjectPKingAttack : Object {
+    int value1[8]; //= { 32, 32, 15225048, 15225048, 15225048, 15225048, 32, 32 };
+    ushort value2;
+    ushort value3;
 };
 
 // Entity Class

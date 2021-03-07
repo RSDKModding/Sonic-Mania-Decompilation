@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectWhirlpool : Object{
+struct ObjectWhirlpool : Object {
 
 };
 

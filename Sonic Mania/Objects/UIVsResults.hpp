@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVsResults : Object{
+struct ObjectUIVsResults : Object {
 
 };
 

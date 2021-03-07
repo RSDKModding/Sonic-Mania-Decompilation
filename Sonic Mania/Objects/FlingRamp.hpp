@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFlingRamp : Object{
+struct ObjectFlingRamp : Object {
     Hitbox hitbox;
 };
 

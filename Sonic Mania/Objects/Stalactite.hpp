@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectStalactite : Object{
+struct ObjectStalactite : Object {
 
 };
 

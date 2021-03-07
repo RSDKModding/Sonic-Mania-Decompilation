@@ -4,8 +4,14 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMagnetSphere : Object{
-
+struct ObjectMagnetSphere : Object {
+    colour value1;
+    byte value2;
+    byte value3;
+    int value4[16]; //= { 32, 32, 32, 48, 64, 80, 96, 96, 96, 160, 160, 176, 192, 208, 224, 224 };
+    ushort value5;
+    ushort value6;
+    ushort value7;
 };
 
 // Entity Class

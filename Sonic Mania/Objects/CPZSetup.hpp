@@ -4,8 +4,17 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCPZSetup : Object{
-
+struct ObjectCPZSetup : Object {
+    ushort value1;
+    bool32 value2;
+    int value3[64]; //= { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
+    int value4;
+    int value5;
+    int value6;
+    int value7;
+    int value8;
+    int value9;
+    bool32 value10;
 };
 
 // Entity Class

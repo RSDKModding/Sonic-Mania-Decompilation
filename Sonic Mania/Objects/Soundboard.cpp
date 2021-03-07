@@ -16,7 +16,7 @@ void Soundboard_StaticUpdate()
 {
     for (int s = 0; s < maxVal(Soundboard->sfxCount, 0x20); ++s) {
         int (*checkCallback)(void)  = (int (*)(void))Soundboard->sfxCheckCallback[s];
-        void (*changeCallback)(int) = (void(__cdecl *)(int))Soundboard->sfxChangeCallback[s];
+        void (*changeCallback)(int) = (void(*)(int))Soundboard->sfxChangeCallback[s];
 
         if (checkCallback && RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
             if (checkCallback()) {

@@ -74,7 +74,7 @@ void ItemBox_Create(void *data)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     if (data)
-        entity->type = (int)data;
+        entity->type = (int)(size_t)data;
     if (entity->state != ItemBox_State_Broken) {
         RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->brokenData, true, 0);
         RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &entity->contentsData, true, 0);
@@ -208,7 +208,7 @@ void ItemBox_DebugSpawn()
 
 void ItemBox_State_Broken()
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    //EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     // if (LRZConvItem)
     //    LRZConvItem_Unknown2(entity);
     ItemBox_HandleFallingCollision();
@@ -981,7 +981,7 @@ void ItemBox_HandleObjectCollisions()
             }
         }
         else {
-            EntityPlatform *platform = NULL;
+            //EntityPlatform *platform = NULL;
             /*while (RSDK.GetActiveObjects(Platform->objectID, (Entity**)&platform) == 1) {
                 if (ItemBox_HandlePlatformCollision(platform))
                     flag = true;
@@ -1027,7 +1027,7 @@ void ItemBox_HandleObjectCollisions()
             }
         }
         else {
-            EntityCrate *crate = 0;
+            //EntityCrate *crate = 0;
             /*while (RSDK.GetActiveObjects(Crate->objectID, (Entity**)&crate)) {
                 if (crate[2].updateRange.y != 1 && ItemBox_HandlePlatformCollision((EntityPlatform *)crate))
                     flag = true;
@@ -1037,7 +1037,7 @@ void ItemBox_HandleObjectCollisions()
     if (!flag)
         entity->parent = NULL;
     if (Ice) {
-        EntityIce *ice = 0;
+        //EntityIce *ice = 0;
         /*while (RSDK.GetActiveObjects(Ice->objectID, (Entity**)&ice)) {
             if (ice[1].position.y == Ice_Unknown18) {
                 int storeX = ice->position.x;

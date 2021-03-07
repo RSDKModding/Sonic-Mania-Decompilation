@@ -16,9 +16,9 @@ void AnimalHBH_Update()
         if ((RSDK_controller->keyA.press || RSDK_controller->keyStart.press))
             entity->timer = 1400;
         if (entity->timer == 1400) {
-            EntityFXFade *fxFade = (EntityFXFade *)RSDK.SpawnEntity(FXFade->objectID, 0, entity->position.x, entity->position.y);
-            //fxFade->speedIn = 12;
-            //fxFade->wait    = 240;
+            EntityFXFade *fxFade = (EntityFXFade *)RSDK.SpawnEntity(FXFade->objectID, NULL, entity->position.x, entity->position.y);
+            fxFade->speedIn = 12;
+            fxFade->wait    = 240;
         }
         if (entity->timer == 1536) {
             RSDK.LoadScene("Presentation", "Menu");

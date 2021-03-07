@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIMedallionPanel : Object{
+struct ObjectUIMedallionPanel : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMagSpikeBall : Object{
+struct ObjectMagSpikeBall : Object {
 
 };
 

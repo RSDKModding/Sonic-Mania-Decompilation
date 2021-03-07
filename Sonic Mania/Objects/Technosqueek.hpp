@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTechnosqueek : Object{
+struct ObjectTechnosqueek : Object {
 
 };
 

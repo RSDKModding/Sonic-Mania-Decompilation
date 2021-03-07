@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGenericTrigger : Object{
+struct ObjectGenericTrigger : Object {
 
 };
 

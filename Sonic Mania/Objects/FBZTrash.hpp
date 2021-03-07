@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectFBZTrash : Object{
+struct ObjectFBZTrash : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectContinueSetup : Object{
+struct ObjectContinueSetup : Object {
 
 };
 

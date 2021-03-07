@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectERZSetup : Object{
+struct ObjectERZSetup : Object {
     int aniTileTimer;
     int timer;
     ushort skySheet;

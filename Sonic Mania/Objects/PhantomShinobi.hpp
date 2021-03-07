@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomShinobi : Object{
+struct ObjectPhantomShinobi : Object {
 
 };
 

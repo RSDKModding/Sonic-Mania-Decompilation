@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectStarPost : Object{
+struct ObjectStarPost : Object {
     Hitbox hitbox;
     bool32 hasAchievement;
     Vector2 playerPositions[4];

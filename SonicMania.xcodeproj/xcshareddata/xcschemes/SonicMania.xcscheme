@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C96881E725DF3C5800BEE4B8"
-               BuildableName = "libSonicMania.dylib"
+               BuildableName = "Game.dylib"
                BlueprintName = "SonicMania"
                ReferencedContainer = "container:SonicMania.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C96881E725DF3C5800BEE4B8"
-            BuildableName = "libSonicMania.dylib"
+            BuildableName = "Game.dylib"
             BlueprintName = "SonicMania"
             ReferencedContainer = "container:SonicMania.xcodeproj">
          </BuildableReference>

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIButtonLabel : Object{
+struct ObjectUIButtonLabel : Object {
 
 };
 

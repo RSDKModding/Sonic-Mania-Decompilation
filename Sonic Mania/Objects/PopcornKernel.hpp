@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPopcornKernel : Object{
+struct ObjectPopcornKernel : Object {
 
 };
 

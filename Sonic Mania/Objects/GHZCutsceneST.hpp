@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGHZCutsceneST : Object{
+struct ObjectGHZCutsceneST : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLRZRockPile : Object{
+struct ObjectLRZRockPile : Object {
 
 };
 

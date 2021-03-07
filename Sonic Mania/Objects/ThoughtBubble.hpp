@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectThoughtBubble : Object{
+struct ObjectThoughtBubble : Object {
 
 };
 

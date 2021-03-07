@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUISlider : Object{
+struct ObjectUISlider : Object {
 
 };
 

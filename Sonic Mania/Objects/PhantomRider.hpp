@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomRider : Object{
+struct ObjectPhantomRider : Object {
 
 };
 

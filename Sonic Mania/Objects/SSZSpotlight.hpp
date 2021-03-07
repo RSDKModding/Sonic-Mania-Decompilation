@@ -4,8 +4,12 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSSZSpotlight : Object{
-
+struct ObjectSSZSpotlight : Object {
+    int value1[8]; //= { 32, 32, 4247680, 4247680, 4247680, 4247680, 32, 32 };
+    int value2[8]; //= { 32, 32, 15225048, 15225048, 15225048, 15225048, 32, 32 };
+    int value3[8]; //= { 32, 32, 13637704, 13637704, 13637704, 13637704, 32, 32 };
+    int value4[8]; //= { 32, 32, 13676568, 13676568, 13676568, 13676568, 32, 32 };
+    ushort value5;
 };
 
 // Entity Class

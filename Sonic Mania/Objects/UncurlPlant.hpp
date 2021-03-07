@@ -4,8 +4,12 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUncurlPlant : Object{
-
+struct ObjectUncurlPlant : Object {
+    colour value1;
+    int value2[8]; //= { 0, 16, 64, 96, 112, 144, 160, 192 };
+    int value3[8]; //= { 0, -8, 32, 64, 64, 64, 64, 64 };
+    int value4[8]; //= { 0, -24, 8, 8, 8, 8, 8, 8 };
+    ushort value5;
 };
 
 // Entity Class

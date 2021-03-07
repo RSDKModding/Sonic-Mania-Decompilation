@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectValve : Object{
+struct ObjectValve : Object {
 
 };
 

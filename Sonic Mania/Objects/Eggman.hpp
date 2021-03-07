@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectEggman : Object{
+struct ObjectEggman : Object {
 
 };
 

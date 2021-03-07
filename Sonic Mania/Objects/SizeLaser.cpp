@@ -30,7 +30,7 @@ void SizeLaser_Create(void* data)
     EntitySizeLaser *entity             = (EntitySizeLaser *)RSDK_sceneInfo->entity;
     RSDK_sceneInfo->entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
-        int type              = (int)data;
+        int type              = (int)(size_t)data;
         entity->visible       = true;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -118,7 +118,7 @@ void SizeLaser_StageLoad()
     SizeLaser->sfx_Shrink2   = RSDK.GetSFX("MMZ/Shrink2.wav");
     SizeLaser->sfx_Grow2     = RSDK.GetSFX("MMZ/Grow2.wav");
 
-    Soundboard_LoadSFX("MMZ/SizeLaser.wav", 1, SizeLaser_SizeChangeSFXCheck, NULL);
+    Soundboard_LoadSFX("MMZ/SizeLaser.wav", 1, (void*)SizeLaser_SizeChangeSFXCheck, NULL);
 }
 
 bool32 SizeLaser_SizeChangeSFXCheck()

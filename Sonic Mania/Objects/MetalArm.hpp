@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMetalArm : Object{
+struct ObjectMetalArm : Object {
 
 };
 

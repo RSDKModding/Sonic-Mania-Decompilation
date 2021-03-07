@@ -5,7 +5,11 @@
 
 // Object Class
 struct ObjectUFO_Sphere : Object {
-
+    int value1;
+    int value2[4]; //= { 12, 12, 16, 16 };
+    ushort value3;
+    ushort value4;
+    ushort value5;
 };
 
 // Entity Class

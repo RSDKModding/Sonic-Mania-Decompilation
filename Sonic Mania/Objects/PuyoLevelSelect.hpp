@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPuyoLevelSelect : Object{
+struct ObjectPuyoLevelSelect : Object {
 
 };
 

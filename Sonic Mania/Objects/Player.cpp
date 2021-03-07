@@ -396,8 +396,8 @@ void Player_Draw()
         entity->inkEffect = INK_BLEND;
         entity->alpha     = 0x7F;
     }
-    Vector2 *posPtr  = (Vector2 *)entity->field_214;
-    Vector2 posStore = entity->position;
+    //Vector2 *posPtr  = (Vector2 *)entity->field_214;
+    //Vector2 posStore = entity->position;
     // if (entity->state == Player_State_FlyIn && posPtr) {
     //    entity->position.x = posPtr->x;
     //    entity->position.y = posPtr->y;
@@ -1415,7 +1415,7 @@ bool32 Player_CheckHit2(EntityPlayer *player, Entity *entity, bool32 flag)
             player->velocity.y += 0x10000;
             return true;
         }
-        else if (player->position.y >= entity->position.y || (player->characterID & 0xFF) == ID_MIGHTY && anim == ID_RAY) {
+        else if (player->position.y >= entity->position.y || ((player->characterID & 0xFF) == ID_MIGHTY && anim == ANI_DROPDASH)) {
             player->velocity.y -= 0x10000;
             return true;
         }
@@ -2102,7 +2102,7 @@ void Player_State_Ground()
     entity->nextAirState = Player_State_Air;
     if (entity->skidding <= 0) {
         if (entity->pushing > -3 && entity->pushing < 3) {
-            if (entity->groundVel || entity->angle >= 32 && entity->angle <= 224 && !entity->flipY) {
+            if (entity->groundVel || (entity->angle >= 32 && entity->angle <= 224 && !entity->flipY)) {
                 entity->timer          = 0;
                 entity->outtaHereTimer = 0;
                 if (abs(entity->groundVel) >= entity->maxWalkSpeed) {
@@ -2172,7 +2172,7 @@ void Player_State_Ground()
                 switch (entity->flailing - 1) {
                     case 0:
                     case 2:
-                        if (entity->direction == FLIP_X || entity->characterID == ID_SONIC && entity->superState == 2 || entity->isChibi) {
+                        if (entity->direction == FLIP_X || (entity->characterID == ID_SONIC && entity->superState == 2) || entity->isChibi) {
                             entity->direction = FLIP_X;
                             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimData, 0, 0);
                         }
@@ -2348,7 +2348,7 @@ void Player_State_Ground()
             }
         }
         else {
-            if (entity->angle < 32 || entity->angle > 224 && !entity->collisionMode || entity->flipY && entity->angle == 128) {
+            if (entity->angle < 32 || entity->angle > 224 && (!entity->collisionMode || entity->flipY) && entity->angle == 128) {
                 if (entity->up) {
                     RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_LOOKUP, &entity->playerAnimData, true, 1);
                     entity->timer = 0;
@@ -3054,7 +3054,7 @@ void Player_SonicJumpAbility()
     entity               = (EntityPlayer *)RSDK_sceneInfo->entity;
     bool flag            = false;
     if (entity->jumpAbilityTimer == 1) {
-        if (entity->inputState != Player_GetP2Inputs || entity->up && options->gameMode != MODE_ENCORE) {
+        if (entity->inputState != Player_GetP2Inputs || (entity->up && options->gameMode != MODE_ENCORE)) {
             if (entity->jumpPress) {
                 int id               = RSDK.GetEntityID(entity);
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
@@ -3147,8 +3147,8 @@ void Player_SonicJumpAbility()
 void Player_TailsJumpAbility()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
-    if (!entity->jumpPress || !entity->jumpAbilityTimer
-        || entity->inputState == Player_GetP2Inputs && (!entity->up || options->gameMode == MODE_ENCORE)) {
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer
+         || entity->inputState == Player_GetP2Inputs) && (!entity->up || options->gameMode == MODE_ENCORE)) {
         if (RSDK_controller[entity->controllerID].keyY.press)
            Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
     }
@@ -3168,8 +3168,8 @@ void Player_TailsJumpAbility()
 void Player_KnuxJumpAbility()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
-    if (!entity->jumpPress || !entity->jumpAbilityTimer
-        || entity->inputState == Player_GetP2Inputs && (!entity->up || options->gameMode == MODE_ENCORE)) {
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer
+         || entity->inputState == Player_GetP2Inputs) && (!entity->up || options->gameMode == MODE_ENCORE)) {
         if (RSDK_controller[entity->controllerID].keyY.press)
            Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
     }
@@ -3197,8 +3197,8 @@ void Player_MightyJumpAbility()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
     if (entity->jumpAbilityTimer <= 1) {
-        if (!entity->jumpPress || !entity->jumpAbilityTimer
-            || entity->inputState == Player_GetP2Inputs && (!entity->up || options->gameMode == MODE_ENCORE)) {
+        if ((!entity->jumpPress || !entity->jumpAbilityTimer
+             || entity->inputState == Player_GetP2Inputs) && (!entity->up || options->gameMode == MODE_ENCORE)) {
             if (RSDK_controller[entity->controllerID].keyY.press)
                Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
         }
@@ -3233,8 +3233,8 @@ void Player_MightyJumpAbility()
 void Player_RayJumpAbility()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
-    if (!entity->jumpPress || !entity->jumpAbilityTimer
-        || entity->inputState == Player_GetP2Inputs && (!entity->up || options->gameMode == MODE_ENCORE)) {
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer
+         || entity->inputState == Player_GetP2Inputs) && (!entity->up || options->gameMode == MODE_ENCORE)) {
         if (RSDK_controller[entity->controllerID].keyY.press)
            Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
     }

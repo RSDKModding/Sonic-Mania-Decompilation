@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectManiaModeMenu : Object{
+struct ObjectManiaModeMenu : Object {
 
 };
 

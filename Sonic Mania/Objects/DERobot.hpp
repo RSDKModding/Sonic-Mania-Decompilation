@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDERobot : Object{
+struct ObjectDERobot : Object {
 
 };
 

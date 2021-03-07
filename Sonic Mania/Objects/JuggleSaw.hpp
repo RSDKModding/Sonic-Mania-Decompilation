@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectJuggleSaw : Object{
+struct ObjectJuggleSaw : Object {
 
 };
 

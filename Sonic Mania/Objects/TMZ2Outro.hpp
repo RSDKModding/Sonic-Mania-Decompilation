@@ -5,7 +5,17 @@
 
 // Object Class
 struct ObjectTMZ2Outro : Object {
-
+    uint value1[7]; //= { 4194664, 7340408, 9437576, 12059016, 15729048, 15753392, 15769800 };
+    ushort value2;
+    ushort value3;
+    ushort value4;
+    ushort value5;
+    ushort value6;
+    ushort value7;
+    ushort value8;
+    ushort value9;
+    byte value10;
+    int value11;
 };
 
 // Entity Class

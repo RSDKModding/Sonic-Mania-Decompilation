@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIResPicker : Object{
+struct ObjectUIResPicker : Object {
 
 };
 

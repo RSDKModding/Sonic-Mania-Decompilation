@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectERZKing : Object{
+struct ObjectERZKing : Object {
 
 };
 

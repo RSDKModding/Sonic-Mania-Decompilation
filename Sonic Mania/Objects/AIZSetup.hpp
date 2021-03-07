@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAIZSetup : Object{
+struct ObjectAIZSetup : Object {
 
 };
 

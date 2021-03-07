@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTubinaut : Object{
+struct ObjectTubinaut : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectDragonfly : Object{
+struct ObjectDragonfly : Object {
 
 };
 

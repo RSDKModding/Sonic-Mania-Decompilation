@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPinata : Object{
+struct ObjectPinata : Object {
 
 };
 

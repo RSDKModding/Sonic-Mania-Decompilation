@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTitleSetup : Object{
+struct ObjectTitleSetup : Object {
 
 };
 

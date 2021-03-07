@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLightBarrier : Object{
+struct ObjectLightBarrier : Object {
 
 };
 

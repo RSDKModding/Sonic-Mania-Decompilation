@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectCableWarp : Object{
+struct ObjectCableWarp : Object {
 
 };
 

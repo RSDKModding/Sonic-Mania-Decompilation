@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectForceUnstick : Object{
+struct ObjectForceUnstick : Object {
 
 };
 

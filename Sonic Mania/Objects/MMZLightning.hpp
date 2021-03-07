@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectMMZLightning : Object{
+struct ObjectMMZLightning : Object {
 
 };
 

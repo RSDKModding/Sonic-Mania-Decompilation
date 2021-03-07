@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectLavaFall : Object{
+struct ObjectLavaFall : Object {
 
 };
 

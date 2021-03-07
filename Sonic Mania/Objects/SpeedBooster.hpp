@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpeedBooster : Object{
+struct ObjectSpeedBooster : Object {
 
 };
 

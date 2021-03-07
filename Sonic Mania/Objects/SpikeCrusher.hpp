@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSpikeCrusher : Object{
+struct ObjectSpikeCrusher : Object {
 
 };
 

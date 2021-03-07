@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectRPlaneShifter : Object{
+struct ObjectRPlaneShifter : Object {
 
 };
 

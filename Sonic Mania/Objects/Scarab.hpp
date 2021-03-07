@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectScarab : Object{
+struct ObjectScarab : Object {
 
 };
 

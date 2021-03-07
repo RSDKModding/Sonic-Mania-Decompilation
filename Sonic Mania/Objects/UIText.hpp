@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIText : Object{
+struct ObjectUIText : Object {
 
 };
 

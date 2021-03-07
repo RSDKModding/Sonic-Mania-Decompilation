@@ -54,7 +54,7 @@ void Camera_Draw()
 
 void Camera_Create(void* data)
 {
-    int screen           = (int)data;
+    int screen           = (int)(size_t)data;
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     entity->field_8C = 0x80000;
     entity->field_98 = 104;
@@ -84,7 +84,7 @@ void Camera_Create(void* data)
 void Camera_StageLoad()
 {
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_C); ++i) RSDK.ResetEntity(i + SLOT_CAMERA1, Camera->objectID, (void *)i);
+        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_C); ++i) RSDK.ResetEntity(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;
     }

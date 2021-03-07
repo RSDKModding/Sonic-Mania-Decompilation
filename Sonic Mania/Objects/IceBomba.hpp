@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectIceBomba : Object{
+struct ObjectIceBomba : Object {
 
 };
 

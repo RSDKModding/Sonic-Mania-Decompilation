@@ -92,7 +92,8 @@ void FXRuby_Unknown2()
 
              int *deformData = layer->deformationData;
              if (id) {
-                 int offset  = id - (int)deformData;
+                 //TODO: fix this lol
+                 int offset  = id - (int)(size_t)deformData;
                  for (int s = 0; s < 0x200; ++s) {
                      int val           = *(int *)((char *)deformData + offset);
                      *deformData       = val;

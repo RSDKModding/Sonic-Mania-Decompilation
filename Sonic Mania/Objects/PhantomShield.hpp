@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectPhantomShield : Object{
+struct ObjectPhantomShield : Object {
 
 };
 

@@ -4,8 +4,10 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectSummary : Object{
-
+struct ObjectSummary : Object {
+    int value1; //= 240;
+    int value2;
+    int value3[4]; //= { 240, 3, 3, 3 };
 };
 
 // Entity Class

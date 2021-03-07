@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectGameOver : Object{
+struct ObjectGameOver : Object {
 
 };
 

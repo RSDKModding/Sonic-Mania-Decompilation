@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectShiversaw : Object{
+struct ObjectShiversaw : Object {
 
 };
 

@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIVsScoreboard : Object{
+struct ObjectUIVsScoreboard : Object {
 
 };
 

@@ -4,8 +4,10 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectUIBackground : Object{
-
+struct ObjectUIBackground : Object {
+    uint value1[21]; //= { 15779840, 15764504, 8429744, 5298336, 15765528, 3715272, 3715272, 15757352, 5298336, 13121640, 5298336, 15765528, 12632216, 3715272, 8954040, 11030768, 8964097, 110832, 5288088, 561352, 15249424 };
+    bool32 value2;
+    ushort value3;
 };
 
 // Entity Class
