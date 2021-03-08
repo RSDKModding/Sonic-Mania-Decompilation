@@ -4,6 +4,8 @@
 #define maxVal(a, b) (a >= b ? a : b)
 #define minVal(a, b) (a <= b ? a : b)
 
+#define voidToInt(x) (size_t)(x)
+
 // Userdata Table
 struct UserFunctionTable {
     void (*Unknown1)(void);
@@ -74,7 +76,9 @@ struct RSDKFunctionTable {
     void (*CreateObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                          void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
+#if RETRO_USE_PLUS
     void (*CreateObjectContainer)(Object **structPtr, const char *name, uint objectSize);
+#endif
     bool32 (*GetActiveObjects)(ushort group, Entity **entity);
     bool32 (*GetObjects)(ushort type, Entity **entity);
     void (*NextForEachLoop)(void);
@@ -95,13 +99,18 @@ struct RSDKFunctionTable {
     void (*SetDrawLayerProperties)(byte layer, bool32 active, void (*initDrawPtr)(void));
     void (*LoadScene)(const char* categoryName, const char* sceneName);
     void (*SetGameMode)(byte mode);
-    void (*SetHardResetFlag)(bool set);
+#if RETRO_USE_PLUS
+    void (*SetHardResetFlag)(bool32 set);
+#endif
     void (*CheckValidScene)(void);
     int (*CheckStageFolder)(const char *folderName);
     int (*InitSceneLoad)(void);
     int (*GetObjectIDByName)(const char* name);
     void (*ClearScreens)(void);
     void (*AddScreen)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);
+#if !RETRO_USE_PLUS
+    void *(*GetFuncPtr)(const char *funcName);
+#endif
     int (*GetSettingsValue)(int id);
     void (*SetSettingsValue)(int id, int val);
     void (*UpdateWindow)(void);
@@ -147,7 +156,9 @@ struct RSDKFunctionTable {
     void (*Unknown71)(void);
     int (*SetScreenSize)(void *, void *, void *, void *, void *);
     void (*SetClipBounds)(byte screenID, int x1, int y1, int x2, int y2);
+#if RETRO_USE_PLUS
     void (*SetScreenUnknown)(byte, byte, byte, byte, byte);
+#endif
     short (*LoadSpriteSheet)(const char *path, Scopes scope);
     void (*SetLookupTable)(ushort *tablePtr);
     void (*SetPaletteMask)(uint maskColour);
@@ -155,10 +166,14 @@ struct RSDKFunctionTable {
     uint (*GetPaletteEntry)(byte paletteID, byte index);
     void (*SetActivePalette)(byte newActivePal, int startLine, int endLine);
     void (*CopyPalette)(byte sourcePalette, byte srcPaletteStart, byte destinationPalette, byte destPaletteStart, ushort count);
+#if RETRO_USE_PLUS
     void (*LoadPalette)(byte bank, const char *path, ushort rowFlags);
+#endif
     void (*RotatePalette)(byte palID, byte startIndex, byte endIndex, bool right);
     void (*SetLimitedFade)(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
+#if RETRO_USE_PLUS
     void (*BlendColours)(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
+#endif
     void (*DrawRect)(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawLine)(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawCircle)(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
@@ -229,6 +244,7 @@ struct RSDKFunctionTable {
     bool32 (*TrackPlaying)(byte slot);
     void (*LoadVideo)(const char *filename, int64 a2, int (*a3)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
+#if RETRO_USE_PLUS
     void (*Unknown98)(int a1, int a2, uint a3);
     void (*Unknown99)(int a1, int a2, uint a3);
     void (*Unknown100)(int a1);
@@ -239,26 +255,39 @@ struct RSDKFunctionTable {
     void (*Missing24)(void);
     void (*Missing25)(byte a1, int a2, int a3);
     void (*Missing26)(byte a1, int a2, int a3);
-    void (*Unknown102)(byte a1, int a2);
+    void (*AssignControllerID)(byte a1, int a2);
     void (*Unknown103)(byte a1);
     void (*Unknown104)(void);
+#endif
+#if !RETRO_USE_PLUS
+    void (*Unknown92)(int a1, int a2, int *a3);
+#endif
     void (*LoadUserFile)(const char *filename, void *buffer, int filesize);
     void (*SaveUserFile)(const char *fileName, void *buffer, uint size);
+#if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
-    void (*printText)(SeverityModes severity, const char *message, TextInfo *text);
-    void (*printIntegerUnsigned)(SeverityModes severity, const char *message, uint integer);
+    void (*PrintText)(SeverityModes severity, const char *message, TextInfo *text);
+    void (*PrintIntegerUnsigned)(SeverityModes severity, const char *message, uint integer);
     void (*PrintInteger)(SeverityModes severity, const char *message, int integer);
-    void (*printFloat)(SeverityModes severity, const char *message, float f);
-    void (*printVector2)(SeverityModes severity, const char *message, int x, int y);
-    void (*printHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
+    void (*PrintFloat)(SeverityModes severity, const char *message, float f);
+    void (*PrintVector2)(SeverityModes severity, const char *message, int x, int y);
+    void (*PrintHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
+#endif
     void (*Unknown105)(void);
     void (*Unknown106)(void);
+#if RETRO_USE_PLUS
     void (*ClearDebugValues)(void);
     void (*SetDebugValue)(const char *name, void *valPtr, int type, int unknown1, int unknown2);
+#endif
+#if !RETRO_USE_PLUS
+    void (*PrintMessage)(void *message, byte type);
+#endif
 };
 
+#if RETRO_USE_PLUS
 extern UserFunctionTable User;
+#endif
 extern RSDKFunctionTable RSDK;
 
 #include "Objects/ActClear.hpp"
@@ -273,6 +302,9 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/AnimalHBH.hpp"
 #include "Objects/Animals.hpp"
 #include "Objects/Announcer.hpp"
+#if !RETRO_USE_PLUS
+#include "Objects/APICallback.hpp"
+#endif
 #include "Objects/Aquis.hpp"
 #include "Objects/Armadiloid.hpp"
 #include "Objects/BallCannon.hpp"
@@ -844,6 +876,10 @@ extern RSDKFunctionTable RSDK;
 
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
+#define RSDK_ADD_OBJECT(object)                                                                                                                      \
+    RSDK.CreateObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), ##object##_Update, ##object##_LateUpdate,             \
+                      ##object##_StaticUpdate, ##object##_Draw, ##object##_Create, ##object##_StageLoad, ##object##_EditorDraw, ##object##_EditorLoad,           \
+                      ##object##_Serialize)
 
 extern "C" {
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);

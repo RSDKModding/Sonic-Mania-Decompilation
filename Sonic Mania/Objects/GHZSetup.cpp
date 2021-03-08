@@ -63,12 +63,20 @@ void GHZSetup_StageLoad()
         BGSwitch->layerIDs[0]     = 0;
         BGSwitch->layerIDs[1]     = 0;
         BGSwitch->layerIDs[2]     = 0;
-        BGSwitch->layerIDs[3]     = 0;
+        BGSwitch->layerIDs[3]       = 0;
+#if RETRO_USE_PLUS
         if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && options->atlEnabled) {
+#else
+        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && options->atlEnabled) {
+#endif
             if (!Game_CheckStageReload())
                 GHZSetup_HandleActTransition();
         }
+#if RETRO_USE_PLUS
         if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct2())
+#else
+        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && Game_CheckAct2())
+#endif
             Zone->stageFinishCallback = GHZSetup_SpawnGHZ2Outro;
     }
     else {
@@ -77,7 +85,11 @@ void GHZSetup_StageLoad()
         bg->parallaxFactor        = -bg->parallaxFactor;
         BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchB1;
         BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchB2;
+#if RETRO_USE_PLUS
         if (!(options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) || !options->atlEnabled || Game_CheckStageReload()) {
+#else
+        if (!(options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) || !options->atlEnabled || Game_CheckStageReload()) {
+#endif
             BGSwitch->layerIDs[0] = 0;
             BGSwitch->layerIDs[1] = 0;
             BGSwitch->layerIDs[2] = 0;
@@ -86,9 +98,15 @@ void GHZSetup_StageLoad()
         else {
             GHZSetup_SetupStartingBG();
         }
+#if RETRO_USE_PLUS
         if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct1())
+#else
+        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && Game_CheckAct1())
+#endif
             Zone->stageFinishCallback = GHZSetup_SetupActTransition;
     }
+
+#if RETRO_USE_PLUS
     if (RSDK_sceneInfo->filter & 4 || (RSDK.CheckStageFolder("GHZCutscene") && options->gameMode == MODE_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
@@ -103,6 +121,7 @@ void GHZSetup_StageLoad()
             }
         }
     }
+#endif
 }
 
 void GHZSetup_SetupStartingBG()

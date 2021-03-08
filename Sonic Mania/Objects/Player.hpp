@@ -329,6 +329,7 @@ void Player_Serialize();
 void Player_LoadSprites();
 void Player_LoadSpritesVS();
 void Player_SaveValues();
+void Player_GiveScore(EntityPlayer *player, int score);
 void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX);
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);

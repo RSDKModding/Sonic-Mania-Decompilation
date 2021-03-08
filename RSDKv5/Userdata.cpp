@@ -2,6 +2,12 @@
 
 bool32 settingsChanged = false;
 
+#if !RETRO_USE_PLUS
+FunctionListEntry functionList[FUNCLIST_COUNT];
+int functionListCount;
+#endif
+
+#if RETRO_USE_PLUS
 DummyCore *dummmyCore = NULL;
 DummyCore *userCore   = NULL;
 
@@ -9,14 +15,18 @@ DummyAchievements *achievements = NULL;
 DummyLeaderboards *leaderboards = NULL;
 DummyRichPresence *richPresence = NULL;
 DummyStats *stats               = NULL;
+#endif
 
 void initUserData()
 {
+#if RETRO_USE_PLUS
     if (!dummmyCore)
         dummmyCore = (DummyCore *)malloc(sizeof(DummyCore));
     MEM_ZEROP(dummmyCore);
+#endif
 
     if (true) { // no steam or etc, so default to dummy funcs
+#if RETRO_USE_PLUS
         userCore = dummmyCore;
 
         if (!achievements)
@@ -55,10 +65,42 @@ void initUserData()
         achievements->UnlockAchievement = unlockAchievement;
 
         richPresence->SetPresence = setPresence;
+#endif
+
+#if !RETRO_USE_PLUS
+        SetFuncPtr("ExitGame", exitGame);
+        //SetFuncPtr("ClearAchievements", Engine_ClearAchievements);
+        SetFuncPtr("UnlockAchievement", unlockAchievement);
+        SetFuncPtr("FetchLeaderboard", fetchLeaderboard);
+        //SetFuncPtr("LeaderboardStatus", Engine_LeaderboardStatus);
+        //SetFuncPtr("LeaderboardEntryCount", Engine_LeaderboardEntryCount);
+        //SetFuncPtr("LeaderboardReadEntry", Engine_LeaderboardReadEntry);
+        //SetFuncPtr("TrackActClear", Engine_TrackActClear);
+        //SetFuncPtr("TrackTAClear", Engine_TrackTAClear);
+        //SetFuncPtr("TrackEnemyDefeat", Engine_TrackEnemyDefeat);
+        //SetFuncPtr("ClearPrerollErrors", Engine_ClearPrerollErrors);
+        //SetFuncPtr("TryAuth", Engine_ClearPrerollErrors);
+        //SetFuncPtr("GetUserAuthStatus", Engine_GetUserAuthStatus);
+        //SetFuncPtr("TryInitStorage", Engine_TryInitStorage);
+        //SetFuncPtr("GetStorageStatus", Engine_GetStorageStatus);
+        //SetFuncPtr("LoadUserFile", Engine_LoadUserFile);
+        //SetFuncPtr("SaveUserFile", Engine_SaveUserFile);
+        SetFuncPtr("SaveSettingsINI", writeSettings);
+        SetFuncPtr("GetUserLanguage", getUserLanguage);
+        //SetFuncPtr("ControllerIDForInputID", Engine_ControllerIDForInputID);
+        //SetFuncPtr("MostRecentActiveControllerID", Engine_MostRecentActiveControllerID);
+        //SetFuncPtr("AssignControllerID", Engine_AssignControllerID);
+        //SetFuncPtr("ResetControllerAssignments", ResetControllerAssignments);
+        //SetFuncPtr("InputIDIsDisconnected", Engine_InputIDIsDisconnected);
+        //SetFuncPtr("GetControllerType", Engine_GetControllerType);
+        //SetFuncPtr("ShowSteamControllerOverlay", Engine_ShowSteamControllerOverlay);
+        SetFuncPtr("SetRichPresence", setPresence);
+#endif
     }
 }
 void releaseUserData()
 {
+#if RETRO_USE_PLUS
     if (dummmyCore)
         free(dummmyCore);
     dummmyCore = NULL;
@@ -78,15 +120,18 @@ void releaseUserData()
     if (stats)
         free(stats);
     stats = NULL;
+#endif
 }
 
 int getUserLanguage() { return curSKU.language; }
+#if RETRO_USE_PLUS
 int getConfirmButtonFlip()
 {
     printConsole("DUMMY GetConfirmButtonFlip()\n");
     return 0;
 }
 void launchManual() { printConsole("DUMMY LaunchManual()\n"); }
+#endif
 void exitGame() { engine.running = false; }
 
 void unlockAchievement(const char *name) { printLog(SEVERITY_WARN, "Achievement Unlocked: %s", name); }
@@ -100,11 +145,16 @@ void setPresence(byte a2, TextInfo *info)
     const char *text = NULL;
     AllocateStorage(info->textLength + 1, (void **)&text, DATASET_TMP, true);
     CopyString(buffer, info);
+#if RETRO_USE_PLUS
     sprintf(buffer, "DUMMY SetPresence(%d, %s) -> %s\n", a2, text, (richPresence->active != a2 ? "Successful Set" : "Redundant Set"));
+#else
+    sprintf(buffer, "DUMMY SetPresence(%d, %s)\n", a2, text);
+#endif
     printConsole(buffer);
     RemoveStorageEntry((void **)&text);
 }
 
+#if RETRO_USE_PLUS
 const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
 void setupUserDebugValues()
 {
@@ -129,6 +179,41 @@ void setupUserDebugValues()
         val->max   = 1;
     }
 }
+#endif
+
+#if !RETRO_USE_PLUS
+void SetFuncPtr(const char *name, void *ptr)
+{
+    if (functionListCount < FUNCLIST_COUNT) {
+        uint hash[4];
+        GEN_HASH(name, hash);
+        for (int f = 0; f < functionListCount; ++f) {
+            if (HASH_MATCH(hash, functionList[f].hash))
+                return; //already exists, ignore this call
+        }
+
+        HASH_COPY(functionList[functionListCount].hash, hash);
+        functionList[functionListCount].ptr = ptr;
+    }
+}
+
+void *GetFuncPtr(const char *name)
+{
+    if (!name)
+        return NULL;
+
+    uint hash[4];
+    GEN_HASH(name, hash);
+    for (int f = 0; f < functionListCount; ++f) {
+        if (HASH_MATCH(hash, functionList[f].hash))
+            return functionList[f].ptr;
+    }
+
+    if (engine.printConsole)
+        printLog(SEVERITY_WARN, "API Function not found: %s", name);
+    return NULL;
+}
+#endif
 
 int GetSettingsValue(int id)
 {

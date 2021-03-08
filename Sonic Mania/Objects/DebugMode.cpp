@@ -7,7 +7,9 @@ void DebugMode_Update()
     EntityDebugMode *entity = (EntityDebugMode *)RSDK_sceneInfo->entity;
 
     bool flag = false;
+#if RETRO_USE_PLUS
     User.Unknown6(0);
+#endif
     if (Zone)
         Zone->stageFinishCallback = NULL;
     if (RSDK_controller[0].keyUp.down || (RSDK_stickL[0].vDelta > 0.30000001)) {

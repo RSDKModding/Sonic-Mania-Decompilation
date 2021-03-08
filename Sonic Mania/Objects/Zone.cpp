@@ -59,8 +59,10 @@ void Zone_StageLoad()
     //int *saveRAM    = SaveGame->saveRAM;
     Zone->timeStart = (uint)time(0);
     // TODO: this junk here
+#if RETRO_USE_PLUS
     if (options->gameMode == MODE_ENCORE) {
     }
+#endif
 
     Zone->timer          = 0;
     Zone->field_154      = 0;
@@ -156,14 +158,19 @@ void Zone_StageLoad()
         RSDK.SetSettingsValue(SETTINGS_C, 1);
     }
     switch (options->gameMode) {
+#if !RETRO_USE_PLUS
+        case MODE_NOSAVE:
+#endif
         case MODE_MANIA:
             // Localization_Unknown1(&textInfo, 0x3Fu);
             // User.PossiblyGetStrings(2, &textInfo);
             break;
+#if RETRO_USE_PLUS
         case MODE_ENCORE:
             // Localization_Unknown1(&textInfo, 0x40u);
             // User.PossiblyGetStrings(3, &textInfo);
             break;
+#endif
         case MODE_TIMEATTACK:
             // Localization_Unknown1(&textInfo, 0x41u);
             // User.PossiblyGetStrings(4, &textInfo);
@@ -205,8 +212,10 @@ int Zone_GetZoneID()
         return 11;
     if (RSDK.CheckStageFolder("ERZ"))
         return 12;
+#if RETRO_USE_PLUS
     if (RSDK.CheckStageFolder("AIZ") && options->gameMode == MODE_ENCORE)
         return 13;
+#endif
     return -1;
 }
 
@@ -287,7 +296,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag) {
 
     memset(options->atlEntityData, 0, options->atlEntityCount << 9);
     Zone->field_158 = flag;
-    if (flag == 1) {
+    if (flag) {
         EntityPlayer *player                                = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
         player->camera                                      = NULL;
         EntityCamera *camera                                = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
@@ -356,6 +365,7 @@ void Zone_Unknown4(int screen)
     entity->timer      = 640;
     entity->fade1      = 16;
     entity->fade2      = 0xF0F0F0;
+#if RETRO_USE_PLUS
     if (options->gameMode != MODE_ENCORE || EncoreIntro) {
         entity->state     = Zone_Unknown18;
         entity->stateDraw = Zone_Unknown12;
@@ -363,11 +373,14 @@ void Zone_Unknown4(int screen)
         entity->drawOrder = 15;
     }
     else {
+#endif
         entity->state     = Zone_Unknown17;
         entity->stateDraw = Zone_Unknown12;
         entity->visible   = true;
         entity->drawOrder = 15;
+#if RETRO_USE_PLUS
     }
+#endif
 }
 
 void Zone_Unknown5()
@@ -473,9 +486,8 @@ void Zone_Unknown16()
     Entity *entity              = RSDK_sceneInfo->entity;
     RSDK_sceneInfo->timeEnabled = true;
     // SaveGame_Unknown9();
-    // v1 = Music->field_254;
-    // if (Music->ActiveTrack != Music->field_254)
-    //    Music_Unknown9(Music->field_254, 0.039999999);
+    if (Music->activeTrack != Music->field_254)
+       Music_Unknown9(Music->field_254, 0.039999999);
     EntityZone *entityZone     = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
     entityZone->screenID       = 0;
     entityZone->timer          = 640;
@@ -580,7 +592,11 @@ bool32 Game_CheckStageReload()
 }
 bool32 Game_CheckIntro()
 {
+#if RETRO_USE_PLUS
     return (options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && options->enableIntro && !Game_CheckStageReload();
+#else
+    return (options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && options->enableIntro && !Game_CheckStageReload();
+#endif
 }
 
 void Zone_EditorDraw() {}

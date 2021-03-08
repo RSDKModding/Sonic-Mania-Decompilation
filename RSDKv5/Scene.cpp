@@ -6,7 +6,9 @@ ScanlineInfo *scanlines = NULL;
 TileLayer tileLayers[LAYER_COUNT];
 CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
 
+#if RETRO_USE_PLUS
 bool32 hardResetFlag = false;
+#endif
 char currentSceneFolder[0x10];
 
 SceneInfo sceneInfo;
@@ -26,10 +28,12 @@ void LoadScene()
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].entryCount = 0;
     }
-
+#if RETRO_USE_PLUS
     debugValCnt = 0;
+#endif
     lookUpBuffer = NULL;
 
+#if RETRO_USE_PLUS
     if (StrComp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
@@ -38,6 +42,17 @@ void LoadScene()
                  sceneInfo.listData[sceneInfo.listPos].name, sceneInfo.listData[sceneInfo.listPos].filter);
         return;
     }
+#endif
+
+#if !RETRO_USE_PLUS
+    if (StrComp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder)) {
+        // Reload
+        ClearUnusedStorage(DATASET_STG);
+        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\"", sceneInfo.listCategory[sceneInfo.activeCategory].name,
+                 sceneInfo.listData[sceneInfo.listPos].name);
+        return;
+    }
+#endif
 
     // Unload Model data
     for (int m = 0; m < MODEL_MAX; ++m) {
@@ -86,10 +101,17 @@ void LoadScene()
 
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     StrCopy(currentSceneFolder, sceneEntry->folder);
+
+#if RETRO_USE_PLUS
     hardResetFlag = false;
     sceneInfo.filter = sceneEntry->filter;
 
     printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name, sceneEntry->name, sceneEntry->filter);
+#endif
+
+#if !RETRO_USE_PLUS
+    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\"", sceneInfo.listCategory[sceneInfo.activeCategory].name, sceneEntry->name);
+#endif
 
     char buffer[0x40];
     StrCopy(buffer, "Data/Stages/");
@@ -117,13 +139,14 @@ void LoadScene()
             for (int o = 0; o < globalObjectCount; ++o) {
                 stageObjectIDs[o] = globalObjectIDs[o];
             }
-            sceneInfo.classCount = DEFAULT_OBJECT_COUNT + globalObjectCount;
+            sceneInfo.classCount = TYPE_DEFAULTCOUNT + globalObjectCount;
         }
         else {
-            stageObjectIDs[0]    = globalObjectIDs[0];
-            stageObjectIDs[1]    = globalObjectIDs[1];
-            stageObjectIDs[2]    = globalObjectIDs[2];
-            sceneInfo.classCount = DEFAULT_OBJECT_COUNT;
+            for (int o = 0; o < TYPE_DEFAULTCOUNT; ++o) {
+                stageObjectIDs[o] = globalObjectIDs[o];
+            }
+
+            sceneInfo.classCount = TYPE_DEFAULTCOUNT;
         }
 
         byte objCnt = ReadInt8(&info);
@@ -152,7 +175,7 @@ void LoadScene()
                 AllocateStorage(obj->objectSize, (void**)obj->type, DATASET_STG, true);
                 LoadStaticObject((byte *)*obj->type, obj->hash, sizeof(Object));
                 (*obj->type)->objectID = o;
-                if (o >= DEFAULT_OBJECT_COUNT)
+                if (o >= TYPE_DEFAULTCOUNT)
                     (*obj->type)->active = ACTIVE_NORMAL;
             }
         }
@@ -330,7 +353,9 @@ void LoadSceneFile() {
             AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, DATASET_TMP, false);
             editableVarCount = 0;
             if (objID) {
+#if RETRO_USE_PLUS
                 SetEditableVar(VAR_UINT8, "filter", objID, offsetof(Entity, filter));
+#endif
                 if (obj->serialize)
                     obj->serialize();
             }
@@ -364,7 +389,9 @@ void LoadSceneFile() {
                     entity = &entList[SCENEENTITY_COUNT - slotID];
 
                 entity->objectID = objID;
+#if RETRO_USE_PLUS
                 entity->filter = 0xFF;
+#endif
                 entity->position.x = ReadInt32(&info);
                 entity->position.y = ReadInt32(&info);
 
@@ -445,6 +472,7 @@ void LoadSceneFile() {
             }
         }
 
+#if RETRO_USE_PLUS
         //handle filter and stuff
         int slot = RESERVE_ENTITY_COUNT;
         int activeSlot = RESERVE_ENTITY_COUNT;
@@ -469,6 +497,14 @@ void LoadSceneFile() {
             }
             slot++;
         }
+#endif
+
+#if !RETRO_USE_PLUS
+        for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
+            memcpy(&objectEntityList[e], &entList[e], sizeof(EntityBase));
+        }
+#endif
+        entList = NULL;
 
         CloseFile(&info);
     }
@@ -852,7 +888,7 @@ void ProcessParallax(TileLayer *layer)
         }
         case LAYER_VSCROLL: {
             for (int i = 0; i < layer->scrollInfoCount; ++i) {
-                scrollInfo->unknown = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
+                scrollInfo->unknown  = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
                 scrollInfo->unknown = (scrollInfo->unknown >> 16) % pixelHeight;
                 scrollInfo->unknown <<= 0x10;
                 ++scrollInfo;

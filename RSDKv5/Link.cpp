@@ -1,6 +1,8 @@
 #include "RetroEngine.hpp"
 
 void *functionTable[FUNCTABLE_COUNT];
+
+#if RETRO_USE_PLUS
 void *userDataTable[UDATATABLE_COUNT];
 
 enum UserdataTableIDs {
@@ -65,11 +67,14 @@ enum UserdataTableIDs {
     UserdataTable_Unknown43,
     UserdataTable_Count,
 };
+#endif
 
 enum FunctionTableIDs {
     FunctionTable_InitGameOptions,
     FunctionTable_CreateObject,
+#if RETRO_USE_PLUS
     FunctionTable_CreateObjectContainer,
+#endif
     FunctionTable_GetActiveObjects,
     FunctionTable_GetObjects,
     FunctionTable_NextForeachLoop,
@@ -90,13 +95,18 @@ enum FunctionTableIDs {
     FunctionTable_SetDrawLayerProperties,
     FunctionTable_LoadScene,
     FunctionTable_SetGameMode,
+#if RETRO_USE_PLUS
     FunctionTable_SetHardResetFlag,
+#endif
     FunctionTable_CheckValidScene,
     FunctionTable_CheckSceneFolder,
     FunctionTable_InitSceneLoad,
     FunctionTable_GetObjectByName,
     FunctionTable_ClearScreens,
     FunctionTable_AddScreen,
+#if !RETRO_USE_PLUS
+    FunctionTable_GetFuncPtr,
+#endif
     FunctionTable_GetSettingsValue,
     FunctionTable_SetSettingsValue,
     FunctionTable_UpdateWindow,
@@ -142,7 +152,9 @@ enum FunctionTableIDs {
     FunctionTable_Unknown71,
     FunctionTable_SetScreenSize,
     FunctionTable_SetClipBounds,
+#if RETRO_USE_PLUS
     FunctionTable_SetScreenUnknown,
+#endif
     FunctionTable_LoadSpriteSheet,
     FunctionTable_SetLookupTable,
     FunctionTable_SetPaletteMask,
@@ -150,10 +162,14 @@ enum FunctionTableIDs {
     FunctionTable_GetPaletteEntry,
     FunctionTable_SetActivePalette,
     FunctionTable_CopyPalette,
+#if RETRO_USE_PLUS
     FunctionTable_LoadPalette,
+#endif
     FunctionTable_RotatePalette,
     FunctionTable_SetLimitedFade,
+#if RETRO_USE_PLUS
     FunctionTable_BlendColours,
+#endif
     FunctionTable_DrawRect,
     FunctionTable_DrawLine,
     FunctionTable_DrawCircle,
@@ -220,6 +236,7 @@ enum FunctionTableIDs {
     FunctionTable_TrackPlaying,
     FunctionTable_LoadVideo,
     FunctionTable_LoadImage,
+#if RETRO_USE_PLUS
     FunctionTable_Unknown98,
     FunctionTable_Unknown99,
     FunctionTable_Unknown100,
@@ -233,8 +250,13 @@ enum FunctionTableIDs {
     FunctionTable_Missing24,
     FunctionTable_Missing25,
     FunctionTable_Missing26,
+#endif
+#if !RETRO_USE_PLUS
+    FunctionTable_Unknown92,
+#endif
     FunctionTable_LoadUserFile,
     FunctionTable_SaveUserFile,
+#if RETRO_USE_PLUS
     FunctionTable_printLog,
     FunctionTable_printString,
     FunctionTable_printText,
@@ -243,35 +265,56 @@ enum FunctionTableIDs {
     FunctionTable_printFloat,
     FunctionTable_printVector2,
     FunctionTable_printHitbox,
+#endif
     FunctionTable_Unknown105,
     FunctionTable_Unknown106,
+#if RETRO_USE_PLUS
     FunctionTable_ClearDebugValues,
     FunctionTable_SetDebugValue,
+#endif
+#if !RETRO_USE_PLUS
+    FunctionTable_PrintMessage,
+#endif
     FunctionTable_Count,
 };
 
+#if RETRO_USE_PLUS
 SKUInfo curSKU;
+UnknownInfo unknownInfo;
+#else
+EngineInfo engineInfo;
+#endif
 
 void NullFunc() {}
 
 void setupFunctions()
 {
+#if RETRO_USE_PLUS
     curSKU.platform = GAME_PLATFORM;
     curSKU.language = 0;
     curSKU.region   = 0;
+#else
+    engineInfo.platform = GAME_PLATFORM;
+    engineInfo.language = 0;
+    engineInfo.region   = 0;
+#endif
 
     CalculateTrigAngles();
     GenerateBlendLookupTable();
     InitGFXSystem();
 
     memset(functionTable, NULL, FUNCTABLE_COUNT * sizeof(void *));
+#if RETRO_USE_PLUS
+    memset(userDataTable, NULL, UDATATABLE_COUNT * sizeof(void *));
+#endif
 
+#if RETRO_USE_PLUS
     // Userdata
     userDataTable[UserdataTable_GetUserLanguage]       = (void *)userCore->GetUserLanguage;
     userDataTable[UserdataTable_GetConfirmButtonFlip]  = (void *)userCore->GetConfirmButtonFlip;
     userDataTable[UserdataTable_ExitGame]              = (void *)userCore->ExitGame;
     userDataTable[UserdataTable_LaunchManual]          = (void *)userCore->ExitGame;
-    userDataTable[UserdataTable_Unknown4]              = (void *)(void (*)())NullFunc;
+    userDataTable[UserdataTable_Unknown4]              = (void *)NullFunc;
     userDataTable[UserdataTable_CheckDLC]              = (void *)userCore->CheckDLC;
     userDataTable[UserdataTable_ClearAchievements]     = (void *)NullFunc;
     userDataTable[UserdataTable_UnlockAchievement]     = (void *)achievements->UnlockAchievement;
@@ -326,95 +369,109 @@ void setupFunctions()
     userDataTable[UserdataTable_Unknown41]             = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown42]             = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown43]             = (void *)NullFunc;
+#endif
 
     // Function Table
-    functionTable[FunctionTable_InitGameOptions]              = (void *)InitGameOptions;
-    functionTable[FunctionTable_CreateObject]                 = (void *)CreateObject;
-    functionTable[FunctionTable_CreateObjectContainer]        = (void *)CreateObjectContainer;
-    functionTable[FunctionTable_GetActiveObjects]             = (void *)GetActiveObjects;
-    functionTable[FunctionTable_GetObjects]                   = (void *)GetObjects;
-    functionTable[FunctionTable_NextForeachLoop]              = (void *)NextForeachLoop;
-    functionTable[FunctionTable_SetEditableVar]               = (void *)SetEditableVar;
-    functionTable[FunctionTable_GetObjectByID]                = (void *)GetObjectByID;
-    functionTable[FunctionTable_GetEntityID]                  = (void *)GetEntityID;
-    functionTable[FunctionTable_GetEntityCount]               = (void *)GetEntityCount;
-    functionTable[FunctionTable_GetDrawListRef]               = (void *)GetDrawListRef;
-    functionTable[FunctionTable_GetDrawListRefPtr]            = (void *)GetDrawListRefPtr;
-    functionTable[FunctionTable_DestroyEntity]                = (void *)DestroyEntity;
-    functionTable[FunctionTable_ResetEntity]                  = (void *)ResetEntity;
-    functionTable[FunctionTable_SpawnEntity]                  = (void *)SpawnEntity;
-    functionTable[FunctionTable_CopyEntity]                   = (void *)CopyEntity;
-    functionTable[FunctionTable_CheckOnScreen]                = (void *)CheckOnScreen;
-    functionTable[FunctionTable_CheckPosOnScreen]             = (void *)CheckPosOnScreen;
-    functionTable[FunctionTable_AddDrawListRef]               = (void *)AddDrawListRef;
-    functionTable[FunctionTable_SwapDrawLayers]               = (void *)SwapDrawLayers;
-    functionTable[FunctionTable_SetDrawLayerProperties]       = (void *)SetDrawLayerProperties;
-    functionTable[FunctionTable_LoadScene]                    = (void *)LoadSceneByName;
-    functionTable[FunctionTable_SetGameMode]                  = (void *)SetEngineState;
-    functionTable[FunctionTable_SetHardResetFlag]             = (void *)SetHardResetFlag;
-    functionTable[FunctionTable_CheckValidScene]              = (void *)CheckValidStage;
-    functionTable[FunctionTable_CheckSceneFolder]             = (void *)CheckSceneFolder;
-    functionTable[FunctionTable_InitSceneLoad]                = (void *)InitSceneLoad;
-    functionTable[FunctionTable_GetObjectByName]              = (void *)GetObjectByName;
-    functionTable[FunctionTable_ClearScreens]                 = (void *)ClearScreens;
-    functionTable[FunctionTable_AddScreen]                    = (void *)AddScreen;
-    functionTable[FunctionTable_GetSettingsValue]             = (void *)GetSettingsValue;
-    functionTable[FunctionTable_SetSettingsValue]             = (void *)SetSettingsValue;
-    functionTable[FunctionTable_UpdateWindow]                 = (void *)UpdateWindow;
-    functionTable[FunctionTable_Sin1024]                      = (void *)sin1024;
-    functionTable[FunctionTable_Cos1024]                      = (void *)cos1024;
-    functionTable[FunctionTable_ATan1024]                     = (void *)tan1024;
-    functionTable[FunctionTable_ASin1024]                     = (void *)aSin1024;
-    functionTable[FunctionTable_ACos1024]                     = (void *)aCos1024;
-    functionTable[FunctionTable_Sin512]                       = (void *)sin512;
-    functionTable[FunctionTable_Cos512]                       = (void *)cos512;
-    functionTable[FunctionTable_ATan512]                      = (void *)tan512;
-    functionTable[FunctionTable_ASin512]                      = (void *)aSin512;
-    functionTable[FunctionTable_ACos512]                      = (void *)aCos512;
-    functionTable[FunctionTable_Sin256]                       = (void *)sin256;
-    functionTable[FunctionTable_Cos256]                       = (void *)cos256;
-    functionTable[FunctionTable_ATan256]                      = (void *)tan256;
-    functionTable[FunctionTable_ASin256]                      = (void *)aSin256;
-    functionTable[FunctionTable_ACos256]                      = (void *)aCos256;
-    functionTable[FunctionTable_Rand]                         = (void *)RSDK_random;
-    functionTable[FunctionTable_Random]                       = (void *)RSDK_random2;
-    functionTable[FunctionTable_SetRandKey]                   = (void *)setRandKey;
-    functionTable[FunctionTable_ATan2]                        = (void *)ArcTanLookup;
-    functionTable[FunctionTable_SetIdentityMatrix]            = (void *)setIdentityMatrix;
-    functionTable[FunctionTable_MatrixMultiply]               = (void *)matrixMultiply;
-    functionTable[FunctionTable_MatrixTranslateXYZ]           = (void *)matrixTranslateXYZ;
-    functionTable[FunctionTable_MatrixScaleXYZ]               = (void *)matrixScaleXYZ;
-    functionTable[FunctionTable_MatrixRotateX]                = (void *)matrixRotateX;
-    functionTable[FunctionTable_MatrixRotateY]                = (void *)matrixRotateY;
-    functionTable[FunctionTable_MatrixRotateZ]                = (void *)matrixRotateZ;
-    functionTable[FunctionTable_MatrixRotateXYZ]              = (void *)matrixRotateXYZ;
-    functionTable[FunctionTable_MatrixInverse]                = (void *)matrixInverse;
-    functionTable[FunctionTable_MatrixCopy]                   = (void *)matrixCopy;
-    functionTable[FunctionTable_SetText]                      = (void *)SetText;
-    functionTable[FunctionTable_Unknown64]                    = (void *)Unknown64;
-    functionTable[FunctionTable_Unknown65]                    = (void *)NullFunc; // Unknown65;
-    functionTable[FunctionTable_Unknown66]                    = (void *)Unknown66;
-    functionTable[FunctionTable_Unknown67]                    = (void *)NullFunc; // Unknown67;
-    functionTable[FunctionTable_LoadStrings]                  = (void *)NullFunc; // LoadStrings;
-    functionTable[FunctionTable_Unknown68]                    = (void *)NullFunc; // Unknown68;
-    functionTable[FunctionTable_CopyString]                   = (void *)NullFunc; // CopyString;
-    functionTable[FunctionTable_Unknown69]                    = (void *)Unknown69;
-    functionTable[FunctionTable_GetWindowSettings]            = (void *)NullFunc; // Unknown70;
-    functionTable[FunctionTable_Unknown71]                    = (void *)NullFunc; // Unknown71;
-    functionTable[FunctionTable_SetScreenSize]                = (void *)SetScreenSize;
-    functionTable[FunctionTable_SetClipBounds]                = (void *)SetClipBounds;
-    functionTable[FunctionTable_SetScreenUnknown]             = (void *)NullFunc; // SetScreenUnknown;
-    functionTable[FunctionTable_LoadSpriteSheet]              = (void *)LoadSpriteSheet;
-    functionTable[FunctionTable_SetLookupTable]               = (void *)SetLookupTable;
-    functionTable[FunctionTable_SetPaletteMask]               = (void *)SetPaletteMask;
-    functionTable[FunctionTable_SetPaletteEntry]              = (void *)SetPaletteEntry;
-    functionTable[FunctionTable_GetPaletteEntry]              = (void *)GetPaletteEntry;
-    functionTable[FunctionTable_SetActivePalette]             = (void *)SetActivePalette;
-    functionTable[FunctionTable_CopyPalette]                  = (void *)CopyPalette;
-    functionTable[FunctionTable_LoadPalette]                  = (void *)LoadPalette;
-    functionTable[FunctionTable_RotatePalette]                = (void *)RotatePalette;
-    functionTable[FunctionTable_SetLimitedFade]               = (void *)SetPaletteFade;
-    functionTable[FunctionTable_BlendColours]                 = (void *)BlendColours;
+    functionTable[FunctionTable_InitGameOptions] = (void *)InitGameOptions;
+    functionTable[FunctionTable_CreateObject]    = (void *)CreateObject;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_CreateObjectContainer] = (void *)CreateObjectContainer;
+#endif
+    functionTable[FunctionTable_GetActiveObjects]       = (void *)GetActiveObjects;
+    functionTable[FunctionTable_GetObjects]             = (void *)GetObjects;
+    functionTable[FunctionTable_NextForeachLoop]        = (void *)NextForeachLoop;
+    functionTable[FunctionTable_SetEditableVar]         = (void *)SetEditableVar;
+    functionTable[FunctionTable_GetObjectByID]          = (void *)GetObjectByID;
+    functionTable[FunctionTable_GetEntityID]            = (void *)GetEntityID;
+    functionTable[FunctionTable_GetEntityCount]         = (void *)GetEntityCount;
+    functionTable[FunctionTable_GetDrawListRef]         = (void *)GetDrawListRef;
+    functionTable[FunctionTable_GetDrawListRefPtr]      = (void *)GetDrawListRefPtr;
+    functionTable[FunctionTable_DestroyEntity]          = (void *)DestroyEntity;
+    functionTable[FunctionTable_ResetEntity]            = (void *)ResetEntity;
+    functionTable[FunctionTable_SpawnEntity]            = (void *)SpawnEntity;
+    functionTable[FunctionTable_CopyEntity]             = (void *)CopyEntity;
+    functionTable[FunctionTable_CheckOnScreen]          = (void *)CheckOnScreen;
+    functionTable[FunctionTable_CheckPosOnScreen]       = (void *)CheckPosOnScreen;
+    functionTable[FunctionTable_AddDrawListRef]         = (void *)AddDrawListRef;
+    functionTable[FunctionTable_SwapDrawLayers]         = (void *)SwapDrawLayers;
+    functionTable[FunctionTable_SetDrawLayerProperties] = (void *)SetDrawLayerProperties;
+    functionTable[FunctionTable_LoadScene]              = (void *)LoadSceneByName;
+    functionTable[FunctionTable_SetGameMode]            = (void *)SetEngineState;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_SetHardResetFlag] = (void *)SetHardResetFlag;
+#endif
+    functionTable[FunctionTable_CheckValidScene]  = (void *)CheckValidStage;
+    functionTable[FunctionTable_CheckSceneFolder] = (void *)CheckSceneFolder;
+    functionTable[FunctionTable_InitSceneLoad]    = (void *)InitSceneLoad;
+    functionTable[FunctionTable_GetObjectByName]  = (void *)GetObjectByName;
+    functionTable[FunctionTable_ClearScreens]     = (void *)ClearScreens;
+    functionTable[FunctionTable_AddScreen]        = (void *)AddScreen;
+#if !RETRO_USE_PLUS
+    functionTable[FunctionTable_GetFuncPtr] = (void *)GetFuncPtr;
+#endif
+    functionTable[FunctionTable_GetSettingsValue]   = (void *)GetSettingsValue;
+    functionTable[FunctionTable_SetSettingsValue]   = (void *)SetSettingsValue;
+    functionTable[FunctionTable_UpdateWindow]       = (void *)UpdateWindow;
+    functionTable[FunctionTable_Sin1024]            = (void *)sin1024;
+    functionTable[FunctionTable_Cos1024]            = (void *)cos1024;
+    functionTable[FunctionTable_ATan1024]           = (void *)tan1024;
+    functionTable[FunctionTable_ASin1024]           = (void *)aSin1024;
+    functionTable[FunctionTable_ACos1024]           = (void *)aCos1024;
+    functionTable[FunctionTable_Sin512]             = (void *)sin512;
+    functionTable[FunctionTable_Cos512]             = (void *)cos512;
+    functionTable[FunctionTable_ATan512]            = (void *)tan512;
+    functionTable[FunctionTable_ASin512]            = (void *)aSin512;
+    functionTable[FunctionTable_ACos512]            = (void *)aCos512;
+    functionTable[FunctionTable_Sin256]             = (void *)sin256;
+    functionTable[FunctionTable_Cos256]             = (void *)cos256;
+    functionTable[FunctionTable_ATan256]            = (void *)tan256;
+    functionTable[FunctionTable_ASin256]            = (void *)aSin256;
+    functionTable[FunctionTable_ACos256]            = (void *)aCos256;
+    functionTable[FunctionTable_Rand]               = (void *)RSDK_random;
+    functionTable[FunctionTable_Random]             = (void *)RSDK_random2;
+    functionTable[FunctionTable_SetRandKey]         = (void *)setRandKey;
+    functionTable[FunctionTable_ATan2]              = (void *)ArcTanLookup;
+    functionTable[FunctionTable_SetIdentityMatrix]  = (void *)setIdentityMatrix;
+    functionTable[FunctionTable_MatrixMultiply]     = (void *)matrixMultiply;
+    functionTable[FunctionTable_MatrixTranslateXYZ] = (void *)matrixTranslateXYZ;
+    functionTable[FunctionTable_MatrixScaleXYZ]     = (void *)matrixScaleXYZ;
+    functionTable[FunctionTable_MatrixRotateX]      = (void *)matrixRotateX;
+    functionTable[FunctionTable_MatrixRotateY]      = (void *)matrixRotateY;
+    functionTable[FunctionTable_MatrixRotateZ]      = (void *)matrixRotateZ;
+    functionTable[FunctionTable_MatrixRotateXYZ]    = (void *)matrixRotateXYZ;
+    functionTable[FunctionTable_MatrixInverse]      = (void *)matrixInverse;
+    functionTable[FunctionTable_MatrixCopy]         = (void *)matrixCopy;
+    functionTable[FunctionTable_SetText]            = (void *)SetText;
+    functionTable[FunctionTable_Unknown64]          = (void *)Unknown64;
+    functionTable[FunctionTable_Unknown65]          = (void *)NullFunc; // Unknown65;
+    functionTable[FunctionTable_Unknown66]          = (void *)Unknown66;
+    functionTable[FunctionTable_Unknown67]          = (void *)NullFunc; // Unknown67;
+    functionTable[FunctionTable_LoadStrings]        = (void *)NullFunc; // LoadStrings;
+    functionTable[FunctionTable_Unknown68]          = (void *)NullFunc; // Unknown68;
+    functionTable[FunctionTable_CopyString]         = (void *)NullFunc; // CopyString;
+    functionTable[FunctionTable_Unknown69]          = (void *)Unknown69;
+    functionTable[FunctionTable_GetWindowSettings]  = (void *)NullFunc; // Unknown70;
+    functionTable[FunctionTable_Unknown71]          = (void *)NullFunc; // Unknown71;
+    functionTable[FunctionTable_SetScreenSize]      = (void *)SetScreenSize;
+    functionTable[FunctionTable_SetClipBounds]      = (void *)SetClipBounds;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_SetScreenUnknown] = (void *)NullFunc; // SetScreenUnknown;
+#endif
+    functionTable[FunctionTable_LoadSpriteSheet]  = (void *)LoadSpriteSheet;
+    functionTable[FunctionTable_SetLookupTable]   = (void *)SetLookupTable;
+    functionTable[FunctionTable_SetPaletteMask]   = (void *)SetPaletteMask;
+    functionTable[FunctionTable_SetPaletteEntry]  = (void *)SetPaletteEntry;
+    functionTable[FunctionTable_GetPaletteEntry]  = (void *)GetPaletteEntry;
+    functionTable[FunctionTable_SetActivePalette] = (void *)SetActivePalette;
+    functionTable[FunctionTable_CopyPalette]      = (void *)CopyPalette;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_LoadPalette] = (void *)LoadPalette;
+#endif
+    functionTable[FunctionTable_RotatePalette]  = (void *)RotatePalette;
+    functionTable[FunctionTable_SetLimitedFade] = (void *)SetPaletteFade;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_BlendColours] = (void *)BlendColours;
+#endif
     functionTable[FunctionTable_DrawRect]                     = (void *)DrawRectangle;
     functionTable[FunctionTable_DrawLine]                     = (void *)DrawLine;
     functionTable[FunctionTable_DrawCircle]                   = (void *)DrawCircle;
@@ -481,33 +538,45 @@ void setupFunctions()
     functionTable[FunctionTable_TrackPlaying]                 = (void *)trackPlaying;
     functionTable[FunctionTable_LoadVideo]                    = (void *)NullFunc; // LoadVideo;
     functionTable[FunctionTable_LoadImage]                    = (void *)LoadImage;
-    functionTable[FunctionTable_Unknown98]                    = (void *)NullFunc; // Unknown98;
-    functionTable[FunctionTable_Unknown99]                    = (void *)NullFunc; // Unknown99;
-    functionTable[FunctionTable_Unknown100]                   = (void *)NullFunc; // Unknown100;
-    functionTable[FunctionTable_Unknown101]                   = (void *)NullFunc; // Unknown101;
-    functionTable[FunctionTable_Unknown102]                   = (void *)NullFunc; // Unknown102;
-    functionTable[FunctionTable_Unknown103]                   = (void *)NullFunc; // Unknown103;
-    functionTable[FunctionTable_Unknown104]                   = (void *)NullFunc; // Unknown104;
-    functionTable[FunctionTable_Missing21]                    = (void *)NullFunc; // UserDataUnknown1;
-    functionTable[FunctionTable_Missing22]                    = (void *)NullFunc; // UserDataUnknown2;
-    functionTable[FunctionTable_Missing23]                    = (void *)NullFunc; // UserDataUnknown3;
-    functionTable[FunctionTable_Missing24]                    = (void *)NullFunc; // UserDataUnknown4;
-    functionTable[FunctionTable_Missing25]                    = (void *)NullFunc; // UserDataUnknown5;
-    functionTable[FunctionTable_Missing26]                    = (void *)NullFunc; // UserDataUnknown6;
-    functionTable[FunctionTable_LoadUserFile]                 = (void *)NullFunc; // LoadUserFile;
-    functionTable[FunctionTable_SaveUserFile]                 = (void *)NullFunc; // SaveUserFile;
-    functionTable[FunctionTable_printLog]                     = (void *)printLog;
-    functionTable[FunctionTable_printString]                  = (void *)printString;
-    functionTable[FunctionTable_printText]                    = (void *)printText;
-    functionTable[FunctionTable_printIntegerUnsigned]         = (void *)printIntegerUnsigned;
-    functionTable[FunctionTable_printInteger]                 = (void *)printInteger;
-    functionTable[FunctionTable_printFloat]                   = (void *)printFloat;
-    functionTable[FunctionTable_printVector2]                 = (void *)printVector2;
-    functionTable[FunctionTable_printHitbox]                  = (void *)printHitbox;
-    functionTable[FunctionTable_Unknown105]                   = (void *)NullFunc; // UserDataUnknown7;
-    functionTable[FunctionTable_Unknown106]                   = (void *)NullFunc; // UserDataUnknown8;
-    functionTable[FunctionTable_ClearDebugValues]             = (void *)ClearDebugValues;
-    functionTable[FunctionTable_SetDebugValue]                = (void *)SetDebugValue;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_Unknown98]  = (void *)NullFunc; // Unknown98;
+    functionTable[FunctionTable_Unknown99]  = (void *)NullFunc; // Unknown99;
+    functionTable[FunctionTable_Unknown100] = (void *)NullFunc; // Unknown100;
+    functionTable[FunctionTable_Unknown101] = (void *)NullFunc; // Unknown101;
+    functionTable[FunctionTable_Unknown102] = (void *)NullFunc; // Unknown102;
+    functionTable[FunctionTable_Unknown103] = (void *)NullFunc; // Unknown103;
+    functionTable[FunctionTable_Unknown104] = (void *)NullFunc; // Unknown104;
+    functionTable[FunctionTable_Missing21]  = (void *)NullFunc; // UserDataUnknown1;
+    functionTable[FunctionTable_Missing22]  = (void *)NullFunc; // UserDataUnknown2;
+    functionTable[FunctionTable_Missing23]  = (void *)NullFunc; // UserDataUnknown3;
+    functionTable[FunctionTable_Missing24]  = (void *)NullFunc; // UserDataUnknown4;
+    functionTable[FunctionTable_Missing25]  = (void *)NullFunc; // UserDataUnknown5;
+    functionTable[FunctionTable_Missing26]  = (void *)NullFunc; // UserDataUnknown6;
+#endif
+#if !RETRO_USE_PLUS
+    functionTable[FunctionTable_Unknown92] = (void *)NullFunc;
+#endif
+    functionTable[FunctionTable_LoadUserFile] = (void *)NullFunc; // LoadUserFile;
+    functionTable[FunctionTable_SaveUserFile] = (void *)NullFunc; // SaveUserFile;
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_printLog]             = (void *)printLog;
+    functionTable[FunctionTable_printString]          = (void *)printString;
+    functionTable[FunctionTable_printText]            = (void *)printText;
+    functionTable[FunctionTable_printIntegerUnsigned] = (void *)printIntegerUnsigned;
+    functionTable[FunctionTable_printInteger]         = (void *)printInteger;
+    functionTable[FunctionTable_printFloat]           = (void *)printFloat;
+    functionTable[FunctionTable_printVector2]         = (void *)printVector2;
+    functionTable[FunctionTable_printHitbox]          = (void *)printHitbox;
+#endif
+    functionTable[FunctionTable_Unknown105] = (void *)NullFunc; // UserDataUnknown7;
+    functionTable[FunctionTable_Unknown106] = (void *)NullFunc; // UserDataUnknown8;
+#if !RETRO_USE_PLUS
+    functionTable[FunctionTable_PrintMessage] = (void *)PrintMessage;
+#endif
+#if RETRO_USE_PLUS
+    functionTable[FunctionTable_ClearDebugValues] = (void *)ClearDebugValues;
+    functionTable[FunctionTable_SetDebugValue]    = (void *)SetDebugValue;
+#endif
 }
 
 void LinkGameLogic(GameInfo *info) { printLog(SEVERITY_WARN, "Internal LinkGameLogic() function called, no logic will be linked"); }

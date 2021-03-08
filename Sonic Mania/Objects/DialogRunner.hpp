@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectDialogRunner : Object {
     int field_4;
@@ -48,5 +49,6 @@ void DialogRunner_Serialize();
 
 // Extra Entity Functions
 void DialogRunner_HandleCallback();
+#endif
 
 #endif //!OBJ_DIALOGRUNNER_H

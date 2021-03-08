@@ -41,6 +41,12 @@ void Animals_EditorLoad();
 void Animals_Serialize();
 
 // Extra Entity Functions
+void Animals_CheckPlayerPos();
+bool32 Animals_CheckPlatformCollision(void *plat);
+bool32 Animals_CheckGroundCollision();
 
-
+void Animals_State_Freed();
+void Animals_State_FollowPlayer_Normal();
+void Animals_State_FollowPlayer_Bird();
+void Animals_State_BounceAround();
 #endif //!OBJ_ANIMALS_H

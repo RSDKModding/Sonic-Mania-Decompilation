@@ -28,7 +28,9 @@ extern ushort* lookUpBuffer;
 
 #define PACK_RGB888(r, g, b) RGB888_TO_RGB565(r, g, b)
 
+#if RETRO_USE_PLUS
 void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags);
+#endif
 
 inline void SetActivePalette(byte newActivePal, int startLine, int endLine)
 {
@@ -81,6 +83,8 @@ inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool32 rig
 }
 
 void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
+#if RETRO_USE_PLUS
 void BlendColours(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
+#endif
 
 #endif

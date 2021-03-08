@@ -3,8 +3,10 @@
 bool32 engineDebugMode = true;
 char outputString[0x400];
 
+#if RETRO_USE_PLUS
 int debugValCnt = 0;
 DebugValueInfo debugValues[DEBUGVAL_MAX];
+#endif
 
 DevMenu devMenu = DevMenu();
 
@@ -56,6 +58,7 @@ void printLog(SeverityModes severity, const char *message, ...)
 #endif
 }
 
+#if RETRO_USE_PLUS
 void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
 {
     if (debugValCnt < DEBUGVAL_MAX) {
@@ -97,6 +100,22 @@ void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
         value->max = max;
     }
 }
+#endif
+
+#if !RETRO_USE_PLUS
+void PrintMessage(void *msg, int type)
+{
+    if (msg && engine.printConsole) {
+        switch (type) {
+            case 0: printLog(SEVERITY_NONE, (const char *)msg); break;
+            case 1: printLog(SEVERITY_NONE, "%i", *(signed int *)msg); break;
+            case 2: printLog(SEVERITY_NONE, "%i", *(int *)msg, 0); break;
+            case 3: printLog(SEVERITY_NONE, "%f", *(float *)msg); break;
+            default: break;
+        }
+    }
+}
+#endif
 
 void DevMenu_MainMenu()
 {
@@ -460,12 +479,16 @@ void DevMenu_Options()
     dy += 44;
     DrawRectangle(currentScreen->centerX - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
-    uint optionColours[5];
+    const byte optionCount = RETRO_USE_PLUS ? 5 : 4;
+
+    uint optionColours[optionCount];
     optionColours[0]              = 0x808090;
     optionColours[1]              = 0x808090;
     optionColours[2]              = 0x808090;
     optionColours[3]              = 0x808090;
+#if RETRO_USE_PLUS
     optionColours[4]              = 0x808090;
+#endif
     optionColours[devMenu.option] = 0xF0F0F0;
 
     DrawDevText(currentScreen->centerX, "Video Settings", dy, ALIGN_CENTER, optionColours[0]);
@@ -473,14 +496,16 @@ void DevMenu_Options()
     DrawDevText(currentScreen->centerX, "Audio Settings", dy, ALIGN_CENTER, optionColours[1]);
     dy += 12;
     DrawDevText(currentScreen->centerX, "Configure Input", dy, ALIGN_CENTER, optionColours[2]);
+#if RETRO_USE_PLUS
     dy += 12;
     DrawDevText(currentScreen->centerX, "Debug Flags", dy, ALIGN_CENTER, optionColours[3]);
-    DrawDevText(currentScreen->centerX, "Back", dy + 12, ALIGN_CENTER, optionColours[4]);
+#endif
+    DrawDevText(currentScreen->centerX, "Back", dy + 12, ALIGN_CENTER, optionColours[optionCount - 1]);
 
     if (controller[0].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
-            devMenu.option = 4;
+            devMenu.option = optionCount;
         }
 
         devMenu.timer = 1;
@@ -489,7 +514,7 @@ void DevMenu_Options()
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
-                devMenu.option = 4;
+                devMenu.option = optionCount;
             }
         }
 
@@ -498,7 +523,7 @@ void DevMenu_Options()
 
     if (controller[0].keyDown.press) {
         devMenu.option++;
-        if (devMenu.option > 4) {
+        if (devMenu.option > optionCount) {
             devMenu.option = 0;
         }
 
@@ -507,7 +532,7 @@ void DevMenu_Options()
     else if (controller[0].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
-            if (devMenu.option > 4) {
+            if (devMenu.option > optionCount) {
                 devMenu.option = 0;
             }
         }
@@ -539,11 +564,15 @@ void DevMenu_Options()
                 devMenu.state  = DevMenu_InputOptions;
                 devMenu.option = 0;
                 break;
+#if RETRO_USE_PLUS
             case 3:
                 devMenu.state  = DevMenu_DebugOptions;
                 devMenu.option = 0;
                 break;
             case 4:
+#else
+            case 3:
+#endif
                 devMenu.state  = DevMenu_MainMenu;
                 devMenu.option = 0;
                 break;
@@ -866,6 +895,7 @@ void DevMenu_InputOptions()
     }
 }
 void DevMenu_MappingsOptions() {}
+#if RETRO_USE_PLUS
 void DevMenu_DebugOptions()
 {
     int dy = currentScreen->centerY;
@@ -1149,3 +1179,4 @@ void DevMenu_DebugOptions()
     }
 
 }
+#endif

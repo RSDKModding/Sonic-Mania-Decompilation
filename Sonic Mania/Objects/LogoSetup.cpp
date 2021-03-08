@@ -34,10 +34,15 @@ void LogoSetup_Create(void* data)
         entity->visible   = 1;
         entity->drawOrder = 12;
         entity->stateDraw      = LogoSetup_Unknown4;
+#if RETRO_USE_PLUS
         if (RSDK_sku->region == 1)
+#else
+        if (RSDK_info->region == 1)
+#endif
             entity->state = LogoSetup_CESAScreen;
         else
             entity->state = LogoSetup_SegaScreen;
+        //TODO: pre-plus
         entity->timer = 1024;
     }
 }
@@ -53,8 +58,10 @@ void LogoSetup_StageLoad()
             case 3: options->playerID = ID_SONIC; break;
             case 4: options->playerID = ID_TAILS; break;
             case 5: options->playerID = ID_KNUCKLES; break;
+#if RETRO_USE_PLUS
             case 6: options->playerID = ID_MIGHTY; break;
             case 7: options->playerID = ID_RAY; break;
+#endif
             default: break;
         }
     }

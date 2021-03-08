@@ -54,7 +54,7 @@ void FXRuby_StageLoad()
     FXRuby->fgHigh = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG High"));
 
     for (int i = 0; i < 0x200; ++i) {
-        FXRuby->unknown[i] = RSDK.Rand(-64, 64);
+        FXRuby->deadzone[i] = RSDK.Rand(-64, 64);
     }
 
     for (int i = 0xFFFF; i > -1; --i) {
@@ -105,7 +105,7 @@ void FXRuby_Unknown2()
                  int cnt = 8 * timer;
                  for (int s = 0; s < 0x200; ++s) {
                      int angle         = RSDK.Sin256(4 * id);
-                     int deform        = ((entity->fadeWhite * FXRuby->unknown[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
+                     int deform        = ((entity->fadeWhite * FXRuby->deadzone[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
                      *deformData       = deform;
                      deformData[0x200] = deform;
 

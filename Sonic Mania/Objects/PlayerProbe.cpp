@@ -192,24 +192,28 @@ void PlayerProbe_Print(EntityPlayer *player)
 {
     EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.PrintString(SEVERITY_NONE, "====================");
-        RSDK.PrintString(SEVERITY_NONE, "= Begin Probe      =");
-        RSDK.PrintString(SEVERITY_NONE, "====================");
-        RSDK.PrintString(SEVERITY_NONE, "self->direction = S/U");
-        RSDK.PrintString(SEVERITY_NONE, "self->direction = U/S");
-        RSDK.PrintInteger(SEVERITY_NONE, "self->angle = ", entity->angle);
-        RSDK.PrintInteger(SEVERITY_NONE, "Cos256(self->angle) = ", RSDK.Cos256(entity->angle));
-        RSDK.PrintInteger(SEVERITY_NONE, "Sin256(self->angle) = ", RSDK.Sin256(entity->angle));
-        RSDK.PrintString(SEVERITY_NONE, "====================");
-        RSDK.PrintString(SEVERITY_NONE, "self->direction = FACING_LEFT");
-        RSDK.PrintString(SEVERITY_NONE, "self->direction = FACING_RIGHT");
-        RSDK.PrintInteger(SEVERITY_NONE, "playerPtr->groundVel = ", player->groundVel);
-        RSDK.PrintInteger(SEVERITY_NONE, "playerPtr->angle = ", player->angle);
-        RSDK.PrintInteger(SEVERITY_NONE, "playerPtr->collisionMode = ", player->collisionMode);
-        RSDK.PrintInteger(SEVERITY_NONE, "playerPtr->onGround = ", player->onGround);
-        RSDK.PrintString(SEVERITY_NONE, "====================");
-        RSDK.PrintString(SEVERITY_NONE, "= End Probe        =");
-        RSDK.PrintString(SEVERITY_NONE, "====================");
+        Game_Print("====================");
+        Game_Print("= Begin Probe      =");
+        Game_Print("====================");
+        if (entity->direction)
+            Game_Print("self->direction = S/U");
+        else
+            Game_Print("self->direction = U/S");
+        Game_Print("self->angle = %i", entity->angle);
+        Game_Print("Cos256(self->angle) = %i", RSDK.Cos256(entity->angle));
+        Game_Print("Sin256(self->angle) = %i", RSDK.Sin256(entity->angle));
+        Game_Print("====================");
+        if (player->direction)
+            Game_Print("self->direction = FACING_LEFT");
+        else
+            Game_Print("self->direction = FACING_RIGHT");
+        Game_Print("playerPtr->groundVel = %1", player->groundVel);
+        Game_Print("playerPtr->angle = %i", player->angle);
+        Game_Print("playerPtr->collisionMode = %i", player->collisionMode);
+        Game_Print("playerPtr->onGround = %i", player->onGround);
+        Game_Print("====================");
+        Game_Print("= End Probe        =");
+        Game_Print("====================");
     }
 }
 

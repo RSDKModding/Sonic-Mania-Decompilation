@@ -57,7 +57,7 @@ struct AnalogState {
     InputState keyLeft;
     InputState keyRight;
     InputState keyStick;
-    float unknown;
+    float deadzone;
     float hDelta;
     float vDelta;
 };

@@ -18,9 +18,9 @@ bool32 validDraw = false;
 ForeachStackInfo foreachStackList[0x20];
 ForeachStackInfo *foreachStackPtr = NULL;
 
-void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void),
-                  void (*lateUpdate)(void), void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void),
-                  void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void))
+void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+                  void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                  void (*editorLoad)(void), void (*serialize)(void))
 {
     if (objectCount < OBJECT_COUNT) {
         ObjectInfo *info = &objectList[objectCount];
@@ -50,6 +50,7 @@ void CreateObject(Object **structPtr, const char *name, uint entitySize, uint ob
     }
 }
 
+#if RETRO_USE_PLUS
 void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize)
 {
     memset(hashBuffer, 0, 0x400);
@@ -58,9 +59,10 @@ void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize
 
     memcpy(hashBuffer, name, len);
     GenerateHash(hash, len);
-    AllocateStorage(objectSize, (void**)structPtr, DATASET_STG, true);
+    AllocateStorage(objectSize, (void **)structPtr, DATASET_STG, true);
     LoadStaticObject((byte *)*structPtr, hash, 0);
 }
+#endif
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 {
@@ -70,7 +72,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 
     int strPos = 20;
     for (int i = 0; i < 32; i += 4) {
-        int charVal = hash[0] >> i;
+        int charVal      = hash[0] >> i;
         buffer[strPos++] = hexChars[charVal & 0xF];
     }
     for (int i = 0; i < 32; i += 4) {
@@ -95,7 +97,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
             CloseFile(&info);
             return;
         }
-        
+
         while (info.readPos < info.fileSize) {
             int dataType  = ReadInt8(&info);
             int arraySize = ReadInt32(&info);
@@ -106,13 +108,12 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 
                 switch (dataType) {
                     case VAR_UINT8:
-                    case VAR_INT8: 
+                    case VAR_INT8:
                         if (info.readPos + dataSize <= info.fileSize && &obj[dataPos]) {
                             for (int i = 0; i < dataSize * sizeof(byte); i += sizeof(byte)) ReadBytes(&info, &obj[dataPos + i], sizeof(byte));
                         }
                         else {
-                            for (int i = 0; i < dataSize * sizeof(byte); ++i)
-                                ReadInt8(&info);
+                            for (int i = 0; i < dataSize * sizeof(byte); ++i) ReadInt8(&info);
                         }
                         dataPos += arraySize;
                         break;
@@ -126,14 +127,13 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             for (int i = 0; i < dataSize * sizeof(short); i += sizeof(short)) ReadBytes(&info, &obj[dataPos + i], sizeof(short));
                         }
                         else {
-                            for (int i = 0; i < dataSize * sizeof(short); ++i)
-                                ReadInt8(&info);
+                            for (int i = 0; i < dataSize * sizeof(short); ++i) ReadInt8(&info);
                         }
                         dataPos = tmp + sizeof(short) * arraySize;
                         break;
                     }
                     case VAR_UINT32:
-                    case VAR_INT32: 
+                    case VAR_INT32:
                     case VAR_ENUM: {
                         int tmp = (dataPos & 0xFFFFFFFC) + 2;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
@@ -143,8 +143,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             for (int i = 0; i < dataSize * sizeof(int); i += sizeof(int)) ReadBytes(&info, &obj[dataPos + i], sizeof(int));
                         }
                         else {
-                            for (int i = 0; i < dataSize * sizeof(int); ++i)
-                                ReadInt8(&info);
+                            for (int i = 0; i < dataSize * sizeof(int); ++i) ReadInt8(&info);
                         }
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
@@ -155,9 +154,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                 int tmp = 0;
                 switch (dataType) {
                     case VAR_UINT8:
-                    case VAR_INT8:
-                        dataPos += sizeof(byte) * arraySize;
-                        break;
+                    case VAR_INT8: dataPos += sizeof(byte) * arraySize; break;
                     case VAR_UINT16:
                     case VAR_INT16:
                         tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
@@ -173,41 +170,41 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
-                    case VAR_BOOL:
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(bool32);
+                    case 7: //any pointer
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(bool32) * arraySize;
+                        dataPos = tmp + sizeof(int *) * arraySize;
                         break;
-                    case VAR_STRING:
+                    case VAR_STRING: //textInfo
                         tmp = (dataPos & 0xFFFFFFFC) + 4;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(TextInfo) * arraySize; //8
+                        dataPos = tmp + sizeof(TextInfo) * arraySize; // 8
                         break;
-                    case VAR_VECTOR2:
+                    case VAR_VECTOR2: //vector2
                         tmp = (dataPos & 0xFFFFFFFC) + 4;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(Vector2) * arraySize; //8
+                        dataPos = tmp + sizeof(Vector2) * arraySize; // 8
                         break;
-                    case 10:
+                    case 10: //EntityAnimationData
                         tmp = (dataPos & 0xFFFFFFFC) + 4;
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(EntityAnimationData) * arraySize; //24
+                        dataPos = tmp + sizeof(EntityAnimationData) * arraySize; // 24
                         break;
-                    case 11:
+                    case 11: //Hitbox
                         tmp = (dataPos & 0xFFFFFFFE) + 2;
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(Hitbox) * arraySize; //8
+                        dataPos = tmp + sizeof(Hitbox) * arraySize; // 8
                         break;
-                    case 12:
+                    case 12: //???
                         tmp = (dataPos & 0xFFFFFFFE) + 2;
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 2 * (9 * arraySize);
+                        dataPos = tmp + 18 * arraySize; // 18
                         break;
                     default: break;
                 }
@@ -239,7 +236,7 @@ void InitObjects()
         }
     }
 
-    //SpawnEntity(TestObject->objectID, NULL, 0, 0);
+    // SpawnEntity(TestObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
@@ -291,12 +288,13 @@ void ProcessObjects()
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;
                 case ACTIVE_ALWAYS:
                 case ACTIVE_NORMAL: sceneInfo.entity->inBounds = true; break;
-                case ACTIVE_BOUNDS: 
+                case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
                         int sx = sceneInfo.entity->position.x - screens[s].position.x;
                         int sy = sceneInfo.entity->position.y - screens[s].position.y;
-                        if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screens[s].width && sy >= sceneInfo.entity->updateRange.y + screens[s].height) {
+                        if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screens[s].width
+                            && sy >= sceneInfo.entity->updateRange.y + screens[s].height) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -326,10 +324,10 @@ void ProcessObjects()
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
                         int sx = sceneInfo.entity->position.x - screens[s].position.x >= 0 ? sceneInfo.entity->position.x - screens[s].position.x
-                                                                                 : screens[s].position.x - sceneInfo.entity->position.x;
+                                                                                           : screens[s].position.x - sceneInfo.entity->position.x;
                         sx >>= 16;
                         int sy = sceneInfo.entity->position.y - screens[s].position.y >= 0 ? sceneInfo.entity->position.y - screens[s].position.y
-                                                                                 : screens[s].position.y - sceneInfo.entity->position.y;
+                                                                                           : screens[s].position.y - sceneInfo.entity->position.y;
                         sy >>= 16;
                         if (sx * sx + sy * sy <= sceneInfo.entity->updateRange.x + screens[s].width) {
                             sceneInfo.entity->inBounds = true;
@@ -362,10 +360,10 @@ void ProcessObjects()
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; //type-based slots
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; //extra slots
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
         }
         sceneInfo.entitySlot++;
@@ -423,7 +421,7 @@ void ProcessPausedObjects()
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
             typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
@@ -554,7 +552,7 @@ void ProcessFrozenObjects()
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                           = e; // All active objects
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
             typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
                 typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
@@ -595,7 +593,7 @@ void ProcessObjectDrawLists()
             sceneInfo.currentDrawGroup = 0;
             for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
                 DrawList *list = &drawLayers[l];
-                
+
                 if (list->initDrawPtr)
                     list->initDrawPtr();
 
@@ -624,7 +622,7 @@ void ProcessObjectDrawLists()
                     }
 
                     for (int i = 0; i < list->layerCount; ++i) {
-                        TileLayer *layer       = &tileLayers[list->layerDrawList[i]];
+                        TileLayer *layer = &tileLayers[list->layerDrawList[i]];
 
                         if (layer->scanlineCallback)
                             layer->scanlineCallback(scanlines);
@@ -744,8 +742,8 @@ void ResetEntity(ushort slotID, ushort type, void *data)
         sceneInfo.entity       = entityPtr;
         entityPtr->interaction = true;
         objInfo->create(data);
-        sceneInfo.entity = curEnt;
-        entityPtr->objectID  = type;
+        sceneInfo.entity    = curEnt;
+        entityPtr->objectID = type;
     }
     else {
         entityPtr->objectID = type;
@@ -774,7 +772,7 @@ void SpawnEntity(ushort type, void *data, int x, int y)
     }
     else {
         entityPtr->objectID = type;
-        entityPtr->active = ACTIVE_NORMAL;
+        entityPtr->active   = ACTIVE_NORMAL;
         entityPtr->visible  = true;
     }
 }
@@ -830,7 +828,6 @@ bool32 GetObjects(ushort type, Entity **entity)
     return false;
 }
 
-
 bool32 CheckOnScreen(Entity *entity, Vector2 *range)
 {
     if (!entity)
@@ -857,7 +854,8 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
     }
     return false;
 }
-bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range) {
+bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
+{
     if (!position || !range)
         return false;
 
@@ -869,5 +867,5 @@ bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range) {
         }
     }
 
-    return false; 
+    return false;
 }

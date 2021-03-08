@@ -139,7 +139,11 @@ void StarPost_StageLoad()
             savedStarPost->activated = StarPost->activePlayers;
         }
 
+#if RETRO_USE_PLUS
         if (options->gameMode == MODE_COMPETITION || options->gameMode == MODE_ENCORE) {
+#else
+        if (options->gameMode == MODE_COMPETITION) {
+#endif
             EntityPlayer *player                         = (EntityPlayer *)RSDK.GetEntityByID(i);
             StarPost->playerPositions[i].x = player->position.x;
             StarPost->playerPositions[i].y = player->position.y;
@@ -315,14 +319,17 @@ void StarPost_CheckCollisions()
         entity->timer = 0;
         if (options->gameMode < MODE_TIMEATTACK) {
             int quota = 50;
+#if RETRO_USE_PLUS
             if (options->gameMode != MODE_ENCORE)
                 quota = 25;
+#endif
             if (player->rings >= quota) {
                 entity->timer2     = 0;
                 entity->starAngle  = 0;
                 entity->starAngle2 = 0;
                 entity->starOffset = 0;
                 //TODO: what the fuck does this even work
+                //NOTE: it does not
                 //int v15            = (int)(player->rings - 20 + ((unsigned __int64)(-2004318071i64 * (player->rings - 20)) >> 32)) >> 3;
                 //entity->starTimer  = (int)(v15 + (v15 >> 31)) % 3 + 1;
             }
@@ -354,7 +361,9 @@ void StarPost_State_BallSpin()
 
     entity->angle += entity->ballSpeed;
     if (!StarPost->hasAchievement && entity->timer == 10) {
+#if RETRO_USE_PLUS
         User.UnlockAchievement("ACH_STARPOST");
+#endif
         StarPost->hasAchievement = true;
     }
 

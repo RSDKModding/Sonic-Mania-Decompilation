@@ -122,7 +122,8 @@ void GenerateHash(uint *buffer, int len);
 
 #define HASH_SIZE            (4 * sizeof(uint))
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
-#define GEN_HASH(text, hash) StrCopy(hashBuffer, text); GenerateHash(hash, StrLength(hashBuffer));
+#define GEN_HASH(text, hash) StrCopy(hashBuffer, text); GenerateHash(hash, StrLength(hashBuffer))
+#define HASH_COPY(dst, src) memcpy(dst, src, 0x10)
 
 extern char textBuffer[0x400];
 inline void SetText(TextInfo *textInfo, char *text, uint size)

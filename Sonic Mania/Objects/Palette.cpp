@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectPalette *Palette;
 
 void Palette_Update() {}
@@ -39,3 +40,4 @@ void Palette_Serialize()
     RSDK_EDITABLE_VAR(Palette, VAR_UINT8, bankID);
     RSDK_EDITABLE_VAR(Palette, VAR_BOOL, loadOnce);
 }
+#endif

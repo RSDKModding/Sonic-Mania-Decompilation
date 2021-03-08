@@ -1763,6 +1763,12 @@
     <ClInclude Include="Objects\InkWipe.hpp">
       <Filter>Sources\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\APICallback.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLink.hpp">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.cpp">
@@ -3509,6 +3515,9 @@
       <Filter>Sources\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Objects\InkWipe.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\APICallback.cpp">
       <Filter>Sources\Objects</Filter>
     </ClCompile>
   </ItemGroup>

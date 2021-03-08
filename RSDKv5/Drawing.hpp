@@ -5,7 +5,11 @@
 #define SURFACE_MAX      (0x40)
 #define GFXDATA_MAX      (0x200000)
 
-#define SCREEN_MAX       (0x4)
+#if RETRO_USE_PLUS
+#define SCREEN_MAX (0x4)
+#else
+#define SCREEN_MAX (0x2)
+#endif
 
 #define BLENDTABLE_YSIZE (0x100)
 #define BLENDTABLE_XSIZE (0x20)
@@ -115,7 +119,7 @@ inline void SetScreenSize(byte screenID, ushort width, ushort height)
         screen->clipBound_X2 = width;
         screen->clipBound_Y1 = 0;
         screen->clipBound_Y2 = screenHeight;
-        screen->waterDrawPos      = screenHeight;
+        screen->waterDrawPos = screenHeight;
     }
 }
 
@@ -127,11 +131,6 @@ inline void AddScreen(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelati
         screenUnknown[screenCount].offset.y      = offsetY;
         screenUnknown[screenCount].worldRelative = worldRelative;
         ++screenCount;
-
-        //screens[screenCount].position.x = x;
-        //screens[screenCount].position.y = y;
-        //screens[screenCount].width = width;
-        //screens[screenCount].height = height;
     }
 }
 

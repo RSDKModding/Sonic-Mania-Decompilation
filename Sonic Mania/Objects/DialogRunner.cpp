@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectDialogRunner *DialogRunner;
 
 void DialogRunner_Update() {}
@@ -70,3 +71,4 @@ void DialogRunner_EditorDraw() {}
 void DialogRunner_EditorLoad() {}
 
 void DialogRunner_Serialize() {}
+#endif

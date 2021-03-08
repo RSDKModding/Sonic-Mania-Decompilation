@@ -94,8 +94,10 @@ void SizeLaser_StageLoad()
             SizeLaser->tailSpriteIndex = RSDK.LoadAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
         case ID_KNUCKLES: SizeLaser->knuxIndex = RSDK.LoadAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
+#if RETRO_USE_PLUS
         case ID_MIGHTY: SizeLaser->mightyIndex = RSDK.LoadAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
         case ID_RAY: SizeLaser->rayIndex = RSDK.LoadAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
+#endif
         default: break;
     }
 
@@ -106,8 +108,10 @@ void SizeLaser_StageLoad()
             SizeLaser->tailSpriteIndex = RSDK.LoadAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
         case ID_KNUCKLES: SizeLaser->knuxIndex = RSDK.LoadAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
+#if RETRO_USE_PLUS
         case ID_MIGHTY: SizeLaser->mightyIndex = RSDK.LoadAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
         case ID_RAY: SizeLaser->rayIndex = RSDK.LoadAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
+#endif
         default: break;
     }
 

@@ -13,8 +13,6 @@
 #define EDITABLEVAR_COUNT (0x100)
 #define TYPEGROUP_COUNT (0x104)
 
-#define DEFAULT_OBJECT_COUNT (3) //usually 2 but test object is being used rn
-
 enum TypeGroups {
     GROUP_ALL     = 0,
     GROUP_CUSTOM1 = TYPE_COUNT,
@@ -51,7 +49,11 @@ enum ActiveFlags {
 
 enum DefaultObjects {
     TYPE_DEFAULTOBJECT = 0,
-    TYPE_DEVOUTPUT     = 1,
+#if RETRO_USE_PLUS
+    TYPE_DEVOUTPUT,
+#endif
+    TYPE_TESTOBJECT,
+    TYPE_DEFAULTCOUNT, //max
 };
 
 struct Object {
@@ -78,7 +80,9 @@ struct Entity {
     bool32 interaction;
     bool32 onGround;
     byte active;
+#if RETRO_USE_PLUS
     byte filter;
+#endif
     byte direction;
     byte drawOrder;
     byte collisionLayers;
@@ -148,7 +152,9 @@ extern bool32 validDraw;
 void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
+#if RETRO_USE_PLUS
 void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize);
+#endif
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos);
 

@@ -15,7 +15,7 @@ byte gfxLineBuffer[SCREEN_YSIZE];
 int maskColour = 0;
 ushort *lookUpBuffer = NULL;
 
-
+#if RETRO_USE_PLUS
 void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)
 {
     FileInfo info;
@@ -45,6 +45,7 @@ void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)
         CloseFile(&info);
     }
 }
+#endif
 
 void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex)
 {
@@ -76,6 +77,7 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
     }
 }
 
+#if RETRO_USE_PLUS
 void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int alpha, int index, int count) {
 
     if (paletteID >= PALETTE_COUNT || !coloursA || !coloursB)
@@ -101,3 +103,4 @@ void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int alpha, int
         ++palettePtr;
     }
 }
+#endif

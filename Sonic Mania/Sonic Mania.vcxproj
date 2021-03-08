@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameLink.hpp" />
     <ClInclude Include="GameObjects.hpp" />
     <ClInclude Include="GameOptions.hpp" />
     <ClInclude Include="Objects\ActClear.hpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Objects\AnimalHBH.hpp" />
     <ClInclude Include="Objects\Animals.hpp" />
     <ClInclude Include="Objects\Announcer.hpp" />
+    <ClInclude Include="Objects\APICallback.hpp" />
     <ClInclude Include="Objects\Aquis.hpp" />
     <ClInclude Include="Objects\Armadiloid.hpp" />
     <ClInclude Include="Objects\BallCannon.hpp" />
@@ -618,6 +620,7 @@
     <ClCompile Include="Objects\AnimalHBH.cpp" />
     <ClCompile Include="Objects\Animals.cpp" />
     <ClCompile Include="Objects\Announcer.cpp" />
+    <ClCompile Include="Objects\APICallback.cpp" />
     <ClCompile Include="Objects\Aquis.cpp" />
     <ClCompile Include="Objects\Armadiloid.cpp" />
     <ClCompile Include="Objects\BallCannon.cpp" />

@@ -30,7 +30,9 @@ struct SceneListEntry {
     char name[0x20];
     char folder[0x10];
     char sceneID[0x08];
+#if RETRO_USE_PLUS
     byte filter;
+#endif
 };
 
 struct SceneInfo {
@@ -52,7 +54,9 @@ struct SceneInfo {
     byte activeCategory;
     byte categoryCount;
     byte state;
+#if RETRO_USE_PLUS
     byte filter;
+#endif
     byte milliseconds;
     byte seconds;
     byte minutes;
@@ -76,7 +80,6 @@ struct TileLayer {
     byte drawLayer[4];
     byte widthShift;
     byte heightShift;
-    byte field_7;
     ushort width;
     ushort height;
     Vector2 position;
@@ -89,8 +92,6 @@ struct TileLayer {
     int deformationDataW[0x400];
     void (*scanlineCallback)(ScanlineInfo *);
     ushort scrollInfoCount;
-    char field_202E;
-    char field_202F;
     ScrollInfo scrollInfo[0x100];
     uint name[4];
     ushort *layout;
@@ -114,7 +115,9 @@ extern TileLayer tileLayers[LAYER_COUNT];
 
 extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction
 
+#if RETRO_USE_PLUS
 extern bool32 hardResetFlag;
+#endif
 extern char currentSceneFolder[0x10];
 
 extern SceneInfo sceneInfo;
@@ -133,7 +136,9 @@ void ProcessSceneTimer();
 void LoadSceneByName(const char *categoryName, const char *sceneName);
 inline void InitSceneLoad() { sceneInfo.state = sceneInfo.state < ENGINESTATE_LOAD_STEPOVER ? ENGINESTATE_LOAD : ENGINESTATE_LOAD_STEPOVER; }
 
+#if RETRO_USE_PLUS
 inline void SetHardResetFlag(bool32 set) { hardResetFlag = set; }
+#endif
 
 inline bool32 CheckValidStage()
 {

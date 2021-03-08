@@ -1,45 +1,75 @@
 #include "SonicMania.hpp"
 
-SceneInfo *RSDK_sceneInfo        = NULL;
+SceneInfo *RSDK_sceneInfo = NULL;
+#if RETRO_USE_PLUS
+char *RSDK_name           = NULL;
 SKUInfo *RSDK_sku                = NULL;
-ScreenInfo *RSDK_screens         = NULL;
+#endif
+#if !RETRO_USE_PLUS
+EngineInfo *RSDK_info;
+#endif
 ControllerState *RSDK_controller = NULL;
 AnalogState *RSDK_stickL         = NULL;
+#if RETRO_USE_PLUS
 AnalogState *RSDK_stickR         = NULL;
 TriggerState *RSDK_triggerL      = NULL;
 TriggerState *RSDK_triggerR      = NULL;
-TouchMouseData *RSDK_touchMouse  = NULL;
+#endif
+TouchMouseData *RSDK_touchMouse = NULL;
+#if RETRO_USE_PLUS
+UnknownInfo *RSDK_unknown              = NULL;
+#endif
+ScreenInfo *RSDK_screens         = NULL;
 
 char textBuffer[0x400];
 
+#if RETRO_USE_PLUS
 UserFunctionTable User;
+#endif
 RSDKFunctionTable RSDK;
 
 void LinkGameLogicDLL(GameInfo *info)
 {
+#if RETRO_USE_PLUS
     memset(&User, 0, sizeof(UserFunctionTable));
+#endif
     memset(&RSDK, 0, sizeof(RSDKFunctionTable));
-    
+
     if (info->functionPtrs)
         memcpy(&RSDK, info->functionPtrs, sizeof(RSDKFunctionTable));
+#if RETRO_USE_PLUS
     if (info->userdataPtrs)
         memcpy(&User, info->userdataPtrs, sizeof(UserFunctionTable));
-    RSDK_sku        = info->currentSKU;
+#endif
+
+#if RETRO_USE_PLUS
+    RSDK_name = info->gameName;
+    RSDK_sku  = info->currentSKU;
+#endif
+#if !RETRO_USE_PLUS
+    RSDK_info = info->engineInfo;
+#endif
     RSDK_sceneInfo  = info->sceneInfo;
     RSDK_controller = info->controller;
     RSDK_stickL     = info->stickL;
-    RSDK_stickR     = info->stickR;
-    RSDK_triggerL   = info->triggerL;
-    RSDK_triggerR   = info->triggerR;
+#if RETRO_USE_PLUS
+    RSDK_stickR   = info->stickR;
+    RSDK_triggerL = info->triggerL;
+    RSDK_triggerR = info->triggerR;
+#endif
     RSDK_touchMouse = info->touchMouse;
-    // GameInfo_Unknown5      = (int)info->InputCount;
+#if RETRO_USE_PLUS
+    RSDK_unknown = info->deadzone;
+#endif
     RSDK_screens = info->screenInfo;
-    RSDK.InitGameOptions((void**)&options, sizeof(GameOptions));
+    RSDK.InitGameOptions((void **)&options, sizeof(GameOptions));
 
     defaultHitbox.left   = -10;
     defaultHitbox.top    = -20;
     defaultHitbox.right  = 10;
     defaultHitbox.bottom = 20;
+
+    //RSDK_ADD_OBJECT(ActClear);
 
     RSDK.CreateObject((Object**)&ActClear, "ActClear", sizeof(EntityActClear), sizeof(ObjectActClear), ActClear_Update, ActClear_LateUpdate, ActClear_StaticUpdate,
                  ActClear_Draw, ActClear_Create, ActClear_StageLoad, ActClear_EditorDraw, ActClear_EditorLoad, ActClear_Serialize);
@@ -73,7 +103,12 @@ void LinkGameLogicDLL(GameInfo *info)
                  Animals_Draw, Animals_Create, Animals_StageLoad, Animals_EditorDraw, Animals_EditorLoad, Animals_Serialize);
     RSDK.CreateObject((Object**)&Announcer, "Announcer", sizeof(EntityAnnouncer), sizeof(ObjectAnnouncer), Announcer_Update, Announcer_LateUpdate,
                  Announcer_StaticUpdate, Announcer_Draw, Announcer_Create, Announcer_StageLoad, Announcer_EditorDraw, Announcer_EditorLoad,
-                 Announcer_Serialize);
+                      Announcer_Serialize);
+#if !RETRO_USE_PLUS
+    RSDK.CreateObject((Object **)&APICallback, "APICallback", sizeof(EntityAPICallback), sizeof(ObjectAPICallback), APICallback_Update,
+                      APICallback_LateUpdate, APICallback_StaticUpdate, APICallback_Draw, APICallback_Create, APICallback_StageLoad,
+                      APICallback_EditorDraw, APICallback_EditorLoad, APICallback_Serialize);
+#endif
     RSDK.CreateObject((Object**)&Aquis, "Aquis", sizeof(EntityAquis), sizeof(ObjectAquis), Aquis_Update, Aquis_LateUpdate, Aquis_StaticUpdate, Aquis_Draw,
                  Aquis_Create, Aquis_StageLoad, Aquis_EditorDraw, Aquis_EditorLoad, Aquis_Serialize);
     RSDK.CreateObject((Object**)&Armadiloid, "Armadiloid", sizeof(EntityArmadiloid), sizeof(ObjectArmadiloid), Armadiloid_Update, Armadiloid_LateUpdate,
@@ -300,11 +335,13 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK.CreateObject((Object**)&Decoration, "Decoration", sizeof(EntityDecoration), sizeof(ObjectDecoration), Decoration_Update, Decoration_LateUpdate,
                  Decoration_StaticUpdate, Decoration_Draw, Decoration_Create, Decoration_StageLoad, Decoration_EditorDraw, Decoration_EditorLoad,
                  Decoration_Serialize);
-    RSDK.CreateObject((Object**)&DERobot, "DERobot", sizeof(EntityDERobot), sizeof(ObjectDERobot), DERobot_Update, DERobot_LateUpdate, DERobot_StaticUpdate,
-                 DERobot_Draw, DERobot_Create, DERobot_StageLoad, DERobot_EditorDraw, DERobot_EditorLoad, DERobot_Serialize);
+    RSDK.CreateObject((Object**)&DERobot, "DERobot", sizeof(EntityDERobot), sizeof(ObjectDERobot), DERobot_Update, DERobot_LateUpdate, DERobot_StaticUpdate, DERobot_Draw, DERobot_Create, DERobot_StageLoad, DERobot_EditorDraw, DERobot_EditorLoad,
+                      DERobot_Serialize);
+#if RETRO_USE_PLUS
     RSDK.CreateObject((Object**)&DialogRunner, "DialogRunner", sizeof(EntityDialogRunner), sizeof(ObjectDialogRunner), DialogRunner_Update, DialogRunner_LateUpdate,
                  DialogRunner_StaticUpdate, DialogRunner_Draw, DialogRunner_Create, DialogRunner_StageLoad, DialogRunner_EditorDraw,
                  DialogRunner_EditorLoad, DialogRunner_Serialize);
+#endif
     RSDK.CreateObject((Object**)&DirectorChair, "DirectorChair", sizeof(EntityDirectorChair), sizeof(ObjectDirectorChair), DirectorChair_Update,
                  DirectorChair_LateUpdate, DirectorChair_StaticUpdate, DirectorChair_Draw, DirectorChair_Create, DirectorChair_StageLoad,
                  DirectorChair_EditorDraw, DirectorChair_EditorLoad, DirectorChair_Serialize);
@@ -469,9 +506,11 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK.CreateObject((Object**)&Gachapandora, "Gachapandora", sizeof(EntityGachapandora), sizeof(ObjectGachapandora), Gachapandora_Update, Gachapandora_LateUpdate,
                  Gachapandora_StaticUpdate, Gachapandora_Draw, Gachapandora_Create, Gachapandora_StageLoad, Gachapandora_EditorDraw,
                  Gachapandora_EditorLoad, Gachapandora_Serialize);
-    RSDK.CreateObject((Object**)&GameOver, "GameOver", sizeof(EntityGameOver), sizeof(ObjectGameOver), GameOver_Update, GameOver_LateUpdate, GameOver_StaticUpdate,
-                 GameOver_Draw, GameOver_Create, GameOver_StageLoad, GameOver_EditorDraw, GameOver_EditorLoad, GameOver_Serialize);
+    RSDK.CreateObject((Object**)&GameOver, "GameOver", sizeof(EntityGameOver), sizeof(ObjectGameOver), GameOver_Update, GameOver_LateUpdate, GameOver_StaticUpdate, GameOver_Draw, GameOver_Create, GameOver_StageLoad, GameOver_EditorDraw, GameOver_EditorLoad,
+                      GameOver_Serialize);
+#if RETRO_USE_PLUS
     RSDK.CreateObjectContainer((Object **)&GameProgress, "GameProgress", sizeof(ObjectGameProgress));
+#endif
     RSDK.CreateObject((Object**)&GasPlatform, "GasPlatform", sizeof(EntityGasPlatform), sizeof(ObjectGasPlatform), GasPlatform_Update, GasPlatform_LateUpdate,
                  GasPlatform_StaticUpdate, GasPlatform_Draw, GasPlatform_Create, GasPlatform_StageLoad, GasPlatform_EditorDraw, GasPlatform_EditorLoad,
                  GasPlatform_Serialize);
@@ -833,17 +872,21 @@ void LinkGameLogicDLL(GameInfo *info)
                  OOZFlames_Serialize);
     RSDK.CreateObject((Object**)&OOZSetup, "OOZSetup", sizeof(EntityOOZSetup), sizeof(ObjectOOZSetup), OOZSetup_Update, OOZSetup_LateUpdate, OOZSetup_StaticUpdate,
                  OOZSetup_Draw, OOZSetup_Create, OOZSetup_StageLoad, OOZSetup_EditorDraw, OOZSetup_EditorLoad, OOZSetup_Serialize);
-    RSDK.CreateObject((Object**)&OptionsMenu, "OptionsMenu", sizeof(EntityOptionsMenu), sizeof(ObjectOptionsMenu), OptionsMenu_Update, OptionsMenu_LateUpdate,
-                 OptionsMenu_StaticUpdate, OptionsMenu_Draw, OptionsMenu_Create, OptionsMenu_StageLoad, OptionsMenu_EditorDraw, OptionsMenu_EditorLoad, OptionsMenu_Serialize);
+    RSDK.CreateObject((Object**)&OptionsMenu, "OptionsMenu", sizeof(EntityOptionsMenu), sizeof(ObjectOptionsMenu), OptionsMenu_Update, OptionsMenu_LateUpdate, OptionsMenu_StaticUpdate, OptionsMenu_Draw, OptionsMenu_Create, OptionsMenu_StageLoad,
+                      OptionsMenu_EditorDraw, OptionsMenu_EditorLoad, OptionsMenu_Serialize);
+#if RETRO_USE_PLUS
     RSDK.CreateObjectContainer((Object **)&Options, "Options", sizeof(ObjectOptions));
+#endif
     RSDK.CreateObject((Object**)&OrbitSpike, "OrbitSpike", sizeof(EntityOrbitSpike), sizeof(ObjectOrbitSpike), OrbitSpike_Update, OrbitSpike_LateUpdate,
                  OrbitSpike_StaticUpdate, OrbitSpike_Draw, OrbitSpike_Create, OrbitSpike_StageLoad, OrbitSpike_EditorDraw, OrbitSpike_EditorLoad,
                  OrbitSpike_Serialize);
-    RSDK.CreateObject((Object**)&PaintingEyes, "PaintingEyes", sizeof(EntityPaintingEyes), sizeof(ObjectPaintingEyes), PaintingEyes_Update, PaintingEyes_LateUpdate,
-                 PaintingEyes_StaticUpdate, PaintingEyes_Draw, PaintingEyes_Create, PaintingEyes_StageLoad, PaintingEyes_EditorDraw, PaintingEyes_EditorLoad, PaintingEyes_Serialize);
+    RSDK.CreateObject((Object**)&PaintingEyes, "PaintingEyes", sizeof(EntityPaintingEyes), sizeof(ObjectPaintingEyes), PaintingEyes_Update, PaintingEyes_LateUpdate, PaintingEyes_StaticUpdate, PaintingEyes_Draw, PaintingEyes_Create, PaintingEyes_StageLoad,
+                      PaintingEyes_EditorDraw, PaintingEyes_EditorLoad, PaintingEyes_Serialize);
+#if RETRO_USE_PLUS
     RSDK.CreateObject((Object **)&Palette, "Palette", sizeof(EntityPalette), sizeof(ObjectPalette), Palette_Update,
                       Palette_LateUpdate, Palette_StaticUpdate, Palette_Draw, Palette_Create, Palette_StageLoad,
                       Palette_EditorDraw, Palette_EditorLoad, Palette_Serialize);
+#endif
     RSDK.CreateObject((Object**)&PaperRoller, "PaperRoller", sizeof(EntityPaperRoller), sizeof(ObjectPaperRoller), PaperRoller_Update, PaperRoller_LateUpdate,
                  PaperRoller_StaticUpdate, PaperRoller_Draw, PaperRoller_Create, PaperRoller_StageLoad, PaperRoller_EditorDraw, PaperRoller_EditorLoad,
                  PaperRoller_Serialize);
@@ -1072,9 +1115,13 @@ void LinkGameLogicDLL(GameInfo *info)
                  RTeleporter_StaticUpdate, RTeleporter_Draw, RTeleporter_Create, RTeleporter_StageLoad, RTeleporter_EditorDraw, RTeleporter_EditorLoad,
                  RTeleporter_Serialize);
     RSDK.CreateObject((Object**)&RubyPortal, "RubyPortal", sizeof(EntityRubyPortal), sizeof(ObjectRubyPortal), RubyPortal_Update, RubyPortal_LateUpdate,
-                 RubyPortal_StaticUpdate, RubyPortal_Draw, RubyPortal_Create, RubyPortal_StageLoad, RubyPortal_EditorDraw, RubyPortal_EditorLoad,
-                 RubyPortal_Serialize);
+                 RubyPortal_StaticUpdate, RubyPortal_Draw, RubyPortal_Create, RubyPortal_StageLoad, RubyPortal_EditorDraw, RubyPortal_EditorLoad, RubyPortal_Serialize);
+#if RETRO_USE_PLUS
     RSDK.CreateObjectContainer((Object **)&SaveGame, "SaveGame", sizeof(ObjectSaveGame));
+#else
+    RSDK.CreateObject((Object **)&SaveGame, "SaveGame", sizeof(Entity)/*sizeof(EntitySaveGame)*/, sizeof(ObjectSaveGame), NULL, NULL, NULL, NULL, NULL,
+                      SaveGame_LoadSaveData, NULL, NULL, NULL);
+#endif
     RSDK.CreateObject((Object**)&Scarab, "Scarab", sizeof(EntityScarab), sizeof(ObjectScarab), Scarab_Update, Scarab_LateUpdate, Scarab_StaticUpdate, Scarab_Draw, Scarab_Create, Scarab_StageLoad, Scarab_EditorDraw, Scarab_EditorLoad, Scarab_Serialize);
     RSDK.CreateObject((Object**)&SchrodingersCapsule, "SchrodingersCapsule", sizeof(EntitySchrodingersCapsule), sizeof(ObjectSchrodingersCapsule),
                  SchrodingersCapsule_Update, SchrodingersCapsule_LateUpdate, SchrodingersCapsule_StaticUpdate, SchrodingersCapsule_Draw,
@@ -1275,9 +1322,11 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK.CreateObject((Object**)&ThoughtBubble, "ThoughtBubble", sizeof(EntityThoughtBubble), sizeof(ObjectThoughtBubble), ThoughtBubble_Update,
                  ThoughtBubble_LateUpdate, ThoughtBubble_StaticUpdate, ThoughtBubble_Draw, ThoughtBubble_Create, ThoughtBubble_StageLoad,
                  ThoughtBubble_EditorDraw, ThoughtBubble_EditorLoad, ThoughtBubble_Serialize);
-    RSDK.CreateObject((Object**)&TilePlatform, "TilePlatform", sizeof(EntityTilePlatform), sizeof(ObjectTilePlatform), TilePlatform_Update, TilePlatform_LateUpdate,
-                 TilePlatform_StaticUpdate, TilePlatform_Draw, TilePlatform_Create, TilePlatform_StageLoad, TilePlatform_EditorDraw, TilePlatform_EditorLoad, TilePlatform_Serialize);
+    RSDK.CreateObject((Object**)&TilePlatform, "TilePlatform", sizeof(EntityTilePlatform), sizeof(ObjectTilePlatform), TilePlatform_Update, TilePlatform_LateUpdate, TilePlatform_StaticUpdate, TilePlatform_Draw, TilePlatform_Create, TilePlatform_StageLoad,
+                      TilePlatform_EditorDraw, TilePlatform_EditorLoad, TilePlatform_Serialize);
+#if RETRO_USE_PLUS
     RSDK.CreateObjectContainer((Object **)&TimeAttackData, "TimeAttackData", sizeof(ObjectTimeAttackData));
+#endif
     RSDK.CreateObject((Object**)&TimeAttackGate, "TimeAttackGate", sizeof(EntityTimeAttackGate), sizeof(ObjectTimeAttackGate), TimeAttackGate_Update,
                  TimeAttackGate_LateUpdate, TimeAttackGate_StaticUpdate, TimeAttackGate_Draw, TimeAttackGate_Create, TimeAttackGate_StageLoad,
                  TimeAttackGate_EditorDraw, TimeAttackGate_EditorLoad, TimeAttackGate_Serialize);

@@ -15,7 +15,7 @@ void InitStorage()
         dataStorage[s].memPtr = (int*)malloc(dataStorage[s].storageLimit);
         dataStorage[s].usedStorage = 0;
         dataStorage[s].entryCount  = 0;
-        dataStorage[s].unknown    = 0;
+        dataStorage[s].unknown     = 0;
     }
 }
 
@@ -26,7 +26,7 @@ void ReleaseStorage()
             free(dataStorage[s].memPtr);
         dataStorage[s].usedStorage = 0;
         dataStorage[s].entryCount  = 0;
-        dataStorage[s].unknown    = 0;
+        dataStorage[s].unknown     = 0;
     }
 }
 

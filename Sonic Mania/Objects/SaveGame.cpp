@@ -2,6 +2,7 @@
 
 ObjectSaveGame *SaveGame;
 
+#if RETRO_USE_PLUS
 int *SaveGame_GetDataPtr(int slot, bool32 encore)
 {
     if (slot == 0xFF)
@@ -12,13 +13,18 @@ int *SaveGame_GetDataPtr(int slot, bool32 encore)
     else
         return &options->saveRAM[0x100 * (slot % 8)];
 }
+#endif
 
 void SaveGame_LoadSaveData() {
     int slot = options->saveSlotID;
     if (slot == 255)
         SaveGame->saveRAM = options->noSaveSlot;
     else
+#if RETRO_USE_PLUS
         SaveGame->saveRAM = (int *)SaveGame_GetDataPtr(slot, options->gameMode == MODE_ENCORE);
+#else
+        SaveGame->saveRAM =  &options->saveRAM[0x100 * (slot % 8)];
+#endif
     Game_Print("dataPtr: %X", SaveGame->saveRAM);
     int *saveRAM = SaveGame->saveRAM;
     if (!saveRAM[25])
@@ -35,8 +41,10 @@ void SaveGame_LoadSaveData() {
             Player->savedScore      = saveRAM[26];
             Player->savedScore1UP   = saveRAM[27];
             options->continues      = saveRAM[29];
+#if RETRO_USE_PLUS
             options->characterFlags = saveRAM[0x44]; // character flags
             options->stock          = saveRAM[0x43]; // stock
+#endif
         }
     }
 

@@ -1,6 +1,7 @@
 #ifndef USERDATA_H
 #define USERDATA_H
 
+#if RETRO_USE_PLUS
 struct DummyCore {
     void (*unknown1)();
     void (*unknown2)();
@@ -100,6 +101,7 @@ extern DummyAchievements *achievements;
 extern DummyLeaderboards *leaderboards;
 extern DummyRichPresence *richPresence;
 extern DummyStats *stats;
+#endif
 
 void initUserData();
 void releaseUserData();
@@ -108,6 +110,7 @@ int getUserLanguage();
 int getConfirmButtonFlip();
 void launchManual();
 void exitGame();
+#if RETRO_USE_PLUS
 inline bool32 checkDLC(byte dlcID)
 {
     if (dlcID < 8)
@@ -115,6 +118,7 @@ inline bool32 checkDLC(byte dlcID)
     else
         return 0;
 }
+#endif
 
 void unlockAchievement(const char *name);
 
@@ -124,6 +128,21 @@ void trackScore(int a2, int a3, int a4);
 void setPresence(byte a2, TextInfo *info);
 
 void setupUserDebugValues();
+
+#if !RETRO_USE_PLUS
+#define FUNCLIST_COUNT (0x30)
+struct FunctionListEntry {
+    void *ptr;
+    uint hash[4];
+};
+
+extern FunctionListEntry functionList[FUNCLIST_COUNT];
+extern int functionListCount;
+
+void SetFuncPtr(const char *name, void *ptr);
+void *GetFuncPtr(const char *name);
+#endif
+
 
 extern bool32 settingsChanged;
 

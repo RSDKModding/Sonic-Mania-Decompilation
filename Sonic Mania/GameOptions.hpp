@@ -2,8 +2,13 @@
 #define GAME_OPTIONS_H
 
 enum GameModes {
+#if !RETRO_USE_PLUS
+	MODE_NOSAVE,
+#endif
     MODE_MANIA,
+#if RETRO_USE_PLUS
     MODE_ENCORE,
+#endif
     MODE_TIMEATTACK,
     MODE_COMPETITION,
 };
@@ -14,9 +19,11 @@ enum PlayerIDs {
     MAX_PLAYERS       = 4,
     ID_SONIC          = 0x01,
     ID_TAILS          = 0x02,
-    ID_KNUCKLES       = 0x04,
+    ID_KNUCKLES = 0x04,
+#if RETRO_USE_PLUS
     ID_MIGHTY         = 0x08,
     ID_RAY            = 0x10,
+#endif
     ID_TAILS_ASSIST   = 0x200,
     ID_DEFAULT_PLAYER = 0x201,
 };
@@ -32,7 +39,9 @@ enum ScreenSizes { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 };
 
 enum SaveSlots { NO_SAVE_SLOT = 255 };
 
+#if RETRO_USE_PLUS
 enum ModeFilters { FILTER_MANIA = 2, FILTER_ENCORE = 4 };
+#endif
 
 enum ReservedEntities {
     SLOT_PLAYER1        = 0,
@@ -129,7 +138,7 @@ struct GameOptions {
 	int continues;
 	int initCoolBonus;
 	int coolBonus[4];
-#if !RETRO_USE_PLUS
+#if RETRO_USE_PLUS
 	int replayWriteBuffer[0x40000];
 	int replayReadBuffer[0x40000];
 	int replayTempWBuffer[0x40000];

@@ -282,6 +282,7 @@ void runRetroEngine()
                 LoadScene();
                 LoadSceneFile();
                 InitObjects();
+#if RETRO_USE_PLUS
                 userCore->SetupDebugValues();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
@@ -289,12 +290,13 @@ void runRetroEngine()
                     val->isSigned   = 0;
                     val->value      = &drawLayers[v].visible;
                     val->valByteCnt = 4;
-                    val->min   = 0;
-                    val->max   = 1;
+                    val->min        = 0;
+                    val->max        = 1;
 
                     MEM_ZERO(drawLayers[v]);
                     drawLayers[v].visible = true;
                 }
+#endif
                 inputDevice.ProcessInput();
                 ProcessObjects();
                 break;
@@ -336,6 +338,7 @@ void runRetroEngine()
                 LoadScene();
                 LoadSceneFile();
                 InitObjects();
+#if RETRO_USE_PLUS
                 userCore->SetupDebugValues();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
@@ -349,6 +352,7 @@ void runRetroEngine()
                     MEM_ZERO(drawLayers[v]);
                     drawLayers[v].visible = true;
                 }
+#endif
                 inputDevice.ProcessInput();
                 ProcessObjects();
                 sceneInfo.state = ENGINESTATE_REGULAR_STEPOVER;
@@ -495,6 +499,7 @@ void parseArguments(int argc, char *argv[])
             buf[b] = 0;
         }
 
+#if RETRO_USE_PLUS
         find = strstr(argv[a], "filter=");
         if (find) {
             char buf[0x10];
@@ -507,6 +512,7 @@ void parseArguments(int argc, char *argv[])
             buf[b]           = 0;
             sceneInfo.filter = atoi(buf);
         }
+#endif
 
         find = strstr(argv[a], "console=true");
         if (find) {
@@ -631,7 +637,9 @@ void LoadGameConfig()
                 ReadString(&info, sceneInfo.listData[sceneID + s].folder);
                 ReadString(&info, sceneInfo.listData[sceneID + s].sceneID);
 
+#if RETRO_USE_PLUS
                 sceneInfo.listData[sceneID + s].filter = ReadInt8(&info);
+#endif
             }
             sceneInfo.listCategory[i].sceneOffsetEnd = sceneInfo.listCategory[i].sceneOffsetStart + sceneInfo.listCategory[i].sceneCount;
             sceneID += sceneInfo.listCategory[i].sceneCount;
@@ -654,31 +662,46 @@ void InitScriptSystem()
 {
     CreateObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
                  NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
+#if RETRO_USE_PLUS
     CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
+#endif
     CreateObject((Object **)&TestObject, ":TestObject:", sizeof(EntityTestObject), sizeof(ObjectTestObject), TestObject_Update,
                  TestObject_LateUpdate, TestObject_StaticUpdate, TestObject_Draw, TestObject_Create, TestObject_StageLoad, TestObject_EditorDraw,
                  TestObject_EditorLoad, TestObject_Serialize);
     globalObjectIDs[0] = 0;
+#if RETRO_USE_PLUS
     globalObjectIDs[1] = 1;
     globalObjectIDs[2] = 2;
+#else
+    globalObjectIDs[1] = 1;
+#endif
 
-    globalObjectCount = DEFAULT_OBJECT_COUNT;
+    globalObjectCount = TYPE_DEFAULTCOUNT;
 
     GameInfo info;
 
     info.functionPtrs = functionTable;
+#if RETRO_USE_PLUS
     info.userdataPtrs = userDataTable;
-    info.gameName     = engine.gameName;
+    info.gameName = engine.gameName;
     info.currentSKU   = &curSKU;
+#endif
+#if !RETRO_USE_PLUS
+    info.engineInfo = &engineInfo;
+#endif
     info.sceneInfo    = &sceneInfo;
     info.controller   = controller;
     info.stickL       = stickR;
+#if RETRO_USE_PLUS
     info.stickR       = stickR;
     info.triggerL     = triggerL;
     info.triggerR     = triggerR;
-    info.touchMouse   = &touchMouseData;
-    info.inputCount   = NULL; //(int *)&Engine_InputCount;
+#endif
+    info.touchMouse = &touchMouseData;
+#if RETRO_USE_PLUS
+    info.deadzone = &unknownInfo;
+#endif
     info.screenInfo   = screens;
 
     if (!engine.useExternalCode) {

@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPalette : Object {
     byte field_4;
@@ -33,6 +34,7 @@ void Palette_StageLoad();
 void Palette_EditorDraw();
 void Palette_EditorLoad();
 void Palette_Serialize();
+#endif
 
 // Extra Entity Functions
 

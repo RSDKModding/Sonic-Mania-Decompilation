@@ -58,6 +58,9 @@ enum GamePlatforms {
 //#include <vorbis/vorbisfile.h>
 #endif
 
+
+#define RETRO_USE_PLUS (1) // idk, might use this, mostly just a marker for what stuff plus/1.05 changed
+
 enum EngineStates {
     ENGINESTATE_LOAD             = 0,
     ENGINESTATE_REGULAR          = 1,

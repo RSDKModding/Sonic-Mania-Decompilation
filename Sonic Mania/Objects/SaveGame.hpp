@@ -15,7 +15,9 @@ struct ObjectSaveGame : Object {
 extern ObjectSaveGame *SaveGame;
 
 //Funcs
+#if RETRO_USE_PLUS
 int *SaveGame_GetDataPtr(int slot, bool32 encore);
+#endif
 void SaveGame_LoadSaveData();
 
 #endif //!OBJ_SAVEGAME_H

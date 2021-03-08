@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectFXRuby : Object {
-    int unknown[0x200];
+    int deadzone[0x200];
     ushort lookupTable[0x10000];
     TileLayer *fgLow;
     TileLayer *fgHigh;
