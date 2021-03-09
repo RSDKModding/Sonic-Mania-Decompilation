@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectReplayDB : Object {
 
@@ -28,6 +29,6 @@ void ReplayDB_EditorLoad();
 void ReplayDB_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_REPLAYDB_H

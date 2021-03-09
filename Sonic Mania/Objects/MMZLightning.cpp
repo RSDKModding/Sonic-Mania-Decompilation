@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectMMZLightning *MMZLightning;
 
 void MMZLightning_Update()
@@ -46,4 +47,5 @@ void MMZLightning_Serialize()
 {
 
 }
+#endif
 

@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectEncoreRoute *EncoreRoute;
 
 void EncoreRoute_Update()
@@ -46,4 +47,5 @@ void EncoreRoute_Serialize()
 {
 
 }
+#endif
 

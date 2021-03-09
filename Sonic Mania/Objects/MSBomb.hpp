@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectMSBomb : Object {
 
@@ -28,6 +29,6 @@ void MSBomb_EditorLoad();
 void MSBomb_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_MSBOMB_H

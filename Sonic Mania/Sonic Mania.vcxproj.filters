@@ -1769,6 +1769,90 @@
     <ClInclude Include="GameLink.hpp">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Acetone.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\BadnikHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Ball.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Batbot.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Bomb.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Bubbler.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Caterkiller.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ColorHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CompetitionSession.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CutsceneRules.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DemoMenu.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DrawHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\E3MenuSetup.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EggJanken.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\EggJankenPart.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Fireball.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LogHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MathHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Orbinaut.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ParticleHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Pendulum.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\PlayerHelpers.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Redz.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SpearBlock.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Stegway.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\TargetBumper.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\WallCrawl.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Wisp.hpp">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.cpp">
@@ -3518,6 +3602,90 @@
       <Filter>Sources\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Objects\APICallback.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Acetone.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\BadnikHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Ball.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Batbot.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Bomb.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Bubbler.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Caterkiller.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ColorHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CompetitionSession.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CutsceneRules.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DemoMenu.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DrawHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\E3MenuSetup.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\EggJanken.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\EggJankenPart.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Fireball.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LogHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MathHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Orbinaut.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ParticleHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Pendulum.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\PlayerHelpers.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Redz.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SpearBlock.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Stegway.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\TargetBumper.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\WallCrawl.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Wisp.cpp">
       <Filter>Sources\Objects</Filter>
     </ClCompile>
   </ItemGroup>

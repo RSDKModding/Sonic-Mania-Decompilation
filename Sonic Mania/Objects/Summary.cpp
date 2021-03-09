@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectSummary *Summary;
 
 void Summary_Update()
@@ -46,4 +47,4 @@ void Summary_Serialize()
 {
 
 }
-
+#endif

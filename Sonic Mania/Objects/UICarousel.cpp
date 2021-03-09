@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectUICarousel *UICarousel;
 
 void UICarousel_Update()
@@ -46,4 +47,4 @@ void UICarousel_Serialize()
 {
 
 }
-
+#endif

@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectUITABanner *UITABanner;
 
 void UITABanner_Update()
@@ -46,4 +47,4 @@ void UITABanner_Serialize()
 {
 
 }
-
+#endif

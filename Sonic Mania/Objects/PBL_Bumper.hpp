@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Bumper : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Bumper : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Bumper PBL_Bumper;
+extern ObjectPBL_Bumper *PBL_Bumper;
 
 // Standard Entity Events
 void PBL_Bumper_Update();
@@ -28,6 +29,6 @@ void PBL_Bumper_EditorLoad();
 void PBL_Bumper_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_BUMPER_H

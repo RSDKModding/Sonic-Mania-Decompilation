@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectOptionsMenu : Object {
 
@@ -28,6 +29,6 @@ void OptionsMenu_EditorLoad();
 void OptionsMenu_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_OPTIONSMENU_H

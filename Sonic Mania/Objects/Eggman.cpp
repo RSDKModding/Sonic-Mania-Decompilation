@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectEggman *Eggman;
 
 void Eggman_Update()
@@ -46,4 +47,5 @@ void Eggman_Serialize()
 {
 
 }
+#endif
 

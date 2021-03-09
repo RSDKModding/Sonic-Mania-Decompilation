@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectGigaMetal : Object {
 
@@ -28,6 +29,6 @@ void GigaMetal_EditorLoad();
 void GigaMetal_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_GIGAMETAL_H

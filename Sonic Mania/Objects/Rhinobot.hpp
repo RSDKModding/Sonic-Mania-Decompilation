@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectRhinobot : Object {
 
@@ -28,6 +29,6 @@ void Rhinobot_EditorLoad();
 void Rhinobot_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_RHINOBOT_H

@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Camera : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Camera : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Camera PBL_Camera;
+extern ObjectPBL_Camera *PBL_Camera;
 
 // Standard Entity Events
 void PBL_Camera_Update();
@@ -28,6 +29,6 @@ void PBL_Camera_EditorLoad();
 void PBL_Camera_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_CAMERA_H

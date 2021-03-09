@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectWaterfallSound : Object {
 
@@ -28,6 +29,6 @@ void WaterfallSound_EditorLoad();
 void WaterfallSound_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_WATERFALLSOUND_H

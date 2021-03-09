@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectUIRankButton *UIRankButton;
 
 void UIRankButton_Update()
@@ -46,4 +47,4 @@ void UIRankButton_Serialize()
 {
 
 }
-
+#endif

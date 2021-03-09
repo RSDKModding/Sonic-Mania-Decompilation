@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Sector PBL_Sector;
+#if RETRO_USE_PLUS
+ObjectPBL_Sector *PBL_Sector;
 
 void PBL_Sector_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Sector_Serialize()
 {
 
 }
-
+#endif

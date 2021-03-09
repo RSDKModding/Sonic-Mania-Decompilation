@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectMonarchPlans *MonarchPlans;
 
 void MonarchPlans_Update()
@@ -46,4 +47,4 @@ void MonarchPlans_Serialize()
 {
 
 }
-
+#endif

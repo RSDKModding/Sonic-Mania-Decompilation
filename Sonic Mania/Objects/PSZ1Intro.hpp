@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPSZ1Intro : Object {
 
@@ -28,6 +29,6 @@ void PSZ1Intro_EditorLoad();
 void PSZ1Intro_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PSZ1INTRO_H

@@ -921,17 +921,16 @@ bool32 ItemBox_HandleFallingCollision()
         return false;
 
     entity->unknownPos.x = -entity->position.x;
-    entity->unknownPos.y = -entity->velocity.y;
+    entity->unknownPos.y = -entity->position.y;
     if (entity->velocity.y)
-        entity->parent = 0;
+        entity->parent = NULL;
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
     ItemBox_HandleObjectCollisions();
-    if (entity->velocity.y < 0
-        || (entity->direction != FLIP_Y || entity->brokenData.animationID != 1
-                ? RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
-                : RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
+    if (!((entity->velocity.y < 0 || entity->direction != FLIP_Y || entity->brokenData.animationID != 1)
+             ? RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
+             : RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
         entity->unknownPos.x += entity->position.x;
         entity->unknownPos.y += entity->position.y;
         return false;

@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectManiaModeMenu *ManiaModeMenu;
 
 void ManiaModeMenu_Update()
@@ -46,4 +47,5 @@ void ManiaModeMenu_Serialize()
 {
 
 }
+#endif
 

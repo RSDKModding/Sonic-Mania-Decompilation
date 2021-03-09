@@ -22,21 +22,21 @@ struct UserFunctionTable {
     void (*Unknown8)(int a1, int a2);
     void (*Unknown9)(int a1, int a2, int a3);
     void (*Unknown10)(void);
-    void (*Unknown11)(void);
+    void (*LeaderboardEntryCount)(void);
     void (*Missing1)(void);
     void (*Unknown12)(int a2, uint a3, int a4);
     void (*Missing2)(void);
-    void (*Unknown13)(uint a1);
-    void (*PossiblyGetStrings)(void *, void *);
+    void (*ReadLeaderboardEntry)(uint a1);
+    void (*SetRichPresence)(int, TextInfo *text);
     void (*Unknown14)(int a1);
     void (*Missing3)(void);
     void (*Unknown15)(int a1);
     void (*Unknown16)(void);
-    void (*Unknown17)(void);
-    void (*Unknown18)(void);
-    void (*Unknown19)(int a1);
-    void (*Unknown20)(void);
-    void (*Unknown21)(void);
+    void (*TryAuth)(void);
+    void (*GetUserAuthStatus)(void);
+    void (*GetUsername)(TextInfo *text);
+    void (*TryInitStorage)(void);
+    void (*GetStorageStatus)(void);
     void (*Unknown22)(void);
     void (*Unknown23)(void);
     void (*Unknown24)(void);
@@ -245,8 +245,8 @@ struct RSDKFunctionTable {
     void (*LoadVideo)(const char *filename, int64 a2, int (*a3)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
-    void (*Unknown98)(int a1, int a2, uint a3);
-    void (*Unknown99)(int a1, int a2, uint a3);
+    void (*ControllerIDForInputID)(int a1, int a2, uint a3);
+    void (*MostRecentActiveControllerID)(int a1, int a2, uint a3);
     void (*Unknown100)(int a1);
     void (*Unknown101)(int a1);
     void (*Missing21)(int a1);
@@ -256,8 +256,8 @@ struct RSDKFunctionTable {
     void (*Missing25)(byte a1, int a2, int a3);
     void (*Missing26)(byte a1, int a2, int a3);
     void (*AssignControllerID)(byte a1, int a2);
-    void (*Unknown103)(byte a1);
-    void (*Unknown104)(void);
+    void (*InputIDIsDisconnected)(byte a1);
+    void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS
     void (*Unknown92)(int a1, int a2, int *a3);
@@ -290,6 +290,8 @@ extern UserFunctionTable User;
 #endif
 extern RSDKFunctionTable RSDK;
 
+
+#include "Objects/Acetone.hpp"
 #include "Objects/ActClear.hpp"
 #include "Objects/AIZEggRobo.hpp"
 #include "Objects/AIZEncoreTutorial.hpp"
@@ -302,14 +304,15 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/AnimalHBH.hpp"
 #include "Objects/Animals.hpp"
 #include "Objects/Announcer.hpp"
-#if !RETRO_USE_PLUS
 #include "Objects/APICallback.hpp"
-#endif
 #include "Objects/Aquis.hpp"
 #include "Objects/Armadiloid.hpp"
+#include "Objects/BadnikHelpers.hpp"
+#include "Objects/Ball.hpp"
 #include "Objects/BallCannon.hpp"
 #include "Objects/BallHog.hpp"
 #include "Objects/BarStool.hpp"
+#include "Objects/Batbot.hpp"
 #include "Objects/Batbrain.hpp"
 #include "Objects/Beanstalk.hpp"
 #include "Objects/BGSwitch.hpp"
@@ -318,6 +321,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Blaster.hpp"
 #include "Objects/Blastoid.hpp"
 #include "Objects/Bloominator.hpp"
+#include "Objects/Bomb.hpp"
 #include "Objects/BouncePlant.hpp"
 #include "Objects/BoundsMarker.hpp"
 #include "Objects/BreakableWall.hpp"
@@ -331,6 +335,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/BSS_Palette.hpp"
 #include "Objects/BSS_Player.hpp"
 #include "Objects/BSS_Setup.hpp"
+#include "Objects/Bubbler.hpp"
 #include "Objects/BuckwildBall.hpp"
 #include "Objects/Buggernaut.hpp"
 #include "Objects/Bumpalo.hpp"
@@ -344,6 +349,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Cactula.hpp"
 #include "Objects/Camera.hpp"
 #include "Objects/Canista.hpp"
+#include "Objects/Caterkiller.hpp"
 #include "Objects/CaterkillerJr.hpp"
 #include "Objects/ChaosEmerald.hpp"
 #include "Objects/CheckerBall.hpp"
@@ -356,8 +362,10 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Clucker.hpp"
 #include "Objects/CollapsingPlatform.hpp"
 #include "Objects/CollapsingSand.hpp"
+#include "Objects/ColorHelpers.hpp"
 #include "Objects/Competition.hpp"
 #include "Objects/CompetitionMenu.hpp"
+#include "Objects/CompetitionSession.hpp"
 #include "Objects/Constellation.hpp"
 #include "Objects/ContinuePlayer.hpp"
 #include "Objects/ContinueSetup.hpp"
@@ -379,6 +387,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/CrimsonEye.hpp"
 #include "Objects/Current.hpp"
 #include "Objects/CutsceneHBH.hpp"
+#include "Objects/CutsceneRules.hpp"
 #include "Objects/CutsceneSeq.hpp"
 #include "Objects/Cylinder.hpp"
 #include "Objects/DAControl.hpp"
@@ -391,6 +400,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Debris.hpp"
 #include "Objects/DebugMode.hpp"
 #include "Objects/Decoration.hpp"
+#include "Objects/DemoMenu.hpp"
 #include "Objects/DERobot.hpp"
 #include "Objects/DialogRunner.hpp"
 #include "Objects/DirectorChair.hpp"
@@ -398,9 +408,13 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/DNARiser.hpp"
 #include "Objects/DoorTrigger.hpp"
 #include "Objects/Dragonfly.hpp"
+#include "Objects/DrawHelpers.hpp"
 #include "Objects/Drillerdroid.hpp"
 #include "Objects/DrillerdroidO.hpp"
 #include "Objects/Dust.hpp"
+#include "Objects/E3MenuSetup.hpp"
+#include "Objects/EggJanken.hpp"
+#include "Objects/EggJankenPart.hpp"
 #include "Objects/EggLoco.hpp"
 #include "Objects/Eggman.hpp"
 #include "Objects/EggPistonsMKII.hpp"
@@ -435,6 +449,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/FernParallax.hpp"
 #include "Objects/FilmProjector.hpp"
 #include "Objects/FilmReel.hpp"
+#include "Objects/Fireball.hpp"
 #include "Objects/Fireflies.hpp"
 #include "Objects/Firework.hpp"
 #include "Objects/Fireworm.hpp"
@@ -456,8 +471,8 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/FXTrail.hpp"
 #include "Objects/FXWaveRing.hpp"
 #include "Objects/Gachapandora.hpp"
-#include "Objects/GameProgress.hpp"
 #include "Objects/GameOver.hpp"
+#include "Objects/GameProgress.hpp"
 #include "Objects/GasPlatform.hpp"
 #include "Objects/GenericTrigger.hpp"
 #include "Objects/GHZ2Outro.hpp"
@@ -525,6 +540,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/LightBulb.hpp"
 #include "Objects/Localization.hpp"
 #include "Objects/LocoSmoke.hpp"
+#include "Objects/LogHelpers.hpp"
 #include "Objects/LogoSetup.hpp"
 #include "Objects/LottoBall.hpp"
 #include "Objects/LottoMachine.hpp"
@@ -551,6 +567,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/MagSpikeBall.hpp"
 #include "Objects/MainMenu.hpp"
 #include "Objects/ManiaModeMenu.hpp"
+#include "Objects/MathHelpers.hpp"
 #include "Objects/MatryoshkaBom.hpp"
 #include "Objects/MechaBu.hpp"
 #include "Objects/MegaChopper.hpp"
@@ -593,11 +610,13 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/OOZSetup.hpp"
 #include "Objects/Options.hpp"
 #include "Objects/OptionsMenu.hpp"
+#include "Objects/Orbinaut.hpp"
 #include "Objects/OrbitSpike.hpp"
 #include "Objects/PaintingEyes.hpp"
 #include "Objects/Palette.hpp"
 #include "Objects/PaperRoller.hpp"
 #include "Objects/ParallaxSprite.hpp"
+#include "Objects/ParticleHelpers.hpp"
 #include "Objects/PathInverter.hpp"
 #include "Objects/PauseMenu.hpp"
 #include "Objects/PBL_Bumper.hpp"
@@ -610,6 +629,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/PBL_Sector.hpp"
 #include "Objects/PBL_Setup.hpp"
 #include "Objects/PBL_TargetBumper.hpp"
+#include "Objects/Pendulum.hpp"
 #include "Objects/PetalPile.hpp"
 #include "Objects/PhantomEgg.hpp"
 #include "Objects/PhantomGunner.hpp"
@@ -631,6 +651,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/PlatformControl.hpp"
 #include "Objects/PlatformNode.hpp"
 #include "Objects/Player.hpp"
+#include "Objects/PlayerHelpers.hpp"
 #include "Objects/PlayerProbe.hpp"
 #include "Objects/PohBee.hpp"
 #include "Objects/Pointdexter.hpp"
@@ -664,6 +685,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/PuyoScore.hpp"
 #include "Objects/Rattlekiller.hpp"
 #include "Objects/Reagent.hpp"
+#include "Objects/Redz.hpp"
 #include "Objects/ReplayDB.hpp"
 #include "Objects/ReplayRecorder.hpp"
 #include "Objects/Rexon.hpp"
@@ -707,6 +729,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/SP500MkII.hpp"
 #include "Objects/SparkRail.hpp"
 #include "Objects/Spear.hpp"
+#include "Objects/SpearBlock.hpp"
 #include "Objects/SpecialClear.hpp"
 #include "Objects/SpecialRing.hpp"
 #include "Objects/SpeedBooster.hpp"
@@ -739,6 +762,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Staircase.hpp"
 #include "Objects/Stalactite.hpp"
 #include "Objects/StarPost.hpp"
+#include "Objects/Stegway.hpp"
 #include "Objects/StickyPlatform.hpp"
 #include "Objects/Summary.hpp"
 #include "Objects/SummaryEmerald.hpp"
@@ -748,6 +772,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/SwitchDoor.hpp"
 #include "Objects/Syringe.hpp"
 #include "Objects/TAEmerald.hpp"
+#include "Objects/TargetBumper.hpp"
 #include "Objects/Technosqueek.hpp"
 #include "Objects/TeeterTotter.hpp"
 #include "Objects/TetherBall.hpp"
@@ -861,6 +886,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Vultron.hpp"
 #include "Objects/WalkerLegs.hpp"
 #include "Objects/WallBumper.hpp"
+#include "Objects/WallCrawl.hpp"
 #include "Objects/WarpDoor.hpp"
 #include "Objects/Water.hpp"
 #include "Objects/WaterfallSound.hpp"
@@ -868,18 +894,21 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/WeatherMobile.hpp"
 #include "Objects/WeatherTV.hpp"
 #include "Objects/Whirlpool.hpp"
+#include "Objects/Wisp.hpp"
 #include "Objects/WoodChipper.hpp"
 #include "Objects/Woodrow.hpp"
 #include "Objects/YoyoPulley.hpp"
 #include "Objects/ZipLine.hpp"
 #include "Objects/Zone.hpp"
 
-
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.CreateObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), ##object##_Update, ##object##_LateUpdate,             \
                       ##object##_StaticUpdate, ##object##_Draw, ##object##_Create, ##object##_StageLoad, ##object##_EditorDraw, ##object##_EditorLoad,           \
                       ##object##_Serialize)
+#if RETRO_USE_PLUS
+#define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.CreateObjectContainer((Object **)&object, #object, sizeof(Object##object))
+#endif
 
 extern "C" {
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);

@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Flipper PBL_Flipper;
+#if RETRO_USE_PLUS
+ObjectPBL_Flipper *PBL_Flipper;
 
 void PBL_Flipper_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Flipper_Serialize()
 {
 
 }
-
+#endif

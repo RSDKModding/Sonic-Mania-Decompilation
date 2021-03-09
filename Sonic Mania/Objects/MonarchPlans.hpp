@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectMonarchPlans : Object {
 
@@ -28,6 +29,6 @@ void MonarchPlans_EditorLoad();
 void MonarchPlans_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_MONARCHPLANS_H

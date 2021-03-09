@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectCompetitionMenu *CompetitionMenu;
 
 void CompetitionMenu_Update()
@@ -46,4 +47,5 @@ void CompetitionMenu_Serialize()
 {
 
 }
+#endif
 

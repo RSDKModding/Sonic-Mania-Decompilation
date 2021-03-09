@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectSummary : Object {
     int value1; //= 240;
@@ -30,6 +31,6 @@ void Summary_EditorLoad();
 void Summary_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_SUMMARY_H

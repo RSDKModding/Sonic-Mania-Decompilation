@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectUITABanner : Object {
 
@@ -28,6 +29,6 @@ void UITABanner_EditorLoad();
 void UITABanner_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_UITABANNER_H

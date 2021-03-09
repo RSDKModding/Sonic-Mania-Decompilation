@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectEncoreIntro *EncoreIntro;
 
 void EncoreIntro_Update()
@@ -46,4 +47,5 @@ void EncoreIntro_Serialize()
 {
 
 }
+#endif
 

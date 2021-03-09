@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectSchrodingersCapsule *SchrodingersCapsule;
 
 void SchrodingersCapsule_Update()
@@ -46,4 +47,4 @@ void SchrodingersCapsule_Serialize()
 {
 
 }
-
+#endif

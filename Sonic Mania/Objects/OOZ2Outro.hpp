@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectOOZ2Outro : Object {
 
@@ -28,6 +29,6 @@ void OOZ2Outro_EditorLoad();
 void OOZ2Outro_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_OOZ2OUTRO_H

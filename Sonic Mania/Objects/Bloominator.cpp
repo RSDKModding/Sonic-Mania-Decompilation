@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectBloominator *Bloominator;
 
 void Bloominator_Update()
@@ -46,4 +47,5 @@ void Bloominator_Serialize()
 {
 
 }
+#endif
 

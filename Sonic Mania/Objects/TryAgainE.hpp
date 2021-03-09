@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectTryAgainE : Object {
 
@@ -28,6 +29,6 @@ void TryAgainE_EditorLoad();
 void TryAgainE_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_TRYAGAINE_H

@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectSSZEggman *SSZEggman;
 
 void SSZEggman_Update()
@@ -46,4 +47,4 @@ void SSZEggman_Serialize()
 {
 
 }
-
+#endif

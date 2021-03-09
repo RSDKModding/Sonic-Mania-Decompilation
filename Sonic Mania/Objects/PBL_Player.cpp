@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Player PBL_Player;
+#if RETRO_USE_PLUS
+ObjectPBL_Player *PBL_Player;
 
 void PBL_Player_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Player_Serialize()
 {
 
 }
-
+#endif

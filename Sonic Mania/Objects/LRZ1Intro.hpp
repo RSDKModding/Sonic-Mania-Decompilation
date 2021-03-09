@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectLRZ1Intro : Object {
 
@@ -28,6 +29,6 @@ void LRZ1Intro_EditorLoad();
 void LRZ1Intro_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_LRZ1INTRO_H

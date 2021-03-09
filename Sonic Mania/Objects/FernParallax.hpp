@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectFernParallax : Object {
 
@@ -28,6 +29,6 @@ void FernParallax_EditorLoad();
 void FernParallax_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_FERNPARALLAX_H

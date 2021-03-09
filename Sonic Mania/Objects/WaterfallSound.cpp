@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectWaterfallSound *WaterfallSound;
 
 void WaterfallSound_Update()
@@ -46,4 +47,4 @@ void WaterfallSound_Serialize()
 {
 
 }
-
+#endif

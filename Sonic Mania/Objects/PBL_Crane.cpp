@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Crane PBL_Crane;
+#if RETRO_USE_PLUS
+ObjectPBL_Crane *PBL_Crane;
 
 void PBL_Crane_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Crane_Serialize()
 {
 
 }
-
+#endif

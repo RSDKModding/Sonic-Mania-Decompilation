@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectNoSwap : Object {
     int counter;
@@ -81,6 +82,6 @@ void NoSwap_EditorLoad();
 void NoSwap_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_NOSWAP_H

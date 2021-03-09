@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectAIZEncoreTutorial : Object {
 
@@ -28,6 +29,6 @@ void AIZEncoreTutorial_EditorLoad();
 void AIZEncoreTutorial_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_AIZENCORETUTORIAL_H

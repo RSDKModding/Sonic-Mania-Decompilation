@@ -53,6 +53,7 @@ enum ReservedEntities {
     SLOT_ZONE           = 12,
     SLOT_CUTSCENESEQ    = 15,
     SLOT_PAUSEMENU      = 16,
+    SLOT_DIALOG         = 21,
     SLOT_REPLAYRECORDER = 37,
     SLOT_CAMERA1        = 60,
     SLOT_CAMERA2        = 61,

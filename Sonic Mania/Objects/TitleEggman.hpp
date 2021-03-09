@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectTitleEggman : Object {
 
@@ -28,6 +29,6 @@ void TitleEggman_EditorLoad();
 void TitleEggman_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_TITLEEGGMAN_H

@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Setup PBL_Setup;
+#if RETRO_USE_PLUS
+ObjectPBL_Setup *PBL_Setup;
 
 void PBL_Setup_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Setup_Serialize()
 {
 
 }
-
+#endif

@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectEncoreGoodEnd : Object {
 
@@ -28,6 +29,6 @@ void EncoreGoodEnd_EditorLoad();
 void EncoreGoodEnd_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_ENCOREGOODEND_H

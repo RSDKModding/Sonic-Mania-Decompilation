@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectUIPopover *UIPopover;
 
 void UIPopover_Update()
@@ -46,4 +47,4 @@ void UIPopover_Serialize()
 {
 
 }
-
+#endif

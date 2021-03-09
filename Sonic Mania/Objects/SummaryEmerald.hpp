@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectSummaryEmerald : Object {
 
@@ -28,6 +29,6 @@ void SummaryEmerald_EditorLoad();
 void SummaryEmerald_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_SUMMARYEMERALD_H

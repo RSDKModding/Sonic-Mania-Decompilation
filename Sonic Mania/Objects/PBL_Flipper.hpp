@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Flipper : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Flipper : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Flipper PBL_Flipper;
+extern ObjectPBL_Flipper *PBL_Flipper;
 
 // Standard Entity Events
 void PBL_Flipper_Update();
@@ -28,6 +29,6 @@ void PBL_Flipper_EditorLoad();
 void PBL_Flipper_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_FLIPPER_H

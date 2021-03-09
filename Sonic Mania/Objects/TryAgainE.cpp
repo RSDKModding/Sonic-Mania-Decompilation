@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectTryAgainE *TryAgainE;
 
 void TryAgainE_Update()
@@ -46,4 +47,4 @@ void TryAgainE_Serialize()
 {
 
 }
-
+#endif

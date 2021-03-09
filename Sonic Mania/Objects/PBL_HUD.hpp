@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_HUD : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_HUD : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_HUD PBL_HUD;
+extern ObjectPBL_HUD *PBL_HUD;
 
 // Standard Entity Events
 void PBL_HUD_Update();
@@ -28,6 +29,6 @@ void PBL_HUD_EditorLoad();
 void PBL_HUD_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_HUD_H

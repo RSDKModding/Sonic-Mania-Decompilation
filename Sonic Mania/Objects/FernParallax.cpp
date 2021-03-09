@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectFernParallax *FernParallax;
 
 void FernParallax_Update()
@@ -46,4 +47,5 @@ void FernParallax_Serialize()
 {
 
 }
+#endif
 

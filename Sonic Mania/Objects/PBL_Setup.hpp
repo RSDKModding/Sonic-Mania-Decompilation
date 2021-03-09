@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Setup : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Setup : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Setup PBL_Setup;
+extern ObjectPBL_Setup *PBL_Setup;
 
 // Standard Entity Events
 void PBL_Setup_Update();
@@ -28,6 +29,6 @@ void PBL_Setup_EditorLoad();
 void PBL_Setup_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_SETUP_H

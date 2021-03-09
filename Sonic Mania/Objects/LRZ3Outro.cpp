@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectLRZ3Outro LRZ3Outro;
 
 void LRZ3Outro_Update()
@@ -46,4 +47,5 @@ void LRZ3Outro_Serialize()
 {
 
 }
+#endif
 

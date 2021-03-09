@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectCompetition : Object {
 
@@ -28,6 +29,6 @@ void Competition_EditorLoad();
 void Competition_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_COMPETITION_H

@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectFBZ2Outro FBZ2Outro;
 
 void FBZ2Outro_Update()
@@ -46,4 +47,5 @@ void FBZ2Outro_Serialize()
 {
 
 }
+#endif
 

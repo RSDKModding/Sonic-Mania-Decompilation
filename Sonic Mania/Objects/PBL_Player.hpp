@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Player : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Player : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Player PBL_Player;
+extern ObjectPBL_Player *PBL_Player;
 
 // Standard Entity Events
 void PBL_Player_Update();
@@ -28,6 +29,6 @@ void PBL_Player_EditorLoad();
 void PBL_Player_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_PLAYER_H

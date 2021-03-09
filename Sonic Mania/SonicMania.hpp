@@ -1,7 +1,7 @@
 #ifndef SONIC_MANIA_H
 #define SONIC_MANIA_H
 
-#define RETRO_USE_PLUS (0) //idk, might use this, mostly just a marker for what stuff plus/1.05 changed
+#define RETRO_USE_PLUS (1) //idk, might use this, mostly just a marker for what stuff plus/1.05 changed
 
 #include "GameLink.hpp"
 

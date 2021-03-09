@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectUIShifter *UIShifter;
 
 void UIShifter_Update()
@@ -46,4 +47,4 @@ void UIShifter_Serialize()
 {
 
 }
-
+#endif

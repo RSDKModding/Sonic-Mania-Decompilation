@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectSummaryEmerald *SummaryEmerald;
 
 void SummaryEmerald_Update()
@@ -46,4 +47,4 @@ void SummaryEmerald_Serialize()
 {
 
 }
-
+#endif

@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Ring : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Ring : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Ring PBL_Ring;
+extern ObjectPBL_Ring *PBL_Ring;
 
 // Standard Entity Events
 void PBL_Ring_Update();
@@ -28,6 +29,6 @@ void PBL_Ring_EditorLoad();
 void PBL_Ring_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_RING_H

@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectMMZLightning : Object {
 
@@ -28,6 +29,6 @@ void MMZLightning_EditorLoad();
 void MMZLightning_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_MMZLIGHTNING_H

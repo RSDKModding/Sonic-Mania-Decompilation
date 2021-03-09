@@ -115,7 +115,7 @@ void Dust_State_Spindash()
         entity->position.x = player->position.x;
         entity->position.y = player->position.y;
         int bottom                      = playerHitbox->bottom << 16;
-        if (player->flipY)
+        if (player->invertGravity)
             entity->position.y -= bottom;
         else
             entity->position.y += bottom;

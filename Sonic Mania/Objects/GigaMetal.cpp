@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectGigaMetal *GigaMetal;
 
 void GigaMetal_Update()
@@ -46,4 +47,5 @@ void GigaMetal_Serialize()
 {
 
 }
+#endif
 

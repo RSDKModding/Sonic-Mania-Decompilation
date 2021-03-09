@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectSSZEggman : Object {
 
@@ -28,6 +29,6 @@ void SSZEggman_EditorLoad();
 void SSZEggman_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_SSZEGGMAN_H

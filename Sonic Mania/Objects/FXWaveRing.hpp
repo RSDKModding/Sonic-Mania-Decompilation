@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectFXWaveRing : Object {
 
@@ -28,6 +29,6 @@ void FXWaveRing_EditorLoad();
 void FXWaveRing_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_FXWAVERING_H

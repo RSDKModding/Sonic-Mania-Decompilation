@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectMMZ2Outro : Object {
 
@@ -28,6 +29,6 @@ void MMZ2Outro_EditorLoad();
 void MMZ2Outro_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_MMZ2OUTRO_H

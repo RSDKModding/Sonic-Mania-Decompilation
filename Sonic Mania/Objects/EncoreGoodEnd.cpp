@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 void EncoreGoodEnd_Update()
@@ -46,4 +47,5 @@ void EncoreGoodEnd_Serialize()
 {
 
 }
+#endif
 

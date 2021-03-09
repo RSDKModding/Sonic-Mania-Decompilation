@@ -1,7 +1,7 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectOptions *Options;
-
 
 void Options_Reload()
 {
@@ -48,3 +48,4 @@ void Options_GetWinSize()
         }
     }
 }
+#endif

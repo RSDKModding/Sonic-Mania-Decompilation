@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectMSBomb *MSBomb;
 
 void MSBomb_Update()
@@ -46,4 +47,4 @@ void MSBomb_Serialize()
 {
 
 }
-
+#endif

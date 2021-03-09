@@ -53,7 +53,7 @@ void Shield_Draw()
                 entity->position.x += (playerHitbox->left << 15) - (playerHitbox->right << 15) - (playerHitbox->left << 16);
             else
                 entity->position.x += ((playerHitbox->right + 2 * playerHitbox->left) << 15) - (playerHitbox->left << 15);
-            if (player->direction & 2 || player->flipY)
+            if (player->direction & 2 || player->invertGravity)
                 entity->position.y += (playerHitbox->top << 15) - (playerHitbox->bottom << 15) - (playerHitbox->top << 16);
             else
                 entity->position.y += ((playerHitbox->bottom + 2 * playerHitbox->top) << 15) - (playerHitbox->top << 15);

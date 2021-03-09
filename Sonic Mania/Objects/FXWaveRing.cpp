@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectFXWaveRing *FXWaveRing;
 
 void FXWaveRing_Update()
@@ -46,4 +47,5 @@ void FXWaveRing_Serialize()
 {
 
 }
+#endif
 

@@ -22,6 +22,7 @@
     <ClInclude Include="GameLink.hpp" />
     <ClInclude Include="GameObjects.hpp" />
     <ClInclude Include="GameOptions.hpp" />
+    <ClInclude Include="Objects\Acetone.hpp" />
     <ClInclude Include="Objects\ActClear.hpp" />
     <ClInclude Include="Objects\AIZEggRobo.hpp" />
     <ClInclude Include="Objects\AIZEncoreTutorial.hpp" />
@@ -37,9 +38,12 @@
     <ClInclude Include="Objects\APICallback.hpp" />
     <ClInclude Include="Objects\Aquis.hpp" />
     <ClInclude Include="Objects\Armadiloid.hpp" />
+    <ClInclude Include="Objects\BadnikHelpers.hpp" />
+    <ClInclude Include="Objects\Ball.hpp" />
     <ClInclude Include="Objects\BallCannon.hpp" />
     <ClInclude Include="Objects\BallHog.hpp" />
     <ClInclude Include="Objects\BarStool.hpp" />
+    <ClInclude Include="Objects\Batbot.hpp" />
     <ClInclude Include="Objects\Batbrain.hpp" />
     <ClInclude Include="Objects\Beanstalk.hpp" />
     <ClInclude Include="Objects\BGSwitch.hpp" />
@@ -48,6 +52,7 @@
     <ClInclude Include="Objects\Blaster.hpp" />
     <ClInclude Include="Objects\Blastoid.hpp" />
     <ClInclude Include="Objects\Bloominator.hpp" />
+    <ClInclude Include="Objects\Bomb.hpp" />
     <ClInclude Include="Objects\BouncePlant.hpp" />
     <ClInclude Include="Objects\BoundsMarker.hpp" />
     <ClInclude Include="Objects\BreakableWall.hpp" />
@@ -61,6 +66,7 @@
     <ClInclude Include="Objects\BSS_Palette.hpp" />
     <ClInclude Include="Objects\BSS_Player.hpp" />
     <ClInclude Include="Objects\BSS_Setup.hpp" />
+    <ClInclude Include="Objects\Bubbler.hpp" />
     <ClInclude Include="Objects\BuckwildBall.hpp" />
     <ClInclude Include="Objects\Buggernaut.hpp" />
     <ClInclude Include="Objects\Bumpalo.hpp" />
@@ -74,6 +80,7 @@
     <ClInclude Include="Objects\Cactula.hpp" />
     <ClInclude Include="Objects\Camera.hpp" />
     <ClInclude Include="Objects\Canista.hpp" />
+    <ClInclude Include="Objects\Caterkiller.hpp" />
     <ClInclude Include="Objects\CaterkillerJr.hpp" />
     <ClInclude Include="Objects\ChaosEmerald.hpp" />
     <ClInclude Include="Objects\CheckerBall.hpp" />
@@ -86,8 +93,10 @@
     <ClInclude Include="Objects\Clucker.hpp" />
     <ClInclude Include="Objects\CollapsingPlatform.hpp" />
     <ClInclude Include="Objects\CollapsingSand.hpp" />
+    <ClInclude Include="Objects\ColorHelpers.hpp" />
     <ClInclude Include="Objects\Competition.hpp" />
     <ClInclude Include="Objects\CompetitionMenu.hpp" />
+    <ClInclude Include="Objects\CompetitionSession.hpp" />
     <ClInclude Include="Objects\Constellation.hpp" />
     <ClInclude Include="Objects\ContinuePlayer.hpp" />
     <ClInclude Include="Objects\ContinueSetup.hpp" />
@@ -109,6 +118,7 @@
     <ClInclude Include="Objects\CrimsonEye.hpp" />
     <ClInclude Include="Objects\Current.hpp" />
     <ClInclude Include="Objects\CutsceneHBH.hpp" />
+    <ClInclude Include="Objects\CutsceneRules.hpp" />
     <ClInclude Include="Objects\CutsceneSeq.hpp" />
     <ClInclude Include="Objects\Cylinder.hpp" />
     <ClInclude Include="Objects\DAControl.hpp" />
@@ -121,6 +131,7 @@
     <ClInclude Include="Objects\Debris.hpp" />
     <ClInclude Include="Objects\DebugMode.hpp" />
     <ClInclude Include="Objects\Decoration.hpp" />
+    <ClInclude Include="Objects\DemoMenu.hpp" />
     <ClInclude Include="Objects\DERobot.hpp" />
     <ClInclude Include="Objects\DialogRunner.hpp" />
     <ClInclude Include="Objects\DirectorChair.hpp" />
@@ -128,9 +139,13 @@
     <ClInclude Include="Objects\DNARiser.hpp" />
     <ClInclude Include="Objects\DoorTrigger.hpp" />
     <ClInclude Include="Objects\Dragonfly.hpp" />
+    <ClInclude Include="Objects\DrawHelpers.hpp" />
     <ClInclude Include="Objects\Drillerdroid.hpp" />
     <ClInclude Include="Objects\DrillerdroidO.hpp" />
     <ClInclude Include="Objects\Dust.hpp" />
+    <ClInclude Include="Objects\E3MenuSetup.hpp" />
+    <ClInclude Include="Objects\EggJanken.hpp" />
+    <ClInclude Include="Objects\EggJankenPart.hpp" />
     <ClInclude Include="Objects\EggLoco.hpp" />
     <ClInclude Include="Objects\Eggman.hpp" />
     <ClInclude Include="Objects\EggPistonsMKII.hpp" />
@@ -165,6 +180,7 @@
     <ClInclude Include="Objects\FernParallax.hpp" />
     <ClInclude Include="Objects\FilmProjector.hpp" />
     <ClInclude Include="Objects\FilmReel.hpp" />
+    <ClInclude Include="Objects\Fireball.hpp" />
     <ClInclude Include="Objects\Fireflies.hpp" />
     <ClInclude Include="Objects\Firework.hpp" />
     <ClInclude Include="Objects\Fireworm.hpp" />
@@ -255,6 +271,7 @@
     <ClInclude Include="Objects\LightBulb.hpp" />
     <ClInclude Include="Objects\Localization.hpp" />
     <ClInclude Include="Objects\LocoSmoke.hpp" />
+    <ClInclude Include="Objects\LogHelpers.hpp" />
     <ClInclude Include="Objects\LogoSetup.hpp" />
     <ClInclude Include="Objects\LottoBall.hpp" />
     <ClInclude Include="Objects\LottoMachine.hpp" />
@@ -281,6 +298,7 @@
     <ClInclude Include="Objects\MagSpikeBall.hpp" />
     <ClInclude Include="Objects\MainMenu.hpp" />
     <ClInclude Include="Objects\ManiaModeMenu.hpp" />
+    <ClInclude Include="Objects\MathHelpers.hpp" />
     <ClInclude Include="Objects\MatryoshkaBom.hpp" />
     <ClInclude Include="Objects\MechaBu.hpp" />
     <ClInclude Include="Objects\MegaChopper.hpp" />
@@ -323,11 +341,13 @@
     <ClInclude Include="Objects\OOZSetup.hpp" />
     <ClInclude Include="Objects\Options.hpp" />
     <ClInclude Include="Objects\OptionsMenu.hpp" />
+    <ClInclude Include="Objects\Orbinaut.hpp" />
     <ClInclude Include="Objects\OrbitSpike.hpp" />
     <ClInclude Include="Objects\PaintingEyes.hpp" />
     <ClInclude Include="Objects\Palette.hpp" />
     <ClInclude Include="Objects\PaperRoller.hpp" />
     <ClInclude Include="Objects\ParallaxSprite.hpp" />
+    <ClInclude Include="Objects\ParticleHelpers.hpp" />
     <ClInclude Include="Objects\PathInverter.hpp" />
     <ClInclude Include="Objects\PauseMenu.hpp" />
     <ClInclude Include="Objects\PBL_Bumper.hpp" />
@@ -340,6 +360,7 @@
     <ClInclude Include="Objects\PBL_Sector.hpp" />
     <ClInclude Include="Objects\PBL_Setup.hpp" />
     <ClInclude Include="Objects\PBL_TargetBumper.hpp" />
+    <ClInclude Include="Objects\Pendulum.hpp" />
     <ClInclude Include="Objects\PetalPile.hpp" />
     <ClInclude Include="Objects\PhantomEgg.hpp" />
     <ClInclude Include="Objects\PhantomGunner.hpp" />
@@ -361,6 +382,7 @@
     <ClInclude Include="Objects\PlatformControl.hpp" />
     <ClInclude Include="Objects\PlatformNode.hpp" />
     <ClInclude Include="Objects\Player.hpp" />
+    <ClInclude Include="Objects\PlayerHelpers.hpp" />
     <ClInclude Include="Objects\PlayerProbe.hpp" />
     <ClInclude Include="Objects\PohBee.hpp" />
     <ClInclude Include="Objects\Pointdexter.hpp" />
@@ -394,6 +416,7 @@
     <ClInclude Include="Objects\PuyoScore.hpp" />
     <ClInclude Include="Objects\Rattlekiller.hpp" />
     <ClInclude Include="Objects\Reagent.hpp" />
+    <ClInclude Include="Objects\Redz.hpp" />
     <ClInclude Include="Objects\ReplayDB.hpp" />
     <ClInclude Include="Objects\ReplayRecorder.hpp" />
     <ClInclude Include="Objects\Rexon.hpp" />
@@ -437,6 +460,7 @@
     <ClInclude Include="Objects\SP500MkII.hpp" />
     <ClInclude Include="Objects\SparkRail.hpp" />
     <ClInclude Include="Objects\Spear.hpp" />
+    <ClInclude Include="Objects\SpearBlock.hpp" />
     <ClInclude Include="Objects\SpecialClear.hpp" />
     <ClInclude Include="Objects\SpecialRing.hpp" />
     <ClInclude Include="Objects\SpeedBooster.hpp" />
@@ -469,6 +493,7 @@
     <ClInclude Include="Objects\Staircase.hpp" />
     <ClInclude Include="Objects\Stalactite.hpp" />
     <ClInclude Include="Objects\StarPost.hpp" />
+    <ClInclude Include="Objects\Stegway.hpp" />
     <ClInclude Include="Objects\StickyPlatform.hpp" />
     <ClInclude Include="Objects\Summary.hpp" />
     <ClInclude Include="Objects\SummaryEmerald.hpp" />
@@ -478,6 +503,7 @@
     <ClInclude Include="Objects\SwitchDoor.hpp" />
     <ClInclude Include="Objects\Syringe.hpp" />
     <ClInclude Include="Objects\TAEmerald.hpp" />
+    <ClInclude Include="Objects\TargetBumper.hpp" />
     <ClInclude Include="Objects\Technosqueek.hpp" />
     <ClInclude Include="Objects\TeeterTotter.hpp" />
     <ClInclude Include="Objects\TetherBall.hpp" />
@@ -591,6 +617,7 @@
     <ClInclude Include="Objects\Vultron.hpp" />
     <ClInclude Include="Objects\WalkerLegs.hpp" />
     <ClInclude Include="Objects\WallBumper.hpp" />
+    <ClInclude Include="Objects\WallCrawl.hpp" />
     <ClInclude Include="Objects\WarpDoor.hpp" />
     <ClInclude Include="Objects\Water.hpp" />
     <ClInclude Include="Objects\WaterfallSound.hpp" />
@@ -598,6 +625,7 @@
     <ClInclude Include="Objects\WeatherMobile.hpp" />
     <ClInclude Include="Objects\WeatherTV.hpp" />
     <ClInclude Include="Objects\Whirlpool.hpp" />
+    <ClInclude Include="Objects\Wisp.hpp" />
     <ClInclude Include="Objects\WoodChipper.hpp" />
     <ClInclude Include="Objects\Woodrow.hpp" />
     <ClInclude Include="Objects\YoyoPulley.hpp" />
@@ -608,6 +636,7 @@
   <ItemGroup>
     <ClCompile Include="GameObjects.cpp" />
     <ClCompile Include="GameOptions.cpp" />
+    <ClCompile Include="Objects\Acetone.cpp" />
     <ClCompile Include="Objects\ActClear.cpp" />
     <ClCompile Include="Objects\AIZEggRobo.cpp" />
     <ClCompile Include="Objects\AIZEncoreTutorial.cpp" />
@@ -623,9 +652,12 @@
     <ClCompile Include="Objects\APICallback.cpp" />
     <ClCompile Include="Objects\Aquis.cpp" />
     <ClCompile Include="Objects\Armadiloid.cpp" />
+    <ClCompile Include="Objects\BadnikHelpers.cpp" />
+    <ClCompile Include="Objects\Ball.cpp" />
     <ClCompile Include="Objects\BallCannon.cpp" />
     <ClCompile Include="Objects\BallHog.cpp" />
     <ClCompile Include="Objects\BarStool.cpp" />
+    <ClCompile Include="Objects\Batbot.cpp" />
     <ClCompile Include="Objects\Batbrain.cpp" />
     <ClCompile Include="Objects\Beanstalk.cpp" />
     <ClCompile Include="Objects\BGSwitch.cpp" />
@@ -634,6 +666,7 @@
     <ClCompile Include="Objects\Blaster.cpp" />
     <ClCompile Include="Objects\Blastoid.cpp" />
     <ClCompile Include="Objects\Bloominator.cpp" />
+    <ClCompile Include="Objects\Bomb.cpp" />
     <ClCompile Include="Objects\BouncePlant.cpp" />
     <ClCompile Include="Objects\BoundsMarker.cpp" />
     <ClCompile Include="Objects\BreakableWall.cpp" />
@@ -647,6 +680,7 @@
     <ClCompile Include="Objects\BSS_Palette.cpp" />
     <ClCompile Include="Objects\BSS_Player.cpp" />
     <ClCompile Include="Objects\BSS_Setup.cpp" />
+    <ClCompile Include="Objects\Bubbler.cpp" />
     <ClCompile Include="Objects\BuckwildBall.cpp" />
     <ClCompile Include="Objects\Buggernaut.cpp" />
     <ClCompile Include="Objects\Bumpalo.cpp" />
@@ -660,6 +694,7 @@
     <ClCompile Include="Objects\Cactula.cpp" />
     <ClCompile Include="Objects\Camera.cpp" />
     <ClCompile Include="Objects\Canista.cpp" />
+    <ClCompile Include="Objects\Caterkiller.cpp" />
     <ClCompile Include="Objects\CaterkillerJr.cpp" />
     <ClCompile Include="Objects\ChaosEmerald.cpp" />
     <ClCompile Include="Objects\CheckerBall.cpp" />
@@ -672,8 +707,10 @@
     <ClCompile Include="Objects\Clucker.cpp" />
     <ClCompile Include="Objects\CollapsingPlatform.cpp" />
     <ClCompile Include="Objects\CollapsingSand.cpp" />
+    <ClCompile Include="Objects\ColorHelpers.cpp" />
     <ClCompile Include="Objects\Competition.cpp" />
     <ClCompile Include="Objects\CompetitionMenu.cpp" />
+    <ClCompile Include="Objects\CompetitionSession.cpp" />
     <ClCompile Include="Objects\Constellation.cpp" />
     <ClCompile Include="Objects\ContinuePlayer.cpp" />
     <ClCompile Include="Objects\ContinueSetup.cpp" />
@@ -695,6 +732,7 @@
     <ClCompile Include="Objects\CrimsonEye.cpp" />
     <ClCompile Include="Objects\Current.cpp" />
     <ClCompile Include="Objects\CutsceneHBH.cpp" />
+    <ClCompile Include="Objects\CutsceneRules.cpp" />
     <ClCompile Include="Objects\CutsceneSeq.cpp" />
     <ClCompile Include="Objects\Cylinder.cpp" />
     <ClCompile Include="Objects\DAControl.cpp" />
@@ -707,6 +745,7 @@
     <ClCompile Include="Objects\Debris.cpp" />
     <ClCompile Include="Objects\DebugMode.cpp" />
     <ClCompile Include="Objects\Decoration.cpp" />
+    <ClCompile Include="Objects\DemoMenu.cpp" />
     <ClCompile Include="Objects\DERobot.cpp" />
     <ClCompile Include="Objects\DialogRunner.cpp" />
     <ClCompile Include="Objects\DirectorChair.cpp" />
@@ -714,9 +753,13 @@
     <ClCompile Include="Objects\DNARiser.cpp" />
     <ClCompile Include="Objects\DoorTrigger.cpp" />
     <ClCompile Include="Objects\Dragonfly.cpp" />
+    <ClCompile Include="Objects\DrawHelpers.cpp" />
     <ClCompile Include="Objects\Drillerdroid.cpp" />
     <ClCompile Include="Objects\DrillerdroidO.cpp" />
     <ClCompile Include="Objects\Dust.cpp" />
+    <ClCompile Include="Objects\E3MenuSetup.cpp" />
+    <ClCompile Include="Objects\EggJanken.cpp" />
+    <ClCompile Include="Objects\EggJankenPart.cpp" />
     <ClCompile Include="Objects\EggLoco.cpp" />
     <ClCompile Include="Objects\Eggman.cpp" />
     <ClCompile Include="Objects\EggPistonsMKII.cpp" />
@@ -751,6 +794,7 @@
     <ClCompile Include="Objects\FernParallax.cpp" />
     <ClCompile Include="Objects\FilmProjector.cpp" />
     <ClCompile Include="Objects\FilmReel.cpp" />
+    <ClCompile Include="Objects\Fireball.cpp" />
     <ClCompile Include="Objects\Fireflies.cpp" />
     <ClCompile Include="Objects\Firework.cpp" />
     <ClCompile Include="Objects\Fireworm.cpp" />
@@ -841,6 +885,7 @@
     <ClCompile Include="Objects\LightBulb.cpp" />
     <ClCompile Include="Objects\Localization.cpp" />
     <ClCompile Include="Objects\LocoSmoke.cpp" />
+    <ClCompile Include="Objects\LogHelpers.cpp" />
     <ClCompile Include="Objects\LogoSetup.cpp" />
     <ClCompile Include="Objects\LottoBall.cpp" />
     <ClCompile Include="Objects\LottoMachine.cpp" />
@@ -867,6 +912,7 @@
     <ClCompile Include="Objects\MagSpikeBall.cpp" />
     <ClCompile Include="Objects\MainMenu.cpp" />
     <ClCompile Include="Objects\ManiaModeMenu.cpp" />
+    <ClCompile Include="Objects\MathHelpers.cpp" />
     <ClCompile Include="Objects\MatryoshkaBom.cpp" />
     <ClCompile Include="Objects\MechaBu.cpp" />
     <ClCompile Include="Objects\MegaChopper.cpp" />
@@ -909,11 +955,13 @@
     <ClCompile Include="Objects\OOZSetup.cpp" />
     <ClCompile Include="Objects\Options.cpp" />
     <ClCompile Include="Objects\OptionsMenu.cpp" />
+    <ClCompile Include="Objects\Orbinaut.cpp" />
     <ClCompile Include="Objects\OrbitSpike.cpp" />
     <ClCompile Include="Objects\PaintingEyes.cpp" />
     <ClCompile Include="Objects\Palette.cpp" />
     <ClCompile Include="Objects\PaperRoller.cpp" />
     <ClCompile Include="Objects\ParallaxSprite.cpp" />
+    <ClCompile Include="Objects\ParticleHelpers.cpp" />
     <ClCompile Include="Objects\PathInverter.cpp" />
     <ClCompile Include="Objects\PauseMenu.cpp" />
     <ClCompile Include="Objects\PBL_Bumper.cpp" />
@@ -926,6 +974,7 @@
     <ClCompile Include="Objects\PBL_Sector.cpp" />
     <ClCompile Include="Objects\PBL_Setup.cpp" />
     <ClCompile Include="Objects\PBL_TargetBumper.cpp" />
+    <ClCompile Include="Objects\Pendulum.cpp" />
     <ClCompile Include="Objects\PetalPile.cpp" />
     <ClCompile Include="Objects\PhantomEgg.cpp" />
     <ClCompile Include="Objects\PhantomGunner.cpp" />
@@ -947,6 +996,7 @@
     <ClCompile Include="Objects\PlatformControl.cpp" />
     <ClCompile Include="Objects\PlatformNode.cpp" />
     <ClCompile Include="Objects\Player.cpp" />
+    <ClCompile Include="Objects\PlayerHelpers.cpp" />
     <ClCompile Include="Objects\PlayerProbe.cpp" />
     <ClCompile Include="Objects\PohBee.cpp" />
     <ClCompile Include="Objects\Pointdexter.cpp" />
@@ -980,6 +1030,7 @@
     <ClCompile Include="Objects\PuyoScore.cpp" />
     <ClCompile Include="Objects\Rattlekiller.cpp" />
     <ClCompile Include="Objects\Reagent.cpp" />
+    <ClCompile Include="Objects\Redz.cpp" />
     <ClCompile Include="Objects\ReplayDB.cpp" />
     <ClCompile Include="Objects\ReplayRecorder.cpp" />
     <ClCompile Include="Objects\Rexon.cpp" />
@@ -1023,6 +1074,7 @@
     <ClCompile Include="Objects\SP500MkII.cpp" />
     <ClCompile Include="Objects\SparkRail.cpp" />
     <ClCompile Include="Objects\Spear.cpp" />
+    <ClCompile Include="Objects\SpearBlock.cpp" />
     <ClCompile Include="Objects\SpecialClear.cpp" />
     <ClCompile Include="Objects\SpecialRing.cpp" />
     <ClCompile Include="Objects\SpeedBooster.cpp" />
@@ -1055,6 +1107,7 @@
     <ClCompile Include="Objects\Staircase.cpp" />
     <ClCompile Include="Objects\Stalactite.cpp" />
     <ClCompile Include="Objects\StarPost.cpp" />
+    <ClCompile Include="Objects\Stegway.cpp" />
     <ClCompile Include="Objects\StickyPlatform.cpp" />
     <ClCompile Include="Objects\Summary.cpp" />
     <ClCompile Include="Objects\SummaryEmerald.cpp" />
@@ -1064,6 +1117,7 @@
     <ClCompile Include="Objects\SwitchDoor.cpp" />
     <ClCompile Include="Objects\Syringe.cpp" />
     <ClCompile Include="Objects\TAEmerald.cpp" />
+    <ClCompile Include="Objects\TargetBumper.cpp" />
     <ClCompile Include="Objects\Technosqueek.cpp" />
     <ClCompile Include="Objects\TeeterTotter.cpp" />
     <ClCompile Include="Objects\TetherBall.cpp" />
@@ -1177,6 +1231,7 @@
     <ClCompile Include="Objects\Vultron.cpp" />
     <ClCompile Include="Objects\WalkerLegs.cpp" />
     <ClCompile Include="Objects\WallBumper.cpp" />
+    <ClCompile Include="Objects\WallCrawl.cpp" />
     <ClCompile Include="Objects\WarpDoor.cpp" />
     <ClCompile Include="Objects\Water.cpp" />
     <ClCompile Include="Objects\WaterfallSound.cpp" />
@@ -1184,6 +1239,7 @@
     <ClCompile Include="Objects\WeatherMobile.cpp" />
     <ClCompile Include="Objects\WeatherTV.cpp" />
     <ClCompile Include="Objects\Whirlpool.cpp" />
+    <ClCompile Include="Objects\Wisp.cpp" />
     <ClCompile Include="Objects\WoodChipper.cpp" />
     <ClCompile Include="Objects\Woodrow.cpp" />
     <ClCompile Include="Objects\YoyoPulley.cpp" />

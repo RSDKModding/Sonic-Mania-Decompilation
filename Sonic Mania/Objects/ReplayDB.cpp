@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectReplayDB *ReplayDB;
 
 void ReplayDB_Update()
@@ -46,4 +47,4 @@ void ReplayDB_Serialize()
 {
 
 }
-
+#endif

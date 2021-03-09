@@ -199,9 +199,9 @@ struct EntityPlayer : Entity {
     int scrollDelay;
     int skidding;
     int pushing;
-    int underwater;
+    bool32 underwater;
     int groundedStore;
-    int flipY;
+    int invertGravity;
     int isChibi;
     int forceTransform;
     int superState;
@@ -379,13 +379,20 @@ void Player_State_Die();
 void Player_State_Drown();
 void Player_State_DropDash();
 void Player_State_BubbleBounce();
+#if RETRO_USE_PLUS
+void Player_State_MightyHammerDrop();
 void Player_State_MightyUnspin();
+void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox);
+void Player_State_RayGlide();
+#endif
 
 void Player_SonicJumpAbility();
 void Player_TailsJumpAbility();
 void Player_KnuxJumpAbility();
+#if RETRO_USE_PLUS
 void Player_MightyJumpAbility();
 void Player_RayJumpAbility();
+#endif
 
 //Input States
 void Player_GetP1Inputs();

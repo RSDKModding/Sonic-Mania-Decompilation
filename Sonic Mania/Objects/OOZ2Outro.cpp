@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectOOZ2Outro OOZ2Outro;
 
 void OOZ2Outro_Update()
@@ -46,4 +47,4 @@ void OOZ2Outro_Serialize()
 {
 
 }
-
+#endif

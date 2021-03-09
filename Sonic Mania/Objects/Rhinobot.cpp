@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectRhinobot *Rhinobot;
 
 void Rhinobot_Update()
@@ -46,4 +47,5 @@ void Rhinobot_Serialize()
 {
 
 }
+#endif
 

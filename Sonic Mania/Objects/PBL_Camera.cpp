@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Camera PBL_Camera;
+#if RETRO_USE_PLUS
+ObjectPBL_Camera *PBL_Camera;
 
 void PBL_Camera_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Camera_Serialize()
 {
 
 }
-
+#endif

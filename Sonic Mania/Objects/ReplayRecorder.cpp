@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectReplayRecorder *ReplayRecorder;
 
 void ReplayRecorder_Update()
@@ -46,4 +47,4 @@ void ReplayRecorder_Serialize()
 {
 
 }
-
+#endif

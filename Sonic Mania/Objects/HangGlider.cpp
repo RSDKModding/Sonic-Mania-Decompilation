@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectHangGlider *HangGlider;
 
 void HangGlider_Update()
@@ -46,4 +47,4 @@ void HangGlider_Serialize()
 {
 
 }
-
+#endif

@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 
 void AIZEncoreTutorial_Update()
@@ -46,4 +47,4 @@ void AIZEncoreTutorial_Serialize()
 {
 
 }
-
+#endif

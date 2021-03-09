@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectUIPopover : Object {
 
@@ -28,6 +29,6 @@ void UIPopover_EditorLoad();
 void UIPopover_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_UIPOPOVER_H

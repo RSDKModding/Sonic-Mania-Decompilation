@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectSchrodingersCapsule : Object {
 
@@ -28,6 +29,6 @@ void SchrodingersCapsule_EditorLoad();
 void SchrodingersCapsule_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_SCHRODINGERSCAPSULE_H

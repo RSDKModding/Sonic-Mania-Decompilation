@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectMainMenu *MainMenu;
 
 void MainMenu_Update()
@@ -46,4 +47,4 @@ void MainMenu_Serialize()
 {
 
 }
-
+#endif

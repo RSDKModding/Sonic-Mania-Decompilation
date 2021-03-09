@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectUIDiorama *UIDiorama;
 
 void UIDiorama_Update()
@@ -46,4 +47,4 @@ void UIDiorama_Serialize()
 {
 
 }
-
+#endif

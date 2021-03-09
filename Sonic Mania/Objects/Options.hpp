@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectOptions : Object {
     void* func;
@@ -16,5 +17,5 @@ extern ObjectOptions *Options;
 //Funcs
 void Options_Reload();
 void Options_GetWinSize();
-
+#endif
 #endif //!OBJ_OPTIONS_H

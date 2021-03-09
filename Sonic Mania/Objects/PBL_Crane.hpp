@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Crane : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Crane : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Crane PBL_Crane;
+extern ObjectPBL_Crane *PBL_Crane;
 
 // Standard Entity Events
 void PBL_Crane_Update();
@@ -28,6 +29,6 @@ void PBL_Crane_EditorLoad();
 void PBL_Crane_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_CRANE_H

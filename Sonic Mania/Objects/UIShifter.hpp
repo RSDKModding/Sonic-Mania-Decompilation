@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectUIShifter : Object {
 
@@ -28,6 +29,6 @@ void UIShifter_EditorLoad();
 void UIShifter_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_UISHIFTER_H

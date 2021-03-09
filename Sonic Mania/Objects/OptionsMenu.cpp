@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectOptionsMenu *OptionsMenu;
 
 void OptionsMenu_Update()
@@ -46,4 +47,4 @@ void OptionsMenu_Serialize()
 {
 
 }
-
+#endif

@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_Ring PBL_Ring;
+#if RETRO_USE_PLUS
+ObjectPBL_Ring *PBL_Ring;
 
 void PBL_Ring_Update()
 {
@@ -46,4 +47,4 @@ void PBL_Ring_Serialize()
 {
 
 }
-
+#endif

@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_TargetBumper PBL_TargetBumper;
+#if RETRO_USE_PLUS
+ObjectPBL_TargetBumper *PBL_TargetBumper;
 
 void PBL_TargetBumper_Update()
 {
@@ -46,4 +47,4 @@ void PBL_TargetBumper_Serialize()
 {
 
 }
-
+#endif

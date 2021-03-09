@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectBloominator : Object {
 
@@ -28,6 +29,6 @@ void Bloominator_EditorLoad();
 void Bloominator_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_BLOOMINATOR_H

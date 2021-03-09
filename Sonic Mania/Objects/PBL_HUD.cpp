@@ -1,6 +1,7 @@
 #include "../SonicMania.hpp"
 
-ObjectPBL_HUD PBL_HUD;
+#if RETRO_USE_PLUS
+ObjectPBL_HUD *PBL_HUD;
 
 void PBL_HUD_Update()
 {
@@ -46,4 +47,4 @@ void PBL_HUD_Serialize()
 {
 
 }
-
+#endif

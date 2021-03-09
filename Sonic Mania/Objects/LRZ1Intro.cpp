@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectLRZ1Intro LRZ1Intro;
 
 void LRZ1Intro_Update()
@@ -46,4 +47,4 @@ void LRZ1Intro_Serialize()
 {
 
 }
-
+#endif

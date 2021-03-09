@@ -22,7 +22,7 @@ void InvincibleStars_Update()
             entity->starPos[0].x += (playerHitbox->left << 15) - (playerHitbox->right << 15) - (playerHitbox->left << 16);
         else
             entity->starPos[0].x += ((playerHitbox->right + 2 * playerHitbox->left) << 15) - (playerHitbox->left << 15);
-        if (player->direction & 2 && player->flipY != 1)
+        if (player->direction & 2 && player->invertGravity != 1)
             entity->starPos[0].y += (playerHitbox->top << 15) - (playerHitbox->bottom << 15) - (playerHitbox->top << 16);
         else
             entity->starPos[0].y += ((playerHitbox->bottom + 2 * playerHitbox->top) << 15) - (playerHitbox->top << 15);

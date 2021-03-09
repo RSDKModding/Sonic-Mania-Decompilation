@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectTimeAttackMenu *TimeAttackMenu;
 
 void TimeAttackMenu_Update()
@@ -46,4 +47,5 @@ void TimeAttackMenu_Serialize()
 {
 
 }
+#endif
 

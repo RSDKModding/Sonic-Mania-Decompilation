@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectAIZRockPile *AIZRockPile;
 
 void AIZRockPile_Update()
@@ -46,4 +47,4 @@ void AIZRockPile_Serialize()
 {
 
 }
-
+#endif

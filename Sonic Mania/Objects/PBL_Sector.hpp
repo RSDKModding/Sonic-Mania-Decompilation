@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectPBL_Sector : Object {
 
@@ -14,7 +15,7 @@ struct EntityPBL_Sector : Entity {
 };
 
 // Object Struct
-extern ObjectPBL_Sector PBL_Sector;
+extern ObjectPBL_Sector *PBL_Sector;
 
 // Standard Entity Events
 void PBL_Sector_Update();
@@ -28,6 +29,6 @@ void PBL_Sector_EditorLoad();
 void PBL_Sector_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_PBL_SECTOR_H

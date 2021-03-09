@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectNoSwap *NoSwap;
 
 void NoSwap_Update()
@@ -102,4 +103,4 @@ void NoSwap_Serialize()
     RSDK_EDITABLE_VAR(NoSwap, VAR_BOOL, always);
     RSDK_EDITABLE_VAR(NoSwap, VAR_BOOL, noDeathSwap);
 }
-
+#endif

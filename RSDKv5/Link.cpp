@@ -14,27 +14,27 @@ enum UserdataTableIDs {
     UserdataTable_CheckDLC,
     UserdataTable_ClearAchievements,
     UserdataTable_UnlockAchievement,
-    UserdataTable_GetAchievementsActive,
-    UserdataTable_SetAchievementsActive,
+    UserdataTable_GetAchievementsStatus,
+    UserdataTable_SetAchievementsStatus,
     UserdataTable_Unknown7,
     UserdataTable_FetchLeaderboard,
     UserdataTable_TrackScore,
     UserdataTable_Unknown10,
-    UserdataTable_Unknown11,
+    UserdataTable_LeaderboardEntryCount,
     UserdataTable_Missing2,
     UserdataTable_Unknown12,
     UserdataTable_Missing3,
-    UserdataTable_Unknown13,
+    UserdataTable_ReadLeaderboardEntry,
     UserdataTable_SetPresence,
     UserdataTable_TryTrackStat,
-    UserdataTable_GetStatsActive,
-    UserdataTable_SetStatsActive,
+    UserdataTable_GetStatsStatus,
+    UserdataTable_SetStatsStatus,
     UserdataTable_Unknown16,
     UserdataTable_TryAuth,
-    UserdataTable_GetUserStorageActive,
-    UserdataTable_Unknown19,
+    UserdataTable_GetUserAuthStatus,
+    UserdataTable_GetUsername,
     UserdataTable_TryInitStorage,
-    UserdataTable_Unknown21,
+    UserdataTable_GetStorageStatus,
     UserdataTable_Unknown22,
     UserdataTable_Unknown23,
     UserdataTable_Unknown24,
@@ -62,7 +62,7 @@ enum UserdataTableIDs {
     UserdataTable_Unknown39,
     UserdataTable_AddUserDB,
     UserdataTable_Unknown40,
-    UserdataTable_Unknown41,
+    UserdataTable_GetTime,
     UserdataTable_Unknown42,
     UserdataTable_Unknown43,
     UserdataTable_Count,
@@ -237,19 +237,19 @@ enum FunctionTableIDs {
     FunctionTable_LoadVideo,
     FunctionTable_LoadImage,
 #if RETRO_USE_PLUS
-    FunctionTable_Unknown98,
-    FunctionTable_Unknown99,
+    FunctionTable_ControllerIDForInputID,
+    FunctionTable_MostRecentActiveControllerID,
     FunctionTable_Unknown100,
     FunctionTable_Unknown101,
-    FunctionTable_Unknown102,
-    FunctionTable_Unknown103,
-    FunctionTable_Unknown104,
     FunctionTable_Missing21,
     FunctionTable_Missing22,
     FunctionTable_Missing23,
     FunctionTable_Missing24,
     FunctionTable_Missing25,
     FunctionTable_Missing26,
+    FunctionTable_AssignControllerID,
+    FunctionTable_InputIDIsDisconnected,
+    FunctionTable_ResetControllerAssignments,
 #endif
 #if !RETRO_USE_PLUS
     FunctionTable_Unknown92,
@@ -313,32 +313,32 @@ void setupFunctions()
     userDataTable[UserdataTable_GetUserLanguage]       = (void *)userCore->GetUserLanguage;
     userDataTable[UserdataTable_GetConfirmButtonFlip]  = (void *)userCore->GetConfirmButtonFlip;
     userDataTable[UserdataTable_ExitGame]              = (void *)userCore->ExitGame;
-    userDataTable[UserdataTable_LaunchManual]          = (void *)userCore->ExitGame;
+    userDataTable[UserdataTable_LaunchManual]          = (void *)userCore->LaunchManual;
     userDataTable[UserdataTable_Unknown4]              = (void *)NullFunc;
     userDataTable[UserdataTable_CheckDLC]              = (void *)userCore->CheckDLC;
     userDataTable[UserdataTable_ClearAchievements]     = (void *)NullFunc;
     userDataTable[UserdataTable_UnlockAchievement]     = (void *)achievements->UnlockAchievement;
-    userDataTable[UserdataTable_GetAchievementsActive] = (void *)NullFunc;
-    userDataTable[UserdataTable_SetAchievementsActive] = (void *)NullFunc;
+    userDataTable[UserdataTable_GetAchievementsStatus] = (void *)NullFunc;
+    userDataTable[UserdataTable_SetAchievementsStatus] = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown7]              = (void *)NullFunc;
     userDataTable[UserdataTable_FetchLeaderboard]      = (void *)leaderboards->FetchLeaderboard;
     userDataTable[UserdataTable_TrackScore]            = (void *)leaderboards->TrackScore;
     userDataTable[UserdataTable_Unknown10]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown11]             = (void *)NullFunc;
+    userDataTable[UserdataTable_LeaderboardEntryCount] = (void *)NullFunc;
     userDataTable[UserdataTable_Missing2]              = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown12]             = (void *)NullFunc;
     userDataTable[UserdataTable_Missing3]              = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown13]             = (void *)NullFunc;
+    userDataTable[UserdataTable_ReadLeaderboardEntry]  = (void *)NullFunc;
     userDataTable[UserdataTable_SetPresence]           = (void *)richPresence->SetPresence;
     userDataTable[UserdataTable_TryTrackStat]          = (void *)NullFunc;
-    userDataTable[UserdataTable_GetStatsActive]        = (void *)NullFunc;
-    userDataTable[UserdataTable_SetStatsActive]        = (void *)NullFunc;
+    userDataTable[UserdataTable_GetStatsStatus]        = (void *)NullFunc;
+    userDataTable[UserdataTable_SetStatsStatus]        = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown16]             = (void *)NullFunc;
     userDataTable[UserdataTable_TryAuth]               = (void *)NullFunc;
-    userDataTable[UserdataTable_GetUserStorageActive]  = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown19]             = (void *)NullFunc;
+    userDataTable[UserdataTable_GetUserAuthStatus]     = (void *)NullFunc;
+    userDataTable[UserdataTable_GetUsername]           = (void *)NullFunc;
     userDataTable[UserdataTable_TryInitStorage]        = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown21]             = (void *)NullFunc;
+    userDataTable[UserdataTable_GetStorageStatus]      = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown22]             = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown23]             = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown24]             = (void *)NullFunc;
@@ -366,7 +366,7 @@ void setupFunctions()
     userDataTable[UserdataTable_Unknown39]             = (void *)NullFunc;
     userDataTable[UserdataTable_AddUserDB]             = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown40]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown41]             = (void *)NullFunc;
+    userDataTable[UserdataTable_GetTime]               = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown42]             = (void *)NullFunc;
     userDataTable[UserdataTable_Unknown43]             = (void *)NullFunc;
 #endif
@@ -539,19 +539,19 @@ void setupFunctions()
     functionTable[FunctionTable_LoadVideo]                    = (void *)NullFunc; // LoadVideo;
     functionTable[FunctionTable_LoadImage]                    = (void *)LoadImage;
 #if RETRO_USE_PLUS
-    functionTable[FunctionTable_Unknown98]  = (void *)NullFunc; // Unknown98;
-    functionTable[FunctionTable_Unknown99]  = (void *)NullFunc; // Unknown99;
-    functionTable[FunctionTable_Unknown100] = (void *)NullFunc; // Unknown100;
-    functionTable[FunctionTable_Unknown101] = (void *)NullFunc; // Unknown101;
-    functionTable[FunctionTable_Unknown102] = (void *)NullFunc; // Unknown102;
-    functionTable[FunctionTable_Unknown103] = (void *)NullFunc; // Unknown103;
-    functionTable[FunctionTable_Unknown104] = (void *)NullFunc; // Unknown104;
-    functionTable[FunctionTable_Missing21]  = (void *)NullFunc; // UserDataUnknown1;
-    functionTable[FunctionTable_Missing22]  = (void *)NullFunc; // UserDataUnknown2;
-    functionTable[FunctionTable_Missing23]  = (void *)NullFunc; // UserDataUnknown3;
-    functionTable[FunctionTable_Missing24]  = (void *)NullFunc; // UserDataUnknown4;
-    functionTable[FunctionTable_Missing25]  = (void *)NullFunc; // UserDataUnknown5;
-    functionTable[FunctionTable_Missing26]  = (void *)NullFunc; // UserDataUnknown6;
+    functionTable[FunctionTable_ControllerIDForInputID]       = (void *)NullFunc; // Unknown98;
+    functionTable[FunctionTable_MostRecentActiveControllerID] = (void *)NullFunc; // Unknown99;
+    functionTable[FunctionTable_Unknown100]                   = (void *)NullFunc; // Unknown100;
+    functionTable[FunctionTable_Unknown101]                   = (void *)NullFunc; // Unknown101;
+    functionTable[FunctionTable_Missing21]                    = (void *)NullFunc; // UserDataUnknown1;
+    functionTable[FunctionTable_Missing22]                    = (void *)NullFunc; // UserDataUnknown2;
+    functionTable[FunctionTable_Missing23]                    = (void *)NullFunc; // UserDataUnknown3;
+    functionTable[FunctionTable_Missing24]                    = (void *)NullFunc; // UserDataUnknown4;
+    functionTable[FunctionTable_Missing25]                    = (void *)NullFunc; // UserDataUnknown5;
+    functionTable[FunctionTable_Missing26]                    = (void *)NullFunc; // UserDataUnknown6;
+    functionTable[FunctionTable_AssignControllerID]           = (void *)NullFunc; // Unknown102;
+    functionTable[FunctionTable_InputIDIsDisconnected]        = (void *)NullFunc; // Unknown103;
+    functionTable[FunctionTable_ResetControllerAssignments]   = (void *)NullFunc; // Unknown104;
 #endif
 #if !RETRO_USE_PLUS
     functionTable[FunctionTable_Unknown92] = (void *)NullFunc;

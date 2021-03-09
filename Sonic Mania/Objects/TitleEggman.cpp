@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectTitleEggman *TitleEggman;
 
 void TitleEggman_Update()
@@ -46,4 +47,4 @@ void TitleEggman_Serialize()
 {
 
 }
-
+#endif

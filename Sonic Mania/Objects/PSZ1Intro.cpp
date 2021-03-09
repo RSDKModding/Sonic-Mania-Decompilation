@@ -1,5 +1,6 @@
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 ObjectPSZ1Intro PSZ1Intro;
 
 void PSZ1Intro_Update()
@@ -46,4 +47,4 @@ void PSZ1Intro_Serialize()
 {
 
 }
-
+#endif

@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectUIReplayCarousel : Object {
 
@@ -28,6 +29,6 @@ void UIReplayCarousel_EditorLoad();
 void UIReplayCarousel_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_UIREPLAYCAROUSEL_H

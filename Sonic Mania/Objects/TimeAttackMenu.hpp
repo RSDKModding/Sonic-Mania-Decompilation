@@ -3,6 +3,7 @@
 
 #include "../SonicMania.hpp"
 
+#if RETRO_USE_PLUS
 // Object Class
 struct ObjectTimeAttackMenu : Object {
 
@@ -28,6 +29,6 @@ void TimeAttackMenu_EditorLoad();
 void TimeAttackMenu_Serialize();
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_TIMEATTACKMENU_H
