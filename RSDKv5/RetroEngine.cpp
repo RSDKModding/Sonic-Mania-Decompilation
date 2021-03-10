@@ -216,7 +216,7 @@ bool32 processEvents()
                         break;
 #else
                     case SDLK_F11:
-                        if (engine.masterPaused)
+                        if ((sceneInfo.state & 4) == 4)
                             engine.frameStep = true;
                         break;
                     case SDLK_F12:

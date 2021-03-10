@@ -3118,7 +3118,7 @@ void Player_State_BubbleBounce()
             entity->onGround = false;
 
             entity->velocity.x = (entity->groundVel * RSDK.Cos256(entity->angle) + (vel * RSDK.Sin256(entity->angle))) >> 8;
-            entity->velocity.y = (entity->velocity.y - (entity->groundVel * RSDK.Sin256(entity->angle)) * RSDK.Cos256(entity->angle)) >> 8;
+            entity->velocity.y = (entity->groundVel * RSDK.Sin256(entity->angle) - (vel * RSDK.Cos256(entity->angle))) >> 8;
 
             if (entity->camera) {
                 entity->camera->field_94 = 1;

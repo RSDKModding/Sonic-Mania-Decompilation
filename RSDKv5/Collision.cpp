@@ -786,7 +786,7 @@ void ProcessTileCollisions(Entity *entity, Hitbox *outerBox, Hitbox *innerBox)
 {
     if (entity && outerBox && innerBox) {
         if (entity->tileCollisions) {
-            entity->angle &= 0xFFu;
+            entity->angle &= 0xFF;
             int vel = abs(entity->groundVel);
             if (vel < 0x60000)
                 collisionTolerance = entity->angle == 0 ? 8 : 15;
@@ -929,7 +929,7 @@ void ProcessAirCollision()
         if (movingRight == 2) {
             collisionEntity->velocity.x = 0;
             collisionEntity->groundVel  = 0;
-            collisionEntity->position.x = (sensors[0].pos.x - collisionRight_Outer) << 16;
+            collisionEntity->position.x = sensors[0].pos.x - (collisionRight_Outer << 16);
             sensors[2].pos.x            = collisionEntity->position.x + ((collisionLeft_Outer + 1) << 16);
             sensors[3].pos.x            = collisionEntity->position.x + ((collisionRight_Outer - 2) << 16);
             sensors[4].pos.x            = sensors[2].pos.x;
@@ -942,7 +942,7 @@ void ProcessAirCollision()
         if (movingLeft == 2) {
             collisionEntity->velocity.x = 0;
             collisionEntity->groundVel  = 0;
-            collisionEntity->position.x = (sensors[1].pos.x - collisionLeft_Outer + 1) << 16;
+            collisionEntity->position.x = sensors[1].pos.x - ((collisionLeft_Outer + 1) << 16);
             sensors[2].pos.x            = collisionEntity->position.x + ((collisionLeft_Outer + 1) << 16);
             sensors[3].pos.x            = collisionEntity->position.x + ((collisionRight_Outer - 2) << 16);
             sensors[4].pos.x            = sensors[2].pos.x;
@@ -993,20 +993,20 @@ void ProcessAirCollision()
         collisionEntity->onGround = true;
         if (sensors[2].collided && sensors[3].collided) {
             if (sensors[2].pos.y >= sensors[3].pos.y) {
-                collisionEntity->position.y = (sensors[3].pos.y - collisionBottom_Outer) << 16;
+                collisionEntity->position.y = sensors[3].pos.y - (collisionBottom_Outer << 16);
                 collisionEntity->angle      = sensors[3].angle;
             }
             else {
-                collisionEntity->position.y = (sensors[2].pos.y - collisionBottom_Outer) << 16;
+                collisionEntity->position.y = sensors[2].pos.y - (collisionBottom_Outer << 16);
                 collisionEntity->angle      = sensors[2].angle;
             }
         }
         else if (sensors[2].collided) {
-            collisionEntity->position.y = (sensors[2].pos.y - collisionBottom_Outer) << 16;
+            collisionEntity->position.y = sensors[2].pos.y - (collisionBottom_Outer << 16);
             collisionEntity->angle      = sensors[2].angle;
         }
         else if (sensors[3].collided) {
-            collisionEntity->position.y = (sensors[3].pos.y - collisionBottom_Outer) << 16;
+            collisionEntity->position.y = sensors[3].pos.y - (collisionBottom_Outer << 16);
             collisionEntity->angle      = sensors[3].angle;
         }
 
@@ -1058,20 +1058,20 @@ void ProcessAirCollision()
         int sensorAngle = 0;
         if (sensors[4].collided && sensors[5].collided) {
             if (sensors[4].pos.y <= sensors[5].pos.y) {
-                collisionEntity->position.y = (sensors[5].pos.y - collisionBottom_Outer + 1) << 16;
+                collisionEntity->position.y = sensors[5].pos.y - ((collisionTop_Outer + 1) << 16);
                 sensorAngle                 = sensors[5].angle;
             }
             else {
-                collisionEntity->position.y = (sensors[4].pos.y - collisionBottom_Outer + 1) << 16;
+                collisionEntity->position.y = sensors[4].pos.y - ((collisionTop_Outer + 1) << 16);
                 sensorAngle                 = sensors[4].angle;
             }
         }
         else if (sensors[4].collided) {
-            collisionEntity->position.y = (sensors[4].pos.y - collisionBottom_Outer) << 16;
+            collisionEntity->position.y = sensors[4].pos.y - (collisionTop_Outer << 16);
             sensorAngle                 = sensors[4].angle;
         }
         else if (sensors[5].collided) {
-            collisionEntity->position.y = (sensors[5].pos.y - collisionBottom_Outer) << 16;
+            collisionEntity->position.y = sensors[5].pos.y - (collisionTop_Outer << 16);
             sensorAngle                 = sensors[5].angle;
         }
         sensorAngle &= 0xFF;
@@ -1149,14 +1149,14 @@ void ProcessPathGrip()
                 if (collisionEntity->groundVel > 0) {
                     LWallCollision(&sensors[3]);
                     if (sensors[3].collided) {
-                        sensors[2].pos.x = (sensors[3].pos.x - 2) << 16;
+                        sensors[2].pos.x = sensors[3].pos.x - (2 << 16);
                     }
                 }
 
                 if (collisionEntity->groundVel < 0) {
                     RWallCollision(&sensors[3]);
                     if (sensors[3].collided) {
-                        sensors[0].pos.x = (sensors[3].pos.x + 2) << 16;
+                        sensors[0].pos.x = sensors[3].pos.x + (2 << 16);
                     }
                 }
 
@@ -1190,7 +1190,7 @@ void ProcessPathGrip()
                     checkDist = -1;
                 }
                 else {
-                    sensors[0].pos.y = sensors[tileDistance].pos.y << 16;
+                    sensors[0].pos.y = sensors[tileDistance].pos.y;
                     sensors[0].angle = sensors[tileDistance].angle;
 
                     sensors[1].pos.y = sensors[0].pos.y;
@@ -1245,7 +1245,7 @@ void ProcessPathGrip()
                     checkDist = -1;
                 }
                 else {
-                    sensors[0].pos.x = sensors[tileDistance].pos.x << 16;
+                    sensors[0].pos.x = sensors[tileDistance].pos.x;
                     sensors[0].angle = sensors[tileDistance].angle;
 
                     sensors[1].pos.x = sensors[0].pos.x;
@@ -1300,7 +1300,7 @@ void ProcessPathGrip()
                     checkDist = -1;
                 }
                 else {
-                    sensors[0].pos.y = sensors[tileDistance].pos.y << 16;
+                    sensors[0].pos.y = sensors[tileDistance].pos.y;
                     sensors[0].angle = sensors[tileDistance].angle;
 
                     sensors[1].pos.y = sensors[0].pos.y;
@@ -1355,7 +1355,7 @@ void ProcessPathGrip()
                     checkDist = -1;
                 }
                 else {
-                    sensors[0].pos.x = sensors[tileDistance].pos.x << 16;
+                    sensors[0].pos.x = sensors[tileDistance].pos.x;
                     sensors[0].angle = sensors[tileDistance].angle;
 
                     sensors[1].pos.x = sensors[0].pos.x;
@@ -1393,10 +1393,10 @@ void ProcessPathGrip()
                 }
                 else {
                     if (collisionEntity->groundVel > 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionRight_Outer) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - (collisionRight_Outer << 16);
 
                     if (collisionEntity->groundVel < 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionLeft_Outer + 1) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - ((collisionLeft_Outer + 1) << 16);
 
                     collisionEntity->groundVel  = 0;
                     collisionEntity->velocity.x = 0;
@@ -1421,9 +1421,9 @@ void ProcessPathGrip()
                 }
                 else {
                     if (collisionEntity->groundVel > 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionRight_Outer) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - (collisionRight_Outer << 16);
                     if (collisionEntity->groundVel < 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionLeft_Outer + 1) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - ((collisionLeft_Outer + 1) << 16);
 
                     collisionEntity->groundVel  = 0;
                     collisionEntity->velocity.x = 0;
@@ -1456,10 +1456,10 @@ void ProcessPathGrip()
             }
             else {
                 if (collisionEntity->groundVel > 0)
-                    collisionEntity->position.y = (sensors[3].pos.y - collisionRight_Outer + 1) << 16;
+                    collisionEntity->position.y = sensors[3].pos.y - ((collisionRight_Outer + 1) << 16);
 
                 if (collisionEntity->groundVel < 0)
-                    collisionEntity->position.y = (sensors[3].pos.y - collisionLeft_Outer) << 16;
+                    collisionEntity->position.y = sensors[3].pos.y - (collisionLeft_Outer << 16);
 
                 collisionEntity->groundVel = 0;
             }
@@ -1486,10 +1486,10 @@ void ProcessPathGrip()
                 }
                 else {
                     if (collisionEntity->groundVel > 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionRight_Outer) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - (collisionRight_Outer << 16);
 
                     if (collisionEntity->groundVel < 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionLeft_Outer - 1) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - ((collisionLeft_Outer - 1) << 16);
 
                     collisionEntity->groundVel = 0;
                 }
@@ -1504,10 +1504,10 @@ void ProcessPathGrip()
                 }
                 else {
                     if (collisionEntity->groundVel > 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionRight_Outer) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - (collisionRight_Outer << 16);
 
                     if (collisionEntity->groundVel < 0)
-                        collisionEntity->position.x = (sensors[3].pos.x - collisionLeft_Outer + 1) << 16;
+                        collisionEntity->position.x = sensors[3].pos.x - ((collisionLeft_Outer + 1) << 16);
                     collisionEntity->groundVel = 0;
                 }
             }
@@ -1537,10 +1537,10 @@ void ProcessPathGrip()
             }
             else {
                 if (collisionEntity->groundVel > 0)
-                    collisionEntity->position.y = (sensors[3].pos.y - collisionRight_Outer) << 16;
+                    collisionEntity->position.y = sensors[3].pos.y - (collisionRight_Outer << 16);
 
                 if (collisionEntity->groundVel < 0)
-                    collisionEntity->position.y = (sensors[3].pos.y - collisionLeft_Outer + 1) << 16;
+                    collisionEntity->position.y = sensors[3].pos.y - ((collisionLeft_Outer + 1) << 16);
 
                 collisionEntity->groundVel = 0;
             }
@@ -1632,19 +1632,21 @@ void FindFloorPosition(CollisionSensor *sensor)
                             int ty        = cy + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                             int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorAngle;
                             if (collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF] < 0xFF) {
-                                if (abs(colY - ty) <= collisionTolerance) {
-                                    if (tileAngle < 0)
-                                        tileAngle += 0x100;
+                                if (!sensor->collided || colY >= ty) {
+                                    if (abs(colY - ty) <= collisionTolerance) {
+                                        if (tileAngle < 0)
+                                            tileAngle += 0x100;
 
-                                    if (tileAngle >= 0x100)
-                                        tileAngle -= 0x100;
+                                        if (tileAngle >= 0x100)
+                                            tileAngle -= 0x100;
 
-                                    if ((abs(sensor->angle - tileAngle) <= 0x20) || (abs(sensor->angle - 0x100 - tileAngle) <= 0x20)
-                                        || (abs(sensor->angle + 0x100 - tileAngle) <= 0x20)) {
-                                        sensor->collided = true;
-                                        sensor->angle    = tileAngle;
-                                        sensor->pos.y    = ty;
-                                        i                = 3;
+                                        if ((abs(sensor->angle - tileAngle) <= 0x20) || (abs(sensor->angle - 0x100 - tileAngle) <= 0x20)
+                                            || (abs(sensor->angle + 0x100 - tileAngle) <= 0x20)) {
+                                            sensor->collided = true;
+                                            sensor->angle    = tileAngle;
+                                            sensor->pos.y    = ty << 0x10;
+                                            i                = 3;
+                                        }
                                     }
                                 }
                             }
@@ -1681,18 +1683,20 @@ void FindLWallPosition(CollisionSensor *sensor)
                             int tx        = cx + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                             int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallAngle;
                             if (collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF] < 0xFF) {
-                                if (abs(colX - tx) <= collisionTolerance) {
-                                    if (sensor->angle < 0)
-                                        sensor->angle += 0x100;
+                                if (!sensor->collided || colX >= tx) {
+                                    if (abs(colX - tx) <= collisionTolerance) {
+                                        if (sensor->angle < 0)
+                                            sensor->angle += 0x100;
 
-                                    if (sensor->angle >= 0x100)
-                                        sensor->angle -= 0x100;
+                                        if (sensor->angle >= 0x100)
+                                            sensor->angle -= 0x100;
 
-                                    if (abs(sensor->angle - tileAngle) <= 0x20) {
-                                        sensor->collided = true;
-                                        sensor->angle    = tileAngle;
-                                        sensor->pos.x    = tx;
-                                        i                = 3;
+                                        if (abs(sensor->angle - tileAngle) <= 0x20) {
+                                            sensor->collided = true;
+                                            sensor->angle    = tileAngle;
+                                            sensor->pos.x    = tx << 0x10;
+                                            i                = 3;
+                                        }
                                     }
                                 }
                             }
@@ -1711,9 +1715,9 @@ void FindRoofPosition(CollisionSensor *sensor)
 {
     int posX  = (sensor->pos.x >> 0x10);
     int posY  = (sensor->pos.y >> 0x10);
-    int solid = 1 << 12;
+    int solid = 1 << 13;
     if (collisionEntity->collisionPlane)
-        solid = 1 << 14;
+        solid = 1 << 15;
     for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
@@ -1729,18 +1733,20 @@ void FindRoofPosition(CollisionSensor *sensor)
                             int ty        = cy + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                             int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofAngle;
                             if (collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF] < 0xFF) {
-                                if (colY <= ty && abs(colY - ty) <= collisionTolerance) {
-                                    if (tileAngle < 0)
-                                        tileAngle += 0x100;
+                                if (!sensor->collided || colY <= ty) {
+                                    if (abs(colY - ty) <= collisionTolerance) {
+                                        if (tileAngle < 0)
+                                            tileAngle += 0x100;
 
-                                    if (tileAngle >= 0x100)
-                                        tileAngle -= 0x100;
+                                        if (tileAngle >= 0x100)
+                                            tileAngle -= 0x100;
 
-                                    if (abs(tileAngle - sensor->angle) <= 0x20) {
-                                        sensor->collided = true;
-                                        sensor->angle    = tileAngle;
-                                        sensor->pos.y    = ty;
-                                        i                = 3;
+                                        if (abs(tileAngle - sensor->angle) <= 0x20) {
+                                            sensor->collided = true;
+                                            sensor->angle    = tileAngle;
+                                            sensor->pos.y    = ty << 0x10;
+                                            i                = 3;
+                                        }
                                     }
                                 }
                             }
@@ -1777,18 +1783,20 @@ void FindRWallPosition(CollisionSensor *sensor)
                             int tx        = cx + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                             int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;
                             if (collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF] < 0xFF) {
-                                if (colX >= tx && abs(colX - tx) <= collisionTolerance) {
-                                    if (tileAngle < 0)
-                                        tileAngle += 0x100;
+                                if (!sensor->collided || colX <= tx) {
+                                    if (abs(colX - tx) <= collisionTolerance) {
+                                        if (tileAngle < 0)
+                                            tileAngle += 0x100;
 
-                                    if (tileAngle >= 0x100)
-                                        tileAngle -= 0x100;
+                                        if (tileAngle >= 0x100)
+                                            tileAngle -= 0x100;
 
-                                    if (abs(tileAngle - sensor->angle) <= 0x20) {
-                                        sensor->collided = true;
-                                        sensor->angle    = tileAngle;
-                                        sensor->pos.x    = tx;
-                                        i                = 3;
+                                        if (abs(tileAngle - sensor->angle) <= 0x20) {
+                                            sensor->collided = true;
+                                            sensor->angle    = tileAngle;
+                                            sensor->pos.x    = tx << 0x10;
+                                            i                = 3;
+                                        }
                                     }
                                 }
                             }
@@ -1827,7 +1835,7 @@ void FloorCollision(CollisionSensor *sensor)
                             if (colY >= ty && abs(colY - ty) <= 14) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorAngle;
-                                sensor->pos.y    = ty;
+                                sensor->pos.y    = ty << 0x10;
                             }
                         }
                     }
@@ -1863,7 +1871,7 @@ void LWallCollision(CollisionSensor *sensor)
                             if (colX >= tx && abs(colX - tx) <= 14) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallAngle;
-                                sensor->pos.x    = tx;
+                                sensor->pos.x    = tx << 0x10;
                             }
                         }
                     }
@@ -1880,9 +1888,9 @@ void RoofCollision(CollisionSensor *sensor)
 {
     int posX  = (sensor->pos.x >> 0x10);
     int posY  = (sensor->pos.y >> 0x10);
-    int solid = 1 << 12;
+    int solid = 1 << 13;
     if (collisionEntity->collisionPlane)
-        solid = 1 << 14;
+        solid = 1 << 15;
     for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
@@ -1896,10 +1904,10 @@ void RoofCollision(CollisionSensor *sensor)
                         ushort tile = *layout;
                         if (tile < 0xFFFF && tile & solid) {
                             int ty = cy + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
-                            if (colY <= ty && abs(colY - ty) <= 14) {
+                            if (colY < ty && abs(colY - ty) <= 14) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofAngle;
-                                sensor->pos.y    = ty;
+                                sensor->pos.y    = ty << 0x10;
                             }
                         }
                     }
@@ -1932,10 +1940,10 @@ void RWallCollision(CollisionSensor *sensor)
                         ushort tile = *layout;
                         if (tile < 0xFFFF && tile & solid) {
                             int tx = cx + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
-                            if (colX >= tx && abs(colX - tx) <= 14) {
+                            if (colX <= tx && abs(colX - tx) <= 14) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;
-                                sensor->pos.x    = tx;
+                                sensor->pos.x    = tx << 0x10;
                             }
                         }
                     }

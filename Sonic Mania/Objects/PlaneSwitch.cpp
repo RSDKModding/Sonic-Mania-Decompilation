@@ -18,8 +18,8 @@ void PlaneSwitch_Update()
             //Next loop, this one doesn't count
         }
         else {
-            int xDif = scanX - entity->position.x >= 0 ? scanX - entity->position.x : entity->position.x - scanX;
-            int yDif = scanY - entity->position.y >= 0 ? scanY - entity->position.y : entity->position.y - scanY;
+            int xDif = abs(scanX - entity->position.x);
+            int yDif = abs(scanY - entity->position.y);
 
             if (xDif < 0x180000 && yDif < entity->size << 19) {
                 if (scanX + pos >= entity->position.x) {
@@ -61,7 +61,7 @@ void PlaneSwitch_Draw()
     Vector2 drawPos;
     EntityPlaneSwitch *entity = (EntityPlaneSwitch *)RSDK_sceneInfo->entity;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= 0x80000;
     drawPos.y -= entity->size << 19;
@@ -112,7 +112,7 @@ void PlaneSwitch_Create(void* data)
         entity->visible       = false;
         entity->updateRange.y = y + 0x200000;
         entity->drawOrder     = Zone->drawOrderLow;
-        entity->negAngle      = (byte)-entity->angle;
+        entity->negAngle      = (byte)-(byte)entity->angle;
     }
 }
 

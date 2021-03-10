@@ -213,7 +213,7 @@ struct RSDKFunctionTable {
     TileLayer *(*GetSceneLayer)(int layerID);
     int (*GetSceneLayerID)(const char *name);
     void (*GetLayerSize)(ushort layer, Vector2 *size, bool32 pixelSize);
-    void (*GetTileInfo)(ushort layer, int x, int y);
+    ushort (*GetTileInfo)(ushort layer, int x, int y);
     void (*SetTileInfo)(ushort layer, int x, int y, ushort tile);
     int (*CopyTileLayer)(ushort dstLayer, int startX1, int startY1, ushort srcLayer, int startX2, int startY2, int countX, int countY);
     void (*ProcessParallax)(TileLayer *TileLayer);

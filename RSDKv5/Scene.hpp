@@ -192,10 +192,10 @@ inline void GetLayerSize(ushort layerID, Vector2 *size, bool32 pixelSize)
 
 inline ushort GetTileInfo(ushort layerID, int tileX, int tileY)
 {
-    if (layerID < 8u) {
+    if (layerID < LAYER_COUNT) {
         TileLayer *layer = &tileLayers[layerID];
         if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
-            return layer->layout[tileX + (tileY << layer->widthShift)];
+            return layer->layout[tileX + (tileY * layer->width)];
         }
     }
     return 0xFFFF;
@@ -203,10 +203,10 @@ inline ushort GetTileInfo(ushort layerID, int tileX, int tileY)
 
 inline void SetTileInfo(ushort layerID, int tileX, int tileY, ushort tile)
 {
-    if (layerID < 8u) {
+    if (layerID < LAYER_COUNT) {
         TileLayer* layer = &tileLayers[layerID];
         if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
-            layer->layout[tileX + (tileY << layer->widthShift)] = tile;
+            layer->layout[tileX + (tileY * layer->width)] = tile;
         }
     }
 }

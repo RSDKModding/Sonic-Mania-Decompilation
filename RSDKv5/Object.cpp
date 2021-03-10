@@ -291,9 +291,9 @@ void ProcessObjects()
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = (sceneInfo.entity->position.x >> 0x10) - screens[s].position.x;
-                        int sy = (sceneInfo.entity->position.y >> 0x10) - screens[s].position.y;
-                        if (sx >= 0 && sy >= 0 && sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width
+                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
+                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width
                             && sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screens[s].height) {
                             sceneInfo.entity->inBounds = true;
                             break;
@@ -303,8 +303,8 @@ void ProcessObjects()
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = (sceneInfo.entity->position.x >> 0x10) - screens[s].position.x;
-                        if (sx >= 0 && sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width) {
+                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
+                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -313,8 +313,8 @@ void ProcessObjects()
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sy = (sceneInfo.entity->position.y >> 0x10) - screens[s].position.y;
-                        if (sy >= 0 && sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screens[s].height) {
+                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screens[s].height) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }

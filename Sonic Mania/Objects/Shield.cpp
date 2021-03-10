@@ -9,9 +9,10 @@ void Shield_Update()
         entity->state();
     EntityPlayer *player = entity->player;
     if (player) {
-        if ((signed int)(entity->frameID & -4) <= 0)
-            --player->drawOrder;
-        entity->drawOrder = player->drawOrder;
+        int drawOrder = player->drawOrder;
+        if (entity->frameID & -4 <= 0)
+            --drawOrder;
+        entity->drawOrder = drawOrder;
         entity->visible   = entity->field_6C & player->visible;
         entity->field_6C  = 1;
     }

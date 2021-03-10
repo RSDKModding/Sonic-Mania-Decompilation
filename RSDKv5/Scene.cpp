@@ -591,23 +591,6 @@ void LoadTileConfig(char *filepath)
                             }
                         }
                     }
-
-                    for (int c = 0; c < TILE_SIZE; ++c) {
-                        int h = TILE_SIZE - 1;
-                        while (h < TILE_SIZE) {
-                            if (h == -1) {
-                                collisionMasks[p][t].rWallMasks[c] = 0xFF;
-                                h                                  = TILE_SIZE;
-                            }
-                            else if (c > collisionMasks[p][t].roofMasks[h]) {
-                                --h;
-                            }
-                            else {
-                                collisionMasks[p][t].rWallMasks[c] = h;
-                                h                                  = TILE_SIZE;
-                            }
-                        }
-                    }
                 }
                 else // Regular Tile
                 {
@@ -623,7 +606,6 @@ void LoadTileConfig(char *filepath)
                         }
                     }
 
-                    // LWall rotations
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         int h = 0;
                         while (h > -1) {

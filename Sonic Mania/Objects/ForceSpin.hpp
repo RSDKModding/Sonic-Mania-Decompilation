@@ -5,12 +5,14 @@
 
 // Object Class
 struct ObjectForceSpin : Object {
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityForceSpin : Entity {
-
+    int size;
+    int negAngle;
+    EntityAnimationData data;
 };
 
 // Object Struct
@@ -28,6 +30,7 @@ void ForceSpin_EditorLoad();
 void ForceSpin_Serialize();
 
 // Extra Entity Functions
-
+void ForceSpin_DrawSprites();
+void ForceSpin_SetPlayerState(void *plr);
 
 #endif //!OBJ_FORCESPIN_H

@@ -5,12 +5,16 @@
 
 // Object Class
 struct ObjectForceUnstick : Object {
-
+    ushort spriteIndex;
+    EntityAnimationData animData;
 };
 
 // Entity Class
 struct EntityForceUnstick : Entity {
-
+    byte width;
+    byte height;
+    bool32 breakClimb;
+    Hitbox hitbox;
 };
 
 // Object Struct
@@ -28,6 +32,7 @@ void ForceUnstick_EditorLoad();
 void ForceUnstick_Serialize();
 
 // Extra Entity Functions
+void ForceUnstick_DrawSprites();
 
 
 #endif //!OBJ_FORCEUNSTICK_H
