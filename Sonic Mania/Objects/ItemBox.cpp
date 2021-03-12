@@ -125,7 +125,7 @@ void ItemBox_Create(void *data)
 #endif
                     entity->contentsData.frameID = entity->type;
                 else
-                    RSDK.DestroyEntity(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, 0, 0);
                 return;
             default: entity->contentsData.frameID = entity->type; break;
         }
@@ -184,11 +184,11 @@ void ItemBox_StageLoad()
 
     if (options->gameMode == MODE_COMPETITION) {
         if (options->itemMode == 1) {
-            for (EntityItemBox *entity = 0; RSDK.GetObjects(ItemBox->objectID, (Entity **)&entity); entity->type = 13) {
+            for (EntityItemBox *entity = 0; RSDK.GetEntities(ItemBox->objectID, (Entity **)&entity); entity->type = 13) {
             }
         }
         else if (options->itemMode == 2) {
-            for (EntityItemBox *entity = 0; RSDK.GetObjects(ItemBox->objectID, (Entity **)&entity); entity->type = 12) {
+            for (EntityItemBox *entity = 0; RSDK.GetEntities(ItemBox->objectID, (Entity **)&entity); entity->type = 12) {
             }
         }
     }
@@ -219,7 +219,7 @@ void ItemBox_DebugDraw()
 void ItemBox_DebugSpawn()
 {
     EntityItemBox *entity =
-        (EntityItemBox *)RSDK.SpawnEntity(ItemBox->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+        (EntityItemBox *)RSDK.CreateEntity(ItemBox->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
     entity->type                 = DebugMode->itemSubType;
     entity->contentsData.frameID = DebugMode->itemSubType;
 }
@@ -370,7 +370,7 @@ void ItemBox_CheckHit()
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     EntityPlayer *player  = 0;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
 #if RETRO_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1 && !entity->parent) {
@@ -498,7 +498,7 @@ void ItemBox_GivePowerup()
             case 5:
                 if (!player->superState) {
                     Entity *shield = (Entity *)RSDK.GetEntityByID((ushort)(Player->playerCount + RSDK.GetEntityID(player)));
-                    RSDK.DestroyEntity(shield, InvincibleStars->objectID, player);
+                    RSDK.ResetEntityPtr(shield, InvincibleStars->objectID, player);
                     player->invincibleTimer = 1260;
                     // Music_PlayMusicTrack(1);
                 }
@@ -509,7 +509,7 @@ void ItemBox_GivePowerup()
                 if (!player->superState) {
                     // Music_PlayMusicTrack(2);
                     Entity *powerup = (Entity *)RSDK.GetEntityByID((ushort)(2 * Player->playerCount + RSDK.GetEntityID(player)));
-                    RSDK.DestroyEntity(powerup, ImageTrail->objectID, player);
+                    RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
                 }
                 return;
             case 7:
@@ -540,7 +540,7 @@ void ItemBox_GivePowerup()
                     }
                     options->stock |= charID;
                     EntityExplosion *explosion =
-                        (EntityExplosion *)RSDK.SpawnEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
+                        (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
                     explosion->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
                     return;
@@ -667,11 +667,11 @@ void ItemBox_GivePowerup()
             LABEL_104:*/
                 EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
                 EntityExplosion *explosion =
-                    (EntityExplosion *)RSDK.SpawnEntity(Explosion->objectID, (void *)1, player1->position.x, player1->position.y);
+                    (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player1->position.x, player1->position.y);
                 explosion->drawOrder = Zone->drawOrderHigh;
 
                 EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                explosion             = (EntityExplosion *)RSDK.SpawnEntity(Explosion->objectID, (void *)1, player2->position.x, player2->position.y);
+                explosion             = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player2->position.x, player2->position.y);
                 explosion->drawOrder  = Zone->drawOrderHigh;
 
                 RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
@@ -703,7 +703,7 @@ void ItemBox_GivePowerup()
                                 player2->objectID = Player->objectID;
                                 Player->jumpInDelay = 0;
                                 EntityDust *dust =
-                                    (EntityDust *)RSDK.SpawnEntity(Dust->objectID, (void *)1, player2->position.x, player2->position.y);
+                                    (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player2->position.x, player2->position.y);
 
                                 dust->visible         = 0;
                                 dust->active          = ACTIVE_NEVER;
@@ -783,7 +783,7 @@ void ItemBox_GivePowerup()
                             default: break;
                         }
                         EntityExplosion *explosion =
-                            (EntityExplosion *)RSDK.SpawnEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
+                            (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
                         explosion->drawOrder = Zone->drawOrderHigh;
                         RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
 #if RETRO_USE_PLUS
@@ -819,7 +819,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     if (options->gameMode == MODE_COMPETITION) {
         ++options->competitionSession[RSDK.GetEntityID(player) + 55];
     }
-    RSDK.SpawnEntity(0, 0, itemBox->position.x, itemBox->position.y);
+    RSDK.CreateEntity(0, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
     if (player->characterID != ID_MIGHTY && player->playerAnimData.animationID != ANI_DROPDASH)
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
@@ -839,11 +839,11 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->overlayData, true, 0);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->debrisData, true, 0);
 
-    EntityExplosion *explosion = (EntityExplosion *)RSDK.SpawnEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
+    EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
     explosion->drawOrder       = Zone->drawOrderHigh;
 
     for (int d = 0; d < 6; ++d) {
-        EntityDebris *debris = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
+        EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
                                                                 itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
         debris->state        = Debris_State_Fall;
         debris->gravity      = 0x4000;
@@ -1105,7 +1105,7 @@ void ItemBox_HandleObjectCollisions()
             }
         }*/
     }
-    for (EntitySpikes *spikes = 0; RSDK.GetActiveObjects(Spikes->objectID, (Entity **)&spikes);) {
+    for (EntitySpikes *spikes = 0; RSDK.GetActiveEntities(Spikes->objectID, (Entity **)&spikes);) {
         int storeX = spikes->position.x;
         int storeY = spikes->position.y;
         /*spikes->position.x -= spikes->unknownPos.x;
@@ -1126,7 +1126,7 @@ void ItemBox_HandleObjectCollisions()
     }
 
     EntityItemBox *itemBox = 0;
-    while (RSDK.GetActiveObjects(ItemBox->objectID, (Entity **)&itemBox)) {
+    while (RSDK.GetActiveEntities(ItemBox->objectID, (Entity **)&itemBox)) {
         if (itemBox != entity) {
             if (entity->state == ItemBox_State_Normal || entity->state == ItemBox_State_Falling) {
                 if (itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling) {

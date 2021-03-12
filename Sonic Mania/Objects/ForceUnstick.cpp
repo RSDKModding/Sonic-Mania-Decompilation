@@ -6,7 +6,7 @@ void ForceUnstick_Update()
 {
     EntityPlayer *player = 0;
     EntityForceUnstick *entity = (EntityForceUnstick *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
             player->collisionMode = CMODE_FLOOR;
             //if (entity->breakClimb && player->state == Player_State_KnuxWallClimb) {

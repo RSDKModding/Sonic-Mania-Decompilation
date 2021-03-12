@@ -62,10 +62,10 @@ void COverlay_DebugDraw()
 void COverlay_DebugSpawn()
 {
     Entity *entity = NULL;
-    while (RSDK.GetActiveObjects(COverlay->objectID, (Entity **)&entity)) {
-        RSDK.DestroyEntity(entity, NULL, 0);
+    while (RSDK.GetActiveEntities(COverlay->objectID, (Entity **)&entity)) {
+        RSDK.ResetEntityPtr(entity, NULL, 0);
     }
-    RSDK.SpawnEntity(COverlay->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK.CreateEntity(COverlay->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
 }
 
 void COverlay_DrawTile()

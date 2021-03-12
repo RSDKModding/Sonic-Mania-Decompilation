@@ -12,7 +12,7 @@ void CollapsingPlatform_Update()
     if (entity->collapseDelay) {
         if (Player) {
             EntityPlayer *player = NULL;
-            while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+            while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     RSDK.NextForEachLoop();
                     entity->state();
@@ -22,7 +22,7 @@ void CollapsingPlatform_Update()
                         entity->playerPos.x   = 0;
                     }
                     else {
-                        RSDK.DestroyEntity(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, 0, 0);
                     }
                     return;
                 }
@@ -36,14 +36,14 @@ void CollapsingPlatform_Update()
                 entity->playerPos.x   = 0;
             }
             else {
-                RSDK.DestroyEntity(entity, 0, 0);
+                RSDK.ResetEntityPtr(entity, 0, 0);
             }
         }
     }
     else if (Player) {
         entity->direction    = FLIP_NONE;
         EntityPlayer *player = NULL;
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)
                 && (!entity->mightyOnly || player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) && !player->sidekick
                 && player->onGround && !player->collisionMode && !entity->eventOnly && entity->delay < 0xFFFF) {
@@ -57,7 +57,7 @@ void CollapsingPlatform_Update()
                         entity->playerPos.x   = 0;
                     }
                     else {
-                        RSDK.DestroyEntity(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, 0, 0);
                     }
                 }
             }
@@ -72,7 +72,7 @@ void CollapsingPlatform_Update()
                     entity->playerPos.x   = 0;
                 }
                 else {
-                    RSDK.DestroyEntity(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, 0, 0);
                 }
             }
         }
@@ -190,7 +190,7 @@ void CollapsingPlatform_State_Left()
 
     for (int y = 0; y < sy; ++y) {
         for (int x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.SpawnEntity(BreakableWall->objectID, (void *)2, tx, ty);
+            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)2, tx, ty);
             tx += 0x100000;
             tileChunk->layerID  = entity->targetLayer;
             tileChunk->tileInfo = *tiles;
@@ -220,7 +220,7 @@ void CollapsingPlatform_State_Right()
     int sy = entity->size.y >> 20;
     for (int y = 0; y < sy; ++y) {
         for (int x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.SpawnEntity(BreakableWall->objectID, (void *)2, tx, ty);
+            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)2, tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
             tileChunk->tileInfo  = *tiles;
@@ -254,7 +254,7 @@ void CollapsingPlatform_State_Center()
     int sy = entity->size.y >> 20;
     for (int y = 0; y < sy; ++y) {
         for (int x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.SpawnEntity(BreakableWall->objectID, (void *)2, tx, ty);
+            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)2, tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
             tileChunk->tileInfo  = *tiles;

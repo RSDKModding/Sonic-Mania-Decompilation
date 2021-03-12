@@ -4,7 +4,7 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectTimeAttackData : Object {
+struct ObjectTimeAttackData {
     byte zoneID;
     byte act;
     byte characterID;

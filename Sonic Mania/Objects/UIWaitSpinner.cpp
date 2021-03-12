@@ -78,7 +78,7 @@ void UIWaitSpinner_Wait()
     }
     else {
         if (!activeSpinner) {
-            activeSpinner                = (EntityUIWaitSpinner *)RSDK.SpawnEntity(UIWaitSpinner->objectID, 0, 0, 0);
+            activeSpinner                = (EntityUIWaitSpinner *)RSDK.CreateEntity(UIWaitSpinner->objectID, 0, 0, 0);
             activeSpinner->field_3C      = 1;
             UIWaitSpinner->activeSpinner = activeSpinner;
         }
@@ -98,7 +98,7 @@ void UIWaitSpinner_WaitReplay()
     }
     else {
         if (!activeSpinner) {
-            activeSpinner                = (EntityUIWaitSpinner *)RSDK.SpawnEntity(UIWaitSpinner->objectID, 0, 0, 0);
+            activeSpinner                = (EntityUIWaitSpinner *)RSDK.CreateEntity(UIWaitSpinner->objectID, 0, 0, 0);
             activeSpinner->field_3C      = 1;
             UIWaitSpinner->activeSpinner = activeSpinner;
         }
@@ -121,7 +121,7 @@ void UIWaitSpinner_State_Wait2()
     EntityUIWaitSpinner *entity = (EntityUIWaitSpinner *)RSDK_sceneInfo->entity;
     if (entity->timer <= 0) {
         UIWaitSpinner->activeSpinner = 0;
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else if (entity->flag) {
         entity->timer -= 3;

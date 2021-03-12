@@ -3,6 +3,8 @@
 
 #include "../SonicMania.hpp"
 
+#define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->objectID, object##_DebugDraw, object##_DebugSpawn)
+
 // Object Class
 struct ObjectDebugMode : Object {
     short objectIDs[0x100];

@@ -59,7 +59,7 @@ void LinkGameLogicDLL(GameInfo *info)
 #endif
     RSDK_touchMouse = info->touchMouse;
 #if RETRO_USE_PLUS
-    RSDK_unknown = info->deadzone;
+    RSDK_unknown = info->unknown;
 #endif
     RSDK_screens = info->screenInfo;
     RSDK.InitGameOptions((void **)&options, sizeof(GameOptions));

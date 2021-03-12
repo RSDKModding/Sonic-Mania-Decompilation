@@ -5,12 +5,42 @@
 
 // Object Class
 struct ObjectSignPost : Object {
-
+    ushort spriteIndex;
+    Hitbox hitbox;
+    Hitbox itemBoxHitbox;
+    ushort sfx_SignPost;
+    ushort sfx_SignPost2P;
+    ushort sfx_Twinkle;
+    ushort sfx_BubbleBounce;
+    ushort sfx_Slide;
+    byte maxPlayerCount;
 };
 
 // Entity Class
 struct EntitySignPost : Entity {
-
+    void(*state)();
+    byte type;
+    ushort field_5D;
+    char field_5F;
+    Vector2 vsBoundsSize;
+    Vector2 vsBoundsOffset;
+    int vsExtendTop;
+    int vsExtendBottom;
+    int gap78;
+    int gravityStrength;
+    int spinCount;
+    int spinSpeed;
+    int maxAngle;
+    int sparkleType;
+    int itemBounceCount;
+    Vector2 playerPosStore[4];
+    EntityAnimationData eggPlateAnim;
+    EntityAnimationData facePlateAnim;
+    EntityAnimationData sidebarData;
+    EntityAnimationData postTopData;
+    EntityAnimationData standData;
+    byte activePlayers;
+    bool32 debugObj;
 };
 
 // Object Struct
@@ -28,6 +58,19 @@ void SignPost_EditorLoad();
 void SignPost_Serialize();
 
 // Extra Entity Functions
+void SignPost_DebugSpawn();
+void SignPost_DebugDraw();
 
+void SignPost_SpinSpeed();
+void SignPost_SpawnSparkle();
+void SignPost_State_SetupCompetition();
+void SignPost_State_Competition();
+void SignPost_State_Land();
+void SignPost_State_CompetitionFinish();
+void SignPost_State_Launched();
+void SignPost_State_Fall();
+void SignPost_State_Finish();
+void SignPost_CheckTouch();
+void SignPost_HandleCompetition();
 
 #endif //!OBJ_SIGNPOST_H

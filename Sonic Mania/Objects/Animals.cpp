@@ -8,7 +8,7 @@ void Animals_Update()
     if (entity->state)
         entity->state();
     if (!entity->behaviour && !RSDK.CheckOnScreen(entity, NULL))
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void Animals_LateUpdate()
@@ -42,7 +42,7 @@ void Animals_Create(void* data)
     entity->drawOrder     = Zone->drawOrderLow;
 #if RETRO_USE_PLUS
     if (!(options->secrets & 1))
-        type = (int)(size_t)data;
+        type = voidToInt(data);
 #endif
     if (!entity->type && RSDK.Random(0, 256, &Zone->timeStart) == 21) {
         type                  = 2;
@@ -166,7 +166,7 @@ bool32 Animals_CheckGroundCollision()
         return true;
     if (Animals->hasPlatform) {
         EntityPlatform *platform = NULL;
-        while (RSDK.GetActiveObjects(Platform->objectID, (Entity **)&platform)) {
+        while (RSDK.GetActiveEntities(Platform->objectID, (Entity **)&platform)) {
             if (Animals_CheckPlatformCollision(platform))
                 return true;
         }
@@ -174,7 +174,7 @@ bool32 Animals_CheckGroundCollision()
 
     if (Animals->hasBridge) {
         EntityBridge *bridge = NULL;
-        while (RSDK.GetActiveObjects(bridge->objectID, (Entity **)&bridge)) {
+        while (RSDK.GetActiveEntities(bridge->objectID, (Entity **)&bridge)) {
             /*v2 = entity->position.x;
             v3 = bridge->field_74;
             if (entity->position.x > v3) {

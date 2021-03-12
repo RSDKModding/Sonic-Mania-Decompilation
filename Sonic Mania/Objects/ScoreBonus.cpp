@@ -8,7 +8,7 @@ void ScoreBonus_Update()
     entity->position.y -= 0x20000;
     entity->timer--;
     if (!entity->timer)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void ScoreBonus_LateUpdate()
@@ -33,16 +33,13 @@ void ScoreBonus_Create(void* data)
     RSDK.SetSpriteAnimation(ScoreBonus->spriteIndex, 0, &entity->data, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
-        entity->visible   = 1;
+        entity->visible   = true;
         entity->drawOrder = Zone->drawOrderLow;
         entity->timer     = 24;
     }
 }
 
-void ScoreBonus_StageLoad()
-{
-
-}
+void ScoreBonus_StageLoad() { ScoreBonus->spriteIndex = RSDK.LoadAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 
 void ScoreBonus_EditorDraw()
 {

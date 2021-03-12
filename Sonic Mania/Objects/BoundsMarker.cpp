@@ -31,7 +31,7 @@ void BoundsMarker_Create(void* data)
     EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->vsDisable && options->gameMode == MODE_COMPETITION) {
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
         }
         else {
             entity->active = ACTIVE_XBOUNDS;
@@ -107,7 +107,7 @@ void BoundsMarker_CheckAllBounds(Entity *p, bool32 setPos)
     EntityPlayer *player       = (EntityPlayer *)p;
     EntityBoundsMarker *entity = NULL;
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
-        while (RSDK.GetObjects(BoundsMarker->objectID, (Entity **)&entity)) {
+        while (RSDK.GetEntities(BoundsMarker->objectID, (Entity **)&entity)) {
             BoundsMarker_CheckBounds(player, entity, setPos);
         }
     }

@@ -5,16 +5,18 @@
 
 // Object Class
 struct ObjectBSS_HUD : Object {
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityBSS_HUD : Entity {
-
+    EntityAnimationData animData1;
+    EntityAnimationData animData2;
+    EntityAnimationData numbersData;
 };
 
 // Object Struct
-extern ObjectBSS_HUD BSS_HUD;
+extern ObjectBSS_HUD *BSS_HUD;
 
 // Standard Entity Events
 void BSS_HUD_Update();
@@ -28,6 +30,6 @@ void BSS_HUD_EditorLoad();
 void BSS_HUD_Serialize();
 
 // Extra Entity Functions
-
+void BSS_HUD_DrawNumbers(int value, Vector2 *drawPos);
 
 #endif //!OBJ_BSS_HUD_H

@@ -40,7 +40,7 @@ void ERZSetup_StageLoad()
     Animals->animalType1           = 2;
     Animals->animalType2           = 6;
     for (int p = 1; p < Player->playerCount; ++p) {
-        RSDK.ResetEntity(p, 0, NULL);
+        RSDK.ResetEntitySlot(p, 0, NULL);
     }
     Player->playerCount = 1;
 }

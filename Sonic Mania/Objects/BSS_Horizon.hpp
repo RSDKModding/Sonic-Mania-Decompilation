@@ -5,16 +5,16 @@
 
 // Object Class
 struct ObjectBSS_Horizon : Object {
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityBSS_Horizon : Entity {
-
+    EntityAnimationData horizonData;
 };
 
 // Object Struct
-extern ObjectBSS_Horizon BSS_Horizon;
+extern ObjectBSS_Horizon *BSS_Horizon;
 
 // Standard Entity Events
 void BSS_Horizon_Update();

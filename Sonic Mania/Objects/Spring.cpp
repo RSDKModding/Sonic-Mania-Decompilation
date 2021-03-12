@@ -111,7 +111,7 @@ void Spring_State_Vertical()
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
     EntityPlayer *player = NULL;
     if (RSDK_sceneInfo->entity->direction == FLIP_NONE) {
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if (!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
                 int col = (entity->type != 0xFF || player->velocity.y >= -0x50000) ? Player_CheckCollisionBox(player, entity, &entity->hitbox)
                                                                                  : Player_CheckCollisionPlatform(player, entity, &entity->hitbox);
@@ -146,7 +146,7 @@ void Spring_State_Vertical()
         }
     }
     else {
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
                 //if (player->state != Ice_State_FrozenPlayer) {
@@ -174,7 +174,7 @@ void Spring_State_Horizontal()
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
     EntityPlayer *player = 0;
     if (entity->direction == FLIP_NONE) {
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 3 && (!entity->onGround || player->onGround)) {
                 if (player->collisionMode == CMODE_ROOF) {
@@ -213,7 +213,7 @@ void Spring_State_Horizontal()
         }
     }
     else {
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2 && (entity->onGround == false || player->onGround == 1)) {
                 if (player->collisionMode == CMODE_ROOF) {
@@ -256,7 +256,7 @@ void Spring_State_Diagonal()
 {
     EntityPlayer *player = NULL;
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) && !player->isGhost) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 bool flag = false;

@@ -169,4 +169,9 @@ bool32 Game_CheckStageReload();
 bool32 Game_CheckIntro();
 void Game_ClearOptions();
 
+int Game_Unknown20(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
+int Game_Unknown21(int px1, int py1, int px2, int py2, int tx1, int tx2);
+bool32 Game_Unknown22(int tx1, int tx2, int ty1, int ty2, int px2, int py2);
+bool32 Game_Unknown23(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
+
 #endif //!OBJ_ZONE_H

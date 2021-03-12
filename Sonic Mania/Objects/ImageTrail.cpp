@@ -26,7 +26,7 @@ void ImageTrail_LateUpdate()
                     entity->baseAlpha = player->speedShoesTimer;
                     entity->baseAlpha *= 8;
                     if (entity->baseAlpha == 0) {
-                        RSDK.DestroyEntity(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, 0, 0);
                     }
                 }
             }
@@ -35,7 +35,7 @@ void ImageTrail_LateUpdate()
                 entity->baseAlpha = 0x10;
                 entity->baseAlpha *= entity->fadeoutTimer;
                 if (entity->baseAlpha == 0) {
-                    RSDK.DestroyEntity(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, 0, 0);
                 }
             }
         }

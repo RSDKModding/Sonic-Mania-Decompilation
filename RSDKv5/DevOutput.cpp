@@ -28,7 +28,7 @@ void DevOutput_Update()
         case 3:
             entity->position.y -= 2;
             if (-entity->position.y > entity->yOffset)
-                DestroyEntity(entity, 0, NULL);
+                ResetEntityPtr(entity, 0, NULL);
             break;
         default: break;
     }

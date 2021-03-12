@@ -27,7 +27,7 @@ void Music_Create(void *data)
                 if (entity->playOnLoad)
                     entity->state = Music_State_PlayMusic;
                 else
-                    RSDK.DestroyEntity(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, 0, 0);
             }
         }
     }
@@ -93,18 +93,18 @@ void Music_State_PlayMusic()
             case 2:
             case 13:
                 Music_Unknown9(entity->trackID, 0.025);
-                RSDK.DestroyEntity(entity, 0, 0);
+                RSDK.ResetEntityPtr(entity, 0, 0);
                 break;
             case 10:
                 Music_Unknown2(Music->activeTrack);
-                RSDK.DestroyEntity(entity, 0, 0);
+                RSDK.ResetEntityPtr(entity, 0, 0);
                 break;
-            default: RSDK.DestroyEntity(entity, 0, 0); break;
+            default: RSDK.ResetEntityPtr(entity, 0, 0); break;
         }
     }
     else {
         Music_PlayTrack(entity->trackID);
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 
@@ -115,7 +115,7 @@ void Music_PlayMusicTrack(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(slot);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
-            RSDK.DestroyEntity(music, 0, 0);
+            RSDK.ResetEntityPtr(music, 0, 0);
         }
     }
 
@@ -123,7 +123,7 @@ void Music_PlayMusicTrack(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         entity = (EntityMusic *)RSDK.GetEntityByID(slot);
         if (entity->objectID != Music->objectID) {
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
             break;
         }
     }
@@ -183,7 +183,7 @@ void Music_PlayTrack(byte trackID)
     if (trackID == TRACK_ACTCLEAR) {
         Music_Unknown8();
 
-        RSDK.ResetEntity(SLOT_MUSIC, 0, 0);
+        RSDK.ResetEntitySlot(SLOT_MUSIC, 0, 0);
         RSDK.SoundUnknown1(Music->slotID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
@@ -197,7 +197,7 @@ void Music_PlayTrack(byte trackID)
         Music->dword250 = trackID;
     }
     else {
-        RSDK.ResetEntity(SLOT_MUSIC, 0, 0);
+        RSDK.ResetEntitySlot(SLOT_MUSIC, 0, 0);
         RSDK.SoundUnknown1(Music->slotID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
@@ -213,7 +213,7 @@ void Music_Unknown1(EntityMusic *entity)
 {
     RSDK.CopyString(Music->trackNames[0], &entity->trackFile);
     Music->trackLoops[0] = entity->trackLoop;
-    RSDK.ResetEntity(SLOT_MUSIC, 0, 0);
+    RSDK.ResetEntitySlot(SLOT_MUSIC, 0, 0);
     RSDK.SoundUnknown1(Music->slotID);
     Music->activeTrack = 0;
     Music->dword244    = 0;
@@ -233,7 +233,7 @@ void Music_Unknown2(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(slot);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
-            RSDK.DestroyEntity(music, 0, 0);
+            RSDK.ResetEntityPtr(music, 0, 0);
         }
     }
 
@@ -241,7 +241,7 @@ void Music_Unknown2(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         entity = (EntityMusic *)RSDK.GetEntityByID(slot);
         if (entity->objectID != Music->objectID) {
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
             break;
         }
     }
@@ -337,18 +337,18 @@ void Music_Unknown7(EntityMusic *entity)
     if (entity) {
         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
         if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-            RSDK.DestroyEntity(music, 0, 0);
+            RSDK.ResetEntityPtr(music, 0, 0);
 
             for (int slot = 40; slot < 48; ++slot) {
                 EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(slot);
                 if (music->objectID == Music->objectID && music->field_80 > entity->field_80) {
-                    RSDK.DestroyEntity(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, 0, 0);
                     return;
                 }
             }
 
             bool32 flag = entity->field_78;
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
             int cnt = 0;
 
             EntityMusic *ptr = NULL;
@@ -398,7 +398,7 @@ void Music_Unknown7(EntityMusic *entity)
                     RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, 1.0);
 #endif
                     music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-                    RSDK.DestroyEntity(music, Music->objectID, 0);
+                    RSDK.ResetEntityPtr(music, Music->objectID, 0);
                     music->state    = Music_Unknown13;
                     music->volume   = 0.0;
                     music->field_8C = 0.079999998;
@@ -411,14 +411,14 @@ void Music_Unknown7(EntityMusic *entity)
             }
         }
         else {
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
         }
     }
 }
 void Music_Unknown8()
 {
     for (int slot = 40; slot < 48; ++slot) {
-        RSDK.DestroyEntity(RSDK.GetEntityByID(slot), 0, 0);
+        RSDK.ResetEntityPtr(RSDK.GetEntityByID(slot), 0, 0);
     }
 }
 
@@ -434,7 +434,7 @@ void Music_Unknown9(byte trackID, float a2)
             EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
             Music->dword250    = trackID;
             if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                RSDK.DestroyEntity(music, Music->objectID, 0);
+                RSDK.ResetEntityPtr(music, Music->objectID, 0);
                 music->state    = Music_Unknown15;
                 music->volume   = 1.0;
                 music->field_8C = a2;
@@ -447,7 +447,7 @@ void Music_Unknown9(byte trackID, float a2)
             EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
             Music->dword250    = trackID;
             if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                RSDK.DestroyEntity(music, Music->objectID, 0);
+                RSDK.ResetEntityPtr(music, Music->objectID, 0);
                 music->state    = Music_Unknown15;
                 music->volume   = 1.0;
                 music->field_8C = a2;
@@ -462,7 +462,7 @@ void Music_Unknown9(byte trackID, float a2)
                 EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
                 Music->dword250    = trackID;
                 if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                    RSDK.DestroyEntity(music, Music->objectID, 0);
+                    RSDK.ResetEntityPtr(music, Music->objectID, 0);
                     music->state    = Music_Unknown15;
                     music->volume   = 1.0;
                     music->field_8C = a2;
@@ -475,7 +475,7 @@ void Music_Unknown10(float a1)
 {
     if (Music->activeTrack != TRACK_DROWNING) {
         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-        RSDK.DestroyEntity(music, Music->objectID, 0);
+        RSDK.ResetEntityPtr(music, Music->objectID, 0);
         music->state    = Music_Unknown14;
         music->volume   = 1.0;
         music->field_8C = a1;
@@ -520,7 +520,7 @@ void Music_Unknown13()
         RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
         if (entity->volume >= 1.0) {
             entity->volume = 1.0;
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
         }
     }
 }
@@ -531,7 +531,7 @@ void Music_Unknown14()
     RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {
         RSDK.SoundUnknown1(Music->slotID);
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 
@@ -550,7 +550,7 @@ void Music_Unknown15()
             RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
 #endif
         Music->dword250 = -1;
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 

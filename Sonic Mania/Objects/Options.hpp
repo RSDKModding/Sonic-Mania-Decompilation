@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-struct ObjectOptions : Object {
+struct ObjectOptions {
     void* func;
     Entity* entityPtr;
     void (*callback)(bool32);

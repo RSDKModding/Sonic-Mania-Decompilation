@@ -77,22 +77,22 @@ struct RSDKFunctionTable {
                          void (*staticUpdate)(void), void (*draw)(void), void(__cdecl *create)(void *), void (*stageLoad)(void),
                          void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
 #if RETRO_USE_PLUS
-    void (*CreateObjectContainer)(Object **structPtr, const char *name, uint objectSize);
+    void (*CreateObjectContainer)(void **structPtr, const char *name, uint objectSize);
 #endif
-    bool32 (*GetActiveObjects)(ushort group, Entity **entity);
-    bool32 (*GetObjects)(ushort type, Entity **entity);
+    bool32 (*GetActiveEntities)(ushort group, Entity **entity);
+    bool32 (*GetEntities)(ushort type, Entity **entity);
     void (*NextForEachLoop)(void);
     void (*SetEditableVar)(byte type, const char *name, byte object, int storeOffset);
-    Entity *(*GetEntityByID)(ushort objectID);
-    int (*GetEntityID)(Entity *entityPtr);
+    void *(*GetEntityByID)(ushort objectID);
+    int (*GetEntityID)(void *entityPtr);
     int (*GetEntityCount)(ushort type, bool32 isActive);
     int (*GetDrawListRef)(byte layerID, ushort entityID);
-    Entity *(*GetDrawListRefPtr)(byte layerID, ushort entityID);
-    int (*DestroyEntity)(Entity *entity, ushort type, void *data);
-    int (*ResetEntity)(ushort slotID, ushort type, void *data);
-    Entity* (*SpawnEntity)(ushort type, void *data, int x, int y);
-    void (*CopyEntity)(void *destEntity, Entity *srcEntity, bool32 clearSrcEntity);
-    bool (*CheckOnScreen)(Entity *entity, Vector2 *range);
+    void *(*GetDrawListRefPtr)(byte layerID, ushort entityID);
+    int (*ResetEntityPtr)(void *entity, ushort type, void *data);
+    int (*ResetEntitySlot)(ushort slotID, ushort type, void *data);
+    Entity* (*CreateEntity)(ushort type, void *data, int x, int y);
+    void (*CopyEntity)(void *destEntity, void *srcEntity, bool32 clearSrcEntity);
+    bool (*CheckOnScreen)(void *entity, Vector2 *range);
     bool (*CheckPosOnScreen)(Vector2 *pos, Vector2 *range);
     void (*AddDrawListRef)(byte layer, ushort entityID);
     void (*SwapDrawLayers)(byte layer, ushort entityID);
@@ -184,20 +184,20 @@ struct RSDKFunctionTable {
     void (*DrawDeformedSprite)(ushort sheet, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8,
                      int a9, bool32 ScreenRelative);
-    void (*DrawTile)(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
+    void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTile)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
     void (*FillScreen)(int a1, int a2, int a3, int a4);
-    void (*LoadMesh)(void);
-    void (*Create3DScene)(void);
-    void (*Init3DScene)(void);
-    void (*View_Something1)(void);
-    void (*View_Something2)(void);
-    void (*View_Something3)(void);
-    void (*SetupMesh)(void);
+    ushort (*LoadMesh)(const char* filename, byte scope);
+    ushort (*Create3DScene)(const char* identifier, ushort faceCount, byte scope);
+    void (*Init3DScene)(ushort index);
+    void (*View_Something1)(ushort index, int x, int y, int z);
+    void (*View_Something2)(ushort index, int x, int y, int z);
+    void (*View_Something3)(ushort index, int x, int y, int z);
+    void (*SetupMesh)(ushort modelIndex, ushort sceneIndex, byte type, Matrix *mat1, Matrix *mat2, colour colour);
     void (*SetModelAnimation)(ushort modelAnim, EntityAnimationData *data, short animSpeed, byte loopIndex, bool forceApply, ushort frameID);
     void (*SetupMeshAnimation)(void);
-    void (*Draw3DScene)(void);
+    void (*Draw3DScene)(ushort index);
     ushort (*LoadAnimation)(const char *path, Scopes scope);
     ushort (*CreateAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
     void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, EntityAnimationData *data, bool forceApply, ushort frameID);
@@ -218,15 +218,15 @@ struct RSDKFunctionTable {
     int (*CopyTileLayer)(ushort dstLayer, int startX1, int startY1, ushort srcLayer, int startX2, int startY2, int countX, int countY);
     void (*ProcessParallax)(TileLayer *TileLayer);
     ScanlineInfo* (*GetScanlines)(void);
-    bool32 (*CheckObjectCollisionTouchBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox);
-    bool32 (*CheckObjectCollisionTouchCircle)(Entity *thisEntity, int thisOffset, Entity *otherEntity, int otherOffset);
-    byte (*CheckObjectCollisionBox)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setPos);
-    bool32 (*CheckObjectCollisionPlatform)(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setPos);
-    bool32 (*ObjectTileCollision)(Entity *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
+    bool32 (*CheckObjectCollisionTouchBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox);
+    bool32 (*CheckObjectCollisionTouchCircle)(void *thisEntity, int thisOffset, void *otherEntity, int otherOffset);
+    byte (*CheckObjectCollisionBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
+    bool32 (*CheckObjectCollisionPlatform)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
+    bool32 (*ObjectTileCollision)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                                 bool32 setPos);
-    bool32 (*ObjectTileGrip)(Entity *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
+    bool32 (*ObjectTileGrip)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                              sbyte tolerance);
-    void (*ProcessTileCollisions)(Entity *entity, Hitbox *outer, Hitbox *inner);
+    void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
     void (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
     void (*SetTileAngle)(ushort tileID, byte cPlane, byte cMode, byte value);
     void (*GetTileBehaviour)(ushort tileID, byte cPlane);
@@ -907,7 +907,7 @@ extern RSDKFunctionTable RSDK;
                       ##object##_StaticUpdate, ##object##_Draw, ##object##_Create, ##object##_StageLoad, ##object##_EditorDraw, ##object##_EditorLoad,           \
                       ##object##_Serialize)
 #if RETRO_USE_PLUS
-#define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.CreateObjectContainer((Object **)&object, #object, sizeof(Object##object))
+#define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.CreateObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
 extern "C" {

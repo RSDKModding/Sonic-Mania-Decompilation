@@ -4,7 +4,11 @@
 #include "../SonicMania.hpp"
 
 // Object Class
+#if RETRO_USE_PLUS
+struct ObjectSaveGame {
+#else
 struct ObjectSaveGame : Object {
+#endif
     int *saveGamePtr;
     int gap8;
     int field_C;
@@ -36,5 +40,6 @@ void SaveGame_Serialize();
 int *SaveGame_GetDataPtr(int slot, bool32 encore);
 #endif
 void SaveGame_LoadSaveData();
+void SaveGame_SaveGameState();
 
 #endif //!OBJ_SAVEGAME_H

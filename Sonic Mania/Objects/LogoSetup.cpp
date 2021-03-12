@@ -50,7 +50,7 @@ void LogoSetup_Create(void* data)
 void LogoSetup_StageLoad()
 {
     LogoSetup->sfx_Sega = RSDK.GetSFX("Stage/Sega.wav");
-    RSDK.ResetEntity(0, LogoSetup->objectID, 0);
+    RSDK.ResetEntitySlot(0, LogoSetup->objectID, 0);
     UIPicture->spriteIndex = RSDK.LoadAnimation("Logos/Logos.bin", SCOPE_STAGE);
 
     if (RSDK_sceneInfo->listPos > 2) {

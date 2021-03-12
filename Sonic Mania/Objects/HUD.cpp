@@ -83,7 +83,7 @@ void HUD_Draw()
         pos[3].y   = entity->dword114[RSDK_sceneInfo->currentScreenID].y;
 
         EntityPlayer *plr = NULL;
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&plr)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&plr)) {
             if (plr != player) {
                 entity->playerIDData.frameID = plr->playerID;
                 RSDK.DrawSprite(&entity->playerIDData, &plr->position, 0);
@@ -599,18 +599,18 @@ void HUD_Unknown6()
             EntityGameOver *gameOver = (EntityGameOver *)RSDK.GetEntityByID(entity->screenID + Player->playerCount);
             //v9       = Competition->field_28;
             //if (!v9 || *(_DWORD *)(v9 + 108)) {
-            //    RSDK.DestroyEntity(gameOver, GameOver->objectID, 0);
+            //    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
             //    gameOver->playerID = entity->screenID;
             //}
             //else {
-                RSDK.DestroyEntity(gameOver, GameOver->objectID, (void *)1);
+                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, (void *)1);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 RSDK_sceneInfo->timeEnabled = false;
                 gameOver->playerID          = entity->screenID;
             //}
         }
         else {
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
         }
     }
 }

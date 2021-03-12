@@ -6,7 +6,7 @@ void PlayerProbe_Update()
 {
     EntityPlayer *player      = NULL;
     EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         int playerID = RSDK.GetEntityID(player);
         int x        = (player->position.x - entity->position.x) >> 8;
         int y        = (player->position.y - entity->position.y) >> 8;

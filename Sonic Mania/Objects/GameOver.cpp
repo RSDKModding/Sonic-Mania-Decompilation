@@ -104,7 +104,7 @@ void GameOver_Create(void *data)
         entity->drawOrder            = Zone->uiDrawHigh + 1;
 
         EntityHUD *hud = NULL;
-        while (RSDK.GetObjects(HUD->objectID, (Entity **)&hud)) {
+        while (RSDK.GetEntities(HUD->objectID, (Entity **)&hud)) {
             // hud->state  = HUD_Unknown6;
             // hud->active = ACTIVE_ALWAYS;
         }
@@ -162,7 +162,7 @@ void GameOver_Unknown2()
     if (entity->timer == 0) {
         if (options->gameMode != MODE_COMPETITION) {
             for (int i = 40; i < 0x30; ++i) {
-                RSDK.DestroyEntity(RSDK.GetEntityByID(i), 0, 0);
+                RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
             }
 
             if (Music_Unknown4()) {
@@ -172,7 +172,7 @@ void GameOver_Unknown2()
                 EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
                 Music->dword250    = 9;
                 if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                    RSDK.DestroyEntity(music, Music->objectID, 0);
+                    RSDK.ResetEntityPtr(music, Music->objectID, 0);
                     music->field_8C = 0.025;
                     music->volume   = 1.0;
                     music->state    = Music_Unknown15;
@@ -189,7 +189,7 @@ void GameOver_Unknown2()
 
                 if (!flag) {
                     for (int i = 40; i < 0x30; ++i) {
-                        RSDK.DestroyEntity(RSDK.GetEntityByID(i), 0, 0);
+                        RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
                     }
 
                     if (Music_Unknown4()) {
@@ -199,7 +199,7 @@ void GameOver_Unknown2()
                         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
                         Music->dword250    = 9;
                         if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                            RSDK.DestroyEntity(music, Music->objectID, 0);
+                            RSDK.ResetEntityPtr(music, Music->objectID, 0);
                             music->field_8C = 0.025;
                             music->volume   = 1.0;
                             music->state    = Music_Unknown15;
@@ -237,7 +237,7 @@ void GameOver_Unknown2()
 
                 if (!flag) {
                     for (int i = 40; i < 0x30; ++i) {
-                        RSDK.DestroyEntity(RSDK.GetEntityByID(i), 0, 0);
+                        RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
                     }
 
                     if (Music_Unknown4()) {
@@ -247,7 +247,7 @@ void GameOver_Unknown2()
                         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
                         Music->dword250    = 9;
                         if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                            RSDK.DestroyEntity(music, Music->objectID, 0);
+                            RSDK.ResetEntityPtr(music, Music->objectID, 0);
                             music->field_8C = 0.025;
                             music->volume   = 1.0;
                             music->state    = Music_Unknown15;
@@ -313,19 +313,19 @@ void GameOver_Unknown4()
 
     if (entity->timer == 420) {
         for (int i = 40; i < 0x30; ++i) {
-            RSDK.DestroyEntity(RSDK.GetEntityByID(i), 0, 0);
+            RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
         }
 
         if (Music->activeTrack != TRACK_DROWNING) {
             EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-            RSDK.DestroyEntity(music, Music->objectID, 0);
+            RSDK.ResetEntityPtr(music, Music->objectID, 0);
             music->state    = Music_Unknown14;
             music->volume   = 1.0;
             music->field_8C = 0.05;
         }
 
         EntityGameOver *gameOver = NULL;
-        while (RSDK.GetObjects(GameOver->objectID, (Entity **)&gameOver)) {
+        while (RSDK.GetEntities(GameOver->objectID, (Entity **)&gameOver)) {
             int angle = 0x88;
             for (int i = 0; i < 4; ++i) {
                 gameOver->letterPosMove[i].x   = RSDK.Cos256(angle) << 11;

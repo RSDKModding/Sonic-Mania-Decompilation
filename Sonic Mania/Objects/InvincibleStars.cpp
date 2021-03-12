@@ -44,7 +44,7 @@ void InvincibleStars_Update()
         entity->starOffset = 11;
     }
     else {
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 

@@ -709,7 +709,7 @@ int GetEntityCount(ushort type, bool32 isActive)
     return cnt;
 }
 
-void DestroyEntity(Entity *entity, ushort type, void *data)
+void ResetEntityPtr(Entity *entity, ushort type, void *data)
 {
     if (entity) {
         ObjectInfo *info = &objectList[stageObjectIDs[type]];
@@ -726,7 +726,7 @@ void DestroyEntity(Entity *entity, ushort type, void *data)
     }
 }
 
-void ResetEntity(ushort slotID, ushort type, void *data)
+void ResetEntitySlot(ushort slotID, ushort type, void *data)
 {
     short slot          = ENTITY_COUNT - 1;
     ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];

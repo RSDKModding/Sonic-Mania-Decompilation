@@ -70,7 +70,8 @@ enum ShieldTypes {
 };
 
 // Object Class
-struct ObjectPlayer : Object {
+struct ObjectPlayer {
+    RSDK_OBJECT
     int sonicPhysicsTable[0x40];
     int tailsPhysicsTable[0x40];
     int knuxPhysicsTable[0x40];
@@ -156,7 +157,8 @@ struct ObjectPlayer : Object {
 };
 
 // Entity Class
-struct EntityPlayer : Entity {
+struct EntityPlayer {
+    RSDK_ENTITY
     void (*state)();
     void (*nextAirState)();
     void (*nextGroundState)();

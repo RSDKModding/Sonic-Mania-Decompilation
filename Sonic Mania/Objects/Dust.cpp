@@ -47,7 +47,7 @@ void Dust_State_DropDash()
     entity->position.y += entity->velocity.y;
     RSDK.ProcessAnimation(&entity->data);
     if (entity->data.frameID == entity->data.frameCount - 1)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void Dust_State_HammerDrop()
 {
@@ -57,28 +57,28 @@ void Dust_State_HammerDrop()
     RSDK.ObjectTileGrip(entity, entity->collisionLayers, entity->collisionMode, entity->collisionPlane, 0, 0, 8);
     RSDK.ProcessAnimation(&entity->data);
     if (entity->data.frameID == entity->data.frameCount - 1)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void Dust_State_GlideSlide()
 {
     EntityDust *entity   = (EntityDust *)RSDK_sceneInfo->entity;
     EntityPlayer *player = (EntityPlayer *)entity->parent;
     if (!player) {
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
         return;
     }
     else {
         entity->visible = false;
         if (entity->timer == 0 && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = (EntityDust *)RSDK.SpawnEntity(Dust->objectID, entity, player->position.x, player->position.y - 0x40000);
+            EntityDust *dust     = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, player->position.x, player->position.y - 0x40000);
             dust->state          = Dust_State_DropDash;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawOrder = player->drawOrder;
         }
         entity->timer = ((byte)entity->timer + 1) & 7;
         if (player->playerAnimData.animationID != ANI_FLYLIFTTIRED || !player->groundVel)
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 void Dust_State_Skid()
@@ -86,21 +86,21 @@ void Dust_State_Skid()
     EntityDust *entity   = (EntityDust *)RSDK_sceneInfo->entity;
     EntityPlayer *player = (EntityPlayer *)entity->parent;
     if (!player) {
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
         return;
     }
     else {
         entity->visible = 0;
         if (entity->timer == 0 && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = (EntityDust *)RSDK.SpawnEntity(Dust->objectID, entity, player->position.x, player->position.y);
+            EntityDust *dust     = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, player->position.x, player->position.y);
             dust->state          = Dust_State_DropDash;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawOrder = player->drawOrder;
         }
         entity->timer = ((byte)entity->timer + 1) & 7;
         if (player->playerAnimData.animationID != ANI_SKID)
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 void Dust_State_Spindash()
@@ -108,7 +108,7 @@ void Dust_State_Spindash()
     EntityDust *entity   = (EntityDust *)RSDK_sceneInfo->entity;
     EntityPlayer *player = (EntityPlayer *)entity->parent;
     if (!player) {
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         Hitbox *playerHitbox    = Player_GetHitbox(player);
@@ -124,7 +124,7 @@ void Dust_State_Spindash()
         entity->rotation  = player->rotation;
         RSDK.ProcessAnimation(&entity->data);
         if (player->state != Player_State_Spindash)
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 void Dust_State_EggLoco()
@@ -135,7 +135,7 @@ void Dust_State_EggLoco()
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     if (entity->data.frameID == entity->data.frameCount - 1)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void Dust_EditorDraw()

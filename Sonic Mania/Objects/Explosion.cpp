@@ -9,7 +9,7 @@ void Explosion_Update()
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     if (entity->data.frameID == entity->data.frameCount - 1)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void Explosion_LateUpdate()

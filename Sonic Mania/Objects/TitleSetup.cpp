@@ -61,7 +61,7 @@ void TitleSetup_StageLoad()
     TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
     TitleSetup->sfx_MenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
     TitleSetup->sfx_Ring       = RSDK.GetSFX("Global/Ring.wav");
-    RSDK.ResetEntity(0, TitleSetup->objectID, 0);
+    RSDK.ResetEntitySlot(0, TitleSetup->objectID, 0);
 }
 
 void TitleSetup_HandleCheatInputs()

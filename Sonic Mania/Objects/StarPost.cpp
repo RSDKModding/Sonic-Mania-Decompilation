@@ -45,7 +45,7 @@ void StarPost_Create(void* data)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
     if (options->gameMode == MODE_TIMEATTACK || (options->gameMode == MODE_COMPETITION && entity->vsRemove)) {
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         if (!RSDK_sceneInfo->inEditor) {
@@ -93,7 +93,7 @@ void StarPost_StageLoad()
             EntityStarPost *savedStarPost = (EntityStarPost *)RSDK.GetEntityByID(StarPost->postIDs[i]);
             if (!TMZ2Setup) {
                 EntityStarPost *starPost = NULL;
-                while (RSDK.GetObjects(StarPost->objectID, (Entity**)&starPost)) {
+                while (RSDK.GetEntities(StarPost->objectID, (Entity**)&starPost)) {
                     if (starPost->id < savedStarPost->id && !starPost->activated) {
                         starPost->activated = StarPost->activePlayers;
                         RSDK.SetSpriteAnimation(StarPost->spriteIndex, 2, &starPost->ballData, true, 0);
@@ -163,7 +163,7 @@ void StarPost_DebugDraw()
 }
 void StarPost_DebugSpawn()
 {
-    RSDK.SpawnEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
 }
 void StarPost_ResetStarPosts()
 {
@@ -243,8 +243,8 @@ void StarPost_CheckCollisions()
 {
     EntityPlayer *player = 0;
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
-    for (int res = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player); res;
-         res     = RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    for (int res = RSDK.GetActiveEntities(Player->objectID, (Entity **)&player); res;
+         res     = RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if (player->sidekick)
             continue;
         int playerSlot = RSDK.GetEntityID(player);
@@ -264,7 +264,7 @@ void StarPost_CheckCollisions()
         entity->state = StarPost_State_BallSpin;
         if (!TMZ2Setup) {
             EntityStarPost *starPost = 0;
-            while (RSDK.GetObjects(StarPost->objectID, (Entity **)&starPost)) {
+            while (RSDK.GetEntities(StarPost->objectID, (Entity **)&starPost)) {
                 if (starPost->id < entity->id && !starPost->activated) {
                     starPost->activated = 1  << playerSlot;
                     RSDK.SetSpriteAnimation(StarPost->spriteIndex, 2, &starPost->ballData, true, 0);

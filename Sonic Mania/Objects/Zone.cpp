@@ -56,11 +56,145 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad()
 {
-    //int *saveRAM    = SaveGame->saveRAM;
+    int *saveRAM    = SaveGame->saveRAM;
     Zone->timeStart = (uint)time(0);
-    // TODO: this junk here
 #if RETRO_USE_PLUS
     if (options->gameMode == MODE_ENCORE) {
+        if (options->characterFlags == 0) {
+            options->characterFlags = 0;
+            saveRAM[66]             = 0;
+            byte id                 = options->playerID & 0xFF;
+            if (options->playerID & 0xFF) {
+                int charID = -1;
+                if (id) {
+                    do {
+                        id >>= 1;
+                        ++charID;
+                    } while (id > 0);
+                }
+                options->characterFlags |= (1 << charID);
+                saveRAM[66] = options->characterFlags;
+            }
+
+            if (options->playerID & 0xFF00) {
+                byte id    = options->playerID >> 8;
+                int charID = -1;
+                if (options->playerID & 0xFF) {
+                    do {
+                        id >>= 1;
+                        ++charID;
+                    } while (id > 0);
+                }
+
+                options->characterFlags |= (1 << charID);
+            }
+            else {
+                if (!options->stock) {
+                    if (options->stock & 0xFF) {
+                        int id     = options->stock & 0xFF;
+                        int charID = -1;
+                        if (options->stock & 0xFF) {
+                            do {
+                                id >>= 1;
+                                ++charID;
+                            } while (id > 0);
+                        }
+
+                        options->characterFlags |= (1 << charID);
+                        saveRAM[66] = options->characterFlags;
+                    }
+
+                    if (options->stock & 0xFF00) {
+                        byte id    = options->playerID >> 8;
+                        int charID = -1;
+                        if (charID) {
+                            do {
+                                id >>= 1;
+                                ++charID;
+                            } while (id > 0);
+                        }
+                        options->characterFlags |= (1 << charID);
+                        saveRAM[66] = options->characterFlags;
+                    }
+
+                    if (options->stock & 0xFF0000) {
+                        int charID = -1;
+                        byte id    = options->playerID >> 16;
+                        if (charID) {
+                            do {
+                                charID >>= 1;
+                                ++charID;
+                            } while (charID > 0);
+                        }
+                        options->characterFlags |= (1 << charID);
+                        saveRAM[66] = options->characterFlags;
+                    }
+                    saveRAM[68] = options->playerID;
+                }
+                else {
+                    options->playerID |= (options->stock & 0xFF);
+                    options->stock >>= 8;
+                    saveRAM[67] = options->stock;
+                    byte id     = options->playerID >> 8;
+                    int charID  = -1;
+                    if (id) {
+                        do {
+                            id >>= 1;
+                            ++charID;
+                        } while (id > 0);
+                    }
+                    options->characterFlags |= (1 << charID);
+                    saveRAM[66] = options->characterFlags;
+
+                    if (options->stock & 0xFF) {
+                        int charID = -1;
+                        id         = options->stock & 0xFF;
+                        if (options->stock & 0xFF) {
+                            do {
+                                id >>= 1;
+                                ++charID;
+                            } while (id > 0);
+                        }
+
+                        options->characterFlags |= (1 << charID);
+                        saveRAM[66] = options->characterFlags;
+                    }
+
+                    if (options->stock & 0xFF00) {
+                        byte id    = options->playerID >> 8;
+                        int charID = -1;
+                        if (charID) {
+                            do {
+                                id >>= 1;
+                                ++charID;
+                            } while (id > 0);
+                        }
+                        options->characterFlags |= (1 << charID);
+                        saveRAM[66] = options->characterFlags;
+                    }
+
+                    if (options->stock & 0xFF0000) {
+                        int charID = -1;
+                        byte id    = options->playerID >> 16;
+                        if (charID) {
+                            do {
+                                charID >>= 1;
+                                ++charID;
+                            } while (charID > 0);
+                        }
+                        options->characterFlags |= (1 << charID);
+                        saveRAM[66] = options->characterFlags;
+                    }
+                    saveRAM[68] = options->playerID;
+                }
+            }
+        }
+
+        if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
+            options->characterFlags = saveRAM[66];
+            options->playerID       = saveRAM[68];
+            options->stock          = saveRAM[67];
+        }
     }
 #endif
 
@@ -126,11 +260,11 @@ void Zone_StageLoad()
     }
 
     EntityZone *ent = NULL;
-    while (RSDK.GetObjects(Zone->objectID, (Entity**)ent)) {
-        RSDK.DestroyEntity(ent, 0, 0);
+    while (RSDK.GetEntities(Zone->objectID, (Entity**)ent)) {
+        RSDK.ResetEntityPtr(ent, 0, 0);
     }
 
-    RSDK.ResetEntity(SLOT_ZONE, Zone->objectID, 0);
+    RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, 0);
     if (options->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (options->gameMode == MODE_COMPETITION) {
@@ -225,7 +359,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
 {
     int count      = 0;
     Entity *entity = NULL;
-    if (RSDK.GetActiveObjects(Player->objectID, &entity)) {
+    if (RSDK.GetActiveEntities(Player->objectID, &entity)) {
         int pos = 0;
         do {
             entity->position.x -= xOffset;
@@ -234,11 +368,11 @@ void Zone_StoreEntities(int xOffset, int yOffset)
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
             pos += 0x200;
-        } while (RSDK.GetActiveObjects(Player->objectID, &entity));
+        } while (RSDK.GetActiveEntities(Player->objectID, &entity));
     }
 
     entity = NULL;
-    if (RSDK.GetActiveObjects(SignPost->objectID, &entity)) {
+    if (RSDK.GetActiveEntities(SignPost->objectID, &entity)) {
         int pos = count << 9;
         do {
             entity->position.x -= xOffset;
@@ -247,11 +381,11 @@ void Zone_StoreEntities(int xOffset, int yOffset)
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
             pos += 0x200;
-        } while (RSDK.GetActiveObjects(SignPost->objectID, &entity));
+        } while (RSDK.GetActiveEntities(SignPost->objectID, &entity));
     }
 
     entity = NULL;
-    if (RSDK.GetActiveObjects(ItemBox->objectID, &entity)) {
+    if (RSDK.GetActiveEntities(ItemBox->objectID, &entity)) {
         int pos = count << 9;
         do {
             entity->position.x -= xOffset;
@@ -260,7 +394,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
             RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
             count++;
             pos += 0x200;
-        } while (RSDK.GetActiveObjects(ItemBox->objectID, &entity));
+        } while (RSDK.GetActiveEntities(ItemBox->objectID, &entity));
     }
 
     EntityPlayer *player     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
@@ -276,7 +410,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag) {
         Entity* entityData = (Entity *)&options->atlEntityData[e << 9];
         Entity *entity;
         if (options->atlEntitySlot[e] >= 12)
-            entity = (Entity *)RSDK.SpawnEntity(0, 0, 0, 0);
+            entity = (Entity *)RSDK.CreateEntity(0, 0, 0, 0);
         else
             entity = (Entity *)RSDK.GetEntityByID(options->atlEntitySlot[e]);
         if (entityData->objectID == Player->objectID) {
@@ -286,7 +420,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag) {
             if (player->shield && player->superState != 2 && player->shield <= 0) {
                 int id = RSDK.GetEntityID(player);
                 Entity* shield    = (Entity *)RSDK.GetEntityByID(Player->playerCount + id);
-                RSDK.DestroyEntity(shield, Shield->objectID, player);
+                RSDK.ResetEntityPtr(shield, Shield->objectID, player);
             }
         }
         else {
@@ -344,7 +478,7 @@ void Zone_Unknown2()
     entity->visible    = true;
     entity->drawOrder  = 15;
     // if (Music->ActiveTrack != 8) {
-    //    RSDK.DestroyEntity(music, Music->objectID, 0);
+    //    RSDK.ResetEntityPtr(music, Music->objectID, 0);
     //    EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
     //    music->state    = Music_Unknown14;
     //    music->field_88 = 1.0;
@@ -362,7 +496,7 @@ void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)
 
 void Zone_Unknown4(int screen)
 {
-    EntityZone *entity = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
+    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
     entity->screenID   = screen;
     entity->timer      = 640;
     entity->fade1      = 16;
@@ -387,7 +521,7 @@ void Zone_Unknown4(int screen)
 
 void Zone_Unknown5()
 {
-    EntityZone *entity = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
+    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
     entity->screenID   = 4;
     entity->timer      = 640;
     entity->fade1      = 16;
@@ -463,7 +597,7 @@ void Zone_Unknown14()
     if (entity->timer <= 0) {
         options->suppressAutoMusic = false;
         options->suppressTitlecard = false;
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer -= entity->fade1;
@@ -490,7 +624,7 @@ void Zone_Unknown16()
     // SaveGame_Unknown9();
     if (Music->activeTrack != Music->field_254)
        Music_Unknown9(Music->field_254, 0.039999999);
-    EntityZone *entityZone     = (EntityZone *)RSDK.SpawnEntity(Zone->objectID, 0, 0, 0);
+    EntityZone *entityZone     = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
     entityZone->screenID       = 0;
     entityZone->timer          = 640;
     entityZone->fade1          = 16;
@@ -502,7 +636,7 @@ void Zone_Unknown16()
     entityZone->drawOrder      = 15;
     // TitleCard->pfuncC      = NULL;
     Player->rings = 0;
-    RSDK.DestroyEntity(entity, 0, 0);
+    RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void Zone_Unknown17()
@@ -523,7 +657,7 @@ void Zone_Unknown18()
 {
     EntityZone *entity = (EntityZone *)RSDK_sceneInfo->entity;
     if (entity->timer <= 0)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     else
         entity->timer -= entity->fade1;
 }
@@ -543,7 +677,7 @@ void Zone_Unknown21()
     EntityZone *entity = (EntityZone *)RSDK_sceneInfo->entity;
     if (entity->timer <= 0) {
         Zone->field_4724 = false;
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer -= entity->fade1;
@@ -585,7 +719,7 @@ bool32 Game_CheckStageReload()
 
     if (SpecialRing && options->specialRingID > 0) {
         EntitySpecialRing *specialRing = NULL;
-        while (RSDK.GetObjects(SpecialRing->objectID, (Entity **)&specialRing)) {
+        while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&specialRing)) {
             // if (SpecialRing->ringID > 0 && options->specialRingID == SpecialRing->ringID)
             //    return true;
         }
@@ -613,6 +747,132 @@ void Game_ClearOptions()
     options->gameMode          = MODE_MANIA;
     options->suppressTitlecard = false;
     options->suppressAutoMusic = false;
+}
+
+int Game_Unknown20(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2)
+{
+    if (!Game_Unknown23(px1, py1, px2, py2, tx1, tx2, ty1, ty2))
+        return false;
+
+    if (px1 == px2 && py1 == py2) {
+        if (px1 != tx1 || py1 != tx2) {
+            if (px1 == ty1 && py1 == ty2)
+                return true;
+            return false;
+        }
+        return true;
+    }
+
+    if (tx1 != ty1 || tx2 != ty2) {
+        int valA = Game_Unknown21(px1, py1, px2, py2, tx1, tx2);
+        int valB  = Game_Unknown21(px1, py1, px2, py2, ty1, ty2);
+        if (valA) {
+            if (valA == valB)
+                return 0;
+        }
+        else if (!valB) {
+            if (Game_Unknown22(px1, py1, px2, py2, tx1, tx2) || Game_Unknown22(px1, py1, px2, py2, ty1, ty2)
+                || Game_Unknown22(tx1, tx2, ty1, ty2, px1, py1)) {
+                return true;
+            }
+            if (!Game_Unknown22(tx1, tx2, ty1, ty2, px2, py2))
+                return false;
+        }
+
+        int res = Game_Unknown21(tx1, tx2, ty1, ty2, px1, py1);
+        if (!res)
+            return true;
+        if (res == Game_Unknown21(tx1, tx2, ty1, ty2, px2, py2))
+            return false;
+        return true;
+    }
+    if (tx1 == px1 && tx2 == py1)
+        return true;
+    if (tx1 != px2 || tx2 != py2)
+        return false;
+    return true;
+}
+int Game_Unknown21(int px1, int py1, int px2, int py2, int tx1, int tx2)
+{
+    int result = ((tx2 - py1) >> 16) * ((px2 - px1) >> 16) - ((tx1 - px1) >> 16) * ((py2 - py1) >> 16);
+    if (((tx2 - py1) >> 16) * ((px2 - px1) >> 16) == ((tx1 - px1) >> 16) * ((py2 - py1) >> 16))
+        return 0;
+    if (result > 0)
+        return 1;
+    if (result < 0)
+        result = -1;
+    return result;
+}
+bool32 Game_Unknown22(int tx1, int tx2, int ty1, int ty2, int px2, int py2)
+{
+    if (ty1 <= tx1) {
+        if (ty1 >= tx1) {
+            if (ty2 <= tx2) {
+                if (ty2 >= tx2) {
+                    if (tx1 > px2)
+                        return false;
+                    if (tx1 <= px2)
+                        return true;
+                }
+                else {
+                    if (ty2 > py2)
+                        return false;
+                    if (ty2 <= py2)
+                        return true;
+                }
+            }
+            else {
+                if (tx2 > py2)
+                    return false;
+                if (tx2 <= px2)
+                    return true;
+            }
+        }
+        else {
+            if (ty1 > px2)
+                return false;
+            if (ty1 <= px2)
+                return true;
+        }
+    }
+    else {
+        if (tx1 > px2)
+            return false;
+        if (tx1 <= px2)
+            return true;
+    }
+        return true;
+    return false;
+}
+bool32 Game_Unknown23(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2)
+{
+    int v8 = px2;
+    int v9 = px2;
+    if (px1 < px2)
+        v9 = px1;
+    int v10 = py2;
+    int v11 = py2;
+    if (py1 < py2)
+        v11 = py1;
+    int v17 = v11;
+    int v12 = ty2;
+    if (px1 > px2)
+        v8 = px1;
+    int v18 = v8;
+    int v13 = ty1;
+    int v14 = ty2;
+    if (py1 > py2)
+        v10 = py1;
+    int v15 = ty1;
+    if (tx1 < ty1)
+        v15 = tx1;
+    if (tx2 < ty2)
+        v14 = tx2;
+    if (tx1 > ty1)
+        v13 = tx1;
+    if (tx2 > ty2)
+        v12 = tx2;
+    return v9 <= v13 && v18 >= v15 && v17 <= v12 && v10 >= v14;
 }
 
 void Zone_EditorDraw() {}

@@ -67,7 +67,7 @@ void FXFade_StageLoad()
 void FXFade_StopAll()
 {
     Entity *entity = NULL;
-    while (RSDK.GetObjects(FXFade->objectID, &entity)) RSDK.DestroyEntity(entity, 0, 0);
+    while (RSDK.GetEntities(FXFade->objectID, &entity)) RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void FXFade_State_FadeIn()
@@ -110,7 +110,7 @@ void FXFade_State_FadeOut()
         if (entity->oneWay)
             entity->state = NULL;
         else
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer -= entity->speedOut;

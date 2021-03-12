@@ -386,8 +386,8 @@ void setupFunctions()
     functionTable[FunctionTable_GetEntityCount]         = (void *)GetEntityCount;
     functionTable[FunctionTable_GetDrawListRef]         = (void *)GetDrawListRef;
     functionTable[FunctionTable_GetDrawListRefPtr]      = (void *)GetDrawListRefPtr;
-    functionTable[FunctionTable_DestroyEntity]          = (void *)DestroyEntity;
-    functionTable[FunctionTable_ResetEntity]            = (void *)ResetEntity;
+    functionTable[FunctionTable_DestroyEntity]          = (void *)ResetEntityPtr;
+    functionTable[FunctionTable_ResetEntity]            = (void *)ResetEntitySlot;
     functionTable[FunctionTable_SpawnEntity]            = (void *)SpawnEntity;
     functionTable[FunctionTable_CopyEntity]             = (void *)CopyEntity;
     functionTable[FunctionTable_CheckOnScreen]          = (void *)CheckOnScreen;

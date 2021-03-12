@@ -6,7 +6,7 @@ void InvisibleBlock_Update()
 {
     EntityPlayer *player         = NULL;
     EntityInvisibleBlock *entity = (EntityInvisibleBlock *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && (!entity->noChibi || !player->isChibi)) {
             switch (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
                 case 1:
@@ -44,7 +44,7 @@ void InvisibleBlock_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->timeAttackOnly) {
             if (options->gameMode < MODE_TIMEATTACK)
-                RSDK.DestroyEntity(entity, 0, 0);
+                RSDK.ResetEntityPtr(entity, 0, 0);
         }
         entity->visible = false;
         entity->active  = 2 * (entity->activeNormal == 0) + 2;

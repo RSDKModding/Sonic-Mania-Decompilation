@@ -85,7 +85,7 @@ void Camera_Create(void* data)
 void Camera_StageLoad()
 {
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntity(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
+        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntitySlot(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;
     }
@@ -117,7 +117,7 @@ void Camera_SetCameraBounds(EntityCamera *entity)
 EntityCamera *Camera_SetTargetEntity(int screen, Entity *target)
 {
     EntityCamera *entity = NULL;
-    while (RSDK.GetObjects(Camera->objectID, (Entity **)&entity)) {
+    while (RSDK.GetEntities(Camera->objectID, (Entity **)&entity)) {
         if (entity->screenID == screen) {
             entity->targetPtr    = target;
             entity->position.x   = target->position.x;
@@ -131,7 +131,7 @@ EntityCamera *Camera_SetTargetEntity(int screen, Entity *target)
 void Camera_ShakeScreen(int shakeX, int screen, int shakeY)
 {
     EntityCamera *entity = NULL;
-    while (RSDK.GetObjects(Camera->objectID, (Entity **)&entity)) {
+    while (RSDK.GetEntities(Camera->objectID, (Entity **)&entity)) {
         if (entity->screenID == screen) {
             entity->shakePos.x = shakeX;
             entity->shakePos.y = shakeY;

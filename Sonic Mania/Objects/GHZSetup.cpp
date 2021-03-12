@@ -114,7 +114,7 @@ void GHZSetup_StageLoad()
         RSDK.RotatePalette(2, 181, 184, true);
         RSDK.RotatePalette(2, 197, 200, true);
         if (Water) {
-            for (EntityWater *water = 0; RSDK.GetObjects(Water->objectID, (Entity **)&water);) {
+            for (EntityWater *water = 0; RSDK.GetEntities(Water->objectID, (Entity **)&water);) {
                 //water->r = 0xA0;
                 //water->g = 0xA0;
                 //water->b = 0xE0;
@@ -207,7 +207,7 @@ void GHZSetup_SetupBGSwitchB2()
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
 }
-void GHZSetup_SpawnGHZ2Outro() { RSDK.SpawnEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
+void GHZSetup_SpawnGHZ2Outro() { RSDK.CreateEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
 
 void GHZSetup_EditorDraw()
 {

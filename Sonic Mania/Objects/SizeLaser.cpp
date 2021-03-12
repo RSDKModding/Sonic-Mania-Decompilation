@@ -130,7 +130,7 @@ bool32 SizeLaser_SizeChangeSFXCheck()
     Entity *entity = NULL;
 
     int cnt = 0;
-    while (RSDK.GetActiveObjects(SizeLaser->objectID, &entity)) {
+    while (RSDK.GetActiveEntities(SizeLaser->objectID, &entity)) {
         if (entity->activeScreens)
             ++cnt;
     }

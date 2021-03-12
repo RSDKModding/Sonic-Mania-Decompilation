@@ -59,7 +59,7 @@ void Spikes_Update()
     entity->position.y -= entity->offset.y;
     if (entity->dword6C != 1) {
         EntityPlayer *player = NULL;
-        while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
                 if ((/*(!Ice || player->state != Ice_State_FrozenPlayer) &&*/ shield->data.animationID != 2) || Press) {
@@ -148,7 +148,7 @@ void Spikes_Update()
                         if (flag) {
                             //RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
                             //Ice_Unknown6(16, 0, 0, 0);
-                            RSDK.DestroyEntity(entity, 0, 0);
+                            RSDK.ResetEntityPtr(entity, 0, 0);
                         }
                     }
                 }
@@ -447,7 +447,7 @@ void Spikes_Unknown1(int a1, int a2)
     EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
     //RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
     //Ice_Unknown6(16, a1, a2, 0);
-    RSDK.DestroyEntity(entity, 0, 0);
+    RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
 {

@@ -16,7 +16,7 @@ void FXRuby_StaticUpdate()
 {
     if (Zone) {
         Entity *entity = NULL;
-        if (RSDK.GetActiveObjects(FXRuby->objectID, &entity)) {
+        if (RSDK.GetActiveEntities(FXRuby->objectID, &entity)) {
             RSDK.AddDrawListRef(Zone->uiDrawHigh + 1, RSDK.GetEntityID(entity));
             RSDK.NextForEachLoop();
         }
@@ -163,7 +163,7 @@ void FXRuby_Unknown9()
     entity->field_68    = 0;
     entity->outerRadius = entity->dword64 >> 16;
     if (entity->dword64 <= 0)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void FXRuby_EditorDraw()

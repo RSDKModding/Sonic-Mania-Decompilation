@@ -68,12 +68,12 @@ void Debris_State_Fall()
     
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer--;
         if (!entity->timer)
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 
@@ -86,12 +86,12 @@ void Debris_State_LightningSpark()
 
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer--;
         if (!entity->timer)
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
 
@@ -105,12 +105,12 @@ void Debris_State_Unknkown()
 
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer--;
         if (!entity->timer)
-            RSDK.DestroyEntity(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, 0, 0);
     }
 
     entity->visible = Zone->timer & 1;
@@ -128,7 +128,7 @@ void Debris_Unknkown1(int spriteIndex, int *a2, int animationID) {
         //xvel
         //yvel
         for (int *entry = a2 + 1; cnt > 0; entity->drawFX = FX_FLIP) {
-            EntityDebris *debris = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x, entity->position.y);
+            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x, entity->position.y);
             RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->data, true, entry[0]);
             debris->direction = entry[1];
             debris->velocity.x         = entry[2];
@@ -158,7 +158,7 @@ void Debris_Unknkown2(int spriteIndex, int *a2)
         // xoffset
         // yoffset
         for (int *entry = a2 + 1; cnt > 0; entity->drawFX = FX_FLIP) {
-            EntityDebris *debris = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x + entry[4],
+            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x + entry[4],
                                                                     entity->position.y + entry[5]);
             RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->data, true, entry[0]);
             debris->direction     = entry[1];

@@ -59,7 +59,7 @@ void DialogRunner_HandleCallback()
         Game_Print("Callback: %x", entity->callback);
         if (entity->callback)
             entity->callback();
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer--;

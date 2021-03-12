@@ -4,7 +4,8 @@
 #include "../SonicMania.hpp"
 
 // Object Class
-struct ObjectAnimals : Object {
+struct ObjectAnimals {
+    RSDK_OBJECT
     int hitboxes[12];
     int gravityStrength[12];
     int yVelocity[12];
@@ -17,7 +18,8 @@ struct ObjectAnimals : Object {
 };
 
 // Entity Class
-struct EntityAnimals : Entity {
+struct EntityAnimals {
+    RSDK_ENTITY
     void(*state)();
     int delay;
     int type;

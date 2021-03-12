@@ -6,7 +6,7 @@ void ForceSpin_Update()
 {
     EntityPlayer *player      = NULL;
     EntityForceSpin *entity = (EntityForceSpin *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         int x     = (player->position.x - entity->position.x) >> 8;
         int y     = (player->position.y - entity->position.y) >> 8;
         int scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;

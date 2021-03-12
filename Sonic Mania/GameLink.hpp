@@ -73,12 +73,12 @@ struct Object {
     byte active;
 };
 
-#define OBJECT_BASE                                                                                                                                  \
+#define RSDK_OBJECT                                                                                                                                  \
     ushort objectID;                                                                                                                                 \
     byte active;
 
 #if RETRO_USE_PLUS
-#define ENTITY_BASE                                                                                                                                  \
+#define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
     Vector2 scale;                                                                                                                                   \
     Vector2 velocity;                                                                                                                                \
@@ -107,7 +107,7 @@ struct Object {
     byte visible;                                                                                                                                    \
     byte activeScreens;
 #else
-#define ENTITY_BASE                                                                                                                                  \
+#define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
     Vector2 scale;                                                                                                                                   \
     Vector2 velocity;                                                                                                                                \
@@ -472,7 +472,7 @@ struct EngineInfo {
 #endif
 
 struct SceneInfo {
-    Entity *entity;
+    void *entity;
     void *listData;
     void *listCategory;
     int timeCounter;
@@ -582,7 +582,7 @@ struct GameInfo {
 #endif
     TouchMouseData *touchMouse;
 #if RETRO_USE_PLUS
-    UnknownInfo *deadzone;
+    UnknownInfo *unknown;
 #endif
     ScreenInfo *screenInfo;
 };

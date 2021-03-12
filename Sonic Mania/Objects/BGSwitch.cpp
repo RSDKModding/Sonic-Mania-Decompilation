@@ -6,7 +6,7 @@ void BGSwitch_Update()
 {
     EntityBGSwitch *entity = (EntityBGSwitch *)RSDK_sceneInfo->entity;
     for (BGSwitch->layerID = 0; BGSwitch->layerID < 4; BGSwitch->layerID++) {
-        Entity* camera = RSDK.GetEntityByID(BGSwitch->layerID + SLOT_CAMERA1);
+        EntityCamera *camera = (EntityCamera *)RSDK.GetEntityByID(BGSwitch->layerID + SLOT_CAMERA1);
         if (!camera->objectID)
             break;
 

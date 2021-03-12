@@ -6,7 +6,7 @@ void FlingRamp_Update()
 {
     EntityFlingRamp *entity = (EntityFlingRamp *)RSDK_sceneInfo->entity;
     EntityPlayer *player    = NULL;
-    while (RSDK.GetActiveObjects(Player->objectID, (Entity **)&player)) {
+    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if ((player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
             if (Player_CheckCollisionTouch(player, entity, &FlingRamp->hitbox)) {
                 player->velocity.x += 0x40000;

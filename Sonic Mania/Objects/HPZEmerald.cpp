@@ -8,7 +8,7 @@ void HPZEmerald_Update()
     RSDK.ProcessAnimation(&entity->data2);
     if (entity->field_60 == 1) {
         if (entity->type) {
-            for (EntityPlayer *player = 0; RSDK.GetActiveObjects(Player->objectID, (Entity **)&player);
+            for (EntityPlayer *player = 0; RSDK.GetActiveEntities(Player->objectID, (Entity **)&player);
                  Player_CheckCollisionPlatform(player, entity, entity->hitbox)) {
                 ;
             }

@@ -94,14 +94,13 @@ void SaveGame_LoadSaveData() {
             options->restartShield         = 0;
             Game_Print("RecallCollectedEntities");
 
-            //Genuinely no clue what's happening here
             for (int e = 0x40; e < 0x840; ++e) {
-                if (options->atlEntityData[e] == 1) {
+                if (options->atlEntityData[(0x200 * 1) + e] == 1) {
                     Entity *entity   = RSDK.GetEntityByID(e);
                     entity->objectID = 0;
                     entity->active   = -1;
                 }
-                else if (options->atlEntityData[e] == 2) {
+                else if (options->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(e);
                     RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &itemBox->brokenData, true, 0);
                     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->overlayData, true, 0);
@@ -111,12 +110,11 @@ void SaveGame_LoadSaveData() {
                 }
             }
 
-            options->recallEntities      = 0;
+            options->recallEntities      = false;
             options->restartMilliseconds = 0;
             options->restartSeconds      = 0;
             options->restartMinutes      = 0;
             memset(options->atlEntityData, 0, 0x800 * sizeof(int));
-            options->recallEntities = false;
         }
     }
     else if (!Zone || Zone->listPos != Zone->prevListPos) {
@@ -134,5 +132,69 @@ void SaveGame_LoadSaveData() {
         options->tempMilliseconds = 0;
         options->tempSeconds = 0;
         options->tempMinutes = 0;
+    }
+}
+
+void SaveGame_SaveGameState()
+{
+    int *saveRAM                      = SaveGame->saveRAM;
+    options->recallEntities      = true;
+
+    options->restartPos[0]       = StarPost->playerPositions[0].x;
+    options->restartPos[1]       = StarPost->playerPositions[0].y;
+    options->restartDir[0]       = StarPost->playerDirections[0];
+    options->restartSlot[0]      = StarPost->postIDs[0];
+
+    options->restartPos[2]       = StarPost->playerPositions[1].x;
+    options->restartPos[3]       = StarPost->playerPositions[1].y;
+    options->restartDir[1]       = StarPost->playerDirections[1];
+    options->restartSlot[1]      = StarPost->postIDs[1];
+
+    options->restartPos[4]       = StarPost->playerPositions[2].x;
+    options->restartPos[5]       = StarPost->playerPositions[2].y;
+    options->restartDir[2]       = StarPost->playerDirections[2];
+    options->restartSlot[2]      = StarPost->postIDs[2];
+
+    options->restartPos[6]       = StarPost->playerPositions[3].x;
+    options->restartPos[7]       = StarPost->playerPositions[3].y;
+    options->restartDir[3]       = StarPost->playerDirections[3];
+    options->restartSlot[3]      = StarPost->postIDs[3];
+
+    EntityPlayer *player1            = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    options->restartMilliseconds = StarPost->storedMS;
+    options->restartSeconds      = StarPost->storedSeconds;
+    options->restartMinutes      = StarPost->storedMinutes;
+    options->tempMinutes         = RSDK_sceneInfo->milliseconds;
+    options->tempSeconds         = RSDK_sceneInfo->seconds;
+    options->tempMinutes             = RSDK_sceneInfo->minutes;
+
+    saveRAM[25]              = player1->lives;
+    options->restartLives[0] = player1->lives;
+    saveRAM[29]              = options->continues;
+    saveRAM[68]              = options->playerID;
+    saveRAM[66]              = options->characterFlags;
+    saveRAM[67]              = options->stock;
+    saveRAM[26]              = player1->score;
+    options->restartScore    = player1->score;
+    saveRAM[27]              = player1->score1UP;
+    options->restartScore1UP = player1->score1UP;
+    options->restartRings    = player1->rings;
+    options->restart1UP      = player1->ringExtraLife;
+
+    for (int i = 0x40; i < 0x40 + 0x800; ++i) {
+        EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(i);
+        if (itemBox->objectID || itemBox->active != -1) {
+            if (itemBox->objectID == ItemBox->objectID) {
+                if (itemBox->state == ItemBox_State_Broken) {
+                    options->atlEntityData[(0x200 * 1) + i] = 2;
+                }
+            }
+            else {
+                options->atlEntityData[(0x200 * 1) + i] = 0;
+            }
+        }
+        else {
+            options->atlEntityData[(0x200 * 1) + i] = 1;
+        }
     }
 }

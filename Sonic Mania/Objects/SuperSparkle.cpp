@@ -7,7 +7,7 @@ void SuperSparkle_Update()
     EntitySuperSparkle *entity = (EntitySuperSparkle *)RSDK_sceneInfo->entity;
     EntityPlayer *player       = (EntityPlayer *)entity->player;
     if (!player) {
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
         return;
     }
 
@@ -18,7 +18,7 @@ void SuperSparkle_Update()
     if (entity->activeFlag) {
         if (++entity->timer == 12) {
             entity->timer        = 0;
-            EntityDebris *debris = (EntityDebris *)RSDK.SpawnEntity(Debris->objectID, 0, player->position.x, player->position.y);
+            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, player->position.x, player->position.y);
             debris->state          = Debris_State_LightningSpark;
             debris->timer          = 16;
             debris->inkEffect = INK_ADD;
@@ -33,7 +33,7 @@ void SuperSparkle_Update()
     }
 
     if (player->characterID == ID_SONIC && !(Zone->timer & 7)) {
-        EntityRing *ring = (EntityRing *)RSDK.SpawnEntity(Ring->objectID, 0, player->position.x + RSDK.Rand(-0xC0000, 0xC0000),
+        EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, player->position.x + RSDK.Rand(-0xC0000, 0xC0000),
                                                           player->position.y + RSDK.Rand(-0x120000, 0x120000));
         ring->state      = Ring_State_Sparkle;
         ring->stateDraw  = Ring_StateDraw_Sparkle;
@@ -51,7 +51,7 @@ void SuperSparkle_Update()
         ring->animData.animationSpeed = RSDK.Rand(6, 8);
     }
     if (player->superState != 2 || !player->active)
-        RSDK.DestroyEntity(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void SuperSparkle_LateUpdate()
