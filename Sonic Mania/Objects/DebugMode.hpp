@@ -40,5 +40,6 @@ void DebugMode_Serialize();
 
 // Extra Entity Functions
 void DebugMode_NullState();
+void DebugMode_AddObject(ushort id, void (*draw)(), void (*spawn)());
 
 #endif //!OBJ_DEBUGMODE_H

@@ -59,14 +59,14 @@ void TestObject_Update()
 void TestObject_LateUpdate() {}
 void TestObject_StaticUpdate()
 {
-    Entity *entity        = GetObjectByID(TestObject->entityID);
-    screens[0].position.x = (entity->position.x >> 0x10) - screens[0].centerX;
-    screens[0].position.y = (entity->position.y >> 0x10) - screens[0].centerY;
-
-    if (screens[0].position.y < 0)
-        screens[0].position.y = 0;
-    if (screens[0].position.x < 0)
-        screens[0].position.x = 0;
+    //Entity *entity        = GetObjectByID(TestObject->entityID);
+    //screens[0].position.x = (entity->position.x >> 0x10) - screens[0].centerX;
+    //screens[0].position.y = (entity->position.y >> 0x10) - screens[0].centerY;
+    //
+    //if (screens[0].position.y < 0)
+    //    screens[0].position.y = 0;
+    //if (screens[0].position.x < 0)
+    //    screens[0].position.x = 0;
     //if (controller[0].keyUp.down) {
     //    if (screens[0].position.y > 0)
     //        screens[0].position.y -= 4;

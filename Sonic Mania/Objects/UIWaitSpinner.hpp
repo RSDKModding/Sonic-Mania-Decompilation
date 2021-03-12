@@ -5,12 +5,17 @@
 
 // Object Class
 struct ObjectUIWaitSpinner : Object {
-
+    ushort spriteIndex;
+    int timer;
+    Entity *activeSpinner;
 };
 
 // Entity Class
 struct EntityUIWaitSpinner : Entity {
-
+    void (*state)();
+    int timer;
+    bool32 flag;
+    EntityAnimationData data;
 };
 
 // Object Struct
@@ -28,6 +33,9 @@ void UIWaitSpinner_EditorLoad();
 void UIWaitSpinner_Serialize();
 
 // Extra Entity Functions
-
+void UIWaitSpinner_Wait();
+void UIWaitSpinner_WaitReplay();
+void UIWaitSpinner_State_Wait();
+void UIWaitSpinner_State_Wait2();
 
 #endif //!OBJ_UIWAITSPINNER_H

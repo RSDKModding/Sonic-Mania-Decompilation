@@ -41,7 +41,7 @@ void initUserData()
         if (!richPresence)
             richPresence = (DummyRichPresence *)malloc(sizeof(DummyRichPresence));
         MEM_ZEROP(richPresence);
-        richPresence->active = true;
+        richPresence->status = true;
 
         if (!stats)
             stats = (DummyStats *)malloc(sizeof(DummyStats));
@@ -141,17 +141,15 @@ void trackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackSc
 
 void setPresence(byte a2, TextInfo *info)
 {
-    char buffer[0x80];
-    const char *text = NULL;
-    AllocateStorage(info->textLength + 1, (void **)&text, DATASET_TMP, true);
+    char buffer[0xFF];
+    char buffer2[0xFF];
     CopyString(buffer, info);
 #if RETRO_USE_PLUS
-    sprintf(buffer, "DUMMY SetPresence(%d, %s) -> %s\n", a2, text, (richPresence->active != a2 ? "Successful Set" : "Redundant Set"));
+    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s\n", a2, buffer, (richPresence->status != a2 ? "Successful Set" : "Redundant Set"));
 #else
-    sprintf(buffer, "DUMMY SetPresence(%d, %s)\n", a2, text);
+    sprintf(buffer2, "DUMMY SetPresence(%d, %s)\n", a2, buffer);
 #endif
-    printConsole(buffer);
-    RemoveStorageEntry((void **)&text);
+    printConsole(buffer2);
 }
 
 #if RETRO_USE_PLUS

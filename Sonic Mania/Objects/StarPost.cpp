@@ -251,7 +251,7 @@ void StarPost_CheckCollisions()
         if ((1 << playerSlot) & entity->activated)
             continue;
 
-        if (player->field_1F0)
+        if (player->isGhost)
             continue;
         Hitbox *playerHitbox = player->outerbox;
         if (!playerHitbox)

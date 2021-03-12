@@ -119,6 +119,7 @@ inline void StringUpperCase(char *dest, const char *src)
 
 extern char hashBuffer[0x400];
 void GenerateHash(uint *buffer, int len);
+void GenerateCRC(uint *id, char *fileName);
 
 #define HASH_SIZE            (4 * sizeof(uint))
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)

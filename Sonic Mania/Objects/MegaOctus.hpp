@@ -6,11 +6,11 @@
 // Object Class
 struct ObjectMegaOctus : Object {
     bool32 value1;
-    unknown value2;
-    unknown value3;
-    unknown value4;
-    unknown value5;
-    unknown value6;
+    EntityAnimationData value2;
+    EntityAnimationData value3;
+    EntityAnimationData value4;
+    EntityAnimationData value5;
+    EntityAnimationData value6;
     int value7;
     int value8;
     byte value9;

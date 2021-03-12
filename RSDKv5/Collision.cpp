@@ -503,9 +503,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
             return collided;
         }
         case CMODE_LWALL: {
-            int solid = 0x2000;
+            int solid = 1 << 13;
             if (cPlane)
-                solid = 0x8000;
+                solid = 1 << 15;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
@@ -540,9 +540,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
             return collided;
         }
         case CMODE_ROOF: {
-            int solid = 0x1000;
+            int solid = 1 << 13;
             if (cPlane)
-                solid = 0x4000;
+                solid = 1 << 15;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
@@ -577,9 +577,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
             return collided;
         }
         case CMODE_RWALL: {
-            int solid = 0x2000;
+            int solid = 1 << 13;
             if (cPlane)
-                solid = 0x8000;
+                solid = 1 << 15;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
@@ -593,7 +593,7 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                                 ushort tile = *layout;
                                 if (tile < 0xFFFF && tile & solid) {
                                     int tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
-                                    if (colX >= tx && abs(colX - tx) <= 14) {
+                                    if (colX <= tx && abs(colX - tx) <= 14) {
                                         collided = true;
                                         colX     = tx;
                                         i        = 3;

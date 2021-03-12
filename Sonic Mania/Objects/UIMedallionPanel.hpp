@@ -5,12 +5,12 @@
 
 // Object Class
 struct ObjectUIMedallionPanel : Object {
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityUIMedallionPanel : Entity {
-
+    EntityAnimationData data;
 };
 
 // Object Struct
@@ -28,6 +28,7 @@ void UIMedallionPanel_EditorLoad();
 void UIMedallionPanel_Serialize();
 
 // Extra Entity Functions
+void UIMedallionPanel_DrawPanel();
 
 
 #endif //!OBJ_UIMEDALLIONPANEL_H

@@ -701,7 +701,7 @@ void ItemBox_GivePowerup()
                             }
                             else {
                                 player2->objectID = Player->objectID;
-                                Player->field_9E4 = 0;
+                                Player->jumpInDelay = 0;
                                 EntityDust *dust =
                                     (EntityDust *)RSDK.SpawnEntity(Dust->objectID, (void *)1, player2->position.x, player2->position.y);
 
@@ -728,10 +728,10 @@ void ItemBox_GivePowerup()
                                     player2->position.y = -0x400000;
                                     player2->angle      = 128;
                                     if (player2->characterID == ID_TAILS) {
-                                        // player2->state = Player_State_FlyIn;
+                                        player2->state = Player_State_FlyIn;
                                     }
                                     else {
-                                        // player2->state         = Player_State_JumpIn;
+                                        player2->state         = Player_State_JumpIn;
                                         player2->maxGlideSpeed = ((RSDK_screens->position.y + RSDK_screens->height + 16) << 16) - player->position.y;
                                         player2->drawFX |= FX_SCALE;
                                         player2->scale.x = 1024;
@@ -747,11 +747,11 @@ void ItemBox_GivePowerup()
                                             player2->velocity.y = -0xE0000;
                                         }
                                     }
-                                    player2->field_214     = &dust->position.x;
+                                    player2->entPtr     = dust;
                                     player2->maxGlideSpeed = 0;
                                     player2->nextAirState     = 0;
                                     player2->nextGroundState  = 0;
-                                    // player2->inputState      = Player_FlyCarryInputState;
+                                    player2->inputState      = Player_FlyCarryInputState;
                                     player2->tileCollisions  = 0;
                                     player2->interaction     = 0;
                                     player2->drawOrder       = Zone->uiDrawLow;
@@ -764,7 +764,7 @@ void ItemBox_GivePowerup()
                                     player2->sidekick        = 1;
                                     player2->drawFX          = 3;
                                     player2->visible         = 1;
-                                    // HUD->field_28                       = 120;
+                                    HUD->field_28                       = 120;
                                 }
                             }
                         }

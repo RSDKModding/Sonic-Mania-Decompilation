@@ -31,7 +31,7 @@ void LogoSetup_Create(void* data)
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         entity->active  = ACTIVE_ALWAYS;
-        entity->visible   = 1;
+        entity->visible   = true;
         entity->drawOrder = 12;
         entity->stateDraw      = LogoSetup_Unknown4;
 #if RETRO_USE_PLUS

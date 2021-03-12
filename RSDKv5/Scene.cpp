@@ -38,6 +38,8 @@ void LoadScene()
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
+        if (sceneInfo.filter == 0x00)
+            sceneInfo.filter = 0xFF;
         printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name,
                  sceneInfo.listData[sceneInfo.listPos].name, sceneInfo.listData[sceneInfo.listPos].filter);
         return;
@@ -105,6 +107,8 @@ void LoadScene()
 #if RETRO_USE_PLUS
     hardResetFlag = false;
     sceneInfo.filter = sceneEntry->filter;
+    if (sceneInfo.filter == 0x00)
+        sceneInfo.filter = 0xFF;
 
     printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name, sceneEntry->name, sceneEntry->filter);
 #endif
@@ -525,7 +529,6 @@ void LoadTileConfig(char *filepath)
 
         int bufPos    = 0;
         for (int p = 0; p < CPATH_COUNT; ++p) {
-            int tileIndex = 0;
             //No Flip/Stored in file
             for (int t = 0; t < TILE_COUNT; ++t) {
                 byte collision[0x10];
@@ -538,8 +541,8 @@ void LoadTileConfig(char *filepath)
 
                 bool32 isCeiling                = buffer[bufPos++];
                 collisionMasks[p][t].floorAngle = buffer[bufPos++];
-                collisionMasks[p][t].lWallAngle = buffer[bufPos++];
                 collisionMasks[p][t].rWallAngle = buffer[bufPos++];
+                collisionMasks[p][t].lWallAngle = buffer[bufPos++];
                 collisionMasks[p][t].roofAngle = buffer[bufPos++];
                 collisionMasks[p][t].flag = buffer[bufPos++];
 
@@ -641,7 +644,6 @@ void LoadTileConfig(char *filepath)
                         }
                     }
                 }
-                tileIndex += 16;
             }
 
             //FlipX

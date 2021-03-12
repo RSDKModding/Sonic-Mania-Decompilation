@@ -27,7 +27,7 @@ bool32 InitRenderDevice()
     for (int s = 0; s < SCREEN_MAX; ++s) {
         SetScreenSize(s, SCREEN_XSIZE, SCREEN_YSIZE);
 
-        screens[s].frameBuffer = new ushort[screens[s].width * screens[s].height];
+        //screens[s].frameBuffer = new ushort[screens[s].width * screens[s].height];
         memset(screens[s].frameBuffer, 0, (screens[s].width * screens[s].height) * sizeof(ushort));
     }
 
@@ -175,8 +175,8 @@ void FlipScreen()
 void ReleaseRenderDevice()
 {
     for (int s = 0; s < SCREEN_MAX; ++s) {
-        if (screens[s].frameBuffer)
-            delete[] screens[s].frameBuffer;
+        //if (screens[s].frameBuffer)
+            //delete[] screens[s].frameBuffer;
 #if RETRO_USING_SDL2
         SDL_DestroyTexture(engine.screenBuffer[s]);
         engine.screenBuffer[s] = NULL;
@@ -362,10 +362,14 @@ void FillScreen(int a1, int a2, int a3, int a4)
 
     if (a4 + a2 + a3) {
         validDraw    = true;
-        ushort a2Val = blendLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(a1 >> 0x10) & 0xFF]];
-        ushort a3Val = blendLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]];
-        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]]
+        ushort a2Val = blendLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(a1 >> 0x10) & 0xFF]]
+                       + subtractLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(a1 >> 0x10) & 0xFF]];
+
+        ushort a3Val = blendLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]]
                        + subtractLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]];
+
+        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]]
+                       + subtractLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]];
 
         int cnt = currentScreen->height * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
@@ -2448,9 +2452,11 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
         else
             pos = *position;
 
+        pos.x >>= 0x10;
+        pos.y >>= 0x10;
         if (!screenRelative) {
-            pos.x = (pos.x >> 0x10) - currentScreen->position.x;
-            pos.y = (pos.y >> 0x10) - currentScreen->position.y;
+            pos.x -= currentScreen->position.x;
+            pos.y -= currentScreen->position.y;
         }
 
         int rotation = sceneInfo.entity->rotation;

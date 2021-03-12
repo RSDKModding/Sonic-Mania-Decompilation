@@ -82,7 +82,7 @@ struct DummyRichPresence {
     void (*unknown3)(void);
     void (*SetPresence)(byte a2, TextInfo *info);
 
-    int active;
+    int status;
 };
 
 struct DummyStats {

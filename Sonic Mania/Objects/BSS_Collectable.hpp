@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectBSS_Collectable : Object {
-    unknown value1;
+    EntityAnimationData value1;
     byte value2;
     int value3[32]; //= { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 32, 32 };
     int value4[32]; //= { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 21, 22, 23, 24 };

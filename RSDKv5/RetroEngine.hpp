@@ -36,6 +36,7 @@ enum GamePlatforms {
 #define RETRO_PLATFORM (RETRO_WIN)
 #define GAME_PLATFORM  (PLATFORM_WIN)
 
+#define SCREEN_XMAX (1280)
 #define SCREEN_YSIZE (240)
 
 #define BASE_PATH ""

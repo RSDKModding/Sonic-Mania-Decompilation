@@ -187,7 +187,7 @@ void BreakableWall_State_HandleHWall()
                         BreakableWall_BreakUnknown(entity, player->position.x > entity->position.x);
                         if (player->characterID == ID_KNUCKLES) {
                             if (player->playerAnimData.animationID == ANI_FLY) {
-                                player->glideSpeedStore -= player->glideSpeedStore >> 2;
+                                player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                                 if (abs(player->velocity.x) <= 0x30000) {
                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimData, 0, 0);
@@ -195,7 +195,7 @@ void BreakableWall_State_HandleHWall()
                                 }
                             }
                             else if (player->playerAnimData.animationID == ANI_FLYLIFTTIRED) {
-                                player->glideSpeedStore -= player->glideSpeedStore >> 2;
+                                player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                             }
                         }

@@ -6,7 +6,12 @@
 #if RETRO_USE_PLUS
 // Object Class
 struct ObjectReplayDB : Object {
-
+    Entity* loadEntity;
+    void(*loadCallback)(bool32);
+    Entity *saveEntity;
+    void (*saveCallback)(bool32);
+    Entity *deleteEntity;
+    void (*deleteCallback)(bool32);
 };
 
 // Entity Class

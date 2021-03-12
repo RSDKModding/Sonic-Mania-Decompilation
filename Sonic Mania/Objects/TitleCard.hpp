@@ -5,7 +5,9 @@
 
 // Object Class
 struct ObjectTitleCard : Object {
-
+    unsigned __int16 spriteIndex;
+    int (*funcA)(void);
+    void (*suppressCallback)(void);
 };
 
 // Entity Class

@@ -49,7 +49,8 @@ struct GFXSurface {
 };
 
 struct ScreenInfo {
-    ushort *frameBuffer;
+    //ushort *frameBuffer;
+    ushort frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     Vector2 position;
     int width;
     int height;

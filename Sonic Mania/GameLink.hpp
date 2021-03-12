@@ -21,8 +21,7 @@ typedef unsigned int bool32;
 typedef uint colour;
 typedef uint color;
 
-typedef int unknown; //temp until I figure it out lol
-
+#define SCREEN_XMAX      (1280)
 #define SCREEN_YSIZE    (240)
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
@@ -67,14 +66,77 @@ struct Entity {
     byte inkEffect;
     byte visible;
     byte activeScreens;
-    byte field_57;
 };
 
 struct Object {
     ushort objectID;
     byte active;
-    byte field_3;
 };
+
+#define OBJECT_BASE                                                                                                                                  \
+    ushort objectID;                                                                                                                                 \
+    byte active;
+
+#if RETRO_USE_PLUS
+#define ENTITY_BASE                                                                                                                                  \
+    Vector2 position;                                                                                                                                \
+    Vector2 scale;                                                                                                                                   \
+    Vector2 velocity;                                                                                                                                \
+    Vector2 updateRange;                                                                                                                             \
+    int angle;                                                                                                                                       \
+    int alpha;                                                                                                                                       \
+    int rotation;                                                                                                                                    \
+    int groundVel;                                                                                                                                   \
+    int depth;                                                                                                                                       \
+    ushort group;                                                                                                                                    \
+    ushort objectID;                                                                                                                                 \
+    bool32 inBounds;                                                                                                                                 \
+    int field_3C;                                                                                                                                    \
+    bool32 tileCollisions;                                                                                                                           \
+    bool32 interaction;                                                                                                                              \
+    bool32 onGround;                                                                                                                                 \
+    byte active;                                                                                                                                     \
+    byte filter;                                                                                                                                     \
+    byte direction;                                                                                                                                  \
+    byte drawOrder;                                                                                                                                  \
+    byte collisionLayers;                                                                                                                            \
+    byte collisionPlane;                                                                                                                             \
+    byte collisionMode;                                                                                                                              \
+    byte drawFX;                                                                                                                                     \
+    byte inkEffect;                                                                                                                                  \
+    byte visible;                                                                                                                                    \
+    byte activeScreens;
+#else
+#define ENTITY_BASE                                                                                                                                  \
+    Vector2 position;                                                                                                                                \
+    Vector2 scale;                                                                                                                                   \
+    Vector2 velocity;                                                                                                                                \
+    Vector2 updateRange;                                                                                                                             \
+    int angle;                                                                                                                                       \
+    int alpha;                                                                                                                                       \
+    int rotation;                                                                                                                                    \
+    int groundVel;                                                                                                                                   \
+    int depth;                                                                                                                                       \
+    ushort group;                                                                                                                                    \
+    ushort objectID;                                                                                                                                 \
+    bool32 inBounds;                                                                                                                                 \
+    int field_3C;                                                                                                                                    \
+    bool32 tileCollisions;                                                                                                                           \
+    bool32 interaction;                                                                                                                              \
+    bool32 onGround;                                                                                                                                 \
+    byte active;                                                                                                                                     \
+    byte direction;                                                                                                                                  \
+    byte drawOrder;                                                                                                                                  \
+    byte collisionLayers;                                                                                                                            \
+    byte collisionPlane;                                                                                                                             \
+    byte collisionMode;                                                                                                                              \
+    byte drawFX;                                                                                                                                     \
+    byte inkEffect;                                                                                                                                  \
+    byte visible;                                                                                                                                    \
+    byte activeScreens;
+#endif
+
+#define ENTITY_SIZE (sizeof(Entity) + 0x400)
 
 #if RETRO_USE_PLUS
 struct SKUInfo {
@@ -485,7 +547,8 @@ struct TouchMouseData {
 };
 
 struct ScreenInfo {
-    ushort *frameBuffer;
+    // ushort *frameBuffer;
+    ushort frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     Vector2 position;
     int width;
     int height;
@@ -607,7 +670,7 @@ struct TileLayer {
 extern char textBuffer[0x400];
 
 enum GamePlatforms {
-    PLATFORM_WIN    = 0,
+    PLATFORM_PC     = 0,
     PLATFORM_PS4    = 1,
     PLATFORM_XB1    = 2,
     PLATFORM_SWITCH = 3,

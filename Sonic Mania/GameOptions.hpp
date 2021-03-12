@@ -74,7 +74,7 @@ enum SettingsValues {
     SETTINGS_REFRESHRATE     = 0x9,
     SETTINGS_SHADERSUPPORT   = 0xA,
     SETTINGS_SHADERID        = 0xB,
-    SETTINGS_C               = 0xC,
+    SETTINGS_SCREENCOUNT               = 0xC,
     SETTINGS_DIMTIMER        = 0xD,
     SETTINGS_STREAMSENABLED  = 0xE,
     SETTINGS_STREAM_VOL      = 0xF,

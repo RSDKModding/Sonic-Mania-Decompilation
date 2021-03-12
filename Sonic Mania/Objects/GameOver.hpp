@@ -5,12 +5,25 @@
 
 // Object Class
 struct ObjectGameOver : Object {
-
+    int activeScreens;
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityGameOver : Entity {
-
+    void(*state)();
+    int timer;
+    int playerID;
+    int dword64;
+    int dword68;
+    Vector2 verts[4];
+    Vector2 letterPositions[8];
+    Vector2 unknownPos1[8];
+    Vector2 letterPosMove[8];
+    int unknownArray1[8];
+    int letterRotations[8];
+    int letterRotateSpeed[8];
+    EntityAnimationData data;
 };
 
 // Object Struct
@@ -28,6 +41,10 @@ void GameOver_EditorLoad();
 void GameOver_Serialize();
 
 // Extra Entity Functions
-
+void GameOver_SaveGameCallback();
+void GameOver_Unknown2();
+void GameOver_Unknown3();
+void GameOver_Unknown4();
+void GameOver_Unknown5();
 
 #endif //!OBJ_GAMEOVER_H

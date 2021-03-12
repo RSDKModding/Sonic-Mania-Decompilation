@@ -131,7 +131,7 @@ void GHZSetup_SetupStartingBG()
         BGSwitch->layerIDs[1] = 1;
         BGSwitch->layerIDs[2] = 1;
         BGSwitch->layerIDs[3] = 1;
-        for (BGSwitch->layerID = 0; BGSwitch->layerID < RSDK.GetSettingsValue(SETTINGS_C); ++BGSwitch->layerID) {
+        for (BGSwitch->layerID = 0; BGSwitch->layerID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->layerID) {
             RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
             RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
             RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
@@ -174,7 +174,7 @@ void GHZSetup_HandleActTransition() {
     }
 
     BGSwitch->layerID = 0;
-    for (int s = RSDK.GetSettingsValue(SETTINGS_C); BGSwitch->layerID < s;) {
+    for (int s = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->layerID < s;) {
         RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID]   = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID]   = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID]   = 0;

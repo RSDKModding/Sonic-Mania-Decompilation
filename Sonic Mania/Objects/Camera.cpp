@@ -71,8 +71,9 @@ void Camera_Create(void* data)
         entity->boundsT = Zone->screenBoundsT1[entity->screenID];
         entity->boundsB = Zone->screenBoundsB1[entity->screenID];
 
-        if (entity->targetPosPtr) {
-            entity->position = *entity->targetPosPtr;
+        if (entity->targetPtr) {
+            entity->position.x = entity->targetPtr->position.x;
+            entity->position.y = entity->targetPtr->position.y;
             entity->state    = Camera_State_Follow;
         }
         else {
@@ -84,7 +85,7 @@ void Camera_Create(void* data)
 void Camera_StageLoad()
 {
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_C); ++i) RSDK.ResetEntity(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
+        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntity(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;
     }
@@ -118,7 +119,7 @@ EntityCamera *Camera_SetTargetEntity(int screen, Entity *target)
     EntityCamera *entity = NULL;
     while (RSDK.GetObjects(Camera->objectID, (Entity **)&entity)) {
         if (entity->screenID == screen) {
-            entity->targetPosPtr = &target->position;
+            entity->targetPtr    = target;
             entity->position.x   = target->position.x;
             entity->position.y   = target->position.y;
             RSDK.NextForEachLoop();
@@ -288,45 +289,45 @@ void Camera_State_Roam()
 void Camera_State_Follow()
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    if (entity->targetPosPtr) {
+    if (entity->targetPtr) {
         Camera_HandleHBounds();
         Camera_HandleVBounds();
-        Vector2 *targetPos = entity->targetPosPtr;
-        targetPos->x += entity->field_6C.x;
-        if (targetPos->x <= entity->position.x + entity->field_8C) {
-            if (targetPos->x < entity->position.x - entity->field_8C) {
-                int pos = targetPos->x + entity->field_8C - entity->position.x;
+        Entity *target = entity->targetPtr;
+        target->position.x += entity->field_6C.x;
+        if (target->position.x <= entity->position.x + entity->field_8C) {
+            if (target->position.x < entity->position.x - entity->field_8C) {
+                int pos = target->position.x + entity->field_8C - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
                 entity->position.x = entity->position.x + pos;
             }
-            targetPos->x -= entity->field_6C.x;
+            target->position.x -= entity->field_6C.x;
         }
         else {
-            int pos = targetPos->x - entity->position.x - entity->field_8C;
+            int pos = target->position.x - entity->position.x - entity->field_8C;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             entity->position.x = entity->position.x + pos;
-            targetPos->x -= entity->field_6C.x;
+            target->position.x -= entity->field_6C.x;
         }
 
-        targetPos->y += entity->field_6C.y;
-        int adjust = targetPos->y - entity->adjustY;
+        target->position.y += entity->field_6C.y;
+        int adjust = target->position.y - entity->adjustY;
         if (adjust <= entity->position.y + entity->field_90) {
             if (adjust < entity->position.y - entity->field_90) {
-                int pos = targetPos->y + entity->field_90 - entity->position.y - entity->adjustY;
+                int pos = target->position.y + entity->field_90 - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
                 entity->position.y = entity->position.y + pos;
             }
-            targetPos->y -= entity->field_6C.y;
+            target->position.y -= entity->field_6C.y;
         }
         else {
             int pos = adjust - entity->position.y - entity->field_90;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             entity->position.y = entity->position.y + pos;
-            targetPos->y -= entity->field_6C.y;
+            target->position.y -= entity->field_6C.y;
         }
 
     }
@@ -334,51 +335,51 @@ void Camera_State_Follow()
 void Camera_State_HLock()
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    if (entity->targetPosPtr) {
+    if (entity->targetPtr) {
         Camera_HandleHBounds();
-        Vector2 *targetPos = entity->targetPosPtr;
-        targetPos->x += entity->field_6C.x;
-        if (targetPos->x <= entity->position.x + entity->field_8C) {
-            if (targetPos->x < entity->position.x - entity->field_8C) {
-                int pos = targetPos->x + entity->field_8C - entity->position.x;
+        Entity *target = entity->targetPtr;
+        target->position.x += entity->field_6C.x;
+        if (target->position.x <= entity->position.x + entity->field_8C) {
+            if (target->position.x < entity->position.x - entity->field_8C) {
+                int pos = target->position.x + entity->field_8C - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
                 entity->position.x = entity->position.x + pos;
             }
-            targetPos->x -= entity->field_6C.x;
+            target->position.x -= entity->field_6C.x;
         }
         else {
-            int pos = targetPos->x - entity->position.x - entity->field_8C;
+            int pos = target->position.x - entity->position.x - entity->field_8C;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             entity->position.x = entity->position.x + pos;
-            targetPos->x -= entity->field_6C.x;
+            target->position.x -= entity->field_6C.x;
         }
     }
 }
 void Camera_State_VLock()
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    if (entity->targetPosPtr) {
+    if (entity->targetPtr) {
         Camera_HandleVBounds();
-        Vector2 *targetPos = entity->targetPosPtr;
-        targetPos->y += entity->field_6C.y;
-        int adjust = targetPos->y - entity->adjustY;
+        Entity *target = entity->targetPtr;
+        target->position.y += entity->field_6C.y;
+        int adjust = target->position.y - entity->adjustY;
         if (adjust <= entity->position.y + entity->field_90) {
             if (adjust < entity->position.y - entity->field_90) {
-                int pos = targetPos->y + entity->field_90 - entity->position.y - entity->adjustY;
+                int pos = target->position.y + entity->field_90 - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
                 entity->position.y = entity->position.y + pos;
             }
-            targetPos->y -= entity->field_6C.y;
+            target->position.y -= entity->field_6C.y;
         }
         else {
             int pos = adjust - entity->position.y - entity->field_90;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             entity->position.y = entity->position.y + pos;
-            targetPos->y -= entity->field_6C.y;
+            target->position.y -= entity->field_6C.y;
         }
     }
 }

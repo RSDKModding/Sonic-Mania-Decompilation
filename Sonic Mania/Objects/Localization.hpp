@@ -5,7 +5,10 @@
 
 // Object Class
 struct ObjectLocalization : Object {
-
+    TextInfo text;
+    TextInfo strings[68];
+    bool32 loaded;
+    byte language;
 };
 
 // Entity Class
@@ -28,6 +31,9 @@ void Localization_EditorLoad();
 void Localization_Serialize();
 
 // Extra Entity Functions
-
+void Localization_LoadStrings();
+void Localization_GetString(TextInfo *textInfo, byte id);
+void Localization_GetZoneName(TextInfo *info, byte zone);
+void Localization_SetZoneNameShort(TextInfo *info, byte zone);
 
 #endif //!OBJ_LOCALIZATION_H

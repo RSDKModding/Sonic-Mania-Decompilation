@@ -11,7 +11,7 @@ struct ObjectCamera : Object {
 // Entity Class
 struct EntityCamera : Entity {
     void (*state)(void);
-    Vector2 *targetPosPtr;
+    Entity *targetPtr;
     int screenID;
     Vector2 center;
     Vector2 field_6C;

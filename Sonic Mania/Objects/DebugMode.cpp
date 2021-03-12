@@ -127,6 +127,17 @@ void DebugMode_StageLoad()
     }
 }
 
+void DebugMode_NullState() {}
+void DebugMode_AddObject(ushort id, void (*draw)(), void (*spawn)())
+{
+    if (DebugMode->itemCount < 0x100) {
+        DebugMode->objectIDs[DebugMode->itemCount] = id;
+        DebugMode->draw[DebugMode->itemCount]      = draw;
+        DebugMode->spawn[DebugMode->itemCount]     = spawn;
+        DebugMode->itemCount++;
+    }
+}
+
 void DebugMode_EditorDraw()
 {
 
@@ -139,10 +150,6 @@ void DebugMode_EditorLoad()
 
 void DebugMode_Serialize()
 {
-
-}
-
-void DebugMode_NullState() {
 
 }
 

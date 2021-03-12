@@ -9,7 +9,7 @@
 // Userdata Table
 struct UserFunctionTable {
     void (*Unknown1)(void);
-    void (*GetConfirmButtonFlip)(void);
+    bool32 (*GetConfirmButtonFlip)(void);
     void (*Unknown2)(void);
     void (*Unknown3)(void);
     void (*Unknown4)(int a1);
@@ -44,29 +44,29 @@ struct UserFunctionTable {
     void (*Unknown25)(void);
     void (*Unknown26)(void);
     void (*Unknown27)(int a1);
-    void (*Unknown28)(void);
+    bool32 (*Unknown28)(void);
     void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));
     void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress);
     void (*DeleteUserFile)(const char *filename, void (*callback)(int status));
     void (*OpenUserDB)(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
     void (*LoadReplayDB)(const char *filename, void (*callback)(int status));
     void (*SaveReplayDB)(ushort tableID, void (*callback)(int status));
-    void (*Unknown30)(ushort a1);
+    void (*Unknown30)(ushort tableID);
     void (*Missing5)(void);
-    void (*Unknown31)(ushort a1);
-    void (*Unknown32)(ushort a1);
-    void (*Unknown33)(ushort a1, int a2, int a3, int a4);
-    void (*Unknown34)(ushort a1, int a2, int a3, int a4);
-    void (*Unknown35)(ushort a1);
-    void (*Unknown36)(ushort a1, ushort a2);
-    void (*Unknown37)(ushort a1);
-    void (*Unknown38)(void *, void *, void *, void *, void *);
-    void (*Unknown39)(short a1, int a2, int a3, int a4, void *dst);
-    void (*AddUserDB)(void *, void *);
-    void (*Unknown40)(ushort a1, int a2);
-    void (*GetTimeFormat)(ushort a1, int a2, const char *Buf, uint sizeInBytes, const char *format);
-    void (*Unknown42)(ushort a1, int a2);
-    void (*Unknown43)(short a1);
+    void (*Unknown31)(ushort tableID);
+    void (*GetUserDBStatus)(ushort tableID);
+    void (*Unknown33)(ushort tableID, int a2, int a3, int a4);
+    void (*Unknown34)(ushort tableID, int a2, int a3, int a4);
+    void (*Unknown35)(ushort tableID);
+    void (*Unknown36)(ushort tableID, ushort a2);
+    void (*Unknown37)(ushort tableID);
+    void (*SetUserDBValue)(ushort tableID, void *, void *, void *, void *);
+    void (*Unknown39)(ushort tableID, int a2, int a3, int a4, void *dst);
+    void (*AddUserDB)(ushort tableID, void *);
+    void (*Unknown40)(ushort tableID, int a2);
+    void (*GetTimeFormat)(ushort tableID, int a2, const char *Buf, uint sizeInBytes, const char *format);
+    void (*Unknown42)(ushort tableID, int a2);
+    void (*Unknown43)(ushort tableID);
     // count: 59
 };
 
@@ -143,13 +143,13 @@ struct RSDKFunctionTable {
     void (*MatrixRotateXYZ)(Matrix *matrix, short angleX, short angleY, short angleZ);
     void (*MatrixInverse)(Matrix *dest, Matrix *matrix);
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
-    void (*SetText)(TextInfo *textInfo, char *text, uint size);
-    void (*Unknown64)(void);
-    void (*Unknown65)(void);
-    void (*Unknown66)(void);
-    void (*Unknown67)(void);
-    void (*LoadStrings)(void);
-    void (*Unknown68)(void);
+    void (*SetText)(TextInfo *textInfo, const char *text, uint size);
+    void (*Unknown64)(TextInfo *dst, TextInfo *src);
+    void (*Unknown65)(TextInfo *, TextInfo *);
+    void (*Unknown66)(TextInfo *, TextInfo *);
+    void (*Unknown67)(TextInfo *, TextInfo *);
+    void (*LoadStrings)(TextInfo *dst, const char* path, int);
+    void (*Unknown68)(TextInfo *, TextInfo *, int, int);
     void (*CopyString)(char *text, TextInfo *info);
     void (*Unknown69)(void);
     void (*Unknown70)(void);
@@ -187,7 +187,7 @@ struct RSDKFunctionTable {
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTile)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
-    int (*FillScreen)(int a1, int a2, int a3, int a4);
+    void (*FillScreen)(int a1, int a2, int a3, int a4);
     void (*LoadMesh)(void);
     void (*Create3DScene)(void);
     void (*Init3DScene)(void);
@@ -208,7 +208,7 @@ struct RSDKFunctionTable {
     SpriteFrame *(*GetFrame)(ushort sprIndex, ushort anim, int frame);
     Hitbox *(*GetHitbox)(EntityAnimationData *data, byte hitboxID);
     short (*GetFrameID)(EntityAnimationData *data);
-    void (*GetStringWidth)(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
+    int (*GetStringWidth)(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
     void (*ProcessAnimation)(EntityAnimationData *data);
     TileLayer *(*GetSceneLayer)(int layerID);
     int (*GetSceneLayerID)(const char *name);
@@ -245,18 +245,18 @@ struct RSDKFunctionTable {
     void (*LoadVideo)(const char *filename, int64 a2, int (*a3)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
-    void (*ControllerIDForInputID)(int a1, int a2, uint a3);
-    void (*MostRecentActiveControllerID)(int a1, int a2, uint a3);
+    int (*ControllerIDForInputID)(byte controllerID);
+    int (*MostRecentActiveControllerID)(int a1, int a2, uint a3);
     void (*Unknown100)(int a1);
     void (*Unknown101)(int a1);
     void (*Missing21)(int a1);
     void (*Missing22)(int a1, int a2, int a3);
     void (*Missing23)(int a1, int a2, int a3);
     void (*Missing24)(void);
-    void (*Missing25)(byte a1, int a2, int a3);
-    void (*Missing26)(byte a1, int a2, int a3);
-    void (*AssignControllerID)(byte a1, int a2);
-    void (*InputIDIsDisconnected)(byte a1);
+    void (*Missing25)(byte controllerID, int a2, int a3);
+    void (*Missing26)(byte controllerID, int a2, int a3);
+    void (*AssignControllerID)(byte controllerID, int a2);
+    bool32 (*InputIDIsDisconnected)(byte controllerID);
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS

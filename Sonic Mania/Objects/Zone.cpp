@@ -134,50 +134,52 @@ void Zone_StageLoad()
     if (options->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (options->gameMode == MODE_COMPETITION) {
-                RSDK.SetSettingsValue(SETTINGS_C, 1);
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
             else {
                 /// Competition_Unknown2();
-                RSDK.SetSettingsValue(SETTINGS_C, 1);
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
         }
         else {
             if (options->competitionSession[23] >= 2) {
                 if (options->competitionSession[23] > 4)
                     options->competitionSession[23] = 4;
-                RSDK.SetSettingsValue(SETTINGS_C, options->competitionSession[23]);
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, options->competitionSession[23]);
             }
             else {
                 options->competitionSession[23] = 2;
-                RSDK.SetSettingsValue(SETTINGS_C, options->competitionSession[23]);
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, options->competitionSession[23]);
             }
         }
     }
     else {
         // Competition_Unknown2();
-        RSDK.SetSettingsValue(SETTINGS_C, 1);
+        RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
     }
+
+    TextInfo textInfo;
     switch (options->gameMode) {
 #if !RETRO_USE_PLUS
         case MODE_NOSAVE:
 #endif
         case MODE_MANIA:
-            // Localization_Unknown1(&textInfo, 0x3Fu);
-            // User.PossiblyGetStrings(2, &textInfo);
+            Localization_GetString(&textInfo, 0x3F);
+            User.SetRichPresence(2, &textInfo);
             break;
 #if RETRO_USE_PLUS
         case MODE_ENCORE:
-            // Localization_Unknown1(&textInfo, 0x40u);
-            // User.PossiblyGetStrings(3, &textInfo);
+            Localization_GetString(&textInfo, 0x40);
+            User.SetRichPresence(3, &textInfo);
             break;
 #endif
         case MODE_TIMEATTACK:
-            // Localization_Unknown1(&textInfo, 0x41u);
-            // User.PossiblyGetStrings(4, &textInfo);
+            Localization_GetString(&textInfo, 0x41);
+            User.SetRichPresence(4, &textInfo);
             break;
         case MODE_COMPETITION:
-            // Localization_Unknown1(&textInfo, 0x42u);
-            // User.PossiblyGetStrings(5, &textInfo);
+            Localization_GetString(&textInfo, 0x42);
+            User.SetRichPresence(5, &textInfo);
             break;
         default: break;
     }
@@ -303,7 +305,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag) {
         camera->position.x                                  = yOffset;
         camera->position.y                                  = xOffset;
         camera->state                                       = 0;
-        camera->targetPosPtr                                = 0;
+        camera->targetPtr                                   = NULL;
         camera->boundsL                                     = (xOffset >> 16) - RSDK_screens->centerX;
         camera->boundsR                                     = (xOffset >> 16) + RSDK_screens->centerX;
         camera->boundsT                                     = (yOffset >> 16) - RSDK_screens->height;
@@ -597,6 +599,20 @@ bool32 Game_CheckIntro()
 #else
     return (options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && options->enableIntro && !Game_CheckStageReload();
 #endif
+}
+void Game_ClearOptions()
+{
+    options->menuParam[22] = 0;
+    memset(&options->menuParam[22] + 2, 0, 0x100);
+    options->menuParam[87]     = 0;
+    options->menuParam[88]     = 0;
+    options->menuParam[89]     = 0;
+    options->menuParam[92]     = 0;
+    options->menuParam[93]     = 0;
+    options->menuParam[94]     = 0;
+    options->gameMode          = MODE_MANIA;
+    options->suppressTitlecard = false;
+    options->suppressAutoMusic = false;
 }
 
 void Zone_EditorDraw() {}

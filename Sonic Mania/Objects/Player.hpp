@@ -99,17 +99,13 @@ struct ObjectPlayer : Object {
     ushort rightState;
     ushort jumpPressState;
     ushort jumpHoldState;
-    int field_950;
-    int field_954;
+    int flyCarryPosA;
+    int flyCarryPosB;
     Vector2 flyCarryPositions[0x10];
-    int field_9D8;
-    int field_9DC;
-    int field_9E0;
-    int field_9E4;
-    char p2InputDelay;
-    char field_9E9;
-    char field_9EA;
-    char field_9EB;
+    Vector2 curFlyCarryPos;
+    int p2UnknownInputTimer;
+    int jumpInDelay;
+    int p2InputDelay;
     int field_9EC;
     int rings;
     int ringExtraLife;
@@ -154,8 +150,8 @@ struct ObjectPlayer : Object {
     int raySwoopTimer;
     int rayDiveTimer;
     bool32 gotHit[PLAYER_MAX];
-    void (*replayState)(void);
-    bool32 (*field_A6C)(void);
+    void (*configureGhost_CB)(void);
+    bool32 (*field_A6C)(int);
     int field_A70;
 };
 
@@ -191,7 +187,7 @@ struct EntityPlayer : Entity {
     int outtaHereTimer;
     int abilityTimer;
     int spindashCharge;
-    int glideTurnCos;
+    int abilityValue;
     int airTimer;
     int invincibleTimer;
     int speedShoesTimer;
@@ -222,7 +218,7 @@ struct EntityPlayer : Entity {
     int rollingFriction;
     int rollingDeceleration;
     int gravityStrength;
-    int glideSpeedStore;
+    int abilitySpeed;
     int jumpStrength;
     int jumpCap;
     int flailing;
@@ -243,16 +239,15 @@ struct EntityPlayer : Entity {
     int jumpAbilityTimer;
     void (*movesetPtr)(void);
     void (*move_Peelout)(void);
-    int field_1D4;
-    int field_1D8;
-    int field_1DC;
-    Vector2 leaderPosition;
+    int flyCarryTimer;
+    Vector2 sidekickPos;
+    Vector2 leaderPos;
     char hurtFlag;
     char field_1E9;
     char field_1EA;
     char field_1EB;
-    int field_1EC;
-    int field_1F0;
+    int forceJumpIn;
+    int isGhost;
     int maxGlideSpeed;
     char field_1F8;
     char field_1F9;
@@ -282,7 +277,7 @@ struct EntityPlayer : Entity {
     char field_211;
     char field_212;
     char field_213;
-    int *field_214;
+    Entity *entPtr;
     int field_218;
     char field_21C;
     char field_21D;
@@ -356,10 +351,13 @@ void Player_HandleAirMovement();
 void Player_HandleAirFriction();
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll();
-void Player_State_StartPeelout();
+void Player_StartPeelout();
 void Player_HandleRollDeceleration();
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
+void Player_CheckFlyCarry(EntityPlayer *player);
+void Player_P2JumpBackIn();
+void Player_Unknown9();
 
 //States
 void Player_State_None();
@@ -379,12 +377,28 @@ void Player_State_Die();
 void Player_State_Drown();
 void Player_State_DropDash();
 void Player_State_BubbleBounce();
+void Player_State_TailsFlight();
+void Player_State_FlyCarried();
+void Player_State_KnuxGlideLeft();
+void Player_State_KnuxGlideRight();
+void Player_State_KnuxGlideDrop();
+void Player_State_GlideSlide();
+void Player_State_KnuxWallClimb();
+void Player_State_KnuxLedgePullUp();
 #if RETRO_USE_PLUS
 void Player_State_MightyHammerDrop();
 void Player_State_MightyUnspin();
 void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox);
 void Player_State_RayGlide();
 #endif
+void Player_State_FlyIn();
+void Player_State_JumpIn();
+void Player_State_StartJumpIn();
+void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player);
+void Player_State_Unknown();
+void Player_State_BuddyChoice();
+void Player_State_Bubble();
+void PlayerState_WaterSlide();
 
 void Player_SonicJumpAbility();
 void Player_TailsJumpAbility();
@@ -396,6 +410,10 @@ void Player_RayJumpAbility();
 
 //Input States
 void Player_GetP1Inputs();
+void Player_FlyCarryInputState();
 void Player_GetP2Inputs();
+void Player_GetP2NoInput();
+void Player_GetP2InputUnknown();
+void Player_GetP2PlayerInputs();
 
 #endif //!OBJ_PLAYER_H

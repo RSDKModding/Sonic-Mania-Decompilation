@@ -21,8 +21,8 @@ struct ObjectOOZSetup : Object {
     TextInfo value14;
     ushort value15;
     byte value16;
-    unknown value17;
-    unknown value18;
+    EntityAnimationData value17;
+    EntityAnimationData value18;
     ushort value19;
     ushort value20;
     byte value21;

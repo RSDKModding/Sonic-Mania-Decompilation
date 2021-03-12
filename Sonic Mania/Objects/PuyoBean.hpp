@@ -14,7 +14,7 @@ struct ObjectPuyoBean : Object {
     TextInfo value7;
     byte value8;
     int value9;
-    unknown value10;
+    EntityAnimationData value10;
     ushort value11;
     ushort value12;
     ushort value13;

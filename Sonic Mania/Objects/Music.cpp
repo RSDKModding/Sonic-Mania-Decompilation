@@ -21,7 +21,7 @@ void Music_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ((RSDK_sceneInfo->state & 3) != 3) + 1;
         if (entity->trackFile.textLength) {
-            if (entity->trackID != TRACK_UNKNOWN) {
+            if (entity->trackID != TRACK_NOLOAD) {
                 RSDK.CopyString(Music->trackNames[entity->trackID], &entity->trackFile);
                 Music->trackLoops[entity->trackID] = entity->trackLoop;
                 if (entity->playOnLoad)
@@ -392,7 +392,8 @@ void Music_Unknown7(EntityMusic *entity)
                     Music->dword244 = 0;
                 Music->slotID = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                 if (Music->dword244) {
-#if RETRO_USE_PLUS RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, options->vapeMode ? 0.75 : 1.0);
+#if RETRO_USE_PLUS 
+                    RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, options->vapeMode ? 0.75 : 1.0);
 #else
                     RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, 1.0);
 #endif

@@ -16,7 +16,7 @@ enum MusicTracks {
     TRACK_GAMEOVER    = 9,
     TRACK_SUPER       = 10,
     TRACK_HBHMISCHIEF = 11,
-    TRACK_UNKNOWN     = 12,
+    TRACK_NOLOAD      = 12,
     TRACK_1UP         = 13,
 };
 

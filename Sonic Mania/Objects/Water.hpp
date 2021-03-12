@@ -38,7 +38,7 @@ struct ObjectWater : Object {
     byte value31;
     int value32;
     byte value33;
-    unknown value34;
+    EntityAnimationData value34;
     byte value35;
     byte value36;
 };

@@ -5,12 +5,24 @@
 
 // Object Class
 struct ObjectUIText : Object {
-
+    ushort spriteIndex;
 };
 
 // Entity Class
 struct EntityUIText : Entity {
-
+    void (*state)();
+    void (*stateDraw)();
+    TextInfo text;
+    TextInfo tag;
+    bool32 selectable;
+    ushort listID;
+    int align;
+    int data0;
+    int data1;
+    int data2;
+    int data3;
+    bool32 highlighted;
+    EntityAnimationData animData;
 };
 
 // Object Struct
