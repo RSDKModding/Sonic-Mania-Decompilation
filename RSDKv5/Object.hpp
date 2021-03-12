@@ -191,7 +191,7 @@ int GetEntityCount(ushort type, bool32 isActive);
 
 void ResetEntityPtr(Entity *entity, ushort type, void *data);
 void ResetEntitySlot(ushort slotID, ushort type, void *data);
-void SpawnEntity(ushort type, void *data, int x, int y);
+void CreateEntity(ushort type, void *data, int x, int y);
 
 inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
 {
@@ -202,10 +202,10 @@ inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
     }
 }
 
-bool32 GetActiveObjects(ushort group, Entity **entity);
-bool32 GetObjects(ushort type, Entity **entity);
+bool32 GetActiveEntities(ushort group, Entity **entity);
+bool32 GetEntities(ushort type, Entity **entity);
 
-inline void NextForeachLoop() { --foreachStackPtr; }
+inline void BreakForeachLoop() { --foreachStackPtr; }
 
 bool32 CheckOnScreen(Entity *entity, Vector2 *range);
 bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range);

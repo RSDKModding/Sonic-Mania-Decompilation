@@ -25,7 +25,7 @@ void printLog(SeverityModes severity, const char *message, ...)
 
         if (severity == SEVERITY_WARN) {
             if (sceneInfo.state & ENGINESTATE_FROZEN) {
-                SpawnEntity(DevOutput->objectID, outputString, 0, 0);
+                CreateEntity(DevOutput->objectID, outputString, 0, 0);
                 return;
             }
         }

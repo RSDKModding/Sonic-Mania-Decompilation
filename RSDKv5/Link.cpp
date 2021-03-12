@@ -75,9 +75,9 @@ enum FunctionTableIDs {
 #if RETRO_USE_PLUS
     FunctionTable_CreateObjectContainer,
 #endif
-    FunctionTable_GetActiveObjects,
-    FunctionTable_GetObjects,
-    FunctionTable_NextForeachLoop,
+    FunctionTable_GetActiveEntities,
+    FunctionTable_GetEntities,
+    FunctionTable_BreakForeachLoop,
     FunctionTable_SetEditableVar,
     FunctionTable_GetObjectByID,
     FunctionTable_GetEntityID,
@@ -377,9 +377,9 @@ void setupFunctions()
 #if RETRO_USE_PLUS
     functionTable[FunctionTable_CreateObjectContainer] = (void *)CreateObjectContainer;
 #endif
-    functionTable[FunctionTable_GetActiveObjects]       = (void *)GetActiveObjects;
-    functionTable[FunctionTable_GetObjects]             = (void *)GetObjects;
-    functionTable[FunctionTable_NextForeachLoop]        = (void *)NextForeachLoop;
+    functionTable[FunctionTable_GetActiveEntities]       = (void *)GetActiveEntities;
+    functionTable[FunctionTable_GetEntities]             = (void *)GetEntities;
+    functionTable[FunctionTable_BreakForeachLoop]        = (void *)BreakForeachLoop;
     functionTable[FunctionTable_SetEditableVar]         = (void *)SetEditableVar;
     functionTable[FunctionTable_GetObjectByID]          = (void *)GetObjectByID;
     functionTable[FunctionTable_GetEntityID]            = (void *)GetEntityID;
@@ -388,7 +388,7 @@ void setupFunctions()
     functionTable[FunctionTable_GetDrawListRefPtr]      = (void *)GetDrawListRefPtr;
     functionTable[FunctionTable_DestroyEntity]          = (void *)ResetEntityPtr;
     functionTable[FunctionTable_ResetEntity]            = (void *)ResetEntitySlot;
-    functionTable[FunctionTable_SpawnEntity]            = (void *)SpawnEntity;
+    functionTable[FunctionTable_SpawnEntity]            = (void *)CreateEntity;
     functionTable[FunctionTable_CopyEntity]             = (void *)CopyEntity;
     functionTable[FunctionTable_CheckOnScreen]          = (void *)CheckOnScreen;
     functionTable[FunctionTable_CheckPosOnScreen]       = (void *)CheckPosOnScreen;

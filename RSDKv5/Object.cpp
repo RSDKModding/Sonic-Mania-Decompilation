@@ -478,10 +478,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = sceneInfo.entity->position.x - screens[s].position.x;
-                        int sy = sceneInfo.entity->position.y - screens[s].position.y;
-                        if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screens[s].width
-                            && sy >= sceneInfo.entity->updateRange.y + screens[s].height) {
+                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
+                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+                        if (sx < sceneInfo.entity->updateRange.x + screens[s].width
+                            && sy < sceneInfo.entity->updateRange.y + screens[s].height) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -490,8 +490,8 @@ void ProcessFrozenObjects()
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = sceneInfo.entity->position.x - screens[s].position.x;
-                        if (sx >= 0 && sx >= sceneInfo.entity->updateRange.x + screens[s].width) {
+                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
+                        if (sx < sceneInfo.entity->updateRange.x + screens[s].width) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -500,8 +500,8 @@ void ProcessFrozenObjects()
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sy = sceneInfo.entity->position.y - screens[s].position.y;
-                        if (sy >= 0 && sy >= sceneInfo.entity->updateRange.y + screens[s].height) {
+                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+                        if (sy < sceneInfo.entity->updateRange.y + screens[s].height) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -510,13 +510,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = sceneInfo.entity->position.x - screens[s].position.x >= 0 ? sceneInfo.entity->position.x - screens[s].position.x
-                                                                                           : screens[s].position.x - sceneInfo.entity->position.x;
-                        sx >>= 16;
-                        int sy = sceneInfo.entity->position.y - screens[s].position.y >= 0 ? sceneInfo.entity->position.y - screens[s].position.y
-                                                                                           : screens[s].position.y - sceneInfo.entity->position.y;
-                        sy >>= 16;
-                        if (sx * sx + sy * sy <= sceneInfo.entity->updateRange.x + screens[s].width) {
+                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
+                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+
+                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -747,7 +744,7 @@ void ResetEntitySlot(ushort slotID, ushort type, void *data)
     }
 }
 
-void SpawnEntity(ushort type, void *data, int x, int y)
+void CreateEntity(ushort type, void *data, int x, int y)
 {
     if (sceneInfo.createSlot >= ENTITY_COUNT)
         sceneInfo.createSlot -= 0x100;
@@ -774,7 +771,7 @@ void SpawnEntity(ushort type, void *data, int x, int y)
     }
 }
 
-bool32 GetActiveObjects(ushort group, Entity **entity)
+bool32 GetActiveEntities(ushort group, Entity **entity)
 {
     if (group >= TYPEGROUP_COUNT)
         return false;
@@ -799,7 +796,7 @@ bool32 GetActiveObjects(ushort group, Entity **entity)
     foreachStackPtr--;
     return false;
 }
-bool32 GetObjects(ushort type, Entity **entity)
+bool32 GetEntities(ushort type, Entity **entity)
 {
     if (type >= OBJECT_COUNT)
         return false;
@@ -832,19 +829,19 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
 
     if (range) {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = sceneInfo.entity->position.x - screenUnknown[s].position.x;
-            int sy = sceneInfo.entity->position.y - screenUnknown[s].position.y;
-            if (sx >= 0 && sy >= 0 && sx >= range->x + screenUnknown[s].offset.x && sy >= range->y + screenUnknown[s].offset.y) {
+            int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+            int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+            if (sx <= range->x + screenUnknown[s].offset.x && sy <= range->y + screenUnknown[s].offset.y) {
                 return true;
             }
         }
     }
     else {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = sceneInfo.entity->position.x - screenUnknown[s].position.x;
-            int sy = sceneInfo.entity->position.y - screenUnknown[s].position.y;
-            if (sx >= 0 && sy >= 0 && sx >= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
-                && sy >= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
+            int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+            int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+            if (sx <= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
+                && sy <= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
                 return true;
             }
         }
@@ -857,9 +854,9 @@ bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
         return false;
 
     for (int s = 0; s < screenCount; ++s) {
-        int sx = position->x - screenUnknown[s].position.x;
-        int sy = position->y - screenUnknown[s].position.y;
-        if (sx >= 0 && sy >= 0 && sx >= range->x + screenUnknown[s].offset.x && sy >= range->y + screenUnknown[s].offset.y) {
+        int sx = abs(position->x - screenUnknown[s].position.x);
+        int sy = abs(position->y - screenUnknown[s].position.y);
+        if (sx >= range->x + screenUnknown[s].offset.x && sy <= range->y + screenUnknown[s].offset.y) {
             return true;
         }
     }

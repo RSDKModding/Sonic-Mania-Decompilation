@@ -355,8 +355,8 @@ ushort LoadMesh(const char *filename, Scopes scope)
     StrAdd(buffer, filename);
 
     uint hash[4];
-    StrCopy(hashBuffer, filename);
-    GenerateHash(hash, StrLength(filename));
+    StrCopy(hashBuffer, buffer);
+    GenerateHash(hash, StrLength(buffer));
 
     for (int i = 0; i < MODEL_MAX; ++i) {
         if (memcmp(hash, modelList[i].hash, 4 * sizeof(uint)) == 0) {
@@ -376,7 +376,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
     Model *model = &modelList[id];
     FileInfo info;
     MEM_ZERO(info);
-    if (LoadFile(&info, filename)) {
+    if (LoadFile(&info, buffer)) {
         uint sig = ReadInt32(&info);
 
         if (sig != 0x4C444D) {
@@ -413,6 +413,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
         }
 
         model->indexCount = ReadInt16(&info);
+        AllocateStorage(sizeof(short) * model->indexCount, (void **)&model->indices, DATASET_STG, true);
         for (int i = 0; i < model->indexCount; ++i) {
             model->indices[i] = ReadInt16(&info);
         }
