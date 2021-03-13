@@ -757,6 +757,18 @@ typedef enum {
 } CModes;
 
 typedef enum {
+    LANGUAGE_EN,
+    LANGUAGE_FR,
+    LANGUAGE_IT,
+    LANGUAGE_GE,
+    LANGUAGE_SP,
+    LANGUAGE_JP,
+    LANGUAGE_KO,
+    LANGUAGE_SC,
+    LANGUAGE_TC,
+} GameLanguages;
+
+typedef enum {
     ENGINESTATE_LOAD             = 0,
     ENGINESTATE_REGULAR          = 1,
     ENGINESTATE_PAUSED           = 2,

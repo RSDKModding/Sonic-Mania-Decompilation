@@ -1,0 +1,33 @@
+#ifndef OBJ_WOODCHIPPER_H
+#define OBJ_WOODCHIPPER_H
+
+#include "../SonicMania.h"
+
+// Object Class
+typedef struct {
+	RSDK_OBJECT
+} ObjectWoodChipper;
+
+// Entity Class
+typedef struct {
+	RSDK_ENTITY
+} EntityWoodChipper;
+
+// Object Struct
+extern ObjectWoodChipper *WoodChipper;
+
+// Standard Entity Events
+void WoodChipper_Update();
+void WoodChipper_LateUpdate();
+void WoodChipper_StaticUpdate();
+void WoodChipper_Draw();
+void WoodChipper_Create(void* data);
+void WoodChipper_StageLoad();
+void WoodChipper_EditorDraw();
+void WoodChipper_EditorLoad();
+void WoodChipper_Serialize();
+
+// Extra Entity Functions
+
+
+#endif //!OBJ_WOODCHIPPER_H

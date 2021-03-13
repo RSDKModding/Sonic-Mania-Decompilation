@@ -144,7 +144,7 @@ typedef struct {
     void (*MatrixInverse)(Matrix *dest, Matrix *matrix);
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
     void (*SetText)(TextInfo *textInfo, const char *text, uint size);
-    void (*Unknown64)(TextInfo *dst, TextInfo *src);
+    void (*Unknown64)(TextInfo *dst, char *src);
     void (*Unknown65)(TextInfo *, TextInfo *);
     void (*Unknown66)(TextInfo *, TextInfo *);
     void (*Unknown67)(TextInfo *, TextInfo *);
