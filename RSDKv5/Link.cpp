@@ -395,7 +395,7 @@ void setupFunctions()
     functionTable[FunctionTable_AddDrawListRef]         = (void *)AddDrawListRef;
     functionTable[FunctionTable_SwapDrawLayers]         = (void *)SwapDrawLayers;
     functionTable[FunctionTable_SetDrawLayerProperties] = (void *)SetDrawLayerProperties;
-    functionTable[FunctionTable_LoadScene]              = (void *)LoadSceneByName;
+    functionTable[FunctionTable_LoadScene]              = (void *)SetScene;
     functionTable[FunctionTable_SetGameMode]            = (void *)SetEngineState;
 #if RETRO_USE_PLUS
     functionTable[FunctionTable_SetHardResetFlag] = (void *)SetHardResetFlag;

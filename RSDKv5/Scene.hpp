@@ -133,7 +133,7 @@ void ProcessParallaxAutoScroll();
 void ProcessParallax(TileLayer *layer);
 void ProcessSceneTimer();
 
-void LoadSceneByName(const char *categoryName, const char *sceneName);
+void SetScene(const char *categoryName, const char *sceneName);
 inline void InitSceneLoad() { sceneInfo.state = sceneInfo.state < ENGINESTATE_LOAD_STEPOVER ? ENGINESTATE_LOAD : ENGINESTATE_LOAD_STEPOVER; }
 
 #if RETRO_USE_PLUS

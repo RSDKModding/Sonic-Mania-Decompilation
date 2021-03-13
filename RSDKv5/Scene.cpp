@@ -999,7 +999,7 @@ void ProcessSceneTimer()
     }
 }
 
-void LoadSceneByName(const char *categoryName, const char *sceneName)
+void SetScene(const char *categoryName, const char *sceneName)
 {
     uint hash[4];
     GEN_HASH(categoryName, hash);

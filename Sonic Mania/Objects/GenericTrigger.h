@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    void (*callbacks[16])();
+    int playerID;
+    int field_48;
 } ObjectGenericTrigger;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    byte triggerID;
+    Hitbox hitbox;
 } EntityGenericTrigger;
 
 // Object Struct
