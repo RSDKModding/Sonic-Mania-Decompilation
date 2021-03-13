@@ -27,18 +27,17 @@ void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)
 
     if (LoadFile(&info, buffer)) {
         for (int r = 0; r < 0x10; ++r) {
-            for (int r = 0; r < 0x10; ++r) {
-                if (!(rowFlags >> r & 1)) {
-                    for (int c = 0; c < 0x10; ++c) {
-                        byte red                       = ReadInt8(&info);
-                        byte green                     = ReadInt8(&info);
-                        byte blue                      = ReadInt8(&info);
-                        fullPalette[paletteID][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
-                    }
+            if (!(rowFlags >> r & 1)) {
+                for (int c = 0; c < 0x10; ++c) {
+                    byte red                             = ReadInt8(&info);
+                    byte green                           = ReadInt8(&info);
+                    byte blue                            = ReadInt8(&info);
+                    fullPalette[paletteID][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                    printLog(SEVERITY_NONE, "deez NU 0x%X", GetPaletteEntry(paletteID, (r << 4) + c));
                 }
-                else {
-                    Seek_Cur(&info, 0x10 * (3 * sizeof(byte)));
-                }
+            }
+            else {
+                Seek_Cur(&info, 0x10 * (3 * sizeof(byte)));
             }
         }
 

@@ -5083,8 +5083,9 @@ void Player_GetP1Inputs()
             }
             if (options->gameMode == MODE_ENCORE && RSDK_controller[entity->controllerID].keyY.press) {
                 if (!HUD->field_24 && Player_CheckValidState(entity)) {
-                    if (Player_SwapMainPlayer(0))
-                       return;
+                    if (Player_SwapMainPlayer(0)) {
+                        return;
+                    }
                     else {
                         RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
                     }

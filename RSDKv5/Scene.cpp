@@ -233,7 +233,6 @@ void LoadSceneFile() {
     StrAdd(buffer, sceneEntry->sceneID);
     StrAdd(buffer, ".bin");
 
-    memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
     dataStorage[DATASET_TMP].usedStorage = 0;
 
     for (int s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].height;
@@ -497,7 +496,7 @@ void LoadSceneFile() {
         slot = activeSlot;
         for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
             if (sceneInfo.filter & entList[e].filter) {
-                memcpy(&objectEntityList[slot], &entList[e], sizeof(EntityBase));
+                memcpy(&objectEntityList[e], &entList[e], sizeof(EntityBase));
             }
             slot++;
         }

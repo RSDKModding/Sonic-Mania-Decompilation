@@ -114,7 +114,8 @@ void GHZSetup_StageLoad()
         RSDK.RotatePalette(2, 181, 184, true);
         RSDK.RotatePalette(2, 197, 200, true);
         if (Water) {
-            for (EntityWater *water = 0; RSDK.GetEntities(Water->objectID, (Entity **)&water);) {
+            EntityWater *water = 0;
+            while (RSDK.GetEntities(Water->objectID, (Entity **)&water)) {
                 //water->r = 0xA0;
                 //water->g = 0xA0;
                 //water->b = 0xE0;

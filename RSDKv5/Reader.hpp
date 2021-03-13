@@ -120,18 +120,16 @@ inline void Seek_Set(FileInfo* info, int count) {
 
 inline void Seek_Cur(FileInfo *info, int count)
 {
-    if (info->readPos != count) {
-        info->readPos += count;
-        if (info->encrypted) {
-            SkipBytes(info, count);
-        }
+    info->readPos += count;
+    if (info->encrypted) {
+        SkipBytes(info, count);
+    }
 
-        if (info->usingFileBuffer) {
-            info->fileData += count;
-        }
-        else {
-            fSeek(info->file, count, SEEK_CUR);
-        }
+    if (info->usingFileBuffer) {
+        info->fileData += count;
+    }
+    else {
+        fSeek(info->file, count, SEEK_CUR);
     }
 }
 
