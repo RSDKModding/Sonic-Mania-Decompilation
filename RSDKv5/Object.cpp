@@ -838,10 +838,10 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
     }
     else {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-            int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
-            if (sx <= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
-                && sy <= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
+            int sx = abs(entity->position.x - screenUnknown[s].position.x);
+            int sy = abs(entity->position.y - screenUnknown[s].position.y);
+            if (sx <= entity->updateRange.x + screenUnknown[s].offset.x
+                && sy <= entity->updateRange.y + screenUnknown[s].offset.y) {
                 return true;
             }
         }
@@ -856,7 +856,7 @@ bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
     for (int s = 0; s < screenCount; ++s) {
         int sx = abs(position->x - screenUnknown[s].position.x);
         int sy = abs(position->y - screenUnknown[s].position.y);
-        if (sx >= range->x + screenUnknown[s].offset.x && sy <= range->y + screenUnknown[s].offset.y) {
+        if (sx <= range->x + screenUnknown[s].offset.x && sy <= range->y + screenUnknown[s].offset.y) {
             return true;
         }
     }

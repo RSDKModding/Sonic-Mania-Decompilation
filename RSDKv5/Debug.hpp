@@ -5,13 +5,6 @@
 
 #include <stdarg.h>
 
-enum SeverityModes {
-    SEVERITY_NONE,
-    SEVERITY_WARN,
-    SEVERITY_ERROR,
-    SEVERITY_FATAL,
-};
-
 extern bool32 engineDebugMode;
 extern char outputString[0x400];
 

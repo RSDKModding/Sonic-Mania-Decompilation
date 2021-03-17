@@ -15,7 +15,12 @@ DummyAchievements *achievements = NULL;
 DummyLeaderboards *leaderboards = NULL;
 DummyRichPresence *richPresence = NULL;
 DummyStats *stats               = NULL;
+DummyUserStorage *userStorage   = NULL;
+
+UserDBStorage userDBStorage[RETRO_USERDB_MAX];
 #endif
+
+inline void nullUserFunc() {}
 
 void initUserData()
 {
@@ -32,7 +37,6 @@ void initUserData()
         if (!achievements)
             achievements = (DummyAchievements *)malloc(sizeof(DummyAchievements));
         MEM_ZEROP(achievements);
-        achievements->active = true;
 
         if (!leaderboards)
             leaderboards = (DummyLeaderboards *)malloc(sizeof(DummyLeaderboards));
@@ -41,19 +45,33 @@ void initUserData()
         if (!richPresence)
             richPresence = (DummyRichPresence *)malloc(sizeof(DummyRichPresence));
         MEM_ZEROP(richPresence);
-        richPresence->status = true;
 
         if (!stats)
             stats = (DummyStats *)malloc(sizeof(DummyStats));
         MEM_ZEROP(stats);
-        stats->active = true;
 
-        userCore->CheckDLC             = checkDLC;
-        userCore->GetUserLanguage      = getUserLanguage;
-        userCore->GetConfirmButtonFlip = getConfirmButtonFlip;
-        userCore->LaunchManual         = launchManual;
-        userCore->ExitGame             = exitGame;
+        if (!userStorage)
+            userStorage = (DummyUserStorage *)malloc(sizeof(DummyUserStorage));
+        MEM_ZEROP(userStorage);
+        // userStorage->active = true;
+
+        userCore->unknown1             = nullUserFunc;
+        userCore->unknown2             = nullUserFunc;
+        userCore->unknown3             = nullUserFunc;
+        userCore->unknown4             = nullUserFunc;
         userCore->SetupDebugValues     = setupUserDebugValues;
+        userCore->UserInitUnknown1     = userInitUnknown1;
+        userCore->UserInitUnknown2     = userInitUnknown2;
+        userCore->GetUserLanguage      = GetUserLanguage;
+        userCore->GetUserRegion        = GetUserRegion;
+        userCore->GetUserPlatform      = GetUserPlatform;
+        userCore->GetConfirmButtonFlip = GetConfirmButtonFlip;
+        userCore->LaunchManual         = LaunchManual;
+        userCore->ExitGame             = ExitGame;
+        userCore->unknown14            = nullUserFunc;
+        userCore->unknown15            = UserCoreUnknown15;
+        userCore->CheckDLC             = checkDLC;
+        userCore->ShowExtensionOverlay = ShowExtensionOverlay;
 
         userCore->values[0]   = &engine.hasPlus;
         userCore->values[1]   = &curSKU.platform;
@@ -62,39 +80,70 @@ void initUserData()
         userCore->values[4]   = &engine.confirmFlip;
         userCore->debugValCnt = 5;
 
-        achievements->UnlockAchievement = unlockAchievement;
+        achievements->InitUnknown1      = nullUserFunc;
+        achievements->SetDebugValues    = nullUserFunc;
+        achievements->InitUnknown2      = nullUserFunc;
+        achievements->UnlockAchievement = TryUnlockAchievement;
 
-        richPresence->SetPresence = setPresence;
+        leaderboards->SetDebugValues   = nullUserFunc;
+        leaderboards->InitUnknown1     = nullUserFunc;
+        leaderboards->InitUnknown2     = nullUserFunc;
+        leaderboards->unknown4         = (int (*)())nullUserFunc;
+        leaderboards->FetchLeaderboard = (void (*)(int, int))nullUserFunc;
+        leaderboards->unknown5         = nullUserFunc;
+        leaderboards->TrackScore       = (void (*)(int, int, int))nullUserFunc;
+        leaderboards->unknown7         = (int (*)())nullUserFunc;
+
+        richPresence->SetDebugValues = nullUserFunc;
+        richPresence->InitUnknown1   = nullUserFunc;
+        richPresence->InitUnknown2   = nullUserFunc;
+        richPresence->SetPresence    = SetPresence;
+
+        stats->SetDebugValues = nullUserFunc;
+        stats->InitUnknown1   = nullUserFunc;
+        stats->InitUnknown2   = nullUserFunc;
+        stats->TryTrackStat   = nullUserFunc; // TODO
+
+        userStorage->InitUnknown1   = (int (*)())nullUserFunc;
+        userStorage->SetDebugValues = (int (*)())nullUserFunc;
+        userStorage->InitUnknown2   = (int (*)())nullUserFunc;
+        userStorage->TryAuth        = TryAuth;
+        userStorage->TryInitStorage = TryInitStorage;
+        userStorage->GetUsername    = GetUserName;
+        // userStorage->LoadUserFile   = TryLoadUserFile;
+        // userStorage->SaveUserFile   = TrySaveUserFile;
+        // userStorage->DeleteUserFile = TryDeleteUserFile;
+        userStorage->unknown8 = UserStorageUnknown8;
 #endif
 
 #if !RETRO_USE_PLUS
-        SetFuncPtr("ExitGame", exitGame);
-        //SetFuncPtr("ClearAchievements", Engine_ClearAchievements);
-        SetFuncPtr("UnlockAchievement", unlockAchievement);
-        SetFuncPtr("FetchLeaderboard", fetchLeaderboard);
-        //SetFuncPtr("LeaderboardStatus", Engine_LeaderboardStatus);
-        //SetFuncPtr("LeaderboardEntryCount", Engine_LeaderboardEntryCount);
-        //SetFuncPtr("LeaderboardReadEntry", Engine_LeaderboardReadEntry);
-        //SetFuncPtr("TrackActClear", Engine_TrackActClear);
-        //SetFuncPtr("TrackTAClear", Engine_TrackTAClear);
-        //SetFuncPtr("TrackEnemyDefeat", Engine_TrackEnemyDefeat);
-        //SetFuncPtr("ClearPrerollErrors", Engine_ClearPrerollErrors);
-        //SetFuncPtr("TryAuth", Engine_ClearPrerollErrors);
-        //SetFuncPtr("GetUserAuthStatus", Engine_GetUserAuthStatus);
-        //SetFuncPtr("TryInitStorage", Engine_TryInitStorage);
-        //SetFuncPtr("GetStorageStatus", Engine_GetStorageStatus);
-        //SetFuncPtr("LoadUserFile", Engine_LoadUserFile);
-        //SetFuncPtr("SaveUserFile", Engine_SaveUserFile);
+        SetFuncPtr("ExitGame", ExitGame);
+        // SetFuncPtr("ClearAchievements", Engine_ClearAchievements);
+        SetFuncPtr("UnlockAchievement", TryUnlockAchievement);
+        SetFuncPtr("FetchLeaderboard", FetchLeaderboard);
+        // SetFuncPtr("LeaderboardStatus", Engine_LeaderboardStatus);
+        // SetFuncPtr("LeaderboardEntryCount", Engine_LeaderboardEntryCount);
+        // SetFuncPtr("LeaderboardReadEntry", Engine_LeaderboardReadEntry);
+        // SetFuncPtr("TrackActClear", Engine_TrackActClear);
+        // SetFuncPtr("TrackTAClear", Engine_TrackTAClear);
+        // SetFuncPtr("TrackEnemyDefeat", Engine_TrackEnemyDefeat);
+        // SetFuncPtr("ClearPrerollErrors", Engine_ClearPrerollErrors);
+        SetFuncPtr("TryAuth", TryAuth);
+        // SetFuncPtr("GetUserAuthStatus", Engine_GetUserAuthStatus);
+        SetFuncPtr("TryInitStorage", TryInitStorage);
+        SetFuncPtr("GetStorageStatus", GetUserStorageStatus);
+        SetFuncPtr("LoadUserFile", TryLoadUserFile);
+        SetFuncPtr("SaveUserFile", TrySaveUserFile);
         SetFuncPtr("SaveSettingsINI", writeSettings);
-        SetFuncPtr("GetUserLanguage", getUserLanguage);
-        //SetFuncPtr("ControllerIDForInputID", Engine_ControllerIDForInputID);
-        //SetFuncPtr("MostRecentActiveControllerID", Engine_MostRecentActiveControllerID);
-        //SetFuncPtr("AssignControllerID", Engine_AssignControllerID);
-        //SetFuncPtr("ResetControllerAssignments", ResetControllerAssignments);
-        //SetFuncPtr("InputIDIsDisconnected", Engine_InputIDIsDisconnected);
-        //SetFuncPtr("GetControllerType", Engine_GetControllerType);
-        //SetFuncPtr("ShowSteamControllerOverlay", Engine_ShowSteamControllerOverlay);
-        SetFuncPtr("SetRichPresence", setPresence);
+        SetFuncPtr("GetUserLanguage", GetUserLanguage);
+        // SetFuncPtr("ControllerIDForInputID", Engine_ControllerIDForInputID);
+        // SetFuncPtr("MostRecentActiveControllerID", Engine_MostRecentActiveControllerID);
+        // SetFuncPtr("AssignControllerID", Engine_AssignControllerID);
+        // SetFuncPtr("ResetControllerAssignments", ResetControllerAssignments);
+        // SetFuncPtr("InputIDIsDisconnected", Engine_InputIDIsDisconnected);
+        // SetFuncPtr("GetControllerType", Engine_GetControllerType);
+        // SetFuncPtr("ShowSteamControllerOverlay", Engine_ShowSteamControllerOverlay);
+        SetFuncPtr("SetRichPresence", SetPresence);
 #endif
     }
 }
@@ -120,26 +169,38 @@ void releaseUserData()
     if (stats)
         free(stats);
     stats = NULL;
+
+    if (userStorage)
+        free(userStorage);
+    userStorage = NULL;
 #endif
 }
 
-int getUserLanguage() { return curSKU.language; }
+int GetUserLanguage() { return curSKU.language; }
+int GetUserRegion() { return curSKU.region; }
+int GetUserPlatform() { return curSKU.platform; }
 #if RETRO_USE_PLUS
-int getConfirmButtonFlip()
+int GetConfirmButtonFlip()
 {
     printConsole("DUMMY GetConfirmButtonFlip()\n");
     return 0;
 }
-void launchManual() { printConsole("DUMMY LaunchManual()\n"); }
+void LaunchManual() { printConsole("DUMMY LaunchManual()\n"); }
 #endif
-void exitGame() { engine.running = false; }
+void ExitGame() { engine.running = false; }
 
-void unlockAchievement(const char *name) { printLog(SEVERITY_WARN, "Achievement Unlocked: %s", name); }
+int ShowExtensionOverlay(byte overlay)
+{
+    printLog(SEVERITY_WARN, "Show Extension Overlay: %d", overlay);
+    return 1;
+}
 
-void fetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)\n", a2, a3); }
-void trackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)\n", a2, a3, a4); }
+void TryUnlockAchievement(const char *name) { printLog(SEVERITY_WARN, "Achievement Unlocked: %s", name); }
 
-void setPresence(byte a2, TextInfo *info)
+void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)\n", a2, a3); }
+void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)\n", a2, a3, a4); }
+
+void SetPresence(byte a2, TextInfo *info)
 {
     char buffer[0xFF];
     char buffer2[0xFF];
@@ -156,16 +217,11 @@ void setPresence(byte a2, TextInfo *info)
 const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
 void setupUserDebugValues()
 {
-    if (achievements->SetDebugValues)
-        achievements->SetDebugValues();
-    if (leaderboards->SetDebugValues)
-        leaderboards->SetDebugValues();
-    if (richPresence->SetDebugValues)
-        richPresence->SetDebugValues();
-    if (stats->SetDebugValues)
-        stats->SetDebugValues();
-    //if (userStorage->SetDebugValues)
-        //userStorage->unknown1();
+    achievements->SetDebugValues();
+    leaderboards->SetDebugValues();
+    richPresence->SetDebugValues();
+    stats->SetDebugValues();
+    userStorage->SetDebugValues();
 
     for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
         DebugValueInfo *val = &debugValues[debugValCnt++];
@@ -173,9 +229,25 @@ void setupUserDebugValues()
         val->isSigned   = 0;
         val->valByteCnt = 4;
         val->value      = userCore->values[i];
-        val->min   = 0;
-        val->max   = 1;
+        val->min        = 0;
+        val->max        = 1;
     }
+}
+void userInitUnknown1()
+{
+    achievements->InitUnknown1();
+    leaderboards->InitUnknown1();
+    richPresence->InitUnknown1();
+    stats->InitUnknown1();
+    userStorage->InitUnknown1();
+}
+void userInitUnknown2()
+{
+    achievements->InitUnknown2();
+    leaderboards->InitUnknown2();
+    richPresence->InitUnknown2();
+    stats->InitUnknown2();
+    userStorage->InitUnknown2();
 }
 #endif
 
@@ -187,7 +259,7 @@ void SetFuncPtr(const char *name, void *ptr)
         GEN_HASH(name, hash);
         for (int f = 0; f < functionListCount; ++f) {
             if (HASH_MATCH(hash, functionList[f].hash))
-                return; //already exists, ignore this call
+                return; // already exists, ignore this call
         }
 
         HASH_COPY(functionList[functionListCount].hash, hash);
@@ -212,6 +284,82 @@ void *GetFuncPtr(const char *name)
     return NULL;
 }
 #endif
+
+bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int)) { return false; }
+bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress) { return false; }
+
+ushort LoadUserDB(const char *filename, int (*callback)(int))
+{
+    int tableID = -1;
+    uint uuid   = 0;
+    GenerateCRC(&uuid, (char *)filename);
+    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+        if (uuid == userDBStorage->userDB[i].uuid)
+            return i;
+    }
+
+    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+        if (!userDBStorage->userDB[i].loaded) {
+            tableID = i;
+            break;
+        }
+    }
+
+    if (tableID == -1) {
+        if (callback)
+            callback(500);
+        return -1;
+    }
+
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    userDB->loaded = true;
+    userDB->name   = filename;
+    userDB->uuid   = uuid;
+    AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
+    // userDBStorage->field_2287C4[tableID] = sub_5ECD20;
+    userDBStorage->callbacks[tableID] = callback;
+    TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->saveCallback[tableID]);
+    return tableID;
+}
+bool32 SaveUserDB(ushort tableID, int (*callback)(int))
+{
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+
+    bool32 success = false;
+    if (userDB->active) {
+        int totalSize = 0; // GetUserDBWriteSize(userDB);
+        AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
+        // GetUserDBWriteBuffer(totalSize, userDBStorage->writeBuffer[tableID]);
+        userDBStorage->callbacks[tableID] = callback;
+        // userDBStorage->field_2287C4[tableID] = UserDB_FinishCallbacks;
+        success = TrySaveUserFile(userDB->name, userDBStorage->writeBuffer[tableID], totalSize, userDBStorage->saveCallback[tableID], true);
+    }
+    else {
+        if (callback)
+            success = callback(500);
+    }
+    return success;
+}
+
+ushort GetUserDBByID(ushort tableID, uint uuid)
+{
+    if (tableID == -1)
+        return -1;
+    if (!uuid)
+        return -1;
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    if (!userDB->active)
+        return -1;
+    if (!userDB->entryCount)
+        return -1;
+
+    for (int i = 0; i < userDB->entryCount; ++i) {
+        if (uuid == userDB->entries[i].uuid) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 int GetSettingsValue(int id)
 {

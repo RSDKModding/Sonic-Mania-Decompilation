@@ -8,9 +8,10 @@ typedef struct {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
 #endif
-    int *saveGamePtr;
-    int gap8;
-    int field_C;
+    void *loadEntityPtr;
+    void (*loadCallback)(int);
+    Entity *saveEntityPtr;
+    void (*saveCallback)(int);
     int *saveRAM;
     int field_14;
 } ObjectSaveGame;
@@ -39,6 +40,31 @@ void SaveGame_Serialize();
 int *SaveGame_GetDataPtr(int slot, bool32 encore);
 #endif
 void SaveGame_LoadSaveData();
+void SaveGame_LoadFile();
+void SaveGame_SaveFile(int (*callback)(int status));
+void SaveGame_SaveLoadedCB(int status);
 void SaveGame_SaveGameState();
+void SaveGame_SaveProgress();
+void SaveGame_ClearRestartData();
+void SaveGame_Unknown8();
+void SaveGame_LoadPlayerState();
+void SaveGame_LoadFile_CB(int status);
+void SaveGame_SaveFile_CB(int status);
+int SaveGame_Unknown11(int type);
+void SaveGame_ShuffleBSSID();
+int *SaveGame_Unknown12();
+void SaveGame_TrackGameProgress(int (*callback)(int), int a2);
+void SaveGame_Unknown14();
+void SaveGame_UnlockAllMedals();
+void SaveGame_ClearProgress();
+void SaveGame_MarkZoneCompleted(int zoneID);
+bool32 SaveGame_CheckZoneClear();
+void SaveGame_GetEmerald(int emeraldID);
+void SaveGame_GetMedal(byte *medalID, byte type);
+void SaveGame_GetEnding(byte ending);
+void SaveGame_PrintSaveProgress();
+int SaveGame_CountUnreadNotifs();
+int SaveGame_GetNextNotif();
+bool32 SaveGame_CheckUnlock(char type);
 
 #endif //!OBJ_SAVEGAME_H

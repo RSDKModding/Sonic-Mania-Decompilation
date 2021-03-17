@@ -44,7 +44,7 @@ void COverlay_Create(void* data)
 
 void COverlay_StageLoad()
 {
-    COverlay->spriteIndex = RSDK.LoadAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+    COverlay->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
     if (DebugMode->itemCount < 256) {
         DebugMode->objectIDs[DebugMode->itemCount] = COverlay->objectID;
         DebugMode->spawn[DebugMode->itemCount]  = COverlay_DebugSpawn;

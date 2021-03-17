@@ -97,7 +97,7 @@ void Animals_Create(void* data)
 
 void Animals_StageLoad()
 {
-    Animals->spriteIndex = RSDK.LoadAnimation("Global/Animals.bin", SCOPE_STAGE);
+    Animals->spriteIndex = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
     if (RSDK.GetObjectIDByName("Platform"))
         Animals->hasPlatform = true;
     if (RSDK.GetObjectIDByName("Bridge"))
@@ -173,8 +173,8 @@ bool32 Animals_CheckGroundCollision()
     }
 
     if (Animals->hasBridge) {
-        EntityBridge *bridge = NULL;
-        while (RSDK.GetActiveEntities(bridge->objectID, (Entity **)&bridge)) {
+        //EntityBridge *bridge = NULL;
+        //while (RSDK.GetActiveEntities(bridge->objectID, (Entity **)&bridge)) {
             /*v2 = entity->position.x;
             v3 = bridge->field_74;
             if (entity->position.x > v3) {
@@ -210,7 +210,7 @@ bool32 Animals_CheckGroundCollision()
                     }
                 }
             }*/
-        }
+        //}
     }
     return false;
 }

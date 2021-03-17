@@ -39,7 +39,7 @@ void ScoreBonus_Create(void* data)
     }
 }
 
-void ScoreBonus_StageLoad() { ScoreBonus->spriteIndex = RSDK.LoadAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
+void ScoreBonus_StageLoad() { ScoreBonus->spriteIndex = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 
 void ScoreBonus_EditorDraw()
 {

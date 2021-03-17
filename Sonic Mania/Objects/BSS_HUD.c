@@ -54,7 +54,7 @@ void BSS_HUD_Create(void* data)
 
 void BSS_HUD_StageLoad()
 {
-    BSS_HUD->spriteIndex = RSDK.LoadAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
+    BSS_HUD->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_HUD, BSS_HUD->objectID, 0);
 }
 

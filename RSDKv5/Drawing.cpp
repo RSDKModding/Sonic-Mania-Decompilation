@@ -2566,31 +2566,31 @@ void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelat
                 }
                 break;
             case FX_ROTATE:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
                                    FLIP_NONE, rotation, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                 break;
             case FX_ROTATE | FX_FLIP:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, 0x200, 0x200,
                                    FlipFlags(sceneInfo.entity->direction & FLIP_X), rotation, (InkEffects)sceneInfo.entity->inkEffect,
                                    sceneInfo.entity->alpha, frame->sheetID);
                 break;
             case FX_SCALE:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY,
                                    sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_NONE, 0, (InkEffects)sceneInfo.entity->inkEffect,
                                    sceneInfo.entity->alpha, frame->sheetID);
                 break;
             case FX_SCALE | FX_FLIP:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY,
                                    sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FlipFlags(sceneInfo.entity->direction & FLIP_X), 0,
                                    (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                 break;
             case FX_SCALE | FX_ROTATE:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY,
                                    sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_NONE, rotation, (InkEffects)sceneInfo.entity->inkEffect,
                                    sceneInfo.entity->alpha, frame->sheetID);
                 break;
             case FX_SCALE | FX_ROTATE | FX_FLIP:
-                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotY, frame->pivotX, frame->width, frame->height, frame->sprX, frame->sprY,
+                DrawSpriteRotozoom(pos.x, pos.y, frame->pivotX, frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY,
                                    sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FlipFlags(sceneInfo.entity->direction & FLIP_X), rotation,
                                    (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                 break;
@@ -3374,25 +3374,220 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     if (!(rotation & 0x1FF))
         angle = rotation & 0x1FF;
 
-    if (width + x > currentScreen->clipBound_X2)
-        width = currentScreen->clipBound_X2 - x;
-    if (x < currentScreen->clipBound_X1) {
-        width += x;
-        x = currentScreen->clipBound_X1;
+    int sine        = sinVal512[angle];
+    int fullScaleXS = scaleX * sinVal512[angle] >> 9;
+    int cosine      = cosVal512[angle];
+    int fullScaleXC = scaleX * cosVal512[angle] >> 9;
+    int fullScaleYS = scaleY * sine >> 9;
+    int fullScaleYC = scaleY * cosine >> 9;
+
+    int x1, x2, x3, x4;
+    int y1, y2, y3, y4;
+    int sprXPos = (sprX - pivotX) << 16;
+    int sprYPos = (sprY - pivotY) << 16;
+    switch (direction) {
+        default:
+        case FLIP_NONE: {
+            int scaledX1 = fullScaleXS * (pivotX - 2);
+            int scaledX2 = fullScaleXC * (pivotX - 2);
+            int scaledY1 = fullScaleYS * (pivotY - 2);
+            int scaledY2 = fullScaleYC * (pivotY - 2);
+            x1           = x + ((scaledX2 + scaledY1) >> 9);
+            y1           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
+            int xMax     = pivotX + 2 + width;
+
+            int scaledXMaxS = fullScaleXS * xMax;
+            int scaledXMaxC = fullScaleXC * xMax;
+            x2              = x + ((scaledXMaxC + scaledY1) >> 9);
+            y2              = y + ((scaledY2 - scaledXMaxS) >> 9);
+            int v32         = pivotY + 2 + height;
+            int scaledYMaxC = fullScaleYC * v32;
+            int scaledYMaxS = fullScaleYS * v32;
+            int v35         = scaledYMaxS + scaledX2;
+            int v36         = scaledXMaxC + scaledYMaxS;
+            x3              = x + (v35 >> 9);
+            int v37         = scaledYMaxC - scaledX1;
+            int v38         = scaledYMaxC - scaledXMaxS;
+            y4              = y + (v38 >> 9);
+            x4              = x + (v36 >> 9);
+            y3              = y + (v37 >> 9);
+            break;
+        }
+        case FLIP_X: {
+            int scaledX1 = fullScaleXS * (2 - pivotX);
+            int scaledX2 = fullScaleXC * (2 - pivotX);
+            int scaledY1 = fullScaleYS * (pivotY - 2);
+            int scaledY2 = fullScaleYC * (pivotY - 2);
+            x1       = x + ((scaledX2 + scaledY1) >> 9);
+            int xMax     = -2 - pivotX - width;
+            y1           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
+
+            int scaledXMaxS = fullScaleXS * xMax;
+            int scaledXMaxC = fullScaleXC * xMax;
+            x2              = x + ((scaledXMaxC + scaledY1) >> 9);
+            y2              = y + ((scaledY2 - scaledXMaxS) >> 9);
+            int v32         = pivotY + 2 + height;
+            int scaledYMaxC = fullScaleYC * v32;
+            int scaledYMaxS = fullScaleYS * v32;
+            int v35         = scaledYMaxS + scaledX2;
+            int v36         = scaledXMaxC + scaledYMaxS;
+            x3              = x + (v35 >> 9);
+            int v37         = scaledYMaxC - scaledX1;
+            int v38         = scaledYMaxC - scaledXMaxS;
+            y4              = y + (v38 >> 9);
+            x4              = x + (v36 >> 9);
+            y3              = y + (v37 >> 9);
+            break;
+        }
+        case FLIP_Y:
+        case FLIP_XY: {
+            //x2 = v186;
+            //x1 = v185;
+            //x4 = v188;
+            //x3 = v187;
+            //y4 = v188;
+            //y3 = v187;
+            //y2 = v186;
+            //x2 = v186;
+            //y1 = v185;
+            int scaledX1 = 0;
+            int scaledX2 = 0;
+            int scaledY1 = 0;
+            int scaledY2 = 0;
+            int xMax = 0;
+
+            int scaledXMaxS = fullScaleXS * xMax;
+            int scaledXMaxC = fullScaleXC * xMax;
+            x2              = x + ((scaledXMaxC + scaledY1) >> 9);
+            y2              = y + ((scaledY2 - scaledXMaxS) >> 9);
+            int v32         = pivotY + 2 + height;
+            int scaledYMaxC = fullScaleYC * v32;
+            int scaledYMaxS = fullScaleYS * v32;
+            int v35         = scaledYMaxS + scaledX2;
+            int v36         = scaledXMaxC + scaledYMaxS;
+            x3              = x + (v35 >> 9);
+            int v37         = scaledYMaxC - scaledX1;
+            int v38         = scaledYMaxC - scaledXMaxS;
+            y4              = y + (v38 >> 9);
+            x4              = x + (v36 >> 9);
+            y3              = y + (v37 >> 9);
+            break;
+        }
     }
 
-    if (height + y > currentScreen->clipBound_Y2)
-        height = currentScreen->clipBound_Y2 - y;
-    if (y < currentScreen->clipBound_Y1) {
-        height += y;
-        y = currentScreen->clipBound_Y1;
+    int right = currentScreen->pitch;
+    int pitch = currentScreen->pitch;
+    if (x1 < currentScreen->pitch)
+        right = x1;
+    if (x2 < right)
+        right = x2;
+    if (x3 < right)
+        right = x3;
+    if (x4 < right)
+        right = x4;
+    if (right < currentScreen->clipBound_X1)
+        right = currentScreen->clipBound_X1;
+    int left = 0;
+    if (x1 > 0)
+        left = x1;
+    if (x2 > left)
+        left = x2;
+    if (x3 > left)
+        left = x3;
+    int bottom = currentScreen->height;
+    if (x4 > left)
+        left = x4;
+    if (left > currentScreen->clipBound_X2)
+        left = currentScreen->clipBound_X2;
+    int xDif = left - right;
+    if (y1 < bottom)
+        bottom = y1;
+    if (y2 < bottom)
+        bottom = y2;
+    if (y3 < bottom)
+        bottom = y3;
+    if (y4 < bottom)
+        bottom = y4;
+    if (bottom < currentScreen->clipBound_Y1)
+        bottom = currentScreen->clipBound_Y1;
+    int top = 0;
+    if (y1 > 0)
+        top = y1;
+    if (y2 > top)
+        top = y2;
+
+    if (y3 > top)
+        top = y3;
+    if (y4 > top)
+        top = y4;
+    if (top > currentScreen->clipBound_Y2)
+        top = currentScreen->clipBound_Y2;
+    int yDif = top - bottom;
+    if (xDif >= 1 && yDif >= 1) {
+        GFXSurface *surface = &gfxSurface[sheetID];
+
+        int fullX        = (sprX + width) << 16;
+        int fullY        = (height + sprY) << 16;
+        validDraw    = true;
+        int fullScaleX   = (signed int)(float)((float)(512.0 / (float)scaleX) * 512.0);
+        int fullScaleY   = (float)(512.0 / (float)scaleY) * 512.0;
+        int deltaXLen    = fullScaleX * sine >> 2;
+        int deltaX       = fullScaleX * cosine >> 2;
+        int fullScaleYCb = fullScaleX * cosine >> 2;
+        int fullScaleXSb = pitch - xDif;
+        int scaleYCos      = (signed int)fullScaleY * cosine >> 2;
+        int deltaY       = (signed int)fullScaleY * sine >> 2;
+        int lineSize     = surface->lineSize;
+        byte *lineBuffer   = &gfxLineBuffer[bottom];
+        int xLen         = right - x;
+        int yLen         = bottom - y;
+        byte* gfxData      = surface->dataPtr;
+        ushort *frameBuffer = &currentScreen->frameBuffer[right + bottom * pitch];
+        int fullSprY        = (sprY << 16) - 1;
+        int fullSprX          = (sprX << 16) - 1;
+
+        int drawX, drawY;
+        if (direction) {
+            if (direction == FLIP_X) {
+                drawX        = sprXPos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
+                drawY        = sprYPos + scaleYCos * yLen + deltaY * xLen;
+                deltaX       = -deltaX;
+                deltaXLen    = -deltaXLen;
+                fullScaleYCb = deltaX;
+            }
+            else {
+                //drawX = v119;
+                //drawY = v119;
+            }
+        }
+        else {
+            drawX = sprXPos + deltaX * xLen - deltaXLen * yLen;
+            drawY = sprYPos + scaleYCos * yLen + deltaY * xLen;
+        }
+
+        switch (inkEffect) {
+            case INK_NONE:
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos   = drawX;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos > fullSprX && drawXPos < fullX && drawY > fullSprY && drawY < fullY) {
+                            byte index = gfxData[((drawY >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index)
+                                *frameBuffer = palettePtr[index];
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawY += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += scaleYCos;
+                    frameBuffer += fullScaleXSb;
+                }
+                break;
+        }
     }
 
-    if (width <= 0 || height <= 0)
-        return;
-
-
-    validDraw = true;
 }
 
 void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)

@@ -14,7 +14,6 @@ void SSZ1Setup_LateUpdate()
 
 void SSZ1Setup_StaticUpdate()
 {
-
 }
 
 void SSZ1Setup_Draw()

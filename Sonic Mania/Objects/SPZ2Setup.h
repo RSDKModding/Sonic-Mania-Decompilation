@@ -6,31 +6,33 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1;
-    int value2;
-    int value3; //= 12;
-    int value4;
-    int value5[8]; //= { 11, 2, 2, 2, 2, 2, 2, 2 };
-    int value6; //= 30;
-    int value7;
-    int value8[12]; //= { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
-    int value9[12]; //= { 30, 9, 6, 6, 6, 9, 30, 9, 6, 6, 6, 9 };
-    int value10[32]; //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    int value11[16]; //= { 96, 96, 112, 96, 112, 112, 112, 112, 112, 112, 112, 112, 112, 96, 112, 96 };
-    int value12[16]; //= { 0, 0, 0, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 0 };
-    int value13[16]; //= { 0, 0, 0, 16, 32, 48, 32, 32, 48, 32, 32, 16, 0, 0, 0, 0 };
-    int value14;
-    int value15;
-    bool32 value16;
-    bool32 value17;
-    ushort value18;
-    ushort value19;
-    bool32 value20;
+    int palTimer;
+    int angle;
+    int timerC; //= 12;
+    int aniTilesFrameC;
+    int aniTileDelaysC[8]; //= { 11, 2, 2, 2, 2, 2, 2, 2 };
+    int delayD;            //= 30;
+    int frameD;
+    int aniTilesSrcYD[12]; //= { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
+    int aniTilesDelaysD[12]; //= { 30, 9, 6, 6, 6, 9, 30, 9, 6, 6, 6, 9 };
+    int layerDeform[32]; //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    int aniTileSrcXB[16];    //= { 96, 96, 112, 96, 112, 112, 112, 112, 112, 112, 112, 112, 112, 96, 112, 96 };
+    int aniTileSrcYB[16]; //= { 0, 0, 0, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 0 };
+    int aniTileSrcXA[16];    //= { 0, 0, 0, 16, 32, 48, 32, 32, 48, 32, 32, 16, 0, 0, 0, 0 };
+    int aniTilesFrameB;
+    int aniTilesFrameA;
+    TileLayer *fgLow;
+    TileLayer *fgHigh;
+    ushort aniTiles;
+    ushort aniTiles2;
+    Entity* outroPtr;
 } ObjectSPZ2Setup;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int palTimer;
+    int timer;
 } EntitySPZ2Setup;
 
 // Object Struct
@@ -48,6 +50,6 @@ void SPZ2Setup_EditorLoad();
 void SPZ2Setup_Serialize();
 
 // Extra Entity Functions
-
+void SPZ2Setup_SetupOutro();
 
 #endif //!OBJ_SPZ2SETUP_H

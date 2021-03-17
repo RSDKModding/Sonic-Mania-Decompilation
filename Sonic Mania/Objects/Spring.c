@@ -102,7 +102,7 @@ void Spring_Create(void *data)
 
 void Spring_StageLoad()
 {
-    Spring->spriteIndex = RSDK.LoadAnimation("Global/Springs.bin", SCOPE_STAGE);
+    Spring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
     Spring->sfx_Spring  = RSDK.GetSFX("Global/Spring.wav");
 }
 

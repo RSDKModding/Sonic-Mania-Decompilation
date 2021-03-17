@@ -55,7 +55,7 @@ void BSS_Horizon_Create(void* data)
 
 void BSS_Horizon_StageLoad()
 {
-    BSS_Horizon->spriteIndex = RSDK.LoadAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
+    BSS_Horizon->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, 0);
 }
 

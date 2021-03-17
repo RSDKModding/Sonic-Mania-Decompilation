@@ -346,13 +346,13 @@ void Spikes_StageLoad()
 {
     Spikes->stateDraw = Spikes_StateDraw_Stage;
     if (RSDK.CheckStageFolder("FBZ")) {
-        Spikes->spriteIndex = RSDK.LoadAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
+        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
     if (RSDK.CheckStageFolder("PSZ2")) {
-        Spikes->spriteIndex = RSDK.LoadAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
+        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
     }
     else {
-        Spikes->spriteIndex = RSDK.LoadAnimation("Global/Spikes.bin", SCOPE_STAGE);
+        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
         Spikes->stateDraw   = Spikes_StateDraw_Global;
     }
     RSDK.SetSpriteAnimation(Spikes->spriteIndex, 0, &Spikes->vData, true, 0);

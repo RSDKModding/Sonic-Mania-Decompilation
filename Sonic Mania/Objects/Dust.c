@@ -38,7 +38,7 @@ void Dust_Create(void* data)
     }
 }
 
-void Dust_StageLoad() { Dust->spriteIndex = RSDK.LoadAnimation("Global/Dust.bin", SCOPE_STAGE); }
+void Dust_StageLoad() { Dust->spriteIndex = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
 
 void Dust_State_DropDash()
 {

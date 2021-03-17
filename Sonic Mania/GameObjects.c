@@ -21,8 +21,6 @@ UnknownInfo *RSDK_unknown = NULL;
 #endif
 ScreenInfo *RSDK_screens = NULL;
 
-char textBuffer[0x400];
-
 #if RETRO_USE_PLUS
 UserFunctionTable User;
 #endif

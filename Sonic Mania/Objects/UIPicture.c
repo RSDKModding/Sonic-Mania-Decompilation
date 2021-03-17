@@ -48,10 +48,10 @@ void UIPicture_Create(void* data)
 void UIPicture_StageLoad()
 {
     if (RSDK.CheckStageFolder("Menu")) {
-        UIPicture->spriteIndex = RSDK.LoadAnimation("UI/Picture.bin", SCOPE_STAGE);
+        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("Logos")) {
-        UIPicture->spriteIndex = RSDK.LoadAnimation("Logos/Logos.bin", SCOPE_STAGE);
+        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
     }
 }
 

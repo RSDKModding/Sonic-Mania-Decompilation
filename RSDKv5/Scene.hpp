@@ -42,10 +42,10 @@ struct SceneInfo {
     int timeCounter;
     int currentDrawGroup;
     int currentScreenID;
-    int listPos;
-    int entitySlot;
-    int createSlot;
-    int classCount;
+    ushort listPos;
+    ushort entitySlot;
+    ushort createSlot;
+    ushort classCount;
     bool32 inEditor;
     bool32 effectGizmo;
     bool32 debugMode;

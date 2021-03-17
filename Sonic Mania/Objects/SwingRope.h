@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    ushort spriteIndex;
 } ObjectSwingRope;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte ropeSize;
+    int ropeGrabDelay;
+    int rotatedAngle;
+    int rotatedOffset;
+    int playerLayers[4];
+    int angleOffset;
+    Vector2 ropePos;
+    Vector2 rotatePos;
+    EntityAnimationData ropeData;
+    EntityAnimationData handleData;
+    EntityAnimationData pivotData;
 } EntitySwingRope;
 
 // Object Struct
@@ -28,6 +42,7 @@ void SwingRope_EditorLoad();
 void SwingRope_Serialize();
 
 // Extra Entity Functions
-
+void SwingRope_DebugDraw();
+void SwingRope_DebugSpawn();
 
 #endif //!OBJ_SWINGROPE_H

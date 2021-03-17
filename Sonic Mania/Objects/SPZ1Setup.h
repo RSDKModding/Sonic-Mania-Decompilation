@@ -5,7 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int palRotateTimerA;
+    int palRotateTimerB;
+    int angle;
+    int aniTilesFrameC;
+    int timerA;
+    int timerB;
+    int aniTilesFrameB;
+    ushort aniTiles;
+    TileLayer *bgLayer;
+    TileLayer *bgLayer2;
 } ObjectSPZ1Setup;
 
 // Entity Class
@@ -28,6 +38,6 @@ void SPZ1Setup_EditorLoad();
 void SPZ1Setup_Serialize();
 
 // Extra Entity Functions
-
+void SPZ1Setup_SetupActTransition();
 
 #endif //!OBJ_SPZ1SETUP_H

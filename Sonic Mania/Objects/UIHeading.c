@@ -47,15 +47,15 @@ void UIHeading_StageLoad() { UIHeading_LoadSprites(); }
 void UIHeading_LoadSprites()
 {
     switch (Localization->language) {
-        case LANGUAGE_EN: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); break;
-        case LANGUAGE_FR: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsFR.bin", SCOPE_STAGE); break;
-        case LANGUAGE_IT: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsIT.bin", SCOPE_STAGE); break;
-        case LANGUAGE_GE: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsGE.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SP: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsSP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_JP: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsJP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_KO: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsKO.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SC: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsSC.bin", SCOPE_STAGE); break;
-        case LANGUAGE_TC: UIHeading->spriteIndex = RSDK.LoadAnimation("UI/HeadingsTC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_EN: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); break;
+        case LANGUAGE_FR: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsFR.bin", SCOPE_STAGE); break;
+        case LANGUAGE_IT: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsIT.bin", SCOPE_STAGE); break;
+        case LANGUAGE_GE: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsGE.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SP: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsSP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_JP: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsJP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_KO: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsKO.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SC: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsSC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_TC: UIHeading->spriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsTC.bin", SCOPE_STAGE); break;
         default: break;
     }
 }

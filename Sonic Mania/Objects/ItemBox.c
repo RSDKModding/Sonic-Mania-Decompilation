@@ -166,7 +166,7 @@ void ItemBox_Create(void *data)
 
 void ItemBox_StageLoad()
 {
-    ItemBox->spriteIndex         = RSDK.LoadAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    ItemBox->spriteIndex         = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     ItemBox->hitbox.left         = -15;
     ItemBox->hitbox.top          = -16;
     ItemBox->hitbox.right        = 15;
@@ -749,11 +749,11 @@ void ItemBox_GivePowerup()
                                     }
                                     player2->entPtr     = dust;
                                     player2->maxGlideSpeed = 0;
-                                    player2->nextAirState     = 0;
-                                    player2->nextGroundState  = 0;
+                                    player2->nextAirState     = NULL;
+                                    player2->nextGroundState  = NULL;
                                     player2->inputState      = Player_FlyCarryInputState;
-                                    player2->tileCollisions  = 0;
-                                    player2->interaction     = 0;
+                                    player2->tileCollisions  = false;
+                                    player2->interaction     = false;
                                     player2->drawOrder       = Zone->uiDrawLow;
                                     player2->airTimer        = 0;
                                     player2->active          = ACTIVE_NORMAL;
@@ -761,9 +761,9 @@ void ItemBox_GivePowerup()
                                     player2->collisionMode   = CMODE_FLOOR;
                                     player2->collisionLayers = Zone->fgLayers;
                                     player2->controllerID    = 2;
-                                    player2->sidekick        = 1;
-                                    player2->drawFX          = 3;
-                                    player2->visible         = 1;
+                                    player2->sidekick        = true;
+                                    player2->drawFX          = FX_FLIP | FX_ROTATE;
+                                    player2->visible         = true;
                                     HUD->field_28                       = 120;
                                 }
                             }

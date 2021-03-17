@@ -61,40 +61,40 @@ void Decoration_Create(void* data)
 void Decoration_StageLoad()
 {
     if (RSDK.CheckStageFolder("GHZ")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("GHZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("CPZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("CPZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SPZ1")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("SPZ1/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("FBZ")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("FBZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("SSZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("SSZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("MMZ1") || RSDK.CheckStageFolder("MMZ2")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("MSZ")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("MSZEnding")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("MSZ/Ending.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Ending.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("HCZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("TMZ1/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("TMZ3")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("Phantom/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("Phantom/Decoration.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("AIZ")) {
-        Decoration->spriteIndex = RSDK.LoadAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
     }
 }
 

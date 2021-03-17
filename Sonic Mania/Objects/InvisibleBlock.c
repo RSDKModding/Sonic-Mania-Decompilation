@@ -62,7 +62,7 @@ void InvisibleBlock_Create(void *data)
 
 void InvisibleBlock_StageLoad()
 {
-    InvisibleBlock->spriteIndex = RSDK.LoadAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    InvisibleBlock->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(InvisibleBlock->spriteIndex, 2, &InvisibleBlock->data, true, 0);
     InvisibleBlock->data.frameID = 10;
 }

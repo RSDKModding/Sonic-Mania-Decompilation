@@ -371,7 +371,7 @@ struct GameInfo {
 #endif
     TouchMouseData *touchMouse;
 #if RETRO_USE_PLUS
-    void *deadzone;
+    void *unknown;
 #endif
     ScreenInfo *screenInfo;
 };

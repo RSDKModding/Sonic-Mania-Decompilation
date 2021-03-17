@@ -186,7 +186,7 @@ void PlayerProbe_Create(void *data)
     entity->negAngle      = (byte)-entity->angle;
 }
 
-void PlayerProbe_StageLoad() { PlayerProbe->spriteIndex = RSDK.LoadAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlayerProbe_StageLoad() { PlayerProbe->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void PlayerProbe_Print(EntityPlayer *player)
 {

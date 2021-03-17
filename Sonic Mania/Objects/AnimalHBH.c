@@ -76,8 +76,8 @@ void AnimalHBH_Create(void* data)
 
 void AnimalHBH_StageLoad()
 {
-    AnimalHBH->animalHBHSprite  = RSDK.LoadAnimation("Credits/AnimalHBH.bin", SCOPE_STAGE);
-    AnimalHBH->silhouetteSprite = RSDK.LoadAnimation("Credits/Silhouettes.bin", SCOPE_STAGE);
+    AnimalHBH->animalHBHSprite  = RSDK.LoadSpriteAnimation("Credits/AnimalHBH.bin", SCOPE_STAGE);
+    AnimalHBH->silhouetteSprite = RSDK.LoadSpriteAnimation("Credits/Silhouettes.bin", SCOPE_STAGE);
     AnimalHBH->palID            = 0;
     AnimalHBH->palCnt           = 0;
 }

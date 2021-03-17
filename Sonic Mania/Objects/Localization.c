@@ -26,7 +26,7 @@ void Localization_StageLoad()
 
 void Localization_LoadStrings()
 {
-    RSDK.SetText(&Localization->text, textBuffer, 0);
+    RSDK.SetText(&Localization->text, "", 0);
     switch (Localization->language) {
         case LANGUAGE_EN:
             Game_Print("Loading EN strings...");
@@ -72,7 +72,7 @@ void Localization_LoadStrings()
 
 void Localization_GetString(TextInfo *textInfo, byte id)
 {
-    RSDK.SetText(textInfo, textBuffer, 0);
+    RSDK.SetText(textInfo, "", 0);
     RSDK.Unknown64(textInfo, &Localization->strings[id]);
     for (int c = 0; c < textInfo->textLength; ++c) {
         if (textInfo->text[c] == '\\')

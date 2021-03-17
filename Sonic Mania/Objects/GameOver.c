@@ -113,7 +113,7 @@ void GameOver_Create(void *data)
 
 void GameOver_StageLoad()
 {
-    GameOver->spriteIndex   = RSDK.LoadAnimation("Global/HUD.bin", SCOPE_STAGE);
+    GameOver->spriteIndex   = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
     GameOver->activeScreens = 0;
 }
 

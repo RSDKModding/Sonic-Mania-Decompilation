@@ -41,6 +41,7 @@ typedef enum { NO_SAVE_SLOT = 255 } SaveSlots;
 
 #if RETRO_USE_PLUS
 typedef enum { FILTER_MANIA = 2, FILTER_ENCORE = 4 } ModeFilters;
+typedef enum { SCN_FILTER_MANIA = 3, SCN_FILTER_ENCORE = 5 } SceneFilters;
 #endif
 
 typedef enum {
@@ -121,7 +122,7 @@ typedef struct {
     int recallEntities;
     int restartRings;
     int restart1UP;
-    int restartShield;
+    int restartPowerups;
     int restartPos[8];
     int restartSlot[4];
     int restartDir[4];

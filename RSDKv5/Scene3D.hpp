@@ -6,17 +6,17 @@
 
 enum Scene3DDrawTypes {
     S3D_TYPE_WORLD_WIREFRAME = 0x0,
-    S3D_TYPE_WORLD         = 0x1,
-    S3D_TYPE_2         = 0x2,
-    S3D_TYPE_3         = 0x3,
-    S3D_TYPE_4         = 0x4,
-    S3D_TYPE_5         = 0x5,
-    S3D_TYPE_6         = 0x6,
-    S3D_TYPE_7         = 0x7,
-    S3D_TYPE_8         = 0x8,
-    S3D_TYPE_9         = 0x9,
-    S3D_TYPE_A         = 0xA,
-    S3D_TYPE_B         = 0xB,
+    S3D_TYPE_WORLD           = 0x1,
+    S3D_TYPE_2               = 0x2,
+    S3D_TYPE_3               = 0x3,
+    S3D_TYPE_4               = 0x4,
+    S3D_TYPE_5               = 0x5,
+    S3D_TYPE_6               = 0x6,
+    S3D_TYPE_7               = 0x7,
+    S3D_TYPE_8               = 0x8,
+    S3D_TYPE_9               = 0x9,
+    S3D_TYPE_A               = 0xA,
+    S3D_TYPE_B               = 0xB,
 };
 
 struct ScanEdge {
@@ -82,7 +82,7 @@ struct ZBufferEntry {
 struct Scene3D {
     uint hash[4];
     Scene3DVertex *vertices;
-    int field_14;
+    Scene3DVertex *normals;
     ZBufferEntry *zBuffer;
     byte *faceVertCounts;
     int unknown1;
@@ -96,9 +96,9 @@ struct Scene3D {
     int unknown9;
     int unknown10;
     int unknown11;
-    ushort field_4C;
+    ushort indexLimit;
     ushort indexCount;
-    ushort indCnt;
+    ushort faceCount;
     byte drawMode;
     byte scope;
 };
@@ -120,15 +120,16 @@ void matrixRotateY(Matrix *matrix, short angle);
 void matrixRotateZ(Matrix *matrix, short angle);
 void matrixRotateXYZ(Matrix *matrix, short rotationX, short rotationY, short rotationZ);
 void matrixInverse(Matrix *dest, Matrix *matrix);
-void matrixCopy(Matrix *matDst, Matrix* matSrc);
+void matrixCopy(Matrix *matDst, Matrix *matSrc);
 
 ushort LoadMesh(const char *filepath, Scopes scope);
 ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
 inline void Init3DScene(ushort sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
-        Scene3D *scn  = &scene3DList[sceneID];
+        Scene3D *scn    = &scene3DList[sceneID];
         scn->indexCount = 0;
+        scn->faceCount     = 0;
     }
 }
 

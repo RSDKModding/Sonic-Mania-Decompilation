@@ -91,11 +91,11 @@ void DDWrecker_State_Init()
     if (++entity->timer >= 8) {
         ScreenInfo *screen             = RSDK_screens;
         entity->timer                  = 0;
-        Zone->screenUnknownB[0]        = 1;
+        Zone->playerBoundActiveL[0]    = true;
         Zone->screenBoundsL1[0]        = (entity->position.x >> 0x10) - screen->centerX;
-        Zone->screenUnknownC[0]        = 1;
+        Zone->playerBoundActiveR[0]    = true;
         Zone->screenBoundsR1[0]        = screen->centerX + (entity->position.x >> 0x10);
-        Zone->field_144                = 1;
+        Zone->playerBoundActiveB[0]    = true;
         Zone->screenBoundsB1[0]        = (entity->position.y >> 0x10);
         DDWrecker->field_4             = entity->position.x + ((160 - screen->centerX) << 16);
         DDWrecker->field_8             = entity->position.x + ((screen->centerX - 160) << 16);
@@ -894,7 +894,7 @@ void DDWrecker_State_SpawnSignpost()
 
 void DDWrecker_StageLoad()
 {
-    DDWrecker->spriteIndex   = RSDK.LoadAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE);
+    DDWrecker->spriteIndex   = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE);
     DDWrecker->sfx_BossHit   = RSDK.GetSFX("Stage/BossHit.wav");
     DDWrecker->sfx_Explosion = RSDK.GetSFX("Stage/Explosion2.wav");
     DDWrecker->sfx_Drop      = RSDK.GetSFX("Stage/Drop.wav");

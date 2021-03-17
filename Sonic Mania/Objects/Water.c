@@ -30,7 +30,7 @@ void Water_Create(void* data)
 void Water_StageLoad()
 {
     Water->active           = ACTIVE_ALWAYS;
-    Water->spriteIndex      = RSDK.LoadAnimation("Global/Water.bin", SCOPE_STAGE);
+    Water->spriteIndex      = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE);
     Water->waterLevel       = 0x7FFFFFFF;
     Water->newWaterLevel    = Water->waterLevel;
     Water->targetWaterLevel = Water->waterLevel;
@@ -51,8 +51,8 @@ void Water_StageLoad()
     Water->sfx_DrownAlert   = RSDK.GetSFX("Stage/DrownAlert.wav");
     Water->sfx_Skim         = RSDK.GetSFX("HCZ/Skim.wav");
     if (RSDK.CheckStageFolder("HCZ")) {
-        Water->wakeSprite      = RSDK.LoadAnimation("HCZ/Wake.bin", SCOPE_STAGE);
-        Water->bigBubbleSprite = RSDK.LoadAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
+        Water->wakeSprite      = RSDK.LoadSpriteAnimation("HCZ/Wake.bin", SCOPE_STAGE);
+        Water->bigBubbleSprite = RSDK.LoadSpriteAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
         Water->sfx_WaterLevelL = RSDK.GetSFX("HCZ/WaterLevel_L.wav");
         Water->sfx_WaterLevelR = RSDK.GetSFX("HCZ/WaterLevel_R.wav");
         Water->sfx_DNAGrab     = RSDK.GetSFX("CPZ/DNAGrab.wav");

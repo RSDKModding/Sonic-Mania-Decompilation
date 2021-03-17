@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectDemoMenu;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+    void (*state)();
+    int timer;
+    int selectedZone;
+    Vector2 drawPosA;
+    Vector2 drawPosB;
+    Vector2 drawPosC;
+    float vDelta;
+    EntityAnimationData zoneSelData;
+    EntityAnimationData barBlackData;
+    EntityAnimationData barFlashingData;
+    EntityAnimationData GHZData;
+    EntityAnimationData SPZData;
+    SpriteFrame *ghzFrame;
+    SpriteFrame *spzFrame;
 } EntityDemoMenu;
 
 // Object Entity
@@ -28,6 +43,11 @@ void DemoMenu_EditorLoad();
 void DemoMenu_Serialize();
 
 // Extra Entity Functions
+void DemoMenu_DrawStagePreview(Vector2 *pos, EntityAnimationData *data, int zoneID);
 
+void DemoMenu_State_Appear();
+void DemoMenu_State_Selection();
+void DemoMenu_State_Load();
+void DemoMenu_State_Disappear();
 
 #endif //!OBJ_DEMOMENU_H

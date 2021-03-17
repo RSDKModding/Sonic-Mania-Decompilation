@@ -5,7 +5,7 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
 } ObjectSSZ1Setup;
 
 // Entity Class

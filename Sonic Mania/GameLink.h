@@ -413,7 +413,7 @@ typedef struct {
     char field_141;
     char field_142;
     char field_143;
-    char field_144;
+    char playerBoundActiveB;
     char field_145;
     char field_146;
     char field_147;
@@ -483,10 +483,10 @@ typedef struct {
     int timeCounter;
     int currentDrawGroup;
     int currentScreenID;
-    int listPos;
-    int entitySlot;
-    int createSlot;
-    int classCount;
+    ushort listPos;
+    ushort entitySlot;
+    ushort createSlot;
+    ushort classCount;
     bool32 inEditor;
     bool32 effectGizmo;
     bool32 debugMode;
@@ -672,7 +672,11 @@ typedef struct {
     byte *lineScroll;
 } TileLayer;
 
-extern char textBuffer[0x400];
+typedef struct {
+    byte statID;
+    const char *name;
+    void *data[64];
+} StatInfo;
 
 typedef enum {
     PLATFORM_PC     = 0,

@@ -8,7 +8,7 @@ void DebugMode_Update()
 
     bool32 flag = false;
 #if RETRO_USE_PLUS
-    User.Unknown6(0);
+    User.SetAchievementStatus(0);
 #endif
     if (Zone)
         Zone->stageFinishCallback = NULL;

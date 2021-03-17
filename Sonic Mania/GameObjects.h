@@ -8,65 +8,65 @@
 
 // Userdata Table
 typedef struct {
-    void (*Unknown1)(void);
+    int (*GetUserLanguage)(void);
     bool32 (*GetConfirmButtonFlip)(void);
-    void (*Unknown2)(void);
-    void (*Unknown3)(void);
-    void (*Unknown4)(int a1);
+    void (*ExitGame)(void);
+    void (*LaunchManual)(void);
+    void (*Unknown4)(byte inputID);
     bool32 (*CheckDLC)(GameDLC dlc);
-    void (*Unknown5)(int a1);
+    void (*ShowExtensionOverlay)(byte overlay);
     void (*UnlockAchievement)(const char *achName);
-    void (*Missing0)(void);
-    void (*Unknown6)(int a1);
-    void (*Unknown7)(void);
-    void (*Unknown8)(int a1, int a2);
-    void (*Unknown9)(int a1, int a2, int a3);
-    void (*Unknown10)(void);
+    void (*GetAchievementStatus)(void);
+    void (*SetAchievementStatus)(int a1);
+    void (*LeaderboardsUnknown4)(void);
+    void (*FetchLeaderboard)(int a1, int a2);
+    void (*TrackScore)(int a1, int a2, int a3);
+    void (*GetLeaderboardsUnknown)(void);
     void (*LeaderboardEntryCount)(void);
-    void (*Missing1)(void);
+    void (*GetLeaderboardUnknown2)(void);
     void (*Unknown12)(int a2, uint a3, int a4);
-    void (*Missing2)(void);
+    void (*LeaderboardsUnknown8)(void);
     void (*ReadLeaderboardEntry)(uint a1);
     void (*SetRichPresence)(int, TextInfo *text);
-    void (*Unknown14)(int a1);
-    void (*Missing3)(void);
-    void (*Unknown15)(int a1);
-    void (*Unknown16)(void);
+    void (*TryTrackStat)(StatInfo *stat);
+    void (*GetStatsStatus)(void);
+    void (*SetStatsStatus)(int a1);
+    void (*UserStorageUnknown8)(void);
     void (*TryAuth)(void);
-    void (*GetUserAuthStatus)(void);
+    void (*GetUserStorageStatus)(void); //GetUserAuthStatus
     void (*GetUsername)(TextInfo *text);
     void (*TryInitStorage)(void);
-    void (*GetStorageStatus)(void);
-    void (*Unknown22)(void);
-    void (*Unknown23)(void);
-    void (*Unknown24)(void);
-    void (*Missing4)(void);
-    void (*Unknown25)(void);
-    void (*Unknown26)(void);
-    void (*Unknown27)(int a1);
-    bool32 (*Unknown28)(void);
+    void (*UserStorageStatusUnknown1)(void);
+    void (*UserStorageStatusUnknown2)(void);
+    void (*ClearUserStorageStatus)(void);
+    void (*SetUserStorageStatus)(void);
+    void (*UserStorageStatusUnknown3)(void);
+    void (*UserStorageStatusUnknown4)(void);
+    void (*UserStorageStatusUnknown5)(void);
+    void (*SetUserStorageUnknown)(int a1);
+    bool32 (*GetUserStorageUnknown)(void);
     void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));
     void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress);
     void (*DeleteUserFile)(const char *filename, void (*callback)(int status));
-    void (*OpenUserDB)(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-    void (*LoadReplayDB)(const char *filename, void (*callback)(int status));
-    void (*SaveReplayDB)(ushort tableID, void (*callback)(int status));
-    void (*Unknown30)(ushort tableID);
-    void (*Missing5)(void);
+    void (*InitUserDB)(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+    ushort (*LoadUserDB)(const char *filename, void (*callback)(int status));
+    void (*SaveUserDB)(ushort tableID, void (*callback)(int status));
+    void (*ClearUserDB)(ushort tableID);
+    void (*ClearAllUserDBs)(void);
     void (*Unknown31)(ushort tableID);
     void (*GetUserDBStatus)(ushort tableID);
     void (*Unknown33)(ushort tableID, int a2, int a3, int a4);
     void (*Unknown34)(ushort tableID, int a2, int a3, int a4);
-    void (*Unknown35)(ushort tableID);
-    void (*Unknown36)(ushort tableID, ushort a2);
-    void (*Unknown37)(ushort tableID);
+    int (*GetUserDBUnknownCount)(ushort tableID);
+    int (*GetUserDBUnknown)(ushort tableID, ushort entryID);
+    int (*AddUserDBEntry)(ushort tableID);
     void (*SetUserDBValue)(ushort tableID, void *, void *, void *, void *);
     void (*Unknown39)(ushort tableID, int a2, int a3, int a4, void *dst);
-    void (*AddUserDB)(ushort tableID, void *);
-    void (*Unknown40)(ushort tableID, int a2);
-    void (*GetTimeFormat)(ushort tableID, int a2, const char *Buf, uint sizeInBytes, const char *format);
-    void (*Unknown42)(ushort tableID, int a2);
-    void (*Unknown43)(ushort tableID);
+    void (*GetDBEntryUUID)(ushort tableID, ushort entryID);
+    void (*Unknown40)(ushort tableID, ushort entryID);
+    void (*GetUserDBTimeA)(ushort tableID, int a2, char *buf, uint sizeInBytes, const char *format);
+    void (*RemoveDBEntry)(ushort tableID, int a2);
+    void (*RemoveAllDBEntries)(ushort tableID);
     // count: 59
 } UserFunctionTable;
 
@@ -95,14 +95,14 @@ typedef struct {
     bool32 (*CheckOnScreen)(void *entity, Vector2 *range);
     bool32 (*CheckPosOnScreen)(Vector2 *pos, Vector2 *range);
     void (*AddDrawListRef)(byte layer, ushort entityID);
-    void (*SwapDrawLayers)(byte layer, ushort entityID);
+    void (*SwapDrawListEntries)(byte layer, ushort entryStart, ushort entryEnd, ushort count);
     void (*SetDrawLayerProperties)(byte layer, bool32 active, void (*initDrawPtr)(void));
     void (*LoadScene)(const char* categoryName, const char* sceneName);
     void (*SetGameMode)(byte mode);
 #if RETRO_USE_PLUS
     void (*SetHardResetFlag)(bool32 set);
 #endif
-    void (*CheckValidScene)(void);
+    bool32 (*CheckValidScene)(void);
     int (*CheckStageFolder)(const char *folderName);
     int (*InitSceneLoad)(void);
     int (*GetObjectIDByName)(const char* name);
@@ -151,7 +151,7 @@ typedef struct {
     void (*LoadStrings)(TextInfo *dst, const char* path, int);
     void (*Unknown68)(TextInfo *, TextInfo *, int, int);
     void (*CopyString)(char *text, TextInfo *info);
-    void (*Unknown69)(void);
+    void (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
     void (*Unknown70)(void);
     void (*Unknown71)(void);
     int (*SetScreenSize)(void *, void *, void *, void *, void *);
@@ -186,7 +186,7 @@ typedef struct {
                      int a9, bool32 ScreenRelative);
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
-    void (*DrawAniTile)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
+    void (*DrawAniTiles)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
     void (*FillScreen)(int a1, int a2, int a3, int a4);
     ushort (*LoadMesh)(const char* filename, byte scope);
     ushort (*Create3DScene)(const char* identifier, ushort faceCount, byte scope);
@@ -198,10 +198,10 @@ typedef struct {
     void (*SetModelAnimation)(ushort modelAnim, EntityAnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID);
     void (*SetupMeshAnimation)(void);
     void (*Draw3DScene)(ushort index);
-    ushort (*LoadAnimation)(const char *path, Scopes scope);
-    ushort (*CreateAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
+    ushort (*LoadSpriteAnimation)(const char *path, Scopes scope);
+    ushort (*CreateSpriteAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
     void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, EntityAnimationData *data, bool32 forceApply, ushort frameID);
-    void (*EditAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
+    void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
                           byte rotationFlag);
     void (*SetSpriteString)(ushort spriteIndex, ushort animID, TextInfo *info);
     void (*GetAnimation)(ushort sprIndex, const char *name);
@@ -262,8 +262,8 @@ typedef struct {
 #if !RETRO_USE_PLUS
     void (*Unknown92)(int a1, int a2, int *a3);
 #endif
-    void (*LoadUserFile)(const char *filename, void *buffer, int filesize);
-    void (*SaveUserFile)(const char *fileName, void *buffer, uint size);
+    void (*LoadUserFile)(const char *filename, void *buffer, uint size); // load user file from exe dir
+    void (*SaveUserFile)(const char *fileName, void *buffer, uint size); // save use file to exe dir
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
@@ -909,6 +909,8 @@ extern RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.CreateObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
+
+#define RSDK_THIS(type) Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 

@@ -168,7 +168,7 @@ void SignPost_Create(void* data)
 
 void SignPost_StageLoad()
 {
-    SignPost->spriteIndex          = RSDK.LoadAnimation("Global/SignPost.bin", SCOPE_STAGE);
+    SignPost->spriteIndex          = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
     SignPost->hitbox.left          = -24;
     SignPost->hitbox.top           = -22;
     SignPost->hitbox.right         = 24;
@@ -538,7 +538,7 @@ void SignPost_HandleCompetition()
                         Zone->screenBoundsL1[p]  = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
                         Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
                         if (options->gameMode == MODE_COMPETITION)
-                            Zone->screenUnknownC[p] = 1;
+                            Zone->playerBoundActiveR[p] = 1;
                     }
                 }
                 else {
@@ -551,7 +551,7 @@ void SignPost_HandleCompetition()
                     Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
                     Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
                     if (options->gameMode == MODE_COMPETITION)
-                        Zone->screenUnknownC[p] = 1;
+                        Zone->playerBoundActiveR[p] = 1;
                 }
             }
         }

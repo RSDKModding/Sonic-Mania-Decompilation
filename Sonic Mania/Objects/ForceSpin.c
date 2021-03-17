@@ -94,7 +94,7 @@ void ForceSpin_Create(void* data)
     }
 }
 
-void ForceSpin_StageLoad() { ForceSpin->spriteIndex = RSDK.LoadAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void ForceSpin_StageLoad() { ForceSpin->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void ForceSpin_DrawSprites()
 {

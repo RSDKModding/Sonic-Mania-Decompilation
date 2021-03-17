@@ -78,7 +78,7 @@ void SuperSparkle_Create(void *data)
     }
 }
 
-void SuperSparkle_StageLoad() { SuperSparkle->spriteIndex = RSDK.LoadAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
+void SuperSparkle_StageLoad() { SuperSparkle->spriteIndex = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
 
 void SuperSparkle_EditorDraw()
 {

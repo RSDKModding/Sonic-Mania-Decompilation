@@ -143,7 +143,7 @@ void InvincibleStars_Create(void* data)
     }
 }
 
-void InvincibleStars_StageLoad() { InvincibleStars->spriteIndex = RSDK.LoadAnimation("Global/Invincible.bin", SCOPE_STAGE); }
+void InvincibleStars_StageLoad() { InvincibleStars->spriteIndex = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
 
 void InvincibleStars_EditorDraw()
 {

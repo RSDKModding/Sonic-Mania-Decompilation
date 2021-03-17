@@ -20,9 +20,9 @@ void UIWidgets_Create(void *data) {}
 void UIWidgets_StageLoad()
 {
     UIWidgets->active                = ACTIVE_ALWAYS;
-    UIWidgets->uiSpriteIndex         = RSDK.LoadAnimation("UI/UIElements.bin", SCOPE_STAGE);
-    UIWidgets->saveSelectSpriteIndex = RSDK.LoadAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
-    UIWidgets->labelSpriteIndex      = RSDK.LoadAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->uiSpriteIndex         = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
+    UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UIWidgets->labelSpriteIndex      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animData1, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animData2, true, 0);
@@ -88,15 +88,15 @@ void UIWidgets_ApplyLanguage()
 {
     Game_Print("Apply Language %d", Localization->language);
     switch (Localization->language) {
-        case LANGUAGE_EN: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
-        case LANGUAGE_FR: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
-        case LANGUAGE_IT: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextIT.bin", SCOPE_STAGE); break;
-        case LANGUAGE_GE: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SP: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_JP: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_KO: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SC: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
-        case LANGUAGE_TC: UIWidgets->textSpriteIndex = RSDK.LoadAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_EN: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
+        case LANGUAGE_FR: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
+        case LANGUAGE_IT: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextIT.bin", SCOPE_STAGE); break;
+        case LANGUAGE_GE: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_JP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_KO: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_TC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
         default: break;
     }
 }

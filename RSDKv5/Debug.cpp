@@ -505,7 +505,7 @@ void DevMenu_Options()
     if (controller[0].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
-            devMenu.option = optionCount;
+            devMenu.option = optionCount - 1;
         }
 
         devMenu.timer = 1;
@@ -514,7 +514,7 @@ void DevMenu_Options()
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
-                devMenu.option = optionCount;
+                devMenu.option = optionCount - 1;
             }
         }
 
@@ -523,7 +523,7 @@ void DevMenu_Options()
 
     if (controller[0].keyDown.press) {
         devMenu.option++;
-        if (devMenu.option > optionCount) {
+        if (devMenu.option >= optionCount) {
             devMenu.option = 0;
         }
 
@@ -532,7 +532,7 @@ void DevMenu_Options()
     else if (controller[0].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
-            if (devMenu.option > optionCount) {
+            if (devMenu.option >= optionCount) {
                 devMenu.option = 0;
             }
         }

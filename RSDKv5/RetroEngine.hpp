@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
+#include <ctime>
 
 // ================
 // STANDARD TYPES
@@ -81,6 +82,13 @@ enum EngineStates {
 
 // Utils
 #include "iniparser/iniparser.h"
+
+enum SeverityModes {
+    SEVERITY_NONE,
+    SEVERITY_WARN,
+    SEVERITY_ERROR,
+    SEVERITY_FATAL,
+};
 
 #include "Storage.hpp"
 #include "Math.hpp"

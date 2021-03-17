@@ -99,7 +99,7 @@ void Ring_Create(void *data)
 
 void Ring_StageLoad()
 {
-    Ring->spriteIndex   = RSDK.LoadAnimation("Global/Ring.bin", SCOPE_STAGE);
+    Ring->spriteIndex   = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
     Ring->hitbox.left   = -8;
     Ring->hitbox.top    = -8;
     Ring->hitbox.right  = 8;

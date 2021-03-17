@@ -42,7 +42,7 @@ void Explosion_Create(void* data)
 
 void Explosion_StageLoad()
 {
-    Explosion->spriteIndex = RSDK.LoadAnimation("Global/Explosions.bin", SCOPE_STAGE);
+    Explosion->spriteIndex = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
     Explosion->sfx_Destroy = RSDK.GetSFX("Global/Destroy.wav");
 }
 

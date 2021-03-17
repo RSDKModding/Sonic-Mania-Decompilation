@@ -43,7 +43,7 @@ void SpearBlock_Create(void *data)
 
 void SpearBlock_StageLoad()
 {
-    SpearBlock->spriteIndex = RSDK.LoadAnimation("MTZ/SpearBlock.bin", SCOPE_STAGE);
+    SpearBlock->spriteIndex = RSDK.LoadSpriteAnimation("MTZ/SpearBlock.bin", SCOPE_STAGE);
 
     SpearBlock->blockHitbox.left        = -16;
     SpearBlock->blockHitbox.top         = -16;

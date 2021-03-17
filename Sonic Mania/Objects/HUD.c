@@ -406,8 +406,8 @@ void HUD_Create(void* data)
 
 void HUD_StageLoad()
 {
-    HUD->hudMappings         = RSDK.LoadAnimation("Global/HUD.bin", SCOPE_STAGE);
-    HUD->superButtonMappings = RSDK.LoadAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
+    HUD->hudMappings         = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    HUD->superButtonMappings = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
     HUD->sfx_Click           = RSDK.GetSFX("Stage/Click.wav");
     HUD->sfx_Starpost        = RSDK.GetSFX("Global/StarPost.wav");
     HUD->dwordC              = 0;

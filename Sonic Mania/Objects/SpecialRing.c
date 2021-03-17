@@ -50,7 +50,7 @@ void SpecialRing_Create(void *data)
 
 void SpecialRing_StageLoad()
 {
-    SpecialRing->spriteIndex = RSDK.LoadAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
+    SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
     SpecialRing->modelIndex  = RSDK.LoadMesh("Global/SpecialRing.bin", SCOPE_STAGE);
     SpecialRing->sceneIndex  = RSDK.Create3DScene("View:SpecialRing", 512, SCOPE_STAGE);
 

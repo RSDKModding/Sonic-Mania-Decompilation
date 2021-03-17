@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    byte playerTypes[4];
+    ushort spriteIndex;
+    Hitbox hitbox;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
 } ObjectInk;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte type;
+    byte inkedPlayers;
+    EntityAnimationData data1;
+    EntityAnimationData data2;
+    EntityAnimationData data3;
 } EntityInk;
 
 // Object Struct

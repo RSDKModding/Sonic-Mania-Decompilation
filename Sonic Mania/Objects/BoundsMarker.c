@@ -69,13 +69,13 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
                 case 0:
                     Zone->screenBoundsB2[playerID] = entity->position.y;
                     Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
-                    Zone->screenUnknownA[playerID] = entity->position.y;
+                    Zone->deathBoundary[playerID] = entity->position.y;
                     break;
                 case 1:
                     if (player->position.y < entity->position.y - (entity->offset << 16)) {
                         Zone->screenBoundsB2[playerID] = entity->position.y;
                         Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
-                        Zone->screenUnknownA[playerID] = entity->position.y;
+                        Zone->deathBoundary[playerID] = entity->position.y;
                     }
                     break;
                 case 2:

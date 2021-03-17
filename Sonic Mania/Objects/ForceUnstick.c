@@ -28,7 +28,7 @@ void ForceUnstick_Create(void *data) {}
 
 void ForceUnstick_StageLoad()
 {
-    ForceUnstick->spriteIndex = RSDK.LoadAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    ForceUnstick->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(ForceUnstick->spriteIndex, 2, &ForceUnstick->animData, true, 6);
 }
 

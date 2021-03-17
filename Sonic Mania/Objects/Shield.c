@@ -97,7 +97,7 @@ void Shield_Create(void *data)
 
 void Shield_StageLoad()
 {
-    Shield->spriteIndex         = RSDK.LoadAnimation("Global/Shields.bin", SCOPE_STAGE);
+    Shield->spriteIndex         = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
     Shield->sfx_BlueShield      = RSDK.GetSFX("Global/BlueShield.wav");
     Shield->sfx_BubbleShield    = RSDK.GetSFX("Global/BubbleShield.wav");
     Shield->sfx_FireShield      = RSDK.GetSFX("Global/FireShield.wav");

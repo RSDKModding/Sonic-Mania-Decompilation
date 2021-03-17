@@ -468,7 +468,14 @@ ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope)
 
     scene->scope = scope;
     memcpy(scene->hash, hash, 4 * sizeof(uint));
-    scene->indexCount = faceCnt;
+    scene->indexLimit = faceCnt;
+    scene->faceCount  = 6;
+    scene->unknown1   = 8;
+    scene->unknown2   = 8;
+    AllocateStorage(sizeof(Scene3DVertex) * faceCnt, (void **)&scene->vertices, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * faceCnt, (void **)&scene->normals, DATASET_STG, true);
+    AllocateStorage(sizeof(ushort) * (faceCnt >> 1), (void **)&scene->faceVertCounts, DATASET_STG, true);
+    AllocateStorage(sizeof(ZBufferEntry) * (faceCnt >> 1), (void **)&scene->zBuffer, DATASET_STG, true);
 
     return id;
 }
@@ -481,12 +488,12 @@ void SetupMesh(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, 
             ushort *indices       = mdl->indices;
             int vertID            = scn->indexCount;
             Scene3DVertex *vertex = &scn->vertices[vertID];
-            byte *faceVertCounts  = &scn->faceVertCounts[scn->indCnt];
+            byte *faceVertCounts  = &scn->faceVertCounts[scn->faceCount];
             int indCnt            = mdl->indexCount;
-            if (scn->field_4C - vertID >= indCnt) {
+            if (scn->indexLimit - vertID >= indCnt) {
                 scn->indexCount += mdl->indexCount;
                 scn->drawMode = drawMode;
-                scn->indCnt += indCnt / mdl->faceVertCount;
+                scn->faceCount += indCnt / mdl->faceVertCount;
 
                 switch (mdl->flags) {
                     default: break;
@@ -619,12 +626,12 @@ void SetupMeshAnimation(ushort modelID, ushort sceneID, EntityAnimationData *dat
             ushort *indices       = mdl->indices;
             int vertID            = scn->indexCount;
             Scene3DVertex *vertex = &scn->vertices[vertID];
-            byte *faceVertCounts  = &scn->faceVertCounts[scn->indCnt];
+            byte *faceVertCounts  = &scn->faceVertCounts[scn->faceCount];
             int indCnt            = mdl->indexCount;
-            if (scn->field_4C - vertID >= indCnt) {
+            if (scn->indexLimit - vertID >= indCnt) {
                 scn->indexCount += mdl->indexCount;
                 scn->drawMode = drawMode;
-                scn->indCnt += indCnt / mdl->faceVertCount;
+                scn->faceCount += indCnt / mdl->faceVertCount;
 
                 int frame = data->frameID + 1;
                 if (data->frameID + 1 >= data->frameCount)
@@ -764,7 +771,7 @@ void Draw3DScene(ushort sceneID)
         Scene3DVertex *vertices = scn->vertices;
         ZBufferEntry *zBuffer   = scn->zBuffer;
         int vertID              = 0;
-        for (int i = 0; i < scn->indCnt; ++i) {
+        for (int i = 0; i < scn->faceCount; ++i) {
             switch (*vertCnt) {
                 default: break;
                 case 1:
@@ -795,8 +802,8 @@ void Draw3DScene(ushort sceneID)
             vertID += *vertCnt++;
         }
 
-        for (int i = 0; i < scn->indCnt; ++i) {
-            for (int j = scn->indCnt - 1; j > i; --j) {
+        for (int i = 0; i < scn->faceCount; ++i) {
+            for (int j = scn->faceCount - 1; j > i; --j) {
                 if (scn->zBuffer[j].depth > scn->zBuffer[j - 1].depth) {
                     int index                 = scn->zBuffer[j].index;
                     int depth                 = scn->zBuffer[j].depth;
@@ -813,7 +820,7 @@ void Draw3DScene(ushort sceneID)
         switch (scn->drawMode) {
             default: break;
             case S3D_TYPE_WORLD_WIREFRAME:
-                for (int i = 0; i < scn->indCnt; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     for (int v = 0; v < *vertCnt - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].colour,
@@ -825,7 +832,7 @@ void Draw3DScene(ushort sceneID)
                 }
                 break;
             case S3D_TYPE_WORLD:
-                for (int i = 0; i < scn->indCnt; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     for (int v = 0; v < *vertCnt - 1; ++v) {
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);

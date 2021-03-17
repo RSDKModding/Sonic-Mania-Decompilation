@@ -19,7 +19,7 @@ void ERZSetup_StaticUpdate()
     if (!(Zone->timer & 3)) {
         ERZSetup->aniTileTimer += 128;
         ERZSetup->aniTileTimer &= 0xFFFu;
-        RSDK.DrawAniTile(ERZSetup->skySheet, 520, ERZSetup->aniTileTimer & 0x1FF, (ERZSetup->aniTileTimer >> 2) & 0xFF80, 128, 128);
+        RSDK.DrawAniTiles(ERZSetup->skySheet, 520, ERZSetup->aniTileTimer & 0x1FF, (ERZSetup->aniTileTimer >> 2) & 0xFF80, 128, 128);
     }
 }
 

@@ -87,7 +87,7 @@ void HPZEmerald_Create(void *data)
     }
 }
 
-void HPZEmerald_StageLoad() { HPZEmerald->spriteIndex = RSDK.LoadAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
+void HPZEmerald_StageLoad() { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 
 void HPZEmerald_EditorDraw() {}
 

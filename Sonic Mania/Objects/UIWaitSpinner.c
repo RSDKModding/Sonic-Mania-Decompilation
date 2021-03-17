@@ -65,7 +65,7 @@ void UIWaitSpinner_StageLoad()
 {
     UIWaitSpinner->timer         = 0;
     UIWaitSpinner->activeSpinner = 0;
-    UIWaitSpinner->spriteIndex   = RSDK.LoadAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
+    UIWaitSpinner->spriteIndex   = RSDK.LoadSpriteAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
 }
 
 void UIWaitSpinner_Wait()

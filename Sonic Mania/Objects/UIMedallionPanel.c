@@ -19,7 +19,7 @@ void UIMedallionPanel_StaticUpdate()
 
 void UIMedallionPanel_Draw()
 {
-    if (User.Unknown28())
+    if (User.GetUserStorageUnknown())
         UIMedallionPanel_DrawPanel();
 }
 
@@ -34,7 +34,7 @@ void UIMedallionPanel_Create(void* data)
     entity->updateRange.y = 0x800000;
 }
 
-void UIMedallionPanel_StageLoad() { UIMedallionPanel->spriteIndex = RSDK.LoadAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
+void UIMedallionPanel_StageLoad() { UIMedallionPanel->spriteIndex = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
 
 void UIMedallionPanel_DrawPanel()
 {
@@ -43,7 +43,7 @@ void UIMedallionPanel_DrawPanel()
 
     int *savePtr = NULL;
     if (!RSDK_sceneInfo->inEditor) {
-        if (options->saveLoaded == 200 && !User.Unknown28()) {
+        if (options->saveLoaded == 200 && !User.GetUserStorageUnknown()) {
             savePtr = &options->saveRAM[2304];
         }
     }

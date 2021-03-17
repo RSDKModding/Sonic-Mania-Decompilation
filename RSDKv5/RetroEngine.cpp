@@ -700,7 +700,7 @@ void InitScriptSystem()
 #endif
     info.touchMouse = &touchMouseData;
 #if RETRO_USE_PLUS
-    info.deadzone = &unknownInfo;
+    info.unknown = &unknownInfo;
 #endif
     info.screenInfo   = screens;
 

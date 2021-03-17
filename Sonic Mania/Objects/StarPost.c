@@ -74,7 +74,7 @@ void StarPost_Create(void* data)
 
 void StarPost_StageLoad()
 {
-    StarPost->spriteIndex = RSDK.LoadAnimation("Global/StarPost.bin", SCOPE_STAGE);
+    StarPost->spriteIndex = RSDK.LoadSpriteAnimation("Global/StarPost.bin", SCOPE_STAGE);
     StarPost->hitbox.left   = -8;
     StarPost->hitbox.top    = -44;
     StarPost->hitbox.right  = 8;

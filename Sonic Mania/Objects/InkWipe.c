@@ -29,7 +29,7 @@ void InkWipe_Create(void* data)
     EntityInkWipe *entity  = (EntityInkWipe *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = 1;
+        entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -40,7 +40,7 @@ void InkWipe_Create(void* data)
 void InkWipe_StageLoad()
 {
     if (RSDK.CheckStageFolder("PSZ1"))
-        InkWipe->spriteIndex = RSDK.LoadAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
+        InkWipe->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
 }
 
 void InkWipe_EditorDraw()

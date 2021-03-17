@@ -16,10 +16,10 @@ enum UserdataTableIDs {
     UserdataTable_UnlockAchievement,
     UserdataTable_GetAchievementsStatus,
     UserdataTable_SetAchievementsStatus,
-    UserdataTable_Unknown7,
+    UserdataTable_LeaderboardsUnknown4,
     UserdataTable_FetchLeaderboard,
     UserdataTable_TrackScore,
-    UserdataTable_Unknown10,
+    UserdataTable_LeaderboardsUnknown7,
     UserdataTable_LeaderboardEntryCount,
     UserdataTable_Missing2,
     UserdataTable_Unknown12,
@@ -34,7 +34,7 @@ enum UserdataTableIDs {
     UserdataTable_GetUserAuthStatus,
     UserdataTable_GetUsername,
     UserdataTable_TryInitStorage,
-    UserdataTable_GetStorageStatus,
+    UserdataTable_UserStorageStatusUnknown1,
     UserdataTable_Unknown22,
     UserdataTable_Unknown23,
     UserdataTable_Unknown24,
@@ -310,65 +310,65 @@ void setupFunctions()
 
 #if RETRO_USE_PLUS
     // Userdata
-    userDataTable[UserdataTable_GetUserLanguage]       = (void *)userCore->GetUserLanguage;
-    userDataTable[UserdataTable_GetConfirmButtonFlip]  = (void *)userCore->GetConfirmButtonFlip;
-    userDataTable[UserdataTable_ExitGame]              = (void *)userCore->ExitGame;
-    userDataTable[UserdataTable_LaunchManual]          = (void *)userCore->LaunchManual;
-    userDataTable[UserdataTable_Unknown4]              = (void *)NullFunc;
-    userDataTable[UserdataTable_CheckDLC]              = (void *)userCore->CheckDLC;
-    userDataTable[UserdataTable_ClearAchievements]     = (void *)NullFunc;
-    userDataTable[UserdataTable_UnlockAchievement]     = (void *)achievements->UnlockAchievement;
-    userDataTable[UserdataTable_GetAchievementsStatus] = (void *)NullFunc;
-    userDataTable[UserdataTable_SetAchievementsStatus] = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown7]              = (void *)NullFunc;
-    userDataTable[UserdataTable_FetchLeaderboard]      = (void *)leaderboards->FetchLeaderboard;
-    userDataTable[UserdataTable_TrackScore]            = (void *)leaderboards->TrackScore;
-    userDataTable[UserdataTable_Unknown10]             = (void *)NullFunc;
-    userDataTable[UserdataTable_LeaderboardEntryCount] = (void *)NullFunc;
-    userDataTable[UserdataTable_Missing2]              = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown12]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Missing3]              = (void *)NullFunc;
-    userDataTable[UserdataTable_ReadLeaderboardEntry]  = (void *)NullFunc;
-    userDataTable[UserdataTable_SetPresence]           = (void *)richPresence->SetPresence;
-    userDataTable[UserdataTable_TryTrackStat]          = (void *)NullFunc;
-    userDataTable[UserdataTable_GetStatsStatus]        = (void *)NullFunc;
-    userDataTable[UserdataTable_SetStatsStatus]        = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown16]             = (void *)NullFunc;
-    userDataTable[UserdataTable_TryAuth]               = (void *)NullFunc;
-    userDataTable[UserdataTable_GetUserAuthStatus]     = (void *)NullFunc;
-    userDataTable[UserdataTable_GetUsername]           = (void *)NullFunc;
-    userDataTable[UserdataTable_TryInitStorage]        = (void *)NullFunc;
-    userDataTable[UserdataTable_GetStorageStatus]      = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown22]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown23]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown24]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Missing5]              = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown25]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown26]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown27]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown28]             = (void *)NullFunc;
-    userDataTable[UserdataTable_LoadUserFile]          = (void *)NullFunc;
-    userDataTable[UserdataTable_SaveUserFile]          = (void *)NullFunc;
-    userDataTable[UserdataTable_DeleteUserFile]        = (void *)NullFunc;
-    userDataTable[UserdataTable_AddUserDBEntry]        = (void *)NullFunc;
-    userDataTable[UserdataTable_OpenUserDB]            = (void *)NullFunc;
-    userDataTable[UserdataTable_SaveUserDB]            = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown30]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Missing6]              = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown31]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown32]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown33]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown34]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown35]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown36]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown37]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown38]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown39]             = (void *)NullFunc;
-    userDataTable[UserdataTable_AddUserDB]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown40]             = (void *)NullFunc;
-    userDataTable[UserdataTable_GetTime]               = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown42]             = (void *)NullFunc;
-    userDataTable[UserdataTable_Unknown43]             = (void *)NullFunc;
+    userDataTable[UserdataTable_GetUserLanguage]           = (void *)userCore->GetUserLanguage;
+    userDataTable[UserdataTable_GetConfirmButtonFlip]      = (void *)userCore->GetConfirmButtonFlip;
+    userDataTable[UserdataTable_ExitGame]                  = (void *)userCore->ExitGame;
+    userDataTable[UserdataTable_LaunchManual]              = (void *)userCore->LaunchManual;
+    userDataTable[UserdataTable_Unknown4]                  = (void *)userCore->unknown15;
+    userDataTable[UserdataTable_CheckDLC]                  = (void *)userCore->CheckDLC;
+    userDataTable[UserdataTable_ClearAchievements]         = (void *)userCore->ShowExtensionOverlay;
+    userDataTable[UserdataTable_UnlockAchievement]         = (void *)achievements->UnlockAchievement;
+    userDataTable[UserdataTable_GetAchievementsStatus]     = (void *)GetAchievementsStatus;
+    userDataTable[UserdataTable_SetAchievementsStatus]     = (void *)SetAchievementsStatus;
+    userDataTable[UserdataTable_LeaderboardsUnknown4]      = (void *)NullFunc;
+    userDataTable[UserdataTable_FetchLeaderboard]          = (void *)leaderboards->FetchLeaderboard;
+    userDataTable[UserdataTable_TrackScore]                = (void *)leaderboards->TrackScore;
+    userDataTable[UserdataTable_LeaderboardsUnknown7]      = (void *)leaderboards->unknown7;
+    userDataTable[UserdataTable_LeaderboardEntryCount]     = (void *)NullFunc;
+    userDataTable[UserdataTable_Missing2]                  = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown12]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Missing3]                  = (void *)NullFunc;
+    userDataTable[UserdataTable_ReadLeaderboardEntry]      = (void *)NullFunc;
+    userDataTable[UserdataTable_SetPresence]               = (void *)richPresence->SetPresence;
+    userDataTable[UserdataTable_TryTrackStat]              = (void *)stats->TryTrackStat;
+    userDataTable[UserdataTable_GetStatsStatus]            = (void *)GetStatsStatus;
+    userDataTable[UserdataTable_SetStatsStatus]            = (void *)SetStatsStatus;
+    userDataTable[UserdataTable_Unknown16]                 = (void *)userStorage->unknown8;
+    userDataTable[UserdataTable_TryAuth]                   = (void *)userStorage->TryAuth;
+    userDataTable[UserdataTable_GetUserAuthStatus]         = (void *)GetUserStorageStatus;
+    userDataTable[UserdataTable_GetUsername]               = (void *)userStorage->GetUsername;
+    userDataTable[UserdataTable_TryInitStorage]            = (void *)userStorage->TryInitStorage;
+    userDataTable[UserdataTable_UserStorageStatusUnknown1] = (void *)UserStorageStatusUnknown1;
+    userDataTable[UserdataTable_Unknown22]                 = (void *)UserStorageStatusUnknown2;
+    userDataTable[UserdataTable_Unknown23]                 = (void *)ClearUserStorageStatus;
+    userDataTable[UserdataTable_Unknown24]                 = (void *)SetUserStorageStatus;
+    userDataTable[UserdataTable_Missing5]                  = (void *)UserStorageStatusUnknown3;
+    userDataTable[UserdataTable_Unknown25]                 = (void *)UserStorageStatusUnknown4;
+    userDataTable[UserdataTable_Unknown26]                 = (void *)UserStorageStatusUnknown5;
+    userDataTable[UserdataTable_Unknown27]                 = (void *)SetUserStorageUnknown;
+    userDataTable[UserdataTable_Unknown28]                 = (void *)GetUserStorageUnknown;
+    userDataTable[UserdataTable_LoadUserFile]              = (void *)userStorage->LoadUserFile;
+    userDataTable[UserdataTable_SaveUserFile]              = (void *)userStorage->SaveUserFile;
+    userDataTable[UserdataTable_DeleteUserFile]            = (void *)userStorage->DeleteUserFile;
+    userDataTable[UserdataTable_AddUserDBEntry]            = (void *)NullFunc;
+    userDataTable[UserdataTable_OpenUserDB]                = (void *)NullFunc;
+    userDataTable[UserdataTable_SaveUserDB]                = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown30]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Missing6]                  = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown31]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown32]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown33]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown34]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown35]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown36]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown37]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown38]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown39]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_AddUserDB]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown40]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_GetTime]                   = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown42]                 = (void *)NullFunc;
+    userDataTable[UserdataTable_Unknown43]                 = (void *)NullFunc;
 #endif
 
     // Function Table
@@ -377,9 +377,9 @@ void setupFunctions()
 #if RETRO_USE_PLUS
     functionTable[FunctionTable_CreateObjectContainer] = (void *)CreateObjectContainer;
 #endif
-    functionTable[FunctionTable_GetActiveEntities]       = (void *)GetActiveEntities;
-    functionTable[FunctionTable_GetEntities]             = (void *)GetEntities;
-    functionTable[FunctionTable_BreakForeachLoop]        = (void *)BreakForeachLoop;
+    functionTable[FunctionTable_GetActiveEntities]      = (void *)GetActiveEntities;
+    functionTable[FunctionTable_GetEntities]            = (void *)GetEntities;
+    functionTable[FunctionTable_BreakForeachLoop]       = (void *)BreakForeachLoop;
     functionTable[FunctionTable_SetEditableVar]         = (void *)SetEditableVar;
     functionTable[FunctionTable_GetObjectByID]          = (void *)GetObjectByID;
     functionTable[FunctionTable_GetEntityID]            = (void *)GetEntityID;
@@ -556,8 +556,8 @@ void setupFunctions()
 #if !RETRO_USE_PLUS
     functionTable[FunctionTable_Unknown92] = (void *)NullFunc;
 #endif
-    functionTable[FunctionTable_LoadUserFile] = (void *)NullFunc; // LoadUserFile;
-    functionTable[FunctionTable_SaveUserFile] = (void *)NullFunc; // SaveUserFile;
+    functionTable[FunctionTable_LoadUserFile] = (void *)userStorage->LoadUserFile;
+    functionTable[FunctionTable_SaveUserFile] = (void *)userStorage->SaveUserFile;
 #if RETRO_USE_PLUS
     functionTable[FunctionTable_printLog]             = (void *)printLog;
     functionTable[FunctionTable_printString]          = (void *)printString;

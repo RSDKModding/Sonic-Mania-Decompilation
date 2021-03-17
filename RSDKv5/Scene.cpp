@@ -479,7 +479,7 @@ void LoadSceneFile() {
         //handle filter and stuff
         int slot = RESERVE_ENTITY_COUNT;
         int activeSlot = RESERVE_ENTITY_COUNT;
-        for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
+        /*for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
             if (sceneInfo.filter & entList[e].filter) {
                 if (activeSlot != slot) {
                     memcpy(&objectEntityList[slot], &objectEntityList[e], sizeof(EntityBase));
@@ -491,12 +491,12 @@ void LoadSceneFile() {
                 memset(&objectEntityList[slot], 0, sizeof(EntityBase));
             }
             slot++;
-        }
+        }*/
 
         slot = activeSlot;
         for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
             if (sceneInfo.filter & entList[e].filter) {
-                memcpy(&objectEntityList[e], &entList[e], sizeof(EntityBase));
+                memcpy(&objectEntityList[e + RESERVE_ENTITY_COUNT], &entList[e], sizeof(EntityBase));
             }
             slot++;
         }
@@ -1006,6 +1006,7 @@ void SetScene(const char *categoryName, const char *sceneName)
     for (int i = 0; i < sceneInfo.categoryCount; ++i) {
         if (HASH_MATCH(sceneInfo.listCategory[i].hash, hash)) {
             sceneInfo.activeCategory = i;
+            sceneInfo.listPos        = 0;
             GEN_HASH(sceneName, hash);
 
             for (int s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {

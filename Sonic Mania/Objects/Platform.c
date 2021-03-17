@@ -299,65 +299,65 @@ void Platform_StageLoad()
 {
     Platform->useClack = false;
     if (RSDK.CheckStageFolder("GHZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("GHZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("GHZCutscene")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("GHZCutscene/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("GHZCutscene/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("OOZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SPZ1")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("SPZ1/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SPZ2")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("SPZ2/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SPZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("FBZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("FBZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Platform.bin", SCOPE_STAGE);
         Platform->sfx_Clack   = RSDK.GetSFX("Stage/Clack2.wav");
         Platform->useClack    = true;
     }
     else if (RSDK.CheckStageFolder("PSZ1")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("PSZ1/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("PSZ2")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("PSZ2/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SSZ1")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("SSZ1/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SSZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SSZ2")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("SSZ2/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SSZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("HCZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE);
         Platform->sfx_Clack   = RSDK.GetSFX("Stage/Clack2.wav");
         Platform->useClack    = true;
     }
     else if (RSDK.CheckStageFolder("MSZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("MSZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("OOZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("OOZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ1")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("LRZ1/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("LRZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("LRZ2/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("LRZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("MMZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("MMZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("TMZ1/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("AIZ")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("AIZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("Blueprint")) {
-        Platform->spriteIndex = RSDK.LoadAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
     }
 
     Platform->sfx_Clacker = RSDK.GetSFX("Stage/Clacker.wav");

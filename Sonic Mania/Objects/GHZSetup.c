@@ -30,15 +30,15 @@ void GHZSetup_StaticUpdate()
         ++GHZSetup->frameA;
         GHZSetup->frameA &= 7;
         GHZSetup->delayA = GHZSetup->delayListA[GHZSetup->frameA];
-        RSDK.DrawAniTile(GHZSetup->aniTiles, 427, 0, 32 * GHZSetup->frameA, 32, 32);
+        RSDK.DrawAniTiles(GHZSetup->aniTiles, 427, 0, 32 * GHZSetup->frameA, 32, 32);
     }
 
     --GHZSetup->delayB;
     if (GHZSetup->delayB < 1) {
         ++GHZSetup->frameB;
-        GHZSetup->frameB &= 0xFu;
+        GHZSetup->frameB &= 0xF;
         GHZSetup->delayB = GHZSetup->delayListB[GHZSetup->frameB];
-        RSDK.DrawAniTile(GHZSetup->aniTiles, 431, 0, 48 * GHZSetup->frameB + 256, 32, 48);
+        RSDK.DrawAniTiles(GHZSetup->aniTiles, 431, 0, 48 * GHZSetup->frameB + 256, 32, 48);
     }
 }
 
@@ -107,7 +107,7 @@ void GHZSetup_StageLoad()
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & 4 || (RSDK.CheckStageFolder("GHZCutscene") && options->gameMode == MODE_ENCORE)) {
+    if (RSDK_sceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && options->gameMode == MODE_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 2, 128, 80);
