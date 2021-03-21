@@ -1832,10 +1832,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             default: break;
             case INK_NONE:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -1864,10 +1868,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             case INK_ALPHA:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -1887,10 +1895,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             case INK_ADD: {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -1923,10 +1935,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             case INK_SUB: {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -1951,10 +1967,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             }
             case INK_LOOKUP:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -1967,10 +1987,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             case INK_MASKED:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -1984,10 +2008,14 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             case INK_UNMASKED:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
                     int xCnt = edge->end - edge->start;
@@ -2093,7 +2121,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2135,7 +2166,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2178,7 +2212,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2228,7 +2265,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2291,7 +2331,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2346,7 +2389,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2432,7 +2478,10 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
+                    if (edge->end < currentScreen->clipBound_X1) {
+                        edge->end = currentScreen->clipBound_X1;
+                    }
+                    if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }

@@ -23,9 +23,10 @@ void SpecialRing_Draw()
     else {
         RSDK.Prepare3DScene(SpecialRing->sceneIndex);
         if (entity->enabled)
-            RSDK.AddMeshToScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, 6, &entity->matrix2, &entity->matrix3, 0xF0F000);
+            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &entity->matrix2, &entity->matrix3,
+                                0xF0F000);
         else
-            RSDK.AddMeshToScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, 4, &entity->matrix2, &entity->matrix3, 0x609090);
+            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_WIREFRAME, &entity->matrix2, &entity->matrix3, 0x609090);
         RSDK.Draw3DScene(SpecialRing->sceneIndex);
     }
 }
@@ -59,9 +60,9 @@ void SpecialRing_StageLoad()
     SpecialRing->hitbox.right  = 18;
     SpecialRing->hitbox.bottom = 18;
 
-    RSDK.View_Something1(SpecialRing->sceneIndex, 160, 160, 160);
-    RSDK.View_Something2(SpecialRing->sceneIndex, 8, 8, 8);
-    RSDK.View_Something3(SpecialRing->sceneIndex, 14, 14, 14);
+    RSDK.SetAmbientColour(SpecialRing->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseColour(SpecialRing->sceneIndex, 8, 8, 8);
+    RSDK.SetSpecularColour(SpecialRing->sceneIndex, 14, 14, 14);
     SpecialRing->sfx_SpecialRing = RSDK.GetSFX("Global/SpecialRing.wav");
     SpecialRing->sfx_SpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
 
@@ -184,7 +185,7 @@ void SpecialRing_State_Warp()
 void SpecialRing_State_Normal()
 {
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
-    entity->angleY            = (entity->angleZ + 4) & 0x3FF;
+    entity->angleZ            = (entity->angleZ + 4) & 0x3FF;
     entity->angleY            = (entity->angleY + 4) & 0x3FF;
 
     Vector2 updateRange;
@@ -201,7 +202,7 @@ void SpecialRing_State_Normal()
         entity->scale.x += ((360 - entity->scale.x) >> 5);
 
     RSDK.MatrixScaleXYZ(&entity->matrix, entity->scale.x, entity->scale.x, entity->scale.x);
-    RSDK.MatrixTranslateXYZ(&entity->matrix, entity->position.x, entity->position.y, 0, 0);
+    RSDK.MatrixTranslateXYZ(&entity->matrix, entity->position.x, entity->position.y, 0, false);
     RSDK.MatrixRotateXYZ(&entity->matrix2, 0, entity->angleY, entity->angleZ);
     RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &entity->matrix);
     RSDK.MatrixRotateX(&entity->matrix4, 480);

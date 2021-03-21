@@ -68,6 +68,21 @@ typedef enum {
 } ReservedEntities;
 
 typedef enum {
+    S3D_FLATCLR_WIREFRAME               = 0x0,
+    S3D_FLATCLR                         = 0x1,
+    S3D_UNKNOWN_2                       = 0x2,
+    S3D_UNKNOWN_3                       = 0x3,
+    S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
+    S3D_FLATCLR_SHADED                  = 0x5,
+    S3D_FLATCLR_SHADED_BLENDED          = 0x6,
+    S3D_FLATCLR_SCREEN_WIREFRAME        = 0x7,
+    S3D_FLATCLR_SCREEN                  = 0x8,
+    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME = 0x9,
+    S3D_FLATCLR_SHADED_SCREEN           = 0xA,
+    S3D_FLATCLR_SHADED_BLENDED_SCREEN   = 0xB,
+} Scene3DDrawTypes;
+
+typedef enum {
     SETTINGS_WINDOWED        = 0x0,
     SETTINGS_BORDERED        = 0x1,
     SETTINGS_EXCLUSIVEFS     = 0x2,

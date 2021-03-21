@@ -3,20 +3,21 @@
 
 #define SCENE3D_MAX (0x20)
 #define MODEL_MAX   (0x100)
+#define SCENE3D_VERT_MAX (0x4000)
 
 enum Scene3DDrawTypes {
-    S3D_TYPE_WORLD_WIREFRAME = 0x0,
-    S3D_TYPE_WORLD           = 0x1,
-    S3D_TYPE_2               = 0x2,
-    S3D_TYPE_3               = 0x3,
-    S3D_TYPE_4               = 0x4,
-    S3D_TYPE_5               = 0x5,
-    S3D_TYPE_6               = 0x6,
-    S3D_TYPE_7               = 0x7,
-    S3D_TYPE_8               = 0x8,
-    S3D_TYPE_9               = 0x9,
-    S3D_TYPE_A               = 0xA,
-    S3D_TYPE_B               = 0xB,
+    S3D_FLATCLR_WIREFRAME               = 0x0,
+    S3D_FLATCLR                         = 0x1,
+    S3D_UNKNOWN_2                       = 0x2,
+    S3D_UNKNOWN_3                       = 0x3,
+    S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
+    S3D_FLATCLR_SHADED                  = 0x5,
+    S3D_FLATCLR_SHADED_BLENDED          = 0x6,
+    S3D_FLATCLR_SCREEN_WIREFRAME        = 0x7,
+    S3D_FLATCLR_SCREEN                  = 0x8,
+    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME = 0x9,
+    S3D_FLATCLR_SHADED_SCREEN           = 0xA,
+    S3D_FLATCLR_SHADED_BLENDED_SCREEN   = 0xB,
 };
 
 struct ScanEdge {
@@ -96,8 +97,8 @@ struct Scene3D {
     int specularX;
     int specularY;
     int specularZ;
-    ushort indexLimit;
-    ushort indexCount;
+    ushort vertLimit;
+    ushort vertexCount;
     ushort faceCount;
     byte drawMode;
     byte scope;
@@ -128,7 +129,7 @@ inline void Init3DScene(ushort sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn    = &scene3DList[sceneID];
-        scn->indexCount = 0;
+        scn->vertexCount = 0;
         scn->faceCount     = 0;
     }
 }

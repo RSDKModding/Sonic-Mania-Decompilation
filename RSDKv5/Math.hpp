@@ -1,6 +1,9 @@
 #ifndef MATH_H
 #define MATH_H
 
+#define maxVal(a, b) (a >= b ? a : b)
+#define minVal(a, b) (a <= b ? a : b)
+
 struct Vector2 {
     int x;
     int y;
