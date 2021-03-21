@@ -634,7 +634,7 @@ typedef struct {
     short frameCount;
     byte loopIndex;
     byte rotationFlag;
-} EntityAnimationData;
+} AnimationData;
 
 typedef struct {
     int deadzone;
@@ -706,6 +706,8 @@ typedef enum {
 typedef enum { FX_NONE = 0, FX_FLIP = 1, FX_ROTATE = 2, FX_SCALE = 4 } DrawFX;
 
 typedef enum { FLIP_NONE, FLIP_X, FLIP_Y, FLIP_XY } FlipFlags;
+
+typedef enum { TYPE_BLANK } DefaultObjTypes;
 
 typedef enum {
     ALIGN_LEFT,

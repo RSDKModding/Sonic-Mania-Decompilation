@@ -135,8 +135,8 @@ void SpecialRing_StartWarp()
         EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
         zone->screenID   = 4;
         zone->timer      = 0;
-        zone->fade1      = 10;
-        zone->fade2      = 0xF0F0F0;
+        zone->fadeTimer      = 10;
+        zone->fadeColour      = 0xF0F0F0;
         zone->state      = Zone_Unknown13;
         zone->stateDraw  = Zone_Unknown12;
         zone->visible    = true;

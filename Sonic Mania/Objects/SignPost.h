@@ -36,11 +36,11 @@ typedef struct {
     int sparkleType;
     int itemBounceCount;
     Vector2 playerPosStore[4];
-    EntityAnimationData eggPlateAnim;
-    EntityAnimationData facePlateAnim;
-    EntityAnimationData sidebarData;
-    EntityAnimationData postTopData;
-    EntityAnimationData standData;
+    AnimationData eggPlateAnim;
+    AnimationData facePlateAnim;
+    AnimationData sidebarData;
+    AnimationData postTopData;
+    AnimationData standData;
     byte activePlayers;
     bool32 debugObj;
 } EntitySignPost;

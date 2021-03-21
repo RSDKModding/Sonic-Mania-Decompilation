@@ -867,7 +867,7 @@ void DDWrecker_State_Die()
                     RSDK.ResetEntityPtr(music, Music->objectID, 0);
                     music->state    = Music_Unknown15;
                     music->volume   = 1.0;
-                    music->field_8C = 0.0125;
+                    music->fadeSpeed = 0.0125;
                 }
             }
             entity->timer               = 0;

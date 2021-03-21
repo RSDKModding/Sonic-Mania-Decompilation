@@ -2,36 +2,24 @@
 
 ObjectBSS_Palette *BSS_Palette;
 
-void BSS_Palette_Update()
-{
+void BSS_Palette_Update() {}
 
-}
+void BSS_Palette_LateUpdate() {}
 
-void BSS_Palette_LateUpdate()
-{
+void BSS_Palette_StaticUpdate() {}
 
-}
+void BSS_Palette_Draw() {}
 
-void BSS_Palette_StaticUpdate()
-{
-
-}
-
-void BSS_Palette_Draw()
-{
-
-}
-
-void BSS_Palette_Create(void* data)
+void BSS_Palette_Create(void *data)
 {
     if (!RSDK_sceneInfo->inEditor)
-        RSDK.ResetEntityPtr(RSDK_sceneInfo->entity, 0, 0);
+        RSDK.ResetEntityPtr(RSDK_sceneInfo->entity, TYPE_BLANK, 0);
 }
 
 void BSS_Palette_StageLoad()
 {
-    BSS_Palette->alpha1 = 256;
-    BSS_Palette->alpha2 = 128;
+    BSS_Palette->alpha1 = 0x100;
+    BSS_Palette->alpha2 = 0x80;
 
     EntityBSS_Palette *entity = NULL;
     while (RSDK.GetEntities(BSS_Palette->objectID, (Entity **)&entity)) {
@@ -46,19 +34,13 @@ void BSS_Palette_StageLoad()
             RSDK.SetPaletteEntry(1, 4, entity->bgColor3);
         }
         BSS_Palette->alpha1 = entity->skyAlpha;
-        BSS_Palette->alpha2     = entity->globeAlpha;
+        BSS_Palette->alpha2 = entity->globeAlpha;
     }
 }
 
-void BSS_Palette_EditorDraw()
-{
+void BSS_Palette_EditorDraw() {}
 
-}
-
-void BSS_Palette_EditorLoad()
-{
-
-}
+void BSS_Palette_EditorLoad() {}
 
 void BSS_Palette_Serialize()
 {
@@ -72,4 +54,3 @@ void BSS_Palette_Serialize()
     RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, bgColor2);
     RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, bgColor3);
 }
-

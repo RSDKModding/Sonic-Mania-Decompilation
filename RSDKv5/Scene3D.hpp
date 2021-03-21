@@ -87,15 +87,15 @@ struct Scene3D {
     byte *faceVertCounts;
     int unknown1;
     int unknown2;
-    int unknown3;
-    int unknown4;
-    int unknown5;
-    int unknown6;
-    int unknown7;
-    int unknown8;
-    int unknown9;
-    int unknown10;
-    int unknown11;
+    int ambientX;
+    int ambientY;
+    int ambientZ;
+    int diffuseX;
+    int diffuseY;
+    int diffuseZ;
+    int specularX;
+    int specularY;
+    int specularZ;
     ushort indexLimit;
     ushort indexCount;
     ushort faceCount;
@@ -109,7 +109,7 @@ extern Scene3D scene3DList[SCENE3D_MAX];
 extern ScanEdge scanEdgeBuffer[SCREEN_YSIZE];
 
 void ProcessScanEdge(int x1, int y1, int x2, int y2);
-void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2);
+void ProcessScanEdgeClr(uint c1, uint c2, int x1, int y1, int x2, int y2);
 
 void setIdentityMatrix(Matrix *matrix);
 void matrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
@@ -133,7 +133,7 @@ inline void Init3DScene(ushort sceneID)
     }
 }
 
-inline void SetModelAnimation(ushort model, EntityAnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
+inline void SetModelAnimation(ushort model, AnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
 {
     if (model >= MODEL_MAX) {
         if (data)
@@ -155,35 +155,35 @@ inline void SetModelAnimation(ushort model, EntityAnimationData *data, short ani
     data->loopIndex       = loopIndex;
     data->animationID     = model;
 }
-inline void View_Something1(ushort sceneID, byte x, byte y, byte z)
+inline void SetAmbientUnknown(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
-        scn->unknown3 = x;
-        scn->unknown4 = y;
-        scn->unknown5 = z;
+        scn->ambientX = x;
+        scn->ambientY = y;
+        scn->ambientZ = z;
     }
 }
-inline void View_Something2(ushort sceneID, byte x, byte y, byte z)
+inline void SetDiffuseUnknown(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
-        scn->unknown6 = x;
-        scn->unknown7 = y;
-        scn->unknown8 = z;
+        scn->diffuseX = x;
+        scn->diffuseY = y;
+        scn->diffuseZ = z;
     }
 }
-inline void View_Something3(ushort sceneID, byte x, byte y, byte z)
+inline void SetSpecularUnknown(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn   = &scene3DList[sceneID];
-        scn->unknown9  = x;
-        scn->unknown10 = y;
-        scn->unknown11 = z;
+        scn->specularX  = x;
+        scn->specularY = y;
+        scn->specularZ = z;
     }
 }
 void SetupMesh(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
-void SetupMeshAnimation(ushort animID, ushort sceneID, EntityAnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
+void SetupMeshAnimation(ushort animID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void Draw3DScene(ushort sceneID);
 
 #endif

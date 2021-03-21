@@ -16,8 +16,8 @@ typedef struct {
     int field_5C;
     Vector2 startPos;
     int headingID;
-    EntityAnimationData data2;
-    EntityAnimationData data;
+    AnimationData data2;
+    AnimationData data;
     ushort spriteIndex;
 } EntityUIHeading;
 

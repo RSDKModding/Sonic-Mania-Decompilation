@@ -5,12 +5,15 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectTitleSonic;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    AnimationData data1;
+    AnimationData data2;
 } EntityTitleSonic;
 
 // Object Struct

@@ -21,7 +21,7 @@ typedef struct {
     char field_66;
     char field_67;
     int timer;
-    EntityAnimationData data;
+    AnimationData data;
     Hitbox hitbox;
 } EntitySpring;
 

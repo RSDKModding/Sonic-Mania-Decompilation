@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectBSS_Message;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    int timer;
+    int timer2;
+    bool32 flag;
+    int colour;
+    int field_6C;
+    AnimationData leftData;
+    AnimationData rightData;
 } EntityBSS_Message;
 
 // Object Struct
@@ -28,6 +37,14 @@ void BSS_Message_EditorLoad();
 void BSS_Message_Serialize();
 
 // Extra Entity Functions
-
+void BSS_Message_State_GetBS();
+void BSS_Message_State_GetBSWait();
+void BSS_Message_State_Unknown();
+void BSS_Message_State_Perfect();
+void BSS_Message_State_Idle();
+void BSS_Message_State_Finish();
+int BSS_Message_TrackProgress_CB(int a1);
+void BSS_Message_LoadPrevScene();
+void BSS_Message_LoadGameState();
 
 #endif //!OBJ_BSS_MESSAGE_H

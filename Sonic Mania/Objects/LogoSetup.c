@@ -80,7 +80,7 @@ void LogoSetup_CESAScreen()
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     LogoSetup->timer = 0;
-    //RSDK.LoadPNG("CESA.png", xmmword_661DB0, *(&xmmword_661DB0 + 1), *(&xmmword_661DB0 + 2), *(&xmmword_661DB0 + 3), LogoSetup_PNGCallback);
+    RSDK.LoadImage("CESA.png", 2.0, 60.0, LogoSetup_PNGCallback);
     entity->timer = 1024;
     entity->state = LogoSetup_SegaScreen;
 }

@@ -47,7 +47,7 @@ typedef struct {
     int field_80;
     int field_84;
     float volume;
-    float field_8C;
+    float fadeSpeed;
     int field_90;
     int field_94;
     int field_98;
@@ -85,7 +85,7 @@ void Music_Unknown6(byte trackID, int a2);
 void Music_Unknown7(EntityMusic *entity);
 void Music_Unknown8();
 void Music_Unknown9(byte trackID, float a2);
-void Music_Unknown10(float a1);
+void Music_FadeOut(float a1);
 void Music_Unknown11();
 void Music_Unknown12();
 void Music_Unknown13();

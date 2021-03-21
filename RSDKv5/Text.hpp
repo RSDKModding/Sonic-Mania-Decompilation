@@ -155,7 +155,26 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
     }
 }
 
-inline void CopyString(char *dest, TextInfo *info)
+inline void CopyString(TextInfo *dst, TextInfo *src)
+{
+    int textLen = src->textLength;
+    if (dst->length >= textLen) {
+        if (!dst->text) {
+            AllocateStorage(sizeof(ushort) * dst->length, (void **)dst, DATASET_STR, 0);
+        }
+    }
+    else {
+        dst->length = textLen;
+        AllocateStorage(sizeof(ushort) * dst->length, (void **)dst, DATASET_STR, 0);
+    }
+    
+    dst->textLength = src->textLength;
+    for (int c = 0; c < dst->textLength; ++c) {
+        dst->text[c] = src->text[c];
+    }
+}
+
+inline void GetCString(char *dest, TextInfo *info)
 {
     if (!info->text)
         return;
@@ -175,7 +194,9 @@ inline void CopyString(char *dest, TextInfo *info)
 
 
 void Unknown64(TextInfo *textA, TextInfo *textB);
-void Unknown66(TextInfo *textA, TextInfo *textB);
-bool32 Unknown69(TextInfo *textA, TextInfo *textB, byte a3);
+void AppendString(TextInfo *textA, TextInfo *textB);
+bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3);
+
+void LoadStrings(TextInfo *buffer, const char *filePath);
 
 #endif

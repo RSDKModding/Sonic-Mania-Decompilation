@@ -4,7 +4,7 @@ ObjectTitleSetup *TitleSetup;
 
 void TitleSetup_Update()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     if (entity->state)
         entity->state();
 }
@@ -15,21 +15,21 @@ void TitleSetup_StaticUpdate() {}
 
 void TitleSetup_Draw()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     if (entity->stateDraw)
         entity->stateDraw();
 }
 
 void TitleSetup_Create(void *data)
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     if (!RSDK_sceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(TitleSetup->spriteIndex, 0, &entity->data, true, 0);
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
         entity->drawFX    = FX_FLIP;
-        // entity->state          = TitleSetup_Unknown4;
+        entity->state          = TitleSetup_Unknown4;
         entity->stateDraw = TitleSetup_Unknown13;
         entity->timer     = 1024;
         entity->drawPos.x = 0x1000000;
@@ -97,7 +97,7 @@ void TitleSetup_CheckCheatCode()
         }
     }
 }
-bool32 TitleSetup_IntroCallback(void)
+bool32 TitleSetup_IntroCallback()
 {
     if (!RSDK_controller->keyA.press && !RSDK_controller->keyB.press && !RSDK_controller->keyStart.press)
         return false;
@@ -105,25 +105,150 @@ bool32 TitleSetup_IntroCallback(void)
     return true;
 }
 
-void TitleSetup_Unknown7()
+void TitleSetup_Unknown4()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
-    TitleSetup_CheckCheatCode();
-    if (entity->timer <= 0) {
-        entity->stateDraw = NULL;
-        // if (User.CheckDLC(DLC_PLUS))
-        //    entity->state = TitleSetup_SetupLogo_Plus;
-        // else
-        //    entity->state = TitleSetup_SetupLogo_NoPlus;
+    RSDK_THIS(TitleSetup);
+    if (entity->timer <= -0x400) {
+        entity->timer     = 0;
+        entity->state     = TitleSetup_Unknown5;
+        entity->stateDraw = TitleSetup_Unknown14;
+        Music_PlayTrack(0);
     }
     else {
         entity->timer -= 16;
     }
 }
 
+void TitleSetup_Unknown5()
+{
+    RSDK_THIS(TitleSetup);
+    RSDK.ProcessAnimation(&entity->data);
+    if (entity->data.frameID == 31) {
+        EntityTitleLogo *titleLogo = NULL;
+        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+            if (titleLogo->type >= 0) {
+                if (titleLogo->type <= 1) {
+                    titleLogo->active  = ACTIVE_NORMAL;
+                    titleLogo->visible = true;
+                }
+                else if (titleLogo->type == 3) {
+                    RSDK.ResetEntityPtr(titleLogo, 0, 0);
+                }
+            }
+        }
+        entity->state = TitleSetup_Unknown6;
+    }
+}
+
+void TitleSetup_Unknown6()
+{
+    RSDK_THIS(TitleSetup);
+
+    RSDK.ProcessAnimation(&entity->data);
+    if (entity->data.frameID == entity->data.frameCount - 1) {
+        EntityTitleLogo *titleLogo = NULL;
+        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+            if (titleLogo->type == 7) {
+                titleLogo->position.y -= 0x200000;
+            }
+            else if (titleLogo->type != 6) {
+                titleLogo->active  = ACTIVE_NORMAL;
+                titleLogo->visible = true;
+            }
+            if (titleLogo->type == 1) {
+                titleLogo->flag = true;
+                RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 2, &titleLogo->data1, true, 0);
+            }
+        }
+
+        Entity *titleSonic = NULL;
+        while (RSDK.GetEntities(TitleSonic->objectID, &titleSonic)) {
+            titleSonic->active = ACTIVE_NORMAL;
+            titleSonic->visible = true;
+        }
+        
+        TitleBG_SetupFX();
+        entity->timer     = 0x300;
+        entity->state     = TitleSetup_Unknown7;
+        entity->stateDraw = TitleSetup_Unknown15;
+    }
+}
+
+void TitleSetup_Unknown7()
+{
+    RSDK_THIS(TitleSetup);
+    TitleSetup_CheckCheatCode();
+    if (entity->timer <= 0) {
+        entity->stateDraw = NULL;
+        if (User.CheckDLC(DLC_PLUS))
+           entity->state = TitleSetup_SetupLogo_Plus;
+        else
+           entity->state = TitleSetup_SetupLogo_NoPlus;
+    }
+    else {
+        entity->timer -= 16;
+    }
+}
+
+void TitleSetup_SetupLogo_NoPlus()
+{
+    RSDK_THIS(TitleSetup);
+    if (entity->timer < 120)
+        TitleSetup_CheckCheatCode();
+    if (++entity->timer == 120) {
+        EntityTitleLogo *titleLogo = NULL;
+        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+            if (titleLogo->type == 6) {
+                titleLogo->active      = ACTIVE_NORMAL;
+                titleLogo->visible     = true;
+                Entity *store          = RSDK_sceneInfo->entity;
+                RSDK_sceneInfo->entity = (Entity *)titleLogo;
+                TitleLogo_Unknown1();
+                RSDK_sceneInfo->entity = store;
+            }
+        }
+        entity->timer = 0;
+        entity->state = TitleSetup_Unknown10;
+    }
+}
+void TitleSetup_SetupLogo_Plus()
+{
+    RSDK_THIS(TitleSetup);
+    if (entity->timer < 120)
+        TitleSetup_CheckCheatCode();
+    if (++entity->timer == 120) {
+        EntityTitleLogo *titleLogo = NULL;
+        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+            switch (titleLogo->type) {
+                case 1:
+                case 2:
+                    titleLogo->storeY     = titleLogo->position.y - 0x70000;
+                    titleLogo->velocity.y = -0x30000;
+                    titleLogo->timer      = 2;
+                    titleLogo->state      = TitleLogo_Unknown4;
+                    RSDK.PlaySFX(TitleLogo->sfx_Plus, 0, 255);
+                    break;
+                case 6: titleLogo->position.y += 0x80000; break;
+                case 7:
+                    titleLogo->active  = ACTIVE_NORMAL;
+                    titleLogo->visible = true;
+                    titleLogo->timer   = 2;
+                    titleLogo->position.y -= 0x40000;
+                    titleLogo->state = TitleLogo_Unknown4;
+                    break;
+                default: break;
+            }
+        }
+        
+        RSDK.CreateEntity(TitleEggman->objectID, 0, 0, 0xC00000);
+        entity->timer = 0;
+        entity->state = TitleSetup_SetupLogo_NoPlus;
+    }
+}
+
 void TitleSetup_Unknown10()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     bool32 skipped = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
                      || RSDK_controller->keyY.press || RSDK_controller->keyZ.press | RSDK_controller->keyStart.press
                      || RSDK_controller->keyStart.press || RSDK_controller->keySelect.press;
@@ -148,8 +273,7 @@ void TitleSetup_Unknown10()
 
 void TitleSetup_Unknown11()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
-
+    RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
         RSDK.InitSceneLoad();
     }
@@ -160,18 +284,18 @@ void TitleSetup_Unknown11()
 
 void TitleSetup_Unknown12()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
         RSDK.InitSceneLoad();
         RSDK.SoundUnknown1(Music->slotID);
         if (TitleSetup->altMusic) {
             RSDK.PlayMusic("IntroTee.ogg", Music->slotID, 0, 0, 0);
-            // RSDK.LoadVideo("Mania.ogv", qword_661940, *(&qword_661940 + 1), TitleSetup_Unknown3);
+            RSDK.LoadVideo("Mania.ogv", 1.8, TitleSetup_IntroCallback);
             TitleSetup->altMusic = 0;
         }
         else {
             RSDK.PlayMusic("IntroHP.ogg", Music->slotID, 0, 0, 0);
-            // RSDK.LoadVideo("Mania.ogv", 0, 0, TitleSetup_Unknown3);
+            RSDK.LoadVideo("Mania.ogv", 0, TitleSetup_IntroCallback);
             TitleSetup->altMusic = true;
         }
     }
@@ -182,13 +306,13 @@ void TitleSetup_Unknown12()
 
 void TitleSetup_Unknown13()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
 void TitleSetup_Unknown14()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     entity->direction        = FLIP_NONE;
     RSDK.DrawSprite(&entity->data, &entity->drawPos, 0);
     entity->direction = FLIP_X;
@@ -197,7 +321,7 @@ void TitleSetup_Unknown14()
 
 void TitleSetup_Unknown15()
 {
-    EntityTitleSetup *entity = (EntityTitleSetup *)RSDK_sceneInfo->entity;
+    RSDK_THIS(TitleSetup);
     RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 

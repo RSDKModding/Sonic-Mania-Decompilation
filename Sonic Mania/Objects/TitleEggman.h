@@ -6,12 +6,20 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectTitleEggman;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+    void (*state)();
+    int timer;
+    Vector2 startPos;
+    AnimationData data1;
+    AnimationData data2;
+    AnimationData data3;
+    AnimationData data4;
 } EntityTitleEggman;
 
 // Object Struct
@@ -29,6 +37,9 @@ void TitleEggman_EditorLoad();
 void TitleEggman_Serialize();
 
 // Extra Entity Functions
+void TitleEggman_Unknown1();
+void TitleEggman_Unknown2();
+void TitleEggman_Unknown3();
 #endif
 
 #endif //!OBJ_TITLEEGGMAN_H

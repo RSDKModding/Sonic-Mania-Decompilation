@@ -273,9 +273,9 @@ void SaveGame_SaveProgress()
     saveRAM[66]  = options->stock;
     saveRAM[67]  = options->characterFlags;
     saveRAM[68]  = options->playerID;
-    /*if (!ActClear || ActClear->actID <= 0) {
-        if (options->saveSlotID != 255) {
-            if (Zone_IsAct2() {
+    if (!ActClear || ActClear->actID <= 0) {
+        if (options->saveSlotID != NO_SAVE_SLOT) {
+            if (Zone_IsAct2()) {
                 if (saveRAM[24] < Zone_GetZoneID() + 1)
                     saveRAM[24] = Zone_GetZoneID() + 1;
                 if (saveRAM[24] > 11) {
@@ -284,7 +284,7 @@ void SaveGame_SaveProgress()
                 }
             }
         }
-    }*/
+    }
 }
 void SaveGame_ClearRestartData()
 {
@@ -294,7 +294,7 @@ void SaveGame_ClearRestartData()
     options->restartMinutes      = 0;
     memset(options->atlEntityData, 0, 0x840 * sizeof(int));
 }
-void SaveGame_Unknown8()
+void SaveGame_SavePlayerState()
 {
     int *saveRAM                 = SaveGame->saveRAM;
     options->restartSlot[0]      = 0;
@@ -378,7 +378,7 @@ void SaveGame_SaveFile_CB(int status)
         SaveGame->saveEntityPtr = NULL;
     }
 }
-int SaveGame_Unknown11(int type)
+int SaveGame_GetNotifStringID(int type)
 {
     switch (type) {
         case 0: return 12; break;
@@ -450,14 +450,14 @@ void SaveGame_ShuffleBSSID()
         Game_Print("Blue Spheres ID rotated by %d to %d", options->blueSpheresID - startID, options->blueSpheresID);
     }
 }
-int *SaveGame_Unknown12()
+int *SaveGame_GetGlobalData()
 {
     if (RSDK_sceneInfo->inEditor || User.GetUserStorageUnknown() || options->saveLoaded != 200)
         return NULL;
     else
         return &options->saveRAM[0x900];
 }
-void SaveGame_TrackGameProgress(int (*callback)(int), int a2)
+void SaveGame_TrackGameProgress(int (*callback)(int))
 {
     if (RSDK_sceneInfo->inEditor || User.GetUserStorageUnknown() || options->saveLoaded != 200) {
         Game_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
@@ -614,7 +614,7 @@ void SaveGame_GetEmerald(int emeraldID)
             saveRAM[52] = 1;
     }
 }
-void SaveGame_GetMedal(byte *medalID, byte type)
+void SaveGame_GetMedal(byte medalID, byte type)
 {
     if (RSDK_sceneInfo->inEditor || User.GetUserStorageUnknown() || options->saveLoaded != 200) {
         Game_Print("WARNING GameProgress Attempted to get medallion before loading SaveGame file");
@@ -626,7 +626,7 @@ void SaveGame_GetMedal(byte *medalID, byte type)
     int goldCount   = 0;
     int silverCount = 0;
     for (int m = 0; m < 0x20; ++m) {
-        if (&saveRAM[m] == medalID && type > *saveRAM)
+        if (saveRAM[m] == medalID && type > *saveRAM)
             *saveRAM = type;
         ++goldCount;
         ++silverCount;

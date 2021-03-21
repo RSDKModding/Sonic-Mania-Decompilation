@@ -238,14 +238,10 @@ void HUD_Draw()
     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
     if (options->gameMode == MODE_ENCORE) {
-        if (HUD->field_28 > 0)
-            HUD->field_28--;
-        if (HUD->field_2C > 0)
-            HUD->field_2C--;
-        if (HUD->field_30 > 0)
-            HUD->field_30--;
-        if (HUD->field_34 > 0)
-            HUD->field_34--;
+        for (int p = 0; p < PLAYER_MAX; ++p) {
+            if (HUD->field_28[0] > 0)
+                HUD->field_28[0]--;
+        }
 
         lifePos.x += 0x140000;
         EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
@@ -254,9 +250,9 @@ void HUD_Draw()
             int id     = -1;
             for (id = -1; charID > 0; ++id) charID >>= 1;
             entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_28 & 4)) {
+            if (id >= 0 && !(HUD->field_28[0] & 4)) {
                 if (sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown
-                    && (/*sidekick->state != Player_State_Unknown1*/ false || !sidekick->maxGlideSpeed)) {
+                    && (sidekick->state != Player_State_Unknown || !sidekick->maxGlideSpeed)) {
                     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
                 }
             }
@@ -271,7 +267,7 @@ void HUD_Draw()
                 } while (stock > 0);
             }
             entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_2C & 4))
+            if (id >= 0 && !(HUD->field_28[1] & 4))
                 RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
             id = -1;
@@ -284,7 +280,7 @@ void HUD_Draw()
                 } while (stock > 0);
             }
             entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_30 & 4))
+            if (id >= 0 && !(HUD->field_28[2] & 4))
                 RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
             id = -1;
@@ -297,7 +293,7 @@ void HUD_Draw()
                 } while (flags > 0);
             }
             entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_34 & 4))
+            if (id >= 0 && !(HUD->field_28[3] & 4))
                 RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
             RSDK.SetSpriteAnimation(HUD->hudMappings, 2, &entity->lifeIconsData, true, 0);
         }
@@ -489,7 +485,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
     RSDK.DrawSprite(&entity->hyperNumbersData, drawPos, true);
 }
 
-void HUD_GetKeyFrame(EntityAnimationData *data, int buttonID)
+void HUD_GetKeyFrame(AnimationData *data, int buttonID)
 {
     int val = 0; // UIButtonPrompt_Unknown1();
     if (User.GetConfirmButtonFlip() && buttonID <= 1)

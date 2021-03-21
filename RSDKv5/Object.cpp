@@ -135,7 +135,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                     case VAR_UINT32:
                     case VAR_INT32:
                     case VAR_ENUM: {
-                        int tmp = (dataPos & 0xFFFFFFFC) + 2;
+                        int tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
@@ -176,23 +176,23 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int *) * arraySize;
                         break;
-                    case VAR_STRING: //textInfo
-                        tmp = (dataPos & 0xFFFFFFFC) + 4;
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
-                            tmp = dataPos;
-                        dataPos = tmp + sizeof(TextInfo) * arraySize; // 8
-                        break;
-                    case VAR_VECTOR2: //vector2
-                        tmp = (dataPos & 0xFFFFFFFC) + 4;
+                    case 8:
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Vector2) * arraySize; // 8
                         break;
-                    case 10: //EntityAnimationData
-                        tmp = (dataPos & 0xFFFFFFFC) + 4;
+                    case 9: //
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(EntityAnimationData) * arraySize; // 24
+                        dataPos = tmp + sizeof(TextInfo) * arraySize; // 8
+                        break;
+                    case 10: //AnimationData
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
+                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                            tmp = dataPos;
+                        dataPos = tmp + sizeof(AnimationData) * arraySize; // 24
                         break;
                     case 11: //Hitbox
                         tmp = (dataPos & 0xFFFFFFFE) + 2;
@@ -236,13 +236,13 @@ void InitObjects()
         }
     }
 
-    // SpawnEntity(TestObject->objectID, NULL, 0, 0);
+    //CreateEntity(TestObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
         screenUnknown[0].targetPos     = &screens[0].position;
-        screenUnknown[0].offset.x      = screens[0].centerX / 2;
-        screenUnknown[0].offset.y      = screens[0].centerY / 2;
+        screenUnknown[0].offset.x      = screens[0].centerX << 0x10;
+        screenUnknown[0].offset.y      = screens[0].centerY << 0x10;
         screenUnknown[0].worldRelative = false;
         screenCount                    = 1;
     }
@@ -272,10 +272,10 @@ void ProcessObjects()
                 screen->position.x = screen->targetPos->x << 0x10;
                 screen->position.y = screen->targetPos->y << 0x10;
             }
-            screens[s].position.x = screen->position.x >> 0x10;
-            screens[s].position.y = screen->position.y >> 0x10;
-            screens[s].position.x -= screen->offset.x >> 0x10;
-            screens[s].position.y -= screen->offset.y >> 0x10;
+            //screens[s].position.x = screen->position.x >> 0x10;
+            //screens[s].position.y = screen->position.y >> 0x10;
+            //screens[s].position.x -= screen->offset.x >> 0x10;
+            //screens[s].position.y -= screen->offset.y >> 0x10;
         }
     }
 
@@ -291,10 +291,10 @@ void ProcessObjects()
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
-                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
-                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width
-                            && sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screens[s].height) {
+                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+                        if (sx <= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
+                            && sy <= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -303,8 +303,8 @@ void ProcessObjects()
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
-                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width) {
+                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -313,8 +313,8 @@ void ProcessObjects()
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
-                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screens[s].height) {
+                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screenUnknown[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -323,10 +323,10 @@ void ProcessObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
-                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
 
-                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width) {
+                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -478,10 +478,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
-                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
-                        if (sx < sceneInfo.entity->updateRange.x + screens[s].width
-                            && sy < sceneInfo.entity->updateRange.y + screens[s].height) {
+                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+                        if (sx <= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
+                            && sy <= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -490,8 +490,8 @@ void ProcessFrozenObjects()
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
-                        if (sx < sceneInfo.entity->updateRange.x + screens[s].width) {
+                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -500,8 +500,8 @@ void ProcessFrozenObjects()
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
-                        if (sy < sceneInfo.entity->updateRange.y + screens[s].height) {
+                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screenUnknown[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -510,10 +510,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs((sceneInfo.entity->position.x >> 0x10) - screens[s].position.x);
-                        int sy = abs((sceneInfo.entity->position.y >> 0x10) - screens[s].position.y);
+                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
 
-                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screens[s].width) {
+                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }

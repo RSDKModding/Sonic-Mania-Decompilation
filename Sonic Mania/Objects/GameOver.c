@@ -173,7 +173,7 @@ void GameOver_Unknown2()
                 Music->dword250    = 9;
                 if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
                     RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                    music->field_8C = 0.025;
+                    music->fadeSpeed = 0.025;
                     music->volume   = 1.0;
                     music->state    = Music_Unknown15;
                 }
@@ -200,7 +200,7 @@ void GameOver_Unknown2()
                         Music->dword250    = 9;
                         if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
                             RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                            music->field_8C = 0.025;
+                            music->fadeSpeed = 0.025;
                             music->volume   = 1.0;
                             music->state    = Music_Unknown15;
                         }
@@ -248,7 +248,7 @@ void GameOver_Unknown2()
                         Music->dword250    = 9;
                         if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
                             RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                            music->field_8C = 0.025;
+                            music->fadeSpeed = 0.025;
                             music->volume   = 1.0;
                             music->state    = Music_Unknown15;
                         }
@@ -321,7 +321,7 @@ void GameOver_Unknown4()
             RSDK.ResetEntityPtr(music, Music->objectID, 0);
             music->state    = Music_Unknown14;
             music->volume   = 1.0;
-            music->field_8C = 0.05;
+            music->fadeSpeed = 0.05;
         }
 
         EntityGameOver *gameOver = NULL;

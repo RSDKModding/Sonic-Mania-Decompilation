@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    EntityAnimationData data;
+    AnimationData data;
     byte type;
     int rotSpeed;
     Vector2 repeatTimes;

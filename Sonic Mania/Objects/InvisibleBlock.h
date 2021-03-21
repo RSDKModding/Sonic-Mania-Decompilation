@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     ushort spriteIndex;
-    EntityAnimationData data;
+    AnimationData data;
 } ObjectInvisibleBlock;
 
 // Entity Class

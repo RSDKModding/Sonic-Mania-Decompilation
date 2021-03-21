@@ -19,7 +19,7 @@ typedef struct {
     Vector2 startPos;
     byte startDir;
     bool32 wasTurning;
-    EntityAnimationData data;
+    AnimationData data;
 } EntityMotobug;
 
 // Object Struct

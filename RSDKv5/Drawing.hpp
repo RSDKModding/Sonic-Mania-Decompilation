@@ -217,9 +217,9 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 
 void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
-void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
+void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect);
 
-void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelative);
+void DrawSprite(AnimationData *data, Vector2 *position, bool32 screenRelative);
 void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);
 void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
                         short Rotation, InkEffects inkEffect, signed int alpha, int sheetID);
@@ -229,7 +229,7 @@ void DrawDeformedSprite(ushort spriteIndex, InkEffects inkEffect, int alpha);
 void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
 
-void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
+void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative);
 void DrawDevText(int x, const char *text, int y, int align, uint colour);
 

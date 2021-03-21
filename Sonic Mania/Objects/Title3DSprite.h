@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int field_8;
+    int field_C;
+    ushort spriteIndex;
 } ObjectTitle3DSprite;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int frame;
+    int field_5C;
+    int field_60;
+    AnimationData data;
 } EntityTitle3DSprite;
 
 // Object Struct

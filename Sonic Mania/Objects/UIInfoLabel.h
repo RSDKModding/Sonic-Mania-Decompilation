@@ -12,13 +12,13 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    EntityAnimationData data;
+    AnimationData data;
     int field_70;
     int field_74;
     Vector2 size;
     TextInfo text;
     int width;
-    EntityAnimationData data2;
+    AnimationData data2;
 } EntityUIInfoLabel;
 
 // Object Struct
@@ -37,7 +37,7 @@ void UIInfoLabel_Serialize();
 
 // Extra Entity Functions
 void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text);
-void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, char *text);
+void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text);
 void UIInfoLabel_DrawSprites();
 
 #endif //!OBJ_UIINFOLABEL_H

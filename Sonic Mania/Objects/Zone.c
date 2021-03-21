@@ -114,8 +114,8 @@ void Zone_LateUpdate()
                 Zone->timeOverState();
         }
 
-        // if (RSDK_sceneInfo->minutes == 59 && RSDK_sceneInfo->seconds == 59)
-        //    ActClear->field_30 = 1;
+        if (RSDK_sceneInfo->minutes == 59 && RSDK_sceneInfo->seconds == 59)
+            ActClear->field_30 = true;
         if (Player->playerCount > 0) {
             EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
             if (sidekick->state != Player_State_FlyIn && sidekick->state != Player_State_JumpIn || sidekick->characterID == ID_TAILS
@@ -520,7 +520,7 @@ void Zone_StoreEntities(int xOffset, int yOffset)
     EntityPlayer *player     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     options->restartLives[0] = player->lives;
     options->restartScore    = player->score;
-    options->restartPowerups   = player->shield;
+    options->restartPowerups = player->shield;
     options->atlEntityCount  = count;
     options->atlEnabled      = true;
 }
@@ -574,11 +574,11 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
     options->atlEntityCount = 0;
 }
 
-void Zone_Unknown1(int fade1, int fade2)
+void Zone_Unknown1(int fadeTimer, int fadeColour)
 {
     EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
-    zone->fade2      = fade2;
-    zone->fade1      = fade1;
+    zone->fadeColour = fadeColour;
+    zone->fadeTimer  = fadeTimer;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
     zone->state      = Zone_Unknown13;
@@ -592,19 +592,19 @@ void Zone_Unknown2()
     EntityZone *entity = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
     entity->screenID   = PLAYER_MAX;
     entity->timer      = 0;
-    entity->fade1      = 10;
-    entity->fade2      = 0;
+    entity->fadeTimer  = 10;
+    entity->fadeColour = 0;
     entity->state      = Zone_Unknown13;
     entity->stateDraw  = Zone_Unknown12;
     entity->visible    = true;
     entity->drawOrder  = 15;
-    // if (Music->ActiveTrack != 8) {
-    //    RSDK.ResetEntityPtr(music, Music->objectID, 0);
-    //    EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-    //    music->state    = Music_Unknown14;
-    //    music->field_88 = 1.0;
-    //    music->field_8C = 0.025;
-    //}
+    if (Music->activeTrack != TRACK_DROWNING) {
+        EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
+        RSDK.ResetEntityPtr(music, Music->objectID, 0);
+        music->state     = Music_Unknown14;
+        music->volume    = 1.0;
+        music->fadeSpeed = 0.025;
+    }
 }
 
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)
@@ -620,8 +620,8 @@ void Zone_Unknown4(int screen)
     EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
     entity->screenID   = screen;
     entity->timer      = 640;
-    entity->fade1      = 16;
-    entity->fade2      = 0xF0F0F0;
+    entity->fadeTimer  = 16;
+    entity->fadeColour = 0xF0F0F0;
 #if RETRO_USE_PLUS
     if (options->gameMode != MODE_ENCORE || EncoreIntro) {
         entity->state     = Zone_Unknown18;
@@ -645,8 +645,8 @@ void Zone_Unknown5()
     EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
     entity->screenID   = 4;
     entity->timer      = 640;
-    entity->fade1      = 16;
-    entity->fade2      = 0xF0F0F0;
+    entity->fadeTimer  = 16;
+    entity->fadeColour = 0xF0F0F0;
     entity->state      = Zone_Unknown20;
     entity->stateDraw  = Zone_Unknown12;
     entity->visible    = true;
@@ -771,13 +771,13 @@ int Zone_GetManiaStageID()
 void Zone_Unknown12()
 {
     RSDK_THIS(Zone);
-    RSDK.FillScreen(entity->fade2, entity->fade1, entity->fade1 - 0x80, entity->fade1 - 0x100);
+    RSDK.FillScreen(entity->fadeColour, entity->fadeTimer, entity->fadeTimer - 0x80, entity->fadeTimer - 0x100);
 }
 
 void Zone_Unknown13()
 {
     RSDK_THIS(Zone);
-    entity->timer += entity->fade1;
+    entity->timer += entity->fadeTimer;
     if (entity->timer > 1024) {
         if (Zone->swapGameMode) {
             if (RSDK_sceneInfo->filter == SCN_FILTER_MANIA) {
@@ -818,14 +818,14 @@ void Zone_Unknown14()
         RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
-        entity->timer -= entity->fade1;
+        entity->timer -= entity->fadeTimer;
     }
 }
 
 void Zone_Unknown15()
 {
     RSDK_THIS(Zone);
-    entity->timer += entity->fade1;
+    entity->timer += entity->fadeTimer;
     if (entity->timer > 1024) {
         options->competitionSession[options->competitionSession[24] + 31] = 1;
         options->competitionSession[27]                                   = options->competitionSession[93] + 1;
@@ -839,34 +839,34 @@ void Zone_Unknown16()
 {
     RSDK_THIS(Zone);
     RSDK_sceneInfo->timeEnabled = true;
-    // SaveGame_Unknown9();
+    SaveGame_LoadPlayerState();
     if (Music->activeTrack != Music->field_254)
-        Music_Unknown9(Music->field_254, 0.039999999);
-    EntityZone *entityZone     = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
-    entityZone->screenID       = 0;
-    entityZone->timer          = 640;
-    entityZone->fade1          = 16;
-    entityZone->fade2          = 0xF0F0F0;
-    entityZone->state          = Zone_Unknown18;
-    entityZone->stateDraw      = Zone_Unknown12;
-    entityZone->visible        = true;
-    options->suppressTitlecard = 0;
-    entityZone->drawOrder      = 15;
-    // TitleCard->pfuncC      = NULL;
-    Player->rings = 0;
+        Music_Unknown9(Music->field_254, 0.04);
+    EntityZone *entityZone      = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
+    entityZone->screenID        = 0;
+    entityZone->timer           = 640;
+    entityZone->fadeTimer       = 16;
+    entityZone->fadeColour      = 0xF0F0F0;
+    entityZone->state           = Zone_Unknown18;
+    entityZone->stateDraw       = Zone_Unknown12;
+    entityZone->visible         = true;
+    options->suppressTitlecard  = 0;
+    entityZone->drawOrder       = 15;
+    TitleCard->suppressCallback = NULL;
+    Player->rings               = 0;
     RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
 void Zone_Unknown17()
 {
-    EntityPlayer *entity       = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-    StarPost->storedMinutes    = RSDK_sceneInfo->minutes;
-    StarPost->storedSeconds    = RSDK_sceneInfo->seconds;
-    StarPost->storedMS         = RSDK_sceneInfo->milliseconds;
-    options->suppressAutoMusic = true;
-    options->suppressTitlecard = true;
-    // TitleCard->pfuncC             = Zone_Unknown16;
-    // SaveGame_Unknown8();
+    EntityPlayer *entity        = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    StarPost->storedMinutes     = RSDK_sceneInfo->minutes;
+    StarPost->storedSeconds     = RSDK_sceneInfo->seconds;
+    StarPost->storedMS          = RSDK_sceneInfo->milliseconds;
+    options->suppressAutoMusic  = true;
+    options->suppressTitlecard  = true;
+    TitleCard->suppressCallback = Zone_Unknown16;
+    SaveGame_SavePlayerState();
     Player->rings = entity->rings;
     RSDK.InitSceneLoad();
 }
@@ -877,7 +877,7 @@ void Zone_Unknown18()
     if (entity->timer <= 0)
         RSDK.ResetEntityPtr(entity, 0, 0);
     else
-        entity->timer -= entity->fade1;
+        entity->timer -= entity->fadeTimer;
 }
 
 void Zone_Unknown19()
@@ -898,7 +898,7 @@ void Zone_Unknown21()
         RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
-        entity->timer -= entity->fade1;
+        entity->timer -= entity->fadeTimer;
         Zone->field_4724 = true;
     }
 }
@@ -937,8 +937,8 @@ bool32 Game_CheckStageReload()
     if (SpecialRing && options->specialRingID > 0) {
         EntitySpecialRing *specialRing = NULL;
         while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&specialRing)) {
-            // if (SpecialRing->ringID > 0 && options->specialRingID == SpecialRing->ringID)
-            //    return true;
+            if (specialRing->id > 0 && options->specialRingID == specialRing->id)
+                return true;
         }
     }
     return false;

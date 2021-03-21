@@ -101,6 +101,11 @@ void LoadScene()
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 
+    for (int s = 0; s < SCREEN_MAX; ++s) {
+        screens[s].position.x = 0;
+        screens[s].position.y = 0;
+    }
+
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     StrCopy(currentSceneFolder, sceneEntry->folder);
 
@@ -1010,7 +1015,7 @@ void SetScene(const char *categoryName, const char *sceneName)
             GEN_HASH(sceneName, hash);
 
             for (int s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
-                if (HASH_MATCH(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + i].hash, hash)) {
+                if (HASH_MATCH(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, hash)) {
                     sceneInfo.listPos = s;
                     break;
                 }
@@ -1348,7 +1353,6 @@ void DrawLayerRotozoom(TileLayer *layer)
     int countX                = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
-    scanlinePtr               = &scanlines[currentScreen->clipBound_Y1];
     ushort *frameBuffer       = &currentScreen->frameBuffer[currentScreen->clipBound_X1 + currentScreen->clipBound_Y1 * currentScreen->pitch];
     int width         = (TILE_SIZE * layer->width) - 1;
     int height        = (TILE_SIZE * layer->height) - 1;
@@ -1356,13 +1360,14 @@ void DrawLayerRotozoom(TileLayer *layer)
     for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
         int defX           = scanlinePtr->deform.x;
         int defY           = scanlinePtr->deform.y;
-        ushort *palettePtr = fullPalette[*lineBuffer];
         int posX           = scanlinePtr->position.x;
+        int posY           = scanlinePtr->position.y;
+
+        ushort *palettePtr = fullPalette[*lineBuffer];
         ++lineBuffer;
         int fbOffset = currentScreen->pitch - countX;
-        int cnt      = countX;
-        for (int posY = scanlinePtr->position.y; cnt; posY += defY) {
-            --cnt;
+        
+        for (int cnt = countX; cnt; --cnt) {
             int tx   = posX >> 20;
             int ty   = posY >> 20;
             int x   = (posX >> 16) & 0xF;
@@ -1372,6 +1377,7 @@ void DrawLayerRotozoom(TileLayer *layer)
             if (idx)
                 *frameBuffer = palettePtr[idx];
             posX += defX;
+            posY += defY;
             ++frameBuffer;
         }
 

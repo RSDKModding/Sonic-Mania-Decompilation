@@ -17,7 +17,7 @@ typedef struct {
     int rotSpeed;
     Vector2 scaleInc;
     int cooldown;
-    EntityAnimationData data;
+    AnimationData data;
 } EntityDebris;
 
 // Object Struct

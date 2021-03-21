@@ -22,7 +22,7 @@ void Music_Create(void *data)
         entity->active = ((RSDK_sceneInfo->state & 3) != 3) + 1;
         if (entity->trackFile.textLength) {
             if (entity->trackID != TRACK_NOLOAD) {
-                RSDK.CopyString(Music->trackNames[entity->trackID], &entity->trackFile);
+                RSDK.GetCString(Music->trackNames[entity->trackID], &entity->trackFile);
                 Music->trackLoops[entity->trackID] = entity->trackLoop;
                 if (entity->playOnLoad)
                     entity->state = Music_State_PlayMusic;
@@ -131,7 +131,7 @@ void Music_PlayMusicTrack(byte trackID)
     entity->trackID  = trackID;
     entity->state    = Music_Unknown11;
     entity->field_80 = 0;
-    entity->field_8C = 0.079999998;
+    entity->fadeSpeed = 0.08;
     switch (trackID) {
         case 1:
         case 2:
@@ -211,7 +211,7 @@ void Music_PlayTrack(byte trackID)
 
 void Music_Unknown1(EntityMusic *entity)
 {
-    RSDK.CopyString(Music->trackNames[0], &entity->trackFile);
+    RSDK.GetCString(Music->trackNames[0], &entity->trackFile);
     Music->trackLoops[0] = entity->trackLoop;
     RSDK.ResetEntitySlot(SLOT_MUSIC, 0, 0);
     RSDK.SoundUnknown1(Music->slotID);
@@ -250,7 +250,7 @@ void Music_Unknown2(byte trackID)
     entity->state    = Music_Unknown11;
     entity->field_80 = 0;
     entity->volume   = 1.0;
-    entity->field_8C = 0.079999998;
+    entity->fadeSpeed = 0.08;
     switch (trackID) {
         case 1:
         case 2:
@@ -324,7 +324,7 @@ void Music_Unknown6(byte trackID, int a2)
         if (music->objectID == Music->objectID && music->trackID == trackID) {
             if (a2) {
                 music->state    = Music_Unknown12;
-                music->field_8C = 0.050000001;
+                music->fadeSpeed = 0.05;
             }
             else {
                 music->timer = 1;
@@ -401,7 +401,7 @@ void Music_Unknown7(EntityMusic *entity)
                     RSDK.ResetEntityPtr(music, Music->objectID, 0);
                     music->state    = Music_Unknown13;
                     music->volume   = 0.0;
-                    music->field_8C = 0.079999998;
+                    music->fadeSpeed = 0.08;
                 }
 #if RETRO_USE_PLUS
                 else if (options->vapeMode) {
@@ -437,7 +437,7 @@ void Music_Unknown9(byte trackID, float a2)
                 RSDK.ResetEntityPtr(music, Music->objectID, 0);
                 music->state    = Music_Unknown15;
                 music->volume   = 1.0;
-                music->field_8C = a2;
+                music->fadeSpeed = a2;
             }
             break;
         }
@@ -450,7 +450,7 @@ void Music_Unknown9(byte trackID, float a2)
                 RSDK.ResetEntityPtr(music, Music->objectID, 0);
                 music->state    = Music_Unknown15;
                 music->volume   = 1.0;
-                music->field_8C = a2;
+                music->fadeSpeed = a2;
             }
             break;
         }
@@ -465,20 +465,20 @@ void Music_Unknown9(byte trackID, float a2)
                     RSDK.ResetEntityPtr(music, Music->objectID, 0);
                     music->state    = Music_Unknown15;
                     music->volume   = 1.0;
-                    music->field_8C = a2;
+                    music->fadeSpeed = a2;
                 }
             }
             break;
     }
 }
-void Music_Unknown10(float a1)
+void Music_FadeOut(float fadeSpeed)
 {
     if (Music->activeTrack != TRACK_DROWNING) {
         EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
         RSDK.ResetEntityPtr(music, Music->objectID, 0);
         music->state    = Music_Unknown14;
         music->volume   = 1.0;
-        music->field_8C = a1;
+        music->fadeSpeed = fadeSpeed;
     }
 }
 void Music_Unknown11()
@@ -487,7 +487,7 @@ void Music_Unknown11()
     if (Music->activeTrack == entity->trackID && RSDK.TrackPlaying(Music->slotID) > entity->field_84) {
         entity->field_84 = 0;
         if (entity->volume < 1.0) {
-            entity->volume += entity->field_8C;
+            entity->volume += entity->fadeSpeed;
             RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
             if (entity->volume >= 1.0)
                 entity->volume = 1.0;
@@ -504,7 +504,7 @@ void Music_Unknown12()
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
     if (entity->volume > -0.5) {
-        entity->volume -= entity->field_8C;
+        entity->volume -= entity->fadeSpeed;
         if (Music->activeTrack == entity->trackID)
             RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
         if (entity->volume <= -0.5)
@@ -516,7 +516,7 @@ void Music_Unknown13()
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
     if (RSDK.TrackPlaying(Music->slotID) > Music->dword244) {
         Music->dword244 = 0;
-        entity->volume += entity->field_8C;
+        entity->volume += entity->fadeSpeed;
         RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
         if (entity->volume >= 1.0) {
             entity->volume = 1.0;
@@ -527,7 +527,7 @@ void Music_Unknown13()
 void Music_Unknown14()
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
-    entity->volume -= entity->field_8C;
+    entity->volume -= entity->fadeSpeed;
     RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {
         RSDK.SoundUnknown1(Music->slotID);
@@ -538,7 +538,7 @@ void Music_Unknown14()
 void Music_Unknown15()
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
-    entity->volume -= entity->field_8C;
+    entity->volume -= entity->fadeSpeed;
     RSDK.SetSoundAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {
         RSDK.SoundUnknown1(Music->slotID);

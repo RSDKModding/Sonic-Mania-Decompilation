@@ -30,8 +30,8 @@ typedef struct {
     int timer;
     Vector2 storedPos;
     int extend;
-    EntityAnimationData animData1;
-    EntityAnimationData animData2;
+    AnimationData animData1;
+    AnimationData animData2;
 } EntitySizeLaser;
 
 // Object Struct

@@ -679,7 +679,12 @@
     <ClCompile Include="Objects\BSS_Message.c" />
     <ClCompile Include="Objects\BSS_Palette.c" />
     <ClCompile Include="Objects\BSS_Player.c" />
-    <ClCompile Include="Objects\BSS_Setup.c" />
+    <ClCompile Include="Objects\BSS_Setup.c">
+      <StructMemberAlignment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</StructMemberAlignment>
+      <StructMemberAlignment Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Default</StructMemberAlignment>
+      <StructMemberAlignment Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</StructMemberAlignment>
+      <StructMemberAlignment Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</StructMemberAlignment>
+    </ClCompile>
     <ClCompile Include="Objects\Bubbler.c" />
     <ClCompile Include="Objects\BuckwildBall.c" />
     <ClCompile Include="Objects\Buggernaut.c" />

@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int palTimer;
+    int timer;
+    int angle;
+    ushort spriteIndex;
 } ObjectTitleBG;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int type;
+    int timer;
+    AnimationData data;
 } EntityTitleBG;
 
 // Object Struct
@@ -28,6 +35,8 @@ void TitleBG_EditorLoad();
 void TitleBG_Serialize();
 
 // Extra Entity Functions
-
+void TitleBG_SetupFX();
+void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines);
+void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines);
 
 #endif //!OBJ_TITLEBG_H

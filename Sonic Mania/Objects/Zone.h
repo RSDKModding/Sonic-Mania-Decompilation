@@ -118,8 +118,8 @@ typedef struct {
     void (*stateDraw)();
     int screenID;
     int timer;
-    int fade1;
-    int fade2;
+    int fadeTimer;
+    int fadeColour;
 } EntityZone;
 
 // Object Struct
@@ -140,7 +140,7 @@ void Zone_Serialize();
 int Zone_GetZoneID();
 void Zone_StoreEntities(int xOffset, int yOffset);
 void Zone_ReloadStoredEntities(int xOffset, int yOffset, bool32 flag);
-void Zone_Unknown1(int fade1, int fade2);
+void Zone_Unknown1(int fadeTimer, int fadeColour);
 void Zone_Unknown2();
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
 void Zone_Unknown4(int screen);

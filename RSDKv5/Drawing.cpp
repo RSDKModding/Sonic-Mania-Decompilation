@@ -1483,280 +1483,284 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
         y = (y >> 16) - currentScreen->position.y;
     }
 
-    int top    = y - outerRadius;
-    int left   = x - outerRadius;
-    int right  = x + outerRadius;
-    int bottom = y + outerRadius;
+    if (outerRadius >= 1 && innerRadius < outerRadius) {
+        int top    = y - outerRadius;
+        int left   = x - outerRadius;
+        int right  = x + outerRadius;
+        int bottom = y + outerRadius;
 
-    if (left < currentScreen->clipBound_X1)
-        left = currentScreen->clipBound_X1;
-    if (left > currentScreen->clipBound_X2)
-        left = currentScreen->clipBound_X2;
+        if (left < currentScreen->clipBound_X1)
+            left = currentScreen->clipBound_X1;
+        if (left > currentScreen->clipBound_X2)
+            left = currentScreen->clipBound_X2;
 
-    if (right < currentScreen->clipBound_X1)
-        right = currentScreen->clipBound_X1;
-    if (right > currentScreen->clipBound_X2)
-        right = currentScreen->clipBound_X2;
+        if (right < currentScreen->clipBound_X1)
+            right = currentScreen->clipBound_X1;
+        if (right > currentScreen->clipBound_X2)
+            right = currentScreen->clipBound_X2;
 
-    if (top < currentScreen->clipBound_Y1)
-        top = currentScreen->clipBound_Y1;
-    if (top > currentScreen->clipBound_Y2)
-        top = currentScreen->clipBound_Y2;
+        if (top < currentScreen->clipBound_Y1)
+            top = currentScreen->clipBound_Y1;
+        if (top > currentScreen->clipBound_Y2)
+            top = currentScreen->clipBound_Y2;
 
-    if (bottom < currentScreen->clipBound_Y1)
-        bottom = currentScreen->clipBound_Y1;
-    if (bottom > currentScreen->clipBound_Y2)
-        bottom = currentScreen->clipBound_Y2;
+        if (bottom < currentScreen->clipBound_Y1)
+            bottom = currentScreen->clipBound_Y1;
+        if (bottom > currentScreen->clipBound_Y2)
+            bottom = currentScreen->clipBound_Y2;
 
-    if (left != right && top != bottom) {
-        int ir2                = innerRadius * innerRadius;
-        int or2                = outerRadius * outerRadius;
-        validDraw              = true;
-        ushort *frameBufferPtr = &currentScreen->frameBuffer[left + top * currentScreen->pitch];
-        ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
-        switch (inkEffect) {
-            default: break;
-            case INK_NONE:
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2)
-                                    *frameBufferPtr = colour16;
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
+        if (left != right && top != bottom) {
+            int ir2                = innerRadius * innerRadius;
+            int or2                = outerRadius * outerRadius;
+            validDraw              = true;
+            ushort *frameBufferPtr = &currentScreen->frameBuffer[left + top * currentScreen->pitch];
+            ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+            switch (inkEffect) {
+                default: break;
+                case INK_NONE:
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2)
+                                        *frameBufferPtr = colour16;
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
+                case INK_BLEND:
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2)
+                                        *frameBufferPtr = ((colour16 & 0xF7DE) >> 1) + ((*frameBufferPtr & 0xF7DE) >> 1);
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
+                case INK_ALPHA:
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2) {
+                                        ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
+                                        ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                                        *frameBufferPtr =
+                                            (blendTablePtrA[*frameBufferPtr & (BLENDTABLE_XSIZE - 1)]
+                                             + blendTablePtrB[colour16 & (BLENDTABLE_XSIZE - 1)])
+                                            | ((blendTablePtrA[(*frameBufferPtr & 0x7E0) >> 6] + blendTablePtrB[(colour16 & 0x7E0) >> 6]) << 6)
+                                            | ((blendTablePtrA[(*frameBufferPtr & 0xF800) >> 11] + blendTablePtrB[(colour16 & 0xF800) >> 11]) << 11);
+                                    }
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
+                case INK_ADD: {
+                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2) {
+                                        int v20         = 0;
+                                        int v21         = 0;
+                                        int finalColour = 0;
+
+                                        if (((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
+                                            v20 = ((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (ushort)(*frameBufferPtr & 0xF800);
+                                        else
+                                            v20 = 0xF800;
+                                        int v12 = ((ushort)blendTablePtr[(colour16 & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
+                                        if (v12 <= 0x7E0)
+                                            v21 = v12 | v20;
+                                        else
+                                            v21 = v20 | 0x7E0;
+                                        int v13 = (ushort)blendTablePtr[colour16 & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
+                                        if (v13 <= 31)
+                                            finalColour = v13 | v21;
+                                        else
+                                            finalColour = v21 | 0x1F;
+                                        *frameBufferPtr = finalColour;
+                                    }
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
                 }
-                break;
-            case INK_BLEND:
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2)
-                                    *frameBufferPtr = ((colour16 & 0xF7DE) >> 1) + ((*frameBufferPtr & 0xF7DE) >> 1);
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
+                case INK_SUB: {
+                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2) {
+                                        ushort finalColour = 0;
+                                        if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                                            finalColour = 0;
+                                        else
+                                            finalColour =
+                                                (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                                        int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                                        if (v12 > 0)
+                                            finalColour |= v12;
+                                        int v13 = (*frameBufferPtr & 0x1F) - (ushort)subBlendTable[colour16 & 0x1F];
+                                        if (v13 > 0)
+                                            finalColour |= v13;
+                                        *frameBufferPtr = finalColour;
+                                    }
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
                 }
-                break;
-            case INK_ALPHA:
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2) {
-                                    ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
-                                    ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                                    *frameBufferPtr =
-                                        (blendTablePtrA[*frameBufferPtr & (BLENDTABLE_XSIZE - 1)] + blendTablePtrB[colour16 & (BLENDTABLE_XSIZE - 1)])
-                                        | ((blendTablePtrA[(*frameBufferPtr & 0x7E0) >> 6] + blendTablePtrB[(colour16 & 0x7E0) >> 6]) << 6)
-                                        | ((blendTablePtrA[(*frameBufferPtr & 0xF800) >> 11] + blendTablePtrB[(colour16 & 0xF800) >> 11]) << 11);
-                                }
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
-                }
-                break;
-            case INK_ADD: {
-                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2) {
-                                    int v20         = 0;
-                                    int v21         = 0;
-                                    int finalColour = 0;
-
-                                    if (((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
-                                        v20 = ((ushort)blendTablePtr[(colour16 & 0xF800) >> 11] << 11) + (ushort)(*frameBufferPtr & 0xF800);
-                                    else
-                                        v20 = 0xF800;
-                                    int v12 = ((ushort)blendTablePtr[(colour16 & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
-                                    if (v12 <= 0x7E0)
-                                        v21 = v12 | v20;
-                                    else
-                                        v21 = v20 | 0x7E0;
-                                    int v13 = (ushort)blendTablePtr[colour16 & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
-                                    if (v13 <= 31)
-                                        finalColour = v13 | v21;
-                                    else
-                                        finalColour = v21 | 0x1F;
-                                    *frameBufferPtr = finalColour;
-                                }
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
-                }
-                break;
+                case INK_LOOKUP:
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2)
+                                        *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
+                case INK_MASKED:
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2 && *frameBufferPtr == maskColour)
+                                        *frameBufferPtr = colour16;
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
+                case INK_UNMASKED:
+                    if (top < bottom) {
+                        int fbOffset = (left + currentScreen->pitch - right);
+                        int yDif1    = top - y;
+                        int yDif2    = bottom - top;
+                        do {
+                            int y2 = yDif1 * yDif1;
+                            if (left < right) {
+                                int xDif1 = left - x;
+                                int xDif2 = right - left;
+                                do {
+                                    int r2 = y2 + xDif1 * xDif1;
+                                    if (r2 >= ir2 && r2 < or2 && *frameBufferPtr != maskColour)
+                                        *frameBufferPtr = colour16;
+                                    ++frameBufferPtr;
+                                    ++xDif1;
+                                    --xDif2;
+                                } while (xDif2);
+                            }
+                            frameBufferPtr += fbOffset;
+                            --yDif2;
+                            ++yDif1;
+                        } while (yDif2);
+                    }
+                    break;
             }
-            case INK_SUB: {
-                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2) {
-                                    ushort finalColour = 0;
-                                    if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
-                                        finalColour = 0;
-                                    else
-                                        finalColour = (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
-                                    int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
-                                    if (v12 > 0)
-                                        finalColour |= v12;
-                                    int v13 = (*frameBufferPtr & 0x1F) - (ushort)subBlendTable[colour16 & 0x1F];
-                                    if (v13 > 0)
-                                        finalColour |= v13;
-                                    *frameBufferPtr = finalColour;
-                                }
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
-                }
-                break;
-            }
-            case INK_LOOKUP:
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2)
-                                    *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
-                }
-                break;
-            case INK_MASKED:
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2 && *frameBufferPtr == maskColour)
-                                    *frameBufferPtr = colour16;
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
-                }
-                break;
-            case INK_UNMASKED:
-                if (top < bottom) {
-                    int fbOffset = (left + currentScreen->pitch - right);
-                    int yDif1    = top - y;
-                    int yDif2    = bottom - top;
-                    do {
-                        int y2 = yDif1 * yDif1;
-                        if (left < right) {
-                            int xDif1 = left - x;
-                            int xDif2 = right - left;
-                            do {
-                                int r2 = y2 + xDif1 * xDif1;
-                                if (r2 >= ir2 && r2 < or2 && *frameBufferPtr != maskColour)
-                                    *frameBufferPtr = colour16;
-                                ++frameBufferPtr;
-                                ++xDif1;
-                                --xDif2;
-                            } while (xDif2);
-                        }
-                        frameBufferPtr += fbOffset;
-                        --yDif2;
-                        ++yDif1;
-                    } while (yDif2);
-                }
-                break;
         }
     }
 }
@@ -1998,7 +2002,7 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
         }
     }
 }
-void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect)
+void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect)
 {
     switch (inkEffect) {
         default: break;
@@ -2053,10 +2057,9 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
         }
 
         for (int v = 0; v < vertCount - 1; ++v) {
-            ProcessScanEdgeUV(vertices[v + 0].y, vertices[v + 0].x, vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
+            ProcessScanEdgeClr(colours[v + 0], colours[v + 1], vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
         }
-        ProcessScanEdgeUV(vertices[vertCount - 1].y, vertices[vertCount - 1].x, vertices[0].x, vertices[0].y, vertices[vertCount - 1].x,
-                          vertices[vertCount - 1].y);
+        ProcessScanEdgeClr(colours[0], colours[vertCount - 1], vertices[0].x, vertices[0].y, vertices[vertCount - 1].x, vertices[vertCount - 1].y);
 
         ushort *frameBufferPtr = &currentScreen->frameBuffer[topScreen * currentScreen->pitch];
 
@@ -2090,7 +2093,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2102,6 +2105,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         frameBufferPtr[edge->start + x] = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             case INK_BLEND:
@@ -2131,7 +2135,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2144,6 +2148,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         frameBufferPtr[edge->start + x] = ((colour & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             case INK_ALPHA:
@@ -2173,7 +2178,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2192,6 +2197,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                             | ((blendTablePtrA[(frameBufferPtr[edge->start + x] & 0xF800) >> 11] + blendTablePtrB[(colour & 0xF800) >> 11]) << 11);
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             case INK_ADD: {
@@ -2222,7 +2228,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2253,6 +2259,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         frameBufferPtr[edge->start + x] = finalColour;
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             }
@@ -2284,7 +2291,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2308,6 +2315,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         frameBufferPtr[edge->start + x] = finalColour;
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             }
@@ -2338,7 +2346,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2350,6 +2358,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             case INK_MASKED:
@@ -2379,7 +2388,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2393,6 +2402,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                             frameBufferPtr[edge->start + x] = colour;
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
             case INK_UNMASKED:
@@ -2422,7 +2432,7 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                         edge->start = currentScreen->clipBound_X1;
                     }
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X1) {
+                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
                         count     = currentScreen->clipBound_X2 - edge->start;
                     }
@@ -2436,13 +2446,14 @@ void DrawTexturedQuad(Vector2 *vertices, Vector2 *vertexUVs, int vertCount, int 
                             frameBufferPtr[edge->start + x] = colour;
                     }
                     ++edge;
+                    frameBufferPtr += currentScreen->pitch;
                 }
                 break;
         }
     }
 }
 
-void DrawSprite(EntityAnimationData *data, Vector2 *position, bool32 screenRelative)
+void DrawSprite(AnimationData *data, Vector2 *position, bool32 screenRelative)
 {
     if (data && data->framePtrs) {
         SpriteFrame *frame = &data->framePtrs[data->frameID];
@@ -4092,7 +4103,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
 }
 
-void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
+void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative)
 {
     if (data && info && data->framePtrs) {
@@ -4150,7 +4161,7 @@ void DrawText(EntityAnimationData *data, Vector2 *position, TextInfo *info, int 
                     }
                 }
                 break;
-            case ALIGN_RIGHT: break;
+            case ALIGN_RIGHT:
             case ALIGN_CENTER:
                 --textLength;
                 if (charPositions) {

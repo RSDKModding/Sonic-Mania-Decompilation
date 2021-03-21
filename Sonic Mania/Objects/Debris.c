@@ -63,7 +63,7 @@ void Debris_State_Fall()
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
 
-    entity->position.y += entity->gravity;
+    entity->position.y += entity->velocity.y;
     entity->velocity.y += entity->gravity;
     
     if (entity->timer <= 0) {

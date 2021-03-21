@@ -28,7 +28,7 @@ typedef struct {
     Vector2 amplitude;
     int speed;
     Vector2 offset;
-    EntityAnimationData animData;
+    AnimationData animData;
 } EntityRing;
 
 // Object Struct

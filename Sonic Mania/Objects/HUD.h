@@ -14,43 +14,40 @@ typedef struct {
     int gap10;
     int compSession[4];
     int field_24;
-    int field_28;
-    int field_2C;
-    int field_30;
-    int field_34;
+    int field_28[PLAYER_MAX];
 } ObjectHUD;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     void (*state)(void);
-    Vector2 dword5C[4];
-    int field_7C[4];
-    int playerLives[4];
+    Vector2 dword5C[PLAYER_MAX];
+    int field_7C[PLAYER_MAX];
+    int playerLives[PLAYER_MAX];
     int field_9C;
     int field_A0;
-    void (*competitionStates[4])(void);
-    Vector2 dwordB4[4];
-    Vector2 dwordD4[4];
-    Vector2 dwordF4[4];
-    Vector2 dword114[4];
-    int field_134[4];
+    void (*competitionStates[PLAYER_MAX])();
+    Vector2 dwordB4[PLAYER_MAX];
+    Vector2 dwordD4[PLAYER_MAX];
+    Vector2 dwordF4[PLAYER_MAX];
+    Vector2 dword114[PLAYER_MAX];
+    int field_134[PLAYER_MAX];
     int screenID;
     int timeFlashFrame;
     int ringFlashFrame;
     int field_150;
     int field_154;
-    EntityAnimationData hudElementsData;
-    EntityAnimationData numbersData;
-    EntityAnimationData hyperNumbersData;
-    EntityAnimationData lifeIconsData;
-    EntityAnimationData playerIDData;
-    EntityAnimationData superButtonsData;
-    EntityAnimationData superButtonData1;
-    EntityAnimationData taData1;
-    EntityAnimationData superButtonData2;
-    EntityAnimationData taData2;
-    EntityAnimationData superButtonData3;
+    AnimationData hudElementsData;
+    AnimationData numbersData;
+    AnimationData hyperNumbersData;
+    AnimationData lifeIconsData;
+    AnimationData playerIDData;
+    AnimationData superButtonsData;
+    AnimationData superButtonData1;
+    AnimationData taData1;
+    AnimationData superButtonData2;
+    AnimationData taData2;
+    AnimationData superButtonData3;
 } EntityHUD;
 
 // Object Struct
@@ -71,7 +68,7 @@ void HUD_Serialize();
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value);
-void HUD_GetKeyFrame(EntityAnimationData *data, int buttonID);
+void HUD_GetKeyFrame(AnimationData *data, int buttonID);
 void HUD_GetSuperFrames();
 void HUD_Unknown5();
 void HUD_Unknown6();

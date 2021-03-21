@@ -5,7 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
+    ushort sfx_ScoreAdd;
+    ushort sfx_ScoreTotal;
+    ushort sfx_Event;
+    bool32 field_C;
+    int field_10;
+    int field_14;
+    int actID;
+    int field_1C;
+    int field_20;
+    void (*bufferMove_CB)();
+    void (*saveReplay_CB)();
+    int field_2C;
+    int field_30;
+    bool32 dword34;
 } ObjectActClear;
 
 // Entity Class

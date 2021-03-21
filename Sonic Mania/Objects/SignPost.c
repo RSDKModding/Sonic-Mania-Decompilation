@@ -27,7 +27,7 @@ void SignPost_Draw()
         entity->drawFX = FX_SCALE;
         drawPos.y           = entity->position.y;
 
-        EntityAnimationData *face = &entity->eggPlateAnim;
+        AnimationData *face = &entity->eggPlateAnim;
         if (entity->rotation <= 128 || entity->rotation >= 384)
             face = &entity->facePlateAnim;
 
@@ -282,8 +282,8 @@ void SignPost_State_CompetitionFinish()
             EntityZone *zone            = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
             zone->screenID              = 4;
             zone->timer                 = 0;
-            zone->fade1                 = 10;
-            zone->fade2                 = 0;
+            zone->fadeTimer                 = 10;
+            zone->fadeColour                 = 0;
             zone->state                 = Zone_Unknown15;
             zone->stateDraw             = Zone_Unknown12;
             zone->visible               = 1;
@@ -388,7 +388,7 @@ void SignPost_State_Fall()
             RSDK.PlaySFX(SignPost->sfx_Slide, 0, 255);
             entity->spinCount       = 4;
             entity->velocity.y = 0;
-            Music_Unknown10(0.025);
+            Music_FadeOut(0.025);
             entity->state           = SignPost_State_Land;
         }
     }
@@ -474,7 +474,7 @@ void SignPost_CheckTouch()
 
                             entity->activePlayers = entity->activePlayers | (1 << p);
                             if (entity->activePlayers == SignPost->maxPlayerCount)
-                                Music_Unknown10(0.025);
+                                Music_FadeOut(0.025);
                             entity->state = SignPost_State_CompetitionFinish;
                         }
                         else {
@@ -493,7 +493,7 @@ void SignPost_CheckTouch()
                                 entity->state = SignPost_State_Launched;
                             }
                             else {
-                                Music_Unknown10(0.025);
+                                Music_FadeOut(0.025);
                                 entity->state = SignPost_State_Land;
                             }
                         }

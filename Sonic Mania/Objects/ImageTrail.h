@@ -26,8 +26,8 @@ typedef struct {
     byte stateVisible[ImageTrail_trackCount];
     int currentScale;
     int stateScale[ImageTrail_trackCount];
-    EntityAnimationData currentAnimData;
-    EntityAnimationData stateAnim[ImageTrail_trackCount];
+    AnimationData currentAnimData;
+    AnimationData stateAnim[ImageTrail_trackCount];
     int baseAlpha;
     int fadeoutTimer;
 } EntityImageTrail;

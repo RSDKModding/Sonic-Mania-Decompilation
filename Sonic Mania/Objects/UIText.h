@@ -24,7 +24,7 @@ typedef struct {
     int data2;
     int data3;
     bool32 highlighted;
-    EntityAnimationData animData;
+    AnimationData animData;
 } EntityUIText;
 
 // Object Struct

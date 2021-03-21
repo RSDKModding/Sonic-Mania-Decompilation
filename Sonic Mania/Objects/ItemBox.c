@@ -697,7 +697,7 @@ void ItemBox_GivePowerup()
                                     while (options->stock >> id);
                                 }
                                 options->stock |= (1 << entity->contentsData.frameID << id);
-                                //*(&HUD->field_2C + (v14 >> 3)) = 120;
+                                HUD->field_28[id >> 3] = 120;
                             }
                             else {
                                 player2->objectID = Player->objectID;
@@ -712,7 +712,7 @@ void ItemBox_GivePowerup()
                                 player2->playerID     = 1;
                                 EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
                                 if (player1->state == Player_State_Die || player1->state == Player_State_Drown) {
-                                    // player2->state           = Player_State_Unknown1;
+                                    player2->state      = Player_State_Unknown;
                                     player2->velocity.x = 0;
                                     player2->velocity.y = 0;
                                     player2->position.x = -0x200000;
@@ -763,8 +763,8 @@ void ItemBox_GivePowerup()
                                     player2->controllerID    = 2;
                                     player2->sidekick        = true;
                                     player2->drawFX          = FX_FLIP | FX_ROTATE;
-                                    player2->visible         = true;
-                                    HUD->field_28                       = 120;
+                                    player2->visible          = true;
+                                    HUD->field_28[0]          = 120;
                                 }
                             }
                         }
@@ -995,8 +995,8 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
         entity->updateRange.y = platform->updateRange.y;
         if (entity->state == ItemBox_State_Falling)
             entity->state = ItemBox_State_Normal;
-        // if (platform->state == Platform_State_Collapsing && !platform->collapseDelay)
-        //    platform->collapseDelay = 30;
+        if (platform->state == Platform_State_Collapsing && !platform->collapseDelay)
+           platform->collapseDelay = 30;
         platform->stood      = true;
         entity->velocity.y   = 0;
         platform->position.x = platform->centerPos.x;
@@ -1013,23 +1013,23 @@ void ItemBox_HandleObjectCollisions()
         if (entity->parent) {
             EntityPlatform *platform = (EntityPlatform *)entity->parent;
             if (platform->objectID == Platform->objectID) {
-                /*platform[1].tileCollisions = 1;
-                entity->position.x = entity->scale.x + ice[1].depth;
-                entity->position.y = (entity->scale.y + *(_DWORD *)&platform[1].group) & 0xFFFF0000;
-                entity->unknownPos.x       = platform[1].inBounds & 0xFFFF0000;
-                entity->unknownPos.y    = platform[1].field_3C & 0xFFFF0000;
-                entity->contentsPos.x += platform[1].inBounds;
-                entity->contentsPos.y += platform[1].field_3C;
+                platform->stood      = true;
+                entity->position.x   = entity->scale.x + platform->drawPos.x;
+                entity->position.y   = (entity->scale.y + platform->drawPos.y) & 0xFFFF0000;
+                entity->unknownPos.x = platform->collisionOffset.x & 0xFFFF0000;
+                entity->unknownPos.y = platform->collisionOffset.y & 0xFFFF0000;
+                entity->contentsPos.x += platform->collisionOffset.x;
+                entity->contentsPos.y += platform->collisionOffset.y;
                 entity->velocity.y = 0;
-                flag               = true;*/
+                flag               = true;
             }
         }
         else {
-            //EntityPlatform *platform = NULL;
-            /*while (RSDK.GetActiveObjects(Platform->objectID, (Entity**)&platform) == 1) {
+            EntityPlatform *platform = NULL;
+            while (RSDK.GetActiveEntities(Platform->objectID, (Entity**)&platform)) {
                 if (ItemBox_HandlePlatformCollision(platform))
                     flag = true;
-            }*/
+            }
         }
     }
 

@@ -17,7 +17,7 @@ typedef struct {
     void (*state)();
     int timer;
     bool32 flag;
-    EntityAnimationData data;
+    AnimationData data;
 } EntityUIWaitSpinner;
 
 // Object Struct

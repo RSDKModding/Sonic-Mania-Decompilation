@@ -42,7 +42,7 @@ typedef struct {
     byte field_D5;
     int field_D8[4];
     byte array2[4];
-    EntityAnimationData wakeData;
+    AnimationData wakeData;
     int field_104;
     int field_108;
 } ObjectWater;
@@ -84,7 +84,7 @@ typedef struct {
     int field_BC;
     int field_C0;
     int field_C4;
-    EntityAnimationData waterData;
+    AnimationData waterData;
 } EntityWater;
 
 // Object Struct

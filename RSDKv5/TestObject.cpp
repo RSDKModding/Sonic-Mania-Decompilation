@@ -108,16 +108,24 @@ void TestObject_Draw() {
     //                  0x20 + (TestObject->timer / 0x04) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
     //DrawCircle(currentScreen->centerX, currentScreen->centerY, 0x10 + (TestObject->timer / 0x02) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
 
-    //Vector2 vertPos[4];
-    //vertPos[0].x = (int)(10 + TestObject->timer * 0.3) << 0x10;
-    //vertPos[0].y = (int)(10 + TestObject->timer * 0.3) << 0x10;
-    //vertPos[1].x = (int)(10 + TestObject->timer * 0.4) << 0x10;
-    //vertPos[1].y = (int)(60 + TestObject->timer * 0.3) << 0x10;
-    //vertPos[2].x = (int)(60 + TestObject->timer * 0.5) << 0x10;
-    //vertPos[2].y = (int)(10 + TestObject->timer * 0.3) << 0x10;
-    //vertPos[3].x = (int)(60 + TestObject->timer * 0.6) << 0x10;
-    //vertPos[3].y = (int)(60 + TestObject->timer * 0.3) << 0x10;
+    Vector2 vertPos[4];
+    uint vertClr[4];
+    vertPos[0].x = (int)(10 + TestObject->timer * 0.3) << 0x10;
+    vertPos[0].y = (int)(10 + TestObject->timer * 0.3) << 0x10;
+    vertPos[1].x = (int)(10 + TestObject->timer * 0.4) << 0x10;
+    vertPos[1].y = (int)(60 + TestObject->timer * 0.3) << 0x10;
+    vertPos[2].x = (int)(60 + TestObject->timer * 0.5) << 0x10;
+    vertPos[2].y = (int)(10 + TestObject->timer * 0.3) << 0x10;
+    vertPos[3].x = (int)(60 + TestObject->timer * 0.6) << 0x10;
+    vertPos[3].y = (int)(60 + TestObject->timer * 0.3) << 0x10;
+
+    vertClr[0] = 0xFF0000;
+    vertClr[1] = 0xFF0000;
+    vertClr[2] = 0x0000FF;
+    vertClr[3] = 0x0000FF;
+
     //DrawQuad(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
+    DrawBlendedQuad(vertPos, vertClr, 4, 0xFF, INK_NONE);
 }
 void TestObject_Create(void *data)
 {

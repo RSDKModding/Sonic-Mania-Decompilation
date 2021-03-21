@@ -26,8 +26,8 @@ typedef struct {
     int timer;
     int frameID;
     int field_6C;
-    EntityAnimationData data;
-    EntityAnimationData altData;
+    AnimationData data;
+    AnimationData altData;
 } EntityShield;
 
 // Object Struct

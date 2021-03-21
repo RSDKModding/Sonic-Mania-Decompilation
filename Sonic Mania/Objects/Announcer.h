@@ -43,8 +43,8 @@ typedef struct {
     int playerID;
     int screen;
     Vector2 pos;
-    EntityAnimationData data;
-    EntityAnimationData data2;
+    AnimationData data;
+    AnimationData data2;
 } EntityAnnouncer;
 
 // Object Struct

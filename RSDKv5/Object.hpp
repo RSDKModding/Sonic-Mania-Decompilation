@@ -59,7 +59,6 @@ enum DefaultObjects {
 struct Object {
     short objectID;
     byte active;
-    byte field_3;
 };
 
 struct Entity {
@@ -92,7 +91,6 @@ struct Entity {
     byte inkEffect;
     byte visible;
     byte activeScreens;
-    byte field_57;
 };
 
 struct EntityBase : Entity {

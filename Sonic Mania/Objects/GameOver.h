@@ -25,7 +25,7 @@ typedef struct {
     int unknownArray1[8];
     int letterRotations[8];
     int letterRotateSpeed[8];
-    EntityAnimationData data;
+    AnimationData data;
 } EntityGameOver;
 
 // Object Struct

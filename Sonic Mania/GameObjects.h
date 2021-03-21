@@ -144,13 +144,13 @@ typedef struct {
     void (*MatrixInverse)(Matrix *dest, Matrix *matrix);
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
     void (*SetText)(TextInfo *textInfo, const char *text, uint size);
-    void (*Unknown64)(TextInfo *dst, char *src);
-    void (*Unknown65)(TextInfo *, TextInfo *);
-    void (*Unknown66)(TextInfo *, TextInfo *);
+    void (*CopyString)(TextInfo *dst, TextInfo *src);
+    void (*PrependString)(TextInfo *info, const char *str);
+    void (*AppendString)(TextInfo *info, const char *str);
     void (*Unknown67)(TextInfo *, TextInfo *);
     void (*LoadStrings)(TextInfo *dst, const char* path, int);
     void (*Unknown68)(TextInfo *, TextInfo *, int, int);
-    void (*CopyString)(char *text, TextInfo *info);
+    void (*GetCString)(char *text, TextInfo *info);
     void (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
     void (*Unknown70)(void);
     void (*Unknown71)(void);
@@ -179,11 +179,11 @@ typedef struct {
     void (*DrawCircle)(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawCircleOutline)(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawQuad)(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
-    void (*DrawTexturedQuad)(Vector2 *verticies, Vector2 *vertexUVs, int vertCount, int alpha, InkEffects inkEffect);
-    void (*DrawSprite)(EntityAnimationData *data, Vector2 *position, bool32 screenRelative);
+    void (*DrawBlendedQuad)(Vector2 *verticies, colour *vertColours, int vertCount, int alpha, InkEffects inkEffect);
+    void (*DrawSprite)(AnimationData *data, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(ushort sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(EntityAnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, FlipFlags direction, int a7, int a8,
-                     int a9, bool32 ScreenRelative);
+    void (*DrawText)(AnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, Alignments align, int spacing, int a8,
+                     Vector2 *charPos, bool32 ScreenRelative);
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
@@ -195,21 +195,21 @@ typedef struct {
     void (*View_Something2)(ushort index, int x, int y, int z);
     void (*View_Something3)(ushort index, int x, int y, int z);
     void (*AddMeshToScene)(ushort modelIndex, ushort sceneIndex, byte type, Matrix *mat1, Matrix *mat2, colour colour);
-    void (*SetModelAnimation)(ushort modelAnim, EntityAnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID);
+    void (*SetModelAnimation)(ushort modelAnim, AnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID);
     void (*SetupMeshAnimation)(void);
     void (*Draw3DScene)(ushort index);
     ushort (*LoadSpriteAnimation)(const char *path, Scopes scope);
     ushort (*CreateSpriteAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
-    void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, EntityAnimationData *data, bool32 forceApply, ushort frameID);
+    void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, AnimationData *data, bool32 forceApply, ushort frameID);
     void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
                           byte rotationFlag);
     void (*SetSpriteString)(ushort spriteIndex, ushort animID, TextInfo *info);
     void (*GetAnimation)(ushort sprIndex, const char *name);
     SpriteFrame *(*GetFrame)(ushort sprIndex, ushort anim, int frame);
-    Hitbox *(*GetHitbox)(EntityAnimationData *data, byte hitboxID);
-    short (*GetFrameID)(EntityAnimationData *data);
+    Hitbox *(*GetHitbox)(AnimationData *data, byte hitboxID);
+    short (*GetFrameID)(AnimationData *data);
     int (*GetStringWidth)(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
-    void (*ProcessAnimation)(EntityAnimationData *data);
+    void (*ProcessAnimation)(AnimationData *data);
     TileLayer *(*GetSceneLayer)(int layerID);
     int (*GetSceneLayerID)(const char *name);
     void (*GetLayerSize)(ushort layer, Vector2 *size, bool32 pixelSize);
@@ -242,8 +242,8 @@ typedef struct {
     bool32 (*SoundPlaying)(byte slot);
     bool32 (*ChannelPlaying)(byte slot);
     bool32 (*TrackPlaying)(byte slot);
-    void (*LoadVideo)(const char *filename, int64 a2, int (*a3)(void));
-    bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
+    void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)());
+    bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)());
 #if RETRO_USE_PLUS
     int (*ControllerIDForInputID)(byte controllerID);
     int (*MostRecentActiveControllerID)(int a1, int a2, uint a3);

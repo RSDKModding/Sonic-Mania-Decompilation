@@ -40,10 +40,10 @@ void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text)
         }
     }
 }
-void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, char *text)
+void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text)
 {
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.Unknown64(&entity->text, text);
+        RSDK.CopyString(&entity->text, text);
         if (!RSDK_sceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->data2, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);

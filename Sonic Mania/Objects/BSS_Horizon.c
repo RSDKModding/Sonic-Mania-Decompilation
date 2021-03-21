@@ -47,6 +47,7 @@ void BSS_Horizon_Create(void* data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->active               = ACTIVE_NORMAL;
         entity->inkEffect            = INK_ADD;
+        entity->visible              = true;
         entity->drawOrder            = 2;
         entity->drawFX               = FX_FLIP;
         RSDK.SetSpriteAnimation(BSS_Horizon->spriteIndex, 0, &entity->horizonData, true, 0);

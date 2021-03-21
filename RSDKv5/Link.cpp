@@ -140,14 +140,14 @@ enum FunctionTableIDs {
     FunctionTable_MatrixInverse,
     FunctionTable_MatrixCopy,
     FunctionTable_SetText,
-    FunctionTable_Unknown64,
-    FunctionTable_Unknown65,
-    FunctionTable_Unknown66,
+    FunctionTable_CopyString,
+    FunctionTable_PrependString,
+    FunctionTable_AppendString,
     FunctionTable_Unknown67,
     FunctionTable_LoadStrings,
     FunctionTable_Unknown68,
-    FunctionTable_CopyString,
-    FunctionTable_Unknown69,
+    FunctionTable_GetCString,
+    FunctionTable_StringCompare,
     FunctionTable_GetWindowSettings,
     FunctionTable_Unknown71,
     FunctionTable_SetScreenSize,
@@ -186,9 +186,9 @@ enum FunctionTableIDs {
     FunctionTable_LoadMesh,
     FunctionTable_Create3DScene,
     FunctionTable_Init3DScene,
-    FunctionTable_View_Something1,
-    FunctionTable_View_Something2,
-    FunctionTable_View_Something3,
+    FunctionTable_SetAmbientUnknown,
+    FunctionTable_SetDiffuseUnknown,
+    FunctionTable_SetSpecularUnknown,
     FunctionTable_SetupMesh,
     FunctionTable_SetModelAnimation,
     FunctionTable_SetupMeshAnimation,
@@ -442,14 +442,14 @@ void setupFunctions()
     functionTable[FunctionTable_MatrixInverse]      = (void *)matrixInverse;
     functionTable[FunctionTable_MatrixCopy]         = (void *)matrixCopy;
     functionTable[FunctionTable_SetText]            = (void *)SetText;
-    functionTable[FunctionTable_Unknown64]          = (void *)Unknown64;
-    functionTable[FunctionTable_Unknown65]          = (void *)NullFunc; // Unknown65;
-    functionTable[FunctionTable_Unknown66]          = (void *)Unknown66;
+    functionTable[FunctionTable_CopyString]         = (void *)CopyString;
+    functionTable[FunctionTable_PrependString]      = (void *)NullFunc; // PrependString;
+    functionTable[FunctionTable_AppendString]       = (void *)AppendString;
     functionTable[FunctionTable_Unknown67]          = (void *)NullFunc; // Unknown67;
-    functionTable[FunctionTable_LoadStrings]        = (void *)NullFunc; // LoadStrings;
+    functionTable[FunctionTable_LoadStrings]        = (void *)LoadStrings;
     functionTable[FunctionTable_Unknown68]          = (void *)NullFunc; // Unknown68;
-    functionTable[FunctionTable_CopyString]         = (void *)NullFunc; // CopyString;
-    functionTable[FunctionTable_Unknown69]          = (void *)Unknown69;
+    functionTable[FunctionTable_GetCString]         = (void *)GetCString;
+    functionTable[FunctionTable_StringCompare]      = (void *)StringCompare;
     functionTable[FunctionTable_GetWindowSettings]  = (void *)NullFunc; // Unknown70;
     functionTable[FunctionTable_Unknown71]          = (void *)NullFunc; // Unknown71;
     functionTable[FunctionTable_SetScreenSize]      = (void *)SetScreenSize;
@@ -477,7 +477,7 @@ void setupFunctions()
     functionTable[FunctionTable_DrawCircle]                   = (void *)DrawCircle;
     functionTable[FunctionTable_DrawCircleOutline]            = (void *)DrawCircleOutline;
     functionTable[FunctionTable_DrawQuad]                     = (void *)DrawQuad;
-    functionTable[FunctionTable_DrawTexturedQuad]             = (void *)DrawTexturedQuad;
+    functionTable[FunctionTable_DrawTexturedQuad]             = (void *)DrawBlendedQuad;
     functionTable[FunctionTable_DrawSprite]                   = (void *)DrawSprite;
     functionTable[FunctionTable_DrawDeformed]                 = (void *)DrawDeformedSprite;
     functionTable[FunctionTable_DrawText]                     = (void *)DrawText;
@@ -488,9 +488,9 @@ void setupFunctions()
     functionTable[FunctionTable_LoadMesh]                     = (void *)LoadMesh;
     functionTable[FunctionTable_Create3DScene]                = (void *)Create3DScene;
     functionTable[FunctionTable_Init3DScene]                  = (void *)Init3DScene;
-    functionTable[FunctionTable_View_Something1]              = (void *)View_Something1;
-    functionTable[FunctionTable_View_Something2]              = (void *)View_Something2;
-    functionTable[FunctionTable_View_Something3]              = (void *)View_Something3;
+    functionTable[FunctionTable_SetAmbientUnknown]            = (void *)SetAmbientUnknown;
+    functionTable[FunctionTable_SetDiffuseUnknown]            = (void *)SetDiffuseUnknown;
+    functionTable[FunctionTable_SetSpecularUnknown]           = (void *)SetSpecularUnknown;
     functionTable[FunctionTable_SetupMesh]                    = (void *)SetupMesh;
     functionTable[FunctionTable_SetModelAnimation]            = (void *)SetModelAnimation;
     functionTable[FunctionTable_SetupMeshAnimation]           = (void *)SetupMeshAnimation;

@@ -19,11 +19,11 @@ typedef struct {
     Vector2 drawPosB;
     Vector2 drawPosC;
     float vDelta;
-    EntityAnimationData zoneSelData;
-    EntityAnimationData barBlackData;
-    EntityAnimationData barFlashingData;
-    EntityAnimationData GHZData;
-    EntityAnimationData SPZData;
+    AnimationData zoneSelData;
+    AnimationData barBlackData;
+    AnimationData barFlashingData;
+    AnimationData GHZData;
+    AnimationData SPZData;
     SpriteFrame *ghzFrame;
     SpriteFrame *spzFrame;
 } EntityDemoMenu;
@@ -43,7 +43,7 @@ void DemoMenu_EditorLoad();
 void DemoMenu_Serialize();
 
 // Extra Entity Functions
-void DemoMenu_DrawStagePreview(Vector2 *pos, EntityAnimationData *data, int zoneID);
+void DemoMenu_DrawStagePreview(Vector2 *pos, AnimationData *data, int zoneID);
 
 void DemoMenu_State_Appear();
 void DemoMenu_State_Selection();

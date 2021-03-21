@@ -163,8 +163,8 @@ typedef struct {
     void (*nextAirState)();
     void (*nextGroundState)();
     EntityCamera *camera;
-    EntityAnimationData playerAnimData;
-    EntityAnimationData tailSpriteAnimData;
+    AnimationData playerAnimData;
+    AnimationData tailSpriteAnimData;
     int maxWalkSpeed;
     int maxJogSpeed;
     int maxRunSpeed;
@@ -332,6 +332,16 @@ void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int character);
 bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags);
+bool32 Player_CheckKeyPress();
+void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane);
+void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane);
+Entity* Player_Unknown2();
+Entity* Player_Unknown3();
+void Player_Unknown4();
+void Player_Unknown5(EntityPlayer *player);
+void Player_Unknown7();
+void Player_HandleDeath(EntityPlayer *player);
+void Player_ResetState(EntityPlayer *player);
 
 // Collision
 Hitbox *Player_GetHitbox(EntityPlayer *player);
@@ -354,6 +364,7 @@ void Player_HandleAirMovement();
 void Player_HandleAirFriction();
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll();
+bool32 Player_SwapMainPlayer(bool32 flag);
 void Player_StartPeelout();
 void Player_HandleRollDeceleration();
 void Player_Hit(EntityPlayer *player);

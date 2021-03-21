@@ -73,7 +73,7 @@ void Localization_LoadStrings()
 void Localization_GetString(TextInfo *textInfo, byte id)
 {
     RSDK.SetText(textInfo, "", 0);
-    RSDK.Unknown64(textInfo, &Localization->strings[id]);
+    RSDK.CopyString(textInfo, &Localization->strings[id]);
     for (int c = 0; c < textInfo->textLength; ++c) {
         if (textInfo->text[c] == '\\')
             textInfo->text[c] = '\n';

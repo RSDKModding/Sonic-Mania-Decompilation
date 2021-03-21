@@ -32,10 +32,10 @@ typedef struct {
     bool32 hidden;
     int planeFilter;
     bool32 lrzConvPhys;
-    EntityAnimationData brokenData;
-    EntityAnimationData contentsData;
-    EntityAnimationData overlayData;
-    EntityAnimationData debrisData;
+    AnimationData brokenData;
+    AnimationData contentsData;
+    AnimationData overlayData;
+    AnimationData debrisData;
     Entity *parent;
 } EntityItemBox;
 

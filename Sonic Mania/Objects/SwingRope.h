@@ -22,9 +22,9 @@ typedef struct {
     int angleOffset;
     Vector2 ropePos;
     Vector2 rotatePos;
-    EntityAnimationData ropeData;
-    EntityAnimationData handleData;
-    EntityAnimationData pivotData;
+    AnimationData ropeData;
+    AnimationData handleData;
+    AnimationData pivotData;
 } EntitySwingRope;
 
 // Object Struct

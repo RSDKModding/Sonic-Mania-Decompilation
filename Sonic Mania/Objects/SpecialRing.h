@@ -22,7 +22,7 @@ typedef struct {
     int planeFilter;
     int warpTimer;
     int dword68;
-    EntityAnimationData warpData;
+    AnimationData warpData;
     int angleZ;
     int angleY;
     bool32 enabled;

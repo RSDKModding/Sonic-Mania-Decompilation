@@ -198,30 +198,7 @@ byte byte_65CB30[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                        1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                        2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
 
-void Unknown64(TextInfo *textA, TextInfo *textB)
-{
-    int textLen = textB->textLength;
-    if (textA->length >= textLen) {
-        if (!textA->text) {
-            AllocateStorage(sizeof(ushort) * textA->length, (void **)textA, DATASET_STR, false);
-        }
-    }
-    else {
-        textA->length = textLen;
-        AllocateStorage(sizeof(ushort) * textA->length, (void **)textA, DATASET_STR, false);
-    }
-
-    textA->textLength = textB->textLength;
-    int id                = 0;
-    if (textB->textLength > 0u) {
-        do {
-            textA->text[id] = textB->text[id];
-            ++id;
-        } while (id < textA->textLength);
-    }
-}
-
-void Unknown66(TextInfo *textA, TextInfo *textB)
+void AppendString(TextInfo *textA, TextInfo *textB)
 {
     uint charID   = 0;
     uint totalLen = textB->textLength + textA->textLength;
@@ -242,13 +219,13 @@ void Unknown66(TextInfo *textA, TextInfo *textB)
     if (textLen < textA->textLength) {
         int id = 0;
         do {
+            textA->text[textLen++] = textB->text[id];
             ++id;
-            textA->text[textLen++] = textB->text[id - 1];
         } while (textLen < textA->textLength);
     }
 }
 
-bool32 Unknown69(TextInfo *textA, TextInfo *textB, byte a3)
+bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3)
 {
     int lengthA = textA->textLength;
     if (lengthA != textB->textLength)
@@ -286,4 +263,37 @@ bool32 Unknown69(TextInfo *textA, TextInfo *textB, byte a3)
             return true;
     }
     return false;
+}
+
+void InitStringsBuffer(TextInfo *info, int size)
+{
+    ushort *text = NULL; 
+
+    AllocateStorage(sizeof(ushort) * size, (void **)&text, DATASET_STR, 0);
+    
+    for (int i = 0; i < size && i < info->textLength; ++i) {
+        text[i] = info->text[i];
+    }
+    
+    CopyStorage((int **)info, (int **)&text);
+    info->length = size;
+    if (info->textLength > (ushort)size)
+        info->textLength = size;
+}
+
+void LoadStrings(TextInfo *buffer, const char *filePath)
+{
+    char nameBuf[0x100];
+    FileInfo info;
+    StrCopy(nameBuf, "Data/Strings/");
+    StrAdd(nameBuf, filePath);
+
+    
+    MEM_ZERO(info);
+    if (LoadFile(&info, nameBuf)) {
+
+        //ushort header = ReadInt16(&info);
+
+        CloseFile(&info);
+    }
 }

@@ -52,7 +52,7 @@ void ProcessScanEdge(int x1, int y1, int x2, int y2)
     }
 }
 
-void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2)
+void ProcessScanEdgeClr(uint c1, uint c2, int x1, int y1, int x2, int y2)
 {
     int iy1 = y1 >> 16;
     int iy2 = y2 >> 16;
@@ -60,7 +60,7 @@ void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2)
     int ix2 = x2 >> 16;
 
     int y  = y1 >> 16;
-    int uv = v;
+    int clr = c1;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
             y   = y2 >> 16;
@@ -68,7 +68,7 @@ void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2)
             ix2 = x1 >> 16;
             iy1 = y2 >> 16;
             iy2 = y1 >> 16;
-            uv  = u;
+            clr = c1;
         }
 
         int end = iy2 + 1;
@@ -77,35 +77,35 @@ void ProcessScanEdgeUV(int u, int v, int x1, int y1, int x2, int y2)
                 end = currentScreen->clipBound_Y2;
 
             int yDif       = iy2 - iy1;
-            int scanPos1   = u & 0xFF0000;
+            int scanPos1   = c1 & 0xFF0000;
             int scanPos    = ix1 << 16;
             int scanOffset = ((ix2 - ix1) << 16) / yDif;
 
             int scanOffset1 = 0;
-            if ((uv & 0xFF0000) == (u & 0xFF0000))
+            if ((clr & 0xFF0000) == (c1 & 0xFF0000))
                 scanOffset1 = 0;
             else
-                scanOffset1 = ((u & 0xFF0000) - scanPos1) / yDif;
+                scanOffset1 = ((c1 & 0xFF0000) - scanPos1) / yDif;
 
-            int scanPos2    = (ushort)(uv & 0xFF00) << 8;
+            int scanPos2    = (ushort)(clr & 0xFF00) << 8;
             int scanOffset2 = 0;
-            if (scanPos2 == (ushort)(u & 0xFF00) << 8)
+            if (scanPos2 == (ushort)(c1 & 0xFF00) << 8)
                 scanOffset2 = 0;
             else
-                scanOffset2 = (((ushort)(u & 0xFF00) << 8) - scanPos2) / yDif;
+                scanOffset2 = (((ushort)(c1 & 0xFF00) << 8) - scanPos2) / yDif;
 
-            int scanPos3    = (byte)uv << 16;
+            int scanPos3    = (byte)clr << 16;
             int scanOffset3 = 0;
-            if (scanPos3 == (byte)u << 16)
+            if (scanPos3 == (byte)c1 << 16)
                 scanOffset3 = 0;
             else
-                scanOffset3 = (((byte)u << 16) - ((byte)uv << 16)) / yDif;
+                scanOffset3 = (((byte)c1 << 16) - ((byte)clr << 16)) / yDif;
 
             if (y < 0) {
                 scanPos -= y * scanOffset;
                 scanPos2 -= y * scanOffset2;
                 scanPos1 -= y * scanOffset1;
-                scanPos3 = ((byte)uv << 16) - y * scanOffset3;
+                scanPos3 = ((byte)clr << 16) - y * scanOffset3;
                 y        = 0;
             }
 
@@ -617,7 +617,7 @@ void SetupMesh(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, 
         }
     }
 }
-void SetupMeshAnimation(ushort modelID, ushort sceneID, EntityAnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void SetupMeshAnimation(ushort modelID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && data) {

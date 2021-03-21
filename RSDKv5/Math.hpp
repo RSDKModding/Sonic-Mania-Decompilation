@@ -34,18 +34,12 @@ void CalculateTrigAngles();
 
 inline int sin1024(int angle)
 {
-    if (angle < 0)
-        angle = 0x400 - angle;
-    angle &= 0x3FF;
-    return sinVal1024[angle];
+    return sinVal1024[angle & 0x3FF];
 }
 
 inline int cos1024(int angle)
 {
-    if (angle < 0)
-        angle = 0x400 - angle;
-    angle &= 0x3FF;
-    return cosVal1024[angle];
+    return cosVal1024[angle & 0x3FF];
 }
 
 inline int tan1024(short angle) { return tanVal1024[angle & 0x3FF]; }
@@ -69,18 +63,12 @@ inline int aCos1024(int angle)
 
 inline int sin512(int angle)
 {
-    if (angle < 0)
-        angle = 0x200 - angle;
-    angle &= 0x1FF;
-    return sinVal512[angle];
+    return sinVal512[angle & 0x1FF];
 }
 
 inline int cos512(int angle)
 {
-    if (angle < 0)
-        angle = 0x200 - angle;
-    angle &= 0x1FF;
-    return cosVal512[angle];
+    return cosVal512[angle & 0x1FF];
 }
 
 inline int tan512(short angle) { return tanVal512[angle & 0x1FF]; }
@@ -103,20 +91,14 @@ inline int aCos512(int angle)
 
 inline int sin256(int angle)
 {
-    if (angle < 0)
-        angle = 0x100 - angle;
-    angle &= 0xFF;
-    return sinVal256[angle];
+    return sinVal256[angle & 0xFF];
 }
 
 inline int cos256(int angle)
 {
-    if (angle < 0)
-        angle = 0x100 - angle;
-    angle &= 0xFF;
-    return cosVal256[angle];
+    return cosVal256[angle & 0xFF];
 }
-inline int tan256(byte angle) { return tanVal256[angle]; }
+inline int tan256(byte angle) { return tanVal256[angle & 0xFF]; }
 inline int aSin256(int angle)
 {
     if (angle > 0xFF)

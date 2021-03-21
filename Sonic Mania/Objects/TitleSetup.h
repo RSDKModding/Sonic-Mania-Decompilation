@@ -22,7 +22,7 @@ typedef struct {
     int timer;
     Vector2 drawPos;
     int touched;
-    EntityAnimationData data;
+    AnimationData data;
 } EntityTitleSetup;
 
 // Object Struct
@@ -44,7 +44,12 @@ void TitleSetup_HandleCheatInputs();
 void TitleSetup_CheckCheatCode();
 bool32 TitleSetup_IntroCallback(void);
 
+void TitleSetup_Unknown4();
+void TitleSetup_Unknown5();
+void TitleSetup_Unknown6();
 void TitleSetup_Unknown7();
+void TitleSetup_SetupLogo_NoPlus();
+void TitleSetup_SetupLogo_Plus();
 void TitleSetup_Unknown10();
 void TitleSetup_Unknown11();
 void TitleSetup_Unknown12();

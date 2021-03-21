@@ -15,7 +15,7 @@ typedef struct {
     void (*state)();
     int timer;
     Entity *parent;
-    EntityAnimationData data;
+    AnimationData data;
 } EntityDust;
 
 // Object Struct

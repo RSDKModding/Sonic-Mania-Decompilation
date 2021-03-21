@@ -17,6 +17,7 @@ typedef enum { MEDIA_DEMO } CategoryIDS;
 
 typedef enum {
     MAX_PLAYERS = 4,
+    ID_NONE     = 0x00,
     ID_SONIC    = 0x01,
     ID_TAILS    = 0x02,
     ID_KNUCKLES = 0x04,
@@ -49,12 +50,14 @@ typedef enum {
     SLOT_PLAYER2        = 1,
     SLOT_PLAYER3        = 2,
     SLOT_PLAYER4        = 3,
+    SLOT_BSS_SETUP      = 8,
     SLOT_MUSIC          = 9,
     SLOT_BSS_HUD        = 10,
     SLOT_BSS_MESSAGE    = 11,
     SLOT_ZONE           = 12,
     SLOT_CUTSCENESEQ    = 15,
     SLOT_PAUSEMENU      = 16,
+    SLOT_GAMEOVER       = 16,
     SLOT_DIALOG         = 21,
     SLOT_BSS_HORIZON    = 32,
     SLOT_REPLAYRECORDER = 37,

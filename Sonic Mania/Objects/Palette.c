@@ -17,7 +17,7 @@ void Palette_Create(void *data)
 
     EntityPalette *entity = (EntityPalette *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor && (!entity->loadOnce || Palette->count <= 1)) {
-        RSDK.CopyString(text, &entity->paletteFile);
+        RSDK.GetCString(text, &entity->paletteFile);
         RSDK.LoadPalette(entity->bankID, text, entity->rowFlags);
         RSDK.ResetEntityPtr(entity, 0, NULL);
     }

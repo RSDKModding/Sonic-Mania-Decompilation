@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    EntityAnimationData horizonData;
+    AnimationData horizonData;
 } EntityBSS_Horizon;
 
 // Object Struct

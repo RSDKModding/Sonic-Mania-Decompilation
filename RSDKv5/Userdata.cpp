@@ -182,7 +182,7 @@ int GetUserPlatform() { return curSKU.platform; }
 #if RETRO_USE_PLUS
 int GetConfirmButtonFlip()
 {
-    printConsole("DUMMY GetConfirmButtonFlip()\n");
+    printConsole("DUMMY GetConfirmButtonFlip() -> 0\n");
     return 0;
 }
 void LaunchManual() { printConsole("DUMMY LaunchManual()\n"); }
@@ -195,7 +195,7 @@ int ShowExtensionOverlay(byte overlay)
     return 1;
 }
 
-void TryUnlockAchievement(const char *name) { printLog(SEVERITY_WARN, "Achievement Unlocked: %s", name); }
+void TryUnlockAchievement(const char *name) { printLog(SEVERITY_NONE, "DUMMY TryUnlockAchievement(%s)", name); }
 
 void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)\n", a2, a3); }
 void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)\n", a2, a3, a4); }
@@ -204,7 +204,7 @@ void SetPresence(byte a2, TextInfo *info)
 {
     char buffer[0xFF];
     char buffer2[0xFF];
-    CopyString(buffer, info);
+    GetCString(buffer, info);
 #if RETRO_USE_PLUS
     sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s\n", a2, buffer, (richPresence->status != a2 ? "Successful Set" : "Redundant Set"));
 #else

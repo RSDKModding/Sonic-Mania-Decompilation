@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     void (*stateDraw)();
-    EntityAnimationData vData;
-    EntityAnimationData hData;
+    AnimationData vData;
+    AnimationData hData;
     ushort spriteIndex;
     int dword3C;
     int dword40;
@@ -32,7 +32,7 @@ typedef struct {
     short timer2;
     byte field_7E;
     Hitbox hitbox;
-    EntityAnimationData animData;
+    AnimationData animData;
 } EntitySpikes;
 
 // Object Struct

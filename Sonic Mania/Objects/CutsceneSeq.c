@@ -132,7 +132,7 @@ void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*ski
         options->enableIntro       = 0;
         RSDK.SetGameMode(ENGINESTATE_FROZEN);
         Zone_Unknown1(20, 0);
-        Music_Unknown10(0.029999999);
+        Music_FadeOut(0.029999999);
     }
 }
 void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq)

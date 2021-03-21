@@ -312,12 +312,12 @@ int UIWidgets_Unknown10(int a1, int a2, int a3, int a4)
 void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int y)
 {
     Vector2 drawPos;
-    EntityAnimationData data;
-    EntityAnimationData data2;
+    AnimationData data;
+    AnimationData data2;
     char strBuf[16];
 
-    memset(&data, 0, sizeof(EntityAnimationData));
-    memset(&data2, 0, sizeof(EntityAnimationData));
+    memset(&data, 0, sizeof(AnimationData));
+    memset(&data2, 0, sizeof(AnimationData));
 
     RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &data2, true, 9);
     RSDK.DrawSprite(&data2, &drawPos, 0);
