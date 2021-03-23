@@ -177,10 +177,10 @@ typedef struct {
     int lastHasPlus;
     int hasPlusInitial;
 #endif
-} GameOptions;
+} GlobalVariables;
 
 extern Hitbox defaultHitbox;
 
-extern GameOptions *options;
+extern GlobalVariables *globals;
 
 #endif //! GAME_OPTIONS_H

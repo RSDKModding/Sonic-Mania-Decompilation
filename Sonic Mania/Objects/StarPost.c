@@ -38,7 +38,7 @@ void StarPost_Draw()
 void StarPost_Create(void *data)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
-    if (options->gameMode == MODE_TIMEATTACK || (options->gameMode == MODE_COMPETITION && entity->vsRemove)) {
+    if (globals->gameMode == MODE_TIMEATTACK || (globals->gameMode == MODE_COMPETITION && entity->vsRemove)) {
         RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
@@ -95,13 +95,13 @@ void StarPost_StageLoad()
                 }
             }
 
-            if (!options->specialRingID) {
-                if (options->gameMode < MODE_TIMEATTACK) {
+            if (!globals->specialRingID) {
+                if (globals->gameMode < MODE_TIMEATTACK) {
                     int ms = RSDK_sceneInfo->milliseconds;
                     int s  = RSDK_sceneInfo->minutes;
                     int m  = RSDK_sceneInfo->seconds;
-                    if ((RSDK_sceneInfo->milliseconds || RSDK_sceneInfo->seconds || RSDK_sceneInfo->minutes) || ms != options->tempMilliseconds
-                        || s != options->tempSeconds || m != options->tempMinutes) {
+                    if ((RSDK_sceneInfo->milliseconds || RSDK_sceneInfo->seconds || RSDK_sceneInfo->minutes) || ms != globals->tempMilliseconds
+                        || s != globals->tempSeconds || m != globals->tempMinutes) {
                         RSDK_sceneInfo->milliseconds = StarPost->storedMS;
                         RSDK_sceneInfo->seconds      = StarPost->storedSeconds;
                         RSDK_sceneInfo->minutes      = StarPost->storedMinutes;
@@ -114,7 +114,7 @@ void StarPost_StageLoad()
                 player->direction = StarPost->playerDirections[i];
                 if (!i) {
                     EntityPlayer *sideKick = (EntityPlayer *)RSDK.GetEntityByID(1);
-                    if (options->gameMode != MODE_COMPETITION) {
+                    if (globals->gameMode != MODE_COMPETITION) {
                         sideKick->position.x = player->position.x;
                         sideKick->position.y = player->position.y;
                         sideKick->direction  = player->direction;
@@ -134,9 +134,9 @@ void StarPost_StageLoad()
         }
 
 #if RETRO_USE_PLUS
-        if (options->gameMode == MODE_COMPETITION || options->gameMode == MODE_ENCORE) {
+        if (globals->gameMode == MODE_COMPETITION || globals->gameMode == MODE_ENCORE) {
 #else
-        if (options->gameMode == MODE_COMPETITION) {
+        if (globals->gameMode == MODE_COMPETITION) {
 #endif
             EntityPlayer *player           = (EntityPlayer *)RSDK.GetEntityByID(i);
             StarPost->playerPositions[i].x = player->position.x;
@@ -189,13 +189,13 @@ void StarPost_CheckBonusStageEntry()
     entity->starHitbox.right  = entity->starOffset >> 2;
     entity->starHitbox.bottom = -40;
     if (entity->starTimer >= 60) {
-        if (!options->recallEntities) {
+        if (!globals->recallEntities) {
             if (Player_CheckCollisionTouch(RSDK.GetEntityByID(SLOT_PLAYER1), entity, &entity->starHitbox)) {
                 SaveGame_SaveGameState();
                 RSDK.PlaySFX(StarPost->sfx_Warp, 0, 254);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 int *saveRAM = SaveGame_GetGlobalData();
-                if ((User.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || options->gameMode == MODE_ENCORE) {
+                if ((User.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Pinball", "");
                     EntityZone *entityZone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
@@ -212,7 +212,7 @@ void StarPost_CheckBonusStageEntry()
                 else {
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Blue Spheres", "");
-                    RSDK_sceneInfo->listPos += options->blueSpheresID;
+                    RSDK_sceneInfo->listPos += globals->blueSpheresID;
                     EntityZone *entityZone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
                     entityZone->screenID   = 4;
                     entityZone->timer      = 0;
@@ -251,7 +251,7 @@ void StarPost_CheckCollisions()
                 StarPost->playerPositions[playerSlot].x = entity->position.x;
                 StarPost->playerPositions[playerSlot].y = entity->position.y;
                 StarPost->playerDirections[playerSlot]  = entity->direction;
-                if (options->gameMode < MODE_TIMEATTACK) {
+                if (globals->gameMode < MODE_TIMEATTACK) {
                     StarPost->storedMS      = RSDK_sceneInfo->milliseconds;
                     StarPost->storedSeconds = RSDK_sceneInfo->seconds;
                     StarPost->storedMinutes = RSDK_sceneInfo->minutes;
@@ -292,10 +292,10 @@ void StarPost_CheckCollisions()
                 }
 
                 entity->timer = 0;
-                if (options->gameMode < MODE_TIMEATTACK) {
+                if (globals->gameMode < MODE_TIMEATTACK) {
                     int quota = 50;
 #if RETRO_USE_PLUS
-                    if (options->gameMode != MODE_ENCORE)
+                    if (globals->gameMode != MODE_ENCORE)
                         quota = 25;
 #endif
                     if (player->rings >= quota) {

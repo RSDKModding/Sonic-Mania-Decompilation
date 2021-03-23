@@ -93,7 +93,7 @@ void Zone_LateUpdate()
         if (entity->state)
             entity->state();
 
-        if (RSDK_sceneInfo->minutes == 10 && !(options->medalMods & MEDAL_NOTIMEOVER)) {
+        if (RSDK_sceneInfo->minutes == 10 && !(globals->medalMods & MEDAL_NOTIMEOVER)) {
             RSDK_sceneInfo->minutes      = 9;
             RSDK_sceneInfo->seconds      = 59;
             RSDK_sceneInfo->milliseconds = 99;
@@ -102,7 +102,7 @@ void Zone_LateUpdate()
             EntityPlayer *playerLoop = NULL;
             while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&playerLoop)) {
                 bool32 flag = false;
-                if (options->gameMode == MODE_COMPETITION && (options->competitionSession[71 + playerLoop->playerID]) == ID_TAILS) {
+                if (globals->gameMode == MODE_COMPETITION && (globals->competitionSession[71 + playerLoop->playerID]) == ID_TAILS) {
                     flag = true;
                 }
                 if (!playerLoop->sidekick && !flag)
@@ -151,7 +151,7 @@ void Zone_StaticUpdate()
     if (act >= 3)
         act = 0;
     int pos = act + 2 * zone;
-    if (pos >= 0 && RSDK_sceneInfo->timeEnabled && options->gameMode < MODE_TIMEATTACK)
+    if (pos >= 0 && RSDK_sceneInfo->timeEnabled && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM[pos + 0x22];
 }
 
@@ -179,12 +179,12 @@ void Zone_StageLoad()
     int *saveRAM    = SaveGame->saveRAM;
     Zone->timeStart = (uint)time(0);
 #if RETRO_USE_PLUS
-    if (options->gameMode == MODE_ENCORE) {
-        if (options->characterFlags == 0) {
-            options->characterFlags = 0;
+    if (globals->gameMode == MODE_ENCORE) {
+        if (globals->characterFlags == 0) {
+            globals->characterFlags = 0;
             saveRAM[66]             = 0;
-            byte id                 = options->playerID & 0xFF;
-            if (options->playerID & 0xFF) {
+            byte id                 = globals->playerID & 0xFF;
+            if (globals->playerID & 0xFF) {
                 int charID = -1;
                 if (id) {
                     do {
@@ -192,40 +192,40 @@ void Zone_StageLoad()
                         ++charID;
                     } while (id > 0);
                 }
-                options->characterFlags |= (1 << charID);
-                saveRAM[66] = options->characterFlags;
+                globals->characterFlags |= (1 << charID);
+                saveRAM[66] = globals->characterFlags;
             }
 
-            if (options->playerID & 0xFF00) {
-                byte id    = options->playerID >> 8;
+            if (globals->playerID & 0xFF00) {
+                byte id    = globals->playerID >> 8;
                 int charID = -1;
-                if (options->playerID & 0xFF) {
+                if (globals->playerID & 0xFF) {
                     do {
                         id >>= 1;
                         ++charID;
                     } while (id > 0);
                 }
 
-                options->characterFlags |= (1 << charID);
+                globals->characterFlags |= (1 << charID);
             }
             else {
-                if (!options->stock) {
-                    if (options->stock & 0xFF) {
-                        int id     = options->stock & 0xFF;
+                if (!globals->stock) {
+                    if (globals->stock & 0xFF) {
+                        int id     = globals->stock & 0xFF;
                         int charID = -1;
-                        if (options->stock & 0xFF) {
+                        if (globals->stock & 0xFF) {
                             do {
                                 id >>= 1;
                                 ++charID;
                             } while (id > 0);
                         }
 
-                        options->characterFlags |= (1 << charID);
-                        saveRAM[66] = options->characterFlags;
+                        globals->characterFlags |= (1 << charID);
+                        saveRAM[66] = globals->characterFlags;
                     }
 
-                    if (options->stock & 0xFF00) {
-                        byte id    = options->playerID >> 8;
+                    if (globals->stock & 0xFF00) {
+                        byte id    = globals->playerID >> 8;
                         int charID = -1;
                         if (charID) {
                             do {
@@ -233,29 +233,29 @@ void Zone_StageLoad()
                                 ++charID;
                             } while (id > 0);
                         }
-                        options->characterFlags |= (1 << charID);
-                        saveRAM[66] = options->characterFlags;
+                        globals->characterFlags |= (1 << charID);
+                        saveRAM[66] = globals->characterFlags;
                     }
 
-                    if (options->stock & 0xFF0000) {
+                    if (globals->stock & 0xFF0000) {
                         int charID = -1;
-                        byte id    = options->playerID >> 16;
+                        byte id    = globals->playerID >> 16;
                         if (charID) {
                             do {
                                 charID >>= 1;
                                 ++charID;
                             } while (charID > 0);
                         }
-                        options->characterFlags |= (1 << charID);
-                        saveRAM[66] = options->characterFlags;
+                        globals->characterFlags |= (1 << charID);
+                        saveRAM[66] = globals->characterFlags;
                     }
-                    saveRAM[68] = options->playerID;
+                    saveRAM[68] = globals->playerID;
                 }
                 else {
-                    options->playerID |= (options->stock & 0xFF);
-                    options->stock >>= 8;
-                    saveRAM[67] = options->stock;
-                    byte id     = options->playerID >> 8;
+                    globals->playerID |= (globals->stock & 0xFF);
+                    globals->stock >>= 8;
+                    saveRAM[67] = globals->stock;
+                    byte id     = globals->playerID >> 8;
                     int charID  = -1;
                     if (id) {
                         do {
@@ -263,25 +263,25 @@ void Zone_StageLoad()
                             ++charID;
                         } while (id > 0);
                     }
-                    options->characterFlags |= (1 << charID);
-                    saveRAM[66] = options->characterFlags;
+                    globals->characterFlags |= (1 << charID);
+                    saveRAM[66] = globals->characterFlags;
 
-                    if (options->stock & 0xFF) {
+                    if (globals->stock & 0xFF) {
                         int charID = -1;
-                        id         = options->stock & 0xFF;
-                        if (options->stock & 0xFF) {
+                        id         = globals->stock & 0xFF;
+                        if (globals->stock & 0xFF) {
                             do {
                                 id >>= 1;
                                 ++charID;
                             } while (id > 0);
                         }
 
-                        options->characterFlags |= (1 << charID);
-                        saveRAM[66] = options->characterFlags;
+                        globals->characterFlags |= (1 << charID);
+                        saveRAM[66] = globals->characterFlags;
                     }
 
-                    if (options->stock & 0xFF00) {
-                        byte id    = options->playerID >> 8;
+                    if (globals->stock & 0xFF00) {
+                        byte id    = globals->playerID >> 8;
                         int charID = -1;
                         if (charID) {
                             do {
@@ -289,31 +289,31 @@ void Zone_StageLoad()
                                 ++charID;
                             } while (id > 0);
                         }
-                        options->characterFlags |= (1 << charID);
-                        saveRAM[66] = options->characterFlags;
+                        globals->characterFlags |= (1 << charID);
+                        saveRAM[66] = globals->characterFlags;
                     }
 
-                    if (options->stock & 0xFF0000) {
+                    if (globals->stock & 0xFF0000) {
                         int charID = -1;
-                        byte id    = options->playerID >> 16;
+                        byte id    = globals->playerID >> 16;
                         if (charID) {
                             do {
                                 charID >>= 1;
                                 ++charID;
                             } while (charID > 0);
                         }
-                        options->characterFlags |= (1 << charID);
-                        saveRAM[66] = options->characterFlags;
+                        globals->characterFlags |= (1 << charID);
+                        saveRAM[66] = globals->characterFlags;
                     }
-                    saveRAM[68] = options->playerID;
+                    saveRAM[68] = globals->playerID;
                 }
             }
         }
 
         if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
-            options->characterFlags = saveRAM[66];
-            options->playerID       = saveRAM[68];
-            options->stock          = saveRAM[67];
+            globals->characterFlags = saveRAM[66];
+            globals->playerID       = saveRAM[68];
+            globals->stock          = saveRAM[67];
         }
     }
 #endif
@@ -371,12 +371,12 @@ void Zone_StageLoad()
         }
     }
 
-    if (!options->initCoolBonus) {
-        options->coolBonus[0]  = 10000;
-        options->coolBonus[1]  = 10000;
-        options->coolBonus[2]  = 10000;
-        options->coolBonus[3]  = 10000;
-        options->initCoolBonus = true;
+    if (!globals->initCoolBonus) {
+        globals->coolBonus[0]  = 10000;
+        globals->coolBonus[1]  = 10000;
+        globals->coolBonus[2]  = 10000;
+        globals->coolBonus[3]  = 10000;
+        globals->initCoolBonus = true;
     }
 
     EntityZone *ent = NULL;
@@ -385,9 +385,9 @@ void Zone_StageLoad()
     }
 
     RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, 0);
-    if (options->gameMode == MODE_COMPETITION) {
+    if (globals->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
-            if (options->gameMode == MODE_COMPETITION) {
+            if (globals->gameMode == MODE_COMPETITION) {
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
             else {
@@ -396,14 +396,14 @@ void Zone_StageLoad()
             }
         }
         else {
-            if (options->competitionSession[23] >= 2) {
-                if (options->competitionSession[23] > 4)
-                    options->competitionSession[23] = 4;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, options->competitionSession[23]);
+            if (globals->competitionSession[23] >= 2) {
+                if (globals->competitionSession[23] > 4)
+                    globals->competitionSession[23] = 4;
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[23]);
             }
             else {
-                options->competitionSession[23] = 2;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, options->competitionSession[23]);
+                globals->competitionSession[23] = 2;
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[23]);
             }
         }
     }
@@ -413,7 +413,7 @@ void Zone_StageLoad()
     }
 
     TextInfo textInfo;
-    switch (options->gameMode) {
+    switch (globals->gameMode) {
 #if !RETRO_USE_PLUS
         case MODE_NOSAVE:
 #endif
@@ -469,7 +469,7 @@ int Zone_GetZoneID()
     if (RSDK.CheckStageFolder("ERZ"))
         return 12;
 #if RETRO_USE_PLUS
-    if (RSDK.CheckStageFolder("AIZ") && options->gameMode == MODE_ENCORE)
+    if (RSDK.CheckStageFolder("AIZ") && globals->gameMode == MODE_ENCORE)
         return 13;
 #endif
     return -1;
@@ -484,8 +484,8 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
-            RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
+            globals->atlEntitySlot[count] = RSDK.GetEntityID(entity);
+            RSDK.CopyEntity(&globals->atlEntityData[pos], entity, 0);
             count++;
             pos += 0x200;
         } while (RSDK.GetActiveEntities(Player->objectID, &entity));
@@ -497,8 +497,8 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
-            RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
+            globals->atlEntitySlot[count] = RSDK.GetEntityID(entity);
+            RSDK.CopyEntity(&globals->atlEntityData[pos], entity, 0);
             count++;
             pos += 0x200;
         } while (RSDK.GetActiveEntities(SignPost->objectID, &entity));
@@ -510,30 +510,30 @@ void Zone_StoreEntities(int xOffset, int yOffset)
         do {
             entity->position.x -= xOffset;
             entity->position.y -= yOffset;
-            options->atlEntitySlot[count] = RSDK.GetEntityID(entity);
-            RSDK.CopyEntity(&options->atlEntityData[pos], entity, 0);
+            globals->atlEntitySlot[count] = RSDK.GetEntityID(entity);
+            RSDK.CopyEntity(&globals->atlEntityData[pos], entity, 0);
             count++;
             pos += 0x200;
         } while (RSDK.GetActiveEntities(ItemBox->objectID, &entity));
     }
 
     EntityPlayer *player     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-    options->restartLives[0] = player->lives;
-    options->restartScore    = player->score;
-    options->restartPowerups = player->shield;
-    options->atlEntityCount  = count;
-    options->atlEnabled      = true;
+    globals->restartLives[0] = player->lives;
+    globals->restartScore    = player->score;
+    globals->restartPowerups = player->shield;
+    globals->atlEntityCount  = count;
+    globals->atlEnabled      = true;
 }
 
 void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
 {
-    for (int e = 0; e < options->atlEntityCount; ++e) {
-        Entity *entityData = (Entity *)&options->atlEntityData[e << 9];
+    for (int e = 0; e < globals->atlEntityCount; ++e) {
+        Entity *entityData = (Entity *)&globals->atlEntityData[e << 9];
         Entity *entity;
-        if (options->atlEntitySlot[e] >= 12)
+        if (globals->atlEntitySlot[e] >= 12)
             entity = (Entity *)RSDK.CreateEntity(0, 0, 0, 0);
         else
-            entity = (Entity *)RSDK.GetEntityByID(options->atlEntitySlot[e]);
+            entity = (Entity *)RSDK.GetEntityByID(globals->atlEntitySlot[e]);
         if (entityData->objectID == Player->objectID) {
             EntityPlayer *playerData = (EntityPlayer *)entityData;
             EntityPlayer *player     = (EntityPlayer *)entity;
@@ -551,7 +551,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
         entity->position.y = yOffset + entityData->position.y;
     }
 
-    memset(options->atlEntityData, 0, options->atlEntityCount << 9);
+    memset(globals->atlEntityData, 0, globals->atlEntityCount << 9);
     Zone->field_158 = flag;
     if (flag) {
         EntityPlayer *player   = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
@@ -568,10 +568,10 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
         Camera->centerBounds.x = 0x80000;
         Camera->centerBounds.y = 0x40000;
     }
-    Player->savedLives      = options->restartLives[0];
-    Player->savedScore      = options->restartScore;
-    Player->powerups        = options->restartPowerups;
-    options->atlEntityCount = 0;
+    Player->savedLives      = globals->restartLives[0];
+    Player->savedScore      = globals->restartScore;
+    Player->powerups        = globals->restartPowerups;
+    globals->atlEntityCount = 0;
 }
 
 void Zone_Unknown1(int fadeTimer, int fadeColour)
@@ -623,7 +623,7 @@ void Zone_Unknown4(int screen)
     entity->fadeTimer  = 16;
     entity->fadeColour = 0xF0F0F0;
 #if RETRO_USE_PLUS
-    if (options->gameMode != MODE_ENCORE || EncoreIntro) {
+    if (globals->gameMode != MODE_ENCORE || EncoreIntro) {
         entity->state     = Zone_Unknown18;
         entity->stateDraw = Zone_Unknown12;
         entity->visible   = true;
@@ -751,7 +751,7 @@ int Zone_GetManiaStageID()
     int pos2 = 0;
     if (pos2 >= 15) {
         if (pos2 == 15) {
-            if (options->playerID & ID_KNUCKLES)
+            if (globals->playerID & ID_KNUCKLES)
                 pos2 = RSDK_sceneInfo->listPos + 16;
             else
                 pos2 = RSDK_sceneInfo->listPos + 15;
@@ -784,21 +784,21 @@ void Zone_Unknown13()
                 if (RSDK.CheckValidScene()) {
                     RSDK_sceneInfo->listPos = Zone_GetEncoreStageID();
                 }
-                options->gameMode = MODE_ENCORE;
+                globals->gameMode = MODE_ENCORE;
             }
             else if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) {
                 if (RSDK.CheckValidScene()) {
                     RSDK_sceneInfo->listPos = Zone_GetManiaStageID();
                 }
-                options->gameMode = MODE_MANIA;
+                globals->gameMode = MODE_MANIA;
             }
             RSDK_sceneInfo->filter ^= 6;
-            options->enableIntro         = true;
-            options->suppressAutoMusic   = true;
-            options->suppressTitlecard   = true;
-            options->restartMilliseconds = RSDK_sceneInfo->milliseconds;
-            options->restartSeconds      = RSDK_sceneInfo->seconds;
-            options->restartMinutes      = RSDK_sceneInfo->minutes;
+            globals->enableIntro         = true;
+            globals->suppressAutoMusic   = true;
+            globals->suppressTitlecard   = true;
+            globals->restartMilliseconds = RSDK_sceneInfo->milliseconds;
+            globals->restartSeconds      = RSDK_sceneInfo->seconds;
+            globals->restartMinutes      = RSDK_sceneInfo->minutes;
             EntityPlayer *player         = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
             RSDK.CopyEntity(Zone->entityData, player, false);
             if (player->camera)
@@ -813,8 +813,8 @@ void Zone_Unknown14()
     RSDK_THIS(Zone);
     RSDK_sceneInfo->timeEnabled = true;
     if (entity->timer <= 0) {
-        options->suppressAutoMusic = false;
-        options->suppressTitlecard = false;
+        globals->suppressAutoMusic = false;
+        globals->suppressTitlecard = false;
         RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
@@ -827,8 +827,8 @@ void Zone_Unknown15()
     RSDK_THIS(Zone);
     entity->timer += entity->fadeTimer;
     if (entity->timer > 1024) {
-        options->competitionSession[options->competitionSession[24] + 31] = 1;
-        options->competitionSession[27]                                   = options->competitionSession[93] + 1;
+        globals->competitionSession[globals->competitionSession[24] + 31] = 1;
+        globals->competitionSession[27]                                   = globals->competitionSession[93] + 1;
         RSDK.LoadScene("Presentation", "Menu");
         RSDK.SetSettingsValue(12, 1);
         RSDK.InitSceneLoad();
@@ -850,7 +850,7 @@ void Zone_Unknown16()
     entityZone->state           = Zone_Unknown18;
     entityZone->stateDraw       = Zone_Unknown12;
     entityZone->visible         = true;
-    options->suppressTitlecard  = 0;
+    globals->suppressTitlecard  = 0;
     entityZone->drawOrder       = 15;
     TitleCard->suppressCallback = NULL;
     Player->rings               = 0;
@@ -863,8 +863,8 @@ void Zone_Unknown17()
     StarPost->storedMinutes     = RSDK_sceneInfo->minutes;
     StarPost->storedSeconds     = RSDK_sceneInfo->seconds;
     StarPost->storedMS          = RSDK_sceneInfo->milliseconds;
-    options->suppressAutoMusic  = true;
-    options->suppressTitlecard  = true;
+    globals->suppressAutoMusic  = true;
+    globals->suppressTitlecard  = true;
     TitleCard->suppressCallback = Zone_Unknown16;
     SaveGame_SavePlayerState();
     Player->rings = entity->rings;
@@ -934,10 +934,10 @@ bool32 Game_CheckStageReload()
         }
     }
 
-    if (SpecialRing && options->specialRingID > 0) {
+    if (SpecialRing && globals->specialRingID > 0) {
         EntitySpecialRing *specialRing = NULL;
         while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&specialRing)) {
-            if (specialRing->id > 0 && options->specialRingID == specialRing->id)
+            if (specialRing->id > 0 && globals->specialRingID == specialRing->id)
                 return true;
         }
     }
@@ -946,24 +946,24 @@ bool32 Game_CheckStageReload()
 bool32 Game_CheckIntro()
 {
 #if RETRO_USE_PLUS
-    return (options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && options->enableIntro && !Game_CheckStageReload();
+    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->enableIntro && !Game_CheckStageReload();
 #else
-    return (options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && options->enableIntro && !Game_CheckStageReload();
+    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->enableIntro && !Game_CheckStageReload();
 #endif
 }
 void Game_ClearOptions()
 {
-    options->menuParam[22] = 0;
-    memset(&options->menuParam[22] + 2, 0, 0x100);
-    options->menuParam[87]     = 0;
-    options->menuParam[88]     = 0;
-    options->menuParam[89]     = 0;
-    options->menuParam[92]     = 0;
-    options->menuParam[93]     = 0;
-    options->menuParam[94]     = 0;
-    options->gameMode          = MODE_MANIA;
-    options->suppressTitlecard = false;
-    options->suppressAutoMusic = false;
+    globals->menuParam[22] = 0;
+    memset(&globals->menuParam[22] + 2, 0, 0x100);
+    globals->menuParam[87]     = 0;
+    globals->menuParam[88]     = 0;
+    globals->menuParam[89]     = 0;
+    globals->menuParam[92]     = 0;
+    globals->menuParam[93]     = 0;
+    globals->menuParam[94]     = 0;
+    globals->gameMode          = MODE_MANIA;
+    globals->suppressTitlecard = false;
+    globals->suppressAutoMusic = false;
 }
 
 int Game_Unknown20(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2)

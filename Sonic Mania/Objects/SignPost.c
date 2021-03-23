@@ -78,9 +78,9 @@ void SignPost_Create(void* data)
     if (!entity->vsExtendBottom)
         entity->vsExtendBottom = 120;
     if (!RSDK_sceneInfo->inEditor) {
-        if (options->gameMode != MODE_TIMEATTACK) {
+        if (globals->gameMode != MODE_TIMEATTACK) {
             RSDK.SetSpriteAnimation(SignPost->spriteIndex, 5, &entity->eggPlateAnim, true, 0);
-            switch (options->playerID & 0xFF) {
+            switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 2, &entity->facePlateAnim, true, 0); break;
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 3, &entity->facePlateAnim, true, 0); break;
@@ -92,7 +92,7 @@ void SignPost_Create(void* data)
             RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &entity->standData, true, 2);
             entity->updateRange.x = 0x400000;
             entity->updateRange.y = 0x400000;
-            if (options->gameMode == MODE_COMPETITION) {
+            if (globals->gameMode == MODE_COMPETITION) {
                 int checkA = entity->vsBoundsOffset.y + (entity->vsBoundsSize.y >> 1);
                 int checkB = entity->vsBoundsOffset.y - (entity->vsBoundsSize.y >> 1);
 
@@ -122,7 +122,7 @@ void SignPost_Create(void* data)
             switch (entity->type) {
                 default: RSDK.ResetEntityPtr(entity, 0, 0); break;
                 case 0:
-                    if (options->gameMode != MODE_COMPETITION) {
+                    if (globals->gameMode != MODE_COMPETITION) {
                         entity->active = ACTIVE_BOUNDS;
                         entity->state  = SignPost_State_SetupCompetition;
                     }
@@ -131,7 +131,7 @@ void SignPost_Create(void* data)
                     }
                     break;
                 case 1:
-                    if (options->gameMode != MODE_COMPETITION) {
+                    if (globals->gameMode != MODE_COMPETITION) {
                         entity->active = ACTIVE_XBOUNDS;
                         entity->state  = NULL;
                     }
@@ -140,7 +140,7 @@ void SignPost_Create(void* data)
                     }
                     break;
                 case 2:
-                    if (options->gameMode == MODE_COMPETITION) {
+                    if (globals->gameMode == MODE_COMPETITION) {
                         entity->active = ACTIVE_BOUNDS;
                         entity->state  = SignPost_State_SetupCompetition;
                     }
@@ -153,7 +153,7 @@ void SignPost_Create(void* data)
                     entity->state  = SignPost_State_Finish;
                     break;
                 case 4:
-                    if (options->gameMode != MODE_COMPETITION) {
+                    if (globals->gameMode != MODE_COMPETITION) {
                         entity->active = ACTIVE_BOUNDS;
                         entity->state  = SignPost_State_SetupCompetition;
                     }
@@ -316,8 +316,8 @@ void SignPost_State_Fall()
     RSDK_sceneInfo->timeEnabled = false;
     if (entity->type == 1) {
         entity->type = 0;
-        if (options->gameMode < MODE_COMPETITION) {
-            switch (options->playerID & 0xFF) {
+        if (globals->gameMode < MODE_COMPETITION) {
+            switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 2, &entity->facePlateAnim, true, 0); break;
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 3, &entity->facePlateAnim, true, 0); break;
@@ -399,10 +399,10 @@ void SignPost_State_Finish()
     RSDK.ProcessAnimation(&entity->facePlateAnim);
     if (entity->debugObj) {
         Zone->stageFinishCallback  = NULL;
-        options->atlEnabled        = false;
-        options->enableIntro       = false;
-        options->suppressTitlecard = false;
-        options->suppressAutoMusic = false;
+        globals->atlEnabled        = false;
+        globals->enableIntro       = false;
+        globals->suppressTitlecard = false;
+        globals->suppressAutoMusic = false;
     }
 }
 void SignPost_CheckTouch()
@@ -416,10 +416,10 @@ void SignPost_CheckTouch()
     for (; p < Player->playerCount; ++p) {
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
         if (!entity->activePlayers || ((Entity *)RSDK.GetEntityByID(p + Player->playerCount))->objectID != GameOver->objectID) {
-            if (!p || options->gameMode == MODE_COMPETITION) {
+            if (!p || globals->gameMode == MODE_COMPETITION) {
                 if (!((1 << p) & entity->activePlayers)) {
                     bool32 flag = false;
-                    if (options->gameMode != MODE_COMPETITION) {
+                    if (globals->gameMode != MODE_COMPETITION) {
                         flag = player->position.x > entity->position.x;
                     }
                     else if (entity->playerPosStore[p].x && entity->playerPosStore[p].y) {
@@ -430,7 +430,7 @@ void SignPost_CheckTouch()
 
                     
                     if (flag) {
-                        // if (!((1 << p) & entity->activePlayers) && options->gameMode == MODE_COMPETITION)
+                        // if (!((1 << p) & entity->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         //    Announcer_Unknown2(player->camera->screenID);
                         RSDK.PlaySFX(SignPost->sfx_SignPost, 0, 255);
                         entity->active = ACTIVE_NORMAL;
@@ -445,7 +445,7 @@ void SignPost_CheckTouch()
 
                         entity->velocity.y      = -(vel >> 1);
                         entity->gravityStrength = vel / 96;
-                        if (options->gameMode == MODE_COMPETITION) {
+                        if (globals->gameMode == MODE_COMPETITION) {
                             entity->active = ACTIVE_NORMAL;
                             if (!entity->activePlayers) {
                                 switch (player->characterID) {
@@ -464,12 +464,12 @@ void SignPost_CheckTouch()
                             //}
                             // v12->playerFlags[player->playerID]    = 1;
                             int pos                               = 3 * player->playerID;
-                            options->competitionSession[pos + 47] = player->rings;
-                            options->competitionSession[pos + 59] = RSDK_sceneInfo->minutes;
-                            options->competitionSession[pos + 60] = RSDK_sceneInfo->seconds;
-                            options->competitionSession[pos + 61] = RSDK_sceneInfo->milliseconds;
-                            options->competitionSession[pos + 51] = player->score;
-                            options->competitionSession[pos + 80] = player->lives;
+                            globals->competitionSession[pos + 47] = player->rings;
+                            globals->competitionSession[pos + 59] = RSDK_sceneInfo->minutes;
+                            globals->competitionSession[pos + 60] = RSDK_sceneInfo->seconds;
+                            globals->competitionSession[pos + 61] = RSDK_sceneInfo->milliseconds;
+                            globals->competitionSession[pos + 51] = player->score;
+                            globals->competitionSession[pos + 80] = player->lives;
                             // Competition_Unknown4(v13, 2);
 
                             entity->activePlayers = entity->activePlayers | (1 << p);
@@ -478,8 +478,8 @@ void SignPost_CheckTouch()
                             entity->state = SignPost_State_CompetitionFinish;
                         }
                         else {
-                            if (options->gameMode == MODE_ENCORE) {
-                                switch (options->playerID & 0xFF) {
+                            if (globals->gameMode == MODE_ENCORE) {
+                                switch (globals->playerID & 0xFF) {
                                     case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
                                     case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 2, &entity->facePlateAnim, true, 0); break;
                                     case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 3, &entity->facePlateAnim, true, 0); break;
@@ -523,7 +523,7 @@ void SignPost_HandleCompetition()
     for (int p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
         if (player->objectID == Player->objectID && !player->sidekick) {
-            if (options->gameMode == MODE_COMPETITION) {
+            if (globals->gameMode == MODE_COMPETITION) {
                 int ex                 = entity->position.x;
                 int ey = entity->position.y;
                 entity->position.x = x;
@@ -537,7 +537,7 @@ void SignPost_HandleCompetition()
                     if (flag) {
                         Zone->screenBoundsL1[p]  = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
                         Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
-                        if (options->gameMode == MODE_COMPETITION)
+                        if (globals->gameMode == MODE_COMPETITION)
                             Zone->playerBoundActiveR[p] = 1;
                     }
                 }
@@ -550,7 +550,7 @@ void SignPost_HandleCompetition()
                 if (entity->position.x - player->position.x < 0x1000000 || entity->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
                     Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
                     Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
-                    if (options->gameMode == MODE_COMPETITION)
+                    if (globals->gameMode == MODE_COMPETITION)
                         Zone->playerBoundActiveR[p] = 1;
                 }
             }

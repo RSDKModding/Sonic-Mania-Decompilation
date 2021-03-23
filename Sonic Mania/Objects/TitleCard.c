@@ -27,12 +27,12 @@ void TitleCard_Create(void *data)
         entity->active      = ACTIVE_ALWAYS;
         entity->visible     = true;
         entity->drawOrder   = Zone->uiDrawHigh;
-        entity->enableIntro = options->enableIntro;
-        if (!options->suppressTitlecard || options->enableIntro || options->gameMode == MODE_TIMEATTACK)
+        entity->enableIntro = globals->enableIntro;
+        if (!globals->suppressTitlecard || globals->enableIntro || globals->gameMode == MODE_TIMEATTACK)
             RSDK_sceneInfo->timeEnabled = false;
         TitleCard_SetColours();
 
-        if (options->suppressTitlecard) {
+        if (globals->suppressTitlecard) {
             if (TitleCard->suppressCallback) {
                 TitleCard->suppressCallback();
                 TitleCard->suppressCallback = NULL;
@@ -40,7 +40,7 @@ void TitleCard_Create(void *data)
             entity->state = TitleCard_Unknown11;
         }
         else {
-            if (!options->atlEnabled)
+            if (!globals->atlEnabled)
                 Zone->timer2 = 0;
             entity->state     = TitleCard_Unknown6;
             entity->stateDraw = TitleCard_Unknown12;
@@ -76,11 +76,11 @@ void TitleCard_Create(void *data)
 
         if (Zone->swapGameMode) {
             Zone->swapGameMode           = false;
-            options->enableIntro         = false;
-            options->suppressTitlecard   = false;
-            RSDK_sceneInfo->milliseconds = options->restartMilliseconds;
-            RSDK_sceneInfo->seconds      = options->restartSeconds;
-            RSDK_sceneInfo->minutes      = options->restartMinutes;
+            globals->enableIntro         = false;
+            globals->suppressTitlecard   = false;
+            RSDK_sceneInfo->milliseconds = globals->restartMilliseconds;
+            RSDK_sceneInfo->seconds      = globals->restartSeconds;
+            RSDK_sceneInfo->minutes      = globals->restartMinutes;
             RSDK_sceneInfo->timeEnabled  = true;
             EntityPlayer *player         = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
             RSDK.CopyEntity(player, (Entity *)Zone->entityData, false);
@@ -376,7 +376,7 @@ void TitleCard_Unknown6(EntityPlayer *player)
     if (ActClear && ActClear->dword34)
         ActClear->dword34 = 0;
     Zone_ApplyWorldBounds(player);
-    if (!options->atlEnabled && !options->suppressTitlecard)
+    if (!globals->atlEnabled && !globals->suppressTitlecard)
         RSDK.SetGameMode(ENGINESTATE_PAUSED);
 
     entity->timer += 24;
@@ -594,23 +594,23 @@ void TitleCard_Unknown10(EntityPlayer *player)
     }
 
     if (entity->field_60 == 6) {
-        if (options->gameMode < MODE_TIMEATTACK) {
+        if (globals->gameMode < MODE_TIMEATTACK) {
             RSDK_sceneInfo->timeEnabled = true;
         }
     }
     if (entity->field_60 > 80) {
-        options->atlEnabled  = false;
-        options->enableIntro = false;
-        if (options->gameMode >= MODE_TIMEATTACK) {
-            if (options->gameMode == MODE_COMPETITION) {
+        globals->atlEnabled  = false;
+        globals->enableIntro = false;
+        if (globals->gameMode >= MODE_TIMEATTACK) {
+            if (globals->gameMode == MODE_COMPETITION) {
                 // Competition_Unknown3();
                 Announcer_Unknown1();
             }
             RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
         }
         else {
-            options->suppressTitlecard = false;
-            options->suppressAutoMusic = false;
+            globals->suppressTitlecard = false;
+            globals->suppressAutoMusic = false;
             RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
         }
     }
@@ -621,14 +621,14 @@ void TitleCard_Unknown11()
     RSDK_THIS(TitleCard);
     TitleCard_Unknown5();
     RSDK.SetGameMode(ENGINESTATE_REGULAR);
-    options->atlEnabled = false;
-    if (options->gameMode == MODE_TIMEATTACK || options->enableIntro)
+    globals->atlEnabled = false;
+    if (globals->gameMode == MODE_TIMEATTACK || globals->enableIntro)
         RSDK_sceneInfo->timeEnabled = false;
 
     entity->active = ACTIVE_NEVER;
-    if (options->suppressTitlecard && !entity->enableIntro || options->gameMode == MODE_TIMEATTACK) {
+    if (globals->suppressTitlecard && !entity->enableIntro || globals->gameMode == MODE_TIMEATTACK) {
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
-        options->suppressTitlecard = false;
+        globals->suppressTitlecard = false;
     }
 
     if (TitleCard->funcA)
@@ -638,7 +638,7 @@ void TitleCard_Unknown11()
 void TitleCard_Unknown12()
 {
     RSDK_THIS(TitleCard);
-    if (!options->atlEnabled && !options->suppressTitlecard) {
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
         if (entity->timer < 256)
             RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, 0, 0xFF, INK_NONE, true);
 
@@ -680,7 +680,7 @@ void TitleCard_Unknown12()
 void TitleCard_Unknown13()
 {
     RSDK_THIS(TitleCard);
-    if (!options->atlEnabled && !options->suppressTitlecard)
+    if (!globals->atlEnabled && !globals->suppressTitlecard)
         RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, entity->colours[4], 0xFF, INK_NONE, true);
     if (entity->points0[1].x < 0xF00000)
         RSDK.DrawQuad(entity->points6, 4, (entity->colours[0] >> 16) & 0xFF, (entity->colours[0] >> 8) & 0xFF, (entity->colours[0] >> 0) & 0xFF, 0xFF,
@@ -694,7 +694,7 @@ void TitleCard_Unknown13()
     if (entity->points0[0].x < 0xF00000)
         RSDK.DrawQuad(entity->points4, 4, (entity->colours[3] >> 16) & 0xFF, (entity->colours[3] >> 8) & 0xFF, (entity->colours[3] >> 0) & 0xFF, 0xFF,
                       INK_NONE);
-    if (!options->atlEnabled && options->suppressTitlecard == false) {
+    if (!globals->atlEnabled && globals->suppressTitlecard == false) {
         entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
         RSDK.DrawSprite(&entity->decorationData, &entity->decorationPos, true);
     }
@@ -765,7 +765,7 @@ void TitleCard_Unknown13()
 void TitleCard_Unknown14()
 {
     RSDK_THIS(TitleCard);
-    if (!options->atlEnabled && !options->suppressTitlecard) {
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
         RSDK.DrawQuad(entity->points8, 4, (entity->colours[4] >> 16) & 0xFF, (entity->colours[4] >> 8) & 0xFF, (entity->colours[4] >> 0) & 0xFF, 0xFF,
                       INK_NONE);
         RSDK.DrawQuad(entity->points9, 4, (entity->colours[4] >> 16) & 0xFF, (entity->colours[4] >> 8) & 0xFF, (entity->colours[4] >> 0) & 0xFF, 0xFF,
@@ -784,7 +784,7 @@ void TitleCard_Unknown14()
         RSDK.DrawQuad(entity->points4, 4, (entity->colours[3] >> 16) & 0xFF, (entity->colours[3] >> 8) & 0xFF, (entity->colours[3] >> 0) & 0xFF, 0xFF,
                       INK_NONE);
 
-    if (!options->atlEnabled && !options->suppressTitlecard) {
+    if (!globals->atlEnabled && !globals->suppressTitlecard) {
         entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
         RSDK.DrawSprite(&entity->decorationData, &entity->decorationPos, true);
     }

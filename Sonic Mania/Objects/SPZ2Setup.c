@@ -96,7 +96,7 @@ void SPZ2Setup_StageLoad()
     Animals->animalType1 = 3;
     Animals->animalType2 = 11;
 
-    if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && options->atlEnabled) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
         if (!Game_CheckStageReload()) {
             Zone->screenBoundsL1[0] = 256 - RSDK_screens->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
@@ -104,7 +104,7 @@ void SPZ2Setup_StageLoad()
         }
     }
 
-    if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct2()) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct2()) {
         EntitySPZ2Outro *entity = NULL;
         if (RSDK.GetEntities(SPZ2Outro->objectID, (Entity **)&entity)) {
             RSDK.BreakForeachLoop();

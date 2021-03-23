@@ -90,7 +90,7 @@ void BSS_Player_Draw()
     drawPos.x = RSDK_screens->centerX << 16;
     RSDK.DrawSprite(&entity->playerData, &drawPos, true);
     
-    byte charID = options->playerID & 0xFF;
+    byte charID = globals->playerID & 0xFF;
     if (charID == ID_TAILS || charID == ID_RAY && entity->playerData.animationID == 1)
         RSDK.DrawSprite(&entity->tailData, &drawPos, true);
 }
@@ -104,7 +104,7 @@ void BSS_Player_Create(void* data)
         entity->drawOrder     = 4;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        switch (options->playerID & 0xFF) {
+        switch (globals->playerID & 0xFF) {
             case ID_TAILS:
                 entity->spriteIndex = BSS_Player->tailsSpriteIndex;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailData, true, 0);
@@ -144,8 +144,8 @@ void BSS_Player_StageLoad()
     BSS_Player->knuxSpriteIndex   = RSDK.LoadSpriteAnimation("SpecialBS/Knuckles.bin", SCOPE_STAGE);
     BSS_Player->mightySpriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Mighty.bin", SCOPE_STAGE);
     BSS_Player->raySpriteIndex    = RSDK.LoadSpriteAnimation("SpecialBS/Ray.bin", SCOPE_STAGE);
-    if (options->playerID == ID_NONE)
-        options->playerID = ID_DEFAULT_PLAYER;
+    if (globals->playerID == ID_NONE)
+        globals->playerID = ID_DEFAULT_PLAYER;
     RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, 0);
     BSS_Player->sfx_Jump = RSDK.GetSFX("Global/Jump.wav");
 }

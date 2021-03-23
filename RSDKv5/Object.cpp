@@ -170,7 +170,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
-                    case 7: //any pointer
+                    case 7: // any pointer
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
@@ -188,13 +188,13 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(TextInfo) * arraySize; // 8
                         break;
-                    case 10: //AnimationData
+                    case 10: // AnimationData
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(AnimationData) * arraySize; // 24
                         break;
-                    case 11: //Hitbox
+                    case 11: // Hitbox
                         tmp = (dataPos & 0xFFFFFFFE) + 2;
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
@@ -236,7 +236,7 @@ void InitObjects()
         }
     }
 
-    //CreateEntity(TestObject->objectID, NULL, 0, 0);
+    CreateEntity(TestObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
@@ -272,10 +272,10 @@ void ProcessObjects()
                 screen->position.x = screen->targetPos->x << 0x10;
                 screen->position.y = screen->targetPos->y << 0x10;
             }
-            //screens[s].position.x = screen->position.x >> 0x10;
-            //screens[s].position.y = screen->position.y >> 0x10;
-            //screens[s].position.x -= screen->offset.x >> 0x10;
-            //screens[s].position.y -= screen->offset.y >> 0x10;
+            // screens[s].position.x = screen->position.x >> 0x10;
+            // screens[s].position.y = screen->position.y >> 0x10;
+            // screens[s].position.x -= screen->offset.x >> 0x10;
+            // screens[s].position.y -= screen->offset.y >> 0x10;
         }
     }
 
@@ -840,8 +840,7 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
         for (int s = 0; s < screenCount; ++s) {
             int sx = abs(entity->position.x - screenUnknown[s].position.x);
             int sy = abs(entity->position.y - screenUnknown[s].position.y);
-            if (sx <= entity->updateRange.x + screenUnknown[s].offset.x
-                && sy <= entity->updateRange.y + screenUnknown[s].offset.y) {
+            if (sx <= entity->updateRange.x + screenUnknown[s].offset.x && sy <= entity->updateRange.y + screenUnknown[s].offset.y) {
                 return true;
             }
         }

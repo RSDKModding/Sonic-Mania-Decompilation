@@ -34,8 +34,8 @@ void UIMedallionPanel_DrawPanel()
 
     int *savePtr = NULL;
     if (!RSDK_sceneInfo->inEditor) {
-        if (options->saveLoaded == 200 && !User.GetUserStorageUnknown()) {
-            savePtr = &options->saveRAM[0x900];
+        if (globals->saveLoaded == 200 && !User.GetUserStorageUnknown()) {
+            savePtr = &globals->saveRAM[0x900];
         }
     }
 

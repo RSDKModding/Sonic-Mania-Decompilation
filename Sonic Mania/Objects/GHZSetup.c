@@ -65,17 +65,17 @@ void GHZSetup_StageLoad()
         BGSwitch->layerIDs[2]     = 0;
         BGSwitch->layerIDs[3]       = 0;
 #if RETRO_USE_PLUS
-        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && options->atlEnabled) {
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
 #else
-        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && options->atlEnabled) {
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->atlEnabled) {
 #endif
             if (!Game_CheckStageReload())
                 GHZSetup_HandleActTransition();
         }
 #if RETRO_USE_PLUS
-        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct2())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct2())
 #else
-        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && Game_CheckAct2())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct2())
 #endif
             Zone->stageFinishCallback = GHZSetup_SpawnGHZ2Outro;
     }
@@ -86,9 +86,9 @@ void GHZSetup_StageLoad()
         BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchB1;
         BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchB2;
 #if RETRO_USE_PLUS
-        if (!(options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) || !options->atlEnabled || Game_CheckStageReload()) {
+        if (!(globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) || !globals->atlEnabled || Game_CheckStageReload()) {
 #else
-        if (!(options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) || !options->atlEnabled || Game_CheckStageReload()) {
+        if (!(globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) || !globals->atlEnabled || Game_CheckStageReload()) {
 #endif
             BGSwitch->layerIDs[0] = 0;
             BGSwitch->layerIDs[1] = 0;
@@ -99,15 +99,15 @@ void GHZSetup_StageLoad()
             GHZSetup_SetupStartingBG();
         }
 #if RETRO_USE_PLUS
-        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct1())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct1())
 #else
-        if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_NOSAVE) && Game_CheckAct1())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct1())
 #endif
             Zone->stageFinishCallback = GHZSetup_SetupActTransition;
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && options->gameMode == MODE_ENCORE)) {
+    if (RSDK_sceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && globals->gameMode == MODE_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 2, 128, 80);
@@ -127,7 +127,7 @@ void GHZSetup_StageLoad()
 
 void GHZSetup_SetupStartingBG()
 {
-    if ((options->playerID & 0xFF) == ID_KNUCKLES) {
+    if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
         BGSwitch->layerIDs[0] = 1;
         BGSwitch->layerIDs[1] = 1;
         BGSwitch->layerIDs[2] = 1;
@@ -148,7 +148,7 @@ void GHZSetup_SetupStartingBG()
         player->onGround = true;
         player->state    = Player_State_Ground;
         for (int s = 0; s < outsideLayer->scrollInfoCount; ++s) {
-            outsideLayer->scrollInfo[s].scrollPos += options->parallaxOffset[0] * outsideLayer->scrollInfo[s].scrollSpeed;
+            outsideLayer->scrollInfo[s].scrollPos += globals->parallaxOffset[0] * outsideLayer->scrollInfo[s].scrollSpeed;
         }
     }
 }

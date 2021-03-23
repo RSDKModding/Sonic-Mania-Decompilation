@@ -10,9 +10,9 @@ typedef struct {
     int newWaterLevel;
     int targetWaterLevel;
     int waterMoveSpeed;
-    int field_14[4];
-    int field_24[4];
-    int field_34[4];
+    int array3[4];
+    int array4[4];
+    int array5[4];
     int bubbleSizes[18];
     ushort spriteIndex;
     ushort bigBubbleSprite;
@@ -29,22 +29,19 @@ typedef struct {
     ushort sfx_DNABurst;
     ushort sfx_WaterLevelL;
     ushort sfx_WaterLevelR;
-    int field_B8;
-    int field_BC;
+    int waterLevelChannel_L;
+    int waterLevelChannel_R;
     int field_C0;
-    char field_C4;
-    char field_C5;
+    bool32 playingWaterLevelSFX;
     int field_C8;
-    byte field_CC;
-    char field_CD;
+    int waterLevelVolume;
     int waterPalette;
-    byte field_D4;
-    byte field_D5;
-    int field_D8[4];
-    byte array2[4];
+    int field_D4;
+    int wakePosX[4];
+    byte wakeDir[4];
     AnimationData wakeData;
     int field_104;
-    int field_108;
+    bool32 playingSkimSFX;
 } ObjectWater;
 
 // Entity Class
@@ -53,7 +50,7 @@ typedef struct {
     void (*state)();
     void (*stateDraw)();
     int type;
-    EntityPlayer *playerPtr;
+    void *childPtr;
     int field_68;
     char bubbleType1;
     char field_6D;
@@ -74,16 +71,16 @@ typedef struct {
     Hitbox hitbox;
     int gapA4;
     int field_A8;
-    int field_AC;
-    char field_B0;
-    char field_B1;
+    int timer;
+    char activePlayers;
+    char activePlayers2;
     char field_B2;
     char field_B3;
     int field_B4;
     int field_B8;
     int field_BC;
     int field_C0;
-    int field_C4;
+    int taggedObject;
     AnimationData waterData;
 } EntityWater;
 
@@ -103,5 +100,35 @@ void Water_Serialize();
 
 // Extra Entity Functions
 
+//Palette stuff
+void Water_SetWaterLevel();
+void Water_RemoveWaterEffect();
+
+//Utils
+void Water_CheckButtonTag();
+void Water_SpawnBubble(EntityPlayer *player, int id);
+void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID);
+EntityWater *Water_Unknown7(EntityPlayer *entityPtr);
+
+void Water_State_Palette();
+void Water_State_Splash();
+void Water_Unknown4();
+void Water_Unknown5(EntityWater *entity, int a2);
+void Water_State_Bubble();
+void Water_Unknown6();
+void Water_Unknown8();
+void Water_Unknown9();
+void Water_State_Bubbler();
+void Water_State_CountDownBubble();
+void Water_State_BubbleMove();
+void Water_State_Adjustable();
+
+//Draw States
+void Water_State_Draw_Palette();
+void Water_State_Draw_Tint();
+void Water_State_Draw_Splash();
+void Water_State_Draw_CountDownBubble();
+void Water_State_Draw_Bubbler();
+void Water_State_Draw_Bubble();
 
 #endif //!OBJ_WATER_H

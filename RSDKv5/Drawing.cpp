@@ -97,7 +97,7 @@ void FlipScreen()
 #if RETRO_USING_SDL2
     SDL_Rect destScreenPos[SCREEN_MAX];
 
-    switch (screenCount) {
+    switch (/*screenCount*/1) {
         default: break;
         case 1:
             destScreenPos[0].x = 0;
@@ -161,12 +161,12 @@ void FlipScreen()
 
     int pitch      = 0;
     ushort *pixels = NULL;
-    for (int s = 0; s < screenCount; ++s) {
+    for (int s = 0; s < /*screenCount*/1; ++s) {
         SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
         memcpy(pixels, screens[s].frameBuffer, pitch * SCREEN_YSIZE);
         SDL_UnlockTexture(engine.screenBuffer[s]);
 
-        SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, NULL);
+        SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, &destScreenPos[s]);
     }
     // no change here
     SDL_RenderPresent(engine.renderer);
@@ -337,45 +337,36 @@ void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count)
     }
 }
 
-void FillScreen(int a1, int a2, int a3, int a4)
+void FillScreen(int colour, int a2, int a3, int a4)
 {
-    if (a2 < 0) {
-        a2 = 0;
-    }
-    else if (a2 > 0xFF) {
-        a2 = 0xFF;
-    }
+    a2 = minVal(0xFF, a2);
+    a2 = maxVal(0x00, a2);
 
-    if (a3 < 0) {
-        a3 = 0;
-    }
-    else if (a3 > 0xFF) {
-        a3 = 0xFF;
-    }
+    a3 = minVal(0xFF, a3);
+    a3 = maxVal(0x00, a3);
 
-    if (a4 < 0) {
-        a4 = 0;
-    }
-    else if (a4 > 0xFF) {
-        a4 = 0xFF;
-    }
+    a4 = minVal(0xFF, a4);
+    a4 = maxVal(0x00, a4);
 
-    if (a4 + a2 + a3) {
+    if (a2 + a3 + a4) {
         validDraw    = true;
-        ushort a2Val = blendLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(a1 >> 0x10) & 0xFF]]
-                       + subtractLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(a1 >> 0x10) & 0xFF]];
+        ushort a2Val = blendLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(colour >> 0x10) & 0xFF]];
+        ushort a3Val = blendLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(colour >> 0x08) & 0xFF]];
+        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(colour >> 0x00) & 0xFF]];
 
-        ushort a3Val = blendLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]]
-                       + subtractLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(a1 >> 0x08) & 0xFF]];
-
-        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]]
-                       + subtractLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(a1 >> 0x00) & 0xFF]];
+        ushort *a2Ptr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - a2)];
+        ushort *a3Ptr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - a3)];
+        ushort *a4Ptr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - a4)];
 
         int cnt = currentScreen->height * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
-            currentScreen->frameBuffer[id] = (a4Val + blendLookupTable[(currentScreen->frameBuffer[id] & 0x1F) + (0xFF - a4)])
-                                             | ((a2Val + blendLookupTable[(currentScreen->frameBuffer[id] >> 11) + (0xFF - a2)]) << 11)
-                                             | ((a3Val + blendLookupTable[(currentScreen->frameBuffer[id] >> 11) + (0xFF - a3)]) << 6);
+            ushort px = currentScreen->frameBuffer[id];
+
+            int r = a2Val + a2Ptr[px >> 11];
+            int g = a3Val + a3Ptr[(px >> 6) & 0x1F];
+            int b = a4Val + a4Ptr[px & 0x1F];
+
+            currentScreen->frameBuffer[id] = (r << 11) | (g << 6) | (b);
         }
     }
 }
@@ -417,52 +408,46 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         drawY2 = (y2 >> 16) - currentScreen->position.y;
     }
 
-    int flags  = 0;
+    int flags1 = 0;
     int clipX1 = currentScreen->clipBound_X1;
-    if (drawX1 >= clipX1) {
-        if (drawX1 > currentScreen->clipBound_X2)
-            flags = 2;
+    if (drawX1 > currentScreen->clipBound_X2) {
+        flags1 |= 2;
     }
-    else {
-        flags = 1;
+    else if (drawX1 < clipX1) {
+        flags1 |= 1;
     }
 
     int clipY1 = currentScreen->clipBound_Y1;
-    if (drawY1 >= clipY1) {
-        if (drawY1 > currentScreen->clipBound_Y2)
-            flags |= 8;
+    if (drawY1 > currentScreen->clipBound_Y2) {
+        flags1 |= 8;
     }
-    else {
-        flags |= 4;
+    else if (drawY1 < clipY1) {
+        flags1 |= 4;
     }
-    int flagsX = flags;
 
-    if (drawX2 >= clipX1) {
-        if (drawX2 > currentScreen->clipBound_X2)
-            flags = 2;
+    int flags2 = 0;
+    if (drawX2 > currentScreen->clipBound_X2) {
+        flags2 = 2;
     }
-    else {
-        flags = 1;
+    else if (drawX2 < clipX1) {
+        flags2 = 1;
     }
 
     clipY1 = currentScreen->clipBound_Y1;
-    if (drawY2 >= clipY1) {
-        clipY1 = currentScreen->clipBound_Y1;
-        if (drawY2 > currentScreen->clipBound_Y2)
-            flags |= 8;
+    if (drawY2 > currentScreen->clipBound_Y2) {
+        flags2 |= 8;
     }
-    else {
-        flags |= 4;
+    else if (drawY2 < clipY1) {
+        flags2 |= 4;
     }
-    int flagsY = flags;
 
-    if (flags) {
+    if (flags1 || flags2) {
         do {
-            if (flagsX & flagsY)
+            if (flags1 & flags2)
                 return;
-            int curFlags = flagsY;
-            if (flagsX)
-                curFlags = flagsX;
+            int curFlags = flags2;
+            if (flags1)
+                curFlags = flags1;
 
             int x1 = 0;
             int y1 = 0;
@@ -485,7 +470,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 y1     = drawY1 + ((drawY2 - drawY1) * (((clipX1 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
             }
 
-            if (curFlags == flagsX) {
+            if (curFlags == flags1) {
                 int modifiers = 0;
                 drawX1        = x1;
                 drawY1        = y1;
@@ -496,14 +481,14 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 else {
                     modifiers = 1;
                 }
-                flagsX = modifiers;
+                flags1 = modifiers;
 
                 if (y1 >= clipY1) {
                     if (y1 > currentScreen->clipBound_Y2)
-                        flagsX = modifiers | 8;
+                        flags1 = modifiers | 8;
                 }
                 else {
-                    flagsX = modifiers | 4;
+                    flags1 = modifiers | 4;
                 }
             }
             else {
@@ -517,60 +502,61 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 else {
                     modifiers = 1;
                 }
-                flagsY = modifiers;
+                flags2 = modifiers;
 
                 if (y1 < clipY1) {
-                    flagsY = modifiers | 4;
+                    flags2 = modifiers | 4;
                 }
                 else if (y1 > currentScreen->clipBound_Y2) {
-                    flagsY = modifiers | 8;
+                    flags2 = modifiers | 8;
                 }
             }
-        } while (flagsX | flagsY);
+        } while (flags1 | flags2);
     }
 
-    int val = 0;
-    if (drawX1 >= clipX1) {
-        if (drawX1 > currentScreen->clipBound_X2)
-            drawX1 = currentScreen->clipBound_X2;
-        val = drawX1;
+    if (drawX1 > currentScreen->clipBound_X2) {
+        drawX1 = currentScreen->clipBound_X2;
     }
-    else {
-        drawX1 = clipX1;
-        val    = clipX1;
-    }
-    if (drawY1 >= clipY1) {
-        if (drawY1 > currentScreen->clipBound_Y2)
-            drawY1 = currentScreen->clipBound_Y2;
-        clipY1 = drawY1;
-    }
-    else {
-        drawY1 = clipY1;
-    }
-    if (drawX2 >= clipX1) {
-        clipX1 = drawX2;
-        if (drawX2 > currentScreen->clipBound_X2)
-            clipX1 = currentScreen->clipBound_X2;
-    }
-    if (drawY2 >= clipY1) {
-        clipY1 = drawY2;
-        if (drawY2 > currentScreen->clipBound_Y2)
-            clipY1 = currentScreen->clipBound_Y2;
+    else if (drawX1 < currentScreen->clipBound_X1) {
+        drawX1 = currentScreen->clipBound_X1;
     }
 
-    int sizeX = abs(clipX1 - drawX1);
-    int sizeY = abs(clipY1 - drawY1);
+    if (drawY1 > currentScreen->clipBound_Y2) {
+        drawY1 = currentScreen->clipBound_Y2;
+    }
+    else if (drawY1 < currentScreen->clipBound_Y1) {
+        drawY1 = currentScreen->clipBound_Y1;
+    }
+
+    if (drawX2 > currentScreen->clipBound_X2) {
+        drawX2 = currentScreen->clipBound_X2;
+    }
+    else if (drawX2 < currentScreen->clipBound_X1) {
+        drawX2 = currentScreen->clipBound_X1;
+    }
+
+    if (drawY2 > currentScreen->clipBound_Y2) {
+        drawY2 = currentScreen->clipBound_Y2;
+    }
+    else if (drawY2 < currentScreen->clipBound_Y1) {
+        drawY2 = currentScreen->clipBound_Y1;
+    }
+
+    int sizeX = abs(drawX2 - drawX1);
+    int sizeY = abs(drawY2 - drawY1);
     int max   = sizeY;
-    //if (sizeX <= sizeY)
-    //    sizeX = -sizeY;
-
     int hSize = sizeX >> 2;
-    if (clipX1 < drawX1) {
-        int v  = clipX1;
-        clipX1 = drawX1;
-        drawX1 = v;
-        clipY1 = drawY1;
-        drawY1 = clipY1;
+    if (sizeX <= sizeY)
+        hSize = -sizeY >> 2;
+
+    if (drawX2 < drawX1) {
+        int v  = drawX1;
+        drawX1 = drawX2;
+        drawX2 = v;
+
+        v      = drawY1;
+        drawY1 = drawY2;
+        drawY2 = v;
     }
 
     ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
@@ -578,8 +564,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
 
     switch (inkEffect) {
         case INK_NONE:
-            if (drawY1 > clipY1) {
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+            if (drawY1 > drawY2) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     *frameBufferPtr = colour16;
 
                     if (hSize > -sizeX) {
@@ -595,7 +581,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < clipX1 && drawY1 < clipY1) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     *frameBufferPtr = colour16;
 
                     if (hSize > -sizeX) {

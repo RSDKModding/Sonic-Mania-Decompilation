@@ -41,7 +41,7 @@ void Animals_Create(void* data)
     entity->updateRange.y = 0x400000;
     entity->drawOrder     = Zone->drawOrderLow;
 #if RETRO_USE_PLUS
-    if (!(options->secrets & 1))
+    if (!(globals->secrets & 1))
         type = voidToInt(data);
 #endif
     if (!entity->type && RSDK.Random(0, 256, &Zone->timeStart) == 21) {

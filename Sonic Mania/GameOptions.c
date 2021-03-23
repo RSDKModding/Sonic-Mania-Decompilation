@@ -2,4 +2,4 @@
 
 Hitbox defaultHitbox;
 
-GameOptions *options;
+GlobalVariables *globals;

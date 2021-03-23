@@ -763,6 +763,12 @@ typedef enum {
 } CModes;
 
 typedef enum {
+    REGION_US,
+    REGION_JP,
+    REGION_EU,
+} GameRegions;
+
+typedef enum {
     LANGUAGE_EN,
     LANGUAGE_FR,
     LANGUAGE_IT,

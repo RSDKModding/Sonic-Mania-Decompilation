@@ -166,16 +166,16 @@ void BSS_Message_LoadPrevScene()
         entity->colour -= 0x80808;
     }
     else {
-        if ((byte)(options->menuParam[22] >> 8) == 1) {
+        if ((byte)(globals->menuParam[22] >> 8) == 1) {
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();
         }
-        else if (options->gameMode < MODE_TIMEATTACK) {
-            if (options->saveSlotID == NO_SAVE_SLOT) {
-                options->blueSpheresInit = true;
+        else if (globals->gameMode < MODE_TIMEATTACK) {
+            if (globals->saveSlotID == NO_SAVE_SLOT) {
+                globals->blueSpheresInit = true;
                 SaveGame_ShuffleBSSID();
                 int *saveRAM = SaveGame->saveRAM;
-                if (options->gameMode == MODE_ENCORE)
+                if (globals->gameMode == MODE_ENCORE)
                     RSDK.LoadScene("Encore Mode", "");
                 else
                     RSDK.LoadScene("Mania Mode", "");
@@ -197,10 +197,10 @@ void BSS_Message_LoadGameState()
 {
     RSDK_THIS(BSS_Message);
     if (!entity->field_6C) {
-        options->blueSpheresInit = true;
+        globals->blueSpheresInit = true;
         SaveGame_ShuffleBSSID();
         int *saveRAM = SaveGame->saveRAM;
-        if (options->gameMode == MODE_ENCORE)
+        if (globals->gameMode == MODE_ENCORE)
             RSDK.LoadScene("Encore Mode", "");
         else
             RSDK.LoadScene("Mania Mode", "");

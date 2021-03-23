@@ -863,12 +863,11 @@ void Draw3DScene(ushort sceneID)
 
                     uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
-                    drawVert = &scn->vertices[scn->zBuffer[i].index];
-                    for (int v = 0; v < *vertCnt - 1; ++v) {
+                    for (int v = 0; v < vertCount - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, colour,
                                  entity->alpha, (InkEffects)entity->inkEffect, false);
                     }
-                    DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, colour,
+                    DrawLine(drawVert[vertCount - 1].x << 8, drawVert[vertCount - 1].y << 8, drawVert[0].x << 8, drawVert[0].y << 8, colour,
                              entity->alpha, (InkEffects)entity->inkEffect, false);
 
                     vertCnt++;

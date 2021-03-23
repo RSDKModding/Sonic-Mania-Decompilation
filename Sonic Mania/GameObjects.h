@@ -23,26 +23,26 @@ typedef struct {
     void (*TrackScore)(int a1, int a2, int a3);
     void (*GetLeaderboardsUnknown)(void);
     void (*LeaderboardEntryCount)(void);
-    void (*GetLeaderboardUnknown2)(void);
+    int (*GetLeaderboardUnknown2)(void);
     void (*Unknown12)(int a2, uint a3, int a4);
     void (*LeaderboardsUnknown8)(void);
     void (*ReadLeaderboardEntry)(uint a1);
     void (*SetRichPresence)(int, TextInfo *text);
     void (*TryTrackStat)(StatInfo *stat);
-    void (*GetStatsStatus)(void);
+    int (*GetStatsStatus)(void);
     void (*SetStatsStatus)(int a1);
     void (*UserStorageUnknown8)(void);
     void (*TryAuth)(void);
-    void (*GetUserStorageStatus)(void); //GetUserAuthStatus
+    int (*GetUserAuthStatus)(void);
     void (*GetUsername)(TextInfo *text);
     void (*TryInitStorage)(void);
-    void (*UserStorageStatusUnknown1)(void);
-    void (*UserStorageStatusUnknown2)(void);
+    int (*UserStorageStatusUnknown1)(void);
+    int (*UserStorageStatusUnknown2)(void);
     void (*ClearUserStorageStatus)(void);
     void (*SetUserStorageStatus)(void);
-    void (*UserStorageStatusUnknown3)(void);
-    void (*UserStorageStatusUnknown4)(void);
-    void (*UserStorageStatusUnknown5)(void);
+    int (*UserStorageStatusUnknown3)(void);
+    int (*UserStorageStatusUnknown4)(void);
+    int (*UserStorageStatusUnknown5)(void);
     void (*SetUserStorageUnknown)(int a1);
     bool32 (*GetUserStorageUnknown)(void);
     void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));
@@ -55,13 +55,13 @@ typedef struct {
     void (*ClearAllUserDBs)(void);
     void (*Unknown31)(ushort tableID);
     void (*GetUserDBStatus)(ushort tableID);
-    void (*Unknown33)(ushort tableID, int a2, int a3, int a4);
-    void (*Unknown34)(ushort tableID, int a2, int a3, int a4);
+    void (*Unknown33)(ushort tableID, int a2, const char *name, void *value);
+    void (*Unknown34)(ushort tableID, int a2, const char *name, void *value);
     int (*GetUserDBUnknownCount)(ushort tableID);
     int (*GetUserDBUnknown)(ushort tableID, ushort entryID);
     int (*AddUserDBEntry)(ushort tableID);
-    void (*SetUserDBValue)(ushort tableID, void *, void *, void *, void *);
-    void (*Unknown39)(ushort tableID, int a2, int a3, int a4, void *dst);
+    void (*SetUserDBValue)(ushort tableID, int a2, int a3, const char *name, void *value);
+    void (*Unknown39)(ushort tableID, int a2, int a3, const char *name, void *value);
     void (*GetDBEntryUUID)(ushort tableID, ushort entryID);
     void (*Unknown40)(ushort tableID, ushort entryID);
     void (*GetUserDBTimeA)(ushort tableID, int a2, char *buf, uint sizeInBytes, const char *format);
@@ -72,12 +72,12 @@ typedef struct {
 
 // Function Table
 typedef struct {
-    void (*InitGameOptions)(void **options, int size);
-    void (*CreateObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(), void (*lateUpdate)(),
+    void (*InitGlobalVariables)(void **globals, int size);
+    void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(), void (*lateUpdate)(),
                          void (*staticUpdate)(), void (*draw)(), void(*create)(void *), void (*stageLoad)(),
                          void (*editorDraw)(), void (*editorLoad)(), void (*serialize)());
 #if RETRO_USE_PLUS
-    void (*CreateObjectContainer)(void **structPtr, const char *name, uint objectSize);
+    void (*RegisterObjectContainer)(void **structPtr, const char *name, uint objectSize);
 #endif
     bool32 (*GetActiveEntities)(ushort group, Entity **entity);
     bool32 (*GetEntities)(ushort type, Entity **entity);
@@ -204,7 +204,7 @@ typedef struct {
     void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
                           byte rotationFlag);
     void (*SetSpriteString)(ushort spriteIndex, ushort animID, TextInfo *info);
-    void (*GetAnimation)(ushort sprIndex, const char *name);
+    void *(*GetSpriteAnimation)(ushort sprIndex, const char *name);
     SpriteFrame *(*GetFrame)(ushort sprIndex, ushort anim, int frame);
     Hitbox *(*GetHitbox)(AnimationData *data, byte hitboxID);
     short (*GetFrameID)(AnimationData *data);
@@ -903,14 +903,22 @@ extern RSDKFunctionTable RSDK;
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
-    RSDK.CreateObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), ##object##_Update, ##object##_LateUpdate,             \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), ##object##_Update, ##object##_LateUpdate,             \
                       ##object##_StaticUpdate, ##object##_Draw, ##object##_Create, ##object##_StageLoad, ##object##_EditorDraw, ##object##_EditorLoad,           \
                       ##object##_Serialize)
 #if RETRO_USE_PLUS
-#define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.CreateObjectContainer((void **)&object, #object, sizeof(Object##object))
+#define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
 #define RSDK_THIS(type) Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
+#define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
+
+#define foreach_active(type, entityOut)                                                                                                              \
+    Entity##type *entityOut = NULL;                                                                                                                  \
+    while (RSDK.GetActiveEntities(type->objectID, (Entity **)&entityOut))
+#define foreach_all(type, entityOut)                                                                                                                 \
+    Entity##type *entityOut = NULL;                                                                                                                  \
+    while (RSDK.GetEntities(type->objectID, (Entity **)&entityOut))
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 

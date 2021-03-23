@@ -89,8 +89,10 @@ void TestObject_StaticUpdate()
 void TestObject_Draw() { 
     EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
     //Vector2 drawPos;
-    //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + (sin(TestObject->timer / 0x08) * 0x10),
-    //         currentScreen->centerY + (cos(TestObject->timer / 0x08) * 0x10), 0x00FF00, 0xFF, INK_NONE, true); 
+    //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + 0x10, currentScreen->centerY + 0x20, 0x00FF00, 0xFF, INK_NONE,
+    //         true);
+    //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + (cos(TestObject->timer) * 0x40),
+    //         currentScreen->centerY + (sin(TestObject->timer) * 0x40), 0x00FF00, 0xFF, INK_NONE, true); 
     //DrawRectangle(currentScreen->centerX, currentScreen->centerY, 0x40 + (TestObject->timer / 0x08) % 0x80, 0x40 + (TestObject->timer / 0x04) % 0x80,
     //              0x00FF00, 0xFF, INK_NONE, true);
 
@@ -98,7 +100,7 @@ void TestObject_Draw() {
     //drawPos.y = currentScreen->centerY;
     //entity->drawFX    = FX_FLIP;
     //entity->direction = (TestObject->timer / 4) % 4;
-    DrawSprite(&entity->data, NULL, false);
+    //DrawSprite(&entity->data, NULL, false);
     //DrawDeformedSprite(2, INK_NONE, 0xFF);
 
     //if (tileLayers[0].layout)
@@ -108,7 +110,7 @@ void TestObject_Draw() {
     //                  0x20 + (TestObject->timer / 0x04) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
     //DrawCircle(currentScreen->centerX, currentScreen->centerY, 0x10 + (TestObject->timer / 0x02) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
 
-    Vector2 vertPos[4];
+    /*Vector2 vertPos[4];
     uint vertClr[4];
     vertPos[0].x = (int)(10 + TestObject->timer * 0.3) << 0x10;
     vertPos[0].y = (int)(10 + TestObject->timer * 0.3) << 0x10;
@@ -122,10 +124,10 @@ void TestObject_Draw() {
     vertClr[0] = 0xFF0000;
     vertClr[1] = 0xFF0000;
     vertClr[2] = 0x0000FF;
-    vertClr[3] = 0x0000FF;
+    vertClr[3] = 0x0000FF;*/
 
     //DrawQuad(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
-    DrawBlendedQuad(vertPos, vertClr, 4, 0xFF, INK_NONE);
+    //DrawBlendedQuad(vertPos, vertClr, 4, 0xFF, INK_NONE);
 }
 void TestObject_Create(void *data)
 {

@@ -16,7 +16,7 @@ void GameOver_StaticUpdate() {}
 void GameOver_Draw()
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
-    if (entity->state != GameOver_Unknown5 && options->gameMode == MODE_COMPETITION) {
+    if (entity->state != GameOver_Unknown5 && globals->gameMode == MODE_COMPETITION) {
         if (RSDK_sceneInfo->currentScreenID != entity->playerID || RSDK.GetEntityCount(PauseMenu->objectID, true) > 0) {
             return;
         }
@@ -26,7 +26,7 @@ void GameOver_Draw()
         RSDK.DrawQuad(entity->verts, 4, 0, 0, 0, 255, INK_NONE);
     }
 
-    if (options->gameMode != MODE_COMPETITION || RSDK_sceneInfo->currentScreenID == entity->playerID) {
+    if (globals->gameMode != MODE_COMPETITION || RSDK_sceneInfo->currentScreenID == entity->playerID) {
         entity->data.frameID = 0;
         for (entity->data.frameID = 0; entity->data.frameID < 8; ++entity->data.frameID) {
             entity->rotation = entity->letterRotations[entity->data.frameID];
@@ -160,7 +160,7 @@ void GameOver_Unknown2()
     entity->scale.y = entity->scale.x;
 
     if (entity->timer == 0) {
-        if (options->gameMode != MODE_COMPETITION) {
+        if (globals->gameMode != MODE_COMPETITION) {
             for (int i = 40; i < 0x30; ++i) {
                 RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
             }
@@ -180,9 +180,9 @@ void GameOver_Unknown2()
             }
         }
         else {
-            if (options->competitionSession[23] <= 0) {
+            if (globals->competitionSession[23] <= 0) {
                 bool32 flag = false;
-                if (0 < options->competitionSession[23] - 1 && 0 != options->competitionSession[23]) {
+                if (0 < globals->competitionSession[23] - 1 && 0 != globals->competitionSession[23]) {
                     if (Zone->field_15C != 1)
                         flag = true;
                 }
@@ -213,7 +213,7 @@ void GameOver_Unknown2()
                 int id       = 0;
                 int id2      = 0;
                 int id3      = 0;
-                for (int i = 0; i < options->competitionSession[23]; ++i) {
+                for (int i = 0; i < globals->competitionSession[23]; ++i) {
                     Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
                     id2         = id;
                     if (ent->objectID == GameOver->objectID) {
@@ -230,7 +230,7 @@ void GameOver_Unknown2()
                 }
 
                 bool32 flag = false;
-                if (0 < options->competitionSession[23] - 1 && 0 != options->competitionSession[23]) {
+                if (0 < globals->competitionSession[23] - 1 && 0 != globals->competitionSession[23]) {
                     if (Zone->field_15C != 1)
                         flag = true;
                 }
@@ -260,7 +260,7 @@ void GameOver_Unknown2()
 
     if (++entity->timer == 120) {
         entity->timer = 0;
-        if (options->gameMode == MODE_COMPETITION || Zone->field_15C)
+        if (globals->gameMode == MODE_COMPETITION || Zone->field_15C)
             entity->state = GameOver_Unknown3;
         else
             entity->state = GameOver_Unknown4;
@@ -276,7 +276,7 @@ void GameOver_Unknown3()
     int id       = 0;
     int id2      = 0;
     int id3      = 0;
-    for (int i = 0; i < options->competitionSession[23]; ++i) {
+    for (int i = 0; i < globals->competitionSession[23]; ++i) {
         Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
         id2         = id;
         if (ent->objectID == GameOver->objectID) {
@@ -292,7 +292,7 @@ void GameOver_Unknown3()
         }
     }
 
-    if (id2 >= options->competitionSession[23] - 1 || id3 == options->competitionSession[23] || Zone->field_15C)
+    if (id2 >= globals->competitionSession[23] - 1 || id3 == globals->competitionSession[23] || Zone->field_15C)
         entity->state = GameOver_Unknown4;
 }
 
@@ -302,7 +302,7 @@ void GameOver_Unknown4()
     ++entity->timer;
 
     int cID = 0;
-    if (options->gameMode == MODE_COMPETITION)
+    if (globals->gameMode == MODE_COMPETITION)
         cID = entity->playerID;
     else
         cID = 0;
@@ -363,9 +363,9 @@ void GameOver_Unknown5()
     if (entity->timer == 90) {
         entity->timer = 0;
 
-        if (options->gameMode == MODE_COMPETITION) {
-            options->competitionSession[options->competitionSession[24] + 31] = 1;
-            options->competitionSession[27]                                   = options->competitionSession[93] + 1;
+        if (globals->gameMode == MODE_COMPETITION) {
+            globals->competitionSession[globals->competitionSession[24] + 31] = 1;
+            globals->competitionSession[27]                                   = globals->competitionSession[93] + 1;
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();
@@ -378,24 +378,24 @@ void GameOver_Unknown5()
         }
         else {
             int *saveRAM = SaveGame->saveRAM;
-            if (options->gameMode >= MODE_TIMEATTACK) {
+            if (globals->gameMode >= MODE_TIMEATTACK) {
                 RSDK.LoadScene("Presentation", "Menu");
                 RSDK.InitSceneLoad();
             }
-            else if (options->continues > 0) {
+            else if (globals->continues > 0) {
                 saveRAM[30] = RSDK_sceneInfo->listPos;
                 saveRAM[25] = 3;
                 saveRAM[26] = 0;
                 saveRAM[27] = 0;
-                if (options->gameMode == MODE_ENCORE) {
-                    options->playerID &= 0xFF;
+                if (globals->gameMode == MODE_ENCORE) {
+                    globals->playerID &= 0xFF;
                     int id      = -1;
                     saveRAM[66] = -1;
-                    for (int i = options->playerID; i > 0; ++id, i >>= 1)
+                    for (int i = globals->playerID; i > 0; ++id, i >>= 1)
                         ;
-                    options->characterFlags = 1 << id;
-                    saveRAM[66]             = options->characterFlags;
-                    saveRAM[67]             = options->stock;
+                    globals->characterFlags = 1 << id;
+                    saveRAM[66]             = globals->characterFlags;
+                    saveRAM[67]             = globals->stock;
                 }
                 RSDK.LoadScene("Presentation", "Continue");
                 RSDK.InitSceneLoad();
@@ -404,15 +404,15 @@ void GameOver_Unknown5()
                 saveRAM[25] = 3;
                 saveRAM[26] = 0;
                 saveRAM[27] = 0;
-                if (options->gameMode == MODE_ENCORE) {
-                    options->playerID &= 0xFF;
+                if (globals->gameMode == MODE_ENCORE) {
+                    globals->playerID &= 0xFF;
                     int id      = -1;
                     saveRAM[66] = -1;
-                    for (int i = options->playerID; i > 0; ++id, i >>= 1)
+                    for (int i = globals->playerID; i > 0; ++id, i >>= 1)
                         ;
-                    options->characterFlags = 1 << id;
-                    saveRAM[66]             = options->characterFlags;
-                    saveRAM[67]             = options->stock;
+                    globals->characterFlags = 1 << id;
+                    saveRAM[66]             = globals->characterFlags;
+                    saveRAM[67]             = globals->stock;
                 }
                 UIWaitSpinner_Wait();
                 // SaveGame_SaveFile(GameOver_SaveGameCallback);

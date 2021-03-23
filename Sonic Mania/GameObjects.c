@@ -60,7 +60,7 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK_unknown = info->unknown;
 #endif
     RSDK_screens = info->screenInfo;
-    RSDK.InitGameOptions((void **)&options, sizeof(GameOptions));
+    RSDK.InitGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 
     defaultHitbox.left   = -10;
     defaultHitbox.top    = -20;

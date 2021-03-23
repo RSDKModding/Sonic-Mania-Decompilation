@@ -127,9 +127,9 @@ void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*ski
             skipCallback();
 
         if (skipState == 2 || skipState != 3 || entity->skipState == 3 || entity->skipState)
-            options->suppressTitlecard = 0;
-        options->suppressAutoMusic = 0;
-        options->enableIntro       = 0;
+            globals->suppressTitlecard = 0;
+        globals->suppressAutoMusic = 0;
+        globals->enableIntro       = 0;
         RSDK.SetGameMode(ENGINESTATE_FROZEN);
         Zone_Unknown1(20, 0);
         Music_FadeOut(0.029999999);

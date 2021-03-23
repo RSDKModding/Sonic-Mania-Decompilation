@@ -25,7 +25,32 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void (*state)();
+    int timer;
+    int stageFinishTimer;
+    int scoreBonus;
+    int field_68;
+    int dword6C;
+    int field_70;
+    int time;
+    int dword78;
+    int field_7C;
+    int field_80;
+    int field_84;
+    Vector2 posUnknown;
+    Vector2 posUnknown3;
+    Vector2 posUnknown2;
+    Vector2 posUnknown4;
+    Vector2 posUnknown5;
+    Vector2 posUnknown6;
+    void *playerPtr;
+    AnimationData data1;
+    AnimationData data2;
+    AnimationData playerNameData;
+    AnimationData gotThroughData;
+    AnimationData actNoData;
+    AnimationData data3;
 } EntityActClear;
 
 // Object Struct
@@ -43,6 +68,26 @@ void ActClear_EditorLoad();
 void ActClear_Serialize();
 
 // Extra Entity Functions
+void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs);
+void ActClear_DrawNumbers(Vector2 *pos, int value, signed int maxVals);
+void ActClear_CheckPlayerVictory();
+int ActClear_SaveGameCallback(int a1);
+void ActClear_Unknown5();
 
+void ActClear_Unknown6();
+void ActClear_Unknown7();
+void ActClear_State_TAFinish();
+void ActClear_Unknown8();
+void ActClear_TallyScore();
+void ActClear_LoadNextScene();
+void ActClear_Unknown9();
+void ActClear_Unknown10();
+void ActClear_State_ActFinish();
+
+void ActClear_ForcePlayerOnScreen();
+StatInfo *Game_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
+int Game_DB_SetScore(byte zone, byte charID, byte act, int encore, int dst);
+void Game_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore);
+void Game_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr);
 
 #endif //!OBJ_ACTCLEAR_H

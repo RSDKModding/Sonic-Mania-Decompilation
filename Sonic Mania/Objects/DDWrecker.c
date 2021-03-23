@@ -47,7 +47,7 @@ void DDWrecker_Create(void *data)
 {
     EntityDDWrecker *entity = (EntityDDWrecker *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
-        if (options->gameMode == MODE_TIMEATTACK || options->gameMode >= MODE_TIMEATTACK) {
+        if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode >= MODE_TIMEATTACK) {
             RSDK.ResetEntityPtr(entity, 0, 0);
         }
         else if (data) {
@@ -885,8 +885,8 @@ void DDWrecker_State_SpawnSignpost()
         EntitySignPost *signPost = NULL;
         while (RSDK.GetEntities(SignPost->objectID, (Entity **)&signPost)) {
             signPost->position.x = entity->position.x;
-            // signPost->state           = Signpost_State_Fall;
-            // RSDK.PlaySFX(SignPost->sfx_Twinkle, 0, 255);
+            signPost->state           = SignPost_State_Fall;
+            RSDK.PlaySFX(SignPost->sfx_Twinkle, 0, 255);
         }
         RSDK.ResetEntityPtr(entity, 0, 0);
     }

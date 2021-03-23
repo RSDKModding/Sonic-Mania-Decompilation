@@ -12,13 +12,13 @@ void ItemBox_Update()
     if (entity->type == 17) {
         if (entity->contentsData.animationID == 2 || (uint)(entity->contentsData.animationID - 7) <= 1) {
 #if RETRO_USE_PLUS
-            if (options->characterFlags != 0x1F || options->gameMode != MODE_ENCORE) {
+            if (globals->characterFlags != 0x1F || globals->gameMode != MODE_ENCORE) {
 #endif
                 RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 7, &entity->contentsData, 0, 0);
 #if RETRO_USE_PLUS
-                if (options->gameMode == MODE_ENCORE) {
+                if (globals->gameMode == MODE_ENCORE) {
                     int id = 0;
-                    while ((1 << entity->contentsData.frameID) & options->characterFlags) {
+                    while ((1 << entity->contentsData.frameID) & globals->characterFlags) {
                         if (++entity->contentsData.frameID > 4)
                             entity->contentsData.frameID = 0;
                         if (++id > 5) {
@@ -94,11 +94,11 @@ void ItemBox_Create(void *data)
             case 9:
             case 0xF:
             case 0x10:
-                if (options->gameMode == MODE_TIMEATTACK) {
+                if (globals->gameMode == MODE_TIMEATTACK) {
                     entity->type = 0;
                 }
 #if RETRO_USE_PLUS
-                else if (options->gameMode == MODE_ENCORE) {
+                else if (globals->gameMode == MODE_ENCORE) {
                     entity->type = 17;
                 }
 #endif
@@ -119,9 +119,9 @@ void ItemBox_Create(void *data)
             case 0xC:
             case 0xD:
 #if RETRO_USE_PLUS
-                if (options->gameMode == MODE_ENCORE || options->gameMode == MODE_COMPETITION)
+                if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
 #else
-                if (options->gameMode == MODE_COMPETITION)
+                if (globals->gameMode == MODE_COMPETITION)
 #endif
                     entity->contentsData.frameID = entity->type;
                 else
@@ -182,12 +182,12 @@ void ItemBox_StageLoad()
         DebugMode->draw[DebugMode->itemCount++]    = ItemBox_DebugDraw;
     }
 
-    if (options->gameMode == MODE_COMPETITION) {
-        if (options->itemMode == 1) {
+    if (globals->gameMode == MODE_COMPETITION) {
+        if (globals->itemMode == 1) {
             for (EntityItemBox *entity = 0; RSDK.GetEntities(ItemBox->objectID, (Entity **)&entity); entity->type = 13) {
             }
         }
-        else if (options->itemMode == 2) {
+        else if (globals->itemMode == 2) {
             for (EntityItemBox *entity = 0; RSDK.GetEntities(ItemBox->objectID, (Entity **)&entity); entity->type = 12) {
             }
         }
@@ -524,21 +524,21 @@ void ItemBox_GivePowerup()
                 return;
             case 12:
 #if RETRO_USE_PLUS
-                if (options->gameMode == MODE_ENCORE) {
-                    if (!options->stock || player->playerAnimData.animationID == ANI_TRANSFORM) {
+                if (globals->gameMode == MODE_ENCORE) {
+                    if (!globals->stock || player->playerAnimData.animationID == ANI_TRANSFORM) {
                         RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
                         return;
                     }
                     int charID = player->characterID;
-                    Player_ChangeCharacter(player, (byte)options->stock);
-                    options->stock >>= 8;
+                    Player_ChangeCharacter(player, (byte)globals->stock);
+                    globals->stock >>= 8;
 
-                    if (options->stock) {
+                    if (globals->stock) {
                         charID <<= 8;
-                        if (options->stock & 0xFF00)
+                        if (globals->stock & 0xFF00)
                             charID <<= 8;
                     }
-                    options->stock |= charID;
+                    globals->stock |= charID;
                     EntityExplosion *explosion =
                         (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
                     explosion->drawOrder = Zone->drawOrderHigh;
@@ -546,7 +546,7 @@ void ItemBox_GivePowerup()
                     return;
                 }
 #endif
-                if (options->gameMode != MODE_COMPETITION) {
+                if (globals->gameMode != MODE_COMPETITION) {
                     RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
                     return;
                 }
@@ -574,7 +574,7 @@ void ItemBox_GivePowerup()
                     return;
                 }
                 v31   = 2;
-                if (options->stock & 0xFF0000) {
+                if (globals->stock & 0xFF0000) {
                     id = -1;
                     int cnt = BYTE2(stock);
                     if (cnt) {
@@ -583,11 +583,11 @@ void ItemBox_GivePowerup()
                             ++id;
                         } while (cnt > 0);
                     }
-                    LOWORD(stock) = options->stock;
+                    LOWORD(stock) = globals->stock;
                     v31           = 3;
                     arr1[2]       = id;
                 }
-                if (options->stock & 0xFF00) {
+                if (globals->stock & 0xFF00) {
                     id = -1;
                     int cnt = BYTE1(stock);
                     if (cnt) {
@@ -611,14 +611,14 @@ void ItemBox_GivePowerup()
                     }
                     arr1[v31] = v37;
                 }
-                options->stock = 0;
+                globals->stock = 0;
                 v38            = 0;
                 do {
                     if (arr1[v38] == 255)
                         break;
                     v39      = RSDK.Rand(0, 5);
                     v53[v38] = v39;
-                    if ((1 << v39) & options->characterFlags) // charFlags
+                    if ((1 << v39) & globals->characterFlags) // charFlags
                     {
                         while (1) {
                             v40 = v53[v38];
@@ -630,7 +630,7 @@ void ItemBox_GivePowerup()
                             }
                             v41      = RSDK_Rand(0, 5);
                             v53[v38] = v41;
-                            if (!((1 << v41) & options->characterFlags))
+                            if (!((1 << v41) & globals->characterFlags))
                                 goto LABEL_95;
                         }
                         v42      = RSDK_Rand(0, v38);
@@ -654,8 +654,8 @@ void ItemBox_GivePowerup()
                             Player_ChangeCharacter(v46, 1 << v47);
                             goto LABEL_103;
                         }
-                        options->stock <<= 8;
-                        options->stock |= 1 << LOBYTE(v53[v45]);
+                        globals->stock <<= 8;
+                        globals->stock |= 1 << LOBYTE(v53[v45]);
                     LABEL_103:
                         if (++v45 >= v38)
                             goto LABEL_104;
@@ -684,19 +684,19 @@ void ItemBox_GivePowerup()
             case 17: {
                 if (entity->contentsData.animationID == 7) {
 #if RETRO_USE_PLUS
-                    if (options->gameMode == MODE_ENCORE) {
-                        if (!((1 << entity->contentsData.frameID) & options->characterFlags) && options->characterFlags != 31
-                            && !(options->stock & 0xFF0000)) {
-                            options->characterFlags |= (1 << entity->contentsData.frameID);
+                    if (globals->gameMode == MODE_ENCORE) {
+                        if (!((1 << entity->contentsData.frameID) & globals->characterFlags) && globals->characterFlags != 31
+                            && !(globals->stock & 0xFF0000)) {
+                            globals->characterFlags |= (1 << entity->contentsData.frameID);
                             EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
                             if (player2->objectID) {
                                 int id = 0;
-                                if (options->stock) {
+                                if (globals->stock) {
                                     do
                                         id += 8;
-                                    while (options->stock >> id);
+                                    while (globals->stock >> id);
                                 }
-                                options->stock |= (1 << entity->contentsData.frameID << id);
+                                globals->stock |= (1 << entity->contentsData.frameID << id);
                                 HUD->field_28[id >> 3] = 120;
                             }
                             else {
@@ -816,8 +816,8 @@ void ItemBox_GivePowerup()
 void ItemBox_Break(EntityItemBox *itemBox, void *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
-    if (options->gameMode == MODE_COMPETITION) {
-        ++options->competitionSession[RSDK.GetEntityID(player) + 55];
+    if (globals->gameMode == MODE_COMPETITION) {
+        ++globals->competitionSession[RSDK.GetEntityID(player) + 55];
     }
     RSDK.CreateEntity(0, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
@@ -861,13 +861,13 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     itemBox->active = ACTIVE_NORMAL;
     if (itemBox->type == 13) {
 #if RETRO_USE_PLUS
-        if (options->gameMode != MODE_ENCORE) {
+        if (globals->gameMode != MODE_ENCORE) {
 #endif
             while (true) {
                 itemBox->type = RSDK.Rand(0, 13);
                 switch (itemBox->type) {
                     case 7:
-                        if (options->gameMode == MODE_TIMEATTACK)
+                        if (globals->gameMode == MODE_TIMEATTACK)
                             continue;
                         switch (player->characterID) {
                             case ID_SONIC:
@@ -901,7 +901,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
                     case 15:
                     case 16: continue;
                     case 12:
-                        if (options->gameMode != MODE_COMPETITION)
+                        if (globals->gameMode != MODE_COMPETITION)
                             continue;
                         itemBox->contentsData.frameID = itemBox->type;
                         break;

@@ -30,7 +30,7 @@ void BoundsMarker_Create(void* data)
 {
     EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
-        if (entity->vsDisable && options->gameMode == MODE_COMPETITION) {
+        if (entity->vsDisable && globals->gameMode == MODE_COMPETITION) {
             RSDK.ResetEntityPtr(entity, 0, 0);
         }
         else {

@@ -124,10 +124,10 @@ void SPZ1Setup_StageLoad()
 
     Animals->animalType1 = 3;
     Animals->animalType2 = 11;
-    if (options->gameMode && options->gameMode != MODE_ENCORE || !options->enableIntro || Game_CheckStageReload())
+    if (globals->gameMode && globals->gameMode != MODE_ENCORE || !globals->enableIntro || Game_CheckStageReload())
         FXFade_StopAll();
 
-    if ((options->gameMode == MODE_MANIA || options->gameMode == MODE_ENCORE) && Game_CheckAct1()) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct1()) {
         Zone->forcePlayerOnScreenFlag = true;
         Zone->stageFinishCallback     = SPZ1Setup_SetupActTransition;
     }

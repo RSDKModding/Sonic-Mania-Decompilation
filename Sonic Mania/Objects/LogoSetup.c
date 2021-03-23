@@ -55,12 +55,12 @@ void LogoSetup_StageLoad()
 
     if (RSDK_sceneInfo->listPos > 2) {
         switch (RSDK_sceneInfo->listPos) {
-            case 3: options->playerID = ID_SONIC; break;
-            case 4: options->playerID = ID_TAILS; break;
-            case 5: options->playerID = ID_KNUCKLES; break;
+            case 3: globals->playerID = ID_SONIC; break;
+            case 4: globals->playerID = ID_TAILS; break;
+            case 5: globals->playerID = ID_KNUCKLES; break;
 #if RETRO_USE_PLUS
-            case 6: options->playerID = ID_MIGHTY; break;
-            case 7: options->playerID = ID_RAY; break;
+            case 6: globals->playerID = ID_MIGHTY; break;
+            case 7: globals->playerID = ID_RAY; break;
 #endif
             default: break;
         }

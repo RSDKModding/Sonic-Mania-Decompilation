@@ -72,9 +72,9 @@ void Spring_Create(void *data)
                     entity->velocity.x = 0x74000;
                     entity->velocity.y = 0x74000;
                 }
-                if (entity->flipFlag < 2u)
+                if (entity->flipFlag < FLIP_Y)
                     entity->velocity.y = -entity->velocity.y;
-                if (entity->flipFlag & 1)
+                if (entity->flipFlag & FLIP_X)
                     entity->velocity.x = -entity->velocity.x;
                 entity->hitbox.left   = -0xC;
                 entity->hitbox.top    = -0xB;

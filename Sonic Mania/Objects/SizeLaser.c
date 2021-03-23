@@ -87,7 +87,7 @@ void SizeLaser_Create(void* data)
 void SizeLaser_StageLoad()
 {
     SizeLaser->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
-    switch (options->playerID & 0xFF) {
+    switch (globals->playerID & 0xFF) {
         case ID_SONIC: SizeLaser->sonicIndex = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
         case ID_TAILS:
             SizeLaser->tailsIndex      = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
@@ -101,7 +101,7 @@ void SizeLaser_StageLoad()
         default: break;
     }
 
-    switch ((options->playerID >> 8) & 0xFF) {
+    switch ((globals->playerID >> 8) & 0xFF) {
         case ID_SONIC: SizeLaser->sonicIndex = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
         case ID_TAILS:
             SizeLaser->tailsIndex      = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);

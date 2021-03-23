@@ -5,8 +5,8 @@ ObjectCamera *Camera;
 void Camera_Update()
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    entity->lastPos.x = entity->position.x;
-    entity->lastPos.y = entity->position.y;
+    entity->lastPos.x    = entity->position.x;
+    entity->lastPos.y    = entity->position.y;
     if (entity->state)
         entity->state();
     entity->velocity.x = entity->position.x - entity->lastPos.x;
@@ -34,10 +34,7 @@ void Camera_Update()
     }
 }
 
-void Camera_LateUpdate()
-{
-
-}
+void Camera_LateUpdate() {}
 
 void Camera_StaticUpdate()
 {
@@ -47,24 +44,21 @@ void Camera_StaticUpdate()
         Camera->centerBounds.y += 0x8000;
 }
 
-void Camera_Draw()
-{
+void Camera_Draw() {}
 
-}
-
-void Camera_Create(void* data)
+void Camera_Create(void *data)
 {
     int screen           = (int)(size_t)data;
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    entity->field_8C = 0x80000;
-    entity->field_98 = 104;
+    entity->field_8C     = 0x80000;
+    entity->field_98     = 104;
     if (entity->active != ACTIVE_NORMAL) {
         entity->screenID = screen;
-        //RSDK.AddScreen(&entity->center, RSDK_screens[screen].centerX << 16, RSDK_screens[screen].centerY << 16, false);
+        RSDK.AddScreen(&entity->center, RSDK_screens[screen].centerX << 16, RSDK_screens[screen].centerY << 16, false);
     }
     entity->boundsOffset.x = 3;
     entity->boundsOffset.y = 2;
-    entity->active    = ACTIVE_NORMAL;
+    entity->active         = ACTIVE_NORMAL;
     if (!Zone->field_158) {
         entity->boundsL = Zone->screenBoundsL1[entity->screenID];
         entity->boundsR = Zone->screenBoundsR1[entity->screenID];
@@ -74,7 +68,7 @@ void Camera_Create(void* data)
         if (entity->targetPtr) {
             entity->position.x = entity->targetPtr->position.x;
             entity->position.y = entity->targetPtr->position.y;
-            entity->state    = Camera_State_Follow;
+            entity->state      = Camera_State_Follow;
         }
         else {
             entity->state = Camera_State_Roam;
@@ -85,7 +79,8 @@ void Camera_Create(void* data)
 void Camera_StageLoad()
 {
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntitySlot(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
+        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i)
+            RSDK.ResetEntitySlot(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;
     }
@@ -93,35 +88,35 @@ void Camera_StageLoad()
 
 void Camera_SetCameraBounds(EntityCamera *entity)
 {
-    ScreenInfo *screen                                    = RSDK_screens;
-    RSDK_screens[entity->screenID].position.x = (entity->position.x >> 0x10) + entity->lookPos.x - RSDK_screens[entity->screenID].centerX;
-    screen[entity->screenID].position.y       = (entity->position.y >> 0x10) + entity->lookPos.y - entity->field_98;
+    ScreenInfo *screen = &RSDK_screens[entity->screenID];
+    screen->position.x = (entity->position.x >> 0x10) + entity->lookPos.x - screen->centerX;
+    screen->position.y = (entity->position.y >> 0x10) + entity->lookPos.y - entity->field_98;
 
-    if (screen[entity->screenID].position.x < entity->boundsL)
-        screen[entity->screenID].position.x = entity->boundsL;
+    if (screen->position.x < entity->boundsL)
+        screen->position.x = entity->boundsL;
 
-    if (screen[entity->screenID].width + screen[entity->screenID].position.x > entity->boundsR)
-        screen[entity->screenID].position.x = entity->boundsR - screen[entity->screenID].width;
+    if (screen->width + screen->position.x > entity->boundsR)
+        screen->position.x = entity->boundsR - screen->width;
 
-    if (screen[entity->screenID].position.y < entity->boundsT)
-        screen[entity->screenID].position.y = entity->boundsT;
+    if (screen->position.y < entity->boundsT)
+        screen->position.y = entity->boundsT;
 
-    if (screen[entity->screenID].height + screen[entity->screenID].position.y > entity->boundsB)
-        screen[entity->screenID].position.y = entity->boundsB - screen[entity->screenID].height;
+    if (screen->height + screen->position.y > entity->boundsB)
+        screen->position.y = entity->boundsB - screen->height;
 
-    screen[entity->screenID].position.x += entity->shakePos.x;
-    screen[entity->screenID].position.y += entity->shakePos.y;
-    entity->center.x = screen[entity->screenID].position.x + screen[entity->screenID].centerX;
-    entity->center.y = screen[entity->screenID].position.y + screen[entity->screenID].centerY;
+    screen->position.x += entity->shakePos.x;
+    screen->position.y += entity->shakePos.y;
+    entity->center.x = screen->position.x + screen->centerX;
+    entity->center.y = screen->position.y + screen->centerY;
 }
 EntityCamera *Camera_SetTargetEntity(int screen, Entity *target)
 {
     EntityCamera *entity = NULL;
     while (RSDK.GetEntities(Camera->objectID, (Entity **)&entity)) {
         if (entity->screenID == screen) {
-            entity->targetPtr    = target;
-            entity->position.x   = target->position.x;
-            entity->position.y   = target->position.y;
+            entity->targetPtr  = target;
+            entity->position.x = target->position.x;
+            entity->position.y = target->position.y;
             RSDK.BreakForeachLoop();
             return entity;
         }
@@ -141,20 +136,20 @@ void Camera_ShakeScreen(int shakeX, int screen, int shakeY)
 }
 void Camera_HandleHBounds()
 {
-    ScreenInfo *screen = RSDK_screens;
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
+    ScreenInfo *screen   = &RSDK_screens[entity->screenID];
 
     if (Zone->screenBoundsL1[entity->screenID] > entity->boundsL) {
         if (entity->boundsL > Zone->screenBoundsL1[entity->screenID])
             entity->boundsL = Zone->screenBoundsL1[entity->screenID];
         else
-            entity->boundsL = RSDK_screens[entity->screenID].position.x;
+            entity->boundsL = screen->position.x;
     }
 
     if (Zone->screenBoundsL1[entity->screenID] < entity->boundsL) {
-        if (screen[entity->screenID].position.x <= entity->boundsL) {
-            int off              = entity->boundsL - entity->boundsOffset.x;
-            entity->boundsL      = off;
+        if (screen->position.x <= entity->boundsL) {
+            int off         = entity->boundsL - entity->boundsOffset.x;
+            entity->boundsL = off;
             if (entity->velocity.x < 0) {
                 entity->boundsL = (entity->velocity.x >> 0x10) + off;
                 if (entity->boundsL < Zone->screenBoundsL1[entity->screenID])
@@ -167,14 +162,14 @@ void Camera_HandleHBounds()
     }
 
     if (Zone->screenBoundsR1[entity->screenID] < entity->boundsR) {
-        if (screen[entity->screenID].width + screen[entity->screenID].position.x < Zone->screenBoundsR1[entity->screenID])
+        if (screen->width + screen->position.x < Zone->screenBoundsR1[entity->screenID])
             entity->boundsR = Zone->screenBoundsR1[entity->screenID];
         else
-            entity->boundsR = screen[entity->screenID].width + screen[entity->screenID].position.x;
+            entity->boundsR = screen->width + screen->position.x;
     }
 
     if (Zone->screenBoundsR1[entity->screenID] > entity->boundsR) {
-        if (screen[entity->screenID].width + screen[entity->screenID].position.x >= entity->boundsR) {
+        if (screen->width + screen->position.x >= entity->boundsR) {
             entity->boundsR += entity->boundsOffset.x;
             if (entity->velocity.x > 0) {
                 entity->boundsR = (entity->velocity.x >> 0x10) + entity->boundsR;
@@ -192,18 +187,18 @@ void Camera_HandleHBounds()
 }
 void Camera_HandleVBounds()
 {
-    ScreenInfo *screen   = RSDK_screens;
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
+    ScreenInfo *screen   = &RSDK_screens[entity->screenID];
 
     if (Zone->screenBoundsT1[entity->screenID] > entity->boundsT) {
         if (entity->boundsT > Zone->screenBoundsT1[entity->screenID])
             entity->boundsT = Zone->screenBoundsT1[entity->screenID];
         else
-            entity->boundsT = RSDK_screens[entity->screenID].position.y;
+            entity->boundsT = screen->position.y;
     }
 
     if (Zone->screenBoundsT1[entity->screenID] < entity->boundsT) {
-        if (screen[entity->screenID].position.y <= entity->boundsT) {
+        if (screen->position.y <= entity->boundsT) {
             int off         = entity->boundsT - entity->boundsOffset.y;
             entity->boundsT = off;
             if (entity->velocity.y < 0) {
@@ -218,14 +213,14 @@ void Camera_HandleVBounds()
     }
 
     if (Zone->screenBoundsB1[entity->screenID] < entity->boundsB) {
-        if (screen[entity->screenID].height + screen[entity->screenID].position.y < Zone->screenBoundsB1[entity->screenID])
+        if (screen->height + screen->position.y < Zone->screenBoundsB1[entity->screenID])
             entity->boundsB = Zone->screenBoundsB1[entity->screenID];
         else
-            entity->boundsB = screen[entity->screenID].height + screen[entity->screenID].position.y;
+            entity->boundsB = screen->height + screen->position.y;
     }
 
     if (Zone->screenBoundsB1[entity->screenID] > entity->boundsB) {
-        if (screen[entity->screenID].height + screen[entity->screenID].position.y >= entity->boundsB) {
+        if (screen->height + screen->position.y >= entity->boundsB) {
             entity->boundsB += entity->boundsOffset.y;
             if (entity->velocity.y > 0) {
                 entity->boundsB = (entity->velocity.y >> 0x10) + entity->boundsB;
@@ -246,7 +241,7 @@ void Camera_HandleVBounds()
 void Camera_State_Roam()
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    int speed = 0x100000;
+    int speed            = 0x100000;
     if (!RSDK_controller[0].keyA.down)
         speed = 0x40000;
 
@@ -263,9 +258,9 @@ void Camera_State_Roam()
         entity->position.x += speed;
     }
 
-    entity->position.x      = entity->position.x >> 0x10;
-    entity->position.y      = entity->position.y >> 0x10;
-    ScreenInfo *screen      = &RSDK_screens[entity->screenID];
+    entity->position.x = entity->position.x >> 0x10;
+    entity->position.y = entity->position.y >> 0x10;
+    ScreenInfo *screen = &RSDK_screens[entity->screenID];
 
     if (entity->position.x >= screen->centerX) {
         if (entity->position.x > Zone->screenBoundsR1[entity->screenID] - screen->centerX)
@@ -329,7 +324,6 @@ void Camera_State_Follow()
             entity->position.y = entity->position.y + pos;
             target->position.y -= entity->field_6C.y;
         }
-
     }
 }
 void Camera_State_HLock()
@@ -384,18 +378,8 @@ void Camera_State_VLock()
     }
 }
 
-void Camera_EditorDraw()
-{
+void Camera_EditorDraw() {}
 
-}
+void Camera_EditorLoad() {}
 
-void Camera_EditorLoad()
-{
-
-}
-
-void Camera_Serialize()
-{
-
-}
-
+void Camera_Serialize() {}

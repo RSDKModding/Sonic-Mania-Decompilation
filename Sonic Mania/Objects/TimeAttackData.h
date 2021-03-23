@@ -5,6 +5,7 @@
 
 // Object Class
 typedef struct {
+    int status;
     byte zoneID;
     byte act;
     byte characterID;
@@ -13,7 +14,7 @@ typedef struct {
     int field_C;
     int field_10;
     int field_14;
-    int field_18;
+    int rank;
     int dword1C;
     Entity *loadEntityPtr;
     void (*loadCallback)(bool32);

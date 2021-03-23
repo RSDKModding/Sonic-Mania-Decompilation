@@ -62,7 +62,7 @@ void Announcer_StageLoad()
         Game_Print("sfxDrawRound = %d", Announcer->sfx_ItsADraw);
         Game_Print("sfxDrawSet = %d", Announcer->sfx_ItsADraw_Set);
     }
-    else if (options->gameMode == MODE_COMPETITION) {
+    else if (globals->gameMode == MODE_COMPETITION) {
         Announcer->spriteIndex = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
         Announcer->sfx_Three = RSDK.GetSFX("VO/Three.wav");
         Announcer->sfx_Two = RSDK.GetSFX("VO/Two.wav");
@@ -70,7 +70,7 @@ void Announcer_StageLoad()
         Announcer->sfx_Go = RSDK.GetSFX("VO/Go.wav");
         Announcer->sfx_Goal    = RSDK.GetSFX("VO/Goal.wav");
     }
-    else if (options->gameMode == MODE_TIMEATTACK) {
+    else if (globals->gameMode == MODE_TIMEATTACK) {
         Announcer->spriteIndex      = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
         Announcer->sfx_NewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
         Announcer->sfx_NewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
@@ -111,7 +111,7 @@ void Announcer_Unknown3()
         entity->inkEffect = INK_NONE;
 
         int frame = 0;
-        switch (*((unsigned __int8 *)&options->competitionSession[43 + RSDK_sceneInfo->currentScreenID])) {
+        switch (*((unsigned __int8 *)&globals->competitionSession[43 + RSDK_sceneInfo->currentScreenID])) {
             case ID_TAILS: frame = 1; break;
             case ID_KNUCKLES: frame = 2; break;
             case ID_MIGHTY: frame = 3; break;

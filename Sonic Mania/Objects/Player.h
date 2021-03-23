@@ -410,9 +410,9 @@ void Player_State_JumpIn();
 void Player_State_StartJumpIn();
 void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player);
 void Player_State_Unknown();
-void Player_State_BuddyChoice();
+void Player_State_Victory();
 void Player_State_Bubble();
-void PlayerState_WaterSlide();
+void Player_State_WaterSlide();
 
 void Player_SonicJumpAbility();
 void Player_TailsJumpAbility();

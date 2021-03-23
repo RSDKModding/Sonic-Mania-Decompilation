@@ -12,7 +12,7 @@ typedef struct {
     int field_C;
     int field_10;
     int field_14;
-    Entity *entityPtr;
+    void *entityPtr;
     int field_1C;
     int field_20;
 } ObjectDialogRunner;
@@ -31,7 +31,7 @@ typedef struct {
     int field_78;
     int field_7C;
     int field_80;
-    Entity *entityPtr;
+    int unknownID;
     int field_88;
 } EntityDialogRunner;
 
@@ -51,6 +51,20 @@ void DialogRunner_Serialize();
 
 // Extra Entity Functions
 void DialogRunner_HandleCallback();
+void DialogRunner_NotifyAutoSave_CB();
+void DialogRunner_NotifyAutoSave();
+void DialogRunner_Unknown4();
+void DialogRunner_Unknown5();
+void DialogRunner_Unknown6();
+void DialogRunner_Unknown7(int a1, int a2);
+void DialogRunner_ManageNotifs(int a1);
+int DialogRunner_Wait(int a1);
+void DialogRunner_GetNextNotif();
+bool32 DialogRunner_CheckUnreadNotifs();
+bool32 DialogRunner_NotifyAutosave();
+void DialogRunner_GetUserAuthStatus();
+void DialogRunner_PromptSavePreference(int id);
+void DialogRunner_Unknown14();
 #endif
 
 #endif //!OBJ_DIALOGRUNNER_H

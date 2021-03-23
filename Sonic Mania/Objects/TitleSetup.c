@@ -43,20 +43,20 @@ void TitleSetup_StageLoad()
     Localization_GetString(&presence, 0x43);
     User.SetRichPresence(6, &presence);
     User.SetUserStorageUnknown(0);
-    options->blueSpheresInit = 0;
+    globals->blueSpheresInit = 0;
     Game_ClearOptions();
     User.UserStorageUnknown8();
     User.ClearUserStorageStatus();
-    options->saveLoaded = false;
-    memset(options->saveRAM, 0, 0x10000);
-    options->optionsLoaded = 0;
-    memset(options->optionsRAM, 0, 0x200);
-    User.ClearUserDB(options->replayTableID);
-    options->replayTableID     = -1;
-    options->replayTableLoaded = false;
-    User.ClearUserDB(options->taTableID);
-    options->taTableID         = -1;
-    options->taTableLoaded     = false;
+    globals->saveLoaded = false;
+    memset(globals->saveRAM, 0, 0x10000);
+    globals->optionsLoaded = 0;
+    memset(globals->optionsRAM, 0, 0x200);
+    User.ClearUserDB(globals->replayTableID);
+    globals->replayTableID     = -1;
+    globals->replayTableLoaded = false;
+    User.ClearUserDB(globals->taTableID);
+    globals->taTableID         = -1;
+    globals->taTableLoaded     = false;
     TitleSetup->spriteIndex    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
     TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
     TitleSetup->sfx_MenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
@@ -91,9 +91,9 @@ void TitleSetup_CheckCheatCode()
     TitleSetup_HandleCheatInputs();
     if (TitleSetup->cheatCode[0] == 1 && TitleSetup->cheatCode[1] == 1 && TitleSetup->cheatCode[2] == 2 && TitleSetup->cheatCode[3] == 2
         && TitleSetup->cheatCode[4] == 1 && TitleSetup->cheatCode[5] == 1 && TitleSetup->cheatCode[6] == 1 && TitleSetup->cheatCode[7] == 1) {
-        if (!options->superSecret) {
+        if (!globals->superSecret) {
             RSDK.PlaySFX(TitleSetup->sfx_Ring, 0, 255);
-            options->superSecret = 1;
+            globals->superSecret = 1;
         }
     }
 }

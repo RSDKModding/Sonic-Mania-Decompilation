@@ -20,7 +20,7 @@ void BSS_Setup_Update()
         RSDK.CopyPalette(2, 16 * entity->paletteLine, 0, 144, 16);
     }
 
-    if ((byte)(options->menuParam[22] >> 8) != 1 && !entity->dwordC8 && options->gameMode < MODE_TIMEATTACK)
+    if ((byte)(globals->menuParam[22] >> 8) != 1 && !entity->dwordC8 && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM[62];
 }
 
@@ -188,7 +188,7 @@ void BSS_Setup_StageLoad()
     }
 
     BSS_Setup_SetupPalette();
-    options->specialCleared    = false;
+    globals->specialCleared    = false;
     BSS_Setup->sfx_BlueSphere  = RSDK.GetSFX("Special/BlueSphere.wav");
     BSS_Setup->sfx_SSExit      = RSDK.GetSFX("Special/SSExit.wav");
     BSS_Setup->sfx_SSJettison  = RSDK.GetSFX("Special/SSJettison.wav");
@@ -201,7 +201,7 @@ void BSS_Setup_StageLoad()
     BSS_Setup->sfx_Medal       = RSDK.GetSFX("Special/Medal.wav");
     BSS_Setup->sfx_MedalCaught = RSDK.GetSFX("Special/MedalCaught.wav");
     BSS_Setup->sfx_Teleport    = RSDK.GetSFX("Global/Teleport.wav");
-    if ((byte)(options->menuParam[22] >> 8) == 1) {
+    if ((byte)(globals->menuParam[22] >> 8) == 1) {
         TextInfo info;
         Localization_GetString(&info, 0x3D);
         User.SetRichPresence(0, &info);
@@ -544,7 +544,7 @@ void BSS_Setup_HandleSteppedObjects()
         case BSS_MEDAL_SILVER:
         case BSS_MEDAL_GOLD:
             if (entity->globeTimer > 240) {
-                if ((byte)(options->menuParam[22] >> 8) != 1 && options->gameMode < MODE_TIMEATTACK) {
+                if ((byte)(globals->menuParam[22] >> 8) != 1 && globals->gameMode < MODE_TIMEATTACK) {
                     int pos = BSS_Setup_ReloadScene();
                     if (pos >= 0) {
                         int *saveRAM = SaveGame_GetGlobalData();
@@ -575,7 +575,7 @@ void BSS_Setup_HandleSteppedObjects()
                 entity->playerPos.x &= 0x1F;
                 entity->playerPos.y += RSDK.Cos256(entity->angle) >> 8;
                 entity->playerPos.y &= 0x1F;
-                options->specialCleared = true;
+                globals->specialCleared = true;
                 RSDK.PlaySFX(BSS_Setup->sfx_SSExit, 0, 255);
             }
             break;

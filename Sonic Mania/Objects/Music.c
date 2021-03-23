@@ -50,19 +50,19 @@ void Music_StageLoad()
     //Slot 12: unknown
     Music_SetMusicTrack("1up.ogg", TRACK_1UP, false);
 
-    if (options->suppressAutoMusic) {
-        if (options->restartMusicID > 0)
-            Music->activeTrack = options->restartMusicID;
+    if (globals->suppressAutoMusic) {
+        if (globals->restartMusicID > 0)
+            Music->activeTrack = globals->restartMusicID;
     }
     else {
         Music->activeTrack = TRACK_STAGE;
     }
 
-    options->restartMusicID = 0;
+    globals->restartMusicID = 0;
     Music->dword250         = -1;
 #if RETRO_USE_PLUS
     if (RSDK_sku->platform == PLATFORM_DEV)
-        RSDK.SetDebugValue("Vape Mode", &options->vapeMode, 1, 0, 1);
+        RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, 1, 0, 1);
 #endif
 }
 
@@ -86,8 +86,8 @@ void Music_SetMusicTrack(const char *path, byte track, uint loopPoint)
 void Music_State_PlayMusic()
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
-    if (options->suppressAutoMusic) {
-        options->suppressAutoMusic = 0;
+    if (globals->suppressAutoMusic) {
+        globals->suppressAutoMusic = 0;
         switch (Music->activeTrack) {
             case 1:
             case 2:
@@ -171,7 +171,7 @@ void Music_PlayMusicTrack(byte trackID)
     Music->activeTrack = trackID;
     Music->slotID      = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 #if RETRO_USE_PLUS
-    if (options->vapeMode)
+    if (globals->vapeMode)
         RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
 #endif
     entity->volume = 1.0;
@@ -189,7 +189,7 @@ void Music_PlayTrack(byte trackID)
         Music->dword244    = 0;
         Music->slotID      = RSDK.PlayMusic(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
 #if RETRO_USE_PLUS
-        if (options->vapeMode)
+        if (globals->vapeMode)
             RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
 #endif
     }
@@ -203,7 +203,7 @@ void Music_PlayTrack(byte trackID)
         Music->dword244    = 0;
         Music->slotID      = RSDK.PlayMusic(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
 #if RETRO_USE_PLUS
-        if (options->vapeMode)
+        if (globals->vapeMode)
             RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
 #endif
     }
@@ -220,7 +220,7 @@ void Music_Unknown1(EntityMusic *entity)
     Music->slotID      = RSDK.PlayMusic(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
 
 #if RETRO_USE_PLUS
-    if (options->vapeMode)
+    if (globals->vapeMode)
         RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
 #endif
 }
@@ -372,13 +372,13 @@ void Music_Unknown7(EntityMusic *entity)
                     Music->slotID = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                     if (ptr->field_84) {
 #if RETRO_USE_PLUS
-                        RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, options->vapeMode ? 0.75 : 1.0);
+                        RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
 #else
                         RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, 1.0);
 #endif
                     }
 #if RETRO_USE_PLUS
-                    else if (options->vapeMode) {
+                    else if (globals->vapeMode) {
                         RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
                     }
 #endif
@@ -393,7 +393,7 @@ void Music_Unknown7(EntityMusic *entity)
                 Music->slotID = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                 if (Music->dword244) {
 #if RETRO_USE_PLUS 
-                    RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, options->vapeMode ? 0.75 : 1.0);
+                    RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
 #else
                     RSDK.SetSoundAttributes(0, Music->slotID, 0.0, 0.0, 1.0);
 #endif
@@ -404,7 +404,7 @@ void Music_Unknown7(EntityMusic *entity)
                     music->fadeSpeed = 0.08;
                 }
 #if RETRO_USE_PLUS
-                else if (options->vapeMode) {
+                else if (globals->vapeMode) {
                     RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
                 }
 #endif
@@ -546,7 +546,7 @@ void Music_Unknown15()
         Music->dword244    = 0;
         Music->slotID      = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 #if RETRO_USE_PLUS
-        if (options->vapeMode)
+        if (globals->vapeMode)
             RSDK.SetSoundAttributes(0, Music->slotID, 1.0, 0.0, 0.75);
 #endif
         Music->dword250 = -1;

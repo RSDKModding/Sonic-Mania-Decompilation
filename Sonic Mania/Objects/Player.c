@@ -41,7 +41,7 @@ void Player_Update()
                 if (!entity->invincibleTimer) {
                     Player_ApplyShieldEffect(entity);
 #if RETRO_USE_PLUS
-                    if (options->gameMode != MODE_ENCORE || !entity->sidekick) {
+                    if (globals->gameMode != MODE_ENCORE || !entity->sidekick) {
 #else
                     if (!entity->sidekick) {
 #endif
@@ -147,7 +147,7 @@ void Player_LateUpdate()
         if (!entity->sidekick)
             RSDK.CopyEntity(Zone->entityData[1], entity, 0);
 
-        if (entity->sidekick || options->gameMode == MODE_COMPETITION || options->gameMode == MODE_ENCORE) {
+        if (entity->sidekick || globals->gameMode == MODE_COMPETITION || globals->gameMode == MODE_ENCORE) {
             if (entity->invincibleTimer > 1)
                 entity->invincibleTimer = 1;
             if (entity->speedShoesTimer > 1)
@@ -169,7 +169,7 @@ void Player_LateUpdate()
         entity->nextAirState    = NULL;
         entity->interaction     = false;
         entity->tileCollisions  = false;
-        if (options->gameMode != MODE_COMPETITION)
+        if (globals->gameMode != MODE_COMPETITION)
             entity->active = ACTIVE_ALWAYS;
         entity->shield     = 0;
         entity->killFlagA  = 0;
@@ -189,11 +189,11 @@ void Player_LateUpdate()
                 RSDK.PlaySFX(Water->sfx_Drown, 0, 255);
                 entity->state = Player_State_Drown;
                 if (!entity->sidekick) {
-                    if (options->gameMode == MODE_COMPETITION) {
+                    if (globals->gameMode == MODE_COMPETITION) {
                         Music_Unknown6(TRACK_DROWNING, 0);
                     }
 #if RETRO_USE_PLUS
-                    else if (options->gameMode != MODE_ENCORE) {
+                    else if (globals->gameMode != MODE_ENCORE) {
 #else
                     else {
 #endif
@@ -207,7 +207,7 @@ void Player_LateUpdate()
 #if RETRO_USE_PLUS
                     else {
                         EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                        if (options->stock == 0 && !sidekick->objectID) {
+                        if (globals->stock == 0 && !sidekick->objectID) {
                             RSDK_sceneInfo->timeEnabled = false;
                         }
 
@@ -237,9 +237,9 @@ void Player_LateUpdate()
                 }
             }
 #if RETRO_USE_PLUS
-            else if (options->gameMode == MODE_ENCORE) {
+            else if (globals->gameMode == MODE_ENCORE) {
                 EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                if (options->stock == 0 && !sidekick->objectID) {
+                if (globals->stock == 0 && !sidekick->objectID) {
 
                     if (entity->camera) {
                         entity->scrollDelay   = 2;
@@ -248,7 +248,7 @@ void Player_LateUpdate()
                 }
             }
 #endif
-            else if (options->gameMode == MODE_COMPETITION) {
+            else if (globals->gameMode == MODE_COMPETITION) {
                 if (entity->camera) {
                     entity->scrollDelay   = 2;
                     entity->camera->state = NULL;
@@ -427,7 +427,7 @@ void Player_Draw()
         entity->direction = dirStore;
     }
 
-    if (entity->playerID != 1 || options->playerID != ((options->playerID >> 8) & 0xFF) || options->gameMode == MODE_TIMEATTACK) {
+    if (entity->playerID != 1 || globals->playerID != ((globals->playerID >> 8) & 0xFF) || globals->gameMode == MODE_TIMEATTACK) {
         RSDK.DrawSprite(&entity->playerAnimData, NULL, 0);
     }
     else {
@@ -525,7 +525,7 @@ void Player_Create(void *data)
                 entity->cameraOffset    = 0x50000;
                 entity->movesetPtr      = Player_SonicJumpAbility;
                 entity->sensorY         = 0x140000;
-                if (options->medalMods & getMod(MEDAL_PEELOUT)) {
+                if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
                     entity->move_Peelout = Player_StartPeelout;
                     for (int f = 0; f < 4; ++f) {
                         SpriteFrame *dst = RSDK.GetFrame(entity->spriteIndex, ANI_DASH, f);
@@ -550,9 +550,9 @@ void Player_Create(void *data)
         entity->controllerID   = entity->playerID;
         entity->state          = Player_State_Ground;
 
-        if (RSDK_sceneInfo->entitySlot && options->gameMode != MODE_COMPETITION) {
+        if (RSDK_sceneInfo->entitySlot && globals->gameMode != MODE_COMPETITION) {
 #if RETRO_USE_PLUS
-            if (RSDK_sceneInfo->entitySlot != 1 || options->gameMode != MODE_TIMEATTACK) {
+            if (RSDK_sceneInfo->entitySlot != 1 || globals->gameMode != MODE_TIMEATTACK) {
                 RSDK.AssignControllerID(entity->controllerID, -1);
                 entity->inputState = Player_GetP2Inputs;
                 entity->sidekick   = true;
@@ -591,12 +591,12 @@ void Player_Create(void *data)
         }
 
         Player->powerups = 0;
-        if (options->gameMode == MODE_COMPETITION) {
-            entity->lives    = options->competitionSession[entity->playerID + (RETRO_USE_PLUS ? 80 : 78)];
+        if (globals->gameMode == MODE_COMPETITION) {
+            entity->lives    = globals->competitionSession[entity->playerID + (RETRO_USE_PLUS ? 80 : 78)];
             entity->score    = 0;
             entity->score1UP = 50000;
         }
-        else if (options->gameMode == MODE_TIMEATTACK) {
+        else if (globals->gameMode == MODE_TIMEATTACK) {
             entity->lives    = 1;
             entity->score    = 0;
             entity->score1UP = 50000;
@@ -628,27 +628,27 @@ void Player_Create(void *data)
 
 void Player_StageLoad()
 {
-    if (!options->playerID) {
-        options->playerID = RSDK.CheckStageFolder("MSZCutscene") != 1 ? ID_SONIC : ID_KNUCKLES;
+    if (!globals->playerID) {
+        globals->playerID = RSDK.CheckStageFolder("MSZCutscene") != 1 ? ID_SONIC : ID_KNUCKLES;
     }
 
-    RSDK_sceneInfo->debugMode = (options->medalMods & getMod(MEDAL_DEBUGMODE)) > 0;
+    RSDK_sceneInfo->debugMode = (globals->medalMods & getMod(MEDAL_DEBUGMODE)) > 0;
     RSDK_sceneInfo->debugMode = true; // TEMP
 #if RETRO_USE_PLUS
     RSDK.SetDebugValue("Debug Mode", &RSDK_sceneInfo->debugMode, 1, 0, 1);
 #endif
-    if (options->medalMods & getMod(MEDAL_ANDKNUCKLES)) {
-        options->playerID &= 0xFF;
-        options->playerID |= (ID_KNUCKLES << 8);
+    if (globals->medalMods & getMod(MEDAL_ANDKNUCKLES)) {
+        globals->playerID &= 0xFF;
+        globals->playerID |= (ID_KNUCKLES << 8);
     }
     Player->playerCount = 0;
     Player->active      = ACTIVE_ALWAYS;
-    if (options->gameMode == MODE_COMPETITION)
+    if (globals->gameMode == MODE_COMPETITION)
         Player_LoadSpritesVS();
     else
         Player_LoadSprites();
 #if RETRO_USE_PLUS
-    if (options->gameMode == MODE_ENCORE) {
+    if (globals->gameMode == MODE_ENCORE) {
         Player->playerCount    = 2;
         EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
         sidekick->characterID  = ID_SONIC;
@@ -712,14 +712,14 @@ void Player_LoadSprites()
 {
     EntityPlayer *entity = NULL;
     while (RSDK.GetEntities(Player->objectID, (Entity **)&entity)) {
-        int pID = options->playerID & 0xFF;
+        int pID = globals->playerID & 0xFF;
 #if RETRO_USE_PLUS
         if (pID == ID_MIGHTY || pID == ID_RAY)
             pID = ID_SONIC;
 #endif
 
         if (pID & entity->characterID) {
-            entity->characterID = options->playerID & 0xFF;
+            entity->characterID = globals->playerID & 0xFF;
             switch (entity->characterID) {
                 case ID_TAILS:
                     Player->tailsSpriteIndex      = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
@@ -745,7 +745,7 @@ void Player_LoadSprites()
         }
     }
 
-    if ((options->playerID & -0x100) > 0) {
+    if ((globals->playerID & -0x100) > 0) {
         entity                 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
         EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
 
@@ -756,12 +756,12 @@ void Player_LoadSprites()
         sidekick->position.x = entity->position.x;
         sidekick->position.y = entity->position.y;
 
-        if (options->gameMode != MODE_TIMEATTACK) {
+        if (globals->gameMode != MODE_TIMEATTACK) {
             RSDK.AddScreen(&sidekick->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
             sidekick->position.x -= 0x100000;
         }
 
-        sidekick->characterID = options->playerID >> 8;
+        sidekick->characterID = globals->playerID >> 8;
         switch (sidekick->characterID) {
             case ID_TAILS:
                 Player->tailsSpriteIndex      = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
@@ -787,10 +787,10 @@ void Player_LoadSpritesVS()
 
         if (entity->characterID & 1) {
             int slotID = 0;
-            for (int i = 0; i < options->competitionSession[23]; ++i, ++slotID) {
+            for (int i = 0; i < globals->competitionSession[23]; ++i, ++slotID) {
                 EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(slotID);
                 RSDK.CopyEntity(player, entity, 0);
-                player->characterID = options->playerID >> 8 * i;
+                player->characterID = globals->playerID >> 8 * i;
                 switch (player->characterID) {
                     case ID_TAILS:
                         Player->tailsSpriteIndex      = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
@@ -818,11 +818,11 @@ void Player_SaveValues()
 {
     EntityPlayer *entity     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     Player->savedLives       = entity->lives;
-    options->restartLives[0] = Player->savedLives;
+    globals->restartLives[0] = Player->savedLives;
     Player->savedScore       = entity->score;
-    options->restartScore    = Player->savedScore;
+    globals->restartScore    = Player->savedScore;
     Player->savedScore1UP    = entity->score1UP;
-    options->restartScore1UP = Player->savedScore1UP;
+    globals->restartScore1UP = Player->savedScore1UP;
 }
 void Player_GiveScore(EntityPlayer *player, int score)
 {
@@ -834,9 +834,9 @@ void Player_GiveScore(EntityPlayer *player, int score)
 
     if (player->score >= player->score1UP) {
 #if RETRO_USE_PLUS
-        if (options->gameMode != MODE_TIMEATTACK && options->gameMode != MODE_ENCORE) {
+        if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
 #else
-        if (options->gameMode != MODE_TIMEATTACK) {
+        if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
             if (player->lives < 99)
                 player->lives++;
@@ -848,8 +848,8 @@ void Player_GiveScore(EntityPlayer *player, int score)
 }
 void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
 {
-    if (options->gameMode == MODE_COMPETITION)
-        options->competitionSession[player->playerID + 72] += amount;
+    if (globals->gameMode == MODE_COMPETITION)
+        globals->competitionSession[player->playerID + 72] += amount;
     player->rings += amount;
 
     if (player->rings < 0) {
@@ -861,9 +861,9 @@ void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
 
     if (player->rings >= player->ringExtraLife) {
 #if RETRO_USE_PLUS
-        if (options->gameMode != MODE_TIMEATTACK && options->gameMode != MODE_ENCORE) {
+        if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
 #else
-        if (options->gameMode != MODE_TIMEATTACK) {
+        if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
             if (player->lives < 99)
                 player->lives++;
@@ -890,9 +890,9 @@ void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
 void Player_GiveLife(EntityPlayer *entity)
 {
 #if RETRO_USE_PLUS
-    if (options->gameMode != MODE_TIMEATTACK && options->gameMode != MODE_ENCORE) {
+    if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
 #else
-    if (options->gameMode != MODE_TIMEATTACK) {
+    if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
         if (entity->lives < 99)
             entity->lives++;
@@ -910,8 +910,8 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
 {
     ushort playerID     = entity->playerID;
     entity->characterID = character;
-    options->playerID &= ~(255 << 8 * playerID);
-    options->playerID |= character << 8 * entity->playerID;
+    globals->playerID &= ~(255 << 8 * playerID);
+    globals->playerID |= character << 8 * entity->playerID;
     switch (entity->characterID) {
         case ID_TAILS:
             Player->tailsSpriteIndex      = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
@@ -1004,7 +1004,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
             entity->tailSpriteIndex = -1;
             entity->movesetPtr      = Player_SonicJumpAbility;
             entity->sensorY         = 0x140000;
-            if (options->medalMods & getMod(MEDAL_PEELOUT)) {
+            if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
                 entity->move_Peelout = Player_StartPeelout;
                 for (int f = 0; f < 4; ++f) {
                     SpriteFrame *dst = RSDK.GetFrame(entity->spriteIndex, ANI_DASH, f);
@@ -1098,7 +1098,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
         return 0;
 
     RSDK.StopSFX(Player->sfx_SwapFail);
-    // if (options->secrets & 2)
+    // if (globals->secrets & 2)
     // player->movesetPtr = Player_State_ERZSuperDash;
 
     switch (player->characterID) {
@@ -1159,7 +1159,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
         player->state           = Player_State_Transform;
         player->forceTransform  = 1;
 #if RETRO_USE_PLUS
-        if (!ERZStart && options->superMusicEnabled)
+        if (!ERZStart && globals->superMusicEnabled)
 #else
         if (!ERZStart)
 #endif
@@ -1178,7 +1178,7 @@ bool32 Player_CheckKeyPress()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
 
-    if (options->gameMode == MODE_ENCORE)
+    if (globals->gameMode == MODE_ENCORE)
         return false;
 
     if (entity->controllerID > 4 || Player->field_9EC)
@@ -1343,14 +1343,14 @@ void Player_Unknown4()
 {
     EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
 
-    if (options->stock) {
-        Player_ChangeCharacter(sidekick, options->stock);
-        options->playerID &= 0xFF;
-        options->playerID |= options->stock << 8;
-        options->stock >>= 8;
+    if (globals->stock) {
+        Player_ChangeCharacter(sidekick, globals->stock);
+        globals->playerID &= 0xFF;
+        globals->playerID |= globals->stock << 8;
+        globals->stock >>= 8;
     }
     else {
-        options->playerID &= 0xFF;
+        globals->playerID &= 0xFF;
         RSDK.ResetEntityPtr(sidekick, 0, 0);
         sidekick->playerID = 1;
     }
@@ -1394,7 +1394,7 @@ void Player_HandleDeath(EntityPlayer *player)
         dust->active        = 0;
         dust->field_3C      = 1;
         dust->position.y    = (screen->position.y - 128) << 16;
-        if (options->gameMode != MODE_ENCORE || player->state != Player_State_Die && player->state != Player_State_Drown) {
+        if (globals->gameMode != MODE_ENCORE || player->state != Player_State_Die && player->state != Player_State_Drown) {
             player->angle           = 0x80;
             player->state           = Player_State_StartJumpIn;
             player->entPtr          = (Entity *)dust;
@@ -1422,11 +1422,11 @@ void Player_HandleDeath(EntityPlayer *player)
         }
     }
     else {
-        if (options->gameMode == MODE_ENCORE && Player_SwapMainPlayer(false)) {
+        if (globals->gameMode == MODE_ENCORE && Player_SwapMainPlayer(false)) {
             EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
             int id                = -1;
             for (int i = player2->characterID; i > 0; ++id) i >>= 1;
-            options->characterFlags &= ~(1 << id);
+            globals->characterFlags &= ~(1 << id);
 
             if (player->state == Player_State_FlyIn || player->state == Player_State_JumpIn || player->state == Player_State_StartJumpIn) {
                 if (!EncoreIntro) {
@@ -1446,33 +1446,33 @@ void Player_HandleDeath(EntityPlayer *player)
             }
         }
         else {
-            if (player->lives > 0 && options->gameMode != MODE_TIMEATTACK)
+            if (player->lives > 0 && globals->gameMode != MODE_TIMEATTACK)
                 player->lives--;
             Player->savedLives                      = player->lives;
             Player->savedScore                      = player->score;
             Player->savedScore1UP                   = player->score1UP;
-            options->restartLives[player->playerID] = player->lives;
+            globals->restartLives[player->playerID] = player->lives;
 
-            if (options->gameMode != MODE_ENCORE) {
+            if (globals->gameMode != MODE_ENCORE) {
                 player->rings         = 0;
                 player->ringExtraLife = 0;
-                options->restartRings = 0;
-                options->restart1UP   = 100;
+                globals->restartRings = 0;
+                globals->restart1UP   = 100;
             }
-            options->coolBonus[player->playerID] = 0;
+            globals->coolBonus[player->playerID] = 0;
 
-            if (options->gameMode == MODE_COMPETITION) {
-                options->competitionSession[player->playerID + 80] = player->lives;
+            if (globals->gameMode == MODE_COMPETITION) {
+                globals->competitionSession[player->playerID + 80] = player->lives;
             }
 
-            if (options->gameMode != MODE_ENCORE) {
+            if (globals->gameMode != MODE_ENCORE) {
                 if (player->lives) {
                     if (Zone->field_15C) {
                         player->objectID = TYPE_BLANK;
                         int *saveRAM     = SaveGame->saveRAM;
-                        if (options->gameMode == MODE_COMPETITION) {
+                        if (globals->gameMode == MODE_COMPETITION) {
                             int playerID  = RSDK.GetEntityID(player);
-                            byte *session = (byte*)&options->competitionSession[71];
+                            byte *session = (byte*)&globals->competitionSession[71];
                             // if (!session[playerID])
                             //    Competition_Unknown4(playerID, 1);
                             EntityHUD *hud = NULL;
@@ -1485,22 +1485,22 @@ void Player_HandleDeath(EntityPlayer *player)
                             saveRAM[25] = player->lives;
                             saveRAM[26] = player->score;
                             saveRAM[27] = player->score1UP;
-                            saveRAM[29] = options->continues;
-                            if (options->gameMode == MODE_ENCORE) {
-                                options->playerID &= 0xFF;
-                                saveRAM[68] = options->playerID;
+                            saveRAM[29] = globals->continues;
+                            if (globals->gameMode == MODE_ENCORE) {
+                                globals->playerID &= 0xFF;
+                                saveRAM[68] = globals->playerID;
                                 int id      = -1;
                                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
-                                options->characterFlags &= ~(1 << id);
-                                saveRAM[66] = options->characterFlags;
-                                saveRAM[67] = options->stock;
+                                globals->characterFlags &= ~(1 << id);
+                                saveRAM[66] = globals->characterFlags;
+                                saveRAM[67] = globals->stock;
                             }
 
-                            if (options->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageUnknown() && SaveGame->saveRAM
-                                && options->saveLoaded == 200) {
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageUnknown() && SaveGame->saveRAM
+                                && globals->saveLoaded == 200) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
-                                User.SaveUserFile("SaveData.bin", options->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
+                                User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
                             }
 
                             EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
@@ -1510,27 +1510,27 @@ void Player_HandleDeath(EntityPlayer *player)
                             RSDK_sceneInfo->timeEnabled = false;
                         }
                     }
-                    else if (options->gameMode != MODE_COMPETITION) {
+                    else if (globals->gameMode != MODE_COMPETITION) {
                         int *saveRAM = SaveGame->saveRAM;
                         if (saveRAM) {
                             saveRAM[25] = player->lives;
                             saveRAM[26] = player->score;
                             saveRAM[27] = player->score1UP;
-                            saveRAM[29] = options->continues;
-                            if (options->gameMode == MODE_ENCORE) {
-                                options->playerID &= 0xFF;
-                                saveRAM[68] = options->playerID;
+                            saveRAM[29] = globals->continues;
+                            if (globals->gameMode == MODE_ENCORE) {
+                                globals->playerID &= 0xFF;
+                                saveRAM[68] = globals->playerID;
                                 int id      = -1;
                                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
-                                options->characterFlags &= ~(1 << id);
-                                saveRAM[66] = options->characterFlags;
-                                saveRAM[67] = options->stock;
+                                globals->characterFlags &= ~(1 << id);
+                                saveRAM[66] = globals->characterFlags;
+                                saveRAM[67] = globals->stock;
                             }
 
-                            if (options->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageUnknown() && SaveGame->saveRAM && options->saveLoaded == 200) {
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageUnknown() && SaveGame->saveRAM && globals->saveLoaded == 200) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = 0;
-                                User.SaveUserFile("SaveData.bin", options->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
+                                User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
                             }
                         }
                         Music_FadeOut(0.025);
@@ -1539,7 +1539,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else {
                         Player_ResetState(player);
-                        if (!player->playerID && options->gameMode == MODE_ENCORE) {
+                        if (!player->playerID && globals->gameMode == MODE_ENCORE) {
                             Player_ResetState((EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2));
                         }
                     }
@@ -1551,7 +1551,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         screenID                  = player->camera->screenID;
                         player->camera->targetPtr = (Entity*)player->camera;
                     }
-                    if (options->gameMode == MODE_COMPETITION) {
+                    if (globals->gameMode == MODE_COMPETITION) {
                         //Competition_Unknown4(RSDK.GetEntityID(player), 1);
                         EntityHUD *hud = NULL;
                         while (RSDK.GetEntities(HUD->objectID, (Entity **)&hud)) {
@@ -1578,15 +1578,15 @@ void Player_HandleDeath(EntityPlayer *player)
             else {
                 int id = -1;
                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
-                options->characterFlags &= ~(1 << id);
-                if (options->characterFlags == 1) {
+                globals->characterFlags &= ~(1 << id);
+                if (globals->characterFlags == 1) {
                     int screenID     = 0;
                     player->objectID = TYPE_BLANK;
                     if (player->camera) {
                         screenID                  = player->camera->screenID;
                         player->camera->targetPtr = (Entity*)player->camera;
                     }
-                    if (options->gameMode == MODE_COMPETITION) {
+                    if (globals->gameMode == MODE_COMPETITION) {
                         // Competition_Unknown4(RSDK.GetEntityID(player), 1);
                         EntityHUD *hud = NULL;
                         while (RSDK.GetEntities(HUD->objectID, (Entity **)&hud)) {
@@ -1614,17 +1614,17 @@ void Player_HandleDeath(EntityPlayer *player)
                     Player->jumpInDelay   = 0;
                     Player_SwapMainPlayer(true);
 
-                    if (options->stock) {
-                        Player_ChangeCharacter(player2, options->stock);
-                        options->stock >>= 8;
+                    if (globals->stock) {
+                        Player_ChangeCharacter(player2, globals->stock);
+                        globals->stock >>= 8;
                     }
                     else {
-                        options->playerID &= 0xFF;
+                        globals->playerID &= 0xFF;
                         player2->objectID = TYPE_BLANK;
                     }
                     if (!EncoreIntro) {
                         Player_ResetState(player);
-                        if (!player->playerID && options->gameMode == MODE_ENCORE) {
+                        if (!player->playerID && globals->gameMode == MODE_ENCORE) {
                             Player_ResetState((EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2));
                         }
                         if (player->objectID == Player->objectID) {
@@ -1949,7 +1949,7 @@ bool32 Player_CheckBadnikBreak(Entity *entity, EntityPlayer *player, bool32 dest
             yVel = -(player->velocity.y + 2 * player->gravityStrength);
         }
         player->velocity.y = yVel;
-        if (options->gameMode != MODE_COMPETITION)
+        if (globals->gameMode != MODE_COMPETITION)
             player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
         EntityScoreBonus *scoreBonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, entity->position.x, entity->position.y);
         scoreBonus->drawOrder        = Zone->drawOrderHigh;
@@ -2692,7 +2692,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
     Player_ChangePhysicsState(sidekick);
     if (sidekick->superState == 2)
         Player_CheckGoSuper(entity, 255);
-    options->playerID = entity->characterID + (sidekick->characterID << 8);
+    globals->playerID = entity->characterID + (sidekick->characterID << 8);
     RSDK.PlaySFX(Player->sfx_Swap, 0, 255);
     HUD->field_24 = 60;
     return true;
@@ -2818,8 +2818,8 @@ void Player_Hit(EntityPlayer *player)
 
     player->nextAirState    = NULL;
     player->nextGroundState = NULL;
-    if (options->coolBonus[player->playerID] > 0) {
-        options->coolBonus[player->playerID] -= 1000;
+    if (globals->coolBonus[player->playerID] > 0) {
+        globals->coolBonus[player->playerID] -= 1000;
     }
 
     switch (flag) {
@@ -2990,7 +2990,7 @@ void Player_P2JumpBackIn()
             entity->interaction     = 0;
             entity->blinkTimer      = 0;
             entity->visible         = true;
-            if (/*player1->underwater && player1->position.y < Water->waterLevel*/ false) {
+            if (player1->underwater && player1->position.y < Water->waterLevel) {
                 entity->drawOrder = player1->drawOrder;
                 entity->airTimer  = 0;
             }
@@ -3744,7 +3744,7 @@ void Player_State_Transform()
                 RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimData, 0, 3);
 
 #if RETRO_USE_PLUS
-                if (!ERZStart && options->superMusicEnabled)
+                if (!ERZStart && globals->superMusicEnabled)
 #else
                 if (!ERZStart)
 #endif
@@ -3770,7 +3770,7 @@ void Player_State_Transform()
                 entity->state          = Player_State_Air;
 
 #if RETRO_USE_PLUS
-                if (!ERZStart && options->superMusicEnabled)
+                if (!ERZStart && globals->superMusicEnabled)
 #else
                 if (!ERZStart)
 #endif
@@ -4032,7 +4032,7 @@ void Player_State_TailsFlight()
             entity->velocity.y = 0;
 
         EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-        if (options->gameMode != MODE_COMPETITION && !entity->isChibi && !player1->isChibi)
+        if (globals->gameMode != MODE_COMPETITION && !entity->isChibi && !player1->isChibi)
             Player_CheckStartFlyCarry(player1);
 
         if (entity->timer >= 480) {
@@ -4925,10 +4925,10 @@ void Player_State_FlyIn()
         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimData, 0, 0);
     }
 
-    // if (player1->underwater && player1->position.y < Water->waterLevel)
-    //    entity->drawOrder = player1->drawOrder;
-    // else
-    entity->drawOrder = Zone->uiDrawLow;
+    if (player1->underwater && player1->position.y < Water->waterLevel)
+        entity->drawOrder = player1->drawOrder;
+    else
+        entity->drawOrder = Zone->uiDrawLow;
 
     Entity *entPtr = entity->entPtr;
     int screenX    = (RSDK_screens->width + RSDK_screens->centerX) << 16;
@@ -4943,7 +4943,7 @@ void Player_State_FlyIn()
         entPtr->position.y = (RSDK_screens->position.y - 128) << 16;
     }
 
-    if (entity->camera && options->gameMode != MODE_ENCORE && entity->camera->targetPtr != entPtr) {
+    if (entity->camera && globals->gameMode != MODE_ENCORE && entity->camera->targetPtr != entPtr) {
         entity->camera->position.x = entPtr->position.x;
         entity->camera->position.y = entPtr->position.y;
         Camera_SetTargetEntity(entity->camera->screenID, entPtr);
@@ -4989,7 +4989,7 @@ void Player_State_FlyIn()
         int spd = 0;
         if (entity->characterID == ID_TAILS || entity->characterID == ID_KNUCKLES) {
             spd = 0x10000;
-            if (options->gameMode == MODE_ENCORE)
+            if (globals->gameMode == MODE_ENCORE)
                 spd = 0x20000;
         }
         else {
@@ -5107,7 +5107,7 @@ void Player_State_StartJumpIn()
             entity->forceJumpIn    = 0;
             entity->drawOrder      = Zone->uiDrawLow + 1;
             entity->angle          = 128;
-            if ((entity->characterID != ID_TAILS && entity->characterID != ID_KNUCKLES) || options->gameMode == MODE_ENCORE) {
+            if ((entity->characterID != ID_TAILS && entity->characterID != ID_KNUCKLES) || globals->gameMode == MODE_ENCORE) {
                 entity->state = Player_State_JumpIn;
                 entity->drawFX |= FX_SCALE;
                 entity->maxGlideSpeed = ((RSDK_screens->height + 16 + RSDK_screens->position.y) << 16) - player1->position.y;
@@ -5140,7 +5140,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
     thisEntity->entPtr   = NULL;
-    if (options->gameMode != MODE_ENCORE || !SizeLaser || thisEntity->state == Player_State_FlyIn) {
+    if (globals->gameMode != MODE_ENCORE || !SizeLaser || thisEntity->state == Player_State_FlyIn) {
         thisEntity->state = Player_State_Air;
     }
     else if (!thisEntity->isChibi && (player->isChibi || /*player->state != SizeLaser_Unknown5*/ false)) {
@@ -5242,9 +5242,9 @@ void Player_State_Unknown()
     EntityPlayer *entity  = (EntityPlayer *)RSDK_sceneInfo->entity;
     EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     if (player1->state != Player_State_Die && player1->state != Player_State_Drown) {
-        if (options->stock) {
-            Player_ChangeCharacter(entity, options->stock);
-            options->stock >>= 8;
+        if (globals->stock) {
+            Player_ChangeCharacter(entity, globals->stock);
+            globals->stock >>= 8;
             EntityDust *dust        = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
             dust->visible           = false;
             dust->active            = ACTIVE_NEVER;
@@ -5274,7 +5274,7 @@ void Player_State_Unknown()
         }
     }
 }
-void Player_State_BuddyChoice()
+void Player_State_Victory()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
     entity->jumpAbility  = 0;
@@ -5344,7 +5344,7 @@ void Player_State_Bubble()
 {
     // yep, thats all it is
 }
-void PlayerState_WaterSlide()
+void Player_State_WaterSlide()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
     if (!entity->onGround) {
@@ -5406,7 +5406,7 @@ void Player_SonicJumpAbility()
     bool32 flag          = false;
     if (entity->jumpAbilityTimer == 1) {
 #if RETRO_USE_PLUS
-        if (entity->inputState != Player_GetP2Inputs || (entity->up && options->gameMode != MODE_ENCORE)) {
+        if (entity->inputState != Player_GetP2Inputs || (entity->up && globals->gameMode != MODE_ENCORE)) {
 #else
         if (entity->inputState != Player_GetP2Inputs) {
 #endif
@@ -5415,14 +5415,14 @@ void Player_SonicJumpAbility()
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
                 if (entity->invincibleTimer) {
                     if (shield->objectID != Shield->objectID || shield->data.animationID != ANI_JUMP) {
-                        if (!(options->medalMods & getMod(MEDAL_DROPDASH)))
+                        if (!(globals->medalMods & getMod(MEDAL_DROPDASH)))
                             ++entity->jumpAbilityTimer;
                     }
                 }
                 else {
                     switch (entity->shield) {
                         case SHIELD_NONE:
-                            if (options->medalMods & getMod(MEDAL_INSTASHIELD)) {
+                            if (globals->medalMods & getMod(MEDAL_INSTASHIELD)) {
                                 entity->invincibleTimer  = -8;
                                 entity->jumpAbilityTimer = 0;
                                 RSDK.PlaySFX(Shield->sfx_InstaShield, 0, 255);
@@ -5432,11 +5432,11 @@ void Player_SonicJumpAbility()
                                 RSDK.SetSpriteAnimation(Shield->spriteIndex, 10, &shield->data, true, 0);
                                 shield->state = Shield_State_Insta;
                             }
-                            if (!(options->medalMods & getMod(MEDAL_DROPDASH)))
+                            if (!(globals->medalMods & getMod(MEDAL_DROPDASH)))
                                 ++entity->jumpAbilityTimer;
                             break;
                         case SHIELD_BLUE:
-                            if (!(options->medalMods & getMod(MEDAL_DROPDASH)))
+                            if (!(globals->medalMods & getMod(MEDAL_DROPDASH)))
                                 ++entity->jumpAbilityTimer;
                             break;
                         case SHIELD_BUBBLE:
@@ -5504,7 +5504,7 @@ void Player_TailsJumpAbility()
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
 #if RETRO_USE_PLUS
     if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)
-        && (!entity->up || options->gameMode == MODE_ENCORE)) {
+        && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
     if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)) {
 #endif
@@ -5529,7 +5529,7 @@ void Player_KnuxJumpAbility()
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
 #if RETRO_USE_PLUS
     if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)
-        && (!entity->up || options->gameMode == MODE_ENCORE)) {
+        && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
     if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)) {
 #endif
@@ -5562,7 +5562,7 @@ void Player_MightyJumpAbility()
     if (entity->jumpAbilityTimer <= 1) {
 #if RETRO_USE_PLUS
         if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)
-            && (!entity->up || options->gameMode == MODE_ENCORE)) {
+            && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
         if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)) {
 #endif
@@ -5602,7 +5602,7 @@ void Player_RayJumpAbility()
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
 #if RETRO_USE_PLUS
     if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)
-        && (!entity->up || options->gameMode == MODE_ENCORE)) {
+        && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
     if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->inputState == Player_GetP2Inputs)) {
 #endif
@@ -5636,7 +5636,7 @@ void Player_RayJumpAbility()
             entity->rotation = 1;
 
             entity->velocity.x >>= 1;
-            int spd = -((abs(entity->velocity.x) >> 1) + (abs(entity->velocity.x) >> 2) + (abs(entity->velocity.x) >> 4)) >> entity->underwater;
+            int spd = -((abs(entity->velocity.x) >> 1) + (abs(entity->velocity.x) >> 2) + (abs(entity->velocity.x) >> 4)) >> (byte)(entity->underwater != 0);
             if (spd > 0x40000)
                 spd = 0x40000;
             entity->abilitySpeed = spd;
@@ -5663,7 +5663,7 @@ void Player_GetP1Inputs()
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
     if (entity->controllerID < PLAYER_MAX) {
-        if (options->gameMode != MODE_COMPETITION /*|| Announcer[14]*/) {
+        if (globals->gameMode != MODE_COMPETITION /*|| Announcer[14]*/) {
             ControllerState *controller = &RSDK_controller[entity->controllerID];
             entity->up                  = controller->keyUp.down;
             entity->down                = controller->keyDown.down;
@@ -5687,7 +5687,7 @@ void Player_GetP1Inputs()
                 RSDK.PlaySFX(Player->sfx_Transform2, 0, 254);
                 Zone_Unknown1(64, 0xF0F0F0);
             }
-            if (options->gameMode == MODE_ENCORE && RSDK_controller[entity->controllerID].keyY.press) {
+            if (globals->gameMode == MODE_ENCORE && RSDK_controller[entity->controllerID].keyY.press) {
                 if (!HUD->field_24 && Player_CheckValidState(entity)) {
                     if (Player_SwapMainPlayer(false)) {
                         return;
@@ -5703,7 +5703,7 @@ void Player_GetP1Inputs()
 #endif
 
             if (entity->controllerID == 0 && RSDK_sceneInfo->debugMode && entity->state != Player_State_Transform && RSDK_controller[0].keyX.press
-                && options->gameMode != MODE_TIMEATTACK) {
+                && globals->gameMode != MODE_TIMEATTACK) {
                 entity->objectID   = DebugMode->objectID;
                 entity->velocity.x = 0;
                 entity->velocity.y = 0;
@@ -5733,7 +5733,7 @@ void Player_GetP1Inputs()
                     if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, 0);
                         // pauseMenu->field_7C = entity->playerID;
-                        // if (options->gameMode == MODE_COMPETITION)
+                        // if (globals->gameMode == MODE_COMPETITION)
                         //    result->field_80 = 1;
                     }
                 }

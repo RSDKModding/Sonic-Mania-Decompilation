@@ -14,7 +14,7 @@ void HUD_Update()
 void HUD_LateUpdate()
 {
     EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
-    if (options->gameMode == MODE_COMPETITION) {
+    if (globals->gameMode == MODE_COMPETITION) {
         for (entity->screenID = 0; entity->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++entity->screenID) {
             if (entity->competitionStates[entity->screenID])
                 entity->competitionStates[entity->screenID]();
@@ -25,8 +25,8 @@ void HUD_LateUpdate()
             entity->state();
     }
 
-    if (options->gameMode >= MODE_TIMEATTACK) {
-        if (options->gameMode != MODE_TIMEATTACK)
+    if (globals->gameMode >= MODE_TIMEATTACK) {
+        if (globals->gameMode != MODE_TIMEATTACK)
             return;
         if (HUD->dwordC) {
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV) {
@@ -58,29 +58,26 @@ void HUD_LateUpdate()
     }
 }
 
-void HUD_StaticUpdate()
-{
-
-}
+void HUD_StaticUpdate() {}
 
 void HUD_Draw()
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    EntityHUD *entity    = (EntityHUD *)RSDK_sceneInfo->entity;
     EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(RSDK_sceneInfo->currentScreenID);
 
     Vector2 lifePos;
 
     Vector2 pos[4];
 
-    if (options->gameMode == MODE_COMPETITION) {
-        pos[0].x      = entity->dwordB4[RSDK_sceneInfo->currentScreenID].x;
-        pos[0].y      = entity->dwordB4[RSDK_sceneInfo->currentScreenID].y;
-        pos[1].x   = entity->dwordD4[RSDK_sceneInfo->currentScreenID].x;
-        pos[1].y   = entity->dwordD4[RSDK_sceneInfo->currentScreenID].y;
-        pos[2].x   = entity->dwordF4[RSDK_sceneInfo->currentScreenID].x;
-        pos[2].y   = entity->dwordF4[RSDK_sceneInfo->currentScreenID].y;
-        pos[3].x   = entity->dword114[RSDK_sceneInfo->currentScreenID].x;
-        pos[3].y   = entity->dword114[RSDK_sceneInfo->currentScreenID].y;
+    if (globals->gameMode == MODE_COMPETITION) {
+        pos[0].x = entity->dwordB4[RSDK_sceneInfo->currentScreenID].x;
+        pos[0].y = entity->dwordB4[RSDK_sceneInfo->currentScreenID].y;
+        pos[1].x = entity->dwordD4[RSDK_sceneInfo->currentScreenID].x;
+        pos[1].y = entity->dwordD4[RSDK_sceneInfo->currentScreenID].y;
+        pos[2].x = entity->dwordF4[RSDK_sceneInfo->currentScreenID].x;
+        pos[2].y = entity->dwordF4[RSDK_sceneInfo->currentScreenID].y;
+        pos[3].x = entity->dword114[RSDK_sceneInfo->currentScreenID].x;
+        pos[3].y = entity->dword114[RSDK_sceneInfo->currentScreenID].y;
 
         EntityPlayer *plr = NULL;
         while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&plr)) {
@@ -91,14 +88,14 @@ void HUD_Draw()
         }
     }
     else {
-        pos[0].x      = entity->dword5C[0].x;
-        pos[0].y      = entity->dword5C[0].y;
-        pos[1].x   = entity->dword5C[1].x;
-        pos[1].y   = entity->dword5C[1].y;
-        pos[2].x   = entity->dword5C[2].x;
-        pos[2].y   = entity->dword5C[2].y;
-        pos[3].x      = entity->dword5C[3].x;
-        pos[3].y   = entity->dword5C[3].y;
+        pos[0].x = entity->dword5C[0].x;
+        pos[0].y = entity->dword5C[0].y;
+        pos[1].x = entity->dword5C[1].x;
+        pos[1].y = entity->dword5C[1].y;
+        pos[2].x = entity->dword5C[2].x;
+        pos[2].y = entity->dword5C[2].y;
+        pos[3].x = entity->dword5C[3].x;
+        pos[3].y = entity->dword5C[3].y;
         if (HUD->field_24 > 0) {
             RSDK.ProcessAnimation(&entity->playerIDData);
             RSDK.DrawSprite(&entity->playerIDData, &player->position, 0);
@@ -111,8 +108,8 @@ void HUD_Draw()
     else
         entity->ringFlashFrame = (Zone->timer2 >> 3) & 1;
 
-    if ((RSDK_sceneInfo->minutes != 9 || options->gameMode >= MODE_TIMEATTACK || options->medalMods & getMod(MEDAL_NOTIMEOVER))
-        /*&& ActClear->field_30 != 1*/) {
+    if ((RSDK_sceneInfo->minutes != 9 || globals->gameMode >= MODE_TIMEATTACK || globals->medalMods & getMod(MEDAL_NOTIMEOVER))
+        && ActClear->field_30 != 1) {
         entity->timeFlashFrame = 0;
     }
     else {
@@ -142,7 +139,7 @@ void HUD_Draw()
 
         lifePos.x -= 0x90000;
 
-        if (RSDK_sceneInfo->minutes > 9 && options->medalMods & getMod(MEDAL_NOTIMEOVER))
+        if (RSDK_sceneInfo->minutes > 9 && globals->medalMods & getMod(MEDAL_NOTIMEOVER))
             HUD_DrawNumbersBase10(&lifePos, RSDK_sceneInfo->minutes, 2);
         else
             HUD_DrawNumbersBase10(&lifePos, RSDK_sceneInfo->minutes, 1);
@@ -160,7 +157,7 @@ void HUD_Draw()
             HUD_DrawNumbersBase10(&lifePos, player->rings, 0);
     }
 
-    if (((Entity*)RSDK.GetEntityByID(SLOT_PLAYER1))->objectID == DebugMode->objectID) {
+    if (((Entity *)RSDK.GetEntityByID(SLOT_PLAYER1))->objectID == DebugMode->objectID) {
         if (player->camera) {
             lifePos.y = 0x180000;
             lifePos.x = (RSDK_screens[player->camera->screenID].width - 16) << 16;
@@ -177,7 +174,7 @@ void HUD_Draw()
             HUD_DrawNumbersBase16(&lifePos, (player->position.x >> 0x10));
         }
     }
-    else if (entity->field_A0 <= -0x400000 || options->gameMode != MODE_TIMEATTACK) {
+    else if (entity->field_A0 <= -0x400000 || globals->gameMode != MODE_TIMEATTACK) {
         if (entity->field_A0 > -0x200000) {
             lifePos.y = 0x140000;
             lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->field_A0;
@@ -223,7 +220,7 @@ void HUD_Draw()
     int cID    = -1;
     lifePos.x  = pos[3].x;
     lifePos.y  = pos[3].y;
-    int charID       = player->characterID;
+    int charID = player->characterID;
     int lives  = entity->playerLives[player->playerID];
     for (; charID > 0; ++cID) charID >>= 1;
     entity->lifeIconsData.frameID = cID;
@@ -237,7 +234,7 @@ void HUD_Draw()
     }
     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
-    if (options->gameMode == MODE_ENCORE) {
+    if (globals->gameMode == MODE_ENCORE) {
         for (int p = 0; p < PLAYER_MAX; ++p) {
             if (HUD->field_28[0] > 0)
                 HUD->field_28[0]--;
@@ -258,8 +255,8 @@ void HUD_Draw()
             }
             lifePos.x += 0x140000;
             RSDK.SetSpriteAnimation(HUD->hudMappings, 12, &entity->lifeIconsData, true, 0);
-            id = -1;
-            int stock = options->stock & 0xFF;
+            id        = -1;
+            int stock = globals->stock & 0xFF;
             if (stock) {
                 do {
                     stock >>= 1;
@@ -272,8 +269,8 @@ void HUD_Draw()
 
             id = -1;
             lifePos.x += 0x100000;
-            stock = (options->stock >> 8) & 0xFF;
-            if (options->stock >> 8) {
+            stock = (globals->stock >> 8) & 0xFF;
+            if (globals->stock >> 8) {
                 do {
                     stock >>= 1;
                     ++id;
@@ -285,8 +282,8 @@ void HUD_Draw()
 
             id = -1;
             lifePos.x += 0x100000;
-            int flags = options->characterFlags;
-            if (options->characterFlags) {
+            int flags = globals->characterFlags;
+            if (globals->characterFlags) {
                 do {
                     flags >>= 1;
                     ++id;
@@ -307,7 +304,7 @@ void HUD_Draw()
         HUD_DrawNumbersBase10(&lifePos, lives, 0);
     }
 
-    if (options->gameMode == MODE_COMPETITION) {
+    if (globals->gameMode == MODE_COMPETITION) {
         switch (HUD->compSession[RSDK_sceneInfo->currentScreenID]) {
             case 1:
                 RSDK.DrawRect(RSDK_screens->width - 1, 0, 1, RSDK_screens->height, 0, 255, INK_NONE, true);
@@ -332,61 +329,61 @@ void HUD_Draw()
     }
 }
 
-void HUD_Create(void* data)
+void HUD_Create(void *data)
 {
     EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
-        //ActClear->field_30 = 0;
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = 1;
-        entity->drawOrder = Zone->uiDrawHigh;
-        entity->dword5C[0].x   = 0x100000;
-        entity->dword5C[0].y   = 0xC0000;
-        entity->dword5C[1].x   = 0x100000;
-        entity->dword5C[1].y   = 0x1C0000;
-        entity->dword5C[2].x   = 0x100000;
-        entity->dword5C[2].y   = 0x2C0000;
-        entity->dword5C[3].x   = 0x100000;
-        entity->field_A0       = -0x200000;
+        ActClear->field_30   = 0;
+        entity->active       = ACTIVE_NORMAL;
+        entity->visible      = 1;
+        entity->drawOrder    = Zone->uiDrawHigh;
+        entity->dword5C[0].x = 0x100000;
+        entity->dword5C[0].y = 0xC0000;
+        entity->dword5C[1].x = 0x100000;
+        entity->dword5C[1].y = 0x1C0000;
+        entity->dword5C[2].x = 0x100000;
+        entity->dword5C[2].y = 0x2C0000;
+        entity->dword5C[3].x = 0x100000;
+        entity->field_A0     = -0x200000;
 
-        entity->dword5C[3].y   = (RSDK_screens->height - 12) << 16;
-        entity->dwordB4[0].x   = entity->dword5C[0].x;
-        entity->dwordB4[0].y   = entity->dword5C[0].y;
-        entity->dwordD4[0].x   = entity->dword5C[1].x;
-        entity->dwordD4[0].y   = entity->dword5C[1].y;
-        entity->dwordF4[0].x   = entity->dword5C[2].x;
-        entity->dwordF4[0].y   = entity->dword5C[2].y;
-        entity->dword114[0].x  = entity->dword5C[3].x;
-        entity->dword114[0].y  = entity->dword5C[3].y;
-        entity->dwordB4[1].x   = entity->dword5C[0].x;
-        entity->dwordB4[1].y   = entity->dword5C[0].y;
-        entity->dwordD4[1].x   = entity->dword5C[1].x;
-        entity->dwordD4[1].y   = entity->dword5C[1].y;
-        entity->dwordF4[1].x   = entity->dword5C[2].x;
-        entity->dwordF4[1].y   = entity->dword5C[2].y;
-        entity->dword114[1].x  = entity->dword5C[3].x;
-        entity->dword114[1].y  = entity->dword5C[3].y;
-        entity->dwordB4[2].x   = entity->dword5C[0].x;
-        entity->dwordB4[2].y   = entity->dword5C[0].y;
-        entity->dwordD4[2].x   = entity->dword5C[1].x;
-        entity->dwordD4[2].y   = entity->dword5C[1].y;
-        entity->dwordF4[2].x   = entity->dword5C[2].x;
-        entity->dwordF4[2].y   = entity->dword5C[2].y;
-        entity->dword114[2].x  = entity->dword5C[3].x;
-        entity->dword114[2].y  = entity->dword5C[3].y;
-        entity->dwordB4[3].x   = entity->dword5C[0].x;
-        entity->dwordB4[3].y   = entity->dword5C[0].y;
-        entity->dwordD4[3].x   = entity->dword5C[1].x;
-        entity->dwordD4[3].y   = entity->dword5C[1].y;
-        entity->dwordF4[3].x   = entity->dword5C[2].x;
-        entity->dwordF4[3].y   = entity->dword5C[2].y;
-        entity->dword114[3].x  = entity->dword5C[3].x;
-        entity->dword114[3].y  = entity->dword5C[3].y;
+        entity->dword5C[3].y  = (RSDK_screens->height - 12) << 16;
+        entity->dwordB4[0].x  = entity->dword5C[0].x;
+        entity->dwordB4[0].y  = entity->dword5C[0].y;
+        entity->dwordD4[0].x  = entity->dword5C[1].x;
+        entity->dwordD4[0].y  = entity->dword5C[1].y;
+        entity->dwordF4[0].x  = entity->dword5C[2].x;
+        entity->dwordF4[0].y  = entity->dword5C[2].y;
+        entity->dword114[0].x = entity->dword5C[3].x;
+        entity->dword114[0].y = entity->dword5C[3].y;
+        entity->dwordB4[1].x  = entity->dword5C[0].x;
+        entity->dwordB4[1].y  = entity->dword5C[0].y;
+        entity->dwordD4[1].x  = entity->dword5C[1].x;
+        entity->dwordD4[1].y  = entity->dword5C[1].y;
+        entity->dwordF4[1].x  = entity->dword5C[2].x;
+        entity->dwordF4[1].y  = entity->dword5C[2].y;
+        entity->dword114[1].x = entity->dword5C[3].x;
+        entity->dword114[1].y = entity->dword5C[3].y;
+        entity->dwordB4[2].x  = entity->dword5C[0].x;
+        entity->dwordB4[2].y  = entity->dword5C[0].y;
+        entity->dwordD4[2].x  = entity->dword5C[1].x;
+        entity->dwordD4[2].y  = entity->dword5C[1].y;
+        entity->dwordF4[2].x  = entity->dword5C[2].x;
+        entity->dwordF4[2].y  = entity->dword5C[2].y;
+        entity->dword114[2].x = entity->dword5C[3].x;
+        entity->dword114[2].y = entity->dword5C[3].y;
+        entity->dwordB4[3].x  = entity->dword5C[0].x;
+        entity->dwordB4[3].y  = entity->dword5C[0].y;
+        entity->dwordD4[3].x  = entity->dword5C[1].x;
+        entity->dwordD4[3].y  = entity->dword5C[1].y;
+        entity->dwordF4[3].x  = entity->dword5C[2].x;
+        entity->dwordF4[3].y  = entity->dword5C[2].y;
+        entity->dword114[3].x = entity->dword5C[3].x;
+        entity->dword114[3].y = entity->dword5C[3].y;
         RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->hudElementsData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 1, &entity->numbersData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 9, &entity->hyperNumbersData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 2, &entity->lifeIconsData, true, 0);
-        if (options->gameMode == MODE_ENCORE)
+        if (globals->gameMode == MODE_ENCORE)
             RSDK.SetSpriteAnimation(HUD->hudMappings, 13, &entity->playerIDData, true, 0);
         else
             RSDK.SetSpriteAnimation(HUD->hudMappings, 8, &entity->playerIDData, true, 0);
@@ -407,18 +404,18 @@ void HUD_StageLoad()
     HUD->sfx_Click           = RSDK.GetSFX("Stage/Click.wav");
     HUD->sfx_Starpost        = RSDK.GetSFX("Global/StarPost.wav");
     HUD->dwordC              = 0;
-    if (options->gameMode == MODE_COMPETITION) {
-        HUD->compSession[0] = options->competitionSession[84];
-        HUD->compSession[1] = options->competitionSession[85];
-        HUD->compSession[2] = options->competitionSession[86];
-        HUD->compSession[3] = options->competitionSession[87];
+    if (globals->gameMode == MODE_COMPETITION) {
+        HUD->compSession[0] = globals->competitionSession[84];
+        HUD->compSession[1] = globals->competitionSession[85];
+        HUD->compSession[2] = globals->competitionSession[86];
+        HUD->compSession[3] = globals->competitionSession[87];
     }
 }
 
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
 {
     EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
-    int mult     = 1;
+    int mult          = 1;
     if (!maxDigits) {
         if (value <= 0) {
             maxDigits = 1;
@@ -443,7 +440,7 @@ void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
 
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
 {
-    int mult   = 1;
+    int mult          = 1;
     EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
     for (int i = 4; i; --i) {
         entity->numbersData.frameID = value / mult & 0xF;
@@ -456,9 +453,9 @@ void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 {
     EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
-    int cnt               = 0;
-    int mult              = 1;
-    int mult2             = 1;
+    int cnt           = 0;
+    int mult          = 1;
+    int mult2         = 1;
     if (value <= 0) {
         cnt = 1;
     }
@@ -495,7 +492,7 @@ void HUD_GetKeyFrame(AnimationData *data, int buttonID)
     }
     else {
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-        int id                   = RSDK.ControllerIDForInputID(player->controllerID);
+        int id               = RSDK.ControllerIDForInputID(player->controllerID);
         int contID           = player->controllerID;
         if (id == -2)
             contID = 1;
@@ -529,13 +526,13 @@ void HUD_Unknown5()
     void **statePtr = NULL;
 
     int *ptr = NULL;
-    if (options->gameMode == MODE_COMPETITION) {
+    if (globals->gameMode == MODE_COMPETITION) {
         statePtr = (void **)&entity->competitionStates[entity->screenID];
         ptrs[0]  = &entity->dwordB4[RSDK_sceneInfo->currentScreenID];
         ptrs[1]  = &entity->dwordD4[RSDK_sceneInfo->currentScreenID];
-        ptrs[2] = &entity->dwordF4[RSDK_sceneInfo->currentScreenID];
-        ptrs[3] = &entity->dword114[RSDK_sceneInfo->currentScreenID];
-        ptr = &entity->field_134[RSDK_sceneInfo->currentScreenID];
+        ptrs[2]  = &entity->dwordF4[RSDK_sceneInfo->currentScreenID];
+        ptrs[3]  = &entity->dword114[RSDK_sceneInfo->currentScreenID];
+        ptr      = &entity->field_134[RSDK_sceneInfo->currentScreenID];
     }
     else {
         statePtr = (void **)&entity->state;
@@ -561,11 +558,11 @@ void HUD_Unknown5()
 
 void HUD_Unknown6()
 {
-    EntityHUD * entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
     Vector2 *ptrs[4];
     void **statePtr = NULL;
 
-    if (options->gameMode == MODE_COMPETITION) {
+    if (globals->gameMode == MODE_COMPETITION) {
         statePtr = (void **)&entity->competitionStates[entity->screenID];
         ptrs[0]  = &entity->dwordB4[entity->screenID];
         ptrs[1]  = &entity->dwordD4[entity->screenID];
@@ -573,11 +570,11 @@ void HUD_Unknown6()
         ptrs[3]  = &entity->dword114[entity->screenID];
     }
     else {
-        statePtr = (void**)&entity->state;
-        ptrs[0] = entity->dword5C;
-        ptrs[1] = &entity->dword5C[1];
-        ptrs[2] = &entity->dword5C[2];
-        ptrs[3] = &entity->dword5C[3];
+        statePtr = (void **)&entity->state;
+        ptrs[0]  = entity->dword5C;
+        ptrs[1]  = &entity->dword5C[1];
+        ptrs[2]  = &entity->dword5C[2];
+        ptrs[3]  = &entity->dword5C[3];
     }
     ptrs[0]->x -= 0x80000;
     if (ptrs[1]->x - ptrs[0]->x > 0x100000)
@@ -589,20 +586,20 @@ void HUD_Unknown6()
     }
 
     if (ptrs[3]->x < -0x500000) {
-        if (options->gameMode == MODE_COMPETITION) {
+        if (globals->gameMode == MODE_COMPETITION) {
             *statePtr = NULL;
-            //Competition_Unknown4(entity->screenID, 1);
+            // Competition_Unknown4(entity->screenID, 1);
             EntityGameOver *gameOver = (EntityGameOver *)RSDK.GetEntityByID(entity->screenID + Player->playerCount);
-            //v9       = Competition->field_28;
-            //if (!v9 || *(_DWORD *)(v9 + 108)) {
+            // v9       = Competition->field_28;
+            // if (!v9 || *(_DWORD *)(v9 + 108)) {
             //    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
             //    gameOver->playerID = entity->screenID;
             //}
-            //else {
-                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, (void *)1);
-                RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                RSDK_sceneInfo->timeEnabled = false;
-                gameOver->playerID          = entity->screenID;
+            // else {
+            RSDK.ResetEntityPtr(gameOver, GameOver->objectID, (void *)1);
+            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+            RSDK_sceneInfo->timeEnabled = false;
+            gameOver->playerID          = entity->screenID;
             //}
         }
         else {
@@ -611,18 +608,8 @@ void HUD_Unknown6()
     }
 }
 
-void HUD_EditorDraw()
-{
+void HUD_EditorDraw() {}
 
-}
+void HUD_EditorLoad() {}
 
-void HUD_EditorLoad()
-{
-
-}
-
-void HUD_Serialize()
-{
-
-}
-
+void HUD_Serialize() {}

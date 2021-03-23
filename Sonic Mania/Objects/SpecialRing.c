@@ -22,7 +22,7 @@ void SpecialRing_Draw()
     }
     else {
         RSDK.Prepare3DScene(SpecialRing->sceneIndex);
-        if (entity->enabled)
+        if (!entity->enabled)
             RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &entity->matrix2, &entity->matrix3,
                                 0xF0F000);
         else
@@ -70,12 +70,12 @@ void SpecialRing_StageLoad()
 
     EntitySpecialRing *entity = NULL;
     while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&entity)) {
-        if (entity->id <= 0 || options->gameMode == MODE_TIMEATTACK || options->gameMode == MODE_COMPETITION) {
+        if (entity->id <= 0 || globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION) {
             entity->enabled = false;
         }
         else {
             entity->enabled = (SaveGame->saveRAM[32] & (1 << ((16 * Zone->actID) + entity->id - 1))) == 0;
-            if (options->specialRingID == entity->id) {
+            if (globals->specialRingID == entity->id) {
                 for (int p = 0; p < Player->playerCount; ++p) {
                     EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
 
@@ -84,7 +84,7 @@ void SpecialRing_StageLoad()
                     player->position.y += 0x100000;
                     if (!p) {
                         EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                        if (options->gameMode != MODE_COMPETITION) {
+                        if (globals->gameMode != MODE_COMPETITION) {
                             player2->position.x = player->position.x;
                             player2->position.y = player->position.y;
                             player2->direction  = player->direction;
@@ -100,13 +100,13 @@ void SpecialRing_StageLoad()
                         }
                     }
                 }
-                RSDK_sceneInfo->milliseconds = options->tempMilliseconds;
-                RSDK_sceneInfo->seconds      = options->tempSeconds;
-                RSDK_sceneInfo->minutes      = options->tempMinutes;
+                RSDK_sceneInfo->milliseconds = globals->tempMilliseconds;
+                RSDK_sceneInfo->seconds      = globals->tempSeconds;
+                RSDK_sceneInfo->minutes      = globals->tempMinutes;
             }
         }
     }
-    options->specialRingID = 0;
+    globals->specialRingID = 0;
 }
 
 void SpecialRing_DebugDraw()
@@ -131,7 +131,7 @@ void SpecialRing_StartWarp()
         saveRAM[30]  = RSDK_sceneInfo->listPos;
         RSDK.LoadScene("Special Stage", "");
         RSDK_sceneInfo->listPos += saveRAM[31];
-        if (options->gameMode == MODE_ENCORE)
+        if (globals->gameMode == MODE_ENCORE)
             RSDK_sceneInfo->listPos += 7;
         EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
         zone->screenID   = 4;
@@ -228,7 +228,7 @@ void SpecialRing_State_Normal()
 
                     if (entity->id > 0) {
                         if (saveRAM[28] != 0x7F)
-                            options->specialRingID = entity->id;
+                            globals->specialRingID = entity->id;
                         saveRAM[32] |= 1 << (16 * Zone->actID - 1 + entity->id);
                     }
                     RSDK.PlaySFX(SpecialRing->sfx_SpecialRing, 0, 254);

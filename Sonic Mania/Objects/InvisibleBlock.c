@@ -43,7 +43,7 @@ void InvisibleBlock_Create(void *data)
     EntityInvisibleBlock *entity = (EntityInvisibleBlock *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->timeAttackOnly) {
-            if (options->gameMode < MODE_TIMEATTACK)
+            if (globals->gameMode < MODE_TIMEATTACK)
                 RSDK.ResetEntityPtr(entity, 0, 0);
         }
         entity->visible = false;
