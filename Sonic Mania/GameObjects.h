@@ -43,8 +43,8 @@ typedef struct {
     int (*UserStorageStatusUnknown3)(void);
     int (*UserStorageStatusUnknown4)(void);
     int (*UserStorageStatusUnknown5)(void);
-    void (*SetUserStorageUnknown)(int a1);
-    bool32 (*GetUserStorageUnknown)(void);
+    void (*SetUserStorageNoSave)(bool32 state);
+    bool32 (*GetUserStorageNoSave)(void);
     void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));
     void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress);
     void (*DeleteUserFile)(const char *filename, void (*callback)(int status));

@@ -10,7 +10,7 @@ void UIMedallionPanel_StaticUpdate() {}
 
 void UIMedallionPanel_Draw()
 {
-    if (User.GetUserStorageUnknown())
+    if (User.GetUserStorageNoSave())
         UIMedallionPanel_DrawPanel();
 }
 
@@ -34,7 +34,7 @@ void UIMedallionPanel_DrawPanel()
 
     int *savePtr = NULL;
     if (!RSDK_sceneInfo->inEditor) {
-        if (globals->saveLoaded == 200 && !User.GetUserStorageUnknown()) {
+        if (globals->saveLoaded == 200 && !User.GetUserStorageNoSave()) {
             savePtr = &globals->saveRAM[0x900];
         }
     }

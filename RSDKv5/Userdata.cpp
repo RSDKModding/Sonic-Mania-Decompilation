@@ -110,9 +110,9 @@ void initUserData()
         userStorage->TryAuth        = TryAuth;
         userStorage->TryInitStorage = TryInitStorage;
         userStorage->GetUsername    = GetUserName;
-        // userStorage->LoadUserFile   = TryLoadUserFile;
-        // userStorage->SaveUserFile   = TrySaveUserFile;
-        // userStorage->DeleteUserFile = TryDeleteUserFile;
+        userStorage->LoadUserFile   = TryLoadUserFile;
+        userStorage->SaveUserFile   = TrySaveUserFile;
+        userStorage->DeleteUserFile = TryDeleteUserFile;
         userStorage->unknown8 = UserStorageUnknown8;
 #endif
 
@@ -285,8 +285,143 @@ void *GetFuncPtr(const char *name)
 }
 #endif
 
-bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int)) { return false; }
-bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress) { return false; }
+bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int)) { 
+    
+    if (!userStorage->noSaveActive) {
+        LoadUserFile(filename, buffer, bufSize);
+
+        if (callback)
+            callback(100);
+    }
+    else {
+        char buffer[0x100];
+        sprintf(buffer, "TryLoadUserFile(%s, %p, %u, %p) failing due to noSave", filename, buffer, bufSize, callback);
+
+        if (callback)
+            callback(500);
+    }
+
+    return false;
+}
+bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress)
+{
+    if (!userStorage->noSaveActive) {
+        if (compress) {
+            //compress lo
+        }
+        SaveUserFile(filename, buffer, bufSize);
+
+        if (callback)
+            callback(100);
+    }
+    else {
+        char buffer[0x100];
+        sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback, compress ? "true" : "false");
+
+        if (callback)
+            callback(500);
+    }
+
+    return false;
+}
+bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
+{
+    if (!userStorage->noSaveActive) {
+        DeleteUserFile(filename);
+
+        if (callback)
+            callback(100);
+    }
+    else {
+        char buffer[0x100];
+        sprintf(buffer, "TryDeleteUserFile(%s, %p) failing due to noSave", filename, callback);
+
+        if (callback)
+            callback(500);
+    }
+
+    return false;
+}
+
+void (*userFileCallback)();
+void (*userFileCallback2)();
+char userFiles[1024];
+
+bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
+{
+    if (userFileCallback)
+        userFileCallback();
+    int len = strlen(userFiles);
+    sprintf(userFiles, "%s", filename);
+    if (len >= 0x400) {
+        // oh shit
+    }
+    printLog(SEVERITY_NONE, "Attempting to load user file: %s", userFiles);
+
+    FileIO *file = fOpen(userFiles, "rb");
+    if (file) {
+        fSeek(file, 0, SEEK_END);
+        int fSize = fTell(file);
+        fSeek(file, 0, SEEK_SET);
+        int size = bufSize;
+        if (bufSize > fSize)
+            size = fSize;
+        fRead(buffer, 1, size, file);
+        fClose(file);
+        if (userFileCallback2)
+            userFileCallback2();
+        return true;
+    }
+    else {
+        if (userFileCallback2)
+            userFileCallback2();
+        printLog(SEVERITY_NONE, "Nope!");
+    }
+    return false;
+}
+bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize) {
+    if (userFileCallback)
+        userFileCallback();
+    int len = strlen(userFiles);
+    sprintf(userFiles, "%s", filename);
+    if (len >= 0x400) {
+        // oh shit
+    }
+    printLog(SEVERITY_NONE, "Attempting to save user file: %s", userFiles);
+    
+    FileIO *file = fOpen(userFiles, "rb");
+    if (file) {
+        fWrite(buffer, 1, bufSize, file);
+        fClose(file);
+
+        //encryption?
+
+        if (userFileCallback2)
+            userFileCallback2();
+        return true;
+    }
+    else {
+        if (userFileCallback2)
+            userFileCallback2();
+        printLog(SEVERITY_NONE, "Nope!");
+    }
+    return false;
+}
+bool32 DeleteUserFile(const char* filename) {
+    if (userFileCallback)
+        userFileCallback();
+    int len = strlen(userFiles);
+    sprintf(userFiles, "%s", filename);
+    if (len >= 0x400) {
+        // oh shit
+    }
+    printLog(SEVERITY_NONE, "Attempting to delete user file: %s", userFiles);
+    int status = remove(userFiles);
+
+    if (userFileCallback2)
+        userFileCallback2();
+    return status == 0;
+}
 
 ushort LoadUserDB(const char *filename, int (*callback)(int))
 {

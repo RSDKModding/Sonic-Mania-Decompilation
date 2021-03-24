@@ -42,7 +42,7 @@ void TitleSetup_StageLoad()
     TextInfo presence;
     Localization_GetString(&presence, 0x43);
     User.SetRichPresence(6, &presence);
-    User.SetUserStorageUnknown(0);
+    User.SetUserStorageNoSave(0);
     globals->blueSpheresInit = 0;
     Game_ClearOptions();
     User.UserStorageUnknown8();

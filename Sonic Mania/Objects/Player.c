@@ -1496,7 +1496,7 @@ void Player_HandleDeath(EntityPlayer *player)
                                 saveRAM[67] = globals->stock;
                             }
 
-                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageUnknown() && SaveGame->saveRAM
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageNoSave() && SaveGame->saveRAM
                                 && globals->saveLoaded == 200) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
@@ -1527,7 +1527,7 @@ void Player_HandleDeath(EntityPlayer *player)
                                 saveRAM[67] = globals->stock;
                             }
 
-                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageUnknown() && SaveGame->saveRAM && globals->saveLoaded == 200) {
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageNoSave() && SaveGame->saveRAM && globals->saveLoaded == 200) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = 0;
                                 User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);

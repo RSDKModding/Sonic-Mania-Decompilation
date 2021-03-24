@@ -41,8 +41,8 @@ enum UserdataTableIDs {
     UserdataTable_Missing5,
     UserdataTable_Unknown25,
     UserdataTable_Unknown26,
-    UserdataTable_Unknown27,
-    UserdataTable_Unknown28,
+    UserdataTable_SetUserStorageNoSave,
+    UserdataTable_GetUserStorageNoSave,
     UserdataTable_LoadUserFile,
     UserdataTable_SaveUserFile,
     UserdataTable_DeleteUserFile,
@@ -345,8 +345,8 @@ void setupFunctions()
     userDataTable[UserdataTable_Missing5]                  = (void *)UserStorageStatusUnknown3;
     userDataTable[UserdataTable_Unknown25]                 = (void *)UserStorageStatusUnknown4;
     userDataTable[UserdataTable_Unknown26]                 = (void *)UserStorageStatusUnknown5;
-    userDataTable[UserdataTable_Unknown27]                 = (void *)SetUserStorageUnknown;
-    userDataTable[UserdataTable_Unknown28]                 = (void *)GetUserStorageUnknown;
+    userDataTable[UserdataTable_SetUserStorageNoSave]      = (void *)SetUserStorageNoSave;
+    userDataTable[UserdataTable_GetUserStorageNoSave]      = (void *)GetUserStorageNoSave;
     userDataTable[UserdataTable_LoadUserFile]              = (void *)userStorage->LoadUserFile;
     userDataTable[UserdataTable_SaveUserFile]              = (void *)userStorage->SaveUserFile;
     userDataTable[UserdataTable_DeleteUserFile]            = (void *)userStorage->DeleteUserFile;
@@ -556,8 +556,8 @@ void setupFunctions()
 #if !RETRO_USE_PLUS
     functionTable[FunctionTable_Unknown92] = (void *)NullFunc;
 #endif
-    functionTable[FunctionTable_LoadUserFile] = (void *)userStorage->LoadUserFile;
-    functionTable[FunctionTable_SaveUserFile] = (void *)userStorage->SaveUserFile;
+    functionTable[FunctionTable_LoadUserFile] = LoadUserFile;
+    functionTable[FunctionTable_SaveUserFile] = SaveUserFile;
 #if RETRO_USE_PLUS
     functionTable[FunctionTable_printLog]             = (void *)printLog;
     functionTable[FunctionTable_printString]          = (void *)printString;

@@ -101,13 +101,13 @@ void DialogRunner_NotifyAutoSave()
 void DialogRunner_Unknown4()
 {
     User.UserStorageStatusUnknown4();
-    User.SetUserStorageUnknown(0);
+    User.SetUserStorageNoSave(0);
 }
 
 void DialogRunner_Unknown5()
 {
     User.UserStorageStatusUnknown5();
-    User.SetUserStorageUnknown(1);
+    User.SetUserStorageNoSave(1);
 }
 
 void DialogRunner_Unknown6()
@@ -243,7 +243,7 @@ int DialogRunner_Wait(int a1)
 void DialogRunner_GetNextNotif()
 {
     int *saveRAM = NULL;
-    if (RSDK_sceneInfo->inEditor || User.GetUserStorageUnknown() || globals->saveLoaded != 200)
+    if (RSDK_sceneInfo->inEditor || User.GetUserStorageNoSave() || globals->saveLoaded != 200)
         saveRAM = NULL;
     else
         saveRAM = &globals->saveRAM[0x900];
@@ -297,7 +297,7 @@ void DialogRunner_GetUserAuthStatus()
 }
 void DialogRunner_PromptSavePreference(int id)
 {
-    if (User.GetUserStorageUnknown()) {
+    if (User.GetUserStorageNoSave()) {
         Game_Print("PromptSavePreference() returning due to noSave");
     }
     Game_Print("PromptSavePreference()");

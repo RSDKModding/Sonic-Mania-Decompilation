@@ -105,17 +105,15 @@ struct DummyUserStorage {
     int (*TryAuth)(void);
     int (*TryInitStorage)(void);
     int (*GetUsername)(TextInfo*);
-    int (*LoadUserFile)(const char *filename, void *, unsigned int, int(*)(int), void *, unsigned int, int(*)(int), int, int, int,
-                        int, int, int (*callback)(int));
-    int (*SaveUserFile)(const char *filename, void *, unsigned int, int (*)(int), int, int (*callback)(int), int, int, int, int, void *, const void *,
-                        int *);
-    int (*DeleteUserFile)(const char *filename, int (*callback)(int));
+    bool32 (*LoadUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
+    bool32 (*SaveUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
+    bool32 (*DeleteUserFile)(const char *filename, int (*callback)(int));
     void (*unknown8)(void);
 
     int authStatusCode;
     int storageStatusCode;
     int statusCode;
-    int field_10;
+    int noSaveActive;
     int field_14;
     int field_18;
     char field_1C[12];
@@ -242,7 +240,7 @@ inline int UserStorageStatusUnknown1()
 }
 inline int UserStorageStatusUnknown2()
 {
-    if (userStorage->field_10)
+    if (userStorage->noSaveActive)
         return 200;
     else
         return userStorage->statusCode;
@@ -275,12 +273,12 @@ inline int SetUserStorageStatus()
     userStorage->statusCode = 100;
     return userStorage->statusCode;
 }
-inline int SetUserStorageUnknown(int state)
+inline int SetUserStorageNoSave(int state)
 {
-    userStorage->field_10 = state;
-    return userStorage->field_10;
+    userStorage->noSaveActive = state;
+    return userStorage->noSaveActive;
 }
-inline int GetUserStorageUnknown() { return userStorage->field_10; }
+inline int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 
 inline int TryAuth()
 {
@@ -327,6 +325,11 @@ void *GetFuncPtr(const char *name);
 
 bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
 bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
+bool32 TryDeleteUserFile(const char *filename, int (*callback)(int));
+
+bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize);
+bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize);
+bool32 DeleteUserFile(const char *filename);
 
 ushort LoadUserDB(const char *filename, int (*callback)(int));
 bool32 SaveUserDB(ushort tableID, int (*callback)(int));
