@@ -236,7 +236,7 @@ void InitObjects()
         }
     }
 
-    CreateEntity(TestObject->objectID, NULL, 0, 0);
+    //CreateEntity(TestObject->objectID, NULL, 0, 0);
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
@@ -571,7 +571,7 @@ void ProcessFrozenObjects()
 void ProcessObjectDrawLists()
 {
     if (sceneInfo.state && sceneInfo.state != ENGINESTATE_LOAD_STEPOVER) {
-        for (int s = 0; s < screenCount; ++s) {
+        for (int s = 0; s < engine.screenCount; ++s) {
             currentScreen             = &screens[s];
             sceneInfo.currentScreenID = s;
             for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
@@ -586,72 +586,75 @@ void ProcessObjectDrawLists()
 
             sceneInfo.currentDrawGroup = 0;
             for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
-                DrawList *list = &drawLayers[l];
+                if (engine.drawLayerVisible[l]) {
 
-                if (list->initDrawPtr)
-                    list->initDrawPtr();
+                    DrawList *list = &drawLayers[l];
 
-                if (list->visible) {
-                    for (int e = 0; e < list->entityCount; ++e) {
-                        for (int e2 = list->entityCount - 1; e2 > e; --e2) {
-                            int slotA = list->entries[e2 - 1];
-                            int slotB = list->entries[e2];
-                            if (objectEntityList[slotA].depth > objectEntityList[slotB].depth) {
-                                list->entries[e2 - 1] = slotB;
-                                list->entries[e2]     = slotA;
+                    if (list->callback)
+                        list->callback();
+
+                    if (list->visible) {
+                        for (int e = 0; e < list->entityCount; ++e) {
+                            for (int e2 = list->entityCount - 1; e2 > e; --e2) {
+                                int slotA = list->entries[e2 - 1];
+                                int slotB = list->entries[e2];
+                                if (objectEntityList[slotA].depth > objectEntityList[slotB].depth) {
+                                    list->entries[e2 - 1] = slotB;
+                                    list->entries[e2]     = slotA;
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < list->entityCount; ++i) {
+                            sceneInfo.entitySlot = list->entries[i];
+                            validDraw            = false;
+                            sceneInfo.entity     = &objectEntityList[list->entries[i]];
+                            if (sceneInfo.entity->visible) {
+                                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
+                                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
+                                }
+                                sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
+                            }
+                        }
+
+                        for (int i = 0; i < list->layerCount; ++i) {
+                            TileLayer *layer = &tileLayers[list->layerDrawList[i]];
+
+                            if (layer->scanlineCallback)
+                                layer->scanlineCallback(scanlines);
+                            else
+                                ProcessParallax(layer);
+                            switch (layer->behaviour) {
+                                case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
+                                case LAYER_VSCROLL: DrawLayerVScroll(layer); break;
+                                case LAYER_ROTOZOOM: DrawLayerRotozoom(layer); break;
+                                case LAYER_BASIC: DrawLayerBasic(layer); break;
+                                default: break;
                             }
                         }
                     }
 
-                    for (int i = 0; i < list->entityCount; ++i) {
-                        sceneInfo.entitySlot = list->entries[i];
-                        validDraw            = false;
-                        sceneInfo.entity     = &objectEntityList[list->entries[i]];
-                        if (sceneInfo.entity->visible) {
-                            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
-                                objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
-                            }
-                            sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
-                        }
+                    if (currentScreen->clipBound_X1 > 0)
+                        currentScreen->clipBound_X1 = 0;
+
+                    if (currentScreen->clipBound_Y1 > 0)
+                        currentScreen->clipBound_Y1 = 0;
+
+                    if (currentScreen->width >= 0) {
+                        if (currentScreen->clipBound_X2 < currentScreen->width)
+                            currentScreen->clipBound_X2 = currentScreen->width;
+                    }
+                    else {
+                        currentScreen->clipBound_X2 = 0;
                     }
 
-                    for (int i = 0; i < list->layerCount; ++i) {
-                        TileLayer *layer = &tileLayers[list->layerDrawList[i]];
-
-                        if (layer->scanlineCallback)
-                            layer->scanlineCallback(scanlines);
-                        else
-                            ProcessParallax(layer);
-                        switch (layer->behaviour) {
-                            case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
-                            case LAYER_VSCROLL: DrawLayerVScroll(layer); break;
-                            case LAYER_ROTOZOOM: DrawLayerRotozoom(layer); break;
-                            case LAYER_BASIC: DrawLayerBasic(layer); break;
-                            default: break;
-                        }
+                    if (currentScreen->height >= 0) {
+                        if (currentScreen->clipBound_Y2 < currentScreen->height)
+                            currentScreen->clipBound_Y2 = currentScreen->height;
                     }
-                }
-
-                if (currentScreen->clipBound_X1 > 0)
-                    currentScreen->clipBound_X1 = 0;
-
-                if (currentScreen->clipBound_Y1 > 0)
-                    currentScreen->clipBound_Y1 = 0;
-
-                if (currentScreen->width >= 0) {
-                    if (currentScreen->clipBound_X2 < currentScreen->width)
-                        currentScreen->clipBound_X2 = currentScreen->width;
-                }
-                else {
-                    currentScreen->clipBound_X2 = 0;
-                }
-
-                if (currentScreen->height >= 0) {
-                    if (currentScreen->clipBound_Y2 < currentScreen->height)
-                        currentScreen->clipBound_Y2 = currentScreen->height;
-                }
-                else {
-                    currentScreen->clipBound_Y2 = 0;
+                    else {
+                        currentScreen->clipBound_Y2 = 0;
+                    }
                 }
 
                 sceneInfo.currentDrawGroup++;
@@ -746,11 +749,29 @@ void ResetEntitySlot(ushort slotID, ushort type, void *data)
 
 void CreateEntity(ushort type, void *data, int x, int y)
 {
-    if (sceneInfo.createSlot >= ENTITY_COUNT)
-        sceneInfo.createSlot -= 0x100;
-
     ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
-    Entity *entityPtr   = &objectEntityList[sceneInfo.createSlot++];
+    Entity *entityPtr   = &objectEntityList[sceneInfo.createSlot];
+
+    int cntA = 0, cntB = 0;
+    while (entityPtr->objectID) {
+        if (cntA >= TEMPENTITY_COUNT)
+            break;
+
+        //after 16 loops, the game says fuck it and will start overwriting non-temp objects
+        if (!entityPtr->isPermanent && cntB >= 16)
+            break;
+        if (!entityPtr->isPermanent)
+            ++cntA;
+        sceneInfo.createSlot++;
+        ++cntB;
+        if (sceneInfo.createSlot == ENTITY_COUNT) {
+            sceneInfo.createSlot = TEMPENTITY_START;
+            entityPtr            = &objectEntityList[sceneInfo.createSlot];
+        }
+        else {
+            entityPtr = &objectEntityList[sceneInfo.createSlot];
+        }
+    }
 
     memset(entityPtr, 0, objInfo->entitySize);
     entityPtr->position.x  = x;

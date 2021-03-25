@@ -29,7 +29,8 @@ void UIDialog_Create(void* data)
 
 void UIDialog_StageLoad()
 {
-
+    UIDialog->field_8      = 0;
+    UIDialog->activeDialog = 0;
 }
 
 void UIDialog_EditorDraw()

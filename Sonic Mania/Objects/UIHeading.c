@@ -4,7 +4,7 @@ ObjectUIHeading *UIHeading;
 
 void UIHeading_Update()
 {
-    EntityUIHeading *entity = (EntityUIHeading *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIHeading);
     if (entity->spriteIndex != UIHeading->spriteIndex) {
         RSDK.SetSpriteAnimation(UIHeading->spriteIndex, entity->headingID, &entity->data, true, 0);
         entity->spriteIndex = UIHeading->spriteIndex;
@@ -20,14 +20,14 @@ void UIHeading_StaticUpdate() {}
 
 void UIHeading_Draw()
 {
-    EntityUIHeading *entity = (EntityUIHeading *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIHeading);
     RSDK.DrawSprite(&entity->data2, 0, 0);
     RSDK.DrawSprite(&entity->data, 0, 0);
 }
 
 void UIHeading_Create(void *data)
 {
-    EntityUIHeading *entity = (EntityUIHeading *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIHeading);
     if (!RSDK_sceneInfo->inEditor) {
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;

@@ -74,7 +74,7 @@ struct ScreenUnknown {
 struct DrawList {
     ushort entries[ENTITY_COUNT];
     ushort layerDrawList[LAYER_COUNT];
-    void (*initDrawPtr)(void);
+    void (*callback)(void);
     bool32 visible;
     int entityCount;
     int layerCount;
@@ -198,12 +198,12 @@ inline Entity *GetDrawListRefPtr(byte layerID, ushort entityID)
         return &objectEntityList[listPtr->entries[entityID]];
 }
 
-inline void SetDrawLayerProperties(byte layer, int active, void (*initDrawPtr)(void))
+inline void SetDrawLayerProperties(byte layer, int active, void (*callback)(void))
 {
     if (layer < DRAWLAYER_COUNT) {
-        DrawList *list      = &drawLayers[layer];
+        DrawList *list    = &drawLayers[layer];
         list->visible     = active;
-        list->initDrawPtr   = initDrawPtr;
+        list->callback = callback;
     }
 }
 

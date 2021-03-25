@@ -861,14 +861,7 @@ void DDWrecker_State_Die()
                 Music->dword250 = 0;
             }
             else {
-                EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-                Music->dword250    = 0;
-                if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                    RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                    music->state    = Music_Unknown15;
-                    music->volume   = 1.0;
-                    music->fadeSpeed = 0.0125;
-                }
+                Music_FadeOut(0.0125);
             }
             entity->timer               = 0;
             entity->visible             = false;

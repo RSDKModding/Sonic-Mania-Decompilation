@@ -86,8 +86,8 @@ struct Scene3D {
     Scene3DVertex *normals;
     ZBufferEntry *zBuffer;
     byte *faceVertCounts;
-    int unknown1;
-    int unknown2;
+    int unknownX;
+    int unknownY;
     int ambientX;
     int ambientY;
     int ambientZ;

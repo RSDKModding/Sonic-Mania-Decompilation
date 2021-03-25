@@ -28,6 +28,7 @@ typedef uint color;
 
 #define SCREEN_XMAX     (1280)
 #define SCREEN_YSIZE    (240)
+#define SCREEN_YCENTER  (SCREEN_YSIZE / 2)
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
 #if RETRO_USE_PLUS
@@ -54,7 +55,7 @@ typedef struct {
     ushort group;
     ushort objectID;
     bool32 inBounds;
-    int field_3C;
+    bool32 isPermament;
     bool32 tileCollisions;
     bool32 interaction;
     bool32 onGround;
@@ -96,7 +97,7 @@ typedef struct {
     ushort group;                                                                                                                                    \
     ushort objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
-    int field_3C;                                                                                                                                    \
+    bool32 isPermament;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
     bool32 onGround;                                                                                                                                 \

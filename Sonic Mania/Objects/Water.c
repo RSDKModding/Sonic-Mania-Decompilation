@@ -194,7 +194,7 @@ void Water_Create(void *data)
                 entity->scale.y       = 0x200;
                 RSDK.SetSpriteAnimation(Water->spriteIndex, 5, &entity->waterData, true, 0);
                 entity->state     = Water_State_Bubble;
-                entity->field_3C  = 1;
+                entity->isPermament = true;
                 entity->stateDraw = Water_State_Draw_Bubble;
                 break;
             case 8:
@@ -1096,7 +1096,7 @@ void Water_State_Bubbler()
             bubble->field_68 = bubble->position.x;
             if (entity->field_6E & 2 && (!RSDK.Rand(0, 4) || !entity->bubbleType1) && !(entity->field_6E & 4)) {
                 RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &bubble->waterData, 0, 0);
-                bubble->field_3C = 1;
+                bubble->isPermament = true;
                 entity->field_6E |= 4;
             }
 

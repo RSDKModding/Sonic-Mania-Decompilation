@@ -5,9 +5,10 @@
 
 //0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
 #define RESERVE_ENTITY_COUNT (0x40)
-#define ENTITY_COUNT         (0x940)
-#define TEMPENTITY_START     (ENTITY_COUNT - 0x100)
-#define SCENEENTITY_COUNT    (TEMPENTITY_START - RESERVE_ENTITY_COUNT)
+#define TEMPENTITY_COUNT     (0x100)
+#define SCENEENTITY_COUNT    (0x800)
+#define ENTITY_COUNT         (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT + TEMPENTITY_COUNT)
+#define TEMPENTITY_START     (ENTITY_COUNT - TEMPENTITY_COUNT)
 
 #define TYPE_COUNT (0x100)
 #define EDITABLEVAR_COUNT (0x100)
@@ -37,14 +38,14 @@ enum AttributeTypes {
 };
 
 enum ActiveFlags {
-	ACTIVE_NEVER,
-	ACTIVE_ALWAYS,
-	ACTIVE_NORMAL,
-	ACTIVE_PAUSED,
-	ACTIVE_BOUNDS,
-	ACTIVE_XBOUNDS,
-	ACTIVE_YBOUNDS,
-    ACTIVE_RBOUNDS,
+    ACTIVE_NEVER,   // never update
+    ACTIVE_ALWAYS,  // always update (even if paused/frozen)
+    ACTIVE_NORMAL,  // always update (unless paused/frozen)
+    ACTIVE_PAUSED,  // update if paused
+    ACTIVE_BOUNDS,  // update if in x & y bounds
+    ACTIVE_XBOUNDS, // update only if in x bounds (y bounds dont matter)
+    ACTIVE_YBOUNDS, // update only if in y bounds (x bounds dont matter)
+    ACTIVE_RBOUNDS, // update based on radius boundaries (updateRange.x = radius)
 };
 
 enum DefaultObjects {
@@ -74,7 +75,7 @@ struct Entity {
     ushort group;
     ushort objectID;
     bool32 inBounds;
-    int field_3C;
+    bool32 isPermanent;
     bool32 tileCollisions;
     bool32 interaction;
     bool32 onGround;

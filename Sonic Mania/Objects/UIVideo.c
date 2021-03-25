@@ -32,13 +32,7 @@ void UIVideo_StageLoad() {}
 bool32 UIVideo_SkipCallback()
 {
     if (RSDK_controller->keyStart.press && RSDK_controller->keyA.press && RSDK_controller->keyB.press) {
-        if (Music->activeTrack != TRACK_DROWNING) {
-            EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-            RSDK.ResetEntityPtr(music, Music->objectID, 0);
-            music->state    = Music_Unknown14;
-            music->volume   = 1.0;
-            music->fadeSpeed = 0.0125;
-        }
+        Music_FadeOut(0.0125);
         UIVideo->playing = true;
         return true;
     }

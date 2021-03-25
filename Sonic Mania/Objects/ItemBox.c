@@ -707,7 +707,7 @@ void ItemBox_GivePowerup()
 
                                 dust->visible         = 0;
                                 dust->active          = ACTIVE_NEVER;
-                                dust->field_3C        = 1;
+                                dust->isPermament     = true;
                                 dust->position.y      = (RSDK_screens->position.y - 128) << 16;
                                 player2->playerID     = 1;
                                 EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);

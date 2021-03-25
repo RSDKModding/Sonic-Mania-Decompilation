@@ -227,9 +227,9 @@ typedef struct {
     bool32 (*ObjectTileGrip)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                              sbyte tolerance);
     void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
-    void (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
+    int (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
     void (*SetTileAngle)(ushort tileID, byte cPlane, byte cMode, byte value);
-    void (*GetTileBehaviour)(ushort tileID, byte cPlane);
+    int (*GetTileBehaviour)(ushort tileID, byte cPlane);
     void (*SetTileBehaviour)(ushort tileID, byte cPlane, byte value);
     int (*GetSFX)(const char *path);
     int (*PlaySFX)(ushort sfx, int loop, int pan);

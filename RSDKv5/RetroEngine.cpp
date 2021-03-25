@@ -288,13 +288,10 @@ void runRetroEngine()
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
                     val->isSigned   = 0;
-                    val->value      = &drawLayers[v].visible;
+                    val->value      = &engine.drawLayerVisible[v];
                     val->valByteCnt = 4;
                     val->min        = 0;
                     val->max        = 1;
-
-                    MEM_ZERO(drawLayers[v]);
-                    drawLayers[v].visible = true;
                 }
 #endif
                 inputDevice.ProcessInput();
@@ -344,13 +341,10 @@ void runRetroEngine()
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
                     val->isSigned   = 0;
-                    val->value      = &drawLayers[v].visible;
+                    val->value      = &engine.drawLayerVisible[v];
                     val->valByteCnt = 4;
                     val->min   = 0;
                     val->max   = 1;
-
-                    MEM_ZERO(drawLayers[v]);
-                    drawLayers[v].visible = true;
                 }
 #endif
                 inputDevice.ProcessInput();
@@ -399,7 +393,7 @@ void runRetroEngine()
                         engine.imageUnknown += engine.imageDelta;
                         if (engine.imageUnknown <= 0.0) {
                             // ShaderSettings.ShaderID = prevScreenShader;
-                            // ShaderSettings.field_C  = 1;
+                            engine.screenCount  = 1;
                             sceneInfo.state     = engine.prevEngineMode;
                             engine.imageUnknown = 1.0;
                         }
@@ -532,6 +526,7 @@ void startGameObjects()
     sceneInfo.inEditor       = 0;
     sceneInfo.debugMode      = engine.devMenu;
     devMenu.state            = DevMenu_MainMenu;
+    for (int l = 0; l < DRAWLAYER_COUNT; ++l) engine.drawLayerVisible[l] = true;
     setupFunctions();
     InitScriptSystem();
     LoadGameConfig();

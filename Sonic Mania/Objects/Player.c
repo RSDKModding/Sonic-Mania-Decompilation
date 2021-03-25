@@ -1226,7 +1226,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 0x100;
-        ring->field_3C                = 1;
+        ring->isPermament             = true;
         ring->state                   = Ring_State_Bounce;
         ring->stateDraw               = Ring_StateDraw_Normal;
         ring->drawOrder               = entity->drawOrder;
@@ -1247,7 +1247,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = 2;
         ring->alpha                   = 256;
-        ring->field_3C                = 1;
+        ring->isPermament             = true;
         ring->state                   = Ring_State_Bounce;
         ring->stateDraw               = Ring_StateDraw_Normal;
         ring->drawOrder               = entity->drawOrder;
@@ -1295,7 +1295,7 @@ void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane)
         RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ring->animData, true, 0);
         ring->type                    = 1;
         ring->velocity.x              = 0x300 * RSDK.Cos256(angle);
-        ring->field_3C                = 1;
+        ring->isPermament             = true;
         ring->drawFX                  = 5;
         ring->alpha                   = 0x100;
         ring->velocity.y              = 0x300 * RSDK.Sin256(angle);
@@ -1392,7 +1392,7 @@ void Player_HandleDeath(EntityPlayer *player)
         ScreenInfo *screen  = RSDK_screens;
         dust->visible       = 0;
         dust->active        = 0;
-        dust->field_3C      = 1;
+        dust->isPermament   = true;
         dust->position.y    = (screen->position.y - 128) << 16;
         if (globals->gameMode != MODE_ENCORE || player->state != Player_State_Die && player->state != Player_State_Drown) {
             player->angle           = 0x80;
@@ -5100,7 +5100,7 @@ void Player_State_StartJumpIn()
             EntityDust *dust       = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
             dust->visible          = false;
             dust->active           = ACTIVE_NEVER;
-            dust->field_3C         = 1;
+            dust->isPermament      = true;
             dust->position.y       = (RSDK_screens->position.y - 128) << 16;
             entity->tileCollisions = 0;
             entity->interaction    = 0;
@@ -5248,7 +5248,7 @@ void Player_State_Unknown()
             EntityDust *dust        = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
             dust->visible           = false;
             dust->active            = ACTIVE_NEVER;
-            dust->field_3C          = 1;
+            dust->isPermament       = true;
             dust->position.y        = (RSDK_screens->position.y - 128) << 16;
             player1->angle          = 128;
             entity->state           = Player_State_FlyIn;

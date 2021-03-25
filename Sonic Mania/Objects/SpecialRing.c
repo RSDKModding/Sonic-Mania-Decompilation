@@ -22,7 +22,7 @@ void SpecialRing_Draw()
     }
     else {
         RSDK.Prepare3DScene(SpecialRing->sceneIndex);
-        if (!entity->enabled)
+        if (entity->enabled)
             RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &entity->matrix2, &entity->matrix3,
                                 0xF0F000);
         else
@@ -36,7 +36,7 @@ void SpecialRing_Create(void *data)
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = 1;
+        entity->visible       = true;
         entity->updateRange.x = 0x900000;
         entity->updateRange.y = 0x900000;
         entity->drawFX        = FX_FLIP;

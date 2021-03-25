@@ -134,14 +134,7 @@ void Summary_State_Unknown2()
         entity->timer     = 0;
         entity->state     = Summary_State_Unknown3;
         entity->stateDraw = Summary_State_Draw;
-
-        if (Music->activeTrack != TRACK_DROWNING) {
-            EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-            RSDK.ResetEntityPtr(music, Music->objectID, 0);
-            music->state     = Music_Unknown14;
-            music->volume    = 1.0;
-            music->fadeSpeed = 0.1;
-        }
+        Music_FadeOut(0.01);
     }
     else {
         entity->timer = 0;

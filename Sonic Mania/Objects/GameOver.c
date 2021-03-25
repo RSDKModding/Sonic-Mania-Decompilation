@@ -40,8 +40,8 @@ void GameOver_Create(void *data)
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         entity->active  = ACTIVE_ALWAYS;
-        entity->visible = 1;
-        entity->drawFX  = 6;
+        entity->visible = true;
+        entity->drawFX  = FX_ROTATE | FX_SCALE;
         if (data)
             RSDK.SetSpriteAnimation(GameOver->spriteIndex, 7, &entity->data, true, 1);
         else
@@ -169,14 +169,7 @@ void GameOver_Unknown2()
                 Music->dword250 = 9;
             }
             else {
-                EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-                Music->dword250    = 9;
-                if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                    RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                    music->fadeSpeed = 0.025;
-                    music->volume   = 1.0;
-                    music->state    = Music_Unknown15;
-                }
+                Music_FadeOut(0.025);
             }
         }
         else {
@@ -196,14 +189,7 @@ void GameOver_Unknown2()
                         Music->dword250 = 9;
                     }
                     else {
-                        EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-                        Music->dword250    = 9;
-                        if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                            RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                            music->fadeSpeed = 0.025;
-                            music->volume   = 1.0;
-                            music->state    = Music_Unknown15;
-                        }
+                        Music_FadeOut(0.025);
                     }
                 }
             }
@@ -244,14 +230,7 @@ void GameOver_Unknown2()
                         Music->dword250 = 9;
                     }
                     else {
-                        EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-                        Music->dword250    = 9;
-                        if (music->objectID != Music->objectID || music->state != Music_Unknown15) {
-                            RSDK.ResetEntityPtr(music, Music->objectID, 0);
-                            music->fadeSpeed = 0.025;
-                            music->volume   = 1.0;
-                            music->state    = Music_Unknown15;
-                        }
+                        Music_FadeOut(0.025);
                     }
                 }
             }
@@ -315,14 +294,7 @@ void GameOver_Unknown4()
         for (int i = 40; i < 0x30; ++i) {
             RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
         }
-
-        if (Music->activeTrack != TRACK_DROWNING) {
-            EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-            RSDK.ResetEntityPtr(music, Music->objectID, 0);
-            music->state    = Music_Unknown14;
-            music->volume   = 1.0;
-            music->fadeSpeed = 0.05;
-        }
+        Music_FadeOut(0.05);
 
         EntityGameOver *gameOver = NULL;
         while (RSDK.GetEntities(GameOver->objectID, (Entity **)&gameOver)) {

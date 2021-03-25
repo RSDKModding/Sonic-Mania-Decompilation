@@ -598,13 +598,7 @@ void Zone_Unknown2()
     entity->stateDraw  = Zone_Unknown12;
     entity->visible    = true;
     entity->drawOrder  = 15;
-    if (Music->activeTrack != TRACK_DROWNING) {
-        EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-        RSDK.ResetEntityPtr(music, Music->objectID, 0);
-        music->state     = Music_Unknown14;
-        music->volume    = 1.0;
-        music->fadeSpeed = 0.025;
-    }
+    Music_FadeOut(0.025);
 }
 
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)

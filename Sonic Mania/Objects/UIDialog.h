@@ -5,7 +5,10 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    void *activeDialog;
+    int field_8;
+    int field_C;
 } ObjectUIDialog;
 
 // Entity Class

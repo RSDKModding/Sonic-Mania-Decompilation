@@ -758,7 +758,7 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
         engine.prevEngineMode = sceneInfo.state;
         // ScreenSettings.field_8  = 0.0;
         // ShaderSettings.ShaderID = 7;
-        // ShaderSettings.field_C  = 0;
+        engine.screenCount    = 0;
         engine.skipCallback = skipCallback;
         sceneInfo.state     = ENGINESTATE_SHOWPNG;
         engine.imageDelta   = delta / 60.0;

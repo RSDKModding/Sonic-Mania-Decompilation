@@ -474,8 +474,8 @@ void Music_Unknown9(byte trackID, float a2)
 void Music_FadeOut(float fadeSpeed)
 {
     if (Music->activeTrack != TRACK_DROWNING) {
-        EntityMusic *music = (EntityMusic *)RSDK.GetEntityByID(SLOT_MUSIC);
-        RSDK.ResetEntityPtr(music, Music->objectID, 0);
+        EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
+        RSDK.ResetEntityPtr(music, Music->objectID, NULL);
         music->state    = Music_Unknown14;
         music->volume   = 1.0;
         music->fadeSpeed = fadeSpeed;

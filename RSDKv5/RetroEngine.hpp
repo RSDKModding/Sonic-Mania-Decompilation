@@ -34,7 +34,7 @@ enum GamePlatforms {
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
 
-#define RETRO_PLATFORM (RETRO_OSX)
+#define RETRO_PLATFORM (RETRO_WIN)
 
 #define SCREEN_XMAX (1280)
 #define SCREEN_YSIZE (240)
@@ -133,6 +133,7 @@ struct RetroEngine {
     bool32 frameStep        = false;
     bool32 masterPaused     = false;
     bool32 showPaletteOverlay = false;
+    bool32 drawLayerVisible[DRAWLAYER_COUNT];
 
     bool32 isFullScreen = false;
 
@@ -155,7 +156,7 @@ struct RetroEngine {
 
     bool32 shaderSupport = true;
     int screenShader     = 0;
-    int screenCount    = 0;
+    int screenCount      = 1;
     int dimTimer         = 0;
 
     bool32 streamsEnabled = true;

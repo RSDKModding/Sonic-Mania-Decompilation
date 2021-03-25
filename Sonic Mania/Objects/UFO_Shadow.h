@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort sceneID;
+    ushort modelIndex;
 } ObjectUFO_Shadow;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int shadowScale;
+    Entity *parent;
+    Matrix matrix;
+    AnimationData data;
 } EntityUFO_Shadow;
 
 // Object Struct

@@ -99,6 +99,11 @@ void LoadScene()
         }
     }
 
+    for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
+        MEM_ZERO(drawLayers[l]);
+        drawLayers[l].visible = true;
+    }
+
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 
@@ -350,12 +355,23 @@ void LoadSceneFile() {
             ReadHash(&info, hashBuf);
 
             int objID = 0;
+#if !RETRO_USE_ORIGINAL_CODE
+            bool32 found = false;
+#endif
             for (int o = 0; o < sceneInfo.classCount; ++o) {
                 if (HASH_MATCH(hashBuf, objectList[stageObjectIDs[o]].hash)) {
                     objID = o;
+#if !RETRO_USE_ORIGINAL_CODE
+                    found = true;
+#endif
                     break;
                 }
             }
+
+#if !RETRO_USE_ORIGINAL_CODE
+            if (!found)
+                printLog(SEVERITY_WARN, "WARNING: stage object %d is unimplimented!", i);
+#endif
 
             ObjectInfo *obj = &objectList[stageObjectIDs[objID]];
             byte varCnt     = ReadInt8(&info);

@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Matrix matWorld;
+    Matrix matView;
+    Matrix matTemp;
+    bool32 isSS7;
 } ObjectUFO_Camera;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void (*state)();
+    int field_5C;
+    int height;
+    int field_64;
+    int angleX;
+    int dword6C;
+    int dword70;
+    Entity *target;
+    Matrix matWorld;
+    Matrix matView;
 } EntityUFO_Camera;
 
 // Object Struct
@@ -28,6 +42,9 @@ void UFO_Camera_EditorLoad();
 void UFO_Camera_Serialize();
 
 // Extra Entity Functions
-
+void UFO_Camera_Unknown1();
+void UFO_Camera_Unknown2();
+void UFO_Camera_Unknown3();
+void UFO_Camera_Unknown4();
 
 #endif //!OBJ_UFO_CAMERA_H
