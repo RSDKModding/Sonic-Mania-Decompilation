@@ -87,7 +87,7 @@ void TestObject_StaticUpdate()
     //DrawAniTile(TestObject->sheetIndex, 2, 0, 32 * (TestObject->timer % 8), 32, 32);
 }
 void TestObject_Draw() { 
-    EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
+    //EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
     //Vector2 drawPos;
     //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + 0x10, currentScreen->centerY + 0x20, 0x00FF00, 0xFF, INK_NONE,
     //         true);

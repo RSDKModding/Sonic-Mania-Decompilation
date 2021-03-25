@@ -116,7 +116,7 @@ typedef enum {
     PRESENCE_TA,
     PRESENCE_COMP,
     PRESENCE_TITLE,
-} ScreenSizes;
+} PresenceTypes;
 
 typedef struct {
     int gameMode;

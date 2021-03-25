@@ -331,7 +331,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len) {
                 }
 
 #if RETRO_USING_SDL2
-                ProcessAudioMixing(mix_buffer, buffer, samples_done, sfxVol, sfx->pan);
+                ProcessAudioMixing(mix_buffer, buffer, (int)samples_done, sfxVol, sfx->pan);
 #endif
             }
         }

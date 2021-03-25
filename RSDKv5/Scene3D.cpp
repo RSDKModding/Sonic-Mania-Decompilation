@@ -842,17 +842,17 @@ void Draw3DScene(ushort sceneID)
                     int specular = normalVal >> 6 >> scn->specularX;
                     specular     = minVal(0xFF, specular);
                     specular     = maxVal(0, specular);
-                    int clrR     = specular + ((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX;
+                    int clrR     = specular + (((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
 
                     specular = normalVal >> 6 >> scn->specularY;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrG = specular + ((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY;
+                    int clrG = specular + (((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
 
                     specular = normalVal >> 6 >> scn->specularZ;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrB = specular + ((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ;
+                    int clrB = specular + (((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
 
                     clrR = minVal(0xFF, clrR);
                     clrR = maxVal(0, clrR);
@@ -891,17 +891,17 @@ void Draw3DScene(ushort sceneID)
                     int specular = normalVal >> 6 >> scn->specularX;
                     specular     = minVal(0xFF, specular);
                     specular     = maxVal(0, specular);
-                    int clrR     = specular + ((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX;
+                    int clrR     = specular + (((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
 
                     specular = normalVal >> 6 >> scn->specularY;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrG = specular + ((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY;
+                    int clrG = specular + (((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
 
                     specular = normalVal >> 6 >> scn->specularZ;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrB = specular + ((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ;
+                    int clrB = specular + (((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
 
                     clrR = minVal(0xFF, clrR);
                     clrR = maxVal(0, clrR);
@@ -913,7 +913,7 @@ void Draw3DScene(ushort sceneID)
                     uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                     drawVert = &scn->vertices[scn->zBuffer[i].index];
-                    DrawQuad(vertPos, *vertCnt, (drawVert->colour >> 16) & 0xFF, (drawVert->colour >> 8) & 0xFF, (drawVert->colour >> 0) & 0xFF,
+                    DrawQuad(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF,
                              entity->alpha, (InkEffects)entity->inkEffect);
 
                     vertCnt++;
@@ -1042,17 +1042,17 @@ void Draw3DScene(ushort sceneID)
                         int specular = normalVal >> 6 >> scn->specularX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0, specular);
-                        int clrR     = specular + ((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX;
+                        int clrR     = specular + (((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
 
                         specular = normalVal >> 6 >> scn->specularY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrG = specular + ((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY;
+                        int clrG = specular + (((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
 
                         specular = normalVal >> 6 >> scn->specularZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrB = specular + ((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ;
+                        int clrB = specular + (((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -1101,17 +1101,17 @@ void Draw3DScene(ushort sceneID)
                         int specular = normalVal >> 6 >> scn->specularX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0, specular);
-                        int clrR     = specular + ((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX;
+                        int clrR     = specular + (((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
 
                         specular = normalVal >> 6 >> scn->specularY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrG = specular + ((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY;
+                        int clrG = specular + (((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
 
                         specular = normalVal >> 6 >> scn->specularZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrB = specular + ((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ;
+                        int clrB = specular + (((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -1123,8 +1123,8 @@ void Draw3DScene(ushort sceneID)
                         uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                         drawVert = &scn->vertices[scn->zBuffer[i].index];
-                        DrawQuad(vertPos, *vertCnt, (drawVert[0].colour >> 16) & 0xFF, (drawVert[0].colour >> 8) & 0xFF,
-                                 (drawVert[0].colour >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
+                        DrawQuad(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF,
+                                 (colour >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
                     }
 
                     vertCnt++;
@@ -1154,17 +1154,17 @@ void Draw3DScene(ushort sceneID)
                             int specular = normalVal >> 6 >> scn->specularX;
                             specular     = minVal(0xFF, specular);
                             specular     = maxVal(0, specular);
-                            int clrR     = specular + ((drawVert[v].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX;
+                            int clrR     = specular + (((drawVert[v].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
 
                             specular = normalVal >> 6 >> scn->specularY;
                             specular = minVal(0xFF, specular);
                             specular = maxVal(0, specular);
-                            int clrG = specular + ((drawVert[v].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY;
+                            int clrG = specular + (((drawVert[v].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
 
                             specular = normalVal >> 6 >> scn->specularZ;
                             specular = minVal(0xFF, specular);
                             specular = maxVal(0, specular);
-                            int clrB = specular + ((drawVert[v].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ;
+                            int clrB = specular + (((drawVert[v].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
 
                             clrR = minVal(0xFF, clrR);
                             clrR = maxVal(0, clrR);

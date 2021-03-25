@@ -353,7 +353,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = strlen(userFiles);
+    int len = (int)strlen(userFiles);
     sprintf(userFiles, "%s", filename);
     if (len >= 0x400) {
         // oh shit
@@ -363,7 +363,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
     FileIO *file = fOpen(userFiles, "rb");
     if (file) {
         fSeek(file, 0, SEEK_END);
-        int fSize = fTell(file);
+        int fSize = (int)fTell(file);
         fSeek(file, 0, SEEK_SET);
         int size = bufSize;
         if (bufSize > fSize)
@@ -385,7 +385,7 @@ bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = strlen(userFiles);
+    int len = (int)strlen(userFiles);
     sprintf(userFiles, "%s", filename);
     if (len >= 0x400) {
         // oh shit
@@ -414,7 +414,7 @@ bool32 DeleteUserFile(const char *filename)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = strlen(userFiles);
+    int len = (int)strlen(userFiles);
     sprintf(userFiles, "%s", filename);
     if (len >= 0x400) {
         // oh shit
@@ -482,7 +482,7 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
 
 ushort GetUserDBByID(ushort tableID, uint uuid)
 {
-    if (tableID == -1)
+    if (tableID == (ushort)-1)
         return -1;
     if (!uuid)
         return -1;

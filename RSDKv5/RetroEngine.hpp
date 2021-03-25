@@ -34,7 +34,7 @@ enum GamePlatforms {
 #define RETRO_OSX   (1)
 #define RETRO_LINUX (2)
 
-#define RETRO_PLATFORM (RETRO_WIN)
+#define RETRO_PLATFORM (RETRO_OSX)
 
 #define SCREEN_XMAX (1280)
 #define SCREEN_YSIZE (240)

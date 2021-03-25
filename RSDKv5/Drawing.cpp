@@ -4264,7 +4264,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
                 if (drawX >= 0 && drawX < currentScreen->width - 7) {
                     ushort *frameBufferPtr = &currentScreen->frameBuffer[drawX + y * currentScreen->pitch];
                     char curChar           = *textPtr;
-                    if (*textPtr < '\t' || curChar > '\n' && curChar != ' ') {
+                    if ((curChar < '\t' || curChar > '\n') && curChar != ' ') {
                         byte h              = 8;
                         byte *engineTextPtr = &engineTextBuffer[64 * *textPtr];
                         do {

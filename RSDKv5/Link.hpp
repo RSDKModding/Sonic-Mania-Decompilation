@@ -8,9 +8,9 @@
 #define FUNCTABLE_COUNT (155)
 #endif
 
-extern void *functionTable[FUNCTABLE_COUNT];
+extern void *RSDKFunctionTable[FUNCTABLE_COUNT];
 #if RETRO_USE_PLUS
-extern void *userDataTable[UDATATABLE_COUNT];
+extern void *userFunctionTable[UDATATABLE_COUNT];
 #endif
 
 #if RETRO_USE_PLUS

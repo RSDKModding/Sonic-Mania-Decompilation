@@ -681,9 +681,9 @@ void InitScriptSystem()
 
     GameInfo info;
 
-    info.functionPtrs = functionTable;
+    info.functionPtrs = RSDKFunctionTable;
 #if RETRO_USE_PLUS
-    info.userdataPtrs = userDataTable;
+    info.userdataPtrs = userFunctionTable;
     info.gameName = engine.gameName;
     info.currentSKU   = &curSKU;
 #endif
