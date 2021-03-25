@@ -97,7 +97,7 @@ void FlipScreen()
 #if RETRO_USING_SDL2
     SDL_Rect destScreenPos[SCREEN_MAX];
 
-    switch (/*screenCount*/1) {
+    switch (engine.screenCount) {
         default: break;
         case 1:
             destScreenPos[0].x = 0;
@@ -161,7 +161,7 @@ void FlipScreen()
 
     int pitch      = 0;
     ushort *pixels = NULL;
-    for (int s = 0; s < /*screenCount*/1; ++s) {
+    for (int s = 0; s < engine.screenCount; ++s) {
         SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
         memcpy(pixels, screens[s].frameBuffer, pitch * SCREEN_YSIZE);
         SDL_UnlockTexture(engine.screenBuffer[s]);

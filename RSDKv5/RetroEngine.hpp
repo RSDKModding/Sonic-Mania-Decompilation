@@ -35,7 +35,6 @@ enum GamePlatforms {
 #define RETRO_LINUX (2)
 
 #define RETRO_PLATFORM (RETRO_WIN)
-#define GAME_PLATFORM  (PLATFORM_WIN)
 
 #define SCREEN_XMAX (1280)
 #define SCREEN_YSIZE (240)
@@ -124,8 +123,8 @@ struct RetroEngine {
     bool32 devMenu    = false;
     bool32 printConsole = false;
 
-    int hasPlus  = true;
-    int confirmFlip = 0;
+    bool32 hasPlus     = true;  // are sonic mania plus features enabled?
+    bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
 
     int prevEngineMode      = ENGINESTATE_LOAD;
     bool32 running          = false;
@@ -156,7 +155,7 @@ struct RetroEngine {
 
     bool32 shaderSupport = true;
     int screenShader     = 0;
-    int shaderUnknown    = 0;
+    int screenCount    = 0;
     int dimTimer         = 0;
 
     bool32 streamsEnabled = true;

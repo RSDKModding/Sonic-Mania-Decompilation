@@ -418,22 +418,22 @@ void Zone_StageLoad()
         case MODE_NOSAVE:
 #endif
         case MODE_MANIA:
-            Localization_GetString(&textInfo, 0x3F);
-            User.SetRichPresence(2, &textInfo);
+            Localization_GetString(&textInfo, STR_RPC_MANIA);
+            User.SetRichPresence(PRESENCE_MANIA, &textInfo);
             break;
 #if RETRO_USE_PLUS
         case MODE_ENCORE:
-            Localization_GetString(&textInfo, 0x40);
-            User.SetRichPresence(3, &textInfo);
+            Localization_GetString(&textInfo, STR_RPC_ENCORE);
+            User.SetRichPresence(PRESENCE_ENCORE, &textInfo);
             break;
 #endif
         case MODE_TIMEATTACK:
-            Localization_GetString(&textInfo, 0x41);
-            User.SetRichPresence(4, &textInfo);
+            Localization_GetString(&textInfo, STR_RPC_TA);
+            User.SetRichPresence(PRESENCE_TA, &textInfo);
             break;
         case MODE_COMPETITION:
-            Localization_GetString(&textInfo, 0x42);
-            User.SetRichPresence(5, &textInfo);
+            Localization_GetString(&textInfo, STR_RPC_TITLE);
+            User.SetRichPresence(PRESENCE_COMP, &textInfo);
             break;
         default: break;
     }

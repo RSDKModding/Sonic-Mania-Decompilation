@@ -85,7 +85,7 @@ void DialogRunner_NotifyAutoSave()
     RSDK_THIS(DialogRunner);
     if (DialogRunner->field_14) {
         /*if (!UIDialog->activeDialog) {
-            Localization_GetString(&info, 0x25);
+            Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B8       = 1;
             UIDialog_Unknown2(2, dialog, DialogRunner_NotifyAutoSave_CB, 1);
@@ -120,12 +120,12 @@ void DialogRunner_Unknown6()
             int stringID = 30;
             switch (entity->unknownID) {
                 case 500:
-                    stringID = 33;
+                    stringID = STR_NOXBOXPROFILE;
                     if (RSDK_sku->platform != PLATFORM_XB1)
-                        stringID = 30;
+                        stringID = STR_SAVELOADFAIL;
                     break;
-                case 505: stringID = 31; break;
-                case 506: stringID = (RSDK_sku->platform == PLATFORM_XB1) + 32; break;
+                case 505: stringID = STR_CORRUPTSAVE; break;
+                case 506: stringID = (RSDK_sku->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
             }
             Localization_GetString(&info, stringID);
             //EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
@@ -182,9 +182,9 @@ void DialogRunner_Unknown7(int a1, int a2)
         }
         /*else if (!UIDialog->activeDialog) {
             TextInfo info;
-            int id = 36;
+            int id = STR_SIGNOUTDETECTED;
             if (entity->field_88)
-                id = 57;
+                id = STR_RETRURNINGTOTITLE;
             Localization_GetString(&info, id);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B8       = 1;
@@ -232,7 +232,7 @@ void DialogRunner_ManageNotifs(int a1)
         DialogRunner->entityPtr = NULL;
         UIWaitSpinner_Wait();
         SaveGame_TrackGameProgress(DialogRunner_Wait);
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
 }
 int DialogRunner_Wait(int a1)

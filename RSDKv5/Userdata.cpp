@@ -73,11 +73,11 @@ void initUserData()
         userCore->CheckDLC             = checkDLC;
         userCore->ShowExtensionOverlay = ShowExtensionOverlay;
 
-        userCore->values[0]   = &engine.hasPlus;
+        userCore->values[0]   = (int *)&engine.hasPlus;
         userCore->values[1]   = &curSKU.platform;
         userCore->values[2]   = &curSKU.region;
         userCore->values[3]   = &curSKU.language;
-        userCore->values[4]   = &engine.confirmFlip;
+        userCore->values[4]   = (int *)&engine.confirmFlip;
         userCore->debugValCnt = 5;
 
         achievements->InitUnknown1      = nullUserFunc;
@@ -113,7 +113,7 @@ void initUserData()
         userStorage->LoadUserFile   = TryLoadUserFile;
         userStorage->SaveUserFile   = TrySaveUserFile;
         userStorage->DeleteUserFile = TryDeleteUserFile;
-        userStorage->unknown8 = UserStorageUnknown8;
+        userStorage->unknown8       = UserStorageUnknown8;
 #endif
 
 #if !RETRO_USE_PLUS
@@ -182,10 +182,10 @@ int GetUserPlatform() { return curSKU.platform; }
 #if RETRO_USE_PLUS
 int GetConfirmButtonFlip()
 {
-    printConsole("DUMMY GetConfirmButtonFlip() -> 0\n");
-    return 0;
+    printLog(SEVERITY_NONE, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
+    return true;
 }
-void LaunchManual() { printConsole("DUMMY LaunchManual()\n"); }
+void LaunchManual() { printLog(SEVERITY_NONE, "DUMMY LaunchManual()"); }
 #endif
 void ExitGame() { engine.running = false; }
 
@@ -197,8 +197,8 @@ int ShowExtensionOverlay(byte overlay)
 
 void TryUnlockAchievement(const char *name) { printLog(SEVERITY_NONE, "DUMMY TryUnlockAchievement(%s)", name); }
 
-void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)\n", a2, a3); }
-void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)\n", a2, a3, a4); }
+void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)", a2, a3); }
+void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)", a2, a3, a4); }
 
 void SetPresence(byte a2, TextInfo *info)
 {
@@ -206,11 +206,11 @@ void SetPresence(byte a2, TextInfo *info)
     char buffer2[0xFF];
     GetCString(buffer, info);
 #if RETRO_USE_PLUS
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s\n", a2, buffer, (richPresence->status != a2 ? "Successful Set" : "Redundant Set"));
+    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", a2, buffer, (richPresence->status != a2 ? "Successful Set" : "Redundant Set"));
 #else
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s)\n", a2, buffer);
+    sprintf(buffer2, "DUMMY SetPresence(%d, %s)", a2, buffer);
 #endif
-    printConsole(buffer2);
+    printLog(SEVERITY_NONE, buffer2);
 }
 
 #if RETRO_USE_PLUS
@@ -285,8 +285,9 @@ void *GetFuncPtr(const char *name)
 }
 #endif
 
-bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int)) { 
-    
+bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int))
+{
+
     if (!userStorage->noSaveActive) {
         LoadUserFile(filename, buffer, bufSize);
 
@@ -307,7 +308,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
 {
     if (!userStorage->noSaveActive) {
         if (compress) {
-            //compress lo
+            // compress lo
         }
         SaveUserFile(filename, buffer, bufSize);
 
@@ -316,7 +317,8 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
     }
     else {
         char buffer[0x100];
-        sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback, compress ? "true" : "false");
+        sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback,
+                compress ? "true" : "false");
 
         if (callback)
             callback(500);
@@ -379,7 +381,8 @@ bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
     }
     return false;
 }
-bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize) {
+bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize)
+{
     if (userFileCallback)
         userFileCallback();
     int len = strlen(userFiles);
@@ -388,13 +391,13 @@ bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize) {
         // oh shit
     }
     printLog(SEVERITY_NONE, "Attempting to save user file: %s", userFiles);
-    
+
     FileIO *file = fOpen(userFiles, "rb");
     if (file) {
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
 
-        //encryption?
+        // encryption?
 
         if (userFileCallback2)
             userFileCallback2();
@@ -407,7 +410,8 @@ bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize) {
     }
     return false;
 }
-bool32 DeleteUserFile(const char* filename) {
+bool32 DeleteUserFile(const char *filename)
+{
     if (userFileCallback)
         userFileCallback();
     int len = strlen(userFiles);
@@ -511,7 +515,7 @@ int GetSettingsValue(int id)
         case 9: return engine.refreshRate;
         case 10: return engine.shaderSupport;
         case 11: return engine.screenShader;
-        case 12: return engine.shaderUnknown;
+        case 12: return engine.screenCount;
         case 13: return engine.dimTimer;
         case 14: return engine.streamsEnabled;
         case 15: return (int)(engine.streamVolume * 1024.0); break;
@@ -579,7 +583,7 @@ void SetSettingsValue(int id, int val)
                 settingsChanged     = true;
             }
             break;
-        case 12: engine.shaderUnknown = val; break;
+        case 12: engine.screenCount = val; break;
         case 13: engine.dimTimer = val; break;
         case 14:
             if (engine.streamsEnabled != bVal)
@@ -712,7 +716,6 @@ void readSettings()
 }
 void writeSettings(bool32 writeToFile)
 {
-
     if (settingsChanged || writeToFile) {
     }
 }

@@ -466,7 +466,7 @@ void DevMenu_SceneSel()
 
     if (controller[0].keyStart.press || controller[0].keyA.press) {
         sceneInfo.activeCategory = devMenu.listPos;
-        sceneInfo.listPos        = devMenu.option + sceneInfo.listCategory[devMenu.listPos].sceneOffsetStart;
+        sceneInfo.listPos        = devMenu.option;
         sceneInfo.state          = ENGINESTATE_LOAD;
     }
 }

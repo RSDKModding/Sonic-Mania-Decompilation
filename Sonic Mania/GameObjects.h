@@ -149,7 +149,7 @@ typedef struct {
     void (*AppendString)(TextInfo *info, const char *str);
     void (*Unknown67)(TextInfo *, TextInfo *);
     void (*LoadStrings)(TextInfo *dst, const char* path, int);
-    void (*Unknown68)(TextInfo *, TextInfo *, int, int);
+    void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
     void (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
     void (*Unknown70)(void);

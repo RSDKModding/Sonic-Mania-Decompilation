@@ -120,7 +120,7 @@ void SaveGame_LoadSaveData()
     }
     else if (!Zone || Zone->listPos != Zone->prevListPos) {
         if (StarPost) {
-            for (int p = 0; p < 4; ++p) {
+            for (int p = 0; p < PLAYER_MAX; ++p) {
                 StarPost->playerPositions[p].x = 0;
                 StarPost->playerPositions[p].y = 0;
                 StarPost->playerDirections[p]  = FLIP_NONE;
@@ -381,16 +381,16 @@ void SaveGame_SaveFile_CB(int status)
 int SaveGame_GetNotifStringID(int type)
 {
     switch (type) {
-        case 0: return 12; break;
-        case 1: return 13; break;
-        case 2: return 14; break;
-        case 3: return 15; break;
-        case 4: return 16; break;
-        case 5: return 17; break;
-        case 6: return 19; break;
-        case 7: return 20; break;
-        case 8: return 18; break;
-        default: return 1; break;
+        case 0: return STR_TAUNLOCKED; break;
+        case 1: return STR_COMPUNLOCKED; break;
+        case 2: return STR_PEELOUTUNLOCKED; break;
+        case 3: return STR_INSTASHIELDUNLOCKED; break;
+        case 4: return STR_ANDKNUXUNLOCKED; break;
+        case 5: return STR_DEBUGMODEUNLOCKED; break;
+        case 6: return STR_MBMUNLOCKED; break;
+        case 7: return STR_DAGARDENUNLOCKED; break;
+        case 8: return STR_BLUESPHERESUNLOCKED; break;
+        default: return STR_FEATUREUNIMPLIMENTED; break;
     }
 }
 void SaveGame_ShuffleBSSID()

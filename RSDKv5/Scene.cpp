@@ -33,25 +33,26 @@ void LoadScene()
 #endif
     lookUpBuffer = NULL;
 
+    SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
 #if RETRO_USE_PLUS
-    if (StrComp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) && !hardResetFlag) {
+    if (StrComp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
+        sceneInfo.filter = sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter;
         if (sceneInfo.filter == 0x00)
             sceneInfo.filter = 0xFF;
-        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name,
-                 sceneInfo.listData[sceneInfo.listPos].name, sceneInfo.listData[sceneInfo.listPos].filter);
+        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\" with filter %d", list->name,
+                 sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name,
+                 sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter);
         return;
     }
 #endif
 
 #if !RETRO_USE_PLUS
-    if (StrComp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder)) {
+    if (StrComp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder)) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\"", sceneInfo.listCategory[sceneInfo.activeCategory].name,
-                 sceneInfo.listData[sceneInfo.listPos].name);
+        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name);
         return;
     }
 #endif
@@ -106,7 +107,7 @@ void LoadScene()
         screens[s].position.y = 0;
     }
 
-    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
+    SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
     StrCopy(currentSceneFolder, sceneEntry->folder);
 
 #if RETRO_USE_PLUS
@@ -115,11 +116,11 @@ void LoadScene()
     if (sceneInfo.filter == 0x00)
         sceneInfo.filter = 0xFF;
 
-    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", sceneInfo.listCategory[sceneInfo.activeCategory].name, sceneEntry->name, sceneEntry->filter);
+    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
 #if !RETRO_USE_PLUS
-    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\"", sceneInfo.listCategory[sceneInfo.activeCategory].name, sceneEntry->name);
+    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
     char buffer[0x40];
@@ -230,7 +231,8 @@ void LoadSceneFile() {
 
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
-    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
+    SceneListInfo *list        = &sceneInfo.listCategory[sceneInfo.activeCategory];
+    SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
     char buffer[0x40];
     StrCopy(buffer, "Data/Stages/");
     StrAdd(buffer, currentSceneFolder);

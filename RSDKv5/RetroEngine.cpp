@@ -177,7 +177,7 @@ bool32 processEvents()
                                     sceneInfo.activeCategory--;
                                 }
                                 list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                                sceneInfo.listPos = list->sceneOffsetStart + list->sceneCount - 1;
+                                sceneInfo.listPos = list->sceneCount - 1;
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
@@ -186,13 +186,13 @@ bool32 processEvents()
                         if (engine.devMenu) {
                             sceneInfo.listPos++;
                             SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                            if (sceneInfo.listPos >= list->sceneCount) {
+                            if (sceneInfo.listPos - list->sceneOffsetStart >= list->sceneCount) {
                                 sceneInfo.activeCategory++;
                                 if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
                                     sceneInfo.activeCategory = 0;
                                 }
                                 list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                                sceneInfo.listPos = list->sceneOffsetStart;
+                                sceneInfo.listPos = 0;
                             }
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }

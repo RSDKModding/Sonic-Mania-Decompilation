@@ -22,7 +22,7 @@ struct DummyCore {
     void (*ExitGame)();
     void (*unknown14)();
     int (*unknown15)(byte inputID);
-    bool32 (*CheckDLC)(byte id);
+    int (*CheckDLC)(byte id);
     int (*ShowExtensionOverlay)(byte overlay);
 
     int* values[8];
@@ -207,7 +207,7 @@ int GetConfirmButtonFlip();
 void LaunchManual();
 void ExitGame();
 #if RETRO_USE_PLUS
-inline bool32 checkDLC(byte dlcID)
+inline int checkDLC(byte dlcID)
 {
     if (dlcID < 8)
         return *userCore->values[dlcID];

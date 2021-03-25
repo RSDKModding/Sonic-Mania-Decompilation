@@ -66,7 +66,7 @@ void Localization_LoadStrings()
             break;
         default: break;
     }
-    RSDK.Unknown68(Localization->strings, &Localization->text, 0, 68);
+    RSDK.SplitStringList(Localization->strings, &Localization->text, 0, 68);
     Localization->loaded = true;
 }
 

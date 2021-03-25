@@ -108,6 +108,16 @@ typedef enum {
     SETTINGS_WRITE           = 0x16,
 } SettingsValues;
 
+typedef enum {
+    PRESENCE_GENERIC,
+    PRESENCE_MENU,
+    PRESENCE_MANIA,
+    PRESENCE_ENCORE,
+    PRESENCE_TA,
+    PRESENCE_COMP,
+    PRESENCE_TITLE,
+} ScreenSizes;
+
 typedef struct {
     int gameMode;
     int playerID;

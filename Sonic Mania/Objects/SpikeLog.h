@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    bool32 hasAchievement;
+    byte timer;
+    ushort spriteIndex;
+    Hitbox hitbox;
+    Hitbox burnHitbox;
 } ObjectSpikeLog;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void (*state)();
+    byte frame;
+    AnimationData data;
 } EntitySpikeLog;
 
 // Object Struct
@@ -28,6 +36,8 @@ void SpikeLog_EditorLoad();
 void SpikeLog_Serialize();
 
 // Extra Entity Functions
+void SpikeLog_State_Main();
+void SpikeLog_State_Burn();
 
 
 #endif //!OBJ_SPIKELOG_H

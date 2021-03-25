@@ -142,13 +142,18 @@ inline void SetHardResetFlag(bool32 set) { hardResetFlag = set; }
 
 inline bool32 CheckValidStage()
 {
-    return sceneInfo.activeCategory < sceneInfo.categoryCount && sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart
-           && sceneInfo.listPos <= sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
+    if (!(sceneInfo.activeCategory < sceneInfo.categoryCount))
+        return false;
+
+    SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
+    int pos             = list->sceneOffsetStart + sceneInfo.listPos;
+    return pos >= list->sceneOffsetStart && pos <= list->sceneOffsetEnd;
 }
 
 inline bool32 CheckSceneFolder(const char *folderName)
 {
-    int res = strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder);
+    SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
+    int res = strcmp(folderName, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder);
     if (res)
         return (-(res < 0) | 1) == 0;
     else

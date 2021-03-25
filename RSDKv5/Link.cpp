@@ -145,7 +145,7 @@ enum FunctionTableIDs {
     FunctionTable_AppendString,
     FunctionTable_Unknown67,
     FunctionTable_LoadStrings,
-    FunctionTable_Unknown68,
+    FunctionTable_SplitStringList,
     FunctionTable_GetCString,
     FunctionTable_StringCompare,
     FunctionTable_GetWindowSettings,
@@ -290,7 +290,7 @@ void NullFunc() {}
 void setupFunctions()
 {
 #if RETRO_USE_PLUS
-    curSKU.platform = GAME_PLATFORM;
+    curSKU.platform = PLATFORM_DEV;
     curSKU.language = 0;
     curSKU.region   = 0;
 #else
@@ -447,7 +447,7 @@ void setupFunctions()
     functionTable[FunctionTable_AppendString]       = (void *)AppendString;
     functionTable[FunctionTable_Unknown67]          = (void *)NullFunc; // Unknown67;
     functionTable[FunctionTable_LoadStrings]        = (void *)LoadStrings;
-    functionTable[FunctionTable_Unknown68]          = (void *)NullFunc; // Unknown68;
+    functionTable[FunctionTable_SplitStringList]    = (void *)SplitStringList;
     functionTable[FunctionTable_GetCString]         = (void *)GetCString;
     functionTable[FunctionTable_StringCompare]      = (void *)StringCompare;
     functionTable[FunctionTable_GetWindowSettings]  = (void *)NullFunc; // Unknown70;

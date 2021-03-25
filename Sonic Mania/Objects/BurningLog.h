@@ -5,12 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int spriteIndex;
+    Hitbox hitbox;
+    Hitbox hitbox2;
 } ObjectBurningLog;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    AnimationData data;
+    int timer;
 } EntityBurningLog;
 
 // Object Struct

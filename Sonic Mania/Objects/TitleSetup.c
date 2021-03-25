@@ -40,9 +40,9 @@ void TitleSetup_Create(void *data)
 void TitleSetup_StageLoad()
 {
     TextInfo presence;
-    Localization_GetString(&presence, 0x43);
-    User.SetRichPresence(6, &presence);
-    User.SetUserStorageNoSave(0);
+    Localization_GetString(&presence, STR_RPC_TITLE);
+    User.SetRichPresence(PRESENCE_TITLE, &presence);
+    User.SetUserStorageNoSave(false);
     globals->blueSpheresInit = 0;
     Game_ClearOptions();
     User.UserStorageUnknown8();

@@ -185,17 +185,19 @@ inline void GetCString(char *dest, TextInfo *info)
     int textLen = 0x400;
     if (dest)
         textLen = info->textLength;
-
-    for (int c = 0; c < textLen; ++c) {
-        *text++ = info->text[c];
+    
+    int c = 0;
+    for (; c < textLen; ++c) {
+        text[c] = info->text[c];
     }
-    text[textLen] = 0;
+    text[c] = 0;
 }
 
 
 void Unknown64(TextInfo *textA, TextInfo *textB);
 void AppendString(TextInfo *textA, TextInfo *textB);
 bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3);
+void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count);
 
 void LoadStrings(TextInfo *buffer, const char *filePath);
 

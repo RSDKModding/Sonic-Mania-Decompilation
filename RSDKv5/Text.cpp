@@ -190,7 +190,7 @@ void GenerateCRC(uint *id, char *fileName)
 
 char textBuffer[0x400];
 
-byte byte_65CB30[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+byte stringFlags[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -204,7 +204,7 @@ void AppendString(TextInfo *textA, TextInfo *textB)
     uint totalLen = textB->textLength + textA->textLength;
     if (textA->length < totalLen || !textA->text) {
         AllocateStorage(sizeof(ushort) * totalLen, (void **)&textA, DATASET_STR, 0);
-        if (textA->textLength > 0u) {
+        if (textA->textLength > 0) {
             do {
                 textA->text[charID] = textA->text[charID];
                 ++charID;
@@ -265,6 +265,41 @@ bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3)
     return false;
 }
 
+void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
+{
+    if (!strings->length || !strings->text)
+        return;
+
+    int lastStrPos = 0;
+    int strID      = 0;
+
+    TextInfo *info = list;
+    for (int c = 0; c < strings->textLength && count > 1; ++c) {
+        if (strings->text[c] == '\n') {
+            if (strID < start) {
+                lastStrPos = c;
+            }
+            else {
+                ushort len = c - lastStrPos;
+                if (info->length < len) {
+                    info->length = len;
+                    AllocateStorage(sizeof(ushort) * len, (void **)&info->text, DATASET_STR, true);
+                }
+                info->textLength = len;
+
+                for (int i = 0; i < info->textLength; ++i) {
+                    info->text[i] = strings->text[lastStrPos++];
+                }
+
+                ++info;
+                --count;
+            }
+            ++strID;
+            ++lastStrPos;
+        }
+    }
+}
+
 void InitStringsBuffer(TextInfo *info, int size)
 {
     ushort *text = NULL; 
@@ -291,8 +326,55 @@ void LoadStrings(TextInfo *buffer, const char *filePath)
     
     MEM_ZERO(info);
     if (LoadFile(&info, nameBuf)) {
+        ushort header = ReadInt16(&info);
+        if (header == 0xFEFF) {
+            InitStringsBuffer(buffer, (info.fileSize >> 1) - 1);
+            ReadBytes(&info, buffer->text, buffer->length * sizeof(ushort));
+            buffer->textLength = buffer->length;
+        }
+        else {
+            if (header == 0xEFBB) {
+                ReadInt8(&info);
+            }
+            else {
+                Seek_Set(&info, 0);
+            }
+            InitStringsBuffer(buffer, info.fileSize);
 
-        //ushort header = ReadInt16(&info);
+            for (int i = 0; i < info.fileSize; ++i) {
+                int curChar = 0;
+
+                byte buf = ReadInt8(&info);
+                switch (stringFlags[buf]) {
+                    case 1: curChar = buf; break;
+                    case 2:
+                        curChar = ((buf & 0x1F) << 6);
+                        curChar |= (ReadInt8(&info) & 0x3F);
+                        break;
+                    case 3:
+                        curChar = (buf << 12);
+                        curChar |= ((ReadInt8(&info) & 0x3F) << 6);
+                        curChar |= ReadInt8(&info) & 0x3F;
+                        break;
+                    case 4:
+                        curChar = ReadInt8(&info) << 12;
+                        curChar |= ((ReadInt8(&info) & 0x3F) << 6);
+                        curChar |= ReadInt8(&info) & 0x3F;
+                        break;
+                    case 5:
+                        i += 4;
+                        Seek_Cur(&info, 4);
+                        break;
+                    case 6:
+                        i += 5;
+                        Seek_Cur(&info, 5);
+                        break;
+                    default: break;
+                }
+
+                buffer->text[buffer->textLength++] = curChar;
+            }
+        }
 
         CloseFile(&info);
     }

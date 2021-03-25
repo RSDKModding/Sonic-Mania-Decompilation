@@ -8,9 +8,9 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 hasAchievement;
-    Vector2 playerPositions[4];
-    byte playerDirections[4];
-    ushort postIDs[4];
+    Vector2 playerPositions[PLAYER_MAX];
+    byte playerDirections[PLAYER_MAX];
+    ushort postIDs[PLAYER_MAX];
     byte storedMinutes;
     byte storedSeconds;
     byte storedMS;

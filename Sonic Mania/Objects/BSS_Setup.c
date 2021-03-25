@@ -203,8 +203,8 @@ void BSS_Setup_StageLoad()
     BSS_Setup->sfx_Teleport    = RSDK.GetSFX("Global/Teleport.wav");
     if ((byte)(globals->menuParam[22] >> 8) == 1) {
         TextInfo info;
-        Localization_GetString(&info, 0x3D);
-        User.SetRichPresence(0, &info);
+        Localization_GetString(&info, STR_RPC_PLAYING);
+        User.SetRichPresence(PRESENCE_GENERIC, &info);
     }
 }
 
