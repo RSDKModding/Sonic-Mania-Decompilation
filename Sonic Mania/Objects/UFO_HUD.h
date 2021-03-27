@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectUFO_HUD;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int timer;
+    byte palID;
+    AnimationData data1;
+    AnimationData data2;
+    AnimationData data3;
+    AnimationData data4;
 } EntityUFO_HUD;
 
 // Object Struct
@@ -28,6 +36,8 @@ void UFO_HUD_EditorLoad();
 void UFO_HUD_Serialize();
 
 // Extra Entity Functions
-
+void UFO_HUD_CheckLevelUp();
+void UFO_HUD_LevelUpMach();
+void UFO_HUD_DrawNumbers(Vector2 *drawPos, int value);
 
 #endif //!OBJ_UFO_HUD_H

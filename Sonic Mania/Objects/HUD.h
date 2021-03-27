@@ -21,17 +21,17 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     void (*state)(void);
-    Vector2 dword5C[PLAYER_MAX];
-    int field_7C[PLAYER_MAX];
+    Vector2 dword5C[4];
+    int field_7C[4];
     int playerLives[PLAYER_MAX];
     int field_9C;
     int field_A0;
     void (*competitionStates[PLAYER_MAX])();
-    Vector2 dwordB4[PLAYER_MAX];
-    Vector2 dwordD4[PLAYER_MAX];
-    Vector2 dwordF4[PLAYER_MAX];
-    Vector2 dword114[PLAYER_MAX];
-    int field_134[PLAYER_MAX];
+    Vector2 dwordB4[4];
+    Vector2 dwordD4[4];
+    Vector2 dwordF4[4];
+    Vector2 dword114[4];
+    int field_134[4];
     int screenID;
     int timeFlashFrame;
     int ringFlashFrame;

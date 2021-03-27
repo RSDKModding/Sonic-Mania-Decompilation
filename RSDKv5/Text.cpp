@@ -274,7 +274,7 @@ void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
     int strID      = 0;
 
     TextInfo *info = list;
-    for (int c = 0; c < strings->textLength && count > 1; ++c) {
+    for (int c = 0; c < strings->textLength && count >= 1; ++c) {
         if (strings->text[c] == '\n') {
             if (strID < start) {
                 lastStrPos = c;

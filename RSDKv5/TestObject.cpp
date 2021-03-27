@@ -108,6 +108,8 @@ void TestObject_Draw() {
 
     //DrawCircleOutline(currentScreen->centerX, currentScreen->centerY, 0x10 + (TestObject->timer / 0x08) % 0x80,
     //                  0x20 + (TestObject->timer / 0x04) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
+    int r = 0x20 + (TestObject->timer) % 0x100;
+    DrawCircleOutline(currentScreen->centerX, currentScreen->centerY, r, r + 1, 0xFF0000, 0xFF, INK_NONE, true);
     //DrawCircle(currentScreen->centerX, currentScreen->centerY, 0x10 + (TestObject->timer / 0x02) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
 
     /*Vector2 vertPos[4];

@@ -109,8 +109,10 @@ void Announcer_Unknown3()
         switch (session[RSDK_sceneInfo->currentScreenID]) {
             case ID_TAILS: frame = 1; break;
             case ID_KNUCKLES: frame = 2; break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY: frame = 3; break;
             case ID_RAY: frame = 4; break;
+#endif
             default: frame = 0; break;
         }
         RSDK.SetSpriteAnimation(Announcer->spriteIndex, 2, &entity->data2, true, frame);
@@ -275,8 +277,10 @@ void Announcer_Unknown9()
             case ID_SONIC: RSDK.PlaySFX(Announcer->sfx_SonicWins, 0, 255); break;
             case ID_TAILS: RSDK.PlaySFX(Announcer->sfx_TailsWins, 0, 255); break;
             case ID_KNUCKLES: RSDK.PlaySFX(Announcer->sfx_KnuxWins, 0, 255); break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY: RSDK.PlaySFX(Announcer->sfx_MightyWins, 0, 255); break;
             case ID_RAY: RSDK.PlaySFX(Announcer->sfx_RayWins, 0, 255); break;
+#endif
             default: break;
         }
         RSDK.ResetEntityPtr(entity, 0, 0);

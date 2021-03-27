@@ -58,7 +58,9 @@ void CutsceneSeq_Draw()
     for (int i = 0; i < 8; ++i) {
         Vector2 *point = &entity->points[i];
         if (point->x || point->y) {
+#if RETRO_USE_PLUS
             RSDK.PrintVector2(0, "Draw poi ", point->x, point->y);
+#endif
             RSDK.DrawLine(point->x - 0x100000, point->y - 0x100000, point->x + 0x100000, point->y + 0x100000, colours[i], 0x7F, INK_NONE, 0);
             RSDK.DrawLine(point->x + 0x100000, point->y - 0x100000, point->x - 0x100000, point->y + 0x100000, colours[i], 0x7F, INK_NONE, 0);
         }

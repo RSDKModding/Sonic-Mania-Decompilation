@@ -88,9 +88,11 @@ void ActClear_Draw()
         drawPos.y = entity->posUnknown.y;
         drawPos.x += center;
         RSDK.DrawSprite(&entity->playerNameData, &drawPos, true);
+#if RETRO_USE_PLUS
         if ((globals->playerID & 0xFF) == ID_MIGHTY)
             entity->gotThroughData.frameID = 2;
         else
+#endif
             entity->gotThroughData.frameID = 0;
         RSDK.DrawSprite(&entity->gotThroughData, &drawPos, true);
         drawPos.x = entity->posUnknown3.x;
@@ -157,7 +159,7 @@ void ActClear_Draw()
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
     if (globals->gameMode == MODE_TIMEATTACK) {
-        Game_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
+        ActClear_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
         drawPos.y -= 0xE0000;
         if (!entity->field_80 || entity->field_80 == 1 && Zone->timer & 8)
@@ -268,18 +270,28 @@ void ActClear_Create(void *data)
             StatInfo *statPtr = NULL;
             ushort time       = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
             switch (globals->playerID & 0xFF) {
-                case ID_SONIC: statPtr = Game_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
-                case ID_TAILS: statPtr = Game_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
-                case ID_KNUCKLES: statPtr = Game_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 3, time, player1->rings, player1->score); break;
-                case ID_MIGHTY: statPtr = Game_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 4, time, player1->rings, player1->score); break;
+                case ID_SONIC: statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
+                case ID_TAILS: statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
+                case ID_KNUCKLES:
+                    statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 3, time, player1->rings, player1->score);
+                    break;
+#if RETRO_USE_PLUS
+                case ID_MIGHTY:
+                    statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 4, time, player1->rings, player1->score);
+                    break;
+#endif
                 default:
+#if RETRO_USE_PLUS
                     if ((globals->playerID & 0xFF) == ID_RAY)
-                        statPtr = Game_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 5, time, player1->rings, player1->score);
+                        statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 5, time, player1->rings, player1->score);
                     else
-                        statPtr = Game_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score);
+#endif
+                        statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score);
                     break;
             }
+#if RETRO_USE_PLUS
             User.TryTrackStat(statPtr);
+#endif
         }
 
         if (!ActClear->field_30) {
@@ -296,9 +308,12 @@ void ActClear_Create(void *data)
                 case 4: entity->scoreBonus = 500; break;
                 case 5: entity->scoreBonus = 100; break;
                 case 9:
-                    if (!(globals->medalMods & MEDAL_NOTIMEOVER) && globals->gameMode != MODE_ENCORE && !RSDK_sceneInfo->debugMode
-                        && globals->gameMode < MODE_TIMEATTACK && RSDK_sceneInfo->seconds == 59) {
-                        entity->scoreBonus = 100000;
+                    if (!getMod(MEDAL_NOTIMEOVER) && !RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK
+                        && RSDK_sceneInfo->seconds == 59) {
+#if RETRO_USE_PLUS
+                        if (globals->gameMode != MODE_ENCORE)
+#endif
+                            entity->scoreBonus = 100000;
                     }
                     break;
                 default: break;
@@ -308,8 +323,12 @@ void ActClear_Create(void *data)
         entity->dword6C        = globals->coolBonus[0];
         globals->initCoolBonus = 0;
         if (globals->gameMode == MODE_TIMEATTACK) {
-            entity->time     = Game_DB_SetScore(globals->menuParam[92], globals->menuParam[91], globals->menuParam[93],
-                                            RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
+#if RETRO_USE_PLUS
+            entity->time = TimeAttackData_SetScore(globals->menuParam[92], globals->menuParam[91], globals->menuParam[93],
+                                                   RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
+#else
+
+#endif
             entity->field_7C = 0;
             entity->field_80 = 0;
         }
@@ -332,8 +351,10 @@ void ActClear_Create(void *data)
         switch (globals->playerID & 0xFF) {
             case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 1); break;
             case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 2); break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 3); break;
             case ID_RAY: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 4); break;
+#endif
             default: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 0); break;
         }
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 4, &entity->gotThroughData, true, 0);
@@ -398,8 +419,9 @@ void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
                 } while (i > 0);
             }
         }
-        if (maxVals <= 0) {
-            int digit = 0;
+
+        if (maxVals > 0) {
+            int digit = 1;
             do {
                 entity->data2.frameID = value / mult % 10;
                 RSDK.DrawSprite(&entity->data2, pos, true);
@@ -903,7 +925,7 @@ void ActClear_ForcePlayerOnScreen()
     }
 }
 
-StatInfo *Game_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score)
+StatInfo *ActClear_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score)
 {
     stat->statID = 0;
     stat->name   = "ACT_CLEAR";
@@ -915,44 +937,18 @@ StatInfo *Game_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, i
     stat->data[4] = (void *)time;
     stat->data[5] = (void *)rings;
     stat->data[6] = (void *)score;
+
+#if !RETRO_USE_PLUS
+    if (APICallback->TrackActClear)
+        APICallback->TrackActClear(Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
+    else
+        Game_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
+#endif
+
     return stat;
 }
 
-int Game_DB_SetScore(byte zone, byte charID, byte act, int encore, int dst)
-{
-    if ((byte)(dst - 1) > 2)
-        return 0;
-
-    if (!TimeAttackData->status || charID != TimeAttackData->characterID || zone != TimeAttackData->zoneID || act != TimeAttackData->act
-        || encore != TimeAttackData->encore) {
-        Game_ConfigureTableView(zone, charID, act, encore);
-    }
-
-    int unknown = User.GetUserDBUnknown(globals->taTableID, dst - 1);
-    if (unknown == -1)
-        return 0;
-    dst = 0;
-    User.Unknown39(globals->taTableID, unknown, 4, "score", &dst);
-    return dst;
-}
-
-void Game_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore)
-{
-    Game_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
-    User.Unknown31(globals->taTableID);
-    User.Unknown33(globals->taTableID, 2, "zoneID", &zoneID);
-    User.Unknown33(globals->taTableID, 2, "act", &act);
-    User.Unknown33(globals->taTableID, 2, "characterID", &characterID);
-    User.Unknown33(globals->taTableID, 2, "encore", &encore);
-    User.Unknown34(globals->taTableID, 4, "score", NULL);
-    TimeAttackData->status      = 1;
-    TimeAttackData->zoneID      = zoneID;
-    TimeAttackData->act         = act;
-    TimeAttackData->characterID = characterID;
-    TimeAttackData->encore      = encore & 1;
-}
-
-void Game_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr)
+void ActClear_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr)
 {
     int m;
     int s;

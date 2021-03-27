@@ -9,6 +9,9 @@ void DebugMode_Update()
     bool32 flag = false;
 #if RETRO_USE_PLUS
     User.SetAchievementStatus(0);
+#else
+    if (!APICallback->achievementsDisabled)
+        APICallback->achievementsDisabled = true;
 #endif
     if (Zone)
         Zone->stageFinishCallback = NULL;

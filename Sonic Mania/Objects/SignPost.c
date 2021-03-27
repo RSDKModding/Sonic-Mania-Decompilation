@@ -9,15 +9,9 @@ void SignPost_Update()
         entity->state();
 }
 
-void SignPost_LateUpdate()
-{
+void SignPost_LateUpdate() {}
 
-}
-
-void SignPost_StaticUpdate()
-{
-
-}
+void SignPost_StaticUpdate() {}
 
 void SignPost_Draw()
 {
@@ -25,7 +19,7 @@ void SignPost_Draw()
     Vector2 drawPos;
     if (entity->state) {
         entity->drawFX = FX_SCALE;
-        drawPos.y           = entity->position.y;
+        drawPos.y      = entity->position.y;
 
         AnimationData *face = &entity->eggPlateAnim;
         if (entity->rotation <= 128 || entity->rotation >= 384)
@@ -65,7 +59,7 @@ void SignPost_Draw()
     }
 }
 
-void SignPost_Create(void* data)
+void SignPost_Create(void *data)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
 
@@ -83,8 +77,10 @@ void SignPost_Create(void* data)
             switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 2, &entity->facePlateAnim, true, 0); break;
+#if RETRO_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 3, &entity->facePlateAnim, true, 0); break;
                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 4, &entity->facePlateAnim, true, 0); break;
+#endif
                 default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 0, &entity->facePlateAnim, true, 0); break;
             }
             RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &entity->postTopData, true, 0);
@@ -114,9 +110,9 @@ void SignPost_Create(void* data)
             }
             entity->visible   = true;
             entity->drawOrder = Zone->drawOrderLow;
-            entity->spinSpeed      = 0x3000;
-            entity->spinCount      = 8;
-            entity->maxAngle       = 0x10000;
+            entity->spinSpeed = 0x3000;
+            entity->spinCount = 8;
+            entity->maxAngle  = 0x10000;
             entity->scale.y   = 512;
 
             switch (entity->type) {
@@ -189,8 +185,8 @@ void SignPost_StageLoad()
 
 void SignPost_DebugSpawn()
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK.CreateEntity(SignPost->objectID, 0, RSDK_sceneInfo->entity->position.x,
-                                                RSDK_sceneInfo->entity->position.y);
+    EntitySignPost *entity =
+        (EntitySignPost *)RSDK.CreateEntity(SignPost->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
     entity->debugObj = true;
 }
 void SignPost_DebugDraw()
@@ -216,7 +212,7 @@ void SignPost_SpinSpeed()
         --entity->spinCount;
         if (!entity->spinCount) {
             entity->spinSpeed                    = 0;
-            entity->angle                   = 0x10000;
+            entity->angle                        = 0x10000;
             entity->facePlateAnim.animationSpeed = 1;
         }
     }
@@ -226,21 +222,21 @@ void SignPost_SpawnSparkle()
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     if (!(Zone->timer & 3)) {
-        EntityRing *ring   = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000),
-                                              entity->position.y + RSDK.Rand(-0x200000, 0x80000));
-        ring->state        = Ring_State_Sparkle;
-        ring->stateDraw    = Ring_StateDraw_Sparkle;
-        ring->active  = ACTIVE_NORMAL;
-        ring->visible = false;
+        EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000),
+                                                           entity->position.y + RSDK.Rand(-0x200000, 0x80000));
+        ring->state      = Ring_State_Sparkle;
+        ring->stateDraw  = Ring_StateDraw_Sparkle;
+        ring->active     = ACTIVE_NORMAL;
+        ring->visible    = false;
         RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &ring->animData, true, 0);
         int cnt = ring->animData.frameCount;
         if (ring->animData.animationID == 2) {
             ring->alpha = 224;
             cnt >>= 1;
         }
-        ring->maxFrameCount       = cnt - 1;
+        ring->maxFrameCount           = cnt - 1;
         ring->animData.animationSpeed = 6;
-        entity->sparkleType       = (entity->sparkleType + 1) % 3;
+        entity->sparkleType           = (entity->sparkleType + 1) % 3;
     }
 }
 void SignPost_State_SetupCompetition()
@@ -282,8 +278,8 @@ void SignPost_State_CompetitionFinish()
             EntityZone *zone            = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
             zone->screenID              = 4;
             zone->timer                 = 0;
-            zone->fadeTimer                 = 10;
-            zone->fadeColour                 = 0;
+            zone->fadeTimer             = 10;
+            zone->fadeColour            = 0;
             zone->state                 = Zone_Unknown15;
             zone->stateDraw             = Zone_Unknown12;
             zone->visible               = 1;
@@ -311,8 +307,8 @@ void SignPost_State_Launched()
 }
 void SignPost_State_Fall()
 {
-    EntitySignPost *entity              = (EntitySignPost *)RSDK_sceneInfo->entity;
-    entity->active = ACTIVE_NORMAL;
+    EntitySignPost *entity      = (EntitySignPost *)RSDK_sceneInfo->entity;
+    entity->active              = ACTIVE_NORMAL;
     RSDK_sceneInfo->timeEnabled = false;
     if (entity->type == 1) {
         entity->type = 0;
@@ -320,13 +316,15 @@ void SignPost_State_Fall()
             switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 2, &entity->facePlateAnim, true, 0); break;
+#if RETRO_USE_PLUS
                 case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 3, &entity->facePlateAnim, true, 0); break;
                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 4, &entity->facePlateAnim, true, 0); break;
+#endif
                 default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 0, &entity->facePlateAnim, true, 0); break;
             }
         }
     }
-    
+
     EntityPlayer *player = NULL;
     while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
         if (entity->velocity.y >= 0) {
@@ -364,7 +362,9 @@ void SignPost_State_Fall()
         if (entity->position.x < (RSDK_screens->position.x + 32) << 16) {
             entity->velocity.x = -entity->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 1, 0, 0x180000, 0, 1)) { entity->velocity.x = -entity->velocity.x; }
+        else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 1, 0, 0x180000, 0, 1)) {
+            entity->velocity.x = -entity->velocity.x;
+        }
     }
 
     entity->velocity.y += 0xC00;
@@ -374,22 +374,27 @@ void SignPost_State_Fall()
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, entity, &SignPost->itemBoxHitbox)) {
                     RSDK.PlaySFX(SignPost->sfx_BubbleBounce, 0, 255);
-                    itemBox->velocity.y      = -0x50000;
-                    itemBox->hidden          = 0;
-                    itemBox->state           = ItemBox_State_Falling;
+                    itemBox->velocity.y = -0x50000;
+                    itemBox->hidden     = 0;
+                    itemBox->state      = ItemBox_State_Falling;
                     entity->itemBounceCount++;
-                    entity->velocity.y  = -0x20000;
+                    entity->velocity.y = -0x20000;
+#if RETRO_USE_PLUS
                     if (entity->itemBounceCount == 2)
                         User.UnlockAchievement("ACH_SIGNPOST");
+#else
+                    if (entity->itemBounceCount == 2)
+                        APICallback_UnlockAchievement("ACH_SIGNPOST");
+#endif
                 }
             }
         }
         if (entity->velocity.y >= 0) {
             RSDK.PlaySFX(SignPost->sfx_Slide, 0, 255);
-            entity->spinCount       = 4;
+            entity->spinCount  = 4;
             entity->velocity.y = 0;
             Music_FadeOut(0.025);
-            entity->state           = SignPost_State_Land;
+            entity->state = SignPost_State_Land;
         }
     }
 }
@@ -428,7 +433,6 @@ void SignPost_CheckTouch()
                         entity->activePlayers |= 1 << p;
                     }
 
-                    
                     if (flag) {
                         // if (!((1 << p) & entity->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         //    Announcer_Unknown2(player->camera->screenID);
@@ -451,8 +455,10 @@ void SignPost_CheckTouch()
                                 switch (player->characterID) {
                                     case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
                                     case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 2, &entity->facePlateAnim, true, 0); break;
+#if RETRO_USE_PLUS
                                     case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 3, &entity->facePlateAnim, true, 0); break;
                                     case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 4, &entity->facePlateAnim, true, 0); break;
+#endif
                                     default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 0, &entity->facePlateAnim, true, 0); break;
                                 }
                                 RSDK.PlaySFX(SignPost->sfx_SignPost2P, 0, 255);
@@ -478,6 +484,7 @@ void SignPost_CheckTouch()
                             entity->state = SignPost_State_CompetitionFinish;
                         }
                         else {
+#if RETRO_USE_PLUS
                             if (globals->gameMode == MODE_ENCORE) {
                                 switch (globals->playerID & 0xFF) {
                                     case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 1, &entity->facePlateAnim, true, 0); break;
@@ -487,6 +494,7 @@ void SignPost_CheckTouch()
                                     default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, 0, &entity->facePlateAnim, true, 0); break;
                                 }
                             }
+#endif
 
                             RSDK_sceneInfo->timeEnabled = false;
                             if (vel >= 0x40000) {
@@ -524,27 +532,31 @@ void SignPost_HandleCompetition()
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
         if (player->objectID == Player->objectID && !player->sidekick) {
             if (globals->gameMode == MODE_COMPETITION) {
-                int ex                 = entity->position.x;
-                int ey = entity->position.y;
+                int ex             = entity->position.x;
+                int ey             = entity->position.y;
                 entity->position.x = x;
                 entity->position.y = y;
+#if RETRO_USE_PLUS
                 if (!player->isGhost) {
+#endif
                     Hitbox *otherHitbox = Player_GetHitbox(player);
                     bool32 flag         = RSDK.CheckObjectCollisionTouchBox(entity, &hitbox, player, otherHitbox);
                     entity->position.x  = ex;
                     entity->position.y  = ey;
 
                     if (flag) {
-                        Zone->screenBoundsL1[p]  = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
+                        Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
                         Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
                         if (globals->gameMode == MODE_COMPETITION)
                             Zone->playerBoundActiveR[p] = 1;
                     }
+#if RETRO_USE_PLUS
                 }
                 else {
                     entity->position.x = ex;
                     entity->position.y = ey;
                 }
+#endif
             }
             else {
                 if (entity->position.x - player->position.x < 0x1000000 || entity->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
@@ -558,15 +570,9 @@ void SignPost_HandleCompetition()
     }
 }
 
-void SignPost_EditorDraw()
-{
+void SignPost_EditorDraw() {}
 
-}
-
-void SignPost_EditorLoad()
-{
-
-}
+void SignPost_EditorLoad() {}
 
 void SignPost_Serialize()
 {
@@ -576,4 +582,3 @@ void SignPost_Serialize()
     RSDK_EDITABLE_VAR(SignPost, VAR_ENUM, vsExtendTop);
     RSDK_EDITABLE_VAR(SignPost, VAR_ENUM, vsExtendBottom);
 }
-

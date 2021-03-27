@@ -96,7 +96,11 @@ void SPZ2Setup_StageLoad()
     Animals->animalType1 = 3;
     Animals->animalType2 = 11;
 
+#if RETRO_USE_PLUS
     if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
+#else
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->atlEnabled) {
+#endif
         if (!Game_CheckStageReload()) {
             Zone->screenBoundsL1[0] = 256 - RSDK_screens->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
@@ -104,7 +108,11 @@ void SPZ2Setup_StageLoad()
         }
     }
 
+#if RETRO_USE_PLUS
     if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct2()) {
+#else
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct2()) {
+#endif
         EntitySPZ2Outro *entity = NULL;
         if (RSDK.GetEntities(SPZ2Outro->objectID, (Entity **)&entity)) {
             RSDK.BreakForeachLoop();
@@ -113,11 +121,13 @@ void SPZ2Setup_StageLoad()
         Zone->stageFinishCallback = SPZ2Setup_SetupOutro;
     }
 
+#if RETRO_USE_PLUS
     if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(4, "EncoreSPZ1.act", 255);
         RSDK.LoadPalette(0, "EncoreSPZ2.act", 255);
         RSDK.CopyPalette(0, 128, 5, 128, 128);
     }
+#endif
 
     SPZ2Setup->fgLow->scrollInfo[0].deform  = true;
     SPZ2Setup->fgHigh->scrollInfo[0].deform = true;

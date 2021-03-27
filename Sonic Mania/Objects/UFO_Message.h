@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectUFO_Message;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    int timer2;
+    int timer;
+    AnimationData data1;
+    AnimationData data2;
+    int field_94;
+    int field_98;
 } EntityUFO_Message;
 
 // Object Struct
@@ -28,6 +36,8 @@ void UFO_Message_EditorLoad();
 void UFO_Message_Serialize();
 
 // Extra Entity Functions
-
+void UFO_Message_Unknown1();
+void UFO_Message_Unknown2();
+void UFO_Message_Unknown3();
 
 #endif //!OBJ_UFO_MESSAGE_H

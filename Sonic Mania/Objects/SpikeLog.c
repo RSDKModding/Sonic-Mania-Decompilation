@@ -57,6 +57,7 @@ void SpikeLog_State_Main()
             if ((entity->data.frameID & 0xFFFFFFFC) != 8)
                 continue;
             if (Player_CheckCollisionTouch(player, entity, &SpikeLog->hitbox)) {
+#if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY) {
                     int anim = player->playerAnimData.animationID;
                     if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
@@ -79,14 +80,21 @@ void SpikeLog_State_Main()
                         Player_CheckHit(player, entity);
                 }
                 else {
+#endif
                     Player_CheckHit(player, entity);
+#if RETRO_USE_PLUS
                 }
+#endif
             }
         }
         else {
             if (Player_CheckCollisionTouch(player, entity, &SpikeLog->hitbox)) {
                 if (!SpikeLog->hasAchievement) {
+#if RETRO_USE_PLUS
                     User.UnlockAchievement("ACH_GHZ");
+#else
+                    APICallback_UnlockAchievement("ACH_GHZ");
+#endif
                     SpikeLog->hasAchievement = true;
                 }
                 RSDK.CreateEntity(BurningLog->objectID, (void *)0x10, entity->position.x, entity->position.y);

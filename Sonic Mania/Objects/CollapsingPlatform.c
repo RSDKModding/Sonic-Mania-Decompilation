@@ -10,6 +10,7 @@ void CollapsingPlatform_Update()
         entity->visible = DebugMode->debugActive;
 
     if (entity->collapseDelay) {
+#if RETRO_USE_PLUS
         if (Player) {
             EntityPlayer *player = NULL;
             while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
@@ -28,6 +29,7 @@ void CollapsingPlatform_Update()
                 }
             }
         }
+#endif
         if (--entity->collapseDelay == 0) {
             entity->state();
             RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
@@ -45,9 +47,13 @@ void CollapsingPlatform_Update()
         EntityPlayer *player = NULL;
         while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)
-                && (!entity->mightyOnly || player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) && !player->sidekick
+#if RETRO_USE_PLUS
+                && (!entity->mightyOnly || player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) 
+#endif
+                && !player->sidekick
                 && player->onGround && !player->collisionMode && !entity->eventOnly && entity->delay < 0xFFFF) {
                 entity->playerPos.x = player->position.x;
+#if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     RSDK.BreakForeachLoop();
                     entity->state();
@@ -60,6 +66,7 @@ void CollapsingPlatform_Update()
                         RSDK.ResetEntityPtr(entity, 0, 0);
                     }
                 }
+#endif
             }
         }
         if (entity->playerPos.x) {

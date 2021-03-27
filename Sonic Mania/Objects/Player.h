@@ -70,6 +70,7 @@ enum ShieldTypes {
 };
 
 // Object Class
+#if RETRO_USE_PLUS
 typedef struct {
     RSDK_OBJECT
     int sonicPhysicsTable[0x40];
@@ -77,21 +78,21 @@ typedef struct {
     int knuxPhysicsTable[0x40];
     int mightyPhysicsTable[0x40];
     int rayPhysicsTable[0x40];
-    uint superPalette_Sonic[18];
-    uint superPalette_Sonic_CPZ[18];
-    uint superPalette_Sonic_HCZ[18];
-    uint superPalette_Tails[18];
-    uint superPalette_Tails_CPZ[18];
-    uint superPalette_Tails_HCZ[18];
-    uint superPalette_Knux[18];
-    uint superPalette_Knux_CPZ[18];
-    uint superPalette_Knux_HCZ[18];
-    uint superPalette_Mighty[18];
-    uint superPalette_Mighty_CPZ[18];
-    uint superPalette_Mighty_HCZ[18];
-    uint superPalette_Ray[18];
-    uint superPalette_Ray_CPZ[18];
-    uint superPalette_Ray_HCZ[18];
+    colour superPalette_Sonic[18];
+    colour superPalette_Sonic_CPZ[18];
+    colour superPalette_Sonic_HCZ[18];
+    colour superPalette_Tails[18];
+    colour superPalette_Tails_CPZ[18];
+    colour superPalette_Tails_HCZ[18];
+    colour superPalette_Knux[18];
+    colour superPalette_Knux_CPZ[18];
+    colour superPalette_Knux_HCZ[18];
+    colour superPalette_Mighty[18];
+    colour superPalette_Mighty_CPZ[18];
+    colour superPalette_Mighty_HCZ[18];
+    colour superPalette_Ray[18];
+    colour superPalette_Ray_CPZ[18];
+    colour superPalette_Ray_HCZ[18];
     int field_93C;
     int playerCount;
     ushort upState;
@@ -155,6 +156,73 @@ typedef struct {
     bool32 (*field_A6C)(int);
     int field_A70;
 } ObjectPlayer;
+#else
+typedef struct {
+    RSDK_OBJECT
+    int playerCount;
+    int sonicPhysicsTable[64];
+    int tailsPhysicsTable[64];
+    int knuxPhysicsTable[64];
+    ushort upState;
+    ushort downState;
+    ushort leftState;
+    ushort rightState;
+    ushort jumpPressState;
+    ushort jumpHoldState;
+    int flyCarryPosA;
+    int flyCarryPosB;
+    Vector2 flyCarryPositions[16];
+    Vector2 curFlyCarryPos;
+    int p2UnknownInputTimer;
+    int jumpInDelay;
+    int p2InputDelay;
+    int rings;
+    int ringExtraLife;
+    int savedTargetScore;
+    int powerups;
+    int savedLives;
+    int savedScore;
+    int savedScore1UP;
+    ushort sonicSpriteIndex;
+    ushort superSpriteIndex;
+    ushort tailsSpriteIndex;
+    ushort tailsTailsSpriteIndex;
+    ushort knuxSpriteIndex;
+    colour superPalette_Sonic[18];
+    colour superPalette_Sonic_CPZ[18];
+    colour superPalette_Sonic_HCZ[18];
+    colour superPalette_Tails[18];
+    colour superPalette_Tails_CPZ[18];
+    colour superPalette_Tails_HCZ[18];
+    colour superPalette_Knux[18];
+    colour superPalette_Knux_CPZ[18];
+    colour superPalette_Knux_HCZ[18];
+    ushort field_65E;
+    ushort sfx_Jump;
+    ushort sfx_Roll;
+    ushort sfx_Charge;
+    ushort sfx_Release;
+    ushort sfx_PeelCharge;
+    ushort sfx_PeelRelease;
+    ushort sfx_Dropdash;
+    ushort sfx_LoseRings;
+    ushort sfx_Hurt;
+    ushort field_672;
+    ushort sfx_Skidding;
+    ushort sfx_Grab;
+    ushort sfx_Flying;
+    ushort field_67A;
+    bool32 playingFlySFX;
+    ushort sfx_Tired;
+    ushort field_682;
+    bool32 playingTiredSFX;
+    ushort sfx_Land;
+    ushort sfx_Slide;
+    ushort sfx_Outtahere;
+    ushort sfx_Transform2;
+    bool32 gotHit[4];
+} ObjectPlayer;
+#endif
 
 // Entity Class
 typedef struct {
@@ -248,8 +316,10 @@ typedef struct {
     char field_1E9;
     char field_1EA;
     char field_1EB;
-    int forceJumpIn;
-    int isGhost;
+    bool32 forceJumpIn;
+#if RETRO_USE_PLUS
+    bool32 isGhost;
+#endif
     int maxGlideSpeed;
     char field_1F8;
     char field_1F9;
@@ -281,31 +351,16 @@ typedef struct {
     char field_213;
     void *entPtr;
     int field_218;
-    char field_21C;
-    char field_21D;
-    char field_21E;
-    char field_21F;
-    char field_220;
-    char field_221;
-    char field_222;
-    char field_223;
-    char field_224;
-    char field_225;
-    char field_226;
-    char field_227;
-    char field_228;
-    char field_229;
-    char field_22A;
-    char field_22B;
-    char field_22C;
-    char field_22D;
-    char field_22E;
-    char field_22F;
-    char field_230;
-    char field_231;
-    char field_232;
-    char field_233;
+    int field_21C;
+#if RETRO_USE_PLUS
+    int field_220;
+    int field_224;
+    int field_228;
+    int field_22C;
+    int field_22F;
+    int field_230;
     int uncurlTimer;
+#endif
 } EntityPlayer;
 
 // Object Struct
@@ -336,8 +391,10 @@ bool32 Player_CheckKeyPress();
 void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane);
 void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane);
 Entity* Player_Unknown2();
-Entity* Player_Unknown3();
+Entity *Player_Unknown3();
+#if RETRO_USE_PLUS
 void Player_Unknown4();
+#endif
 void Player_Unknown5(EntityPlayer *player);
 void Player_Unknown7();
 void Player_HandleDeath(EntityPlayer *player);

@@ -59,14 +59,18 @@ void TitleLogo_Create(void *data)
                 break;
             case 6: entity->state = TitleLogo_Unknown3; break;
             case 7:
+#if RETRO_USE_PLUS
                 if (User.CheckDLC(DLC_PLUS)) {
                     RSDK.SetSpriteAnimation(TitleLogo->plusIndex, 0, &entity->data1, true, 0);
                     entity->storeY = entity->position.y;
                 }
                 else {
-                    RSDK.ResetEntityPtr(entity, 0, 0);
+#endif
+                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
                     return;
+#if RETRO_USE_PLUS
                 }
+#endif
                 break;
             default: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, entity->type + 2, &entity->data1, true, 0); break;
         }
@@ -109,19 +113,31 @@ void TitleLogo_Unknown1()
         case 0:
         case 5: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 0); break;
         case 1:
+#if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_SWITCH)
+#else
+            if (RSDK_info->platformID == PLATFORM_SWITCH)
+#endif
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 2);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 1);
             break;
         case 2:
+#if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_XB1 || RSDK_sku->platform == PLATFORM_SWITCH)
+#else
+            if (RSDK_info->platformID == PLATFORM_XB1 || RSDK_info->platformID == PLATFORM_SWITCH)
+            #endif
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 4);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 3);
             break;
         case 3:
+#if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_SWITCH)
+#else
+            if (RSDK_info->platformID == PLATFORM_SWITCH)
+#endif
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 6);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 5);
@@ -181,7 +197,9 @@ void TitleLogo_Unknown5()
     RSDK_THIS(TitleLogo);
     if (entity->timer <= 0) {
         entity->timer = RSDK.Rand(120, 240);
+#if RETRO_USE_PLUS
         RSDK.SetSpriteAnimation(TitleLogo->plusIndex, 1, &entity->data2, true, 0);
+#endif
         entity->state = TitleLogo_Unknown6;
     }
     else {

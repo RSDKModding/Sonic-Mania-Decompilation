@@ -20,8 +20,10 @@ void BSS_Setup_Update()
         RSDK.CopyPalette(2, 16 * entity->paletteLine, 0, 144, 16);
     }
 
+#if RETRO_USE_PLUS
     if ((byte)(globals->menuParam[22] >> 8) != 1 && !entity->dwordC8 && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM[62];
+#endif
 }
 
 void BSS_Setup_LateUpdate() {}
@@ -204,7 +206,11 @@ void BSS_Setup_StageLoad()
     if ((byte)(globals->menuParam[22] >> 8) == 1) {
         TextInfo info;
         Localization_GetString(&info, STR_RPC_PLAYING);
+#if RETRO_USE_PLUS
         User.SetRichPresence(PRESENCE_GENERIC, &info);
+#else
+        APICallback_SetRichPresence(PRESENCE_GENERIC, &info);
+#endif
     }
 }
 
@@ -559,10 +565,17 @@ void BSS_Setup_HandleSteppedObjects()
                             if (medalType)
                                 SaveGame_GetMedal(pos, medalType);
 
+#if RETRO_USE_PLUS
                             if (saveRAM[30] && saveRAM[71] == 0x1F)
                                 User.UnlockAchievement("ACH_GOLD_MEDAL");
                             if (saveRAM[31] && saveRAM[72] == 0x1F)
                                 User.UnlockAchievement("ACH_SILVER_MEDAL");
+#else
+                            if (saveRAM[30] && saveRAM[71] == 0x1F)
+                                APICallback_UnlockAchievement("ACH_GOLD_MEDAL");
+                            if (saveRAM[31] && saveRAM[72] == 0x1F)
+                                APICallback_UnlockAchievement("ACH_SILVER_MEDAL");
+#endif
                         }
                     }
                 }

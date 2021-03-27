@@ -31,7 +31,7 @@ void LoadScene()
 #if RETRO_USE_PLUS
     debugValCnt = 0;
 #endif
-    lookUpBuffer = NULL;
+    lookupTable = NULL;
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
 #if RETRO_USE_PLUS
@@ -101,7 +101,7 @@ void LoadScene()
 
     for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
         MEM_ZERO(drawLayers[l]);
-        drawLayers[l].visible = true;
+        drawLayers[l].sorted = true;
     }
 
     ClearUnusedStorage(DATASET_STG);
@@ -355,23 +355,12 @@ void LoadSceneFile() {
             ReadHash(&info, hashBuf);
 
             int objID = 0;
-#if !RETRO_USE_ORIGINAL_CODE
-            bool32 found = false;
-#endif
             for (int o = 0; o < sceneInfo.classCount; ++o) {
                 if (HASH_MATCH(hashBuf, objectList[stageObjectIDs[o]].hash)) {
                     objID = o;
-#if !RETRO_USE_ORIGINAL_CODE
-                    found = true;
-#endif
                     break;
                 }
             }
-
-#if !RETRO_USE_ORIGINAL_CODE
-            if (!found)
-                printLog(SEVERITY_WARN, "WARNING: stage object %d is unimplimented!", i);
-#endif
 
             ObjectInfo *obj = &objectList[stageObjectIDs[objID]];
             byte varCnt     = ReadInt8(&info);
@@ -413,6 +402,8 @@ void LoadSceneFile() {
                     entity = &entList[slotID];
                 else
                     entity = &entList[SCENEENTITY_COUNT - slotID];
+                if (entity->objectID)
+                    printf("wait");
 
                 entity->objectID = objID;
 #if RETRO_USE_PLUS
@@ -527,7 +518,7 @@ void LoadSceneFile() {
 
 #if !RETRO_USE_PLUS
         for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
-            memcpy(&objectEntityList[e], &entList[e], sizeof(EntityBase));
+            memcpy(&objectEntityList[e + RESERVE_ENTITY_COUNT], &entList[e], sizeof(EntityBase));
         }
 #endif
         entList = NULL;

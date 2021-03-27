@@ -73,6 +73,7 @@ typedef struct {
     byte field_17B;
     ushort sfx_fail;
     ushort field_17E;
+#if RETRO_USE_PLUS
     byte entityData[16][ENTITY_SIZE];
     byte field_4700;
     byte field_4701;
@@ -107,6 +108,7 @@ typedef struct {
     byte field_471E;
     byte field_471F;
     bool32 swapGameMode;
+#endif
     int field_4724;
     int timeStart;
 } ObjectZone;

@@ -435,8 +435,10 @@ void Water_State_Palette()
                     underwater = false;
             }
             int waterID = 0;
+#if RETRO_USE_PLUS
             if (!player->isGhost)
                 waterID = underwater;
+#endif
             if (!waterID) {
                 if (player->underwater) {
                     EntityWater *childPtr = NULL;
@@ -559,7 +561,11 @@ void Water_State_Palette()
                                 break;
                         }
                         if (alertFlag) {
-                            if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
+                            if (
+#if RETRO_USE_PLUS
+                                globals->gameMode == MODE_ENCORE || 
+#endif
+                                globals->gameMode == MODE_COMPETITION)
                                 RSDK.PlaySFX(Water->sfx_DrownAlert, 0, 255);
                         }
                     }
@@ -783,9 +789,11 @@ void Water_State_Bubble()
                                         player->state                                        = Player_State_Air;
                                         RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
                                     }
+#if RETRO_USE_PLUS
                                     else if (player->state == Player_State_MightyHammerDrop) {
                                         player->state = Player_State_Air;
                                     }
+#endif
                                 }
                                 player->airTimer = 0;
                                 if (!player->sidekick)

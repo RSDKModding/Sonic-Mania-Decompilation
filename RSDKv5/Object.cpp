@@ -593,44 +593,44 @@ void ProcessObjectDrawLists()
                     if (list->callback)
                         list->callback();
 
-                    if (list->visible) {
+                    if (list->sorted) {
                         for (int e = 0; e < list->entityCount; ++e) {
                             for (int e2 = list->entityCount - 1; e2 > e; --e2) {
                                 int slotA = list->entries[e2 - 1];
                                 int slotB = list->entries[e2];
-                                if (objectEntityList[slotA].depth > objectEntityList[slotB].depth) {
+                                if (objectEntityList[slotB].depth > objectEntityList[slotA].depth) {
                                     list->entries[e2 - 1] = slotB;
                                     list->entries[e2]     = slotA;
                                 }
                             }
                         }
+                    }
 
-                        for (int i = 0; i < list->entityCount; ++i) {
-                            sceneInfo.entitySlot = list->entries[i];
-                            validDraw            = false;
-                            sceneInfo.entity     = &objectEntityList[list->entries[i]];
-                            if (sceneInfo.entity->visible) {
-                                if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
-                                    objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
-                                }
-                                sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
+                    for (int i = 0; i < list->entityCount; ++i) {
+                        sceneInfo.entitySlot = list->entries[i];
+                        validDraw            = false;
+                        sceneInfo.entity     = &objectEntityList[list->entries[i]];
+                        if (sceneInfo.entity->visible) {
+                            if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
+                                objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
                             }
+                            sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
                         }
+                    }
 
-                        for (int i = 0; i < list->layerCount; ++i) {
-                            TileLayer *layer = &tileLayers[list->layerDrawList[i]];
+                    for (int i = 0; i < list->layerCount; ++i) {
+                        TileLayer *layer = &tileLayers[list->layerDrawList[i]];
 
-                            if (layer->scanlineCallback)
-                                layer->scanlineCallback(scanlines);
-                            else
-                                ProcessParallax(layer);
-                            switch (layer->behaviour) {
-                                case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
-                                case LAYER_VSCROLL: DrawLayerVScroll(layer); break;
-                                case LAYER_ROTOZOOM: DrawLayerRotozoom(layer); break;
-                                case LAYER_BASIC: DrawLayerBasic(layer); break;
-                                default: break;
-                            }
+                        if (layer->scanlineCallback)
+                            layer->scanlineCallback(scanlines);
+                        else
+                            ProcessParallax(layer);
+                        switch (layer->behaviour) {
+                            case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
+                            case LAYER_VSCROLL: DrawLayerVScroll(layer); break;
+                            case LAYER_ROTOZOOM: DrawLayerRotozoom(layer); break;
+                            case LAYER_BASIC: DrawLayerBasic(layer); break;
+                            default: break;
                         }
                     }
 

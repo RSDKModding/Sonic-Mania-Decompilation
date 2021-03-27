@@ -43,7 +43,7 @@ void GameOver_EditorLoad();
 void GameOver_Serialize();
 
 // Extra Entity Functions
-void GameOver_SaveGameCallback();
+int GameOver_SaveGameCallback(int status);
 void GameOver_Unknown2();
 void GameOver_Unknown3();
 void GameOver_Unknown4();

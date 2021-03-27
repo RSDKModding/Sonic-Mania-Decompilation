@@ -41,22 +41,33 @@ void TitleSetup_StageLoad()
 {
     TextInfo presence;
     Localization_GetString(&presence, STR_RPC_TITLE);
+#if RETRO_USE_PLUS
     User.SetRichPresence(PRESENCE_TITLE, &presence);
     User.SetUserStorageNoSave(false);
-    globals->blueSpheresInit = 0;
+#else
+    APICallback_SetRichPresence(PRESENCE_TITLE, &presence);
+    globals->noSave = false;
+#endif
+    globals->blueSpheresInit = false;
     Game_ClearOptions();
+#if RETRO_USE_PLUS
     User.UserStorageUnknown8();
     User.ClearUserStorageStatus();
+#else
+    APICallback_ClearPrerollErrors();
+#endif
     globals->saveLoaded = false;
     memset(globals->saveRAM, 0, 0x10000);
     globals->optionsLoaded = 0;
     memset(globals->optionsRAM, 0, 0x200);
+#if RETRO_USE_PLUS
     User.ClearUserDB(globals->replayTableID);
     globals->replayTableID     = -1;
     globals->replayTableLoaded = false;
     User.ClearUserDB(globals->taTableID);
     globals->taTableID         = -1;
     globals->taTableLoaded     = false;
+#endif
     TitleSetup->spriteIndex    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
     TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
     TitleSetup->sfx_MenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
@@ -91,10 +102,12 @@ void TitleSetup_CheckCheatCode()
     TitleSetup_HandleCheatInputs();
     if (TitleSetup->cheatCode[0] == 1 && TitleSetup->cheatCode[1] == 1 && TitleSetup->cheatCode[2] == 2 && TitleSetup->cheatCode[3] == 2
         && TitleSetup->cheatCode[4] == 1 && TitleSetup->cheatCode[5] == 1 && TitleSetup->cheatCode[6] == 1 && TitleSetup->cheatCode[7] == 1) {
+#if RETRO_USE_PLUS
         if (!globals->superSecret) {
             RSDK.PlaySFX(TitleSetup->sfx_Ring, 0, 255);
-            globals->superSecret = 1;
+            globals->superSecret = true;
         }
+#endif
     }
 }
 bool32 TitleSetup_IntroCallback()
@@ -180,9 +193,11 @@ void TitleSetup_Unknown7()
     TitleSetup_CheckCheatCode();
     if (entity->timer <= 0) {
         entity->stateDraw = NULL;
+#if RETRO_USE_PLUS
         if (User.CheckDLC(DLC_PLUS))
            entity->state = TitleSetup_SetupLogo_Plus;
         else
+#endif
            entity->state = TitleSetup_SetupLogo_NoPlus;
     }
     else {
@@ -226,7 +241,9 @@ void TitleSetup_SetupLogo_Plus()
                     titleLogo->velocity.y = -0x30000;
                     titleLogo->timer      = 2;
                     titleLogo->state      = TitleLogo_Unknown4;
+#if RETRO_USE_PLUS
                     RSDK.PlaySFX(TitleLogo->sfx_Plus, 0, 255);
+#endif
                     break;
                 case 6: titleLogo->position.y += 0x80000; break;
                 case 7:
@@ -239,8 +256,10 @@ void TitleSetup_SetupLogo_Plus()
                 default: break;
             }
         }
-        
+
+#if RETRO_USE_PLUS
         RSDK.CreateEntity(TitleEggman->objectID, 0, 0, 0xC00000);
+#endif
         entity->timer = 0;
         entity->state = TitleSetup_SetupLogo_NoPlus;
     }
@@ -252,14 +271,23 @@ void TitleSetup_Unknown10()
     bool32 skipped = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
                      || RSDK_controller->keyY.press || RSDK_controller->keyZ.press | RSDK_controller->keyStart.press
                      || RSDK_controller->keyStart.press || RSDK_controller->keySelect.press;
-    bool32 skipped2 = (!RSDK_touchMouse->count && entity->touched) | RSDK_unknown->field_28;
+    bool32 skipped2 = (!RSDK_touchMouse->count && entity->touched)
+#if RETRO_USE_PLUS
+                      || RSDK_unknown->field_28;
+#else
+        ;
+#endif
     entity->touched = RSDK_touchMouse->count > 0;
     if (skipped2 || skipped) {
         RSDK.PlaySFX(TitleSetup->sfx_MenuAccept, 0, 255);
         entity->timer = 0;
         RSDK.LoadScene("Presentation", "Menu");
+#if RETRO_USE_PLUS
         RSDK.ResetControllerAssignments();
         RSDK.AssignControllerID(1, RSDK.MostRecentActiveControllerID(0, 0, 5));
+#else
+
+#endif
         RSDK.SoundUnknown1(Music->slotID);
         entity->state     = TitleSetup_Unknown11;
         entity->stateDraw = TitleSetup_Unknown13;

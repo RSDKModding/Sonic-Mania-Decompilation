@@ -117,32 +117,35 @@ void initUserData()
 #endif
 
 #if !RETRO_USE_PLUS
+        SetFuncPtr("GetConfirmButtonFlip", GetConfirmButtonFlip);
+        SetFuncPtr("LaunchManual", LaunchManual);
         SetFuncPtr("ExitGame", ExitGame);
-        // SetFuncPtr("ClearAchievements", Engine_ClearAchievements);
+        // SetFuncPtr("ClearAchievements", ClearAchievements);
         SetFuncPtr("UnlockAchievement", TryUnlockAchievement);
         SetFuncPtr("FetchLeaderboard", FetchLeaderboard);
-        // SetFuncPtr("LeaderboardStatus", Engine_LeaderboardStatus);
-        // SetFuncPtr("LeaderboardEntryCount", Engine_LeaderboardEntryCount);
-        // SetFuncPtr("LeaderboardReadEntry", Engine_LeaderboardReadEntry);
-        // SetFuncPtr("TrackActClear", Engine_TrackActClear);
-        // SetFuncPtr("TrackTAClear", Engine_TrackTAClear);
-        // SetFuncPtr("TrackEnemyDefeat", Engine_TrackEnemyDefeat);
-        // SetFuncPtr("ClearPrerollErrors", Engine_ClearPrerollErrors);
+        // SetFuncPtr("LeaderboardStatus", GetLeaderboardStatus);
+        // SetFuncPtr("LeaderboardEntryCount", LeaderboardEntryCount);
+        // SetFuncPtr("LeaderboardReadEntry", LeaderboardReadEntry);
+        SetFuncPtr("TrackActClear", TrackActClear);
+        SetFuncPtr("TrackTAClear", TrackTAClear);
+        SetFuncPtr("TrackEnemyDefeat", TrackEnemyDefeat);
+        SetFuncPtr("ClearPrerollErrors", ClearPrerollErrors);
         SetFuncPtr("TryAuth", TryAuth);
-        // SetFuncPtr("GetUserAuthStatus", Engine_GetUserAuthStatus);
+        SetFuncPtr("GetUserAuthStatus", GetUserAuthStatus);
         SetFuncPtr("TryInitStorage", TryInitStorage);
         SetFuncPtr("GetStorageStatus", GetUserStorageStatus);
+        SetFuncPtr("GetUsername", GetUserName);
         SetFuncPtr("LoadUserFile", TryLoadUserFile);
         SetFuncPtr("SaveUserFile", TrySaveUserFile);
         SetFuncPtr("SaveSettingsINI", writeSettings);
         SetFuncPtr("GetUserLanguage", GetUserLanguage);
-        // SetFuncPtr("ControllerIDForInputID", Engine_ControllerIDForInputID);
-        // SetFuncPtr("MostRecentActiveControllerID", Engine_MostRecentActiveControllerID);
-        // SetFuncPtr("AssignControllerID", Engine_AssignControllerID);
+        // SetFuncPtr("ControllerIDForInputID", ControllerIDForInputID);
+        // SetFuncPtr("MostRecentActiveControllerID", MostRecentActiveControllerID);
+        // SetFuncPtr("AssignControllerID", AssignControllerID);
         // SetFuncPtr("ResetControllerAssignments", ResetControllerAssignments);
-        // SetFuncPtr("InputIDIsDisconnected", Engine_InputIDIsDisconnected);
-        // SetFuncPtr("GetControllerType", Engine_GetControllerType);
-        // SetFuncPtr("ShowSteamControllerOverlay", Engine_ShowSteamControllerOverlay);
+        // SetFuncPtr("InputIDIsDisconnected", InputIDIsDisconnected);
+        // SetFuncPtr("GetControllerType", GetControllerType);
+        SetFuncPtr("ShowSteamControllerOverlay", ShowExtensionOverlay);
         SetFuncPtr("SetRichPresence", SetPresence);
 #endif
     }
@@ -176,17 +179,36 @@ void releaseUserData()
 #endif
 }
 
-int GetUserLanguage() { return curSKU.language; }
-int GetUserRegion() { return curSKU.region; }
-int GetUserPlatform() { return curSKU.platform; }
+int GetUserLanguage()
+{
 #if RETRO_USE_PLUS
+    return curSKU.language;
+#else
+    return engineInfo.language;
+#endif
+}
+int GetUserRegion()
+{
+#if RETRO_USE_PLUS
+    return curSKU.region;
+#else
+    return engineInfo.region;
+#endif
+}
+int GetUserPlatform()
+{
+#if RETRO_USE_PLUS
+    return curSKU.platform; 
+#else 
+    return engineInfo.platformID;
+#endif
+}
 int GetConfirmButtonFlip()
 {
     printLog(SEVERITY_NONE, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
     return true;
 }
 void LaunchManual() { printLog(SEVERITY_NONE, "DUMMY LaunchManual()"); }
-#endif
 void ExitGame() { engine.running = false; }
 
 int ShowExtensionOverlay(byte overlay)
@@ -212,6 +234,13 @@ void SetPresence(byte a2, TextInfo *info)
 #endif
     printLog(SEVERITY_NONE, buffer2);
 }
+
+#if !RETRO_USE_PLUS
+void TrackActClear() { printLog(SEVERITY_NONE, "DUMMY TrackActClear()"); }
+void TrackTAClear(byte a1, byte a2, byte a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackTAClear(%d,%d,%d,%d)", a1, a2, a3, a4); }
+void TrackEnemyDefeat() { printLog(SEVERITY_NONE, "DUMMY TrackEnemyDefeat()"); }
+void ClearPrerollErrors() { printLog(SEVERITY_NONE, "DUMMY ClearPrerollErrors()"); }
+#endif
 
 #if RETRO_USE_PLUS
 const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
@@ -264,6 +293,7 @@ void SetFuncPtr(const char *name, void *ptr)
 
         HASH_COPY(functionList[functionListCount].hash, hash);
         functionList[functionListCount].ptr = ptr;
+        functionListCount++;
     }
 }
 
@@ -287,12 +317,14 @@ void *GetFuncPtr(const char *name)
 
 bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int))
 {
-
+#if RETRO_USE_PLUS
     if (!userStorage->noSaveActive) {
+#endif
         LoadUserFile(filename, buffer, bufSize);
 
         if (callback)
             callback(100);
+#if RETRO_USE_PLUS
     }
     else {
         char buffer[0x100];
@@ -301,12 +333,15 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize,
         if (callback)
             callback(500);
     }
+#endif
 
     return false;
 }
 bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress)
 {
+#if RETRO_USE_PLUS
     if (!userStorage->noSaveActive) {
+#endif
         if (compress) {
             // compress lo
         }
@@ -314,6 +349,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
 
         if (callback)
             callback(100);
+#if RETRO_USE_PLUS
     }
     else {
         char buffer[0x100];
@@ -323,16 +359,20 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
         if (callback)
             callback(500);
     }
+#endif
 
     return false;
 }
 bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
 {
+#if RETRO_USE_PLUS
     if (!userStorage->noSaveActive) {
+#endif
         DeleteUserFile(filename);
 
         if (callback)
             callback(100);
+#if RETRO_USE_PLUS
     }
     else {
         char buffer[0x100];
@@ -341,6 +381,7 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
         if (callback)
             callback(500);
     }
+#endif
 
     return false;
 }
@@ -427,6 +468,177 @@ bool32 DeleteUserFile(const char *filename)
     return status == 0;
 }
 
+#if RETRO_USE_PLUS
+int LoadDBFromBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
+{
+    if (*(int *)writeBuffer != 0x80074B1E)
+        return 0;
+    writeBuffer += sizeof(int);
+    writeBuffer += sizeof(int); // used size
+
+    userDB->entryCount = *(ushort *)writeBuffer;
+    writeBuffer += sizeof(ushort);
+
+    userDB->columnCount = *writeBuffer;
+    writeBuffer++;
+
+    for (int c = 0; c < userDB->columnCount; ++c) {
+        userDB->columnSizes[c] = *writeBuffer;
+        writeBuffer++;
+
+        strcpy_s(userDB->columnNames[c], 0x10, (char *)writeBuffer);
+        writeBuffer += 0x10;
+
+        GenerateCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
+    }
+
+    for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
+        userDB->rows[r].uuid = *(uint *)writeBuffer;
+        writeBuffer += sizeof(uint);
+
+        memcpy(&userDB->rows[r].createTime, writeBuffer, sizeof(tm));
+        writeBuffer += sizeof(tm);
+        memcpy(&userDB->rows[r].changeTime, writeBuffer, sizeof(tm));
+        writeBuffer += sizeof(tm);
+
+        for (int c = 0; c < userDB->columnCount; ++c) {
+            userDB->rows[r].values[c].size = *writeBuffer;
+            writeBuffer++;
+
+            memcpy(&userDB->rows[r].values[c].value, writeBuffer, userDB->rows[r].values[c].size);
+            writeBuffer += userDB->rows[r].values[c].size;
+        }
+    }
+
+    userDB->active = true;
+    UpdateUserDBParents(userDB);
+    return 1;
+}
+
+size_t GetUserDBWriteSize(UserDB *userDB)
+{
+    int colSize = 1;
+    if (userDB->columnCount)
+        colSize = (0x10 * userDB->columnCount) + userDB->columnCount + 1;
+    size_t size = colSize + 10;
+
+    for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
+        userDB->rows[r].parent = userDB;
+        int rowSize            = (sizeof(tm) * 2) + sizeof(uint);
+        for (int c = 0; c < userDB->columnCount; ++c) {
+            rowSize += sizeof(byte) + userDB->rows[r].values[c].size;
+        }
+        size += rowSize;
+    }
+
+    return size;
+}
+
+void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
+{
+    int size = 0;
+    if (totalSize >= sizeof(int)) {
+        size                = sizeof(int);
+        *(int *)writeBuffer = 0x80074B1E; // signature
+        writeBuffer += sizeof(int);
+    }
+    if (size + sizeof(int) <= totalSize) {
+        size += sizeof(int);
+        *(int *)writeBuffer = GetUserDBWriteSize(userDB); // used size
+        writeBuffer += sizeof(int);
+    }
+    if (size + sizeof(ushort) <= totalSize) {
+        size += sizeof(ushort);
+        *(ushort *)writeBuffer = userDB->entryCount;
+        writeBuffer += sizeof(ushort);
+    }
+    if (size + sizeof(byte) <= totalSize) {
+        ++size;
+        *writeBuffer++ = userDB->columnCount;
+    }
+
+    for (int c = 0; c < userDB->columnCount; ++c) {
+        if (size + sizeof(byte) <= totalSize) {
+            ++size;
+            *writeBuffer++ = (byte)userDB->columnSizes[c];
+        }
+        if (size + 0x10 <= totalSize) {
+            memset(writeBuffer, 0, 0x10 * sizeof(byte));
+            strcpy_s((char *)writeBuffer, 0x10, userDB->columnNames[c]);
+            size += 0x10;
+            writeBuffer += 0x10;
+        }
+    }
+
+    for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
+        if (size + sizeof(uint) <= totalSize) {
+            size += sizeof(uint);
+            *(uint *)writeBuffer = userDB->rows[r].uuid;
+            writeBuffer += sizeof(uint);
+        }
+        if (size + sizeof(tm) <= totalSize) {
+            memcpy(writeBuffer, &userDB->rows[r].createTime, sizeof(tm));
+            size += sizeof(tm);
+            writeBuffer += sizeof(tm);
+        }
+        if (size + sizeof(tm) <= totalSize) {
+            memcpy(writeBuffer, &userDB->rows[r].changeTime, sizeof(tm));
+            size += sizeof(tm);
+            writeBuffer += sizeof(tm);
+        }
+
+        for (int c = 0; c < userDB->columnCount; ++c) {
+            if (size + sizeof(byte) <= totalSize) {
+                ++size;
+                *writeBuffer++ = (byte)userDB->rows[r].values[c].size;
+            }
+            if (userDB->rows[r].values[c].size + size <= totalSize) {
+                memcpy(writeBuffer, (byte *)&userDB->rows[r].values[c].value, userDB->rows[r].values[c].size);
+                size += userDB->rows[r].values[c].size;
+                writeBuffer += userDB->rows[r].values[c].size;
+            }
+        }
+    }
+
+    if (size < totalSize)
+        memset(writeBuffer, 0, totalSize - size);
+}
+
+int UserDBLoadCB(ushort tableID, int status)
+{
+    if (status == 200) {
+        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (int)userDBStorage, (byte*)userDBStorage->readBuffer[tableID]);
+        if (result) {
+            // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
+        }
+    }
+    else {
+        ClearUserDB(tableID);
+    }
+    RemoveStorageEntry((void **)&userDBStorage->readBuffer[tableID]);
+
+    if (userDBStorage->callbacks[tableID]) {
+        int result                        = userDBStorage->callbacks[tableID](status);
+        userDBStorage->callbacks[tableID] = NULL;
+        return result;
+    }
+    return 0;
+}
+
+int UserDBSaveCB(ushort tableID, int status)
+{
+    RemoveStorageEntry((void**)&userDBStorage->writeBuffer[tableID]);
+    if (status != 200)
+        userDBStorage->userDB[tableID].valid = false;
+
+    if (userDBStorage->callbacks[tableID]) {
+        int result = userDBStorage->callbacks[tableID](status);
+        userDBStorage->callbacks[tableID]                  = NULL;
+        return result;
+    }
+    return 0;
+}
+
 ushort LoadUserDB(const char *filename, int (*callback)(int))
 {
     int tableID = -1;
@@ -455,7 +667,7 @@ ushort LoadUserDB(const char *filename, int (*callback)(int))
     userDB->name   = filename;
     userDB->uuid   = uuid;
     AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
-    // userDBStorage->field_2287C4[tableID] = sub_5ECD20;
+    userDBStorage->loadCallback[tableID] = UserDBLoadCB;
     userDBStorage->callbacks[tableID] = callback;
     TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->saveCallback[tableID]);
     return tableID;
@@ -466,11 +678,11 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
 
     bool32 success = false;
     if (userDB->active) {
-        int totalSize = 0; // GetUserDBWriteSize(userDB);
+        int totalSize = GetUserDBWriteSize(userDB);
         AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
-        // GetUserDBWriteBuffer(totalSize, userDBStorage->writeBuffer[tableID]);
+        SaveDBToBuffer(userDB, totalSize, (byte*)userDBStorage->writeBuffer[tableID]);
         userDBStorage->callbacks[tableID] = callback;
-        // userDBStorage->field_2287C4[tableID] = UserDB_FinishCallbacks;
+        userDBStorage->loadCallback[tableID] = UserDBSaveCB;
         success = TrySaveUserFile(userDB->name, userDBStorage->writeBuffer[tableID], totalSize, userDBStorage->saveCallback[tableID], true);
     }
     else {
@@ -479,26 +691,7 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
     }
     return success;
 }
-
-ushort GetUserDBByID(ushort tableID, uint uuid)
-{
-    if (tableID == (ushort)-1)
-        return -1;
-    if (!uuid)
-        return -1;
-    UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (!userDB->active)
-        return -1;
-    if (!userDB->entryCount)
-        return -1;
-
-    for (int i = 0; i < userDB->entryCount; ++i) {
-        if (uuid == userDB->entries[i].uuid) {
-            return i;
-        }
-    }
-    return -1;
-}
+#endif
 
 int GetSettingsValue(int id)
 {
@@ -518,10 +711,15 @@ int GetSettingsValue(int id)
         case 12: return engine.screenCount;
         case 13: return engine.dimTimer;
         case 14: return engine.streamsEnabled;
-        case 15: return (int)(engine.streamVolume * 1024.0); break;
-        case 16: return (int)(engine.soundFXVolume * 1024.0); break;
-        case 17: return curSKU.language; break;
-        case 20: return settingsChanged; break;
+        case 15: return (int)(engine.streamVolume * 1024.0); 
+        case 16: return (int)(engine.soundFXVolume * 1024.0); 
+        case 17:
+#if RETRO_USE_PLUS
+            return curSKU.language; 
+#else
+            return engineInfo.language;
+#endif
+        case 20: return settingsChanged;
         default: break;
     }
     return 0;
@@ -602,7 +800,13 @@ void SetSettingsValue(int id, int val)
                 settingsChanged      = true;
             }
             break;
-        case 17: curSKU.language = val; break;
+        case 17:
+#if RETRO_USE_PLUS
+            curSKU.language = val; 
+#else
+            engineInfo.language = val;
+#endif
+            break;
         case 18:
             // windowSettings = WindowSettings;
             // gameSettings   = GameSettings;
@@ -631,7 +835,11 @@ void readSettings()
 
     const char *result = "";
 
+#if RETRO_USE_PLUS
     curSKU.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+#else
+    engineInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+#endif
 
     result = iniparser_getstring(ini, "Game:dataFile", "Data.rsdk");
     if (CheckDataFile(result))

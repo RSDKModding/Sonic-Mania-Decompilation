@@ -85,9 +85,7 @@ void ActClear_Unknown10();
 void ActClear_State_ActFinish();
 
 void ActClear_ForcePlayerOnScreen();
-StatInfo *Game_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
-int Game_DB_SetScore(byte zone, byte charID, byte act, int encore, int dst);
-void Game_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore);
-void Game_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr);
+StatInfo *ActClear_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
+void ActClear_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr);
 
 #endif //!OBJ_ACTCLEAR_H

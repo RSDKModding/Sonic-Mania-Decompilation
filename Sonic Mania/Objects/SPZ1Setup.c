@@ -124,19 +124,30 @@ void SPZ1Setup_StageLoad()
 
     Animals->animalType1 = 3;
     Animals->animalType2 = 11;
-    if (globals->gameMode && globals->gameMode != MODE_ENCORE || !globals->enableIntro || Game_CheckStageReload())
+#if RETRO_USE_PLUS
+    if ((globals->gameMode && globals->gameMode != MODE_ENCORE) || !globals->enableIntro || Game_CheckStageReload())
+#else
+    if ((globals->gameMode && globals->gameMode != MODE_MANIA) || !globals->enableIntro || Game_CheckStageReload())
+#endif
         FXFade_StopAll();
 
+#if RETRO_USE_PLUS
     if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct1()) {
+#else
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct1()) {
+#endif
         Zone->forcePlayerOnScreenFlag = true;
         Zone->stageFinishCallback     = SPZ1Setup_SetupActTransition;
     }
-    if (RSDK_sceneInfo->filter & 4) {
+
+#if RETRO_USE_PLUS
+    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreSPZ1.act", 255);
         RSDK.LoadPalette(1, "EncoreSPZ1b1.act", 255);
         RSDK.LoadPalette(2, "EncoreSPZ1b2.act", 255);
         RSDK.LoadPalette(3, "EncoreSPZ1b3.act", 255);
     }
+#endif
 }
 
 void SPZ1Setup_SetupActTransition()

@@ -13,7 +13,7 @@ ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 byte gfxLineBuffer[SCREEN_YSIZE];
 
 int maskColour = 0;
-ushort *lookUpBuffer = NULL;
+ushort *lookupTable = NULL;
 
 #if RETRO_USE_PLUS
 void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)

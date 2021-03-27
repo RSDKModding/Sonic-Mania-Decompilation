@@ -22,6 +22,7 @@ void printLog(SeverityModes severity, const char *message, ...)
         vsprintf(buffer, message, args);
         printf("%s\n", buffer);
         sprintf(buffer, "%s\n", buffer);
+        va_end(args);
 
         if (severity == SEVERITY_WARN) {
             if (sceneInfo.state & ENGINESTATE_FROZEN) {
@@ -107,7 +108,7 @@ void PrintMessage(void *msg, int type)
 {
     if (msg && engine.printConsole) {
         switch (type) {
-            case 0: printLog(SEVERITY_NONE, (const char *)msg); break;
+            case 0: printLog(SEVERITY_NONE, "%s", (const char *)msg); break;
             case 1: printLog(SEVERITY_NONE, "%i", *(signed int *)msg); break;
             case 2: printLog(SEVERITY_NONE, "%i", *(int *)msg, 0); break;
             case 3: printLog(SEVERITY_NONE, "%f", *(float *)msg); break;

@@ -195,6 +195,7 @@ void StarPost_CheckBonusStageEntry()
                 RSDK.PlaySFX(StarPost->sfx_Warp, 0, 254);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 int *saveRAM = SaveGame_GetGlobalData();
+#if RETRO_USE_PLUS
                 if ((User.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Pinball", "");
@@ -210,6 +211,7 @@ void StarPost_CheckBonusStageEntry()
                     RSDK.SoundUnknown1(Music->slotID);
                 }
                 else {
+#endif
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Blue Spheres", "");
                     RSDK_sceneInfo->listPos += globals->blueSpheresID;
@@ -223,7 +225,9 @@ void StarPost_CheckBonusStageEntry()
                     entityZone->visible    = true;
                     entityZone->drawOrder  = 15;
                     RSDK.SoundUnknown1(Music->slotID);
+#if RETRO_USE_PLUS
                 }
+#endif
             }
         }
     }
@@ -337,6 +341,8 @@ void StarPost_State_BallSpin()
     if (!StarPost->hasAchievement && entity->timer == 10) {
 #if RETRO_USE_PLUS
         User.UnlockAchievement("ACH_STARPOST");
+#else
+        APICallback_UnlockAchievement("ACH_STARPOST");
 #endif
         StarPost->hasAchievement = true;
     }

@@ -131,8 +131,10 @@ void SpecialRing_StartWarp()
         saveRAM[30]  = RSDK_sceneInfo->listPos;
         RSDK.LoadScene("Special Stage", "");
         RSDK_sceneInfo->listPos += saveRAM[31];
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK_sceneInfo->listPos += 7;
+#endif
         EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
         zone->screenID   = 4;
         zone->timer      = 0;

@@ -80,11 +80,11 @@ void UFO_Player_Create(void *data)
         if (entity->startingRings > 0)
             UFO_Setup->rings = entity->startingRings;
 
-        UFO_Setup->machQuota1 = entity->machQuota1;
-        UFO_Setup->machQuota2 = entity->machQuota2;
-        UFO_Setup->machQuota3 = entity->machQuota3;
-        entity->angle         = 0x200;
-        entity->onGround      = true;
+        UFO_Setup->machQuotas[0] = entity->machQuota1;
+        UFO_Setup->machQuotas[1] = entity->machQuota2;
+        UFO_Setup->machQuotas[2] = entity->machQuota3;
+        entity->angle            = 0x200;
+        entity->onGround         = true;
         UFO_Player_ChangeMachState();
         entity->inputState   = UFO_Player_ProcessPlayerControl;
         entity->controllerID = 0;
@@ -215,18 +215,18 @@ void UFO_Player_ChangeMachState()
         default: break;
         case 0:
             UFO_Player->maxSpeed = 0x70000;
-            entity->field_84    = 16;
-            entity->field_8C    = 128;
+            entity->field_84     = 16;
+            entity->field_8C     = 128;
             break;
         case 1:
             UFO_Player->maxSpeed = 0xA0000;
-            entity->field_84    = 18;
-            entity->field_8C    = 144;
+            entity->field_84     = 18;
+            entity->field_8C     = 144;
             break;
         case 2:
             UFO_Player->maxSpeed = 0xE0000;
-            entity->field_84    = 20;
-            entity->field_8C    = 160;
+            entity->field_84     = 20;
+            entity->field_8C     = 160;
             break;
     }
 }

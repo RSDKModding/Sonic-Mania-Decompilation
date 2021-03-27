@@ -167,6 +167,8 @@ int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startInde
         return 0;
     if (!info)
         return 0;
+    if (!info->text)
+        return 0;
 
     SpriteAnimation *spr       = &spriteAnimationList[sprIndex];
     if (animID < spr->animCount) {

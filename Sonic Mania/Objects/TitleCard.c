@@ -74,6 +74,7 @@ void TitleCard_Create(void *data)
             entity->dword2EC = entity->dword2EC - dif;
         }
 
+#if RETRO_USE_PLUS
         if (Zone->swapGameMode) {
             Zone->swapGameMode           = false;
             globals->enableIntro         = false;
@@ -101,6 +102,7 @@ void TitleCard_Create(void *data)
             memset(Zone->entityData, 0, ENTITY_SIZE);
             memset(Zone->entityData[8], 0, ENTITY_SIZE);
         }
+#endif
     }
 }
 
@@ -117,6 +119,7 @@ void TitleCard_StageLoad()
 void TitleCard_SetColours()
 {
     RSDK_THIS(TitleCard);
+#if RETRO_USE_PLUS
     if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) {
         entity->colours[0] = 0x3751A2;
         entity->colours[1] = 0xC7525B;
@@ -125,12 +128,15 @@ void TitleCard_SetColours()
         entity->colours[4] = 0x6BAE99;
     }
     else {
+#endif
         entity->colours[0] = 0xF08C18;
         entity->colours[1] = 0x60C0A0;
         entity->colours[2] = 0xF05030;
         entity->colours[3] = 0x4060B0;
         entity->colours[4] = 0xF0C800;
+#if RETRO_USE_PLUS
     }
+#endif
 }
 
 void TitleCard_SetPoints()
@@ -673,7 +679,11 @@ void TitleCard_Unknown12()
         RSDK.DrawQuad(entity->points1, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
     RSDK.DrawQuad(entity->points2, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
     RSDK.DrawQuad(entity->points3, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
+#if RETRO_USE_PLUS
     entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+#else
+    entity->decorationData.frameID = 2 * 0 + 1;
+#endif
     RSDK.DrawSprite(&entity->decorationData, &entity->decorationPos, true);
 }
 
@@ -695,7 +705,11 @@ void TitleCard_Unknown13()
         RSDK.DrawQuad(entity->points4, 4, (entity->colours[3] >> 16) & 0xFF, (entity->colours[3] >> 8) & 0xFF, (entity->colours[3] >> 0) & 0xFF, 0xFF,
                       INK_NONE);
     if (!globals->atlEnabled && globals->suppressTitlecard == false) {
+#if RETRO_USE_PLUS
         entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+#else
+        entity->decorationData.frameID = 2 * 0 + 1;
+#endif
         RSDK.DrawSprite(&entity->decorationData, &entity->decorationPos, true);
     }
 
@@ -745,7 +759,11 @@ void TitleCard_Unknown13()
             else
                 entity->scale.x = entity->dword2F4;
 
-            entity->decorationData.frameID = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE ? 2 : 0;
+#if RETRO_USE_PLUS
+            entity->decorationData.frameID = (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+#else
+            entity->decorationData.frameID = 0;
+#endif
             RSDK.DrawSprite(&entity->decorationData, &entity->drawPos2, true);
 
             entity->scale.x = entity->dword2F4 - 0x100;
@@ -785,12 +803,20 @@ void TitleCard_Unknown14()
                       INK_NONE);
 
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
+#if RETRO_USE_PLUS
         entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+#else
+        entity->decorationData.frameID = 2 * 0 + 1;
+#endif
         RSDK.DrawSprite(&entity->decorationData, &entity->decorationPos, true);
     }
 
     if (entity->actID != 3 && entity->dword2F4 > 0) {
-        entity->decorationData.frameID = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE ? 2 : 0;
+#if RETRO_USE_PLUS
+        entity->decorationData.frameID = (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+#else
+        entity->decorationData.frameID = 0;
+#endif
         RSDK.DrawSprite(&entity->decorationData, &entity->drawPos2, true);
         RSDK.DrawSprite(&entity->actNumbersData, &entity->drawPos2, true);
     }

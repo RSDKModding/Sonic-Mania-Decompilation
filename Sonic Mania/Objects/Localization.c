@@ -19,7 +19,11 @@ void Localization_StageLoad()
         Localization_LoadStrings();
     }
     else {
+#if RETRO_USE_PLUS
         Localization->language = RSDK_sku->language;
+#else
+        Localization->language = RSDK_info->language;
+#endif
         Localization_LoadStrings();
     }
 }

@@ -117,10 +117,11 @@ void GameOver_StageLoad()
     GameOver->activeScreens = 0;
 }
 
-void GameOver_SaveGameCallback()
+int GameOver_SaveGameCallback(int status)
 {
     UIWaitSpinner_WaitReplay();
     RSDK.InitSceneLoad();
+    return 1;
 }
 
 void GameOver_Unknown2()
@@ -359,6 +360,7 @@ void GameOver_Unknown5()
                 saveRAM[25] = 3;
                 saveRAM[26] = 0;
                 saveRAM[27] = 0;
+#if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
                     int id      = -1;
@@ -369,6 +371,7 @@ void GameOver_Unknown5()
                     saveRAM[66]             = globals->characterFlags;
                     saveRAM[67]             = globals->stock;
                 }
+#endif
                 RSDK.LoadScene("Presentation", "Continue");
                 RSDK.InitSceneLoad();
             }
@@ -376,6 +379,7 @@ void GameOver_Unknown5()
                 saveRAM[25] = 3;
                 saveRAM[26] = 0;
                 saveRAM[27] = 0;
+#if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
                     int id      = -1;
@@ -386,8 +390,9 @@ void GameOver_Unknown5()
                     saveRAM[66]             = globals->characterFlags;
                     saveRAM[67]             = globals->stock;
                 }
+#endif
                 UIWaitSpinner_Wait();
-                // SaveGame_SaveFile(GameOver_SaveGameCallback);
+                SaveGame_SaveFile(GameOver_SaveGameCallback);
                 RSDK.LoadScene("Presentation", "Menu");
             }
         }

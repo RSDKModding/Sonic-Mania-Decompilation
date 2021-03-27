@@ -128,9 +128,13 @@ ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
 inline void Init3DScene(ushort sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
-        Scene3D *scn    = &scene3DList[sceneID];
+        Scene3D *scn     = &scene3DList[sceneID];
         scn->vertexCount = 0;
-        scn->faceCount     = 0;
+        scn->faceCount   = 0;
+        memset(scn->vertices, 0, sizeof(Scene3DVertex) * scn->vertLimit);
+        memset(scn->normals, 0, sizeof(Scene3DVertex) * scn->vertLimit);
+        memset(scn->faceVertCounts, 0, sizeof(byte) * scn->vertLimit);
+        memset(scn->zBuffer, 0, sizeof(ZBufferEntry) * scn->vertLimit);
     }
 }
 

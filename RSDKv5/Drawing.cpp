@@ -391,7 +391,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -814,7 +814,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         case INK_LOOKUP:
             if (drawY1 > clipY1) {
                 while (drawX1 < clipX1 || drawY1 >= clipY1) {
-                    *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                    *frameBufferPtr = lookupTable[*frameBufferPtr];
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -830,7 +830,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 while (true) {
-                    *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                    *frameBufferPtr = lookupTable[*frameBufferPtr];
 
                     if (drawX1 >= clipX1 && drawY1 >= clipY1)
                         break;
@@ -945,7 +945,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -1077,7 +1077,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                    *frameBufferPtr = lookupTable[*frameBufferPtr];
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1132,7 +1132,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -1167,51 +1167,51 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
             scanEdgeBuffer[i].end   = -1;
         }
 
-        int r     = 3 - 2 * radius;
+        int r = 3 - 2 * radius;
         if (radius >= 0) {
-            int xRad      = x - radius;
-            int y1      = y + 1;
-            int x1                    = x;
-            int start                 = yRadiusTop + 1;
-            ScanEdge *scanEdgeTop = &scanEdgeBuffer[yRadiusTop];
-            ScanEdge *scanEdgeBottom  = &scanEdgeBuffer[yRadiusBottom];
-            ScanEdge *scanEdge  = &scanEdgeBuffer[y];
-            int dif       = x - y;
+            int xRad                 = x - radius;
+            int curY                 = y + 1;
+            int curX                 = x;
+            int startY               = yRadiusTop + 1;
+            ScanEdge *scanEdgeTop    = &scanEdgeBuffer[yRadiusTop];
+            ScanEdge *scanEdgeBottom = &scanEdgeBuffer[yRadiusBottom];
+            ScanEdge *scanEdge       = &scanEdgeBuffer[y];
+            int dif                  = x - y;
 
             for (int i = 0; i < radius + 1; ++i) {
-                int xPos = i + x1;
-                if (yRadiusBottom >= top && yRadiusBottom <= bottom && xPos > scanEdgeBottom->end)
-                    scanEdgeBottom->end = xPos;
-                if (start >= top && start <= bottom && xPos > scanEdgeTop->end)
-                    scanEdgeTop->end = xPos;
+                int scanX = i + curX;
+                if (yRadiusBottom >= top && yRadiusBottom <= bottom && scanX > scanEdgeBottom->end)
+                    scanEdgeBottom->end = scanX;
+                if (startY >= top && startY <= bottom && scanX > scanEdgeTop->end)
+                    scanEdgeTop->end = scanX;
 
-                int yPos = i + y;
-                if (yPos >= top && yPos <= bottom) {
-                    ScanEdge *edge = &scanEdgeBuffer[yPos];
+                int scanY = i + y;
+                if (scanY >= top && scanY <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[scanY];
                     if (yRadiusBottom + dif > edge->end)
                         edge->end = yRadiusBottom + dif;
                 }
 
-                if (y1 >= top && y1 <= bottom && yRadiusBottom + dif > scanEdge->end)
+                if (curY >= top && curY <= bottom && yRadiusBottom + dif > scanEdge->end)
                     scanEdge->end = yRadiusBottom + dif;
                 if (yRadiusBottom >= top && yRadiusBottom <= bottom && x < scanEdgeBottom->start)
                     scanEdgeBottom->start = x;
-                if (start >= top && start <= bottom && x < scanEdgeTop->start)
+                if (startY >= top && startY <= bottom && x < scanEdgeTop->start)
                     scanEdgeTop->start = x;
 
-                if (yPos >= top && yPos <= bottom) {
-                    ScanEdge *edge = &scanEdgeBuffer[yPos];
+                if (scanY >= top && scanY <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[scanY];
                     if (xRad < edge->start)
                         edge->start = xRad;
                 }
 
-                if (y1 >= top && y1 <= bottom && xRad < scanEdge->start)
+                if (curY >= top && curY <= bottom && xRad < scanEdge->start)
                     scanEdge->start = xRad;
 
                 if (r >= 0) {
                     --yRadiusBottom;
                     --scanEdgeBottom;
-                    ++start;
+                    ++startY;
                     r += 4 * (i - radius) + 10;
                     ++scanEdgeTop;
                     --radius;
@@ -1220,7 +1220,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                 else {
                     r += 4 * i + 6;
                 }
-                --y1;
+                --curY;
                 --scanEdge;
                 --x;
             }
@@ -1387,7 +1387,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                         int xCnt = edge->end - edge->start;
                         for (int x = 0; x < xCnt; ++x) {
-                            frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
+                            frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
                         }
                         ++edge;
                         frameBufferPtr += currentScreen->pitch;
@@ -1459,7 +1459,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -1684,7 +1684,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2)
-                                        *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                                        *frameBufferPtr = lookupTable[*frameBufferPtr];
                                     ++frameBufferPtr;
                                     ++xDif1;
                                     --xDif2;
@@ -1771,7 +1771,7 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -1965,7 +1965,7 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int xCnt = edge->end - edge->start;
                     for (int x = 0; x < xCnt; ++x) {
-                        frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
+                        frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2036,7 +2036,7 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -2387,7 +2387,7 @@ void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         start1 += bufferedPos1;
                         start2 += bufferedPos2;
                         start3 += bufferedPos3;
-                        frameBufferPtr[edge->start + x] = lookUpBuffer[frameBufferPtr[edge->start + x]];
+                        frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2664,7 +2664,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -2832,7 +2832,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                                *frameBufferPtr = lookupTable[*frameBufferPtr];
                             ++gfxData;
                             ++frameBufferPtr;
                         }
@@ -3004,7 +3004,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                                *frameBufferPtr = lookupTable[*frameBufferPtr];
                             --gfxData;
                             ++frameBufferPtr;
                         }
@@ -3176,7 +3176,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                                *frameBufferPtr = lookupTable[*frameBufferPtr];
                             ++gfxData;
                             ++frameBufferPtr;
                         }
@@ -3348,7 +3348,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                                *frameBufferPtr = lookupTable[*frameBufferPtr];
                             --gfxData;
                             ++frameBufferPtr;
                         }
@@ -3411,7 +3411,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -3656,7 +3656,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 return;
             break;
         case INK_LOOKUP:
-            if (!lookUpBuffer)
+            if (!lookupTable)
                 return;
             break;
     }
@@ -3810,7 +3810,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 for (int i = 0; i < currentScreen->pitch; ++i, ly += dy) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex)
-                        *frameBufferPtr = lookUpBuffer[*frameBufferPtr];
+                        *frameBufferPtr = lookupTable[*frameBufferPtr];
                     lx += dx;
                     ++frameBufferPtr;
                 }

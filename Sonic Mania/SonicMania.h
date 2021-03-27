@@ -56,9 +56,17 @@ inline void Game_Print(const char *message, ...)
 #if RETRO_USE_PLUS
         RSDK.PrintString(SEVERITY_NONE, buffer);
 #else
-        RSDK.PrintMessage((void*)message, 0);
+        RSDK.PrintMessage((void *)buffer, 0);
 #endif
     }
+}
+
+inline void Game_PrintString(TextInfo *text)
+{
+    for (int i = 0; i < text->textLength; ++i) {
+        Game_Print("%c", text->text[i]);
+    }
+    Game_Print("\n");
 }
 
 static const char *PlayerNames[] = { "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };

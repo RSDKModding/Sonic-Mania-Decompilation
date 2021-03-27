@@ -110,18 +110,24 @@ void SSZSpotlight_Create(void *data)
         entity->vertStore[3].y = 0x1000000;
         entity->vertStore[5].y = 0x1000000;
         entity->vertStore[7].y = 0x1000000;
+#if RETRO_USE_PLUS
         if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
             if (entity->color)
                 entity->vertClrPtrs = SSZSpotlight->coloursEncoreB;
             else
                 entity->vertClrPtrs = SSZSpotlight->coloursEncoreA;
         }
-        else if (entity->color) {
-            entity->vertClrPtrs = SSZSpotlight->coloursManiaB;
-        }
         else {
-            entity->vertClrPtrs = SSZSpotlight->coloursManiaA;
+#endif
+            if (entity->color) {
+                entity->vertClrPtrs = SSZSpotlight->coloursManiaB;
+            }
+            else {
+                entity->vertClrPtrs = SSZSpotlight->coloursManiaA;
+            }
+#if RETRO_USE_PLUS
         }
+#endif
 
         entity->active        = ACTIVE_XBOUNDS;
         entity->updateRange.x = 0x1000000;

@@ -205,8 +205,8 @@ void UFO_Sphere_Unknown3()
     entity->scale.x = entity->scale.x + ((128 - entity->scale.x) >> 3);
     entity->scale.y = entity->scale.x + ((128 - entity->scale.x) >> 3);
     if (entity->drawPos.y < 0x200000) {
-        ++UFO_Setup->dword18;
-        // UFO_HUD_Unknown1();
+        ++UFO_Setup->machPoints;
+        UFO_HUD_CheckLevelUp();
         entity->timer   = UFO_Setup->timer;
         entity->visible = false;
         entity->state   = UFO_Sphere_Unknown4;

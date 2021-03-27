@@ -58,6 +58,7 @@ typedef enum {
     SLOT_UFO_CAMERA       = 10,
     SLOT_PBL_CAMERA       = 10,
     SLOT_BSS_MESSAGE      = 11,
+    SLOT_UFO_HUD          = 11,
     SLOT_ZONE             = 12,
     SLOT_CUTSCENESEQ      = 15,
     SLOT_PAUSEMENU        = 16,
@@ -118,7 +119,9 @@ typedef enum {
     PRESENCE_GENERIC,
     PRESENCE_MENU,
     PRESENCE_MANIA,
+#if RETRO_USE_PLUS
     PRESENCE_ENCORE,
+#endif
     PRESENCE_TA,
     PRESENCE_COMP,
     PRESENCE_TITLE,

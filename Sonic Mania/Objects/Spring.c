@@ -257,7 +257,7 @@ void Spring_State_Diagonal()
     EntityPlayer *player = NULL;
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
     while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
-        if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) && !player->isGhost) {
+        if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 bool32 flag = false;
                 if (player->onGround) {

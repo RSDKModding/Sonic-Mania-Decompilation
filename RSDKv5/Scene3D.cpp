@@ -447,7 +447,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
     }
     return -1;
 }
-ushort Create3DScene(const char *name, ushort vertexMax, Scopes scope)
+ushort Create3DScene(const char *name, ushort vertexLimit, Scopes scope)
 {
     uint hash[4];
     GEN_HASH(name, hash);
@@ -469,19 +469,19 @@ ushort Create3DScene(const char *name, ushort vertexMax, Scopes scope)
 
     Scene3D *scene = &scene3DList[id];
 
-    if (vertexMax > SCENE3D_VERT_MAX || !vertexMax)
-        vertexMax = SCENE3D_VERT_MAX;
+    if (vertexLimit > SCENE3D_VERT_MAX || !vertexLimit)
+        vertexLimit = SCENE3D_VERT_MAX;
 
     scene->scope = scope;
     HASH_COPY(scene->hash, hash);
-    scene->vertLimit = vertexMax;
+    scene->vertLimit = vertexLimit;
     scene->faceCount  = 6;
     scene->unknownX   = 8;
     scene->unknownY   = 8;
-    AllocateStorage(sizeof(Scene3DVertex) * vertexMax, (void **)&scene->vertices, DATASET_STG, true);
-    AllocateStorage(sizeof(Scene3DVertex) * vertexMax, (void **)&scene->normals, DATASET_STG, true);
-    AllocateStorage(sizeof(byte) * vertexMax, (void **)&scene->faceVertCounts, DATASET_STG, true);
-    AllocateStorage(sizeof(ZBufferEntry) * vertexMax, (void **)&scene->zBuffer, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, DATASET_STG, true);
+    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, DATASET_STG, true);
+    AllocateStorage(sizeof(byte) * vertexLimit, (void **)&scene->faceVertCounts, DATASET_STG, true);
+    AllocateStorage(sizeof(ZBufferEntry) * vertexLimit, (void **)&scene->zBuffer, DATASET_STG, true);
 
     return id;
 }
@@ -990,9 +990,10 @@ void Draw3DScene(ushort sceneID)
             case S3D_FLATCLR_SCREEN:
                 for (int i = 0; i < scn->vertexCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    int vertCount           = *vertCnt;
 
                     int v = 0;
-                    for (; v < *vertCnt - 1 && v < 0xFF; ++v) {
+                    for (; v < vertCount && v < 0xFF; ++v) {
                         int vertZ = drawVert[v].z;
                         if (vertZ < 0x100) {
                             v = 0xFF;
@@ -1076,7 +1077,7 @@ void Draw3DScene(ushort sceneID)
 
                     int v  = 0;
                     int ny = 0;
-                    for (; v < *vertCnt - 1 && v < 0xFF; ++v) {
+                    for (; v < vertCount && v < 0xFF; ++v) {
                         int vertZ = drawVert[v].z;
                         if (vertZ < 0x100) {
                             v = 0xFF;

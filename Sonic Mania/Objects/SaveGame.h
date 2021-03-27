@@ -18,8 +18,9 @@ typedef struct {
 
 #if !RETRO_USE_PLUS
 // Entity Class
-struct EntitySaveGame : Entity {
-};
+typedef struct {
+    RSDK_ENTITY
+} EntitySaveGame;
 #endif
 
 extern ObjectSaveGame *SaveGame;

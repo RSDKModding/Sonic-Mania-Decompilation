@@ -126,7 +126,7 @@ typedef struct {
     ushort group;                                                                                                                                    \
     ushort objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
-    int field_3C;                                                                                                                                    \
+    bool32 isPermament;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
     bool32 onGround;                                                                                                                                 \

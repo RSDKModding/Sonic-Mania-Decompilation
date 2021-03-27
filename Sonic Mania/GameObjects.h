@@ -48,13 +48,13 @@ typedef struct {
     void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));
     void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress);
     void (*DeleteUserFile)(const char *filename, void (*callback)(int status));
-    void (*InitUserDB)(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-    ushort (*LoadUserDB)(const char *filename, void (*callback)(int status));
-    void (*SaveUserDB)(ushort tableID, void (*callback)(int status));
+    ushort (*InitUserDB)(const char *name, ...);
+    ushort (*LoadUserDB)(const char *filename, int (*callback)(int status));
+    void (*SaveUserDB)(ushort tableID, int (*callback)(int status));
     void (*ClearUserDB)(ushort tableID);
     void (*ClearAllUserDBs)(void);
     void (*Unknown31)(ushort tableID);
-    void (*GetUserDBStatus)(ushort tableID);
+    int (*GetUserDBStatus)(ushort tableID);
     void (*Unknown33)(ushort tableID, int a2, const char *name, void *value);
     void (*Unknown34)(ushort tableID, int a2, const char *name, void *value);
     int (*GetUserDBUnknownCount)(ushort tableID);
@@ -62,10 +62,10 @@ typedef struct {
     int (*AddUserDBEntry)(ushort tableID);
     void (*SetUserDBValue)(ushort tableID, int a2, int a3, const char *name, void *value);
     void (*Unknown39)(ushort tableID, int a2, int a3, const char *name, void *value);
-    void (*GetDBEntryUUID)(ushort tableID, ushort entryID);
-    void (*Unknown40)(ushort tableID, ushort entryID);
-    void (*GetUserDBTimeA)(ushort tableID, int a2, char *buf, uint sizeInBytes, const char *format);
-    void (*RemoveDBEntry)(ushort tableID, int a2);
+    uint (*GetUserDBEntryUUID)(ushort tableID, ushort entryID);
+    void (*GetUserDBByID)(ushort tableID, uint uuid);
+    void (*GetUserDBCreationTime)(ushort tableID, ushort entry, char *buf, uint sizeInBytes, const char *format);
+    void (*RemoveDBEntry)(ushort tableID, ushort entry);
     void (*RemoveAllDBEntries)(ushort tableID);
     // count: 59
 } UserFunctionTable;
@@ -96,7 +96,7 @@ typedef struct {
     bool32 (*CheckPosOnScreen)(Vector2 *pos, Vector2 *range);
     void (*AddDrawListRef)(byte layer, ushort entityID);
     void (*SwapDrawListEntries)(byte layer, ushort entryStart, ushort entryEnd, ushort count);
-    void (*SetDrawLayerProperties)(byte layer, bool32 active, void (*initDrawPtr)(void));
+    void (*SetDrawLayerProperties)(byte layer, bool32 sorted, void (*callback)(void));
     void (*LoadScene)(const char* categoryName, const char* sceneName);
     void (*SetGameMode)(byte mode);
 #if RETRO_USE_PLUS
@@ -262,8 +262,8 @@ typedef struct {
 #if !RETRO_USE_PLUS
     void (*Unknown92)(int a1, int a2, int *a3);
 #endif
-    void (*LoadUserFile)(const char *filename, void *buffer, uint size); // load user file from exe dir
-    void (*SaveUserFile)(const char *fileName, void *buffer, uint size); // save use file to exe dir
+    int (*LoadUserFile)(const char *filename, void *buffer, uint size); // load user file from exe dir
+    int (*SaveUserFile)(const char *fileName, void *buffer, uint size); // save use file to exe dir
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);

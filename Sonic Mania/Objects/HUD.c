@@ -29,7 +29,11 @@ void HUD_LateUpdate()
         if (globals->gameMode != MODE_TIMEATTACK)
             return;
         if (HUD->dwordC) {
+#if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV) {
+#else
+            if (RSDK_info->platformID == PLATFORM_PC || RSDK_info->platformID == PLATFORM_SWITCH || RSDK_info->platformID == PLATFORM_DEV) {
+#endif
                 entity = (EntityHUD *)RSDK_sceneInfo->entity;
                 HUD_GetKeyFrame(&entity->superButtonData1, 3);
                 HUD_GetKeyFrame(&entity->superButtonData3, 3);
@@ -46,7 +50,11 @@ void HUD_LateUpdate()
     else {
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
         if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM[28] == 0x7F) {
+#if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV)
+#else
+            if (RSDK_info->platformID == PLATFORM_PC || RSDK_info->platformID == PLATFORM_SWITCH || RSDK_info->platformID == PLATFORM_DEV)
+#endif
                 HUD_GetSuperFrames();
             if (entity->field_A0 < 0x180000)
                 entity->field_A0 += 0x80000;
@@ -181,8 +189,10 @@ void HUD_Draw()
             RSDK.DrawSprite(&entity->superButtonsData, &lifePos, true);
             lifePos.x -= 0x140000;
             bool32 flag = true;
+#if RETRO_USE_PLUS
             if (Player->field_A6C)
                 flag = Player->field_A6C(1);
+#endif
             if (player->state == Player_State_Air && player->jumpAbilityTimer == 1 && flag) {
                 RSDK.DrawSprite(&entity->superButtonData1, &lifePos, true);
             }
@@ -196,6 +206,7 @@ void HUD_Draw()
     else {
         lifePos.y = 0x140000;
         lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->field_A0;
+#if RETRO_USE_PLUS
         if (User.CheckDLC(DLC_PLUS)) {
             RSDK.DrawSprite(&entity->taData2, &lifePos, true);
             lifePos.x -= 0x1C0000;
@@ -212,6 +223,7 @@ void HUD_Draw()
             lifePos.y += 0x1C0000;
             lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->field_A0;
         }
+#endif
         RSDK.DrawSprite(&entity->taData1, &lifePos, true);
         lifePos.x -= 0x1C0000;
         RSDK.DrawSprite(&entity->superButtonData2, &lifePos, true);
@@ -234,6 +246,7 @@ void HUD_Draw()
     }
     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         for (int p = 0; p < PLAYER_MAX; ++p) {
             if (HUD->field_28[0] > 0)
@@ -296,13 +309,16 @@ void HUD_Draw()
         }
     }
     else {
+#endif
         entity->hudElementsData.frameID = 14;
         RSDK.DrawSprite(&entity->hudElementsData, &lifePos, true);
         lifePos.x += 0x300000;
         if (player->lives < 10)
             lifePos.x -= 0x80000;
         HUD_DrawNumbersBase10(&lifePos, lives, 0);
+#if RETRO_USE_PLUS
     }
+#endif
 
     if (globals->gameMode == MODE_COMPETITION) {
         switch (HUD->compSession[RSDK_sceneInfo->currentScreenID]) {
@@ -331,11 +347,11 @@ void HUD_Draw()
 
 void HUD_Create(void *data)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     if (!RSDK_sceneInfo->inEditor) {
         ActClear->field_30   = 0;
         entity->active       = ACTIVE_NORMAL;
-        entity->visible      = 1;
+        entity->visible      = true;
         entity->drawOrder    = Zone->uiDrawHigh;
         entity->dword5C[0].x = 0x100000;
         entity->dword5C[0].y = 0xC0000;
@@ -383,9 +399,11 @@ void HUD_Create(void *data)
         RSDK.SetSpriteAnimation(HUD->hudMappings, 1, &entity->numbersData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 9, &entity->hyperNumbersData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 2, &entity->lifeIconsData, true, 0);
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetSpriteAnimation(HUD->hudMappings, 13, &entity->playerIDData, true, 0);
         else
+#endif
             RSDK.SetSpriteAnimation(HUD->hudMappings, 8, &entity->playerIDData, true, 0);
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, 0, &entity->superButtonsData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &entity->taData1, true, 2);
@@ -393,7 +411,9 @@ void HUD_Create(void *data)
         HUD_GetKeyFrame(&entity->superButtonData1, 3);
         HUD_GetKeyFrame(&entity->superButtonData3, 3);
         HUD_GetKeyFrame(&entity->superButtonData2, 4);
+#if RETRO_USE_PLUS
         RSDK.SetDebugValue("Show HUD", &entity->visible, 2, 0, 1);
+#endif
     }
 }
 
@@ -485,14 +505,22 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 void HUD_GetKeyFrame(AnimationData *data, int buttonID)
 {
     int val = 0; // UIButtonPrompt_Unknown1();
+#if RETRO_USE_PLUS
     if (User.GetConfirmButtonFlip() && buttonID <= 1)
+#else
+    if (APICallback_GetConfirmButtonFlip() && buttonID <= 1)
+#endif
         buttonID ^= 1u;
     if (val != 1 && (val <= 8 || val > 12)) {
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, data, true, buttonID);
     }
     else {
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+#if RETRO_USE_PLUS
         int id               = RSDK.ControllerIDForInputID(player->controllerID);
+#else
+        int id = 0;
+#endif
         int contID           = player->controllerID;
         if (id == -2)
             contID = 1;

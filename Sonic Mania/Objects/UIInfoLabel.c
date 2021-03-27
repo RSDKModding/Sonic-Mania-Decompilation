@@ -15,12 +15,12 @@ void UIInfoLabel_Create(void *data)
     EntityUIInfoLabel *entity = (EntityUIInfoLabel *)RSDK_sceneInfo->entity;
     entity->active            = ACTIVE_BOUNDS;
     entity->drawOrder         = 2;
-    entity->visible           = 1;
+    entity->visible           = true;
     entity->drawFX            = FX_FLIP;
     entity->updateRange.x     = 0x800000;
     entity->updateRange.y     = 0x300000;
     entity->width             = entity->size.x >> 0x10;
-    if (RSDK_sceneInfo->inEditor == false) {
+    if (!RSDK_sceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->data2, true, 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
     }

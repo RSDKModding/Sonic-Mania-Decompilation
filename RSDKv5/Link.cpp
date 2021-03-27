@@ -49,22 +49,22 @@ enum UserdataTableIDs {
     UserdataTable_AddUserDBEntry,
     UserdataTable_OpenUserDB,
     UserdataTable_SaveUserDB,
-    UserdataTable_Unknown30,
-    UserdataTable_Missing6,
+    UserdataTable_ClearUserDB,
+    UserdataTable_ClearAllUserDBs,
     UserdataTable_Unknown31,
-    UserdataTable_Unknown32,
+    UserdataTable_GetUserDBSatus,
     UserdataTable_Unknown33,
     UserdataTable_Unknown34,
-    UserdataTable_Unknown35,
-    UserdataTable_Unknown36,
+    UserdataTable_GetUserDBUnknownCount,
+    UserdataTable_GetUserDBUnknown,
     UserdataTable_Unknown37,
-    UserdataTable_Unknown38,
+    UserdataTable_SetUserDBValue,
     UserdataTable_Unknown39,
-    UserdataTable_AddUserDB,
-    UserdataTable_Unknown40,
-    UserdataTable_GetTime,
-    UserdataTable_Unknown42,
-    UserdataTable_Unknown43,
+    UserdataTable_GetEntryUUID,
+    UserdataTable_GetUserDBByID,
+    UserdataTable_GetUserDBCreationTime,
+    UserdataTable_RemoveDBEntry,
+    UserdataTable_RemoveAllDBEntries,
     UserdataTable_Count,
 };
 #endif
@@ -297,7 +297,7 @@ void setupFunctions()
     curSKU.language = 0;
     curSKU.region   = 0;
 #else
-    engineInfo.platform = GAME_PLATFORM;
+    engineInfo.platformID = PLATFORM_DEV;
     engineInfo.language = 0;
     engineInfo.region   = 0;
 #endif
@@ -353,25 +353,25 @@ void setupFunctions()
     userFunctionTable[UserdataTable_LoadUserFile]              = (void *)userStorage->LoadUserFile;
     userFunctionTable[UserdataTable_SaveUserFile]              = (void *)userStorage->SaveUserFile;
     userFunctionTable[UserdataTable_DeleteUserFile]            = (void *)userStorage->DeleteUserFile;
-    userFunctionTable[UserdataTable_AddUserDBEntry]            = (void *)NullFunc;
-    userFunctionTable[UserdataTable_OpenUserDB]                = (void *)NullFunc;
-    userFunctionTable[UserdataTable_SaveUserDB]                = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown30]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Missing6]                  = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown31]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown32]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown33]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown34]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown35]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown36]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown37]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown38]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown39]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_AddUserDB]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown40]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_GetTime]                   = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown42]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown43]                 = (void *)NullFunc;
+    userFunctionTable[UserdataTable_AddUserDBEntry]            = (void *)InitUserDB;
+    userFunctionTable[UserdataTable_OpenUserDB]                = (void *)LoadUserDB;
+    userFunctionTable[UserdataTable_SaveUserDB]                = (void *)SaveUserDB;
+    userFunctionTable[UserdataTable_ClearUserDB]               = (void *)ClearUserDB;
+    userFunctionTable[UserdataTable_ClearAllUserDBs]           = (void *)ClearAllUserDBs;
+    userFunctionTable[UserdataTable_Unknown31]                 = (void *)NullFunc; // Unknown31;
+    userFunctionTable[UserdataTable_GetUserDBSatus]            = (void *)GetUserDBStatus;
+    userFunctionTable[UserdataTable_Unknown33]                 = (void *)NullFunc; // Unknown33;
+    userFunctionTable[UserdataTable_Unknown34]                 = (void *)NullFunc; // Unknown34;
+    userFunctionTable[UserdataTable_GetUserDBUnknownCount]     = (void *)GetUserDBRowUnknownCount;
+    userFunctionTable[UserdataTable_GetUserDBUnknown]          = (void *)GetUserDBRowUnknown;
+    userFunctionTable[UserdataTable_Unknown37]                 = (void *)AddUserDBEntry;
+    userFunctionTable[UserdataTable_SetUserDBValue]            = (void *)NullFunc; // SetUserDBValue;
+    userFunctionTable[UserdataTable_Unknown39]                 = (void *)NullFunc; // Unknown39;
+    userFunctionTable[UserdataTable_GetEntryUUID]              = (void *)GetUserDBRowUUID;
+    userFunctionTable[UserdataTable_GetUserDBByID]             = (void *)GetUserDBByID;
+    userFunctionTable[UserdataTable_GetUserDBCreationTime]     = (void *)GetUserDBCreationTime;
+    userFunctionTable[UserdataTable_RemoveDBEntry]             = (void *)RemoveDBEntry;
+    userFunctionTable[UserdataTable_RemoveAllDBEntries]        = (void *)RemoveAllDBEntries;
 #endif
 
     // Function Table
@@ -559,8 +559,8 @@ void setupFunctions()
 #if !RETRO_USE_PLUS
     RSDKFunctionTable[FunctionTable_Unknown92] = (void *)NullFunc;
 #endif
-    RSDKFunctionTable[FunctionTable_LoadUserFile] = (void*)LoadUserFile;
-    RSDKFunctionTable[FunctionTable_SaveUserFile] = (void*)SaveUserFile;
+    RSDKFunctionTable[FunctionTable_LoadUserFile] = (void *)LoadUserFile;
+    RSDKFunctionTable[FunctionTable_SaveUserFile] = (void *)SaveUserFile;
 #if RETRO_USE_PLUS
     RSDKFunctionTable[FunctionTable_printLog]             = (void *)printLog;
     RSDKFunctionTable[FunctionTable_printString]          = (void *)printString;

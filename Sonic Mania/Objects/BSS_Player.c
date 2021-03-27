@@ -91,8 +91,12 @@ void BSS_Player_Draw()
     RSDK.DrawSprite(&entity->playerData, &drawPos, true);
     
     byte charID = globals->playerID & 0xFF;
-    if (charID == ID_TAILS || charID == ID_RAY && entity->playerData.animationID == 1)
+    if (charID == ID_TAILS && entity->playerData.animationID == 1)
         RSDK.DrawSprite(&entity->tailData, &drawPos, true);
+#if RETRO_USE_PLUS
+    else if (charID == ID_RAY && entity->playerData.animationID == 1)
+        RSDK.DrawSprite(&entity->tailData, &drawPos, true);
+#endif
 }
 
 void BSS_Player_Create(void* data)
@@ -110,8 +114,8 @@ void BSS_Player_Create(void* data)
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailData, true, 0);
                 break;
             case ID_KNUCKLES:
-                entity->spriteIndex = BSS_Player->knuxSpriteIndex;
-                break;
+                entity->spriteIndex = BSS_Player->knuxSpriteIndex; break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY:
                 entity->spriteIndex = BSS_Player->mightySpriteIndex;
                 break;
@@ -119,6 +123,7 @@ void BSS_Player_Create(void* data)
                 entity->spriteIndex = BSS_Player->raySpriteIndex;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailData, true, 0);
                 break;
+#endif
             default:
                 entity->spriteIndex = BSS_Player->sonicSpriteIndex;
                 break;

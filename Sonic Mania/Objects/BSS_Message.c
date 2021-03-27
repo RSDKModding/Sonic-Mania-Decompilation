@@ -175,9 +175,11 @@ void BSS_Message_LoadPrevScene()
                 globals->blueSpheresInit = true;
                 SaveGame_ShuffleBSSID();
                 int *saveRAM = SaveGame->saveRAM;
+#if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE)
                     RSDK.LoadScene("Encore Mode", "");
                 else
+#endif
                     RSDK.LoadScene("Mania Mode", "");
                 RSDK_sceneInfo->listPos = saveRAM[30];
                 RSDK.InitSceneLoad();
@@ -200,9 +202,11 @@ void BSS_Message_LoadGameState()
         globals->blueSpheresInit = true;
         SaveGame_ShuffleBSSID();
         int *saveRAM = SaveGame->saveRAM;
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.LoadScene("Encore Mode", "");
         else
+#endif
             RSDK.LoadScene("Mania Mode", "");
         RSDK_sceneInfo->listPos = saveRAM[30];
         RSDK.InitSceneLoad();

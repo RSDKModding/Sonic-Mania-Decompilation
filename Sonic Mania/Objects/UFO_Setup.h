@@ -10,24 +10,21 @@ typedef struct {
     int timedOut;
     bool32 encoreStage;
     int machLevel;
-    int field_14;
-    int dword18;
+    int scoreBonus;
+    int machPoints;
     int rings;
     int timer;
     int ringFrame;
     int ringPan;
     int spherePan;
     int specialStageID;
-    int machQuota1;
-    int machQuota2;
-    int machQuota3;
+    int machQuotas[3];
     byte playFieldLayer;
-    char field_41;
     ushort sfx_BlueSphere;
     ushort sfx_SSExit;
     ushort sfx_Emerald;
     ushort sfx_Event;
-    int dword4C;
+    bool32 resetToTitle;
 } ObjectUFO_Setup;
 
 // Entity Class

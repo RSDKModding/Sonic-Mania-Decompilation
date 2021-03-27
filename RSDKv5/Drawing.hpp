@@ -75,7 +75,7 @@ struct DrawList {
     ushort entries[ENTITY_COUNT];
     ushort layerDrawList[LAYER_COUNT];
     void (*callback)(void);
-    bool32 visible;
+    bool32 sorted;
     int entityCount;
     int layerCount;
 };
@@ -198,11 +198,11 @@ inline Entity *GetDrawListRefPtr(byte layerID, ushort entityID)
         return &objectEntityList[listPtr->entries[entityID]];
 }
 
-inline void SetDrawLayerProperties(byte layer, int active, void (*callback)(void))
+inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(void))
 {
     if (layer < DRAWLAYER_COUNT) {
-        DrawList *list    = &drawLayers[layer];
-        list->visible     = active;
+        DrawList *list = &drawLayers[layer];
+        list->sorted   = sorted;
         list->callback = callback;
     }
 }

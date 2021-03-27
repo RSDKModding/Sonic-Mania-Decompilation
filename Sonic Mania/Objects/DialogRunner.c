@@ -40,8 +40,8 @@ void DialogRunner_StageLoad()
     DialogRunner->entityPtr = NULL;
     SaveGame_LoadSaveData();
     TimeAttackData->status   = 0;
-    TimeAttackData->field_C  = 0;
-    TimeAttackData->field_10 = -1;
+    TimeAttackData->uuid     = 0;
+    TimeAttackData->unknown  = -1;
     TimeAttackData->field_14 = 0;
     TimeAttackData->rank     = 0;
     TimeAttackData->dword1C  = 0;

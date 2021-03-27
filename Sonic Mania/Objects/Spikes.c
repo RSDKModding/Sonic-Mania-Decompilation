@@ -85,6 +85,7 @@ void Spikes_Update()
                                     player->onGround = 0;
                             }
                             flag = 0;
+#if RETRO_USE_PLUS
                             if (side == 1 && player->state == Player_State_MightyHammerDrop) {
                                 if (Ice) {
                                     if (!Press) {
@@ -96,6 +97,7 @@ void Spikes_Update()
                                     }
                                 }
                             }
+#endif
                         }
                         switch (side) {
                             case 1:

@@ -9,8 +9,10 @@ void UFO_Setup_Update()
     if (entity->state)
         entity->state();
 
+#if RETRO_USE_PLUS
     if (entity->state != UFO_Setup_Unknown12 && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM[63];
+#endif
 }
 
 void UFO_Setup_LateUpdate() {}
@@ -49,11 +51,11 @@ void UFO_Setup_StageLoad()
     RSDK.ResetEntitySlot(SLOT_BSS_SETUP, UFO_Setup->objectID, NULL);
 
     UFO_Setup->playFieldLayer                                       = RSDK.GetSceneLayerID("Playfield");
-    UFO_Setup->dword18                                              = 0;
-    UFO_Setup->machLevel                                              = 0;
+    UFO_Setup->machPoints                                           = 0;
+    UFO_Setup->machLevel                                            = 0;
     UFO_Setup->rings                                                = 30;
     UFO_Setup->timedOut                                             = 0;
-    UFO_Setup->dword4C                                              = 0;
+    UFO_Setup->resetToTitle                                         = false;
     RSDK.GetSceneLayer(UFO_Setup->playFieldLayer)->scanlineCallback = UFO_Setup_ScanlineCallback_Playfield;
     RSDK.SetDrawLayerProperties(1, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(3, false, UFO_Setup_DrawLayerCallback);
@@ -366,7 +368,7 @@ void UFO_Setup_Unknown12()
 {
     RSDK_THIS(UFO_Setup);
     if (entity->timer >= 1024) {
-        if (UFO_Setup->dword4C) {
+        if (UFO_Setup->resetToTitle) {
             RSDK.LoadScene("Presentation", "Title Screen");
             RSDK.InitSceneLoad();
         }
@@ -386,9 +388,11 @@ void UFO_Setup_Unknown12()
             RSDK.ResetEntitySlot(0, UIBackground->objectID, 0);
             RSDK.ResetEntitySlot(1, SpecialClear->objectID, 0);
             RSDK.AddDrawListRef(14, 1);
+#if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE) {
                 UIBackground->activeColours = &UIBackground->bgColours[18];
             }
+#endif
             entity->visible = false;
             entity->state   = NULL;
         }

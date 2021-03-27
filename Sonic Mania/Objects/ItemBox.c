@@ -546,10 +546,12 @@ void ItemBox_GivePowerup()
                     return;
                 }
 #endif
+#if RETRO_USE_PLUS
                 if (globals->gameMode != MODE_COMPETITION) {
                     RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
                     return;
                 }
+#endif
                 Zone_Unknown5();
                 RSDK.PlaySFX(ItemBox->sfx_Teleport, 0, 255);
                 return;

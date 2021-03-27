@@ -138,6 +138,7 @@ void Zone_StaticUpdate()
         Zone->ringFrame &= 0xF;
     }
 
+#if RETRO_USE_PLUS
     int zone = Zone_GetZoneID();
     if (zone >= 13) {
         zone = 13;
@@ -152,7 +153,8 @@ void Zone_StaticUpdate()
         act = 0;
     int pos = act + 2 * zone;
     if (pos >= 0 && RSDK_sceneInfo->timeEnabled && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM[pos + 0x22];
+        ++SaveGame->saveRAM[pos + 34];
+#endif
 }
 
 void Zone_Draw()
@@ -352,7 +354,9 @@ void Zone_StageLoad()
     Vector2 layerSize;
     RSDK.GetLayerSize(Zone->fgLow, &layerSize, true);
 
+#if RETRO_USE_PLUS
     if (!Zone->swapGameMode) {
+#endif
         for (int s = 0; s < PLAYER_MAX; ++s) {
             Zone->screenBoundsL1[s] = 0;
             Zone->screenBoundsR1[s] = layerSize.x;
@@ -369,7 +373,9 @@ void Zone_StageLoad()
             Zone->playerBoundActiveR[s] = true;
             Zone->playerBoundActiveT[s] = false;
         }
+#if RETRO_USE_PLUS
     }
+#endif
 
     if (!globals->initCoolBonus) {
         globals->coolBonus[0]  = 10000;
@@ -417,9 +423,12 @@ void Zone_StageLoad()
 #if !RETRO_USE_PLUS
         case MODE_NOSAVE:
 #endif
-        case MODE_MANIA:
-            Localization_GetString(&textInfo, STR_RPC_MANIA);
+        case MODE_MANIA: Localization_GetString(&textInfo, STR_RPC_MANIA);
+#if RETRO_USE_PLUS
             User.SetRichPresence(PRESENCE_MANIA, &textInfo);
+#else
+            APICallback_SetRichPresence(PRESENCE_MANIA, &textInfo);
+#endif
             break;
 #if RETRO_USE_PLUS
         case MODE_ENCORE:
@@ -427,13 +436,19 @@ void Zone_StageLoad()
             User.SetRichPresence(PRESENCE_ENCORE, &textInfo);
             break;
 #endif
-        case MODE_TIMEATTACK:
-            Localization_GetString(&textInfo, STR_RPC_TA);
+        case MODE_TIMEATTACK: Localization_GetString(&textInfo, STR_RPC_TA);
+#if RETRO_USE_PLUS
             User.SetRichPresence(PRESENCE_TA, &textInfo);
+#else
+            APICallback_SetRichPresence(PRESENCE_TA, &textInfo);
+#endif
             break;
-        case MODE_COMPETITION:
-            Localization_GetString(&textInfo, STR_RPC_TITLE);
+        case MODE_COMPETITION: Localization_GetString(&textInfo, STR_RPC_COMP);
+#if RETRO_USE_PLUS
             User.SetRichPresence(PRESENCE_COMP, &textInfo);
+#else
+            APICallback_SetRichPresence(PRESENCE_COMP, &textInfo);
+#endif
             break;
         default: break;
     }
@@ -773,6 +788,7 @@ void Zone_Unknown13()
     RSDK_THIS(Zone);
     entity->timer += entity->fadeTimer;
     if (entity->timer > 1024) {
+#if RETRO_USE_PLUS
         if (Zone->swapGameMode) {
             if (RSDK_sceneInfo->filter == SCN_FILTER_MANIA) {
                 if (RSDK.CheckValidScene()) {
@@ -798,6 +814,7 @@ void Zone_Unknown13()
             if (player->camera)
                 RSDK.CopyEntity(Zone->entityData[8], player->camera, false);
         }
+#endif
         RSDK.InitSceneLoad();
     }
 }
