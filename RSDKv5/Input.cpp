@@ -39,7 +39,10 @@ bool32 getControllerButton(byte inputID, byte buttonID)
 void InputDevice::ProcessInput()
 {
 #if RETRO_USING_SDL2
-    const byte *keyState = SDL_GetKeyboardState(NULL);
+    int keyCount         = 0;
+    const byte *keyState = SDL_GetKeyboardState(&keyCount);
+
+    bool32 anyPress = false;
 
     for (int c = 0; c < PLAYER_COUNT; ++c) {
         InputState *buttons[] = {
@@ -93,6 +96,24 @@ void InputDevice::ProcessInput()
         }
         if (isPressed)
             inputDevice.inputType[c] = 1;
+
+        for (int i = 0; i < keyCount && !anyPress; i++) {
+            if (keyState[i]) {
+                anyPress = true;
+            }
+        }
+        for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX && !anyPress; i++) {
+            if (getControllerButton(c, i)) {
+                anyPress = true;
+            }
+        }
+
+        if (anyPress) {
+            engine.dimTimer = 0;
+        }
+        else if (engine.dimTimer < engine.dimLimit) {
+            ++engine.dimTimer;
+        }
     }
 #endif
 }

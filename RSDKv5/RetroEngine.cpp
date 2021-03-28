@@ -294,6 +294,7 @@ void runRetroEngine()
                     val->max        = 1;
                 }
 #endif
+                engine.dimLimit = 18000;
                 inputDevice.ProcessInput();
                 ProcessObjects();
                 break;

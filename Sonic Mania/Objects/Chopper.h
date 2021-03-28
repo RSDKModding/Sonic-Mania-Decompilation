@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    Hitbox hitbox4;
+    ushort spriteIndex;
 } ObjectChopper;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void (*state)();
+    byte type;
+    ushort timer;
+    bool32 charge;
+    Vector2 startPos;
+    byte startDir;
+    AnimationData data;
 } EntityChopper;
 
 // Object Struct
@@ -28,6 +40,16 @@ void Chopper_EditorLoad();
 void Chopper_Serialize();
 
 // Extra Entity Functions
+void Chopper_DebugDraw();
+void Chopper_DebugSpawn();
 
+void Chopper_CheckOnScreen();
+void Chopper_Unknown3();
+void Chopper_Unknown4();
+void Chopper_Unknown5();
+void Chopper_Unknown6();
+void Chopper_Unknown7();
+void Chopper_CheckPlayerCollisions();
+void Chopper_CheckPlayerCollisions2();
 
 #endif //!OBJ_CHOPPER_H

@@ -7,6 +7,7 @@ void TitleSetup_Update()
     RSDK_THIS(TitleSetup);
     if (entity->state)
         entity->state();
+    RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
 void TitleSetup_LateUpdate() {}
@@ -29,7 +30,7 @@ void TitleSetup_Create(void *data)
         entity->visible   = true;
         entity->drawOrder = 12;
         entity->drawFX    = FX_FLIP;
-        entity->state          = TitleSetup_Unknown4;
+        entity->state     = TitleSetup_Unknown4;
         entity->stateDraw = TitleSetup_Unknown13;
         entity->timer     = 1024;
         entity->drawPos.x = 0x1000000;
@@ -65,8 +66,8 @@ void TitleSetup_StageLoad()
     globals->replayTableID     = -1;
     globals->replayTableLoaded = false;
     User.ClearUserDB(globals->taTableID);
-    globals->taTableID         = -1;
-    globals->taTableLoaded     = false;
+    globals->taTableID     = -1;
+    globals->taTableLoaded = false;
 #endif
     TitleSetup->spriteIndex    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
     TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
@@ -176,10 +177,10 @@ void TitleSetup_Unknown6()
 
         Entity *titleSonic = NULL;
         while (RSDK.GetEntities(TitleSonic->objectID, &titleSonic)) {
-            titleSonic->active = ACTIVE_NORMAL;
+            titleSonic->active  = ACTIVE_NORMAL;
             titleSonic->visible = true;
         }
-        
+
         TitleBG_SetupFX();
         entity->timer     = 0x300;
         entity->state     = TitleSetup_Unknown7;
@@ -195,10 +196,10 @@ void TitleSetup_Unknown7()
         entity->stateDraw = NULL;
 #if RETRO_USE_PLUS
         if (User.CheckDLC(DLC_PLUS))
-           entity->state = TitleSetup_SetupLogo_Plus;
+            entity->state = TitleSetup_SetupLogo_Plus;
         else
 #endif
-           entity->state = TitleSetup_SetupLogo_NoPlus;
+            entity->state = TitleSetup_SetupLogo_NoPlus;
     }
     else {
         entity->timer -= 16;
@@ -341,7 +342,7 @@ void TitleSetup_Unknown13()
 void TitleSetup_Unknown14()
 {
     RSDK_THIS(TitleSetup);
-    entity->direction        = FLIP_NONE;
+    entity->direction = FLIP_NONE;
     RSDK.DrawSprite(&entity->data, &entity->drawPos, 0);
     entity->direction = FLIP_X;
     RSDK.DrawSprite(&entity->data, &entity->drawPos, 0);

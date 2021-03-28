@@ -735,6 +735,8 @@ ushort LoadSpriteSheet(const char *filename, Scopes scope)
         return id;
     }
     else {
+        image.palette = NULL;
+        image.dataPtr = NULL;
         CloseFile(&image.info);
         return -1;
     }
@@ -753,12 +755,12 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
         // if (image.width == 1024 && image.height == 512)
         //    Engine_Unknown193(image.dataPtr);
 
-        engine.displayTime = displayTime;
-        // engine.prevScreenShader = ShaderSettings.ShaderID;
+        engine.displayTime    = displayTime;
+        engine.prevShaderID   = engine.shaderID;
         engine.prevEngineMode = sceneInfo.state;
-        // ScreenSettings.field_8  = 0.0;
+        engine.dimMax         = 0.0;
         // ShaderSettings.ShaderID = 7;
-        engine.screenCount    = 0;
+        engine.screenCount  = 0;
         engine.skipCallback = skipCallback;
         sceneInfo.state     = ENGINESTATE_SHOWPNG;
         engine.imageDelta   = delta / 60.0;

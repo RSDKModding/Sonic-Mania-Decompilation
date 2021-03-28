@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    ushort spriteIndex;
 } ObjectBuzzBomber;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    byte shotRange;
+    int timer;
+    byte field_64;
+    Vector2 startPos;
+    byte startDir;
+    Entity *projectile;
+    AnimationData data1;
+    AnimationData data2;
+    AnimationData data3;
+    Hitbox rangeHitbox;
 } EntityBuzzBomber;
 
 // Object Struct
@@ -28,6 +42,16 @@ void BuzzBomber_EditorLoad();
 void BuzzBomber_Serialize();
 
 // Extra Entity Functions
+void BuzzBomber_DebugDraw();
+void BuzzBomber_DebugSpawn();
 
+void BuzzBomber_CheckOnScreen();
+void BuzzBomber_Unknown1();
+void BuzzBomber_Unknown2();
+void BuzzBomber_Unknown3();
+void BuzzBomber_Unknown4();
+void BuzzBomber_Unknown5();
+void BuzzBomber_Unknown6();
+void BuzzBomber_Unknown7();
 
 #endif //!OBJ_BUZZBOMBER_H

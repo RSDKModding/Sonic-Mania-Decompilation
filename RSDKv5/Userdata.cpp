@@ -707,7 +707,7 @@ int GetSettingsValue(int id)
         case 8: return engine.fsHeight;
         case 9: return engine.refreshRate;
         case 10: return engine.shaderSupport;
-        case 11: return engine.screenShader;
+        case 11: return engine.shaderID;
         case 12: return engine.screenCount;
         case 13: return engine.dimTimer;
         case 14: return engine.streamsEnabled;
@@ -776,8 +776,8 @@ void SetSettingsValue(int id, int val)
         case 9: engine.refreshRate = val; break;
         case 10: engine.shaderSupport = val; break;
         case 11:
-            if (engine.screenShader != val) {
-                engine.screenShader = val;
+            if (engine.shaderID != val) {
+                engine.shaderID = val;
                 settingsChanged     = true;
             }
             break;
@@ -862,7 +862,7 @@ void readSettings()
     engine.fsHeight      = (int)strtol(iniparser_getstring(ini, "Video:fsHeight", "0"), NULL, 0);
     engine.refreshRate   = (int)strtol(iniparser_getstring(ini, "Video:refreshRate", "60"), NULL, 0);
     engine.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
-    engine.screenShader  = (int)strtol(iniparser_getstring(ini, "Video:refreshRate", "0"), NULL, 0);
+    engine.shaderID      = (int)strtol(iniparser_getstring(ini, "Video:screenShader", "0"), NULL, 0);
 
     engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
     engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 1.0);

@@ -137,6 +137,7 @@ struct RetroEngine {
 
     bool32 isFullScreen = false;
 
+    bool32 windowActive    = false;
     bool32 startFullScreen = false;
     bool32 borderless      = false;
     bool32 exclusiveFS     = false;
@@ -155,9 +156,13 @@ struct RetroEngine {
     bool32 (*skipCallback)();
 
     bool32 shaderSupport = true;
-    int screenShader     = 0;
+    int shaderID         = 0;
+    int prevShaderID         = 0;
     int screenCount      = 1;
     int dimTimer         = 0;
+    int dimLimit         = 0;
+    float dimPercent     = 1.0;
+    float dimMax         = 1.0;
 
     bool32 streamsEnabled = true;
     float streamVolume  = 1.0;

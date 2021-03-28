@@ -83,6 +83,8 @@ bool32 InitRenderDevice()
         SDL_SetWindowBordered(engine.window, SDL_FALSE);
     }
 
+    InitShaders();
+
     SDL_DisplayMode disp;
     if (SDL_GetDisplayMode(0, 0, &disp) == 0) {
         // engine.screenRefreshRate = disp.refresh_rate;
@@ -94,6 +96,18 @@ bool32 InitRenderDevice()
 
 void FlipScreen()
 {
+    if (engine.dimTimer < engine.dimLimit) {
+        if (engine.dimPercent < 1.0) {
+            engine.dimPercent += 0.05;
+            if (engine.dimPercent > 1.0)
+                engine.dimPercent = 1.0;
+        }
+    }
+    else if (engine.dimPercent > 0.25) {
+        engine.dimPercent *= 0.9;
+    }
+
+    float dimAmount = engine.dimMax * engine.dimPercent;
 #if RETRO_USING_SDL2
     SDL_Rect destScreenPos[SCREEN_MAX];
 
@@ -1487,11 +1501,11 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
 
         if (top < currentScreen->clipBound_Y1)
             top = currentScreen->clipBound_Y1;
-        if (top > currentScreen->clipBound_Y2)
-            top = currentScreen->clipBound_Y2;
+        if (top > currentScreen->clipBound_Y1)
+            top = currentScreen->clipBound_Y1;
 
-        if (bottom < currentScreen->clipBound_Y1)
-            bottom = currentScreen->clipBound_Y1;
+        if (bottom < currentScreen->clipBound_Y2)
+            bottom = currentScreen->clipBound_Y2;
         if (bottom > currentScreen->clipBound_Y2)
             bottom = currentScreen->clipBound_Y2;
 

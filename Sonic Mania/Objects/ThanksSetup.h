@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort sfx_Sega;
 } ObjectThanksSetup;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    void(*stateDraw)();
+    Entity *picture;
+    int timer;
+    int offset;
 } EntityThanksSetup;
 
 // Object Struct
@@ -28,6 +34,11 @@ void ThanksSetup_EditorLoad();
 void ThanksSetup_Serialize();
 
 // Extra Entity Functions
-
+void ThanksSetup_Unknown1();
+void ThanksSetup_Unknown2();
+void ThanksSetup_Unknown3();
+void ThanksSetup_Unknown4();
+void ThanksSetup_Unknown5();
+void ThanksSetup_Unknown6();
 
 #endif //!OBJ_THANKSSETUP_H

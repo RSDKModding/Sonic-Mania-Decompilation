@@ -7,17 +7,12 @@ void LogoSetup_Update()
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
+    RSDK_screens->position.x = 256 - RSDK_screens->centerX;
 }
 
-void LogoSetup_LateUpdate()
-{
+void LogoSetup_LateUpdate() {}
 
-}
-
-void LogoSetup_StaticUpdate()
-{
-
-}
+void LogoSetup_StaticUpdate() {}
 
 void LogoSetup_Draw()
 {
@@ -26,14 +21,14 @@ void LogoSetup_Draw()
         entity->stateDraw();
 }
 
-void LogoSetup_Create(void* data)
+void LogoSetup_Create(void *data)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
-        entity->active  = ACTIVE_ALWAYS;
+        entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
-        entity->stateDraw      = LogoSetup_Unknown4;
+        entity->stateDraw = LogoSetup_Unknown4;
 #if RETRO_USE_PLUS
         if (RSDK_sku->region == 1)
 #else
@@ -42,7 +37,7 @@ void LogoSetup_Create(void* data)
             entity->state = LogoSetup_CESAScreen;
         else
             entity->state = LogoSetup_SegaScreen;
-        //TODO: pre-plus
+        // TODO: pre-plus
         entity->timer = 1024;
     }
 }
@@ -79,7 +74,7 @@ bool32 LogoSetup_PNGCallback()
 void LogoSetup_CESAScreen()
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
-    LogoSetup->timer = 0;
+    LogoSetup->timer        = 0;
     RSDK.LoadImage("CESA.png", 2.0, 60.0, LogoSetup_PNGCallback);
     entity->timer = 1024;
     entity->state = LogoSetup_SegaScreen;
@@ -102,7 +97,7 @@ void LogoSetup_SegaScreen()
 void LogoSetup_Unknown2()
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
-    
+
     ++entity->timer;
     if (+entity->timer > 120 || (entity->timer > 30 && RSDK_controller->keyStart.press)) {
         entity->timer     = 0;
@@ -121,9 +116,9 @@ void LogoSetup_Unknown3()
         }
         else {
             RSDK_screens->position.y += SCREEN_YSIZE;
-            entity->state            = LogoSetup_SegaScreen;
-            entity->stateDraw        = LogoSetup_Unknown4;
-            entity->timer            = 1024;
+            entity->state     = LogoSetup_SegaScreen;
+            entity->stateDraw = LogoSetup_Unknown4;
+            entity->timer     = 1024;
         }
     }
     else {
@@ -136,18 +131,8 @@ void LogoSetup_Unknown4()
     RSDK.FillScreen(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
 }
 
-void LogoSetup_EditorDraw()
-{
+void LogoSetup_EditorDraw() {}
 
-}
+void LogoSetup_EditorLoad() {}
 
-void LogoSetup_EditorLoad()
-{
-
-}
-
-void LogoSetup_Serialize()
-{
-
-}
-
+void LogoSetup_Serialize() {}
