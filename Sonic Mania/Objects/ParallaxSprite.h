@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectParallaxSprite;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    AnimationData data;
+    byte aniID;
+    byte attribute;
+    Vector2 parallaxFactor;
+    Vector2 scrollSpeed;
+    Vector2 loopPoint;
+    bool32 hiddenAtStart;
+    Vector2 unknownPosA;
+    Vector2 unknownPosB;
+    Vector2 scrollPos;
+    int sprX;
+    int field_B0;
+    int field_B4;
 } EntityParallaxSprite;
 
 // Object Struct
@@ -28,6 +43,10 @@ void ParallaxSprite_EditorLoad();
 void ParallaxSprite_Serialize();
 
 // Extra Entity Functions
-
+void ParallaxSprite_Unknown1();
+void ParallaxSprite_CreateCopy();
+void ParallaxSprite_Unknown3();
+void ParallaxSprite_Unknown4();
+void ParallaxSprite_Unknown5();
 
 #endif //!OBJ_PARALLAXSPRITE_H

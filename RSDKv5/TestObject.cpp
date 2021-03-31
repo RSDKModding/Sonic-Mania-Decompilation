@@ -93,6 +93,7 @@ void TestObject_Draw() {
     //         true);
     //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + (cos(TestObject->timer) * 0x40),
     //         currentScreen->centerY + (sin(TestObject->timer) * 0x40), 0x00FF00, 0xFF, INK_NONE, true); 
+    //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX * 3, currentScreen->centerY * 3, 0x00FF00, 0xFF, INK_NONE, true); 
     //DrawRectangle(currentScreen->centerX, currentScreen->centerY, 0x40 + (TestObject->timer / 0x08) % 0x80, 0x40 + (TestObject->timer / 0x04) % 0x80,
     //              0x00FF00, 0xFF, INK_NONE, true);
 
@@ -108,11 +109,11 @@ void TestObject_Draw() {
 
     //DrawCircleOutline(currentScreen->centerX, currentScreen->centerY, 0x10 + (TestObject->timer / 0x08) % 0x80,
     //                  0x20 + (TestObject->timer / 0x04) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
-    int r = 0x20 + (TestObject->timer) % 0x100;
-    DrawCircleOutline(currentScreen->centerX, currentScreen->centerY, r, r + 1, 0xFF0000, 0xFF, INK_NONE, true);
+    //int r = 0x20 + (TestObject->timer) % 0x100;
+    //DrawCircleOutline(currentScreen->centerX, currentScreen->centerY, r, r + 1, 0xFF0000, 0xFF, INK_NONE, true);
     //DrawCircle(currentScreen->centerX, currentScreen->centerY, 0x10 + (TestObject->timer / 0x02) % 0x80, 0xFF0000, 0xFF, INK_NONE, true);
 
-    /*Vector2 vertPos[4];
+    Vector2 vertPos[4];
     uint vertClr[4];
     vertPos[0].x = (int)(10 + TestObject->timer * 0.3) << 0x10;
     vertPos[0].y = (int)(10 + TestObject->timer * 0.3) << 0x10;
@@ -124,19 +125,19 @@ void TestObject_Draw() {
     vertPos[3].y = (int)(60 + TestObject->timer * 0.3) << 0x10;
 
     vertClr[0] = 0xFF0000;
-    vertClr[1] = 0xFF0000;
+    vertClr[1] = 0x00FF00;
     vertClr[2] = 0x0000FF;
-    vertClr[3] = 0x0000FF;*/
+    vertClr[3] = 0x000000;
 
     //DrawFace(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
-    //DrawBlendedFace(vertPos, vertClr, 4, 0xFF, INK_NONE);
+    //DrawBlendedFace(vertPos, vertClr, 3, 0xFF, INK_NONE);
 }
 void TestObject_Create(void *data)
 {
     EntityTestObject *entity    = (EntityTestObject *)sceneInfo.entity;
     entity->active = ACTIVE_ALWAYS;
     entity->visible   = true;
-    entity->drawOrder = 4;
+    entity->drawOrder = 14;
     entity->tileCollisions      = true;
     entity->collisionLayers     = TestObject->fgLayers;
     SetSpriteAnimation(TestObject->spriteIndex, 0, &entity->data, true, 0);
@@ -172,11 +173,12 @@ void TestObject_StageLoad()
 
     TestObject->fgLayers = 1 << TestObject->fgLow;
     TestObject->fgLayers |= 1 << TestObject->fgHigh;
+
+    CreateEntity(TestObject->objectID, NULL, 0, 0);
 }
 void TestObject_EditorDraw() {}
 void TestObject_EditorLoad() {}
 void TestObject_Serialize() {}
-
 
 
 

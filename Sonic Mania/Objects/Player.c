@@ -2011,7 +2011,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
     }
 
     if (badnikHit) {
-        RSDK.CreateEntity(Animals->objectID, (void *)((Animals->animalType1 + (RSDK.Rand(0, 32) >> 4)) + 1), entity->position.x, entity->position.y);
+        RSDK.CreateEntity(Animals->objectID, (void *)((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), entity->position.x, entity->position.y);
         EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, entity->position.x, entity->position.y);
         explosion->drawOrder       = Zone->drawOrderHigh;
         RSDK.PlaySFX(Explosion->sfx_Destroy, 0, 255);

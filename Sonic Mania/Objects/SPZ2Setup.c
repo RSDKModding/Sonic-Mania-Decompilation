@@ -93,8 +93,8 @@ void SPZ2Setup_StageLoad()
         SPZ2Setup->fgHigh->deformationData[i] = SPZ2Setup->layerDeform[i & 0x1F];
     }
 
-    Animals->animalType1 = 3;
-    Animals->animalType2 = 11;
+    Animals->animalTypes[0] = ANIMAL_PECKY;
+    Animals->animalTypes[1] = ANIMAL_MICKY;
 
 #if RETRO_USE_PLUS
     if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
@@ -129,8 +129,8 @@ void SPZ2Setup_StageLoad()
     }
 #endif
 
-    SPZ2Setup->fgLow->scrollInfo[0].deform  = true;
-    SPZ2Setup->fgHigh->scrollInfo[0].deform = true;
+    SPZ2Setup->fgLow->scrollInfo[0].deform  = false;
+    SPZ2Setup->fgHigh->scrollInfo[0].deform = false;
 }
 
 void SPZ2Setup_SetupOutro() { SPZ2Setup->outroPtr->active = ACTIVE_NORMAL; }

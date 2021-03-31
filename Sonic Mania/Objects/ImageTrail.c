@@ -58,6 +58,7 @@ void ImageTrail_LateUpdate()
     memcpy(&entity->stateAnim[0], &entity->currentAnimData, sizeof(AnimationData));
 
     // Record Player
+    entity->drawOrder        = player->drawOrder - 1;
     entity->currentPos.x     = player->position.x;
     entity->currentPos.y     = player->position.y;
     entity->currentRotation  = player->rotation;
@@ -82,7 +83,7 @@ void ImageTrail_StaticUpdate() {}
 void ImageTrail_Draw()
 {
     RSDK_THIS(ImageTrail);
-    int alpha[3] = { 0x60 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0xA0 * entity->baseAlpha >> 8 };
+    int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
     for (int i = 2; i >= 0; --i) {
         int id = (i * 3) - (i - 1);
         if (entity->stateVisible[id]) {
@@ -111,7 +112,7 @@ void ImageTrail_Create(void *data)
         entity->playerObjID  = player->objectID;
         entity->baseAlpha    = 0x100;
         entity->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;
-        entity->inkEffect    = INK_ADD;
+        entity->inkEffect    = INK_ALPHA;
 
         for (int i = ImageTrail_trackCount - 1; i >= 0; --i) {
             entity->statePos[i].x     = player->position.x;

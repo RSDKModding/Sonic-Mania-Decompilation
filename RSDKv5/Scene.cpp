@@ -402,8 +402,8 @@ void LoadSceneFile() {
                     entity = &entList[slotID];
                 else
                     entity = &entList[SCENEENTITY_COUNT - slotID];
-                if (entity->objectID)
-                    printf("wait");
+                //if (entity->objectID)
+                //    printf("wait");
 
                 entity->objectID = objID;
 #if RETRO_USE_PLUS

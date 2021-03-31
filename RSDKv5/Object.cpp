@@ -238,8 +238,6 @@ void InitObjects()
         }
     }
 
-    //CreateEntity(TestObject->objectID, NULL, 0, 0);
-
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
         screenUnknown[0].targetPos     = &screens[0].position;

@@ -423,109 +423,99 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
     }
 
     int flags1 = 0;
-    int clipX1 = currentScreen->clipBound_X1;
-    if (drawX1 > currentScreen->clipBound_X2) {
-        flags1 |= 2;
+    if (drawX1 >= currentScreen->clipBound_X2) {
+        flags1 = 2;
     }
-    else if (drawX1 < clipX1) {
-        flags1 |= 1;
+    else if (drawX1 < currentScreen->clipBound_X1) {
+        flags1 = 1;
     }
 
-    int clipY1 = currentScreen->clipBound_Y1;
-    if (drawY1 > currentScreen->clipBound_Y2) {
+    if (drawY1 >= currentScreen->clipBound_Y2) {
         flags1 |= 8;
     }
-    else if (drawY1 < clipY1) {
+    else if (drawY1 < currentScreen->clipBound_Y1) {
         flags1 |= 4;
     }
 
     int flags2 = 0;
-    if (drawX2 > currentScreen->clipBound_X2) {
+    if (drawX2 >= currentScreen->clipBound_X2) {
         flags2 = 2;
     }
-    else if (drawX2 < clipX1) {
+    else if (drawX2 < currentScreen->clipBound_X1) {
         flags2 = 1;
     }
 
-    clipY1 = currentScreen->clipBound_Y1;
-    if (drawY2 > currentScreen->clipBound_Y2) {
+    if (drawY2 >= currentScreen->clipBound_Y2) {
         flags2 |= 8;
     }
-    else if (drawY2 < clipY1) {
+    else if (drawY2 < currentScreen->clipBound_Y1) {
         flags2 |= 4;
     }
 
-    if (flags1 || flags2) {
-        do {
-            if (flags1 & flags2)
-                return;
-            int curFlags = flags2;
-            if (flags1)
-                curFlags = flags1;
+    while (flags1 || flags2) {
+        if (flags1 & flags2)
+            return;
+        int curFlags = flags2;
+        if (flags1)
+            curFlags = flags1;
 
-            int x1 = 0;
-            int y1 = 0;
-            if ((curFlags & 8)) {
-                y1 = currentScreen->clipBound_Y2;
-                x1 = drawX1 + ((drawX2 - drawX1) * (((y1 - drawY1) << 8) / (drawY2 - drawY1)) >> 8);
+        int x = 0;
+        int y   = 0;
+        if (curFlags & 8) {
+            x = drawX1 + ((drawX2 - drawX1) * (((currentScreen->clipBound_Y2 - drawY1) << 8) / (drawY2 - drawY1)) >> 8);
+            y = currentScreen->clipBound_Y2;
+        }
+        else if (curFlags & 4) {
+            x = drawX1 + ((drawX2 - drawX1) * (((currentScreen->clipBound_Y1 - drawY1) << 8) / (drawY2 - drawY1)) >> 8);
+            y = currentScreen->clipBound_Y1;
+        }
+        else if (curFlags & 2) {
+            x = currentScreen->clipBound_X2;
+            y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X2 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
+            y = drawY1 + (y >> 8);
+        }
+        else if (curFlags & 1) {
+            x = currentScreen->clipBound_X1;
+            y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X1 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
+            y = drawY1 + (y >> 8);
+        }
+
+        if (curFlags == flags1) {
+            drawX1 = x;
+            drawY1 = y;
+            flags1 = 0;
+            if (x > currentScreen->clipBound_X2) {
+                flags1 = 2;
             }
-            else if (curFlags & 4) {
-                clipY1 = currentScreen->clipBound_Y1;
-                y1     = currentScreen->clipBound_Y1;
-                x1     = drawX1 + ((drawX2 - drawX1) * (((clipY1 - drawY1) << 8) / (drawY2 - drawY1)) >> 8);
-            }
-            else if (curFlags & 2) {
-                x1 = currentScreen->clipBound_X2;
-                y1 = drawY1 + ((drawY2 - drawY1) * (((x1 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
-            }
-            else if (curFlags & 1) {
-                clipX1 = currentScreen->clipBound_X1;
-                x1     = clipX1;
-                y1     = drawY1 + ((drawY2 - drawY1) * (((clipX1 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
+            else if (x < currentScreen->clipBound_X1) {
+                flags1 = 1;
             }
 
-            if (curFlags == flags1) {
-                int modifiers = 0;
-                drawX1        = x1;
-                drawY1        = y1;
-                if (x1 >= clipX1) {
-                    if (x1 > currentScreen->clipBound_X2)
-                        modifiers = 2;
-                }
-                else {
-                    modifiers = 1;
-                }
-                flags1 = modifiers;
-
-                if (y1 >= clipY1) {
-                    if (y1 > currentScreen->clipBound_Y2)
-                        flags1 = modifiers | 8;
-                }
-                else {
-                    flags1 = modifiers | 4;
-                }
+            if (y < currentScreen->clipBound_Y1) {
+                flags1 |= 4;
             }
-            else {
-                int modifiers = 0;
-                drawX2        = x1;
-                drawY2        = y1;
-                if (x1 >= clipX1) {
-                    if (x1 > currentScreen->clipBound_X2)
-                        modifiers = 2;
-                }
-                else {
-                    modifiers = 1;
-                }
-                flags2 = modifiers;
-
-                if (y1 < clipY1) {
-                    flags2 = modifiers | 4;
-                }
-                else if (y1 > currentScreen->clipBound_Y2) {
-                    flags2 = modifiers | 8;
-                }
+            else if (y > currentScreen->clipBound_Y2) {
+                flags1 |= 8;
             }
-        } while (flags1 | flags2);
+        }
+        else {
+            drawX2 = x;
+            drawY2 = y;
+            flags2 = 0;
+            if (x > currentScreen->clipBound_X2) {
+                flags2 = 2;
+            }
+            else if (x < currentScreen->clipBound_X1) {
+                flags2 = 1;
+            }
+
+            if (y < currentScreen->clipBound_Y1) {
+                flags2 |= 4;
+            }
+            else if (y > currentScreen->clipBound_Y2) {
+                flags2 |= 8;
+            }
+        }
     }
 
     if (drawX1 > currentScreen->clipBound_X2) {
@@ -612,8 +602,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_BLEND:
-            if (drawY1 > clipY1) {
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+            if (drawY1 > drawY2) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     *frameBufferPtr = ((colour16 & 0xF7DE) >> 1) + ((*frameBufferPtr & 0xF7DE) >> 1);
 
                     if (hSize > -sizeX) {
@@ -629,11 +619,9 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     *frameBufferPtr = ((colour16 & 0xF7DE) >> 1) + ((*frameBufferPtr & 0xF7DE) >> 1);
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -648,8 +636,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_ALPHA:
-            if (drawY1 > clipY1) {
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+            if (drawY1 > drawY2) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     ushort *blendPtrB = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - alpha)];
                     ushort *blendPtrA = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                     *frameBufferPtr   = (blendPtrB[*frameBufferPtr & 0x1F] + blendPtrA[colour16 & 0x1F])
@@ -669,15 +657,13 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     ushort *blendPtrB = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - alpha)];
                     ushort *blendPtrA = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                     *frameBufferPtr   = (blendPtrB[*frameBufferPtr & 0x1F] + blendPtrA[colour16 & 0x1F])
                                       | ((blendPtrB[(*frameBufferPtr & 0x7E0) >> 6] + blendPtrA[(colour16 & 0x7E0) >> 6]) << 6)
                                       | ((blendPtrB[(*frameBufferPtr & 0xF800) >> 11] + blendPtrA[(colour16 & 0xF800) >> 11]) << 11);
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -692,9 +678,9 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_ADD:
-            if (drawY1 > clipY1) {
+            if (drawY1 > drawY2) {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     int v20         = 0;
                     int v21         = 0;
                     int finalColour = 0;
@@ -729,7 +715,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     int v20         = 0;
                     int v21         = 0;
                     int finalColour = 0;
@@ -750,8 +736,6 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                         finalColour = v21 | 0x1F;
                     *frameBufferPtr = finalColour;
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -766,18 +750,18 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_SUB:
-            if (drawY1 > clipY1) {
+            if (drawY1 > drawY2) {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     ushort finalColour = 0;
-                    if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                    if ((*frameBufferPtr & 0xF800) - (subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
                         finalColour = 0;
                     else
-                        finalColour = (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
-                    int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                        finalColour = (*frameBufferPtr & 0xF800) - (subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                    int v12 = (*frameBufferPtr & 0x7E0) - (subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
                     if (v12 > 0)
                         finalColour |= v12;
-                    int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
+                    int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
                     if (v13 > 0)
                         finalColour |= v13;
                     *frameBufferPtr = finalColour;
@@ -796,22 +780,20 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     ushort finalColour = 0;
-                    if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                    if ((*frameBufferPtr & 0xF800) - (subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
                         finalColour = 0;
                     else
-                        finalColour = (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
-                    int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                        finalColour = (*frameBufferPtr & 0xF800) - (subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                    int v12 = (*frameBufferPtr & 0x7E0) - (subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
                     if (v12 > 0)
                         finalColour |= v12;
-                    int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
+                    int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
                     if (v13 > 0)
                         finalColour |= v13;
                     *frameBufferPtr = finalColour;
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -826,8 +808,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_LOOKUP:
-            if (drawY1 > clipY1) {
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+            if (drawY1 > drawY2) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     *frameBufferPtr = lookupTable[*frameBufferPtr];
 
                     if (hSize > -sizeX) {
@@ -843,11 +825,9 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     *frameBufferPtr = lookupTable[*frameBufferPtr];
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -862,8 +842,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_MASKED:
-            if (drawY1 > clipY1) {
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+            if (drawY1 > drawY2) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     if (*frameBufferPtr == maskColour)
                         *frameBufferPtr = colour16;
 
@@ -880,12 +860,10 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     if (*frameBufferPtr == maskColour)
                         *frameBufferPtr = colour16;
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -900,8 +878,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
         case INK_UNMASKED:
-            if (drawY1 > clipY1) {
-                while (drawX1 < clipX1 || drawY1 >= clipY1) {
+            if (drawY1 > drawY2) {
+                while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     if (*frameBufferPtr != maskColour)
                         *frameBufferPtr = colour16;
 
@@ -918,12 +896,10 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (true) {
+                while (drawX1 < drawX2 || drawY1 < drawY2) {
                     if (*frameBufferPtr != maskColour)
                         *frameBufferPtr = colour16;
 
-                    if (drawX1 >= clipX1 && drawY1 >= clipY1)
-                        break;
                     if (hSize > -sizeX) {
                         hSize -= max;
                         ++drawX1;
@@ -2687,19 +2663,22 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
 
     if (width + x > currentScreen->clipBound_X2)
         width = currentScreen->clipBound_X2 - x;
+
     if (x < currentScreen->clipBound_X1) {
-        sprX -= x;
-        width += x;
-        widthFlip += x + x;
+        int val = x - currentScreen->clipBound_X1;
+        sprX -= val;
+        width += val;
+        widthFlip += 2 * val;
         x = currentScreen->clipBound_X1;
     }
 
     if (height + y > currentScreen->clipBound_Y2)
         height = currentScreen->clipBound_Y2 - y;
     if (y < currentScreen->clipBound_Y1) {
-        sprY -= y;
-        height += y;
-        heightFlip += y + y;
+        int val = y - currentScreen->clipBound_Y1;
+        sprY -= val;
+        height += val;
+        heightFlip += 2 * val;
         y = currentScreen->clipBound_Y1;
     }
 
@@ -3302,16 +3281,16 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                                 int v21         = 0;
                                 int finalColour = 0;
 
-                                if (((ushort)blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
-                                    v20 = ((ushort)blendTablePtr[(colour & 0xF800) >> 11] << 11) + (ushort)(*frameBufferPtr & 0xF800);
+                                if ((blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800) <= 0xF800)
+                                    v20 = (blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBufferPtr & 0xF800);
                                 else
                                     v20 = 0xF800;
-                                int v12 = ((ushort)blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
+                                int v12 = (blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (*frameBufferPtr & 0x7E0);
                                 if (v12 <= 0x7E0)
                                     v21 = v12 | v20;
                                 else
                                     v21 = v20 | 0x7E0;
-                                int v13 = (ushort)blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
+                                int v13 = blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (*frameBufferPtr & 0x1F);
                                 if (v13 <= 31)
                                     finalColour = v13 | v21;
                                 else
@@ -3336,14 +3315,14 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                             if (*gfxData > 0) {
                                 ushort colour      = activePalette[*gfxData];
                                 ushort finalColour = 0;
-                                if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)
+                                if ((*frameBufferPtr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)
                                     finalColour = 0;
                                 else
-                                    finalColour = (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour & 0xF800) >> 11] << 11);
-                                int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour & 0x7E0) >> 6] << 6);
+                                    finalColour = (*frameBufferPtr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11);
+                                int v12 = (*frameBufferPtr & 0x7E0) - (subBlendTable[(colour & 0x7E0) >> 6] << 6);
                                 if (v12 > 0)
                                     finalColour |= v12;
-                                int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour & (BLENDTABLE_XSIZE - 1)];
+                                int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - subBlendTable[colour & (BLENDTABLE_XSIZE - 1)];
                                 if (v13 > 0)
                                     finalColour |= v13;
                                 *frameBufferPtr = finalColour;
@@ -3435,214 +3414,331 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
         angle = rotation & 0x1FF;
 
     int sine        = sinVal512[angle];
-    int fullScaleXS = scaleX * sinVal512[angle] >> 9;
     int cosine      = cosVal512[angle];
-    int fullScaleXC = scaleX * cosVal512[angle] >> 9;
+    int fullScaleXS = scaleX * sine >> 9;
+    int fullScaleXC = scaleX * cosine >> 9;
     int fullScaleYS = scaleY * sine >> 9;
     int fullScaleYC = scaleY * cosine >> 9;
 
-    int x1, x2, x3, x4;
-    int y1, y2, y3, y4;
+    int posX[4];
+    int posY[4];
     int sprXPos = (sprX - pivotX) << 16;
     int sprYPos = (sprY - pivotY) << 16;
+
+    int xMax     = 0;
+    int scaledX1 = 0;
+    int scaledX2 = 0;
+    int scaledY1 = 0;
+    int scaledY2 = 0;
     switch (direction) {
         default:
         case FLIP_NONE: {
-            int scaledX1 = fullScaleXS * (pivotX - 2);
-            int scaledX2 = fullScaleXC * (pivotX - 2);
-            int scaledY1 = fullScaleYS * (pivotY - 2);
-            int scaledY2 = fullScaleYC * (pivotY - 2);
-            x1           = x + ((scaledX2 + scaledY1) >> 9);
-            y1           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
-            int xMax     = pivotX + 2 + width;
-
-            int scaledXMaxS = fullScaleXS * xMax;
-            int scaledXMaxC = fullScaleXC * xMax;
-            x2              = x + ((scaledXMaxC + scaledY1) >> 9);
-            y2              = y + ((scaledY2 - scaledXMaxS) >> 9);
-            int v32         = pivotY + 2 + height;
-            int scaledYMaxC = fullScaleYC * v32;
-            int scaledYMaxS = fullScaleYS * v32;
-            int v35         = scaledYMaxS + scaledX2;
-            int v36         = scaledXMaxC + scaledYMaxS;
-            x3              = x + (v35 >> 9);
-            int v37         = scaledYMaxC - scaledX1;
-            int v38         = scaledYMaxC - scaledXMaxS;
-            y4              = y + (v38 >> 9);
-            x4              = x + (v36 >> 9);
-            y3              = y + (v37 >> 9);
+            scaledX1 = fullScaleXS * (pivotX - 2);
+            scaledX2 = fullScaleXC * (pivotX - 2);
+            scaledY1 = fullScaleYS * (pivotY - 2);
+            scaledY2 = fullScaleYC * (pivotY - 2);
+            xMax     = pivotX + 2 + width;
+            posX[0]           = x + ((scaledX2 + scaledY1) >> 9);
+            posY[0]           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
             break;
         }
         case FLIP_X: {
-            int scaledX1 = fullScaleXS * (2 - pivotX);
-            int scaledX2 = fullScaleXC * (2 - pivotX);
-            int scaledY1 = fullScaleYS * (pivotY - 2);
-            int scaledY2 = fullScaleYC * (pivotY - 2);
-            x1       = x + ((scaledX2 + scaledY1) >> 9);
-            int xMax     = -2 - pivotX - width;
-            y1           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
-
-            int scaledXMaxS = fullScaleXS * xMax;
-            int scaledXMaxC = fullScaleXC * xMax;
-            x2              = x + ((scaledXMaxC + scaledY1) >> 9);
-            y2              = y + ((scaledY2 - scaledXMaxS) >> 9);
-            int v32         = pivotY + 2 + height;
-            int scaledYMaxC = fullScaleYC * v32;
-            int scaledYMaxS = fullScaleYS * v32;
-            int v35         = scaledYMaxS + scaledX2;
-            int v36         = scaledXMaxC + scaledYMaxS;
-            x3              = x + (v35 >> 9);
-            int v37         = scaledYMaxC - scaledX1;
-            int v38         = scaledYMaxC - scaledXMaxS;
-            y4              = y + (v38 >> 9);
-            x4              = x + (v36 >> 9);
-            y3              = y + (v37 >> 9);
+            scaledX1 = fullScaleXS * (2 - pivotX);
+            scaledX2 = fullScaleXC * (2 - pivotX);
+            scaledY1 = fullScaleYS * (pivotY - 2);
+            scaledY2 = fullScaleYC * (pivotY - 2);
+            xMax     = -2 - pivotX - width;
+            posX[0]       = x + ((scaledX2 + scaledY1) >> 9);
+            posY[0]           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
             break;
         }
         case FLIP_Y:
-        case FLIP_XY: {
-            //x2 = v186;
-            //x1 = v185;
-            //x4 = v188;
-            //x3 = v187;
-            //y4 = v188;
-            //y3 = v187;
-            //y2 = v186;
-            //x2 = v186;
-            //y1 = v185;
-            int scaledX1 = 0;
-            int scaledX2 = 0;
-            int scaledY1 = 0;
-            int scaledY2 = 0;
-            int xMax = 0;
-
-            int scaledXMaxS = fullScaleXS * xMax;
-            int scaledXMaxC = fullScaleXC * xMax;
-            x2              = x + ((scaledXMaxC + scaledY1) >> 9);
-            y2              = y + ((scaledY2 - scaledXMaxS) >> 9);
-            int v32         = pivotY + 2 + height;
-            int scaledYMaxC = fullScaleYC * v32;
-            int scaledYMaxS = fullScaleYS * v32;
-            int v35         = scaledYMaxS + scaledX2;
-            int v36         = scaledXMaxC + scaledYMaxS;
-            x3              = x + (v35 >> 9);
-            int v37         = scaledYMaxC - scaledX1;
-            int v38         = scaledYMaxC - scaledXMaxS;
-            y4              = y + (v38 >> 9);
-            x4              = x + (v36 >> 9);
-            y3              = y + (v37 >> 9);
+        case FLIP_XY:
             break;
-        }
     }
 
-    int right = currentScreen->pitch;
-    int pitch = currentScreen->pitch;
-    if (x1 < currentScreen->pitch)
-        right = x1;
-    if (x2 < right)
-        right = x2;
-    if (x3 < right)
-        right = x3;
-    if (x4 < right)
-        right = x4;
-    if (right < currentScreen->clipBound_X1)
-        right = currentScreen->clipBound_X1;
-    int left = 0;
-    if (x1 > 0)
-        left = x1;
-    if (x2 > left)
-        left = x2;
-    if (x3 > left)
-        left = x3;
-    int bottom = currentScreen->height;
-    if (x4 > left)
-        left = x4;
-    if (left > currentScreen->clipBound_X2)
-        left = currentScreen->clipBound_X2;
-    int xDif = left - right;
-    if (y1 < bottom)
-        bottom = y1;
-    if (y2 < bottom)
-        bottom = y2;
-    if (y3 < bottom)
-        bottom = y3;
-    if (y4 < bottom)
-        bottom = y4;
-    if (bottom < currentScreen->clipBound_Y1)
-        bottom = currentScreen->clipBound_Y1;
-    int top = 0;
-    if (y1 > 0)
-        top = y1;
-    if (y2 > top)
-        top = y2;
+    int scaledXMaxS = fullScaleXS * xMax;
+    int scaledXMaxC = fullScaleXC * xMax;
+    int scaledYMaxC = fullScaleYC * (pivotY + 2 + height);
+    int scaledYMaxS = fullScaleYS * (pivotY + 2 + height);
+    posX[1]              = x + ((scaledXMaxC + scaledY1) >> 9);
+    posY[1]              = y + ((scaledY2 - scaledXMaxS) >> 9);
+    posX[2]              = x + ((scaledYMaxS + scaledX2) >> 9);
+    posY[2]              = y + ((scaledYMaxC - scaledX1) >> 9);
+    posX[3]              = x + ((scaledXMaxC + scaledYMaxS) >> 9);
+    posY[3]              = y + ((scaledYMaxC - scaledXMaxS) >> 9);
 
-    if (y3 > top)
-        top = y3;
-    if (y4 > top)
-        top = y4;
-    if (top > currentScreen->clipBound_Y2)
-        top = currentScreen->clipBound_Y2;
-    int yDif = top - bottom;
+    int left = currentScreen->pitch;
+    for (int i = 0; i < 4; ++i) {
+        if (posX[i] < left)
+            left = posX[i];
+    }
+    if (left < currentScreen->clipBound_X1)
+        left = currentScreen->clipBound_X1;
+    int right = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (posX[i] > right)
+            right = posX[i];
+    }
+    if (right > currentScreen->clipBound_X2)
+        right = currentScreen->clipBound_X2;
+
+
+    int top = currentScreen->height;
+    for (int i = 0; i < 4; ++i) {
+        if (posY[i] < top)
+            top = posY[i];
+    }
+    if (top < currentScreen->clipBound_Y1)
+        top = currentScreen->clipBound_Y1;
+
+    int bottom = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (posY[i] > bottom)
+            bottom = posY[i];
+    }
+    if (bottom > currentScreen->clipBound_Y2)
+        bottom = currentScreen->clipBound_Y2;
+
+    int xDif = right - left;
+    int yDif = bottom - top;
     if (xDif >= 1 && yDif >= 1) {
         GFXSurface *surface = &gfxSurface[sheetID];
 
-        int fullX        = (sprX + width) << 16;
-        int fullY        = (height + sprY) << 16;
-        validDraw    = true;
-        int fullScaleX   = (signed int)(float)((float)(512.0 / (float)scaleX) * 512.0);
-        int fullScaleY   = (float)(512.0 / (float)scaleY) * 512.0;
-        int deltaXLen    = fullScaleX * sine >> 2;
-        int deltaX       = fullScaleX * cosine >> 2;
-        int fullScaleYCb = fullScaleX * cosine >> 2;
-        int fullScaleXSb = pitch - xDif;
-        int scaleYCos      = (signed int)fullScaleY * cosine >> 2;
-        int deltaY       = (signed int)fullScaleY * sine >> 2;
-        int lineSize     = surface->lineSize;
-        byte *lineBuffer   = &gfxLineBuffer[bottom];
-        int xLen         = right - x;
-        int yLen         = bottom - y;
-        byte* gfxData      = surface->dataPtr;
-        ushort *frameBuffer = &currentScreen->frameBuffer[right + bottom * pitch];
+        int fullX           = (sprX + width) << 16;
+        int fullY           = (sprY + height) << 16;
+        validDraw           = true;
+        int fullScaleX      = (float)((512.0 / (float)scaleX) * 512.0);
+        int fullScaleY      = (float)((512.0 / (float)scaleY) * 512.0);
+        int deltaXLen       = fullScaleX * sine >> 2;
+        int deltaX          = fullScaleX * cosine >> 2;
+        int fbPitch         = currentScreen->pitch - xDif;
+        int deltaYLen       = fullScaleY * cosine >> 2;
+        int deltaY          = fullScaleY * sine >> 2;
+        int lineSize        = surface->lineSize;
+        byte *lineBuffer    = &gfxLineBuffer[top];
+        int xLen            = left - x;
+        int yLen            = top - y;
+        byte *gfxData       = surface->dataPtr;
+        ushort *frameBuffer = &currentScreen->frameBuffer[left + (top * currentScreen->pitch)];
         int fullSprY        = (sprY << 16) - 1;
-        int fullSprX          = (sprX << 16) - 1;
+        int fullSprX        = (sprX << 16) - 1;
 
-        int drawX, drawY;
-        if (direction) {
-            if (direction == FLIP_X) {
-                drawX        = sprXPos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
-                drawY        = sprYPos + scaleYCos * yLen + deltaY * xLen;
-                deltaX       = -deltaX;
-                deltaXLen    = -deltaXLen;
-                fullScaleYCb = deltaX;
-            }
-            else {
-                //drawX = v119;
-                //drawY = v119;
-            }
+        int drawX = 0, drawY = 0;
+        if (direction == FLIP_X) {
+            drawX        = sprXPos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
+            drawY        = sprYPos + deltaYLen * yLen + deltaY * xLen;
+            deltaX       = -deltaX;
+            deltaXLen    = -deltaXLen;
         }
-        else {
+        else if (!direction) {
             drawX = sprXPos + deltaX * xLen - deltaXLen * yLen;
-            drawY = sprYPos + scaleYCos * yLen + deltaY * xLen;
+            drawY = sprYPos + deltaYLen * yLen + deltaY * xLen;
         }
 
         switch (inkEffect) {
             case INK_NONE:
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos   = drawX;
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos > fullSprX && drawXPos < fullX && drawY > fullSprY && drawY < fullY) {
-                            byte index = gfxData[((drawY >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index)
                                 *frameBuffer = palettePtr[index];
                         }
                         ++frameBuffer;
                         drawXPos += deltaX;
-                        drawY += deltaY;
+                        drawYPos += deltaY;
                     }
                     drawX -= deltaXLen;
-                    drawY += scaleYCos;
-                    frameBuffer += fullScaleXSb;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            case INK_BLEND:
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index)
+                                *frameBuffer = ((palettePtr[index] & 0xF7DE) >> 1) + ((*frameBuffer & 0xF7DE) >> 1);
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            case INK_ALPHA:
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index) {
+                                ushort colour          = palettePtr[index];
+                                ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
+                                ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                                *frameBuffer =
+                                    (blendTablePtrA[*frameBuffer & (BLENDTABLE_XSIZE - 1)] + blendTablePtrB[colour & (BLENDTABLE_XSIZE - 1)])
+                                    | ((blendTablePtrA[(*frameBuffer & 0x7E0) >> 6] + blendTablePtrB[(colour & 0x7E0) >> 6]) << 6)
+                                    | ((blendTablePtrA[(*frameBuffer & 0xF800) >> 11] + blendTablePtrB[(colour & 0xF800) >> 11]) << 11);
+                            }
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            case INK_ADD: {
+                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index) {
+                                ushort colour   = palettePtr[index];
+                                int v20         = 0;
+                                int v21         = 0;
+                                int finalColour = 0;
+
+                                if ((blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBuffer & 0xF800) <= 0xF800)
+                                    v20 = (blendTablePtr[(colour & 0xF800) >> 11] << 11) + (*frameBuffer & 0xF800);
+                                else
+                                    v20 = 0xF800;
+                                int v12 = (blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (*frameBuffer & 0x7E0);
+                                if (v12 <= 0x7E0)
+                                    v21 = v12 | v20;
+                                else
+                                    v21 = v20 | 0x7E0;
+                                int v13 = blendTablePtr[colour & 0x1F] + (*frameBuffer & 0x1F);
+                                if (v13 <= 31)
+                                    finalColour = v13 | v21;
+                                else
+                                    finalColour = v21 | 0x1F;
+                                *frameBuffer = finalColour;
+                            }
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            }
+            case INK_SUB: {
+                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index) {
+                                ushort colour      = palettePtr[index];
+                                ushort finalColour = 0;
+                                if ((*frameBuffer & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)
+                                    finalColour = 0;
+                                else
+                                    finalColour = (*frameBuffer & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11);
+                                int v12 = (*frameBuffer & 0x7E0) - (subBlendTable[(colour & 0x7E0) >> 6] << 6);
+                                if (v12 > 0)
+                                    finalColour |= v12;
+                                int v13 = (*frameBuffer & 0x1F) - subBlendTable[colour & 0x1F];
+                                if (v13 > 0)
+                                    finalColour |= v13;
+                                *frameBuffer = finalColour;
+                            }
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            }
+            case INK_LOOKUP:
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index)
+                                *frameBuffer = lookupTable[*frameBuffer];
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            case INK_MASKED:
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index && *frameBuffer == maskColour)
+                                *frameBuffer = palettePtr[index];
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
+                }
+                break;
+            case INK_UNMASKED:
+                for (int y = 0; y < yDif; ++y) {
+                    ushort *palettePtr = fullPalette[*lineBuffer++];
+                    int drawXPos       = drawX;
+                    int drawYPos       = drawY;
+                    for (int x = 0; x < xDif; ++x) {
+                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
+                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                            if (index && *frameBuffer != maskColour)
+                                *frameBuffer = palettePtr[index];
+                        }
+                        ++frameBuffer;
+                        drawXPos += deltaX;
+                        drawYPos += deltaY;
+                    }
+                    drawX -= deltaXLen;
+                    drawY += deltaYLen;
+                    frameBuffer += fbPitch;
                 }
                 break;
         }

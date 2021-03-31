@@ -3,15 +3,23 @@
 
 #include "../SonicMania.h"
 
-#if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
 } ObjectEggman;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    void(*stateStore)();
+    int timer;
+    ushort animID;
+    Entity* parent;
+    Vector2 offset;
+    Hitbox hitbox;
+    AnimationData data;
 } EntityEggman;
 
 // Object Struct
@@ -29,6 +37,12 @@ void Eggman_EditorLoad();
 void Eggman_Serialize();
 
 // Extra Entity Functions
-#endif
+void Eggman_Unknown1();
+void Eggman_Unknown2();
+void Eggman_Unknown3();
+void Eggman_Unknown4();
+void Eggman_Unknown5();
+void Eggman_Unknown6();
+void Eggman_Unknown7();
 
 #endif //!OBJ_EGGMAN_H

@@ -969,11 +969,10 @@ inline void writeText(FileIO *file, const char *string, ...)
     va_list args;
     va_start(args, string);
     vsprintf(buffer, string, args);
-    printf("%s\n", buffer);
-    sprintf(buffer, "%s\n", buffer);
+    sprintf(buffer, "%s", buffer);
     va_end(args);
 
-    fWrite(string, sizeof(char), StrLength(string), file);
+    fWrite(buffer, sizeof(char), StrLength(buffer), file);
 }
 
 void writeSettings(bool32 writeToFile)
@@ -984,16 +983,16 @@ void writeSettings(bool32 writeToFile)
 
     if (settingsChanged || writeToFile) {
         dictionary *ini = iniparser_load("Settings.ini");
-        FileIO *file    = fOpen("Settings.ini", "rb");
+        FileIO *file    = fOpen("Settings.ini", "wb");
         writeText(file, "; Retro Engine Config File\n\n");
         writeText(file, "[Game]\n");
         if (ini) {
-            if (StrComp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound")) {
+            if (!StrComp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound")) {
                 writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
 
-            if (StrComp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound"))
-                writeText(file, "devMenu=%s\n", engine.devMenu);
+            if (!StrComp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound"))
+                writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
         }
 
 #if RETRO_USE_PLUS
@@ -1004,13 +1003,13 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "\n[Video]\n");
         writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
         writeText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
-        writeText(file, "windowed=%s\n", !engine.startFullScreen);
-        writeText(file, "border=%s\n", !engine.borderless);
-        writeText(file, "exclusiveFS=%s\n", engine.exclusiveFS);
-        writeText(file, "vsync=%s\n", engine.vsync);
-        writeText(file, "tripleBuffering=%s\n", engine.tripleBuffer);
+        writeText(file, "windowed=%s\n", (!engine.startFullScreen ? "y" : "n"));
+        writeText(file, "border=%s\n", (!engine.borderless ? "y" : "n"));
+        writeText(file, "exclusiveFS=%s\n", (engine.exclusiveFS ? "y" : "n"));
+        writeText(file, "vsync=%s\n", (engine.vsync ? "y" : "n"));
+        writeText(file, "tripleBuffering=%s\n", (engine.tripleBuffer ? "y" : "n"));
         if (ini) {
-            if (StrComp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound"))
+            if (!StrComp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound"))
                 writeText(file, "pixWidth=%d\n", pixWidth);
         }
         writeText(file, "winWidth=%d\n", engine.windowWidth);
@@ -1022,15 +1021,15 @@ void writeSettings(bool32 writeToFile)
         if (engine.refreshRate > 0)
             writeText(file, "refreshRate=%d\n", engine.refreshRate);
 
-        writeText(file, "shaderSupport=%s\n", engine.shaderSupport);
+        writeText(file, "shaderSupport=%s\n", (engine.shaderSupport ? "y" : "n"));
         writeText(file, "screenShader=%d\n", engine.shaderID);
         writeText(file, "\n[Audio]\n");
-        writeText(file, "streamsEnabled=%s\n", engine.streamsEnabled);
+        writeText(file, "streamsEnabled=%s\n", (engine.streamsEnabled ? "y" : "n"));
         writeText(file, "streamVolume=%f\n", engine.streamVolume);
         writeText(file, "sfxVolume=%f\n", engine.soundFXVolume);
 
-        for (int i = 0; i < 4; ++i) {
-            writeText(file, "\n[Keyboard Map %d]\n", i + i);
+        for (int i = 0; i < SCREEN_MAX; ++i) {
+            writeText(file, "\n[Keyboard Map %d]\n", i + 1);
             writeText(file, "up=0x%x\n", controller[i].keyUp.keyMap);
             writeText(file, "down=0x%x\n", controller[i].keyDown.keyMap);
             writeText(file, "left=0x%x\n", controller[i].keyLeft.keyMap);
@@ -1046,5 +1045,6 @@ void writeSettings(bool32 writeToFile)
         }
 
         iniparser_freedict(ini);
+        fClose(file);
     }
 }

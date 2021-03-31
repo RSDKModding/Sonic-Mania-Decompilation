@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort spriteIndex;
+    ushort sfxShatter;
 } ObjectShopWindow;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void(*state)();
+    void(*stateDraw)();
+    Vector2 size;
+    bool32 shatter;
+    bool32 silhouette;
+    Hitbox hitbox;
+    Hitbox windowHitbox;
+    Hitbox hitbox2;
+    Vector2 field_88;
+    Vector2 field_90;
+    AnimationData data;
 } EntityShopWindow;
 
 // Object Struct
@@ -28,6 +41,11 @@ void ShopWindow_EditorLoad();
 void ShopWindow_Serialize();
 
 // Extra Entity Functions
-
+void ShopWindow_State_Shard();
+void ShopWindow_State_Shattered();
+void ShopWindow_State_Silhouette();
+void ShopWindow_Draw_Normal();
+void ShopWindow_State_Draw_Shard();
+void ShopWindow_State_Draw_Shattered();
 
 #endif //!OBJ_SHOPWINDOW_H

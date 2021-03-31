@@ -340,7 +340,7 @@ void Music_Unknown7(EntityMusic *entity)
             RSDK.ResetEntityPtr(music, 0, 0);
 
             for (int slot = 40; slot < 48; ++slot) {
-                EntityMusic *music = RSDK_GET_ENTITY(slot);
+                EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
                 if (music->objectID == Music->objectID && music->field_80 > entity->field_80) {
                     RSDK.ResetEntityPtr(entity, 0, 0);
                     return;
@@ -517,7 +517,7 @@ void Music_State_Unknown13()
     if (RSDK.GetChannelPos(Music->slotID) > Music->dword244) {
         Music->dword244 = 0;
         entity->volume += entity->fadeSpeed;
-        RSDK.SetChannelAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
+        RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
         if (entity->volume >= 1.0) {
             entity->volume = 1.0;
             RSDK.ResetEntityPtr(entity, 0, 0);
@@ -539,7 +539,7 @@ void Music_State_TransitionTrack()
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
     entity->volume -= entity->fadeSpeed;
-    RSDK.SetChannelAttributes(0, Music->slotID, entity->volume, 0.0, 1.0);
+    RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {
         RSDK.StopChannel(Music->slotID);
         Music->activeTrack = Music->dword250;

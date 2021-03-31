@@ -2,15 +2,9 @@
 
 ObjectGHZSetup *GHZSetup;
 
-void GHZSetup_Update()
-{
+void GHZSetup_Update() {}
 
-}
-
-void GHZSetup_LateUpdate()
-{
-
-}
+void GHZSetup_LateUpdate() {}
 
 void GHZSetup_StaticUpdate()
 {
@@ -42,27 +36,21 @@ void GHZSetup_StaticUpdate()
     }
 }
 
-void GHZSetup_Draw()
-{
+void GHZSetup_Draw() {}
 
-}
-
-void GHZSetup_Create(void* data)
-{
-
-}
+void GHZSetup_Create(void *data) {}
 
 void GHZSetup_StageLoad()
 {
-    GHZSetup->aniTiles = RSDK.LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
-    Animals->animalType1 = 0;
-    Animals->animalType2 = 2;
+    GHZSetup->aniTiles      = RSDK.LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
+    Animals->animalTypes[0] = ANIMAL_FLICKY;
+    Animals->animalTypes[1] = ANIMAL_POCKY;
     if (Zone->actID) {
         BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchA1;
         BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchA2;
-        BGSwitch->layerIDs[0]     = 0;
-        BGSwitch->layerIDs[1]     = 0;
-        BGSwitch->layerIDs[2]     = 0;
+        BGSwitch->layerIDs[0]       = 0;
+        BGSwitch->layerIDs[1]       = 0;
+        BGSwitch->layerIDs[2]       = 0;
         BGSwitch->layerIDs[3]       = 0;
 #if RETRO_USE_PLUS
         if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
@@ -80,9 +68,9 @@ void GHZSetup_StageLoad()
             Zone->stageFinishCallback = GHZSetup_SpawnGHZ2Outro;
     }
     else {
-        TileLayer *bg             = RSDK.GetSceneLayer(0);
-        bg->scrollPos             = 0x180000;
-        bg->parallaxFactor        = -bg->parallaxFactor;
+        TileLayer *bg               = RSDK.GetSceneLayer(0);
+        bg->scrollPos               = 0x180000;
+        bg->parallaxFactor          = -bg->parallaxFactor;
         BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchB1;
         BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchB2;
 #if RETRO_USE_PLUS
@@ -116,9 +104,9 @@ void GHZSetup_StageLoad()
         if (Water) {
             EntityWater *water = 0;
             while (RSDK.GetEntities(Water->objectID, (Entity **)&water)) {
-                //water->r = 0xA0;
-                //water->g = 0xA0;
-                //water->b = 0xE0;
+                water->r = 0xA0;
+                water->g = 0xA0;
+                water->b = 0xE0;
             }
         }
     }
@@ -157,8 +145,9 @@ void GHZSetup_SetupActTransition()
     Zone_StoreEntities(0x3DB00000, 0x6340000);
     RSDK.InitSceneLoad();
 }
-void GHZSetup_HandleActTransition() {
-    Zone->screenBoundsL1[0] = 256 - RSDK_screens->centerX;
+void GHZSetup_HandleActTransition()
+{
+    Zone->screenBoundsL1[0] = 0x100 - RSDK_screens->centerX;
     Zone->screenBoundsB1[0] = 1412;
     Zone_ReloadStoredEntities(0x5840000, 0x1000000, true);
 
@@ -210,18 +199,8 @@ void GHZSetup_SetupBGSwitchB2()
 }
 void GHZSetup_SpawnGHZ2Outro() { RSDK.CreateEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
 
-void GHZSetup_EditorDraw()
-{
+void GHZSetup_EditorDraw() {}
 
-}
+void GHZSetup_EditorLoad() {}
 
-void GHZSetup_EditorLoad()
-{
-
-}
-
-void GHZSetup_Serialize()
-{
-
-}
-
+void GHZSetup_Serialize() {}

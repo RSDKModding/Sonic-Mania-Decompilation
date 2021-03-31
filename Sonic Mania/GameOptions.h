@@ -63,6 +63,7 @@ typedef enum {
     SLOT_CUTSCENESEQ      = 15,
     SLOT_PAUSEMENU        = 16,
     SLOT_GAMEOVER         = 16,
+    SLOT_ACTCLEAR         = 16,
     SLOT_UICONTROL        = 17,
     SLOT_DIALOG           = 21,
     SLOT_DIALOG_UICONTROL = 22,

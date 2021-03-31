@@ -259,7 +259,7 @@ void SignPost_State_Land()
         entity->type  = 3;
         entity->state = SignPost_State_Finish;
         Music_PlayTrack(TRACK_ACTCLEAR);
-        RSDK.ResetEntitySlot(16, ActClear->objectID, 0);
+        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, 0);
     }
 }
 void SignPost_State_CompetitionFinish()

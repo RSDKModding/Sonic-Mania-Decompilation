@@ -1,7 +1,22 @@
 #ifndef OBJ_ANIMALS_H
 #define OBJ_ANIMALS_H
 
-#include "../SonicMania.h"
+#include "../SonicMania.h" 
+
+typedef enum {
+    ANIMAL_FLICKY,
+    ANIMAL_RICKY,
+    ANIMAL_POCKY,
+    ANIMAL_PECKY,
+    ANIMAL_PICKY,
+    ANIMAL_CUCKY,
+    ANIMAL_ROCKY,
+    ANIMAL_BECKY,
+    ANIMAL_LOCKY,
+    ANIMAL_TOCKY,
+    ANIMAL_WOCKY,
+    ANIMAL_MICKY,
+} ANIMAL_TYPES;
 
 // Object Class
 typedef struct {
@@ -11,8 +26,7 @@ typedef struct {
     int yVelocity[12];
     int xVelocity[12];
     ushort spriteIndex;
-    int animalType1;
-    int animalType2;
+    int animalTypes[2];
     bool32 hasPlatform;
     bool32 hasBridge;
 } ObjectAnimals;

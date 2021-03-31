@@ -26,6 +26,7 @@ void FXTrail_LateUpdate()
         memcpy(&entity->stateAnim[0], &entity->currentAnim, sizeof(AnimationData));
 
         // Record Parent
+        entity->drawOrder        = parent->drawOrder - 1;
         entity->currentPos.x     = parent->position.x;
         entity->currentPos.y     = parent->position.y;
         entity->currentRotation  = parent->rotation;
@@ -42,7 +43,7 @@ void FXTrail_StaticUpdate() {}
 void FXTrail_Draw()
 {
     RSDK_THIS(FXTrail);
-    int alpha[3] = { 0x60 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0xA0 * entity->baseAlpha >> 8 };
+    int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
     for (int i = 2; i >= 0; --i) {
         int id = (i * 3) - (i - 1);
         if (entity->stateVisible[id]) {

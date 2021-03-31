@@ -121,9 +121,9 @@ void SPZ1Setup_StageLoad()
         memcpy(SPZ1Setup->bgLayer2->deformationData + 0x200, SPZ1Setup->bgLayer2->deformationData, 0x200 * sizeof(int));
         id += 16;
     }
-
-    Animals->animalType1 = 3;
-    Animals->animalType2 = 11;
+    
+    Animals->animalTypes[0] = ANIMAL_PECKY;
+    Animals->animalTypes[1] = ANIMAL_MICKY;
 #if RETRO_USE_PLUS
     if ((globals->gameMode && globals->gameMode != MODE_ENCORE) || !globals->enableIntro || Game_CheckStageReload())
 #else
