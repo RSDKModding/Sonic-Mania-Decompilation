@@ -383,7 +383,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
     Model *model = &modelList[id];
     FileInfo info;
     MEM_ZERO(info);
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info);
 
         if (sig != 0x4C444D) {
@@ -485,7 +485,7 @@ ushort Create3DScene(const char *name, ushort vertexLimit, Scopes scope)
 
     return id;
 }
-void SetupMesh(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void AddModelToScene(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld) {
@@ -608,7 +608,7 @@ void SetupMesh(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, 
         }
     }
 }
-void SetupMeshAnimation(ushort modelID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void AddMeshFrameToScene(ushort modelID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && data) {
@@ -813,7 +813,7 @@ void Draw3DScene(ushort sceneID)
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
                     }
-                    DrawQuad(vertPos, *vertCnt, (drawVert->colour >> 16) & 0xFF, (drawVert->colour >> 8) & 0xFF, (drawVert->colour >> 0) & 0xFF,
+                    DrawFace(vertPos, *vertCnt, (drawVert->colour >> 16) & 0xFF, (drawVert->colour >> 8) & 0xFF, (drawVert->colour >> 0) & 0xFF,
                              entity->alpha, (InkEffects)entity->inkEffect);
                     vertCnt++;
                 }
@@ -907,7 +907,7 @@ void Draw3DScene(ushort sceneID)
                     uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                     drawVert = &scn->vertices[scn->zBuffer[i].index];
-                    DrawQuad(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF,
+                    DrawFace(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF,
                              entity->alpha, (InkEffects)entity->inkEffect);
 
                     vertCnt++;
@@ -955,13 +955,13 @@ void Draw3DScene(ushort sceneID)
                         vertClrs[v] = (clrR << 16) | (clrG << 8) | (clrB << 0);
                     }
 
-                    DrawBlendedQuad(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
+                    DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
 
                     vertCnt++;
                 }
                 break;
             case S3D_FLATCLR_SCREEN_WIREFRAME:
-                for (int i = 0; i < scn->vertexCount; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
 
                     int v = 0;
@@ -988,7 +988,7 @@ void Draw3DScene(ushort sceneID)
                 }
                 break;
             case S3D_FLATCLR_SCREEN:
-                for (int i = 0; i < scn->vertexCount; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     int vertCount           = *vertCnt;
 
@@ -1005,14 +1005,14 @@ void Draw3DScene(ushort sceneID)
                     }
 
                     if (v < 0xFF) {
-                        DrawQuad(vertPos, *vertCnt, (drawVert[0].colour >> 16) & 0xFF, (drawVert[0].colour >> 8) & 0xFF,
+                        DrawFace(vertPos, *vertCnt, (drawVert[0].colour >> 16) & 0xFF, (drawVert[0].colour >> 8) & 0xFF,
                                  (drawVert[0].colour >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
                     }
                     vertCnt++;
                 }
                 break;
             case S3D_FLATCLR_SHADED_SCREEN_WIREFRAME:
-                for (int i = 0; i < scn->vertexCount; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     int vertCount           = *vertCnt;
 
@@ -1071,7 +1071,7 @@ void Draw3DScene(ushort sceneID)
                 }
                 break;
             case S3D_FLATCLR_SHADED_SCREEN:
-                for (int i = 0; i < scn->vertexCount; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     int vertCount           = *vertCnt;
 
@@ -1118,7 +1118,7 @@ void Draw3DScene(ushort sceneID)
                         uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                         drawVert = &scn->vertices[scn->zBuffer[i].index];
-                        DrawQuad(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF,
+                        DrawFace(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF,
                                  (colour >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
                     }
 
@@ -1126,7 +1126,7 @@ void Draw3DScene(ushort sceneID)
                 }
                 break;
             case S3D_FLATCLR_SHADED_BLENDED_SCREEN:
-                for (int i = 0; i < scn->vertexCount; ++i) {
+                for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     int vertCount           = *vertCnt;
 
@@ -1173,7 +1173,7 @@ void Draw3DScene(ushort sceneID)
 
                     if (v < 0xFF) {
                         drawVert = &scn->vertices[scn->zBuffer[i].index];
-                        DrawBlendedQuad(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
+                        DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
                     }
 
                     vertCnt++;

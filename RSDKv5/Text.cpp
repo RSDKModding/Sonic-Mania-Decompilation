@@ -274,7 +274,7 @@ void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
     int strID      = 0;
 
     TextInfo *info = list;
-    for (int c = 0; c < strings->textLength && count >= 1; ++c) {
+    for (int c = 0; c < strings->textLength && count > 0; ++c) {
         if (strings->text[c] == '\n') {
             if (strID < start) {
                 lastStrPos = c;
@@ -325,7 +325,7 @@ void LoadStrings(TextInfo *buffer, const char *filePath)
 
     
     MEM_ZERO(info);
-    if (LoadFile(&info, nameBuf)) {
+    if (LoadFile(&info, nameBuf, FMODE_RB)) {
         ushort header = ReadInt16(&info);
         if (header == 0xFEFF) {
             InitStringsBuffer(buffer, (info.fileSize >> 1) - 1);

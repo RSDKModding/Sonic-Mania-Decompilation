@@ -5,12 +5,45 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    ushort field_1C;
+    ushort modelIndex;
+    ushort sceneIndex;
+    ushort field_22;
 } ObjectUFO_Springboard;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int height;
+    byte rampCount;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int field_78;
+    int field_7C;
+    int field_80;
+    int field_84;
+    int field_88;
+    int field_8C;
+    int field_90;
+    int field_94;
+    int field_98;
+    int field_9C;
+    int field_A0;
+    Matrix matrix1;
+    Matrix matrix2;
+    Matrix matrix3;
+    AnimationData data;
 } EntityUFO_Springboard;
 
 // Object Struct

@@ -93,7 +93,7 @@ bool32 processEvents()
                 for (int i = 0; i < touches; i++) {
                     touchDown[i]       = true;
                     SDL_Finger *finger = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
-                    touchX[i]          = (finger->x * SCREEN_XSIZE * engine.windowScale) / engine.windowScale;
+                    touchX[i]          = (finger->x * pixWidth * engine.windowScale) / engine.windowScale;
 
                     touchY[i] = (finger->y * SCREEN_YSIZE * engine.windowScale) / engine.windowScale;
                 }
@@ -103,7 +103,7 @@ bool32 processEvents()
                 for (int i = 0; i < touches; i++) {
                     touchDown[i]       = true;
                     SDL_Finger *finger = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
-                    touchX[i]          = (finger->x * SCREEN_XSIZE * engine.windowScale) / engine.windowScale;
+                    touchX[i]          = (finger->x * pixWidth * engine.windowScale) / engine.windowScale;
 
                     touchY[i] = (finger->y * SCREEN_YSIZE * engine.windowScale) / engine.windowScale;
                 }
@@ -400,7 +400,7 @@ void runRetroEngine()
                         }
                     }
                     else {
-                        engine.displayTime -= 0.01666666666666667f;
+                        engine.displayTime -= 0.0166666667f;
                         if (engine.skipCallback) {
                             if (engine.skipCallback())
                                 engine.displayTime = 0.0;
@@ -538,7 +538,7 @@ void LoadGameConfig()
     FileInfo info;
     MEM_ZERO(info);
 
-    if (LoadFile(&info, "Data/Game/GameConfig.bin")) {
+    if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
         char buffer[0x100];
         uint sig = ReadInt32(&info);
 
@@ -656,13 +656,13 @@ void LoadGameConfig()
 
 void InitScriptSystem()
 {
-    CreateObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
+    RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
                  NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
 #if RETRO_USE_PLUS
-    CreateObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
+    RegisterObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
 #endif
-    CreateObject((Object **)&TestObject, ":TestObject:", sizeof(EntityTestObject), sizeof(ObjectTestObject), TestObject_Update,
+    RegisterObject((Object **)&TestObject, ":TestObject:", sizeof(EntityTestObject), sizeof(ObjectTestObject), TestObject_Update,
                  TestObject_LateUpdate, TestObject_StaticUpdate, TestObject_Draw, TestObject_Create, TestObject_StageLoad, TestObject_EditorDraw,
                  TestObject_EditorLoad, TestObject_Serialize);
     globalObjectIDs[0] = 0;

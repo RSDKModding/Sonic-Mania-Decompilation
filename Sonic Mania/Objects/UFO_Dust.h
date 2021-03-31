@@ -5,12 +5,23 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int field_8;
+    unsigned __int16 spriteIndex;
+    __int16 field_E;
 } ObjectUFO_Dust;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int field_5C;
+    int height;
+    int field_64;
+    int worldX;
+    int worldY;
+    AnimationData data;
 } EntityUFO_Dust;
 
 // Object Struct

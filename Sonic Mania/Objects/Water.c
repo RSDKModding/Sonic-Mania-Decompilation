@@ -51,16 +51,18 @@ void Water_StaticUpdate()
         if (Water->waterLevelVolume > 30)
             Water->waterLevelVolume = 30;
         float volume = (float)Water->waterLevelVolume / 30.0;
-        RSDK.SetSoundAttributes(0, Water->waterLevelChannel_L, volume, -1.0, 1.0);
-        RSDK.SetSoundAttributes(0, Water->waterLevelChannel_R, volume, 1.0, 1.0);
+        RSDK.SetChannelAttributes(Water->waterLevelChannel_L, volume, -1.0, 1.0);
+        RSDK.SetChannelAttributes(Water->waterLevelChannel_R, volume, 1.0, 1.0);
     }
 
     if (Water->waterLevelVolume > 0) {
         if (!Water->playingWaterLevelSFX) {
             Water->waterLevelChannel_L = RSDK.PlaySFX(Water->sfx_WaterLevelL, 1, 255);
-            RSDK.SetSoundAttributes(0, Water->waterLevelChannel_L, 0.0, -1.0, 1.0);
+            RSDK.SetChannelAttributes(Water->waterLevelChannel_L, 0.0, -1.0, 1.0);
+
             Water->waterLevelChannel_R = RSDK.PlaySFX(Water->sfx_WaterLevelR, 1, 255);
-            RSDK.SetSoundAttributes(0, Water->waterLevelChannel_R, 0.0, 1.0, 1.0);
+            RSDK.SetChannelAttributes(Water->waterLevelChannel_R, 0.0, 1.0, 1.0);
+
             Water->playingWaterLevelSFX = true;
         }
     }

@@ -575,7 +575,7 @@ void UFO_Player_Unknown10()
         entity->velocity.x    = (entity->circuitPtr->position.x - entity->position.x) >> 4;
         entity->velocity.y    = (entity->circuitPtr->position.y - entity->position.y) >> 4;
         entity->state         = UFO_Player_Unknown11;
-        // entity->gravityStrength = (entity->circuitPtr->height - entity->height + 0x200000) >> 4;
+        // entity->gravityStrength = (entity->circuitPtr->timer - entity->timer + 0x200000) >> 4;
         RSDK.PlaySFX(UFO_Player->sfx_Release, 0, 255);
     }
 }

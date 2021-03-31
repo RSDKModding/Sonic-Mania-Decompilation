@@ -18,7 +18,7 @@ bool32 validDraw = false;
 ForeachStackInfo foreachStackList[0x20];
 ForeachStackInfo *foreachStackPtr = NULL;
 
-void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void))
 {
@@ -51,7 +51,7 @@ void CreateObject(Object **structPtr, const char *name, uint entitySize, uint ob
 }
 
 #if RETRO_USE_PLUS
-void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize)
+void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize)
 {
     memset(hashBuffer, 0, 0x400);
     int len = StrLength(name);
@@ -90,7 +90,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 
     FileInfo info;
     MEM_ZERO(info);
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info);
 
         if (sig != 0x4A424F) {
@@ -153,28 +153,30 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
             else {
                 int tmp = 0;
                 switch (dataType) {
-                    case VAR_UINT8:
-                    case VAR_INT8: dataPos += sizeof(byte) * arraySize; break;
-                    case VAR_UINT16:
-                    case VAR_INT16:
+                    case 0:
+                    case 3: // byte, sbyte
+                        dataPos += sizeof(byte) * arraySize;
+                        break;
+                    case 1:
+                    case 4: // short, ushort
                         tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(short) * arraySize;
                         break;
-                    case VAR_UINT32:
-                    case VAR_INT32:
-                    case VAR_ENUM:
+                    case 2:
+                    case 5:
+                    case 6: // int, uint, bool32
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
                     case 7: // any pointer
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(int *) * arraySize;
+                        dataPos = tmp + sizeof(int *) * arraySize; //4/8
                         break;
                     case 8:
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
@@ -183,28 +185,28 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         dataPos = tmp + sizeof(Vector2) * arraySize; // 8
                         break;
                     case 9: //
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(TextInfo) * arraySize; // 8
+                        dataPos = tmp + sizeof(TextInfo) * arraySize; // 8/16
                         break;
                     case 10: // AnimationData
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(AnimationData) * arraySize; // 24
+                        dataPos = tmp + sizeof(AnimationData) * arraySize; // 24/32
                         break;
                     case 11: // Hitbox
-                        tmp = (dataPos & 0xFFFFFFFE) + 2;
+                        tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Hitbox) * arraySize; // 8
                         break;
                     case 12: //???
-                        tmp = (dataPos & 0xFFFFFFFE) + 2;
+                        tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
                         if ((dataPos & 0xFFFFFFFE) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + 18 * arraySize; // 18
+                        dataPos = tmp + (2 * 9) * arraySize; // 18 (2 * 9)
                         break;
                     default: break;
                 }
@@ -663,7 +665,7 @@ void ProcessObjectDrawLists()
 #if !RETRO_USE_ORIGINAL_CODE
             if (engine.showPaletteOverlay) {
                 for (int p = 0; p < PALETTE_COUNT; ++p) {
-                    int x = (SCREEN_XSIZE - (0xF << 3));
+                    int x = (pixWidth - (0xF << 3));
                     int y = (SCREEN_YSIZE - (0xF << 2));
                     for (int c = 0; c < PALETTE_SIZE; ++c) {
                         uint clr = GetPaletteEntry(p, c);

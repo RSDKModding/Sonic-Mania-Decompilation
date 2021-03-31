@@ -258,7 +258,7 @@ inline void CopyTile(ushort dest, ushort src, ushort count)
     }
 }
 
-inline ScanlineInfo *GetLinePositions() { return scanlines; }
+inline ScanlineInfo *GetScanlines() { return scanlines; }
 
 void DrawLayerHScroll(TileLayer *layer);
 void DrawLayerVScroll(TileLayer *layer);

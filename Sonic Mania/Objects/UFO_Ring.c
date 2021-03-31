@@ -75,12 +75,12 @@ void UFO_Ring_PlayRingSFX()
 
     if (UFO_Setup->ringPan) {
         int channel = RSDK.PlaySFX(UFO_Ring->sfx_Ring, 0, 255);
-        RSDK.SetSoundAttributes(0, channel, 1.0, -1.0, 1.0);
+        RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->ringPan = 0;
     }
     else {
         int channel = RSDK.PlaySFX(UFO_Ring->sfx_Ring, 0, 255);
-        RSDK.SetSoundAttributes(0, channel, 1.0, 1.0, 1.0);
+        RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->ringPan = 1;
     }
 }

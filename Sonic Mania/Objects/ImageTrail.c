@@ -2,15 +2,12 @@
 
 ObjectImageTrail *ImageTrail;
 
-void ImageTrail_Update()
-{
-
-}
+void ImageTrail_Update() {}
 
 void ImageTrail_LateUpdate()
 {
-    EntityImageTrail *entity = (EntityImageTrail *)RSDK_sceneInfo->entity;
-    EntityPlayer *player     = (EntityPlayer *)entity->player;
+    RSDK_THIS(ImageTrail);
+    EntityPlayer *player = (EntityPlayer *)entity->player;
 
     // Check for fadeouts/destroy flags
     if (player->superState == 2) {
@@ -51,6 +48,7 @@ void ImageTrail_LateUpdate()
         entity->stateVisible[i]   = entity->stateVisible[i - 1];
         memcpy(&entity->stateAnim[i], &entity->stateAnim[i - 1], sizeof(AnimationData));
     }
+
     entity->statePos[0].x     = entity->currentPos.x;
     entity->statePos[0].y     = entity->currentPos.y;
     entity->stateRotation[0]  = entity->currentRotation;
@@ -79,15 +77,11 @@ void ImageTrail_LateUpdate()
     }
 }
 
-void ImageTrail_StaticUpdate()
-{
-
-}
+void ImageTrail_StaticUpdate() {}
 
 void ImageTrail_Draw()
 {
-    EntityImageTrail *entity = (EntityImageTrail *)RSDK_sceneInfo->entity;
-
+    RSDK_THIS(ImageTrail);
     int alpha[3] = { 0x60 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0xA0 * entity->baseAlpha >> 8 };
     for (int i = 2; i >= 0; --i) {
         int id = (i * 3) - (i - 1);
@@ -106,9 +100,9 @@ void ImageTrail_Draw()
     }
 }
 
-void ImageTrail_Create(void* data)
+void ImageTrail_Create(void *data)
 {
-    EntityImageTrail *entity = (EntityImageTrail *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ImageTrail);
     if (!RSDK_sceneInfo->inEditor) {
         EntityPlayer *player = (EntityPlayer *)data;
         entity->active       = ACTIVE_ALWAYS;
@@ -129,23 +123,10 @@ void ImageTrail_Create(void* data)
     }
 }
 
-void ImageTrail_StageLoad()
-{
+void ImageTrail_StageLoad() {}
 
-}
+void ImageTrail_EditorDraw() {}
 
-void ImageTrail_EditorDraw()
-{
+void ImageTrail_EditorLoad() {}
 
-}
-
-void ImageTrail_EditorLoad()
-{
-
-}
-
-void ImageTrail_Serialize()
-{
-
-}
-
+void ImageTrail_Serialize() {}

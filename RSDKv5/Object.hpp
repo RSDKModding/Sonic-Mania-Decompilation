@@ -148,11 +148,11 @@ extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 extern bool32 validDraw;
 
-void CreateObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
 #if RETRO_USE_PLUS
-void CreateObjectContainer(Object **structPtr, const char *name, uint objectSize);
+void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize);
 #endif
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos);

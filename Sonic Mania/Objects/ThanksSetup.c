@@ -48,7 +48,7 @@ void ThanksSetup_StageLoad()
     RSDK.ResetEntitySlot(0, ThanksSetup->objectID, 0);
     UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Thanks/Decorations.bin", SCOPE_STAGE);
     for (int i = 0; i < 16; ++i) {
-        RSDK.SoundUnknown1(i);
+        RSDK.StopChannel(i);
     }
 }
 

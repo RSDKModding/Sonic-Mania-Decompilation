@@ -69,7 +69,7 @@ void LoadShader(const char* fileName, byte scope) {
 
     sprintf(buffer, "Data/Shaders/CSO-DX9/%s.vso", fileName);
     MEM_ZERO(info);
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
@@ -82,7 +82,7 @@ void LoadShader(const char* fileName, byte scope) {
 
     sprintf(buffer, "Data/Shaders/CSO-DX9/%s.fso", fileName);
     MEM_ZERO(info);
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);

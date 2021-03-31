@@ -208,7 +208,7 @@ void DialogRunner_Unknown7(int a1, int a2)
                     UIControl_Unknown6(UIControl_Unknown8());
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
-            RSDK.SoundUnknown1(Music->slotID);
+            RSDK.StopChannel(Music->slotID);
             dialog->timer = 1;
         }*/
     }

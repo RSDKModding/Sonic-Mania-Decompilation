@@ -3,6 +3,9 @@
 
 #include "../SonicMania.h"
 
+// Extras lol
+#define FXTrail_trackCount 7
+
 // Object Class
 typedef struct {
 	RSDK_OBJECT
@@ -10,7 +13,20 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Entity *parent;
+    Vector2 currentPos;
+    Vector2 statePos[FXTrail_trackCount];
+    int currentRotation;
+    int stateRotation[FXTrail_trackCount];
+    byte currentDirection;
+    byte stateDirection[FXTrail_trackCount];
+    byte currentVisible;
+    byte stateVisible[FXTrail_trackCount];
+    AnimationData currentAnim;
+    AnimationData stateAnim[FXTrail_trackCount];
+    AnimationData *dataPtr;
+    int baseAlpha;
 } EntityFXTrail;
 
 // Object Struct

@@ -115,7 +115,7 @@ bool32 TitleSetup_IntroCallback()
 {
     if (!RSDK_controller->keyA.press && !RSDK_controller->keyB.press && !RSDK_controller->keyStart.press)
         return false;
-    RSDK.SoundUnknown1(Music->slotID);
+    RSDK.StopChannel(Music->slotID);
     return true;
 }
 
@@ -289,7 +289,7 @@ void TitleSetup_Unknown10()
 #else
 
 #endif
-        RSDK.SoundUnknown1(Music->slotID);
+        RSDK.StopChannel(Music->slotID);
         entity->state     = TitleSetup_Unknown11;
         entity->stateDraw = TitleSetup_Unknown13;
     }
@@ -316,7 +316,7 @@ void TitleSetup_Unknown12()
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
         RSDK.InitSceneLoad();
-        RSDK.SoundUnknown1(Music->slotID);
+        RSDK.StopChannel(Music->slotID);
         if (TitleSetup->altMusic) {
             RSDK.PlayMusic("IntroTee.ogg", Music->slotID, 0, 0, 0);
             RSDK.LoadVideo("Mania.ogv", 1.8, TitleSetup_IntroCallback);

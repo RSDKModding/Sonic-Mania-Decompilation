@@ -187,7 +187,7 @@ void ReadGifPictureData(ImageGIF *image, int width, int height, bool32 interlace
 bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader)
 {
     if (fileName) {
-        if (!LoadFile(&image->info, fileName))
+        if (!LoadFile(&image->info, fileName, FMODE_RB))
             return 0;
         Seek_Set(&image->info, 6);
         image->width  = ReadInt16(&image->info);
@@ -571,7 +571,7 @@ LABEL_30:
 
 bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
     if (fileName) {
-        if (LoadFile(&image->info, fileName)) {
+        if (LoadFile(&image->info, fileName, FMODE_RB)) {
             if (ReadInt64(&image->info) == 0xA1A0A0D474E5089LL) {
                 image->chunkSize   = ReadInt32(&image->info);
                 image->chunkHeader = ReadInt32(&image->info);

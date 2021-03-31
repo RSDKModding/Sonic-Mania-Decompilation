@@ -800,4 +800,10 @@ typedef enum {
     ENGINESTATE_NULL = 0x0D,
 } EngineStates;
 
+//Macros and other handy things
+
+#define CallFunction(func)                                                                                                                           \
+    if (func)                                                                                                                                        \
+        func();
+
 #endif /* GAMELINK_H */

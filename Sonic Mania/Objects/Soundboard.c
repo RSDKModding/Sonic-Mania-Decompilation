@@ -28,7 +28,7 @@ void Soundboard_StaticUpdate()
                 }
 
                 if (Soundboard->sfxUnknown8[s] > 0) {
-                    RSDK.SetSoundAttributes(0, Soundboard->sfxUnknown8[s], 1.0, 0.0, 1.0);
+                    RSDK.SetChannelAttributes(Soundboard->sfxUnknown8[s], 1.0, 0.0, 1.0);
                 }
 
                 if (changeCallback) {
@@ -49,7 +49,7 @@ void Soundboard_StaticUpdate()
                 RSDK.StopSFX(Soundboard->sfxList[s]);
             }
             else {
-                RSDK.SetSoundAttributes(0, Soundboard->sfxUnknownVal[s],
+                RSDK.SetChannelAttributes(Soundboard->sfxUnknownVal[s],
                                         1.0 - (float)((float)Soundboard->sfxUnknown7[s] / (float)Soundboard->sfxUnknown8[s]), 0.0, 1.0);
                 ++Soundboard->sfxUnknown7[s];
             }

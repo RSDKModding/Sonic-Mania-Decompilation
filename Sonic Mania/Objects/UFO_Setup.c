@@ -279,12 +279,12 @@ void UFO_Setup_PlaySphereSFX()
 {
     if (UFO_Setup->spherePan) {
         int channel = RSDK.PlaySFX(UFO_Setup->sfx_BlueSphere, 0, 255);
-        RSDK.SetSoundAttributes(0, channel, 1.0, -1.0, 1.0);
+        RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->spherePan = 0;
     }
     else {
         int channel = RSDK.PlaySFX(UFO_Setup->sfx_BlueSphere, 0, 255);
-        RSDK.SetSoundAttributes(0, channel, 1.0, 1.0, 1.0);
+        RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->spherePan = 1;
     }
 }

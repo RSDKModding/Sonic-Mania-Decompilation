@@ -102,7 +102,7 @@ void Zone_LateUpdate()
             EntityPlayer *playerLoop = NULL;
             while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&playerLoop)) {
                 bool32 flag = false;
-                if (globals->gameMode == MODE_COMPETITION && (globals->competitionSession[71 + playerLoop->playerID]) == ID_TAILS) {
+                if (globals->gameMode == MODE_COMPETITION && (globals->competitionSession[CS_FinishFlags + playerLoop->playerID]) == 2) {
                     flag = true;
                 }
                 if (!playerLoop->sidekick && !flag)
@@ -387,7 +387,7 @@ void Zone_StageLoad()
 
     EntityZone *ent = NULL;
     while (RSDK.GetEntities(Zone->objectID, (Entity **)ent)) {
-        RSDK.ResetEntityPtr(ent, 0, 0);
+        RSDK.ResetEntityPtr(ent, TYPE_BLANK, 0);
     }
 
     RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, 0);
@@ -402,14 +402,14 @@ void Zone_StageLoad()
             }
         }
         else {
-            if (globals->competitionSession[23] >= 2) {
-                if (globals->competitionSession[23] > 4)
-                    globals->competitionSession[23] = 4;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[23]);
+            if (globals->competitionSession[CS_PlayerCount] >= 2) {
+                if (globals->competitionSession[CS_PlayerCount] > MAX_PLAYERS)
+                    globals->competitionSession[CS_PlayerCount] = MAX_PLAYERS;
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[CS_PlayerCount]);
             }
             else {
-                globals->competitionSession[23] = 2;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[23]);
+                globals->competitionSession[CS_PlayerCount] = 2;
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[CS_PlayerCount]);
             }
         }
     }
@@ -838,8 +838,8 @@ void Zone_Unknown15()
     RSDK_THIS(Zone);
     entity->timer += entity->fadeTimer;
     if (entity->timer > 1024) {
-        globals->competitionSession[globals->competitionSession[24] + 31] = 1;
-        globals->competitionSession[27]                                   = globals->competitionSession[93] + 1;
+        globals->competitionSession[globals->competitionSession[CS_LevelIndex] + CS_ZoneUnknown30] = 1;
+        globals->competitionSession[CS_MatchID]                                                    = globals->competitionSession[CS_Unknown93] + 1;
         RSDK.LoadScene("Presentation", "Menu");
         RSDK.SetSettingsValue(12, 1);
         RSDK.InitSceneLoad();

@@ -128,8 +128,8 @@ void TestObject_Draw() {
     vertClr[2] = 0x0000FF;
     vertClr[3] = 0x0000FF;*/
 
-    //DrawQuad(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
-    //DrawBlendedQuad(vertPos, vertClr, 4, 0xFF, INK_NONE);
+    //DrawFace(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
+    //DrawBlendedFace(vertPos, vertClr, 4, 0xFF, INK_NONE);
 }
 void TestObject_Create(void *data)
 {

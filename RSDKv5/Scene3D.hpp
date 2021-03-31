@@ -125,7 +125,7 @@ void matrixCopy(Matrix *matDst, Matrix *matSrc);
 
 ushort LoadMesh(const char *filepath, Scopes scope);
 ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
-inline void Init3DScene(ushort sceneID)
+inline void Prepare3DScene(ushort sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn     = &scene3DList[sceneID];
@@ -138,7 +138,7 @@ inline void Init3DScene(ushort sceneID)
     }
 }
 
-inline void SetModelAnimation(ushort model, AnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
+inline void SetMeshAnimation(ushort model, AnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
 {
     if (model >= MODEL_MAX) {
         if (data)
@@ -160,7 +160,7 @@ inline void SetModelAnimation(ushort model, AnimationData *data, short animSpeed
     data->loopIndex       = loopIndex;
     data->animationID     = model;
 }
-inline void SetAmbientUnknown(ushort sceneID, byte x, byte y, byte z)
+inline void SetAmbientColour(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
@@ -169,7 +169,7 @@ inline void SetAmbientUnknown(ushort sceneID, byte x, byte y, byte z)
         scn->ambientZ = z;
     }
 }
-inline void SetDiffuseUnknown(ushort sceneID, byte x, byte y, byte z)
+inline void SetDiffuseColour(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
@@ -178,7 +178,7 @@ inline void SetDiffuseUnknown(ushort sceneID, byte x, byte y, byte z)
         scn->diffuseZ = z;
     }
 }
-inline void SetSpecularUnknown(ushort sceneID, byte x, byte y, byte z)
+inline void SetSpecularColour(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn   = &scene3DList[sceneID];
@@ -187,8 +187,8 @@ inline void SetSpecularUnknown(ushort sceneID, byte x, byte y, byte z)
         scn->specularZ = z;
     }
 }
-void SetupMesh(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
-void SetupMeshAnimation(ushort animID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
+void AddModelToScene(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
+void AddMeshFrameToScene(ushort animID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void Draw3DScene(ushort sceneID);
 
 #endif

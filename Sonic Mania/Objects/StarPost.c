@@ -208,7 +208,7 @@ void StarPost_CheckBonusStageEntry()
                     entityZone->stateDraw  = Zone_Unknown12;
                     entityZone->visible    = true;
                     entityZone->drawOrder  = 15;
-                    RSDK.SoundUnknown1(Music->slotID);
+                    RSDK.StopChannel(Music->slotID);
                 }
                 else {
 #endif
@@ -224,7 +224,7 @@ void StarPost_CheckBonusStageEntry()
                     entityZone->stateDraw  = Zone_Unknown12;
                     entityZone->visible    = true;
                     entityZone->drawOrder  = 15;
-                    RSDK.SoundUnknown1(Music->slotID);
+                    RSDK.StopChannel(Music->slotID);
 #if RETRO_USE_PLUS
                 }
 #endif

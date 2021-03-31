@@ -9,7 +9,7 @@ int gfxDataPosition;
 GFXSurface gfxSurface[SURFACE_MAX];
 byte graphicData[GFXDATA_MAX];
 
-int SCREEN_XSIZE = 424;
+int pixWidth = 424;
 int screenCount  = 0;
 ScreenInfo screens[SCREEN_MAX];
 ScreenUnknown screenUnknown[SCREEN_MAX];
@@ -25,13 +25,13 @@ char drawGroupNames[0x10][0x10]{
 bool32 InitRenderDevice()
 {
     for (int s = 0; s < SCREEN_MAX; ++s) {
-        SetScreenSize(s, SCREEN_XSIZE, SCREEN_YSIZE);
+        SetScreenSize(s, pixWidth, SCREEN_YSIZE);
 
         //screens[s].frameBuffer = new ushort[screens[s].width * screens[s].height];
         memset(screens[s].frameBuffer, 0, (screens[s].width * screens[s].height) * sizeof(ushort));
     }
 
-    int size = SCREEN_XSIZE >= SCREEN_YSIZE ? SCREEN_XSIZE : SCREEN_YSIZE;
+    int size = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo*)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
 
@@ -58,7 +58,7 @@ bool32 InitRenderDevice()
         return 0;
     }
 
-    SDL_RenderSetLogicalSize(engine.renderer, SCREEN_XSIZE, SCREEN_YSIZE);
+    SDL_RenderSetLogicalSize(engine.renderer, pixWidth, SCREEN_YSIZE);
     SDL_SetRenderDrawBlendMode(engine.renderer, SDL_BLENDMODE_BLEND);
 
     for (int s = 0; s < SCREEN_MAX; ++s) {
@@ -116,55 +116,55 @@ void FlipScreen()
         case 1:
             destScreenPos[0].x = 0;
             destScreenPos[0].y = 0;
-            destScreenPos[0].w = SCREEN_XSIZE;
+            destScreenPos[0].w = pixWidth;
             destScreenPos[0].h = SCREEN_YSIZE;
             break;
         case 2:
-            destScreenPos[0].x = (SCREEN_XSIZE / 4);
+            destScreenPos[0].x = (pixWidth / 4);
             destScreenPos[0].y = 0;
-            destScreenPos[0].w = SCREEN_XSIZE / 2;
+            destScreenPos[0].w = pixWidth / 2;
             destScreenPos[0].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[1].x = (SCREEN_XSIZE / 4);
+            destScreenPos[1].x = (pixWidth / 4);
             destScreenPos[1].y = SCREEN_YSIZE / 2;
-            destScreenPos[1].w = SCREEN_XSIZE / 2;
+            destScreenPos[1].w = pixWidth / 2;
             destScreenPos[1].h = SCREEN_YSIZE / 2;
             break;
         case 3:
             destScreenPos[0].x = 0;
             destScreenPos[0].y = 0;
-            destScreenPos[0].w = SCREEN_XSIZE / 2;
+            destScreenPos[0].w = pixWidth / 2;
             destScreenPos[0].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[1].x = SCREEN_XSIZE / 2;
+            destScreenPos[1].x = pixWidth / 2;
             destScreenPos[1].y = 0;
-            destScreenPos[1].w = SCREEN_XSIZE / 2;
+            destScreenPos[1].w = pixWidth / 2;
             destScreenPos[1].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[2].x = (SCREEN_XSIZE / 4);
+            destScreenPos[2].x = (pixWidth / 4);
             destScreenPos[2].y = SCREEN_YSIZE / 2;
-            destScreenPos[2].w = SCREEN_XSIZE / 2;
+            destScreenPos[2].w = pixWidth / 2;
             destScreenPos[2].h = SCREEN_YSIZE / 2;
             break;
         case 4:
             destScreenPos[0].x = 0;
             destScreenPos[0].y = 0;
-            destScreenPos[0].w = SCREEN_XSIZE / 2;
+            destScreenPos[0].w = pixWidth / 2;
             destScreenPos[0].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[1].x = SCREEN_XSIZE / 2;
+            destScreenPos[1].x = pixWidth / 2;
             destScreenPos[1].y = 0;
-            destScreenPos[1].w = SCREEN_XSIZE / 2;
+            destScreenPos[1].w = pixWidth / 2;
             destScreenPos[1].h = SCREEN_YSIZE / 2;
 
             destScreenPos[2].x = 0;
             destScreenPos[2].y = SCREEN_YSIZE / 2;
-            destScreenPos[2].w = SCREEN_XSIZE / 2;
+            destScreenPos[2].w = pixWidth / 2;
             destScreenPos[2].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[3].x = SCREEN_XSIZE / 2;
+            destScreenPos[3].x = pixWidth / 2;
             destScreenPos[3].y = SCREEN_YSIZE / 2;
-            destScreenPos[3].w = SCREEN_XSIZE / 2;
+            destScreenPos[3].w = pixWidth / 2;
             destScreenPos[3].h = SCREEN_YSIZE / 2;
             break;
     }
@@ -236,7 +236,7 @@ void UpdateWindow()
         return;
     }
 
-    SDL_RenderSetLogicalSize(engine.renderer, SCREEN_XSIZE, SCREEN_YSIZE);
+    SDL_RenderSetLogicalSize(engine.renderer, pixWidth, SCREEN_YSIZE);
     SDL_SetRenderDrawBlendMode(engine.renderer, SDL_BLENDMODE_BLEND);
 
     for (int s = 0; s < SCREEN_MAX; ++s) {
@@ -1765,7 +1765,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
     }
 }
 
-void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect)
+void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect)
 {
     switch (inkEffect) {
         default: break;
@@ -2030,7 +2030,7 @@ void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
         }
     }
 }
-void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect)
+void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect)
 {
     switch (inkEffect) {
         default: break;

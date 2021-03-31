@@ -603,6 +603,33 @@ inline uint GetDBEntryUUID(ushort tableID, int entry)
 }
 #endif
 
+struct SettingsStorage {
+    byte windowed;
+    byte bordered;
+    byte exclusiveFS;
+    byte vsync;
+    byte shaderSupport;
+    int fsWidth;
+    int fsHeight;
+    int gameHeight;
+    int windowActive;
+    int shaderID;
+    int screenCount;
+    int dimTimer;
+    int dimLimit;
+    float dimMax;
+    float dimPercent;
+    int refreshRate;
+    int windowWidth;
+    int windowHeight;
+    int pixWidth;
+    int mouseX;
+    int mouseY;
+    int field_8;
+    int field_C;
+};
+
+extern SettingsStorage settingsStorage;
 extern bool32 settingsChanged;
 
 int GetSettingsValue(int id);

@@ -71,9 +71,9 @@ enum UserdataTableIDs {
 
 enum FunctionTableIDs {
     FunctionTable_InitGameOptions,
-    FunctionTable_CreateObject,
+    FunctionTable_RegisterObject,
 #if RETRO_USE_PLUS
-    FunctionTable_CreateObjectContainer,
+    FunctionTable_RegisterObjectContainer,
 #endif
     FunctionTable_GetActiveEntities,
     FunctionTable_GetEntities,
@@ -84,9 +84,9 @@ enum FunctionTableIDs {
     FunctionTable_GetEntityCount,
     FunctionTable_GetDrawListRef,
     FunctionTable_GetDrawListRefPtr,
-    FunctionTable_DestroyEntity,
-    FunctionTable_ResetEntity,
-    FunctionTable_SpawnEntity,
+    FunctionTable_ResetEntityPtr,
+    FunctionTable_ResetEntitySlot,
+    FunctionTable_CreateEntity,
     FunctionTable_CopyEntity,
     FunctionTable_CheckOnScreen,
     FunctionTable_CheckPosOnScreen,
@@ -174,8 +174,8 @@ enum FunctionTableIDs {
     FunctionTable_DrawLine,
     FunctionTable_DrawCircle,
     FunctionTable_DrawCircleOutline,
-    FunctionTable_DrawQuad,
-    FunctionTable_DrawTexturedQuad,
+    FunctionTable_DrawFace,
+    FunctionTable_DrawBlendedFace,
     FunctionTable_DrawSprite,
     FunctionTable_DrawDeformed,
     FunctionTable_DrawText,
@@ -211,7 +211,7 @@ enum FunctionTableIDs {
     FunctionTable_SetTileInfo,
     FunctionTable_CopyTileLayer,
     FunctionTable_ProcessParallax,
-    FunctionTable_GetLinePosPtrs,
+    FunctionTable_GetScanlines,
     FunctionTable_CheckObjectCollisionTouch,
     FunctionTable_CheckObjectCollisionPoint,
     FunctionTable_CheckObjectCollisionBox,
@@ -227,13 +227,13 @@ enum FunctionTableIDs {
     FunctionTable_PlaySFX,
     FunctionTable_StopSFX,
     FunctionTable_PlayMusic,
-    FunctionTable_SetSoundAttributes,
-    FunctionTable_Unknown91,
+    FunctionTable_SetChannelAttributes,
+    FunctionTable_StopChannel,
     FunctionTable_PauseChannel,
     FunctionTable_ResumeChannel,
-    FunctionTable_SoundPlaying,
-    FunctionTable_ChannelPlaying,
-    FunctionTable_TrackPlaying,
+    FunctionTable_SfxPlaying,
+    FunctionTable_ChannelActive,
+    FunctionTable_GetChannelPos,
     FunctionTable_LoadVideo,
     FunctionTable_LoadImage,
 #if RETRO_USE_PLUS
@@ -298,8 +298,8 @@ void setupFunctions()
     curSKU.region   = 0;
 #else
     engineInfo.platformID = PLATFORM_DEV;
-    engineInfo.language = 0;
-    engineInfo.region   = 0;
+    engineInfo.language   = 0;
+    engineInfo.region     = 0;
 #endif
 
     CalculateTrigAngles();
@@ -313,272 +313,272 @@ void setupFunctions()
 
 #if RETRO_USE_PLUS
     // Userdata
-    userFunctionTable[UserdataTable_GetUserLanguage]           = (void *)userCore->GetUserLanguage;
-    userFunctionTable[UserdataTable_GetConfirmButtonFlip]      = (void *)userCore->GetConfirmButtonFlip;
-    userFunctionTable[UserdataTable_ExitGame]                  = (void *)userCore->ExitGame;
-    userFunctionTable[UserdataTable_LaunchManual]              = (void *)userCore->LaunchManual;
-    userFunctionTable[UserdataTable_Unknown4]                  = (void *)userCore->unknown15;
-    userFunctionTable[UserdataTable_CheckDLC]                  = (void *)userCore->CheckDLC;
-    userFunctionTable[UserdataTable_ClearAchievements]         = (void *)userCore->ShowExtensionOverlay;
-    userFunctionTable[UserdataTable_UnlockAchievement]         = (void *)achievements->UnlockAchievement;
-    userFunctionTable[UserdataTable_GetAchievementsStatus]     = (void *)GetAchievementsStatus;
-    userFunctionTable[UserdataTable_SetAchievementsStatus]     = (void *)SetAchievementsStatus;
-    userFunctionTable[UserdataTable_LeaderboardsUnknown4]      = (void *)NullFunc;
-    userFunctionTable[UserdataTable_FetchLeaderboard]          = (void *)leaderboards->FetchLeaderboard;
-    userFunctionTable[UserdataTable_TrackScore]                = (void *)leaderboards->TrackScore;
-    userFunctionTable[UserdataTable_LeaderboardsUnknown7]      = (void *)leaderboards->unknown7;
-    userFunctionTable[UserdataTable_LeaderboardEntryCount]     = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Missing2]                  = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Unknown12]                 = (void *)NullFunc;
-    userFunctionTable[UserdataTable_Missing3]                  = (void *)NullFunc;
-    userFunctionTable[UserdataTable_ReadLeaderboardEntry]      = (void *)NullFunc;
-    userFunctionTable[UserdataTable_SetPresence]               = (void *)richPresence->SetPresence;
-    userFunctionTable[UserdataTable_TryTrackStat]              = (void *)stats->TryTrackStat;
-    userFunctionTable[UserdataTable_GetStatsStatus]            = (void *)GetStatsStatus;
-    userFunctionTable[UserdataTable_SetStatsStatus]            = (void *)SetStatsStatus;
-    userFunctionTable[UserdataTable_Unknown16]                 = (void *)userStorage->unknown8;
-    userFunctionTable[UserdataTable_TryAuth]                   = (void *)userStorage->TryAuth;
-    userFunctionTable[UserdataTable_GetUserAuthStatus]         = (void *)GetUserStorageStatus;
-    userFunctionTable[UserdataTable_GetUsername]               = (void *)userStorage->GetUsername;
-    userFunctionTable[UserdataTable_TryInitStorage]            = (void *)userStorage->TryInitStorage;
-    userFunctionTable[UserdataTable_UserStorageStatusUnknown1] = (void *)UserStorageStatusUnknown1;
-    userFunctionTable[UserdataTable_Unknown22]                 = (void *)UserStorageStatusUnknown2;
-    userFunctionTable[UserdataTable_Unknown23]                 = (void *)ClearUserStorageStatus;
-    userFunctionTable[UserdataTable_Unknown24]                 = (void *)SetUserStorageStatus;
-    userFunctionTable[UserdataTable_Missing5]                  = (void *)UserStorageStatusUnknown3;
-    userFunctionTable[UserdataTable_Unknown25]                 = (void *)UserStorageStatusUnknown4;
-    userFunctionTable[UserdataTable_Unknown26]                 = (void *)UserStorageStatusUnknown5;
-    userFunctionTable[UserdataTable_SetUserStorageNoSave]      = (void *)SetUserStorageNoSave;
-    userFunctionTable[UserdataTable_GetUserStorageNoSave]      = (void *)GetUserStorageNoSave;
-    userFunctionTable[UserdataTable_LoadUserFile]              = (void *)userStorage->LoadUserFile;
-    userFunctionTable[UserdataTable_SaveUserFile]              = (void *)userStorage->SaveUserFile;
-    userFunctionTable[UserdataTable_DeleteUserFile]            = (void *)userStorage->DeleteUserFile;
-    userFunctionTable[UserdataTable_AddUserDBEntry]            = (void *)InitUserDB;
-    userFunctionTable[UserdataTable_OpenUserDB]                = (void *)LoadUserDB;
-    userFunctionTable[UserdataTable_SaveUserDB]                = (void *)SaveUserDB;
-    userFunctionTable[UserdataTable_ClearUserDB]               = (void *)ClearUserDB;
-    userFunctionTable[UserdataTable_ClearAllUserDBs]           = (void *)ClearAllUserDBs;
-    userFunctionTable[UserdataTable_Unknown31]                 = (void *)NullFunc; // Unknown31;
-    userFunctionTable[UserdataTable_GetUserDBSatus]            = (void *)GetUserDBStatus;
-    userFunctionTable[UserdataTable_Unknown33]                 = (void *)NullFunc; // Unknown33;
-    userFunctionTable[UserdataTable_Unknown34]                 = (void *)NullFunc; // Unknown34;
-    userFunctionTable[UserdataTable_GetUserDBUnknownCount]     = (void *)GetUserDBRowUnknownCount;
-    userFunctionTable[UserdataTable_GetUserDBUnknown]          = (void *)GetUserDBRowUnknown;
-    userFunctionTable[UserdataTable_Unknown37]                 = (void *)AddUserDBEntry;
-    userFunctionTable[UserdataTable_SetUserDBValue]            = (void *)NullFunc; // SetUserDBValue;
-    userFunctionTable[UserdataTable_Unknown39]                 = (void *)NullFunc; // Unknown39;
-    userFunctionTable[UserdataTable_GetEntryUUID]              = (void *)GetUserDBRowUUID;
-    userFunctionTable[UserdataTable_GetUserDBByID]             = (void *)GetUserDBByID;
-    userFunctionTable[UserdataTable_GetUserDBCreationTime]     = (void *)GetUserDBCreationTime;
-    userFunctionTable[UserdataTable_RemoveDBEntry]             = (void *)RemoveDBEntry;
-    userFunctionTable[UserdataTable_RemoveAllDBEntries]        = (void *)RemoveAllDBEntries;
+    addToUserFunctionTable(UserdataTable_GetUserLanguage, userCore->GetUserLanguage);
+    addToUserFunctionTable(UserdataTable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
+    addToUserFunctionTable(UserdataTable_ExitGame, userCore->ExitGame);
+    addToUserFunctionTable(UserdataTable_LaunchManual, userCore->LaunchManual);
+    addToUserFunctionTable(UserdataTable_Unknown4, userCore->unknown15);
+    addToUserFunctionTable(UserdataTable_CheckDLC, userCore->CheckDLC);
+    addToUserFunctionTable(UserdataTable_ClearAchievements, userCore->ShowExtensionOverlay);
+    addToUserFunctionTable(UserdataTable_UnlockAchievement, achievements->UnlockAchievement);
+    addToUserFunctionTable(UserdataTable_GetAchievementsStatus, GetAchievementsStatus);
+    addToUserFunctionTable(UserdataTable_SetAchievementsStatus, SetAchievementsStatus);
+    addToUserFunctionTable(UserdataTable_LeaderboardsUnknown4, NullFunc);
+    addToUserFunctionTable(UserdataTable_FetchLeaderboard, leaderboards->FetchLeaderboard);
+    addToUserFunctionTable(UserdataTable_TrackScore, leaderboards->TrackScore);
+    addToUserFunctionTable(UserdataTable_LeaderboardsUnknown7, leaderboards->unknown7);
+    addToUserFunctionTable(UserdataTable_LeaderboardEntryCount, NullFunc);
+    addToUserFunctionTable(UserdataTable_Missing2, NullFunc);
+    addToUserFunctionTable(UserdataTable_Unknown12, NullFunc);
+    addToUserFunctionTable(UserdataTable_Missing3, NullFunc);
+    addToUserFunctionTable(UserdataTable_ReadLeaderboardEntry, NullFunc);
+    addToUserFunctionTable(UserdataTable_SetPresence, richPresence->SetPresence);
+    addToUserFunctionTable(UserdataTable_TryTrackStat, stats->TryTrackStat);
+    addToUserFunctionTable(UserdataTable_GetStatsStatus, GetStatsStatus);
+    addToUserFunctionTable(UserdataTable_SetStatsStatus, SetStatsStatus);
+    addToUserFunctionTable(UserdataTable_Unknown16, userStorage->unknown8);
+    addToUserFunctionTable(UserdataTable_TryAuth, userStorage->TryAuth);
+    addToUserFunctionTable(UserdataTable_GetUserAuthStatus, GetUserStorageStatus);
+    addToUserFunctionTable(UserdataTable_GetUsername, userStorage->GetUsername);
+    addToUserFunctionTable(UserdataTable_TryInitStorage, userStorage->TryInitStorage);
+    addToUserFunctionTable(UserdataTable_UserStorageStatusUnknown1, UserStorageStatusUnknown1);
+    addToUserFunctionTable(UserdataTable_Unknown22, UserStorageStatusUnknown2);
+    addToUserFunctionTable(UserdataTable_Unknown23, ClearUserStorageStatus);
+    addToUserFunctionTable(UserdataTable_Unknown24, SetUserStorageStatus);
+    addToUserFunctionTable(UserdataTable_Missing5, UserStorageStatusUnknown3);
+    addToUserFunctionTable(UserdataTable_Unknown25, UserStorageStatusUnknown4);
+    addToUserFunctionTable(UserdataTable_Unknown26, UserStorageStatusUnknown5);
+    addToUserFunctionTable(UserdataTable_SetUserStorageNoSave, SetUserStorageNoSave);
+    addToUserFunctionTable(UserdataTable_GetUserStorageNoSave, GetUserStorageNoSave);
+    addToUserFunctionTable(UserdataTable_LoadUserFile, userStorage->LoadUserFile);
+    addToUserFunctionTable(UserdataTable_SaveUserFile, userStorage->SaveUserFile);
+    addToUserFunctionTable(UserdataTable_DeleteUserFile, userStorage->DeleteUserFile);
+    addToUserFunctionTable(UserdataTable_AddUserDBEntry, InitUserDB);
+    addToUserFunctionTable(UserdataTable_OpenUserDB, LoadUserDB);
+    addToUserFunctionTable(UserdataTable_SaveUserDB, SaveUserDB);
+    addToUserFunctionTable(UserdataTable_ClearUserDB, ClearUserDB);
+    addToUserFunctionTable(UserdataTable_ClearAllUserDBs, ClearAllUserDBs);
+    addToUserFunctionTable(UserdataTable_Unknown31, NullFunc); // Unknown31);
+    addToUserFunctionTable(UserdataTable_GetUserDBSatus, GetUserDBStatus);
+    addToUserFunctionTable(UserdataTable_Unknown33, NullFunc); // Unknown33);
+    addToUserFunctionTable(UserdataTable_Unknown34, NullFunc); // Unknown34);
+    addToUserFunctionTable(UserdataTable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
+    addToUserFunctionTable(UserdataTable_GetUserDBUnknown, GetUserDBRowUnknown);
+    addToUserFunctionTable(UserdataTable_Unknown37, AddUserDBEntry);
+    addToUserFunctionTable(UserdataTable_SetUserDBValue, NullFunc); // SetUserDBValue);
+    addToUserFunctionTable(UserdataTable_Unknown39, NullFunc);      // Unknown39);
+    addToUserFunctionTable(UserdataTable_GetEntryUUID, GetUserDBRowUUID);
+    addToUserFunctionTable(UserdataTable_GetUserDBByID, GetUserDBByID);
+    addToUserFunctionTable(UserdataTable_GetUserDBCreationTime, GetUserDBCreationTime);
+    addToUserFunctionTable(UserdataTable_RemoveDBEntry, RemoveDBEntry);
+    addToUserFunctionTable(UserdataTable_RemoveAllDBEntries, RemoveAllDBEntries);
 #endif
 
     // Function Table
-    RSDKFunctionTable[FunctionTable_InitGameOptions] = (void *)InitGameOptions;
-    RSDKFunctionTable[FunctionTable_CreateObject]    = (void *)CreateObject;
+    addToRSDKFunctionTable(FunctionTable_InitGameOptions, InitGameOptions);
+    addToRSDKFunctionTable(FunctionTable_RegisterObject, RegisterObject);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_CreateObjectContainer] = (void *)CreateObjectContainer;
+    addToRSDKFunctionTable(FunctionTable_RegisterObjectContainer, RegisterObjectContainer);
 #endif
-    RSDKFunctionTable[FunctionTable_GetActiveEntities]      = (void *)GetActiveEntities;
-    RSDKFunctionTable[FunctionTable_GetEntities]            = (void *)GetEntities;
-    RSDKFunctionTable[FunctionTable_BreakForeachLoop]       = (void *)BreakForeachLoop;
-    RSDKFunctionTable[FunctionTable_SetEditableVar]         = (void *)SetEditableVar;
-    RSDKFunctionTable[FunctionTable_GetObjectByID]          = (void *)GetObjectByID;
-    RSDKFunctionTable[FunctionTable_GetEntityID]            = (void *)GetEntityID;
-    RSDKFunctionTable[FunctionTable_GetEntityCount]         = (void *)GetEntityCount;
-    RSDKFunctionTable[FunctionTable_GetDrawListRef]         = (void *)GetDrawListRef;
-    RSDKFunctionTable[FunctionTable_GetDrawListRefPtr]      = (void *)GetDrawListRefPtr;
-    RSDKFunctionTable[FunctionTable_DestroyEntity]          = (void *)ResetEntityPtr;
-    RSDKFunctionTable[FunctionTable_ResetEntity]            = (void *)ResetEntitySlot;
-    RSDKFunctionTable[FunctionTable_SpawnEntity]            = (void *)CreateEntity;
-    RSDKFunctionTable[FunctionTable_CopyEntity]             = (void *)CopyEntity;
-    RSDKFunctionTable[FunctionTable_CheckOnScreen]          = (void *)CheckOnScreen;
-    RSDKFunctionTable[FunctionTable_CheckPosOnScreen]       = (void *)CheckPosOnScreen;
-    RSDKFunctionTable[FunctionTable_AddDrawListRef]         = (void *)AddDrawListRef;
-    RSDKFunctionTable[FunctionTable_SwapDrawLayers]         = (void *)SwapDrawLayers;
-    RSDKFunctionTable[FunctionTable_SetDrawLayerProperties] = (void *)SetDrawLayerProperties;
-    RSDKFunctionTable[FunctionTable_LoadScene]              = (void *)SetScene;
-    RSDKFunctionTable[FunctionTable_SetGameMode]            = (void *)SetEngineState;
+    addToRSDKFunctionTable(FunctionTable_GetActiveEntities, GetActiveEntities);
+    addToRSDKFunctionTable(FunctionTable_GetEntities, GetEntities);
+    addToRSDKFunctionTable(FunctionTable_BreakForeachLoop, BreakForeachLoop);
+    addToRSDKFunctionTable(FunctionTable_SetEditableVar, SetEditableVar);
+    addToRSDKFunctionTable(FunctionTable_GetObjectByID, GetObjectByID);
+    addToRSDKFunctionTable(FunctionTable_GetEntityID, GetEntityID);
+    addToRSDKFunctionTable(FunctionTable_GetEntityCount, GetEntityCount);
+    addToRSDKFunctionTable(FunctionTable_GetDrawListRef, GetDrawListRef);
+    addToRSDKFunctionTable(FunctionTable_GetDrawListRefPtr, GetDrawListRefPtr);
+    addToRSDKFunctionTable(FunctionTable_ResetEntityPtr, ResetEntityPtr);
+    addToRSDKFunctionTable(FunctionTable_ResetEntitySlot, ResetEntitySlot);
+    addToRSDKFunctionTable(FunctionTable_CreateEntity, CreateEntity);
+    addToRSDKFunctionTable(FunctionTable_CopyEntity, CopyEntity);
+    addToRSDKFunctionTable(FunctionTable_CheckOnScreen, CheckOnScreen);
+    addToRSDKFunctionTable(FunctionTable_CheckPosOnScreen, CheckPosOnScreen);
+    addToRSDKFunctionTable(FunctionTable_AddDrawListRef, AddDrawListRef);
+    addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawLayers);
+    addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
+    addToRSDKFunctionTable(FunctionTable_LoadScene, SetScene);
+    addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_SetHardResetFlag] = (void *)SetHardResetFlag;
+    addToRSDKFunctionTable(FunctionTable_SetHardResetFlag, SetHardResetFlag);
 #endif
-    RSDKFunctionTable[FunctionTable_CheckValidScene]  = (void *)CheckValidStage;
-    RSDKFunctionTable[FunctionTable_CheckSceneFolder] = (void *)CheckSceneFolder;
-    RSDKFunctionTable[FunctionTable_InitSceneLoad]    = (void *)InitSceneLoad;
-    RSDKFunctionTable[FunctionTable_GetObjectByName]  = (void *)GetObjectByName;
-    RSDKFunctionTable[FunctionTable_ClearScreens]     = (void *)ClearScreens;
-    RSDKFunctionTable[FunctionTable_AddScreen]        = (void *)AddScreen;
+    addToRSDKFunctionTable(FunctionTable_CheckValidScene, CheckValidStage);
+    addToRSDKFunctionTable(FunctionTable_CheckSceneFolder, CheckSceneFolder);
+    addToRSDKFunctionTable(FunctionTable_InitSceneLoad, InitSceneLoad);
+    addToRSDKFunctionTable(FunctionTable_GetObjectByName, GetObjectByName);
+    addToRSDKFunctionTable(FunctionTable_ClearScreens, ClearScreens);
+    addToRSDKFunctionTable(FunctionTable_AddScreen, AddScreen);
 #if !RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_GetFuncPtr] = (void *)GetFuncPtr;
+    addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetFuncPtr);
 #endif
-    RSDKFunctionTable[FunctionTable_GetSettingsValue]   = (void *)GetSettingsValue;
-    RSDKFunctionTable[FunctionTable_SetSettingsValue]   = (void *)SetSettingsValue;
-    RSDKFunctionTable[FunctionTable_UpdateWindow]       = (void *)UpdateWindow;
-    RSDKFunctionTable[FunctionTable_Sin1024]            = (void *)sin1024;
-    RSDKFunctionTable[FunctionTable_Cos1024]            = (void *)cos1024;
-    RSDKFunctionTable[FunctionTable_ATan1024]           = (void *)tan1024;
-    RSDKFunctionTable[FunctionTable_ASin1024]           = (void *)aSin1024;
-    RSDKFunctionTable[FunctionTable_ACos1024]           = (void *)aCos1024;
-    RSDKFunctionTable[FunctionTable_Sin512]             = (void *)sin512;
-    RSDKFunctionTable[FunctionTable_Cos512]             = (void *)cos512;
-    RSDKFunctionTable[FunctionTable_ATan512]            = (void *)tan512;
-    RSDKFunctionTable[FunctionTable_ASin512]            = (void *)aSin512;
-    RSDKFunctionTable[FunctionTable_ACos512]            = (void *)aCos512;
-    RSDKFunctionTable[FunctionTable_Sin256]             = (void *)sin256;
-    RSDKFunctionTable[FunctionTable_Cos256]             = (void *)cos256;
-    RSDKFunctionTable[FunctionTable_ATan256]            = (void *)tan256;
-    RSDKFunctionTable[FunctionTable_ASin256]            = (void *)aSin256;
-    RSDKFunctionTable[FunctionTable_ACos256]            = (void *)aCos256;
-    RSDKFunctionTable[FunctionTable_Rand]               = (void *)RSDK_random;
-    RSDKFunctionTable[FunctionTable_Random]             = (void *)RSDK_random2;
-    RSDKFunctionTable[FunctionTable_SetRandKey]         = (void *)setRandKey;
-    RSDKFunctionTable[FunctionTable_ATan2]              = (void *)ArcTanLookup;
-    RSDKFunctionTable[FunctionTable_SetIdentityMatrix]  = (void *)setIdentityMatrix;
-    RSDKFunctionTable[FunctionTable_MatrixMultiply]     = (void *)matrixMultiply;
-    RSDKFunctionTable[FunctionTable_MatrixTranslateXYZ] = (void *)matrixTranslateXYZ;
-    RSDKFunctionTable[FunctionTable_MatrixScaleXYZ]     = (void *)matrixScaleXYZ;
-    RSDKFunctionTable[FunctionTable_MatrixRotateX]      = (void *)matrixRotateX;
-    RSDKFunctionTable[FunctionTable_MatrixRotateY]      = (void *)matrixRotateY;
-    RSDKFunctionTable[FunctionTable_MatrixRotateZ]      = (void *)matrixRotateZ;
-    RSDKFunctionTable[FunctionTable_MatrixRotateXYZ]    = (void *)matrixRotateXYZ;
-    RSDKFunctionTable[FunctionTable_MatrixInverse]      = (void *)matrixInverse;
-    RSDKFunctionTable[FunctionTable_MatrixCopy]         = (void *)matrixCopy;
-    RSDKFunctionTable[FunctionTable_SetText]            = (void *)SetText;
-    RSDKFunctionTable[FunctionTable_CopyString]         = (void *)CopyString;
-    RSDKFunctionTable[FunctionTable_PrependString]      = (void *)NullFunc; // PrependString;
-    RSDKFunctionTable[FunctionTable_AppendString]       = (void *)AppendString;
-    RSDKFunctionTable[FunctionTable_Unknown67]          = (void *)NullFunc; // Unknown67;
-    RSDKFunctionTable[FunctionTable_LoadStrings]        = (void *)LoadStrings;
-    RSDKFunctionTable[FunctionTable_SplitStringList]    = (void *)SplitStringList;
-    RSDKFunctionTable[FunctionTable_GetCString]         = (void *)GetCString;
-    RSDKFunctionTable[FunctionTable_StringCompare]      = (void *)StringCompare;
-    RSDKFunctionTable[FunctionTable_GetWindowSettings]  = (void *)NullFunc; // Unknown70;
-    RSDKFunctionTable[FunctionTable_Unknown71]          = (void *)NullFunc; // Unknown71;
-    RSDKFunctionTable[FunctionTable_SetScreenSize]      = (void *)SetScreenSize;
-    RSDKFunctionTable[FunctionTable_SetClipBounds]      = (void *)SetClipBounds;
+    addToRSDKFunctionTable(FunctionTable_GetSettingsValue, GetSettingsValue);
+    addToRSDKFunctionTable(FunctionTable_SetSettingsValue, SetSettingsValue);
+    addToRSDKFunctionTable(FunctionTable_UpdateWindow, UpdateWindow);
+    addToRSDKFunctionTable(FunctionTable_Sin1024, sin1024);
+    addToRSDKFunctionTable(FunctionTable_Cos1024, cos1024);
+    addToRSDKFunctionTable(FunctionTable_ATan1024, tan1024);
+    addToRSDKFunctionTable(FunctionTable_ASin1024, aSin1024);
+    addToRSDKFunctionTable(FunctionTable_ACos1024, aCos1024);
+    addToRSDKFunctionTable(FunctionTable_Sin512, sin512);
+    addToRSDKFunctionTable(FunctionTable_Cos512, cos512);
+    addToRSDKFunctionTable(FunctionTable_ATan512, tan512);
+    addToRSDKFunctionTable(FunctionTable_ASin512, aSin512);
+    addToRSDKFunctionTable(FunctionTable_ACos512, aCos512);
+    addToRSDKFunctionTable(FunctionTable_Sin256, sin256);
+    addToRSDKFunctionTable(FunctionTable_Cos256, cos256);
+    addToRSDKFunctionTable(FunctionTable_ATan256, tan256);
+    addToRSDKFunctionTable(FunctionTable_ASin256, aSin256);
+    addToRSDKFunctionTable(FunctionTable_ACos256, aCos256);
+    addToRSDKFunctionTable(FunctionTable_Rand, RSDK_random);
+    addToRSDKFunctionTable(FunctionTable_Random, RSDK_random2);
+    addToRSDKFunctionTable(FunctionTable_SetRandKey, setRandKey);
+    addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
+    addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, setIdentityMatrix);
+    addToRSDKFunctionTable(FunctionTable_MatrixMultiply, matrixMultiply);
+    addToRSDKFunctionTable(FunctionTable_MatrixTranslateXYZ, matrixTranslateXYZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixScaleXYZ, matrixScaleXYZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateX, matrixRotateX);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateY, matrixRotateY);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateZ, matrixRotateZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixRotateXYZ, matrixRotateXYZ);
+    addToRSDKFunctionTable(FunctionTable_MatrixInverse, matrixInverse);
+    addToRSDKFunctionTable(FunctionTable_MatrixCopy, matrixCopy);
+    addToRSDKFunctionTable(FunctionTable_SetText, SetText);
+    addToRSDKFunctionTable(FunctionTable_CopyString, CopyString);
+    addToRSDKFunctionTable(FunctionTable_PrependString, NullFunc); // PrependString);
+    addToRSDKFunctionTable(FunctionTable_AppendString, AppendString);
+    addToRSDKFunctionTable(FunctionTable_Unknown67, NullFunc); // Unknown67);
+    addToRSDKFunctionTable(FunctionTable_LoadStrings, LoadStrings);
+    addToRSDKFunctionTable(FunctionTable_SplitStringList, SplitStringList);
+    addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);
+    addToRSDKFunctionTable(FunctionTable_StringCompare, StringCompare);
+    addToRSDKFunctionTable(FunctionTable_GetWindowSettings, NullFunc); // Unknown70);
+    addToRSDKFunctionTable(FunctionTable_Unknown71, NullFunc);         // Unknown71);
+    addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
+    addToRSDKFunctionTable(FunctionTable_SetClipBounds, SetClipBounds);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_SetScreenUnknown] = (void *)NullFunc; // SetScreenUnknown;
+    addToRSDKFunctionTable(FunctionTable_SetScreenUnknown, NullFunc); // SetScreenUnknown);
 #endif
-    RSDKFunctionTable[FunctionTable_LoadSpriteSheet]  = (void *)LoadSpriteSheet;
-    RSDKFunctionTable[FunctionTable_SetLookupTable]   = (void *)SetLookupTable;
-    RSDKFunctionTable[FunctionTable_SetPaletteMask]   = (void *)SetPaletteMask;
-    RSDKFunctionTable[FunctionTable_SetPaletteEntry]  = (void *)SetPaletteEntry;
-    RSDKFunctionTable[FunctionTable_GetPaletteEntry]  = (void *)GetPaletteEntry;
-    RSDKFunctionTable[FunctionTable_SetActivePalette] = (void *)SetActivePalette;
-    RSDKFunctionTable[FunctionTable_CopyPalette]      = (void *)CopyPalette;
+    addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, LoadSpriteSheet);
+    addToRSDKFunctionTable(FunctionTable_SetLookupTable, SetLookupTable);
+    addToRSDKFunctionTable(FunctionTable_SetPaletteMask, SetPaletteMask);
+    addToRSDKFunctionTable(FunctionTable_SetPaletteEntry, SetPaletteEntry);
+    addToRSDKFunctionTable(FunctionTable_GetPaletteEntry, GetPaletteEntry);
+    addToRSDKFunctionTable(FunctionTable_SetActivePalette, SetActivePalette);
+    addToRSDKFunctionTable(FunctionTable_CopyPalette, CopyPalette);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_LoadPalette] = (void *)LoadPalette;
+    addToRSDKFunctionTable(FunctionTable_LoadPalette, LoadPalette);
 #endif
-    RSDKFunctionTable[FunctionTable_RotatePalette]  = (void *)RotatePalette;
-    RSDKFunctionTable[FunctionTable_SetLimitedFade] = (void *)SetPaletteFade;
+    addToRSDKFunctionTable(FunctionTable_RotatePalette, RotatePalette);
+    addToRSDKFunctionTable(FunctionTable_SetLimitedFade, SetPaletteFade);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_BlendColours] = (void *)BlendColours;
+    addToRSDKFunctionTable(FunctionTable_BlendColours, BlendColours);
 #endif
-    RSDKFunctionTable[FunctionTable_DrawRect]                     = (void *)DrawRectangle;
-    RSDKFunctionTable[FunctionTable_DrawLine]                     = (void *)DrawLine;
-    RSDKFunctionTable[FunctionTable_DrawCircle]                   = (void *)DrawCircle;
-    RSDKFunctionTable[FunctionTable_DrawCircleOutline]            = (void *)DrawCircleOutline;
-    RSDKFunctionTable[FunctionTable_DrawQuad]                     = (void *)DrawQuad;
-    RSDKFunctionTable[FunctionTable_DrawTexturedQuad]             = (void *)DrawBlendedQuad;
-    RSDKFunctionTable[FunctionTable_DrawSprite]                   = (void *)DrawSprite;
-    RSDKFunctionTable[FunctionTable_DrawDeformed]                 = (void *)DrawDeformedSprite;
-    RSDKFunctionTable[FunctionTable_DrawText]                     = (void *)DrawText;
-    RSDKFunctionTable[FunctionTable_DrawTile]                     = (void *)DrawTile;
-    RSDKFunctionTable[FunctionTable_CopyTile]                     = (void *)CopyTile;
-    RSDKFunctionTable[FunctionTable_DrawAniTile]                  = (void *)DrawAniTile;
-    RSDKFunctionTable[FunctionTable_FillScreen]                   = (void *)FillScreen;
-    RSDKFunctionTable[FunctionTable_LoadMesh]                     = (void *)LoadMesh;
-    RSDKFunctionTable[FunctionTable_Create3DScene]                = (void *)Create3DScene;
-    RSDKFunctionTable[FunctionTable_Init3DScene]                  = (void *)Init3DScene;
-    RSDKFunctionTable[FunctionTable_SetAmbientUnknown]            = (void *)SetAmbientUnknown;
-    RSDKFunctionTable[FunctionTable_SetDiffuseUnknown]            = (void *)SetDiffuseUnknown;
-    RSDKFunctionTable[FunctionTable_SetSpecularUnknown]           = (void *)SetSpecularUnknown;
-    RSDKFunctionTable[FunctionTable_SetupMesh]                    = (void *)SetupMesh;
-    RSDKFunctionTable[FunctionTable_SetModelAnimation]            = (void *)SetModelAnimation;
-    RSDKFunctionTable[FunctionTable_SetupMeshAnimation]           = (void *)SetupMeshAnimation;
-    RSDKFunctionTable[FunctionTable_Draw3DScene]                  = (void *)Draw3DScene; // Draw3DScene;
-    RSDKFunctionTable[FunctionTable_LoadAnimation]                = (void *)LoadAnimation;
-    RSDKFunctionTable[FunctionTable_CreateAnimation]              = (void *)CreateAnimation;
-    RSDKFunctionTable[FunctionTable_SetSpriteAnimation]           = (void *)SetSpriteAnimation;
-    RSDKFunctionTable[FunctionTable_EditAnimation]                = (void *)EditAnimation;
-    RSDKFunctionTable[FunctionTable_SetSpriteString]              = (void *)SetSpriteString;
-    RSDKFunctionTable[FunctionTable_GetAnimation]                 = (void *)GetAnimation;
-    RSDKFunctionTable[FunctionTable_GetFrame]                     = (void *)GetFrame;
-    RSDKFunctionTable[FunctionTable_GetHitbox]                    = (void *)GetHitbox;
-    RSDKFunctionTable[FunctionTable_GetFrameID]                   = (void *)GetFrameID;
-    RSDKFunctionTable[FunctionTable_GetStringWidth]               = (void *)GetStringWidth;
-    RSDKFunctionTable[FunctionTable_ProcessAnimation]             = (void *)ProcessAnimation;
-    RSDKFunctionTable[FunctionTable_GetSceneLayer]                = (void *)GetSceneLayer;
-    RSDKFunctionTable[FunctionTable_GetSceneLayerID]              = (void *)GetSceneLayerID;
-    RSDKFunctionTable[FunctionTable_GetLayerSize]                 = (void *)GetLayerSize;
-    RSDKFunctionTable[FunctionTable_GetTileInfo]                  = (void *)GetTileInfo;
-    RSDKFunctionTable[FunctionTable_SetTileInfo]                  = (void *)SetTileInfo;
-    RSDKFunctionTable[FunctionTable_CopyTileLayer]                = (void *)CopyTileLayout;
-    RSDKFunctionTable[FunctionTable_ProcessParallax]              = (void *)ProcessParallax;
-    RSDKFunctionTable[FunctionTable_GetLinePosPtrs]               = (void *)GetLinePositions;
-    RSDKFunctionTable[FunctionTable_CheckObjectCollisionTouch]    = (void *)CheckObjectCollisionTouch;
-    RSDKFunctionTable[FunctionTable_CheckObjectCollisionPoint]    = (void *)CheckObjectCollisionCircle;
-    RSDKFunctionTable[FunctionTable_CheckObjectCollisionBox]      = (void *)CheckObjectCollisionBox;
-    RSDKFunctionTable[FunctionTable_CheckObjectCollisionPlatform] = (void *)CheckObjectCollisionPlatform;
-    RSDKFunctionTable[FunctionTable_ObjectTileCollision]          = (void *)ObjectTileCollision;
-    RSDKFunctionTable[FunctionTable_ObjectTileGrip]               = (void *)ObjectTileGrip;
-    RSDKFunctionTable[FunctionTable_ProcessTileCollisions]        = (void *)ProcessTileCollisions;
-    RSDKFunctionTable[FunctionTable_GetTileAngle]                 = (void *)GetTileAngle;
-    RSDKFunctionTable[FunctionTable_SetTileAngle]                 = (void *)SetTileAngle;
-    RSDKFunctionTable[FunctionTable_GetTileBehaviour]             = (void *)GetTileBehaviour;
-    RSDKFunctionTable[FunctionTable_SetTileBehaviour]             = (void *)SetTileBehaviour;
-    RSDKFunctionTable[FunctionTable_GetSFX]                       = (void *)GetSFX;
-    RSDKFunctionTable[FunctionTable_PlaySFX]                      = (void *)PlaySfx;
-    RSDKFunctionTable[FunctionTable_StopSFX]                      = (void *)StopSfx;
-    RSDKFunctionTable[FunctionTable_PlayMusic]                    = (void *)NullFunc; // PlayMusicFile;
-    RSDKFunctionTable[FunctionTable_SetSoundAttributes]           = (void *)SetSoundAttributes;
-    RSDKFunctionTable[FunctionTable_Unknown91]                    = (void *)SoundUnknown1;
-    RSDKFunctionTable[FunctionTable_PauseChannel]                 = (void *)PauseChannel;
-    RSDKFunctionTable[FunctionTable_ResumeChannel]                = (void *)ResumeChannel;
-    RSDKFunctionTable[FunctionTable_SoundPlaying]                 = (void *)soundPlaying;
-    RSDKFunctionTable[FunctionTable_ChannelPlaying]               = (void *)channelPlaying;
-    RSDKFunctionTable[FunctionTable_TrackPlaying]                 = (void *)trackPlaying;
-    RSDKFunctionTable[FunctionTable_LoadVideo]                    = (void *)NullFunc; // LoadVideo;
-    RSDKFunctionTable[FunctionTable_LoadImage]                    = (void *)LoadImage;
+    addToRSDKFunctionTable(FunctionTable_DrawRect, DrawRectangle);
+    addToRSDKFunctionTable(FunctionTable_DrawLine, DrawLine);
+    addToRSDKFunctionTable(FunctionTable_DrawCircle, DrawCircle);
+    addToRSDKFunctionTable(FunctionTable_DrawCircleOutline, DrawCircleOutline);
+    addToRSDKFunctionTable(FunctionTable_DrawFace, DrawFace);
+    addToRSDKFunctionTable(FunctionTable_DrawBlendedFace, DrawBlendedFace);
+    addToRSDKFunctionTable(FunctionTable_DrawSprite, DrawSprite);
+    addToRSDKFunctionTable(FunctionTable_DrawDeformed, DrawDeformedSprite);
+    addToRSDKFunctionTable(FunctionTable_DrawText, DrawText);
+    addToRSDKFunctionTable(FunctionTable_DrawTile, DrawTile);
+    addToRSDKFunctionTable(FunctionTable_CopyTile, CopyTile);
+    addToRSDKFunctionTable(FunctionTable_DrawAniTile, DrawAniTile);
+    addToRSDKFunctionTable(FunctionTable_FillScreen, FillScreen);
+    addToRSDKFunctionTable(FunctionTable_LoadMesh, LoadMesh);
+    addToRSDKFunctionTable(FunctionTable_Create3DScene, Create3DScene);
+    addToRSDKFunctionTable(FunctionTable_Init3DScene, Prepare3DScene);
+    addToRSDKFunctionTable(FunctionTable_SetAmbientUnknown, SetAmbientColour);
+    addToRSDKFunctionTable(FunctionTable_SetDiffuseUnknown, SetDiffuseColour);
+    addToRSDKFunctionTable(FunctionTable_SetSpecularUnknown, SetSpecularColour);
+    addToRSDKFunctionTable(FunctionTable_SetupMesh, AddModelToScene);
+    addToRSDKFunctionTable(FunctionTable_SetModelAnimation, SetMeshAnimation);
+    addToRSDKFunctionTable(FunctionTable_SetupMeshAnimation, AddMeshFrameToScene);
+    addToRSDKFunctionTable(FunctionTable_Draw3DScene, Draw3DScene);
+    addToRSDKFunctionTable(FunctionTable_LoadAnimation, LoadAnimation);
+    addToRSDKFunctionTable(FunctionTable_CreateAnimation, CreateAnimation);
+    addToRSDKFunctionTable(FunctionTable_SetSpriteAnimation, SetSpriteAnimation);
+    addToRSDKFunctionTable(FunctionTable_EditAnimation, EditAnimation);
+    addToRSDKFunctionTable(FunctionTable_SetSpriteString, SetSpriteString);
+    addToRSDKFunctionTable(FunctionTable_GetAnimation, GetAnimation);
+    addToRSDKFunctionTable(FunctionTable_GetFrame, GetFrame);
+    addToRSDKFunctionTable(FunctionTable_GetHitbox, GetHitbox);
+    addToRSDKFunctionTable(FunctionTable_GetFrameID, GetFrameID);
+    addToRSDKFunctionTable(FunctionTable_GetStringWidth, GetStringWidth);
+    addToRSDKFunctionTable(FunctionTable_ProcessAnimation, ProcessAnimation);
+    addToRSDKFunctionTable(FunctionTable_GetSceneLayer, GetSceneLayer);
+    addToRSDKFunctionTable(FunctionTable_GetSceneLayerID, GetSceneLayerID);
+    addToRSDKFunctionTable(FunctionTable_GetLayerSize, GetLayerSize);
+    addToRSDKFunctionTable(FunctionTable_GetTileInfo, GetTileInfo);
+    addToRSDKFunctionTable(FunctionTable_SetTileInfo, SetTileInfo);
+    addToRSDKFunctionTable(FunctionTable_CopyTileLayer, CopyTileLayout);
+    addToRSDKFunctionTable(FunctionTable_ProcessParallax, ProcessParallax);
+    addToRSDKFunctionTable(FunctionTable_GetScanlines, GetScanlines);
+    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionTouch, CheckObjectCollisionTouch);
+    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionPoint, CheckObjectCollisionCircle);
+    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionBox, CheckObjectCollisionBox);
+    addToRSDKFunctionTable(FunctionTable_CheckObjectCollisionPlatform, CheckObjectCollisionPlatform);
+    addToRSDKFunctionTable(FunctionTable_ObjectTileCollision, ObjectTileCollision);
+    addToRSDKFunctionTable(FunctionTable_ObjectTileGrip, ObjectTileGrip);
+    addToRSDKFunctionTable(FunctionTable_ProcessTileCollisions, ProcessTileCollisions);
+    addToRSDKFunctionTable(FunctionTable_GetTileAngle, GetTileAngle);
+    addToRSDKFunctionTable(FunctionTable_SetTileAngle, SetTileAngle);
+    addToRSDKFunctionTable(FunctionTable_GetTileBehaviour, GetTileBehaviour);
+    addToRSDKFunctionTable(FunctionTable_SetTileBehaviour, SetTileBehaviour);
+    addToRSDKFunctionTable(FunctionTable_GetSFX, GetSFX);
+    addToRSDKFunctionTable(FunctionTable_PlaySFX, PlaySfx);
+    addToRSDKFunctionTable(FunctionTable_StopSFX, StopSfx);
+    addToRSDKFunctionTable(FunctionTable_PlayMusic, PlayStream);
+    addToRSDKFunctionTable(FunctionTable_SetChannelAttributes, SetChannelAttributes);
+    addToRSDKFunctionTable(FunctionTable_StopChannel, StopChannel);
+    addToRSDKFunctionTable(FunctionTable_PauseChannel, PauseChannel);
+    addToRSDKFunctionTable(FunctionTable_ResumeChannel, ResumeChannel);
+    addToRSDKFunctionTable(FunctionTable_SfxPlaying, SfxPlaying);
+    addToRSDKFunctionTable(FunctionTable_ChannelActive, ChannelActive);
+    addToRSDKFunctionTable(FunctionTable_GetChannelPos, GetChannelPos);
+    addToRSDKFunctionTable(FunctionTable_LoadVideo, NullFunc); // LoadVideo);
+    addToRSDKFunctionTable(FunctionTable_LoadImage, LoadImage);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_ControllerIDForInputID]       = (void *)NullFunc; // Unknown98;
-    RSDKFunctionTable[FunctionTable_MostRecentActiveControllerID] = (void *)NullFunc; // Unknown99;
-    RSDKFunctionTable[FunctionTable_Unknown100]                   = (void *)NullFunc; // Unknown100;
-    RSDKFunctionTable[FunctionTable_Unknown101]                   = (void *)NullFunc; // Unknown101;
-    RSDKFunctionTable[FunctionTable_Missing21]                    = (void *)NullFunc; // UserDataUnknown1;
-    RSDKFunctionTable[FunctionTable_Missing22]                    = (void *)NullFunc; // UserDataUnknown2;
-    RSDKFunctionTable[FunctionTable_Missing23]                    = (void *)NullFunc; // UserDataUnknown3;
-    RSDKFunctionTable[FunctionTable_Missing24]                    = (void *)NullFunc; // UserDataUnknown4;
-    RSDKFunctionTable[FunctionTable_Missing25]                    = (void *)NullFunc; // UserDataUnknown5;
-    RSDKFunctionTable[FunctionTable_Missing26]                    = (void *)NullFunc; // UserDataUnknown6;
-    RSDKFunctionTable[FunctionTable_AssignControllerID]           = (void *)NullFunc; // Unknown102;
-    RSDKFunctionTable[FunctionTable_InputIDIsDisconnected]        = (void *)NullFunc; // Unknown103;
-    RSDKFunctionTable[FunctionTable_ResetControllerAssignments]   = (void *)NullFunc; // Unknown104;
+    addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, NullFunc);       // Unknown98);
+    addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, NullFunc); // Unknown99);
+    addToRSDKFunctionTable(FunctionTable_Unknown100, NullFunc);                   // Unknown100);
+    addToRSDKFunctionTable(FunctionTable_Unknown101, NullFunc);                   // Unknown101);
+    addToRSDKFunctionTable(FunctionTable_Missing21, NullFunc);                    // UserDataUnknown1);
+    addToRSDKFunctionTable(FunctionTable_Missing22, NullFunc);                    // UserDataUnknown2);
+    addToRSDKFunctionTable(FunctionTable_Missing23, NullFunc);                    // UserDataUnknown3);
+    addToRSDKFunctionTable(FunctionTable_Missing24, NullFunc);                    // UserDataUnknown4);
+    addToRSDKFunctionTable(FunctionTable_Missing25, NullFunc);                    // UserDataUnknown5);
+    addToRSDKFunctionTable(FunctionTable_Missing26, NullFunc);                    // UserDataUnknown6);
+    addToRSDKFunctionTable(FunctionTable_AssignControllerID, NullFunc);           // Unknown102);
+    addToRSDKFunctionTable(FunctionTable_InputIDIsDisconnected, NullFunc);        // Unknown103);
+    addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, NullFunc);   // Unknown104);
 #endif
 #if !RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_Unknown92] = (void *)NullFunc;
+    addToRSDKFunctionTable(FunctionTable_Unknown92, NullFunc);
 #endif
-    RSDKFunctionTable[FunctionTable_LoadUserFile] = (void *)LoadUserFile;
-    RSDKFunctionTable[FunctionTable_SaveUserFile] = (void *)SaveUserFile;
+    addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile);
+    addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile);
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_printLog]             = (void *)printLog;
-    RSDKFunctionTable[FunctionTable_printString]          = (void *)printString;
-    RSDKFunctionTable[FunctionTable_printText]            = (void *)printText;
-    RSDKFunctionTable[FunctionTable_printIntegerUnsigned] = (void *)printIntegerUnsigned;
-    RSDKFunctionTable[FunctionTable_printInteger]         = (void *)printInteger;
-    RSDKFunctionTable[FunctionTable_printFloat]           = (void *)printFloat;
-    RSDKFunctionTable[FunctionTable_printVector2]         = (void *)printVector2;
-    RSDKFunctionTable[FunctionTable_printHitbox]          = (void *)printHitbox;
+    addToRSDKFunctionTable(FunctionTable_printLog, printLog);
+    addToRSDKFunctionTable(FunctionTable_printString, printString);
+    addToRSDKFunctionTable(FunctionTable_printText, printText);
+    addToRSDKFunctionTable(FunctionTable_printIntegerUnsigned, printIntegerUnsigned);
+    addToRSDKFunctionTable(FunctionTable_printInteger, printInteger);
+    addToRSDKFunctionTable(FunctionTable_printFloat, printFloat);
+    addToRSDKFunctionTable(FunctionTable_printVector2, printVector2);
+    addToRSDKFunctionTable(FunctionTable_printHitbox, printHitbox);
 #endif
-    RSDKFunctionTable[FunctionTable_Unknown105] = (void *)NullFunc; // UserDataUnknown7;
-    RSDKFunctionTable[FunctionTable_Unknown106] = (void *)NullFunc; // UserDataUnknown8;
+    addToRSDKFunctionTable(FunctionTable_Unknown105, NullFunc); // UserDataUnknown7);
+    addToRSDKFunctionTable(FunctionTable_Unknown106, NullFunc); // UserDataUnknown8);
 #if !RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_PrintMessage] = (void *)PrintMessage;
+    addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
 #endif
 #if RETRO_USE_PLUS
-    RSDKFunctionTable[FunctionTable_ClearDebugValues] = (void *)ClearDebugValues;
-    RSDKFunctionTable[FunctionTable_SetDebugValue]    = (void *)SetDebugValue;
+    addToRSDKFunctionTable(FunctionTable_ClearDebugValues, ClearDebugValues);
+    addToRSDKFunctionTable(FunctionTable_SetDebugValue, SetDebugValue);
 #endif
 }
 

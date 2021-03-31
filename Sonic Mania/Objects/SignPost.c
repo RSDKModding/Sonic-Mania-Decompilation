@@ -469,13 +469,13 @@ void SignPost_CheckTouch()
                             //    entity->position.y);
                             //}
                             // v12->playerFlags[player->playerID]    = 1;
-                            int pos                               = 3 * player->playerID;
-                            globals->competitionSession[pos + 47] = player->rings;
-                            globals->competitionSession[pos + 59] = RSDK_sceneInfo->minutes;
-                            globals->competitionSession[pos + 60] = RSDK_sceneInfo->seconds;
-                            globals->competitionSession[pos + 61] = RSDK_sceneInfo->milliseconds;
-                            globals->competitionSession[pos + 51] = player->score;
-                            globals->competitionSession[pos + 80] = player->lives;
+                            int pos                                                    = 3 * player->playerID;
+                            globals->competitionSession[player->playerID + CS_RingsP1] = player->rings;
+                            globals->competitionSession[pos + CS_TimeMinutesP1]        = RSDK_sceneInfo->minutes;
+                            globals->competitionSession[pos + CS_TimeSecondsP1]        = RSDK_sceneInfo->seconds;
+                            globals->competitionSession[pos + CS_TimeMillisecondsP1]   = RSDK_sceneInfo->milliseconds;
+                            globals->competitionSession[player->playerID + CS_ScoreP1] = player->score;
+                            globals->competitionSession[player->playerID + CS_LivesP1] = player->lives;
                             // Competition_Unknown4(v13, 2);
 
                             entity->activePlayers = entity->activePlayers | (1 << p);

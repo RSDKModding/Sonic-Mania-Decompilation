@@ -15,8 +15,13 @@ enum MusicTracks {
     TRACK_DROWNING    = 8,
     TRACK_GAMEOVER    = 9,
     TRACK_SUPER       = 10,
+#if RETRO_USE_PLUS
     TRACK_HBHMISCHIEF = 11,
     TRACK_NOLOAD      = 12,
+#else
+    TRACK_NOLOAD      = 11,
+    TRACK_HBHMISCHIEF = 12,
+#endif
     TRACK_1UP         = 13,
 };
 
@@ -83,13 +88,13 @@ bool32 Music_Unknown4();
 void Music_Unknown5(EntityMusic *entity);
 void Music_Unknown6(byte trackID, int a2);
 void Music_Unknown7(EntityMusic *entity);
-void Music_Unknown8();
+void Music_RemoveStoredEntities();
 void Music_Unknown9(byte trackID, float a2);
 void Music_FadeOut(float fadeSpeed);
-void Music_Unknown11();
-void Music_Unknown12();
-void Music_Unknown13();
-void Music_Unknown14();
-void Music_Unknown15();
+void Music_State_Unknown11();
+void Music_State_Unknown12();
+void Music_State_Unknown13();
+void Music_State_FadeOut();
+void Music_State_TransitionTrack();
 
 #endif //!OBJ_MUSIC_H

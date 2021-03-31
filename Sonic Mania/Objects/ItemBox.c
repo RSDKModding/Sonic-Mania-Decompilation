@@ -819,9 +819,9 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     if (globals->gameMode == MODE_COMPETITION) {
-        ++globals->competitionSession[RSDK.GetEntityID(player) + 55];
+        ++globals->competitionSession[RSDK.GetEntityID(player) + CS_ItemsP1];
     }
-    RSDK.CreateEntity(0, 0, itemBox->position.x, itemBox->position.y);
+    RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
     if (player->characterID != ID_MIGHTY && player->playerAnimData.animationID != ANI_DROPDASH)
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);

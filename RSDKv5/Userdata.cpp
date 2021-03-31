@@ -20,6 +20,8 @@ DummyUserStorage *userStorage   = NULL;
 UserDBStorage userDBStorage[RETRO_USERDB_MAX];
 #endif
 
+SettingsStorage settingsStorage;
+
 inline void nullUserFunc() {}
 
 void initUserData()
@@ -469,7 +471,7 @@ bool32 DeleteUserFile(const char *filename)
 }
 
 #if RETRO_USE_PLUS
-int LoadDBFromBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
+int LoadDBFromBuffer(UserDB *userDB, byte *writeBuffer)
 {
     if (*(int *)writeBuffer != 0x80074B1E)
         return 0;
@@ -607,7 +609,7 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
 int UserDBLoadCB(ushort tableID, int status)
 {
     if (status == 200) {
-        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (int)userDBStorage, (byte*)userDBStorage->readBuffer[tableID]);
+        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte*)userDBStorage->readBuffer[tableID]);
         if (result) {
             // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
         }
@@ -808,19 +810,56 @@ void SetSettingsValue(int id, int val)
 #endif
             break;
         case 18:
-            // windowSettings = WindowSettings;
-            // gameSettings   = GameSettings;
-            // shaderSettings = ShaderSettings;
-            // screenSettings = ScreenSettings;
-            // inputSettings  = InputSettings;
+            settingsStorage.windowed      = engine.isFullScreen;
+            settingsStorage.bordered      = engine.borderless;
+            settingsStorage.exclusiveFS   = engine.exclusiveFS;
+            settingsStorage.vsync         = engine.vsync;
+            settingsStorage.shaderSupport = engine.shaderSupport;
+            settingsStorage.fsWidth       = engine.fsWidth;
+            settingsStorage.fsHeight      = engine.fsHeight;
+            settingsStorage.gameHeight    = engine.gameHeight;
+            settingsStorage.windowActive  = engine.windowActive;
+            settingsStorage.shaderID      = engine.shaderID;
+            settingsStorage.screenCount   = engine.screenCount;
+            settingsStorage.dimTimer      = engine.dimTimer;
+            settingsStorage.dimLimit      = engine.dimLimit;
+            settingsStorage.dimMax        = engine.dimMax;
+            settingsStorage.dimPercent    = engine.dimPercent;
+            settingsStorage.refreshRate   = engine.refreshRate;
+            settingsStorage.windowWidth   = engine.windowWidth;
+            settingsStorage.windowHeight  = engine.windowHeight;
+            settingsStorage.pixWidth      = pixWidth;
+            //settingsStorage.mouseX        = 0;
+            //settingsStorage.mouseY        = 0;
+            //settingsStorage.field_8       = 0;
+            //settingsStorage.field_C       = 0;
             break;
         case 19:
-            settingsChanged = true;
-            // WindowSettings = windowSettings;
-            // GameSettings   = gameSettings;
-            // ShaderSettings = shaderSettings;
-            // ScreenSettings = screenSettings;
-            // InputSettings  = inputSettings;
+            settingsChanged               = true;
+
+            engine.isFullScreen  = settingsStorage.windowed;
+            engine.borderless    = settingsStorage.bordered;
+            engine.exclusiveFS   = settingsStorage.exclusiveFS;
+            engine.vsync         = settingsStorage.vsync;
+            engine.shaderSupport = settingsStorage.shaderSupport;
+            engine.fsWidth       = settingsStorage.fsWidth;
+            engine.fsHeight      = settingsStorage.fsHeight;
+            engine.gameHeight    = settingsStorage.gameHeight;
+            engine.windowActive  = settingsStorage.windowActive;
+            engine.shaderID      = settingsStorage.shaderID;
+            engine.screenCount   = settingsStorage.screenCount;
+            engine.dimTimer      = settingsStorage.dimTimer;
+            engine.dimLimit      = settingsStorage.dimLimit;
+            engine.dimMax        = settingsStorage.dimMax;
+            engine.dimPercent    = settingsStorage.dimPercent;
+            engine.refreshRate   = settingsStorage.refreshRate;
+            engine.windowWidth   = settingsStorage.windowWidth;
+            engine.windowHeight  = settingsStorage.windowHeight;
+            pixWidth             = settingsStorage.pixWidth;
+            //0                    = settingsStorage.mouseX;
+            //0                    = settingsStorage.mouseY;
+            //0                    = settingsStorage.field_8;
+            //0                    = settingsStorage.field_C;
             break;
         case 20: settingsChanged = val; break;
         case 21: writeSettings(val); break;
@@ -854,7 +893,7 @@ void readSettings()
     engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
     result       = iniparser_getstring(ini, "Video:pixWidth", "424");
-    SCREEN_XSIZE = (int)strtol(result, NULL, 0);
+    pixWidth = (int)strtol(result, NULL, 0);
 
     engine.windowWidth   = (int)strtol(iniparser_getstring(ini, "Video:winWidth", "424"), NULL, 0);
     engine.windowHeight  = (int)strtol(iniparser_getstring(ini, "Video:winHeight", "240"), NULL, 0);
@@ -922,8 +961,90 @@ void readSettings()
     }
     iniparser_freedict(ini);
 }
+
+inline void writeText(FileIO *file, const char *string, ...)
+{
+    // make the full string
+    char buffer[0x100];
+    va_list args;
+    va_start(args, string);
+    vsprintf(buffer, string, args);
+    printf("%s\n", buffer);
+    sprintf(buffer, "%s\n", buffer);
+    va_end(args);
+
+    fWrite(string, sizeof(char), StrLength(string), file);
+}
+
 void writeSettings(bool32 writeToFile)
 {
+    //only done on windows and "dev", consoles use "options.bin"
+    if (curSKU.platform != PLATFORM_WIN && curSKU.platform != PLATFORM_DEV)
+        return;
+
     if (settingsChanged || writeToFile) {
+        dictionary *ini = iniparser_load("Settings.ini");
+        FileIO *file    = fOpen("Settings.ini", "rb");
+        writeText(file, "; Retro Engine Config File\n\n");
+        writeText(file, "[Game]\n");
+        if (ini) {
+            if (StrComp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound")) {
+                writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
+            }
+
+            if (StrComp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound"))
+                writeText(file, "devMenu=%s\n", engine.devMenu);
+        }
+
+#if RETRO_USE_PLUS
+        writeText(file, "language=%d\n", curSKU.language);
+#else
+        writeText(file, "language=%d\n", engineInfo.language);
+#endif
+        writeText(file, "\n[Video]\n");
+        writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
+        writeText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
+        writeText(file, "windowed=%s\n", !engine.startFullScreen);
+        writeText(file, "border=%s\n", !engine.borderless);
+        writeText(file, "exclusiveFS=%s\n", engine.exclusiveFS);
+        writeText(file, "vsync=%s\n", engine.vsync);
+        writeText(file, "tripleBuffering=%s\n", engine.tripleBuffer);
+        if (ini) {
+            if (StrComp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound"))
+                writeText(file, "pixWidth=%d\n", pixWidth);
+        }
+        writeText(file, "winWidth=%d\n", engine.windowWidth);
+        writeText(file, "winHeight=%d\n", engine.windowHeight);
+        if (engine.fsWidth > 0)
+            writeText(file, "fsWidth=%d\n", engine.fsWidth);
+        if (engine.fsHeight > 0)
+            writeText(file, "fsHeight=%d\n", engine.fsHeight);
+        if (engine.refreshRate > 0)
+            writeText(file, "refreshRate=%d\n", engine.refreshRate);
+
+        writeText(file, "shaderSupport=%s\n", engine.shaderSupport);
+        writeText(file, "screenShader=%d\n", engine.shaderID);
+        writeText(file, "\n[Audio]\n");
+        writeText(file, "streamsEnabled=%s\n", engine.streamsEnabled);
+        writeText(file, "streamVolume=%f\n", engine.streamVolume);
+        writeText(file, "sfxVolume=%f\n", engine.soundFXVolume);
+
+        for (int i = 0; i < 4; ++i) {
+            writeText(file, "\n[Keyboard Map %d]\n", i + i);
+            writeText(file, "up=0x%x\n", controller[i].keyUp.keyMap);
+            writeText(file, "down=0x%x\n", controller[i].keyDown.keyMap);
+            writeText(file, "left=0x%x\n", controller[i].keyLeft.keyMap);
+            writeText(file, "right=0x%x\n", controller[i].keyRight.keyMap);
+            writeText(file, "buttonA=0x%x\n", controller[i].keyA.keyMap);
+            writeText(file, "buttonB=0x%x\n", controller[i].keyB.keyMap);
+            writeText(file, "buttonC=0x%x\n", controller[i].keyC.keyMap);
+            writeText(file, "buttonX=0x%x\n", controller[i].keyX.keyMap);
+            writeText(file, "buttonY=0x%x\n", controller[i].keyY.keyMap);
+            writeText(file, "buttonZ=0x%x\n", controller[i].keyZ.keyMap);
+            writeText(file, "start=0x%x\n", controller[i].keyStart.keyMap);
+            writeText(file, "select=0x%x\n", controller[i].keySelect.keyMap);
+        }
+
+        iniparser_freedict(ini);
     }
 }

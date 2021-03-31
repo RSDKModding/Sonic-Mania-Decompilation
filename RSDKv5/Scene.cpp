@@ -140,7 +140,7 @@ void LoadScene()
 
     FileInfo info;
     MEM_ZERO(info);
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         char buffer[0x100];
         uint sig = ReadInt32(&info);
 
@@ -257,7 +257,7 @@ void LoadSceneFile() {
 
     FileInfo info;
     MEM_ZERO(info);
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info);
 
         if (sig != 0x4E4353) {
@@ -530,7 +530,7 @@ void LoadTileConfig(char *filepath)
 {
     FileInfo info;
     MEM_ZERO(info);
-    if (LoadFile(&info, filepath)) {
+    if (LoadFile(&info, filepath, FMODE_RB)) {
         uint sig = ReadInt32(&info);
         if (sig != 0x4C4954) {
             CloseFile(&info);
@@ -554,9 +554,9 @@ void LoadTileConfig(char *filepath)
 
                 bool32 isCeiling                = buffer[bufPos++];
                 collisionMasks[p][t].floorAngle = buffer[bufPos++];
-                collisionMasks[p][t].rWallAngle = buffer[bufPos++];
                 collisionMasks[p][t].lWallAngle = buffer[bufPos++];
-                collisionMasks[p][t].roofAngle = buffer[bufPos++];
+                collisionMasks[p][t].rWallAngle = buffer[bufPos++];
+                collisionMasks[p][t].roofAngle  = buffer[bufPos++];
                 collisionMasks[p][t].flag = buffer[bufPos++];
 
                 if (isCeiling) // Ceiling Tile
@@ -614,7 +614,7 @@ void LoadTileConfig(char *filepath)
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         if (hasCollision[c]) {
                             collisionMasks[p][t].floorMasks[c] = collision[c];
-                            collisionMasks[p][t].roofMasks[c]  = 0;
+                            collisionMasks[p][t].roofMasks[c]  = 0xF;
                         }
                         else {
                             collisionMasks[p][t].floorMasks[c] = 0xFF;
@@ -664,23 +664,25 @@ void LoadTileConfig(char *filepath)
                 int off                               = (FLIP_X * TILE_COUNT);
                 collisionMasks[p][t + off].flag       = collisionMasks[p][t].flag;
                 collisionMasks[p][t + off].floorAngle = -collisionMasks[p][t].floorAngle;
-                collisionMasks[p][t + off].lWallAngle = -collisionMasks[p][t].lWallAngle;
-                collisionMasks[p][t + off].rWallAngle = -collisionMasks[p][t].rWallAngle;
+                collisionMasks[p][t + off].lWallAngle = -collisionMasks[p][t].rWallAngle;
+                collisionMasks[p][t + off].rWallAngle = -collisionMasks[p][t].lWallAngle;
                 collisionMasks[p][t + off].roofAngle  = -collisionMasks[p][t].roofAngle;
 
                 for (int c = 0; c < TILE_SIZE; ++c) {
-                    collisionMasks[p][t + off].lWallMasks[0xF - c] = collisionMasks[p][t].rWallMasks[c];
-                    collisionMasks[p][t + off].rWallMasks[0xF - c] = collisionMasks[p][t].lWallMasks[c];
-
-                    if (collisionMasks[p][t].floorMasks[c] >= 0xFF)
-                        collisionMasks[p][t + off].floorMasks[0xF - c] = 0xFF;
+                    int h = collisionMasks[p][t].lWallMasks[c];
+                    if (h == 255)
+                        collisionMasks[p][t + off].rWallMasks[c] = 1;
                     else
-                        collisionMasks[p][t + off].floorMasks[0xF - c] = collisionMasks[p][t].floorMasks[c];
+                        collisionMasks[p][t + off].rWallMasks[c] = 0xF - h;
 
-                    if (collisionMasks[p][t].roofMasks[c] >= 0xFF)
-                        collisionMasks[p][t + off].roofMasks[0xF - c] = 0xFF;
+                    h = collisionMasks[p][t].rWallMasks[c];
+                    if (h == 255)
+                        collisionMasks[p][t + off].lWallMasks[c] = 1;
                     else
-                        collisionMasks[p][t + off].roofMasks[0xF - c] = collisionMasks[p][t].roofMasks[c];
+                        collisionMasks[p][t + off].lWallMasks[c] = 0xF - h;
+
+                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t].floorMasks[c];
+                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t].roofMasks[c];
                 }
             }
 
@@ -688,50 +690,54 @@ void LoadTileConfig(char *filepath)
             for (int t = 0; t < TILE_COUNT; ++t) {
                 int off                               = (FLIP_Y * TILE_COUNT);
                 collisionMasks[p][t + off].flag       = collisionMasks[p][t].flag;
-                collisionMasks[p][t + off].floorAngle = -0x80 - collisionMasks[p][t].floorAngle;
+                collisionMasks[p][t + off].floorAngle = -0x80 - collisionMasks[p][t].roofAngle;
                 collisionMasks[p][t + off].lWallAngle = -0x80 - collisionMasks[p][t].lWallAngle;
-                collisionMasks[p][t + off].roofAngle  = -0x80 - collisionMasks[p][t].roofAngle;
+                collisionMasks[p][t + off].roofAngle  = -0x80 - collisionMasks[p][t].floorAngle;
                 collisionMasks[p][t + off].rWallAngle = -0x80 - collisionMasks[p][t].rWallAngle;
 
                 for (int c = 0; c < TILE_SIZE; ++c) {
-                    collisionMasks[p][t + off].floorMasks[0xF - c] = collisionMasks[p][t].roofMasks[c];
-                    collisionMasks[p][t + off].roofMasks[0xF - c]  = collisionMasks[p][t].floorMasks[c];
-
-                    if (collisionMasks[p][t].lWallMasks[c] >= 0xFF)
-                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xFF;
+                    int h = collisionMasks[p][t].roofMasks[c];
+                    if (h == 255)
+                        collisionMasks[p][t + off].floorMasks[c] = 1;
                     else
-                        collisionMasks[p][t + off].lWallMasks[0xF - c] = collisionMasks[p][t].lWallMasks[c];
+                        collisionMasks[p][t + off].floorMasks[c] = 0xF - h;
 
-                    if (collisionMasks[p][t].rWallMasks[c] >= 0xFF)
-                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xFF;
+                    collisionMasks[p][t + off].lWallMasks[c] = collisionMasks[p][t].rWallMasks[c];
+                    collisionMasks[p][t + off].rWallMasks[c] = collisionMasks[p][t].lWallMasks[c];
+
+                    h                                    = collisionMasks[p][t].floorMasks[c];
+                    if (h == 0xFF)
+                        collisionMasks[p][t + off].roofMasks[c] = 1;
                     else
-                        collisionMasks[p][t + off].rWallMasks[0xF - c] = collisionMasks[p][t].rWallMasks[c];
+                        collisionMasks[p][t + off].roofMasks[c] = 0xF - h;
                 }
             }
 
             // FlipXY
             for (int t = 0; t < TILE_COUNT; ++t) {
                 int off                                                  = (FLIP_XY * TILE_COUNT);
-                int offX                                                  = (FLIP_X * TILE_COUNT);
-                collisionMasks[p][t + off].flag                           = collisionMasks[p][t + offX].flag;
-                collisionMasks[p][t + off].floorAngle                    = -collisionMasks[p][t + offX].floorAngle;
-                collisionMasks[p][t + off].lWallAngle                    = -collisionMasks[p][t + offX].lWallAngle;
-                collisionMasks[p][t + off].rWallAngle                    = -collisionMasks[p][t + offX].rWallAngle;
-                collisionMasks[p][t + off].roofAngle                      = -collisionMasks[p][t + offX].roofAngle;
+                int offY                                                  = (FLIP_Y * TILE_COUNT);
+                collisionMasks[p][t + off].flag                           = collisionMasks[p][t + offY].flag;
+                collisionMasks[p][t + off].floorAngle                     = -collisionMasks[p][t + offY].floorAngle;
+                collisionMasks[p][t + off].lWallAngle                     = -collisionMasks[p][t + offY].rWallAngle;
+                collisionMasks[p][t + off].rWallAngle                     = -collisionMasks[p][t + offY].lWallAngle;
+                collisionMasks[p][t + off].roofAngle                      = -collisionMasks[p][t + offY].roofAngle;
 
                 for (int c = 0; c < TILE_SIZE; ++c) {
-                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t + offX].roofMasks[c];
-                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t + offX].floorMasks[c];
-
-                    if (collisionMasks[p][t + offX].lWallMasks[c] >= 0xFF)
-                        collisionMasks[p][t + off].lWallMasks[0xF - c] = 0xFF;
+                    int h = collisionMasks[p][t + offY].lWallMasks[c];
+                    if (h == 255)
+                        collisionMasks[p][t + off].rWallMasks[c] = 1;
                     else
-                        collisionMasks[p][t + off].lWallMasks[0xF - c] = collisionMasks[p][t + offX].lWallMasks[c];
+                        collisionMasks[p][t + off].rWallMasks[c] = 0xF - h;
 
-                    if (collisionMasks[p][t + offX].rWallMasks[c] >= 0xFF)
-                        collisionMasks[p][t + off].rWallMasks[0xF - c] = 0xFF;
+                    h = collisionMasks[p][t + offY].rWallMasks[c];
+                    if (h == 255)
+                        collisionMasks[p][t + off].lWallMasks[c] = 1;
                     else
-                        collisionMasks[p][t + off].rWallMasks[0xF - c] = collisionMasks[p][t + offX].rWallMasks[c];
+                        collisionMasks[p][t + off].lWallMasks[c] = 0xF - h;
+
+                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t + offY].floorMasks[c];
+                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t + offY].roofMasks[c];
                 }
             }
         }

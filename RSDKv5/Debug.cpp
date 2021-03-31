@@ -545,7 +545,7 @@ void DevMenu_Options()
         switch (devMenu.option) {
             case 0: {
                 devMenu.windowed = !engine.isFullScreen;
-                devMenu.winScale = (engine.windowWidth / SCREEN_XSIZE) - 1;
+                devMenu.winScale = (engine.windowWidth / pixWidth) - 1;
                 int aspect       = (int)((engine.windowWidth / (float)engine.windowHeight) * (float)SCREEN_YSIZE) >> 3;
                 switch (aspect) {
                     case 40: devMenu.winAspect = 0; break;

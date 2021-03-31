@@ -425,10 +425,10 @@ void HUD_StageLoad()
     HUD->sfx_Starpost        = RSDK.GetSFX("Global/StarPost.wav");
     HUD->dwordC              = 0;
     if (globals->gameMode == MODE_COMPETITION) {
-        HUD->compSession[0] = globals->competitionSession[84];
-        HUD->compSession[1] = globals->competitionSession[85];
-        HUD->compSession[2] = globals->competitionSession[86];
-        HUD->compSession[3] = globals->competitionSession[87];
+        HUD->compSession[0] = globals->competitionSession[CS_Unknown84];
+        HUD->compSession[1] = globals->competitionSession[CS_Unknown85];
+        HUD->compSession[2] = globals->competitionSession[CS_Unknown86];
+        HUD->compSession[3] = globals->competitionSession[CS_Unknown87];
     }
 }
 

@@ -163,7 +163,7 @@ void GameOver_Unknown2()
     if (entity->timer == 0) {
         if (globals->gameMode != MODE_COMPETITION) {
             for (int i = 40; i < 0x30; ++i) {
-                RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
+                RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), TYPE_BLANK, 0);
             }
 
             if (Music_Unknown4()) {
@@ -174,9 +174,9 @@ void GameOver_Unknown2()
             }
         }
         else {
-            if (globals->competitionSession[23] <= 0) {
+            if (globals->competitionSession[CS_PlayerCount] <= 0) {
                 bool32 flag = false;
-                if (0 < globals->competitionSession[23] - 1 && 0 != globals->competitionSession[23]) {
+                if (0 < globals->competitionSession[CS_PlayerCount] - 1 && 0 != globals->competitionSession[CS_PlayerCount]) {
                     if (Zone->field_15C != 1)
                         flag = true;
                 }
@@ -200,7 +200,7 @@ void GameOver_Unknown2()
                 int id       = 0;
                 int id2      = 0;
                 int id3      = 0;
-                for (int i = 0; i < globals->competitionSession[23]; ++i) {
+                for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i) {
                     Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
                     id2         = id;
                     if (ent->objectID == GameOver->objectID) {
@@ -217,7 +217,7 @@ void GameOver_Unknown2()
                 }
 
                 bool32 flag = false;
-                if (0 < globals->competitionSession[23] - 1 && 0 != globals->competitionSession[23]) {
+                if (0 < globals->competitionSession[CS_PlayerCount] - 1 && 0 != globals->competitionSession[CS_PlayerCount]) {
                     if (Zone->field_15C != 1)
                         flag = true;
                 }
@@ -256,7 +256,7 @@ void GameOver_Unknown3()
     int id       = 0;
     int id2      = 0;
     int id3      = 0;
-    for (int i = 0; i < globals->competitionSession[23]; ++i) {
+    for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i) {
         Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
         id2         = id;
         if (ent->objectID == GameOver->objectID) {
@@ -272,7 +272,7 @@ void GameOver_Unknown3()
         }
     }
 
-    if (id2 >= globals->competitionSession[23] - 1 || id3 == globals->competitionSession[23] || Zone->field_15C)
+    if (id2 >= globals->competitionSession[CS_PlayerCount] - 1 || id3 == globals->competitionSession[CS_PlayerCount] || Zone->field_15C)
         entity->state = GameOver_Unknown4;
 }
 
@@ -337,8 +337,8 @@ void GameOver_Unknown5()
         entity->timer = 0;
 
         if (globals->gameMode == MODE_COMPETITION) {
-            globals->competitionSession[globals->competitionSession[24] + 31] = 1;
-            globals->competitionSession[27]                                   = globals->competitionSession[93] + 1;
+            globals->competitionSession[globals->competitionSession[CS_LevelIndex] + CS_ZoneUnknown31] = 1;
+            globals->competitionSession[CS_MatchID] = globals->competitionSession[CS_Unknown93] + 1;
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();

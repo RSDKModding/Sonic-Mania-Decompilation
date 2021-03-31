@@ -43,7 +43,7 @@ void UIVideo_State_PlayVid1()
 {
     RSDK_THIS(UIVideo);
     if (!entity->timer)
-        RSDK.SoundUnknown1(Music->slotID);
+        RSDK.StopChannel(Music->slotID);
 
     if (++entity->timer >= 16) {
         char videoFile1[64];

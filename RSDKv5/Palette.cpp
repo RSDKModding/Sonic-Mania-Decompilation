@@ -25,7 +25,7 @@ void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)
     StrCopy(buffer, "Data/Palettes/");
     StrAdd(buffer, filePath);
 
-    if (LoadFile(&info, buffer)) {
+    if (LoadFile(&info, buffer, FMODE_RB)) {
         for (int r = 0; r < 0x10; ++r) {
             if (!(rowFlags >> r & 1)) {
                 for (int c = 0; c < 0x10; ++c) {

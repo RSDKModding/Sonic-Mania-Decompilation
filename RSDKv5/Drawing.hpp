@@ -90,7 +90,7 @@ extern int gfxDataPosition;
 extern GFXSurface gfxSurface[SURFACE_MAX];
 extern byte graphicData[GFXDATA_MAX];
 
-extern int SCREEN_XSIZE;
+extern int pixWidth;
 extern int screenCount;
 extern ScreenInfo screens[SCREEN_MAX];
 extern ScreenUnknown screenUnknown[SCREEN_MAX];
@@ -216,8 +216,8 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
 void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 
-void DrawQuad(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
-void DrawBlendedQuad(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect);
+void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
+void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect);
 
 void DrawSprite(AnimationData *data, Vector2 *position, bool32 screenRelative);
 void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);

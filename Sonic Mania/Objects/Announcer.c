@@ -105,8 +105,8 @@ void Announcer_Unknown3()
         entity->inkEffect = INK_NONE;
 
         int frame     = 0;
-        byte *session = (byte *)&globals->competitionSession[43];
-        switch (session[RSDK_sceneInfo->currentScreenID]) {
+        byte *charFlags = (byte *)&globals->competitionSession[CS_CharacterFlags];
+        switch (charFlags[RSDK_sceneInfo->currentScreenID]) {
             case ID_TAILS: frame = 1; break;
             case ID_KNUCKLES: frame = 2; break;
 #if RETRO_USE_PLUS

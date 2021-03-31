@@ -65,24 +65,41 @@ extern bool32 useDataFile;
 bool32 CheckDataFile(const char *filename);
 bool32 OpenDataFile(FileInfo *info, const char *filename);
 
-inline bool32 LoadFile(FileInfo *info, const char *filename)
+enum FileModes {
+    FMODE_NONE,
+    FMODE_RB,
+    FMODE_WB,
+    FMODE_RB_PLUS,
+    FMODE_4
+};
+
+static const char *openModes[3] = { "rb", "wb", "rb+" };
+
+inline bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
 {
     if (info->file)
-        return 0;
-    if (info->externalFile || !useDataFile) {
-        info->file = fOpen(filename, "rb");
-        if (!info->file)
-            return 0;
-        info->readPos = 0;
-        info->fileSize = 0;
-        fSeek(info->file, 0, SEEK_END);
-        info->fileSize = (int)fTell(info->file);
-        fSeek(info->file, 0, SEEK_SET);
-        return info->file != NULL;
-    }
-    else {
+        return false;
+
+    if (!info->externalFile && fileMode == FMODE_RB && useDataFile) {
         return OpenDataFile(info, filename);
     }
+    else {
+        if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
+            info->file = fOpen(filename, openModes[fileMode - 1]);
+        }
+        if (!info->file)
+            return false;
+        info->readPos  = 0;
+        info->fileSize = 0;
+
+        if (fileMode != FMODE_WB) {
+            fSeek(info->file, 0, SEEK_END);
+            info->fileSize = (int)fTell(info->file);
+            fSeek(info->file, 0, SEEK_SET);
+        }
+        return info->file != NULL;
+    }
+    return false;
 }
 
 inline void CloseFile(FileInfo *info)

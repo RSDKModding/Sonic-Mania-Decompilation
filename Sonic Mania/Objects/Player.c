@@ -608,7 +608,7 @@ void Player_Create(void *data)
 
         Player->powerups = 0;
         if (globals->gameMode == MODE_COMPETITION) {
-            entity->lives    = globals->competitionSession[entity->playerID + (RETRO_USE_PLUS ? 80 : 78)];
+            entity->lives    = globals->competitionSession[entity->playerID + (RETRO_USE_PLUS ? CS_LivesP1 : 78)];
             entity->score    = 0;
             entity->score1UP = 50000;
         }
@@ -761,7 +761,7 @@ void Player_LoadSprites()
             RSDK.AddScreen(&player1->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
         }
         else {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
         }
     }
 
@@ -808,7 +808,7 @@ void Player_LoadSpritesVS()
         if (entity->characterID & 1) {
             int slotID = 0;
 #if RETRO_USE_PLUS
-            for (int i = 0; i < globals->competitionSession[23]; ++i, ++slotID) {
+            for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i, ++slotID) {
 #else
             for (int i = 0; i < PLAYER_MAX; ++i, ++slotID) {
 #endif
@@ -835,7 +835,7 @@ void Player_LoadSpritesVS()
                 player->camera       = Camera_SetTargetEntity(i, (Entity *)player);
             }
         }
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
 }
 void Player_SaveValues()
@@ -873,7 +873,7 @@ void Player_GiveScore(EntityPlayer *player, int score)
 void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
 {
     if (globals->gameMode == MODE_COMPETITION)
-        globals->competitionSession[player->playerID + 72] += amount;
+        globals->competitionSession[player->playerID + CS_TotalRingsP1] += amount;
     player->rings += amount;
 
     if (player->rings < 0) {
@@ -900,13 +900,13 @@ void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
 
     if (playSFX) {
         if (Ring->pan) {
-            int slot = RSDK.PlaySFX(Ring->sfx_Ring, 0, 255);
-            RSDK.SetSoundAttributes(0, slot, 1.0, -1.0, 1.0);
+            int channel = RSDK.PlaySFX(Ring->sfx_Ring, 0, 255);
+            RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
             Ring->pan = 0;
         }
         else {
-            int slot = RSDK.PlaySFX(Ring->sfx_Ring, 0, 255);
-            RSDK.SetSoundAttributes(0, slot, 1.0, 1.0, 1.0);
+            int channel = RSDK.PlaySFX(Ring->sfx_Ring, 0, 255);
+            RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
             Ring->pan = 1;
         }
     }
@@ -1518,7 +1518,7 @@ void Player_HandleDeath(EntityPlayer *player)
             globals->coolBonus[player->playerID] = 0;
 
             if (globals->gameMode == MODE_COMPETITION) {
-                globals->competitionSession[player->playerID + 80] = player->lives;
+                globals->competitionSession[player->playerID + CS_LivesP1] = player->lives;
             }
 
 #if RETRO_USE_PLUS
@@ -1530,8 +1530,8 @@ void Player_HandleDeath(EntityPlayer *player)
                         int *saveRAM     = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int playerID  = RSDK.GetEntityID(player);
-                            byte *session = (byte *)&globals->competitionSession[71];
-                            // if (!session[playerID])
+                            byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
+                            // if (!finishFlags[playerID])
                             //    Competition_Unknown4(playerID, 1);
                             EntityHUD *hud = NULL;
                             while (RSDK.GetEntities(HUD->objectID, (Entity **)&hud)) {
@@ -3706,8 +3706,8 @@ void Player_State_Spindash()
             entity->spindashCharge = 0;
 
         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SPINDASH, &entity->playerAnimData, true, 0);
-        int slot = RSDK.PlaySFX(Player->sfx_Charge, 0, 255);
-        RSDK.SetSoundAttributes(0, slot, 1.0, 0.0, chargeSpeeds[entity->spindashCharge]);
+        int channel = RSDK.PlaySFX(Player->sfx_Charge, 0, 255);
+        RSDK.SetChannelAttributes(channel, 1.0, 0.0, chargeSpeeds[entity->spindashCharge]);
     }
     else {
         entity->abilityTimer -= entity->abilityTimer >> 5;

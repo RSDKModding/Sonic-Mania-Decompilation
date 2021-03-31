@@ -14,7 +14,7 @@ bool32 CheckDataFile(const char *filePath)
 
     MEM_ZERO(info);
     info.externalFile = true;
-    if (LoadFile(&info, filePath)) {
+    if (LoadFile(&info, filePath, FMODE_RB)) {
         byte signature[6] = { 'R', 'S', 'D', 'K', 'v', '5' };
         byte buf          = 0;
         for (int i = 0; i < 6; ++i) {

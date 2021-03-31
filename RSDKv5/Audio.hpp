@@ -26,7 +26,7 @@ struct ChannelInfo {
     float volume;
     int speed;
     size_t sampleLength;
-    int unknown1; 
+    int bufferPos; 
     int unknown2; 
     uint loop;
     short soundID;
@@ -34,9 +34,20 @@ struct ChannelInfo {
     byte state;
 };
 
+enum ChannelStates { CHANNEL_NONE, CHANNEL_SFX, CHANNEL_STREAMING, CHANNEL_STREAM_LOAD, CHANNEL_PAUSED = 0x40 };
 
 extern SFXInfo sfxList[SFX_COUNT];
 extern ChannelInfo channels[CHANNEL_COUNT];
+
+extern bool32 audioEnabled;
+
+extern char streamFilename[0x100];
+extern byte *streamFileBuffer;
+extern int streamFileSize;
+extern void *streamBuffer;
+extern int streamBufferSize;
+extern int streamStartPos;
+extern int streamLoopPoint;
 
 bool32 InitAudioDevice();
 void ReleaseAudioDevice();
@@ -50,6 +61,9 @@ void ProcessAudioMixing(Sint32 *dst, const Sint16 *src, int len, int volume, sby
 #endif
 
 #endif
+
+void LoadStream(ChannelInfo *channel);
+int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loopPoint, bool32 loadASync);
 
 void LoadSfx(char *filePath, byte plays, byte scope);
 inline ushort GetSFX(const char* sfxName) {
@@ -70,24 +84,25 @@ inline void StopSfx(int sfx)
         if (channels[i].soundID == sfx) {
             MEM_ZERO(channels[i]);
             channels[i].soundID = -1;
+            channels[i].state = CHANNEL_NONE;
         }
     }
 }
-void SetSoundAttributes(sbyte a1, byte slot, float volume, float panning, float speed);
+void SetChannelAttributes(byte slot, float volume, float panning, float speed);
 
-inline void SoundUnknown1(byte slot)
+inline void StopChannel(byte slot)
 {
     if (slot < CHANNEL_COUNT) {
-        if (channels[slot].state != 3)
-            channels[slot].state = 0;
+        if (channels[slot].state != CHANNEL_STREAM_LOAD)
+            channels[slot].state = CHANNEL_NONE;
     }
 }
 
 inline void PauseChannel(byte slot)
 {
     if (slot < CHANNEL_COUNT) {
-        if (channels[slot].state != 3 && channels[slot].state < 0x40) {
-            channels[slot].state += 0x40;
+        if (channels[slot].state != CHANNEL_STREAM_LOAD) {
+            channels[slot].state |= CHANNEL_PAUSED;
         }
     }
 }
@@ -95,8 +110,8 @@ inline void PauseChannel(byte slot)
 inline void ResumeChannel(byte slot)
 {
     if (slot < CHANNEL_COUNT) {
-        if (channels[slot].state != 3 && channels[slot].state >= 0x40) {
-            channels[slot].state -= 0x40;
+        if (channels[slot].state != CHANNEL_STREAM_LOAD) {
+            channels[slot].state &= ~CHANNEL_PAUSED;
         }
     }
 }
@@ -115,35 +130,35 @@ inline void ResumeSound()
     }
 }
 
-inline bool32 soundPlaying(byte slot)
+inline bool32 SfxPlaying(byte slot)
 {
     for (int c = 0; c < CHANNEL_COUNT; ++c) {
-        if (channels[c].state == 1 || channels[c].soundID == slot)
+        if (channels[c].state == CHANNEL_SFX && channels[c].soundID == slot)
             return true;
     }
     return false;
 }
 
-inline bool32 channelPlaying(byte slot)
+inline bool32 ChannelActive(byte slot)
 {
     if (slot >= CHANNEL_COUNT)
-        return 0;
+        return false;
     else
-        return channels[slot].state == 1;
+        return channels[slot].state == CHANNEL_NONE;
 }
 
-inline bool32 trackPlaying(byte slot)
+inline bool32 GetChannelPos(byte slot)
 {
     if (slot >= CHANNEL_COUNT)
         return 0;
-    if (channels[slot].state == 1)
-        return channels[slot].unknown1;
-    if (channels[slot].state != 2)
-        return 0;
-    //if (!musicFileInfo->field_41C)
-    //    return 0;
-    //if (musicFileInfo->dword418 >= 0)
-    //    return musicFileInfo->dword418;
+    if (channels[slot].state == CHANNEL_SFX)
+        return channels[slot].bufferPos;
+    if (channels[slot].state == CHANNEL_STREAMING) {
+        // if (!musicFileInfo->field_41C)
+        //    return 0;
+        // if (musicFileInfo->dword418 >= 0)
+        //    return musicFileInfo->dword418;
+    }
     return 0;
 }
 

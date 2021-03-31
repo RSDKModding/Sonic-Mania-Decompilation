@@ -5,7 +5,12 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    ScanlineInfo *scanlines;
+    int deform[0x400];
+    ushort spriteIndex;
+    int field_1010;
 } ObjectUFO_Plasma;
 
 // Entity Class

@@ -255,12 +255,12 @@ void BSS_Setup_CollectRing()
 
     if (BSS_Setup->ringPan) {
         int channel = RSDK.PlaySFX(BSS_Setup->sfx_Ring, 0, 255);
-        RSDK.SetSoundAttributes(0, channel, 1.0, -1.0, 1.0);
+        RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         BSS_Setup->ringPan = 0;
     }
     else {
         int channel = RSDK.PlaySFX(BSS_Setup->sfx_Ring, 0, 255);
-        RSDK.SetSoundAttributes(0, channel, 1.0, 1.0, 1.0);
+        RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         BSS_Setup->ringPan = 1;
     }
 }

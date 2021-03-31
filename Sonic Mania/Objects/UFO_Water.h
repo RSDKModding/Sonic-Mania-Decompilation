@@ -5,7 +5,9 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int timer;
+    ushort spriteIndex;
 } ObjectUFO_Water;
 
 // Entity Class

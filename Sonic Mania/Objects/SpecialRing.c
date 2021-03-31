@@ -144,7 +144,7 @@ void SpecialRing_StartWarp()
         zone->stateDraw  = Zone_Unknown12;
         zone->visible    = true;
         zone->drawOrder  = 15;
-        RSDK.SoundUnknown1(Music->slotID);
+        RSDK.StopChannel(Music->slotID);
     }
 }
 void SpecialRing_State_Warp()

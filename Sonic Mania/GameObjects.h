@@ -45,9 +45,9 @@ typedef struct {
     int (*UserStorageStatusUnknown5)(void);
     void (*SetUserStorageNoSave)(bool32 state);
     bool32 (*GetUserStorageNoSave)(void);
-    void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));
-    void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress);
-    void (*DeleteUserFile)(const char *filename, void (*callback)(int status));
+    void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status)); //load user file from game dir
+    void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress); // save user file to game dir
+    void (*DeleteUserFile)(const char *filename, void (*callback)(int status));                                 // delete user file from game dir
     ushort (*InitUserDB)(const char *name, ...);
     ushort (*LoadUserDB)(const char *filename, int (*callback)(int status));
     void (*SaveUserDB)(ushort tableID, int (*callback)(int status));
@@ -234,14 +234,14 @@ typedef struct {
     int (*GetSFX)(const char *path);
     int (*PlaySFX)(ushort sfx, int loop, int pan);
     void (*StopSFX)(ushort sfx);
-    int (*PlayMusic)(const char *filename, uint slot, int a3, uint loopStart, bool32 loop);
-    int (*SetSoundAttributes)(byte a1, uint slot, float volume, float pan, float playbackSpeed);
-    void (*SoundUnknown1)(byte slot);
+    int (*PlayMusic)(const char *filename, uint slot, int a3, uint loopPoint, bool32 loadASync);
+    int (*SetChannelAttributes)(byte slot, float volume, float pan, float playbackSpeed);
+    void (*StopChannel)(byte slot);
     void (*PauseChannel)(byte slot);
     void (*ResumeChannel)(byte slot);
-    bool32 (*SoundPlaying)(byte slot);
-    bool32 (*ChannelPlaying)(byte slot);
-    bool32 (*TrackPlaying)(byte slot);
+    bool32 (*IsSFXPlaying)(byte slot);
+    bool32 (*ChannelActive)(byte slot);
+    int (*GetChannelPos)(byte slot);
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)());
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)());
 #if RETRO_USE_PLUS
@@ -267,7 +267,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
-    void (*PrintText)(SeverityModes severity, const char *message, TextInfo *text);
+    void (*PrintText)(SeverityModes severity, TextInfo *text);
     void (*PrintIntegerUnsigned)(SeverityModes severity, const char *message, uint integer);
     void (*PrintInteger)(SeverityModes severity, const char *message, int integer);
     void (*PrintFloat)(SeverityModes severity, const char *message, float f);
@@ -919,6 +919,7 @@ extern RSDKFunctionTable RSDK;
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
     while (RSDK.GetEntities(type->objectID, (Entity **)&entityOut))
+
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 

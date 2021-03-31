@@ -143,11 +143,12 @@ struct RetroEngine {
     bool32 exclusiveFS     = false;
     bool32 vsync           = false;
     bool32 tripleBuffer    = false;
-    int windowWidth      = 424;
-    int windowHeight     = SCREEN_YSIZE;
-    int fsWidth          = 0;
-    int fsHeight         = 0;
-    int refreshRate      = 60;
+    int windowWidth        = 424;
+    int windowHeight       = SCREEN_YSIZE;
+    int fsWidth            = 0;
+    int fsHeight           = 0;
+    int gameHeight         = SCREEN_YSIZE;
+    int refreshRate        = 60;
 
     //Image/Video support
     float displayTime;
@@ -191,9 +192,8 @@ void InitScriptSystem();
 
 inline void SetEngineState(byte state)
 {
-    if (state < 4) {
+    if (state < 4)
         sceneInfo.state = state & 3;
-    }
 }
 
 extern byte *gameOptionsPtr;
