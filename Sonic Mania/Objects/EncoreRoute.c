@@ -3,7 +3,7 @@
 #if RETRO_USE_PLUS
 ObjectEncoreRoute *EncoreRoute;
 
-void EncoreRoute_Update()
+void EncoreRoute_Update(void)
 {
     RSDK_THIS(EncoreRoute);
 
@@ -37,11 +37,11 @@ void EncoreRoute_Update()
     RSDK.ResetEntityPtr(entity, 0, NULL);
 }
 
-void EncoreRoute_LateUpdate() {}
+void EncoreRoute_LateUpdate(void) {}
 
-void EncoreRoute_StaticUpdate() {}
+void EncoreRoute_StaticUpdate(void) {}
 
-void EncoreRoute_Draw() {}
+void EncoreRoute_Draw(void) {}
 
 void EncoreRoute_Create(void *data)
 {
@@ -49,13 +49,13 @@ void EncoreRoute_Create(void *data)
     entity->active            = ACTIVE_ALWAYS;
 }
 
-void EncoreRoute_StageLoad() {}
+void EncoreRoute_StageLoad(void) {}
 
-void EncoreRoute_EditorDraw() {}
+void EncoreRoute_EditorDraw(void) {}
 
-void EncoreRoute_EditorLoad() {}
+void EncoreRoute_EditorLoad(void) {}
 
-void EncoreRoute_Serialize()
+void EncoreRoute_Serialize(void)
 {
     RSDK_EDITABLE_VAR(EncoreRoute, VAR_VECTOR2, offset);
     RSDK_EDITABLE_VAR(EncoreRoute, VAR_VECTOR2, size);

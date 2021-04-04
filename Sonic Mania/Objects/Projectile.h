@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectProjectile *Projectile;
 
 // Standard Entity Events
-void Projectile_Update();
-void Projectile_LateUpdate();
-void Projectile_StaticUpdate();
-void Projectile_Draw();
+void Projectile_Update(void);
+void Projectile_LateUpdate(void);
+void Projectile_StaticUpdate(void);
+void Projectile_Draw(void);
 void Projectile_Create(void* data);
-void Projectile_StageLoad();
-void Projectile_EditorDraw();
-void Projectile_EditorLoad();
-void Projectile_Serialize();
+void Projectile_StageLoad(void);
+void Projectile_EditorDraw(void);
+void Projectile_EditorLoad(void);
+void Projectile_Serialize(void);
 
 // Extra Entity Functions
 

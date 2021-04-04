@@ -2,22 +2,22 @@
 
 ObjectAIZTornadoPath *AIZTornadoPath;
 
-void AIZTornadoPath_Update()
+void AIZTornadoPath_Update(void)
 {
 
 }
 
-void AIZTornadoPath_LateUpdate()
+void AIZTornadoPath_LateUpdate(void)
 {
 
 }
 
-void AIZTornadoPath_StaticUpdate()
+void AIZTornadoPath_StaticUpdate(void)
 {
 
 }
 
-void AIZTornadoPath_Draw()
+void AIZTornadoPath_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void AIZTornadoPath_Create(void* data)
 
 }
 
-void AIZTornadoPath_StageLoad()
+void AIZTornadoPath_StageLoad(void)
 {
 
 }
 
-void AIZTornadoPath_EditorDraw()
+void AIZTornadoPath_EditorDraw(void)
 {
 
 }
 
-void AIZTornadoPath_EditorLoad()
+void AIZTornadoPath_EditorLoad(void)
 {
 
 }
 
-void AIZTornadoPath_Serialize()
+void AIZTornadoPath_Serialize(void)
 {
 
 }

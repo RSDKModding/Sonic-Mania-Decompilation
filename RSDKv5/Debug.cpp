@@ -3,7 +3,7 @@
 bool32 engineDebugMode = true;
 char outputString[0x400];
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 int debugValCnt = 0;
 DebugValueInfo debugValues[DEBUGVAL_MAX];
 #endif
@@ -59,7 +59,7 @@ void printLog(SeverityModes severity, const char *message, ...)
 #endif
 }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
 {
     if (debugValCnt < DEBUGVAL_MAX) {
@@ -103,7 +103,7 @@ void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
 }
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 void PrintMessage(void *msg, int type)
 {
     if (msg && engine.printConsole) {
@@ -480,14 +480,14 @@ void DevMenu_Options()
     dy += 44;
     DrawRectangle(currentScreen->centerX - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
-    const byte optionCount = RETRO_USE_PLUS ? 5 : 4;
+    const byte optionCount = RETRO_REV02 ? 5 : 4;
 
     uint optionColours[optionCount];
     optionColours[0]              = 0x808090;
     optionColours[1]              = 0x808090;
     optionColours[2]              = 0x808090;
     optionColours[3]              = 0x808090;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     optionColours[4]              = 0x808090;
 #endif
     optionColours[devMenu.option] = 0xF0F0F0;
@@ -497,7 +497,7 @@ void DevMenu_Options()
     DrawDevText(currentScreen->centerX, "Audio Settings", dy, ALIGN_CENTER, optionColours[1]);
     dy += 12;
     DrawDevText(currentScreen->centerX, "Configure Input", dy, ALIGN_CENTER, optionColours[2]);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     dy += 12;
     DrawDevText(currentScreen->centerX, "Debug Flags", dy, ALIGN_CENTER, optionColours[3]);
 #endif
@@ -565,7 +565,7 @@ void DevMenu_Options()
                 devMenu.state  = DevMenu_InputOptions;
                 devMenu.option = 0;
                 break;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
             case 3:
                 devMenu.state  = DevMenu_DebugOptions;
                 devMenu.option = 0;
@@ -896,7 +896,7 @@ void DevMenu_InputOptions()
     }
 }
 void DevMenu_MappingsOptions() {}
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 void DevMenu_DebugOptions()
 {
     int dy = currentScreen->centerY;

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectFirework *Firework;
 
 // Standard Entity Events
-void Firework_Update();
-void Firework_LateUpdate();
-void Firework_StaticUpdate();
-void Firework_Draw();
+void Firework_Update(void);
+void Firework_LateUpdate(void);
+void Firework_StaticUpdate(void);
+void Firework_Draw(void);
 void Firework_Create(void* data);
-void Firework_StageLoad();
-void Firework_EditorDraw();
-void Firework_EditorLoad();
-void Firework_Serialize();
+void Firework_StageLoad(void);
+void Firework_EditorDraw(void);
+void Firework_EditorLoad(void);
+void Firework_Serialize(void);
 
 // Extra Entity Functions
 

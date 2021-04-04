@@ -2,22 +2,22 @@
 
 ObjectClucker *Clucker;
 
-void Clucker_Update()
+void Clucker_Update(void)
 {
 
 }
 
-void Clucker_LateUpdate()
+void Clucker_LateUpdate(void)
 {
 
 }
 
-void Clucker_StaticUpdate()
+void Clucker_StaticUpdate(void)
 {
 
 }
 
-void Clucker_Draw()
+void Clucker_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Clucker_Create(void* data)
 
 }
 
-void Clucker_StageLoad()
+void Clucker_StageLoad(void)
 {
 
 }
 
-void Clucker_EditorDraw()
+void Clucker_EditorDraw(void)
 {
 
 }
 
-void Clucker_EditorLoad()
+void Clucker_EditorLoad(void)
 {
 
 }
 
-void Clucker_Serialize()
+void Clucker_Serialize(void)
 {
 
 }

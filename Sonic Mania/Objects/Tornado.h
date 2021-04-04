@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectTornado *Tornado;
 
 // Standard Entity Events
-void Tornado_Update();
-void Tornado_LateUpdate();
-void Tornado_StaticUpdate();
-void Tornado_Draw();
+void Tornado_Update(void);
+void Tornado_LateUpdate(void);
+void Tornado_StaticUpdate(void);
+void Tornado_Draw(void);
 void Tornado_Create(void* data);
-void Tornado_StageLoad();
-void Tornado_EditorDraw();
-void Tornado_EditorLoad();
-void Tornado_Serialize();
+void Tornado_StageLoad(void);
+void Tornado_EditorDraw(void);
+void Tornado_EditorLoad(void);
+void Tornado_Serialize(void);
 
 // Extra Entity Functions
 

@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     int layerID;
     int layerIDs[8];
-    void (*switchCallback[8])();
+    void (*switchCallback[8])(void);
     int field_48;
 } ObjectBGSwitch;
 
@@ -29,15 +29,15 @@ typedef struct {
 extern ObjectBGSwitch *BGSwitch;
 
 // Standard Entity Events
-void BGSwitch_Update();
-void BGSwitch_LateUpdate();
-void BGSwitch_StaticUpdate();
-void BGSwitch_Draw();
+void BGSwitch_Update(void);
+void BGSwitch_LateUpdate(void);
+void BGSwitch_StaticUpdate(void);
+void BGSwitch_Draw(void);
 void BGSwitch_Create(void* data);
-void BGSwitch_StageLoad();
-void BGSwitch_EditorDraw();
-void BGSwitch_EditorLoad();
-void BGSwitch_Serialize();
+void BGSwitch_StageLoad(void);
+void BGSwitch_EditorDraw(void);
+void BGSwitch_EditorLoad(void);
+void BGSwitch_Serialize(void);
 
 // Extra Entity Functions
 

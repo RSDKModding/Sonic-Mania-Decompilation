@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLogHelpers *LogHelpers;
 
 // Standard Entity Events
-void LogHelpers_Update();
-void LogHelpers_LateUpdate();
-void LogHelpers_StaticUpdate();
-void LogHelpers_Draw();
+void LogHelpers_Update(void);
+void LogHelpers_LateUpdate(void);
+void LogHelpers_StaticUpdate(void);
+void LogHelpers_Draw(void);
 void LogHelpers_Create(void* data);
-void LogHelpers_StageLoad();
-void LogHelpers_EditorDraw();
-void LogHelpers_EditorLoad();
-void LogHelpers_Serialize();
+void LogHelpers_StageLoad(void);
+void LogHelpers_EditorDraw(void);
+void LogHelpers_EditorLoad(void);
+void LogHelpers_Serialize(void);
 
 // Extra Entity Functions
 

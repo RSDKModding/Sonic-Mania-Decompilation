@@ -2,22 +2,22 @@
 
 ObjectRockDrill *RockDrill;
 
-void RockDrill_Update()
+void RockDrill_Update(void)
 {
 
 }
 
-void RockDrill_LateUpdate()
+void RockDrill_LateUpdate(void)
 {
 
 }
 
-void RockDrill_StaticUpdate()
+void RockDrill_StaticUpdate(void)
 {
 
 }
 
-void RockDrill_Draw()
+void RockDrill_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void RockDrill_Create(void* data)
 
 }
 
-void RockDrill_StageLoad()
+void RockDrill_StageLoad(void)
 {
 
 }
 
-void RockDrill_EditorDraw()
+void RockDrill_EditorDraw(void)
 {
 
 }
 
-void RockDrill_EditorLoad()
+void RockDrill_EditorLoad(void)
 {
 
 }
 
-void RockDrill_Serialize()
+void RockDrill_Serialize(void)
 {
 
 }

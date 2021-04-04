@@ -2,7 +2,7 @@
 
 ObjectDecoration *Decoration;
 
-void Decoration_Update()
+void Decoration_Update(void)
 {
     EntityDecoration *entity = (EntityDecoration *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -10,17 +10,17 @@ void Decoration_Update()
     entity->rotation &= 0x1FF;
 }
 
-void Decoration_LateUpdate()
+void Decoration_LateUpdate(void)
 {
 
 }
 
-void Decoration_StaticUpdate()
+void Decoration_StaticUpdate(void)
 {
 
 }
 
-void Decoration_Draw()
+void Decoration_Draw(void)
 {
     EntityDecoration *entity = (EntityDecoration *)RSDK_sceneInfo->entity;
     if (entity->tmzFlag) {
@@ -58,7 +58,7 @@ void Decoration_Create(void* data)
     }
 }
 
-void Decoration_StageLoad()
+void Decoration_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ")) {
         Decoration->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Decoration.bin", SCOPE_STAGE);
@@ -98,7 +98,7 @@ void Decoration_StageLoad()
     }
 }
 
-void Decoration_DrawSprite() {
+void Decoration_DrawSprite(void) {
     EntityDecoration *entity = (EntityDecoration *)RSDK_sceneInfo->entity;
     Vector2 drawPos, repeat;
 
@@ -117,17 +117,17 @@ void Decoration_DrawSprite() {
     }
 }
 
-void Decoration_EditorDraw()
+void Decoration_EditorDraw(void)
 {
 
 }
 
-void Decoration_EditorLoad()
+void Decoration_EditorLoad(void)
 {
 
 }
 
-void Decoration_Serialize()
+void Decoration_Serialize(void)
 {
 
 }

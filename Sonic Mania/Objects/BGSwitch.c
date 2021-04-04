@@ -2,7 +2,7 @@
 
 ObjectBGSwitch *BGSwitch;
 
-void BGSwitch_Update()
+void BGSwitch_Update(void)
 {
     EntityBGSwitch *entity = (EntityBGSwitch *)RSDK_sceneInfo->entity;
     for (BGSwitch->layerID = 0; BGSwitch->layerID < 4; BGSwitch->layerID++) {
@@ -24,17 +24,17 @@ void BGSwitch_Update()
     }
 }
 
-void BGSwitch_LateUpdate()
+void BGSwitch_LateUpdate(void)
 {
 
 }
 
-void BGSwitch_StaticUpdate()
+void BGSwitch_StaticUpdate(void)
 {
 
 }
 
-void BGSwitch_Draw()
+void BGSwitch_Draw(void)
 {
 
 }
@@ -49,7 +49,7 @@ void BGSwitch_Create(void* data)
     }
 }
 
-void BGSwitch_StageLoad()
+void BGSwitch_StageLoad(void)
 {
     BGSwitch->layerIDs[4] = -1;
     BGSwitch->layerIDs[5] = -1;
@@ -57,17 +57,17 @@ void BGSwitch_StageLoad()
     BGSwitch->layerIDs[7] = -1;
 }
 
-void BGSwitch_EditorDraw()
+void BGSwitch_EditorDraw(void)
 {
 
 }
 
-void BGSwitch_EditorLoad()
+void BGSwitch_EditorLoad(void)
 {
 
 }
 
-void BGSwitch_Serialize()
+void BGSwitch_Serialize(void)
 {
     RSDK_EDITABLE_VAR(BGSwitch, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(BGSwitch, VAR_UINT8, bgID);

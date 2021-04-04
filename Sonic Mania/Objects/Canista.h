@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCanista *Canista;
 
 // Standard Entity Events
-void Canista_Update();
-void Canista_LateUpdate();
-void Canista_StaticUpdate();
-void Canista_Draw();
+void Canista_Update(void);
+void Canista_LateUpdate(void);
+void Canista_StaticUpdate(void);
+void Canista_Draw(void);
 void Canista_Create(void* data);
-void Canista_StageLoad();
-void Canista_EditorDraw();
-void Canista_EditorLoad();
-void Canista_Serialize();
+void Canista_StageLoad(void);
+void Canista_EditorDraw(void);
+void Canista_EditorLoad(void);
+void Canista_Serialize(void);
 
 // Extra Entity Functions
 

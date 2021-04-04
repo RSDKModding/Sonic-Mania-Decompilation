@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectUIButtonLabel *UIButtonLabel;
 
 // Standard Entity Events
-void UIButtonLabel_Update();
-void UIButtonLabel_LateUpdate();
-void UIButtonLabel_StaticUpdate();
-void UIButtonLabel_Draw();
+void UIButtonLabel_Update(void);
+void UIButtonLabel_LateUpdate(void);
+void UIButtonLabel_StaticUpdate(void);
+void UIButtonLabel_Draw(void);
 void UIButtonLabel_Create(void* data);
-void UIButtonLabel_StageLoad();
-void UIButtonLabel_EditorDraw();
-void UIButtonLabel_EditorLoad();
-void UIButtonLabel_Serialize();
+void UIButtonLabel_StageLoad(void);
+void UIButtonLabel_EditorDraw(void);
+void UIButtonLabel_EditorLoad(void);
+void UIButtonLabel_Serialize(void);
 
 // Extra Entity Functions
 

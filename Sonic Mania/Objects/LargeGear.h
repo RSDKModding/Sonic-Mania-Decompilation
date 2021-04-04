@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLargeGear *LargeGear;
 
 // Standard Entity Events
-void LargeGear_Update();
-void LargeGear_LateUpdate();
-void LargeGear_StaticUpdate();
-void LargeGear_Draw();
+void LargeGear_Update(void);
+void LargeGear_LateUpdate(void);
+void LargeGear_StaticUpdate(void);
+void LargeGear_Draw(void);
 void LargeGear_Create(void* data);
-void LargeGear_StageLoad();
-void LargeGear_EditorDraw();
-void LargeGear_EditorLoad();
-void LargeGear_Serialize();
+void LargeGear_StageLoad(void);
+void LargeGear_EditorDraw(void);
+void LargeGear_EditorLoad(void);
+void LargeGear_Serialize(void);
 
 // Extra Entity Functions
 

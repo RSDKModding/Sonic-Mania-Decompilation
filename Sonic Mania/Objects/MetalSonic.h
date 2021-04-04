@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMetalSonic *MetalSonic;
 
 // Standard Entity Events
-void MetalSonic_Update();
-void MetalSonic_LateUpdate();
-void MetalSonic_StaticUpdate();
-void MetalSonic_Draw();
+void MetalSonic_Update(void);
+void MetalSonic_LateUpdate(void);
+void MetalSonic_StaticUpdate(void);
+void MetalSonic_Draw(void);
 void MetalSonic_Create(void* data);
-void MetalSonic_StageLoad();
-void MetalSonic_EditorDraw();
-void MetalSonic_EditorLoad();
-void MetalSonic_Serialize();
+void MetalSonic_StageLoad(void);
+void MetalSonic_EditorDraw(void);
+void MetalSonic_EditorLoad(void);
+void MetalSonic_Serialize(void);
 
 // Extra Entity Functions
 

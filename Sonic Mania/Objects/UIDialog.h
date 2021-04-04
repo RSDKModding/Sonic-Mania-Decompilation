@@ -20,15 +20,15 @@ typedef struct {
 extern ObjectUIDialog *UIDialog;
 
 // Standard Entity Events
-void UIDialog_Update();
-void UIDialog_LateUpdate();
-void UIDialog_StaticUpdate();
-void UIDialog_Draw();
+void UIDialog_Update(void);
+void UIDialog_LateUpdate(void);
+void UIDialog_StaticUpdate(void);
+void UIDialog_Draw(void);
 void UIDialog_Create(void* data);
-void UIDialog_StageLoad();
-void UIDialog_EditorDraw();
-void UIDialog_EditorLoad();
-void UIDialog_Serialize();
+void UIDialog_StageLoad(void);
+void UIDialog_EditorDraw(void);
+void UIDialog_EditorLoad(void);
+void UIDialog_Serialize(void);
 
 // Extra Entity Functions
 

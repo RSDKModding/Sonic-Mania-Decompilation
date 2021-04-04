@@ -27,15 +27,15 @@ typedef struct {
 extern ObjectInk *Ink;
 
 // Standard Entity Events
-void Ink_Update();
-void Ink_LateUpdate();
-void Ink_StaticUpdate();
-void Ink_Draw();
+void Ink_Update(void);
+void Ink_LateUpdate(void);
+void Ink_StaticUpdate(void);
+void Ink_Draw(void);
 void Ink_Create(void* data);
-void Ink_StageLoad();
-void Ink_EditorDraw();
-void Ink_EditorLoad();
-void Ink_Serialize();
+void Ink_StageLoad(void);
+void Ink_EditorDraw(void);
+void Ink_EditorLoad(void);
+void Ink_Serialize(void);
 
 // Extra Entity Functions
 

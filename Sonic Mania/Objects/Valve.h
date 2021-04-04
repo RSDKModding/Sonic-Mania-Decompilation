@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectValve *Valve;
 
 // Standard Entity Events
-void Valve_Update();
-void Valve_LateUpdate();
-void Valve_StaticUpdate();
-void Valve_Draw();
+void Valve_Update(void);
+void Valve_LateUpdate(void);
+void Valve_StaticUpdate(void);
+void Valve_Draw(void);
 void Valve_Create(void* data);
-void Valve_StageLoad();
-void Valve_EditorDraw();
-void Valve_EditorLoad();
-void Valve_Serialize();
+void Valve_StageLoad(void);
+void Valve_EditorDraw(void);
+void Valve_EditorLoad(void);
+void Valve_Serialize(void);
 
 // Extra Entity Functions
 

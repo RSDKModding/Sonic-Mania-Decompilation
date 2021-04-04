@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBall *Ball;
 
 // Standard Entity Events
-void Ball_Update();
-void Ball_LateUpdate();
-void Ball_StaticUpdate();
-void Ball_Draw();
+void Ball_Update(void);
+void Ball_LateUpdate(void);
+void Ball_StaticUpdate(void);
+void Ball_Draw(void);
 void Ball_Create(void* data);
-void Ball_StageLoad();
-void Ball_EditorDraw();
-void Ball_EditorLoad();
-void Ball_Serialize();
+void Ball_StageLoad(void);
+void Ball_EditorDraw(void);
+void Ball_EditorLoad(void);
+void Ball_Serialize(void);
 
 // Extra Entity Functions
 

@@ -16,10 +16,10 @@ typedef struct {
 extern ObjectOptions *Options;
 
 //Funcs
-void Options_Reload();
-void Options_GetWinSize();
+void Options_Reload(void);
+void Options_GetWinSize(void);
 void Options_LoadCallback(int success);
-void Options_LoadOptionsBin();
+void Options_LoadOptionsBin(void);
 void Options_SaveOptionsBin(void (*callback)(int));
 void Options_SetLanguage(int language);
 void Options_Unknown1(int *optionsRAM);

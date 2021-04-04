@@ -2,7 +2,7 @@
 
 ObjectSpeedGate *SpeedGate;
 
-void SpeedGate_Update()
+void SpeedGate_Update(void)
 {
     RSDK_THIS(SpeedGate);
     foreach_active(Player, player)
@@ -60,11 +60,11 @@ void SpeedGate_Update()
         entity->state();
 }
 
-void SpeedGate_LateUpdate() {}
+void SpeedGate_LateUpdate(void) {}
 
-void SpeedGate_StaticUpdate() {}
+void SpeedGate_StaticUpdate(void) {}
 
-void SpeedGate_Draw() {}
+void SpeedGate_Draw(void) {}
 
 void SpeedGate_Create(void *data)
 {
@@ -95,7 +95,7 @@ void SpeedGate_Create(void *data)
     }
 }
 
-void SpeedGate_StageLoad()
+void SpeedGate_StageLoad(void)
 {
     SpeedGate->spriteIndex   = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
     SpeedGate->sfx_StarPost  = RSDK.GetSFX("Global/StarPost.wav");
@@ -105,7 +105,7 @@ void SpeedGate_StageLoad()
     SpeedGate->hitbox.bottom = 20;
 }
 
-void SpeedGate_State_Unknown1()
+void SpeedGate_State_Unknown1(void)
 {
     RSDK_THIS(SpeedGate);
 
@@ -132,7 +132,7 @@ void SpeedGate_State_Unknown1()
     }
 }
 
-void SpeedGate_State_Unknown2()
+void SpeedGate_State_Unknown2(void)
 {
     RSDK_THIS(SpeedGate);
 
@@ -159,8 +159,8 @@ void SpeedGate_State_Unknown2()
             if (entity->playerPtr->direction == FLIP_X)
                 vel = -0x100000;
 
-            entity->velocity.x += +((signed int)(vel - entity->field_80) >> 6) - (entity->velocity.x >> 4);
-            entity->velocity.y += ((signed int)(-0x200000 - entity->field_84) >> 6) - (entity->velocity.y >> 4);
+            entity->velocity.x += +((int)(vel - entity->field_80) >> 6) - (entity->velocity.x >> 4);
+            entity->velocity.y += ((int)(-0x200000 - entity->field_84) >> 6) - (entity->velocity.y >> 4);
 
             entity->field_80 += entity->velocity.x;
             entity->field_84 += entity->velocity.y;
@@ -191,7 +191,7 @@ void SpeedGate_State_Unknown2()
     }
 }
 
-void SpeedGate_State_Unknown3()
+void SpeedGate_State_Unknown3(void)
 {
     RSDK_THIS(SpeedGate);
     int y = entity->position.y - 0x200000;
@@ -220,11 +220,11 @@ void SpeedGate_State_Unknown3()
     }
 }
 
-void SpeedGate_EditorDraw() {}
+void SpeedGate_EditorDraw(void) {}
 
-void SpeedGate_EditorLoad() {}
+void SpeedGate_EditorLoad(void) {}
 
-void SpeedGate_Serialize()
+void SpeedGate_Serialize(void)
 {
     RSDK_EDITABLE_VAR(SpeedGate, VAR_ENUM, id);
     RSDK_EDITABLE_VAR(SpeedGate, VAR_ENUM, timer);

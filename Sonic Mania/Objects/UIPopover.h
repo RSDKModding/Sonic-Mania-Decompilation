@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectUIPopover *UIPopover;
 
 // Standard Entity Events
-void UIPopover_Update();
-void UIPopover_LateUpdate();
-void UIPopover_StaticUpdate();
-void UIPopover_Draw();
+void UIPopover_Update(void);
+void UIPopover_LateUpdate(void);
+void UIPopover_StaticUpdate(void);
+void UIPopover_Draw(void);
 void UIPopover_Create(void* data);
-void UIPopover_StageLoad();
-void UIPopover_EditorDraw();
-void UIPopover_EditorLoad();
-void UIPopover_Serialize();
+void UIPopover_StageLoad(void);
+void UIPopover_EditorDraw(void);
+void UIPopover_EditorLoad(void);
+void UIPopover_Serialize(void);
 
 // Extra Entity Functions
 #endif

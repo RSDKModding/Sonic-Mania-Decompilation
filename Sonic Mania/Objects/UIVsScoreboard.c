@@ -2,22 +2,22 @@
 
 ObjectUIVsScoreboard *UIVsScoreboard;
 
-void UIVsScoreboard_Update()
+void UIVsScoreboard_Update(void)
 {
 
 }
 
-void UIVsScoreboard_LateUpdate()
+void UIVsScoreboard_LateUpdate(void)
 {
 
 }
 
-void UIVsScoreboard_StaticUpdate()
+void UIVsScoreboard_StaticUpdate(void)
 {
 
 }
 
-void UIVsScoreboard_Draw()
+void UIVsScoreboard_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void UIVsScoreboard_Create(void* data)
 
 }
 
-void UIVsScoreboard_StageLoad()
+void UIVsScoreboard_StageLoad(void)
 {
 
 }
 
-void UIVsScoreboard_EditorDraw()
+void UIVsScoreboard_EditorDraw(void)
 {
 
 }
 
-void UIVsScoreboard_EditorLoad()
+void UIVsScoreboard_EditorLoad(void)
 {
 
 }
 
-void UIVsScoreboard_Serialize()
+void UIVsScoreboard_Serialize(void)
 {
 
 }

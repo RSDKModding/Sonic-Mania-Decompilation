@@ -23,15 +23,15 @@ typedef struct {
 extern ObjectPlaneSwitch *PlaneSwitch;
 
 // Standard Entity Events
-void PlaneSwitch_Update();
-void PlaneSwitch_LateUpdate();
-void PlaneSwitch_StaticUpdate();
-void PlaneSwitch_Draw();
+void PlaneSwitch_Update(void);
+void PlaneSwitch_LateUpdate(void);
+void PlaneSwitch_StaticUpdate(void);
+void PlaneSwitch_Draw(void);
 void PlaneSwitch_Create(void* data);
-void PlaneSwitch_StageLoad();
-void PlaneSwitch_EditorDraw();
-void PlaneSwitch_EditorLoad();
-void PlaneSwitch_Serialize();
+void PlaneSwitch_StageLoad(void);
+void PlaneSwitch_EditorDraw(void);
+void PlaneSwitch_EditorLoad(void);
+void PlaneSwitch_Serialize(void);
 
 // Extra Entity Functions
 

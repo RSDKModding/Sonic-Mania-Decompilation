@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLightBarrier *LightBarrier;
 
 // Standard Entity Events
-void LightBarrier_Update();
-void LightBarrier_LateUpdate();
-void LightBarrier_StaticUpdate();
-void LightBarrier_Draw();
+void LightBarrier_Update(void);
+void LightBarrier_LateUpdate(void);
+void LightBarrier_StaticUpdate(void);
+void LightBarrier_Draw(void);
 void LightBarrier_Create(void* data);
-void LightBarrier_StageLoad();
-void LightBarrier_EditorDraw();
-void LightBarrier_EditorLoad();
-void LightBarrier_Serialize();
+void LightBarrier_StageLoad(void);
+void LightBarrier_EditorDraw(void);
+void LightBarrier_EditorLoad(void);
+void LightBarrier_Serialize(void);
 
 // Extra Entity Functions
 

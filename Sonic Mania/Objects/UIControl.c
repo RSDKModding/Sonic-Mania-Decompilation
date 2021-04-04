@@ -2,22 +2,22 @@
 
 ObjectUIControl *UIControl;
 
-void UIControl_Update()
+void UIControl_Update(void)
 {
 
 }
 
-void UIControl_LateUpdate()
+void UIControl_LateUpdate(void)
 {
 
 }
 
-void UIControl_StaticUpdate()
+void UIControl_StaticUpdate(void)
 {
 
 }
 
-void UIControl_Draw()
+void UIControl_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void UIControl_Create(void* data)
 
 }
 
-void UIControl_StageLoad()
+void UIControl_StageLoad(void)
 {
 
 }
 
-void UIControl_EditorDraw()
+void UIControl_EditorDraw(void)
 {
 
 }
 
-void UIControl_EditorLoad()
+void UIControl_EditorLoad(void)
 {
 
 }
 
-void UIControl_Serialize()
+void UIControl_Serialize(void)
 {
 
 }

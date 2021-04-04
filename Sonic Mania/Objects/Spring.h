@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int type;
     int flipFlag;
     byte planeFilter;
@@ -29,19 +29,19 @@ typedef struct {
 extern ObjectSpring *Spring;
 
 // Standard Entity Events
-void Spring_Update();
-void Spring_LateUpdate();
-void Spring_StaticUpdate();
-void Spring_Draw();
+void Spring_Update(void);
+void Spring_LateUpdate(void);
+void Spring_StaticUpdate(void);
+void Spring_Draw(void);
 void Spring_Create(void* data);
-void Spring_StageLoad();
-void Spring_EditorDraw();
-void Spring_EditorLoad();
-void Spring_Serialize();
+void Spring_StageLoad(void);
+void Spring_EditorDraw(void);
+void Spring_EditorLoad(void);
+void Spring_Serialize(void);
 
 // Extra Entity Functions
-void Spring_State_Vertical();
-void Spring_State_Horizontal();
-void Spring_State_Diagonal();
+void Spring_State_Vertical(void);
+void Spring_State_Horizontal(void);
+void Spring_State_Diagonal(void);
 
 #endif //!OBJ_SPRING_H

@@ -2,22 +2,22 @@
 
 ObjectUIVsZoneButton *UIVsZoneButton;
 
-void UIVsZoneButton_Update()
+void UIVsZoneButton_Update(void)
 {
 
 }
 
-void UIVsZoneButton_LateUpdate()
+void UIVsZoneButton_LateUpdate(void)
 {
 
 }
 
-void UIVsZoneButton_StaticUpdate()
+void UIVsZoneButton_StaticUpdate(void)
 {
 
 }
 
-void UIVsZoneButton_Draw()
+void UIVsZoneButton_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void UIVsZoneButton_Create(void* data)
 
 }
 
-void UIVsZoneButton_StageLoad()
+void UIVsZoneButton_StageLoad(void)
 {
 
 }
 
-void UIVsZoneButton_EditorDraw()
+void UIVsZoneButton_EditorDraw(void)
 {
 
 }
 
-void UIVsZoneButton_EditorLoad()
+void UIVsZoneButton_EditorLoad(void)
 {
 
 }
 
-void UIVsZoneButton_Serialize()
+void UIVsZoneButton_Serialize(void)
 {
 
 }

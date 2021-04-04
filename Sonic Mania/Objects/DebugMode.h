@@ -9,8 +9,8 @@
 typedef struct {
     RSDK_OBJECT
     short objectIDs[0x100];
-    void (*draw[0x100])();
-    void (*spawn[0x100])();
+    void (*draw[0x100])(void);
+    void (*spawn[0x100])(void);
     AnimationData debugData;
     int objID;
     int itemCount;
@@ -31,18 +31,18 @@ typedef struct {
 extern ObjectDebugMode *DebugMode;
 
 // Standard Entity Events
-void DebugMode_Update();
-void DebugMode_LateUpdate();
-void DebugMode_StaticUpdate();
-void DebugMode_Draw();
+void DebugMode_Update(void);
+void DebugMode_LateUpdate(void);
+void DebugMode_StaticUpdate(void);
+void DebugMode_Draw(void);
 void DebugMode_Create(void* data);
-void DebugMode_StageLoad();
-void DebugMode_EditorDraw();
-void DebugMode_EditorLoad();
-void DebugMode_Serialize();
+void DebugMode_StageLoad(void);
+void DebugMode_EditorDraw(void);
+void DebugMode_EditorLoad(void);
+void DebugMode_Serialize(void);
 
 // Extra Entity Functions
-void DebugMode_NullState();
-void DebugMode_AddObject(ushort id, void (*draw)(), void (*spawn)());
+void DebugMode_NullState(void);
+void DebugMode_AddObject(ushort id, void (*draw)(void), void (*spawn)(void));
 
 #endif //!OBJ_DEBUGMODE_H

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTurntable *Turntable;
 
 // Standard Entity Events
-void Turntable_Update();
-void Turntable_LateUpdate();
-void Turntable_StaticUpdate();
-void Turntable_Draw();
+void Turntable_Update(void);
+void Turntable_LateUpdate(void);
+void Turntable_StaticUpdate(void);
+void Turntable_Draw(void);
 void Turntable_Create(void* data);
-void Turntable_StageLoad();
-void Turntable_EditorDraw();
-void Turntable_EditorLoad();
-void Turntable_Serialize();
+void Turntable_StageLoad(void);
+void Turntable_EditorDraw(void);
+void Turntable_EditorLoad(void);
+void Turntable_Serialize(void);
 
 // Extra Entity Functions
 

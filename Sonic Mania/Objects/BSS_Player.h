@@ -21,7 +21,7 @@ typedef struct {
     RSDK_ENTITY
     int gravityStrength;
     bool32 sideKick;
-    void (*inputState)();
+    void (*inputState)(void);
     int field_64;
     bool32 up;
     bool32 down;
@@ -38,18 +38,18 @@ typedef struct {
 extern ObjectBSS_Player *BSS_Player;
 
 // Standard Entity Events
-void BSS_Player_Update();
-void BSS_Player_LateUpdate();
-void BSS_Player_StaticUpdate();
-void BSS_Player_Draw();
+void BSS_Player_Update(void);
+void BSS_Player_LateUpdate(void);
+void BSS_Player_StaticUpdate(void);
+void BSS_Player_Draw(void);
 void BSS_Player_Create(void* data);
-void BSS_Player_StageLoad();
-void BSS_Player_EditorDraw();
-void BSS_Player_EditorLoad();
-void BSS_Player_Serialize();
+void BSS_Player_StageLoad(void);
+void BSS_Player_EditorDraw(void);
+void BSS_Player_EditorLoad(void);
+void BSS_Player_Serialize(void);
 
 // Extra Entity Functions
-void BSS_Player_HandleP1Inputs();
-void BSS_Player_HandleP2Inputs();
+void BSS_Player_HandleP1Inputs(void);
+void BSS_Player_HandleP2Inputs(void);
 
 #endif //!OBJ_BSS_PLAYER_H

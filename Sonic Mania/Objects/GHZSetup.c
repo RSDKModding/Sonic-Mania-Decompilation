@@ -2,11 +2,11 @@
 
 ObjectGHZSetup *GHZSetup;
 
-void GHZSetup_Update() {}
+void GHZSetup_Update(void) {}
 
-void GHZSetup_LateUpdate() {}
+void GHZSetup_LateUpdate(void) {}
 
-void GHZSetup_StaticUpdate()
+void GHZSetup_StaticUpdate(void)
 {
     GHZSetup->waterFadeAmount += 42;
     if (GHZSetup->waterFadeAmount > 255) {
@@ -36,11 +36,11 @@ void GHZSetup_StaticUpdate()
     }
 }
 
-void GHZSetup_Draw() {}
+void GHZSetup_Draw(void) {}
 
 void GHZSetup_Create(void *data) {}
 
-void GHZSetup_StageLoad()
+void GHZSetup_StageLoad(void)
 {
     GHZSetup->aniTiles      = RSDK.LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
     Animals->animalTypes[0] = ANIMAL_FLICKY;
@@ -113,7 +113,7 @@ void GHZSetup_StageLoad()
 #endif
 }
 
-void GHZSetup_SetupStartingBG()
+void GHZSetup_SetupStartingBG(void)
 {
     if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
         BGSwitch->layerIDs[0] = 1;
@@ -140,12 +140,12 @@ void GHZSetup_SetupStartingBG()
         }
     }
 }
-void GHZSetup_SetupActTransition()
+void GHZSetup_SetupActTransition(void)
 {
     Zone_StoreEntities(0x3DB00000, 0x6340000);
     RSDK.InitSceneLoad();
 }
-void GHZSetup_HandleActTransition()
+void GHZSetup_HandleActTransition(void)
 {
     Zone->screenBoundsL1[0] = 0x100 - RSDK_screens->centerX;
     Zone->screenBoundsB1[0] = 1412;
@@ -171,36 +171,36 @@ void GHZSetup_HandleActTransition()
         RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID++] = 0;
     }
 }
-void GHZSetup_SetupBGSwitchA1()
+void GHZSetup_SetupBGSwitchA1(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
 }
-void GHZSetup_SetupBGSwitchA2()
+void GHZSetup_SetupBGSwitchA2(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
     RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = 0;
 }
-void GHZSetup_SetupBGSwitchB1()
+void GHZSetup_SetupBGSwitchB1(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
 }
-void GHZSetup_SetupBGSwitchB2()
+void GHZSetup_SetupBGSwitchB2(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
 }
-void GHZSetup_SpawnGHZ2Outro() { RSDK.CreateEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
+void GHZSetup_SpawnGHZ2Outro(void) { RSDK.CreateEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
 
-void GHZSetup_EditorDraw() {}
+void GHZSetup_EditorDraw(void) {}
 
-void GHZSetup_EditorLoad() {}
+void GHZSetup_EditorLoad(void) {}
 
-void GHZSetup_Serialize() {}
+void GHZSetup_Serialize(void) {}

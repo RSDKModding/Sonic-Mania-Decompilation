@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectHCZOneWayDoor *HCZOneWayDoor;
 
 // Standard Entity Events
-void HCZOneWayDoor_Update();
-void HCZOneWayDoor_LateUpdate();
-void HCZOneWayDoor_StaticUpdate();
-void HCZOneWayDoor_Draw();
+void HCZOneWayDoor_Update(void);
+void HCZOneWayDoor_LateUpdate(void);
+void HCZOneWayDoor_StaticUpdate(void);
+void HCZOneWayDoor_Draw(void);
 void HCZOneWayDoor_Create(void* data);
-void HCZOneWayDoor_StageLoad();
-void HCZOneWayDoor_EditorDraw();
-void HCZOneWayDoor_EditorLoad();
-void HCZOneWayDoor_Serialize();
+void HCZOneWayDoor_StageLoad(void);
+void HCZOneWayDoor_EditorDraw(void);
+void HCZOneWayDoor_EditorLoad(void);
+void HCZOneWayDoor_Serialize(void);
 
 // Extra Entity Functions
 

@@ -36,15 +36,15 @@ typedef struct {
 extern ObjectHotaruHiWatt *HotaruHiWatt;
 
 // Standard Entity Events
-void HotaruHiWatt_Update();
-void HotaruHiWatt_LateUpdate();
-void HotaruHiWatt_StaticUpdate();
-void HotaruHiWatt_Draw();
+void HotaruHiWatt_Update(void);
+void HotaruHiWatt_LateUpdate(void);
+void HotaruHiWatt_StaticUpdate(void);
+void HotaruHiWatt_Draw(void);
 void HotaruHiWatt_Create(void* data);
-void HotaruHiWatt_StageLoad();
-void HotaruHiWatt_EditorDraw();
-void HotaruHiWatt_EditorLoad();
-void HotaruHiWatt_Serialize();
+void HotaruHiWatt_StageLoad(void);
+void HotaruHiWatt_EditorDraw(void);
+void HotaruHiWatt_EditorLoad(void);
+void HotaruHiWatt_Serialize(void);
 
 // Extra Entity Functions
 

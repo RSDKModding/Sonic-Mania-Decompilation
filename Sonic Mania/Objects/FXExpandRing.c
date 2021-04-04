@@ -2,22 +2,22 @@
 
 ObjectFXExpandRing *FXExpandRing;
 
-void FXExpandRing_Update()
+void FXExpandRing_Update(void)
 {
 
 }
 
-void FXExpandRing_LateUpdate()
+void FXExpandRing_LateUpdate(void)
 {
 
 }
 
-void FXExpandRing_StaticUpdate()
+void FXExpandRing_StaticUpdate(void)
 {
 
 }
 
-void FXExpandRing_Draw()
+void FXExpandRing_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void FXExpandRing_Create(void* data)
 
 }
 
-void FXExpandRing_StageLoad()
+void FXExpandRing_StageLoad(void)
 {
 
 }
 
-void FXExpandRing_EditorDraw()
+void FXExpandRing_EditorDraw(void)
 {
 
 }
 
-void FXExpandRing_EditorLoad()
+void FXExpandRing_EditorLoad(void)
 {
 
 }
 
-void FXExpandRing_Serialize()
+void FXExpandRing_Serialize(void)
 {
 
 }

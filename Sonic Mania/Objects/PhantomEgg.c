@@ -2,22 +2,22 @@
 
 ObjectPhantomEgg *PhantomEgg;
 
-void PhantomEgg_Update()
+void PhantomEgg_Update(void)
 {
 
 }
 
-void PhantomEgg_LateUpdate()
+void PhantomEgg_LateUpdate(void)
 {
 
 }
 
-void PhantomEgg_StaticUpdate()
+void PhantomEgg_StaticUpdate(void)
 {
 
 }
 
-void PhantomEgg_Draw()
+void PhantomEgg_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PhantomEgg_Create(void* data)
 
 }
 
-void PhantomEgg_StageLoad()
+void PhantomEgg_StageLoad(void)
 {
 
 }
 
-void PhantomEgg_EditorDraw()
+void PhantomEgg_EditorDraw(void)
 {
 
 }
 
-void PhantomEgg_EditorLoad()
+void PhantomEgg_EditorLoad(void)
 {
 
 }
 
-void PhantomEgg_Serialize()
+void PhantomEgg_Serialize(void)
 {
 
 }

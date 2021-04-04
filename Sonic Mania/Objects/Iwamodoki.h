@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectIwamodoki *Iwamodoki;
 
 // Standard Entity Events
-void Iwamodoki_Update();
-void Iwamodoki_LateUpdate();
-void Iwamodoki_StaticUpdate();
-void Iwamodoki_Draw();
+void Iwamodoki_Update(void);
+void Iwamodoki_LateUpdate(void);
+void Iwamodoki_StaticUpdate(void);
+void Iwamodoki_Draw(void);
 void Iwamodoki_Create(void* data);
-void Iwamodoki_StageLoad();
-void Iwamodoki_EditorDraw();
-void Iwamodoki_EditorLoad();
-void Iwamodoki_Serialize();
+void Iwamodoki_StageLoad(void);
+void Iwamodoki_EditorDraw(void);
+void Iwamodoki_EditorLoad(void);
+void Iwamodoki_Serialize(void);
 
 // Extra Entity Functions
 

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectClapperboard *Clapperboard;
 
 // Standard Entity Events
-void Clapperboard_Update();
-void Clapperboard_LateUpdate();
-void Clapperboard_StaticUpdate();
-void Clapperboard_Draw();
+void Clapperboard_Update(void);
+void Clapperboard_LateUpdate(void);
+void Clapperboard_StaticUpdate(void);
+void Clapperboard_Draw(void);
 void Clapperboard_Create(void* data);
-void Clapperboard_StageLoad();
-void Clapperboard_EditorDraw();
-void Clapperboard_EditorLoad();
-void Clapperboard_Serialize();
+void Clapperboard_StageLoad(void);
+void Clapperboard_EditorDraw(void);
+void Clapperboard_EditorLoad(void);
+void Clapperboard_Serialize(void);
 
 // Extra Entity Functions
 

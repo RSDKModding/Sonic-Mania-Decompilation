@@ -3,13 +3,13 @@
 #if RETRO_USE_PLUS
 ObjectPalette *Palette;
 
-void Palette_Update() {}
+void Palette_Update(void) {}
 
-void Palette_LateUpdate() {}
+void Palette_LateUpdate(void) {}
 
-void Palette_StaticUpdate() {}
+void Palette_StaticUpdate(void) {}
 
-void Palette_Draw() {}
+void Palette_Draw(void) {}
 
 void Palette_Create(void *data)
 {
@@ -23,17 +23,17 @@ void Palette_Create(void *data)
     }
 }
 
-void Palette_StageLoad()
+void Palette_StageLoad(void)
 {
     if (Palette->count < 2)
         Palette->count++;
 }
 
-void Palette_EditorDraw() {}
+void Palette_EditorDraw(void) {}
 
-void Palette_EditorLoad() {}
+void Palette_EditorLoad(void) {}
 
-void Palette_Serialize()
+void Palette_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Palette, VAR_STRING, paletteFile);
     RSDK_EDITABLE_VAR(Palette, VAR_UINT16, rowFlags);

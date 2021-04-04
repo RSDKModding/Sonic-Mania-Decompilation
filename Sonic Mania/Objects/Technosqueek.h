@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTechnosqueek *Technosqueek;
 
 // Standard Entity Events
-void Technosqueek_Update();
-void Technosqueek_LateUpdate();
-void Technosqueek_StaticUpdate();
-void Technosqueek_Draw();
+void Technosqueek_Update(void);
+void Technosqueek_LateUpdate(void);
+void Technosqueek_StaticUpdate(void);
+void Technosqueek_Draw(void);
 void Technosqueek_Create(void* data);
-void Technosqueek_StageLoad();
-void Technosqueek_EditorDraw();
-void Technosqueek_EditorLoad();
-void Technosqueek_Serialize();
+void Technosqueek_StageLoad(void);
+void Technosqueek_EditorDraw(void);
+void Technosqueek_EditorLoad(void);
+void Technosqueek_Serialize(void);
 
 // Extra Entity Functions
 

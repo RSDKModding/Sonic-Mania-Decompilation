@@ -2,9 +2,9 @@
 
 ObjectUFO_Shadow *UFO_Shadow;
 
-void UFO_Shadow_Update() {}
+void UFO_Shadow_Update(void) {}
 
-void UFO_Shadow_LateUpdate()
+void UFO_Shadow_LateUpdate(void)
 {
     RSDK_THIS(UFO_Shadow);
     Entity *parent = entity->parent;
@@ -23,7 +23,7 @@ void UFO_Shadow_LateUpdate()
             entity->depth = mat->values[2][3] + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
             if (entity->depth >= 0x4000)
                 entity->visible =
-                    abs(((mat->values[0][3] << 8) + (z * mat->values[0][2] & 0xFFFFFF00) + (x * mat->values[0][0] & 0xFFFFFF00)) / entity->depth)
+                    abs(((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00)) / entity->depth)
                     < 0x100;
         }
     }
@@ -32,9 +32,9 @@ void UFO_Shadow_LateUpdate()
     }
 }
 
-void UFO_Shadow_StaticUpdate() {}
+void UFO_Shadow_StaticUpdate(void) {}
 
-void UFO_Shadow_Draw()
+void UFO_Shadow_Draw(void)
 {
     RSDK_THIS(UFO_Shadow);
     if (entity->depth >= 0x4000) {
@@ -62,7 +62,7 @@ void UFO_Shadow_Create(void *data)
     }
 }
 
-void UFO_Shadow_StageLoad()
+void UFO_Shadow_StageLoad(void)
 {
     UFO_Shadow->modelIndex = RSDK.LoadMesh("Special/Shadow.bin", SCOPE_STAGE);
     UFO_Shadow->sceneID    = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
@@ -113,8 +113,8 @@ void UFO_Shadow_StageLoad()
     Game_Print("%d shadow entities spawned", slot - 0x840);
 }
 
-void UFO_Shadow_EditorDraw() {}
+void UFO_Shadow_EditorDraw(void) {}
 
-void UFO_Shadow_EditorLoad() {}
+void UFO_Shadow_EditorLoad(void) {}
 
-void UFO_Shadow_Serialize() {}
+void UFO_Shadow_Serialize(void) {}

@@ -2,22 +2,22 @@
 
 ObjectERZStart *ERZStart;
 
-void ERZStart_Update()
+void ERZStart_Update(void)
 {
 
 }
 
-void ERZStart_LateUpdate()
+void ERZStart_LateUpdate(void)
 {
 
 }
 
-void ERZStart_StaticUpdate()
+void ERZStart_StaticUpdate(void)
 {
 
 }
 
-void ERZStart_Draw()
+void ERZStart_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void ERZStart_Create(void* data)
 
 }
 
-void ERZStart_StageLoad()
+void ERZStart_StageLoad(void)
 {
 
 }
 
-void ERZStart_EditorDraw()
+void ERZStart_EditorDraw(void)
 {
 
 }
 
-void ERZStart_EditorLoad()
+void ERZStart_EditorLoad(void)
 {
 
 }
 
-void ERZStart_Serialize()
+void ERZStart_Serialize(void)
 {
 
 }

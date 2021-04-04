@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectFireflies *Fireflies;
 
 // Standard Entity Events
-void Fireflies_Update();
-void Fireflies_LateUpdate();
-void Fireflies_StaticUpdate();
-void Fireflies_Draw();
+void Fireflies_Update(void);
+void Fireflies_LateUpdate(void);
+void Fireflies_StaticUpdate(void);
+void Fireflies_Draw(void);
 void Fireflies_Create(void* data);
-void Fireflies_StageLoad();
-void Fireflies_EditorDraw();
-void Fireflies_EditorLoad();
-void Fireflies_Serialize();
+void Fireflies_StageLoad(void);
+void Fireflies_EditorDraw(void);
+void Fireflies_EditorLoad(void);
+void Fireflies_Serialize(void);
 
 // Extra Entity Functions
 

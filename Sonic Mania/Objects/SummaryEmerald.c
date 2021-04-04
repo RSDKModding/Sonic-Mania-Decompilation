@@ -3,13 +3,13 @@
 #if RETRO_USE_PLUS
 ObjectSummaryEmerald *SummaryEmerald;
 
-void SummaryEmerald_Update() {}
+void SummaryEmerald_Update(void) {}
 
-void SummaryEmerald_LateUpdate() {}
+void SummaryEmerald_LateUpdate(void) {}
 
-void SummaryEmerald_StaticUpdate() {}
+void SummaryEmerald_StaticUpdate(void) {}
 
-void SummaryEmerald_Draw()
+void SummaryEmerald_Draw(void)
 {
     RSDK_THIS(SummaryEmerald);
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -31,11 +31,11 @@ void SummaryEmerald_Create(void *data)
     }
 }
 
-void SummaryEmerald_StageLoad() { SummaryEmerald->spriteIndex = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
+void SummaryEmerald_StageLoad(void) { SummaryEmerald->spriteIndex = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
 
-void SummaryEmerald_EditorDraw() {}
+void SummaryEmerald_EditorDraw(void) {}
 
-void SummaryEmerald_EditorLoad() {}
+void SummaryEmerald_EditorLoad(void) {}
 
-void SummaryEmerald_Serialize() { RSDK_EDITABLE_VAR(SummaryEmerald, VAR_ENUM, emeraldID); }
+void SummaryEmerald_Serialize(void) { RSDK_EDITABLE_VAR(SummaryEmerald, VAR_ENUM, emeraldID); }
 #endif

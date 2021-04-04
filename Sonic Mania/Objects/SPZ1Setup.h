@@ -27,17 +27,17 @@ typedef struct {
 extern ObjectSPZ1Setup *SPZ1Setup;
 
 // Standard Entity Events
-void SPZ1Setup_Update();
-void SPZ1Setup_LateUpdate();
-void SPZ1Setup_StaticUpdate();
-void SPZ1Setup_Draw();
+void SPZ1Setup_Update(void);
+void SPZ1Setup_LateUpdate(void);
+void SPZ1Setup_StaticUpdate(void);
+void SPZ1Setup_Draw(void);
 void SPZ1Setup_Create(void* data);
-void SPZ1Setup_StageLoad();
-void SPZ1Setup_EditorDraw();
-void SPZ1Setup_EditorLoad();
-void SPZ1Setup_Serialize();
+void SPZ1Setup_StageLoad(void);
+void SPZ1Setup_EditorDraw(void);
+void SPZ1Setup_EditorLoad(void);
+void SPZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void SPZ1Setup_SetupActTransition();
+void SPZ1Setup_SetupActTransition(void);
 
 #endif //!OBJ_SPZ1SETUP_H

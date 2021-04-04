@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBladePole *BladePole;
 
 // Standard Entity Events
-void BladePole_Update();
-void BladePole_LateUpdate();
-void BladePole_StaticUpdate();
-void BladePole_Draw();
+void BladePole_Update(void);
+void BladePole_LateUpdate(void);
+void BladePole_StaticUpdate(void);
+void BladePole_Draw(void);
 void BladePole_Create(void* data);
-void BladePole_StageLoad();
-void BladePole_EditorDraw();
-void BladePole_EditorLoad();
-void BladePole_Serialize();
+void BladePole_StageLoad(void);
+void BladePole_EditorDraw(void);
+void BladePole_EditorLoad(void);
+void BladePole_Serialize(void);
 
 // Extra Entity Functions
 

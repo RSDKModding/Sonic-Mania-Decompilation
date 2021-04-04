@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLavaGeyser *LavaGeyser;
 
 // Standard Entity Events
-void LavaGeyser_Update();
-void LavaGeyser_LateUpdate();
-void LavaGeyser_StaticUpdate();
-void LavaGeyser_Draw();
+void LavaGeyser_Update(void);
+void LavaGeyser_LateUpdate(void);
+void LavaGeyser_StaticUpdate(void);
+void LavaGeyser_Draw(void);
 void LavaGeyser_Create(void* data);
-void LavaGeyser_StageLoad();
-void LavaGeyser_EditorDraw();
-void LavaGeyser_EditorLoad();
-void LavaGeyser_Serialize();
+void LavaGeyser_StageLoad(void);
+void LavaGeyser_EditorDraw(void);
+void LavaGeyser_EditorLoad(void);
+void LavaGeyser_Serialize(void);
 
 // Extra Entity Functions
 

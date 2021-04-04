@@ -2,7 +2,7 @@
 
 ObjectUIWaitSpinner *UIWaitSpinner;
 
-void UIWaitSpinner_Update()
+void UIWaitSpinner_Update(void)
 {
     EntityUIWaitSpinner *entity = (EntityUIWaitSpinner *)RSDK_sceneInfo->entity;
 
@@ -30,17 +30,17 @@ void UIWaitSpinner_Update()
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void UIWaitSpinner_LateUpdate()
+void UIWaitSpinner_LateUpdate(void)
 {
 
 }
 
-void UIWaitSpinner_StaticUpdate()
+void UIWaitSpinner_StaticUpdate(void)
 {
 
 }
 
-void UIWaitSpinner_Draw()
+void UIWaitSpinner_Draw(void)
 {
     EntityUIWaitSpinner *entity = (EntityUIWaitSpinner *)RSDK_sceneInfo->entity;
     Vector2 drawPos; 
@@ -61,14 +61,14 @@ void UIWaitSpinner_Create(void* data)
     entity->state = UIWaitSpinner_State_Wait;
 }
 
-void UIWaitSpinner_StageLoad()
+void UIWaitSpinner_StageLoad(void)
 {
     UIWaitSpinner->timer         = 0;
     UIWaitSpinner->activeSpinner = 0;
     UIWaitSpinner->spriteIndex   = RSDK.LoadSpriteAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
 }
 
-void UIWaitSpinner_Wait()
+void UIWaitSpinner_Wait(void)
 {
     ++UIWaitSpinner->timer;
     EntityUIWaitSpinner *activeSpinner = (EntityUIWaitSpinner *)UIWaitSpinner->activeSpinner;
@@ -85,7 +85,7 @@ void UIWaitSpinner_Wait()
         activeSpinner->state = UIWaitSpinner_State_Wait;
     }
 }
-void UIWaitSpinner_WaitReplay()
+void UIWaitSpinner_WaitReplay(void)
 {
     if (UIWaitSpinner->timer > 0) {
         UIWaitSpinner->timer--;
@@ -105,7 +105,7 @@ void UIWaitSpinner_WaitReplay()
         activeSpinner->state = UIWaitSpinner_State_Wait;
     }
 }
-void UIWaitSpinner_State_Wait()
+void UIWaitSpinner_State_Wait(void)
 {
     EntityUIWaitSpinner *entity = (EntityUIWaitSpinner *)RSDK_sceneInfo->entity;
     if (entity->timer >= 16) {
@@ -116,7 +116,7 @@ void UIWaitSpinner_State_Wait()
         entity->timer += 3;
     }
 }
-void UIWaitSpinner_State_Wait2()
+void UIWaitSpinner_State_Wait2(void)
 {
     EntityUIWaitSpinner *entity = (EntityUIWaitSpinner *)RSDK_sceneInfo->entity;
     if (entity->timer <= 0) {
@@ -135,17 +135,17 @@ void UIWaitSpinner_State_Wait2()
     }
 }
 
-void UIWaitSpinner_EditorDraw()
+void UIWaitSpinner_EditorDraw(void)
 {
 
 }
 
-void UIWaitSpinner_EditorLoad()
+void UIWaitSpinner_EditorLoad(void)
 {
 
 }
 
-void UIWaitSpinner_Serialize()
+void UIWaitSpinner_Serialize(void)
 {
 
 }

@@ -2,7 +2,7 @@
 
 ObjectSSZSpotlight *SSZSpotlight;
 
-void SSZSpotlight_Update()
+void SSZSpotlight_Update(void)
 {
     RSDK_THIS(SSZSpotlight);
     entity->angle    = (entity->angle + entity->speed) & 0x1FF;
@@ -26,11 +26,11 @@ void SSZSpotlight_Update()
         entity->alpha = (RSDK.Sin256((Zone->timer + entity->offset) << entity->flashSpeed) >> 2) + 0xC0;
 }
 
-void SSZSpotlight_LateUpdate() {}
+void SSZSpotlight_LateUpdate(void) {}
 
-void SSZSpotlight_StaticUpdate() {}
+void SSZSpotlight_StaticUpdate(void) {}
 
-void SSZSpotlight_Draw()
+void SSZSpotlight_Draw(void)
 {
     RSDK_THIS(SSZSpotlight);
     Vector2 *vertPosPtr = entity->vertPos;
@@ -135,13 +135,13 @@ void SSZSpotlight_Create(void *data)
     }
 }
 
-void SSZSpotlight_StageLoad() {}
+void SSZSpotlight_StageLoad(void) {}
 
-void SSZSpotlight_EditorDraw() {}
+void SSZSpotlight_EditorDraw(void) {}
 
-void SSZSpotlight_EditorLoad() {}
+void SSZSpotlight_EditorLoad(void) {}
 
-void SSZSpotlight_Serialize()
+void SSZSpotlight_Serialize(void)
 {
     RSDK_EDITABLE_VAR(SSZSpotlight, VAR_UINT8, color);
     RSDK_EDITABLE_VAR(SSZSpotlight, VAR_UINT8, size);

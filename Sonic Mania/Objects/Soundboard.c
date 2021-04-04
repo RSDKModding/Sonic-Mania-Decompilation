@@ -2,17 +2,17 @@
 
 ObjectSoundboard *Soundboard;
 
-void Soundboard_Update()
+void Soundboard_Update(void)
 {
 
 }
 
-void Soundboard_LateUpdate()
+void Soundboard_LateUpdate(void)
 {
 
 }
 
-void Soundboard_StaticUpdate()
+void Soundboard_StaticUpdate(void)
 {
     for (int s = 0; s < maxVal(Soundboard->sfxCount, 0x20); ++s) {
         int (*checkCallback)(void)  = (int (*)(void))Soundboard->sfxCheckCallback[s];
@@ -57,7 +57,7 @@ void Soundboard_StaticUpdate()
     }
 }
 
-void Soundboard_Draw()
+void Soundboard_Draw(void)
 {
 
 }
@@ -67,7 +67,7 @@ void Soundboard_Create(void* data)
 
 }
 
-void Soundboard_StageLoad()
+void Soundboard_StageLoad(void)
 {
     Soundboard->active   = ACTIVE_ALWAYS;
     Soundboard->sfxCount = 0;
@@ -106,17 +106,17 @@ byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, void *checkCallback
     return sfxID;
 }
 
-void Soundboard_EditorDraw()
+void Soundboard_EditorDraw(void)
 {
 
 }
 
-void Soundboard_EditorLoad()
+void Soundboard_EditorLoad(void)
 {
 
 }
 
-void Soundboard_Serialize()
+void Soundboard_Serialize(void)
 {
 
 }

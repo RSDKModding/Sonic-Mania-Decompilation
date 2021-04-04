@@ -2,7 +2,7 @@
 
 ObjectThanksSetup *ThanksSetup;
 
-void ThanksSetup_Update()
+void ThanksSetup_Update(void)
 {
     RSDK_THIS(ThanksSetup);
     if (entity->state)
@@ -10,11 +10,11 @@ void ThanksSetup_Update()
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
-void ThanksSetup_LateUpdate() {}
+void ThanksSetup_LateUpdate(void) {}
 
-void ThanksSetup_StaticUpdate() {}
+void ThanksSetup_StaticUpdate(void) {}
 
-void ThanksSetup_Draw()
+void ThanksSetup_Draw(void)
 {
     RSDK_THIS(ThanksSetup);
     if (entity->stateDraw)
@@ -42,7 +42,7 @@ void ThanksSetup_Create(void *data)
     }
 }
 
-void ThanksSetup_StageLoad()
+void ThanksSetup_StageLoad(void)
 {
     ThanksSetup->sfx_Sega = RSDK.GetSFX("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, ThanksSetup->objectID, 0);
@@ -52,7 +52,7 @@ void ThanksSetup_StageLoad()
     }
 }
 
-void ThanksSetup_Unknown1()
+void ThanksSetup_Unknown1(void)
 {
     RSDK_THIS(ThanksSetup);
     entity->angle = (entity->angle - 3) & 0x1FF;
@@ -68,7 +68,7 @@ void ThanksSetup_Unknown1()
     }
 }
 
-void ThanksSetup_Unknown2()
+void ThanksSetup_Unknown2(void)
 {
     RSDK_THIS(ThanksSetup);
 
@@ -85,7 +85,7 @@ void ThanksSetup_Unknown2()
     ThanksSetup_Unknown1();
 }
 
-void ThanksSetup_Unknown3()
+void ThanksSetup_Unknown3(void)
 {
     RSDK_THIS(ThanksSetup);
     if (++entity->timer > 120) {
@@ -103,7 +103,7 @@ void ThanksSetup_Unknown3()
     ThanksSetup_Unknown1();
 }
 
-void ThanksSetup_Unknown4()
+void ThanksSetup_Unknown4(void)
 {
     RSDK_THIS(ThanksSetup);
 
@@ -125,7 +125,7 @@ void ThanksSetup_Unknown4()
     ThanksSetup_Unknown1();
 }
 
-void ThanksSetup_Unknown5()
+void ThanksSetup_Unknown5(void)
 {
     RSDK_THIS(ThanksSetup);
 
@@ -140,14 +140,14 @@ void ThanksSetup_Unknown5()
     ThanksSetup_Unknown1();
 }
 
-void ThanksSetup_Unknown6()
+void ThanksSetup_Unknown6(void)
 {
     RSDK_THIS(ThanksSetup);
     RSDK.FillScreen(0, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
-void ThanksSetup_EditorDraw() {}
+void ThanksSetup_EditorDraw(void) {}
 
-void ThanksSetup_EditorLoad() {}
+void ThanksSetup_EditorLoad(void) {}
 
-void ThanksSetup_Serialize() {}
+void ThanksSetup_Serialize(void) {}

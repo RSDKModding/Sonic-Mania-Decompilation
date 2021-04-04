@@ -2,7 +2,7 @@
 
 ObjectUFO_Player *UFO_Player;
 
-void UFO_Player_Update()
+void UFO_Player_Update(void)
 {
     RSDK_THIS(UFO_Player);
 
@@ -17,7 +17,7 @@ void UFO_Player_Update()
         entity->groundVel -= entity->groundVel >> 5;
 }
 
-void UFO_Player_LateUpdate()
+void UFO_Player_LateUpdate(void)
 {
     RSDK_THIS(UFO_Player);
     Matrix *mat = &UFO_Camera->matWorld;
@@ -26,9 +26,9 @@ void UFO_Player_LateUpdate()
                     + mat->values[2][1] * (entity->height >> 0x10);
 }
 
-void UFO_Player_StaticUpdate() {}
+void UFO_Player_StaticUpdate(void) {}
 
-void UFO_Player_Draw()
+void UFO_Player_Draw(void)
 {
     RSDK_THIS(UFO_Player);
     if (entity->depth >= 1) {
@@ -93,7 +93,7 @@ void UFO_Player_Create(void *data)
     }
 }
 
-void UFO_Player_StageLoad()
+void UFO_Player_StageLoad(void)
 {
     if (globals->playerID == ID_NONE) {
         globals->playerID = ID_DEFAULT_PLAYER;
@@ -165,11 +165,11 @@ void UFO_Player_StageLoad()
     RSDK.AddScreen(&player1->position, 0x100000, 0x100000, true);
 }
 
-void UFO_Player_EditorDraw() {}
+void UFO_Player_EditorDraw(void) {}
 
-void UFO_Player_EditorLoad() {}
+void UFO_Player_EditorLoad(void) {}
 
-void UFO_Player_ProcessPlayerControl()
+void UFO_Player_ProcessPlayerControl(void)
 {
     RSDK_THIS(UFO_Player);
     if (entity->controllerID < PLAYER_MAX) {
@@ -208,7 +208,7 @@ void UFO_Player_ProcessPlayerControl()
     }
 }
 
-void UFO_Player_ChangeMachState()
+void UFO_Player_ChangeMachState(void)
 {
     RSDK_THIS(UFO_Player);
     switch (UFO_Setup->machLevel) {
@@ -231,7 +231,7 @@ void UFO_Player_ChangeMachState()
     }
 }
 
-void UFO_Player_HandleBumperTiles()
+void UFO_Player_HandleBumperTiles(void)
 {
     RSDK_THIS(UFO_Player);
     int flags = 0;
@@ -289,7 +289,7 @@ void UFO_Player_HandleBumperTiles()
     }
 }
 
-void UFO_Player_HandleSpeedUp()
+void UFO_Player_HandleSpeedUp(void)
 {
     RSDK_THIS(UFO_Player);
 
@@ -335,7 +335,7 @@ void UFO_Player_HandleSpeedUp()
     }
 }
 
-void UFO_Player_StateRun()
+void UFO_Player_StateRun(void)
 {
     RSDK_THIS(UFO_Player);
     int val = UFO_Player->maxSpeed - 0x87000;
@@ -407,7 +407,7 @@ void UFO_Player_StateRun()
     }
 }
 
-void UFO_Player_StateJump()
+void UFO_Player_StateJump(void)
 {
     RSDK_THIS(UFO_Player);
     int val = UFO_Player->maxSpeed - 0x60000;
@@ -460,7 +460,7 @@ void UFO_Player_StateJump()
     UFO_Player_HandleBumperTiles();
 }
 
-void UFO_Player_HandleTilt()
+void UFO_Player_HandleTilt(void)
 {
     RSDK_THIS(UFO_Player);
 
@@ -497,7 +497,7 @@ void UFO_Player_HandleTilt()
     UFO_Player_HandleBumperTiles();
 }
 
-void UFO_Player_Unknown8()
+void UFO_Player_Unknown8(void)
 {
     RSDK_THIS(UFO_Player);
     int xVel = entity->velocity.x;
@@ -526,7 +526,7 @@ void UFO_Player_Unknown8()
     }
 }
 
-void UFO_Player_Unknown9()
+void UFO_Player_Unknown9(void)
 {
     RSDK_THIS(UFO_Player);
     int x = entity->velocity.x;
@@ -542,7 +542,7 @@ void UFO_Player_Unknown9()
     if (RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup)->state == UFO_Setup_Unknown13) {
         ++entity->timer;
         if (entity->timer == 120) {
-            UFO_Setup_Unknown7(entity);
+            UFO_Setup_Unknown7();
         }
         else if (entity->timer == 16) {
             if (!UFO_Setup->timedOut) {
@@ -553,7 +553,7 @@ void UFO_Player_Unknown9()
     }
 }
 
-void UFO_Player_Unknown10()
+void UFO_Player_Unknown10(void)
 {
     RSDK_THIS(UFO_Player);
     int xVel = entity->velocity.x;
@@ -580,7 +580,7 @@ void UFO_Player_Unknown10()
     }
 }
 
-void UFO_Player_Unknown11()
+void UFO_Player_Unknown11(void)
 {
     RSDK_THIS(UFO_Player);
     entity->position.x += entity->velocity.x;
@@ -594,7 +594,7 @@ void UFO_Player_Unknown11()
         UFO_Setup_Unknown6();
 }
 
-void UFO_Player_Serialize()
+void UFO_Player_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UFO_Player, VAR_ENUM, machQuota1);
     RSDK_EDITABLE_VAR(UFO_Player, VAR_ENUM, machQuota2);

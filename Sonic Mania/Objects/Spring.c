@@ -2,7 +2,7 @@
 
 ObjectSpring *Spring;
 
-void Spring_Update()
+void Spring_Update(void)
 {
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
 
@@ -15,11 +15,11 @@ void Spring_Update()
         entity->data.animationSpeed = 0;
 }
 
-void Spring_LateUpdate() {}
+void Spring_LateUpdate(void) {}
 
-void Spring_StaticUpdate() {}
+void Spring_StaticUpdate(void) {}
 
-void Spring_Draw()
+void Spring_Draw(void)
 {
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -100,13 +100,13 @@ void Spring_Create(void *data)
     }
 }
 
-void Spring_StageLoad()
+void Spring_StageLoad(void)
 {
     Spring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
     Spring->sfx_Spring  = RSDK.GetSFX("Global/Spring.wav");
 }
 
-void Spring_State_Vertical()
+void Spring_State_Vertical(void)
 {
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
     EntityPlayer *player = NULL;
@@ -169,7 +169,7 @@ void Spring_State_Vertical()
         }
     }
 }
-void Spring_State_Horizontal()
+void Spring_State_Horizontal(void)
 {
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
     EntityPlayer *player = 0;
@@ -252,7 +252,7 @@ void Spring_State_Horizontal()
         }
     }
 }
-void Spring_State_Diagonal()
+void Spring_State_Diagonal(void)
 {
     EntityPlayer *player = NULL;
     EntitySpring *entity = (EntitySpring *)RSDK_sceneInfo->entity;
@@ -315,11 +315,11 @@ void Spring_State_Diagonal()
     }
 }
 
-void Spring_EditorDraw() {}
+void Spring_EditorDraw(void) {}
 
-void Spring_EditorLoad() {}
+void Spring_EditorLoad(void) {}
 
-void Spring_Serialize()
+void Spring_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Spring, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Spring, VAR_ENUM, flipFlag);

@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectSDashWheel *SDashWheel;
 
 // Standard Entity Events
-void SDashWheel_Update();
-void SDashWheel_LateUpdate();
-void SDashWheel_StaticUpdate();
-void SDashWheel_Draw();
+void SDashWheel_Update(void);
+void SDashWheel_LateUpdate(void);
+void SDashWheel_StaticUpdate(void);
+void SDashWheel_Draw(void);
 void SDashWheel_Create(void* data);
-void SDashWheel_StageLoad();
-void SDashWheel_EditorDraw();
-void SDashWheel_EditorLoad();
-void SDashWheel_Serialize();
+void SDashWheel_StageLoad(void);
+void SDashWheel_EditorDraw(void);
+void SDashWheel_EditorLoad(void);
+void SDashWheel_Serialize(void);
 
 // Extra Entity Functions
 

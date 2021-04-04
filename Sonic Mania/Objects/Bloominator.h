@@ -16,7 +16,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int timer;
     AnimationData data;
 } EntityBloominator;
@@ -25,25 +25,25 @@ typedef struct {
 extern ObjectBloominator *Bloominator;
 
 // Standard Entity Events
-void Bloominator_Update();
-void Bloominator_LateUpdate();
-void Bloominator_StaticUpdate();
-void Bloominator_Draw();
+void Bloominator_Update(void);
+void Bloominator_LateUpdate(void);
+void Bloominator_StaticUpdate(void);
+void Bloominator_Draw(void);
 void Bloominator_Create(void* data);
-void Bloominator_StageLoad();
-void Bloominator_EditorDraw();
-void Bloominator_EditorLoad();
-void Bloominator_Serialize();
+void Bloominator_StageLoad(void);
+void Bloominator_EditorDraw(void);
+void Bloominator_EditorLoad(void);
+void Bloominator_Serialize(void);
 
 // Extra Entity Functions
-void Bloominator_DebugDraw();
-void Bloominator_DebugSpawn();
+void Bloominator_DebugDraw(void);
+void Bloominator_DebugSpawn(void);
 
-void Bloominator_CheckHit();
-void Bloominator_Idle();
-void Bloominator_State_Firing();
-void Bloominator_State_Setup();
-void Bloominator_State_Spikeball();
+void Bloominator_CheckHit(void);
+void Bloominator_Idle(void);
+void Bloominator_State_Firing(void);
+void Bloominator_State_Setup(void);
+void Bloominator_State_Spikeball(void);
 #endif
 
 #endif //!OBJ_BLOOMINATOR_H

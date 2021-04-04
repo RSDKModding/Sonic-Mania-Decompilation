@@ -2,22 +2,22 @@
 
 ObjectHandLauncher *HandLauncher;
 
-void HandLauncher_Update()
+void HandLauncher_Update(void)
 {
 
 }
 
-void HandLauncher_LateUpdate()
+void HandLauncher_LateUpdate(void)
 {
 
 }
 
-void HandLauncher_StaticUpdate()
+void HandLauncher_StaticUpdate(void)
 {
 
 }
 
-void HandLauncher_Draw()
+void HandLauncher_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void HandLauncher_Create(void* data)
 
 }
 
-void HandLauncher_StageLoad()
+void HandLauncher_StageLoad(void)
 {
 
 }
 
-void HandLauncher_EditorDraw()
+void HandLauncher_EditorDraw(void)
 {
 
 }
 
-void HandLauncher_EditorLoad()
+void HandLauncher_EditorLoad(void)
 {
 
 }
 
-void HandLauncher_Serialize()
+void HandLauncher_Serialize(void)
 {
 
 }

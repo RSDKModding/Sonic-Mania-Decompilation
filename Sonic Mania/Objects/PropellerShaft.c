@@ -2,22 +2,22 @@
 
 ObjectPropellerShaft *PropellerShaft;
 
-void PropellerShaft_Update()
+void PropellerShaft_Update(void)
 {
 
 }
 
-void PropellerShaft_LateUpdate()
+void PropellerShaft_LateUpdate(void)
 {
 
 }
 
-void PropellerShaft_StaticUpdate()
+void PropellerShaft_StaticUpdate(void)
 {
 
 }
 
-void PropellerShaft_Draw()
+void PropellerShaft_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PropellerShaft_Create(void* data)
 
 }
 
-void PropellerShaft_StageLoad()
+void PropellerShaft_StageLoad(void)
 {
 
 }
 
-void PropellerShaft_EditorDraw()
+void PropellerShaft_EditorDraw(void)
 {
 
 }
 
-void PropellerShaft_EditorLoad()
+void PropellerShaft_EditorLoad(void)
 {
 
 }
 
-void PropellerShaft_Serialize()
+void PropellerShaft_Serialize(void)
 {
 
 }

@@ -2,7 +2,7 @@
 
 ObjectBurningLog *BurningLog;
 
-void BurningLog_Update()
+void BurningLog_Update(void)
 {
     RSDK_THIS(BurningLog);
     RSDK.ProcessAnimation(&entity->data);
@@ -30,11 +30,11 @@ void BurningLog_Update()
     }
 }
 
-void BurningLog_LateUpdate() {}
+void BurningLog_LateUpdate(void) {}
 
-void BurningLog_StaticUpdate() {}
+void BurningLog_StaticUpdate(void) {}
 
-void BurningLog_Draw()
+void BurningLog_Draw(void)
 {
     RSDK_THIS(BurningLog);
     RSDK.DrawSprite(&entity->data, 0, 0);
@@ -53,7 +53,7 @@ void BurningLog_Create(void *data)
     RSDK.SetSpriteAnimation(BurningLog->spriteIndex, 0, &entity->data, true, 0);
 }
 
-void BurningLog_StageLoad()
+void BurningLog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         BurningLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
@@ -67,8 +67,8 @@ void BurningLog_StageLoad()
     BurningLog->hitbox2.bottom = 8;
 }
 
-void BurningLog_EditorDraw() {}
+void BurningLog_EditorDraw(void) {}
 
-void BurningLog_EditorLoad() {}
+void BurningLog_EditorLoad(void) {}
 
-void BurningLog_Serialize() { RSDK_EDITABLE_VAR(BurningLog, VAR_ENUM, timer); }
+void BurningLog_Serialize(void) { RSDK_EDITABLE_VAR(BurningLog, VAR_ENUM, timer); }

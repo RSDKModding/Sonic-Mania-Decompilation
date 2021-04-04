@@ -2,7 +2,7 @@
 
 ObjectScoreBonus *ScoreBonus;
 
-void ScoreBonus_Update()
+void ScoreBonus_Update(void)
 {
     EntityScoreBonus* entity = (EntityScoreBonus *)RSDK_sceneInfo->entity;
     entity->position.y -= 0x20000;
@@ -11,17 +11,17 @@ void ScoreBonus_Update()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void ScoreBonus_LateUpdate()
+void ScoreBonus_LateUpdate(void)
 {
 
 }
 
-void ScoreBonus_StaticUpdate()
+void ScoreBonus_StaticUpdate(void)
 {
 
 }
 
-void ScoreBonus_Draw()
+void ScoreBonus_Draw(void)
 {
     EntityScoreBonus *entity = (EntityScoreBonus *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -39,19 +39,19 @@ void ScoreBonus_Create(void* data)
     }
 }
 
-void ScoreBonus_StageLoad() { ScoreBonus->spriteIndex = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
+void ScoreBonus_StageLoad(void) { ScoreBonus->spriteIndex = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 
-void ScoreBonus_EditorDraw()
+void ScoreBonus_EditorDraw(void)
 {
 
 }
 
-void ScoreBonus_EditorLoad()
+void ScoreBonus_EditorLoad(void)
 {
 
 }
 
-void ScoreBonus_Serialize()
+void ScoreBonus_Serialize(void)
 {
 
 }

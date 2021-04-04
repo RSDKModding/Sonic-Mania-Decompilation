@@ -27,15 +27,15 @@ typedef struct {
 extern ObjectPalette *Palette;
 
 // Standard Entity Events
-void Palette_Update();
-void Palette_LateUpdate();
-void Palette_StaticUpdate();
-void Palette_Draw();
+void Palette_Update(void);
+void Palette_LateUpdate(void);
+void Palette_StaticUpdate(void);
+void Palette_Draw(void);
 void Palette_Create(void *data);
-void Palette_StageLoad();
-void Palette_EditorDraw();
-void Palette_EditorLoad();
-void Palette_Serialize();
+void Palette_StageLoad(void);
+void Palette_EditorDraw(void);
+void Palette_EditorLoad(void);
+void Palette_Serialize(void);
 #endif
 
 // Extra Entity Functions

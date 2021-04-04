@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectRTeleporter *RTeleporter;
 
 // Standard Entity Events
-void RTeleporter_Update();
-void RTeleporter_LateUpdate();
-void RTeleporter_StaticUpdate();
-void RTeleporter_Draw();
+void RTeleporter_Update(void);
+void RTeleporter_LateUpdate(void);
+void RTeleporter_StaticUpdate(void);
+void RTeleporter_Draw(void);
 void RTeleporter_Create(void* data);
-void RTeleporter_StageLoad();
-void RTeleporter_EditorDraw();
-void RTeleporter_EditorLoad();
-void RTeleporter_Serialize();
+void RTeleporter_StageLoad(void);
+void RTeleporter_EditorDraw(void);
+void RTeleporter_EditorLoad(void);
+void RTeleporter_Serialize(void);
 
 // Extra Entity Functions
 

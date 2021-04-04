@@ -2,7 +2,7 @@
 
 ObjectUFO_Springboard *UFO_Springboard;
 
-void UFO_Springboard_Update()
+void UFO_Springboard_Update(void)
 {
     RSDK_THIS(UFO_Springboard);
     foreach_active(UFO_Player, player)
@@ -51,7 +51,7 @@ void UFO_Springboard_Update()
     }
 }
 
-void UFO_Springboard_LateUpdate()
+void UFO_Springboard_LateUpdate(void)
 {
     RSDK_THIS(UFO_Springboard);
     int z       = entity->position.y;
@@ -68,9 +68,9 @@ void UFO_Springboard_LateUpdate()
     }
 }
 
-void UFO_Springboard_StaticUpdate() {}
+void UFO_Springboard_StaticUpdate(void) {}
 
-void UFO_Springboard_Draw()
+void UFO_Springboard_Draw(void)
 {
     RSDK_THIS(UFO_Springboard);
     if (entity->depth >= 0x4000) {
@@ -99,17 +99,17 @@ void UFO_Springboard_Create(void *data)
     }
 }
 
-void UFO_Springboard_StageLoad()
+void UFO_Springboard_StageLoad(void)
 {
     UFO_Springboard->modelIndex = RSDK.LoadMesh("Special/Springboard.bin", SCOPE_STAGE);
     UFO_Springboard->sceneIndex = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
 }
 
-void UFO_Springboard_EditorDraw() {}
+void UFO_Springboard_EditorDraw(void) {}
 
-void UFO_Springboard_EditorLoad() {}
+void UFO_Springboard_EditorLoad(void) {}
 
-void UFO_Springboard_Serialize()
+void UFO_Springboard_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UFO_Springboard, VAR_ENUM, angle);
     RSDK_EDITABLE_VAR(UFO_Springboard, VAR_UINT8, rampCount);

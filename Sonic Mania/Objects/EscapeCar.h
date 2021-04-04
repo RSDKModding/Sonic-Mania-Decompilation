@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectEscapeCar *EscapeCar;
 
 // Standard Entity Events
-void EscapeCar_Update();
-void EscapeCar_LateUpdate();
-void EscapeCar_StaticUpdate();
-void EscapeCar_Draw();
+void EscapeCar_Update(void);
+void EscapeCar_LateUpdate(void);
+void EscapeCar_StaticUpdate(void);
+void EscapeCar_Draw(void);
 void EscapeCar_Create(void* data);
-void EscapeCar_StageLoad();
-void EscapeCar_EditorDraw();
-void EscapeCar_EditorLoad();
-void EscapeCar_Serialize();
+void EscapeCar_StageLoad(void);
+void EscapeCar_EditorDraw(void);
+void EscapeCar_EditorLoad(void);
+void EscapeCar_Serialize(void);
 
 // Extra Entity Functions
 

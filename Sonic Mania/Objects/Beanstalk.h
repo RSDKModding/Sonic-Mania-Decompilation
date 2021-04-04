@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBeanstalk *Beanstalk;
 
 // Standard Entity Events
-void Beanstalk_Update();
-void Beanstalk_LateUpdate();
-void Beanstalk_StaticUpdate();
-void Beanstalk_Draw();
+void Beanstalk_Update(void);
+void Beanstalk_LateUpdate(void);
+void Beanstalk_StaticUpdate(void);
+void Beanstalk_Draw(void);
 void Beanstalk_Create(void* data);
-void Beanstalk_StageLoad();
-void Beanstalk_EditorDraw();
-void Beanstalk_EditorLoad();
-void Beanstalk_Serialize();
+void Beanstalk_StageLoad(void);
+void Beanstalk_EditorDraw(void);
+void Beanstalk_EditorLoad(void);
+void Beanstalk_Serialize(void);
 
 // Extra Entity Functions
 

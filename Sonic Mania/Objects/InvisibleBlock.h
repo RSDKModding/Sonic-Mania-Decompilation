@@ -27,17 +27,17 @@ typedef struct {
 extern ObjectInvisibleBlock *InvisibleBlock;
 
 // Standard Entity Events
-void InvisibleBlock_Update();
-void InvisibleBlock_LateUpdate();
-void InvisibleBlock_StaticUpdate();
-void InvisibleBlock_Draw();
+void InvisibleBlock_Update(void);
+void InvisibleBlock_LateUpdate(void);
+void InvisibleBlock_StaticUpdate(void);
+void InvisibleBlock_Draw(void);
 void InvisibleBlock_Create(void* data);
-void InvisibleBlock_StageLoad();
-void InvisibleBlock_EditorDraw();
-void InvisibleBlock_EditorLoad();
-void InvisibleBlock_Serialize();
+void InvisibleBlock_StageLoad(void);
+void InvisibleBlock_EditorDraw(void);
+void InvisibleBlock_EditorLoad(void);
+void InvisibleBlock_Serialize(void);
 
 // Extra Entity Functions
-void InvisibleBlock_DrawSprites();
+void InvisibleBlock_DrawSprites(void);
 
 #endif //!OBJ_INVISIBLEBLOCK_H

@@ -6,7 +6,7 @@ ScanlineInfo *scanlines = NULL;
 TileLayer tileLayers[LAYER_COUNT];
 CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 bool32 hardResetFlag = false;
 #endif
 char currentSceneFolder[0x10];
@@ -28,13 +28,13 @@ void LoadScene()
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].entryCount = 0;
     }
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     debugValCnt = 0;
 #endif
     lookupTable = NULL;
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     if (StrComp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
@@ -48,7 +48,7 @@ void LoadScene()
     }
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     if (StrComp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder)) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
@@ -115,7 +115,7 @@ void LoadScene()
     SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
     StrCopy(currentSceneFolder, sceneEntry->folder);
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     hardResetFlag = false;
     sceneInfo.filter = sceneEntry->filter;
     if (sceneInfo.filter == 0x00)
@@ -124,7 +124,7 @@ void LoadScene()
     printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
@@ -368,7 +368,7 @@ void LoadSceneFile() {
             AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, DATASET_TMP, false);
             editableVarCount = 0;
             if (objID) {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
                 SetEditableVar(VAR_UINT8, "filter", objID, offsetof(Entity, filter));
 #endif
                 if (obj->serialize)
@@ -406,7 +406,7 @@ void LoadSceneFile() {
                 //    printf("wait");
 
                 entity->objectID = objID;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
                 entity->filter = 0xFF;
 #endif
                 entity->position.x = ReadInt32(&info);
@@ -489,7 +489,7 @@ void LoadSceneFile() {
             }
         }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
         //handle filter and stuff
         int slot = RESERVE_ENTITY_COUNT;
         int activeSlot = RESERVE_ENTITY_COUNT;
@@ -516,7 +516,7 @@ void LoadSceneFile() {
         }
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
         for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
             memcpy(&objectEntityList[e + RESERVE_ENTITY_COUNT], &entList[e], sizeof(EntityBase));
         }

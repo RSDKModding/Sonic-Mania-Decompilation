@@ -2,7 +2,7 @@
 
 ObjectDebugMode *DebugMode;
 
-void DebugMode_Update()
+void DebugMode_Update(void)
 {
     EntityDebugMode *entity = (EntityDebugMode *)RSDK_sceneInfo->entity;
 
@@ -94,17 +94,17 @@ void DebugMode_Update()
     }
 }
 
-void DebugMode_LateUpdate()
+void DebugMode_LateUpdate(void)
 {
 
 }
 
-void DebugMode_StaticUpdate()
+void DebugMode_StaticUpdate(void)
 {
 
 }
 
-void DebugMode_Draw()
+void DebugMode_Draw(void)
 {
     if (DebugMode->draw[DebugMode->objID])
          DebugMode->draw[DebugMode->objID]();
@@ -117,7 +117,7 @@ void DebugMode_Create(void* data)
     entity->visible         = true;
 }
 
-void DebugMode_StageLoad()
+void DebugMode_StageLoad(void)
 {
     DebugMode->objID       = 0;
     DebugMode->itemCount   = 0;
@@ -130,8 +130,8 @@ void DebugMode_StageLoad()
     }
 }
 
-void DebugMode_NullState() {}
-void DebugMode_AddObject(ushort id, void (*draw)(), void (*spawn)())
+void DebugMode_NullState(void) {}
+void DebugMode_AddObject(ushort id, void (*draw)(void), void (*spawn)(void))
 {
     if (DebugMode->itemCount < 0x100) {
         DebugMode->objectIDs[DebugMode->itemCount] = id;
@@ -141,17 +141,17 @@ void DebugMode_AddObject(ushort id, void (*draw)(), void (*spawn)())
     }
 }
 
-void DebugMode_EditorDraw()
+void DebugMode_EditorDraw(void)
 {
 
 }
 
-void DebugMode_EditorLoad()
+void DebugMode_EditorLoad(void)
 {
 
 }
 
-void DebugMode_Serialize()
+void DebugMode_Serialize(void)
 {
 
 }

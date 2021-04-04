@@ -3,9 +3,9 @@
 
 ObjectZone *Zone;
 
-void Zone_Update() {}
+void Zone_Update(void) {}
 
-void Zone_LateUpdate()
+void Zone_LateUpdate(void)
 {
     RSDK_THIS(Zone);
     if (RSDK_sceneInfo->entitySlot != SLOT_ZONE) {
@@ -118,7 +118,7 @@ void Zone_LateUpdate()
             ActClear->field_30 = true;
         if (Player->playerCount > 0) {
             EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-            if (sidekick->state != Player_State_FlyIn && sidekick->state != Player_State_JumpIn || sidekick->characterID == ID_TAILS
+            if ((sidekick->state != Player_State_FlyIn && sidekick->state != Player_State_JumpIn) || sidekick->characterID == ID_TAILS
                 || sidekick->scale.x == 0x200) {
                 player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
                 RSDK.SwapDrawListEntries(player->drawOrder, 0, 1, Player->playerCount);
@@ -127,7 +127,7 @@ void Zone_LateUpdate()
     }
 }
 
-void Zone_StaticUpdate()
+void Zone_StaticUpdate(void)
 {
     ++Zone->timer;
     Zone->timer &= 0x7FFF;
@@ -157,7 +157,7 @@ void Zone_StaticUpdate()
 #endif
 }
 
-void Zone_Draw()
+void Zone_Draw(void)
 {
     RSDK_THIS(Zone);
     if (entity->screenID >= PLAYER_MAX || entity->screenID == RSDK_sceneInfo->currentScreenID) {
@@ -176,7 +176,7 @@ void Zone_Create(void *data)
     }
 }
 
-void Zone_StageLoad()
+void Zone_StageLoad(void)
 {
     int *saveRAM    = SaveGame->saveRAM;
     Zone->timeStart = (uint)time(0);
@@ -242,11 +242,11 @@ void Zone_StageLoad()
                     if (globals->stock & 0xFF0000) {
                         int charID = -1;
                         byte id    = globals->playerID >> 16;
-                        if (charID) {
+                        if (id) {
                             do {
-                                charID >>= 1;
+                                id >>= 1;
                                 ++charID;
-                            } while (charID > 0);
+                            } while (id > 0);
                         }
                         globals->characterFlags |= (1 << charID);
                         saveRAM[66] = globals->characterFlags;
@@ -298,11 +298,11 @@ void Zone_StageLoad()
                     if (globals->stock & 0xFF0000) {
                         int charID = -1;
                         byte id    = globals->playerID >> 16;
-                        if (charID) {
+                        if (id) {
                             do {
-                                charID >>= 1;
+                                id >>= 1;
                                 ++charID;
-                            } while (charID > 0);
+                            } while (id > 0);
                         }
                         globals->characterFlags |= (1 << charID);
                         saveRAM[66] = globals->characterFlags;
@@ -455,7 +455,7 @@ void Zone_StageLoad()
     Zone->sfx_fail = RSDK.GetSFX("Stage/Fail.wav");
 }
 
-int Zone_GetZoneID()
+int Zone_GetZoneID(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         return 0;
@@ -599,10 +599,10 @@ void Zone_Unknown1(int fadeTimer, int fadeColour)
     zone->state      = Zone_Unknown13;
     zone->stateDraw  = Zone_Unknown12;
     zone->visible    = true;
-    zone->drawOrder  = 15;
+    zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
-void Zone_Unknown2()
+void Zone_Unknown2(void)
 {
     EntityZone *entity = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
     entity->screenID   = PLAYER_MAX;
@@ -649,7 +649,7 @@ void Zone_Unknown4(int screen)
 #endif
 }
 
-void Zone_Unknown5()
+void Zone_Unknown5(void)
 {
     EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
     entity->screenID   = 4;
@@ -704,7 +704,7 @@ void Zone_ApplyWorldBounds(EntityPlayer *player)
     }
 }
 
-bool32 Zone_IsAct2()
+bool32 Zone_IsAct2(void)
 {
     if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
         || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2")) {
@@ -722,7 +722,7 @@ bool32 Zone_IsAct2()
     return false;
 }
 
-int Zone_GetEncoreStageID()
+int Zone_GetEncoreStageID(void)
 {
     int pos = RSDK_sceneInfo->listPos;
     RSDK.LoadScene("Mania Mode", "");
@@ -749,7 +749,7 @@ int Zone_GetEncoreStageID()
     Game_Print("Mania Mode offset %d, pos %d -> Encore Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
     return pos2;
 }
-int Zone_GetManiaStageID()
+int Zone_GetManiaStageID(void)
 {
     int pos = RSDK_sceneInfo->listPos;
     RSDK.LoadScene("Encore Mode", "");
@@ -777,13 +777,13 @@ int Zone_GetManiaStageID()
     return pos2;
 }
 
-void Zone_Unknown12()
+void Zone_Unknown12(void)
 {
     RSDK_THIS(Zone);
     RSDK.FillScreen(entity->fadeColour, entity->fadeTimer, entity->fadeTimer - 0x80, entity->fadeTimer - 0x100);
 }
 
-void Zone_Unknown13()
+void Zone_Unknown13(void)
 {
     RSDK_THIS(Zone);
     entity->timer += entity->fadeTimer;
@@ -819,7 +819,7 @@ void Zone_Unknown13()
     }
 }
 
-void Zone_Unknown14()
+void Zone_Unknown14(void)
 {
     RSDK_THIS(Zone);
     RSDK_sceneInfo->timeEnabled = true;
@@ -833,7 +833,7 @@ void Zone_Unknown14()
     }
 }
 
-void Zone_Unknown15()
+void Zone_Unknown15(void)
 {
     RSDK_THIS(Zone);
     entity->timer += entity->fadeTimer;
@@ -846,7 +846,7 @@ void Zone_Unknown15()
     }
 }
 
-void Zone_Unknown16()
+void Zone_Unknown16(void)
 {
     RSDK_THIS(Zone);
     RSDK_sceneInfo->timeEnabled = true;
@@ -868,7 +868,7 @@ void Zone_Unknown16()
     RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void Zone_Unknown17()
+void Zone_Unknown17(void)
 {
     EntityPlayer *entity        = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     StarPost->storedMinutes     = RSDK_sceneInfo->minutes;
@@ -882,7 +882,7 @@ void Zone_Unknown17()
     RSDK.InitSceneLoad();
 }
 
-void Zone_Unknown18()
+void Zone_Unknown18(void)
 {
     RSDK_THIS(Zone);
     if (entity->timer <= 0)
@@ -891,17 +891,17 @@ void Zone_Unknown18()
         entity->timer -= entity->fadeTimer;
 }
 
-void Zone_Unknown19()
+void Zone_Unknown19(void)
 {
     // TODO
 }
 
-void Zone_Unknown20()
+void Zone_Unknown20(void)
 {
     // TODO
 }
 
-void Zone_Unknown21()
+void Zone_Unknown21(void)
 {
     RSDK_THIS(Zone);
     if (entity->timer <= 0) {
@@ -914,7 +914,7 @@ void Zone_Unknown21()
     }
 }
 
-bool32 Game_CheckAct1()
+bool32 Game_CheckAct1(void)
 {
     if ((RSDK.CheckStageFolder("GHZ") && !Zone->actID) || (RSDK.CheckStageFolder("CPZ") && !Zone->actID) || RSDK.CheckStageFolder("SPZ1")
         || (RSDK.CheckStageFolder("FBZ") && !Zone->actID) || RSDK.CheckStageFolder("PSZ1") || RSDK.CheckStageFolder("SSZ1")
@@ -925,7 +925,7 @@ bool32 Game_CheckAct1()
     }
     return false;
 }
-bool32 Game_CheckAct2()
+bool32 Game_CheckAct2(void)
 {
     if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
         || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2") || RSDK.CheckStageFolder("SSZ2")
@@ -935,7 +935,7 @@ bool32 Game_CheckAct2()
     }
     return false;
 }
-bool32 Game_CheckStageReload()
+bool32 Game_CheckStageReload(void)
 {
     if (StarPost && Player->playerCount > 0) {
         for (int p = 0; p < Player->playerCount; ++p) {
@@ -954,7 +954,7 @@ bool32 Game_CheckStageReload()
     }
     return false;
 }
-bool32 Game_CheckIntro()
+bool32 Game_CheckIntro(void)
 {
 #if RETRO_USE_PLUS
     return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->enableIntro && !Game_CheckStageReload();
@@ -962,7 +962,7 @@ bool32 Game_CheckIntro()
     return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->enableIntro && !Game_CheckStageReload();
 #endif
 }
-void Game_ClearOptions()
+void Game_ClearOptions(void)
 {
     globals->menuParam[22] = 0;
     memset(&globals->menuParam[22] + 2, 0, 0x100);
@@ -1103,8 +1103,8 @@ bool32 Game_Unknown23(int px1, int py1, int px2, int py2, int tx1, int tx2, int 
     return v9 <= v13 && v18 >= v15 && v17 <= v12 && v10 >= v14;
 }
 
-void Zone_EditorDraw() {}
+void Zone_EditorDraw(void) {}
 
-void Zone_EditorLoad() {}
+void Zone_EditorLoad(void) {}
 
-void Zone_Serialize() {}
+void Zone_Serialize(void) {}

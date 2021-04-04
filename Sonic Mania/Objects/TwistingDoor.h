@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTwistingDoor *TwistingDoor;
 
 // Standard Entity Events
-void TwistingDoor_Update();
-void TwistingDoor_LateUpdate();
-void TwistingDoor_StaticUpdate();
-void TwistingDoor_Draw();
+void TwistingDoor_Update(void);
+void TwistingDoor_LateUpdate(void);
+void TwistingDoor_StaticUpdate(void);
+void TwistingDoor_Draw(void);
 void TwistingDoor_Create(void* data);
-void TwistingDoor_StageLoad();
-void TwistingDoor_EditorDraw();
-void TwistingDoor_EditorLoad();
-void TwistingDoor_Serialize();
+void TwistingDoor_StageLoad(void);
+void TwistingDoor_EditorDraw(void);
+void TwistingDoor_EditorLoad(void);
+void TwistingDoor_Serialize(void);
 
 // Extra Entity Functions
 

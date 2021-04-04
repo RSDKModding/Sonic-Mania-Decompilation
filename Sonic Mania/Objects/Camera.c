@@ -2,7 +2,7 @@
 
 ObjectCamera *Camera;
 
-void Camera_Update()
+void Camera_Update(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     entity->lastPos.x    = entity->position.x;
@@ -34,9 +34,9 @@ void Camera_Update()
     }
 }
 
-void Camera_LateUpdate() {}
+void Camera_LateUpdate(void) {}
 
-void Camera_StaticUpdate()
+void Camera_StaticUpdate(void)
 {
     if (Camera->centerBounds.x < 0x100000)
         Camera->centerBounds.x += 0x4000;
@@ -44,7 +44,7 @@ void Camera_StaticUpdate()
         Camera->centerBounds.y += 0x8000;
 }
 
-void Camera_Draw() {}
+void Camera_Draw(void) {}
 
 void Camera_Create(void *data)
 {
@@ -76,7 +76,7 @@ void Camera_Create(void *data)
     }
 }
 
-void Camera_StageLoad()
+void Camera_StageLoad(void)
 {
     if (!RSDK.CheckStageFolder("Credits")) {
         for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i)
@@ -134,7 +134,7 @@ void Camera_ShakeScreen(int shakeX, int screen, int shakeY)
         }
     }
 }
-void Camera_HandleHBounds()
+void Camera_HandleHBounds(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     ScreenInfo *screen   = &RSDK_screens[entity->screenID];
@@ -185,7 +185,7 @@ void Camera_HandleHBounds()
     Zone->screenBoundsL2[entity->screenID] = entity->boundsL << 16;
     Zone->screenBoundsR2[entity->screenID] = entity->boundsR << 16;
 }
-void Camera_HandleVBounds()
+void Camera_HandleVBounds(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     ScreenInfo *screen   = &RSDK_screens[entity->screenID];
@@ -238,7 +238,7 @@ void Camera_HandleVBounds()
 }
 
 // States
-void Camera_State_Roam()
+void Camera_State_Roam(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     int speed            = 0x100000;
@@ -281,7 +281,7 @@ void Camera_State_Roam()
         entity->position.y <<= 0x10;
     }
 }
-void Camera_State_Follow()
+void Camera_State_Follow(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     if (entity->targetPtr) {
@@ -326,7 +326,7 @@ void Camera_State_Follow()
         }
     }
 }
-void Camera_State_HLock()
+void Camera_State_HLock(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     if (entity->targetPtr) {
@@ -351,7 +351,7 @@ void Camera_State_HLock()
         }
     }
 }
-void Camera_State_VLock()
+void Camera_State_VLock(void)
 {
     EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
     if (entity->targetPtr) {
@@ -378,8 +378,8 @@ void Camera_State_VLock()
     }
 }
 
-void Camera_EditorDraw() {}
+void Camera_EditorDraw(void) {}
 
-void Camera_EditorLoad() {}
+void Camera_EditorLoad(void) {}
 
-void Camera_Serialize() {}
+void Camera_Serialize(void) {}

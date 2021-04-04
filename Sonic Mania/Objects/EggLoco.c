@@ -2,22 +2,22 @@
 
 ObjectEggLoco *EggLoco;
 
-void EggLoco_Update()
+void EggLoco_Update(void)
 {
 
 }
 
-void EggLoco_LateUpdate()
+void EggLoco_LateUpdate(void)
 {
 
 }
 
-void EggLoco_StaticUpdate()
+void EggLoco_StaticUpdate(void)
 {
 
 }
 
-void EggLoco_Draw()
+void EggLoco_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void EggLoco_Create(void* data)
 
 }
 
-void EggLoco_StageLoad()
+void EggLoco_StageLoad(void)
 {
 
 }
 
-void EggLoco_EditorDraw()
+void EggLoco_EditorDraw(void)
 {
 
 }
 
-void EggLoco_EditorLoad()
+void EggLoco_EditorLoad(void)
 {
 
 }
 
-void EggLoco_Serialize()
+void EggLoco_Serialize(void)
 {
 
 }

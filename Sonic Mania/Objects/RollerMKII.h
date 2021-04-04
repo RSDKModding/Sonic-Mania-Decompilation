@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectRollerMKII *RollerMKII;
 
 // Standard Entity Events
-void RollerMKII_Update();
-void RollerMKII_LateUpdate();
-void RollerMKII_StaticUpdate();
-void RollerMKII_Draw();
+void RollerMKII_Update(void);
+void RollerMKII_LateUpdate(void);
+void RollerMKII_StaticUpdate(void);
+void RollerMKII_Draw(void);
 void RollerMKII_Create(void* data);
-void RollerMKII_StageLoad();
-void RollerMKII_EditorDraw();
-void RollerMKII_EditorLoad();
-void RollerMKII_Serialize();
+void RollerMKII_StageLoad(void);
+void RollerMKII_EditorDraw(void);
+void RollerMKII_EditorLoad(void);
+void RollerMKII_Serialize(void);
 
 // Extra Entity Functions
 

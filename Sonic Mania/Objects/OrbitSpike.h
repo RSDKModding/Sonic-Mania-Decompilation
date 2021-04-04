@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectOrbitSpike *OrbitSpike;
 
 // Standard Entity Events
-void OrbitSpike_Update();
-void OrbitSpike_LateUpdate();
-void OrbitSpike_StaticUpdate();
-void OrbitSpike_Draw();
+void OrbitSpike_Update(void);
+void OrbitSpike_LateUpdate(void);
+void OrbitSpike_StaticUpdate(void);
+void OrbitSpike_Draw(void);
 void OrbitSpike_Create(void* data);
-void OrbitSpike_StageLoad();
-void OrbitSpike_EditorDraw();
-void OrbitSpike_EditorLoad();
-void OrbitSpike_Serialize();
+void OrbitSpike_StageLoad(void);
+void OrbitSpike_EditorDraw(void);
+void OrbitSpike_EditorLoad(void);
+void OrbitSpike_Serialize(void);
 
 // Extra Entity Functions
 

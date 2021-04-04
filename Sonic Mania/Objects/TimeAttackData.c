@@ -2,18 +2,18 @@
 
 ObjectTimeAttackData *TimeAttackData;
 
-void TimeAttackData_Update() {}
-void TimeAttackData_LateUpdate() {}
-void TimeAttackData_StaticUpdate() {}
-void TimeAttackData_Draw() {}
+void TimeAttackData_Update(void) {}
+void TimeAttackData_LateUpdate(void) {}
+void TimeAttackData_StaticUpdate(void) {}
+void TimeAttackData_Draw(void) {}
 void TimeAttackData_Create(void *data) {}
-void TimeAttackData_StageLoad() {}
+void TimeAttackData_StageLoad(void) {}
 
 #if RETRO_USE_PLUS
 int TimeAttackData_LoadCB(int statusCode)
 {
-    if (statusCode == 200) {
-        globals->taTableLoaded = 200;
+    if (statusCode == STATUS_OK) {
+        globals->taTableLoaded = STATUS_OK;
         User.Unknown31(globals->taTableID);
         Game_Print("Load Succeeded! Replay count: %d", User.GetUserDBUnknownCount(globals->taTableID));
     }
@@ -27,7 +27,7 @@ int TimeAttackData_LoadCB(int statusCode)
         Entity *entStore = RSDK_sceneInfo->entity;
         if (TimeAttackData->loadEntityPtr)
             RSDK_sceneInfo->entity = TimeAttackData->loadEntityPtr;
-        TimeAttackData->loadCallback(statusCode == 200);
+        TimeAttackData->loadCallback(statusCode == STATUS_OK);
         RSDK_sceneInfo->entity        = entStore;
         TimeAttackData->loadCallback  = NULL;
         TimeAttackData->loadEntityPtr = NULL;
@@ -35,25 +35,25 @@ int TimeAttackData_LoadCB(int statusCode)
     return 1;
 }
 
-void TimeAttackData_ResetTimeAttackDB()
+void TimeAttackData_ResetTimeAttackDB(void)
 {
     ushort id = User.InitUserDB("TimeAttackDB.bin", 2, "zoneID", 2, "act", 2, "characterID", 2, "encore", 4, "score", 4, "replayID", 0, NULL);
     globals->taTableID = id;
-    if (id == -1) {
-        globals->taTableLoaded = 500;
+    if (id == 0xFFFF) {
+        globals->taTableLoaded = STATUS_ERROR;
     }
     else {
-        globals->taTableLoaded = 200;
+        globals->taTableLoaded = STATUS_OK;
         if (!User.GetUserStorageNoSave()) {
-            if (globals->saveLoaded == 200)
+            if (globals->saveLoaded == STATUS_OK)
                 TimeAttackData_MigrateLegacyTADB();
         }
     }
 }
 
-void TimeAttackData_MigrateLegacyTADB()
+void TimeAttackData_MigrateLegacyTADB(void)
 {
-    if (globals->saveLoaded == 200) {
+    if (globals->saveLoaded == STATUS_OK) {
         // result = (GlobalVariables *)((char *)globals + 73892); //saveRAM[0x800]
         // if (globals != (GlobalVariables *)-73892) {
         TimeAttackData->dword1C = 1;
@@ -90,7 +90,7 @@ void TimeAttackData_MigrateLegacyTADB()
 
 int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mode, int time)
 {
-    if (globals->taTableLoaded != 200)
+    if (globals->taTableLoaded != STATUS_OK)
         return -1;
 
     ushort rowID = User.AddUserDBEntry(globals->taTableID);
@@ -153,7 +153,7 @@ int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int t
 
 int TimeAttackData_SaveTimeAttackDB(void (*callback)(int))
 {
-    if (User.GetUserStorageNoSave() || globals->taTableID == 0xFFFF || globals->taTableLoaded != 200) {
+    if (User.GetUserStorageNoSave() || globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) {
         if (callback)
             callback(0);
     }
@@ -172,7 +172,7 @@ int TimeAttackData_SaveTimeAttackDB_CB(int statusCode)
         Entity *entStore = RSDK_sceneInfo->entity;
         if (TimeAttackData->saveEntityPtr)
             RSDK_sceneInfo->entity = TimeAttackData->saveEntityPtr;
-        TimeAttackData->saveCallback(statusCode == 200);
+        TimeAttackData->saveCallback(statusCode == STATUS_OK);
         RSDK_sceneInfo->entity        = entStore;
         TimeAttackData->saveCallback  = NULL;
         TimeAttackData->saveEntityPtr = NULL;
@@ -216,6 +216,6 @@ void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, 
 
 #endif
 
-void TimeAttackData_EditorDraw() {}
-void TimeAttackData_EditorLoad() {}
-void TimeAttackData_Serialize() {}
+void TimeAttackData_EditorDraw(void) {}
+void TimeAttackData_EditorLoad(void) {}
+void TimeAttackData_Serialize(void) {}

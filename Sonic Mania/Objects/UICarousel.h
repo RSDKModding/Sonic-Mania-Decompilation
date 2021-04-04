@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectUICarousel *UICarousel;
 
 // Standard Entity Events
-void UICarousel_Update();
-void UICarousel_LateUpdate();
-void UICarousel_StaticUpdate();
-void UICarousel_Draw();
+void UICarousel_Update(void);
+void UICarousel_LateUpdate(void);
+void UICarousel_StaticUpdate(void);
+void UICarousel_Draw(void);
 void UICarousel_Create(void* data);
-void UICarousel_StageLoad();
-void UICarousel_EditorDraw();
-void UICarousel_EditorLoad();
-void UICarousel_Serialize();
+void UICarousel_StageLoad(void);
+void UICarousel_EditorDraw(void);
+void UICarousel_EditorLoad(void);
+void UICarousel_Serialize(void);
 
 // Extra Entity Functions
 #endif

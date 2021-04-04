@@ -2,22 +2,22 @@
 
 ObjectCrimsonEye *CrimsonEye;
 
-void CrimsonEye_Update()
+void CrimsonEye_Update(void)
 {
 
 }
 
-void CrimsonEye_LateUpdate()
+void CrimsonEye_LateUpdate(void)
 {
 
 }
 
-void CrimsonEye_StaticUpdate()
+void CrimsonEye_StaticUpdate(void)
 {
 
 }
 
-void CrimsonEye_Draw()
+void CrimsonEye_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void CrimsonEye_Create(void* data)
 
 }
 
-void CrimsonEye_StageLoad()
+void CrimsonEye_StageLoad(void)
 {
 
 }
 
-void CrimsonEye_EditorDraw()
+void CrimsonEye_EditorDraw(void)
 {
 
 }
 
-void CrimsonEye_EditorLoad()
+void CrimsonEye_EditorLoad(void)
 {
 
 }
 
-void CrimsonEye_Serialize()
+void CrimsonEye_Serialize(void)
 {
 
 }

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPuyoScore *PuyoScore;
 
 // Standard Entity Events
-void PuyoScore_Update();
-void PuyoScore_LateUpdate();
-void PuyoScore_StaticUpdate();
-void PuyoScore_Draw();
+void PuyoScore_Update(void);
+void PuyoScore_LateUpdate(void);
+void PuyoScore_StaticUpdate(void);
+void PuyoScore_Draw(void);
 void PuyoScore_Create(void* data);
-void PuyoScore_StageLoad();
-void PuyoScore_EditorDraw();
-void PuyoScore_EditorLoad();
-void PuyoScore_Serialize();
+void PuyoScore_StageLoad(void);
+void PuyoScore_EditorDraw(void);
+void PuyoScore_EditorLoad(void);
+void PuyoScore_Serialize(void);
 
 // Extra Entity Functions
 

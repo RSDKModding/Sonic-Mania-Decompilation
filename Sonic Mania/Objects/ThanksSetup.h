@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
-    void(*stateDraw)();
+    void(*state)(void);
+    void(*stateDraw)(void);
     Entity *picture;
     int timer;
     int offset;
@@ -23,22 +23,22 @@ typedef struct {
 extern ObjectThanksSetup *ThanksSetup;
 
 // Standard Entity Events
-void ThanksSetup_Update();
-void ThanksSetup_LateUpdate();
-void ThanksSetup_StaticUpdate();
-void ThanksSetup_Draw();
+void ThanksSetup_Update(void);
+void ThanksSetup_LateUpdate(void);
+void ThanksSetup_StaticUpdate(void);
+void ThanksSetup_Draw(void);
 void ThanksSetup_Create(void* data);
-void ThanksSetup_StageLoad();
-void ThanksSetup_EditorDraw();
-void ThanksSetup_EditorLoad();
-void ThanksSetup_Serialize();
+void ThanksSetup_StageLoad(void);
+void ThanksSetup_EditorDraw(void);
+void ThanksSetup_EditorLoad(void);
+void ThanksSetup_Serialize(void);
 
 // Extra Entity Functions
-void ThanksSetup_Unknown1();
-void ThanksSetup_Unknown2();
-void ThanksSetup_Unknown3();
-void ThanksSetup_Unknown4();
-void ThanksSetup_Unknown5();
-void ThanksSetup_Unknown6();
+void ThanksSetup_Unknown1(void);
+void ThanksSetup_Unknown2(void);
+void ThanksSetup_Unknown3(void);
+void ThanksSetup_Unknown4(void);
+void ThanksSetup_Unknown5(void);
+void ThanksSetup_Unknown6(void);
 
 #endif //!OBJ_THANKSSETUP_H

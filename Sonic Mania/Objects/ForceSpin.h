@@ -21,18 +21,18 @@ typedef struct {
 extern ObjectForceSpin *ForceSpin;
 
 // Standard Entity Events
-void ForceSpin_Update();
-void ForceSpin_LateUpdate();
-void ForceSpin_StaticUpdate();
-void ForceSpin_Draw();
+void ForceSpin_Update(void);
+void ForceSpin_LateUpdate(void);
+void ForceSpin_StaticUpdate(void);
+void ForceSpin_Draw(void);
 void ForceSpin_Create(void* data);
-void ForceSpin_StageLoad();
-void ForceSpin_EditorDraw();
-void ForceSpin_EditorLoad();
-void ForceSpin_Serialize();
+void ForceSpin_StageLoad(void);
+void ForceSpin_EditorDraw(void);
+void ForceSpin_EditorLoad(void);
+void ForceSpin_Serialize(void);
 
 // Extra Entity Functions
-void ForceSpin_DrawSprites();
+void ForceSpin_DrawSprites(void);
 void ForceSpin_SetPlayerState(void *plr);
 
 #endif //!OBJ_FORCESPIN_H

@@ -2,18 +2,18 @@
 
 ObjectCrabmeat *Crabmeat;
 
-void Crabmeat_Update()
+void Crabmeat_Update(void)
 {
     RSDK_THIS(Crabmeat);
     if (entity->state)
         entity->state();
 }
 
-void Crabmeat_LateUpdate() {}
+void Crabmeat_LateUpdate(void) {}
 
-void Crabmeat_StaticUpdate() {}
+void Crabmeat_StaticUpdate(void) {}
 
-void Crabmeat_Draw()
+void Crabmeat_Draw(void)
 {
     RSDK_THIS(Crabmeat);
     RSDK.DrawSprite(&entity->data, 0, 0);
@@ -46,7 +46,7 @@ void Crabmeat_Create(void *data)
     }
 }
 
-void Crabmeat_StageLoad()
+void Crabmeat_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         Crabmeat->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE);
@@ -62,18 +62,18 @@ void Crabmeat_StageLoad()
     DEBUGMODE_ADD_OBJ(Crabmeat);
 }
 
-void Crabmeat_DebugDraw()
+void Crabmeat_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
-void Crabmeat_DebugSpawn()
+void Crabmeat_DebugSpawn(void)
 {
     RSDK_THIS(Crabmeat);
     RSDK.CreateEntity(Crabmeat->objectID, 0, entity->position.x, entity->position.y);
 }
 
-void Crabmeat_State_Main()
+void Crabmeat_State_Main(void)
 {
     RSDK_THIS(Crabmeat);
 
@@ -95,7 +95,7 @@ void Crabmeat_State_Main()
     Crabmeat_CheckOnScreen();
 }
 
-void Crabmeat_State_Projectile()
+void Crabmeat_State_Projectile(void)
 {
     RSDK_THIS(Crabmeat);
     entity->position.x += entity->velocity.x;
@@ -115,7 +115,7 @@ void Crabmeat_State_Projectile()
     }
 }
 
-void Crabmeat_State_Shoot()
+void Crabmeat_State_Shoot(void)
 {
     RSDK_THIS(Crabmeat);
 
@@ -155,7 +155,7 @@ void Crabmeat_State_Shoot()
     Crabmeat_CheckOnScreen();
 }
 
-void Crabmeat_Unknown1()
+void Crabmeat_Unknown1(void)
 {
     RSDK_THIS(Crabmeat);
 
@@ -166,7 +166,7 @@ void Crabmeat_Unknown1()
     Crabmeat_State_Main();
 }
 
-void Crabmeat_CheckOnScreen()
+void Crabmeat_CheckOnScreen(void)
 {
     RSDK_THIS(Crabmeat);
     if (entity->tileCollisions && !RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
@@ -178,7 +178,7 @@ void Crabmeat_CheckOnScreen()
     }
 }
 
-void Crabmeat_CheckPlayerCollisions()
+void Crabmeat_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Crabmeat);
     foreach_active(Player, player)
@@ -188,8 +188,8 @@ void Crabmeat_CheckPlayerCollisions()
     }
 }
 
-void Crabmeat_EditorDraw() {}
+void Crabmeat_EditorDraw(void) {}
 
-void Crabmeat_EditorLoad() {}
+void Crabmeat_EditorLoad(void) {}
 
-void Crabmeat_Serialize() {}
+void Crabmeat_Serialize(void) {}

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectDNARiser *DNARiser;
 
 // Standard Entity Events
-void DNARiser_Update();
-void DNARiser_LateUpdate();
-void DNARiser_StaticUpdate();
-void DNARiser_Draw();
+void DNARiser_Update(void);
+void DNARiser_LateUpdate(void);
+void DNARiser_StaticUpdate(void);
+void DNARiser_Draw(void);
 void DNARiser_Create(void* data);
-void DNARiser_StageLoad();
-void DNARiser_EditorDraw();
-void DNARiser_EditorLoad();
-void DNARiser_Serialize();
+void DNARiser_StageLoad(void);
+void DNARiser_EditorDraw(void);
+void DNARiser_EditorLoad(void);
+void DNARiser_Serialize(void);
 
 // Extra Entity Functions
 

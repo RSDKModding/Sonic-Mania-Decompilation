@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectERZOutro *ERZOutro;
 
 // Standard Entity Events
-void ERZOutro_Update();
-void ERZOutro_LateUpdate();
-void ERZOutro_StaticUpdate();
-void ERZOutro_Draw();
+void ERZOutro_Update(void);
+void ERZOutro_LateUpdate(void);
+void ERZOutro_StaticUpdate(void);
+void ERZOutro_Draw(void);
 void ERZOutro_Create(void* data);
-void ERZOutro_StageLoad();
-void ERZOutro_EditorDraw();
-void ERZOutro_EditorLoad();
-void ERZOutro_Serialize();
+void ERZOutro_StageLoad(void);
+void ERZOutro_EditorDraw(void);
+void ERZOutro_EditorLoad(void);
+void ERZOutro_Serialize(void);
 
 // Extra Entity Functions
 

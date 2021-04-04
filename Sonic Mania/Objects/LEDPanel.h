@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLEDPanel *LEDPanel;
 
 // Standard Entity Events
-void LEDPanel_Update();
-void LEDPanel_LateUpdate();
-void LEDPanel_StaticUpdate();
-void LEDPanel_Draw();
+void LEDPanel_Update(void);
+void LEDPanel_LateUpdate(void);
+void LEDPanel_StaticUpdate(void);
+void LEDPanel_Draw(void);
 void LEDPanel_Create(void* data);
-void LEDPanel_StageLoad();
-void LEDPanel_EditorDraw();
-void LEDPanel_EditorLoad();
-void LEDPanel_Serialize();
+void LEDPanel_StageLoad(void);
+void LEDPanel_EditorDraw(void);
+void LEDPanel_EditorLoad(void);
+void LEDPanel_Serialize(void);
 
 // Extra Entity Functions
 

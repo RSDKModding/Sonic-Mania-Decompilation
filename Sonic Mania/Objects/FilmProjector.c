@@ -2,7 +2,7 @@
 
 ObjectFilmProjector *FilmProjector;
 
-void FilmProjector_Update()
+void FilmProjector_Update(void)
 {
     RSDK_THIS(FilmProjector);
     if (entity->pathMovement)
@@ -14,17 +14,17 @@ void FilmProjector_Update()
     RSDK.ProcessAnimation(&entity->data6);
 }
 
-void FilmProjector_LateUpdate()
+void FilmProjector_LateUpdate(void)
 {
 
 }
 
-void FilmProjector_StaticUpdate()
+void FilmProjector_StaticUpdate(void)
 {
 
 }
 
-void FilmProjector_Draw()
+void FilmProjector_Draw(void)
 {
     RSDK_THIS(FilmProjector);
     if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
@@ -102,19 +102,19 @@ void FilmProjector_Create(void* data)
     }
 }
 
-void FilmProjector_StageLoad() { FilmProjector->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
+void FilmProjector_StageLoad(void) { FilmProjector->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
 
-void FilmProjector_EditorDraw()
+void FilmProjector_EditorDraw(void)
 {
 
 }
 
-void FilmProjector_EditorLoad()
+void FilmProjector_EditorLoad(void)
 {
 
 }
 
-void FilmProjector_Serialize()
+void FilmProjector_Serialize(void)
 {
     RSDK_EDITABLE_VAR(FilmProjector, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(FilmProjector, VAR_UINT8, pathMovement);

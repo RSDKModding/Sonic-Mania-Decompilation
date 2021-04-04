@@ -2,22 +2,22 @@
 
 ObjectDoorTrigger *DoorTrigger;
 
-void DoorTrigger_Update()
+void DoorTrigger_Update(void)
 {
 
 }
 
-void DoorTrigger_LateUpdate()
+void DoorTrigger_LateUpdate(void)
 {
 
 }
 
-void DoorTrigger_StaticUpdate()
+void DoorTrigger_StaticUpdate(void)
 {
 
 }
 
-void DoorTrigger_Draw()
+void DoorTrigger_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void DoorTrigger_Create(void* data)
 
 }
 
-void DoorTrigger_StageLoad()
+void DoorTrigger_StageLoad(void)
 {
 
 }
 
-void DoorTrigger_EditorDraw()
+void DoorTrigger_EditorDraw(void)
 {
 
 }
 
-void DoorTrigger_EditorLoad()
+void DoorTrigger_EditorLoad(void)
 {
 
 }
 
-void DoorTrigger_Serialize()
+void DoorTrigger_Serialize(void)
 {
 
 }

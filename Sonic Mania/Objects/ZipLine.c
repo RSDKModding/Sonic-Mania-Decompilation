@@ -2,22 +2,22 @@
 
 ObjectZipLine *ZipLine;
 
-void ZipLine_Update()
+void ZipLine_Update(void)
 {
 
 }
 
-void ZipLine_LateUpdate()
+void ZipLine_LateUpdate(void)
 {
 
 }
 
-void ZipLine_StaticUpdate()
+void ZipLine_StaticUpdate(void)
 {
 
 }
 
-void ZipLine_Draw()
+void ZipLine_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void ZipLine_Create(void* data)
 
 }
 
-void ZipLine_StageLoad()
+void ZipLine_StageLoad(void)
 {
 
 }
 
-void ZipLine_EditorDraw()
+void ZipLine_EditorDraw(void)
 {
 
 }
 
-void ZipLine_EditorLoad()
+void ZipLine_EditorLoad(void)
 {
 
 }
 
-void ZipLine_Serialize()
+void ZipLine_Serialize(void)
 {
 
 }

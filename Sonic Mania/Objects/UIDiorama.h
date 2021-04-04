@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectUIDiorama *UIDiorama;
 
 // Standard Entity Events
-void UIDiorama_Update();
-void UIDiorama_LateUpdate();
-void UIDiorama_StaticUpdate();
-void UIDiorama_Draw();
+void UIDiorama_Update(void);
+void UIDiorama_LateUpdate(void);
+void UIDiorama_StaticUpdate(void);
+void UIDiorama_Draw(void);
 void UIDiorama_Create(void* data);
-void UIDiorama_StageLoad();
-void UIDiorama_EditorDraw();
-void UIDiorama_EditorLoad();
-void UIDiorama_Serialize();
+void UIDiorama_StageLoad(void);
+void UIDiorama_EditorDraw(void);
+void UIDiorama_EditorLoad(void);
+void UIDiorama_Serialize(void);
 
 // Extra Entity Functions
 #endif

@@ -2,18 +2,18 @@
 
 ObjectSignPost *SignPost;
 
-void SignPost_Update()
+void SignPost_Update(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void SignPost_LateUpdate() {}
+void SignPost_LateUpdate(void) {}
 
-void SignPost_StaticUpdate() {}
+void SignPost_StaticUpdate(void) {}
 
-void SignPost_Draw()
+void SignPost_Draw(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     Vector2 drawPos;
@@ -162,7 +162,7 @@ void SignPost_Create(void *data)
     }
 }
 
-void SignPost_StageLoad()
+void SignPost_StageLoad(void)
 {
     SignPost->spriteIndex          = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
     SignPost->hitbox.left          = -24;
@@ -183,13 +183,13 @@ void SignPost_StageLoad()
     SignPost->sfx_Slide        = RSDK.GetSFX("Global/Slide.wav");
 }
 
-void SignPost_DebugSpawn()
+void SignPost_DebugSpawn(void)
 {
     EntitySignPost *entity =
         (EntitySignPost *)RSDK.CreateEntity(SignPost->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
     entity->debugObj = true;
 }
-void SignPost_DebugDraw()
+void SignPost_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
@@ -198,7 +198,7 @@ void SignPost_DebugDraw()
     RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &DebugMode->debugData, true, 2);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
-void SignPost_SpinSpeed()
+void SignPost_SpinSpeed(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     entity->angle += entity->spinSpeed;
@@ -218,7 +218,7 @@ void SignPost_SpinSpeed()
     }
     entity->rotation = (entity->angle >> 8) & 0x1FF;
 }
-void SignPost_SpawnSparkle()
+void SignPost_SpawnSparkle(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     if (!(Zone->timer & 3)) {
@@ -239,17 +239,17 @@ void SignPost_SpawnSparkle()
         entity->sparkleType           = (entity->sparkleType + 1) % 3;
     }
 }
-void SignPost_State_SetupCompetition()
+void SignPost_State_SetupCompetition(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     entity->state          = SignPost_State_Competition;
 }
-void SignPost_State_Competition()
+void SignPost_State_Competition(void)
 {
     SignPost_HandleCompetition();
     SignPost_CheckTouch();
 }
-void SignPost_State_Land()
+void SignPost_State_Land(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     SignPost_SpinSpeed();
@@ -262,7 +262,7 @@ void SignPost_State_Land()
         RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, 0);
     }
 }
-void SignPost_State_CompetitionFinish()
+void SignPost_State_CompetitionFinish(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     SignPost_SpinSpeed();
@@ -293,7 +293,7 @@ void SignPost_State_CompetitionFinish()
         }
     }
 }
-void SignPost_State_Launched()
+void SignPost_State_Launched(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     SignPost_SpinSpeed();
@@ -305,7 +305,7 @@ void SignPost_State_Launched()
     if (entity->velocity.y < 0)
         entity->state = SignPost_State_Fall;
 }
-void SignPost_State_Fall()
+void SignPost_State_Fall(void)
 {
     EntitySignPost *entity      = (EntitySignPost *)RSDK_sceneInfo->entity;
     entity->active              = ACTIVE_NORMAL;
@@ -398,7 +398,7 @@ void SignPost_State_Fall()
         }
     }
 }
-void SignPost_State_Finish()
+void SignPost_State_Finish(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->facePlateAnim);
@@ -410,7 +410,7 @@ void SignPost_State_Finish()
         globals->suppressAutoMusic = false;
     }
 }
-void SignPost_CheckTouch()
+void SignPost_CheckTouch(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     int ty1                = RSDK_sceneInfo->entity->position.y - (entity->vsExtendTop << 16);
@@ -516,7 +516,7 @@ void SignPost_CheckTouch()
         }
     }
 }
-void SignPost_HandleCompetition()
+void SignPost_HandleCompetition(void)
 {
     EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
     int x                  = entity->vsBoundsOffset.y + RSDK_sceneInfo->entity->position.y;
@@ -570,11 +570,11 @@ void SignPost_HandleCompetition()
     }
 }
 
-void SignPost_EditorDraw() {}
+void SignPost_EditorDraw(void) {}
 
-void SignPost_EditorLoad() {}
+void SignPost_EditorLoad(void) {}
 
-void SignPost_Serialize()
+void SignPost_Serialize(void)
 {
     RSDK_EDITABLE_VAR(SignPost, VAR_UINT8, type);
     RSDK_EDITABLE_VAR(SignPost, VAR_VECTOR2, vsBoundsSize);

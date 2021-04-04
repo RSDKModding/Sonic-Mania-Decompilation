@@ -2,22 +2,22 @@
 
 ObjectUFO_Plasma *UFO_Plasma;
 
-void UFO_Plasma_Update()
+void UFO_Plasma_Update(void)
 {
 
 }
 
-void UFO_Plasma_LateUpdate()
+void UFO_Plasma_LateUpdate(void)
 {
 
 }
 
-void UFO_Plasma_StaticUpdate()
+void UFO_Plasma_StaticUpdate(void)
 {
 
 }
 
-void UFO_Plasma_Draw()
+void UFO_Plasma_Draw(void)
 {
     int screenX             = RSDK_screens->position.x << 16;
     int screenY             = RSDK_screens->position.y;
@@ -51,7 +51,7 @@ void UFO_Plasma_Create(void* data)
     }
 }
 
-void UFO_Plasma_StageLoad()
+void UFO_Plasma_StageLoad(void)
 {
     UFO_Plasma->spriteIndex = RSDK.LoadSpriteSheet("SpecialUFO/Plasma.gif", SCOPE_STAGE);
     UFO_Plasma->scanlines   = RSDK.GetScanlines();
@@ -74,17 +74,17 @@ void UFO_Plasma_StageLoad()
     RSDK.SetDrawLayerProperties(3, 0, 0);
 }
 
-void UFO_Plasma_EditorDraw()
+void UFO_Plasma_EditorDraw(void)
 {
 
 }
 
-void UFO_Plasma_EditorLoad()
+void UFO_Plasma_EditorLoad(void)
 {
 
 }
 
-void UFO_Plasma_Serialize()
+void UFO_Plasma_Serialize(void)
 {
 
 }

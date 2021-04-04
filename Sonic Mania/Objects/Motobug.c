@@ -2,18 +2,18 @@
 
 ObjectMotobug *Motobug;
 
-void Motobug_Update()
+void Motobug_Update(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void Motobug_LateUpdate() {}
+void Motobug_LateUpdate(void) {}
 
-void Motobug_StaticUpdate() {}
+void Motobug_StaticUpdate(void) {}
 
-void Motobug_Draw()
+void Motobug_Draw(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -43,7 +43,7 @@ void Motobug_Create(void *data)
     }
 }
 
-void Motobug_StageLoad()
+void Motobug_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ")) {
         Motobug->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
@@ -59,17 +59,17 @@ void Motobug_StageLoad()
     DEBUGMODE_ADD_OBJ(Motobug);
 }
 
-void Motobug_DebugDraw()
+void Motobug_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
-void Motobug_DebugSpawn()
+void Motobug_DebugSpawn(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     RSDK.CreateEntity(Motobug->objectID, 0, entity->position.x, entity->position.y);
 }
-void Motobug_CheckOnScreen()
+void Motobug_CheckOnScreen(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
@@ -79,7 +79,7 @@ void Motobug_CheckOnScreen()
         Motobug_Create(NULL);
     }
 }
-void Motobug_CheckPlayerCollisions()
+void Motobug_CheckPlayerCollisions(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     EntityPlayer *player  = NULL;
@@ -88,7 +88,7 @@ void Motobug_CheckPlayerCollisions()
             Player_CheckBadnikBreak((Entity*)entity, player, true);
     }
 }
-void Motobug_State_Fall()
+void Motobug_State_Fall(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -108,7 +108,7 @@ void Motobug_State_Fall()
         Motobug_CheckOnScreen();
     }
 }
-void Motobug_State_HandleMove()
+void Motobug_State_HandleMove(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
@@ -140,7 +140,7 @@ void Motobug_State_HandleMove()
     Motobug_CheckPlayerCollisions();
     Motobug_CheckOnScreen();
 }
-void Motobug_State_Move2()
+void Motobug_State_Move2(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -171,7 +171,7 @@ void Motobug_State_Move2()
         entity->velocity.x = -entity->velocity.x;
     }
 }
-void Motobug_State_Move()
+void Motobug_State_Move(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     entity->active        = ACTIVE_NORMAL;
@@ -180,14 +180,14 @@ void Motobug_State_Move()
     entity->state         = Motobug_State_HandleMove;
     Motobug_State_HandleMove();
 }
-void Motobug_State_Smoke()
+void Motobug_State_Smoke(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
     if (entity->data.frameID == entity->data.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
-void Motobug_State_Turn()
+void Motobug_State_Turn(void)
 {
     EntityMotobug *entity = (EntityMotobug *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -220,8 +220,8 @@ void Motobug_State_Turn()
     }
 }
 
-void Motobug_EditorDraw() {}
+void Motobug_EditorDraw(void) {}
 
-void Motobug_EditorLoad() {}
+void Motobug_EditorLoad(void) {}
 
-void Motobug_Serialize() {}
+void Motobug_Serialize(void) {}

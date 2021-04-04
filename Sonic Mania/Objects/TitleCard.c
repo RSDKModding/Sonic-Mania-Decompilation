@@ -2,18 +2,18 @@
 
 ObjectTitleCard *TitleCard;
 
-void TitleCard_Update()
+void TitleCard_Update(void)
 {
     RSDK_THIS(TitleCard);
     if (entity->state)
         entity->state();
 }
 
-void TitleCard_LateUpdate() {}
+void TitleCard_LateUpdate(void) {}
 
-void TitleCard_StaticUpdate() {}
+void TitleCard_StaticUpdate(void) {}
 
-void TitleCard_Draw()
+void TitleCard_Draw(void)
 {
     RSDK_THIS(TitleCard);
     if (entity->stateDraw)
@@ -106,7 +106,7 @@ void TitleCard_Create(void *data)
     }
 }
 
-void TitleCard_StageLoad()
+void TitleCard_StageLoad(void)
 {
     TitleCard->spriteIndex = RSDK.LoadSpriteAnimation("Global/TitleCard.bin", SCOPE_STAGE);
 
@@ -116,7 +116,7 @@ void TitleCard_StageLoad()
     }
 }
 
-void TitleCard_SetColours()
+void TitleCard_SetColours(void)
 {
     RSDK_THIS(TitleCard);
 #if RETRO_USE_PLUS
@@ -139,7 +139,7 @@ void TitleCard_SetColours()
 #endif
 }
 
-void TitleCard_SetPoints()
+void TitleCard_SetPoints(void)
 {
     RSDK_THIS(TitleCard);
 
@@ -236,7 +236,7 @@ void TitleCard_SetPoints()
     entity->points9[3].y = 0xF00000;
 }
 
-void TitleCard_Unknown2()
+void TitleCard_Unknown2(void)
 {
     RSDK_THIS(TitleCard);
     if (!entity->zoneName.text)
@@ -280,11 +280,10 @@ void TitleCard_Unknown2()
     entity->field_2E8 = entity->field_2E0 - entity->field_2E4 + entity->dword2EC - 0x200000;
 }
 
-void TitleCard_Unknown3()
+void TitleCard_Unknown3(void)
 {
     RSDK_THIS(TitleCard);
 
-    int val = 0;
     if (entity->word2Offset > 0) {
         entity->points1[1].x -= 0x200000;
         if (entity->points1[1].x < entity->field_2E8 - 0x100000)
@@ -326,7 +325,7 @@ void TitleCard_Unknown3()
     }
 }
 
-void TitleCard_Unknown4()
+void TitleCard_Unknown4(void)
 {
     RSDK_THIS(TitleCard);
 
@@ -338,6 +337,8 @@ void TitleCard_Unknown4()
         charPos->y += *unknownPtr;
         if (charPos->y > 0 && *unknownPtr > 0)
             charPos->y = 0;
+        charPos++;
+        unknownPtr++;
     }
 
     if (entity->field_1C8[0].x > 0)
@@ -367,7 +368,7 @@ void TitleCard_Unknown4()
     if (entity->field_1C8[3].y < 0)
         entity->field_1C8[1].y = 0;
 }
-void TitleCard_Unknown5()
+void TitleCard_Unknown5(void)
 {
     EntityPlayer *player = NULL;
     while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
@@ -376,12 +377,16 @@ void TitleCard_Unknown5()
     }
 }
 
-void TitleCard_Unknown6(EntityPlayer *player)
+void TitleCard_Unknown6(void)
 {
     RSDK_THIS(TitleCard);
     if (ActClear && ActClear->dword34)
         ActClear->dword34 = 0;
-    Zone_ApplyWorldBounds(player);
+    
+    foreach_all(Player, player) {
+        Zone_ApplyWorldBounds(player);
+    }
+    
     if (!globals->atlEnabled && !globals->suppressTitlecard)
         RSDK.SetGameMode(ENGINESTATE_PAUSED);
 
@@ -415,10 +420,13 @@ void TitleCard_Unknown6(EntityPlayer *player)
     entity->points3[3].x -= 0x280000;
 }
 
-void TitleCard_Unknown7(EntityPlayer *player)
+void TitleCard_Unknown7(void)
 {
     RSDK_THIS(TitleCard);
-    Zone_ApplyWorldBounds(player);
+    
+    foreach_all(Player, player) {
+        Zone_ApplyWorldBounds(player);
+    }
 
     if (entity->timer >= 1024) {
         entity->state     = TitleCard_Unknown8;
@@ -430,10 +438,13 @@ void TitleCard_Unknown7(EntityPlayer *player)
     TitleCard_Unknown3();
 }
 
-void TitleCard_Unknown8(EntityPlayer *player)
+void TitleCard_Unknown8(void)
 {
     RSDK_THIS(TitleCard);
-    Zone_ApplyWorldBounds(player);
+    
+    foreach_all(Player, player) {
+        Zone_ApplyWorldBounds(player);
+    }
 
     int val = entity->points0[0].x + (entity->points0[2].x - entity->points0[0].x - 0x100000) / 6;
     if (val < entity->points0[2].x)
@@ -483,10 +494,12 @@ void TitleCard_Unknown8(EntityPlayer *player)
     if (!entity->field_1C8[1].y && entity->field_1C8[3].y < 0)
         entity->state = TitleCard_Unknown9;
 }
-void TitleCard_Unknown9(EntityPlayer *player)
+void TitleCard_Unknown9(void)
 {
     RSDK_THIS(TitleCard);
-    Zone_ApplyWorldBounds(player);
+    foreach_all(Player, player) {
+        Zone_ApplyWorldBounds(player);
+    }
     TitleCard_Unknown5();
 
     if (entity->field_60 >= 60) {
@@ -514,10 +527,12 @@ void TitleCard_Unknown9(EntityPlayer *player)
     }
 }
 
-void TitleCard_Unknown10(EntityPlayer *player)
+void TitleCard_Unknown10(void)
 {
     RSDK_THIS(TitleCard);
-    Zone_ApplyWorldBounds(player);
+    foreach_all(Player, player) {
+        Zone_ApplyWorldBounds(player);
+    }
     int speed = ++entity->field_60 << 18;
     entity->points7[0].x -= speed;
     entity->points7[0].y -= speed;
@@ -622,7 +637,7 @@ void TitleCard_Unknown10(EntityPlayer *player)
     }
 }
 
-void TitleCard_Unknown11()
+void TitleCard_Unknown11(void)
 {
     RSDK_THIS(TitleCard);
     TitleCard_Unknown5();
@@ -632,8 +647,8 @@ void TitleCard_Unknown11()
         RSDK_sceneInfo->timeEnabled = false;
 
     entity->active = ACTIVE_NEVER;
-    if (globals->suppressTitlecard && !entity->enableIntro || globals->gameMode == MODE_TIMEATTACK) {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+    if ((globals->suppressTitlecard && !entity->enableIntro) || globals->gameMode == MODE_TIMEATTACK) {
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
         globals->suppressTitlecard = false;
     }
 
@@ -641,7 +656,7 @@ void TitleCard_Unknown11()
         TitleCard->funcA();
 }
 
-void TitleCard_Unknown12()
+void TitleCard_Unknown12(void)
 {
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
@@ -687,7 +702,7 @@ void TitleCard_Unknown12()
     RSDK.DrawSprite(&entity->decorationData, &entity->decorationPos, true);
 }
 
-void TitleCard_Unknown13()
+void TitleCard_Unknown13(void)
 {
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard)
@@ -780,7 +795,7 @@ void TitleCard_Unknown13()
     }
 }
 
-void TitleCard_Unknown14()
+void TitleCard_Unknown14(void)
 {
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
@@ -851,11 +866,11 @@ void TitleCard_Unknown14()
     RSDK.DrawText(&entity->nameLetterData, &drawPos, &entity->zoneName, entity->word2Offset, 0, ALIGN_RIGHT, 1, 0, 0, true);
 }
 
-void TitleCard_EditorDraw() {}
+void TitleCard_EditorDraw(void) {}
 
-void TitleCard_EditorLoad() {}
+void TitleCard_EditorLoad(void) {}
 
-void TitleCard_Serialize()
+void TitleCard_Serialize(void)
 {
     RSDK_EDITABLE_VAR(TitleCard, VAR_STRING, zoneName);
     RSDK_EDITABLE_VAR(TitleCard, VAR_UINT8, actID);

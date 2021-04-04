@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectToxomister *Toxomister;
 
 // Standard Entity Events
-void Toxomister_Update();
-void Toxomister_LateUpdate();
-void Toxomister_StaticUpdate();
-void Toxomister_Draw();
+void Toxomister_Update(void);
+void Toxomister_LateUpdate(void);
+void Toxomister_StaticUpdate(void);
+void Toxomister_Draw(void);
 void Toxomister_Create(void* data);
-void Toxomister_StageLoad();
-void Toxomister_EditorDraw();
-void Toxomister_EditorLoad();
-void Toxomister_Serialize();
+void Toxomister_StageLoad(void);
+void Toxomister_EditorDraw(void);
+void Toxomister_EditorLoad(void);
+void Toxomister_Serialize(void);
 
 // Extra Entity Functions
 

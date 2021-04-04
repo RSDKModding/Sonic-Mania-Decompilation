@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectUIReplayCarousel *UIReplayCarousel;
 
 // Standard Entity Events
-void UIReplayCarousel_Update();
-void UIReplayCarousel_LateUpdate();
-void UIReplayCarousel_StaticUpdate();
-void UIReplayCarousel_Draw();
+void UIReplayCarousel_Update(void);
+void UIReplayCarousel_LateUpdate(void);
+void UIReplayCarousel_StaticUpdate(void);
+void UIReplayCarousel_Draw(void);
 void UIReplayCarousel_Create(void* data);
-void UIReplayCarousel_StageLoad();
-void UIReplayCarousel_EditorDraw();
-void UIReplayCarousel_EditorLoad();
-void UIReplayCarousel_Serialize();
+void UIReplayCarousel_StageLoad(void);
+void UIReplayCarousel_EditorDraw(void);
+void UIReplayCarousel_EditorLoad(void);
+void UIReplayCarousel_Serialize(void);
 
 // Extra Entity Functions
 #endif

@@ -71,7 +71,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int spinTimer;
     int speedupTimer;
     int speedupInterval;
@@ -109,31 +109,31 @@ typedef struct {
 extern ObjectBSS_Setup *BSS_Setup;
 
 // Standard Entity Events
-void BSS_Setup_Update();
-void BSS_Setup_LateUpdate();
-void BSS_Setup_StaticUpdate();
-void BSS_Setup_Draw();
+void BSS_Setup_Update(void);
+void BSS_Setup_LateUpdate(void);
+void BSS_Setup_StaticUpdate(void);
+void BSS_Setup_Draw(void);
 void BSS_Setup_Create(void *data);
-void BSS_Setup_StageLoad();
-void BSS_Setup_EditorDraw();
-void BSS_Setup_EditorLoad();
-void BSS_Setup_Serialize();
+void BSS_Setup_StageLoad(void);
+void BSS_Setup_EditorDraw(void);
+void BSS_Setup_EditorLoad(void);
+void BSS_Setup_Serialize(void);
 
 // Extra Entity Functions
-int BSS_Setup_ReloadScene();
-void BSS_Setup_SetupPalette();
-void BSS_Setup_CollectRing();
-void BSS_Setup_GetStartupInfo();
-void BSS_Setup_Finished();
-void BSS_Setup_HandleSteppedObjects();
-void BSS_Setup_HandleCollectableMovement();
-void BSS_Setup_State_FinishWalk();
-void BSS_Setup_State_PinkSphereWarp();
-void BSS_Setup_State_Exit();
-void BSS_Setup_State_HandleStage();
-void BSS_Setup_State_SpinLeft();
-void BSS_Setup_State_SpinRight();
-void BSS_Setup_State_Unknown23();
-void BSS_Setup_Unknown12();
+int BSS_Setup_ReloadScene(void);
+void BSS_Setup_SetupPalette(void);
+void BSS_Setup_CollectRing(void);
+void BSS_Setup_GetStartupInfo(void);
+void BSS_Setup_Finished(void);
+void BSS_Setup_HandleSteppedObjects(void);
+void BSS_Setup_HandleCollectableMovement(void);
+void BSS_Setup_State_FinishWalk(void);
+void BSS_Setup_State_PinkSphereWarp(void);
+void BSS_Setup_State_Exit(void);
+void BSS_Setup_State_HandleStage(void);
+void BSS_Setup_State_SpinLeft(void);
+void BSS_Setup_State_SpinRight(void);
+void BSS_Setup_State_Unknown23(void);
+void BSS_Setup_Unknown12(void);
 
 #endif //! OBJ_BSS_SETUP_H

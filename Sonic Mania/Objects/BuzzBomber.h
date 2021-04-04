@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     byte shotRange;
     int timer;
     byte field_64;
@@ -31,27 +31,27 @@ typedef struct {
 extern ObjectBuzzBomber *BuzzBomber;
 
 // Standard Entity Events
-void BuzzBomber_Update();
-void BuzzBomber_LateUpdate();
-void BuzzBomber_StaticUpdate();
-void BuzzBomber_Draw();
+void BuzzBomber_Update(void);
+void BuzzBomber_LateUpdate(void);
+void BuzzBomber_StaticUpdate(void);
+void BuzzBomber_Draw(void);
 void BuzzBomber_Create(void* data);
-void BuzzBomber_StageLoad();
-void BuzzBomber_EditorDraw();
-void BuzzBomber_EditorLoad();
-void BuzzBomber_Serialize();
+void BuzzBomber_StageLoad(void);
+void BuzzBomber_EditorDraw(void);
+void BuzzBomber_EditorLoad(void);
+void BuzzBomber_Serialize(void);
 
 // Extra Entity Functions
-void BuzzBomber_DebugDraw();
-void BuzzBomber_DebugSpawn();
+void BuzzBomber_DebugDraw(void);
+void BuzzBomber_DebugSpawn(void);
 
-void BuzzBomber_CheckOnScreen();
-void BuzzBomber_Unknown1();
-void BuzzBomber_Unknown2();
-void BuzzBomber_Unknown3();
-void BuzzBomber_Unknown4();
-void BuzzBomber_Unknown5();
-void BuzzBomber_Unknown6();
-void BuzzBomber_Unknown7();
+void BuzzBomber_CheckOnScreen(void);
+void BuzzBomber_Unknown1(void);
+void BuzzBomber_Unknown2(void);
+void BuzzBomber_Unknown3(void);
+void BuzzBomber_Unknown4(void);
+void BuzzBomber_Unknown5(void);
+void BuzzBomber_Unknown6(void);
+void BuzzBomber_Unknown7(void);
 
 #endif //!OBJ_BUZZBOMBER_H

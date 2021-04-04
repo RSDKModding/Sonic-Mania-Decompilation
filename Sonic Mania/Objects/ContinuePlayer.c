@@ -2,22 +2,22 @@
 
 ObjectContinuePlayer *ContinuePlayer;
 
-void ContinuePlayer_Update()
+void ContinuePlayer_Update(void)
 {
 
 }
 
-void ContinuePlayer_LateUpdate()
+void ContinuePlayer_LateUpdate(void)
 {
 
 }
 
-void ContinuePlayer_StaticUpdate()
+void ContinuePlayer_StaticUpdate(void)
 {
 
 }
 
-void ContinuePlayer_Draw()
+void ContinuePlayer_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void ContinuePlayer_Create(void* data)
 
 }
 
-void ContinuePlayer_StageLoad()
+void ContinuePlayer_StageLoad(void)
 {
 
 }
 
-void ContinuePlayer_EditorDraw()
+void ContinuePlayer_EditorDraw(void)
 {
 
 }
 
-void ContinuePlayer_EditorLoad()
+void ContinuePlayer_EditorLoad(void)
 {
 
 }
 
-void ContinuePlayer_Serialize()
+void ContinuePlayer_Serialize(void)
 {
 
 }

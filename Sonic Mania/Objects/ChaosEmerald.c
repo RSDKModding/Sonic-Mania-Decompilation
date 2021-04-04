@@ -2,22 +2,22 @@
 
 ObjectChaosEmerald *ChaosEmerald;
 
-void ChaosEmerald_Update()
+void ChaosEmerald_Update(void)
 {
 
 }
 
-void ChaosEmerald_LateUpdate()
+void ChaosEmerald_LateUpdate(void)
 {
 
 }
 
-void ChaosEmerald_StaticUpdate()
+void ChaosEmerald_StaticUpdate(void)
 {
 
 }
 
-void ChaosEmerald_Draw()
+void ChaosEmerald_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void ChaosEmerald_Create(void* data)
 
 }
 
-void ChaosEmerald_StageLoad()
+void ChaosEmerald_StageLoad(void)
 {
 
 }
 
-void ChaosEmerald_EditorDraw()
+void ChaosEmerald_EditorDraw(void)
 {
 
 }
 
-void ChaosEmerald_EditorLoad()
+void ChaosEmerald_EditorLoad(void)
 {
 
 }
 
-void ChaosEmerald_Serialize()
+void ChaosEmerald_Serialize(void)
 {
 
 }

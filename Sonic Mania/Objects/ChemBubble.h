@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectChemBubble *ChemBubble;
 
 // Standard Entity Events
-void ChemBubble_Update();
-void ChemBubble_LateUpdate();
-void ChemBubble_StaticUpdate();
-void ChemBubble_Draw();
+void ChemBubble_Update(void);
+void ChemBubble_LateUpdate(void);
+void ChemBubble_StaticUpdate(void);
+void ChemBubble_Draw(void);
 void ChemBubble_Create(void* data);
-void ChemBubble_StageLoad();
-void ChemBubble_EditorDraw();
-void ChemBubble_EditorLoad();
-void ChemBubble_Serialize();
+void ChemBubble_StageLoad(void);
+void ChemBubble_EditorDraw(void);
+void ChemBubble_EditorLoad(void);
+void ChemBubble_Serialize(void);
 
 // Extra Entity Functions
 

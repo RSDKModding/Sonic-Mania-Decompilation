@@ -2,7 +2,7 @@
 
 ObjectSpikes *Spikes;
 
-void Spikes_Update()
+void Spikes_Update(void)
 {
     EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
     switch (entity->dword6C) {
@@ -264,17 +264,17 @@ void Spikes_Update()
     }
 }
 
-void Spikes_LateUpdate()
+void Spikes_LateUpdate(void)
 {
 
 }
 
-void Spikes_StaticUpdate()
+void Spikes_StaticUpdate(void)
 {
 
 }
 
-void Spikes_Draw()
+void Spikes_Draw(void)
 {
     if (Spikes->stateDraw)
         Spikes->stateDraw();
@@ -344,7 +344,7 @@ void Spikes_Create(void* data)
     }
 }
 
-void Spikes_StageLoad()
+void Spikes_StageLoad(void)
 {
     Spikes->stateDraw = Spikes_StateDraw_Stage;
     if (RSDK.CheckStageFolder("FBZ")) {
@@ -365,7 +365,7 @@ void Spikes_StageLoad()
     Spikes->sfx_Spike = RSDK.GetSFX("Global/Spike.wav");
 }
 
-void Spikes_StateDraw_Global()
+void Spikes_StateDraw_Global(void)
 {
     Vector2 drawPos;
 
@@ -407,7 +407,7 @@ void Spikes_StateDraw_Global()
     entity->inkEffect = INK_NONE;
 }
 
-void Spikes_StateDraw_Stage()
+void Spikes_StateDraw_Stage(void)
 {
     Vector2 drawPos;
 
@@ -449,7 +449,7 @@ void Spikes_Unknown1(int a1, int a2)
     EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
     //RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
     //Ice_Unknown6(16, a1, a2, 0);
-    RSDK.ResetEntityPtr(entity, 0, 0);
+    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
 {
@@ -591,17 +591,17 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
     }
 }
 
-void Spikes_EditorDraw()
+void Spikes_EditorDraw(void)
 {
 
 }
 
-void Spikes_EditorLoad()
+void Spikes_EditorLoad(void)
 {
 
 }
 
-void Spikes_Serialize()
+void Spikes_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Spikes, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Spikes, VAR_BOOL, moving);

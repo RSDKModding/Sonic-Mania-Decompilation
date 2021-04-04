@@ -34,18 +34,18 @@ typedef struct {
 extern ObjectUIWidgets *UIWidgets;
 
 // Standard Entity Events
-void UIWidgets_Update();
-void UIWidgets_LateUpdate();
-void UIWidgets_StaticUpdate();
-void UIWidgets_Draw();
+void UIWidgets_Update(void);
+void UIWidgets_LateUpdate(void);
+void UIWidgets_StaticUpdate(void);
+void UIWidgets_Draw(void);
 void UIWidgets_Create(void* data);
-void UIWidgets_StageLoad();
-void UIWidgets_EditorDraw();
-void UIWidgets_EditorLoad();
-void UIWidgets_Serialize();
+void UIWidgets_StageLoad(void);
+void UIWidgets_EditorDraw(void);
+void UIWidgets_EditorLoad(void);
+void UIWidgets_Serialize(void);
 
 // Extra Entity Functions
-void UIWidgets_ApplyLanguage();
+void UIWidgets_ApplyLanguage(void);
 
 void UIWidgets_Unknown2(int a1, int a2, int a3, int a4);
 void UIWidgets_Unknown3(int a1, int a2, int a3, int a4);

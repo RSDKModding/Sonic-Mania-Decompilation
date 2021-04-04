@@ -2,22 +2,22 @@
 
 ObjectCrane *Crane;
 
-void Crane_Update()
+void Crane_Update(void)
 {
 
 }
 
-void Crane_LateUpdate()
+void Crane_LateUpdate(void)
 {
 
 }
 
-void Crane_StaticUpdate()
+void Crane_StaticUpdate(void)
 {
 
 }
 
-void Crane_Draw()
+void Crane_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Crane_Create(void* data)
 
 }
 
-void Crane_StageLoad()
+void Crane_StageLoad(void)
 {
 
 }
 
-void Crane_EditorDraw()
+void Crane_EditorDraw(void)
 {
 
 }
 
-void Crane_EditorLoad()
+void Crane_EditorLoad(void)
 {
 
 }
 
-void Crane_Serialize()
+void Crane_Serialize(void)
 {
 
 }

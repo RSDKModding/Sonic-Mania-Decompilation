@@ -2,9 +2,9 @@
 
 ObjectCutsceneSeq *CutsceneSeq;
 
-void CutsceneSeq_Update() {}
+void CutsceneSeq_Update(void) {}
 
-void CutsceneSeq_LateUpdate()
+void CutsceneSeq_LateUpdate(void)
 {
     EntityCutsceneSeq *entity = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
     entity->currentState      = (bool32(*)(Entity *))entity->cutsceneStates[entity->stateID];
@@ -39,9 +39,9 @@ void CutsceneSeq_LateUpdate()
     }
 }
 
-void CutsceneSeq_StaticUpdate() {}
+void CutsceneSeq_StaticUpdate(void) {}
 
-void CutsceneSeq_Draw()
+void CutsceneSeq_Draw(void)
 {
     EntityCutsceneSeq *entity = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
 
@@ -83,7 +83,7 @@ void CutsceneSeq_Create(void *data)
     CutsceneSeq_CheckSkip(entity->skipState, entity, entity->skipCallback);
 }
 
-void CutsceneSeq_StageLoad() {}
+void CutsceneSeq_StageLoad(void) {}
 
 Entity *CutsceneSeq_GetEntity(int type)
 {
@@ -95,7 +95,7 @@ Entity *CutsceneSeq_GetEntity(int type)
     return NULL;
 }
 
-void CutsceneSeq_LockAllPlayerControl()
+void CutsceneSeq_LockAllPlayerControl(void)
 {
     for (int i = 0; i < Player->playerCount; ++i) {
         CutsceneSeq_LockPlayerControl(RSDK.GetEntityByID(i));
@@ -118,7 +118,7 @@ void CutsceneSeq_LockPlayerControl(void *plr)
     Player->jumpHoldState  = 0;
 }
 
-void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*skipCallback)())
+void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*skipCallback)(void))
 {
     if (skipState && RSDK_controller->keyStart.press && RSDK_sceneInfo->state & 1) {
         if (skipState == 2) {
@@ -189,8 +189,8 @@ void CutsceneSeq_StartSequence(Entity *host, void *states)
     Game_Print("Starting sequence with %d states", id);
 }
 
-void CutsceneSeq_EditorDraw() {}
+void CutsceneSeq_EditorDraw(void) {}
 
-void CutsceneSeq_EditorLoad() {}
+void CutsceneSeq_EditorLoad(void) {}
 
-void CutsceneSeq_Serialize() {}
+void CutsceneSeq_Serialize(void) {}

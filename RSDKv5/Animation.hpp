@@ -72,11 +72,10 @@ inline ushort GetAnimation(ushort sprIndex, const char *name)
     SpriteAnimation *spr = &spriteAnimationList[sprIndex];
 
     uint hash[4];
-    StrCopy(hashBuffer, name);
-    GenerateHash(hash, StrLength(name));
+    GEN_HASH(name, hash);
 
     for (int a = 0; a < spr->animCount; ++a) {
-        if (memcmp(hash, spr->animations[a].hash, 4 * sizeof(uint)) == 0) {
+        if (HASH_MATCH(hash, spr->animations[a].hash)) {
             return a;
         }
     }

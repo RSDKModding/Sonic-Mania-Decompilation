@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBubbler *Bubbler;
 
 // Standard Entity Events
-void Bubbler_Update();
-void Bubbler_LateUpdate();
-void Bubbler_StaticUpdate();
-void Bubbler_Draw();
+void Bubbler_Update(void);
+void Bubbler_LateUpdate(void);
+void Bubbler_StaticUpdate(void);
+void Bubbler_Draw(void);
 void Bubbler_Create(void* data);
-void Bubbler_StageLoad();
-void Bubbler_EditorDraw();
-void Bubbler_EditorLoad();
-void Bubbler_Serialize();
+void Bubbler_StageLoad(void);
+void Bubbler_EditorDraw(void);
+void Bubbler_EditorLoad(void);
+void Bubbler_Serialize(void);
 
 // Extra Entity Functions
 

@@ -34,7 +34,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     int delay;
     int type;
     int behaviour;
@@ -46,23 +46,23 @@ typedef struct {
 extern ObjectAnimals *Animals;
 
 // Standard Entity Events
-void Animals_Update();
-void Animals_LateUpdate();
-void Animals_StaticUpdate();
-void Animals_Draw();
+void Animals_Update(void);
+void Animals_LateUpdate(void);
+void Animals_StaticUpdate(void);
+void Animals_Draw(void);
 void Animals_Create(void* data);
-void Animals_StageLoad();
-void Animals_EditorDraw();
-void Animals_EditorLoad();
-void Animals_Serialize();
+void Animals_StageLoad(void);
+void Animals_EditorDraw(void);
+void Animals_EditorLoad(void);
+void Animals_Serialize(void);
 
 // Extra Entity Functions
-void Animals_CheckPlayerPos();
+void Animals_CheckPlayerPos(void);
 bool32 Animals_CheckPlatformCollision(void *plat);
-bool32 Animals_CheckGroundCollision();
+bool32 Animals_CheckGroundCollision(void);
 
-void Animals_State_Freed();
-void Animals_State_FollowPlayer_Normal();
-void Animals_State_FollowPlayer_Bird();
-void Animals_State_BounceAround();
+void Animals_State_Freed(void);
+void Animals_State_FollowPlayer_Normal(void);
+void Animals_State_FollowPlayer_Bird(void);
+void Animals_State_BounceAround(void);
 #endif //!OBJ_ANIMALS_H

@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int timer;
     Vector2 startPos;
     AnimationData data1;
@@ -26,20 +26,20 @@ typedef struct {
 extern ObjectTitleEggman *TitleEggman;
 
 // Standard Entity Events
-void TitleEggman_Update();
-void TitleEggman_LateUpdate();
-void TitleEggman_StaticUpdate();
-void TitleEggman_Draw();
+void TitleEggman_Update(void);
+void TitleEggman_LateUpdate(void);
+void TitleEggman_StaticUpdate(void);
+void TitleEggman_Draw(void);
 void TitleEggman_Create(void* data);
-void TitleEggman_StageLoad();
-void TitleEggman_EditorDraw();
-void TitleEggman_EditorLoad();
-void TitleEggman_Serialize();
+void TitleEggman_StageLoad(void);
+void TitleEggman_EditorDraw(void);
+void TitleEggman_EditorLoad(void);
+void TitleEggman_Serialize(void);
 
 // Extra Entity Functions
-void TitleEggman_Unknown1();
-void TitleEggman_Unknown2();
-void TitleEggman_Unknown3();
+void TitleEggman_Unknown1(void);
+void TitleEggman_Unknown2(void);
+void TitleEggman_Unknown3(void);
 #endif
 
 #endif //!OBJ_TITLEEGGMAN_H

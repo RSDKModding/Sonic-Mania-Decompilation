@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectShiversaw *Shiversaw;
 
 // Standard Entity Events
-void Shiversaw_Update();
-void Shiversaw_LateUpdate();
-void Shiversaw_StaticUpdate();
-void Shiversaw_Draw();
+void Shiversaw_Update(void);
+void Shiversaw_LateUpdate(void);
+void Shiversaw_StaticUpdate(void);
+void Shiversaw_Draw(void);
 void Shiversaw_Create(void* data);
-void Shiversaw_StageLoad();
-void Shiversaw_EditorDraw();
-void Shiversaw_EditorLoad();
-void Shiversaw_Serialize();
+void Shiversaw_StageLoad(void);
+void Shiversaw_EditorDraw(void);
+void Shiversaw_EditorLoad(void);
+void Shiversaw_Serialize(void);
 
 // Extra Entity Functions
 

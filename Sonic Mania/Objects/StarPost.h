@@ -23,7 +23,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int id;
     bool32 vsRemove;
     int ballSpeed;
@@ -45,23 +45,23 @@ typedef struct {
 extern ObjectStarPost *StarPost;
 
 // Standard Entity Events
-void StarPost_Update();
-void StarPost_LateUpdate();
-void StarPost_StaticUpdate();
-void StarPost_Draw();
+void StarPost_Update(void);
+void StarPost_LateUpdate(void);
+void StarPost_StaticUpdate(void);
+void StarPost_Draw(void);
 void StarPost_Create(void* data);
-void StarPost_StageLoad();
-void StarPost_EditorDraw();
-void StarPost_EditorLoad();
-void StarPost_Serialize();
+void StarPost_StageLoad(void);
+void StarPost_EditorDraw(void);
+void StarPost_EditorLoad(void);
+void StarPost_Serialize(void);
 
 // Extra Entity Functions
-void StarPost_DebugDraw();
-void StarPost_DebugSpawn();
-void StarPost_ResetStarPosts();
-void StarPost_CheckBonusStageEntry();
-void StarPost_CheckCollisions();
-void StarPost_State_Idle();
-void StarPost_State_BallSpin();
+void StarPost_DebugDraw(void);
+void StarPost_DebugSpawn(void);
+void StarPost_ResetStarPosts(void);
+void StarPost_CheckBonusStageEntry(void);
+void StarPost_CheckCollisions(void);
+void StarPost_State_Idle(void);
+void StarPost_State_BallSpin(void);
 
 #endif //!OBJ_STARPOST_H

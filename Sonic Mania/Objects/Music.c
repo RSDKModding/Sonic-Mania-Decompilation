@@ -2,18 +2,18 @@
 
 ObjectMusic *Music;
 
-void Music_Update()
+void Music_Update(void)
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void Music_LateUpdate() {}
+void Music_LateUpdate(void) {}
 
-void Music_StaticUpdate() {}
+void Music_StaticUpdate(void) {}
 
-void Music_Draw() {}
+void Music_Draw(void) {}
 
 void Music_Create(void *data)
 {
@@ -33,7 +33,7 @@ void Music_Create(void *data)
     }
 }
 
-void Music_StageLoad()
+void Music_StageLoad(void)
 {
     //Slot 0: stage music
     Music_SetMusicTrack("Invincible.ogg", TRACK_INVINCIBLE, 139263);
@@ -83,7 +83,7 @@ void Music_SetMusicTrack(const char *path, byte track, uint loopPoint)
     Music->trackLoops[track]         = loopPoint;
 }
 
-void Music_State_PlayMusic()
+void Music_State_PlayMusic(void)
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
     if (globals->suppressAutoMusic) {
@@ -283,7 +283,7 @@ void Music_Unknown3(EntityMusic *entity)
             music->field_80 = 10;
     }
 }
-bool32 Music_Unknown4()
+bool32 Music_Unknown4(void)
 {
     bool32 flag = false;
     for (int slot = 40; slot < 48; ++slot) {
@@ -415,10 +415,10 @@ void Music_Unknown7(EntityMusic *entity)
         }
     }
 }
-void Music_RemoveStoredEntities()
+void Music_RemoveStoredEntities(void)
 {
     for (int slot = 40; slot < 48; ++slot) {
-        RSDK.ResetEntityPtr(RSDK.GetEntityByID(slot), 0, 0);
+        RSDK.ResetEntityPtr(RSDK.GetEntityByID(slot), TYPE_BLANK, NULL);
     }
 }
 
@@ -481,7 +481,7 @@ void Music_FadeOut(float fadeSpeed)
         music->fadeSpeed = fadeSpeed;
     }
 }
-void Music_State_Unknown11()
+void Music_State_Unknown11(void)
 {
     RSDK_THIS(Music);
     if (Music->activeTrack == entity->trackID && RSDK.GetChannelPos(Music->slotID) > entity->field_84) {
@@ -500,7 +500,7 @@ void Music_State_Unknown11()
             Music_Unknown7(entity);
     }
 }
-void Music_State_Unknown12()
+void Music_State_Unknown12(void)
 {
     RSDK_THIS(Music);
     if (entity->volume > -0.5) {
@@ -511,7 +511,7 @@ void Music_State_Unknown12()
             Music_Unknown7(entity);
     }
 }
-void Music_State_Unknown13()
+void Music_State_Unknown13(void)
 {
     RSDK_THIS(Music);
     if (RSDK.GetChannelPos(Music->slotID) > Music->dword244) {
@@ -524,7 +524,7 @@ void Music_State_Unknown13()
         }
     }
 }
-void Music_State_FadeOut()
+void Music_State_FadeOut(void)
 {
     RSDK_THIS(Music);
     entity->volume -= entity->fadeSpeed;
@@ -535,7 +535,7 @@ void Music_State_FadeOut()
     }
 }
 
-void Music_State_TransitionTrack()
+void Music_State_TransitionTrack(void)
 {
     EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
     entity->volume -= entity->fadeSpeed;
@@ -554,11 +554,11 @@ void Music_State_TransitionTrack()
     }
 }
 
-void Music_EditorDraw() {}
+void Music_EditorDraw(void) {}
 
-void Music_EditorLoad() {}
+void Music_EditorLoad(void) {}
 
-void Music_Serialize()
+void Music_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Music, VAR_STRING, trackFile);
     RSDK_EDITABLE_VAR(Music, VAR_STRING, soundTestTitle);

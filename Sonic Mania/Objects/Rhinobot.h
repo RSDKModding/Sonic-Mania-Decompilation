@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectRhinobot *Rhinobot;
 
 // Standard Entity Events
-void Rhinobot_Update();
-void Rhinobot_LateUpdate();
-void Rhinobot_StaticUpdate();
-void Rhinobot_Draw();
+void Rhinobot_Update(void);
+void Rhinobot_LateUpdate(void);
+void Rhinobot_StaticUpdate(void);
+void Rhinobot_Draw(void);
 void Rhinobot_Create(void* data);
-void Rhinobot_StageLoad();
-void Rhinobot_EditorDraw();
-void Rhinobot_EditorLoad();
-void Rhinobot_Serialize();
+void Rhinobot_StageLoad(void);
+void Rhinobot_EditorDraw(void);
+void Rhinobot_EditorLoad(void);
+void Rhinobot_Serialize(void);
 
 // Extra Entity Functions
 #endif

@@ -2,7 +2,7 @@
 
 ObjectAnimalHBH *AnimalHBH;
 
-void AnimalHBH_Update()
+void AnimalHBH_Update(void)
 {
     EntityAnimalHBH *entity = (EntityAnimalHBH *)RSDK_sceneInfo->entity;
     entity->position.x -= 0x10000;
@@ -33,17 +33,17 @@ void AnimalHBH_Update()
     }
 }
 
-void AnimalHBH_LateUpdate()
+void AnimalHBH_LateUpdate(void)
 {
 
 }
 
-void AnimalHBH_StaticUpdate()
+void AnimalHBH_StaticUpdate(void)
 {
 
 }
 
-void AnimalHBH_Draw()
+void AnimalHBH_Draw(void)
 {
     EntityAnimalHBH *entity = (EntityAnimalHBH *)RSDK_sceneInfo->entity;
     Vector2 drawPos;
@@ -74,7 +74,7 @@ void AnimalHBH_Create(void* data)
     }
 }
 
-void AnimalHBH_StageLoad()
+void AnimalHBH_StageLoad(void)
 {
     AnimalHBH->animalHBHSprite  = RSDK.LoadSpriteAnimation("Credits/AnimalHBH.bin", SCOPE_STAGE);
     AnimalHBH->silhouetteSprite = RSDK.LoadSpriteAnimation("Credits/Silhouettes.bin", SCOPE_STAGE);
@@ -82,15 +82,15 @@ void AnimalHBH_StageLoad()
     AnimalHBH->palCnt           = 0;
 }
 
-void AnimalHBH_EditorDraw()
+void AnimalHBH_EditorDraw(void)
 {
 
 }
 
-void AnimalHBH_EditorLoad()
+void AnimalHBH_EditorLoad(void)
 {
 
 }
 
-void AnimalHBH_Serialize() { RSDK_EDITABLE_VAR(AnimalHBH, VAR_UINT8, type); }
+void AnimalHBH_Serialize(void) { RSDK_EDITABLE_VAR(AnimalHBH, VAR_UINT8, type); }
 

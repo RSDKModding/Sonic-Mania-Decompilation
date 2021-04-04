@@ -2,7 +2,7 @@
 
 ObjectInk *Ink;
 
-void Ink_Update()
+void Ink_Update(void)
 {
     RSDK_THIS(Ink);
     RSDK.ProcessAnimation(&entity->data3);
@@ -30,11 +30,11 @@ void Ink_Update()
     }
 }
 
-void Ink_LateUpdate() {}
+void Ink_LateUpdate(void) {}
 
-void Ink_StaticUpdate() {}
+void Ink_StaticUpdate(void) {}
 
-void Ink_Draw()
+void Ink_Draw(void)
 {
     RSDK_THIS(Ink);
     RSDK_sceneInfo->entity->inkEffect = INK_SUB;
@@ -59,7 +59,7 @@ void Ink_Create(void *data)
     }
 }
 
-void Ink_StageLoad()
+void Ink_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         Ink->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/Ink.bin", SCOPE_STAGE);
@@ -78,8 +78,8 @@ void Ink_StageLoad()
     for (int p = 0; p < 4; ++p) Ink->playerTypes[p] = 0;
 }
 
-void Ink_EditorDraw() {}
+void Ink_EditorDraw(void) {}
 
-void Ink_EditorLoad() {}
+void Ink_EditorLoad(void) {}
 
-void Ink_Serialize() { RSDK_EDITABLE_VAR(Ink, VAR_UINT8, type); }
+void Ink_Serialize(void) { RSDK_EDITABLE_VAR(Ink, VAR_UINT8, type); }

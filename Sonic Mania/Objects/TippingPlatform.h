@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTippingPlatform *TippingPlatform;
 
 // Standard Entity Events
-void TippingPlatform_Update();
-void TippingPlatform_LateUpdate();
-void TippingPlatform_StaticUpdate();
-void TippingPlatform_Draw();
+void TippingPlatform_Update(void);
+void TippingPlatform_LateUpdate(void);
+void TippingPlatform_StaticUpdate(void);
+void TippingPlatform_Draw(void);
 void TippingPlatform_Create(void* data);
-void TippingPlatform_StageLoad();
-void TippingPlatform_EditorDraw();
-void TippingPlatform_EditorLoad();
-void TippingPlatform_Serialize();
+void TippingPlatform_StageLoad(void);
+void TippingPlatform_EditorDraw(void);
+void TippingPlatform_EditorLoad(void);
+void TippingPlatform_Serialize(void);
 
 // Extra Entity Functions
 

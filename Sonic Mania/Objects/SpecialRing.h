@@ -17,7 +17,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int id;
     int planeFilter;
     int warpTimer;
@@ -36,22 +36,22 @@ typedef struct {
 extern ObjectSpecialRing *SpecialRing;
 
 // Standard Entity Events
-void SpecialRing_Update();
-void SpecialRing_LateUpdate();
-void SpecialRing_StaticUpdate();
-void SpecialRing_Draw();
+void SpecialRing_Update(void);
+void SpecialRing_LateUpdate(void);
+void SpecialRing_StaticUpdate(void);
+void SpecialRing_Draw(void);
 void SpecialRing_Create(void* data);
-void SpecialRing_StageLoad();
-void SpecialRing_EditorDraw();
-void SpecialRing_EditorLoad();
-void SpecialRing_Serialize();
+void SpecialRing_StageLoad(void);
+void SpecialRing_EditorDraw(void);
+void SpecialRing_EditorLoad(void);
+void SpecialRing_Serialize(void);
 
 // Extra Entity Functions
-void SpecialRing_DebugDraw();
-void SpecialRing_DebugSpawn();
+void SpecialRing_DebugDraw(void);
+void SpecialRing_DebugSpawn(void);
 
-void SpecialRing_StartWarp();
-void SpecialRing_State_Warp();
-void SpecialRing_State_Normal();
+void SpecialRing_StartWarp(void);
+void SpecialRing_State_Warp(void);
+void SpecialRing_State_Normal(void);
 
 #endif //!OBJ_SPECIALRING_H

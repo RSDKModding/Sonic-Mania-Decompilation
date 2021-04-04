@@ -2,22 +2,22 @@
 
 ObjectCaterkiller *Caterkiller = NULL;
 
-void Caterkiller_Update()
+void Caterkiller_Update(void)
 {
 
 }
 
-void Caterkiller_LateUpdate()
+void Caterkiller_LateUpdate(void)
 {
 
 }
 
-void Caterkiller_StaticUpdate()
+void Caterkiller_StaticUpdate(void)
 {
 
 }
 
-void Caterkiller_Draw()
+void Caterkiller_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Caterkiller_Create(void* data)
 
 }
 
-void Caterkiller_StageLoad()
+void Caterkiller_StageLoad(void)
 {
 
 }
 
-void Caterkiller_EditorDraw()
+void Caterkiller_EditorDraw(void)
 {
 
 }
 
-void Caterkiller_EditorLoad()
+void Caterkiller_EditorLoad(void)
 {
 
 }
 
-void Caterkiller_Serialize()
+void Caterkiller_Serialize(void)
 {
 
 }

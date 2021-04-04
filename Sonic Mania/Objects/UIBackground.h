@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int type;
     int timer;
     int field_64;
@@ -29,17 +29,17 @@ typedef struct {
 extern ObjectUIBackground *UIBackground;
 
 // Standard Entity Events
-void UIBackground_Update();
-void UIBackground_LateUpdate();
-void UIBackground_StaticUpdate();
-void UIBackground_Draw();
+void UIBackground_Update(void);
+void UIBackground_LateUpdate(void);
+void UIBackground_StaticUpdate(void);
+void UIBackground_Draw(void);
 void UIBackground_Create(void* data);
-void UIBackground_StageLoad();
-void UIBackground_EditorDraw();
-void UIBackground_EditorLoad();
-void UIBackground_Serialize();
+void UIBackground_StageLoad(void);
+void UIBackground_EditorDraw(void);
+void UIBackground_EditorLoad(void);
+void UIBackground_Serialize(void);
 
 // Extra Entity Functions
-void UIBackground_DrawNormal();
+void UIBackground_DrawNormal(void);
 
 #endif //!OBJ_UIBACKGROUND_H

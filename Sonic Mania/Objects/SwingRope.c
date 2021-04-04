@@ -2,7 +2,7 @@
 
 ObjectSwingRope *SwingRope;
 
-void SwingRope_Update()
+void SwingRope_Update(void)
 {
     RSDK_THIS(SwingRope);
     int sine              = 11 * RSDK.Sin512(entity->angleOffset + 3 * Zone->timer);
@@ -87,11 +87,11 @@ void SwingRope_Update()
     entity->position.y = storeY;
 }
 
-void SwingRope_LateUpdate() {}
+void SwingRope_LateUpdate(void) {}
 
-void SwingRope_StaticUpdate() {}
+void SwingRope_StaticUpdate(void) {}
 
-void SwingRope_Draw()
+void SwingRope_Draw(void)
 {
     RSDK_THIS(SwingRope);
 
@@ -137,7 +137,7 @@ void SwingRope_Create(void *data)
     }
 }
 
-void SwingRope_StageLoad()
+void SwingRope_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ")) {
         SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
@@ -158,23 +158,23 @@ void SwingRope_StageLoad()
     DEBUGMODE_ADD_OBJ(SwingRope);
 }
 
-void SwingRope_DebugDraw()
+void SwingRope_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
-void SwingRope_DebugSpawn()
+void SwingRope_DebugSpawn(void)
 {
     RSDK_THIS(SwingRope);
     EntitySwingRope *rope = (EntitySwingRope *)RSDK.CreateEntity(SwingRope->objectID, NULL, entity->position.x, entity->position.y);
     rope->ropeSize        = 6;
 }
 
-void SwingRope_EditorDraw() {}
+void SwingRope_EditorDraw(void) {}
 
-void SwingRope_EditorLoad() {}
+void SwingRope_EditorLoad(void) {}
 
-void SwingRope_Serialize()
+void SwingRope_Serialize(void)
 {
     RSDK_EDITABLE_VAR(SwingRope, VAR_UINT8, ropeSize);
     RSDK_EDITABLE_VAR(SwingRope, VAR_ENUM, angleOffset);

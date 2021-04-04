@@ -2,22 +2,22 @@
 
 ObjectLottoMachine *LottoMachine;
 
-void LottoMachine_Update()
+void LottoMachine_Update(void)
 {
 
 }
 
-void LottoMachine_LateUpdate()
+void LottoMachine_LateUpdate(void)
 {
 
 }
 
-void LottoMachine_StaticUpdate()
+void LottoMachine_StaticUpdate(void)
 {
 
 }
 
-void LottoMachine_Draw()
+void LottoMachine_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void LottoMachine_Create(void* data)
 
 }
 
-void LottoMachine_StageLoad()
+void LottoMachine_StageLoad(void)
 {
 
 }
 
-void LottoMachine_EditorDraw()
+void LottoMachine_EditorDraw(void)
 {
 
 }
 
-void LottoMachine_EditorLoad()
+void LottoMachine_EditorLoad(void)
 {
 
 }
 
-void LottoMachine_Serialize()
+void LottoMachine_Serialize(void)
 {
 
 }

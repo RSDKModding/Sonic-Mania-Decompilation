@@ -21,15 +21,15 @@ typedef struct {
 extern ObjectBSS_HUD *BSS_HUD;
 
 // Standard Entity Events
-void BSS_HUD_Update();
-void BSS_HUD_LateUpdate();
-void BSS_HUD_StaticUpdate();
-void BSS_HUD_Draw();
+void BSS_HUD_Update(void);
+void BSS_HUD_LateUpdate(void);
+void BSS_HUD_StaticUpdate(void);
+void BSS_HUD_Draw(void);
 void BSS_HUD_Create(void* data);
-void BSS_HUD_StageLoad();
-void BSS_HUD_EditorDraw();
-void BSS_HUD_EditorLoad();
-void BSS_HUD_Serialize();
+void BSS_HUD_StageLoad(void);
+void BSS_HUD_EditorDraw(void);
+void BSS_HUD_EditorLoad(void);
+void BSS_HUD_Serialize(void);
 
 // Extra Entity Functions
 void BSS_HUD_DrawNumbers(int value, Vector2 *drawPos);

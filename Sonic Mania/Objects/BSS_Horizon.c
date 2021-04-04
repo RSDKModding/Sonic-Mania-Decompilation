@@ -2,22 +2,22 @@
 
 ObjectBSS_Horizon *BSS_Horizon;
 
-void BSS_Horizon_Update()
+void BSS_Horizon_Update(void)
 {
 
 }
 
-void BSS_Horizon_LateUpdate()
+void BSS_Horizon_LateUpdate(void)
 {
 
 }
 
-void BSS_Horizon_StaticUpdate()
+void BSS_Horizon_StaticUpdate(void)
 {
 
 }
 
-void BSS_Horizon_Draw()
+void BSS_Horizon_Draw(void)
 {
     Vector2 drawPos; 
     drawPos.y                   = 0;
@@ -54,23 +54,23 @@ void BSS_Horizon_Create(void* data)
     }
 }
 
-void BSS_Horizon_StageLoad()
+void BSS_Horizon_StageLoad(void)
 {
     BSS_Horizon->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, 0);
 }
 
-void BSS_Horizon_EditorDraw()
+void BSS_Horizon_EditorDraw(void)
 {
 
 }
 
-void BSS_Horizon_EditorLoad()
+void BSS_Horizon_EditorLoad(void)
 {
 
 }
 
-void BSS_Horizon_Serialize()
+void BSS_Horizon_Serialize(void)
 {
 
 }

@@ -1,7 +1,7 @@
 #ifndef LINK_H
 #define LINK_H
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define FUNCTABLE_COUNT  (180)
 #define UDATATABLE_COUNT (59)
 #else
@@ -9,11 +9,11 @@
 #endif
 
 extern void *RSDKFunctionTable[FUNCTABLE_COUNT];
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 extern void *userFunctionTable[UDATATABLE_COUNT];
 #endif
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 struct SKUInfo {
     int platform;
     int language;
@@ -353,24 +353,24 @@ extern EngineInfo engineInfo;
 
 struct GameInfo {
     void *functionPtrs;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void *userdataPtrs;
     char *gameName;
     SKUInfo *currentSKU;
 #endif
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     EngineInfo *engineInfo;
 #endif
     SceneInfo *sceneInfo;
     ControllerState *controller;
     AnalogState *stickL;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     AnalogState *stickR;
     TriggerState *triggerL;
     TriggerState *triggerR;
 #endif
     TouchMouseData *touchMouse;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     void *unknown;
 #endif
     ScreenInfo *screenInfo;

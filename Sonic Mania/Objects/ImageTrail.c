@@ -2,9 +2,9 @@
 
 ObjectImageTrail *ImageTrail;
 
-void ImageTrail_Update() {}
+void ImageTrail_Update(void) {}
 
-void ImageTrail_LateUpdate()
+void ImageTrail_LateUpdate(void)
 {
     RSDK_THIS(ImageTrail);
     EntityPlayer *player = (EntityPlayer *)entity->player;
@@ -14,7 +14,7 @@ void ImageTrail_LateUpdate()
         entity->baseAlpha = 0x100;
     }
     else {
-        if (false /*player->state == Player_State_HammerDrop*/) {
+        if (player->state == Player_State_MightyHammerDrop) {
             entity->fadeoutTimer = 0x10;
         }
         else {
@@ -78,9 +78,9 @@ void ImageTrail_LateUpdate()
     }
 }
 
-void ImageTrail_StaticUpdate() {}
+void ImageTrail_StaticUpdate(void) {}
 
-void ImageTrail_Draw()
+void ImageTrail_Draw(void)
 {
     RSDK_THIS(ImageTrail);
     int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
@@ -124,10 +124,10 @@ void ImageTrail_Create(void *data)
     }
 }
 
-void ImageTrail_StageLoad() {}
+void ImageTrail_StageLoad(void) {}
 
-void ImageTrail_EditorDraw() {}
+void ImageTrail_EditorDraw(void) {}
 
-void ImageTrail_EditorLoad() {}
+void ImageTrail_EditorLoad(void) {}
 
-void ImageTrail_Serialize() {}
+void ImageTrail_Serialize(void) {}

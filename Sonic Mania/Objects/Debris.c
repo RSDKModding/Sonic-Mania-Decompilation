@@ -2,7 +2,7 @@
 
 ObjectDebris *Debris;
 
-void Debris_Update()
+void Debris_Update(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     if (entity->cooldown <= 0) {
@@ -29,17 +29,17 @@ void Debris_Update()
     }
 }
 
-void Debris_LateUpdate()
+void Debris_LateUpdate(void)
 {
 
 }
 
-void Debris_StaticUpdate()
+void Debris_StaticUpdate(void)
 {
 
 }
 
-void Debris_Draw()
+void Debris_Draw(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -53,12 +53,12 @@ void Debris_Create(void* data)
     entity->state        = (void (*)(void))data;
 }
 
-void Debris_StageLoad()
+void Debris_StageLoad(void)
 {
 
 }
 
-void Debris_State_Fall()
+void Debris_State_Fall(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
@@ -77,7 +77,7 @@ void Debris_State_Fall()
     }
 }
 
-void Debris_State_LightningSpark()
+void Debris_State_LightningSpark(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
 
@@ -95,7 +95,7 @@ void Debris_State_LightningSpark()
     }
 }
 
-void Debris_State_Unknkown()
+void Debris_State_Unknkown(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
@@ -174,17 +174,17 @@ void Debris_Unknkown2(int spriteIndex, int *a2)
     }
 }
 
-void Debris_EditorDraw()
+void Debris_EditorDraw(void)
 {
 
 }
 
-void Debris_EditorLoad()
+void Debris_EditorLoad(void)
 {
 
 }
 
-void Debris_Serialize()
+void Debris_Serialize(void)
 {
 
 }

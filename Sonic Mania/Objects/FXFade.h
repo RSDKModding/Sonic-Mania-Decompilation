@@ -11,7 +11,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int timer;
     int speedIn;
     int wait;
@@ -28,21 +28,21 @@ typedef struct {
 extern ObjectFXFade *FXFade;
 
 // Standard Entity Events
-void FXFade_Update();
-void FXFade_LateUpdate();
-void FXFade_StaticUpdate();
-void FXFade_Draw();
+void FXFade_Update(void);
+void FXFade_LateUpdate(void);
+void FXFade_StaticUpdate(void);
+void FXFade_Draw(void);
 void FXFade_Create(void* data);
-void FXFade_StageLoad();
-void FXFade_EditorDraw();
-void FXFade_EditorLoad();
-void FXFade_Serialize();
+void FXFade_StageLoad(void);
+void FXFade_EditorDraw(void);
+void FXFade_EditorLoad(void);
+void FXFade_Serialize(void);
 
 // Extra Entity Functions
-void FXFade_StopAll();
-void FXFade_State_FadeIn();
-void FXFade_State_Wait();
-void FXFade_State_FadeOut();
-void FXFade_State_FadeOutBlack();
+void FXFade_StopAll(void);
+void FXFade_State_FadeIn(void);
+void FXFade_State_Wait(void);
+void FXFade_State_FadeOut(void);
+void FXFade_State_FadeOutBlack(void);
 
 #endif //!OBJ_FXFADE_H

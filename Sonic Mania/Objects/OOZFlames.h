@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectOOZFlames *OOZFlames;
 
 // Standard Entity Events
-void OOZFlames_Update();
-void OOZFlames_LateUpdate();
-void OOZFlames_StaticUpdate();
-void OOZFlames_Draw();
+void OOZFlames_Update(void);
+void OOZFlames_LateUpdate(void);
+void OOZFlames_StaticUpdate(void);
+void OOZFlames_Draw(void);
 void OOZFlames_Create(void* data);
-void OOZFlames_StageLoad();
-void OOZFlames_EditorDraw();
-void OOZFlames_EditorLoad();
-void OOZFlames_Serialize();
+void OOZFlames_StageLoad(void);
+void OOZFlames_EditorDraw(void);
+void OOZFlames_EditorLoad(void);
+void OOZFlames_Serialize(void);
 
 // Extra Entity Functions
 

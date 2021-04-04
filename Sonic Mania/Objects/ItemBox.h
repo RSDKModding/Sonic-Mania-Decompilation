@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int type;
     Vector2 contentsPos;
     Vector2 unknownPos;
@@ -43,32 +43,32 @@ typedef struct {
 extern ObjectItemBox *ItemBox;
 
 // Standard Entity Events
-void ItemBox_Update();
-void ItemBox_LateUpdate();
-void ItemBox_StaticUpdate();
-void ItemBox_Draw();
+void ItemBox_Update(void);
+void ItemBox_LateUpdate(void);
+void ItemBox_StaticUpdate(void);
+void ItemBox_Draw(void);
 void ItemBox_Create(void* data);
-void ItemBox_StageLoad();
-void ItemBox_EditorDraw();
-void ItemBox_EditorLoad();
-void ItemBox_Serialize();
+void ItemBox_StageLoad(void);
+void ItemBox_EditorDraw(void);
+void ItemBox_EditorLoad(void);
+void ItemBox_Serialize(void);
 
 // Extra Entity Functions
-void ItemBox_DebugDraw();
-void ItemBox_DebugSpawn();
-void ItemBox_CheckHit();
-void ItemBox_GivePowerup();
+void ItemBox_DebugDraw(void);
+void ItemBox_DebugSpawn(void);
+void ItemBox_CheckHit(void);
+void ItemBox_GivePowerup(void);
 void ItemBox_Break(EntityItemBox *itemBox, void *p);
-bool32 ItemBox_HandleFallingCollision();
+bool32 ItemBox_HandleFallingCollision(void);
 bool32 ItemBox_HandlePlatformCollision(void *p);
-void ItemBox_HandleObjectCollisions();
+void ItemBox_HandleObjectCollisions(void);
 
 //Entity States
-void ItemBox_State_Broken();
-void ItemBox_State_Contents();
-void ItemBox_State_Unknown();
-void ItemBox_State_Normal();
-void ItemBox_State_Falling();
-void ItemBox_State_Conveyor();
+void ItemBox_State_Broken(void);
+void ItemBox_State_Contents(void);
+void ItemBox_State_Unknown(void);
+void ItemBox_State_Normal(void);
+void ItemBox_State_Falling(void);
+void ItemBox_State_Conveyor(void);
 
 #endif //!OBJ_ITEMBOX_H

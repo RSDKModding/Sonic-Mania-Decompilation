@@ -21,15 +21,15 @@ typedef struct {
 extern ObjectExplosion *Explosion;
 
 // Standard Entity Events
-void Explosion_Update();
-void Explosion_LateUpdate();
-void Explosion_StaticUpdate();
-void Explosion_Draw();
+void Explosion_Update(void);
+void Explosion_LateUpdate(void);
+void Explosion_StaticUpdate(void);
+void Explosion_Draw(void);
 void Explosion_Create(void* data);
-void Explosion_StageLoad();
-void Explosion_EditorDraw();
-void Explosion_EditorLoad();
-void Explosion_Serialize();
+void Explosion_StageLoad(void);
+void Explosion_EditorDraw(void);
+void Explosion_EditorLoad(void);
+void Explosion_Serialize(void);
 
 // Extra Entity Functions
 

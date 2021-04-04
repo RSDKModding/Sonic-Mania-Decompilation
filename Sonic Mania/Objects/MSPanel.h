@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMSPanel *MSPanel;
 
 // Standard Entity Events
-void MSPanel_Update();
-void MSPanel_LateUpdate();
-void MSPanel_StaticUpdate();
-void MSPanel_Draw();
+void MSPanel_Update(void);
+void MSPanel_LateUpdate(void);
+void MSPanel_StaticUpdate(void);
+void MSPanel_Draw(void);
 void MSPanel_Create(void* data);
-void MSPanel_StageLoad();
-void MSPanel_EditorDraw();
-void MSPanel_EditorLoad();
-void MSPanel_Serialize();
+void MSPanel_StageLoad(void);
+void MSPanel_EditorDraw(void);
+void MSPanel_EditorLoad(void);
+void MSPanel_Serialize(void);
 
 // Extra Entity Functions
 

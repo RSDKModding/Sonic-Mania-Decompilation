@@ -1,5 +1,6 @@
 #include "RetroEngine.hpp"
 
+#if RETRO_REV02
 ObjectDevOutput *DevOutput;
 
 void DevOutput_Update()
@@ -76,3 +77,4 @@ int DevOutput_GetStringYOffset(char *string)
     else
         return 24;
 }
+#endif

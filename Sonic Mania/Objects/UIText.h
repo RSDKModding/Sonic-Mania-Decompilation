@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
-    void (*stateDraw)();
+    void (*state)(void);
+    void (*stateDraw)(void);
     TextInfo text;
     TextInfo tag;
     bool32 selectable;
@@ -31,15 +31,15 @@ typedef struct {
 extern ObjectUIText *UIText;
 
 // Standard Entity Events
-void UIText_Update();
-void UIText_LateUpdate();
-void UIText_StaticUpdate();
-void UIText_Draw();
+void UIText_Update(void);
+void UIText_LateUpdate(void);
+void UIText_StaticUpdate(void);
+void UIText_Draw(void);
 void UIText_Create(void* data);
-void UIText_StageLoad();
-void UIText_EditorDraw();
-void UIText_EditorLoad();
-void UIText_Serialize();
+void UIText_StageLoad(void);
+void UIText_EditorDraw(void);
+void UIText_EditorLoad(void);
+void UIText_Serialize(void);
 
 // Extra Entity Functions
 

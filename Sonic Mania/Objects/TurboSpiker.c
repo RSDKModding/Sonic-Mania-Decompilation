@@ -2,22 +2,22 @@
 
 ObjectTurboSpiker *TurboSpiker;
 
-void TurboSpiker_Update()
+void TurboSpiker_Update(void)
 {
 
 }
 
-void TurboSpiker_LateUpdate()
+void TurboSpiker_LateUpdate(void)
 {
 
 }
 
-void TurboSpiker_StaticUpdate()
+void TurboSpiker_StaticUpdate(void)
 {
 
 }
 
-void TurboSpiker_Draw()
+void TurboSpiker_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void TurboSpiker_Create(void* data)
 
 }
 
-void TurboSpiker_StageLoad()
+void TurboSpiker_StageLoad(void)
 {
 
 }
 
-void TurboSpiker_EditorDraw()
+void TurboSpiker_EditorDraw(void)
 {
 
 }
 
-void TurboSpiker_EditorLoad()
+void TurboSpiker_EditorLoad(void)
 {
 
 }
 
-void TurboSpiker_Serialize()
+void TurboSpiker_Serialize(void)
 {
 
 }

@@ -42,15 +42,15 @@ typedef struct {
 extern ObjectAIZRockPile *AIZRockPile;
 
 // Standard Entity Events
-void AIZRockPile_Update();
-void AIZRockPile_LateUpdate();
-void AIZRockPile_StaticUpdate();
-void AIZRockPile_Draw();
+void AIZRockPile_Update(void);
+void AIZRockPile_LateUpdate(void);
+void AIZRockPile_StaticUpdate(void);
+void AIZRockPile_Draw(void);
 void AIZRockPile_Create(void* data);
-void AIZRockPile_StageLoad();
-void AIZRockPile_EditorDraw();
-void AIZRockPile_EditorLoad();
-void AIZRockPile_Serialize();
+void AIZRockPile_StageLoad(void);
+void AIZRockPile_EditorDraw(void);
+void AIZRockPile_EditorLoad(void);
+void AIZRockPile_Serialize(void);
 
 // Extra Entity Functions
 void AIZRockPile_SpawnRocks(int *speeds);

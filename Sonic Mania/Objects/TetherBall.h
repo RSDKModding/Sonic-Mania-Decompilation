@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTetherBall *TetherBall;
 
 // Standard Entity Events
-void TetherBall_Update();
-void TetherBall_LateUpdate();
-void TetherBall_StaticUpdate();
-void TetherBall_Draw();
+void TetherBall_Update(void);
+void TetherBall_LateUpdate(void);
+void TetherBall_StaticUpdate(void);
+void TetherBall_Draw(void);
 void TetherBall_Create(void* data);
-void TetherBall_StageLoad();
-void TetherBall_EditorDraw();
-void TetherBall_EditorLoad();
-void TetherBall_Serialize();
+void TetherBall_StageLoad(void);
+void TetherBall_EditorDraw(void);
+void TetherBall_EditorLoad(void);
+void TetherBall_Serialize(void);
 
 // Extra Entity Functions
 

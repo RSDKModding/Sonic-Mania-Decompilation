@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTornadoPath *TornadoPath;
 
 // Standard Entity Events
-void TornadoPath_Update();
-void TornadoPath_LateUpdate();
-void TornadoPath_StaticUpdate();
-void TornadoPath_Draw();
+void TornadoPath_Update(void);
+void TornadoPath_LateUpdate(void);
+void TornadoPath_StaticUpdate(void);
+void TornadoPath_Draw(void);
 void TornadoPath_Create(void* data);
-void TornadoPath_StageLoad();
-void TornadoPath_EditorDraw();
-void TornadoPath_EditorLoad();
-void TornadoPath_Serialize();
+void TornadoPath_StageLoad(void);
+void TornadoPath_EditorDraw(void);
+void TornadoPath_EditorLoad(void);
+void TornadoPath_Serialize(void);
 
 // Extra Entity Functions
 

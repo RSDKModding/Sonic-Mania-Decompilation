@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSpikeCorridor *SpikeCorridor;
 
 // Standard Entity Events
-void SpikeCorridor_Update();
-void SpikeCorridor_LateUpdate();
-void SpikeCorridor_StaticUpdate();
-void SpikeCorridor_Draw();
+void SpikeCorridor_Update(void);
+void SpikeCorridor_LateUpdate(void);
+void SpikeCorridor_StaticUpdate(void);
+void SpikeCorridor_Draw(void);
 void SpikeCorridor_Create(void* data);
-void SpikeCorridor_StageLoad();
-void SpikeCorridor_EditorDraw();
-void SpikeCorridor_EditorLoad();
-void SpikeCorridor_Serialize();
+void SpikeCorridor_StageLoad(void);
+void SpikeCorridor_EditorDraw(void);
+void SpikeCorridor_EditorLoad(void);
+void SpikeCorridor_Serialize(void);
 
 // Extra Entity Functions
 

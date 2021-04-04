@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectUIVsResults *UIVsResults;
 
 // Standard Entity Events
-void UIVsResults_Update();
-void UIVsResults_LateUpdate();
-void UIVsResults_StaticUpdate();
-void UIVsResults_Draw();
+void UIVsResults_Update(void);
+void UIVsResults_LateUpdate(void);
+void UIVsResults_StaticUpdate(void);
+void UIVsResults_Draw(void);
 void UIVsResults_Create(void* data);
-void UIVsResults_StageLoad();
-void UIVsResults_EditorDraw();
-void UIVsResults_EditorLoad();
-void UIVsResults_Serialize();
+void UIVsResults_StageLoad(void);
+void UIVsResults_EditorDraw(void);
+void UIVsResults_EditorLoad(void);
+void UIVsResults_Serialize(void);
 
 // Extra Entity Functions
 

@@ -24,15 +24,15 @@ typedef struct {
 extern ObjectFBZStorm *FBZStorm;
 
 // Standard Entity Events
-void FBZStorm_Update();
-void FBZStorm_LateUpdate();
-void FBZStorm_StaticUpdate();
-void FBZStorm_Draw();
+void FBZStorm_Update(void);
+void FBZStorm_LateUpdate(void);
+void FBZStorm_StaticUpdate(void);
+void FBZStorm_Draw(void);
 void FBZStorm_Create(void* data);
-void FBZStorm_StageLoad();
-void FBZStorm_EditorDraw();
-void FBZStorm_EditorLoad();
-void FBZStorm_Serialize();
+void FBZStorm_StageLoad(void);
+void FBZStorm_EditorDraw(void);
+void FBZStorm_EditorLoad(void);
+void FBZStorm_Serialize(void);
 
 // Extra Entity Functions
 

@@ -2,7 +2,7 @@
 
 ObjectBSS_Player *BSS_Player;
 
-void BSS_Player_Update()
+void BSS_Player_Update(void)
 {
     RSDK_THIS(BSS_Player);
     EntityBSS_Setup *setup = (EntityBSS_Setup *)RSDK.GetEntityByID(SLOT_BSS_SETUP);
@@ -71,17 +71,17 @@ void BSS_Player_Update()
     RSDK.ProcessAnimation(&entity->tailData);
 }
 
-void BSS_Player_LateUpdate()
+void BSS_Player_LateUpdate(void)
 {
 
 }
 
-void BSS_Player_StaticUpdate()
+void BSS_Player_StaticUpdate(void)
 {
 
 }
 
-void BSS_Player_Draw()
+void BSS_Player_Draw(void)
 {
     RSDK_THIS(BSS_Player);
     Vector2 drawPos;
@@ -142,7 +142,7 @@ void BSS_Player_Create(void* data)
     }
 }
 
-void BSS_Player_StageLoad()
+void BSS_Player_StageLoad(void)
 {
     BSS_Player->sonicSpriteIndex  = RSDK.LoadSpriteAnimation("SpecialBS/Sonic.bin", SCOPE_STAGE);
     BSS_Player->tailsSpriteIndex  = RSDK.LoadSpriteAnimation("SpecialBS/Tails.bin", SCOPE_STAGE);
@@ -155,7 +155,7 @@ void BSS_Player_StageLoad()
     BSS_Player->sfx_Jump = RSDK.GetSFX("Global/Jump.wav");
 }
 
-void BSS_Player_HandleP1Inputs()
+void BSS_Player_HandleP1Inputs(void)
 {
     EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
     if (entity->controllerID < PLAYER_MAX) {
@@ -194,7 +194,7 @@ void BSS_Player_HandleP1Inputs()
     }
 }
 
-void BSS_Player_HandleP2Inputs()
+void BSS_Player_HandleP2Inputs(void)
 {
     RSDK_THIS(BSS_Player);
     RSDK.GetEntityByID(SLOT_PLAYER1);
@@ -203,17 +203,17 @@ void BSS_Player_HandleP2Inputs()
     entity->jumpPress = BSS_Player->jumpPressState >> 15;
 }
 
-void BSS_Player_EditorDraw()
+void BSS_Player_EditorDraw(void)
 {
 
 }
 
-void BSS_Player_EditorLoad()
+void BSS_Player_EditorLoad(void)
 {
 
 }
 
-void BSS_Player_Serialize()
+void BSS_Player_Serialize(void)
 {
 
 }

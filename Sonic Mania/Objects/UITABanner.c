@@ -3,22 +3,22 @@
 #if RETRO_USE_PLUS
 ObjectUITABanner *UITABanner;
 
-void UITABanner_Update()
+void UITABanner_Update(void)
 {
 
 }
 
-void UITABanner_LateUpdate()
+void UITABanner_LateUpdate(void)
 {
 
 }
 
-void UITABanner_StaticUpdate()
+void UITABanner_StaticUpdate(void)
 {
 
 }
 
-void UITABanner_Draw()
+void UITABanner_Draw(void)
 {
 
 }
@@ -28,22 +28,22 @@ void UITABanner_Create(void* data)
 
 }
 
-void UITABanner_StageLoad()
+void UITABanner_StageLoad(void)
 {
 
 }
 
-void UITABanner_EditorDraw()
+void UITABanner_EditorDraw(void)
 {
 
 }
 
-void UITABanner_EditorLoad()
+void UITABanner_EditorLoad(void)
 {
 
 }
 
-void UITABanner_Serialize()
+void UITABanner_Serialize(void)
 {
 
 }

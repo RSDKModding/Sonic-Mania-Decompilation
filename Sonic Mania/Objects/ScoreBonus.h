@@ -20,15 +20,15 @@ typedef struct {
 extern ObjectScoreBonus *ScoreBonus;
 
 // Standard Entity Events
-void ScoreBonus_Update();
-void ScoreBonus_LateUpdate();
-void ScoreBonus_StaticUpdate();
-void ScoreBonus_Draw();
+void ScoreBonus_Update(void);
+void ScoreBonus_LateUpdate(void);
+void ScoreBonus_StaticUpdate(void);
+void ScoreBonus_Draw(void);
 void ScoreBonus_Create(void* data);
-void ScoreBonus_StageLoad();
-void ScoreBonus_EditorDraw();
-void ScoreBonus_EditorLoad();
-void ScoreBonus_Serialize();
+void ScoreBonus_StageLoad(void);
+void ScoreBonus_EditorDraw(void);
+void ScoreBonus_EditorLoad(void);
+void ScoreBonus_Serialize(void);
 
 // Extra Entity Functions
 

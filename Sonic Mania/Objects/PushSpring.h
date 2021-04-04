@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPushSpring *PushSpring;
 
 // Standard Entity Events
-void PushSpring_Update();
-void PushSpring_LateUpdate();
-void PushSpring_StaticUpdate();
-void PushSpring_Draw();
+void PushSpring_Update(void);
+void PushSpring_LateUpdate(void);
+void PushSpring_StaticUpdate(void);
+void PushSpring_Draw(void);
 void PushSpring_Create(void* data);
-void PushSpring_StageLoad();
-void PushSpring_EditorDraw();
-void PushSpring_EditorLoad();
-void PushSpring_Serialize();
+void PushSpring_StageLoad(void);
+void PushSpring_EditorDraw(void);
+void PushSpring_EditorLoad(void);
+void PushSpring_Serialize(void);
 
 // Extra Entity Functions
 

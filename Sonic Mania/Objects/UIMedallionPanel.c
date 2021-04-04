@@ -2,18 +2,18 @@
 
 ObjectUIMedallionPanel *UIMedallionPanel;
 
-void UIMedallionPanel_Update() {}
+void UIMedallionPanel_Update(void) {}
 
-void UIMedallionPanel_LateUpdate() {}
+void UIMedallionPanel_LateUpdate(void) {}
 
-void UIMedallionPanel_StaticUpdate() {}
+void UIMedallionPanel_StaticUpdate(void) {}
 
-void UIMedallionPanel_Draw()
+void UIMedallionPanel_Draw(void)
 {
 #if RETRO_USE_PLUS
-    if (User.GetUserStorageNoSave())
+    if (!User.GetUserStorageNoSave())
 #else
-    if (globals->noSave)
+    if (!globals->noSave)
 #endif
         UIMedallionPanel_DrawPanel();
 }
@@ -29,16 +29,16 @@ void UIMedallionPanel_Create(void *data)
     entity->updateRange.y          = 0x800000;
 }
 
-void UIMedallionPanel_StageLoad() { UIMedallionPanel->spriteIndex = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
+void UIMedallionPanel_StageLoad(void) { UIMedallionPanel->spriteIndex = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
 
-void UIMedallionPanel_DrawPanel()
+void UIMedallionPanel_DrawPanel(void)
 {
     EntityUIMedallionPanel *entity = (EntityUIMedallionPanel *)RSDK_sceneInfo->entity;
     Vector2 drawPos;
 
     int *savePtr = NULL;
     if (!RSDK_sceneInfo->inEditor) {
-        if (globals->saveLoaded == 200) {
+        if (globals->saveLoaded == STATUS_OK) {
 #if RETRO_USE_PLUS
             if (!User.GetUserStorageNoSave())
 #else
@@ -75,8 +75,8 @@ void UIMedallionPanel_DrawPanel()
     }
 }
 
-void UIMedallionPanel_EditorDraw() {}
+void UIMedallionPanel_EditorDraw(void) {}
 
-void UIMedallionPanel_EditorLoad() {}
+void UIMedallionPanel_EditorLoad(void) {}
 
-void UIMedallionPanel_Serialize() {}
+void UIMedallionPanel_Serialize(void) {}

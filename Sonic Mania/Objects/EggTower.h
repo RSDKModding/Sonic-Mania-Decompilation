@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectEggTower *EggTower;
 
 // Standard Entity Events
-void EggTower_Update();
-void EggTower_LateUpdate();
-void EggTower_StaticUpdate();
-void EggTower_Draw();
+void EggTower_Update(void);
+void EggTower_LateUpdate(void);
+void EggTower_StaticUpdate(void);
+void EggTower_Draw(void);
 void EggTower_Create(void* data);
-void EggTower_StageLoad();
-void EggTower_EditorDraw();
-void EggTower_EditorLoad();
-void EggTower_Serialize();
+void EggTower_StageLoad(void);
+void EggTower_EditorDraw(void);
+void EggTower_EditorLoad(void);
+void EggTower_Serialize(void);
 
 // Extra Entity Functions
 

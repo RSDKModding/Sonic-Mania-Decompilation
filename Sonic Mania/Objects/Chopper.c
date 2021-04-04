@@ -2,18 +2,18 @@
 
 ObjectChopper *Chopper;
 
-void Chopper_Update()
+void Chopper_Update(void)
 {
     RSDK_THIS(Chopper);
     if (entity->state)
         entity->state();
 }
 
-void Chopper_LateUpdate() {}
+void Chopper_LateUpdate(void) {}
 
-void Chopper_StaticUpdate() {}
+void Chopper_StaticUpdate(void) {}
 
-void Chopper_Draw()
+void Chopper_Draw(void)
 {
     RSDK_THIS(Chopper);
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -34,7 +34,7 @@ void Chopper_Create(void *data)
     entity->state         = Chopper_Unknown3;
 }
 
-void Chopper_StageLoad()
+void Chopper_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         Chopper->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
@@ -57,19 +57,19 @@ void Chopper_StageLoad()
 
     DEBUGMODE_ADD_OBJ(Chopper);
 }
-void Chopper_DebugDraw()
+void Chopper_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
 
-void Chopper_DebugSpawn()
+void Chopper_DebugSpawn(void)
 {
     RSDK_THIS(Chopper);
     RSDK.CreateEntity(Chopper->objectID, 0, entity->position.x, entity->position.y);
 }
 
-void Chopper_CheckOnScreen()
+void Chopper_CheckOnScreen(void)
 {
     RSDK_THIS(Chopper);
     if (!RSDK.CheckOnScreen(entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
@@ -80,7 +80,7 @@ void Chopper_CheckOnScreen()
     }
 }
 
-void Chopper_Unknown3()
+void Chopper_Unknown3(void)
 {
     RSDK_THIS(Chopper);
 
@@ -104,7 +104,7 @@ void Chopper_Unknown3()
     }
 }
 
-void Chopper_Unknown4()
+void Chopper_Unknown4(void)
 {
     RSDK_THIS(Chopper);
     entity->position.y += entity->velocity.y;
@@ -131,7 +131,7 @@ void Chopper_Unknown4()
     Chopper_CheckOnScreen();
 }
 
-void Chopper_Unknown5()
+void Chopper_Unknown5(void)
 {
     RSDK_THIS(Chopper);
     entity->position.x += entity->velocity.x;
@@ -179,7 +179,7 @@ void Chopper_Unknown5()
     Chopper_CheckOnScreen();
 }
 
-void Chopper_Unknown6()
+void Chopper_Unknown6(void)
 {
     RSDK_THIS(Chopper);
 
@@ -190,7 +190,7 @@ void Chopper_Unknown6()
     Chopper_CheckOnScreen();
 }
 
-void Chopper_Unknown7()
+void Chopper_Unknown7(void)
 {
     RSDK_THIS(Chopper);
     entity->position.x += entity->velocity.x;
@@ -249,7 +249,7 @@ void Chopper_Unknown7()
     Chopper_CheckOnScreen();
 }
 
-void Chopper_CheckPlayerCollisions()
+void Chopper_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Chopper);
 
@@ -260,7 +260,7 @@ void Chopper_CheckPlayerCollisions()
     }
 }
 
-void Chopper_CheckPlayerCollisions2()
+void Chopper_CheckPlayerCollisions2(void)
 {
     RSDK_THIS(Chopper);
 
@@ -271,11 +271,11 @@ void Chopper_CheckPlayerCollisions2()
     }
 }
 
-void Chopper_EditorDraw() {}
+void Chopper_EditorDraw(void) {}
 
-void Chopper_EditorLoad() {}
+void Chopper_EditorLoad(void) {}
 
-void Chopper_Serialize()
+void Chopper_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Chopper, VAR_UINT8, type);
     RSDK_EDITABLE_VAR(Chopper, VAR_UINT8, direction);

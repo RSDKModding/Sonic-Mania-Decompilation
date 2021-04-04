@@ -2,22 +2,22 @@
 
 ObjectWeatherTV *WeatherTV;
 
-void WeatherTV_Update()
+void WeatherTV_Update(void)
 {
 
 }
 
-void WeatherTV_LateUpdate()
+void WeatherTV_LateUpdate(void)
 {
 
 }
 
-void WeatherTV_StaticUpdate()
+void WeatherTV_StaticUpdate(void)
 {
 
 }
 
-void WeatherTV_Draw()
+void WeatherTV_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void WeatherTV_Create(void* data)
 
 }
 
-void WeatherTV_StageLoad()
+void WeatherTV_StageLoad(void)
 {
 
 }
 
-void WeatherTV_EditorDraw()
+void WeatherTV_EditorDraw(void)
 {
 
 }
 
-void WeatherTV_EditorLoad()
+void WeatherTV_EditorLoad(void)
 {
 
 }
 
-void WeatherTV_Serialize()
+void WeatherTV_Serialize(void)
 {
 
 }

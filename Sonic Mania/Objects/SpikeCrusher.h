@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSpikeCrusher *SpikeCrusher;
 
 // Standard Entity Events
-void SpikeCrusher_Update();
-void SpikeCrusher_LateUpdate();
-void SpikeCrusher_StaticUpdate();
-void SpikeCrusher_Draw();
+void SpikeCrusher_Update(void);
+void SpikeCrusher_LateUpdate(void);
+void SpikeCrusher_StaticUpdate(void);
+void SpikeCrusher_Draw(void);
 void SpikeCrusher_Create(void* data);
-void SpikeCrusher_StageLoad();
-void SpikeCrusher_EditorDraw();
-void SpikeCrusher_EditorLoad();
-void SpikeCrusher_Serialize();
+void SpikeCrusher_StageLoad(void);
+void SpikeCrusher_EditorDraw(void);
+void SpikeCrusher_EditorLoad(void);
+void SpikeCrusher_Serialize(void);
 
 // Extra Entity Functions
 

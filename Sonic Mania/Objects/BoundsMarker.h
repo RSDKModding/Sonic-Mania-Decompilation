@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectBoundsMarker *BoundsMarker;
 
 // Standard Entity Events
-void BoundsMarker_Update();
-void BoundsMarker_LateUpdate();
-void BoundsMarker_StaticUpdate();
-void BoundsMarker_Draw();
+void BoundsMarker_Update(void);
+void BoundsMarker_LateUpdate(void);
+void BoundsMarker_StaticUpdate(void);
+void BoundsMarker_Draw(void);
 void BoundsMarker_Create(void* data);
-void BoundsMarker_StageLoad();
-void BoundsMarker_EditorDraw();
-void BoundsMarker_EditorLoad();
-void BoundsMarker_Serialize();
+void BoundsMarker_StageLoad(void);
+void BoundsMarker_EditorDraw(void);
+void BoundsMarker_EditorLoad(void);
+void BoundsMarker_Serialize(void);
 
 // Extra Entity Functions
 void BoundsMarker_CheckBounds(void *player, EntityBoundsMarker *entity, bool32 setPos);

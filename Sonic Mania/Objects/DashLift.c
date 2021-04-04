@@ -2,22 +2,22 @@
 
 ObjectDashLift *DashLift;
 
-void DashLift_Update()
+void DashLift_Update(void)
 {
 
 }
 
-void DashLift_LateUpdate()
+void DashLift_LateUpdate(void)
 {
 
 }
 
-void DashLift_StaticUpdate()
+void DashLift_StaticUpdate(void)
 {
 
 }
 
-void DashLift_Draw()
+void DashLift_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void DashLift_Create(void* data)
 
 }
 
-void DashLift_StageLoad()
+void DashLift_StageLoad(void)
 {
 
 }
 
-void DashLift_EditorDraw()
+void DashLift_EditorDraw(void)
 {
 
 }
 
-void DashLift_EditorLoad()
+void DashLift_EditorLoad(void)
 {
 
 }
 
-void DashLift_Serialize()
+void DashLift_Serialize(void)
 {
 
 }

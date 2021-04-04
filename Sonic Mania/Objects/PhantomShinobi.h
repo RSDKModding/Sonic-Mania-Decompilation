@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPhantomShinobi *PhantomShinobi;
 
 // Standard Entity Events
-void PhantomShinobi_Update();
-void PhantomShinobi_LateUpdate();
-void PhantomShinobi_StaticUpdate();
-void PhantomShinobi_Draw();
+void PhantomShinobi_Update(void);
+void PhantomShinobi_LateUpdate(void);
+void PhantomShinobi_StaticUpdate(void);
+void PhantomShinobi_Draw(void);
 void PhantomShinobi_Create(void* data);
-void PhantomShinobi_StageLoad();
-void PhantomShinobi_EditorDraw();
-void PhantomShinobi_EditorLoad();
-void PhantomShinobi_Serialize();
+void PhantomShinobi_StageLoad(void);
+void PhantomShinobi_EditorDraw(void);
+void PhantomShinobi_EditorLoad(void);
+void PhantomShinobi_Serialize(void);
 
 // Extra Entity Functions
 

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectFan *Fan;
 
 // Standard Entity Events
-void Fan_Update();
-void Fan_LateUpdate();
-void Fan_StaticUpdate();
-void Fan_Draw();
+void Fan_Update(void);
+void Fan_LateUpdate(void);
+void Fan_StaticUpdate(void);
+void Fan_Draw(void);
 void Fan_Create(void* data);
-void Fan_StageLoad();
-void Fan_EditorDraw();
-void Fan_EditorLoad();
-void Fan_Serialize();
+void Fan_StageLoad(void);
+void Fan_EditorDraw(void);
+void Fan_EditorLoad(void);
+void Fan_Serialize(void);
 
 // Extra Entity Functions
 

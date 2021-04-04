@@ -1,7 +1,7 @@
 #ifndef USERDATA_H
 #define USERDATA_H
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define RETRO_USERDB_MAX (8)
 #define RETRO_USERDB_VAL_MAX (8)
 #define RETRO_USERDB_ENTRY_MAX (0x400)
@@ -201,7 +201,7 @@ int GetUserPlatform();
 int GetConfirmButtonFlip();
 void LaunchManual();
 void ExitGame();
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline int checkDLC(byte dlcID)
 {
     if (dlcID < 8)
@@ -213,7 +213,7 @@ inline int checkDLC(byte dlcID)
 inline int UserCoreUnknown15(byte inputID) { return 0; }
 int ShowExtensionOverlay(byte overlay);
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline int GetAchievementsStatus() { return achievements->status; }
 inline void SetAchievementsStatus(int status) { achievements->status = status; }
 #endif
@@ -224,7 +224,7 @@ void TrackScore(int a2, int a3, int a4);
 
 void SetPresence(byte a2, TextInfo *info);
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline int GetStatsStatus() { return stats->status; }
 inline void SetStatsStatus(int status) { stats->status = status; }
 #endif
@@ -232,13 +232,13 @@ inline void SetStatsStatus(int status) { stats->status = status; }
 inline int GetUserAuthStatus() { return 200; }
 inline int GetUserStorageStatus()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     return userStorage->authStatusCode; 
 #else
     return 200;
 #endif
 }
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline int UserStorageStatusUnknown1()
 {
     if (userStorage->statusCode == 500)
@@ -291,7 +291,7 @@ inline int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 
 inline int TryAuth()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     userStorage->authStatusCode = 200;
     return userStorage->authStatusCode;
 #else
@@ -300,7 +300,7 @@ inline int TryAuth()
 }
 inline int TryInitStorage()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     userStorage->storageStatusCode = 200;
     return userStorage->storageStatusCode;
 #else
@@ -312,7 +312,7 @@ inline int GetUserName(TextInfo *info)
     SetText(info, (char*)"IntegerGeorge802", 0);
     return true;
 }
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline void UserStorageUnknown8()
 {
     if (userStorage->authStatusCode != 200)
@@ -324,7 +324,7 @@ inline void UserStorageUnknown8()
 }
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 void TrackActClear();
 void TrackTAClear(byte a1, byte a2, byte a3, int a4);
 void TrackEnemyDefeat();
@@ -335,7 +335,7 @@ void setupUserDebugValues();
 void userInitUnknown1();
 void userInitUnknown2();
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 #define FUNCLIST_COUNT (0x30)
 struct FunctionListEntry {
     void *ptr;
@@ -357,7 +357,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize);
 bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize);
 bool32 DeleteUserFile(const char *filename);
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline void UpdateUserDBParents(UserDB *userDB)
 {
     for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
@@ -374,7 +374,7 @@ inline void InitUserDBValues(UserDB *userDB, va_list list)
     while ((int *)list) {
         userDB->columnSizes[cnt] = va_arg(list, int);
         memcpy(userDB->columnNames[cnt], 0, 0x10);
-        strcpy_s(userDB->columnNames[cnt], 0x10, va_arg(list, const char*));
+        sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char*));
         GenerateCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
         ++cnt;
     }
@@ -421,7 +421,7 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int));
 
 inline void ClearUserDB(ushort tableID)
 {
-    if (tableID == -1)
+    if (tableID == 0xFFFF)
         return;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -462,7 +462,7 @@ inline void ClearAllUserDBs()
 
 inline ushort GetUserDBByID(ushort tableID, uint uuid)
 {
-    if (tableID == (ushort)-1)
+    if (tableID == 0xFFFF)
         return -1;
     if (!uuid)
         return -1;
@@ -482,7 +482,7 @@ inline ushort GetUserDBByID(ushort tableID, uint uuid)
 
 inline void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
 {
-    if (tableID != -1 && entryID != -1) {
+    if (tableID != 0xFFFF && entryID != 0xFFFF) {
         UserDB* userDB = &userDBStorage->userDB[tableID];
         if (userDB->active)
             strftime(buf, size, format, &userDB->rows[entryID].createTime);
@@ -491,7 +491,7 @@ inline void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t
 
 inline int GetUserDBRowUnknownCount(ushort tableID)
 {
-    if (tableID == -1)
+    if (tableID == 0xFFFF)
         return 0;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -503,7 +503,7 @@ inline int GetUserDBRowUnknownCount(ushort tableID)
 
 inline uint GetUserDBRowUUID(ushort tableID, ushort entry)
 {
-    if (tableID == -1 || entry == -1)
+    if (tableID == 0xFFFF || entry == 0xFFFF)
         return 0;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -515,7 +515,7 @@ inline uint GetUserDBRowUUID(ushort tableID, ushort entry)
 
 inline int GetUserDBRowUnknown(ushort tableID, ushort entryID)
 {
-    if (tableID == -1)
+    if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active || userDB->status || entryID >userDB->rowUnknownCount - 1)
@@ -526,7 +526,7 @@ inline int GetUserDBRowUnknown(ushort tableID, ushort entryID)
 
 inline int AddUserDBEntry(ushort tableID)
 {
-    if (tableID == -1)
+    if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (userDB->active)
@@ -542,7 +542,7 @@ inline int AddUserDBEntry(ushort tableID)
     tm *tmB                                = localtime(&t);
 
     memcpy(&row->createTime, tmA, sizeof(tm));
-    memcpy(&row->changeTime, tmA, sizeof(tm));
+    memcpy(&row->changeTime, tmB, sizeof(tm));
 
     memset(row->values, 0, sizeof(UserDBValue) * RETRO_USERDB_VAL_MAX);
     ++userDB->entryCount;
@@ -554,7 +554,7 @@ inline int AddUserDBEntry(ushort tableID)
 
 inline uint RemoveDBEntry(ushort tableID, uint entryID)
 {
-    if (tableID == -1 || entryID == -1)
+    if (tableID == 0xFFFF || entryID == 0xFFFF)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (userDB->active)
@@ -578,7 +578,7 @@ inline uint RemoveDBEntry(ushort tableID, uint entryID)
 
 inline bool32 RemoveAllDBEntries(ushort tableID)
 {
-    if (tableID == -1)
+    if (tableID == 0xFFFF)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -593,7 +593,7 @@ inline int GetUserDBStatus(ushort tableID) { return userDBStorage->userDB[tableI
 
 inline uint GetDBEntryUUID(ushort tableID, int entry)
 {
-    if (tableID == -1 || entry == -1)
+    if (tableID == 0xFFFF || entry == 0xFFFF)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (userDB->active)

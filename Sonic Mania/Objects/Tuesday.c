@@ -2,22 +2,22 @@
 
 ObjectTuesday *Tuesday;
 
-void Tuesday_Update()
+void Tuesday_Update(void)
 {
 
 }
 
-void Tuesday_LateUpdate()
+void Tuesday_LateUpdate(void)
 {
 
 }
 
-void Tuesday_StaticUpdate()
+void Tuesday_StaticUpdate(void)
 {
 
 }
 
-void Tuesday_Draw()
+void Tuesday_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Tuesday_Create(void* data)
 
 }
 
-void Tuesday_StageLoad()
+void Tuesday_StageLoad(void)
 {
 
 }
 
-void Tuesday_EditorDraw()
+void Tuesday_EditorDraw(void)
 {
 
 }
 
-void Tuesday_EditorLoad()
+void Tuesday_EditorLoad(void)
 {
 
 }
 
-void Tuesday_Serialize()
+void Tuesday_Serialize(void)
 {
 
 }

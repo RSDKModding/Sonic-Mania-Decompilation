@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMatryoshkaBom *MatryoshkaBom;
 
 // Standard Entity Events
-void MatryoshkaBom_Update();
-void MatryoshkaBom_LateUpdate();
-void MatryoshkaBom_StaticUpdate();
-void MatryoshkaBom_Draw();
+void MatryoshkaBom_Update(void);
+void MatryoshkaBom_LateUpdate(void);
+void MatryoshkaBom_StaticUpdate(void);
+void MatryoshkaBom_Draw(void);
 void MatryoshkaBom_Create(void* data);
-void MatryoshkaBom_StageLoad();
-void MatryoshkaBom_EditorDraw();
-void MatryoshkaBom_EditorLoad();
-void MatryoshkaBom_Serialize();
+void MatryoshkaBom_StageLoad(void);
+void MatryoshkaBom_EditorDraw(void);
+void MatryoshkaBom_EditorLoad(void);
+void MatryoshkaBom_Serialize(void);
 
 // Extra Entity Functions
 

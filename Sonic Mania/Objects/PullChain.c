@@ -2,22 +2,22 @@
 
 ObjectPullChain *PullChain;
 
-void PullChain_Update()
+void PullChain_Update(void)
 {
 
 }
 
-void PullChain_LateUpdate()
+void PullChain_LateUpdate(void)
 {
 
 }
 
-void PullChain_StaticUpdate()
+void PullChain_StaticUpdate(void)
 {
 
 }
 
-void PullChain_Draw()
+void PullChain_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PullChain_Create(void* data)
 
 }
 
-void PullChain_StageLoad()
+void PullChain_StageLoad(void)
 {
 
 }
 
-void PullChain_EditorDraw()
+void PullChain_EditorDraw(void)
 {
 
 }
 
-void PullChain_EditorLoad()
+void PullChain_EditorLoad(void)
 {
 
 }
 
-void PullChain_Serialize()
+void PullChain_Serialize(void)
 {
 
 }

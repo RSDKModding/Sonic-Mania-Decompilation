@@ -2,22 +2,22 @@
 
 ObjectScarab *Scarab;
 
-void Scarab_Update()
+void Scarab_Update(void)
 {
 
 }
 
-void Scarab_LateUpdate()
+void Scarab_LateUpdate(void)
 {
 
 }
 
-void Scarab_StaticUpdate()
+void Scarab_StaticUpdate(void)
 {
 
 }
 
-void Scarab_Draw()
+void Scarab_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Scarab_Create(void* data)
 
 }
 
-void Scarab_StageLoad()
+void Scarab_StageLoad(void)
 {
 
 }
 
-void Scarab_EditorDraw()
+void Scarab_EditorDraw(void)
 {
 
 }
 
-void Scarab_EditorLoad()
+void Scarab_EditorLoad(void)
 {
 
 }
 
-void Scarab_Serialize()
+void Scarab_Serialize(void)
 {
 
 }

@@ -2,23 +2,23 @@
 
 ObjectUIPicture *UIPicture;
 
-void UIPicture_Update()
+void UIPicture_Update(void)
 {
     EntityUIPicture *entity = (EntityUIPicture *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void UIPicture_LateUpdate()
+void UIPicture_LateUpdate(void)
 {
 
 }
 
-void UIPicture_StaticUpdate()
+void UIPicture_StaticUpdate(void)
 {
 
 }
 
-void UIPicture_Draw()
+void UIPicture_Draw(void)
 {
     EntityUIPicture *entity = (EntityUIPicture *)RSDK_sceneInfo->entity;
     if (entity->zonePalette)
@@ -45,7 +45,7 @@ void UIPicture_Create(void* data)
     }
 }
 
-void UIPicture_StageLoad()
+void UIPicture_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("Menu")) {
         UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
@@ -55,17 +55,17 @@ void UIPicture_StageLoad()
     }
 }
 
-void UIPicture_EditorDraw()
+void UIPicture_EditorDraw(void)
 {
 
 }
 
-void UIPicture_EditorLoad()
+void UIPicture_EditorLoad(void)
 {
 
 }
 
-void UIPicture_Serialize()
+void UIPicture_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UIPicture, VAR_ENUM, listID);
     RSDK_EDITABLE_VAR(UIPicture, VAR_ENUM, frameID);

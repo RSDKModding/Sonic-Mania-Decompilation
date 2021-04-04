@@ -2,18 +2,18 @@
 
 ObjectStarPost *StarPost;
 
-void StarPost_Update()
+void StarPost_Update(void)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void StarPost_LateUpdate() {}
+void StarPost_LateUpdate(void) {}
 
-void StarPost_StaticUpdate() {}
+void StarPost_StaticUpdate(void) {}
 
-void StarPost_Draw()
+void StarPost_Draw(void)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->poleData, &entity->position, false);
@@ -66,7 +66,7 @@ void StarPost_Create(void *data)
     }
 }
 
-void StarPost_StageLoad()
+void StarPost_StageLoad(void)
 {
     StarPost->spriteIndex   = RSDK.LoadSpriteAnimation("Global/StarPost.bin", SCOPE_STAGE);
     StarPost->hitbox.left   = -8;
@@ -150,20 +150,20 @@ void StarPost_StageLoad()
     StarPost->sfx_Warp     = RSDK.GetSFX("Global/SpecialWarp.wav");
 }
 
-void StarPost_DebugDraw()
+void StarPost_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(StarPost->spriteIndex, 0, &DebugMode->debugData, true, 1);
     RSDK.DrawSprite(&DebugMode->debugData, NULL, 0);
 }
-void StarPost_DebugSpawn() { RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
-void StarPost_ResetStarPosts()
+void StarPost_DebugSpawn(void) { RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void StarPost_ResetStarPosts(void)
 {
     for (int i = 0; i < Player->playerCount; ++i) StarPost->postIDs[i] = 0;
     StarPost->storedMS      = 0;
     StarPost->storedSeconds = 0;
     StarPost->storedMinutes = 0;
 }
-void StarPost_CheckBonusStageEntry()
+void StarPost_CheckBonusStageEntry(void)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
     entity->starAngle += 4;
@@ -232,7 +232,7 @@ void StarPost_CheckBonusStageEntry()
         }
     }
 }
-void StarPost_CheckCollisions()
+void StarPost_CheckCollisions(void)
 {
     EntityPlayer *player   = 0;
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
@@ -322,7 +322,7 @@ void StarPost_CheckCollisions()
         }
     }
 }
-void StarPost_State_Idle()
+void StarPost_State_Idle(void)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
     if (entity->activated < StarPost->activePlayers)
@@ -331,7 +331,7 @@ void StarPost_State_Idle()
         StarPost_CheckBonusStageEntry();
     RSDK.ProcessAnimation(&entity->ballData);
 }
-void StarPost_State_BallSpin()
+void StarPost_State_BallSpin(void)
 {
     EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
     if (entity->activated < StarPost->activePlayers) // activated
@@ -385,11 +385,11 @@ void StarPost_State_BallSpin()
     RSDK.ProcessAnimation(&entity->ballData);
 }
 
-void StarPost_EditorDraw() {}
+void StarPost_EditorDraw(void) {}
 
-void StarPost_EditorLoad() {}
+void StarPost_EditorLoad(void) {}
 
-void StarPost_Serialize()
+void StarPost_Serialize(void)
 {
     RSDK_EDITABLE_VAR(StarPost, VAR_ENUM, id);
     RSDK_EDITABLE_VAR(StarPost, VAR_UINT8, direction);

@@ -20,15 +20,15 @@ typedef struct {
 extern ObjectPlatformNode *PlatformNode;
 
 // Standard Entity Events
-void PlatformNode_Update();
-void PlatformNode_LateUpdate();
-void PlatformNode_StaticUpdate();
-void PlatformNode_Draw();
+void PlatformNode_Update(void);
+void PlatformNode_LateUpdate(void);
+void PlatformNode_StaticUpdate(void);
+void PlatformNode_Draw(void);
 void PlatformNode_Create(void* data);
-void PlatformNode_StageLoad();
-void PlatformNode_EditorDraw();
-void PlatformNode_EditorLoad();
-void PlatformNode_Serialize();
+void PlatformNode_StageLoad(void);
+void PlatformNode_EditorDraw(void);
+void PlatformNode_EditorLoad(void);
+void PlatformNode_Serialize(void);
 
 // Extra Entity Functions
 

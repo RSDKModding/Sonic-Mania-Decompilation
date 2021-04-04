@@ -37,8 +37,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
-    void(*stateDraw)();
+    void(*state)(void);
+    void(*stateDraw)(void);
     int timer;
     int playerID;
     int screen;
@@ -51,25 +51,25 @@ typedef struct {
 extern ObjectAnnouncer *Announcer;
 
 // Standard Entity Events
-void Announcer_Update();
-void Announcer_LateUpdate();
-void Announcer_StaticUpdate();
-void Announcer_Draw();
+void Announcer_Update(void);
+void Announcer_LateUpdate(void);
+void Announcer_StaticUpdate(void);
+void Announcer_Draw(void);
 void Announcer_Create(void* data);
-void Announcer_StageLoad();
-void Announcer_EditorDraw();
-void Announcer_EditorLoad();
-void Announcer_Serialize();
+void Announcer_StageLoad(void);
+void Announcer_EditorDraw(void);
+void Announcer_EditorLoad(void);
+void Announcer_Serialize(void);
 
 // Extra Entity Functions
-void Announcer_Unknown1();
+void Announcer_Unknown1(void);
 void Announcer_Unknown2(int screen);
-void Announcer_Unknown3();
-void Announcer_Unknown4();
-void Announcer_Unknown5();
-void Announcer_Unknown6();
-void Announcer_Unknown7();
-void Announcer_Unknown8();
-void Announcer_Unknown9();
+void Announcer_Unknown3(void);
+void Announcer_Unknown4(void);
+void Announcer_Unknown5(void);
+void Announcer_Unknown6(void);
+void Announcer_Unknown7(void);
+void Announcer_Unknown8(void);
+void Announcer_Unknown9(void);
 
 #endif //!OBJ_ANNOUNCER_H

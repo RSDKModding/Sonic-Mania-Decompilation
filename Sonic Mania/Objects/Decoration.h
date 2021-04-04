@@ -24,17 +24,17 @@ typedef struct {
 extern ObjectDecoration *Decoration;
 
 // Standard Entity Events
-void Decoration_Update();
-void Decoration_LateUpdate();
-void Decoration_StaticUpdate();
-void Decoration_Draw();
+void Decoration_Update(void);
+void Decoration_LateUpdate(void);
+void Decoration_StaticUpdate(void);
+void Decoration_Draw(void);
 void Decoration_Create(void* data);
-void Decoration_StageLoad();
-void Decoration_EditorDraw();
-void Decoration_EditorLoad();
-void Decoration_Serialize();
+void Decoration_StageLoad(void);
+void Decoration_EditorDraw(void);
+void Decoration_EditorLoad(void);
+void Decoration_Serialize(void);
 
 // Extra Entity Functions
-void Decoration_DrawSprite();
+void Decoration_DrawSprite(void);
 
 #endif //!OBJ_DECORATION_H

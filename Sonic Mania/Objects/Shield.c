@@ -2,7 +2,7 @@
 
 ObjectShield *Shield;
 
-void Shield_Update()
+void Shield_Update(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     if (entity->state)
@@ -10,19 +10,19 @@ void Shield_Update()
     EntityPlayer *player = entity->player;
     if (player) {
         int drawOrder = player->drawOrder;
-        if (entity->frameID & -4 <= 0)
+        if ((entity->frameID & -4) <= 0)
             --drawOrder;
         entity->drawOrder = drawOrder;
-        entity->visible   = entity->field_6C & player->visible;
-        entity->field_6C  = 1;
+        entity->visible   = entity->flag & player->visible;
+        entity->flag  = true;
     }
 }
 
-void Shield_LateUpdate() {}
+void Shield_LateUpdate(void) {}
 
-void Shield_StaticUpdate() {}
+void Shield_StaticUpdate(void) {}
 
-void Shield_Draw()
+void Shield_Draw(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     EntityPlayer *player = (EntityPlayer *)entity->player;
@@ -77,7 +77,7 @@ void Shield_Create(void *data)
     }
 
     entity->drawFX = FX_FLIP;
-    entity->state  = Shield_State_Update;
+    entity->state  = Shield_State_Generic;
     switch (entity->type - 1) {
         case SHIELD_NONE:
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 0, &entity->data, true, 0);
@@ -91,11 +91,11 @@ void Shield_Create(void *data)
             break;
         case SHIELD_BUBBLE: RSDK.SetSpriteAnimation(Shield->spriteIndex, 1, &entity->data, true, 0); break;
         case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->spriteIndex, 3, &entity->data, true, 0); break;
-        default: return;
+        default: break;
     }
 }
 
-void Shield_StageLoad()
+void Shield_StageLoad(void)
 {
     Shield->spriteIndex         = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
     Shield->sfx_BlueShield      = RSDK.GetSFX("Global/BlueShield.wav");
@@ -108,7 +108,7 @@ void Shield_StageLoad()
     Shield->sfx_LightningJump   = RSDK.GetSFX("Global/LightningJump.wav");
 }
 
-void Shield_State_Update()
+void Shield_State_Generic(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -118,7 +118,7 @@ void Shield_State_Update()
     entity->direction = id & 3;
 }
 
-void Shield_State_Bubble()
+void Shield_State_Bubble(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -128,12 +128,12 @@ void Shield_State_Bubble()
     entity->direction = id & 3;
     if (entity->altData.frameID == entity->altData.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &entity->altData, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &entity->altData, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->altData, true, 0);
         entity->state = Shield_State_BubbleAlt;
     }
 }
 
-void Shield_State_BubbleAlt()
+void Shield_State_BubbleAlt(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -144,11 +144,11 @@ void Shield_State_BubbleAlt()
     if (entity->altData.frameID == entity->altData.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->altData, true, 0);
         RSDK.SetSpriteAnimation(Shield->spriteIndex, 6, &entity->data, true, 0);
-        entity->state = Shield_State_Update;
+        entity->state = Shield_State_Generic;
     }
 }
 
-void Shield_State_Fire()
+void Shield_State_Fire(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -157,11 +157,11 @@ void Shield_State_Fire()
     if (entity->timer > 24) {
         entity->timer = 0;
         RSDK.SetSpriteAnimation(Shield->spriteIndex, 1, &entity->data, true, 0);
-        entity->state = Shield_State_Update;
+        entity->state = Shield_State_Generic;
     }
 }
 
-void Shield_State_Lightning()
+void Shield_State_Lightning(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->altData);
@@ -221,10 +221,10 @@ void Shield_State_Lightning()
         debris->scale.x = entity->scale.x;
         debris->scale.y = entity->scale.y;
     }
-    entity->state = Shield_State_Update;
+    entity->state = Shield_State_Generic;
 }
 
-void Shield_State_Insta()
+void Shield_State_Insta(void)
 {
     EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -236,8 +236,8 @@ void Shield_State_Insta()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void Shield_EditorDraw() {}
+void Shield_EditorDraw(void) {}
 
-void Shield_EditorLoad() {}
+void Shield_EditorLoad(void) {}
 
-void Shield_Serialize() {}
+void Shield_Serialize(void) {}

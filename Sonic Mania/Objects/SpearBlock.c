@@ -2,7 +2,7 @@
 
 ObjectSpearBlock *SpearBlock = NULL;
 
-void SpearBlock_Update()
+void SpearBlock_Update(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     if (entity->state)
@@ -15,11 +15,11 @@ void SpearBlock_Update()
     }
 }
 
-void SpearBlock_LateUpdate() {}
+void SpearBlock_LateUpdate(void) {}
 
-void SpearBlock_StaticUpdate() {}
+void SpearBlock_StaticUpdate(void) {}
 
-void SpearBlock_Draw()
+void SpearBlock_Draw(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, &entity->spearPos, 0);
@@ -41,7 +41,7 @@ void SpearBlock_Create(void *data)
     entity->state = SpearBlock_State_SetupSpears;
 }
 
-void SpearBlock_StageLoad()
+void SpearBlock_StageLoad(void)
 {
     SpearBlock->spriteIndex = RSDK.LoadSpriteAnimation("MTZ/SpearBlock.bin", SCOPE_STAGE);
 
@@ -69,18 +69,18 @@ void SpearBlock_StageLoad()
     DebugMode_AddObject(SpearBlock->objectID, SpearBlock_DebugDraw, SpearBlock_DebugSpawn);
 }
 
-void SpearBlock_DebugDraw()
+void SpearBlock_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
 }
-void SpearBlock_DebugSpawn()
+void SpearBlock_DebugSpawn(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
-    RSDK.CreateEntity(SpearBlock->objectID, 0, entity->position.x, entity->position.y);
+    RSDK.CreateEntity(SpearBlock->objectID, NULL, entity->position.x, entity->position.y);
 }
 
-void SpearBlock_CheckPlayerCollisions()
+void SpearBlock_CheckPlayerCollisions(void)
 {
     EntityPlayer *player     = NULL;
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
@@ -107,7 +107,7 @@ void SpearBlock_CheckPlayerCollisions()
     }
 }
 
-void SpearBlock_State_SetupSpears()
+void SpearBlock_State_SetupSpears(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     entity->active           = ACTIVE_NORMAL;
@@ -120,7 +120,7 @@ void SpearBlock_State_SetupSpears()
     entity->data.frameID = (frameTimer & 3);
 }
 
-void SpearBlock_State_CheckSpearExtend()
+void SpearBlock_State_CheckSpearExtend(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     if (Zone->timer & 0x7F)
@@ -131,7 +131,7 @@ void SpearBlock_State_CheckSpearExtend()
     entity->data.frameID = (frameTimer & 3);
 }
 
-void SpearBlock_State_ExtendSpears()
+void SpearBlock_State_ExtendSpears(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     switch (entity->data.frameID) {
@@ -147,7 +147,7 @@ void SpearBlock_State_ExtendSpears()
         entity->state = SpearBlock_State_CheckSpearRetract;
 }
 
-void SpearBlock_State_CheckSpearRetract()
+void SpearBlock_State_CheckSpearRetract(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     if (Zone->timer & 0x3F)
@@ -156,7 +156,7 @@ void SpearBlock_State_CheckSpearRetract()
     entity->state = SpearBlock_State_RetractSpears;
 }
 
-void SpearBlock_State_RetractSpears()
+void SpearBlock_State_RetractSpears(void)
 {
     EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
     switch (entity->data.frameID) {
@@ -172,8 +172,8 @@ void SpearBlock_State_RetractSpears()
         entity->state = SpearBlock_State_CheckSpearExtend;
 }
 
-void SpearBlock_EditorDraw() {}
+void SpearBlock_EditorDraw(void) {}
 
-void SpearBlock_EditorLoad() {}
+void SpearBlock_EditorLoad(void) {}
 
-void SpearBlock_Serialize() { RSDK_EDITABLE_VAR(SpearBlock, VAR_UINT8, spearDir); }
+void SpearBlock_Serialize(void) { RSDK_EDITABLE_VAR(SpearBlock, VAR_UINT8, spearDir); }

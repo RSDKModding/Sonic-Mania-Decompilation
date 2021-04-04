@@ -2,22 +2,22 @@
 
 ObjectPress *Press;
 
-void Press_Update()
+void Press_Update(void)
 {
 
 }
 
-void Press_LateUpdate()
+void Press_LateUpdate(void)
 {
 
 }
 
-void Press_StaticUpdate()
+void Press_StaticUpdate(void)
 {
 
 }
 
-void Press_Draw()
+void Press_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Press_Create(void* data)
 
 }
 
-void Press_StageLoad()
+void Press_StageLoad(void)
 {
 
 }
 
-void Press_EditorDraw()
+void Press_EditorDraw(void)
 {
 
 }
 
-void Press_EditorLoad()
+void Press_EditorLoad(void)
 {
 
 }
 
-void Press_Serialize()
+void Press_Serialize(void)
 {
 
 }

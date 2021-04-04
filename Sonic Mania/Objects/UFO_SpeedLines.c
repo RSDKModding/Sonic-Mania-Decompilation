@@ -2,9 +2,9 @@
 
 ObjectUFO_SpeedLines *UFO_SpeedLines;
 
-void UFO_SpeedLines_Update() {}
+void UFO_SpeedLines_Update(void) {}
 
-void UFO_SpeedLines_LateUpdate()
+void UFO_SpeedLines_LateUpdate(void)
 {
     RSDK_THIS(UFO_SpeedLines);
     EntityUFO_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, UFO_Player);
@@ -45,9 +45,9 @@ void UFO_SpeedLines_LateUpdate()
     }
 }
 
-void UFO_SpeedLines_StaticUpdate() {}
+void UFO_SpeedLines_StaticUpdate(void) {}
 
-void UFO_SpeedLines_Draw()
+void UFO_SpeedLines_Draw(void)
 {
     RSDK_THIS(UFO_SpeedLines);
 
@@ -85,10 +85,10 @@ void UFO_SpeedLines_Create(void *data)
     }
 }
 
-void UFO_SpeedLines_StageLoad() { RSDK.ResetEntitySlot(SLOT_UFO_SPEEDLINES, UFO_SpeedLines->objectID, 0); }
+void UFO_SpeedLines_StageLoad(void) { RSDK.ResetEntitySlot(SLOT_UFO_SPEEDLINES, UFO_SpeedLines->objectID, 0); }
 
-void UFO_SpeedLines_EditorDraw() {}
+void UFO_SpeedLines_EditorDraw(void) {}
 
-void UFO_SpeedLines_EditorLoad() {}
+void UFO_SpeedLines_EditorLoad(void) {}
 
-void UFO_SpeedLines_Serialize() {}
+void UFO_SpeedLines_Serialize(void) {}

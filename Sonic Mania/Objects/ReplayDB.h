@@ -24,15 +24,15 @@ typedef struct {
 extern ObjectReplayDB *ReplayDB;
 
 // Standard Entity Events
-void ReplayDB_Update();
-void ReplayDB_LateUpdate();
-void ReplayDB_StaticUpdate();
-void ReplayDB_Draw();
+void ReplayDB_Update(void);
+void ReplayDB_LateUpdate(void);
+void ReplayDB_StaticUpdate(void);
+void ReplayDB_Draw(void);
 void ReplayDB_Create(void* data);
-void ReplayDB_StageLoad();
-void ReplayDB_EditorDraw();
-void ReplayDB_EditorLoad();
-void ReplayDB_Serialize();
+void ReplayDB_StageLoad(void);
+void ReplayDB_EditorDraw(void);
+void ReplayDB_EditorLoad(void);
+void ReplayDB_Serialize(void);
 
 // Extra Entity Functions
 #endif

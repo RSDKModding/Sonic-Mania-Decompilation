@@ -2,22 +2,22 @@
 
 ObjectLauncher *Launcher;
 
-void Launcher_Update()
+void Launcher_Update(void)
 {
 
 }
 
-void Launcher_LateUpdate()
+void Launcher_LateUpdate(void)
 {
 
 }
 
-void Launcher_StaticUpdate()
+void Launcher_StaticUpdate(void)
 {
 
 }
 
-void Launcher_Draw()
+void Launcher_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Launcher_Create(void* data)
 
 }
 
-void Launcher_StageLoad()
+void Launcher_StageLoad(void)
 {
 
 }
 
-void Launcher_EditorDraw()
+void Launcher_EditorDraw(void)
 {
 
 }
 
-void Launcher_EditorLoad()
+void Launcher_EditorLoad(void)
 {
 
 }
 
-void Launcher_Serialize()
+void Launcher_Serialize(void)
 {
 
 }

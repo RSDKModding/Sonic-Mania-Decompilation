@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPathInverter *PathInverter;
 
 // Standard Entity Events
-void PathInverter_Update();
-void PathInverter_LateUpdate();
-void PathInverter_StaticUpdate();
-void PathInverter_Draw();
+void PathInverter_Update(void);
+void PathInverter_LateUpdate(void);
+void PathInverter_StaticUpdate(void);
+void PathInverter_Draw(void);
 void PathInverter_Create(void* data);
-void PathInverter_StageLoad();
-void PathInverter_EditorDraw();
-void PathInverter_EditorLoad();
-void PathInverter_Serialize();
+void PathInverter_StageLoad(void);
+void PathInverter_EditorDraw(void);
+void PathInverter_EditorLoad(void);
+void PathInverter_Serialize(void);
 
 // Extra Entity Functions
 

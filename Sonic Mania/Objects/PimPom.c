@@ -2,22 +2,22 @@
 
 ObjectPimPom *PimPom;
 
-void PimPom_Update()
+void PimPom_Update(void)
 {
 
 }
 
-void PimPom_LateUpdate()
+void PimPom_LateUpdate(void)
 {
 
 }
 
-void PimPom_StaticUpdate()
+void PimPom_StaticUpdate(void)
 {
 
 }
 
-void PimPom_Draw()
+void PimPom_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PimPom_Create(void* data)
 
 }
 
-void PimPom_StageLoad()
+void PimPom_StageLoad(void)
 {
 
 }
 
-void PimPom_EditorDraw()
+void PimPom_EditorDraw(void)
 {
 
 }
 
-void PimPom_EditorLoad()
+void PimPom_EditorLoad(void)
 {
 
 }
 
-void PimPom_Serialize()
+void PimPom_Serialize(void)
 {
 
 }

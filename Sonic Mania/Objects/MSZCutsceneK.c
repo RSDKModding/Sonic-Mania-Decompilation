@@ -2,22 +2,22 @@
 
 ObjectMSZCutsceneK *MSZCutsceneK;
 
-void MSZCutsceneK_Update()
+void MSZCutsceneK_Update(void)
 {
 
 }
 
-void MSZCutsceneK_LateUpdate()
+void MSZCutsceneK_LateUpdate(void)
 {
 
 }
 
-void MSZCutsceneK_StaticUpdate()
+void MSZCutsceneK_StaticUpdate(void)
 {
 
 }
 
-void MSZCutsceneK_Draw()
+void MSZCutsceneK_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void MSZCutsceneK_Create(void* data)
 
 }
 
-void MSZCutsceneK_StageLoad()
+void MSZCutsceneK_StageLoad(void)
 {
 
 }
 
-void MSZCutsceneK_EditorDraw()
+void MSZCutsceneK_EditorDraw(void)
 {
 
 }
 
-void MSZCutsceneK_EditorLoad()
+void MSZCutsceneK_EditorLoad(void)
 {
 
 }
 
-void MSZCutsceneK_Serialize()
+void MSZCutsceneK_Serialize(void)
 {
 
 }

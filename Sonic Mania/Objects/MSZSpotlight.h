@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMSZSpotlight *MSZSpotlight;
 
 // Standard Entity Events
-void MSZSpotlight_Update();
-void MSZSpotlight_LateUpdate();
-void MSZSpotlight_StaticUpdate();
-void MSZSpotlight_Draw();
+void MSZSpotlight_Update(void);
+void MSZSpotlight_LateUpdate(void);
+void MSZSpotlight_StaticUpdate(void);
+void MSZSpotlight_Draw(void);
 void MSZSpotlight_Create(void* data);
-void MSZSpotlight_StageLoad();
-void MSZSpotlight_EditorDraw();
-void MSZSpotlight_EditorLoad();
-void MSZSpotlight_Serialize();
+void MSZSpotlight_StageLoad(void);
+void MSZSpotlight_EditorDraw(void);
+void MSZSpotlight_EditorLoad(void);
+void MSZSpotlight_Serialize(void);
 
 // Extra Entity Functions
 

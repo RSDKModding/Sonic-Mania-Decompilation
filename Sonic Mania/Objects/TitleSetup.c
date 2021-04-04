@@ -2,7 +2,7 @@
 
 ObjectTitleSetup *TitleSetup;
 
-void TitleSetup_Update()
+void TitleSetup_Update(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->state)
@@ -10,11 +10,11 @@ void TitleSetup_Update()
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
-void TitleSetup_LateUpdate() {}
+void TitleSetup_LateUpdate(void) {}
 
-void TitleSetup_StaticUpdate() {}
+void TitleSetup_StaticUpdate(void) {}
 
-void TitleSetup_Draw()
+void TitleSetup_Draw(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->stateDraw)
@@ -38,7 +38,7 @@ void TitleSetup_Create(void *data)
     }
 }
 
-void TitleSetup_StageLoad()
+void TitleSetup_StageLoad(void)
 {
     TextInfo presence;
     Localization_GetString(&presence, STR_RPC_TITLE);
@@ -76,7 +76,7 @@ void TitleSetup_StageLoad()
     RSDK.ResetEntitySlot(0, TitleSetup->objectID, 0);
 }
 
-void TitleSetup_HandleCheatInputs()
+void TitleSetup_HandleCheatInputs(void)
 {
     byte keyState = 0;
     if (RSDK_controller->keyUp.press || RSDK_stickL->keyUp.press) {
@@ -98,7 +98,7 @@ void TitleSetup_HandleCheatInputs()
     }
 }
 
-void TitleSetup_CheckCheatCode()
+void TitleSetup_CheckCheatCode(void)
 {
     TitleSetup_HandleCheatInputs();
     if (TitleSetup->cheatCode[0] == 1 && TitleSetup->cheatCode[1] == 1 && TitleSetup->cheatCode[2] == 2 && TitleSetup->cheatCode[3] == 2
@@ -111,7 +111,7 @@ void TitleSetup_CheckCheatCode()
 #endif
     }
 }
-bool32 TitleSetup_IntroCallback()
+bool32 TitleSetup_IntroCallback(void)
 {
     if (!RSDK_controller->keyA.press && !RSDK_controller->keyB.press && !RSDK_controller->keyStart.press)
         return false;
@@ -119,21 +119,21 @@ bool32 TitleSetup_IntroCallback()
     return true;
 }
 
-void TitleSetup_Unknown4()
+void TitleSetup_Unknown4(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer <= -0x400) {
         entity->timer     = 0;
         entity->state     = TitleSetup_Unknown5;
         entity->stateDraw = TitleSetup_Unknown14;
-        Music_PlayTrack(0);
+        Music_PlayTrack(TRACK_STAGE);
     }
     else {
         entity->timer -= 16;
     }
 }
 
-void TitleSetup_Unknown5()
+void TitleSetup_Unknown5(void)
 {
     RSDK_THIS(TitleSetup);
     RSDK.ProcessAnimation(&entity->data);
@@ -154,7 +154,7 @@ void TitleSetup_Unknown5()
     }
 }
 
-void TitleSetup_Unknown6()
+void TitleSetup_Unknown6(void)
 {
     RSDK_THIS(TitleSetup);
 
@@ -188,7 +188,7 @@ void TitleSetup_Unknown6()
     }
 }
 
-void TitleSetup_Unknown7()
+void TitleSetup_Unknown7(void)
 {
     RSDK_THIS(TitleSetup);
     TitleSetup_CheckCheatCode();
@@ -206,7 +206,7 @@ void TitleSetup_Unknown7()
     }
 }
 
-void TitleSetup_SetupLogo_NoPlus()
+void TitleSetup_SetupLogo_NoPlus(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer < 120)
@@ -227,7 +227,7 @@ void TitleSetup_SetupLogo_NoPlus()
         entity->state = TitleSetup_Unknown10;
     }
 }
-void TitleSetup_SetupLogo_Plus()
+void TitleSetup_SetupLogo_Plus(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer < 120)
@@ -266,7 +266,7 @@ void TitleSetup_SetupLogo_Plus()
     }
 }
 
-void TitleSetup_Unknown10()
+void TitleSetup_Unknown10(void)
 {
     RSDK_THIS(TitleSetup);
     bool32 skipped = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
@@ -300,7 +300,7 @@ void TitleSetup_Unknown10()
     }
 }
 
-void TitleSetup_Unknown11()
+void TitleSetup_Unknown11(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
@@ -311,7 +311,7 @@ void TitleSetup_Unknown11()
     }
 }
 
-void TitleSetup_Unknown12()
+void TitleSetup_Unknown12(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
@@ -333,13 +333,13 @@ void TitleSetup_Unknown12()
     }
 }
 
-void TitleSetup_Unknown13()
+void TitleSetup_Unknown13(void)
 {
     RSDK_THIS(TitleSetup);
     RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
-void TitleSetup_Unknown14()
+void TitleSetup_Unknown14(void)
 {
     RSDK_THIS(TitleSetup);
     entity->direction = FLIP_NONE;
@@ -348,14 +348,14 @@ void TitleSetup_Unknown14()
     RSDK.DrawSprite(&entity->data, &entity->drawPos, 0);
 }
 
-void TitleSetup_Unknown15()
+void TitleSetup_Unknown15(void)
 {
     RSDK_THIS(TitleSetup);
     RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
-void TitleSetup_EditorDraw() {}
+void TitleSetup_EditorDraw(void) {}
 
-void TitleSetup_EditorLoad() {}
+void TitleSetup_EditorLoad(void) {}
 
-void TitleSetup_Serialize() {}
+void TitleSetup_Serialize(void) {}

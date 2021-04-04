@@ -2,18 +2,18 @@
 
 ObjectRing *Ring;
 
-void Ring_Update()
+void Ring_Update(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void Ring_LateUpdate() {}
+void Ring_LateUpdate(void) {}
 
-void Ring_StaticUpdate() {}
+void Ring_StaticUpdate(void) {}
 
-void Ring_Draw()
+void Ring_Draw(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     if (entity->stateDraw)
@@ -97,7 +97,7 @@ void Ring_Create(void *data)
     }
 }
 
-void Ring_StageLoad()
+void Ring_StageLoad(void)
 {
     Ring->spriteIndex   = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
     Ring->hitbox.left   = -8;
@@ -112,26 +112,26 @@ void Ring_StageLoad()
     Ring->sfx_Ring = RSDK.GetSFX("Global/Ring.wav");
 }
 
-void Ring_DebugSpawn() { RSDK.CreateEntity(Ring->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
-void Ring_DebugDraw()
+void Ring_DebugSpawn(void) { RSDK.CreateEntity(Ring->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Ring_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
 
-void Ring_StateDraw_Normal()
+void Ring_StateDraw_Normal(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->direction  = entity->animData.frameID > 8;
     RSDK.DrawSprite(&entity->animData, NULL, 0);
 }
-void Ring_StateDraw_Oscillating()
+void Ring_StateDraw_Oscillating(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->direction  = entity->animData.frameID > 8;
     RSDK.DrawSprite(&entity->animData, &entity->offset, 0);
 }
-void Ring_StateDraw_Sparkle()
+void Ring_StateDraw_Sparkle(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     if (RSDK_sceneInfo->entity->alpha == 0xE0) {
@@ -143,7 +143,7 @@ void Ring_StateDraw_Sparkle()
     }
     RSDK.DrawSprite(&entity->animData, NULL, 0);
 }
-void Ring_State_Attract()
+void Ring_State_Attract(void)
 {
     EntityRing *entity   = (EntityRing *)RSDK_sceneInfo->entity;
     EntityPlayer *player = entity->storedPlayer;
@@ -192,7 +192,7 @@ void Ring_State_Attract()
     Ring_Collect();
     entity->animData.frameID = Zone->ringFrame;
 }
-void Ring_State_Big()
+void Ring_State_Big(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->position.x += entity->velocity.x;
@@ -247,7 +247,7 @@ void Ring_State_Big()
     if (entity->timer > 0xFF)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
-void Ring_State_Bounce()
+void Ring_State_Bounce(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->velocity.y += 0x1800;
@@ -276,11 +276,11 @@ void Ring_State_Bounce()
         Ring_Collect();
 
     if (entity->timer > 0xFF)
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     else if (entity->timer >= 0xF0)
         entity->alpha -= 0x10;
 }
-void Ring_State_Circular()
+void Ring_State_Circular(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->offset.x   = entity->amplitude.x * RSDK.Cos1024(entity->speed * Zone->timer + 4 * entity->angle) + entity->position.x;
@@ -289,7 +289,7 @@ void Ring_State_Circular()
 
     entity->animData.frameID = Zone->ringFrame;
 }
-void Ring_State_Grow()
+void Ring_State_Grow(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->position.x += entity->velocity.x;
@@ -302,7 +302,7 @@ void Ring_State_Grow()
     if (++entity->timer > 64)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
-void Ring_State_Move()
+void Ring_State_Move(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->offset.x   = entity->amplitude.x * RSDK.Sin1024(entity->speed * Zone->timer) + entity->position.x;
@@ -311,14 +311,14 @@ void Ring_State_Move()
 
     entity->animData.frameID = Zone->ringFrame;
 }
-void Ring_State_Normal()
+void Ring_State_Normal(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     Ring_Collect();
 
     entity->animData.frameID = Zone->ringFrame;
 }
-void Ring_State_Path()
+void Ring_State_Path(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
 
@@ -335,7 +335,7 @@ void Ring_State_Path()
 
     entity->animData.frameID = Zone->ringFrame;
 }
-void Ring_State_Sparkle()
+void Ring_State_Sparkle(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->position.x += entity->velocity.x;
@@ -353,7 +353,7 @@ void Ring_State_Sparkle()
         entity->timer--;
     }
 }
-void Ring_State_Track()
+void Ring_State_Track(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
     entity->offset.x += entity->velocity.x;
@@ -467,7 +467,7 @@ byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
     }
     return boxResult;
 }
-void Ring_Collect()
+void Ring_Collect(void)
 {
     EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
 
@@ -546,7 +546,7 @@ void Ring_Collect()
         sparkle->animData.animationSpeed = RSDK.Rand(6, 8);
         sparkle->timer                   = 2 * i++;
     }
-    RSDK.ResetEntityPtr(entity, 0, 0);
+    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     entity->active = -1;
     RSDK.BreakForeachLoop();
 }
@@ -647,11 +647,11 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
     }
 }
 
-void Ring_EditorDraw() {}
+void Ring_EditorDraw(void) {}
 
-void Ring_EditorLoad() {}
+void Ring_EditorLoad(void) {}
 
-void Ring_Serialize()
+void Ring_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Ring, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Ring, VAR_ENUM, planeFilter);

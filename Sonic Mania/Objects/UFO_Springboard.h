@@ -50,15 +50,15 @@ typedef struct {
 extern ObjectUFO_Springboard *UFO_Springboard;
 
 // Standard Entity Events
-void UFO_Springboard_Update();
-void UFO_Springboard_LateUpdate();
-void UFO_Springboard_StaticUpdate();
-void UFO_Springboard_Draw();
+void UFO_Springboard_Update(void);
+void UFO_Springboard_LateUpdate(void);
+void UFO_Springboard_StaticUpdate(void);
+void UFO_Springboard_Draw(void);
 void UFO_Springboard_Create(void* data);
-void UFO_Springboard_StageLoad();
-void UFO_Springboard_EditorDraw();
-void UFO_Springboard_EditorLoad();
-void UFO_Springboard_Serialize();
+void UFO_Springboard_StageLoad(void);
+void UFO_Springboard_EditorDraw(void);
+void UFO_Springboard_EditorLoad(void);
+void UFO_Springboard_Serialize(void);
 
 // Extra Entity Functions
 

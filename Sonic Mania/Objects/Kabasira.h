@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectKabasira *Kabasira;
 
 // Standard Entity Events
-void Kabasira_Update();
-void Kabasira_LateUpdate();
-void Kabasira_StaticUpdate();
-void Kabasira_Draw();
+void Kabasira_Update(void);
+void Kabasira_LateUpdate(void);
+void Kabasira_StaticUpdate(void);
+void Kabasira_Draw(void);
 void Kabasira_Create(void* data);
-void Kabasira_StageLoad();
-void Kabasira_EditorDraw();
-void Kabasira_EditorLoad();
-void Kabasira_Serialize();
+void Kabasira_StageLoad(void);
+void Kabasira_EditorDraw(void);
+void Kabasira_EditorLoad(void);
+void Kabasira_Serialize(void);
 
 // Extra Entity Functions
 

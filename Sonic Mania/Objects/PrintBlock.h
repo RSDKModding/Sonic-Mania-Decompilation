@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPrintBlock *PrintBlock;
 
 // Standard Entity Events
-void PrintBlock_Update();
-void PrintBlock_LateUpdate();
-void PrintBlock_StaticUpdate();
-void PrintBlock_Draw();
+void PrintBlock_Update(void);
+void PrintBlock_LateUpdate(void);
+void PrintBlock_StaticUpdate(void);
+void PrintBlock_Draw(void);
 void PrintBlock_Create(void* data);
-void PrintBlock_StageLoad();
-void PrintBlock_EditorDraw();
-void PrintBlock_EditorLoad();
-void PrintBlock_Serialize();
+void PrintBlock_StageLoad(void);
+void PrintBlock_EditorDraw(void);
+void PrintBlock_EditorLoad(void);
+void PrintBlock_Serialize(void);
 
 // Extra Entity Functions
 

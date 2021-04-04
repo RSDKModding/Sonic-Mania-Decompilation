@@ -55,7 +55,9 @@ bool32 processEvents()
 #endif                                                                                     //! RETRO_USING_SDL2
                     SDL_GetMouseState(&touchX[0], &touchY[0]);
                     touchX[0] /= engine.windowScale;
+                    touchX[0] /= 65536.0f;
                     touchY[0] /= engine.windowScale;
+                    touchY[0] /= 65536.0f;
                     touches = 1;
 #if RETRO_USING_SDL2
                 }
@@ -94,8 +96,10 @@ bool32 processEvents()
                     touchDown[i]       = true;
                     SDL_Finger *finger = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
                     touchX[i]          = (finger->x * pixWidth * engine.windowScale) / engine.windowScale;
+                    touchX[i] /= 65536.0f;
 
                     touchY[i] = (finger->y * SCREEN_YSIZE * engine.windowScale) / engine.windowScale;
+                    touchY[i] /= 65536.0f;
                 }
                 break;
             case SDL_FINGERDOWN:
@@ -104,8 +108,10 @@ bool32 processEvents()
                     touchDown[i]       = true;
                     SDL_Finger *finger = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
                     touchX[i]          = (finger->x * pixWidth * engine.windowScale) / engine.windowScale;
+                    touchX[i] /= 65536.0f;
 
                     touchY[i] = (finger->y * SCREEN_YSIZE * engine.windowScale) / engine.windowScale;
+                    touchY[i] /= 65536.0f;
                 }
                 break;
             case SDL_FINGERUP: touches = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)); break;
@@ -117,25 +123,21 @@ bool32 processEvents()
                     case SDLK_ESCAPE:
                         if (engine.devMenu) {
                             if (sceneInfo.state == ENGINESTATE_DEVMENU) {
-                                // v2              = ShaderSettings.field_C;
                                 sceneInfo.state = devMenu.stateStore;
-                                // if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
-                                //    v2 = 0;
-                                // ShaderSettings.field_C = v2;
-                                // ResumeSound();
+                                if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
+                                    engine.screenCount = 0;
+                                ResumeSound();
                             }
                             else {
-                                // v1                 = ShaderSettings.field_C;
                                 devMenu.stateStore = sceneInfo.state;
-                                // if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                                //    v1 = 1;
+                                if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
+                                    engine.screenCount = 1;
                                 devMenu.state  = DevMenu_MainMenu;
                                 devMenu.option = 0;
                                 devMenu.scroll = 0;
                                 devMenu.timer  = 0;
-                                // ShaderSettings.field_C = v1;
                                 sceneInfo.state = ENGINESTATE_DEVMENU;
-                                // PauseSound();
+                                PauseSound();
                             }
                         }
                         break;
@@ -282,7 +284,7 @@ void runRetroEngine()
                 LoadScene();
                 LoadSceneFile();
                 InitObjects();
-#if RETRO_USE_PLUS
+#if RETRO_REV02
                 userCore->SetupDebugValues();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
@@ -294,7 +296,8 @@ void runRetroEngine()
                     val->max        = 1;
                 }
 #endif
-                engine.dimLimit = 18000;
+                // dim after 5 mins
+                engine.dimLimit = (5 * 60) * engine.refreshRate;
                 inputDevice.ProcessInput();
                 ProcessObjects();
                 break;
@@ -332,11 +335,11 @@ void runRetroEngine()
                 }
                 ProcessObjectDrawLists();
                 break;
-            case ENGINESTATE_LOAD_STEPOVER:
+            case ENGINESTATE_LOAD | ENGINESTATE_STEPOVER:
                 LoadScene();
                 LoadSceneFile();
                 InitObjects();
-#if RETRO_USE_PLUS
+#if RETRO_REV02
                 userCore->SetupDebugValues();
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
@@ -350,9 +353,9 @@ void runRetroEngine()
 #endif
                 inputDevice.ProcessInput();
                 ProcessObjects();
-                sceneInfo.state = ENGINESTATE_REGULAR_STEPOVER;
+                sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
                 break;
-            case ENGINESTATE_REGULAR_STEPOVER:
+            case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
                 inputDevice.ProcessInput();
                 if (engine.frameStep) {
                     ProcessSceneTimer();
@@ -362,7 +365,7 @@ void runRetroEngine()
                     engine.frameStep = false;
                 }
                 break;
-            case ENGINESTATE_PAUSED_STEPOVER:
+            case ENGINESTATE_PAUSED | ENGINESTATE_STEPOVER:
                 inputDevice.ProcessInput();
                 if (engine.frameStep) {
                     ProcessPausedObjects();
@@ -370,7 +373,7 @@ void runRetroEngine()
                     engine.frameStep = false;
                 }
                 break;
-            case ENGINESTATE_FROZEN_STEPOVER:
+            case ENGINESTATE_FROZEN | ENGINESTATE_STEPOVER:
                 inputDevice.ProcessInput();
                 if (engine.frameStep) {
                     ProcessFrozenObjects();
@@ -393,7 +396,7 @@ void runRetroEngine()
                     if (engine.displayTime <= 0.0) {
                         engine.imageUnknown += engine.imageDelta;
                         if (engine.imageUnknown <= 0.0) {
-                            // ShaderSettings.ShaderID = prevScreenShader;
+                            engine.shaderID = engine.prevShaderID;
                             engine.screenCount  = 1;
                             sceneInfo.state     = engine.prevEngineMode;
                             engine.imageUnknown = 1.0;
@@ -415,6 +418,7 @@ void runRetroEngine()
                     }
                 }
                 break;
+#if RETRO_REV02
             case ENGINESTATE_ERRORMSG: {
                 inputDevice.ProcessInput();
                 if (controller[0].keyStart.down)
@@ -435,6 +439,7 @@ void runRetroEngine()
                 DrawDevText(8, outputString, currentScreen->centerY - (yOff >> 1) + 8, 0, 0xF0F0F0);
                 break;
             }
+#endif
         }
 
         FlipScreen();
@@ -494,7 +499,7 @@ void parseArguments(int argc, char *argv[])
             buf[b] = 0;
         }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
         find = strstr(argv[a], "filter=");
         if (find) {
             char buf[0x10];
@@ -562,18 +567,17 @@ void LoadGameConfig()
             ReadString(&info, hashBuffer);
 
             uint hash[4];
-            GenerateHash(hash, StrLength(hashBuffer));
+            GEN_HASH(hashBuffer, hash);
 
             if (objectCount > 0) {
                 int objID                          = 0;
+                globalObjectCount                  = TYPE_DEFAULTCOUNT;
                 globalObjectIDs[globalObjectCount] = 0;
-                do {
-                    if (hash[0] == objectList[objID].hash[0] && hash[1] == objectList[objID].hash[1] && hash[2] == objectList[objID].hash[2]
-                        && hash[3] == objectList[objID].hash[3]) {
+                for (objID = 0; objID < objectCount; ++objID) {
+                    if (HASH_MATCH(hash, objectList[objID].hash)) {
                         globalObjectIDs[globalObjectCount++] = objID;
                     }
-                    ++objID;
-                } while (objID < objectCount);
+                }
             }
         }
 
@@ -619,26 +623,26 @@ void LoadGameConfig()
 
         int sceneID = 0;
         for (int i = 0; i < sceneInfo.categoryCount; ++i) {
-            ReadString(&info, sceneInfo.listCategory[i].name);
-            StrCopy(hashBuffer, sceneInfo.listCategory[i].name);
-            GenerateHash(sceneInfo.listCategory[i].hash, StrLength(hashBuffer));
+            SceneListInfo *category = &sceneInfo.listCategory[i];
+            ReadString(&info, category->name);
+            GEN_HASH(category->name, category->hash);
 
-            sceneInfo.listCategory[i].sceneOffsetStart = sceneID;
-            sceneInfo.listCategory[i].sceneCount       = ReadInt8(&info);
-            for (int s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
-                ReadString(&info, sceneInfo.listData[sceneID + s].name);
-                StrCopy(hashBuffer, sceneInfo.listData[sceneID + s].name);
-                GenerateHash(sceneInfo.listData[sceneID + s].hash, StrLength(hashBuffer));
+            category->sceneOffsetStart = sceneID;
+            category->sceneCount       = ReadInt8(&info);
+            for (int s = 0; s < category->sceneCount; ++s) {
+                SceneListEntry *scene = &sceneInfo.listData[sceneID + s];
+                ReadString(&info, scene->name);
+                GEN_HASH(scene->name, scene->hash);
 
-                ReadString(&info, sceneInfo.listData[sceneID + s].folder);
-                ReadString(&info, sceneInfo.listData[sceneID + s].sceneID);
+                ReadString(&info, scene->folder);
+                ReadString(&info, scene->sceneID);
 
-#if RETRO_USE_PLUS
-                sceneInfo.listData[sceneID + s].filter = ReadInt8(&info);
+#if RETRO_REV02
+                scene->filter = ReadInt8(&info);
 #endif
             }
-            sceneInfo.listCategory[i].sceneOffsetEnd = sceneInfo.listCategory[i].sceneOffsetStart + sceneInfo.listCategory[i].sceneCount;
-            sceneID += sceneInfo.listCategory[i].sceneCount;
+            category->sceneOffsetEnd = category->sceneOffsetStart + category->sceneCount;
+            sceneID += category->sceneCount;
         }
 
         byte cfmCount = ReadInt8(&info);
@@ -658,7 +662,7 @@ void InitScriptSystem()
 {
     RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
                  NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     RegisterObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
                  DevOutput_Create, NULL, NULL, NULL, NULL);
 #endif
@@ -666,7 +670,7 @@ void InitScriptSystem()
                  TestObject_LateUpdate, TestObject_StaticUpdate, TestObject_Draw, TestObject_Create, TestObject_StageLoad, TestObject_EditorDraw,
                  TestObject_EditorLoad, TestObject_Serialize);
     globalObjectIDs[0] = 0;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     globalObjectIDs[1] = 1;
     globalObjectIDs[2] = 2;
 #else
@@ -678,24 +682,24 @@ void InitScriptSystem()
     GameInfo info;
 
     info.functionPtrs = RSDKFunctionTable;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     info.userdataPtrs = userFunctionTable;
     info.gameName = engine.gameName;
     info.currentSKU   = &curSKU;
 #endif
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     info.engineInfo = &engineInfo;
 #endif
     info.sceneInfo    = &sceneInfo;
     info.controller   = controller;
     info.stickL       = stickR;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     info.stickR       = stickR;
     info.triggerL     = triggerL;
     info.triggerR     = triggerR;
 #endif
     info.touchMouse = &touchMouseData;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     info.unknown = &unknownInfo;
 #endif
     info.screenInfo   = screens;

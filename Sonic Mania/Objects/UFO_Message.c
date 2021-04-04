@@ -2,18 +2,18 @@
 
 ObjectUFO_Message *UFO_Message;
 
-void UFO_Message_Update()
+void UFO_Message_Update(void)
 {
     RSDK_THIS(UFO_Message);
     if (entity->state)
         entity->state();
 }
 
-void UFO_Message_LateUpdate() {}
+void UFO_Message_LateUpdate(void) {}
 
-void UFO_Message_StaticUpdate() {}
+void UFO_Message_StaticUpdate(void) {}
 
-void UFO_Message_Draw()
+void UFO_Message_Draw(void)
 {
     RSDK_THIS(UFO_Message);
     Vector2 drawPos;
@@ -48,16 +48,16 @@ void UFO_Message_Create(void *data)
     }
 }
 
-void UFO_Message_StageLoad() { UFO_Message->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE); }
+void UFO_Message_StageLoad(void) { UFO_Message->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE); }
 
-void UFO_Message_Unknown1()
+void UFO_Message_Unknown1(void)
 {
     RSDK_THIS(UFO_Message);
     entity->timer -= 16;
     if (entity->timer <= 0)
         entity->state = UFO_Message_Unknown2;
 }
-void UFO_Message_Unknown2()
+void UFO_Message_Unknown2(void)
 {
     RSDK_THIS(UFO_Message);
     if (++entity->timer2 >= 180) {
@@ -65,7 +65,7 @@ void UFO_Message_Unknown2()
         entity->state  = UFO_Message_Unknown3;
     }
 }
-void UFO_Message_Unknown3()
+void UFO_Message_Unknown3(void)
 {
     RSDK_THIS(UFO_Message);
     entity->timer += 16;
@@ -73,8 +73,8 @@ void UFO_Message_Unknown3()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void UFO_Message_EditorDraw() {}
+void UFO_Message_EditorDraw(void) {}
 
-void UFO_Message_EditorLoad() {}
+void UFO_Message_EditorLoad(void) {}
 
-void UFO_Message_Serialize() {}
+void UFO_Message_Serialize(void) {}

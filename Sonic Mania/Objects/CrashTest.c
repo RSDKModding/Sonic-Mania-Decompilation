@@ -2,22 +2,22 @@
 
 ObjectCrashTest *CrashTest;
 
-void CrashTest_Update()
+void CrashTest_Update(void)
 {
 
 }
 
-void CrashTest_LateUpdate()
+void CrashTest_LateUpdate(void)
 {
 
 }
 
-void CrashTest_StaticUpdate()
+void CrashTest_StaticUpdate(void)
 {
 
 }
 
-void CrashTest_Draw()
+void CrashTest_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void CrashTest_Create(void* data)
 
 }
 
-void CrashTest_StageLoad()
+void CrashTest_StageLoad(void)
 {
 
 }
 
-void CrashTest_EditorDraw()
+void CrashTest_EditorDraw(void)
 {
 
 }
 
-void CrashTest_EditorLoad()
+void CrashTest_EditorLoad(void)
 {
 
 }
 
-void CrashTest_Serialize()
+void CrashTest_Serialize(void)
 {
 
 }

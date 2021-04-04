@@ -2,22 +2,22 @@
 
 ObjectOneWayDoor *OneWayDoor;
 
-void OneWayDoor_Update()
+void OneWayDoor_Update(void)
 {
 
 }
 
-void OneWayDoor_LateUpdate()
+void OneWayDoor_LateUpdate(void)
 {
 
 }
 
-void OneWayDoor_StaticUpdate()
+void OneWayDoor_StaticUpdate(void)
 {
 
 }
 
-void OneWayDoor_Draw()
+void OneWayDoor_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void OneWayDoor_Create(void* data)
 
 }
 
-void OneWayDoor_StageLoad()
+void OneWayDoor_StageLoad(void)
 {
 
 }
 
-void OneWayDoor_EditorDraw()
+void OneWayDoor_EditorDraw(void)
 {
 
 }
 
-void OneWayDoor_EditorLoad()
+void OneWayDoor_EditorLoad(void)
 {
 
 }
 
-void OneWayDoor_Serialize()
+void OneWayDoor_Serialize(void)
 {
 
 }

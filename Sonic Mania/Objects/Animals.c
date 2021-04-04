@@ -2,7 +2,7 @@
 
 ObjectAnimals *Animals;
 
-void Animals_Update()
+void Animals_Update(void)
 {
     EntityAnimals *entity = (EntityAnimals*)RSDK_sceneInfo->entity;
     if (entity->state)
@@ -11,17 +11,17 @@ void Animals_Update()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void Animals_LateUpdate()
+void Animals_LateUpdate(void)
 {
 
 }
 
-void Animals_StaticUpdate()
+void Animals_StaticUpdate(void)
 {
 
 }
 
-void Animals_Draw()
+void Animals_Draw(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -95,7 +95,7 @@ void Animals_Create(void* data)
     }
 }
 
-void Animals_StageLoad()
+void Animals_StageLoad(void)
 {
     Animals->spriteIndex = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
     if (RSDK.GetObjectIDByName("Platform"))
@@ -104,7 +104,7 @@ void Animals_StageLoad()
         Animals->hasBridge = true;
 }
 
-void Animals_CheckPlayerPos()
+void Animals_CheckPlayerPos(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
 
@@ -123,8 +123,7 @@ void Animals_CheckPlayerPos()
         }
         case 2: entity->direction = RSDK.Random(0, 2, &Zone->timeStart); break;
     }
-
-    int xVel = Animals->xVelocity[entity->type];
+    
     if (!entity->direction)
         entity->velocity.x = -Animals->xVelocity[entity->type];
     else
@@ -157,7 +156,7 @@ bool32 Animals_CheckPlatformCollision(void *plat)
     return flag;
 }
 
-bool32 Animals_CheckGroundCollision()
+bool32 Animals_CheckGroundCollision(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     if (entity->velocity.y <= 0)
@@ -215,7 +214,7 @@ bool32 Animals_CheckGroundCollision()
     return false;
 }
 
-void Animals_State_Freed()
+void Animals_State_Freed(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     entity->position.y += entity->velocity.y;
@@ -243,7 +242,7 @@ void Animals_State_Freed()
     }
 }
 
-void Animals_State_FollowPlayer_Normal()
+void Animals_State_FollowPlayer_Normal(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     entity->position.x += entity->velocity.x;
@@ -256,7 +255,7 @@ void Animals_State_FollowPlayer_Normal()
     entity->data.frameID = entity->velocity.y < 0;
 }
 
-void Animals_State_FollowPlayer_Bird()
+void Animals_State_FollowPlayer_Bird(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     entity->position.x += entity->velocity.x;
@@ -269,7 +268,7 @@ void Animals_State_FollowPlayer_Bird()
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void Animals_State_BounceAround()
+void Animals_State_BounceAround(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     if (entity->delay <= 0)
@@ -278,17 +277,17 @@ void Animals_State_BounceAround()
         entity->delay--;
 }
 
-void Animals_EditorDraw()
+void Animals_EditorDraw(void)
 {
 
 }
 
-void Animals_EditorLoad()
+void Animals_EditorLoad(void)
 {
 
 }
 
-void Animals_Serialize()
+void Animals_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Animals, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Animals, VAR_ENUM, behaviour);

@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectFXWaveRing *FXWaveRing;
 
 // Standard Entity Events
-void FXWaveRing_Update();
-void FXWaveRing_LateUpdate();
-void FXWaveRing_StaticUpdate();
-void FXWaveRing_Draw();
+void FXWaveRing_Update(void);
+void FXWaveRing_LateUpdate(void);
+void FXWaveRing_StaticUpdate(void);
+void FXWaveRing_Draw(void);
 void FXWaveRing_Create(void* data);
-void FXWaveRing_StageLoad();
-void FXWaveRing_EditorDraw();
-void FXWaveRing_EditorLoad();
-void FXWaveRing_Serialize();
+void FXWaveRing_StageLoad(void);
+void FXWaveRing_EditorDraw(void);
+void FXWaveRing_EditorLoad(void);
+void FXWaveRing_Serialize(void);
 
 // Extra Entity Functions
 #endif

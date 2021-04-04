@@ -20,15 +20,15 @@ typedef struct {
 extern ObjectERZSetup *ERZSetup;
 
 // Standard Entity Events
-void ERZSetup_Update();
-void ERZSetup_LateUpdate();
-void ERZSetup_StaticUpdate();
-void ERZSetup_Draw();
+void ERZSetup_Update(void);
+void ERZSetup_LateUpdate(void);
+void ERZSetup_StaticUpdate(void);
+void ERZSetup_Draw(void);
 void ERZSetup_Create(void* data);
-void ERZSetup_StageLoad();
-void ERZSetup_EditorDraw();
-void ERZSetup_EditorLoad();
-void ERZSetup_Serialize();
+void ERZSetup_StageLoad(void);
+void ERZSetup_EditorDraw(void);
+void ERZSetup_EditorLoad(void);
+void ERZSetup_Serialize(void);
 
 // Extra Entity Functions
 void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines);

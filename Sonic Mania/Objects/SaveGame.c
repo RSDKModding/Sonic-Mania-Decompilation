@@ -8,25 +8,25 @@ ObjectSaveGame *SaveGame;
 #define noSave globals->noSave
 #endif
 
-void SaveGame_Update() {}
-void SaveGame_LateUpdate() {}
-void SaveGame_StaticUpdate() {}
-void SaveGame_Draw() {}
+void SaveGame_Update(void) {}
+void SaveGame_LateUpdate(void) {}
+void SaveGame_StaticUpdate(void) {}
+void SaveGame_Draw(void) {}
 void SaveGame_Create(void *data) {}
-void SaveGame_StageLoad()
+void SaveGame_StageLoad(void)
 {
 #if !RETRO_USE_PLUS
     SaveGame_LoadSaveData();
 #endif
 }
-void SaveGame_EditorDraw() {}
-void SaveGame_EditorLoad() {}
-void SaveGame_Serialize() {}
+void SaveGame_EditorDraw(void) {}
+void SaveGame_EditorLoad(void) {}
+void SaveGame_Serialize(void) {}
 
 #if RETRO_USE_PLUS
 int *SaveGame_GetDataPtr(int slot, bool32 encore)
 {
-    if (slot == 0xFF)
+    if (slot == NO_SAVE_SLOT)
         return globals->noSaveSlot;
 
     if (encore)
@@ -36,10 +36,10 @@ int *SaveGame_GetDataPtr(int slot, bool32 encore)
 }
 #endif
 
-void SaveGame_LoadSaveData()
+void SaveGame_LoadSaveData(void)
 {
     int slot = globals->saveSlotID;
-    if (slot == 255)
+    if (slot == NO_SAVE_SLOT)
         SaveGame->saveRAM = globals->noSaveSlot;
     else
 #if RETRO_USE_PLUS
@@ -142,28 +142,28 @@ void SaveGame_LoadSaveData()
     }
 }
 
-void SaveGame_LoadFile()
+void SaveGame_LoadFile(void)
 {
     if (!SaveGame->saveRAM) {
         SaveGame_SaveLoadedCB(0);
         return;
     }
-    if (globals->saveLoaded == 100) {
+    if (globals->saveLoaded == STATUS_CONTINUE) {
         SaveGame_SaveLoadedCB(0);
         return;
     }
-    if (globals->saveLoaded == 200) {
+    if (globals->saveLoaded == STATUS_OK) {
         SaveGame_SaveLoadedCB(1);
         return;
     }
-    globals->saveLoaded     = 100;
+    globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = RSDK_sceneInfo->entity;
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
 #if RETRO_USE_PLUS
     User.LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 #endif
 }
-void SaveGame_SaveFile(int (*callback)(int status))
+void SaveGame_SaveFile(void (*callback)(int status))
 {
 #if RETRO_USE_PLUS
     if (noSave || !SaveGame->saveRAM || globals->saveLoaded != 200) {
@@ -197,22 +197,22 @@ void SaveGame_SaveLoadedCB(int status)
     }
 
 #if RETRO_USE_PLUS
-    if ((globals->taTableID == 0xFFFF || globals->taTableLoaded != 200) && globals->taTableLoaded != 100) {
+    if ((globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
         Game_Print("Loading Time Attack DB");
-        globals->taTableLoaded        = 100;
+        globals->taTableLoaded        = STATUS_CONTINUE;
         TimeAttackData->loadEntityPtr = RSDK_sceneInfo->entity;
         TimeAttackData->loadCallback  = NULL;
         ushort table                  = User.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
         globals->taTableID            = table;
-        if (globals->taTableID == -1) {
+        if (globals->taTableID == 0xFFFF) {
             Game_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
-            globals->taTableLoaded = 500;
+            globals->taTableLoaded = STATUS_ERROR;
         }
     }
 #endif
 }
 
-void SaveGame_SaveGameState()
+void SaveGame_SaveGameState(void)
 {
     int *saveRAM            = SaveGame->saveRAM;
     globals->recallEntities = true;
@@ -261,8 +261,8 @@ void SaveGame_SaveGameState()
     globals->restart1UP      = player1->ringExtraLife;
 
     for (int i = 0x40; i < 0x40 + 0x800; ++i) {
-        EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(i);
-        if (itemBox->objectID || itemBox->active != -1) {
+        EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
+        if (itemBox->objectID || (itemBox->active != 0xFF)) {
             if (itemBox->objectID == ItemBox->objectID) {
                 if (itemBox->state == ItemBox_State_Broken) {
                     globals->atlEntityData[(0x200 * 1) + i] = 2;
@@ -277,7 +277,7 @@ void SaveGame_SaveGameState()
         }
     }
 }
-void SaveGame_SaveProgress()
+void SaveGame_SaveProgress(void)
 {
     int *saveRAM = SaveGame->saveRAM;
     saveRAM[25]  = Player->savedLives;
@@ -302,7 +302,7 @@ void SaveGame_SaveProgress()
         }
     }
 }
-void SaveGame_ClearRestartData()
+void SaveGame_ClearRestartData(void)
 {
     globals->recallEntities      = 0;
     globals->restartMilliseconds = 0;
@@ -310,7 +310,7 @@ void SaveGame_ClearRestartData()
     globals->restartMinutes      = 0;
     memset(globals->atlEntityData, 0, 0x840 * sizeof(int));
 }
-void SaveGame_SavePlayerState()
+void SaveGame_SavePlayerState(void)
 {
     int *saveRAM                 = SaveGame->saveRAM;
     globals->restartSlot[0]      = 0;
@@ -336,7 +336,7 @@ void SaveGame_SavePlayerState()
     globals->restart1UP      = player->ringExtraLife;
     globals->restartPowerups = player->shield | (player->hyperRing << 6);
 }
-void SaveGame_LoadPlayerState()
+void SaveGame_LoadPlayerState(void)
 {
     RSDK_sceneInfo->milliseconds = globals->restartMilliseconds;
     RSDK_sceneInfo->seconds      = globals->restartSeconds;
@@ -348,7 +348,7 @@ void SaveGame_LoadPlayerState()
     globals->restart1UP          = 100;
     globals->restartPowerups     = 0;
 }
-void SaveGame_ResetPlayerState()
+void SaveGame_ResetPlayerState(void)
 {
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
@@ -365,13 +365,13 @@ void SaveGame_ResetPlayerState()
 void SaveGame_LoadFile_CB(int status)
 {
     int state = 0;
-    if (status == 200 || status == 404) {
+    if (status == STATUS_OK || status == STATUS_NOTFOUND) {
         state               = 1;
-        globals->saveLoaded = 200;
+        globals->saveLoaded = STATUS_OK;
     }
     else {
         state               = 0;
-        globals->saveLoaded = 500;
+        globals->saveLoaded = STATUS_ERROR;
     }
 
     if (SaveGame->loadCallback) {
@@ -411,7 +411,7 @@ int SaveGame_GetNotifStringID(int type)
         default: return STR_FEATUREUNIMPLIMENTED; break;
     }
 }
-void SaveGame_ShuffleBSSID()
+void SaveGame_ShuffleBSSID(void)
 {
     int *saveRAM = NULL;
     if (RSDK_sceneInfo->inEditor) {
@@ -419,7 +419,7 @@ void SaveGame_ShuffleBSSID()
     }
     else {
         if (!noSave) {
-            if (globals->saveLoaded == 200)
+            if (globals->saveLoaded == STATUS_OK)
                 saveRAM = &globals->saveRAM[0x900];
             else
                 saveRAM = NULL;
@@ -444,7 +444,7 @@ void SaveGame_ShuffleBSSID()
                 break;
 
             bool32 flag    = false;
-            byte *bssState = (byte *)saveRAM[0x56];
+            byte *bssState = (byte *)&saveRAM[0x56];
             if (saveRAM[72] < 32)
                 flag = bssState[globals->blueSpheresID] < 1;
             else
@@ -468,16 +468,16 @@ void SaveGame_ShuffleBSSID()
         Game_Print("Blue Spheres ID rotated by %d to %d", globals->blueSpheresID - startID, globals->blueSpheresID);
     }
 }
-int *SaveGame_GetGlobalData()
+int *SaveGame_GetGlobalData(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200)
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK)
         return NULL;
     else
         return &globals->saveRAM[0x900];
 }
-void SaveGame_TrackGameProgress(int (*callback)(int))
+void SaveGame_TrackGameProgress(void (*callback)(int))
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         if (callback)
             callback(0);
@@ -496,11 +496,11 @@ void SaveGame_TrackGameProgress(int (*callback)(int))
         SaveGame_SaveFile(callback);
     }
 }
-void SaveGame_Unknown14()
+void SaveGame_Unknown14(void)
 {
     int *saveRAM = NULL;
 
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200)
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK)
         saveRAM = NULL;
     else
         saveRAM = &globals->saveRAM[0x900];
@@ -513,9 +513,9 @@ void SaveGame_Unknown14()
     saveRAM[71] = 0;
     saveRAM[72] = 0;
 }
-void SaveGame_UnlockAllMedals()
+void SaveGame_UnlockAllMedals(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
         return;
     }
@@ -523,7 +523,7 @@ void SaveGame_UnlockAllMedals()
     int *saveRAM            = &globals->saveRAM[0x900];
     globals->saveRAM[0x945] = 1;
     int *data               = saveRAM + 32;
-    byte *bssState          = (byte *)saveRAM[0x56];
+    byte *bssState          = (byte *)&saveRAM[0x56];
     saveRAM[52]             = 1;
     saveRAM[70]             = 2;
     saveRAM[72]             = 32;
@@ -540,9 +540,9 @@ void SaveGame_UnlockAllMedals()
         ++data;
     }
 }
-void SaveGame_ClearProgress()
+void SaveGame_ClearProgress(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to clear all before loading SaveGame file");
         return;
     }
@@ -550,7 +550,7 @@ void SaveGame_ClearProgress()
     int *saveRAM            = &globals->saveRAM[0x900];
     globals->saveRAM[0x945] = 0;
     int *data               = saveRAM + 32;
-    byte *bssState          = (byte *)saveRAM[0x15];
+    byte *bssState          = (byte *)&saveRAM[0x15];
     saveRAM[52]             = 0;
     saveRAM[70]             = 0;
     saveRAM[72]             = 0;
@@ -572,7 +572,7 @@ void SaveGame_ClearProgress()
 }
 void SaveGame_MarkZoneCompleted(int zoneID)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to mark completed zone before loading SaveGame file");
         return;
     }
@@ -588,9 +588,9 @@ void SaveGame_MarkZoneCompleted(int zoneID)
         }
     }
 }
-bool32 SaveGame_CheckZoneClear()
+bool32 SaveGame_CheckZoneClear(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
     }
@@ -605,7 +605,7 @@ bool32 SaveGame_CheckZoneClear()
 }
 void SaveGame_GetEmerald(int emeraldID)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to get emerald before loading SaveGame file");
         return;
     }
@@ -666,16 +666,16 @@ void SaveGame_GetMedal(byte medalID, byte type)
 }
 void SaveGame_GetEnding(byte ending)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to get game ending before loading SaveGame file");
     }
 
     if (ending > globals->saveRAM[0x946])
         globals->saveRAM[0x946] = ending;
 }
-void SaveGame_PrintSaveProgress()
+void SaveGame_PrintSaveProgress(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to dump before loading SaveGame file");
         return;
     }
@@ -709,7 +709,7 @@ void SaveGame_PrintSaveProgress()
         case 2: Game_Print("GOOD ENDING!\n"); break;
     }
 
-    byte *medals = (byte *)saveRAM[0x15];
+    byte *medals = (byte *)&saveRAM[0x15];
     for (int m = 0; m < 0x20; ++m) {
         switch (medals[m]) {
             default:
@@ -727,9 +727,9 @@ void SaveGame_PrintSaveProgress()
         Game_Print("ALL SILVER MEDALLIONS!");
     Game_Print("\n=========================");
 }
-int SaveGame_CountUnreadNotifs()
+int SaveGame_CountUnreadNotifs(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to count unread notifs before loading SaveGame file");
         return 0;
     }
@@ -746,9 +746,9 @@ int SaveGame_CountUnreadNotifs()
         return cnt;
     }
 }
-int SaveGame_GetNextNotif()
+int SaveGame_GetNextNotif(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
         Game_Print("WARNING GameProgress Attempted to get next unread notif before loading SaveGame file");
         return -1;
     }

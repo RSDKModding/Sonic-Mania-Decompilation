@@ -84,15 +84,15 @@ typedef struct {
 extern ObjectAPICallback *APICallback;
 
 // Standard Entity Events
-void APICallback_Update();
-void APICallback_LateUpdate();
-void APICallback_StaticUpdate();
-void APICallback_Draw();
+void APICallback_Update(void);
+void APICallback_LateUpdate(void);
+void APICallback_StaticUpdate(void);
+void APICallback_Draw(void);
 void APICallback_Create(void* data);
-void APICallback_StageLoad();
-void APICallback_EditorDraw();
-void APICallback_EditorLoad();
-void APICallback_Serialize();
+void APICallback_StageLoad(void);
+void APICallback_EditorDraw(void);
+void APICallback_EditorLoad(void);
+void APICallback_Serialize(void);
 
 // Extra Entity Functions
 void APICallback_SetRichPresence(int id, TextInfo *msg);

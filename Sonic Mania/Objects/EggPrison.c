@@ -2,7 +2,7 @@
 
 ObjectEggPrison *EggPrison;
 
-void EggPrison_Update()
+void EggPrison_Update(void)
 {
     RSDK_THIS(EggPrison);
     CallFunction(entity->state);
@@ -62,7 +62,7 @@ void EggPrison_Update()
                         RSDK_sceneInfo->timeEnabled = false;
                     if (entity->type == 5) {
                         int anim = player->playerAnimData.animationID;
-                        if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
+                        if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                             player->storedAnim = player->playerAnimData.animationID;
                         else
                             player->storedAnim = ANI_WALK;
@@ -103,11 +103,11 @@ void EggPrison_Update()
     }
 }
 
-void EggPrison_LateUpdate() {}
+void EggPrison_LateUpdate(void) {}
 
-void EggPrison_StaticUpdate() {}
+void EggPrison_StaticUpdate(void) {}
 
-void EggPrison_Draw()
+void EggPrison_Draw(void)
 {
     RSDK_THIS(EggPrison);
     Vector2 drawPos;
@@ -191,14 +191,14 @@ void EggPrison_Create(void *data)
     }
 }
 
-void EggPrison_StageLoad()
+void EggPrison_StageLoad(void)
 {
     EggPrison->spriteIndex = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
     EggPrison->sfxDestroy  = RSDK.GetSFX("Global/Destroy.wav");
     EggPrison->sfxSpring   = RSDK.GetSFX("Global/Spring.wav");
 }
 
-void EggPrison_HandleTileCollisions()
+void EggPrison_HandleTileCollisions(void)
 {
     RSDK_THIS(EggPrison);
 
@@ -240,7 +240,7 @@ void EggPrison_HandleTileCollisions()
     entity->angle &= 0xFF;
 }
 
-void EggPrison_Activated()
+void EggPrison_Activated(void)
 {
     RSDK_THIS(EggPrison);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data3, true, 0);
@@ -301,7 +301,7 @@ void EggPrison_Activated()
         }
         case 5:
             for (int a = 0; a < 10; ++a) {
-                EntityAnimals *animals = (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, (void *)(Animals->animalTypes[a & 1] + 1),
+                EntityAnimals *animals = (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[a & 1] + 1),
                                                                             (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + entity->position.x,
                                                                             entity->position.y + 0x40000);
                 animals->delay         = 4 * a;
@@ -347,14 +347,14 @@ void EggPrison_Activated()
     debris->updateRange.y = 0x800000;
 }
 
-void EggPrison_Unknown1()
+void EggPrison_Unknown1(void)
 {
     RSDK_THIS(EggPrison);
     entity->angleY = entity->position.y;
     entity->state  = EggPrison_Unknown2;
 }
 
-void EggPrison_Unknown2()
+void EggPrison_Unknown2(void)
 {
     RSDK_THIS(EggPrison);
     for (int p = 0; p < Player->playerCount && entity->type < 2; ++p) {
@@ -374,11 +374,11 @@ void EggPrison_Unknown2()
     }
 }
 
-void EggPrison_Unknown3()
+void EggPrison_Unknown3(void)
 {
     RSDK_THIS(EggPrison);
     if (!(entity->timer % 3)) {
-        Entity *explosion    = RSDK.CreateEntity(Explosion->objectID, (void *)(2 * (RSDK.Rand(0, 256) > 192) + 1),
+        Entity *explosion    = RSDK.CreateEntity(Explosion->objectID, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + 1),
                                               (RSDK.Rand(-24, 24) << 16) + entity->position.x, (RSDK.Rand(-24, 24) << 16) + entity->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
         RSDK.PlaySFX(EggPrison->sfxDestroy, 0, 255);
@@ -395,7 +395,7 @@ void EggPrison_Unknown3()
     }
 }
 
-void EggPrison_Unknown4()
+void EggPrison_Unknown4(void)
 {
     RSDK_THIS(EggPrison);
     if (++entity->timer == 60) {
@@ -407,7 +407,7 @@ void EggPrison_Unknown4()
     }
 }
 
-void EggPrison_Unknown5()
+void EggPrison_Unknown5(void)
 {
     RSDK_THIS(EggPrison);
     if (entity->velocity.x > -0x30000)
@@ -417,8 +417,8 @@ void EggPrison_Unknown5()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void EggPrison_EditorDraw() {}
+void EggPrison_EditorDraw(void) {}
 
-void EggPrison_EditorLoad() {}
+void EggPrison_EditorLoad(void) {}
 
-void EggPrison_Serialize() {}
+void EggPrison_Serialize(void) {}

@@ -16,8 +16,8 @@ typedef struct {
     int actID;
     int field_1C;
     int field_20;
-    void (*bufferMove_CB)();
-    void (*saveReplay_CB)();
+    void (*bufferMove_CB)(void);
+    void (*saveReplay_CB)(void);
     int field_2C;
     int field_30;
     bool32 dword34;
@@ -26,7 +26,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int timer;
     int stageFinishTimer;
     int scoreBonus;
@@ -57,34 +57,34 @@ typedef struct {
 extern ObjectActClear *ActClear;
 
 // Standard Entity Events
-void ActClear_Update();
-void ActClear_LateUpdate();
-void ActClear_StaticUpdate();
-void ActClear_Draw();
+void ActClear_Update(void);
+void ActClear_LateUpdate(void);
+void ActClear_StaticUpdate(void);
+void ActClear_Draw(void);
 void ActClear_Create(void* data);
-void ActClear_StageLoad();
-void ActClear_EditorDraw();
-void ActClear_EditorLoad();
-void ActClear_Serialize();
+void ActClear_StageLoad(void);
+void ActClear_EditorDraw(void);
+void ActClear_EditorLoad(void);
+void ActClear_Serialize(void);
 
 // Extra Entity Functions
 void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs);
 void ActClear_DrawNumbers(Vector2 *pos, int value, signed int maxVals);
-void ActClear_CheckPlayerVictory();
-int ActClear_SaveGameCallback(int a1);
-void ActClear_Unknown5();
+void ActClear_CheckPlayerVictory(void);
+void ActClear_SaveGameCallback(int success);
+void ActClear_Unknown5(void);
 
-void ActClear_Unknown6();
-void ActClear_Unknown7();
-void ActClear_State_TAFinish();
-void ActClear_Unknown8();
-void ActClear_TallyScore();
-void ActClear_LoadNextScene();
-void ActClear_Unknown9();
-void ActClear_Unknown10();
-void ActClear_State_ActFinish();
+void ActClear_Unknown6(void);
+void ActClear_Unknown7(void);
+void ActClear_State_TAFinish(void);
+void ActClear_Unknown8(void);
+void ActClear_TallyScore(void);
+void ActClear_LoadNextScene(void);
+void ActClear_Unknown9(void);
+void ActClear_Unknown10(void);
+void ActClear_State_ActFinish(void);
 
-void ActClear_ForcePlayerOnScreen();
+void ActClear_ForcePlayerOnScreen(void);
 StatInfo *ActClear_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
 void ActClear_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr);
 

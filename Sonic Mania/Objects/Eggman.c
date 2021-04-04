@@ -2,17 +2,17 @@
 
 ObjectEggman *Eggman;
 
-void Eggman_Update()
+void Eggman_Update(void)
 {
     RSDK_THIS(Eggman);
     CallFunction(entity->state);
 }
 
-void Eggman_LateUpdate() {}
+void Eggman_LateUpdate(void) {}
 
-void Eggman_StaticUpdate() {}
+void Eggman_StaticUpdate(void) {}
 
-void Eggman_Draw()
+void Eggman_Draw(void)
 {
     RSDK_THIS(Eggman);
     if (entity->parent) {
@@ -46,7 +46,7 @@ void Eggman_Create(void *data)
     }
 }
 
-void Eggman_StageLoad()
+void Eggman_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZCutscene")) {
         Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanGHZCutt.bin", SCOPE_STAGE);
@@ -62,13 +62,13 @@ void Eggman_StageLoad()
     }
 }
 
-void Eggman_Unknown1()
+void Eggman_Unknown1(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void Eggman_Unknown2()
+void Eggman_Unknown2(void)
 {
     RSDK_THIS(Eggman);
 
@@ -79,7 +79,7 @@ void Eggman_Unknown2()
     }
 }
 
-void Eggman_Unknown3()
+void Eggman_Unknown3(void)
 {
     RSDK_THIS(Eggman);
 
@@ -87,7 +87,7 @@ void Eggman_Unknown3()
         RSDK.ProcessAnimation(&entity->data);
 }
 
-void Eggman_Unknown4()
+void Eggman_Unknown4(void)
 {
     RSDK_THIS(Eggman);
 
@@ -103,7 +103,7 @@ void Eggman_Unknown4()
     }
 }
 
-void Eggman_Unknown5()
+void Eggman_Unknown5(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&entity->data);
@@ -121,7 +121,7 @@ void Eggman_Unknown5()
     }
 }
 
-void Eggman_Unknown6()
+void Eggman_Unknown6(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&entity->data);
@@ -133,7 +133,7 @@ void Eggman_Unknown6()
     }
 }
 
-void Eggman_Unknown7()
+void Eggman_Unknown7(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&entity->data);
@@ -146,8 +146,8 @@ void Eggman_Unknown7()
     }
 }
 
-void Eggman_EditorDraw() {}
+void Eggman_EditorDraw(void) {}
 
-void Eggman_EditorLoad() {}
+void Eggman_EditorLoad(void) {}
 
-void Eggman_Serialize() {}
+void Eggman_Serialize(void) {}

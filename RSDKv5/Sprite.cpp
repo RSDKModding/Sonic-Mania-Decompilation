@@ -759,7 +759,7 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
         engine.prevShaderID   = engine.shaderID;
         engine.prevEngineMode = sceneInfo.state;
         engine.dimMax         = 0.0;
-        // ShaderSettings.ShaderID = 7;
+        engine.shaderID       = 7; //RGBA
         engine.screenCount  = 0;
         engine.skipCallback = skipCallback;
         sceneInfo.state     = ENGINESTATE_SHOWPNG;

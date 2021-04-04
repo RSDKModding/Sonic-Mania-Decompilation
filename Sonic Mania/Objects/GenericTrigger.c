@@ -2,7 +2,7 @@
 
 ObjectGenericTrigger *GenericTrigger;
 
-void GenericTrigger_Update()
+void GenericTrigger_Update(void)
 {
     EntityPlayer *player = NULL;
     EntityGenericTrigger *entity = (EntityGenericTrigger *)RSDK_sceneInfo->entity;
@@ -15,17 +15,17 @@ void GenericTrigger_Update()
     }
 }
 
-void GenericTrigger_LateUpdate()
+void GenericTrigger_LateUpdate(void)
 {
 
 }
 
-void GenericTrigger_StaticUpdate()
+void GenericTrigger_StaticUpdate(void)
 {
 
 }
 
-void GenericTrigger_Draw()
+void GenericTrigger_Draw(void)
 {
 
 }
@@ -45,22 +45,22 @@ void GenericTrigger_Create(void* data)
     }
 }
 
-void GenericTrigger_StageLoad()
+void GenericTrigger_StageLoad(void)
 {
 
 }
 
-void GenericTrigger_EditorDraw()
+void GenericTrigger_EditorDraw(void)
 {
 
 }
 
-void GenericTrigger_EditorLoad()
+void GenericTrigger_EditorLoad(void)
 {
 
 }
 
-void GenericTrigger_Serialize()
+void GenericTrigger_Serialize(void)
 {
     RSDK_EDITABLE_VAR(GenericTrigger, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(GenericTrigger, VAR_UINT8, triggerID);

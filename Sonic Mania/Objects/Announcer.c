@@ -2,18 +2,18 @@
 
 ObjectAnnouncer *Announcer;
 
-void Announcer_Update()
+void Announcer_Update(void)
 {
     RSDK_THIS(Announcer);
     if (entity->state)
         entity->state();
 }
 
-void Announcer_LateUpdate() {}
+void Announcer_LateUpdate(void) {}
 
-void Announcer_StaticUpdate() {}
+void Announcer_StaticUpdate(void) {}
 
-void Announcer_Draw()
+void Announcer_Draw(void)
 {
     RSDK_THIS(Announcer);
     if (entity->stateDraw)
@@ -32,7 +32,7 @@ void Announcer_Create(void *data)
     entity->updateRange.y = 0x800000;
 }
 
-void Announcer_StageLoad()
+void Announcer_StageLoad(void)
 {
     Announcer->dword38 = 0;
     if (RSDK.CheckStageFolder("Menu")) {
@@ -72,7 +72,7 @@ void Announcer_StageLoad()
     }
 }
 
-void Announcer_Unknown1()
+void Announcer_Unknown1(void)
 {
     Announcer->dword38 = 0;
     RSDK_THIS(Announcer);
@@ -91,7 +91,7 @@ void Announcer_Unknown2(int screen)
     RSDK.SetSpriteAnimation(Announcer->spriteIndex, 0, &entity->data, true, 0);
     RSDK.PlaySFX(Announcer->sfx_Goal, 0, 255);
 }
-void Announcer_Unknown3()
+void Announcer_Unknown3(void)
 {
     Vector2 drawPos;
     RSDK_THIS(Announcer);
@@ -123,7 +123,7 @@ void Announcer_Unknown3()
         entity->inkEffect = INK_ALPHA;
     }
 }
-void Announcer_Unknown4()
+void Announcer_Unknown4(void)
 {
     Vector2 drawPos;
     RSDK_THIS(Announcer);
@@ -136,7 +136,7 @@ void Announcer_Unknown4()
         RSDK.DrawSprite(&entity->data, &drawPos, true);
     }
 }
-void Announcer_Unknown5()
+void Announcer_Unknown5(void)
 {
     RSDK_THIS(Announcer);
 
@@ -193,7 +193,7 @@ void Announcer_Unknown5()
         }
     }
 }
-void Announcer_Unknown6()
+void Announcer_Unknown6(void)
 {
     RSDK_THIS(Announcer);
     entity->scale.x = 0x200;
@@ -234,7 +234,7 @@ void Announcer_Unknown6()
         }
     }
 }
-void Announcer_Unknown7()
+void Announcer_Unknown7(void)
 {
     RSDK_THIS(Announcer);
     if (entity->timer >= 150) {
@@ -253,7 +253,7 @@ void Announcer_Unknown7()
         ++entity->timer;
     }
 }
-void Announcer_Unknown8()
+void Announcer_Unknown8(void)
 {
     RSDK_THIS(Announcer);
     if (entity->timer < 30) {
@@ -269,7 +269,7 @@ void Announcer_Unknown8()
         RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
-void Announcer_Unknown9()
+void Announcer_Unknown9(void)
 {
     RSDK_THIS(Announcer);
     if (entity->timer >= 30) {
@@ -290,8 +290,8 @@ void Announcer_Unknown9()
     }
 }
 
-void Announcer_EditorDraw() {}
+void Announcer_EditorDraw(void) {}
 
-void Announcer_EditorLoad() {}
+void Announcer_EditorLoad(void) {}
 
-void Announcer_Serialize() {}
+void Announcer_Serialize(void) {}

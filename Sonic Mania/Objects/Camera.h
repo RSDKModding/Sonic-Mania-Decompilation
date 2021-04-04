@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     Entity *targetPtr;
     int screenID;
     Vector2 center;
@@ -42,27 +42,27 @@ typedef struct {
 extern ObjectCamera *Camera;
 
 // Standard Entity Events
-void Camera_Update();
-void Camera_LateUpdate();
-void Camera_StaticUpdate();
-void Camera_Draw();
+void Camera_Update(void);
+void Camera_LateUpdate(void);
+void Camera_StaticUpdate(void);
+void Camera_Draw(void);
 void Camera_Create(void* data);
-void Camera_StageLoad();
-void Camera_EditorDraw();
-void Camera_EditorLoad();
-void Camera_Serialize();
+void Camera_StageLoad(void);
+void Camera_EditorDraw(void);
+void Camera_EditorLoad(void);
+void Camera_Serialize(void);
 
 // Extra Entity Functions
 void Camera_SetCameraBounds(EntityCamera *entity);
 EntityCamera *Camera_SetTargetEntity(int screen, Entity *target);
 void Camera_ShakeScreen(int shakeX, int screen, int shakeY);
-void Camera_HandleHBounds();
-void Camera_HandleVBounds();
+void Camera_HandleHBounds(void);
+void Camera_HandleVBounds(void);
 
 //States
-void Camera_State_Roam();
-void Camera_State_Follow();
-void Camera_State_HLock();
-void Camera_State_VLock();
+void Camera_State_Roam(void);
+void Camera_State_Follow(void);
+void Camera_State_HLock(void);
+void Camera_State_VLock(void);
 
 #endif //!OBJ_CAMERA_H

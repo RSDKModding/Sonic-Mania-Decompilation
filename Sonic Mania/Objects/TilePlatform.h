@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTilePlatform *TilePlatform;
 
 // Standard Entity Events
-void TilePlatform_Update();
-void TilePlatform_LateUpdate();
-void TilePlatform_StaticUpdate();
-void TilePlatform_Draw();
+void TilePlatform_Update(void);
+void TilePlatform_LateUpdate(void);
+void TilePlatform_StaticUpdate(void);
+void TilePlatform_Draw(void);
 void TilePlatform_Create(void* data);
-void TilePlatform_StageLoad();
-void TilePlatform_EditorDraw();
-void TilePlatform_EditorLoad();
-void TilePlatform_Serialize();
+void TilePlatform_StageLoad(void);
+void TilePlatform_EditorDraw(void);
+void TilePlatform_EditorLoad(void);
+void TilePlatform_Serialize(void);
 
 // Extra Entity Functions
 

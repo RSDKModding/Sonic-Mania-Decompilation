@@ -25,24 +25,24 @@ typedef struct {
 extern ObjectGHZSetup *GHZSetup;
 
 // Standard Entity Events
-void GHZSetup_Update();
-void GHZSetup_LateUpdate();
-void GHZSetup_StaticUpdate();
-void GHZSetup_Draw();
+void GHZSetup_Update(void);
+void GHZSetup_LateUpdate(void);
+void GHZSetup_StaticUpdate(void);
+void GHZSetup_Draw(void);
 void GHZSetup_Create(void* data);
-void GHZSetup_StageLoad();
-void GHZSetup_EditorDraw();
-void GHZSetup_EditorLoad();
-void GHZSetup_Serialize();
+void GHZSetup_StageLoad(void);
+void GHZSetup_EditorDraw(void);
+void GHZSetup_EditorLoad(void);
+void GHZSetup_Serialize(void);
 
 // Extra Entity Functions
-void GHZSetup_SetupStartingBG();
-void GHZSetup_SetupActTransition();
-void GHZSetup_HandleActTransition();
-void GHZSetup_SetupBGSwitchA1();
-void GHZSetup_SetupBGSwitchA2();
-void GHZSetup_SetupBGSwitchB1();
-void GHZSetup_SetupBGSwitchB2();
-void GHZSetup_SpawnGHZ2Outro();
+void GHZSetup_SetupStartingBG(void);
+void GHZSetup_SetupActTransition(void);
+void GHZSetup_HandleActTransition(void);
+void GHZSetup_SetupBGSwitchA1(void);
+void GHZSetup_SetupBGSwitchA2(void);
+void GHZSetup_SetupBGSwitchB1(void);
+void GHZSetup_SetupBGSwitchB2(void);
+void GHZSetup_SpawnGHZ2Outro(void);
 
 #endif //!OBJ_GHZSETUP_H

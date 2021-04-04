@@ -154,9 +154,8 @@ inline int RSDK_random2(int min, int max, int *randKey)
     if (!randKey)
         return 0;
     v4       = 1103515245 * *randKey + 12345;
-    v5       = v4;
     v6       = 1103515245 * v4 + 12345;
-    v7       = (((v5 >> 16) & 0x7FF) << 10) ^ (v6 >> 16) & 0x7FF;
+    v7       = (((v4 >> 16) & 0x7FF) << 10) ^ (v6 >> 16) & 0x7FF;
     v8       = 1103515245 * v6 + 12345;
     *randKey = v8;
     v9       = ((v7 << 10) ^ (v8 >> 16)) & 0x7FF;

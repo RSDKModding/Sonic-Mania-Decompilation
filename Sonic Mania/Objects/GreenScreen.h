@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectGreenScreen *GreenScreen;
 
 // Standard Entity Events
-void GreenScreen_Update();
-void GreenScreen_LateUpdate();
-void GreenScreen_StaticUpdate();
-void GreenScreen_Draw();
+void GreenScreen_Update(void);
+void GreenScreen_LateUpdate(void);
+void GreenScreen_StaticUpdate(void);
+void GreenScreen_Draw(void);
 void GreenScreen_Create(void* data);
-void GreenScreen_StageLoad();
-void GreenScreen_EditorDraw();
-void GreenScreen_EditorLoad();
-void GreenScreen_Serialize();
+void GreenScreen_StageLoad(void);
+void GreenScreen_EditorDraw(void);
+void GreenScreen_EditorLoad(void);
+void GreenScreen_Serialize(void);
 
 // Extra Entity Functions
 

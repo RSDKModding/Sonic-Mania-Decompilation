@@ -2,22 +2,22 @@
 
 ObjectPohBee *PohBee;
 
-void PohBee_Update()
+void PohBee_Update(void)
 {
 
 }
 
-void PohBee_LateUpdate()
+void PohBee_LateUpdate(void)
 {
 
 }
 
-void PohBee_StaticUpdate()
+void PohBee_StaticUpdate(void)
 {
 
 }
 
-void PohBee_Draw()
+void PohBee_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PohBee_Create(void* data)
 
 }
 
-void PohBee_StageLoad()
+void PohBee_StageLoad(void)
 {
 
 }
 
-void PohBee_EditorDraw()
+void PohBee_EditorDraw(void)
 {
 
 }
 
-void PohBee_EditorLoad()
+void PohBee_EditorLoad(void)
 {
 
 }
 
-void PohBee_Serialize()
+void PohBee_Serialize(void)
 {
 
 }

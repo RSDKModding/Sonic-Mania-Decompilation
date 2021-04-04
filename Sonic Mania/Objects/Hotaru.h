@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectHotaru *Hotaru;
 
 // Standard Entity Events
-void Hotaru_Update();
-void Hotaru_LateUpdate();
-void Hotaru_StaticUpdate();
-void Hotaru_Draw();
+void Hotaru_Update(void);
+void Hotaru_LateUpdate(void);
+void Hotaru_StaticUpdate(void);
+void Hotaru_Draw(void);
 void Hotaru_Create(void* data);
-void Hotaru_StageLoad();
-void Hotaru_EditorDraw();
-void Hotaru_EditorLoad();
-void Hotaru_Serialize();
+void Hotaru_StageLoad(void);
+void Hotaru_EditorDraw(void);
+void Hotaru_EditorLoad(void);
+void Hotaru_Serialize(void);
 
 // Extra Entity Functions
 

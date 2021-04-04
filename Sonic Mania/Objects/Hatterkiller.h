@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectHatterkiller *Hatterkiller;
 
 // Standard Entity Events
-void Hatterkiller_Update();
-void Hatterkiller_LateUpdate();
-void Hatterkiller_StaticUpdate();
-void Hatterkiller_Draw();
+void Hatterkiller_Update(void);
+void Hatterkiller_LateUpdate(void);
+void Hatterkiller_StaticUpdate(void);
+void Hatterkiller_Draw(void);
 void Hatterkiller_Create(void* data);
-void Hatterkiller_StageLoad();
-void Hatterkiller_EditorDraw();
-void Hatterkiller_EditorLoad();
-void Hatterkiller_Serialize();
+void Hatterkiller_StageLoad(void);
+void Hatterkiller_EditorDraw(void);
+void Hatterkiller_EditorLoad(void);
+void Hatterkiller_Serialize(void);
 
 // Extra Entity Functions
 

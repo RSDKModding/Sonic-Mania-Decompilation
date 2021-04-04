@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSeltzerBottle *SeltzerBottle;
 
 // Standard Entity Events
-void SeltzerBottle_Update();
-void SeltzerBottle_LateUpdate();
-void SeltzerBottle_StaticUpdate();
-void SeltzerBottle_Draw();
+void SeltzerBottle_Update(void);
+void SeltzerBottle_LateUpdate(void);
+void SeltzerBottle_StaticUpdate(void);
+void SeltzerBottle_Draw(void);
 void SeltzerBottle_Create(void* data);
-void SeltzerBottle_StageLoad();
-void SeltzerBottle_EditorDraw();
-void SeltzerBottle_EditorLoad();
-void SeltzerBottle_Serialize();
+void SeltzerBottle_StageLoad(void);
+void SeltzerBottle_EditorDraw(void);
+void SeltzerBottle_EditorLoad(void);
+void SeltzerBottle_Serialize(void);
 
 // Extra Entity Functions
 

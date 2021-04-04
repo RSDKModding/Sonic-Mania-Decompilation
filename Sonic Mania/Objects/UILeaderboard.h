@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectUILeaderboard *UILeaderboard;
 
 // Standard Entity Events
-void UILeaderboard_Update();
-void UILeaderboard_LateUpdate();
-void UILeaderboard_StaticUpdate();
-void UILeaderboard_Draw();
+void UILeaderboard_Update(void);
+void UILeaderboard_LateUpdate(void);
+void UILeaderboard_StaticUpdate(void);
+void UILeaderboard_Draw(void);
 void UILeaderboard_Create(void* data);
-void UILeaderboard_StageLoad();
-void UILeaderboard_EditorDraw();
-void UILeaderboard_EditorLoad();
-void UILeaderboard_Serialize();
+void UILeaderboard_StageLoad(void);
+void UILeaderboard_EditorDraw(void);
+void UILeaderboard_EditorLoad(void);
+void UILeaderboard_Serialize(void);
 
 // Extra Entity Functions
 

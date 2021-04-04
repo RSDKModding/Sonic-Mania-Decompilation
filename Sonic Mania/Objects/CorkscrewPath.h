@@ -23,15 +23,15 @@ typedef struct {
 extern ObjectCorkscrewPath *CorkscrewPath;
 
 // Standard Entity Events
-void CorkscrewPath_Update();
-void CorkscrewPath_LateUpdate();
-void CorkscrewPath_StaticUpdate();
-void CorkscrewPath_Draw();
+void CorkscrewPath_Update(void);
+void CorkscrewPath_LateUpdate(void);
+void CorkscrewPath_StaticUpdate(void);
+void CorkscrewPath_Draw(void);
 void CorkscrewPath_Create(void* data);
-void CorkscrewPath_StageLoad();
-void CorkscrewPath_EditorDraw();
-void CorkscrewPath_EditorLoad();
-void CorkscrewPath_Serialize();
+void CorkscrewPath_StageLoad(void);
+void CorkscrewPath_EditorDraw(void);
+void CorkscrewPath_EditorLoad(void);
+void CorkscrewPath_Serialize(void);
 
 // Extra Entity Functions
 

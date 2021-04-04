@@ -1,6 +1,6 @@
 #include "RetroEngine.hpp"
 
-int objectCount;
+int objectCount = 0;
 ObjectInfo objectList[OBJECT_COUNT];
 int globalObjectCount = 0;
 int globalObjectIDs[OBJECT_COUNT];
@@ -50,7 +50,7 @@ void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint 
     }
 }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize)
 {
     memset(hashBuffer, 0, 0x400);
@@ -240,10 +240,10 @@ void InitObjects()
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!screenCount) {
-        screenUnknown[0].targetPos     = &screens[0].position;
-        screenUnknown[0].offset.x      = screens[0].centerX << 0x10;
-        screenUnknown[0].offset.y      = screens[0].centerY << 0x10;
-        screenUnknown[0].worldRelative = false;
+        cameras[0].targetPos     = &screens[0].position;
+        cameras[0].offset.x      = screens[0].centerX << 0x10;
+        cameras[0].offset.y      = screens[0].centerY << 0x10;
+        cameras[0].worldRelative = false;
         screenCount                    = 1;
     }
 }
@@ -262,20 +262,16 @@ void ProcessObjects()
     }
 
     for (int s = 0; s < screenCount; ++s) {
-        ScreenUnknown *screen = &screenUnknown[s];
-        if (screen->targetPos) {
-            if (screen->worldRelative) {
-                screen->position.x = screen->targetPos->x;
-                screen->position.y = screen->targetPos->y;
+        CameraInfo *camera = &cameras[s];
+        if (camera->targetPos) {
+            if (camera->worldRelative) {
+                camera->position.x = camera->targetPos->x;
+                camera->position.y = camera->targetPos->y;
             }
             else {
-                screen->position.x = screen->targetPos->x << 0x10;
-                screen->position.y = screen->targetPos->y << 0x10;
+                camera->position.x = camera->targetPos->x << 0x10;
+                camera->position.y = camera->targetPos->y << 0x10;
             }
-            // screens[s].position.x = screen->position.x >> 0x10;
-            // screens[s].position.y = screen->position.y >> 0x10;
-            // screens[s].position.x -= screen->offset.x >> 0x10;
-            // screens[s].position.y -= screen->offset.y >> 0x10;
         }
     }
 
@@ -291,10 +287,10 @@ void ProcessObjects()
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
-                        if (sx <= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
-                            && sy <= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+                        if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x
+                            && sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -303,8 +299,8 @@ void ProcessObjects()
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -313,8 +309,8 @@ void ProcessObjects()
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
-                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screenUnknown[s].offset.y) {
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -323,10 +319,10 @@ void ProcessObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
 
-                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
+                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -453,15 +449,15 @@ void ProcessFrozenObjects()
     }
 
     for (int s = 0; s < screenCount; ++s) {
-        ScreenUnknown *screen = &screenUnknown[s];
-        if (screen->targetPos) {
-            if (screen->worldRelative) {
-                screen->position.x = screen->targetPos->x;
-                screen->position.y = screen->targetPos->y;
+        CameraInfo *camera = &cameras[s];
+        if (camera->targetPos) {
+            if (camera->worldRelative) {
+                camera->position.x = camera->targetPos->x;
+                camera->position.y = camera->targetPos->y;
             }
             else {
-                screen->position.x = screen->targetPos->x << 0x10;
-                screen->position.y = screen->targetPos->y << 0x10;
+                camera->position.x = camera->targetPos->x << 0x10;
+                camera->position.y = camera->targetPos->y << 0x10;
             }
         }
     }
@@ -478,10 +474,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
-                        if (sx <= sceneInfo.entity->updateRange.x + screenUnknown[s].offset.x
-                            && sy <= sceneInfo.entity->updateRange.y + screenUnknown[s].offset.y) {
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+                        if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x
+                            && sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -490,8 +486,8 @@ void ProcessFrozenObjects()
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -500,8 +496,8 @@ void ProcessFrozenObjects()
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
-                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + screenUnknown[s].offset.y) {
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -510,10 +506,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < screenCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-                        int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
 
-                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + screenUnknown[s].offset.x) {
+                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -570,7 +566,7 @@ void ProcessFrozenObjects()
 }
 void ProcessObjectDrawLists()
 {
-    if (sceneInfo.state && sceneInfo.state != ENGINESTATE_LOAD_STEPOVER) {
+    if (sceneInfo.state && sceneInfo.state != (ENGINESTATE_LOAD | ENGINESTATE_STEPOVER)) {
         for (int s = 0; s < engine.screenCount; ++s) {
             currentScreen             = &screens[s];
             sceneInfo.currentScreenID = s;
@@ -850,18 +846,18 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
 
     if (range) {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = abs(sceneInfo.entity->position.x - screenUnknown[s].position.x);
-            int sy = abs(sceneInfo.entity->position.y - screenUnknown[s].position.y);
-            if (sx <= range->x + screenUnknown[s].offset.x && sy <= range->y + screenUnknown[s].offset.y) {
+            int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
+            int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+            if (sx <= range->x + cameras[s].offset.x && sy <= range->y + cameras[s].offset.y) {
                 return true;
             }
         }
     }
     else {
         for (int s = 0; s < screenCount; ++s) {
-            int sx = abs(entity->position.x - screenUnknown[s].position.x);
-            int sy = abs(entity->position.y - screenUnknown[s].position.y);
-            if (sx <= entity->updateRange.x + screenUnknown[s].offset.x && sy <= entity->updateRange.y + screenUnknown[s].offset.y) {
+            int sx = abs(entity->position.x - cameras[s].position.x);
+            int sy = abs(entity->position.y - cameras[s].position.y);
+            if (sx <= entity->updateRange.x + cameras[s].offset.x && sy <= entity->updateRange.y + cameras[s].offset.y) {
                 return true;
             }
         }
@@ -874,9 +870,9 @@ bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
         return false;
 
     for (int s = 0; s < screenCount; ++s) {
-        int sx = abs(position->x - screenUnknown[s].position.x);
-        int sy = abs(position->y - screenUnknown[s].position.y);
-        if (sx <= range->x + screenUnknown[s].offset.x && sy <= range->y + screenUnknown[s].offset.y) {
+        int sx = abs(position->x - cameras[s].position.x);
+        int sy = abs(position->y - cameras[s].position.y);
+        if (sx <= range->x + cameras[s].offset.x && sy <= range->y + cameras[s].offset.y) {
             return true;
         }
     }

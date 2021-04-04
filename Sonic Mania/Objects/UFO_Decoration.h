@@ -52,15 +52,15 @@ typedef struct {
 extern ObjectUFO_Decoration *UFO_Decoration;
 
 // Standard Entity Events
-void UFO_Decoration_Update();
-void UFO_Decoration_LateUpdate();
-void UFO_Decoration_StaticUpdate();
-void UFO_Decoration_Draw();
+void UFO_Decoration_Update(void);
+void UFO_Decoration_LateUpdate(void);
+void UFO_Decoration_StaticUpdate(void);
+void UFO_Decoration_Draw(void);
 void UFO_Decoration_Create(void* data);
-void UFO_Decoration_StageLoad();
-void UFO_Decoration_EditorDraw();
-void UFO_Decoration_EditorLoad();
-void UFO_Decoration_Serialize();
+void UFO_Decoration_StageLoad(void);
+void UFO_Decoration_EditorDraw(void);
+void UFO_Decoration_EditorLoad(void);
+void UFO_Decoration_Serialize(void);
 
 // Extra Entity Functions
 

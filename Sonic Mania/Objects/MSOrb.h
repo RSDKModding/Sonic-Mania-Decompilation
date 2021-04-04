@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMSOrb *MSOrb;
 
 // Standard Entity Events
-void MSOrb_Update();
-void MSOrb_LateUpdate();
-void MSOrb_StaticUpdate();
-void MSOrb_Draw();
+void MSOrb_Update(void);
+void MSOrb_LateUpdate(void);
+void MSOrb_StaticUpdate(void);
+void MSOrb_Draw(void);
 void MSOrb_Create(void* data);
-void MSOrb_StageLoad();
-void MSOrb_EditorDraw();
-void MSOrb_EditorLoad();
-void MSOrb_Serialize();
+void MSOrb_StageLoad(void);
+void MSOrb_EditorDraw(void);
+void MSOrb_EditorLoad(void);
+void MSOrb_Serialize(void);
 
 // Extra Entity Functions
 

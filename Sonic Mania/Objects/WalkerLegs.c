@@ -2,22 +2,22 @@
 
 ObjectWalkerLegs *WalkerLegs;
 
-void WalkerLegs_Update()
+void WalkerLegs_Update(void)
 {
 
 }
 
-void WalkerLegs_LateUpdate()
+void WalkerLegs_LateUpdate(void)
 {
 
 }
 
-void WalkerLegs_StaticUpdate()
+void WalkerLegs_StaticUpdate(void)
 {
 
 }
 
-void WalkerLegs_Draw()
+void WalkerLegs_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void WalkerLegs_Create(void* data)
 
 }
 
-void WalkerLegs_StageLoad()
+void WalkerLegs_StageLoad(void)
 {
 
 }
 
-void WalkerLegs_EditorDraw()
+void WalkerLegs_EditorDraw(void)
 {
 
 }
 
-void WalkerLegs_EditorLoad()
+void WalkerLegs_EditorLoad(void)
 {
 
 }
 
-void WalkerLegs_Serialize()
+void WalkerLegs_Serialize(void)
 {
 
 }

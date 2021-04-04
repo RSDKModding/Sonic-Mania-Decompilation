@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCompetitionMenu *CompetitionMenu;
 
 // Standard Entity Events
-void CompetitionMenu_Update();
-void CompetitionMenu_LateUpdate();
-void CompetitionMenu_StaticUpdate();
-void CompetitionMenu_Draw();
+void CompetitionMenu_Update(void);
+void CompetitionMenu_LateUpdate(void);
+void CompetitionMenu_StaticUpdate(void);
+void CompetitionMenu_Draw(void);
 void CompetitionMenu_Create(void* data);
-void CompetitionMenu_StageLoad();
-void CompetitionMenu_EditorDraw();
-void CompetitionMenu_EditorLoad();
-void CompetitionMenu_Serialize();
+void CompetitionMenu_StageLoad(void);
+void CompetitionMenu_EditorDraw(void);
+void CompetitionMenu_EditorLoad(void);
+void CompetitionMenu_Serialize(void);
 
 // Extra Entity Functions
 

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectStickyPlatform *StickyPlatform;
 
 // Standard Entity Events
-void StickyPlatform_Update();
-void StickyPlatform_LateUpdate();
-void StickyPlatform_StaticUpdate();
-void StickyPlatform_Draw();
+void StickyPlatform_Update(void);
+void StickyPlatform_LateUpdate(void);
+void StickyPlatform_StaticUpdate(void);
+void StickyPlatform_Draw(void);
 void StickyPlatform_Create(void* data);
-void StickyPlatform_StageLoad();
-void StickyPlatform_EditorDraw();
-void StickyPlatform_EditorLoad();
-void StickyPlatform_Serialize();
+void StickyPlatform_StageLoad(void);
+void StickyPlatform_EditorDraw(void);
+void StickyPlatform_EditorLoad(void);
+void StickyPlatform_Serialize(void);
 
 // Extra Entity Functions
 

@@ -2,24 +2,24 @@
 
 ObjectFXFade *FXFade;
 
-void FXFade_Update()
+void FXFade_Update(void)
 {
     EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void FXFade_LateUpdate()
+void FXFade_LateUpdate(void)
 {
 
 }
 
-void FXFade_StaticUpdate()
+void FXFade_StaticUpdate(void)
 {
 
 }
 
-void FXFade_Draw()
+void FXFade_Draw(void)
 {
     EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
     RSDK.FillScreen(entity->color, entity->timer, entity->timer - 128, entity->timer - 256);
@@ -59,18 +59,18 @@ void FXFade_Create(void *data)
     }
 }
 
-void FXFade_StageLoad()
+void FXFade_StageLoad(void)
 {
 
 }
 
-void FXFade_StopAll()
+void FXFade_StopAll(void)
 {
     Entity *entity = NULL;
     while (RSDK.GetEntities(FXFade->objectID, &entity)) RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void FXFade_State_FadeIn()
+void FXFade_State_FadeIn(void)
 {
     EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
     if (entity->timer >= 512) {
@@ -93,7 +93,7 @@ void FXFade_State_FadeIn()
         entity->timer += entity->speedIn;
     }
 }
-void FXFade_State_Wait()
+void FXFade_State_Wait(void)
 {
     EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
     if (--entity->wait <= 0) {
@@ -103,7 +103,7 @@ void FXFade_State_Wait()
             entity->state = FXFade_State_FadeOut;
     }
 }
-void FXFade_State_FadeOut()
+void FXFade_State_FadeOut(void)
 {
     EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
     if (entity->timer <= 0) {
@@ -116,7 +116,7 @@ void FXFade_State_FadeOut()
         entity->timer -= entity->speedOut;
     }
 }
-void FXFade_State_FadeOutBlack()
+void FXFade_State_FadeOutBlack(void)
 {
     EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
     if (entity->color >> 16) {
@@ -142,17 +142,17 @@ void FXFade_State_FadeOutBlack()
     }
 }
 
-void FXFade_EditorDraw()
+void FXFade_EditorDraw(void)
 {
 
 }
 
-void FXFade_EditorLoad()
+void FXFade_EditorLoad(void)
 {
 
 }
 
-void FXFade_Serialize()
+void FXFade_Serialize(void)
 {
     RSDK_EDITABLE_VAR(FXFade, VAR_ENUM, timer);
     RSDK_EDITABLE_VAR(FXFade, VAR_ENUM, speedIn);

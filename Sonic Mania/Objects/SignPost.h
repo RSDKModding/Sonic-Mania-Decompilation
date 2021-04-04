@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     byte type;
     ushort field_5D;
     char field_5F;
@@ -49,30 +49,30 @@ typedef struct {
 extern ObjectSignPost *SignPost;
 
 // Standard Entity Events
-void SignPost_Update();
-void SignPost_LateUpdate();
-void SignPost_StaticUpdate();
-void SignPost_Draw();
+void SignPost_Update(void);
+void SignPost_LateUpdate(void);
+void SignPost_StaticUpdate(void);
+void SignPost_Draw(void);
 void SignPost_Create(void* data);
-void SignPost_StageLoad();
-void SignPost_EditorDraw();
-void SignPost_EditorLoad();
-void SignPost_Serialize();
+void SignPost_StageLoad(void);
+void SignPost_EditorDraw(void);
+void SignPost_EditorLoad(void);
+void SignPost_Serialize(void);
 
 // Extra Entity Functions
-void SignPost_DebugSpawn();
-void SignPost_DebugDraw();
+void SignPost_DebugSpawn(void);
+void SignPost_DebugDraw(void);
 
-void SignPost_SpinSpeed();
-void SignPost_SpawnSparkle();
-void SignPost_State_SetupCompetition();
-void SignPost_State_Competition();
-void SignPost_State_Land();
-void SignPost_State_CompetitionFinish();
-void SignPost_State_Launched();
-void SignPost_State_Fall();
-void SignPost_State_Finish();
-void SignPost_CheckTouch();
-void SignPost_HandleCompetition();
+void SignPost_SpinSpeed(void);
+void SignPost_SpawnSparkle(void);
+void SignPost_State_SetupCompetition(void);
+void SignPost_State_Competition(void);
+void SignPost_State_Land(void);
+void SignPost_State_CompetitionFinish(void);
+void SignPost_State_Launched(void);
+void SignPost_State_Fall(void);
+void SignPost_State_Finish(void);
+void SignPost_CheckTouch(void);
+void SignPost_HandleCompetition(void);
 
 #endif //!OBJ_SIGNPOST_H

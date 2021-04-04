@@ -47,8 +47,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
-    void (*stateDraw)();
+    void (*state)(void);
+    void (*stateDraw)(void);
     int type;
     void *childPtr;
     int field_68;
@@ -88,47 +88,47 @@ typedef struct {
 extern ObjectWater *Water;
 
 // Standard Entity Events
-void Water_Update();
-void Water_LateUpdate();
-void Water_StaticUpdate();
-void Water_Draw();
+void Water_Update(void);
+void Water_LateUpdate(void);
+void Water_StaticUpdate(void);
+void Water_Draw(void);
 void Water_Create(void* data);
-void Water_StageLoad();
-void Water_EditorDraw();
-void Water_EditorLoad();
-void Water_Serialize();
+void Water_StageLoad(void);
+void Water_EditorDraw(void);
+void Water_EditorLoad(void);
+void Water_Serialize(void);
 
 // Extra Entity Functions
 
 //Palette stuff
-void Water_SetWaterLevel();
-void Water_RemoveWaterEffect();
+void Water_SetWaterLevel(void);
+void Water_RemoveWaterEffect(void);
 
 //Utils
-void Water_CheckButtonTag();
+void Water_CheckButtonTag(void);
 void Water_SpawnBubble(EntityPlayer *player, int id);
 void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID);
 EntityWater *Water_Unknown7(EntityPlayer *entityPtr);
 
-void Water_State_Palette();
-void Water_State_Splash();
-void Water_Unknown4();
+void Water_State_Palette(void);
+void Water_State_Splash(void);
+void Water_Unknown4(void);
 void Water_Unknown5(EntityWater *entity, int a2);
-void Water_State_Bubble();
-void Water_Unknown6();
-void Water_Unknown8();
-void Water_Unknown9();
-void Water_State_Bubbler();
-void Water_State_CountDownBubble();
-void Water_State_BubbleMove();
-void Water_State_Adjustable();
+void Water_State_Bubble(void);
+void Water_Unknown6(void);
+void Water_Unknown8(void);
+void Water_Unknown9(void);
+void Water_State_Bubbler(void);
+void Water_State_CountDownBubble(void);
+void Water_State_BubbleMove(void);
+void Water_State_Adjustable(void);
 
 //Draw States
-void Water_State_Draw_Palette();
-void Water_State_Draw_Tint();
-void Water_State_Draw_Splash();
-void Water_State_Draw_CountDownBubble();
-void Water_State_Draw_Bubbler();
-void Water_State_Draw_Bubble();
+void Water_State_Draw_Palette(void);
+void Water_State_Draw_Tint(void);
+void Water_State_Draw_Splash(void);
+void Water_State_Draw_CountDownBubble(void);
+void Water_State_Draw_Bubbler(void);
+void Water_State_Draw_Bubble(void);
 
 #endif //!OBJ_WATER_H

@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectPBL_Ring *PBL_Ring;
 
 // Standard Entity Events
-void PBL_Ring_Update();
-void PBL_Ring_LateUpdate();
-void PBL_Ring_StaticUpdate();
-void PBL_Ring_Draw();
+void PBL_Ring_Update(void);
+void PBL_Ring_LateUpdate(void);
+void PBL_Ring_StaticUpdate(void);
+void PBL_Ring_Draw(void);
 void PBL_Ring_Create(void* data);
-void PBL_Ring_StageLoad();
-void PBL_Ring_EditorDraw();
-void PBL_Ring_EditorLoad();
-void PBL_Ring_Serialize();
+void PBL_Ring_StageLoad(void);
+void PBL_Ring_EditorDraw(void);
+void PBL_Ring_EditorLoad(void);
+void PBL_Ring_Serialize(void);
 
 // Extra Entity Functions
 #endif

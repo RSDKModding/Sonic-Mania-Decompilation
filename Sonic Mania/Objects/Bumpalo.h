@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBumpalo *Bumpalo;
 
 // Standard Entity Events
-void Bumpalo_Update();
-void Bumpalo_LateUpdate();
-void Bumpalo_StaticUpdate();
-void Bumpalo_Draw();
+void Bumpalo_Update(void);
+void Bumpalo_LateUpdate(void);
+void Bumpalo_StaticUpdate(void);
+void Bumpalo_Draw(void);
 void Bumpalo_Create(void* data);
-void Bumpalo_StageLoad();
-void Bumpalo_EditorDraw();
-void Bumpalo_EditorLoad();
-void Bumpalo_Serialize();
+void Bumpalo_StageLoad(void);
+void Bumpalo_EditorDraw(void);
+void Bumpalo_EditorLoad(void);
+void Bumpalo_Serialize(void);
 
 // Extra Entity Functions
 

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCheckerBall *CheckerBall;
 
 // Standard Entity Events
-void CheckerBall_Update();
-void CheckerBall_LateUpdate();
-void CheckerBall_StaticUpdate();
-void CheckerBall_Draw();
+void CheckerBall_Update(void);
+void CheckerBall_LateUpdate(void);
+void CheckerBall_StaticUpdate(void);
+void CheckerBall_Draw(void);
 void CheckerBall_Create(void* data);
-void CheckerBall_StageLoad();
-void CheckerBall_EditorDraw();
-void CheckerBall_EditorLoad();
-void CheckerBall_Serialize();
+void CheckerBall_StageLoad(void);
+void CheckerBall_EditorDraw(void);
+void CheckerBall_EditorLoad(void);
+void CheckerBall_Serialize(void);
 
 // Extra Entity Functions
 

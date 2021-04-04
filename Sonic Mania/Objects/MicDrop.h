@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMicDrop *MicDrop;
 
 // Standard Entity Events
-void MicDrop_Update();
-void MicDrop_LateUpdate();
-void MicDrop_StaticUpdate();
-void MicDrop_Draw();
+void MicDrop_Update(void);
+void MicDrop_LateUpdate(void);
+void MicDrop_StaticUpdate(void);
+void MicDrop_Draw(void);
 void MicDrop_Create(void* data);
-void MicDrop_StageLoad();
-void MicDrop_EditorDraw();
-void MicDrop_EditorLoad();
-void MicDrop_Serialize();
+void MicDrop_StageLoad(void);
+void MicDrop_EditorDraw(void);
+void MicDrop_EditorLoad(void);
+void MicDrop_Serialize(void);
 
 // Extra Entity Functions
 

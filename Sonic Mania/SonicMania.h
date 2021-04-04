@@ -1,7 +1,13 @@
 #ifndef SONIC_MANIA_H
 #define SONIC_MANIA_H
 
-#define RETRO_USE_PLUS (1) //idk, might use this, mostly just a marker for what stuff plus/1.05 changed
+#define VER_100 0 // 1.00 (initial console release)
+#define VER_103 3 // 1.03 (pc release/ console patch)
+#define VER_105 5 // 1.04/1.05 + 1.06 (sonic mania plus update)
+
+#define RETRO_GAMEVER VER_105
+
+#define RETRO_USE_PLUS (RETRO_GAMEVER == VER_105)
 
 #include "GameLink.h"
 
@@ -42,32 +48,6 @@ extern TouchMouseData *RSDK_touchMouse;
 extern UnknownInfo *RSDK_unknown;
 #endif
 extern ScreenInfo *RSDK_screens;
-
-#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
-inline void Game_Print(const char *message, ...)
-{
-    if (!RSDK_sceneInfo->inEditor) {
-        char buffer[0x100];
-
-        // make the full string
-        va_list args;
-        va_start(args, message);
-        vsprintf(buffer, message, args);
-#if RETRO_USE_PLUS
-        RSDK.PrintString(SEVERITY_NONE, buffer);
-#else
-        RSDK.PrintMessage((void *)buffer, 0);
-#endif
-    }
-}
-
-inline void Game_PrintString(TextInfo *text)
-{
-    for (int i = 0; i < text->textLength; ++i) {
-        Game_Print("%c", text->text[i]);
-    }
-    Game_Print("\n");
-}
 
 static const char *PlayerNames[] = { "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };
 static const char *ActNames[]    = { "Act 1", "Act 2", "Act 3" };

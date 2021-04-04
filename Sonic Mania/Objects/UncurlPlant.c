@@ -2,22 +2,22 @@
 
 ObjectUncurlPlant *UncurlPlant;
 
-void UncurlPlant_Update()
+void UncurlPlant_Update(void)
 {
 
 }
 
-void UncurlPlant_LateUpdate()
+void UncurlPlant_LateUpdate(void)
 {
 
 }
 
-void UncurlPlant_StaticUpdate()
+void UncurlPlant_StaticUpdate(void)
 {
 
 }
 
-void UncurlPlant_Draw()
+void UncurlPlant_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void UncurlPlant_Create(void* data)
 
 }
 
-void UncurlPlant_StageLoad()
+void UncurlPlant_StageLoad(void)
 {
 
 }
 
-void UncurlPlant_EditorDraw()
+void UncurlPlant_EditorDraw(void)
 {
 
 }
 
-void UncurlPlant_EditorLoad()
+void UncurlPlant_EditorLoad(void)
 {
 
 }
 
-void UncurlPlant_Serialize()
+void UncurlPlant_Serialize(void)
 {
 
 }

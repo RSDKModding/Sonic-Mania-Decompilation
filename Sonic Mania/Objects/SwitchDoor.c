@@ -2,22 +2,22 @@
 
 ObjectSwitchDoor *SwitchDoor;
 
-void SwitchDoor_Update()
+void SwitchDoor_Update(void)
 {
 
 }
 
-void SwitchDoor_LateUpdate()
+void SwitchDoor_LateUpdate(void)
 {
 
 }
 
-void SwitchDoor_StaticUpdate()
+void SwitchDoor_StaticUpdate(void)
 {
 
 }
 
-void SwitchDoor_Draw()
+void SwitchDoor_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void SwitchDoor_Create(void* data)
 
 }
 
-void SwitchDoor_StageLoad()
+void SwitchDoor_StageLoad(void)
 {
 
 }
 
-void SwitchDoor_EditorDraw()
+void SwitchDoor_EditorDraw(void)
 {
 
 }
 
-void SwitchDoor_EditorLoad()
+void SwitchDoor_EditorLoad(void)
 {
 
 }
 
-void SwitchDoor_Serialize()
+void SwitchDoor_Serialize(void)
 {
 
 }

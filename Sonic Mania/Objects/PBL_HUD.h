@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectPBL_HUD *PBL_HUD;
 
 // Standard Entity Events
-void PBL_HUD_Update();
-void PBL_HUD_LateUpdate();
-void PBL_HUD_StaticUpdate();
-void PBL_HUD_Draw();
+void PBL_HUD_Update(void);
+void PBL_HUD_LateUpdate(void);
+void PBL_HUD_StaticUpdate(void);
+void PBL_HUD_Draw(void);
 void PBL_HUD_Create(void* data);
-void PBL_HUD_StageLoad();
-void PBL_HUD_EditorDraw();
-void PBL_HUD_EditorLoad();
-void PBL_HUD_Serialize();
+void PBL_HUD_StageLoad(void);
+void PBL_HUD_EditorDraw(void);
+void PBL_HUD_EditorLoad(void);
+void PBL_HUD_Serialize(void);
 
 // Extra Entity Functions
 #endif

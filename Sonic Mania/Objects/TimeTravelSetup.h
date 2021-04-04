@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTimeTravelSetup *TimeTravelSetup;
 
 // Standard Entity Events
-void TimeTravelSetup_Update();
-void TimeTravelSetup_LateUpdate();
-void TimeTravelSetup_StaticUpdate();
-void TimeTravelSetup_Draw();
+void TimeTravelSetup_Update(void);
+void TimeTravelSetup_LateUpdate(void);
+void TimeTravelSetup_StaticUpdate(void);
+void TimeTravelSetup_Draw(void);
 void TimeTravelSetup_Create(void* data);
-void TimeTravelSetup_StageLoad();
-void TimeTravelSetup_EditorDraw();
-void TimeTravelSetup_EditorLoad();
-void TimeTravelSetup_Serialize();
+void TimeTravelSetup_StageLoad(void);
+void TimeTravelSetup_EditorDraw(void);
+void TimeTravelSetup_EditorLoad(void);
+void TimeTravelSetup_Serialize(void);
 
 // Extra Entity Functions
 

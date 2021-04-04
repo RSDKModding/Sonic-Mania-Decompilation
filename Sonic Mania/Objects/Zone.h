@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int actID;
-    void (*stageFinishCallback)();
+    void (*stageFinishCallback)(void);
     bool32 forcePlayerOnScreenFlag;
     int field_10;
     int field_14;
@@ -116,8 +116,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
-    void (*stateDraw)();
+    void (*state)(void);
+    void (*stateDraw)(void);
     int screenID;
     int timer;
     int fadeTimer;
@@ -128,45 +128,45 @@ typedef struct {
 extern ObjectZone *Zone;
 
 // Standard Entity Events
-void Zone_Update();
-void Zone_LateUpdate();
-void Zone_StaticUpdate();
-void Zone_Draw();
+void Zone_Update(void);
+void Zone_LateUpdate(void);
+void Zone_StaticUpdate(void);
+void Zone_Draw(void);
 void Zone_Create(void* data);
-void Zone_StageLoad();
-void Zone_EditorDraw();
-void Zone_EditorLoad();
-void Zone_Serialize();
+void Zone_StageLoad(void);
+void Zone_EditorDraw(void);
+void Zone_EditorLoad(void);
+void Zone_Serialize(void);
 
 // Extra Entity Functions
-int Zone_GetZoneID();
+int Zone_GetZoneID(void);
 void Zone_StoreEntities(int xOffset, int yOffset);
 void Zone_ReloadStoredEntities(int xOffset, int yOffset, bool32 flag);
 void Zone_Unknown1(int fadeTimer, int fadeColour);
-void Zone_Unknown2();
+void Zone_Unknown2(void);
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
 void Zone_Unknown4(int screen);
-void Zone_Unknown5();
+void Zone_Unknown5(void);
 void Zone_ApplyWorldBounds(EntityPlayer *player);
-bool32 Zone_IsAct2();
-int Zone_GetEncoreStageID();
-int Zone_GetManiaStageID();
-void Zone_Unknown12();
-void Zone_Unknown13();
-void Zone_Unknown14();
-void Zone_Unknown15();
-void Zone_Unknown16();
-void Zone_Unknown17();
-void Zone_Unknown18();
-void Zone_Unknown19();
-void Zone_Unknown20();
-void Zone_Unknown21();
+bool32 Zone_IsAct2(void);
+int Zone_GetEncoreStageID(void);
+int Zone_GetManiaStageID(void);
+void Zone_Unknown12(void);
+void Zone_Unknown13(void);
+void Zone_Unknown14(void);
+void Zone_Unknown15(void);
+void Zone_Unknown16(void);
+void Zone_Unknown17(void);
+void Zone_Unknown18(void);
+void Zone_Unknown19(void);
+void Zone_Unknown20(void);
+void Zone_Unknown21(void);
 
-bool32 Game_CheckAct1();
-bool32 Game_CheckAct2();
-bool32 Game_CheckStageReload();
-bool32 Game_CheckIntro();
-void Game_ClearOptions();
+bool32 Game_CheckAct1(void);
+bool32 Game_CheckAct2(void);
+bool32 Game_CheckStageReload(void);
+bool32 Game_CheckIntro(void);
+void Game_ClearOptions(void);
 
 int Game_Unknown20(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
 int Game_Unknown21(int px1, int py1, int px2, int py2, int tx1, int tx2);

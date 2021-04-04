@@ -27,15 +27,15 @@ typedef struct {
 extern ObjectSoundboard *Soundboard;
 
 // Standard Entity Events
-void Soundboard_Update();
-void Soundboard_LateUpdate();
-void Soundboard_StaticUpdate();
-void Soundboard_Draw();
+void Soundboard_Update(void);
+void Soundboard_LateUpdate(void);
+void Soundboard_StaticUpdate(void);
+void Soundboard_Draw(void);
 void Soundboard_Create(void* data);
-void Soundboard_StageLoad();
-void Soundboard_EditorDraw();
-void Soundboard_EditorLoad();
-void Soundboard_Serialize();
+void Soundboard_StageLoad(void);
+void Soundboard_EditorDraw(void);
+void Soundboard_EditorLoad(void);
+void Soundboard_Serialize(void);
 
 // Extra Entity Functions
 byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, void *checkCallback, void *changeCallback);

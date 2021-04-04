@@ -3,22 +3,22 @@
 #if RETRO_USE_PLUS
 ObjectEncoreGoodEnd *EncoreGoodEnd;
 
-void EncoreGoodEnd_Update()
+void EncoreGoodEnd_Update(void)
 {
 
 }
 
-void EncoreGoodEnd_LateUpdate()
+void EncoreGoodEnd_LateUpdate(void)
 {
 
 }
 
-void EncoreGoodEnd_StaticUpdate()
+void EncoreGoodEnd_StaticUpdate(void)
 {
 
 }
 
-void EncoreGoodEnd_Draw()
+void EncoreGoodEnd_Draw(void)
 {
 
 }
@@ -28,22 +28,22 @@ void EncoreGoodEnd_Create(void* data)
 
 }
 
-void EncoreGoodEnd_StageLoad()
+void EncoreGoodEnd_StageLoad(void)
 {
 
 }
 
-void EncoreGoodEnd_EditorDraw()
+void EncoreGoodEnd_EditorDraw(void)
 {
 
 }
 
-void EncoreGoodEnd_EditorLoad()
+void EncoreGoodEnd_EditorLoad(void)
 {
 
 }
 
-void EncoreGoodEnd_Serialize()
+void EncoreGoodEnd_Serialize(void)
 {
 
 }

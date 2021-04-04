@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectDrawHelpers *DrawHelpers;
 
 // Standard Entity Events
-void DrawHelpers_Update();
-void DrawHelpers_LateUpdate();
-void DrawHelpers_StaticUpdate();
-void DrawHelpers_Draw();
+void DrawHelpers_Update(void);
+void DrawHelpers_LateUpdate(void);
+void DrawHelpers_StaticUpdate(void);
+void DrawHelpers_Draw(void);
 void DrawHelpers_Create(void* data);
-void DrawHelpers_StageLoad();
-void DrawHelpers_EditorDraw();
-void DrawHelpers_EditorLoad();
-void DrawHelpers_Serialize();
+void DrawHelpers_StageLoad(void);
+void DrawHelpers_EditorDraw(void);
+void DrawHelpers_EditorLoad(void);
+void DrawHelpers_Serialize(void);
 
 // Extra Entity Functions
 

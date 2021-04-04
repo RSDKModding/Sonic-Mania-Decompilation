@@ -2,22 +2,22 @@
 
 ObjectTubinaut *Tubinaut;
 
-void Tubinaut_Update()
+void Tubinaut_Update(void)
 {
 
 }
 
-void Tubinaut_LateUpdate()
+void Tubinaut_LateUpdate(void)
 {
 
 }
 
-void Tubinaut_StaticUpdate()
+void Tubinaut_StaticUpdate(void)
 {
 
 }
 
-void Tubinaut_Draw()
+void Tubinaut_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Tubinaut_Create(void* data)
 
 }
 
-void Tubinaut_StageLoad()
+void Tubinaut_StageLoad(void)
 {
 
 }
 
-void Tubinaut_EditorDraw()
+void Tubinaut_EditorDraw(void)
 {
 
 }
 
-void Tubinaut_EditorLoad()
+void Tubinaut_EditorLoad(void)
 {
 
 }
 
-void Tubinaut_Serialize()
+void Tubinaut_Serialize(void)
 {
 
 }

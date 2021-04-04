@@ -2,16 +2,16 @@
 
 ObjectWater *Water;
 
-void Water_Update()
+void Water_Update(void)
 {
     RSDK_THIS(Water);
     if (entity->state)
         entity->state();
 }
 
-void Water_LateUpdate() {}
+void Water_LateUpdate(void) {}
 
-void Water_StaticUpdate()
+void Water_StaticUpdate(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
@@ -92,7 +92,7 @@ void Water_StaticUpdate()
     }
 }
 
-void Water_Draw()
+void Water_Draw(void)
 {
     RSDK_THIS(Water);
     if (entity->stateDraw)
@@ -218,7 +218,7 @@ void Water_Create(void *data)
     }
 }
 
-void Water_StageLoad()
+void Water_StageLoad(void)
 {
     Water->active           = ACTIVE_ALWAYS;
     Water->spriteIndex      = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE);
@@ -251,11 +251,11 @@ void Water_StageLoad()
     }
 }
 
-void Water_EditorDraw() {}
+void Water_EditorDraw(void) {}
 
-void Water_EditorLoad() {}
+void Water_EditorLoad(void) {}
 
-void Water_SetWaterLevel()
+void Water_SetWaterLevel(void)
 {
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
     int waterDrawPos   = (Water->waterLevel >> 0x10) - screen->position.y;
@@ -270,9 +270,9 @@ void Water_SetWaterLevel()
     RSDK_screens[RSDK_sceneInfo->currentScreenID].waterDrawPos = waterDrawPos;
 }
 
-void Water_RemoveWaterEffect() { RSDK.SetActivePalette(0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height); }
+void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height); }
 
-void Water_CheckButtonTag()
+void Water_CheckButtonTag(void)
 {
     RSDK_THIS(Water);
     // EntityButton *button = RSDK_GET_ENTITY((ushort)(RSDK.GetEntityID(entity) - 1), Button);
@@ -388,7 +388,7 @@ void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID)
     bubble->drawOrder   = Zone->uiDrawLow + 1;
 }
 
-void Water_State_Palette()
+void Water_State_Palette(void)
 {
     RSDK_THIS(Water);
     RSDK.ProcessAnimation(&entity->waterData);
@@ -584,7 +584,7 @@ void Water_State_Palette()
     }
 }
 
-void Water_State_Splash()
+void Water_State_Splash(void)
 {
     RSDK_THIS(Water);
     EntityWater *water = entity->childPtr;
@@ -602,7 +602,7 @@ void Water_State_Splash()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void Water_Unknown4()
+void Water_Unknown4(void)
 {
     RSDK_THIS(Water);
 
@@ -619,7 +619,7 @@ void Water_Unknown4()
     entity->position.y += entity->field_B8;
 
     int anim = entity->waterData.animationID;
-    if (anim == 3 && entity->waterData.frameID < 12 || anim == 4 || anim == 5 || anim == 7 && !entity->activePlayers) {
+    if ((anim == 3 && entity->waterData.frameID < 12) || anim == 4 || anim == 5 || (anim == 7 && !entity->activePlayers)) {
         entity->position.x = (RSDK.Sin512(entity->angle) << 9) + entity->field_68;
         entity->angle      = (entity->angle + 4) & 0x1FF;
     }
@@ -684,7 +684,7 @@ void Water_Unknown5(EntityWater *entity, int a2)
     }
 }
 
-void Water_State_Bubble()
+void Water_State_Bubble(void)
 {
     RSDK_THIS(Water);
     EntityPlayer *player = (EntityPlayer *)entity->childPtr;
@@ -815,7 +815,7 @@ void Water_State_Bubble()
     }
 }
 
-void Water_Unknown6()
+void Water_Unknown6(void)
 {
     RSDK_THIS(Water);
     EntityPlayer *player = (EntityPlayer *)entity->childPtr;
@@ -858,7 +858,7 @@ EntityWater *Water_Unknown7(EntityPlayer *entityPtr)
     return NULL;
 }
 
-void Water_Unknown8()
+void Water_Unknown8(void)
 {
     RSDK_THIS(Water);
     if (entity->waterData.animationID == 6 && entity->waterData.frameID == entity->waterData.frameCount - 1) {
@@ -1020,7 +1020,7 @@ void Water_Unknown8()
     }
 }
 
-void Water_Unknown9()
+void Water_Unknown9(void)
 {
     RSDK_THIS(Water);
 
@@ -1062,7 +1062,7 @@ void Water_Unknown9()
     }
 }
 
-void Water_State_Bubbler()
+void Water_State_Bubbler(void)
 {
     RSDK_THIS(Water);
 
@@ -1119,7 +1119,7 @@ void Water_State_Bubbler()
     RSDK.ProcessAnimation(&entity->waterData);
 }
 
-void Water_State_CountDownBubble()
+void Water_State_CountDownBubble(void)
 {
     RSDK_THIS(Water);
     EntityPlayer *player = (EntityPlayer *)entity->childPtr;
@@ -1161,7 +1161,7 @@ void Water_State_CountDownBubble()
     }
 }
 
-void Water_State_BubbleMove()
+void Water_State_BubbleMove(void)
 {
     RSDK_THIS(Water);
 
@@ -1179,7 +1179,7 @@ void Water_State_BubbleMove()
     }
 }
 
-void Water_State_Adjustable()
+void Water_State_Adjustable(void)
 {
     RSDK_THIS(Water);
     bool32 flag = false;
@@ -1224,7 +1224,7 @@ void Water_State_Adjustable()
     }
 }
 
-void Water_State_Draw_Palette()
+void Water_State_Draw_Palette(void)
 {
     Vector2 drawPos;
 
@@ -1250,20 +1250,20 @@ void Water_State_Draw_Palette()
     entity->drawFX &= ~FX_FLIP;
 }
 
-void Water_State_Draw_Tint()
+void Water_State_Draw_Tint(void)
 {
     RSDK_THIS(Water);
     RSDK.DrawRect(entity->position.x - (entity->size.x >> 1), entity->position.y - (entity->size.y >> 1), entity->size.x, entity->size.y,
                   entity->b + ((entity->g + (entity->r << 8)) << 8), 0x100, INK_SUB, false);
 }
 
-void Water_State_Draw_Splash()
+void Water_State_Draw_Splash(void)
 {
     RSDK_THIS(Water);
     RSDK.DrawSprite(&entity->waterData, NULL, false);
 }
 
-void Water_State_Draw_CountDownBubble()
+void Water_State_Draw_CountDownBubble(void)
 {
     Vector2 drawPos;
 
@@ -1287,19 +1287,19 @@ void Water_State_Draw_CountDownBubble()
     RSDK.DrawSprite(&entity->waterData, &drawPos, false);
 }
 
-void Water_State_Draw_Bubbler()
+void Water_State_Draw_Bubbler(void)
 {
     RSDK_THIS(Water);
     RSDK.DrawSprite(&entity->waterData, NULL, false);
 }
 
-void Water_State_Draw_Bubble()
+void Water_State_Draw_Bubble(void)
 {
     RSDK_THIS(Water);
     RSDK.DrawSprite(&entity->waterData, NULL, false);
 }
 
-void Water_Serialize()
+void Water_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Water, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Water, VAR_UINT8, numDuds);

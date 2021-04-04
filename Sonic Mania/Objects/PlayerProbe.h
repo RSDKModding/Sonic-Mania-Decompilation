@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectPlayerProbe *PlayerProbe;
 
 // Standard Entity Events
-void PlayerProbe_Update();
-void PlayerProbe_LateUpdate();
-void PlayerProbe_StaticUpdate();
-void PlayerProbe_Draw();
+void PlayerProbe_Update(void);
+void PlayerProbe_LateUpdate(void);
+void PlayerProbe_StaticUpdate(void);
+void PlayerProbe_Draw(void);
 void PlayerProbe_Create(void* data);
-void PlayerProbe_StageLoad();
-void PlayerProbe_EditorDraw();
-void PlayerProbe_EditorLoad();
-void PlayerProbe_Serialize();
+void PlayerProbe_StageLoad(void);
+void PlayerProbe_EditorDraw(void);
+void PlayerProbe_EditorLoad(void);
+void PlayerProbe_Serialize(void);
 
 // Extra Entity Functions
 void PlayerProbe_Print(EntityPlayer *player);

@@ -23,7 +23,8 @@ void DefaultObject_Update()
 
 void DefaultObject_Create(void* data)
 {
-    sceneInfo.entity->active  = ACTIVE_ALWAYS;
+    EntityDefaultObject *entity = (EntityDefaultObject *)sceneInfo.entity;
+    entity->active         = ACTIVE_ALWAYS;
     DefaultObject->active  = ACTIVE_ALWAYS;
 }
 

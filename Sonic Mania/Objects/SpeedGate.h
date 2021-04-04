@@ -15,7 +15,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     int id;
     int timer;
     int prize;
@@ -39,19 +39,19 @@ typedef struct {
 extern ObjectSpeedGate *SpeedGate;
 
 // Standard Entity Events
-void SpeedGate_Update();
-void SpeedGate_LateUpdate();
-void SpeedGate_StaticUpdate();
-void SpeedGate_Draw();
+void SpeedGate_Update(void);
+void SpeedGate_LateUpdate(void);
+void SpeedGate_StaticUpdate(void);
+void SpeedGate_Draw(void);
 void SpeedGate_Create(void* data);
-void SpeedGate_StageLoad();
-void SpeedGate_EditorDraw();
-void SpeedGate_EditorLoad();
-void SpeedGate_Serialize();
+void SpeedGate_StageLoad(void);
+void SpeedGate_EditorDraw(void);
+void SpeedGate_EditorLoad(void);
+void SpeedGate_Serialize(void);
 
 // Extra Entity Functions
-void SpeedGate_State_Unknown1();
-void SpeedGate_State_Unknown2();
-void SpeedGate_State_Unknown3();
+void SpeedGate_State_Unknown1(void);
+void SpeedGate_State_Unknown2(void);
+void SpeedGate_State_Unknown3(void);
 
 #endif //!OBJ_SPEEDGATE_H

@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     int timer;
     int playerID;
     int dword64;
@@ -32,21 +32,21 @@ typedef struct {
 extern ObjectGameOver *GameOver;
 
 // Standard Entity Events
-void GameOver_Update();
-void GameOver_LateUpdate();
-void GameOver_StaticUpdate();
-void GameOver_Draw();
+void GameOver_Update(void);
+void GameOver_LateUpdate(void);
+void GameOver_StaticUpdate(void);
+void GameOver_Draw(void);
 void GameOver_Create(void* data);
-void GameOver_StageLoad();
-void GameOver_EditorDraw();
-void GameOver_EditorLoad();
-void GameOver_Serialize();
+void GameOver_StageLoad(void);
+void GameOver_EditorDraw(void);
+void GameOver_EditorLoad(void);
+void GameOver_Serialize(void);
 
 // Extra Entity Functions
-int GameOver_SaveGameCallback(int status);
-void GameOver_Unknown2();
-void GameOver_Unknown3();
-void GameOver_Unknown4();
-void GameOver_Unknown5();
+void GameOver_SaveGameCallback(int status);
+void GameOver_Unknown2(void);
+void GameOver_Unknown3(void);
+void GameOver_Unknown4(void);
+void GameOver_Unknown5(void);
 
 #endif //!OBJ_GAMEOVER_H

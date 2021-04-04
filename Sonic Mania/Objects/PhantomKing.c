@@ -2,22 +2,22 @@
 
 ObjectPhantomKing *PhantomKing;
 
-void PhantomKing_Update()
+void PhantomKing_Update(void)
 {
 
 }
 
-void PhantomKing_LateUpdate()
+void PhantomKing_LateUpdate(void)
 {
 
 }
 
-void PhantomKing_StaticUpdate()
+void PhantomKing_StaticUpdate(void)
 {
 
 }
 
-void PhantomKing_Draw()
+void PhantomKing_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PhantomKing_Create(void* data)
 
 }
 
-void PhantomKing_StageLoad()
+void PhantomKing_StageLoad(void)
 {
 
 }
 
-void PhantomKing_EditorDraw()
+void PhantomKing_EditorDraw(void)
 {
 
 }
 
-void PhantomKing_EditorLoad()
+void PhantomKing_EditorLoad(void)
 {
 
 }
 
-void PhantomKing_Serialize()
+void PhantomKing_Serialize(void)
 {
 
 }

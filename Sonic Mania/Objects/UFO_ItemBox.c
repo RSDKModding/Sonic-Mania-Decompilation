@@ -2,18 +2,18 @@
 
 ObjectUFO_ItemBox *UFO_ItemBox;
 
-void UFO_ItemBox_Update()
+void UFO_ItemBox_Update(void)
 {
     RSDK_THIS(UFO_ItemBox);
     CallFunction(entity->state);
 }
 
-void UFO_ItemBox_LateUpdate()
+void UFO_ItemBox_LateUpdate(void)
 {
     RSDK_THIS(UFO_ItemBox);
     entity->visible = true;
     int x           = entity->position.x >> 8;
-    int y           = entity->timer >> 8;
+    int y           = entity->height >> 8;
     int z           = entity->position.y >> 8;
 
     Matrix *mat = &UFO_Camera->matWorld;
@@ -29,9 +29,9 @@ void UFO_ItemBox_LateUpdate()
     }
 }
 
-void UFO_ItemBox_StaticUpdate() {}
+void UFO_ItemBox_StaticUpdate(void) {}
 
-void UFO_ItemBox_Draw()
+void UFO_ItemBox_Draw(void)
 {
     RSDK_THIS(UFO_ItemBox);
     if (entity->state == UFO_ItemBox_Unknown1) {
@@ -74,7 +74,7 @@ void UFO_ItemBox_Create(void *data)
     }
 }
 
-void UFO_ItemBox_StageLoad()
+void UFO_ItemBox_StageLoad(void)
 {
     UFO_ItemBox->itemBoxSprite = RSDK.LoadSpriteAnimation("SpecialUFO/Items.bin", SCOPE_STAGE);
     UFO_ItemBox->itemBoxModel  = RSDK.LoadMesh("Special/ItemBox.bin", SCOPE_STAGE);
@@ -88,7 +88,7 @@ void UFO_ItemBox_StageLoad()
     UFO_ItemBox->sfx_Bumper       = RSDK.GetSFX("Stage/Bumper.wav");
 }
 
-void UFO_ItemBox_Unknown1()
+void UFO_ItemBox_Unknown1(void)
 {
     RSDK_THIS(UFO_ItemBox);
     foreach_active(UFO_Player, player)
@@ -126,7 +126,7 @@ void UFO_ItemBox_Unknown1()
     }
 }
 
-void UFO_ItemBox_Unknown2()
+void UFO_ItemBox_Unknown2(void)
 {
     RSDK_THIS(UFO_ItemBox);
 
@@ -174,11 +174,11 @@ void UFO_ItemBox_Unknown2()
     }
 }
 
-void UFO_ItemBox_EditorDraw() {}
+void UFO_ItemBox_EditorDraw(void) {}
 
-void UFO_ItemBox_EditorLoad() {}
+void UFO_ItemBox_EditorLoad(void) {}
 
-void UFO_ItemBox_Serialize()
+void UFO_ItemBox_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UFO_ItemBox, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(UFO_ItemBox, VAR_ENUM, timer);

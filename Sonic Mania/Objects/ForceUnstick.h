@@ -23,18 +23,18 @@ typedef struct {
 extern ObjectForceUnstick *ForceUnstick;
 
 // Standard Entity Events
-void ForceUnstick_Update();
-void ForceUnstick_LateUpdate();
-void ForceUnstick_StaticUpdate();
-void ForceUnstick_Draw();
+void ForceUnstick_Update(void);
+void ForceUnstick_LateUpdate(void);
+void ForceUnstick_StaticUpdate(void);
+void ForceUnstick_Draw(void);
 void ForceUnstick_Create(void* data);
-void ForceUnstick_StageLoad();
-void ForceUnstick_EditorDraw();
-void ForceUnstick_EditorLoad();
-void ForceUnstick_Serialize();
+void ForceUnstick_StageLoad(void);
+void ForceUnstick_EditorDraw(void);
+void ForceUnstick_EditorLoad(void);
+void ForceUnstick_Serialize(void);
 
 // Extra Entity Functions
-void ForceUnstick_DrawSprites();
+void ForceUnstick_DrawSprites(void);
 
 
 #endif //!OBJ_FORCEUNSTICK_H

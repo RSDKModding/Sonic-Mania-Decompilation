@@ -26,15 +26,15 @@ typedef struct {
 extern ObjectFilmProjector *FilmProjector;
 
 // Standard Entity Events
-void FilmProjector_Update();
-void FilmProjector_LateUpdate();
-void FilmProjector_StaticUpdate();
-void FilmProjector_Draw();
+void FilmProjector_Update(void);
+void FilmProjector_LateUpdate(void);
+void FilmProjector_StaticUpdate(void);
+void FilmProjector_Draw(void);
 void FilmProjector_Create(void* data);
-void FilmProjector_StageLoad();
-void FilmProjector_EditorDraw();
-void FilmProjector_EditorLoad();
-void FilmProjector_Serialize();
+void FilmProjector_StageLoad(void);
+void FilmProjector_EditorDraw(void);
+void FilmProjector_EditorLoad(void);
+void FilmProjector_Serialize(void);
 
 // Extra Entity Functions
 

@@ -2,9 +2,9 @@
 
 ObjectUFO_Dust *UFO_Dust;
 
-void UFO_Dust_Update() {}
+void UFO_Dust_Update(void) {}
 
-void UFO_Dust_LateUpdate()
+void UFO_Dust_LateUpdate(void)
 {
     RSDK_THIS(UFO_Dust);
 
@@ -25,9 +25,9 @@ void UFO_Dust_LateUpdate()
     }
 }
 
-void UFO_Dust_StaticUpdate() {}
+void UFO_Dust_StaticUpdate(void) {}
 
-void UFO_Dust_Draw()
+void UFO_Dust_Draw(void)
 {
     RSDK_THIS(UFO_Dust);
 
@@ -59,10 +59,10 @@ void UFO_Dust_Create(void *data)
     }
 }
 
-void UFO_Dust_StageLoad() { UFO_Dust->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/Dust.bin", SCOPE_STAGE); }
+void UFO_Dust_StageLoad(void) { UFO_Dust->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/Dust.bin", SCOPE_STAGE); }
 
-void UFO_Dust_EditorDraw() {}
+void UFO_Dust_EditorDraw(void) {}
 
-void UFO_Dust_EditorLoad() {}
+void UFO_Dust_EditorLoad(void) {}
 
-void UFO_Dust_Serialize() { RSDK_EDITABLE_VAR(UFO_Dust, VAR_ENUM, height); }
+void UFO_Dust_Serialize(void) { RSDK_EDITABLE_VAR(UFO_Dust, VAR_ENUM, height); }

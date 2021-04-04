@@ -2,22 +2,22 @@
 
 ObjectBallCannon *BallCannon;
 
-void BallCannon_Update()
+void BallCannon_Update(void)
 {
 
 }
 
-void BallCannon_LateUpdate()
+void BallCannon_LateUpdate(void)
 {
 
 }
 
-void BallCannon_StaticUpdate()
+void BallCannon_StaticUpdate(void)
 {
 
 }
 
-void BallCannon_Draw()
+void BallCannon_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void BallCannon_Create(void* data)
 
 }
 
-void BallCannon_StageLoad()
+void BallCannon_StageLoad(void)
 {
 
 }
 
-void BallCannon_EditorDraw()
+void BallCannon_EditorDraw(void)
 {
 
 }
 
-void BallCannon_EditorLoad()
+void BallCannon_EditorLoad(void)
 {
 
 }
 
-void BallCannon_Serialize()
+void BallCannon_Serialize(void)
 {
 
 }

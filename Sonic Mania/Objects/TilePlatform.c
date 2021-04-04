@@ -2,22 +2,22 @@
 
 ObjectTilePlatform *TilePlatform;
 
-void TilePlatform_Update()
+void TilePlatform_Update(void)
 {
 
 }
 
-void TilePlatform_LateUpdate()
+void TilePlatform_LateUpdate(void)
 {
 
 }
 
-void TilePlatform_StaticUpdate()
+void TilePlatform_StaticUpdate(void)
 {
 
 }
 
-void TilePlatform_Draw()
+void TilePlatform_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void TilePlatform_Create(void* data)
 
 }
 
-void TilePlatform_StageLoad()
+void TilePlatform_StageLoad(void)
 {
 
 }
 
-void TilePlatform_EditorDraw()
+void TilePlatform_EditorDraw(void)
 {
 
 }
 
-void TilePlatform_EditorLoad()
+void TilePlatform_EditorLoad(void)
 {
 
 }
 
-void TilePlatform_Serialize()
+void TilePlatform_Serialize(void)
 {
 
 }

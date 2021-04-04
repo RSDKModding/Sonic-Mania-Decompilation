@@ -2,7 +2,7 @@
 
 ObjectForceUnstick *ForceUnstick;
 
-void ForceUnstick_Update()
+void ForceUnstick_Update(void)
 {
     EntityPlayer *player       = 0;
     EntityForceUnstick *entity = (EntityForceUnstick *)RSDK_sceneInfo->entity;
@@ -18,21 +18,21 @@ void ForceUnstick_Update()
     entity->visible = DebugMode->debugActive;
 }
 
-void ForceUnstick_LateUpdate() {}
+void ForceUnstick_LateUpdate(void) {}
 
-void ForceUnstick_StaticUpdate() {}
+void ForceUnstick_StaticUpdate(void) {}
 
-void ForceUnstick_Draw() { ForceUnstick_DrawSprites(); }
+void ForceUnstick_Draw(void) { ForceUnstick_DrawSprites(); }
 
 void ForceUnstick_Create(void *data) {}
 
-void ForceUnstick_StageLoad()
+void ForceUnstick_StageLoad(void)
 {
     ForceUnstick->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(ForceUnstick->spriteIndex, 2, &ForceUnstick->animData, true, 6);
 }
 
-void ForceUnstick_DrawSprites()
+void ForceUnstick_DrawSprites(void)
 {
     Vector2 drawPos;
     EntityForceUnstick *entity = (EntityForceUnstick *)RSDK_sceneInfo->entity;
@@ -55,11 +55,11 @@ void ForceUnstick_DrawSprites()
     }
 }
 
-void ForceUnstick_EditorDraw() {}
+void ForceUnstick_EditorDraw(void) {}
 
-void ForceUnstick_EditorLoad() {}
+void ForceUnstick_EditorLoad(void) {}
 
-void ForceUnstick_Serialize()
+void ForceUnstick_Serialize(void)
 {
     RSDK_EDITABLE_VAR(ForceUnstick, VAR_UINT8, width);
     RSDK_EDITABLE_VAR(ForceUnstick, VAR_UINT8, height);

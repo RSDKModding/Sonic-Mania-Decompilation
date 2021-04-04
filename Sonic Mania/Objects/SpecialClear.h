@@ -18,7 +18,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     bool32 isBSS;
     int finishType;
     int timer;
@@ -51,34 +51,34 @@ typedef struct {
 extern ObjectSpecialClear *SpecialClear;
 
 // Standard Entity Events
-void SpecialClear_Update();
-void SpecialClear_LateUpdate();
-void SpecialClear_StaticUpdate();
-void SpecialClear_Draw();
+void SpecialClear_Update(void);
+void SpecialClear_LateUpdate(void);
+void SpecialClear_StaticUpdate(void);
+void SpecialClear_Draw(void);
 void SpecialClear_Create(void* data);
-void SpecialClear_StageLoad();
-void SpecialClear_EditorDraw();
-void SpecialClear_EditorLoad();
-void SpecialClear_Serialize();
+void SpecialClear_StageLoad(void);
+void SpecialClear_EditorDraw(void);
+void SpecialClear_EditorLoad(void);
+void SpecialClear_Serialize(void);
 
 // Extra Entity Functions
 void SpecialClear_DrawNumbers(Vector2 *pos, int value);
 void SpecialClear_GiveScoreBonus(int score);
-int SpecialClear_SaveCB(int a1);
-void SpecialClear_LoadScene();
-void SpecialClear_TallyScore();
+void SpecialClear_SaveCB(int success);
+void SpecialClear_LoadScene(void);
+void SpecialClear_TallyScore(void);
 
-void SpecialClear_Unknown3();
-void SpecialClear_Unknown4();
-void SpecialClear_Unknown5();
-void SpecialClear_HandlePositions();
-void SpecialClear_Unknown6();
-void SpecialClear_Unknown7();
-void SpecialClear_Unknown9();
-void SpecialClear_Unknown10();
-void SpecialClear_Unknown11();
-void SpecialClear_Unknown12();
-void SpecialClear_Unknown13();
-void SpecialClear_Unknown15();
+void SpecialClear_Unknown3(void);
+void SpecialClear_Unknown4(void);
+void SpecialClear_Unknown5(void);
+void SpecialClear_HandlePositions(void);
+void SpecialClear_Unknown6(void);
+void SpecialClear_Unknown7(void);
+void SpecialClear_Unknown9(void);
+void SpecialClear_Unknown10(void);
+void SpecialClear_Unknown11(void);
+void SpecialClear_Unknown12(void);
+void SpecialClear_Unknown13(void);
+void SpecialClear_Unknown15(void);
 
 #endif //!OBJ_SPECIALCLEAR_H

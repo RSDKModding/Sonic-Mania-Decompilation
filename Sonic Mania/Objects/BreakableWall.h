@@ -20,8 +20,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
-    void (*stateDraw)();
+    void (*state)(void);
+    void (*stateDraw)(void);
     byte type;
     bool32 onlyKnux;
     bool32 onlyMighty;
@@ -40,36 +40,36 @@ typedef struct {
 extern ObjectBreakableWall *BreakableWall;
 
 // Standard Entity Events
-void BreakableWall_Update();
-void BreakableWall_LateUpdate();
-void BreakableWall_StaticUpdate();
-void BreakableWall_Draw();
+void BreakableWall_Update(void);
+void BreakableWall_LateUpdate(void);
+void BreakableWall_StaticUpdate(void);
+void BreakableWall_Draw(void);
 void BreakableWall_Create(void* data);
-void BreakableWall_StageLoad();
-void BreakableWall_EditorDraw();
-void BreakableWall_EditorLoad();
-void BreakableWall_Serialize();
+void BreakableWall_StageLoad(void);
+void BreakableWall_EditorDraw(void);
+void BreakableWall_EditorLoad(void);
+void BreakableWall_Serialize(void);
 
 // Extra Entity Functions
 //States
-void BreakableWall_State_BottomChunks();
-void BreakableWall_State_BottomFull();
-void BreakableWall_State_FallingTile();
-void BreakableWall_State_HWall();
-void BreakableWall_State_HandleHWall();
-void BreakableWall_State_Tile();
-void BreakableWall_State_Top();
-void BreakableWall_State_VerticalChunks();
+void BreakableWall_State_BottomChunks(void);
+void BreakableWall_State_BottomFull(void);
+void BreakableWall_State_FallingTile(void);
+void BreakableWall_State_HWall(void);
+void BreakableWall_State_HandleHWall(void);
+void BreakableWall_State_Tile(void);
+void BreakableWall_State_Top(void);
+void BreakableWall_State_VerticalChunks(void);
 //Draw States
-void BreakableWall_StateDraw_BWall();
-void BreakableWall_StateDraw_BWall2();
-void BreakableWall_StateDraw_Tile();
+void BreakableWall_StateDraw_BWall(void);
+void BreakableWall_StateDraw_BWall2(void);
+void BreakableWall_StateDraw_Tile(void);
 //Break
-void BreakableWall_Break1();
-void BreakableWall_Break2AND3();
-void BreakableWall_Break4();
-void BreakableWall_Break5();
-void BreakableWall_BreakV();
+void BreakableWall_Break1(void);
+void BreakableWall_Break2AND3(void);
+void BreakableWall_Break4(void);
+void BreakableWall_Break5(void);
+void BreakableWall_BreakV(void);
 void BreakableWall_BreakUnknown(EntityBreakableWall *entity, byte flip);
 // Misc
 void BreakableWall_GiveScoreBonus(void *plr);

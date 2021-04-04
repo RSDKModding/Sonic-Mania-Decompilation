@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSpiralPlatform *SpiralPlatform;
 
 // Standard Entity Events
-void SpiralPlatform_Update();
-void SpiralPlatform_LateUpdate();
-void SpiralPlatform_StaticUpdate();
-void SpiralPlatform_Draw();
+void SpiralPlatform_Update(void);
+void SpiralPlatform_LateUpdate(void);
+void SpiralPlatform_StaticUpdate(void);
+void SpiralPlatform_Draw(void);
 void SpiralPlatform_Create(void* data);
-void SpiralPlatform_StageLoad();
-void SpiralPlatform_EditorDraw();
-void SpiralPlatform_EditorLoad();
-void SpiralPlatform_Serialize();
+void SpiralPlatform_StageLoad(void);
+void SpiralPlatform_EditorDraw(void);
+void SpiralPlatform_EditorLoad(void);
+void SpiralPlatform_Serialize(void);
 
 // Extra Entity Functions
 

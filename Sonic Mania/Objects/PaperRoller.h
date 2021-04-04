@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPaperRoller *PaperRoller;
 
 // Standard Entity Events
-void PaperRoller_Update();
-void PaperRoller_LateUpdate();
-void PaperRoller_StaticUpdate();
-void PaperRoller_Draw();
+void PaperRoller_Update(void);
+void PaperRoller_LateUpdate(void);
+void PaperRoller_StaticUpdate(void);
+void PaperRoller_Draw(void);
 void PaperRoller_Create(void* data);
-void PaperRoller_StageLoad();
-void PaperRoller_EditorDraw();
-void PaperRoller_EditorLoad();
-void PaperRoller_Serialize();
+void PaperRoller_StageLoad(void);
+void PaperRoller_EditorDraw(void);
+void PaperRoller_EditorLoad(void);
+void PaperRoller_Serialize(void);
 
 // Extra Entity Functions
 

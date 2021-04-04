@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectUISubHeading *UISubHeading;
 
 // Standard Entity Events
-void UISubHeading_Update();
-void UISubHeading_LateUpdate();
-void UISubHeading_StaticUpdate();
-void UISubHeading_Draw();
+void UISubHeading_Update(void);
+void UISubHeading_LateUpdate(void);
+void UISubHeading_StaticUpdate(void);
+void UISubHeading_Draw(void);
 void UISubHeading_Create(void* data);
-void UISubHeading_StageLoad();
-void UISubHeading_EditorDraw();
-void UISubHeading_EditorLoad();
-void UISubHeading_Serialize();
+void UISubHeading_StageLoad(void);
+void UISubHeading_EditorDraw(void);
+void UISubHeading_EditorLoad(void);
+void UISubHeading_Serialize(void);
 
 // Extra Entity Functions
 

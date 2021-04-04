@@ -25,19 +25,19 @@ typedef struct {
 extern ObjectUIInfoLabel *UIInfoLabel;
 
 // Standard Entity Events
-void UIInfoLabel_Update();
-void UIInfoLabel_LateUpdate();
-void UIInfoLabel_StaticUpdate();
-void UIInfoLabel_Draw();
+void UIInfoLabel_Update(void);
+void UIInfoLabel_LateUpdate(void);
+void UIInfoLabel_StaticUpdate(void);
+void UIInfoLabel_Draw(void);
 void UIInfoLabel_Create(void* data);
-void UIInfoLabel_StageLoad();
-void UIInfoLabel_EditorDraw();
-void UIInfoLabel_EditorLoad();
-void UIInfoLabel_Serialize();
+void UIInfoLabel_StageLoad(void);
+void UIInfoLabel_EditorDraw(void);
+void UIInfoLabel_EditorLoad(void);
+void UIInfoLabel_Serialize(void);
 
 // Extra Entity Functions
 void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text);
 void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text);
-void UIInfoLabel_DrawSprites();
+void UIInfoLabel_DrawSprites(void);
 
 #endif //!OBJ_UIINFOLABEL_H

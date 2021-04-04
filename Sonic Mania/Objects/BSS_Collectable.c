@@ -2,11 +2,11 @@
 
 ObjectBSS_Collectable *BSS_Collectable;
 
-void BSS_Collectable_Update() {}
+void BSS_Collectable_Update(void) {}
 
-void BSS_Collectable_LateUpdate() {}
+void BSS_Collectable_LateUpdate(void) {}
 
-void BSS_Collectable_StaticUpdate()
+void BSS_Collectable_StaticUpdate(void)
 {
     RSDK.ProcessAnimation(&BSS_Collectable->sphereData[BSS_RING]);
     RSDK.ProcessAnimation(&BSS_Collectable->sphereData[BSS_RING_SPARKLE]);
@@ -14,7 +14,7 @@ void BSS_Collectable_StaticUpdate()
     RSDK.ProcessAnimation(&BSS_Collectable->sphereData[BSS_MEDAL_GOLD]);
 }
 
-void BSS_Collectable_Draw()
+void BSS_Collectable_Draw(void)
 {
     RSDK_THIS(BSS_Collectable);
     Vector2 drawPos;
@@ -99,7 +99,7 @@ void BSS_Collectable_Create(void *data)
     }
 }
 
-void BSS_Collectable_StageLoad()
+void BSS_Collectable_StageLoad(void)
 {
     BSS_Collectable->spriteIndex     = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
     BSS_Collectable->ringSpriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Ring.bin", SCOPE_STAGE);
@@ -124,8 +124,8 @@ void BSS_Collectable_StageLoad()
     }
 }
 
-void BSS_Collectable_EditorDraw() {}
+void BSS_Collectable_EditorDraw(void) {}
 
-void BSS_Collectable_EditorLoad() {}
+void BSS_Collectable_EditorLoad(void) {}
 
-void BSS_Collectable_Serialize() {}
+void BSS_Collectable_Serialize(void) {}

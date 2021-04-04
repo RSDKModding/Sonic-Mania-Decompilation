@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPhantomRider *PhantomRider;
 
 // Standard Entity Events
-void PhantomRider_Update();
-void PhantomRider_LateUpdate();
-void PhantomRider_StaticUpdate();
-void PhantomRider_Draw();
+void PhantomRider_Update(void);
+void PhantomRider_LateUpdate(void);
+void PhantomRider_StaticUpdate(void);
+void PhantomRider_Draw(void);
 void PhantomRider_Create(void* data);
-void PhantomRider_StageLoad();
-void PhantomRider_EditorDraw();
-void PhantomRider_EditorLoad();
-void PhantomRider_Serialize();
+void PhantomRider_StageLoad(void);
+void PhantomRider_EditorDraw(void);
+void PhantomRider_EditorLoad(void);
+void PhantomRider_Serialize(void);
 
 // Extra Entity Functions
 

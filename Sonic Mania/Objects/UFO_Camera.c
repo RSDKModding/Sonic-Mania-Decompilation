@@ -2,9 +2,9 @@
 
 ObjectUFO_Camera *UFO_Camera;
 
-void UFO_Camera_Update() {}
+void UFO_Camera_Update(void) {}
 
-void UFO_Camera_LateUpdate()
+void UFO_Camera_LateUpdate(void)
 {
     RSDK_THIS(UFO_Camera);
     if (entity->state)
@@ -12,9 +12,9 @@ void UFO_Camera_LateUpdate()
     UFO_Camera_Unknown1();
 }
 
-void UFO_Camera_StaticUpdate() {}
+void UFO_Camera_StaticUpdate(void) {}
 
-void UFO_Camera_Draw() {}
+void UFO_Camera_Draw(void) {}
 
 void UFO_Camera_Create(void *data)
 {
@@ -31,13 +31,13 @@ void UFO_Camera_Create(void *data)
     }
 }
 
-void UFO_Camera_StageLoad()
+void UFO_Camera_StageLoad(void)
 {
     RSDK.ResetEntitySlot(SLOT_UFO_CAMERA, UFO_Camera->objectID, 0);
     UFO_Camera->isSS7 = RSDK.CheckStageFolder("UFO7");
 }
 
-void UFO_Camera_Unknown1()
+void UFO_Camera_Unknown1(void)
 {
     RSDK_THIS(UFO_Camera);
     int val = RSDK.Cos1024(-entity->angleX) << 12;
@@ -71,7 +71,7 @@ void UFO_Camera_Unknown1()
     }
 }
 
-void UFO_Camera_Unknown2()
+void UFO_Camera_Unknown2(void)
 {
     RSDK_THIS(UFO_Camera);
     EntityUFO_Player *target = (EntityUFO_Player *)entity->target;
@@ -139,7 +139,7 @@ void UFO_Camera_Unknown2()
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &entity->matWorld);
 }
 
-void UFO_Camera_Unknown3()
+void UFO_Camera_Unknown3(void)
 {
     RSDK_THIS(UFO_Camera);
     entity->height += 0x20000;
@@ -156,7 +156,7 @@ void UFO_Camera_Unknown3()
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &entity->matWorld);
 }
 
-void UFO_Camera_Unknown4()
+void UFO_Camera_Unknown4(void)
 {
     RSDK_THIS(UFO_Camera);
     entity->height += 0x80000;
@@ -173,8 +173,8 @@ void UFO_Camera_Unknown4()
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &entity->matWorld);
 }
 
-void UFO_Camera_EditorDraw() {}
+void UFO_Camera_EditorDraw(void) {}
 
-void UFO_Camera_EditorLoad() {}
+void UFO_Camera_EditorLoad(void) {}
 
-void UFO_Camera_Serialize() {}
+void UFO_Camera_Serialize(void) {}

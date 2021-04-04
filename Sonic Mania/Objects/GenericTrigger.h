@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    void (*callbacks[16])();
+    void (*callbacks[16])(void);
     int playerID;
     int field_48;
 } ObjectGenericTrigger;
@@ -23,15 +23,15 @@ typedef struct {
 extern ObjectGenericTrigger *GenericTrigger;
 
 // Standard Entity Events
-void GenericTrigger_Update();
-void GenericTrigger_LateUpdate();
-void GenericTrigger_StaticUpdate();
-void GenericTrigger_Draw();
+void GenericTrigger_Update(void);
+void GenericTrigger_LateUpdate(void);
+void GenericTrigger_StaticUpdate(void);
+void GenericTrigger_Draw(void);
 void GenericTrigger_Create(void* data);
-void GenericTrigger_StageLoad();
-void GenericTrigger_EditorDraw();
-void GenericTrigger_EditorLoad();
-void GenericTrigger_Serialize();
+void GenericTrigger_StageLoad(void);
+void GenericTrigger_EditorDraw(void);
+void GenericTrigger_EditorLoad(void);
+void GenericTrigger_Serialize(void);
 
 // Extra Entity Functions
 

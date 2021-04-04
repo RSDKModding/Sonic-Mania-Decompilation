@@ -19,15 +19,15 @@ typedef struct {
 extern ObjectUFO_Water *UFO_Water;
 
 // Standard Entity Events
-void UFO_Water_Update();
-void UFO_Water_LateUpdate();
-void UFO_Water_StaticUpdate();
-void UFO_Water_Draw();
+void UFO_Water_Update(void);
+void UFO_Water_LateUpdate(void);
+void UFO_Water_StaticUpdate(void);
+void UFO_Water_Draw(void);
 void UFO_Water_Create(void* data);
-void UFO_Water_StageLoad();
-void UFO_Water_EditorDraw();
-void UFO_Water_EditorLoad();
-void UFO_Water_Serialize();
+void UFO_Water_StageLoad(void);
+void UFO_Water_EditorDraw(void);
+void UFO_Water_EditorLoad(void);
+void UFO_Water_Serialize(void);
 
 // Extra Entity Functions
 

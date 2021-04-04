@@ -2,7 +2,7 @@
 
 ObjectItemBox *ItemBox;
 
-void ItemBox_Update()
+void ItemBox_Update(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
 
@@ -38,9 +38,9 @@ void ItemBox_Update()
     }
 }
 
-void ItemBox_LateUpdate() {}
+void ItemBox_LateUpdate(void) {}
 
-void ItemBox_StaticUpdate()
+void ItemBox_StaticUpdate(void)
 {
     if (!(Zone->timer & 3)) {
         RSDK.RotatePalette(0, 60, 63, true);
@@ -48,7 +48,7 @@ void ItemBox_StaticUpdate()
     }
 }
 
-void ItemBox_Draw()
+void ItemBox_Draw(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     if (!entity->hidden) {
@@ -164,7 +164,7 @@ void ItemBox_Create(void *data)
     }
 }
 
-void ItemBox_StageLoad()
+void ItemBox_StageLoad(void)
 {
     ItemBox->spriteIndex         = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     ItemBox->hitbox.left         = -15;
@@ -200,7 +200,7 @@ void ItemBox_StageLoad()
     ItemBox->sfx_Revovery  = RSDK.GetSFX("Global/Recovery.wav");
 }
 
-void ItemBox_DebugDraw()
+void ItemBox_DebugDraw(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
 #if RETRO_USE_PLUS
@@ -216,7 +216,7 @@ void ItemBox_DebugDraw()
     drawPos.y = entity->position.y - 0x30000;
     RSDK.DrawSprite(&DebugMode->debugData, &drawPos, 0);
 }
-void ItemBox_DebugSpawn()
+void ItemBox_DebugSpawn(void)
 {
     EntityItemBox *entity =
         (EntityItemBox *)RSDK.CreateEntity(ItemBox->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
@@ -224,14 +224,14 @@ void ItemBox_DebugSpawn()
     entity->contentsData.frameID = DebugMode->itemSubType;
 }
 
-void ItemBox_State_Broken()
+void ItemBox_State_Broken(void)
 {
     //EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     // if (LRZConvItem)
     //    LRZConvItem_Unknown2(entity);
     ItemBox_HandleFallingCollision();
 }
-void ItemBox_State_Contents()
+void ItemBox_State_Contents(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     if (LRZConvItem && entity->lrzConvPhys) {
@@ -253,7 +253,7 @@ void ItemBox_State_Contents()
     }
 }
 
-void ItemBox_State_Unknown()
+void ItemBox_State_Unknown(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     if (LRZConvItem && entity->lrzConvPhys) {
@@ -270,7 +270,7 @@ void ItemBox_State_Unknown()
     }
 }
 
-void ItemBox_State_Normal()
+void ItemBox_State_Normal(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     entity->contentsPos.x = RSDK_sceneInfo->entity->position.x;
@@ -301,7 +301,7 @@ void ItemBox_State_Normal()
         }
     }
 }
-void ItemBox_State_Falling()
+void ItemBox_State_Falling(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     if (ItemBox_HandleFallingCollision())
@@ -334,7 +334,7 @@ void ItemBox_State_Falling()
         }
     }
 }
-void ItemBox_State_Conveyor()
+void ItemBox_State_Conveyor(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
 
@@ -366,7 +366,7 @@ void ItemBox_State_Conveyor()
     }
 }
 
-void ItemBox_CheckHit()
+void ItemBox_CheckHit(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     EntityPlayer *player  = 0;
@@ -466,7 +466,7 @@ void ItemBox_CheckHit()
         }
     }
 }
-void ItemBox_GivePowerup()
+void ItemBox_GivePowerup(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     EntityPlayer *player  = (EntityPlayer *)entity->storedEntity;
@@ -916,7 +916,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 #endif
     }
 }
-bool32 ItemBox_HandleFallingCollision()
+bool32 ItemBox_HandleFallingCollision(void)
 {
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
     if (entity->direction)
@@ -1007,7 +1007,7 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
     }
     return false;
 }
-void ItemBox_HandleObjectCollisions()
+void ItemBox_HandleObjectCollisions(void)
 {
     bool32 flag             = false;
     EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
@@ -1156,11 +1156,11 @@ void ItemBox_HandleObjectCollisions()
     }
 }
 
-void ItemBox_EditorDraw() {}
+void ItemBox_EditorDraw(void) {}
 
-void ItemBox_EditorLoad() {}
+void ItemBox_EditorLoad(void) {}
 
-void ItemBox_Serialize()
+void ItemBox_Serialize(void)
 {
     RSDK_EDITABLE_VAR(ItemBox, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(ItemBox, VAR_BOOL, isFalling);

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTVFlyingBattery *TVFlyingBattery;
 
 // Standard Entity Events
-void TVFlyingBattery_Update();
-void TVFlyingBattery_LateUpdate();
-void TVFlyingBattery_StaticUpdate();
-void TVFlyingBattery_Draw();
+void TVFlyingBattery_Update(void);
+void TVFlyingBattery_LateUpdate(void);
+void TVFlyingBattery_StaticUpdate(void);
+void TVFlyingBattery_Draw(void);
 void TVFlyingBattery_Create(void* data);
-void TVFlyingBattery_StageLoad();
-void TVFlyingBattery_EditorDraw();
-void TVFlyingBattery_EditorLoad();
-void TVFlyingBattery_Serialize();
+void TVFlyingBattery_StageLoad(void);
+void TVFlyingBattery_EditorDraw(void);
+void TVFlyingBattery_EditorLoad(void);
+void TVFlyingBattery_Serialize(void);
 
 // Extra Entity Functions
 

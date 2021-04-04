@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectRPlaneShifter *RPlaneShifter;
 
 // Standard Entity Events
-void RPlaneShifter_Update();
-void RPlaneShifter_LateUpdate();
-void RPlaneShifter_StaticUpdate();
-void RPlaneShifter_Draw();
+void RPlaneShifter_Update(void);
+void RPlaneShifter_LateUpdate(void);
+void RPlaneShifter_StaticUpdate(void);
+void RPlaneShifter_Draw(void);
 void RPlaneShifter_Create(void* data);
-void RPlaneShifter_StageLoad();
-void RPlaneShifter_EditorDraw();
-void RPlaneShifter_EditorLoad();
-void RPlaneShifter_Serialize();
+void RPlaneShifter_StageLoad(void);
+void RPlaneShifter_EditorDraw(void);
+void RPlaneShifter_EditorLoad(void);
+void RPlaneShifter_Serialize(void);
 
 // Extra Entity Functions
 

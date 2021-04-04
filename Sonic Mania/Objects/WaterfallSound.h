@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectWaterfallSound *WaterfallSound;
 
 // Standard Entity Events
-void WaterfallSound_Update();
-void WaterfallSound_LateUpdate();
-void WaterfallSound_StaticUpdate();
-void WaterfallSound_Draw();
+void WaterfallSound_Update(void);
+void WaterfallSound_LateUpdate(void);
+void WaterfallSound_StaticUpdate(void);
+void WaterfallSound_Draw(void);
 void WaterfallSound_Create(void* data);
-void WaterfallSound_StageLoad();
-void WaterfallSound_EditorDraw();
-void WaterfallSound_EditorLoad();
-void WaterfallSound_Serialize();
+void WaterfallSound_StageLoad(void);
+void WaterfallSound_EditorDraw(void);
+void WaterfallSound_EditorLoad(void);
+void WaterfallSound_Serialize(void);
 
 // Extra Entity Functions
 #endif

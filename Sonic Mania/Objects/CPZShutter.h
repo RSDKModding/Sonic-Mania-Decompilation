@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCPZShutter *CPZShutter;
 
 // Standard Entity Events
-void CPZShutter_Update();
-void CPZShutter_LateUpdate();
-void CPZShutter_StaticUpdate();
-void CPZShutter_Draw();
+void CPZShutter_Update(void);
+void CPZShutter_LateUpdate(void);
+void CPZShutter_StaticUpdate(void);
+void CPZShutter_Draw(void);
 void CPZShutter_Create(void* data);
-void CPZShutter_StageLoad();
-void CPZShutter_EditorDraw();
-void CPZShutter_EditorLoad();
-void CPZShutter_Serialize();
+void CPZShutter_StageLoad(void);
+void CPZShutter_EditorDraw(void);
+void CPZShutter_EditorLoad(void);
+void CPZShutter_Serialize(void);
 
 // Extra Entity Functions
 

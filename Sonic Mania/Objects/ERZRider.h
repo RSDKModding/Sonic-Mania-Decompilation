@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectERZRider *ERZRider;
 
 // Standard Entity Events
-void ERZRider_Update();
-void ERZRider_LateUpdate();
-void ERZRider_StaticUpdate();
-void ERZRider_Draw();
+void ERZRider_Update(void);
+void ERZRider_LateUpdate(void);
+void ERZRider_StaticUpdate(void);
+void ERZRider_Draw(void);
 void ERZRider_Create(void* data);
-void ERZRider_StageLoad();
-void ERZRider_EditorDraw();
-void ERZRider_EditorLoad();
-void ERZRider_Serialize();
+void ERZRider_StageLoad(void);
+void ERZRider_EditorDraw(void);
+void ERZRider_EditorLoad(void);
+void ERZRider_Serialize(void);
 
 // Extra Entity Functions
 

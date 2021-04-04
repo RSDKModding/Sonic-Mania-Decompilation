@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLetterboard *Letterboard;
 
 // Standard Entity Events
-void Letterboard_Update();
-void Letterboard_LateUpdate();
-void Letterboard_StaticUpdate();
-void Letterboard_Draw();
+void Letterboard_Update(void);
+void Letterboard_LateUpdate(void);
+void Letterboard_StaticUpdate(void);
+void Letterboard_Draw(void);
 void Letterboard_Create(void* data);
-void Letterboard_StageLoad();
-void Letterboard_EditorDraw();
-void Letterboard_EditorLoad();
-void Letterboard_Serialize();
+void Letterboard_StageLoad(void);
+void Letterboard_EditorDraw(void);
+void Letterboard_EditorLoad(void);
+void Letterboard_Serialize(void);
 
 // Extra Entity Functions
 

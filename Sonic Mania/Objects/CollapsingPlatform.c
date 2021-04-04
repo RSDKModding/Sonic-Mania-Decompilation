@@ -2,7 +2,7 @@
 
 ObjectCollapsingPlatform *CollapsingPlatform;
 
-void CollapsingPlatform_Update()
+void CollapsingPlatform_Update(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
     entity->visible                  = false;
@@ -48,7 +48,7 @@ void CollapsingPlatform_Update()
         while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)
 #if RETRO_USE_PLUS
-                && (!entity->mightyOnly || player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) 
+                && (!entity->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)) 
 #endif
                 && !player->sidekick
                 && player->onGround && !player->collisionMode && !entity->eventOnly && entity->delay < 0xFFFF) {
@@ -86,11 +86,11 @@ void CollapsingPlatform_Update()
     }
 }
 
-void CollapsingPlatform_LateUpdate() {}
+void CollapsingPlatform_LateUpdate(void) {}
 
-void CollapsingPlatform_StaticUpdate() {}
+void CollapsingPlatform_StaticUpdate(void) {}
 
-void CollapsingPlatform_Draw()
+void CollapsingPlatform_Draw(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
     Vector2 drawPos;
@@ -166,7 +166,7 @@ void CollapsingPlatform_Create(void *data)
     }
 }
 
-void CollapsingPlatform_StageLoad()
+void CollapsingPlatform_StageLoad(void)
 {
     CollapsingPlatform->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animData, true, 0);
@@ -182,7 +182,7 @@ void CollapsingPlatform_StageLoad()
     }
 }
 
-void CollapsingPlatform_State_Left()
+void CollapsingPlatform_State_Left(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
 
@@ -213,7 +213,7 @@ void CollapsingPlatform_State_Left()
         ty += 0x100000;
     }
 }
-void CollapsingPlatform_State_Right()
+void CollapsingPlatform_State_Right(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
 
@@ -244,7 +244,7 @@ void CollapsingPlatform_State_Right()
         ty += 0x100000;
     }
 }
-void CollapsingPlatform_State_Center()
+void CollapsingPlatform_State_Center(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
 
@@ -255,7 +255,6 @@ void CollapsingPlatform_State_Center()
     int ty        = (RSDK_sceneInfo->entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
     int tCountX = entity->size.x >> CollapsingPlatform->shift >> 20;
-    int tCountY = entity->size.y >> CollapsingPlatform->shift >> 20;
 
     int sx = entity->size.x >> 20;
     int sy = entity->size.y >> 20;
@@ -280,7 +279,7 @@ void CollapsingPlatform_State_Center()
         ty += 0x100000;
     }
 }
-void CollapsingPlatform_State_LeftOrRight()
+void CollapsingPlatform_State_LeftOrRight(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
     int px                           = entity->playerPos.x;
@@ -291,7 +290,7 @@ void CollapsingPlatform_State_LeftOrRight()
     else
         CollapsingPlatform_State_Right();
 }
-void CollapsingPlatform_State_PlayerPos()
+void CollapsingPlatform_State_PlayerPos(void)
 {
     EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
     int px = entity->playerPos.x;
@@ -308,11 +307,11 @@ void CollapsingPlatform_State_PlayerPos()
     }
 }
 
-void CollapsingPlatform_EditorDraw() {}
+void CollapsingPlatform_EditorDraw(void) {}
 
-void CollapsingPlatform_EditorLoad() {}
+void CollapsingPlatform_EditorLoad(void) {}
 
-void CollapsingPlatform_Serialize()
+void CollapsingPlatform_Serialize(void)
 {
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(CollapsingPlatform, VAR_BOOL, respawn);

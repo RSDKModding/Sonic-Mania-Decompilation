@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTurboTurtle *TurboTurtle;
 
 // Standard Entity Events
-void TurboTurtle_Update();
-void TurboTurtle_LateUpdate();
-void TurboTurtle_StaticUpdate();
-void TurboTurtle_Draw();
+void TurboTurtle_Update(void);
+void TurboTurtle_LateUpdate(void);
+void TurboTurtle_StaticUpdate(void);
+void TurboTurtle_Draw(void);
 void TurboTurtle_Create(void* data);
-void TurboTurtle_StageLoad();
-void TurboTurtle_EditorDraw();
-void TurboTurtle_EditorLoad();
-void TurboTurtle_Serialize();
+void TurboTurtle_StageLoad(void);
+void TurboTurtle_EditorDraw(void);
+void TurboTurtle_EditorLoad(void);
+void TurboTurtle_Serialize(void);
 
 // Extra Entity Functions
 

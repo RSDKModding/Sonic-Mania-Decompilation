@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPendulum *Pendulum;
 
 // Standard Entity Events
-void Pendulum_Update();
-void Pendulum_LateUpdate();
-void Pendulum_StaticUpdate();
-void Pendulum_Draw();
+void Pendulum_Update(void);
+void Pendulum_LateUpdate(void);
+void Pendulum_StaticUpdate(void);
+void Pendulum_Draw(void);
 void Pendulum_Create(void* data);
-void Pendulum_StageLoad();
-void Pendulum_EditorDraw();
-void Pendulum_EditorLoad();
-void Pendulum_Serialize();
+void Pendulum_StageLoad(void);
+void Pendulum_EditorDraw(void);
+void Pendulum_EditorLoad(void);
+void Pendulum_Serialize(void);
 
 // Extra Entity Functions
 

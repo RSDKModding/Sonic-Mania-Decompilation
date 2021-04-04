@@ -3,7 +3,7 @@
 #if RETRO_USE_PLUS
 ObjectSummary *Summary;
 
-void Summary_Update()
+void Summary_Update(void)
 {
     RSDK_THIS(Summary);
     if (entity->state)
@@ -11,9 +11,9 @@ void Summary_Update()
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
-void Summary_LateUpdate() {}
+void Summary_LateUpdate(void) {}
 
-void Summary_StaticUpdate()
+void Summary_StaticUpdate(void)
 {
     if (--Summary->timer < 1) {
         ++Summary->aniFrameID;
@@ -24,7 +24,7 @@ void Summary_StaticUpdate()
     }
 }
 
-void Summary_Draw()
+void Summary_Draw(void)
 {
     RSDK_THIS(Summary);
     if (entity->stateDraw)
@@ -44,7 +44,7 @@ void Summary_Create(void *data)
     }
 }
 
-void Summary_StageLoad()
+void Summary_StageLoad(void)
 {
     RSDK.ResetEntitySlot(0, Summary->objectID, 0);
 
@@ -52,13 +52,13 @@ void Summary_StageLoad()
     UIText->spriteIndex    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
 }
 
-void Summary_State_Draw()
+void Summary_State_Draw(void)
 {
     RSDK_THIS(Summary);
     RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
-void Summary_State_SetupText()
+void Summary_State_SetupText(void)
 {
     RSDK_THIS(Summary);
     entity->unknownPtr   = NULL;
@@ -112,7 +112,7 @@ void Summary_State_SetupText()
     entity->state = Summary_State_Unknown;
 }
 
-void Summary_State_Unknown()
+void Summary_State_Unknown(void)
 {
     RSDK_THIS(Summary);
 
@@ -126,7 +126,7 @@ void Summary_State_Unknown()
     }
 }
 
-void Summary_State_Unknown2()
+void Summary_State_Unknown2(void)
 {
     RSDK_THIS(Summary);
     if (RSDK_controller->keyStart.press || (User.GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)) {
@@ -141,7 +141,7 @@ void Summary_State_Unknown2()
     }
 }
 
-void Summary_State_Unknown3()
+void Summary_State_Unknown3(void)
 {
     RSDK_THIS(Summary);
     if (entity->timer >= 1024) {
@@ -200,7 +200,7 @@ void Summary_SetStageTime(char *buffer, int time)
     }
 }
 
-void Summary_LoadTimes()
+void Summary_LoadTimes(void)
 {
     RSDK_THIS(Summary);
     if (globals->gameMode == MODE_ENCORE) {
@@ -247,9 +247,9 @@ void Summary_LoadTimes()
     Summary_SetTextString(0, entity->totalTime, textBuf);
 }
 
-void Summary_EditorDraw() {}
+void Summary_EditorDraw(void) {}
 
-void Summary_EditorLoad() {}
+void Summary_EditorLoad(void) {}
 
-void Summary_Serialize() {}
+void Summary_Serialize(void) {}
 #endif

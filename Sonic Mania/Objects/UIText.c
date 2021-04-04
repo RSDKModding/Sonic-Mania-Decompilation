@@ -2,7 +2,7 @@
 
 ObjectUIText *UIText;
 
-void UIText_Update()
+void UIText_Update(void)
 {
     EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
     if (entity->animData.animationID != entity->highlighted + entity->listID) {
@@ -15,17 +15,17 @@ void UIText_Update()
     }
 }
 
-void UIText_LateUpdate()
+void UIText_LateUpdate(void)
 {
 
 }
 
-void UIText_StaticUpdate()
+void UIText_StaticUpdate(void)
 {
 
 }
 
-void UIText_Draw()
+void UIText_Draw(void)
 {
     EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
 
@@ -45,7 +45,7 @@ void UIText_Draw()
     if (entity->align == ALIGN_CENTER) {
         drawPos.x -= width << 16;
     }
-    RSDK.DrawText(&entity->animData, &drawPos, &entity->text, 0, 0, FLIP_NONE, 0, 0, 0, false);
+    RSDK.DrawText(&entity->animData, &drawPos, &entity->text, 0, 0, ALIGN_LEFT, 0, 0, 0, false);
 }
 
 void UIText_Create(void* data)
@@ -69,22 +69,22 @@ void UIText_Create(void* data)
     }
 }
 
-void UIText_StageLoad()
+void UIText_StageLoad(void)
 {
 
 }
 
-void UIText_EditorDraw()
+void UIText_EditorDraw(void)
 {
 
 }
 
-void UIText_EditorLoad()
+void UIText_EditorLoad(void)
 {
 
 }
 
-void UIText_Serialize()
+void UIText_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UIText, VAR_STRING, text);
     RSDK_EDITABLE_VAR(UIText, VAR_STRING, tag);

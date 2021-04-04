@@ -33,15 +33,15 @@ typedef struct {
 extern ObjectRingField *RingField;
 
 // Standard Entity Events
-void RingField_Update();
-void RingField_LateUpdate();
-void RingField_StaticUpdate();
-void RingField_Draw();
+void RingField_Update(void);
+void RingField_LateUpdate(void);
+void RingField_StaticUpdate(void);
+void RingField_Draw(void);
 void RingField_Create(void* data);
-void RingField_StageLoad();
-void RingField_EditorDraw();
-void RingField_EditorLoad();
-void RingField_Serialize();
+void RingField_StageLoad(void);
+void RingField_EditorDraw(void);
+void RingField_EditorLoad(void);
+void RingField_Serialize(void);
 
 // Extra Entity Functions
 void RingField_GetPos(Vector2 *pos);

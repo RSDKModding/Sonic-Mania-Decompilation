@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSilverSonic *SilverSonic;
 
 // Standard Entity Events
-void SilverSonic_Update();
-void SilverSonic_LateUpdate();
-void SilverSonic_StaticUpdate();
-void SilverSonic_Draw();
+void SilverSonic_Update(void);
+void SilverSonic_LateUpdate(void);
+void SilverSonic_StaticUpdate(void);
+void SilverSonic_Draw(void);
 void SilverSonic_Create(void* data);
-void SilverSonic_StageLoad();
-void SilverSonic_EditorDraw();
-void SilverSonic_EditorLoad();
-void SilverSonic_Serialize();
+void SilverSonic_StageLoad(void);
+void SilverSonic_EditorDraw(void);
+void SilverSonic_EditorLoad(void);
+void SilverSonic_Serialize(void);
 
 // Extra Entity Functions
 

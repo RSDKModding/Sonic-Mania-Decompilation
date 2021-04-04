@@ -2,7 +2,7 @@
 
 ObjectInvincibleStars *InvincibleStars;
 
-void InvincibleStars_Update()
+void InvincibleStars_Update(void)
 {
     EntityInvincibleStars *entity = (EntityInvincibleStars *)RSDK_sceneInfo->entity;
     EntityPlayer *player          = (EntityPlayer *)entity->parent;
@@ -48,17 +48,17 @@ void InvincibleStars_Update()
     }
 }
 
-void InvincibleStars_LateUpdate()
+void InvincibleStars_LateUpdate(void)
 {
 
 }
 
-void InvincibleStars_StaticUpdate()
+void InvincibleStars_StaticUpdate(void)
 {
 
 }
 
-void InvincibleStars_Draw()
+void InvincibleStars_Draw(void)
 {
     EntityInvincibleStars *entity = (EntityInvincibleStars *)RSDK_sceneInfo->entity;
     EntityPlayer *player          = (EntityPlayer *)entity->parent;
@@ -143,19 +143,19 @@ void InvincibleStars_Create(void* data)
     }
 }
 
-void InvincibleStars_StageLoad() { InvincibleStars->spriteIndex = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
+void InvincibleStars_StageLoad(void) { InvincibleStars->spriteIndex = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
 
-void InvincibleStars_EditorDraw()
+void InvincibleStars_EditorDraw(void)
 {
 
 }
 
-void InvincibleStars_EditorLoad()
+void InvincibleStars_EditorLoad(void)
 {
 
 }
 
-void InvincibleStars_Serialize()
+void InvincibleStars_Serialize(void)
 {
 
 }

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMathHelpers *MathHelpers;
 
 // Standard Entity Events
-void MathHelpers_Update();
-void MathHelpers_LateUpdate();
-void MathHelpers_StaticUpdate();
-void MathHelpers_Draw();
+void MathHelpers_Update(void);
+void MathHelpers_LateUpdate(void);
+void MathHelpers_StaticUpdate(void);
+void MathHelpers_Draw(void);
 void MathHelpers_Create(void* data);
-void MathHelpers_StageLoad();
-void MathHelpers_EditorDraw();
-void MathHelpers_EditorLoad();
-void MathHelpers_Serialize();
+void MathHelpers_StageLoad(void);
+void MathHelpers_EditorDraw(void);
+void MathHelpers_EditorLoad(void);
+void MathHelpers_Serialize(void);
 
 // Extra Entity Functions
 

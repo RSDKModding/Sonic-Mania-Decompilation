@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectFunnel *Funnel;
 
 // Standard Entity Events
-void Funnel_Update();
-void Funnel_LateUpdate();
-void Funnel_StaticUpdate();
-void Funnel_Draw();
+void Funnel_Update(void);
+void Funnel_LateUpdate(void);
+void Funnel_StaticUpdate(void);
+void Funnel_Draw(void);
 void Funnel_Create(void* data);
-void Funnel_StageLoad();
-void Funnel_EditorDraw();
-void Funnel_EditorLoad();
-void Funnel_Serialize();
+void Funnel_StageLoad(void);
+void Funnel_EditorDraw(void);
+void Funnel_EditorLoad(void);
+void Funnel_Serialize(void);
 
 // Extra Entity Functions
 

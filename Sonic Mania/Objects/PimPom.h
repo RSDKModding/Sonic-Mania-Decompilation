@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPimPom *PimPom;
 
 // Standard Entity Events
-void PimPom_Update();
-void PimPom_LateUpdate();
-void PimPom_StaticUpdate();
-void PimPom_Draw();
+void PimPom_Update(void);
+void PimPom_LateUpdate(void);
+void PimPom_StaticUpdate(void);
+void PimPom_Draw(void);
 void PimPom_Create(void* data);
-void PimPom_StageLoad();
-void PimPom_EditorDraw();
-void PimPom_EditorLoad();
-void PimPom_Serialize();
+void PimPom_StageLoad(void);
+void PimPom_EditorDraw(void);
+void PimPom_EditorLoad(void);
+void PimPom_Serialize(void);
 
 // Extra Entity Functions
 

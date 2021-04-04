@@ -2,22 +2,22 @@
 
 ObjectChemicalPool *ChemicalPool;
 
-void ChemicalPool_Update()
+void ChemicalPool_Update(void)
 {
 
 }
 
-void ChemicalPool_LateUpdate()
+void ChemicalPool_LateUpdate(void)
 {
 
 }
 
-void ChemicalPool_StaticUpdate()
+void ChemicalPool_StaticUpdate(void)
 {
 
 }
 
-void ChemicalPool_Draw()
+void ChemicalPool_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void ChemicalPool_Create(void* data)
 
 }
 
-void ChemicalPool_StageLoad()
+void ChemicalPool_StageLoad(void)
 {
 
 }
 
-void ChemicalPool_EditorDraw()
+void ChemicalPool_EditorDraw(void)
 {
 
 }
 
-void ChemicalPool_EditorLoad()
+void ChemicalPool_EditorLoad(void)
 {
 
 }
 
-void ChemicalPool_Serialize()
+void ChemicalPool_Serialize(void)
 {
 
 }

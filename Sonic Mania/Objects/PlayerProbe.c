@@ -2,7 +2,7 @@
 
 ObjectPlayerProbe *PlayerProbe;
 
-void PlayerProbe_Update()
+void PlayerProbe_Update(void)
 {
     EntityPlayer *player      = NULL;
     EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
@@ -42,11 +42,11 @@ void PlayerProbe_Update()
     entity->visible = DebugMode->debugActive;
 }
 
-void PlayerProbe_LateUpdate() {}
+void PlayerProbe_LateUpdate(void) {}
 
-void PlayerProbe_StaticUpdate() {}
+void PlayerProbe_StaticUpdate(void) {}
 
-void PlayerProbe_Draw()
+void PlayerProbe_Draw(void)
 {
     Vector2 drawPos;
     EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
@@ -186,7 +186,7 @@ void PlayerProbe_Create(void *data)
     entity->negAngle      = (byte)-entity->angle;
 }
 
-void PlayerProbe_StageLoad() { PlayerProbe->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlayerProbe_StageLoad(void) { PlayerProbe->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void PlayerProbe_Print(EntityPlayer *player)
 {
@@ -217,11 +217,11 @@ void PlayerProbe_Print(EntityPlayer *player)
     }
 }
 
-void PlayerProbe_EditorDraw() {}
+void PlayerProbe_EditorDraw(void) {}
 
-void PlayerProbe_EditorLoad() {}
+void PlayerProbe_EditorLoad(void) {}
 
-void PlayerProbe_Serialize()
+void PlayerProbe_Serialize(void)
 {
     RSDK_EDITABLE_VAR(PlayerProbe, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(PlayerProbe, VAR_ENUM, size);

@@ -16,7 +16,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int type;
     int behavior;
     int height;
@@ -39,22 +39,22 @@ typedef struct {
 extern ObjectUFO_Sphere *UFO_Sphere;
 
 // Standard Entity Events
-void UFO_Sphere_Update();
-void UFO_Sphere_LateUpdate();
-void UFO_Sphere_StaticUpdate();
-void UFO_Sphere_Draw();
+void UFO_Sphere_Update(void);
+void UFO_Sphere_LateUpdate(void);
+void UFO_Sphere_StaticUpdate(void);
+void UFO_Sphere_Draw(void);
 void UFO_Sphere_Create(void* data);
-void UFO_Sphere_StageLoad();
-void UFO_Sphere_EditorDraw();
-void UFO_Sphere_EditorLoad();
-void UFO_Sphere_Serialize();
+void UFO_Sphere_StageLoad(void);
+void UFO_Sphere_EditorDraw(void);
+void UFO_Sphere_EditorLoad(void);
+void UFO_Sphere_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Sphere_CheckPlayerCollision();
-void UFO_Sphere_State_Bouncing();
-void UFO_Sphere_State_Moving();
-void UFO_Sphere_Unknown3();
-void UFO_Sphere_Unknown4();
-void UFO_Sphere_Unknown5();
+void UFO_Sphere_CheckPlayerCollision(void);
+void UFO_Sphere_State_Bouncing(void);
+void UFO_Sphere_State_Moving(void);
+void UFO_Sphere_Unknown3(void);
+void UFO_Sphere_Unknown4(void);
+void UFO_Sphere_Unknown5(void);
 
 #endif //!OBJ_UFO_SPHERE_H

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectWisp *Wisp;
 
 // Standard Entity Events
-void Wisp_Update();
-void Wisp_LateUpdate();
-void Wisp_StaticUpdate();
-void Wisp_Draw();
+void Wisp_Update(void);
+void Wisp_LateUpdate(void);
+void Wisp_StaticUpdate(void);
+void Wisp_Draw(void);
 void Wisp_Create(void* data);
-void Wisp_StageLoad();
-void Wisp_EditorDraw();
-void Wisp_EditorLoad();
-void Wisp_Serialize();
+void Wisp_StageLoad(void);
+void Wisp_EditorDraw(void);
+void Wisp_EditorLoad(void);
+void Wisp_Serialize(void);
 
 // Extra Entity Functions
 

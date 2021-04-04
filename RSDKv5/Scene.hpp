@@ -30,7 +30,7 @@ struct SceneListEntry {
     char name[0x20];
     char folder[0x10];
     char sceneID[0x08];
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     byte filter;
 #endif
 };
@@ -54,7 +54,7 @@ struct SceneInfo {
     byte activeCategory;
     byte categoryCount;
     byte state;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     byte filter;
 #endif
     byte milliseconds;
@@ -115,7 +115,7 @@ extern TileLayer tileLayers[LAYER_COUNT];
 
 extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per direction
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 extern bool32 hardResetFlag;
 #endif
 extern char currentSceneFolder[0x10];
@@ -134,9 +134,14 @@ void ProcessParallax(TileLayer *layer);
 void ProcessSceneTimer();
 
 void SetScene(const char *categoryName, const char *sceneName);
-inline void InitSceneLoad() { sceneInfo.state = sceneInfo.state < ENGINESTATE_LOAD_STEPOVER ? ENGINESTATE_LOAD : ENGINESTATE_LOAD_STEPOVER; }
+inline void InitSceneLoad() {
+    bool32 stepOver = (sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER;
+    sceneInfo.state = ENGINESTATE_LOAD;
+    if (stepOver)
+        sceneInfo.state |= ENGINESTATE_STEPOVER;
+}
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline void SetHardResetFlag(bool32 set) { hardResetFlag = set; }
 #endif
 

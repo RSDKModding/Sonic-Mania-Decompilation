@@ -73,15 +73,15 @@ typedef struct {
 extern ObjectNoSwap *NoSwap;
 
 // Standard Entity Events
-void NoSwap_Update();
-void NoSwap_LateUpdate();
-void NoSwap_StaticUpdate();
-void NoSwap_Draw();
+void NoSwap_Update(void);
+void NoSwap_LateUpdate(void);
+void NoSwap_StaticUpdate(void);
+void NoSwap_Draw(void);
 void NoSwap_Create(void* data);
-void NoSwap_StageLoad();
-void NoSwap_EditorDraw();
-void NoSwap_EditorLoad();
-void NoSwap_Serialize();
+void NoSwap_StageLoad(void);
+void NoSwap_EditorDraw(void);
+void NoSwap_EditorLoad(void);
+void NoSwap_Serialize(void);
 
 // Extra Entity Functions
 #endif

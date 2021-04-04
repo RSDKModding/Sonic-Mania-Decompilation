@@ -31,18 +31,18 @@ typedef struct {
 extern ObjectSwingRope *SwingRope;
 
 // Standard Entity Events
-void SwingRope_Update();
-void SwingRope_LateUpdate();
-void SwingRope_StaticUpdate();
-void SwingRope_Draw();
+void SwingRope_Update(void);
+void SwingRope_LateUpdate(void);
+void SwingRope_StaticUpdate(void);
+void SwingRope_Draw(void);
 void SwingRope_Create(void* data);
-void SwingRope_StageLoad();
-void SwingRope_EditorDraw();
-void SwingRope_EditorLoad();
-void SwingRope_Serialize();
+void SwingRope_StageLoad(void);
+void SwingRope_EditorDraw(void);
+void SwingRope_EditorLoad(void);
+void SwingRope_Serialize(void);
 
 // Extra Entity Functions
-void SwingRope_DebugDraw();
-void SwingRope_DebugSpawn();
+void SwingRope_DebugDraw(void);
+void SwingRope_DebugSpawn(void);
 
 #endif //!OBJ_SWINGROPE_H

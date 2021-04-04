@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectManiaModeMenu *ManiaModeMenu;
 
 // Standard Entity Events
-void ManiaModeMenu_Update();
-void ManiaModeMenu_LateUpdate();
-void ManiaModeMenu_StaticUpdate();
-void ManiaModeMenu_Draw();
+void ManiaModeMenu_Update(void);
+void ManiaModeMenu_LateUpdate(void);
+void ManiaModeMenu_StaticUpdate(void);
+void ManiaModeMenu_Draw(void);
 void ManiaModeMenu_Create(void* data);
-void ManiaModeMenu_StageLoad();
-void ManiaModeMenu_EditorDraw();
-void ManiaModeMenu_EditorLoad();
-void ManiaModeMenu_Serialize();
+void ManiaModeMenu_StageLoad(void);
+void ManiaModeMenu_EditorDraw(void);
+void ManiaModeMenu_EditorLoad(void);
+void ManiaModeMenu_Serialize(void);
 
 // Extra Entity Functions
 

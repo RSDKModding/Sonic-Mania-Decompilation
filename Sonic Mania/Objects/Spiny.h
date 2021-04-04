@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSpiny *Spiny;
 
 // Standard Entity Events
-void Spiny_Update();
-void Spiny_LateUpdate();
-void Spiny_StaticUpdate();
-void Spiny_Draw();
+void Spiny_Update(void);
+void Spiny_LateUpdate(void);
+void Spiny_StaticUpdate(void);
+void Spiny_Draw(void);
 void Spiny_Create(void* data);
-void Spiny_StageLoad();
-void Spiny_EditorDraw();
-void Spiny_EditorLoad();
-void Spiny_Serialize();
+void Spiny_StageLoad(void);
+void Spiny_EditorDraw(void);
+void Spiny_EditorLoad(void);
+void Spiny_Serialize(void);
 
 // Extra Entity Functions
 

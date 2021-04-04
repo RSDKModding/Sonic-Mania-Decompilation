@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectPBL_Setup *PBL_Setup;
 
 // Standard Entity Events
-void PBL_Setup_Update();
-void PBL_Setup_LateUpdate();
-void PBL_Setup_StaticUpdate();
-void PBL_Setup_Draw();
+void PBL_Setup_Update(void);
+void PBL_Setup_LateUpdate(void);
+void PBL_Setup_StaticUpdate(void);
+void PBL_Setup_Draw(void);
 void PBL_Setup_Create(void* data);
-void PBL_Setup_StageLoad();
-void PBL_Setup_EditorDraw();
-void PBL_Setup_EditorLoad();
-void PBL_Setup_Serialize();
+void PBL_Setup_StageLoad(void);
+void PBL_Setup_EditorDraw(void);
+void PBL_Setup_EditorLoad(void);
+void PBL_Setup_Serialize(void);
 
 // Extra Entity Functions
 #endif

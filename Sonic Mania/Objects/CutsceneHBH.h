@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCutsceneHBH *CutsceneHBH;
 
 // Standard Entity Events
-void CutsceneHBH_Update();
-void CutsceneHBH_LateUpdate();
-void CutsceneHBH_StaticUpdate();
-void CutsceneHBH_Draw();
+void CutsceneHBH_Update(void);
+void CutsceneHBH_LateUpdate(void);
+void CutsceneHBH_StaticUpdate(void);
+void CutsceneHBH_Draw(void);
 void CutsceneHBH_Create(void* data);
-void CutsceneHBH_StageLoad();
-void CutsceneHBH_EditorDraw();
-void CutsceneHBH_EditorLoad();
-void CutsceneHBH_Serialize();
+void CutsceneHBH_StageLoad(void);
+void CutsceneHBH_EditorDraw(void);
+void CutsceneHBH_EditorLoad(void);
+void CutsceneHBH_Serialize(void);
 
 // Extra Entity Functions
 

@@ -24,15 +24,15 @@ typedef struct {
 extern ObjectUIPicture *UIPicture;
 
 // Standard Entity Events
-void UIPicture_Update();
-void UIPicture_LateUpdate();
-void UIPicture_StaticUpdate();
-void UIPicture_Draw();
+void UIPicture_Update(void);
+void UIPicture_LateUpdate(void);
+void UIPicture_StaticUpdate(void);
+void UIPicture_Draw(void);
 void UIPicture_Create(void* data);
-void UIPicture_StageLoad();
-void UIPicture_EditorDraw();
-void UIPicture_EditorLoad();
-void UIPicture_Serialize();
+void UIPicture_StageLoad(void);
+void UIPicture_EditorDraw(void);
+void UIPicture_EditorLoad(void);
+void UIPicture_Serialize(void);
 
 // Extra Entity Functions
 

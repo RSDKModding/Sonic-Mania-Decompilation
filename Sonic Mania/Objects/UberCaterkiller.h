@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectUberCaterkiller *UberCaterkiller;
 
 // Standard Entity Events
-void UberCaterkiller_Update();
-void UberCaterkiller_LateUpdate();
-void UberCaterkiller_StaticUpdate();
-void UberCaterkiller_Draw();
+void UberCaterkiller_Update(void);
+void UberCaterkiller_LateUpdate(void);
+void UberCaterkiller_StaticUpdate(void);
+void UberCaterkiller_Draw(void);
 void UberCaterkiller_Create(void* data);
-void UberCaterkiller_StageLoad();
-void UberCaterkiller_EditorDraw();
-void UberCaterkiller_EditorLoad();
-void UberCaterkiller_Serialize();
+void UberCaterkiller_StageLoad(void);
+void UberCaterkiller_EditorDraw(void);
+void UberCaterkiller_EditorLoad(void);
+void UberCaterkiller_Serialize(void);
 
 // Extra Entity Functions
 

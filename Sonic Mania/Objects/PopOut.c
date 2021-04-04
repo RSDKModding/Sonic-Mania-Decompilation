@@ -2,22 +2,22 @@
 
 ObjectPopOut *PopOut;
 
-void PopOut_Update()
+void PopOut_Update(void)
 {
 
 }
 
-void PopOut_LateUpdate()
+void PopOut_LateUpdate(void)
 {
 
 }
 
-void PopOut_StaticUpdate()
+void PopOut_StaticUpdate(void)
 {
 
 }
 
-void PopOut_Draw()
+void PopOut_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PopOut_Create(void* data)
 
 }
 
-void PopOut_StageLoad()
+void PopOut_StageLoad(void)
 {
 
 }
 
-void PopOut_EditorDraw()
+void PopOut_EditorDraw(void)
 {
 
 }
 
-void PopOut_EditorLoad()
+void PopOut_EditorLoad(void)
 {
 
 }
 
-void PopOut_Serialize()
+void PopOut_Serialize(void)
 {
 
 }

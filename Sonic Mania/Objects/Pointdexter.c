@@ -2,22 +2,22 @@
 
 ObjectPointdexter *Pointdexter;
 
-void Pointdexter_Update()
+void Pointdexter_Update(void)
 {
 
 }
 
-void Pointdexter_LateUpdate()
+void Pointdexter_LateUpdate(void)
 {
 
 }
 
-void Pointdexter_StaticUpdate()
+void Pointdexter_StaticUpdate(void)
 {
 
 }
 
-void Pointdexter_Draw()
+void Pointdexter_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Pointdexter_Create(void* data)
 
 }
 
-void Pointdexter_StageLoad()
+void Pointdexter_StageLoad(void)
 {
 
 }
 
-void Pointdexter_EditorDraw()
+void Pointdexter_EditorDraw(void)
 {
 
 }
 
-void Pointdexter_EditorLoad()
+void Pointdexter_EditorLoad(void)
 {
 
 }
 
-void Pointdexter_Serialize()
+void Pointdexter_Serialize(void)
 {
 
 }

@@ -3,7 +3,7 @@
 
 ObjectBSS_Setup *BSS_Setup;
 
-void BSS_Setup_Update()
+void BSS_Setup_Update(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -26,11 +26,11 @@ void BSS_Setup_Update()
 #endif
 }
 
-void BSS_Setup_LateUpdate() {}
+void BSS_Setup_LateUpdate(void) {}
 
-void BSS_Setup_StaticUpdate() {}
+void BSS_Setup_StaticUpdate(void) {}
 
-void BSS_Setup_Draw()
+void BSS_Setup_Draw(void)
 {
     RSDK_THIS(BSS_Setup);
     TileLayer *globe  = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
@@ -65,7 +65,7 @@ void BSS_Setup_Create(void *data)
     }
 }
 
-void BSS_Setup_StageLoad()
+void BSS_Setup_StageLoad(void)
 {
     BSS_Setup->globeMappings  = RSDK.LoadSpriteAnimation("SpecialBS/Globe.bin", SCOPE_STAGE);
     BSS_Setup->bgLayer        = RSDK.GetSceneLayerID("Background");
@@ -97,7 +97,7 @@ void BSS_Setup_StageLoad()
     }
     else {
         int max  = (playField->width >> 4) * ((playField->height - 32) >> 4);
-        uint key = time(0);
+        int key = (int)time(0);
 
         BSS_Setup->flags[0] = RSDK.Random(0, max, &key);
         BSS_Setup->flags[1] = RSDK.Random(0, max, &key);
@@ -214,7 +214,7 @@ void BSS_Setup_StageLoad()
     }
 }
 
-int BSS_Setup_ReloadScene()
+int BSS_Setup_ReloadScene(void)
 {
     int pos = RSDK_sceneInfo->listPos;
     RSDK.LoadScene("Blue Spheres", "");
@@ -222,7 +222,7 @@ int BSS_Setup_ReloadScene()
     return (pos - RSDK_sceneInfo->listPos) % 32;
 }
 
-void BSS_Setup_SetupPalette()
+void BSS_Setup_SetupPalette(void)
 {
     for (int i = 0; i < 0x10; ++i) RSDK.SetPaletteEntry(0, 0x80 + i, RSDK.GetPaletteEntry(1, BSS_Palette->startColourID));
     for (int i = 0; i < 0x10; ++i) RSDK.SetPaletteEntry(0, 0x90 + i, RSDK.GetPaletteEntry(1, BSS_Palette->startColourID + 1));
@@ -240,7 +240,7 @@ void BSS_Setup_SetupPalette()
     }
 }
 
-void BSS_Setup_CollectRing()
+void BSS_Setup_CollectRing(void)
 {
     RSDK_THIS(BSS_Setup);
     ++BSS_Setup->rings;
@@ -265,7 +265,7 @@ void BSS_Setup_CollectRing()
     }
 }
 
-void BSS_Setup_GetStartupInfo()
+void BSS_Setup_GetStartupInfo(void)
 {
     RSDK_THIS(BSS_Setup);
     BSS_Setup->sphereCount     = 0;
@@ -310,7 +310,7 @@ void BSS_Setup_GetStartupInfo()
     RSDK.GetSceneLayer(BSS_Setup->bgLayer)->scrollInfo[0].scrollPos = entity->angle << 18;
 }
 
-void BSS_Setup_Finished()
+void BSS_Setup_Finished(void)
 {
     RSDK_THIS(BSS_Setup);
     RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
@@ -349,7 +349,7 @@ void BSS_Setup_Finished()
     }
 }
 
-void BSS_Setup_HandleSteppedObjects()
+void BSS_Setup_HandleSteppedObjects(void)
 {
     RSDK_THIS(BSS_Setup);
     if (entity->globeTimer < 32)
@@ -596,7 +596,7 @@ void BSS_Setup_HandleSteppedObjects()
     }
 }
 
-void BSS_Setup_HandleCollectableMovement()
+void BSS_Setup_HandleCollectableMovement(void)
 {
     RSDK_THIS(BSS_Setup);
     entity->field_9C = entity->angle >> 6;
@@ -672,7 +672,7 @@ void BSS_Setup_HandleCollectableMovement()
     }
 }
 
-void BSS_Setup_State_FinishWalk()
+void BSS_Setup_State_FinishWalk(void)
 {
     RSDK_THIS(BSS_Setup);
     RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
@@ -701,9 +701,9 @@ void BSS_Setup_State_FinishWalk()
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_PinkSphereWarp() { RSDK_THIS(BSS_Setup); }
+void BSS_Setup_State_PinkSphereWarp(void) { RSDK_THIS(BSS_Setup); }
 
-void BSS_Setup_State_Exit()
+void BSS_Setup_State_Exit(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -742,7 +742,7 @@ void BSS_Setup_State_Exit()
     }
 }
 
-void BSS_Setup_State_HandleStage()
+void BSS_Setup_State_HandleStage(void)
 {
     RSDK_THIS(BSS_Setup);
     EntityBSS_Player *player1 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
@@ -837,7 +837,7 @@ void BSS_Setup_State_HandleStage()
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_SpinLeft()
+void BSS_Setup_State_SpinLeft(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -873,7 +873,7 @@ void BSS_Setup_State_SpinLeft()
     }
 }
 
-void BSS_Setup_State_SpinRight()
+void BSS_Setup_State_SpinRight(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -910,7 +910,7 @@ void BSS_Setup_State_SpinRight()
     }
 }
 
-void BSS_Setup_State_Unknown23()
+void BSS_Setup_State_Unknown23(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -944,7 +944,7 @@ void BSS_Setup_State_Unknown23()
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_Unknown12()
+void BSS_Setup_Unknown12(void)
 {
     RSDK_THIS(BSS_Setup);
 
@@ -964,8 +964,8 @@ void BSS_Setup_Unknown12()
     }
 }
 
-void BSS_Setup_EditorDraw() {}
+void BSS_Setup_EditorDraw(void) {}
 
-void BSS_Setup_EditorLoad() {}
+void BSS_Setup_EditorLoad(void) {}
 
-void BSS_Setup_Serialize() { RSDK_EDITABLE_VAR(BSS_Setup, VAR_UINT8, paletteID); }
+void BSS_Setup_Serialize(void) { RSDK_EDITABLE_VAR(BSS_Setup, VAR_UINT8, paletteID); }

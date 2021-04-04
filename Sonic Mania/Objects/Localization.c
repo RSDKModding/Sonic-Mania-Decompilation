@@ -2,17 +2,17 @@
 
 ObjectLocalization *Localization;
 
-void Localization_Update() {}
+void Localization_Update(void) {}
 
-void Localization_LateUpdate() {}
+void Localization_LateUpdate(void) {}
 
-void Localization_StaticUpdate() {}
+void Localization_StaticUpdate(void) {}
 
-void Localization_Draw() {}
+void Localization_Draw(void) {}
 
 void Localization_Create(void *data) {}
 
-void Localization_StageLoad()
+void Localization_StageLoad(void)
 {
     if (globals->optionsLoaded >= 200 && globals->optionsRAM[22]) {
         Localization->language = (globals->optionsRAM[21] >> 8) & 0xFF;
@@ -28,7 +28,7 @@ void Localization_StageLoad()
     }
 }
 
-void Localization_LoadStrings()
+void Localization_LoadStrings(void)
 {
     RSDK.SetText(&Localization->text, "", 0);
     switch (Localization->language) {
@@ -123,8 +123,8 @@ void Localization_SetZoneNameShort(TextInfo *info, byte zone)
     }
 }
 
-void Localization_EditorDraw() {}
+void Localization_EditorDraw(void) {}
 
-void Localization_EditorLoad() {}
+void Localization_EditorLoad(void) {}
 
-void Localization_Serialize() {}
+void Localization_Serialize(void) {}

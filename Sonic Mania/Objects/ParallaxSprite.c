@@ -2,17 +2,17 @@
 
 ObjectParallaxSprite *ParallaxSprite;
 
-void ParallaxSprite_Update()
+void ParallaxSprite_Update(void)
 {
     RSDK_THIS(ParallaxSprite);
     CallFunction(entity->state);
 }
 
-void ParallaxSprite_LateUpdate() {}
+void ParallaxSprite_LateUpdate(void) {}
 
-void ParallaxSprite_StaticUpdate() {}
+void ParallaxSprite_StaticUpdate(void) {}
 
-void ParallaxSprite_Draw()
+void ParallaxSprite_Draw(void)
 {
     RSDK_THIS(ParallaxSprite);
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
@@ -117,7 +117,7 @@ void ParallaxSprite_Create(void *data)
     RSDK.SetSpriteAnimation(ParallaxSprite->aniFrames, entity->aniID, &entity->data, true, 0);
 }
 
-void ParallaxSprite_StageLoad()
+void ParallaxSprite_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("AIZ")) {
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
@@ -142,7 +142,7 @@ void ParallaxSprite_StageLoad()
     }
 }
 
-void ParallaxSprite_Unknown1()
+void ParallaxSprite_Unknown1(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&entity->data);
@@ -151,7 +151,7 @@ void ParallaxSprite_Unknown1()
     entity->scrollPos.y += entity->scrollSpeed.y;
 }
 
-void ParallaxSprite_CreateCopy()
+void ParallaxSprite_CreateCopy(void)
 {
     RSDK_THIS(ParallaxSprite);
     if (!(Zone->timer & 3)) {
@@ -166,7 +166,7 @@ void ParallaxSprite_CreateCopy()
     }
 }
 
-void ParallaxSprite_Unknown3()
+void ParallaxSprite_Unknown3(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&entity->data);
@@ -179,7 +179,7 @@ void ParallaxSprite_Unknown3()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void ParallaxSprite_Unknown4()
+void ParallaxSprite_Unknown4(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&entity->data);
@@ -196,7 +196,7 @@ void ParallaxSprite_Unknown4()
     }
 }
 
-void ParallaxSprite_Unknown5()
+void ParallaxSprite_Unknown5(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&entity->data);
@@ -212,11 +212,11 @@ void ParallaxSprite_Unknown5()
     }
 }
 
-void ParallaxSprite_EditorDraw() {}
+void ParallaxSprite_EditorDraw(void) {}
 
-void ParallaxSprite_EditorLoad() {}
+void ParallaxSprite_EditorLoad(void) {}
 
-void ParallaxSprite_Serialize()
+void ParallaxSprite_Serialize(void)
 {
     RSDK_EDITABLE_VAR(ParallaxSprite, VAR_UINT8, aniID);
     RSDK_EDITABLE_VAR(ParallaxSprite, VAR_UINT8, attribute);

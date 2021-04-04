@@ -3,7 +3,7 @@
 #if RETRO_USE_PLUS
 ObjectNoSwap *NoSwap;
 
-void NoSwap_Update()
+void NoSwap_Update(void)
 {
     EntityNoSwap *entity = (EntityNoSwap *)RSDK_sceneInfo->entity;
     if (Player->playerCount) {
@@ -43,12 +43,12 @@ void NoSwap_Update()
     }
 }
 
-void NoSwap_LateUpdate()
+void NoSwap_LateUpdate(void)
 {
 
 }
 
-void NoSwap_StaticUpdate()
+void NoSwap_StaticUpdate(void)
 {
     if (NoSwap->counter)
         NoSwap->counter = 0;
@@ -56,7 +56,7 @@ void NoSwap_StaticUpdate()
         Player->field_93C = 0;
 }
 
-void NoSwap_Draw()
+void NoSwap_Draw(void)
 {
     EntityNoSwap *entity = (EntityNoSwap *)RSDK_sceneInfo->entity;
 
@@ -85,19 +85,19 @@ void NoSwap_Create(void* data)
     }
 }
 
-void NoSwap_StageLoad() { NoSwap->active = ACTIVE_ALWAYS; }
+void NoSwap_StageLoad(void) { NoSwap->active = ACTIVE_ALWAYS; }
 
-void NoSwap_EditorDraw()
+void NoSwap_EditorDraw(void)
 {
 
 }
 
-void NoSwap_EditorLoad()
+void NoSwap_EditorLoad(void)
 {
 
 }
 
-void NoSwap_Serialize()
+void NoSwap_Serialize(void)
 {
     RSDK_EDITABLE_VAR(NoSwap, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(NoSwap, VAR_BOOL, always);

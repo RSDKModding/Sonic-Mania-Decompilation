@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBuzzSaw *BuzzSaw;
 
 // Standard Entity Events
-void BuzzSaw_Update();
-void BuzzSaw_LateUpdate();
-void BuzzSaw_StaticUpdate();
-void BuzzSaw_Draw();
+void BuzzSaw_Update(void);
+void BuzzSaw_LateUpdate(void);
+void BuzzSaw_StaticUpdate(void);
+void BuzzSaw_Draw(void);
 void BuzzSaw_Create(void* data);
-void BuzzSaw_StageLoad();
-void BuzzSaw_EditorDraw();
-void BuzzSaw_EditorLoad();
-void BuzzSaw_Serialize();
+void BuzzSaw_StageLoad(void);
+void BuzzSaw_EditorDraw(void);
+void BuzzSaw_EditorLoad(void);
+void BuzzSaw_Serialize(void);
 
 // Extra Entity Functions
 

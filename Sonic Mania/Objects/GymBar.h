@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectGymBar *GymBar;
 
 // Standard Entity Events
-void GymBar_Update();
-void GymBar_LateUpdate();
-void GymBar_StaticUpdate();
-void GymBar_Draw();
+void GymBar_Update(void);
+void GymBar_LateUpdate(void);
+void GymBar_StaticUpdate(void);
+void GymBar_Draw(void);
 void GymBar_Create(void* data);
-void GymBar_StageLoad();
-void GymBar_EditorDraw();
-void GymBar_EditorLoad();
-void GymBar_Serialize();
+void GymBar_StageLoad(void);
+void GymBar_EditorDraw(void);
+void GymBar_EditorLoad(void);
+void GymBar_Serialize(void);
 
 // Extra Entity Functions
 

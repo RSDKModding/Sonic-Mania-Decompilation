@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectDAControl *DAControl;
 
 // Standard Entity Events
-void DAControl_Update();
-void DAControl_LateUpdate();
-void DAControl_StaticUpdate();
-void DAControl_Draw();
+void DAControl_Update(void);
+void DAControl_LateUpdate(void);
+void DAControl_StaticUpdate(void);
+void DAControl_Draw(void);
 void DAControl_Create(void* data);
-void DAControl_StageLoad();
-void DAControl_EditorDraw();
-void DAControl_EditorLoad();
-void DAControl_Serialize();
+void DAControl_StageLoad(void);
+void DAControl_EditorDraw(void);
+void DAControl_EditorLoad(void);
+void DAControl_Serialize(void);
 
 // Extra Entity Functions
 

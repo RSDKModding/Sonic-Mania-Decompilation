@@ -15,7 +15,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int field_5C;
     int height;
     int field_64;
@@ -28,22 +28,22 @@ typedef struct {
 extern ObjectUFO_Ring *UFO_Ring;
 
 // Standard Entity Events
-void UFO_Ring_Update();
-void UFO_Ring_LateUpdate();
-void UFO_Ring_StaticUpdate();
-void UFO_Ring_Draw();
+void UFO_Ring_Update(void);
+void UFO_Ring_LateUpdate(void);
+void UFO_Ring_StaticUpdate(void);
+void UFO_Ring_Draw(void);
 void UFO_Ring_Create(void* data);
-void UFO_Ring_StageLoad();
-void UFO_Ring_EditorDraw();
-void UFO_Ring_EditorLoad();
-void UFO_Ring_Serialize();
+void UFO_Ring_StageLoad(void);
+void UFO_Ring_EditorDraw(void);
+void UFO_Ring_EditorLoad(void);
+void UFO_Ring_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Ring_PlayRingSFX();
+void UFO_Ring_PlayRingSFX(void);
 void UFO_Ring_LoseRings(EntityUFO_Player *player);
 //States
-void UFO_Ring_Unknown2();
-void UFO_Ring_Unknown3();
-void UFO_Ring_Unknown4();
+void UFO_Ring_Unknown2(void);
+void UFO_Ring_Unknown3(void);
+void UFO_Ring_Unknown4(void);
 
 #endif //!OBJ_UFO_RING_H

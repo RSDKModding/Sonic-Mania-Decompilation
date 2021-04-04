@@ -2,22 +2,22 @@
 
 ObjectPSZDoor *PSZDoor;
 
-void PSZDoor_Update()
+void PSZDoor_Update(void)
 {
 
 }
 
-void PSZDoor_LateUpdate()
+void PSZDoor_LateUpdate(void)
 {
 
 }
 
-void PSZDoor_StaticUpdate()
+void PSZDoor_StaticUpdate(void)
 {
 
 }
 
-void PSZDoor_Draw()
+void PSZDoor_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PSZDoor_Create(void* data)
 
 }
 
-void PSZDoor_StageLoad()
+void PSZDoor_StageLoad(void)
 {
 
 }
 
-void PSZDoor_EditorDraw()
+void PSZDoor_EditorDraw(void)
 {
 
 }
 
-void PSZDoor_EditorLoad()
+void PSZDoor_EditorLoad(void)
 {
 
 }
 
-void PSZDoor_Serialize()
+void PSZDoor_Serialize(void)
 {
 
 }

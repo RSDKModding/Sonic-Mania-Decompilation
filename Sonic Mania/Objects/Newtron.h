@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectNewtron *Newtron;
 
 // Standard Entity Events
-void Newtron_Update();
-void Newtron_LateUpdate();
-void Newtron_StaticUpdate();
-void Newtron_Draw();
+void Newtron_Update(void);
+void Newtron_LateUpdate(void);
+void Newtron_StaticUpdate(void);
+void Newtron_Draw(void);
 void Newtron_Create(void* data);
-void Newtron_StageLoad();
-void Newtron_EditorDraw();
-void Newtron_EditorLoad();
-void Newtron_Serialize();
+void Newtron_StageLoad(void);
+void Newtron_EditorDraw(void);
+void Newtron_EditorLoad(void);
+void Newtron_Serialize(void);
 
 // Extra Entity Functions
 

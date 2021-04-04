@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectStaircase *Staircase;
 
 // Standard Entity Events
-void Staircase_Update();
-void Staircase_LateUpdate();
-void Staircase_StaticUpdate();
-void Staircase_Draw();
+void Staircase_Update(void);
+void Staircase_LateUpdate(void);
+void Staircase_StaticUpdate(void);
+void Staircase_Draw(void);
 void Staircase_Create(void* data);
-void Staircase_StageLoad();
-void Staircase_EditorDraw();
-void Staircase_EditorLoad();
-void Staircase_Serialize();
+void Staircase_StageLoad(void);
+void Staircase_EditorDraw(void);
+void Staircase_EditorLoad(void);
+void Staircase_Serialize(void);
 
 // Extra Entity Functions
 

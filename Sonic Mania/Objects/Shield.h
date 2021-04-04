@@ -21,11 +21,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
-    void (*state)();
+    void (*state)(void);
     int type;
     int timer;
     int frameID;
-    int field_6C;
+    int flag;
     AnimationData data;
     AnimationData altData;
 } EntityShield;
@@ -34,22 +34,22 @@ typedef struct {
 extern ObjectShield *Shield;
 
 // Standard Entity Events
-void Shield_Update();
-void Shield_LateUpdate();
-void Shield_StaticUpdate();
-void Shield_Draw();
+void Shield_Update(void);
+void Shield_LateUpdate(void);
+void Shield_StaticUpdate(void);
+void Shield_Draw(void);
 void Shield_Create(void* data);
-void Shield_StageLoad();
-void Shield_EditorDraw();
-void Shield_EditorLoad();
-void Shield_Serialize();
+void Shield_StageLoad(void);
+void Shield_EditorDraw(void);
+void Shield_EditorLoad(void);
+void Shield_Serialize(void);
 
 // Extra Entity Functions
-void Shield_State_Update();
-void Shield_State_Bubble();
-void Shield_State_BubbleAlt();
-void Shield_State_Fire();
-void Shield_State_Lightning();
-void Shield_State_Insta();
+void Shield_State_Generic(void);
+void Shield_State_Bubble(void);
+void Shield_State_BubbleAlt(void);
+void Shield_State_Fire(void);
+void Shield_State_Lightning(void);
+void Shield_State_Insta(void);
 
 #endif //!OBJ_SHIELD_H

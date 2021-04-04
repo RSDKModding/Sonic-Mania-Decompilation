@@ -2,7 +2,7 @@
 
 ObjectGHZCutsceneST *GHZCutsceneST;
 
-void GHZCutsceneST_Update()
+void GHZCutsceneST_Update(void)
 {
     void *states[4] = { GHZCutsceneST_CutsceneState_Unknown1, GHZCutsceneST_CutsceneState_Unknown2, GHZCutsceneST_CutsceneState_Unknown3,
                         GHZCutsceneST_CutsceneState_LoadNextStage };
@@ -22,11 +22,11 @@ void GHZCutsceneST_Update()
     }
 }
 
-void GHZCutsceneST_LateUpdate() {}
+void GHZCutsceneST_LateUpdate(void) {}
 
-void GHZCutsceneST_StaticUpdate() {}
+void GHZCutsceneST_StaticUpdate(void) {}
 
-void GHZCutsceneST_Draw() {}
+void GHZCutsceneST_Draw(void) {}
 
 void GHZCutsceneST_Create(void *data)
 {
@@ -51,9 +51,9 @@ void GHZCutsceneST_Create(void *data)
     }
 }
 
-void GHZCutsceneST_StageLoad() {}
+void GHZCutsceneST_StageLoad(void) {}
 
-void GHZCutsceneST_SetupCutscene()
+void GHZCutsceneST_SetupCutscene(void)
 {
     EntityPlatform *platform = NULL;
     while (RSDK.GetEntities(Platform->objectID, (Entity **)&platform)) {
@@ -92,11 +92,11 @@ void GHZCutsceneST_SetupCutscene()
     }
 }
 
-bool32 GHZCutsceneST_CutsceneState_Unknown1() { return true; }
-bool32 GHZCutsceneST_CutsceneState_Unknown2() { return true; }
-bool32 GHZCutsceneST_CutsceneState_Unknown3() { return true; }
+bool32 GHZCutsceneST_CutsceneState_Unknown1(void) { return true; }
+bool32 GHZCutsceneST_CutsceneState_Unknown2(void) { return true; }
+bool32 GHZCutsceneST_CutsceneState_Unknown3(void) { return true; }
 
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage()
+bool32 GHZCutsceneST_CutsceneState_LoadNextStage(void)
 {
     EntityGHZCutsceneST *entity = (EntityGHZCutsceneST *)RSDK_sceneInfo->entity;
 #if RETRO_USE_PLUS
@@ -114,7 +114,7 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage()
     return true;
 }
 
-void GHZCutsceneST_Skip()
+void GHZCutsceneST_Skip(void)
 {
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
@@ -124,8 +124,8 @@ void GHZCutsceneST_Skip()
         RSDK.LoadScene("Mania Mode", "Green Hill Zone 1");
 }
 
-void GHZCutsceneST_EditorDraw() {}
+void GHZCutsceneST_EditorDraw(void) {}
 
-void GHZCutsceneST_EditorLoad() {}
+void GHZCutsceneST_EditorLoad(void) {}
 
-void GHZCutsceneST_Serialize() { RSDK_EDITABLE_VAR(GHZCutsceneST, VAR_VECTOR2, size); }
+void GHZCutsceneST_Serialize(void) { RSDK_EDITABLE_VAR(GHZCutsceneST, VAR_VECTOR2, size); }

@@ -25,15 +25,15 @@ typedef struct {
 extern ObjectAnimalHBH *AnimalHBH;
 
 // Standard Entity Events
-void AnimalHBH_Update();
-void AnimalHBH_LateUpdate();
-void AnimalHBH_StaticUpdate();
-void AnimalHBH_Draw();
+void AnimalHBH_Update(void);
+void AnimalHBH_LateUpdate(void);
+void AnimalHBH_StaticUpdate(void);
+void AnimalHBH_Draw(void);
 void AnimalHBH_Create(void* data);
-void AnimalHBH_StageLoad();
-void AnimalHBH_EditorDraw();
-void AnimalHBH_EditorLoad();
-void AnimalHBH_Serialize();
+void AnimalHBH_StageLoad(void);
+void AnimalHBH_EditorDraw(void);
+void AnimalHBH_EditorLoad(void);
+void AnimalHBH_Serialize(void);
 
 // Extra Entity Functions
 

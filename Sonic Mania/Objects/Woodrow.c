@@ -2,22 +2,22 @@
 
 ObjectWoodrow *Woodrow;
 
-void Woodrow_Update()
+void Woodrow_Update(void)
 {
 
 }
 
-void Woodrow_LateUpdate()
+void Woodrow_LateUpdate(void)
 {
 
 }
 
-void Woodrow_StaticUpdate()
+void Woodrow_StaticUpdate(void)
 {
 
 }
 
-void Woodrow_Draw()
+void Woodrow_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Woodrow_Create(void* data)
 
 }
 
-void Woodrow_StageLoad()
+void Woodrow_StageLoad(void)
 {
 
 }
 
-void Woodrow_EditorDraw()
+void Woodrow_EditorDraw(void)
 {
 
 }
 
-void Woodrow_EditorLoad()
+void Woodrow_EditorLoad(void)
 {
 
 }
 
-void Woodrow_Serialize()
+void Woodrow_Serialize(void)
 {
 
 }

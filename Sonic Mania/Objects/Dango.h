@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectDango *Dango;
 
 // Standard Entity Events
-void Dango_Update();
-void Dango_LateUpdate();
-void Dango_StaticUpdate();
-void Dango_Draw();
+void Dango_Update(void);
+void Dango_LateUpdate(void);
+void Dango_StaticUpdate(void);
+void Dango_Draw(void);
 void Dango_Create(void* data);
-void Dango_StageLoad();
-void Dango_EditorDraw();
-void Dango_EditorLoad();
-void Dango_Serialize();
+void Dango_StageLoad(void);
+void Dango_EditorDraw(void);
+void Dango_EditorLoad(void);
+void Dango_Serialize(void);
 
 // Extra Entity Functions
 

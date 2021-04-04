@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectChemicalBall *ChemicalBall;
 
 // Standard Entity Events
-void ChemicalBall_Update();
-void ChemicalBall_LateUpdate();
-void ChemicalBall_StaticUpdate();
-void ChemicalBall_Draw();
+void ChemicalBall_Update(void);
+void ChemicalBall_LateUpdate(void);
+void ChemicalBall_StaticUpdate(void);
+void ChemicalBall_Draw(void);
 void ChemicalBall_Create(void* data);
-void ChemicalBall_StageLoad();
-void ChemicalBall_EditorDraw();
-void ChemicalBall_EditorLoad();
-void ChemicalBall_Serialize();
+void ChemicalBall_StageLoad(void);
+void ChemicalBall_EditorDraw(void);
+void ChemicalBall_EditorLoad(void);
+void ChemicalBall_Serialize(void);
 
 // Extra Entity Functions
 

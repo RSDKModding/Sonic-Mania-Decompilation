@@ -2,18 +2,18 @@
 
 ObjectActClear *ActClear;
 
-void ActClear_Update() {}
+void ActClear_Update(void) {}
 
-void ActClear_LateUpdate()
+void ActClear_LateUpdate(void)
 {
     RSDK_THIS(ActClear);
     if (entity->state)
         entity->state();
 }
 
-void ActClear_StaticUpdate() {}
+void ActClear_StaticUpdate(void) {}
 
-void ActClear_Draw()
+void ActClear_Draw(void)
 {
     Vector2 drawPos;
     Vector2 verts[4];
@@ -162,7 +162,7 @@ void ActClear_Draw()
         ActClear_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
         drawPos.y -= 0xE0000;
-        if (!entity->field_80 || entity->field_80 == 1 && Zone->timer & 8)
+        if (!entity->field_80 || (entity->field_80 == 1 && (Zone->timer & 8)))
             ActClear_DrawTime(minsPtr, &drawPos, secsPtr, millisecsPtr);
     }
     else {
@@ -202,7 +202,7 @@ void ActClear_Draw()
 
                 drawPos.x -= 0x90000;
             }
-            else if (!entity->field_7C || entity->field_7C == 1 && Zone->timer & 8)
+            else if (!entity->field_7C || (entity->field_7C == 1 && (Zone->timer & 8)))
                 ActClear_DrawNumbers(&drawPos, TimeAttackData->field_14, 0);
         }
     }
@@ -366,7 +366,7 @@ void ActClear_Create(void *data)
     }
 }
 
-void ActClear_StageLoad()
+void ActClear_StageLoad(void)
 {
     ActClear->dword34        = 0;
     ActClear->spriteIndex    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
@@ -439,7 +439,7 @@ void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
         } while (--maxVals);
     }
 }
-void ActClear_CheckPlayerVictory()
+void ActClear_CheckPlayerVictory(void)
 {
     foreach_active(Player, player)
     {
@@ -454,14 +454,13 @@ void ActClear_CheckPlayerVictory()
         }
     }
 }
-int ActClear_SaveGameCallback(int a1)
+void ActClear_SaveGameCallback(int success)
 {
     UIWaitSpinner_WaitReplay();
     ActClear->field_10 = 0;
-    return 1;
 }
 
-void ActClear_Unknown5()
+void ActClear_Unknown5(void)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -488,7 +487,7 @@ void ActClear_Unknown5()
     }
 }
 
-void ActClear_Unknown6()
+void ActClear_Unknown6(void)
 {
     RSDK_THIS(ActClear);
 
@@ -507,7 +506,7 @@ void ActClear_Unknown6()
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_Unknown7()
+void ActClear_Unknown7(void)
 {
     RSDK_THIS(ActClear);
 
@@ -520,7 +519,7 @@ void ActClear_Unknown7()
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_State_TAFinish()
+void ActClear_State_TAFinish(void)
 {
     RSDK_THIS(ActClear);
 
@@ -555,7 +554,7 @@ void ActClear_State_TAFinish()
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_Unknown8()
+void ActClear_Unknown8(void)
 {
     RSDK_THIS(ActClear);
     if (++entity->timer == 120) {
@@ -565,7 +564,7 @@ void ActClear_Unknown8()
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_TallyScore()
+void ActClear_TallyScore(void)
 {
     RSDK_THIS(ActClear);
     EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
@@ -609,7 +608,7 @@ void ActClear_TallyScore()
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_LoadNextScene()
+void ActClear_LoadNextScene(void)
 {
     RSDK_THIS(ActClear);
     if (++entity->timer == 120) {
@@ -674,7 +673,7 @@ void ActClear_LoadNextScene()
     }
 }
 
-void ActClear_Unknown9()
+void ActClear_Unknown9(void)
 {
     RSDK_THIS(ActClear);
 
@@ -716,7 +715,7 @@ void ActClear_Unknown9()
     else {
         if (RSDK_controller->keyY.press) {
             if (!ActClear->field_2C) {
-                if (HUD->gap10) {
+                if (HUD->replaySaveEnabled) {
                     /*if (!UIDialog->activeDialog) {
                         if (User.CheckDLC(DLC_PLUS)) {
                             if (ActClear->saveReplay_CB) {
@@ -753,7 +752,7 @@ void ActClear_Unknown9()
     }
 }
 
-void ActClear_Unknown10()
+void ActClear_Unknown10(void)
 {
     if (ActClear->field_10) {
         RSDK_THIS(ActClear);
@@ -761,7 +760,7 @@ void ActClear_Unknown10()
             entity->state = ActClear_State_ActFinish;
         }
         else {
-            entity->state    = 0;
+            entity->state    = NULL;
             EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
             zone->screenID   = 4;
             zone->timer      = 0;
@@ -775,7 +774,7 @@ void ActClear_Unknown10()
     }
 }
 
-void ActClear_State_ActFinish()
+void ActClear_State_ActFinish(void)
 {
     RSDK_THIS(ActClear);
     entity->posUnknown.x += 0x200000;
@@ -824,7 +823,7 @@ void ActClear_State_ActFinish()
     }
 }
 
-void ActClear_ForcePlayerOnScreen()
+void ActClear_ForcePlayerOnScreen(void)
 {
     RSDK_THIS(ActClear);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -934,9 +933,9 @@ StatInfo *ActClear_TrackActClear(byte act, byte zone, StatInfo *stat, byte charI
     stat->data[1] = (void *)ActNames[act];
     stat->data[2] = (void *)PlayerNames[charID];
     stat->data[3] = 0;
-    stat->data[4] = (void *)time;
-    stat->data[5] = (void *)rings;
-    stat->data[6] = (void *)score;
+    stat->data[4] = intToVoid(time);
+    stat->data[5] = intToVoid(rings);
+    stat->data[6] = intToVoid(score);
 
 #if !RETRO_USE_PLUS
     if (APICallback->TrackActClear)
@@ -964,8 +963,8 @@ void ActClear_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millis
         *millisecsPtr = ms;
 }
 
-void ActClear_EditorDraw() {}
+void ActClear_EditorDraw(void) {}
 
-void ActClear_EditorLoad() {}
+void ActClear_EditorLoad(void) {}
 
-void ActClear_Serialize() {}
+void ActClear_Serialize(void) {}

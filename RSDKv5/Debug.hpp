@@ -11,7 +11,7 @@ extern char outputString[0x400];
 void printLog(SeverityModes severity, const char *message, ...);
 inline void printConsole(const char *message) { printf("%s", message); }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 inline void printString(SeverityModes severity, const char *message) { printLog(severity, "%s", message); }
 inline void printText(SeverityModes severity, const char *message, TextInfo *text)
 {
@@ -55,7 +55,7 @@ inline void ClearDebugValues() { debugValCnt = 0; }
 void SetDebugValue(const char *name, void *valPtr, int type, int min, int max);
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 void PrintMessage(void *msg, int type);
 #endif
 
@@ -81,7 +81,7 @@ void DevMenu_VideoOptions();
 void DevMenu_AudioOptions();
 void DevMenu_InputOptions();
 void DevMenu_MappingsOptions();
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 void DevMenu_DebugOptions();
 #endif
 

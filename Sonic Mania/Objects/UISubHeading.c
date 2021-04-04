@@ -2,22 +2,22 @@
 
 ObjectUISubHeading *UISubHeading;
 
-void UISubHeading_Update()
+void UISubHeading_Update(void)
 {
 
 }
 
-void UISubHeading_LateUpdate()
+void UISubHeading_LateUpdate(void)
 {
 
 }
 
-void UISubHeading_StaticUpdate()
+void UISubHeading_StaticUpdate(void)
 {
 
 }
 
-void UISubHeading_Draw()
+void UISubHeading_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void UISubHeading_Create(void* data)
 
 }
 
-void UISubHeading_StageLoad()
+void UISubHeading_StageLoad(void)
 {
 
 }
 
-void UISubHeading_EditorDraw()
+void UISubHeading_EditorDraw(void)
 {
 
 }
 
-void UISubHeading_EditorLoad()
+void UISubHeading_EditorLoad(void)
 {
 
 }
 
-void UISubHeading_Serialize()
+void UISubHeading_Serialize(void)
 {
 
 }

@@ -2,13 +2,13 @@
 
 ObjectUIInfoLabel *UIInfoLabel;
 
-void UIInfoLabel_Update() {}
+void UIInfoLabel_Update(void) {}
 
-void UIInfoLabel_LateUpdate() {}
+void UIInfoLabel_LateUpdate(void) {}
 
-void UIInfoLabel_StaticUpdate() {}
+void UIInfoLabel_StaticUpdate(void) {}
 
-void UIInfoLabel_Draw() { UIInfoLabel_DrawSprites(); }
+void UIInfoLabel_Draw(void) { UIInfoLabel_DrawSprites(); }
 
 void UIInfoLabel_Create(void *data)
 {
@@ -26,9 +26,9 @@ void UIInfoLabel_Create(void *data)
     }
 }
 
-void UIInfoLabel_StageLoad() {}
+void UIInfoLabel_StageLoad(void) {}
 
-void UIInfoLabel_EditorDraw() {}
+void UIInfoLabel_EditorDraw(void) {}
 
 void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text)
 {
@@ -51,7 +51,7 @@ void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text)
     }
 }
 
-void UIInfoLabel_DrawSprites()
+void UIInfoLabel_DrawSprites(void)
 {
     Vector2 drawPos;
 
@@ -74,6 +74,6 @@ void UIInfoLabel_DrawSprites()
     }
 }
 
-void UIInfoLabel_EditorLoad() {}
+void UIInfoLabel_EditorLoad(void) {}
 
-void UIInfoLabel_Serialize() {}
+void UIInfoLabel_Serialize(void) {}

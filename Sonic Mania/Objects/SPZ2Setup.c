@@ -2,7 +2,7 @@
 
 ObjectSPZ2Setup *SPZ2Setup;
 
-void SPZ2Setup_Update()
+void SPZ2Setup_Update(void)
 {
     RSDK_THIS(SPZ2Setup);
     entity->palTimer += 4;
@@ -13,9 +13,9 @@ void SPZ2Setup_Update()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void SPZ2Setup_LateUpdate() {}
+void SPZ2Setup_LateUpdate(void) {}
 
-void SPZ2Setup_StaticUpdate()
+void SPZ2Setup_StaticUpdate(void)
 {
     ++SPZ2Setup->palTimer;
     if (SPZ2Setup->palTimer > 2) {
@@ -65,7 +65,7 @@ void SPZ2Setup_StaticUpdate()
     ++SPZ2Setup->fgHigh->deformationOffset;
 }
 
-void SPZ2Setup_Draw()
+void SPZ2Setup_Draw(void)
 {
     RSDK_THIS(SPZ2Setup);
     RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
@@ -81,7 +81,7 @@ void SPZ2Setup_Create(void *data)
     entity->drawOrder = Zone->uiDrawHigh + 1;
 }
 
-void SPZ2Setup_StageLoad()
+void SPZ2Setup_StageLoad(void)
 {
     SPZ2Setup->aniTiles  = RSDK.LoadSpriteSheet("SPZ2/AniTiles1.gif", SCOPE_STAGE);
     SPZ2Setup->aniTiles2 = RSDK.LoadSpriteSheet("SPZ2/AniTiles2.gif", SCOPE_STAGE);
@@ -133,10 +133,10 @@ void SPZ2Setup_StageLoad()
     SPZ2Setup->fgHigh->scrollInfo[0].deform = false;
 }
 
-void SPZ2Setup_SetupOutro() { SPZ2Setup->outroPtr->active = ACTIVE_NORMAL; }
+void SPZ2Setup_SetupOutro(void) { SPZ2Setup->outroPtr->active = ACTIVE_NORMAL; }
 
-void SPZ2Setup_EditorDraw() {}
+void SPZ2Setup_EditorDraw(void) {}
 
-void SPZ2Setup_EditorLoad() {}
+void SPZ2Setup_EditorLoad(void) {}
 
-void SPZ2Setup_Serialize() {}
+void SPZ2Setup_Serialize(void) {}

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectRexon *Rexon;
 
 // Standard Entity Events
-void Rexon_Update();
-void Rexon_LateUpdate();
-void Rexon_StaticUpdate();
-void Rexon_Draw();
+void Rexon_Update(void);
+void Rexon_LateUpdate(void);
+void Rexon_StaticUpdate(void);
+void Rexon_Draw(void);
 void Rexon_Create(void* data);
-void Rexon_StageLoad();
-void Rexon_EditorDraw();
-void Rexon_EditorLoad();
-void Rexon_Serialize();
+void Rexon_StageLoad(void);
+void Rexon_EditorDraw(void);
+void Rexon_EditorLoad(void);
+void Rexon_Serialize(void);
 
 // Extra Entity Functions
 

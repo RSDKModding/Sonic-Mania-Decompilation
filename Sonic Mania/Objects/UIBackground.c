@@ -2,17 +2,17 @@
 
 ObjectUIBackground *UIBackground;
 
-void UIBackground_Update()
+void UIBackground_Update(void)
 {
     RSDK_THIS(UIBackground);
     ++entity->timer;
 }
 
-void UIBackground_LateUpdate() {}
+void UIBackground_LateUpdate(void) {}
 
-void UIBackground_StaticUpdate() {}
+void UIBackground_StaticUpdate(void) {}
 
-void UIBackground_Draw()
+void UIBackground_Draw(void)
 {
     RSDK_THIS(UIBackground);
     if (entity->state)
@@ -30,9 +30,9 @@ void UIBackground_Create(void *data)
     }
 }
 
-void UIBackground_StageLoad() { UIBackground->activeColours = UIBackground->bgColours; }
+void UIBackground_StageLoad(void) { UIBackground->activeColours = UIBackground->bgColours; }
 
-void UIBackground_DrawNormal()
+void UIBackground_DrawNormal(void)
 {
     RSDK_THIS(UIBackground);
     colour *colourPtrs = UIBackground->activeColours;
@@ -58,8 +58,8 @@ void UIBackground_DrawNormal()
     RSDK.DrawCircle(drawPos.x + RSDK_screens->centerX, drawPos.y + RSDK_screens->centerY, 26, colourPtrs[0], 255, INK_NONE, true);
 }
 
-void UIBackground_EditorDraw() {}
+void UIBackground_EditorDraw(void) {}
 
-void UIBackground_EditorLoad() {}
+void UIBackground_EditorLoad(void) {}
 
-void UIBackground_Serialize() { RSDK_EDITABLE_VAR(UIBackground, VAR_ENUM, type); }
+void UIBackground_Serialize(void) { RSDK_EDITABLE_VAR(UIBackground, VAR_ENUM, type); }

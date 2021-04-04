@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMegaChopper *MegaChopper;
 
 // Standard Entity Events
-void MegaChopper_Update();
-void MegaChopper_LateUpdate();
-void MegaChopper_StaticUpdate();
-void MegaChopper_Draw();
+void MegaChopper_Update(void);
+void MegaChopper_LateUpdate(void);
+void MegaChopper_StaticUpdate(void);
+void MegaChopper_Draw(void);
 void MegaChopper_Create(void* data);
-void MegaChopper_StageLoad();
-void MegaChopper_EditorDraw();
-void MegaChopper_EditorLoad();
-void MegaChopper_Serialize();
+void MegaChopper_StageLoad(void);
+void MegaChopper_EditorDraw(void);
+void MegaChopper_EditorLoad(void);
+void MegaChopper_Serialize(void);
 
 // Extra Entity Functions
 

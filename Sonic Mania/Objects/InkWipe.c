@@ -2,23 +2,23 @@
 
 ObjectInkWipe *InkWipe;
 
-void InkWipe_Update()
+void InkWipe_Update(void)
 {
     EntityInkWipe *entity = (EntityInkWipe *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void InkWipe_LateUpdate()
+void InkWipe_LateUpdate(void)
 {
 
 }
 
-void InkWipe_StaticUpdate()
+void InkWipe_StaticUpdate(void)
 {
 
 }
 
-void InkWipe_Draw()
+void InkWipe_Draw(void)
 {
     EntityInkWipe *entity = (EntityInkWipe *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, 0);
@@ -37,23 +37,23 @@ void InkWipe_Create(void* data)
     }
 }
 
-void InkWipe_StageLoad()
+void InkWipe_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         InkWipe->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
 }
 
-void InkWipe_EditorDraw()
+void InkWipe_EditorDraw(void)
 {
 
 }
 
-void InkWipe_EditorLoad()
+void InkWipe_EditorLoad(void)
 {
 
 }
 
-void InkWipe_Serialize()
+void InkWipe_Serialize(void)
 {
 
 }

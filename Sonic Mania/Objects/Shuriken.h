@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectShuriken *Shuriken;
 
 // Standard Entity Events
-void Shuriken_Update();
-void Shuriken_LateUpdate();
-void Shuriken_StaticUpdate();
-void Shuriken_Draw();
+void Shuriken_Update(void);
+void Shuriken_LateUpdate(void);
+void Shuriken_StaticUpdate(void);
+void Shuriken_Draw(void);
 void Shuriken_Create(void* data);
-void Shuriken_StageLoad();
-void Shuriken_EditorDraw();
-void Shuriken_EditorLoad();
-void Shuriken_Serialize();
+void Shuriken_StageLoad(void);
+void Shuriken_EditorDraw(void);
+void Shuriken_EditorLoad(void);
+void Shuriken_Serialize(void);
 
 // Extra Entity Functions
 

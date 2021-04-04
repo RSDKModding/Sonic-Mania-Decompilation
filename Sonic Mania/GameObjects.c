@@ -26,6 +26,31 @@ UserFunctionTable User;
 #endif
 RSDKFunctionTable RSDK;
 
+void Game_Print(const char *message, ...)
+{
+    if (!RSDK_sceneInfo->inEditor) {
+        char buffer[0x100];
+
+        // make the full string
+        va_list args;
+        va_start(args, message);
+        vsprintf(buffer, message, args);
+#if RETRO_USE_PLUS
+        RSDK.PrintString(SEVERITY_NONE, buffer);
+#else
+        RSDK.PrintMessage((void *)buffer, 0);
+#endif
+    }
+}
+
+void Game_PrintString(TextInfo *text)
+{
+    for (int i = 0; i < text->textLength; ++i) {
+        Game_Print("%c", text->text[i]);
+    }
+    Game_Print("\n");
+}
+
 void LinkGameLogicDLL(GameInfo *info)
 {
 #if RETRO_USE_PLUS

@@ -2,7 +2,7 @@
 
 ObjectUFO_Sphere *UFO_Sphere;
 
-void UFO_Sphere_Update()
+void UFO_Sphere_Update(void)
 {
     RSDK_THIS(UFO_Sphere);
     if (entity->state)
@@ -10,7 +10,7 @@ void UFO_Sphere_Update()
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void UFO_Sphere_LateUpdate()
+void UFO_Sphere_LateUpdate(void)
 {
     RSDK_THIS(UFO_Sphere);
     int x = entity->position.x >> 8;
@@ -24,9 +24,9 @@ void UFO_Sphere_LateUpdate()
     entity->depth      = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 }
 
-void UFO_Sphere_StaticUpdate() {}
+void UFO_Sphere_StaticUpdate(void) {}
 
-void UFO_Sphere_Draw()
+void UFO_Sphere_Draw(void)
 {
     RSDK_THIS(UFO_Sphere);
     if (entity->drawOrder == 4) {
@@ -84,14 +84,14 @@ void UFO_Sphere_Create(void *data)
     }
 }
 
-void UFO_Sphere_StageLoad()
+void UFO_Sphere_StageLoad(void)
 {
     UFO_Sphere->spriteIndex    = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
     UFO_Sphere->sfx_MachSpeed  = RSDK.GetSFX("Special/MachSpeed.wav");
     UFO_Sphere->sfx_LedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
 }
 
-void UFO_Sphere_CheckPlayerCollision()
+void UFO_Sphere_CheckPlayerCollision(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -163,7 +163,7 @@ void UFO_Sphere_CheckPlayerCollision()
     }
 }
 
-void UFO_Sphere_State_Bouncing()
+void UFO_Sphere_State_Bouncing(void)
 {
     RSDK_THIS(UFO_Sphere);
     entity->velocity.y -= 0x3800;
@@ -175,7 +175,7 @@ void UFO_Sphere_State_Bouncing()
     UFO_Sphere_CheckPlayerCollision();
 }
 
-void UFO_Sphere_State_Moving()
+void UFO_Sphere_State_Moving(void)
 {
     RSDK_THIS(UFO_Sphere);
     Matrix *mat = &entity->matrix;
@@ -196,7 +196,7 @@ void UFO_Sphere_State_Moving()
     UFO_Sphere_CheckPlayerCollision();
 }
 
-void UFO_Sphere_Unknown3()
+void UFO_Sphere_Unknown3(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -213,7 +213,7 @@ void UFO_Sphere_Unknown3()
     }
 }
 
-void UFO_Sphere_Unknown4()
+void UFO_Sphere_Unknown4(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -231,7 +231,7 @@ void UFO_Sphere_Unknown4()
     }
 }
 
-void UFO_Sphere_Unknown5()
+void UFO_Sphere_Unknown5(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -239,11 +239,11 @@ void UFO_Sphere_Unknown5()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void UFO_Sphere_EditorDraw() {}
+void UFO_Sphere_EditorDraw(void) {}
 
-void UFO_Sphere_EditorLoad() {}
+void UFO_Sphere_EditorLoad(void) {}
 
-void UFO_Sphere_Serialize()
+void UFO_Sphere_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UFO_Sphere, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(UFO_Sphere, VAR_ENUM, behavior);

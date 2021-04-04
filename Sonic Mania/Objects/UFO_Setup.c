@@ -2,7 +2,7 @@
 
 ObjectUFO_Setup *UFO_Setup;
 
-void UFO_Setup_Update()
+void UFO_Setup_Update(void)
 {
     RSDK_THIS(UFO_Setup);
 
@@ -15,9 +15,9 @@ void UFO_Setup_Update()
 #endif
 }
 
-void UFO_Setup_LateUpdate() {}
+void UFO_Setup_LateUpdate(void) {}
 
-void UFO_Setup_StaticUpdate()
+void UFO_Setup_StaticUpdate(void)
 {
     ++UFO_Setup->timer;
     UFO_Setup->timer &= 0x7FFF;
@@ -29,7 +29,7 @@ void UFO_Setup_StaticUpdate()
         UFO_Setup->state();
 }
 
-void UFO_Setup_Draw()
+void UFO_Setup_Draw(void)
 {
     RSDK_THIS(UFO_Setup);
     RSDK.FillScreen(entity->fadeColour, entity->timer, entity->timer - 128, entity->timer - 256);
@@ -46,7 +46,7 @@ void UFO_Setup_Create(void *data)
     entity->state      = UFO_Setup_Unknown11;
 }
 
-void UFO_Setup_StageLoad()
+void UFO_Setup_StageLoad(void)
 {
     RSDK.ResetEntitySlot(SLOT_BSS_SETUP, UFO_Setup->objectID, NULL);
 
@@ -275,7 +275,7 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
     }
 }
 
-void UFO_Setup_PlaySphereSFX()
+void UFO_Setup_PlaySphereSFX(void)
 {
     if (UFO_Setup->spherePan) {
         int channel = RSDK.PlaySFX(UFO_Setup->sfx_BlueSphere, 0, 255);
@@ -288,7 +288,7 @@ void UFO_Setup_PlaySphereSFX()
         UFO_Setup->spherePan = 1;
     }
 }
-void UFO_Setup_Unknown6() // success
+void UFO_Setup_Unknown6(void) // success
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
@@ -310,7 +310,7 @@ void UFO_Setup_Unknown6() // success
     Music_FadeOut(0.025);
     // PauseMenu->dword8 = true;
 }
-void UFO_Setup_Unknown7() // fail
+void UFO_Setup_Unknown7(void) // fail
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
@@ -327,7 +327,7 @@ void UFO_Setup_Unknown7() // fail
     // PauseMenu->dword8 = true;
 }
 
-void UFO_Setup_Unknown8()
+void UFO_Setup_Unknown8(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetSceneLayer(0)->deformationOffset;
@@ -335,21 +335,21 @@ void UFO_Setup_Unknown8()
     }
 }
 
-void UFO_Setup_Unknown9()
+void UFO_Setup_Unknown9(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetSceneLayer(0)->deformationOffset;
     }
 }
 
-void UFO_Setup_Unknown10()
+void UFO_Setup_Unknown10(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetSceneLayer(0)->deformationOffset;
     }
 }
 
-void UFO_Setup_Unknown11()
+void UFO_Setup_Unknown11(void)
 {
     RSDK_THIS(UFO_Setup);
     if (entity->timer <= 0) {
@@ -364,7 +364,7 @@ void UFO_Setup_Unknown11()
     }
 }
 
-void UFO_Setup_Unknown12()
+void UFO_Setup_Unknown12(void)
 {
     RSDK_THIS(UFO_Setup);
     if (entity->timer >= 1024) {
@@ -402,7 +402,7 @@ void UFO_Setup_Unknown12()
     }
 }
 
-void UFO_Setup_Unknown13()
+void UFO_Setup_Unknown13(void)
 {
     RSDK_THIS(UFO_Setup);
     if (++entity->timer == 60) {
@@ -420,15 +420,15 @@ void UFO_Setup_Unknown13()
     }
 }
 
-void UFO_Setup_Unknown14()
+void UFO_Setup_Unknown14(void)
 {
     RSDK_THIS(UFO_Setup);
     if (++entity->timer >= 90)
         UFO_Setup_Unknown7();
 }
 
-void UFO_Setup_EditorDraw() {}
+void UFO_Setup_EditorDraw(void) {}
 
-void UFO_Setup_EditorLoad() {}
+void UFO_Setup_EditorLoad(void) {}
 
-void UFO_Setup_Serialize() {}
+void UFO_Setup_Serialize(void) {}

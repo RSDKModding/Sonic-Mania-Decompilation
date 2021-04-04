@@ -24,15 +24,15 @@ typedef struct {
 extern ObjectPSZ2Setup *PSZ2Setup;
 
 // Standard Entity Events
-void PSZ2Setup_Update();
-void PSZ2Setup_LateUpdate();
-void PSZ2Setup_StaticUpdate();
-void PSZ2Setup_Draw();
+void PSZ2Setup_Update(void);
+void PSZ2Setup_LateUpdate(void);
+void PSZ2Setup_StaticUpdate(void);
+void PSZ2Setup_Draw(void);
 void PSZ2Setup_Create(void* data);
-void PSZ2Setup_StageLoad();
-void PSZ2Setup_EditorDraw();
-void PSZ2Setup_EditorLoad();
-void PSZ2Setup_Serialize();
+void PSZ2Setup_StageLoad(void);
+void PSZ2Setup_EditorDraw(void);
+void PSZ2Setup_EditorLoad(void);
+void PSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
 

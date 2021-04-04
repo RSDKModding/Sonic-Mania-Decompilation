@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectPBL_Camera *PBL_Camera;
 
 // Standard Entity Events
-void PBL_Camera_Update();
-void PBL_Camera_LateUpdate();
-void PBL_Camera_StaticUpdate();
-void PBL_Camera_Draw();
+void PBL_Camera_Update(void);
+void PBL_Camera_LateUpdate(void);
+void PBL_Camera_StaticUpdate(void);
+void PBL_Camera_Draw(void);
 void PBL_Camera_Create(void* data);
-void PBL_Camera_StageLoad();
-void PBL_Camera_EditorDraw();
-void PBL_Camera_EditorLoad();
-void PBL_Camera_Serialize();
+void PBL_Camera_StageLoad(void);
+void PBL_Camera_EditorDraw(void);
+void PBL_Camera_EditorLoad(void);
+void PBL_Camera_Serialize(void);
 
 // Extra Entity Functions
 #endif

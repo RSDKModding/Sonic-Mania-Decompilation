@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTMZBarrier *TMZBarrier;
 
 // Standard Entity Events
-void TMZBarrier_Update();
-void TMZBarrier_LateUpdate();
-void TMZBarrier_StaticUpdate();
-void TMZBarrier_Draw();
+void TMZBarrier_Update(void);
+void TMZBarrier_LateUpdate(void);
+void TMZBarrier_StaticUpdate(void);
+void TMZBarrier_Draw(void);
 void TMZBarrier_Create(void* data);
-void TMZBarrier_StageLoad();
-void TMZBarrier_EditorDraw();
-void TMZBarrier_EditorLoad();
-void TMZBarrier_Serialize();
+void TMZBarrier_StageLoad(void);
+void TMZBarrier_EditorDraw(void);
+void TMZBarrier_EditorLoad(void);
+void TMZBarrier_Serialize(void);
 
 // Extra Entity Functions
 

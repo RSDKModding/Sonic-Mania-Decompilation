@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectFilmReel *FilmReel;
 
 // Standard Entity Events
-void FilmReel_Update();
-void FilmReel_LateUpdate();
-void FilmReel_StaticUpdate();
-void FilmReel_Draw();
+void FilmReel_Update(void);
+void FilmReel_LateUpdate(void);
+void FilmReel_StaticUpdate(void);
+void FilmReel_Draw(void);
 void FilmReel_Create(void* data);
-void FilmReel_StageLoad();
-void FilmReel_EditorDraw();
-void FilmReel_EditorLoad();
-void FilmReel_Serialize();
+void FilmReel_StageLoad(void);
+void FilmReel_EditorDraw(void);
+void FilmReel_EditorLoad(void);
+void FilmReel_Serialize(void);
 
 // Extra Entity Functions
 

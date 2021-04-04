@@ -2,18 +2,18 @@
 
 ObjectUIVideo *UIVideo;
 
-void UIVideo_Update()
+void UIVideo_Update(void)
 {
     RSDK_THIS(UIVideo);
     if (entity->state)
         entity->state();
 }
 
-void UIVideo_LateUpdate() {}
+void UIVideo_LateUpdate(void) {}
 
-void UIVideo_StaticUpdate() {}
+void UIVideo_StaticUpdate(void) {}
 
-void UIVideo_Draw() {}
+void UIVideo_Draw(void) {}
 
 void UIVideo_Create(void *data)
 {
@@ -27,9 +27,9 @@ void UIVideo_Create(void *data)
     }
 }
 
-void UIVideo_StageLoad() {}
+void UIVideo_StageLoad(void) {}
 
-bool32 UIVideo_SkipCallback()
+bool32 UIVideo_SkipCallback(void)
 {
     if (RSDK_controller->keyStart.press && RSDK_controller->keyA.press && RSDK_controller->keyB.press) {
         Music_FadeOut(0.0125);
@@ -39,7 +39,7 @@ bool32 UIVideo_SkipCallback()
     return false;
 }
 
-void UIVideo_State_PlayVid1()
+void UIVideo_State_PlayVid1(void)
 {
     RSDK_THIS(UIVideo);
     if (!entity->timer)
@@ -60,7 +60,7 @@ void UIVideo_State_PlayVid1()
         entity->timer = 0;
     }
 }
-void UIVideo_State_PlayVid2()
+void UIVideo_State_PlayVid2(void)
 {
     RSDK_THIS(UIVideo);
     if (entity->videoFile2.textLength) {
@@ -72,7 +72,7 @@ void UIVideo_State_PlayVid2()
     }
     entity->state = UIVideo_State_FinishPlayback;
 }
-void UIVideo_State_FinishPlayback()
+void UIVideo_State_FinishPlayback(void)
 {
     RSDK_THIS(UIVideo);
     if (++entity->timer == 120) {
@@ -86,15 +86,15 @@ void UIVideo_State_FinishPlayback()
                 RSDK.LoadScene("Presentation", "Title Screen");
             RSDK.InitSceneLoad();
         }
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
 }
 
-void UIVideo_EditorDraw() {}
+void UIVideo_EditorDraw(void) {}
 
-void UIVideo_EditorLoad() {}
+void UIVideo_EditorLoad(void) {}
 
-void UIVideo_Serialize()
+void UIVideo_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UIVideo, VAR_STRING, videoFile1);
     RSDK_EDITABLE_VAR(UIVideo, VAR_STRING, videoFile2);

@@ -2,13 +2,13 @@
 
 ObjectCOverlay *COverlay;
 
-void COverlay_Update() {}
+void COverlay_Update(void) {}
 
-void COverlay_LateUpdate() {}
+void COverlay_LateUpdate(void) {}
 
-void COverlay_StaticUpdate() {}
+void COverlay_StaticUpdate(void) {}
 
-void COverlay_Draw()
+void COverlay_Draw(void)
 {
     RSDK_THIS(COverlay);
     ScreenInfo *screen = RSDK_screens;
@@ -33,28 +33,28 @@ void COverlay_Create(void *data)
     }
 }
 
-void COverlay_StageLoad()
+void COverlay_StageLoad(void)
 {
     COverlay->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
     DEBUGMODE_ADD_OBJ(COverlay);
 }
 
-void COverlay_DebugDraw()
+void COverlay_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(COverlay->spriteIndex, 0, &DebugMode->debugData, true, 0);
     DebugMode->debugData.frameID = 4;
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
 
-void COverlay_DebugSpawn()
+void COverlay_DebugSpawn(void)
 {
-    foreach_active(COverlay, entity) {
-        RSDK.ResetEntityPtr(entity, 0, NULL);
+    foreach_all(COverlay, entity) {
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     RSDK.CreateEntity(COverlay->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
 }
 
-void COverlay_DrawTile()
+void COverlay_DrawTile(void)
 {
     RSDK_THIS(COverlay);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -108,8 +108,8 @@ void COverlay_DrawTile()
     }
 }
 
-void COverlay_EditorDraw() {}
+void COverlay_EditorDraw(void) {}
 
-void COverlay_EditorLoad() {}
+void COverlay_EditorLoad(void) {}
 
-void COverlay_Serialize() {}
+void COverlay_Serialize(void) {}

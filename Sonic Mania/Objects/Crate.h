@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCrate *Crate;
 
 // Standard Entity Events
-void Crate_Update();
-void Crate_LateUpdate();
-void Crate_StaticUpdate();
-void Crate_Draw();
+void Crate_Update(void);
+void Crate_LateUpdate(void);
+void Crate_StaticUpdate(void);
+void Crate_Draw(void);
 void Crate_Create(void* data);
-void Crate_StageLoad();
-void Crate_EditorDraw();
-void Crate_EditorLoad();
-void Crate_Serialize();
+void Crate_StageLoad(void);
+void Crate_EditorDraw(void);
+void Crate_EditorLoad(void);
+void Crate_Serialize(void);
 
 // Extra Entity Functions
 

@@ -2,7 +2,7 @@
 
 ObjectPlatform *Platform;
 
-void Platform_Update()
+void Platform_Update(void)
 {
     RSDK_THIS(Platform);
     if (Zone->field_4724) {
@@ -81,9 +81,9 @@ void Platform_Update()
     }
 }
 
-void Platform_LateUpdate() {}
+void Platform_LateUpdate(void) {}
 
-void Platform_StaticUpdate()
+void Platform_StaticUpdate(void)
 {
     Platform->stoodPos[0].x = 0;
     Platform->stoodPos[0].y = 0;
@@ -95,14 +95,14 @@ void Platform_StaticUpdate()
     Platform->stoodPos[3].y = 0;
 }
 
-void Platform_Draw()
+void Platform_Draw(void)
 {
     Vector2 drawPos;
     RSDK_THIS(Platform);
     if (entity->frameID >= 0) {
         if ((entity->state != Platform_State_Circular
             || !entity->hasTension) && (entity->state != Platform_State_Swing && entity->state != Platform_State_14 && entity->type != 12)) {
-            if (Platform->spriteIndex == -1)
+            if (Platform->spriteIndex == 0xFFFF)
                 RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, 0, 0);
             else
                 RSDK.DrawSprite(&entity->animData, &entity->drawPos, 0);
@@ -135,7 +135,7 @@ void Platform_Draw()
             RSDK.DrawSprite(&entity->animData, &entity->centerPos, 0);
             entity->animData.frameID = entity->frameID;
 
-            if (Platform->spriteIndex == -1)
+            if (Platform->spriteIndex == 0xFFFF)
                 RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, 0, 0);
             else
                 RSDK.DrawSprite(&entity->animData, &entity->drawPos, 0);
@@ -316,7 +316,7 @@ void Platform_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->collision != 4) {
             Hitbox *hitbox = RSDK.GetHitbox(&entity->animData, entity->collision != 0);
-            if (Platform->spriteIndex != -1 && hitbox) {
+            if (Platform->spriteIndex != 0xFFFF && hitbox) {
                 entity->hitbox.left   = hitbox->left;
                 entity->hitbox.top    = hitbox->top;
                 entity->hitbox.right  = hitbox->right;
@@ -372,7 +372,7 @@ void Platform_Create(void *data)
     }
 }
 
-void Platform_StageLoad()
+void Platform_StageLoad(void)
 {
     Platform->useClack = false;
     if (RSDK.CheckStageFolder("GHZ")) {
@@ -446,14 +446,14 @@ void Platform_StageLoad()
     }
 }
 
-void Platform_State_Nothing()
+void Platform_State_Nothing(void)
 {
     RSDK_THIS(Platform);
     entity->velocity.x = 0;
     entity->velocity.y = 0;
 }
 
-void Platform_State_Normal()
+void Platform_State_Normal(void)
 {
     RSDK_THIS(Platform);
     entity->drawPos.x = entity->centerPos.x;
@@ -463,7 +463,7 @@ void Platform_State_Normal()
     entity->velocity.y = 0;
 }
 
-void Platform_State_Moving()
+void Platform_State_Moving(void)
 {
     RSDK_THIS(Platform);
     int drawX         = -entity->drawPos.x;
@@ -475,7 +475,7 @@ void Platform_State_Moving()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_Swing()
+void Platform_State_Swing(void)
 {
     RSDK_THIS(Platform);
     int drawX          = -entity->drawPos.x;
@@ -487,7 +487,7 @@ void Platform_State_Swing()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_Wait()
+void Platform_State_Wait(void)
 {
     RSDK_THIS(Platform);
     if (entity->stood) {
@@ -503,7 +503,7 @@ void Platform_State_Wait()
     entity->velocity.x = 0;
 }
 
-void Platform_State_WaitBobbing()
+void Platform_State_WaitBobbing(void)
 {
     RSDK_THIS(Platform);
     entity->rotation += 4;
@@ -522,7 +522,7 @@ void Platform_State_WaitBobbing()
     entity->velocity.x = 0;
 }
 
-void Platform_State_StartPush()
+void Platform_State_StartPush(void)
 {
     RSDK_THIS(Platform);
     entity->active        = ACTIVE_NORMAL;
@@ -533,7 +533,7 @@ void Platform_State_StartPush()
     entity->velocity.y    = 0;
 }
 
-void Platform_State_StartFalling()
+void Platform_State_StartFalling(void)
 {
     RSDK_THIS(Platform);
     if (--entity->collapseDelay <= 0) {
@@ -551,7 +551,7 @@ void Platform_State_StartFalling()
     entity->velocity.x = 0;
 }
 
-void Platform_State_PlayerActivated()
+void Platform_State_PlayerActivated(void)
 {
     RSDK_THIS(Platform);
     int drawX            = -entity->drawPos.x;
@@ -569,7 +569,7 @@ void Platform_State_PlayerActivated()
 
             int cy = (yOff * RSDK.Cos256(angle)) - xOff * RSDK.Sin256(angle);
 
-            int center = cy + entity->centerPos.y;
+            //int center = cy + entity->centerPos.y;
             if (abs(player->position.x - entity->centerPos.x) <= 0x4000000) {
                 if (abs(player->position.y - entity->centerPos.y) <= 0x4000000 && cy < entity->centerPos.y) {
                     if (entity->centerPos.y - cy < 0x1000000)
@@ -610,7 +610,7 @@ void Platform_State_PlayerActivated()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_PlayerMove()
+void Platform_State_PlayerMove(void)
 {
     RSDK_THIS(Platform);
     int drawX = -entity->drawPos.x;
@@ -641,7 +641,7 @@ void Platform_State_PlayerMove()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_Pushable()
+void Platform_State_Pushable(void)
 {
     RSDK_THIS(Platform);
     entity->velocity.x   = 0;
@@ -739,7 +739,7 @@ void Platform_State_Pushable()
     }
 }
 
-void Platform_State_OffScreenReset()
+void Platform_State_OffScreenReset(void)
 {
     RSDK_THIS(Platform);
     if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &entity->updateRange))
@@ -748,7 +748,7 @@ void Platform_State_OffScreenReset()
     entity->velocity.x = 0;
 }
 
-void Platform_State_MovingSpike()
+void Platform_State_MovingSpike(void)
 {
     RSDK_THIS(Platform);
     int drawX = -entity->drawPos.x;
@@ -756,7 +756,7 @@ void Platform_State_MovingSpike()
     int move  = Zone->timer * (entity->speed << 7);
 
     int y1, y2;
-    if ((move >> 16) & 1 == entity->direction) {
+    if (((move >> 16) & 1) == entity->direction) {
         entity->drawPos.x = entity->centerPos.x + ((ushort)move * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
         y1                = (ushort)move * entity->amplitude.y >> 6;
         y2                = entity->amplitude.y << 9;
@@ -767,7 +767,7 @@ void Platform_State_MovingSpike()
         y1                = entity->amplitude.y << 9;
     }
     entity->drawPos.y = entity->centerPos.y + y1 - y2;
-    if ((move >> 16) & 1 != entity->hasTension) {
+    if (((move >> 16) & 1) != entity->hasTension) {
         if (entity->activeScreens)
             RSDK.PlaySFX(Platform->sfx_Clang, 0, 255);
         entity->hasTension = (move >> 16) & 1;
@@ -776,7 +776,7 @@ void Platform_State_MovingSpike()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_Falling()
+void Platform_State_Falling(void)
 {
     RSDK_THIS(Platform);
     entity->drawPos.y += entity->velocity.y;
@@ -803,7 +803,7 @@ void Platform_State_Falling()
     }
 }
 
-void Platform_State_Collapsing()
+void Platform_State_Collapsing(void)
 {
     RSDK_THIS(Platform);
 
@@ -821,7 +821,7 @@ void Platform_State_Collapsing()
     entity->velocity.x = 0;
 }
 
-void Platform_State_Circular()
+void Platform_State_Circular(void)
 {
     RSDK_THIS(Platform);
     int drawX          = -entity->drawPos.x;
@@ -832,7 +832,7 @@ void Platform_State_Circular()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_12()
+void Platform_State_12(void)
 {
     RSDK_THIS(Platform);
     entity->velocity.x = 0;
@@ -841,7 +841,7 @@ void Platform_State_12()
         entity->state = Platform_Unknown9;
 }
 
-void Platform_State_13()
+void Platform_State_13(void)
 {
     RSDK_THIS(Platform);
     entity->velocity.x = 0;
@@ -850,7 +850,7 @@ void Platform_State_13()
         entity->state = Platform_Unknown12;
 }
 
-void Platform_State_14()
+void Platform_State_14(void)
 {
     RSDK_THIS(Platform);
     int oldAngle  = entity->angle;
@@ -885,7 +885,7 @@ void Platform_State_14()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_15()
+void Platform_State_15(void)
 {
     RSDK_THIS(Platform);
     int drawX          = -entity->drawPos.x;
@@ -896,7 +896,7 @@ void Platform_State_15()
     entity->velocity.y = entity->drawPos.y + drawY;
 }
 
-void Platform_State_16()
+void Platform_State_16(void)
 {
     RSDK_THIS(Platform);
 
@@ -912,7 +912,7 @@ void Platform_State_16()
     }
 }
 
-void Platform_Unknown1()
+void Platform_Unknown1(void)
 {
     RSDK_THIS(Platform);
     entity->drawPos.x += entity->velocity.x;
@@ -927,7 +927,7 @@ void Platform_Unknown1()
     entity->position.y = y;
 }
 
-void Platform_Unknown2()
+void Platform_Unknown2(void)
 {
     RSDK_THIS(Platform);
     entity->drawPos.x += entity->velocity.x;
@@ -942,7 +942,7 @@ void Platform_Unknown2()
     entity->position.y = y;
 }
 
-void Platform_Unknown3()
+void Platform_Unknown3(void)
 {
     RSDK_THIS(Platform);
     int x = entity->position.x;
@@ -975,7 +975,7 @@ void Platform_Unknown3()
     entity->velocity.x = 0;
 }
 
-void Platform_Unknown4()
+void Platform_Unknown4(void)
 {
     RSDK_THIS(Platform);
     entity->drawPos.x += entity->velocity.x;
@@ -999,7 +999,7 @@ void Platform_Unknown4()
     }
 }
 
-void Platform_Unknown5()
+void Platform_Unknown5(void)
 {
     RSDK_THIS(Platform);
     int drawX = -entity->drawPos.x;
@@ -1044,7 +1044,7 @@ void Platform_Unknown5()
     entity->velocity.y = drawY + entity->drawPos.y;
 }
 
-void Platform_Unknown6()
+void Platform_Unknown6(void)
 {
     RSDK_THIS(Platform);
     entity->rotation += 4;
@@ -1053,7 +1053,7 @@ void Platform_Unknown6()
     entity->velocity.y = 0;
 }
 
-void Platform_Unknown7()
+void Platform_Unknown7(void)
 {
     RSDK_THIS(Platform);
     if (entity->type == 9) {
@@ -1080,7 +1080,7 @@ void Platform_Unknown7()
     }
 }
 
-void Platform_Unknown8()
+void Platform_Unknown8(void)
 {
     RSDK_THIS(Platform);
     if (!entity->stood) {
@@ -1111,7 +1111,7 @@ void Platform_Unknown8()
     }
 }
 
-void Platform_Unknown9()
+void Platform_Unknown9(void)
 {
     RSDK_THIS(Platform);
     int drawX     = -entity->drawPos.x;
@@ -1134,7 +1134,7 @@ void Platform_Unknown9()
     entity->velocity.y = drawY + entity->drawPos.y;
 }
 
-void Platform_Unknown10()
+void Platform_Unknown10(void)
 {
     RSDK_THIS(Platform);
     if (entity->stood) {
@@ -1153,7 +1153,7 @@ void Platform_Unknown10()
     }
 }
 
-void Platform_Unknown11()
+void Platform_Unknown11(void)
 {
     RSDK_THIS(Platform);
     int drawX = -entity->drawPos.x;
@@ -1175,7 +1175,7 @@ void Platform_Unknown11()
     entity->velocity.y = drawY + entity->drawPos.y;
 }
 
-void Platform_Unknown12()
+void Platform_Unknown12(void)
 {
     RSDK_THIS(Platform);
     int drawX = -entity->drawPos.x;
@@ -1211,7 +1211,7 @@ void Platform_Unknown12()
     entity->velocity.y = drawY + entity->drawPos.y;
 }
 
-void Platform_Unknown13()
+void Platform_Unknown13(void)
 {
     RSDK_THIS(Platform);
     if (entity->stoodPlayers) {
@@ -1229,7 +1229,7 @@ void Platform_Unknown13()
     }
 }
 
-void Platform_Unknown14()
+void Platform_Unknown14(void)
 {
     RSDK_THIS(Platform);
     int drawX = -entity->drawPos.x;
@@ -1262,11 +1262,11 @@ void Platform_Unknown14()
     entity->velocity.y = drawY + entity->drawPos.y;
 }
 
-void Platform_EditorDraw() {}
+void Platform_EditorDraw(void) {}
 
-void Platform_EditorLoad() {}
+void Platform_EditorLoad(void) {}
 
-void Platform_Serialize()
+void Platform_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Platform, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Platform, VAR_VECTOR2, amplitude);

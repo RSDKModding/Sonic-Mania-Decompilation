@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLightBulb *LightBulb;
 
 // Standard Entity Events
-void LightBulb_Update();
-void LightBulb_LateUpdate();
-void LightBulb_StaticUpdate();
-void LightBulb_Draw();
+void LightBulb_Update(void);
+void LightBulb_LateUpdate(void);
+void LightBulb_StaticUpdate(void);
+void LightBulb_Draw(void);
 void LightBulb_Create(void* data);
-void LightBulb_StageLoad();
-void LightBulb_EditorDraw();
-void LightBulb_EditorLoad();
-void LightBulb_Serialize();
+void LightBulb_StageLoad(void);
+void LightBulb_EditorDraw(void);
+void LightBulb_EditorLoad(void);
+void LightBulb_Serialize(void);
 
 // Extra Entity Functions
 

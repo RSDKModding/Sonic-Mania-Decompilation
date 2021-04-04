@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLRZ1Outro *LRZ1Outro;
 
 // Standard Entity Events
-void LRZ1Outro_Update();
-void LRZ1Outro_LateUpdate();
-void LRZ1Outro_StaticUpdate();
-void LRZ1Outro_Draw();
+void LRZ1Outro_Update(void);
+void LRZ1Outro_LateUpdate(void);
+void LRZ1Outro_StaticUpdate(void);
+void LRZ1Outro_Draw(void);
 void LRZ1Outro_Create(void* data);
-void LRZ1Outro_StageLoad();
-void LRZ1Outro_EditorDraw();
-void LRZ1Outro_EditorLoad();
-void LRZ1Outro_Serialize();
+void LRZ1Outro_StageLoad(void);
+void LRZ1Outro_EditorDraw(void);
+void LRZ1Outro_EditorLoad(void);
+void LRZ1Outro_Serialize(void);
 
 // Extra Entity Functions
 

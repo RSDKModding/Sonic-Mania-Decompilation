@@ -2,22 +2,22 @@
 
 ObjectJellygnite *Jellygnite;
 
-void Jellygnite_Update()
+void Jellygnite_Update(void)
 {
 
 }
 
-void Jellygnite_LateUpdate()
+void Jellygnite_LateUpdate(void)
 {
 
 }
 
-void Jellygnite_StaticUpdate()
+void Jellygnite_StaticUpdate(void)
 {
 
 }
 
-void Jellygnite_Draw()
+void Jellygnite_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Jellygnite_Create(void* data)
 
 }
 
-void Jellygnite_StageLoad()
+void Jellygnite_StageLoad(void)
 {
 
 }
 
-void Jellygnite_EditorDraw()
+void Jellygnite_EditorDraw(void)
 {
 
 }
 
-void Jellygnite_EditorLoad()
+void Jellygnite_EditorLoad(void)
 {
 
 }
 
-void Jellygnite_Serialize()
+void Jellygnite_Serialize(void)
 {
 
 }

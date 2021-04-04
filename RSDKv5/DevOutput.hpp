@@ -1,6 +1,7 @@
 #ifndef OBJ_DEVOUTPUT_H
 #define OBJ_DEVOUTPUT_H
 
+#if RETRO_REV02
 // Object Class
 struct ObjectDevOutput : Object {
 
@@ -24,5 +25,6 @@ void DevOutput_Create(void* data);
 
 // Extra Entity Functions
 int DevOutput_GetStringYOffset(char *string);
+#endif
 
 #endif //!OBJ_DEVOUTPUT_H

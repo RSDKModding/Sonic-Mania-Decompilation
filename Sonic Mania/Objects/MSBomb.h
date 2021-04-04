@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectMSBomb *MSBomb;
 
 // Standard Entity Events
-void MSBomb_Update();
-void MSBomb_LateUpdate();
-void MSBomb_StaticUpdate();
-void MSBomb_Draw();
+void MSBomb_Update(void);
+void MSBomb_LateUpdate(void);
+void MSBomb_StaticUpdate(void);
+void MSBomb_Draw(void);
 void MSBomb_Create(void* data);
-void MSBomb_StageLoad();
-void MSBomb_EditorDraw();
-void MSBomb_EditorLoad();
-void MSBomb_Serialize();
+void MSBomb_StageLoad(void);
+void MSBomb_EditorDraw(void);
+void MSBomb_EditorLoad(void);
+void MSBomb_Serialize(void);
 
 // Extra Entity Functions
 #endif

@@ -2,7 +2,7 @@
 
 ObjectTitleBG *TitleBG;
 
-void TitleBG_Update()
+void TitleBG_Update(void)
 {
     RSDK_THIS(TitleBG);
     if (entity->type == 4) {
@@ -20,9 +20,9 @@ void TitleBG_Update()
     }
 }
 
-void TitleBG_LateUpdate() {}
+void TitleBG_LateUpdate(void) {}
 
-void TitleBG_StaticUpdate()
+void TitleBG_StaticUpdate(void)
 {
     TitleBG->timer += 0x8000;
     TitleBG->timer &= 0x7FFFFFFF;
@@ -34,7 +34,7 @@ void TitleBG_StaticUpdate()
     }
 }
 
-void TitleBG_Draw()
+void TitleBG_Draw(void)
 {
     RSDK_THIS(TitleBG);
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
@@ -67,15 +67,15 @@ void TitleBG_Create(void *data)
     }
 }
 
-void TitleBG_StageLoad()
+void TitleBG_StageLoad(void)
 {
     TitleBG->spriteIndex = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
     RSDK.SetPaletteEntry(0, 55, 0x202030);
 }
 
-void TitleBG_SetupFX()
+void TitleBG_SetupFX(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[0] = 16;
+    RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(1)->drawLayer[0] = 0;
 
     TileLayer *bg1        = RSDK.GetSceneLayer(2);
@@ -136,8 +136,8 @@ void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines)
     }
 }
 
-void TitleBG_EditorDraw() {}
+void TitleBG_EditorDraw(void) {}
 
-void TitleBG_EditorLoad() {}
+void TitleBG_EditorLoad(void) {}
 
-void TitleBG_Serialize() { RSDK_EDITABLE_VAR(TitleBG, VAR_ENUM, type); }
+void TitleBG_Serialize(void) { RSDK_EDITABLE_VAR(TitleBG, VAR_ENUM, type); }

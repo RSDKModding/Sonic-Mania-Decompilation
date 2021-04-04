@@ -3,22 +3,22 @@
 #if RETRO_USE_PLUS
 ObjectGigaMetal *GigaMetal;
 
-void GigaMetal_Update()
+void GigaMetal_Update(void)
 {
 
 }
 
-void GigaMetal_LateUpdate()
+void GigaMetal_LateUpdate(void)
 {
 
 }
 
-void GigaMetal_StaticUpdate()
+void GigaMetal_StaticUpdate(void)
 {
 
 }
 
-void GigaMetal_Draw()
+void GigaMetal_Draw(void)
 {
 
 }
@@ -28,22 +28,22 @@ void GigaMetal_Create(void* data)
 
 }
 
-void GigaMetal_StageLoad()
+void GigaMetal_StageLoad(void)
 {
 
 }
 
-void GigaMetal_EditorDraw()
+void GigaMetal_EditorDraw(void)
 {
 
 }
 
-void GigaMetal_EditorLoad()
+void GigaMetal_EditorLoad(void)
 {
 
 }
 
-void GigaMetal_Serialize()
+void GigaMetal_Serialize(void)
 {
 
 }

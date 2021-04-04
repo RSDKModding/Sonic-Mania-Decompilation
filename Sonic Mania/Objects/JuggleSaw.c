@@ -2,22 +2,22 @@
 
 ObjectJuggleSaw *JuggleSaw;
 
-void JuggleSaw_Update()
+void JuggleSaw_Update(void)
 {
 
 }
 
-void JuggleSaw_LateUpdate()
+void JuggleSaw_LateUpdate(void)
 {
 
 }
 
-void JuggleSaw_StaticUpdate()
+void JuggleSaw_StaticUpdate(void)
 {
 
 }
 
-void JuggleSaw_Draw()
+void JuggleSaw_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void JuggleSaw_Create(void* data)
 
 }
 
-void JuggleSaw_StageLoad()
+void JuggleSaw_StageLoad(void)
 {
 
 }
 
-void JuggleSaw_EditorDraw()
+void JuggleSaw_EditorDraw(void)
 {
 
 }
 
-void JuggleSaw_EditorLoad()
+void JuggleSaw_EditorLoad(void)
 {
 
 }
 
-void JuggleSaw_Serialize()
+void JuggleSaw_Serialize(void)
 {
 
 }

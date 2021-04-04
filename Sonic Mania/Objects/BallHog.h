@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBallHog *BallHog;
 
 // Standard Entity Events
-void BallHog_Update();
-void BallHog_LateUpdate();
-void BallHog_StaticUpdate();
-void BallHog_Draw();
+void BallHog_Update(void);
+void BallHog_LateUpdate(void);
+void BallHog_StaticUpdate(void);
+void BallHog_Draw(void);
 void BallHog_Create(void* data);
-void BallHog_StageLoad();
-void BallHog_EditorDraw();
-void BallHog_EditorLoad();
-void BallHog_Serialize();
+void BallHog_StageLoad(void);
+void BallHog_EditorDraw(void);
+void BallHog_EditorLoad(void);
+void BallHog_Serialize(void);
 
 // Extra Entity Functions
 

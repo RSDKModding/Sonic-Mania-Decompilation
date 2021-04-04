@@ -2,7 +2,7 @@
 
 ObjectUFO_Decoration *UFO_Decoration;
 
-void UFO_Decoration_Update()
+void UFO_Decoration_Update(void)
 {
     RSDK_THIS(UFO_Decoration);
     if (RSDK.CheckOnScreen(entity, NULL)) {
@@ -18,7 +18,7 @@ void UFO_Decoration_Update()
         RSDK.ProcessAnimation(&entity->data);
 }
 
-void UFO_Decoration_LateUpdate()
+void UFO_Decoration_LateUpdate(void)
 {
     RSDK_THIS(UFO_Decoration);
     int z = entity->position.y;
@@ -36,9 +36,9 @@ void UFO_Decoration_LateUpdate()
     }
 }
 
-void UFO_Decoration_StaticUpdate() {}
+void UFO_Decoration_StaticUpdate(void) {}
 
-void UFO_Decoration_Draw()
+void UFO_Decoration_Draw(void)
 {
     RSDK_THIS(UFO_Decoration);
     if (entity->depth >= 0x4000) {
@@ -80,7 +80,7 @@ void UFO_Decoration_Create(void *data)
     }
 }
 
-void UFO_Decoration_StageLoad()
+void UFO_Decoration_StageLoad(void)
 {
     UFO_Decoration->modelIndices[0] = RSDK.LoadMesh("Decoration/Tree.bin", SCOPE_STAGE);
     UFO_Decoration->modelIndices[1] = RSDK.LoadMesh("Decoration/Flower1.bin", SCOPE_STAGE);
@@ -94,11 +94,11 @@ void UFO_Decoration_StageLoad()
     UFO_Decoration->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
 }
 
-void UFO_Decoration_EditorDraw() {}
+void UFO_Decoration_EditorDraw(void) {}
 
-void UFO_Decoration_EditorLoad() {}
+void UFO_Decoration_EditorLoad(void) {}
 
-void UFO_Decoration_Serialize()
+void UFO_Decoration_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UFO_Decoration, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(UFO_Decoration, VAR_ENUM, angle);

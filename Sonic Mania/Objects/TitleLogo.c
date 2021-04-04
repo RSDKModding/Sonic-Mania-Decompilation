@@ -2,18 +2,18 @@
 
 ObjectTitleLogo *TitleLogo;
 
-void TitleLogo_Update()
+void TitleLogo_Update(void)
 {
     RSDK_THIS(TitleLogo);
     if (entity->state)
         entity->state();
 }
 
-void TitleLogo_LateUpdate() {}
+void TitleLogo_LateUpdate(void) {}
 
-void TitleLogo_StaticUpdate() {}
+void TitleLogo_StaticUpdate(void) {}
 
-void TitleLogo_Draw()
+void TitleLogo_Draw(void)
 {
     RSDK_THIS(TitleLogo);
     switch (entity->type) {
@@ -96,7 +96,7 @@ void TitleLogo_Create(void *data)
     }
 }
 
-void TitleLogo_StageLoad()
+void TitleLogo_StageLoad(void)
 {
     TitleLogo->logoIndex = RSDK.LoadSpriteAnimation("Title/Logo.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
@@ -106,13 +106,13 @@ void TitleLogo_StageLoad()
 #endif
 }
 
-void TitleLogo_Unknown1()
+void TitleLogo_Unknown1(void)
 {
     RSDK_THIS(TitleLogo);
     switch (Localization->language) {
-        case 0:
-        case 5: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 0); break;
-        case 1:
+        case LANGUAGE_EN:
+        case LANGUAGE_JP: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 0); break;
+        case LANGUAGE_FR:
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_SWITCH)
 #else
@@ -122,7 +122,7 @@ void TitleLogo_Unknown1()
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 1);
             break;
-        case 2:
+        case LANGUAGE_IT:
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_XB1 || RSDK_sku->platform == PLATFORM_SWITCH)
 #else
@@ -132,7 +132,7 @@ void TitleLogo_Unknown1()
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 3);
             break;
-        case 3:
+        case LANGUAGE_GE:
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_SWITCH)
 #else
@@ -142,14 +142,16 @@ void TitleLogo_Unknown1()
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 5);
             break;
-        case 4: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 7); break;
-        case 6: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 8); break;
-        case 7: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 9); break;
-        case 8: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 10); break;
+        case LANGUAGE_SP: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 7); break;
+#if RETRO_GAMEVER != VER_100
+        case LANGUAGE_KO: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 8); break;
+        case LANGUAGE_SC: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 9); break;
+        case LANGUAGE_TC: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 10); break;
+#endif
         default: break;
     }
 }
-void TitleLogo_Unknown2()
+void TitleLogo_Unknown2(void)
 {
     RSDK_THIS(TitleLogo);
 
@@ -157,12 +159,12 @@ void TitleLogo_Unknown2()
     if (entity->flag)
         RSDK.ProcessAnimation(&entity->data3);
 }
-void TitleLogo_Unknown3()
+void TitleLogo_Unknown3(void)
 {
     RSDK_THIS(TitleLogo);
     ++entity->timer;
 }
-void TitleLogo_Unknown4()
+void TitleLogo_Unknown4(void)
 {
     RSDK_THIS(TitleLogo);
     entity->position.y += entity->velocity.y;
@@ -192,7 +194,7 @@ void TitleLogo_Unknown4()
         }
     }
 }
-void TitleLogo_Unknown5()
+void TitleLogo_Unknown5(void)
 {
     RSDK_THIS(TitleLogo);
     if (entity->timer <= 0) {
@@ -206,7 +208,7 @@ void TitleLogo_Unknown5()
         entity->timer--;
     }
 }
-void TitleLogo_Unknown6()
+void TitleLogo_Unknown6(void)
 {
     RSDK_THIS(TitleLogo);
     RSDK.ProcessAnimation(&entity->data2);
@@ -216,8 +218,8 @@ void TitleLogo_Unknown6()
     }
 }
 
-void TitleLogo_EditorDraw() {}
+void TitleLogo_EditorDraw(void) {}
 
-void TitleLogo_EditorLoad() {}
+void TitleLogo_EditorLoad(void) {}
 
-void TitleLogo_Serialize() { RSDK_EDITABLE_VAR(TitleLogo, VAR_ENUM, type); }
+void TitleLogo_Serialize(void) { RSDK_EDITABLE_VAR(TitleLogo, VAR_ENUM, type); }

@@ -2,22 +2,22 @@
 
 ObjectPuyoBean *PuyoBean;
 
-void PuyoBean_Update()
+void PuyoBean_Update(void)
 {
 
 }
 
-void PuyoBean_LateUpdate()
+void PuyoBean_LateUpdate(void)
 {
 
 }
 
-void PuyoBean_StaticUpdate()
+void PuyoBean_StaticUpdate(void)
 {
 
 }
 
-void PuyoBean_Draw()
+void PuyoBean_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PuyoBean_Create(void* data)
 
 }
 
-void PuyoBean_StageLoad()
+void PuyoBean_StageLoad(void)
 {
 
 }
 
-void PuyoBean_EditorDraw()
+void PuyoBean_EditorDraw(void)
 {
 
 }
 
-void PuyoBean_EditorLoad()
+void PuyoBean_EditorLoad(void)
 {
 
 }
 
-void PuyoBean_Serialize()
+void PuyoBean_Serialize(void)
 {
 
 }

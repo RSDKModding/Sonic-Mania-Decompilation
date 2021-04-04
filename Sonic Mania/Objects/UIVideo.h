@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     TextInfo videoFile1;
     TextInfo videoFile2;
     TextInfo audioFile;
@@ -21,51 +21,33 @@ typedef struct {
     TextInfo stageListCategory;
     TextInfo stageListName;
     int timer;
-    char field_8C;
-    char field_8D;
-    char field_8E;
-    char field_8F;
-    char field_90;
-    char field_91;
-    char field_92;
-    char field_93;
-    char field_94;
-    char field_95;
-    char field_96;
-    char field_97;
-    char field_98;
-    char field_99;
-    char field_9A;
-    char field_9B;
-    char field_9C;
-    char field_9D;
-    char field_9E;
-    char field_9F;
-    char field_A0;
-    char field_A1;
-    char field_A2;
-    char field_A3;
+    int field_8C;
+    int field_90;
+    int field_94;
+    int field_98;
+    int field_9C;
+    int field_A0;
 } EntityUIVideo;
 
 // Object Struct
 extern ObjectUIVideo *UIVideo;
 
 // Standard Entity Events
-void UIVideo_Update();
-void UIVideo_LateUpdate();
-void UIVideo_StaticUpdate();
-void UIVideo_Draw();
+void UIVideo_Update(void);
+void UIVideo_LateUpdate(void);
+void UIVideo_StaticUpdate(void);
+void UIVideo_Draw(void);
 void UIVideo_Create(void* data);
-void UIVideo_StageLoad();
-void UIVideo_EditorDraw();
-void UIVideo_EditorLoad();
-void UIVideo_Serialize();
+void UIVideo_StageLoad(void);
+void UIVideo_EditorDraw(void);
+void UIVideo_EditorLoad(void);
+void UIVideo_Serialize(void);
 
 // Extra Entity Functions
-bool32 UIVideo_SkipCallback();
+bool32 UIVideo_SkipCallback(void);
 
-void UIVideo_State_PlayVid1();
-void UIVideo_State_PlayVid2();
-void UIVideo_State_FinishPlayback();
+void UIVideo_State_PlayVid1(void);
+void UIVideo_State_PlayVid2(void);
+void UIVideo_State_FinishPlayback(void);
 
 #endif //!OBJ_UIVIDEO_H

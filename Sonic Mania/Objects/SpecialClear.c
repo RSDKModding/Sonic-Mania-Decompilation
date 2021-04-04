@@ -2,18 +2,18 @@
 
 ObjectSpecialClear *SpecialClear;
 
-void SpecialClear_Update() {}
+void SpecialClear_Update(void) {}
 
-void SpecialClear_LateUpdate()
+void SpecialClear_LateUpdate(void)
 {
     RSDK_THIS(SpecialClear);
     if (entity->state)
         entity->state();
 }
 
-void SpecialClear_StaticUpdate() {}
+void SpecialClear_StaticUpdate(void) {}
 
-void SpecialClear_Draw()
+void SpecialClear_Draw(void)
 {
     Vector2 vertPos[4];
     Vector2 drawPos;
@@ -299,7 +299,7 @@ void SpecialClear_Create(void *data)
     }
 }
 
-void SpecialClear_StageLoad()
+void SpecialClear_StageLoad(void)
 {
     SpecialClear->spriteIndex     = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE);
     SpecialClear->sfx_ScoreAdd    = RSDK.GetSFX("Global/ScoreAdd.wav");
@@ -358,15 +358,14 @@ void SpecialClear_GiveScoreBonus(int score)
     }
 }
 
-int SpecialClear_SaveCB(int a1)
+void SpecialClear_SaveCB(int success)
 {
     RSDK_THIS(SpecialClear);
     UIWaitSpinner_WaitReplay();
     entity->field_120 = 0;
-    return 1;
 }
 
-void SpecialClear_LoadScene()
+void SpecialClear_LoadScene(void)
 {
     RSDK_THIS(SpecialClear);
     if (entity->fillColour) {
@@ -389,7 +388,7 @@ void SpecialClear_LoadScene()
     }
 }
 
-void SpecialClear_TallyScore()
+void SpecialClear_TallyScore(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -427,7 +426,7 @@ void SpecialClear_TallyScore()
     }
 }
 
-void SpecialClear_Unknown3()
+void SpecialClear_Unknown3(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -442,7 +441,7 @@ void SpecialClear_Unknown3()
     }
 }
 
-void SpecialClear_Unknown4()
+void SpecialClear_Unknown4(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -459,7 +458,7 @@ void SpecialClear_Unknown4()
     }
 }
 
-void SpecialClear_Unknown5()
+void SpecialClear_Unknown5(void)
 {
     RSDK_THIS(SpecialClear);
     entity->positions[0].y -= 0x10000;
@@ -470,7 +469,7 @@ void SpecialClear_Unknown5()
     }
 }
 
-void SpecialClear_HandlePositions()
+void SpecialClear_HandlePositions(void)
 {
     RSDK_THIS(SpecialClear);
     int val = 0x700000;
@@ -527,7 +526,7 @@ void SpecialClear_HandlePositions()
     }
 }
 
-void SpecialClear_Unknown6()
+void SpecialClear_Unknown6(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -554,7 +553,7 @@ void SpecialClear_Unknown6()
     SpecialClear_HandlePositions();
 }
 
-void SpecialClear_Unknown7()
+void SpecialClear_Unknown7(void)
 {
     RSDK_THIS(SpecialClear);
     if (++entity->timer == 120) {
@@ -566,7 +565,7 @@ void SpecialClear_Unknown7()
     SpecialClear_HandlePositions();
 }
 
-void SpecialClear_Unknown9()
+void SpecialClear_Unknown9(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -604,7 +603,7 @@ void SpecialClear_Unknown9()
     }
 }
 
-void SpecialClear_Unknown10()
+void SpecialClear_Unknown10(void)
 {
     RSDK_THIS(SpecialClear);
     if (++entity->timer == 120) {
@@ -624,7 +623,7 @@ void SpecialClear_Unknown10()
     }
 }
 
-void SpecialClear_Unknown11()
+void SpecialClear_Unknown11(void)
 {
     RSDK_THIS(SpecialClear);
     entity->positions[0].x += 0x180000;
@@ -636,7 +635,7 @@ void SpecialClear_Unknown11()
     }
 }
 
-void SpecialClear_Unknown12()
+void SpecialClear_Unknown12(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -652,7 +651,7 @@ void SpecialClear_Unknown12()
     }
 }
 
-void SpecialClear_Unknown13()
+void SpecialClear_Unknown13(void)
 {
     RSDK_THIS(SpecialClear);
     if (++entity->timer == 160) {
@@ -663,7 +662,7 @@ void SpecialClear_Unknown13()
     }
 }
 
-void SpecialClear_Unknown15()
+void SpecialClear_Unknown15(void)
 {
     RSDK_THIS(SpecialClear);
 
@@ -680,8 +679,8 @@ void SpecialClear_Unknown15()
     }
 }
 
-void SpecialClear_EditorDraw() {}
+void SpecialClear_EditorDraw(void) {}
 
-void SpecialClear_EditorLoad() {}
+void SpecialClear_EditorLoad(void) {}
 
-void SpecialClear_Serialize() {}
+void SpecialClear_Serialize(void) {}

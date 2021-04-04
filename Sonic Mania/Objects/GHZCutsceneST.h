@@ -33,22 +33,22 @@ typedef struct {
 extern ObjectGHZCutsceneST *GHZCutsceneST;
 
 // Standard Entity Events
-void GHZCutsceneST_Update();
-void GHZCutsceneST_LateUpdate();
-void GHZCutsceneST_StaticUpdate();
-void GHZCutsceneST_Draw();
+void GHZCutsceneST_Update(void);
+void GHZCutsceneST_LateUpdate(void);
+void GHZCutsceneST_StaticUpdate(void);
+void GHZCutsceneST_Draw(void);
 void GHZCutsceneST_Create(void* data);
-void GHZCutsceneST_StageLoad();
-void GHZCutsceneST_EditorDraw();
-void GHZCutsceneST_EditorLoad();
-void GHZCutsceneST_Serialize();
+void GHZCutsceneST_StageLoad(void);
+void GHZCutsceneST_EditorDraw(void);
+void GHZCutsceneST_EditorLoad(void);
+void GHZCutsceneST_Serialize(void);
 
 // Extra Entity Functions
-void GHZCutsceneST_SetupCutscene();
-bool32 GHZCutsceneST_CutsceneState_Unknown1();
-bool32 GHZCutsceneST_CutsceneState_Unknown2();
-bool32 GHZCutsceneST_CutsceneState_Unknown3();
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage();
-void GHZCutsceneST_Skip();
+void GHZCutsceneST_SetupCutscene(void);
+bool32 GHZCutsceneST_CutsceneState_Unknown1(void);
+bool32 GHZCutsceneST_CutsceneState_Unknown2(void);
+bool32 GHZCutsceneST_CutsceneState_Unknown3(void);
+bool32 GHZCutsceneST_CutsceneState_LoadNextStage(void);
+void GHZCutsceneST_Skip(void);
 
 #endif //!OBJ_GHZCUTSCENEST_H

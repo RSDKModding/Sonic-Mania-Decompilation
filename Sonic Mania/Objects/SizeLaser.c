@@ -2,22 +2,22 @@
 
 ObjectSizeLaser *SizeLaser;
 
-void SizeLaser_Update()
+void SizeLaser_Update(void)
 {
 
 }
 
-void SizeLaser_LateUpdate()
+void SizeLaser_LateUpdate(void)
 {
 
 }
 
-void SizeLaser_StaticUpdate()
+void SizeLaser_StaticUpdate(void)
 {
 
 }
 
-void SizeLaser_Draw()
+void SizeLaser_Draw(void)
 {
     EntitySizeLaser *entity = (EntitySizeLaser *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->animData1, 0, 0);
@@ -84,7 +84,7 @@ void SizeLaser_Create(void* data)
     }
 }
 
-void SizeLaser_StageLoad()
+void SizeLaser_StageLoad(void)
 {
     SizeLaser->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
     switch (globals->playerID & 0xFF) {
@@ -125,7 +125,7 @@ void SizeLaser_StageLoad()
     Soundboard_LoadSFX("MMZ/SizeLaser.wav", 1, (void*)SizeLaser_SizeChangeSFXCheck, NULL);
 }
 
-bool32 SizeLaser_SizeChangeSFXCheck()
+bool32 SizeLaser_SizeChangeSFXCheck(void)
 {
     Entity *entity = NULL;
 
@@ -137,17 +137,17 @@ bool32 SizeLaser_SizeChangeSFXCheck()
     return cnt > 0;
 }
 
-void SizeLaser_EditorDraw()
+void SizeLaser_EditorDraw(void)
 {
 
 }
 
-void SizeLaser_EditorLoad()
+void SizeLaser_EditorLoad(void)
 {
 
 }
 
-void SizeLaser_Serialize()
+void SizeLaser_Serialize(void)
 {
     RSDK_EDITABLE_VAR(SizeLaser, VAR_UINT8, type);
     RSDK_EDITABLE_VAR(SizeLaser, VAR_UINT8, orientation);

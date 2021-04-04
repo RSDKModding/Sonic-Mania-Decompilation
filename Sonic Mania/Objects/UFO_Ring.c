@@ -2,14 +2,14 @@
 
 ObjectUFO_Ring *UFO_Ring;
 
-void UFO_Ring_Update()
+void UFO_Ring_Update(void)
 {
     RSDK_THIS(UFO_Ring);
     if (entity->state)
         entity->state();
 }
 
-void UFO_Ring_LateUpdate()
+void UFO_Ring_LateUpdate(void)
 {
     RSDK_THIS(UFO_Ring);
     int x = entity->position.x >> 8;
@@ -23,9 +23,9 @@ void UFO_Ring_LateUpdate()
     entity->depth  = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 }
 
-void UFO_Ring_StaticUpdate() {}
+void UFO_Ring_StaticUpdate(void) {}
 
-void UFO_Ring_Draw()
+void UFO_Ring_Draw(void)
 {
     RSDK_THIS(UFO_Ring);
 
@@ -61,13 +61,13 @@ void UFO_Ring_Create(void *data)
     }
 }
 
-void UFO_Ring_StageLoad()
+void UFO_Ring_StageLoad(void)
 {
     UFO_Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
     UFO_Ring->sfx_Ring    = RSDK.GetSFX("Global/Ring.wav");
 }
 
-void UFO_Ring_PlayRingSFX()
+void UFO_Ring_PlayRingSFX(void)
 {
     if (UFO_Setup->rings < 999) {
         UFO_Setup->rings++;
@@ -107,7 +107,7 @@ void UFO_Ring_LoseRings(EntityUFO_Player *player)
     }
 }
 
-void UFO_Ring_Unknown2()
+void UFO_Ring_Unknown2(void)
 {
     RSDK_THIS(UFO_Ring);
     foreach_active(UFO_Player, player)
@@ -126,7 +126,7 @@ void UFO_Ring_Unknown2()
     }
 }
 
-void UFO_Ring_Unknown3()
+void UFO_Ring_Unknown3(void)
 {
     RSDK_THIS(UFO_Ring);
     RSDK.ProcessAnimation(&entity->data);
@@ -135,7 +135,7 @@ void UFO_Ring_Unknown3()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void UFO_Ring_Unknown4()
+void UFO_Ring_Unknown4(void)
 {
     RSDK_THIS(UFO_Ring);
     RSDK.ProcessAnimation(&entity->data);
@@ -157,8 +157,8 @@ void UFO_Ring_Unknown4()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void UFO_Ring_EditorDraw() {}
+void UFO_Ring_EditorDraw(void) {}
 
-void UFO_Ring_EditorLoad() {}
+void UFO_Ring_EditorLoad(void) {}
 
-void UFO_Ring_Serialize() { RSDK_EDITABLE_VAR(UFO_Ring, VAR_ENUM, height); }
+void UFO_Ring_Serialize(void) { RSDK_EDITABLE_VAR(UFO_Ring, VAR_ENUM, height); }

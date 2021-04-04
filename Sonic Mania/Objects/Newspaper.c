@@ -2,22 +2,22 @@
 
 ObjectNewspaper *Newspaper;
 
-void Newspaper_Update()
+void Newspaper_Update(void)
 {
 
 }
 
-void Newspaper_LateUpdate()
+void Newspaper_LateUpdate(void)
 {
 
 }
 
-void Newspaper_StaticUpdate()
+void Newspaper_StaticUpdate(void)
 {
 
 }
 
-void Newspaper_Draw()
+void Newspaper_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Newspaper_Create(void* data)
 
 }
 
-void Newspaper_StageLoad()
+void Newspaper_StageLoad(void)
 {
 
 }
 
-void Newspaper_EditorDraw()
+void Newspaper_EditorDraw(void)
 {
 
 }
 
-void Newspaper_EditorLoad()
+void Newspaper_EditorLoad(void)
 {
 
 }
 
-void Newspaper_Serialize()
+void Newspaper_Serialize(void)
 {
 
 }

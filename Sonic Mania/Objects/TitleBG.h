@@ -24,18 +24,18 @@ typedef struct {
 extern ObjectTitleBG *TitleBG;
 
 // Standard Entity Events
-void TitleBG_Update();
-void TitleBG_LateUpdate();
-void TitleBG_StaticUpdate();
-void TitleBG_Draw();
+void TitleBG_Update(void);
+void TitleBG_LateUpdate(void);
+void TitleBG_StaticUpdate(void);
+void TitleBG_Draw(void);
 void TitleBG_Create(void* data);
-void TitleBG_StageLoad();
-void TitleBG_EditorDraw();
-void TitleBG_EditorLoad();
-void TitleBG_Serialize();
+void TitleBG_StageLoad(void);
+void TitleBG_EditorDraw(void);
+void TitleBG_EditorLoad(void);
+void TitleBG_Serialize(void);
 
 // Extra Entity Functions
-void TitleBG_SetupFX();
+void TitleBG_SetupFX(void);
 void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines);
 void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines);
 

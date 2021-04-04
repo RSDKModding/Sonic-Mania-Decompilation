@@ -20,15 +20,15 @@ typedef struct {
 extern ObjectTitleSonic *TitleSonic;
 
 // Standard Entity Events
-void TitleSonic_Update();
-void TitleSonic_LateUpdate();
-void TitleSonic_StaticUpdate();
-void TitleSonic_Draw();
+void TitleSonic_Update(void);
+void TitleSonic_LateUpdate(void);
+void TitleSonic_StaticUpdate(void);
+void TitleSonic_Draw(void);
 void TitleSonic_Create(void* data);
-void TitleSonic_StageLoad();
-void TitleSonic_EditorDraw();
-void TitleSonic_EditorLoad();
-void TitleSonic_Serialize();
+void TitleSonic_StageLoad(void);
+void TitleSonic_EditorDraw(void);
+void TitleSonic_EditorLoad(void);
+void TitleSonic_Serialize(void);
 
 // Extra Entity Functions
 

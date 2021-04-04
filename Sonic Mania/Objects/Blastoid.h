@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBlastoid *Blastoid;
 
 // Standard Entity Events
-void Blastoid_Update();
-void Blastoid_LateUpdate();
-void Blastoid_StaticUpdate();
-void Blastoid_Draw();
+void Blastoid_Update(void);
+void Blastoid_LateUpdate(void);
+void Blastoid_StaticUpdate(void);
+void Blastoid_Draw(void);
 void Blastoid_Create(void* data);
-void Blastoid_StageLoad();
-void Blastoid_EditorDraw();
-void Blastoid_EditorLoad();
-void Blastoid_Serialize();
+void Blastoid_StageLoad(void);
+void Blastoid_EditorDraw(void);
+void Blastoid_EditorLoad(void);
+void Blastoid_Serialize(void);
 
 // Extra Entity Functions
 

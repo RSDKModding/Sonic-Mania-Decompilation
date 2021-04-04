@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectLRZConvSwitch *LRZConvSwitch;
 
 // Standard Entity Events
-void LRZConvSwitch_Update();
-void LRZConvSwitch_LateUpdate();
-void LRZConvSwitch_StaticUpdate();
-void LRZConvSwitch_Draw();
+void LRZConvSwitch_Update(void);
+void LRZConvSwitch_LateUpdate(void);
+void LRZConvSwitch_StaticUpdate(void);
+void LRZConvSwitch_Draw(void);
 void LRZConvSwitch_Create(void* data);
-void LRZConvSwitch_StageLoad();
-void LRZConvSwitch_EditorDraw();
-void LRZConvSwitch_EditorLoad();
-void LRZConvSwitch_Serialize();
+void LRZConvSwitch_StageLoad(void);
+void LRZConvSwitch_EditorDraw(void);
+void LRZConvSwitch_EditorLoad(void);
+void LRZConvSwitch_Serialize(void);
 
 // Extra Entity Functions
 

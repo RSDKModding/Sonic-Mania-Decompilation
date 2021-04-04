@@ -21,15 +21,15 @@ typedef struct {
 extern ObjectSummaryEmerald *SummaryEmerald;
 
 // Standard Entity Events
-void SummaryEmerald_Update();
-void SummaryEmerald_LateUpdate();
-void SummaryEmerald_StaticUpdate();
-void SummaryEmerald_Draw();
+void SummaryEmerald_Update(void);
+void SummaryEmerald_LateUpdate(void);
+void SummaryEmerald_StaticUpdate(void);
+void SummaryEmerald_Draw(void);
 void SummaryEmerald_Create(void* data);
-void SummaryEmerald_StageLoad();
-void SummaryEmerald_EditorDraw();
-void SummaryEmerald_EditorLoad();
-void SummaryEmerald_Serialize();
+void SummaryEmerald_StageLoad(void);
+void SummaryEmerald_EditorDraw(void);
+void SummaryEmerald_EditorLoad(void);
+void SummaryEmerald_Serialize(void);
 
 // Extra Entity Functions
 #endif

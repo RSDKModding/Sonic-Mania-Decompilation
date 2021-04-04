@@ -2,7 +2,7 @@
 
 ObjectExplosion *Explosion;
 
-void Explosion_Update()
+void Explosion_Update(void)
 {
     EntityExplosion *entity = (EntityExplosion *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data);
@@ -12,17 +12,17 @@ void Explosion_Update()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void Explosion_LateUpdate()
+void Explosion_LateUpdate(void)
 {
 
 }
 
-void Explosion_StaticUpdate()
+void Explosion_StaticUpdate(void)
 {
 
 }
 
-void Explosion_Draw()
+void Explosion_Draw(void)
 {
     EntityExplosion *entity = (EntityExplosion *)RSDK_sceneInfo->entity;
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -40,23 +40,23 @@ void Explosion_Create(void* data)
     RSDK.SetSpriteAnimation(Explosion->spriteIndex, (int)(size_t)data, &entity->data, true, 0);
 }
 
-void Explosion_StageLoad()
+void Explosion_StageLoad(void)
 {
     Explosion->spriteIndex = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
     Explosion->sfx_Destroy = RSDK.GetSFX("Global/Destroy.wav");
 }
 
-void Explosion_EditorDraw()
+void Explosion_EditorDraw(void)
 {
 
 }
 
-void Explosion_EditorLoad()
+void Explosion_EditorLoad(void)
 {
 
 }
 
-void Explosion_Serialize()
+void Explosion_Serialize(void)
 {
 
 }

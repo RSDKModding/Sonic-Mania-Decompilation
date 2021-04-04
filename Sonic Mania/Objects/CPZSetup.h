@@ -27,15 +27,15 @@ typedef struct {
 extern ObjectCPZSetup *CPZSetup;
 
 // Standard Entity Events
-void CPZSetup_Update();
-void CPZSetup_LateUpdate();
-void CPZSetup_StaticUpdate();
-void CPZSetup_Draw();
+void CPZSetup_Update(void);
+void CPZSetup_LateUpdate(void);
+void CPZSetup_StaticUpdate(void);
+void CPZSetup_Draw(void);
 void CPZSetup_Create(void* data);
-void CPZSetup_StageLoad();
-void CPZSetup_EditorDraw();
-void CPZSetup_EditorLoad();
-void CPZSetup_Serialize();
+void CPZSetup_StageLoad(void);
+void CPZSetup_EditorDraw(void);
+void CPZSetup_EditorLoad(void);
+void CPZSetup_Serialize(void);
 
 // Extra Entity Functions
 

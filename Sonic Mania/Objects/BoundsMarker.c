@@ -2,7 +2,7 @@
 
 ObjectBoundsMarker *BoundsMarker;
 
-void BoundsMarker_Update()
+void BoundsMarker_Update(void)
 {
     EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
     for (int p = 0; p < Player->playerCount; ++p) {
@@ -11,17 +11,17 @@ void BoundsMarker_Update()
     }
 }
 
-void BoundsMarker_LateUpdate()
+void BoundsMarker_LateUpdate(void)
 {
 
 }
 
-void BoundsMarker_StaticUpdate()
+void BoundsMarker_StaticUpdate(void)
 {
 
 }
 
-void BoundsMarker_Draw()
+void BoundsMarker_Draw(void)
 {
 
 }
@@ -49,7 +49,7 @@ void BoundsMarker_Create(void* data)
     }
 }
 
-void BoundsMarker_StageLoad()
+void BoundsMarker_StageLoad(void)
 {
 
 }
@@ -113,17 +113,17 @@ void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
     }
 }
 
-void BoundsMarker_EditorDraw()
+void BoundsMarker_EditorDraw(void)
 {
 
 }
 
-void BoundsMarker_EditorLoad()
+void BoundsMarker_EditorLoad(void)
 {
 
 }
 
-void BoundsMarker_Serialize()
+void BoundsMarker_Serialize(void)
 {
     RSDK_EDITABLE_VAR(BoundsMarker, VAR_UINT8, type);
     RSDK_EDITABLE_VAR(BoundsMarker, VAR_ENUM, width);

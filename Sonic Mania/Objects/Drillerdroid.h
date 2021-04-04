@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectDrillerdroid *Drillerdroid;
 
 // Standard Entity Events
-void Drillerdroid_Update();
-void Drillerdroid_LateUpdate();
-void Drillerdroid_StaticUpdate();
-void Drillerdroid_Draw();
+void Drillerdroid_Update(void);
+void Drillerdroid_LateUpdate(void);
+void Drillerdroid_StaticUpdate(void);
+void Drillerdroid_Draw(void);
 void Drillerdroid_Create(void* data);
-void Drillerdroid_StageLoad();
-void Drillerdroid_EditorDraw();
-void Drillerdroid_EditorLoad();
-void Drillerdroid_Serialize();
+void Drillerdroid_StageLoad(void);
+void Drillerdroid_EditorDraw(void);
+void Drillerdroid_EditorLoad(void);
+void Drillerdroid_Serialize(void);
 
 // Extra Entity Functions
 

@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     AnimationData data;
     byte aniID;
     byte attribute;
@@ -32,21 +32,21 @@ typedef struct {
 extern ObjectParallaxSprite *ParallaxSprite;
 
 // Standard Entity Events
-void ParallaxSprite_Update();
-void ParallaxSprite_LateUpdate();
-void ParallaxSprite_StaticUpdate();
-void ParallaxSprite_Draw();
+void ParallaxSprite_Update(void);
+void ParallaxSprite_LateUpdate(void);
+void ParallaxSprite_StaticUpdate(void);
+void ParallaxSprite_Draw(void);
 void ParallaxSprite_Create(void* data);
-void ParallaxSprite_StageLoad();
-void ParallaxSprite_EditorDraw();
-void ParallaxSprite_EditorLoad();
-void ParallaxSprite_Serialize();
+void ParallaxSprite_StageLoad(void);
+void ParallaxSprite_EditorDraw(void);
+void ParallaxSprite_EditorLoad(void);
+void ParallaxSprite_Serialize(void);
 
 // Extra Entity Functions
-void ParallaxSprite_Unknown1();
-void ParallaxSprite_CreateCopy();
-void ParallaxSprite_Unknown3();
-void ParallaxSprite_Unknown4();
-void ParallaxSprite_Unknown5();
+void ParallaxSprite_Unknown1(void);
+void ParallaxSprite_CreateCopy(void);
+void ParallaxSprite_Unknown3(void);
+void ParallaxSprite_Unknown4(void);
+void ParallaxSprite_Unknown5(void);
 
 #endif //!OBJ_PARALLAXSPRITE_H

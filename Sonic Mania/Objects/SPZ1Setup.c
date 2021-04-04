@@ -2,17 +2,17 @@
 
 ObjectSPZ1Setup *SPZ1Setup;
 
-void SPZ1Setup_Update()
+void SPZ1Setup_Update(void)
 {
 
 }
 
-void SPZ1Setup_LateUpdate()
+void SPZ1Setup_LateUpdate(void)
 {
 
 }
 
-void SPZ1Setup_StaticUpdate()
+void SPZ1Setup_StaticUpdate(void)
 {
     if (!(Zone->timer & 3)) {
         ++SPZ1Setup->bgLayer->deformationOffset;
@@ -58,7 +58,7 @@ void SPZ1Setup_StaticUpdate()
     }
 }
 
-void SPZ1Setup_Draw()
+void SPZ1Setup_Draw(void)
 {
 
 }
@@ -68,7 +68,7 @@ void SPZ1Setup_Create(void* data)
 
 }
 
-void SPZ1Setup_StageLoad()
+void SPZ1Setup_StageLoad(void)
 {
     SPZ1Setup->aniTiles = RSDK.LoadSpriteSheet("SPZ1/AniTiles.gif", SCOPE_STAGE);
     SPZ1Setup->bgLayer      = RSDK.GetSceneLayer(0);
@@ -150,23 +150,23 @@ void SPZ1Setup_StageLoad()
 #endif
 }
 
-void SPZ1Setup_SetupActTransition()
+void SPZ1Setup_SetupActTransition(void)
 {
     Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
     RSDK.InitSceneLoad();
 }
 
-void SPZ1Setup_EditorDraw()
+void SPZ1Setup_EditorDraw(void)
 {
 
 }
 
-void SPZ1Setup_EditorLoad()
+void SPZ1Setup_EditorLoad(void)
 {
 
 }
 
-void SPZ1Setup_Serialize()
+void SPZ1Setup_Serialize(void)
 {
 
 }

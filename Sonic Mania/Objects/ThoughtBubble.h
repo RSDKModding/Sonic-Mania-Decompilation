@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectThoughtBubble *ThoughtBubble;
 
 // Standard Entity Events
-void ThoughtBubble_Update();
-void ThoughtBubble_LateUpdate();
-void ThoughtBubble_StaticUpdate();
-void ThoughtBubble_Draw();
+void ThoughtBubble_Update(void);
+void ThoughtBubble_LateUpdate(void);
+void ThoughtBubble_StaticUpdate(void);
+void ThoughtBubble_Draw(void);
 void ThoughtBubble_Create(void* data);
-void ThoughtBubble_StageLoad();
-void ThoughtBubble_EditorDraw();
-void ThoughtBubble_EditorLoad();
-void ThoughtBubble_Serialize();
+void ThoughtBubble_StageLoad(void);
+void ThoughtBubble_EditorDraw(void);
+void ThoughtBubble_EditorLoad(void);
+void ThoughtBubble_Serialize(void);
 
 // Extra Entity Functions
 

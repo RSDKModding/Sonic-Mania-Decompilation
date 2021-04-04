@@ -5,14 +5,13 @@ DrawList drawLayers[DRAWLAYER_COUNT];
 ushort blendLookupTable[BLENDTABLE_SIZE];
 ushort subtractLookupTable[BLENDTABLE_SIZE];
 
-int gfxDataPosition;
 GFXSurface gfxSurface[SURFACE_MAX];
 byte graphicData[GFXDATA_MAX];
 
 int pixWidth = 424;
 int screenCount  = 0;
 ScreenInfo screens[SCREEN_MAX];
-ScreenUnknown screenUnknown[SCREEN_MAX];
+CameraInfo cameras[SCREEN_MAX];
 ScreenInfo *currentScreen = NULL;
 
 char drawGroupNames[0x10][0x10]{
@@ -130,6 +129,7 @@ void FlipScreen()
             destScreenPos[1].w = pixWidth / 2;
             destScreenPos[1].h = SCREEN_YSIZE / 2;
             break;
+#if RETRO_REV02
         case 3:
             destScreenPos[0].x = 0;
             destScreenPos[0].y = 0;
@@ -167,6 +167,7 @@ void FlipScreen()
             destScreenPos[3].w = pixWidth / 2;
             destScreenPos[3].h = SCREEN_YSIZE / 2;
             break;
+#endif
     }
 
     // Clear the screen. This is needed to keep the
@@ -3683,7 +3684,6 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             }
             case INK_LOOKUP:
                 for (int y = 0; y < yDif; ++y) {
-                    ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
@@ -4249,7 +4249,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 }
 
 void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
-              Vector2 *charPositions, bool32 screenRelative)
+              Vector2 *charOffsets, bool32 screenRelative)
 {
     if (data && info && data->framePtrs) {
         if (!position)
@@ -4281,16 +4281,15 @@ void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFra
 
         switch (align) {
             case ALIGN_LEFT:
-                if (charPositions) {
+                if (charOffsets) {
                     for (; endFrame < textLength; ++endFrame) {
                         ushort curChar = info->text[endFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
-                            DrawSpriteFlipped(x + (charPositions->x >> 0x10), y + frame->pivotY + (charPositions->y >> 0x10), frame->width,
-                                              frame->height, frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha,
-                                              frame->sheetID);
+                            DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height, frame->sprX,
+                                              frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
-                            ++charPositions;
+                            ++charOffsets;
                         }
                     }
                 }
@@ -4299,7 +4298,7 @@ void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFra
                         ushort curChar = info->text[endFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
-                            DrawSpriteFlipped(y + frame->pivotY, x, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
+                            DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
                         }
@@ -4309,15 +4308,16 @@ void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFra
             case ALIGN_RIGHT:
             case ALIGN_CENTER:
                 --textLength;
-                if (charPositions) {
-                    for (Vector2 *pos = &charPositions[textLength]; textLength >= endFrame; --textLength) {
+                if (charOffsets) {
+                    for (Vector2 *charOffset = &charOffsets[textLength]; textLength >= endFrame; --textLength) {
                         ushort curChar = info->text[textLength];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
-                            DrawSpriteFlipped(y + frame->pivotY + (pos->y >> 0x10), (pos->x >> 0x10), frame->width, frame->height, frame->sprX,
-                                              frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
-                            x += spacing + frame->width;
-                            --pos;
+                            DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
+                                              frame->height, frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha,
+                                              frame->sheetID);
+                            x = (x - frame->width) - spacing;
+                            --charOffset;
                         }
                     }
                 }
@@ -4326,9 +4326,9 @@ void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFra
                         ushort curChar = info->text[textLength];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
-                            DrawSpriteFlipped(y + frame->pivotY, x, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
+                            DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
-                            x += spacing + frame->width;
+                            x = (x - frame->width) - spacing;
                         }
                     }
                 }

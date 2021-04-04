@@ -2,22 +2,22 @@
 
 ObjectCableWarp *CableWarp;
 
-void CableWarp_Update()
+void CableWarp_Update(void)
 {
 
 }
 
-void CableWarp_LateUpdate()
+void CableWarp_LateUpdate(void)
 {
 
 }
 
-void CableWarp_StaticUpdate()
+void CableWarp_StaticUpdate(void)
 {
 
 }
 
-void CableWarp_Draw()
+void CableWarp_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void CableWarp_Create(void* data)
 
 }
 
-void CableWarp_StageLoad()
+void CableWarp_StageLoad(void)
 {
 
 }
 
-void CableWarp_EditorDraw()
+void CableWarp_EditorDraw(void)
 {
 
 }
 
-void CableWarp_EditorLoad()
+void CableWarp_EditorLoad(void)
 {
 
 }
 
-void CableWarp_Serialize()
+void CableWarp_Serialize(void)
 {
 
 }

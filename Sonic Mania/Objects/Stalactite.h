@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectStalactite *Stalactite;
 
 // Standard Entity Events
-void Stalactite_Update();
-void Stalactite_LateUpdate();
-void Stalactite_StaticUpdate();
-void Stalactite_Draw();
+void Stalactite_Update(void);
+void Stalactite_LateUpdate(void);
+void Stalactite_StaticUpdate(void);
+void Stalactite_Draw(void);
 void Stalactite_Create(void* data);
-void Stalactite_StageLoad();
-void Stalactite_EditorDraw();
-void Stalactite_EditorLoad();
-void Stalactite_Serialize();
+void Stalactite_StageLoad(void);
+void Stalactite_EditorDraw(void);
+void Stalactite_EditorLoad(void);
+void Stalactite_Serialize(void);
 
 // Extra Entity Functions
 

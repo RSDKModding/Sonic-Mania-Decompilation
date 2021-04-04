@@ -2,9 +2,9 @@
 
 ObjectFXTrail *FXTrail;
 
-void FXTrail_Update() {}
+void FXTrail_Update(void) {}
 
-void FXTrail_LateUpdate()
+void FXTrail_LateUpdate(void)
 {
     RSDK_THIS(FXTrail);
     Entity *parent = (Entity *)entity->parent;
@@ -38,9 +38,9 @@ void FXTrail_LateUpdate()
     }
 }
 
-void FXTrail_StaticUpdate() {}
+void FXTrail_StaticUpdate(void) {}
 
-void FXTrail_Draw()
+void FXTrail_Draw(void)
 {
     RSDK_THIS(FXTrail);
     int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
@@ -78,10 +78,10 @@ void FXTrail_Create(void *data)
     }
 }
 
-void FXTrail_StageLoad() {}
+void FXTrail_StageLoad(void) {}
 
-void FXTrail_EditorDraw() {}
+void FXTrail_EditorDraw(void) {}
 
-void FXTrail_EditorLoad() {}
+void FXTrail_EditorLoad(void) {}
 
-void FXTrail_Serialize() {}
+void FXTrail_Serialize(void) {}

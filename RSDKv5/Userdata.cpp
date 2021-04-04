@@ -2,12 +2,12 @@
 
 bool32 settingsChanged = false;
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 FunctionListEntry functionList[FUNCLIST_COUNT];
 int functionListCount;
 #endif
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 DummyCore *dummmyCore = NULL;
 DummyCore *userCore   = NULL;
 
@@ -26,14 +26,14 @@ inline void nullUserFunc() {}
 
 void initUserData()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     if (!dummmyCore)
         dummmyCore = (DummyCore *)malloc(sizeof(DummyCore));
     MEM_ZEROP(dummmyCore);
 #endif
 
     if (true) { // no steam or etc, so default to dummy funcs
-#if RETRO_USE_PLUS
+#if RETRO_REV02
         userCore = dummmyCore;
 
         if (!achievements)
@@ -118,7 +118,7 @@ void initUserData()
         userStorage->unknown8       = UserStorageUnknown8;
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
         SetFuncPtr("GetConfirmButtonFlip", GetConfirmButtonFlip);
         SetFuncPtr("LaunchManual", LaunchManual);
         SetFuncPtr("ExitGame", ExitGame);
@@ -154,7 +154,7 @@ void initUserData()
 }
 void releaseUserData()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     if (dummmyCore)
         free(dummmyCore);
     dummmyCore = NULL;
@@ -183,7 +183,7 @@ void releaseUserData()
 
 int GetUserLanguage()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     return curSKU.language;
 #else
     return engineInfo.language;
@@ -191,7 +191,7 @@ int GetUserLanguage()
 }
 int GetUserRegion()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     return curSKU.region;
 #else
     return engineInfo.region;
@@ -199,7 +199,7 @@ int GetUserRegion()
 }
 int GetUserPlatform()
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     return curSKU.platform; 
 #else 
     return engineInfo.platformID;
@@ -229,7 +229,7 @@ void SetPresence(byte a2, TextInfo *info)
     char buffer[0xFF];
     char buffer2[0xFF];
     GetCString(buffer, info);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", a2, buffer, (richPresence->status != a2 ? "Successful Set" : "Redundant Set"));
 #else
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", a2, buffer);
@@ -237,14 +237,14 @@ void SetPresence(byte a2, TextInfo *info)
     printLog(SEVERITY_NONE, buffer2);
 }
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 void TrackActClear() { printLog(SEVERITY_NONE, "DUMMY TrackActClear()"); }
 void TrackTAClear(byte a1, byte a2, byte a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackTAClear(%d,%d,%d,%d)", a1, a2, a3, a4); }
 void TrackEnemyDefeat() { printLog(SEVERITY_NONE, "DUMMY TrackEnemyDefeat()"); }
 void ClearPrerollErrors() { printLog(SEVERITY_NONE, "DUMMY ClearPrerollErrors()"); }
 #endif
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
 void setupUserDebugValues()
 {
@@ -282,7 +282,7 @@ void userInitUnknown2()
 }
 #endif
 
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
 void SetFuncPtr(const char *name, void *ptr)
 {
     if (functionListCount < FUNCLIST_COUNT) {
@@ -319,14 +319,14 @@ void *GetFuncPtr(const char *name)
 
 bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int))
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
         LoadUserFile(filename, buffer, bufSize);
 
         if (callback)
             callback(100);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     }
     else {
         char buffer[0x100];
@@ -341,7 +341,7 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize,
 }
 bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress)
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
         if (compress) {
@@ -351,7 +351,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
 
         if (callback)
             callback(100);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     }
     else {
         char buffer[0x100];
@@ -367,14 +367,14 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
 }
 bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
 {
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
         DeleteUserFile(filename);
 
         if (callback)
             callback(100);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     }
     else {
         char buffer[0x100];
@@ -470,7 +470,7 @@ bool32 DeleteUserFile(const char *filename)
     return status == 0;
 }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 int LoadDBFromBuffer(UserDB *userDB, byte *writeBuffer)
 {
     if (*(int *)writeBuffer != 0x80074B1E)
@@ -488,7 +488,7 @@ int LoadDBFromBuffer(UserDB *userDB, byte *writeBuffer)
         userDB->columnSizes[c] = *writeBuffer;
         writeBuffer++;
 
-        strcpy_s(userDB->columnNames[c], 0x10, (char *)writeBuffer);
+        sprintf(userDB->columnNames[c], "%s", (char *)writeBuffer);
         writeBuffer += 0x10;
 
         GenerateCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
@@ -546,7 +546,7 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
     }
     if (size + sizeof(int) <= totalSize) {
         size += sizeof(int);
-        *(int *)writeBuffer = GetUserDBWriteSize(userDB); // used size
+        *(int *)writeBuffer = (int)GetUserDBWriteSize(userDB); // used size
         writeBuffer += sizeof(int);
     }
     if (size + sizeof(ushort) <= totalSize) {
@@ -566,7 +566,7 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
         }
         if (size + 0x10 <= totalSize) {
             memset(writeBuffer, 0, 0x10 * sizeof(byte));
-            strcpy_s((char *)writeBuffer, 0x10, userDB->columnNames[c]);
+            sprintf((char *)writeBuffer, "%s", userDB->columnNames[c]);
             size += 0x10;
             writeBuffer += 0x10;
         }
@@ -680,7 +680,7 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
 
     bool32 success = false;
     if (userDB->active) {
-        int totalSize = GetUserDBWriteSize(userDB);
+        int totalSize = (int)GetUserDBWriteSize(userDB);
         AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
         SaveDBToBuffer(userDB, totalSize, (byte*)userDBStorage->writeBuffer[tableID]);
         userDBStorage->callbacks[tableID] = callback;
@@ -716,7 +716,7 @@ int GetSettingsValue(int id)
         case 15: return (int)(engine.streamVolume * 1024.0); 
         case 16: return (int)(engine.soundFXVolume * 1024.0); 
         case 17:
-#if RETRO_USE_PLUS
+#if RETRO_REV02
             return curSKU.language; 
 #else
             return engineInfo.language;
@@ -803,7 +803,7 @@ void SetSettingsValue(int id, int val)
             }
             break;
         case 17:
-#if RETRO_USE_PLUS
+#if RETRO_REV02
             curSKU.language = val; 
 #else
             engineInfo.language = val;
@@ -874,7 +874,7 @@ void readSettings()
 
     const char *result = "";
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     curSKU.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #else
     engineInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
@@ -995,7 +995,7 @@ void writeSettings(bool32 writeToFile)
                 writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
         }
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
         writeText(file, "language=%d\n", curSKU.language);
 #else
         writeText(file, "language=%d\n", engineInfo.language);

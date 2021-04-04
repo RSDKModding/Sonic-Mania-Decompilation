@@ -2,7 +2,7 @@
 
 ObjectRingField *RingField;
 
-void RingField_Update()
+void RingField_Update(void)
 {
     RSDK_THIS(RingField);
     if (entity->running) {
@@ -42,9 +42,9 @@ void RingField_Update()
     }
 }
 
-void RingField_LateUpdate() {}
+void RingField_LateUpdate(void) {}
 
-void RingField_StaticUpdate()
+void RingField_StaticUpdate(void)
 {
     Vector2 updateRange;
     updateRange.x = 0x400000;
@@ -61,7 +61,7 @@ void RingField_StaticUpdate()
     }
 }
 
-void RingField_Draw() {}
+void RingField_Draw(void) {}
 
 void RingField_Create(void *data)
 {
@@ -90,7 +90,7 @@ void RingField_Create(void *data)
     entity->hitbox.bottom = entity->size.y >> 17;
 }
 
-void RingField_StageLoad() { RingField->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
+void RingField_StageLoad(void) { RingField->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
 
 void RingField_GetPos(Vector2 *pos)
 {
@@ -126,11 +126,11 @@ void RingField_GetPos(Vector2 *pos)
     pos->y = y + ((RSDK_screens->position.y + RSDK_screens->centerY) << 16);
 }
 
-void RingField_EditorDraw() {}
+void RingField_EditorDraw(void) {}
 
-void RingField_EditorLoad() {}
+void RingField_EditorLoad(void) {}
 
-void RingField_Serialize()
+void RingField_Serialize(void)
 {
     RSDK_EDITABLE_VAR(RingField, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(RingField, VAR_ENUM, frequency);

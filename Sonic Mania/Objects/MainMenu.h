@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectMainMenu *MainMenu;
 
 // Standard Entity Events
-void MainMenu_Update();
-void MainMenu_LateUpdate();
-void MainMenu_StaticUpdate();
-void MainMenu_Draw();
+void MainMenu_Update(void);
+void MainMenu_LateUpdate(void);
+void MainMenu_StaticUpdate(void);
+void MainMenu_Draw(void);
 void MainMenu_Create(void* data);
-void MainMenu_StageLoad();
-void MainMenu_EditorDraw();
-void MainMenu_EditorLoad();
-void MainMenu_Serialize();
+void MainMenu_StageLoad(void);
+void MainMenu_EditorDraw(void);
+void MainMenu_EditorLoad(void);
+void MainMenu_Serialize(void);
 
 // Extra Entity Functions
 #endif

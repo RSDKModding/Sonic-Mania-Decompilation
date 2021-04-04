@@ -2,22 +2,22 @@
 
 ObjectRedz *Redz = NULL;
 
-void Redz_Update()
+void Redz_Update(void)
 {
 
 }
 
-void Redz_LateUpdate()
+void Redz_LateUpdate(void)
 {
 
 }
 
-void Redz_StaticUpdate()
+void Redz_StaticUpdate(void)
 {
 
 }
 
-void Redz_Draw()
+void Redz_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Redz_Create(void* data)
 
 }
 
-void Redz_StageLoad()
+void Redz_StageLoad(void)
 {
 
 }
 
-void Redz_EditorDraw()
+void Redz_EditorDraw(void)
 {
 
 }
 
-void Redz_EditorLoad()
+void Redz_EditorLoad(void)
 {
 
 }
 
-void Redz_Serialize()
+void Redz_Serialize(void)
 {
 
 }

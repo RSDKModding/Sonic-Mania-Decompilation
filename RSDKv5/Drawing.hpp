@@ -5,7 +5,7 @@
 #define SURFACE_MAX      (0x40)
 #define GFXDATA_MAX      (0x200000)
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 #define SCREEN_MAX (0x4)
 #else
 #define SCREEN_MAX (0x2)
@@ -64,7 +64,7 @@ struct ScreenInfo {
     int waterDrawPos;
 };
 
-struct ScreenUnknown {
+struct CameraInfo {
     Vector2 *targetPos;
     Vector2 position;
     Vector2 offset;
@@ -86,14 +86,13 @@ extern char drawGroupNames[0x10][0x10];
 extern ushort blendLookupTable[BLENDTABLE_SIZE];
 extern ushort subtractLookupTable[BLENDTABLE_SIZE];
 
-extern int gfxDataPosition;
 extern GFXSurface gfxSurface[SURFACE_MAX];
 extern byte graphicData[GFXDATA_MAX];
 
 extern int pixWidth;
 extern int screenCount;
 extern ScreenInfo screens[SCREEN_MAX];
-extern ScreenUnknown screenUnknown[SCREEN_MAX];
+extern CameraInfo cameras[SCREEN_MAX];
 extern ScreenInfo *currentScreen;
 
 bool32 InitRenderDevice();
@@ -124,18 +123,18 @@ inline void SetScreenSize(byte screenID, ushort width, ushort height)
     }
 }
 
-inline void AddScreen(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative)
+inline void AddCamera(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative)
 {
     if (screenCount < SCREEN_MAX) {
-        screenUnknown[screenCount].targetPos     = pos;
-        screenUnknown[screenCount].offset.x      = offsetX;
-        screenUnknown[screenCount].offset.y      = offsetY;
-        screenUnknown[screenCount].worldRelative = worldRelative;
+        cameras[screenCount].targetPos     = pos;
+        cameras[screenCount].offset.x      = offsetX;
+        cameras[screenCount].offset.y      = offsetY;
+        cameras[screenCount].worldRelative = worldRelative;
         ++screenCount;
     }
 }
 
-inline void ClearScreens() { screenCount = 0; }
+inline void ClearCameras() { screenCount = 0; }
 
 inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
 {

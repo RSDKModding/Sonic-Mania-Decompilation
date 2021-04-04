@@ -2,7 +2,7 @@
 
 ObjectPlaneSwitch *PlaneSwitch;
 
-void PlaneSwitch_Update()
+void PlaneSwitch_Update(void)
 {
     EntityPlayer *player = NULL;
     EntityPlaneSwitch *entity = (EntityPlaneSwitch *)RSDK_sceneInfo->entity;
@@ -46,17 +46,17 @@ void PlaneSwitch_Update()
     entity->visible = DebugMode->debugActive;
 }
 
-void PlaneSwitch_LateUpdate()
+void PlaneSwitch_LateUpdate(void)
 {
 
 }
 
-void PlaneSwitch_StaticUpdate()
+void PlaneSwitch_StaticUpdate(void)
 {
 
 }
 
-void PlaneSwitch_Draw()
+void PlaneSwitch_Draw(void)
 {
     Vector2 drawPos;
     EntityPlaneSwitch *entity = (EntityPlaneSwitch *)RSDK_sceneInfo->entity;
@@ -116,19 +116,19 @@ void PlaneSwitch_Create(void* data)
     }
 }
 
-void PlaneSwitch_StageLoad() { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-void PlaneSwitch_EditorDraw()
+void PlaneSwitch_EditorDraw(void)
 {
 
 }
 
-void PlaneSwitch_EditorLoad()
+void PlaneSwitch_EditorLoad(void)
 {
 
 }
 
-void PlaneSwitch_Serialize()
+void PlaneSwitch_Serialize(void)
 {
     RSDK_EDITABLE_VAR(PlaneSwitch, VAR_ENUM, flags);
     RSDK_EDITABLE_VAR(PlaneSwitch, VAR_ENUM, size);

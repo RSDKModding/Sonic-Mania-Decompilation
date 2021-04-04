@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBarStool *BarStool;
 
 // Standard Entity Events
-void BarStool_Update();
-void BarStool_LateUpdate();
-void BarStool_StaticUpdate();
-void BarStool_Draw();
+void BarStool_Update(void);
+void BarStool_LateUpdate(void);
+void BarStool_StaticUpdate(void);
+void BarStool_Draw(void);
 void BarStool_Create(void* data);
-void BarStool_StageLoad();
-void BarStool_EditorDraw();
-void BarStool_EditorLoad();
-void BarStool_Serialize();
+void BarStool_StageLoad(void);
+void BarStool_EditorDraw(void);
+void BarStool_EditorLoad(void);
+void BarStool_Serialize(void);
 
 // Extra Entity Functions
 

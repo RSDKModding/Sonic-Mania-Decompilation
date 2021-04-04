@@ -2,17 +2,17 @@
 
 ObjectERZSetup *ERZSetup;
 
-void ERZSetup_Update()
+void ERZSetup_Update(void)
 {
 
 }
 
-void ERZSetup_LateUpdate()
+void ERZSetup_LateUpdate(void)
 {
 
 }
 
-void ERZSetup_StaticUpdate()
+void ERZSetup_StaticUpdate(void)
 {
     ERZSetup->timer += 0x10000;
     ERZSetup->timer &= 0x7FFFFFFFu;
@@ -23,7 +23,7 @@ void ERZSetup_StaticUpdate()
     }
 }
 
-void ERZSetup_Draw()
+void ERZSetup_Draw(void)
 {
 
 }
@@ -33,7 +33,7 @@ void ERZSetup_Create(void* data)
 
 }
 
-void ERZSetup_StageLoad()
+void ERZSetup_StageLoad(void)
 {
     ERZSetup->skySheet        = RSDK.LoadSpriteSheet("Phantom/Sky.gif", SCOPE_STAGE);
     RSDK.GetSceneLayer(1)->scanlineCallback = ERZSetup_ScanlineCallback;
@@ -67,17 +67,17 @@ void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
     }
 }
 
-void ERZSetup_EditorDraw()
+void ERZSetup_EditorDraw(void)
 {
 
 }
 
-void ERZSetup_EditorLoad()
+void ERZSetup_EditorLoad(void)
 {
 
 }
 
-void ERZSetup_Serialize()
+void ERZSetup_Serialize(void)
 {
 
 }

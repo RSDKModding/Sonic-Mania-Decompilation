@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSSZ1Intro *SSZ1Intro;
 
 // Standard Entity Events
-void SSZ1Intro_Update();
-void SSZ1Intro_LateUpdate();
-void SSZ1Intro_StaticUpdate();
-void SSZ1Intro_Draw();
+void SSZ1Intro_Update(void);
+void SSZ1Intro_LateUpdate(void);
+void SSZ1Intro_StaticUpdate(void);
+void SSZ1Intro_Draw(void);
 void SSZ1Intro_Create(void* data);
-void SSZ1Intro_StageLoad();
-void SSZ1Intro_EditorDraw();
-void SSZ1Intro_EditorLoad();
-void SSZ1Intro_Serialize();
+void SSZ1Intro_StageLoad(void);
+void SSZ1Intro_EditorDraw(void);
+void SSZ1Intro_EditorLoad(void);
+void SSZ1Intro_Serialize(void);
 
 // Extra Entity Functions
 

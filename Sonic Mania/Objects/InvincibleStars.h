@@ -23,15 +23,15 @@ typedef struct {
 extern ObjectInvincibleStars *InvincibleStars;
 
 // Standard Entity Events
-void InvincibleStars_Update();
-void InvincibleStars_LateUpdate();
-void InvincibleStars_StaticUpdate();
-void InvincibleStars_Draw();
+void InvincibleStars_Update(void);
+void InvincibleStars_LateUpdate(void);
+void InvincibleStars_StaticUpdate(void);
+void InvincibleStars_Draw(void);
 void InvincibleStars_Create(void* data);
-void InvincibleStars_StageLoad();
-void InvincibleStars_EditorDraw();
-void InvincibleStars_EditorLoad();
-void InvincibleStars_Serialize();
+void InvincibleStars_StageLoad(void);
+void InvincibleStars_EditorDraw(void);
+void InvincibleStars_EditorLoad(void);
+void InvincibleStars_Serialize(void);
 
 // Extra Entity Functions
 

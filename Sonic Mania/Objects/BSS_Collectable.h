@@ -65,15 +65,15 @@ typedef struct {
 extern ObjectBSS_Collectable *BSS_Collectable;
 
 // Standard Entity Events
-void BSS_Collectable_Update();
-void BSS_Collectable_LateUpdate();
-void BSS_Collectable_StaticUpdate();
-void BSS_Collectable_Draw();
+void BSS_Collectable_Update(void);
+void BSS_Collectable_LateUpdate(void);
+void BSS_Collectable_StaticUpdate(void);
+void BSS_Collectable_Draw(void);
 void BSS_Collectable_Create(void *data);
-void BSS_Collectable_StageLoad();
-void BSS_Collectable_EditorDraw();
-void BSS_Collectable_EditorLoad();
-void BSS_Collectable_Serialize();
+void BSS_Collectable_StageLoad(void);
+void BSS_Collectable_EditorDraw(void);
+void BSS_Collectable_EditorLoad(void);
+void BSS_Collectable_Serialize(void);
 
 // Extra Entity Functions
 

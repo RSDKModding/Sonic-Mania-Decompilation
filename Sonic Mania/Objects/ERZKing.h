@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectERZKing *ERZKing;
 
 // Standard Entity Events
-void ERZKing_Update();
-void ERZKing_LateUpdate();
-void ERZKing_StaticUpdate();
-void ERZKing_Draw();
+void ERZKing_Update(void);
+void ERZKing_LateUpdate(void);
+void ERZKing_StaticUpdate(void);
+void ERZKing_Draw(void);
 void ERZKing_Create(void* data);
-void ERZKing_StageLoad();
-void ERZKing_EditorDraw();
-void ERZKing_EditorLoad();
-void ERZKing_Serialize();
+void ERZKing_StageLoad(void);
+void ERZKing_EditorDraw(void);
+void ERZKing_EditorLoad(void);
+void ERZKing_Serialize(void);
 
 // Extra Entity Functions
 

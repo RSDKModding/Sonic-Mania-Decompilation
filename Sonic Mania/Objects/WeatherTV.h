@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectWeatherTV *WeatherTV;
 
 // Standard Entity Events
-void WeatherTV_Update();
-void WeatherTV_LateUpdate();
-void WeatherTV_StaticUpdate();
-void WeatherTV_Draw();
+void WeatherTV_Update(void);
+void WeatherTV_LateUpdate(void);
+void WeatherTV_StaticUpdate(void);
+void WeatherTV_Draw(void);
 void WeatherTV_Create(void* data);
-void WeatherTV_StageLoad();
-void WeatherTV_EditorDraw();
-void WeatherTV_EditorLoad();
-void WeatherTV_Serialize();
+void WeatherTV_StageLoad(void);
+void WeatherTV_EditorDraw(void);
+void WeatherTV_EditorLoad(void);
+void WeatherTV_Serialize(void);
 
 // Extra Entity Functions
 

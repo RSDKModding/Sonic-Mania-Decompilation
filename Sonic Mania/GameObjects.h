@@ -4,7 +4,8 @@
 #define maxVal(a, b) (a >= b ? a : b)
 #define minVal(a, b) (a <= b ? a : b)
 
-#define voidToInt(x) (size_t)(x)
+#define intToVoid(x) (void*)(size_t)(x)
+#define voidToInt(x) (int)(size_t)(x)
 
 // Userdata Table
 typedef struct {
@@ -73,9 +74,9 @@ typedef struct {
 // Function Table
 typedef struct {
     void (*InitGlobalVariables)(void **globals, int size);
-    void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(), void (*lateUpdate)(),
-                         void (*staticUpdate)(), void (*draw)(), void(*create)(void *), void (*stageLoad)(),
-                         void (*editorDraw)(), void (*editorLoad)(), void (*serialize)());
+    void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+                         void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void),
+                         void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
 #if RETRO_USE_PLUS
     void (*RegisterObjectContainer)(void **structPtr, const char *name, uint objectSize);
 #endif
@@ -242,8 +243,8 @@ typedef struct {
     bool32 (*IsSFXPlaying)(byte slot);
     bool32 (*ChannelActive)(byte slot);
     int (*GetChannelPos)(byte slot);
-    void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)());
-    bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)());
+    void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
+    bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
     int (*ControllerIDForInputID)(byte controllerID);
     int (*MostRecentActiveControllerID)(int a1, int a2, uint a3);
@@ -290,6 +291,8 @@ extern UserFunctionTable User;
 #endif
 extern RSDKFunctionTable RSDK;
 
+void Game_Print(const char *message, ...);
+void Game_PrintString(TextInfo *text);
 
 #include "Objects/Acetone.h"
 #include "Objects/ActClear.h"
@@ -903,9 +906,9 @@ extern RSDKFunctionTable RSDK;
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), ##object##_Update, ##object##_LateUpdate,             \
-                      ##object##_StaticUpdate, ##object##_Draw, ##object##_Create, ##object##_StageLoad, ##object##_EditorDraw, ##object##_EditorLoad,           \
-                      ##object##_Serialize)
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,             \
+                      object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,           \
+                      object##_Serialize)
 #if RETRO_USE_PLUS
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif

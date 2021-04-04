@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectBatbrain *Batbrain;
 
 // Standard Entity Events
-void Batbrain_Update();
-void Batbrain_LateUpdate();
-void Batbrain_StaticUpdate();
-void Batbrain_Draw();
+void Batbrain_Update(void);
+void Batbrain_LateUpdate(void);
+void Batbrain_StaticUpdate(void);
+void Batbrain_Draw(void);
 void Batbrain_Create(void* data);
-void Batbrain_StageLoad();
-void Batbrain_EditorDraw();
-void Batbrain_EditorLoad();
-void Batbrain_Serialize();
+void Batbrain_StageLoad(void);
+void Batbrain_EditorDraw(void);
+void Batbrain_EditorLoad(void);
+void Batbrain_Serialize(void);
 
 // Extra Entity Functions
 

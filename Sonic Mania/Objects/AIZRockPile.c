@@ -3,7 +3,7 @@
 #if RETRO_USE_PLUS
 ObjectAIZRockPile *AIZRockPile;
 
-void AIZRockPile_Update()
+void AIZRockPile_Update(void)
 {
     RSDK_THIS(AIZRockPile);
     entity         = (EntityAIZRockPile *)RSDK_sceneInfo->entity;
@@ -74,11 +74,11 @@ void AIZRockPile_Update()
     }
 }
 
-void AIZRockPile_LateUpdate() {}
+void AIZRockPile_LateUpdate(void) {}
 
-void AIZRockPile_StaticUpdate() {}
+void AIZRockPile_StaticUpdate(void) {}
 
-void AIZRockPile_Draw()
+void AIZRockPile_Draw(void)
 {
     RSDK_THIS(AIZRockPile);
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -123,7 +123,7 @@ void AIZRockPile_Create(void *data)
     }
 }
 
-void AIZRockPile_StageLoad()
+void AIZRockPile_StageLoad(void)
 {
     AIZRockPile->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
     AIZRockPile->sfx_Break   = RSDK.GetSFX("Stage/LedgeBreak3.wav");
@@ -150,11 +150,11 @@ void AIZRockPile_SpawnRocks(int *speeds)
     RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void AIZRockPile_EditorDraw() {}
+void AIZRockPile_EditorDraw(void) {}
 
-void AIZRockPile_EditorLoad() {}
+void AIZRockPile_EditorLoad(void) {}
 
-void AIZRockPile_Serialize()
+void AIZRockPile_Serialize(void)
 {
     RSDK_EDITABLE_VAR(AIZRockPile, VAR_ENUM, size);
     RSDK_EDITABLE_VAR(AIZRockPile, VAR_BOOL, smashTop);

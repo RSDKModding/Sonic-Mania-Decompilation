@@ -50,7 +50,7 @@ enum ActiveFlags {
 
 enum DefaultObjects {
     TYPE_DEFAULTOBJECT = 0,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     TYPE_DEVOUTPUT,
 #endif
     TYPE_TESTOBJECT,
@@ -80,7 +80,7 @@ struct Entity {
     bool32 interaction;
     bool32 onGround;
     byte active;
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     byte filter;
 #endif
     byte direction;
@@ -151,7 +151,7 @@ extern bool32 validDraw;
 void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize);
 #endif
 

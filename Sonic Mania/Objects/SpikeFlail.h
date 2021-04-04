@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSpikeFlail *SpikeFlail;
 
 // Standard Entity Events
-void SpikeFlail_Update();
-void SpikeFlail_LateUpdate();
-void SpikeFlail_StaticUpdate();
-void SpikeFlail_Draw();
+void SpikeFlail_Update(void);
+void SpikeFlail_LateUpdate(void);
+void SpikeFlail_StaticUpdate(void);
+void SpikeFlail_Draw(void);
 void SpikeFlail_Create(void* data);
-void SpikeFlail_StageLoad();
-void SpikeFlail_EditorDraw();
-void SpikeFlail_EditorLoad();
-void SpikeFlail_Serialize();
+void SpikeFlail_StageLoad(void);
+void SpikeFlail_EditorDraw(void);
+void SpikeFlail_EditorLoad(void);
+void SpikeFlail_Serialize(void);
 
 // Extra Entity Functions
 

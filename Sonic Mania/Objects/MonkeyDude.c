@@ -2,22 +2,22 @@
 
 ObjectMonkeyDude *MonkeyDude;
 
-void MonkeyDude_Update()
+void MonkeyDude_Update(void)
 {
 
 }
 
-void MonkeyDude_LateUpdate()
+void MonkeyDude_LateUpdate(void)
 {
 
 }
 
-void MonkeyDude_StaticUpdate()
+void MonkeyDude_StaticUpdate(void)
 {
 
 }
 
-void MonkeyDude_Draw()
+void MonkeyDude_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void MonkeyDude_Create(void* data)
 
 }
 
-void MonkeyDude_StageLoad()
+void MonkeyDude_StageLoad(void)
 {
 
 }
 
-void MonkeyDude_EditorDraw()
+void MonkeyDude_EditorDraw(void)
 {
 
 }
 
-void MonkeyDude_EditorLoad()
+void MonkeyDude_EditorLoad(void)
 {
 
 }
 
-void MonkeyDude_Serialize()
+void MonkeyDude_Serialize(void)
 {
 
 }

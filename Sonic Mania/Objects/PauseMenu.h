@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPauseMenu *PauseMenu;
 
 // Standard Entity Events
-void PauseMenu_Update();
-void PauseMenu_LateUpdate();
-void PauseMenu_StaticUpdate();
-void PauseMenu_Draw();
+void PauseMenu_Update(void);
+void PauseMenu_LateUpdate(void);
+void PauseMenu_StaticUpdate(void);
+void PauseMenu_Draw(void);
 void PauseMenu_Create(void* data);
-void PauseMenu_StageLoad();
-void PauseMenu_EditorDraw();
-void PauseMenu_EditorLoad();
-void PauseMenu_Serialize();
+void PauseMenu_StageLoad(void);
+void PauseMenu_EditorDraw(void);
+void PauseMenu_EditorLoad(void);
+void PauseMenu_Serialize(void);
 
 // Extra Entity Functions
 

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectGondola *Gondola;
 
 // Standard Entity Events
-void Gondola_Update();
-void Gondola_LateUpdate();
-void Gondola_StaticUpdate();
-void Gondola_Draw();
+void Gondola_Update(void);
+void Gondola_LateUpdate(void);
+void Gondola_StaticUpdate(void);
+void Gondola_Draw(void);
 void Gondola_Create(void* data);
-void Gondola_StageLoad();
-void Gondola_EditorDraw();
-void Gondola_EditorLoad();
-void Gondola_Serialize();
+void Gondola_StageLoad(void);
+void Gondola_EditorDraw(void);
+void Gondola_EditorLoad(void);
+void Gondola_Serialize(void);
 
 // Extra Entity Functions
 

@@ -2,7 +2,7 @@
 
 ObjectFlingRamp *FlingRamp;
 
-void FlingRamp_Update()
+void FlingRamp_Update(void)
 {
     EntityFlingRamp *entity = (EntityFlingRamp *)RSDK_sceneInfo->entity;
     EntityPlayer *player    = NULL;
@@ -26,17 +26,17 @@ void FlingRamp_Update()
     }
 }
 
-void FlingRamp_LateUpdate()
+void FlingRamp_LateUpdate(void)
 {
 
 }
 
-void FlingRamp_StaticUpdate()
+void FlingRamp_StaticUpdate(void)
 {
 
 }
 
-void FlingRamp_Draw()
+void FlingRamp_Draw(void)
 {
 
 }
@@ -50,7 +50,7 @@ void FlingRamp_Create(void* data)
     }
 }
 
-void FlingRamp_StageLoad()
+void FlingRamp_StageLoad(void)
 {
     FlingRamp->hitbox.left   = -16;
     FlingRamp->hitbox.top    = -16;
@@ -58,15 +58,15 @@ void FlingRamp_StageLoad()
     FlingRamp->hitbox.bottom = 16;
 }
 
-void FlingRamp_EditorDraw()
+void FlingRamp_EditorDraw(void)
 {
 
 }
 
-void FlingRamp_EditorLoad()
+void FlingRamp_EditorLoad(void)
 {
 
 }
 
-void FlingRamp_Serialize() { RSDK_EDITABLE_VAR(FlingRamp, VAR_UINT8, direction); }
+void FlingRamp_Serialize(void) { RSDK_EDITABLE_VAR(FlingRamp, VAR_UINT8, direction); }
 

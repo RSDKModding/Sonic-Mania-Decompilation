@@ -18,15 +18,15 @@ typedef struct {
 extern ObjectFlingRamp *FlingRamp;
 
 // Standard Entity Events
-void FlingRamp_Update();
-void FlingRamp_LateUpdate();
-void FlingRamp_StaticUpdate();
-void FlingRamp_Draw();
+void FlingRamp_Update(void);
+void FlingRamp_LateUpdate(void);
+void FlingRamp_StaticUpdate(void);
+void FlingRamp_Draw(void);
 void FlingRamp_Create(void* data);
-void FlingRamp_StageLoad();
-void FlingRamp_EditorDraw();
-void FlingRamp_EditorLoad();
-void FlingRamp_Serialize();
+void FlingRamp_StageLoad(void);
+void FlingRamp_EditorDraw(void);
+void FlingRamp_EditorLoad(void);
+void FlingRamp_Serialize(void);
 
 // Extra Entity Functions
 

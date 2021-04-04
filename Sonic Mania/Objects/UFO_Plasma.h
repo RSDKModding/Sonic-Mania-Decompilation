@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectUFO_Plasma *UFO_Plasma;
 
 // Standard Entity Events
-void UFO_Plasma_Update();
-void UFO_Plasma_LateUpdate();
-void UFO_Plasma_StaticUpdate();
-void UFO_Plasma_Draw();
+void UFO_Plasma_Update(void);
+void UFO_Plasma_LateUpdate(void);
+void UFO_Plasma_StaticUpdate(void);
+void UFO_Plasma_Draw(void);
 void UFO_Plasma_Create(void* data);
-void UFO_Plasma_StageLoad();
-void UFO_Plasma_EditorDraw();
-void UFO_Plasma_EditorLoad();
-void UFO_Plasma_Serialize();
+void UFO_Plasma_StageLoad(void);
+void UFO_Plasma_EditorDraw(void);
+void UFO_Plasma_EditorLoad(void);
+void UFO_Plasma_Serialize(void);
 
 // Extra Entity Functions
 

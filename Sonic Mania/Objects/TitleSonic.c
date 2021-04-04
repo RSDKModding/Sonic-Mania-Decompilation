@@ -2,7 +2,7 @@
 
 ObjectTitleSonic *TitleSonic;
 
-void TitleSonic_Update()
+void TitleSonic_Update(void)
 {
     RSDK_THIS(TitleSonic);
     RSDK.ProcessAnimation(&entity->data1);
@@ -10,11 +10,11 @@ void TitleSonic_Update()
         RSDK.ProcessAnimation(&entity->data2);
 }
 
-void TitleSonic_LateUpdate() {}
+void TitleSonic_LateUpdate(void) {}
 
-void TitleSonic_StaticUpdate() {}
+void TitleSonic_StaticUpdate(void) {}
 
-void TitleSonic_Draw()
+void TitleSonic_Draw(void)
 {
     RSDK_THIS(TitleSonic);
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, 160);
@@ -36,10 +36,10 @@ void TitleSonic_Create(void *data)
     }
 }
 
-void TitleSonic_StageLoad() { TitleSonic->spriteIndex = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
+void TitleSonic_StageLoad(void) { TitleSonic->spriteIndex = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
 
-void TitleSonic_EditorDraw() {}
+void TitleSonic_EditorDraw(void) {}
 
-void TitleSonic_EditorLoad() {}
+void TitleSonic_EditorLoad(void) {}
 
-void TitleSonic_Serialize() {}
+void TitleSonic_Serialize(void) {}

@@ -7,6 +7,8 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdarg.h>
 
 // ================
 // STANDARD TYPES
@@ -764,6 +766,14 @@ typedef enum {
 } CModes;
 
 typedef enum {
+    STATUS_CONTINUE = 100,
+    STATUS_OK = 200,
+    STATUS_FORBIDDEN = 403,
+    STATUS_NOTFOUND = 404,
+    STATUS_ERROR = 500
+} StatusCodes;
+
+typedef enum {
     REGION_US,
     REGION_JP,
     REGION_EU,
@@ -776,9 +786,11 @@ typedef enum {
     LANGUAGE_GE,
     LANGUAGE_SP,
     LANGUAGE_JP,
+#if RETRO_GAMEVER != VER_100
     LANGUAGE_KO,
     LANGUAGE_SC,
     LANGUAGE_TC,
+#endif
 } GameLanguages;
 
 typedef enum {

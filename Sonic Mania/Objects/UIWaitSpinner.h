@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int timer;
     bool32 flag;
     AnimationData data;
@@ -24,20 +24,20 @@ typedef struct {
 extern ObjectUIWaitSpinner *UIWaitSpinner;
 
 // Standard Entity Events
-void UIWaitSpinner_Update();
-void UIWaitSpinner_LateUpdate();
-void UIWaitSpinner_StaticUpdate();
-void UIWaitSpinner_Draw();
+void UIWaitSpinner_Update(void);
+void UIWaitSpinner_LateUpdate(void);
+void UIWaitSpinner_StaticUpdate(void);
+void UIWaitSpinner_Draw(void);
 void UIWaitSpinner_Create(void* data);
-void UIWaitSpinner_StageLoad();
-void UIWaitSpinner_EditorDraw();
-void UIWaitSpinner_EditorLoad();
-void UIWaitSpinner_Serialize();
+void UIWaitSpinner_StageLoad(void);
+void UIWaitSpinner_EditorDraw(void);
+void UIWaitSpinner_EditorLoad(void);
+void UIWaitSpinner_Serialize(void);
 
 // Extra Entity Functions
-void UIWaitSpinner_Wait();
-void UIWaitSpinner_WaitReplay();
-void UIWaitSpinner_State_Wait();
-void UIWaitSpinner_State_Wait2();
+void UIWaitSpinner_Wait(void);
+void UIWaitSpinner_WaitReplay(void);
+void UIWaitSpinner_State_Wait(void);
+void UIWaitSpinner_State_Wait2(void);
 
 #endif //!OBJ_UIWAITSPINNER_H

@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     int field_4;
     int field_8;
-    unsigned __int16 spriteIndex;
-    __int16 field_E;
+    ushort spriteIndex;
+    ushort field_E;
 } ObjectUFO_Dust;
 
 // Entity Class
@@ -28,15 +28,15 @@ typedef struct {
 extern ObjectUFO_Dust *UFO_Dust;
 
 // Standard Entity Events
-void UFO_Dust_Update();
-void UFO_Dust_LateUpdate();
-void UFO_Dust_StaticUpdate();
-void UFO_Dust_Draw();
+void UFO_Dust_Update(void);
+void UFO_Dust_LateUpdate(void);
+void UFO_Dust_StaticUpdate(void);
+void UFO_Dust_Draw(void);
 void UFO_Dust_Create(void* data);
-void UFO_Dust_StageLoad();
-void UFO_Dust_EditorDraw();
-void UFO_Dust_EditorLoad();
-void UFO_Dust_Serialize();
+void UFO_Dust_StageLoad(void);
+void UFO_Dust_EditorDraw(void);
+void UFO_Dust_EditorLoad(void);
+void UFO_Dust_Serialize(void);
 
 // Extra Entity Functions
 

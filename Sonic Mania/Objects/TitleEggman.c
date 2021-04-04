@@ -3,18 +3,18 @@
 #if RETRO_USE_PLUS
 ObjectTitleEggman *TitleEggman;
 
-void TitleEggman_Update()
+void TitleEggman_Update(void)
 {
     RSDK_THIS(TitleEggman);
     if (entity->state)
         entity->state();
 }
 
-void TitleEggman_LateUpdate() {}
+void TitleEggman_LateUpdate(void) {}
 
-void TitleEggman_StaticUpdate() {}
+void TitleEggman_StaticUpdate(void) {}
 
-void TitleEggman_Draw()
+void TitleEggman_Draw(void)
 {
     RSDK_THIS(TitleEggman);
     if (entity->state == TitleEggman_Unknown1) {
@@ -64,20 +64,20 @@ void TitleEggman_Create(void *data)
     }
 }
 
-void TitleEggman_StageLoad()
+void TitleEggman_StageLoad(void)
 {
     if (User.CheckDLC(DLC_PLUS))
         TitleEggman->spriteIndex = RSDK.LoadSpriteAnimation("Title/PlusLogo.bin", SCOPE_STAGE);
 }
 
-void TitleEggman_Unknown1()
+void TitleEggman_Unknown1(void)
 {
     RSDK_THIS(TitleEggman);
     RSDK.ProcessAnimation(&entity->data1);
     if (entity->data1.frameID == entity->data1.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
-void TitleEggman_Unknown2()
+void TitleEggman_Unknown2(void)
 {
     RSDK_THIS(TitleEggman);
     if (++entity->timer == 120) {
@@ -85,7 +85,7 @@ void TitleEggman_Unknown2()
         entity->state = TitleEggman_Unknown3;
     }
 }
-void TitleEggman_Unknown3()
+void TitleEggman_Unknown3(void)
 {
     RSDK_THIS(TitleEggman);
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
@@ -98,9 +98,9 @@ void TitleEggman_Unknown3()
     RSDK.ProcessAnimation(&entity->data4);
 }
 
-void TitleEggman_EditorDraw() {}
+void TitleEggman_EditorDraw(void) {}
 
-void TitleEggman_EditorLoad() {}
+void TitleEggman_EditorLoad(void) {}
 
-void TitleEggman_Serialize() {}
+void TitleEggman_Serialize(void) {}
 #endif

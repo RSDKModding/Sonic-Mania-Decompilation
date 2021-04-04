@@ -3,17 +3,17 @@
 #if RETRO_USE_PLUS
 ObjectBloominator *Bloominator;
 
-void Bloominator_Update()
+void Bloominator_Update(void)
 {
     RSDK_THIS(Bloominator);
     CallFunction(entity->state);
 }
 
-void Bloominator_LateUpdate() {}
+void Bloominator_LateUpdate(void) {}
 
-void Bloominator_StaticUpdate() {}
+void Bloominator_StaticUpdate(void) {}
 
-void Bloominator_Draw()
+void Bloominator_Draw(void)
 {
     RSDK_THIS(Bloominator);
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -40,7 +40,7 @@ void Bloominator_Create(void *data)
     }
 }
 
-void Bloominator_StageLoad()
+void Bloominator_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("AIZ"))
         Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
@@ -57,19 +57,19 @@ void Bloominator_StageLoad()
     DEBUGMODE_ADD_OBJ(Bloominator);
 }
 
-void Bloominator_DebugDraw()
+void Bloominator_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
 }
 
-void Bloominator_DebugSpawn()
+void Bloominator_DebugSpawn(void)
 {
     RSDK_THIS(Bloominator);
     RSDK.CreateEntity(Bloominator->objectID, 0, entity->position.x, entity->position.y);
 }
 
-void Bloominator_CheckHit()
+void Bloominator_CheckHit(void)
 {
     RSDK_THIS(Bloominator);
     foreach_active(Player, player)
@@ -79,7 +79,7 @@ void Bloominator_CheckHit()
     }
 }
 
-void Bloominator_Idle()
+void Bloominator_Idle(void)
 {
     RSDK_THIS(Bloominator);
     if (entity->activeScreens) {
@@ -95,7 +95,7 @@ void Bloominator_Idle()
         Bloominator_Create(NULL);
 }
 
-void Bloominator_State_Firing()
+void Bloominator_State_Firing(void)
 {
     RSDK_THIS(Bloominator);
     EntityBloominator *spikeBall = NULL;
@@ -127,7 +127,7 @@ void Bloominator_State_Firing()
         Bloominator_Create(NULL);
 }
 
-void Bloominator_State_Setup()
+void Bloominator_State_Setup(void)
 {
     RSDK_THIS(Bloominator);
     entity->active = ACTIVE_NORMAL;
@@ -136,7 +136,7 @@ void Bloominator_State_Setup()
     Bloominator_Idle();
 }
 
-void Bloominator_State_Spikeball()
+void Bloominator_State_Spikeball(void)
 {
     RSDK_THIS(Bloominator);
     if (RSDK.CheckOnScreen(entity, NULL)) {
@@ -157,9 +157,9 @@ void Bloominator_State_Spikeball()
     }
 }
 
-void Bloominator_EditorDraw() {}
+void Bloominator_EditorDraw(void) {}
 
-void Bloominator_EditorLoad() {}
+void Bloominator_EditorLoad(void) {}
 
-void Bloominator_Serialize() {}
+void Bloominator_Serialize(void) {}
 #endif

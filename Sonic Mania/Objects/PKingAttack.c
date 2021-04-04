@@ -2,22 +2,22 @@
 
 ObjectPKingAttack *PKingAttack;
 
-void PKingAttack_Update()
+void PKingAttack_Update(void)
 {
 
 }
 
-void PKingAttack_LateUpdate()
+void PKingAttack_LateUpdate(void)
 {
 
 }
 
-void PKingAttack_StaticUpdate()
+void PKingAttack_StaticUpdate(void)
 {
 
 }
 
-void PKingAttack_Draw()
+void PKingAttack_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PKingAttack_Create(void* data)
 
 }
 
-void PKingAttack_StageLoad()
+void PKingAttack_StageLoad(void)
 {
 
 }
 
-void PKingAttack_EditorDraw()
+void PKingAttack_EditorDraw(void)
 {
 
 }
 
-void PKingAttack_EditorLoad()
+void PKingAttack_EditorLoad(void)
 {
 
 }
 
-void PKingAttack_Serialize()
+void PKingAttack_Serialize(void)
 {
 
 }

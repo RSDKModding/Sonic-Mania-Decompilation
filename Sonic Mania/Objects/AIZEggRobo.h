@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectAIZEggRobo *AIZEggRobo;
 
 // Standard Entity Events
-void AIZEggRobo_Update();
-void AIZEggRobo_LateUpdate();
-void AIZEggRobo_StaticUpdate();
-void AIZEggRobo_Draw();
+void AIZEggRobo_Update(void);
+void AIZEggRobo_LateUpdate(void);
+void AIZEggRobo_StaticUpdate(void);
+void AIZEggRobo_Draw(void);
 void AIZEggRobo_Create(void* data);
-void AIZEggRobo_StageLoad();
-void AIZEggRobo_EditorDraw();
-void AIZEggRobo_EditorLoad();
-void AIZEggRobo_Serialize();
+void AIZEggRobo_StageLoad(void);
+void AIZEggRobo_EditorDraw(void);
+void AIZEggRobo_EditorLoad(void);
+void AIZEggRobo_Serialize(void);
 
 // Extra Entity Functions
 

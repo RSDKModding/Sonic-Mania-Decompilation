@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectMine *Mine;
 
 // Standard Entity Events
-void Mine_Update();
-void Mine_LateUpdate();
-void Mine_StaticUpdate();
-void Mine_Draw();
+void Mine_Update(void);
+void Mine_LateUpdate(void);
+void Mine_StaticUpdate(void);
+void Mine_Draw(void);
 void Mine_Create(void* data);
-void Mine_StageLoad();
-void Mine_EditorDraw();
-void Mine_EditorLoad();
-void Mine_Serialize();
+void Mine_StageLoad(void);
+void Mine_EditorDraw(void);
+void Mine_EditorLoad(void);
+void Mine_Serialize(void);
 
 // Extra Entity Functions
 

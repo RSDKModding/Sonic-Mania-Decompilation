@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCollapsingSand *CollapsingSand;
 
 // Standard Entity Events
-void CollapsingSand_Update();
-void CollapsingSand_LateUpdate();
-void CollapsingSand_StaticUpdate();
-void CollapsingSand_Draw();
+void CollapsingSand_Update(void);
+void CollapsingSand_LateUpdate(void);
+void CollapsingSand_StaticUpdate(void);
+void CollapsingSand_Draw(void);
 void CollapsingSand_Create(void* data);
-void CollapsingSand_StageLoad();
-void CollapsingSand_EditorDraw();
-void CollapsingSand_EditorLoad();
-void CollapsingSand_Serialize();
+void CollapsingSand_StageLoad(void);
+void CollapsingSand_EditorDraw(void);
+void CollapsingSand_EditorLoad(void);
+void CollapsingSand_Serialize(void);
 
 // Extra Entity Functions
 

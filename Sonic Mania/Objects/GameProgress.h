@@ -23,14 +23,14 @@ typedef struct {
 extern ObjectGameProgress *GameProgress;
 
 // Standard Entity Events
-void GameProgess_Update();
-void GameProgess_LateUpdate();
-void GameProgess_StaticUpdate();
-void GameProgess_Draw();
+void GameProgess_Update(void);
+void GameProgess_LateUpdate(void);
+void GameProgess_StaticUpdate(void);
+void GameProgess_Draw(void);
 void GameProgess_Create(void *data);
-void GameProgess_StageLoad();
-void GameProgess_EditorDraw();
-void GameProgess_EditorLoad();
-void GameProgess_Serialize();
+void GameProgess_StageLoad(void);
+void GameProgess_EditorDraw(void);
+void GameProgess_EditorLoad(void);
+void GameProgess_Serialize(void);
 
 #endif //!OBJ_GAMEPROGRESS_H

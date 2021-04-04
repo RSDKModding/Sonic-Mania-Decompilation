@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
+    void(*state)(void);
     int type;
     int timer;
     int height;
@@ -61,18 +61,18 @@ typedef struct {
 extern ObjectUFO_ItemBox *UFO_ItemBox;
 
 // Standard Entity Events
-void UFO_ItemBox_Update();
-void UFO_ItemBox_LateUpdate();
-void UFO_ItemBox_StaticUpdate();
-void UFO_ItemBox_Draw();
+void UFO_ItemBox_Update(void);
+void UFO_ItemBox_LateUpdate(void);
+void UFO_ItemBox_StaticUpdate(void);
+void UFO_ItemBox_Draw(void);
 void UFO_ItemBox_Create(void* data);
-void UFO_ItemBox_StageLoad();
-void UFO_ItemBox_EditorDraw();
-void UFO_ItemBox_EditorLoad();
-void UFO_ItemBox_Serialize();
+void UFO_ItemBox_StageLoad(void);
+void UFO_ItemBox_EditorDraw(void);
+void UFO_ItemBox_EditorLoad(void);
+void UFO_ItemBox_Serialize(void);
 
 // Extra Entity Functions
-void UFO_ItemBox_Unknown1();
-void UFO_ItemBox_Unknown2();
+void UFO_ItemBox_Unknown1(void);
+void UFO_ItemBox_Unknown2(void);
 
 #endif //!OBJ_UFO_ITEMBOX_H

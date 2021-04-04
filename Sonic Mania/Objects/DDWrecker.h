@@ -27,8 +27,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
-    void(*lateState)();
+    void(*state)(void);
+    void(*lateState)(void);
     Vector2 startPos;
     int type;
     int timer;
@@ -55,39 +55,39 @@ typedef struct {
 extern ObjectDDWrecker *DDWrecker;
 
 // Standard Entity Events
-void DDWrecker_Update();
-void DDWrecker_LateUpdate();
-void DDWrecker_StaticUpdate();
-void DDWrecker_Draw();
+void DDWrecker_Update(void);
+void DDWrecker_LateUpdate(void);
+void DDWrecker_StaticUpdate(void);
+void DDWrecker_Draw(void);
 void DDWrecker_Create(void* data);
-void DDWrecker_StageLoad();
-void DDWrecker_EditorDraw();
-void DDWrecker_EditorLoad();
-void DDWrecker_Serialize();
+void DDWrecker_StageLoad(void);
+void DDWrecker_EditorDraw(void);
+void DDWrecker_EditorLoad(void);
+void DDWrecker_Serialize(void);
 
 // Extra Entity Functions
-void DDWrecker_State_Init();
-void DDWrecker_State_InitChildren();
-void DDWrecker_State_Assemble();
-void DDWrecker_State_Unknown2();
-void DDWrecker_State_Unknown3();
-void DDWrecker_State_Unknown4();
-void DDWrecker_State_Unknown5();
-void DDWrecker_State_Unknown6();
-void DDWrecker_State_Unknown7();
-void DDWrecker_State_Unknown8();
-void DDWrecker_State_Unknown9();
-void DDWrecker_State_Unknown10();
-void DDWrecker_State_Unknown11();
-void DDWrecker_State_Unknown12();
-void DDWrecker_LateState_Unknown1();
-void DDWrecker_LateState_Unknown2();
-void DDWrecker_LateState_Unknown3();
-void DDWrecker_Hit();
-void DDWrecker_Spin();
-void DDWrecker_Spin2();
-void DDWrecker_State_Debris();
-void DDWrecker_State_Die();
-void DDWrecker_State_SpawnSignpost();
+void DDWrecker_State_Init(void);
+void DDWrecker_State_InitChildren(void);
+void DDWrecker_State_Assemble(void);
+void DDWrecker_State_Unknown2(void);
+void DDWrecker_State_Unknown3(void);
+void DDWrecker_State_Unknown4(void);
+void DDWrecker_State_Unknown5(void);
+void DDWrecker_State_Unknown6(void);
+void DDWrecker_State_Unknown7(void);
+void DDWrecker_State_Unknown8(void);
+void DDWrecker_State_Unknown9(void);
+void DDWrecker_State_Unknown10(void);
+void DDWrecker_State_Unknown11(void);
+void DDWrecker_State_Unknown12(void);
+void DDWrecker_LateState_Unknown1(void);
+void DDWrecker_LateState_Unknown2(void);
+void DDWrecker_LateState_Unknown3(void);
+void DDWrecker_Hit(void);
+void DDWrecker_Spin(void);
+void DDWrecker_Spin2(void);
+void DDWrecker_State_Debris(void);
+void DDWrecker_State_Die(void);
+void DDWrecker_State_SpawnSignpost(void);
 
 #endif //!OBJ_DDWRECKER_H

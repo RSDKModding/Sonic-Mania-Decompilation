@@ -2,22 +2,22 @@
 
 ObjectUIWidgets *UIWidgets;
 
-void UIWidgets_Update() {}
+void UIWidgets_Update(void) {}
 
-void UIWidgets_LateUpdate() {}
+void UIWidgets_LateUpdate(void) {}
 
-void UIWidgets_StaticUpdate()
+void UIWidgets_StaticUpdate(void)
 {
     ++UIWidgets->arrayIndex;
     UIWidgets->arrayIndex &= 0x7FFF;
     UIWidgets->value = UIWidgets->array1[(UIWidgets->arrayIndex >> 1) & 0xF];
 }
 
-void UIWidgets_Draw() {}
+void UIWidgets_Draw(void) {}
 
 void UIWidgets_Create(void *data) {}
 
-void UIWidgets_StageLoad()
+void UIWidgets_StageLoad(void)
 {
     UIWidgets->active                = ACTIVE_ALWAYS;
     UIWidgets->uiSpriteIndex         = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
@@ -84,7 +84,7 @@ void UIWidgets_StageLoad()
     arrPtr[60]   = 0;
 }
 
-void UIWidgets_ApplyLanguage()
+void UIWidgets_ApplyLanguage(void)
 {
     Game_Print("Apply Language %d", Localization->language);
     switch (Localization->language) {
@@ -94,9 +94,11 @@ void UIWidgets_ApplyLanguage()
         case LANGUAGE_GE: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
         case LANGUAGE_SP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
         case LANGUAGE_JP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
+#if RETRO_GAMEVER != VER_100
         case LANGUAGE_KO: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
         case LANGUAGE_SC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
         case LANGUAGE_TC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
+#endif
         default: break;
     }
 }
@@ -347,8 +349,8 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
     }
 }
 
-void UIWidgets_EditorDraw() {}
+void UIWidgets_EditorDraw(void) {}
 
-void UIWidgets_EditorLoad() {}
+void UIWidgets_EditorLoad(void) {}
 
-void UIWidgets_Serialize() {}
+void UIWidgets_Serialize(void) {}

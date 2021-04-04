@@ -2,7 +2,7 @@
 
 ObjectBSS_Message *BSS_Message;
 
-void BSS_Message_Update()
+void BSS_Message_Update(void)
 {
     RSDK_THIS(BSS_Message);
 
@@ -10,11 +10,11 @@ void BSS_Message_Update()
         entity->state();
 }
 
-void BSS_Message_LateUpdate() {}
+void BSS_Message_LateUpdate(void) {}
 
-void BSS_Message_StaticUpdate() {}
+void BSS_Message_StaticUpdate(void) {}
 
-void BSS_Message_Draw()
+void BSS_Message_Draw(void)
 {
     RSDK_THIS(BSS_Message);
     Vector2 drawPos;
@@ -57,13 +57,13 @@ void BSS_Message_Create(void *data)
     }
 }
 
-void BSS_Message_StageLoad()
+void BSS_Message_StageLoad(void)
 {
     BSS_Message->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, 0);
 }
 
-void BSS_Message_State_GetBS()
+void BSS_Message_State_GetBS(void)
 {
     RSDK_THIS(BSS_Message);
     if (entity->timer == 512) {
@@ -81,7 +81,7 @@ void BSS_Message_State_GetBS()
     }
 }
 
-void BSS_Message_State_GetBSWait()
+void BSS_Message_State_GetBSWait(void)
 {
     RSDK_THIS(BSS_Message);
     EntityBSS_Setup *setup   = (EntityBSS_Setup *)RSDK.GetEntityByID(SLOT_BSS_SETUP);
@@ -115,7 +115,7 @@ void BSS_Message_State_GetBSWait()
     }
 }
 
-void BSS_Message_State_Unknown()
+void BSS_Message_State_Unknown(void)
 {
     RSDK_THIS(BSS_Message);
     if (entity->timer >= 768) {
@@ -126,7 +126,7 @@ void BSS_Message_State_Unknown()
     }
 }
 
-void BSS_Message_State_Perfect()
+void BSS_Message_State_Perfect(void)
 {
     RSDK_THIS(BSS_Message);
     entity->timer2 -= 16;
@@ -134,7 +134,7 @@ void BSS_Message_State_Perfect()
         entity->state = BSS_Message_State_Idle;
 }
 
-void BSS_Message_State_Idle()
+void BSS_Message_State_Idle(void)
 {
     RSDK_THIS(BSS_Message);
     if (++entity->timer >= 180) {
@@ -143,22 +143,21 @@ void BSS_Message_State_Idle()
     }
 }
 
-void BSS_Message_State_Finish()
+void BSS_Message_State_Finish(void)
 {
     RSDK_THIS(BSS_Message);
     entity->timer2 += 16;
     if (entity->timer2 > 320)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
-int BSS_Message_TrackProgress_CB(int a1)
+void BSS_Message_TrackProgress_CB(int success)
 {
     RSDK_THIS(BSS_Message);
     entity->field_6C = 0;
-    // UIWaitSpinner_WaitReplay();
-    return 1;
+    UIWaitSpinner_WaitReplay();
 }
 
-void BSS_Message_LoadPrevScene()
+void BSS_Message_LoadPrevScene(void)
 {
     RSDK_THIS(BSS_Message);
 
@@ -188,14 +187,14 @@ void BSS_Message_LoadPrevScene()
             else {
                 entity->state    = BSS_Message_LoadGameState;
                 entity->field_6C = 1;
-                // UIWaitSpinner_Wait();
+                UIWaitSpinner_Wait();
                 SaveGame_TrackGameProgress(BSS_Message_TrackProgress_CB);
             }
         }
     }
 }
 
-void BSS_Message_LoadGameState()
+void BSS_Message_LoadGameState(void)
 {
     RSDK_THIS(BSS_Message);
     if (!entity->field_6C) {
@@ -214,8 +213,8 @@ void BSS_Message_LoadGameState()
     }
 }
 
-void BSS_Message_EditorDraw() {}
+void BSS_Message_EditorDraw(void) {}
 
-void BSS_Message_EditorLoad() {}
+void BSS_Message_EditorLoad(void) {}
 
-void BSS_Message_Serialize() {}
+void BSS_Message_Serialize(void) {}

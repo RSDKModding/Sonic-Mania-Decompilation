@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int field_5C;
     Vector2 startPos;
     int headingID;
@@ -25,17 +25,17 @@ typedef struct {
 extern ObjectUIHeading *UIHeading;
 
 // Standard Entity Events
-void UIHeading_Update();
-void UIHeading_LateUpdate();
-void UIHeading_StaticUpdate();
-void UIHeading_Draw();
+void UIHeading_Update(void);
+void UIHeading_LateUpdate(void);
+void UIHeading_StaticUpdate(void);
+void UIHeading_Draw(void);
 void UIHeading_Create(void* data);
-void UIHeading_StageLoad();
-void UIHeading_EditorDraw();
-void UIHeading_EditorLoad();
-void UIHeading_Serialize();
+void UIHeading_StageLoad(void);
+void UIHeading_EditorDraw(void);
+void UIHeading_EditorLoad(void);
+void UIHeading_Serialize(void);
 
 // Extra Entity Functions
-void UIHeading_LoadSprites();
+void UIHeading_LoadSprites(void);
 
 #endif //!OBJ_UIHEADING_H

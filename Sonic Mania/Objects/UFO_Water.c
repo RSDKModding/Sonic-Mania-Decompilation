@@ -2,11 +2,11 @@
 
 ObjectUFO_Water *UFO_Water;
 
-void UFO_Water_Update() {}
+void UFO_Water_Update(void) {}
 
-void UFO_Water_LateUpdate() {}
+void UFO_Water_LateUpdate(void) {}
 
-void UFO_Water_StaticUpdate()
+void UFO_Water_StaticUpdate(void)
 {
     if (!(UFO_Setup->timer & 3)) {
         UFO_Water->timer += 128;
@@ -15,14 +15,14 @@ void UFO_Water_StaticUpdate()
     }
 }
 
-void UFO_Water_Draw() {}
+void UFO_Water_Draw(void) {}
 
 void UFO_Water_Create(void *data) {}
 
-void UFO_Water_StageLoad() { UFO_Water->spriteIndex = RSDK.LoadSpriteSheet("SpecialUFO/Water.gif", SCOPE_STAGE); }
+void UFO_Water_StageLoad(void) { UFO_Water->spriteIndex = RSDK.LoadSpriteSheet("SpecialUFO/Water.gif", SCOPE_STAGE); }
 
-void UFO_Water_EditorDraw() {}
+void UFO_Water_EditorDraw(void) {}
 
-void UFO_Water_EditorLoad() {}
+void UFO_Water_EditorLoad(void) {}
 
-void UFO_Water_Serialize() {}
+void UFO_Water_Serialize(void) {}

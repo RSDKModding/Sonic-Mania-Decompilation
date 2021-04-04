@@ -2,22 +2,22 @@
 
 ObjectUIResPicker *UIResPicker;
 
-void UIResPicker_Update()
+void UIResPicker_Update(void)
 {
 
 }
 
-void UIResPicker_LateUpdate()
+void UIResPicker_LateUpdate(void)
 {
 
 }
 
-void UIResPicker_StaticUpdate()
+void UIResPicker_StaticUpdate(void)
 {
 
 }
 
-void UIResPicker_Draw()
+void UIResPicker_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void UIResPicker_Create(void* data)
 
 }
 
-void UIResPicker_StageLoad()
+void UIResPicker_StageLoad(void)
 {
 
 }
 
-void UIResPicker_EditorDraw()
+void UIResPicker_EditorDraw(void)
 {
 
 }
 
-void UIResPicker_EditorLoad()
+void UIResPicker_EditorLoad(void)
 {
 
 }
 
-void UIResPicker_Serialize()
+void UIResPicker_Serialize(void)
 {
 
 }

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectWoodChipper *WoodChipper;
 
 // Standard Entity Events
-void WoodChipper_Update();
-void WoodChipper_LateUpdate();
-void WoodChipper_StaticUpdate();
-void WoodChipper_Draw();
+void WoodChipper_Update(void);
+void WoodChipper_LateUpdate(void);
+void WoodChipper_StaticUpdate(void);
+void WoodChipper_Draw(void);
 void WoodChipper_Create(void* data);
-void WoodChipper_StageLoad();
-void WoodChipper_EditorDraw();
-void WoodChipper_EditorLoad();
-void WoodChipper_Serialize();
+void WoodChipper_StageLoad(void);
+void WoodChipper_EditorDraw(void);
+void WoodChipper_EditorLoad(void);
+void WoodChipper_Serialize(void);
 
 // Extra Entity Functions
 

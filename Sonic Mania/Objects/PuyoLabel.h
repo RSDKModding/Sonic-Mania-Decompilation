@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPuyoLabel *PuyoLabel;
 
 // Standard Entity Events
-void PuyoLabel_Update();
-void PuyoLabel_LateUpdate();
-void PuyoLabel_StaticUpdate();
-void PuyoLabel_Draw();
+void PuyoLabel_Update(void);
+void PuyoLabel_LateUpdate(void);
+void PuyoLabel_StaticUpdate(void);
+void PuyoLabel_Draw(void);
 void PuyoLabel_Create(void* data);
-void PuyoLabel_StageLoad();
-void PuyoLabel_EditorDraw();
-void PuyoLabel_EditorLoad();
-void PuyoLabel_Serialize();
+void PuyoLabel_StageLoad(void);
+void PuyoLabel_EditorDraw(void);
+void PuyoLabel_EditorLoad(void);
+void PuyoLabel_Serialize(void);
 
 // Extra Entity Functions
 

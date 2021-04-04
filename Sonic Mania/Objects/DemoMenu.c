@@ -2,7 +2,7 @@
 
 ObjectDemoMenu *DemoMenu = NULL;
 
-void DemoMenu_Update()
+void DemoMenu_Update(void)
 {
     RSDK_THIS(DemoMenu);
     if (entity->state)
@@ -19,11 +19,11 @@ void DemoMenu_Update()
     }
 }
 
-void DemoMenu_LateUpdate() {}
+void DemoMenu_LateUpdate(void) {}
 
-void DemoMenu_StaticUpdate() {}
+void DemoMenu_StaticUpdate(void) {}
 
-void DemoMenu_Draw()
+void DemoMenu_Draw(void)
 {
     RSDK_THIS(DemoMenu);
     RSDK.DrawSprite(&entity->zoneSelData, & entity->drawPosA, false);
@@ -55,7 +55,7 @@ void DemoMenu_Create(void *data)
     }
 }
 
-void DemoMenu_StageLoad() { DemoMenu->spriteIndex = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
+void DemoMenu_StageLoad(void) { DemoMenu->spriteIndex = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
 
 void DemoMenu_DrawStagePreview(Vector2 *pos, AnimationData *data, int zoneID)
 {
@@ -87,7 +87,7 @@ void DemoMenu_DrawStagePreview(Vector2 *pos, AnimationData *data, int zoneID)
         entity->inkEffect = INK_BLEND;
     }
 }
-void DemoMenu_State_Appear()
+void DemoMenu_State_Appear(void)
 {
     RSDK_THIS(DemoMenu);
     if (entity->drawPosA.y < 0x280000)
@@ -103,7 +103,7 @@ void DemoMenu_State_Appear()
         entity->drawPosC.x -= 0x200000;
     }
 }
-void DemoMenu_State_Selection()
+void DemoMenu_State_Selection(void)
 {
     RSDK_THIS(DemoMenu);
     if (RSDK_controller->keyUp.press || RSDK_controller->keyDown.press) {
@@ -132,7 +132,7 @@ void DemoMenu_State_Selection()
         RSDK.PlaySFX(TitleSetup->sfx_MenuAccept, 0, 255);
     }
 }
-void DemoMenu_State_Load()
+void DemoMenu_State_Load(void)
 {
     RSDK_THIS(DemoMenu);
     RSDK.ProcessAnimation(&entity->barFlashingData);
@@ -152,7 +152,7 @@ void DemoMenu_State_Load()
         entity->state = DemoMenu_State_Disappear;
     }
 }
-void DemoMenu_State_Disappear()
+void DemoMenu_State_Disappear(void)
 {
     EntityDemoMenu *entity; // eax
 
@@ -161,11 +161,11 @@ void DemoMenu_State_Disappear()
     entity->drawPosB.x += 0x200000;
     entity->drawPosC.x -= 0x200000;
     if (++entity->timer == 30)
-        entity = (EntityDemoMenu *)RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void DemoMenu_EditorDraw() {}
+void DemoMenu_EditorDraw(void) {}
 
-void DemoMenu_EditorLoad() {}
+void DemoMenu_EditorLoad(void) {}
 
-void DemoMenu_Serialize() {}
+void DemoMenu_Serialize(void) {}

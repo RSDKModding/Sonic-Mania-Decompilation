@@ -2,7 +2,7 @@
 
 ObjectInvisibleBlock *InvisibleBlock;
 
-void InvisibleBlock_Update()
+void InvisibleBlock_Update(void)
 {
     EntityPlayer *player         = NULL;
     EntityInvisibleBlock *entity = (EntityInvisibleBlock *)RSDK_sceneInfo->entity;
@@ -32,11 +32,11 @@ void InvisibleBlock_Update()
     entity->visible = DebugMode->active;
 }
 
-void InvisibleBlock_LateUpdate() {}
+void InvisibleBlock_LateUpdate(void) {}
 
-void InvisibleBlock_StaticUpdate() {}
+void InvisibleBlock_StaticUpdate(void) {}
 
-void InvisibleBlock_Draw() { InvisibleBlock_DrawSprites(); }
+void InvisibleBlock_Draw(void) { InvisibleBlock_DrawSprites(); }
 
 void InvisibleBlock_Create(void *data)
 {
@@ -60,14 +60,14 @@ void InvisibleBlock_Create(void *data)
     }
 }
 
-void InvisibleBlock_StageLoad()
+void InvisibleBlock_StageLoad(void)
 {
     InvisibleBlock->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(InvisibleBlock->spriteIndex, 2, &InvisibleBlock->data, true, 0);
     InvisibleBlock->data.frameID = 10;
 }
 
-void InvisibleBlock_DrawSprites()
+void InvisibleBlock_DrawSprites(void)
 {
     Vector2 drawPos;
 
@@ -87,11 +87,11 @@ void InvisibleBlock_DrawSprites()
     }
 }
 
-void InvisibleBlock_EditorDraw() {}
+void InvisibleBlock_EditorDraw(void) {}
 
-void InvisibleBlock_EditorLoad() {}
+void InvisibleBlock_EditorLoad(void) {}
 
-void InvisibleBlock_Serialize()
+void InvisibleBlock_Serialize(void)
 {
     RSDK_EDITABLE_VAR(InvisibleBlock, VAR_UINT8, width);
     RSDK_EDITABLE_VAR(InvisibleBlock, VAR_UINT8, height);

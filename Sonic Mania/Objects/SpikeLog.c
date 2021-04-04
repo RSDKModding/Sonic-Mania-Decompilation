@@ -2,18 +2,18 @@
 
 ObjectSpikeLog *SpikeLog;
 
-void SpikeLog_Update()
+void SpikeLog_Update(void)
 {
     RSDK_THIS(SpikeLog);
     if (entity->state)
         entity->state();
 }
 
-void SpikeLog_LateUpdate() {}
+void SpikeLog_LateUpdate(void) {}
 
-void SpikeLog_StaticUpdate() { SpikeLog->timer = Zone->timer / 3 & 0x1F; }
+void SpikeLog_StaticUpdate(void) { SpikeLog->timer = Zone->timer / 3 & 0x1F; }
 
-void SpikeLog_Draw()
+void SpikeLog_Draw(void)
 {
     RSDK_THIS(SpikeLog);
     RSDK.DrawSprite(&entity->data, 0, 0);
@@ -33,7 +33,7 @@ void SpikeLog_Create(void *data)
     entity->state = SpikeLog_State_Main;
 }
 
-void SpikeLog_StageLoad()
+void SpikeLog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         SpikeLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
@@ -47,7 +47,7 @@ void SpikeLog_StageLoad()
     SpikeLog->burnHitbox.bottom = 0;
 }
 
-void SpikeLog_State_Main()
+void SpikeLog_State_Main(void)
 {
     RSDK_THIS(SpikeLog);
     entity->data.frameID = (entity->frame + SpikeLog->timer) & 0x1F;
@@ -106,7 +106,7 @@ void SpikeLog_State_Main()
     }
 }
 
-void SpikeLog_State_Burn()
+void SpikeLog_State_Burn(void)
 {
     RSDK_THIS(SpikeLog);
     if (!--entity->frame) {
@@ -125,8 +125,8 @@ void SpikeLog_State_Burn()
     }
 }
 
-void SpikeLog_EditorDraw() {}
+void SpikeLog_EditorDraw(void) {}
 
-void SpikeLog_EditorLoad() {}
+void SpikeLog_EditorLoad(void) {}
 
-void SpikeLog_Serialize() { RSDK_EDITABLE_VAR(SpikeLog, VAR_UINT8, frame); }
+void SpikeLog_Serialize(void) { RSDK_EDITABLE_VAR(SpikeLog, VAR_UINT8, frame); }

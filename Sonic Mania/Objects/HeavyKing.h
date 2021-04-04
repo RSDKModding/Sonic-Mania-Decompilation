@@ -40,15 +40,15 @@ typedef struct {
 extern ObjectHeavyKing *HeavyKing;
 
 // Standard Entity Events
-void HeavyKing_Update();
-void HeavyKing_LateUpdate();
-void HeavyKing_StaticUpdate();
-void HeavyKing_Draw();
+void HeavyKing_Update(void);
+void HeavyKing_LateUpdate(void);
+void HeavyKing_StaticUpdate(void);
+void HeavyKing_Draw(void);
 void HeavyKing_Create(void* data);
-void HeavyKing_StageLoad();
-void HeavyKing_EditorDraw();
-void HeavyKing_EditorLoad();
-void HeavyKing_Serialize();
+void HeavyKing_StageLoad(void);
+void HeavyKing_EditorDraw(void);
+void HeavyKing_EditorLoad(void);
+void HeavyKing_Serialize(void);
 
 // Extra Entity Functions
 

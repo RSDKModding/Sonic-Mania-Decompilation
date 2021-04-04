@@ -2,18 +2,18 @@
 
 ObjectGameOver *GameOver;
 
-void GameOver_Update()
+void GameOver_Update(void)
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void GameOver_LateUpdate() {}
+void GameOver_LateUpdate(void) {}
 
-void GameOver_StaticUpdate() {}
+void GameOver_StaticUpdate(void) {}
 
-void GameOver_Draw()
+void GameOver_Draw(void)
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
     if (entity->state != GameOver_Unknown5 && globals->gameMode == MODE_COMPETITION) {
@@ -103,28 +103,26 @@ void GameOver_Create(void *data)
         entity->state                = GameOver_Unknown2;
         entity->drawOrder            = Zone->uiDrawHigh + 1;
 
-        EntityHUD *hud = NULL;
-        while (RSDK.GetEntities(HUD->objectID, (Entity **)&hud)) {
-            // hud->state  = HUD_Unknown6;
-            // hud->active = ACTIVE_ALWAYS;
+        foreach_all(HUD, hud) {
+            hud->state  = HUD_Unknown6;
+            hud->active = ACTIVE_ALWAYS;
         }
     }
 }
 
-void GameOver_StageLoad()
+void GameOver_StageLoad(void)
 {
     GameOver->spriteIndex   = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
     GameOver->activeScreens = 0;
 }
 
-int GameOver_SaveGameCallback(int status)
+void GameOver_SaveGameCallback(int status)
 {
     UIWaitSpinner_WaitReplay();
     RSDK.InitSceneLoad();
-    return 1;
 }
 
-void GameOver_Unknown2()
+void GameOver_Unknown2(void)
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
     if (entity->dword64 > 0)
@@ -162,10 +160,7 @@ void GameOver_Unknown2()
 
     if (entity->timer == 0) {
         if (globals->gameMode != MODE_COMPETITION) {
-            for (int i = 40; i < 0x30; ++i) {
-                RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), TYPE_BLANK, 0);
-            }
-
+            Music_RemoveStoredEntities();
             if (Music_Unknown4()) {
                 Music->dword250 = 9;
             }
@@ -182,10 +177,7 @@ void GameOver_Unknown2()
                 }
 
                 if (!flag) {
-                    for (int i = 40; i < 0x30; ++i) {
-                        RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
-                    }
-
+                    Music_RemoveStoredEntities();
                     if (Music_Unknown4()) {
                         Music->dword250 = 9;
                     }
@@ -223,10 +215,7 @@ void GameOver_Unknown2()
                 }
 
                 if (!flag) {
-                    for (int i = 40; i < 0x30; ++i) {
-                        RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
-                    }
-
+                    Music_RemoveStoredEntities();
                     if (Music_Unknown4()) {
                         Music->dword250 = 9;
                     }
@@ -247,7 +236,7 @@ void GameOver_Unknown2()
     }
 }
 
-void GameOver_Unknown3()
+void GameOver_Unknown3(void)
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
 
@@ -276,7 +265,7 @@ void GameOver_Unknown3()
         entity->state = GameOver_Unknown4;
 }
 
-void GameOver_Unknown4()
+void GameOver_Unknown4(void)
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
     ++entity->timer;
@@ -292,9 +281,7 @@ void GameOver_Unknown4()
         entity->timer = 420;
 
     if (entity->timer == 420) {
-        for (int i = 40; i < 0x30; ++i) {
-            RSDK.ResetEntityPtr(RSDK.GetEntityByID(i), 0, 0);
-        }
+        Music_RemoveStoredEntities();
         Music_FadeOut(0.05);
 
         EntityGameOver *gameOver = NULL;
@@ -312,7 +299,7 @@ void GameOver_Unknown4()
     }
 }
 
-void GameOver_Unknown5()
+void GameOver_Unknown5(void)
 {
     EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
     if (entity->timer < 120) {
@@ -399,8 +386,8 @@ void GameOver_Unknown5()
     }
 }
 
-void GameOver_EditorDraw() {}
+void GameOver_EditorDraw(void) {}
 
-void GameOver_EditorLoad() {}
+void GameOver_EditorLoad(void) {}
 
-void GameOver_Serialize() {}
+void GameOver_Serialize(void) {}

@@ -38,15 +38,15 @@ typedef struct {
 extern ObjectSSZSpotlight *SSZSpotlight;
 
 // Standard Entity Events
-void SSZSpotlight_Update();
-void SSZSpotlight_LateUpdate();
-void SSZSpotlight_StaticUpdate();
-void SSZSpotlight_Draw();
+void SSZSpotlight_Update(void);
+void SSZSpotlight_LateUpdate(void);
+void SSZSpotlight_StaticUpdate(void);
+void SSZSpotlight_Draw(void);
 void SSZSpotlight_Create(void* data);
-void SSZSpotlight_StageLoad();
-void SSZSpotlight_EditorDraw();
-void SSZSpotlight_EditorLoad();
-void SSZSpotlight_Serialize();
+void SSZSpotlight_StageLoad(void);
+void SSZSpotlight_EditorDraw(void);
+void SSZSpotlight_EditorLoad(void);
+void SSZSpotlight_Serialize(void);
 
 // Extra Entity Functions
 

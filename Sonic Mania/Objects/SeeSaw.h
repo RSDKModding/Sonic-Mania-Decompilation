@@ -24,15 +24,15 @@ typedef struct {
 extern ObjectSeeSaw *SeeSaw;
 
 // Standard Entity Events
-void SeeSaw_Update();
-void SeeSaw_LateUpdate();
-void SeeSaw_StaticUpdate();
-void SeeSaw_Draw();
+void SeeSaw_Update(void);
+void SeeSaw_LateUpdate(void);
+void SeeSaw_StaticUpdate(void);
+void SeeSaw_Draw(void);
 void SeeSaw_Create(void* data);
-void SeeSaw_StageLoad();
-void SeeSaw_EditorDraw();
-void SeeSaw_EditorLoad();
-void SeeSaw_Serialize();
+void SeeSaw_StageLoad(void);
+void SeeSaw_EditorDraw(void);
+void SeeSaw_EditorLoad(void);
+void SeeSaw_Serialize(void);
 
 // Extra Entity Functions
 

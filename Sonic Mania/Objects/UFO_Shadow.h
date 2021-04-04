@@ -23,15 +23,15 @@ typedef struct {
 extern ObjectUFO_Shadow *UFO_Shadow;
 
 // Standard Entity Events
-void UFO_Shadow_Update();
-void UFO_Shadow_LateUpdate();
-void UFO_Shadow_StaticUpdate();
-void UFO_Shadow_Draw();
+void UFO_Shadow_Update(void);
+void UFO_Shadow_LateUpdate(void);
+void UFO_Shadow_StaticUpdate(void);
+void UFO_Shadow_Draw(void);
 void UFO_Shadow_Create(void* data);
-void UFO_Shadow_StageLoad();
-void UFO_Shadow_EditorDraw();
-void UFO_Shadow_EditorLoad();
-void UFO_Shadow_Serialize();
+void UFO_Shadow_StageLoad(void);
+void UFO_Shadow_EditorDraw(void);
+void UFO_Shadow_EditorLoad(void);
+void UFO_Shadow_Serialize(void);
 
 // Extra Entity Functions
 

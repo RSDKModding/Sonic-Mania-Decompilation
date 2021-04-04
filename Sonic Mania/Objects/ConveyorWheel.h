@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectConveyorWheel *ConveyorWheel;
 
 // Standard Entity Events
-void ConveyorWheel_Update();
-void ConveyorWheel_LateUpdate();
-void ConveyorWheel_StaticUpdate();
-void ConveyorWheel_Draw();
+void ConveyorWheel_Update(void);
+void ConveyorWheel_LateUpdate(void);
+void ConveyorWheel_StaticUpdate(void);
+void ConveyorWheel_Draw(void);
 void ConveyorWheel_Create(void* data);
-void ConveyorWheel_StageLoad();
-void ConveyorWheel_EditorDraw();
-void ConveyorWheel_EditorLoad();
-void ConveyorWheel_Serialize();
+void ConveyorWheel_StageLoad(void);
+void ConveyorWheel_EditorDraw(void);
+void ConveyorWheel_EditorLoad(void);
+void ConveyorWheel_Serialize(void);
 
 // Extra Entity Functions
 

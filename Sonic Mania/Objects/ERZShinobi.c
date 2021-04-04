@@ -2,22 +2,22 @@
 
 ObjectERZShinobi *ERZShinobi;
 
-void ERZShinobi_Update()
+void ERZShinobi_Update(void)
 {
 
 }
 
-void ERZShinobi_LateUpdate()
+void ERZShinobi_LateUpdate(void)
 {
 
 }
 
-void ERZShinobi_StaticUpdate()
+void ERZShinobi_StaticUpdate(void)
 {
 
 }
 
-void ERZShinobi_Draw()
+void ERZShinobi_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void ERZShinobi_Create(void* data)
 
 }
 
-void ERZShinobi_StageLoad()
+void ERZShinobi_StageLoad(void)
 {
 
 }
 
-void ERZShinobi_EditorDraw()
+void ERZShinobi_EditorDraw(void)
 {
 
 }
 
-void ERZShinobi_EditorLoad()
+void ERZShinobi_EditorLoad(void)
 {
 
 }
 
-void ERZShinobi_Serialize()
+void ERZShinobi_Serialize(void)
 {
 
 }

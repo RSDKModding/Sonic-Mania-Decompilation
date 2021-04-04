@@ -2,7 +2,7 @@
 
 ObjectForceSpin *ForceSpin;
 
-void ForceSpin_Update()
+void ForceSpin_Update(void)
 {
     EntityPlayer *player      = NULL;
     EntityForceSpin *entity = (EntityForceSpin *)RSDK_sceneInfo->entity;
@@ -54,17 +54,17 @@ void ForceSpin_Update()
     entity->visible = DebugMode->debugActive;
 }
 
-void ForceSpin_LateUpdate()
+void ForceSpin_LateUpdate(void)
 {
 
 }
 
-void ForceSpin_StaticUpdate()
+void ForceSpin_StaticUpdate(void)
 {
 
 }
 
-void ForceSpin_Draw() { ForceSpin_DrawSprites(); }
+void ForceSpin_Draw(void) { ForceSpin_DrawSprites(); }
 
 void ForceSpin_Create(void* data)
 {
@@ -94,9 +94,9 @@ void ForceSpin_Create(void* data)
     }
 }
 
-void ForceSpin_StageLoad() { ForceSpin->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void ForceSpin_StageLoad(void) { ForceSpin->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-void ForceSpin_DrawSprites()
+void ForceSpin_DrawSprites(void)
 {
     Vector2 drawPos;
 
@@ -141,17 +141,17 @@ void ForceSpin_SetPlayerState(void *plr)
     }
 }
 
-void ForceSpin_EditorDraw()
+void ForceSpin_EditorDraw(void)
 {
 
 }
 
-void ForceSpin_EditorLoad()
+void ForceSpin_EditorLoad(void)
 {
 
 }
 
-void ForceSpin_Serialize()
+void ForceSpin_Serialize(void)
 {
     RSDK_EDITABLE_VAR(ForceSpin, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(ForceSpin, VAR_ENUM, size);

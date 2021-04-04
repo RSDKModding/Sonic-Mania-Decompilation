@@ -41,7 +41,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     TextInfo trackFile;
     TextInfo soundTestTitle;
     int trackID;
@@ -65,36 +65,36 @@ typedef struct {
 extern ObjectMusic *Music;
 
 // Standard Entity Events
-void Music_Update();
-void Music_LateUpdate();
-void Music_StaticUpdate();
-void Music_Draw();
+void Music_Update(void);
+void Music_LateUpdate(void);
+void Music_StaticUpdate(void);
+void Music_Draw(void);
 void Music_Create(void* data);
-void Music_StageLoad();
-void Music_EditorDraw();
-void Music_EditorLoad();
-void Music_Serialize();
+void Music_StageLoad(void);
+void Music_EditorDraw(void);
+void Music_EditorLoad(void);
+void Music_Serialize(void);
 
 // Extra Entity Functions
 void Music_SetMusicTrack(const char *path, byte track, uint loopPoint);
-void Music_State_PlayMusic();
+void Music_State_PlayMusic(void);
 void Music_PlayMusicTrack(byte trackID);
 void Music_PlayTrack(byte trackID);
 
 void Music_Unknown1(EntityMusic *entity);
 void Music_Unknown2(byte trackID);
 void Music_Unknown3(EntityMusic *entity);
-bool32 Music_Unknown4();
+bool32 Music_Unknown4(void);
 void Music_Unknown5(EntityMusic *entity);
 void Music_Unknown6(byte trackID, int a2);
 void Music_Unknown7(EntityMusic *entity);
-void Music_RemoveStoredEntities();
+void Music_RemoveStoredEntities(void);
 void Music_Unknown9(byte trackID, float a2);
 void Music_FadeOut(float fadeSpeed);
-void Music_State_Unknown11();
-void Music_State_Unknown12();
-void Music_State_Unknown13();
-void Music_State_FadeOut();
-void Music_State_TransitionTrack();
+void Music_State_Unknown11(void);
+void Music_State_Unknown12(void);
+void Music_State_Unknown13(void);
+void Music_State_FadeOut(void);
+void Music_State_TransitionTrack(void);
 
 #endif //!OBJ_MUSIC_H

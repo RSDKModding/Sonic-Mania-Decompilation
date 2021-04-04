@@ -24,7 +24,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     byte type;
     byte orientation;
     int timer;
@@ -38,17 +38,17 @@ typedef struct {
 extern ObjectSizeLaser *SizeLaser;
 
 // Standard Entity Events
-void SizeLaser_Update();
-void SizeLaser_LateUpdate();
-void SizeLaser_StaticUpdate();
-void SizeLaser_Draw();
+void SizeLaser_Update(void);
+void SizeLaser_LateUpdate(void);
+void SizeLaser_StaticUpdate(void);
+void SizeLaser_Draw(void);
 void SizeLaser_Create(void* data);
-void SizeLaser_StageLoad();
-void SizeLaser_EditorDraw();
-void SizeLaser_EditorLoad();
-void SizeLaser_Serialize();
+void SizeLaser_StageLoad(void);
+void SizeLaser_EditorDraw(void);
+void SizeLaser_EditorLoad(void);
+void SizeLaser_Serialize(void);
 
 // Extra Entity Functions
-bool32 SizeLaser_SizeChangeSFXCheck();
+bool32 SizeLaser_SizeChangeSFXCheck(void);
 
 #endif //!OBJ_SIZELASER_H

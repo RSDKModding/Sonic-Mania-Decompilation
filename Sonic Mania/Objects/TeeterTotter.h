@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTeeterTotter *TeeterTotter;
 
 // Standard Entity Events
-void TeeterTotter_Update();
-void TeeterTotter_LateUpdate();
-void TeeterTotter_StaticUpdate();
-void TeeterTotter_Draw();
+void TeeterTotter_Update(void);
+void TeeterTotter_LateUpdate(void);
+void TeeterTotter_StaticUpdate(void);
+void TeeterTotter_Draw(void);
 void TeeterTotter_Create(void* data);
-void TeeterTotter_StageLoad();
-void TeeterTotter_EditorDraw();
-void TeeterTotter_EditorLoad();
-void TeeterTotter_Serialize();
+void TeeterTotter_StageLoad(void);
+void TeeterTotter_EditorDraw(void);
+void TeeterTotter_EditorLoad(void);
+void TeeterTotter_Serialize(void);
 
 // Extra Entity Functions
 

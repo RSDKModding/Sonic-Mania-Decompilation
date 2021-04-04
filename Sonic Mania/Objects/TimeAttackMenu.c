@@ -3,22 +3,22 @@
 #if RETRO_USE_PLUS
 ObjectTimeAttackMenu *TimeAttackMenu;
 
-void TimeAttackMenu_Update()
+void TimeAttackMenu_Update(void)
 {
 
 }
 
-void TimeAttackMenu_LateUpdate()
+void TimeAttackMenu_LateUpdate(void)
 {
 
 }
 
-void TimeAttackMenu_StaticUpdate()
+void TimeAttackMenu_StaticUpdate(void)
 {
 
 }
 
-void TimeAttackMenu_Draw()
+void TimeAttackMenu_Draw(void)
 {
 
 }
@@ -28,22 +28,22 @@ void TimeAttackMenu_Create(void* data)
 
 }
 
-void TimeAttackMenu_StageLoad()
+void TimeAttackMenu_StageLoad(void)
 {
 
 }
 
-void TimeAttackMenu_EditorDraw()
+void TimeAttackMenu_EditorDraw(void)
 {
 
 }
 
-void TimeAttackMenu_EditorLoad()
+void TimeAttackMenu_EditorLoad(void)
 {
 
 }
 
-void TimeAttackMenu_Serialize()
+void TimeAttackMenu_Serialize(void)
 {
 
 }

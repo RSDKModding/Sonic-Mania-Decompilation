@@ -227,9 +227,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
-    void (*nextAirState)();
-    void (*nextGroundState)();
+    void (*state)(void);
+    void (*nextAirState)(void);
+    void (*nextGroundState)(void);
     EntityCamera *camera;
     AnimationData playerAnimData;
     AnimationData tailSpriteAnimData;
@@ -295,8 +295,8 @@ typedef struct {
     int sensorX[5];
     int sensorY;
     Vector2 field_194;
-    void (*inputState2)();
-    void (*inputState)();
+    void (*inputState2)(void);
+    void (*inputState)(void);
     int controllerID;
     int glideTimer;
     int up;
@@ -307,8 +307,8 @@ typedef struct {
     int jumpHold;
     int jumpAbility;
     int jumpAbilityTimer;
-    void (*movesetPtr)();
-    void (*move_Peelout)();
+    void (*movesetPtr)(void);
+    void (*move_Peelout)(void);
     int flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;
@@ -367,36 +367,36 @@ typedef struct {
 extern ObjectPlayer *Player;
 
 // Standard Entity Events
-void Player_Update();
-void Player_LateUpdate();
-void Player_StaticUpdate();
-void Player_Draw();
+void Player_Update(void);
+void Player_LateUpdate(void);
+void Player_StaticUpdate(void);
+void Player_Draw(void);
 void Player_Create(void* data);
-void Player_StageLoad();
-void Player_EditorDraw();
-void Player_EditorLoad();
-void Player_Serialize();
+void Player_StageLoad(void);
+void Player_EditorDraw(void);
+void Player_EditorLoad(void);
+void Player_Serialize(void);
 
 // Extra Entity Functions
-void Player_LoadSprites();
-void Player_LoadSpritesVS();
-void Player_SaveValues();
+void Player_LoadSprites(void);
+void Player_LoadSpritesVS(void);
+void Player_SaveValues(void);
 void Player_GiveScore(EntityPlayer *player, int score);
 void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX);
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int character);
 bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags);
-bool32 Player_CheckKeyPress();
+bool32 Player_CheckKeyPress(void);
 void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane);
 void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane);
-Entity* Player_Unknown2();
-Entity *Player_Unknown3();
+Entity* Player_Unknown2(void);
+Entity *Player_Unknown3(void);
 #if RETRO_USE_PLUS
-void Player_Unknown4();
+void Player_Unknown4(void);
 #endif
 void Player_Unknown5(EntityPlayer *player);
-void Player_Unknown7();
+void Player_Unknown7(void);
 void Player_HandleDeath(EntityPlayer *player);
 void Player_ResetState(EntityPlayer *player);
 
@@ -415,76 +415,76 @@ bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
 
 //State helpers
 void Player_ChangePhysicsState(EntityPlayer *entity);
-void Player_HandleGroundMovement();
-void Player_HandleGroundRotation();
-void Player_HandleAirMovement();
-void Player_HandleAirFriction();
+void Player_HandleGroundMovement(void);
+void Player_HandleGroundRotation(void);
+void Player_HandleAirMovement(void);
+void Player_HandleAirFriction(void);
 void Player_StartJump(EntityPlayer *entity);
-void Player_StartRoll();
+void Player_StartRoll(void);
 bool32 Player_SwapMainPlayer(bool32 flag);
-void Player_StartPeelout();
-void Player_HandleRollDeceleration();
+void Player_StartPeelout(void);
+void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
 void Player_CheckFlyCarry(EntityPlayer *player);
-void Player_P2JumpBackIn();
-void Player_Unknown9();
+void Player_P2JumpBackIn(void);
+void Player_Unknown9(void);
 
 //States
-void Player_State_None();
-void Player_State_Ground();
-void Player_State_Air();
-void Player_State_Roll();
-void Player_State_ForceRoll();
-void Player_State_RollLock();
-void Player_State_LookUp();
-void Player_State_Crouch();
-void Player_State_Spindash();
-void Player_State_Peelout();
-void Player_State_OuttaHere();
-void Player_State_Transform();
-void Player_State_Hit();
-void Player_State_Die();
-void Player_State_Drown();
-void Player_State_DropDash();
-void Player_State_BubbleBounce();
-void Player_State_TailsFlight();
-void Player_State_FlyCarried();
-void Player_State_KnuxGlideLeft();
-void Player_State_KnuxGlideRight();
-void Player_State_KnuxGlideDrop();
-void Player_State_GlideSlide();
-void Player_State_KnuxWallClimb();
-void Player_State_KnuxLedgePullUp();
+void Player_State_None(void);
+void Player_State_Ground(void);
+void Player_State_Air(void);
+void Player_State_Roll(void);
+void Player_State_ForceRoll(void);
+void Player_State_RollLock(void);
+void Player_State_LookUp(void);
+void Player_State_Crouch(void);
+void Player_State_Spindash(void);
+void Player_State_Peelout(void);
+void Player_State_OuttaHere(void);
+void Player_State_Transform(void);
+void Player_State_Hit(void);
+void Player_State_Die(void);
+void Player_State_Drown(void);
+void Player_State_DropDash(void);
+void Player_State_BubbleBounce(void);
+void Player_State_TailsFlight(void);
+void Player_State_FlyCarried(void);
+void Player_State_KnuxGlideLeft(void);
+void Player_State_KnuxGlideRight(void);
+void Player_State_KnuxGlideDrop(void);
+void Player_State_GlideSlide(void);
+void Player_State_KnuxWallClimb(void);
+void Player_State_KnuxLedgePullUp(void);
 #if RETRO_USE_PLUS
-void Player_State_MightyHammerDrop();
-void Player_State_MightyUnspin();
+void Player_State_MightyHammerDrop(void);
+void Player_State_MightyUnspin(void);
 void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox);
-void Player_State_RayGlide();
+void Player_State_RayGlide(void);
 #endif
-void Player_State_FlyIn();
-void Player_State_JumpIn();
-void Player_State_StartJumpIn();
+void Player_State_FlyIn(void);
+void Player_State_JumpIn(void);
+void Player_State_StartJumpIn(void);
 void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player);
-void Player_State_Unknown();
-void Player_State_Victory();
-void Player_State_Bubble();
-void Player_State_WaterSlide();
+void Player_State_Unknown(void);
+void Player_State_Victory(void);
+void Player_State_Bubble(void);
+void Player_State_WaterSlide(void);
 
-void Player_SonicJumpAbility();
-void Player_TailsJumpAbility();
-void Player_KnuxJumpAbility();
+void Player_SonicJumpAbility(void);
+void Player_TailsJumpAbility(void);
+void Player_KnuxJumpAbility(void);
 #if RETRO_USE_PLUS
-void Player_MightyJumpAbility();
-void Player_RayJumpAbility();
+void Player_MightyJumpAbility(void);
+void Player_RayJumpAbility(void);
 #endif
 
 //Input States
-void Player_GetP1Inputs();
-void Player_FlyCarryInputState();
-void Player_GetP2Inputs();
-void Player_GetP2NoInput();
-void Player_GetP2InputUnknown();
-void Player_GetP2PlayerInputs();
+void Player_GetP1Inputs(void);
+void Player_FlyCarryInputState(void);
+void Player_GetP2Inputs(void);
+void Player_GetP2NoInput(void);
+void Player_GetP2InputUnknown(void);
+void Player_GetP2PlayerInputs(void);
 
 #endif //!OBJ_PLAYER_H

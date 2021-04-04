@@ -2,18 +2,18 @@
 
 ObjectBuzzBomber *BuzzBomber;
 
-void BuzzBomber_Update()
+void BuzzBomber_Update(void)
 {
     RSDK_THIS(BuzzBomber);
     if (entity->state)
         entity->state();
 }
 
-void BuzzBomber_LateUpdate() {}
+void BuzzBomber_LateUpdate(void) {}
 
-void BuzzBomber_StaticUpdate() {}
+void BuzzBomber_StaticUpdate(void) {}
 
-void BuzzBomber_Draw()
+void BuzzBomber_Draw(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -72,7 +72,7 @@ void BuzzBomber_Create(void *data)
     }
 }
 
-void BuzzBomber_StageLoad()
+void BuzzBomber_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ")) {
         BuzzBomber->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
@@ -93,13 +93,13 @@ void BuzzBomber_StageLoad()
     DEBUGMODE_ADD_OBJ(BuzzBomber);
 }
 
-void BuzzBomber_DebugDraw()
+void BuzzBomber_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
 
-void BuzzBomber_DebugSpawn()
+void BuzzBomber_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
     EntityBuzzBomber *buzzBomber = (EntityBuzzBomber *)RSDK.CreateEntity(BuzzBomber->objectID, 0, entity->position.x, entity->position.y);
@@ -108,7 +108,7 @@ void BuzzBomber_DebugSpawn()
     buzzBomber->startDir  = entity->direction;
 }
 
-void BuzzBomber_CheckOnScreen()
+void BuzzBomber_CheckOnScreen(void)
 {
     RSDK_THIS(BuzzBomber);
     if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
@@ -119,7 +119,7 @@ void BuzzBomber_CheckOnScreen()
     }
 }
 
-void BuzzBomber_Unknown1()
+void BuzzBomber_Unknown1(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -142,7 +142,7 @@ void BuzzBomber_Unknown1()
     }
 }
 
-void BuzzBomber_Unknown2()
+void BuzzBomber_Unknown2(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -155,7 +155,7 @@ void BuzzBomber_Unknown2()
     BuzzBomber_Unknown3();
 }
 
-void BuzzBomber_Unknown3()
+void BuzzBomber_Unknown3(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -177,7 +177,7 @@ void BuzzBomber_Unknown3()
     BuzzBomber_CheckOnScreen();
 }
 
-void BuzzBomber_Unknown4()
+void BuzzBomber_Unknown4(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -192,7 +192,7 @@ void BuzzBomber_Unknown4()
     BuzzBomber_CheckOnScreen();
 }
 
-void BuzzBomber_Unknown5()
+void BuzzBomber_Unknown5(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -231,7 +231,7 @@ void BuzzBomber_Unknown5()
     }
 }
 
-void BuzzBomber_Unknown6()
+void BuzzBomber_Unknown6(void)
 {
     RSDK_THIS(BuzzBomber);
     RSDK.ProcessAnimation(&entity->data1);
@@ -243,7 +243,7 @@ void BuzzBomber_Unknown6()
     }
 }
 
-void BuzzBomber_Unknown7()
+void BuzzBomber_Unknown7(void)
 {
     RSDK_THIS(BuzzBomber);
     entity->position.x += entity->velocity.x;
@@ -262,11 +262,11 @@ void BuzzBomber_Unknown7()
     }
 }
 
-void BuzzBomber_EditorDraw() {}
+void BuzzBomber_EditorDraw(void) {}
 
-void BuzzBomber_EditorLoad() {}
+void BuzzBomber_EditorLoad(void) {}
 
-void BuzzBomber_Serialize()
+void BuzzBomber_Serialize(void)
 {
     RSDK_EDITABLE_VAR(BuzzBomber, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(BuzzBomber, VAR_UINT8, shotRange);

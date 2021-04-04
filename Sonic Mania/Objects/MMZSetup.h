@@ -28,15 +28,15 @@ typedef struct {
 extern ObjectMMZSetup *MMZSetup;
 
 // Standard Entity Events
-void MMZSetup_Update();
-void MMZSetup_LateUpdate();
-void MMZSetup_StaticUpdate();
-void MMZSetup_Draw();
+void MMZSetup_Update(void);
+void MMZSetup_LateUpdate(void);
+void MMZSetup_StaticUpdate(void);
+void MMZSetup_Draw(void);
 void MMZSetup_Create(void* data);
-void MMZSetup_StageLoad();
-void MMZSetup_EditorDraw();
-void MMZSetup_EditorLoad();
-void MMZSetup_Serialize();
+void MMZSetup_StageLoad(void);
+void MMZSetup_EditorDraw(void);
+void MMZSetup_EditorLoad(void);
+void MMZSetup_Serialize(void);
 
 // Extra Entity Functions
 

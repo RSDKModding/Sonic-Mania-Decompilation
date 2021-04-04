@@ -33,21 +33,21 @@ typedef struct {
 extern ObjectTimeAttackData *TimeAttackData;
 
 // Standard Entity Events
-void TimeAttackData_Update();
-void TimeAttackData_LateUpdate();
-void TimeAttackData_StaticUpdate();
-void TimeAttackData_Draw();
+void TimeAttackData_Update(void);
+void TimeAttackData_LateUpdate(void);
+void TimeAttackData_StaticUpdate(void);
+void TimeAttackData_Draw(void);
 void TimeAttackData_Create(void *data);
-void TimeAttackData_StageLoad();
-void TimeAttackData_EditorDraw();
-void TimeAttackData_EditorLoad();
-void TimeAttackData_Serialize();
+void TimeAttackData_StageLoad(void);
+void TimeAttackData_EditorDraw(void);
+void TimeAttackData_EditorLoad(void);
+void TimeAttackData_Serialize(void);
 
 //Extra Entity FUnctions
 #if RETRO_USE_PLUS
 int TimeAttackData_LoadCB(int statusCode);
-void TimeAttackData_ResetTimeAttackDB();
-void TimeAttackData_MigrateLegacyTADB();
+void TimeAttackData_ResetTimeAttackDB(void);
+void TimeAttackData_MigrateLegacyTADB(void);
 int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mode, int time);
 int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int time, void (*callback)(int));
 int TimeAttackData_SaveTimeAttackDB(void (*callback)(int));

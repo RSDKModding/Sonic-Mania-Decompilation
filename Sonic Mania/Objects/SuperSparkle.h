@@ -21,15 +21,15 @@ typedef struct {
 extern ObjectSuperSparkle *SuperSparkle;
 
 // Standard Entity Events
-void SuperSparkle_Update();
-void SuperSparkle_LateUpdate();
-void SuperSparkle_StaticUpdate();
-void SuperSparkle_Draw();
+void SuperSparkle_Update(void);
+void SuperSparkle_LateUpdate(void);
+void SuperSparkle_StaticUpdate(void);
+void SuperSparkle_Draw(void);
 void SuperSparkle_Create(void* data);
-void SuperSparkle_StageLoad();
-void SuperSparkle_EditorDraw();
-void SuperSparkle_EditorLoad();
-void SuperSparkle_Serialize();
+void SuperSparkle_StageLoad(void);
+void SuperSparkle_EditorDraw(void);
+void SuperSparkle_EditorLoad(void);
+void SuperSparkle_Serialize(void);
 
 // Extra Entity Functions
 

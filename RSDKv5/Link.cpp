@@ -2,7 +2,7 @@
 
 void *RSDKFunctionTable[FUNCTABLE_COUNT];
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 void *userFunctionTable[UDATATABLE_COUNT];
 
 enum UserdataTableIDs {
@@ -72,7 +72,7 @@ enum UserdataTableIDs {
 enum FunctionTableIDs {
     FunctionTable_InitGameOptions,
     FunctionTable_RegisterObject,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_RegisterObjectContainer,
 #endif
     FunctionTable_GetActiveEntities,
@@ -95,7 +95,7 @@ enum FunctionTableIDs {
     FunctionTable_SetDrawLayerProperties,
     FunctionTable_LoadScene,
     FunctionTable_SetGameMode,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_SetHardResetFlag,
 #endif
     FunctionTable_CheckValidScene,
@@ -104,7 +104,7 @@ enum FunctionTableIDs {
     FunctionTable_GetObjectByName,
     FunctionTable_ClearScreens,
     FunctionTable_AddScreen,
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     FunctionTable_GetFuncPtr,
 #endif
     FunctionTable_GetSettingsValue,
@@ -152,7 +152,7 @@ enum FunctionTableIDs {
     FunctionTable_Unknown71,
     FunctionTable_SetScreenSize,
     FunctionTable_SetClipBounds,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_SetScreenUnknown,
 #endif
     FunctionTable_LoadSpriteSheet,
@@ -162,12 +162,12 @@ enum FunctionTableIDs {
     FunctionTable_GetPaletteEntry,
     FunctionTable_SetActivePalette,
     FunctionTable_CopyPalette,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_LoadPalette,
 #endif
     FunctionTable_RotatePalette,
     FunctionTable_SetLimitedFade,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_BlendColours,
 #endif
     FunctionTable_DrawRect,
@@ -236,7 +236,7 @@ enum FunctionTableIDs {
     FunctionTable_GetChannelPos,
     FunctionTable_LoadVideo,
     FunctionTable_LoadImage,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_ControllerIDForInputID,
     FunctionTable_MostRecentActiveControllerID,
     FunctionTable_Unknown100,
@@ -251,12 +251,12 @@ enum FunctionTableIDs {
     FunctionTable_InputIDIsDisconnected,
     FunctionTable_ResetControllerAssignments,
 #endif
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     FunctionTable_Unknown92,
 #endif
     FunctionTable_LoadUserFile,
     FunctionTable_SaveUserFile,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_printLog,
     FunctionTable_printString,
     FunctionTable_printText,
@@ -268,17 +268,17 @@ enum FunctionTableIDs {
 #endif
     FunctionTable_Unknown105,
     FunctionTable_Unknown106,
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     FunctionTable_ClearDebugValues,
     FunctionTable_SetDebugValue,
 #endif
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     FunctionTable_PrintMessage,
 #endif
     FunctionTable_Count,
 };
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
 SKUInfo curSKU;
 UnknownInfo unknownInfo;
 #else
@@ -292,14 +292,27 @@ void NullFunc() {}
 
 void setupFunctions()
 {
-#if RETRO_USE_PLUS
-    curSKU.platform = PLATFORM_DEV;
-    curSKU.language = 0;
-    curSKU.region   = 0;
+    int language = LANGUAGE_EN;
+    int region = REGION_US;
+    int platform = PLATFORM_DEV;
+#if RETRO_PLATFORM == RETRO_WIN
+    //platform = PLATFORM_WIN;
+#elif RETRO_PLATFORM == RETRO_PS4
+    platform = PLATFORM_PS4;
+#elif RETRO_PLATFORM == RETRO_XB1
+    platform = PLATFORM_XB1;
+#elif RETRO_PLATFORM == RETRO_SWITCH
+    platform = PLATFORM_SWITCH;
+#endif
+    
+#if RETRO_REV02
+    curSKU.platform = platform;
+    curSKU.language = language;
+    curSKU.region   = region;
 #else
-    engineInfo.platformID = PLATFORM_DEV;
-    engineInfo.language   = 0;
-    engineInfo.region     = 0;
+    engineInfo.platformID = platform;
+    engineInfo.language   = language;
+    engineInfo.region     = region;
 #endif
 
     CalculateTrigAngles();
@@ -307,11 +320,11 @@ void setupFunctions()
     InitGFXSystem();
 
     memset(RSDKFunctionTable, NULL, FUNCTABLE_COUNT * sizeof(void *));
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     memset(userFunctionTable, NULL, UDATATABLE_COUNT * sizeof(void *));
 #endif
 
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     // Userdata
     addToUserFunctionTable(UserdataTable_GetUserLanguage, userCore->GetUserLanguage);
     addToUserFunctionTable(UserdataTable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
@@ -377,7 +390,7 @@ void setupFunctions()
     // Function Table
     addToRSDKFunctionTable(FunctionTable_InitGameOptions, InitGameOptions);
     addToRSDKFunctionTable(FunctionTable_RegisterObject, RegisterObject);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_RegisterObjectContainer, RegisterObjectContainer);
 #endif
     addToRSDKFunctionTable(FunctionTable_GetActiveEntities, GetActiveEntities);
@@ -400,16 +413,16 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
     addToRSDKFunctionTable(FunctionTable_LoadScene, SetScene);
     addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetHardResetFlag, SetHardResetFlag);
 #endif
     addToRSDKFunctionTable(FunctionTable_CheckValidScene, CheckValidStage);
     addToRSDKFunctionTable(FunctionTable_CheckSceneFolder, CheckSceneFolder);
     addToRSDKFunctionTable(FunctionTable_InitSceneLoad, InitSceneLoad);
     addToRSDKFunctionTable(FunctionTable_GetObjectByName, GetObjectByName);
-    addToRSDKFunctionTable(FunctionTable_ClearScreens, ClearScreens);
-    addToRSDKFunctionTable(FunctionTable_AddScreen, AddScreen);
-#if !RETRO_USE_PLUS
+    addToRSDKFunctionTable(FunctionTable_ClearScreens, ClearCameras);
+    addToRSDKFunctionTable(FunctionTable_AddScreen, AddCamera);
+#if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetFuncPtr);
 #endif
     addToRSDKFunctionTable(FunctionTable_GetSettingsValue, GetSettingsValue);
@@ -457,7 +470,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_Unknown71, NullFunc);         // Unknown71);
     addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
     addToRSDKFunctionTable(FunctionTable_SetClipBounds, SetClipBounds);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetScreenUnknown, NullFunc); // SetScreenUnknown);
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, LoadSpriteSheet);
@@ -467,12 +480,12 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_GetPaletteEntry, GetPaletteEntry);
     addToRSDKFunctionTable(FunctionTable_SetActivePalette, SetActivePalette);
     addToRSDKFunctionTable(FunctionTable_CopyPalette, CopyPalette);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_LoadPalette, LoadPalette);
 #endif
     addToRSDKFunctionTable(FunctionTable_RotatePalette, RotatePalette);
     addToRSDKFunctionTable(FunctionTable_SetLimitedFade, SetPaletteFade);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_BlendColours, BlendColours);
 #endif
     addToRSDKFunctionTable(FunctionTable_DrawRect, DrawRectangle);
@@ -541,7 +554,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_GetChannelPos, GetChannelPos);
     addToRSDKFunctionTable(FunctionTable_LoadVideo, NullFunc); // LoadVideo);
     addToRSDKFunctionTable(FunctionTable_LoadImage, LoadImage);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, NullFunc);       // Unknown98);
     addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, NullFunc); // Unknown99);
     addToRSDKFunctionTable(FunctionTable_Unknown100, NullFunc);                   // Unknown100);
@@ -556,12 +569,12 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_InputIDIsDisconnected, NullFunc);        // Unknown103);
     addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, NullFunc);   // Unknown104);
 #endif
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_Unknown92, NullFunc);
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile);
     addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile);
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_printLog, printLog);
     addToRSDKFunctionTable(FunctionTable_printString, printString);
     addToRSDKFunctionTable(FunctionTable_printText, printText);
@@ -573,10 +586,10 @@ void setupFunctions()
 #endif
     addToRSDKFunctionTable(FunctionTable_Unknown105, NullFunc); // UserDataUnknown7);
     addToRSDKFunctionTable(FunctionTable_Unknown106, NullFunc); // UserDataUnknown8);
-#if !RETRO_USE_PLUS
+#if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
 #endif
-#if RETRO_USE_PLUS
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ClearDebugValues, ClearDebugValues);
     addToRSDKFunctionTable(FunctionTable_SetDebugValue, SetDebugValue);
 #endif

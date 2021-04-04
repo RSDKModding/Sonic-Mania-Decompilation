@@ -26,15 +26,15 @@ typedef struct {
 extern ObjectUFO_SpeedLines *UFO_SpeedLines;
 
 // Standard Entity Events
-void UFO_SpeedLines_Update();
-void UFO_SpeedLines_LateUpdate();
-void UFO_SpeedLines_StaticUpdate();
-void UFO_SpeedLines_Draw();
+void UFO_SpeedLines_Update(void);
+void UFO_SpeedLines_LateUpdate(void);
+void UFO_SpeedLines_StaticUpdate(void);
+void UFO_SpeedLines_Draw(void);
 void UFO_SpeedLines_Create(void* data);
-void UFO_SpeedLines_StageLoad();
-void UFO_SpeedLines_EditorDraw();
-void UFO_SpeedLines_EditorLoad();
-void UFO_SpeedLines_Serialize();
+void UFO_SpeedLines_StageLoad(void);
+void UFO_SpeedLines_EditorDraw(void);
+void UFO_SpeedLines_EditorLoad(void);
+void UFO_SpeedLines_Serialize(void);
 
 // Extra Entity Functions
 

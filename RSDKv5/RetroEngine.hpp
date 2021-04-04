@@ -28,13 +28,57 @@ enum GamePlatforms {
     PLATFORM_DEV    = 0xFF,
 };
 
+enum GameLanguages {
+    LANGUAGE_EN,
+    LANGUAGE_FR,
+    LANGUAGE_IT,
+    LANGUAGE_GE,
+    LANGUAGE_SP,
+    LANGUAGE_JP,
+    LANGUAGE_KO,
+    LANGUAGE_SC,
+    LANGUAGE_TC,
+};
+
+enum GameRegions {
+    REGION_US,
+    REGION_JP,
+    REGION_EU,
+};
+
 #define RETRO_USE_ORIGINAL_CODE (0)
 
-#define RETRO_WIN   (0)
-#define RETRO_OSX   (1)
-#define RETRO_LINUX (2)
+#define RETRO_WIN     (0)
+#define RETRO_PS4     (1)
+#define RETRO_XB1     (2)
+#define RETRO_SWITCH  (3)
+#define RETRO_OSX     (4)
+#define RETRO_LINUX   (5)
+#define RETRO_iOS     (6)
+#define RETRO_ANDROID (7)
+#define RETRO_UWP     (8)
 
-#define RETRO_PLATFORM (RETRO_WIN)
+#if defined _WIN32
+
+#if defined WINAPI_FAMILY
+#if WINAPI_FAMILY != WINAPI_FAMILY_APP
+#define RETRO_PLATFORM   (RETRO_WIN)
+#else
+#define RETRO_PLATFORM   (RETRO_UWP)
+#endif
+#else
+#define RETRO_PLATFORM   (RETRO_WIN)
+#endif
+
+#elif defined __APPLE__
+#if __IPHONEOS__
+#define RETRO_PLATFORM   (RETRO_iOS)
+#else
+#define RETRO_PLATFORM   (RETRO_OSX)
+#endif
+#else
+#define RETRO_PLATFORM   (RETRO_WIN)
+#endif
 
 #define SCREEN_XMAX (1280)
 #define SCREEN_YSIZE (240)
@@ -60,23 +104,22 @@ enum GamePlatforms {
 #endif
 
 
-#define RETRO_USE_PLUS (1) // idk, might use this, mostly just a marker for what stuff plus/1.05 changed
+#define RETRO_REV02 (1)
 
 enum EngineStates {
-    ENGINESTATE_LOAD             = 0,
-    ENGINESTATE_REGULAR          = 1,
-    ENGINESTATE_PAUSED           = 2,
-    ENGINESTATE_FROZEN           = 3,
-    ENGINESTATE_LOAD_STEPOVER    = 4,
-    ENGINESTATE_REGULAR_STEPOVER = 5,
-    ENGINESTATE_PAUSED_STEPOVER  = 6,
-    ENGINESTATE_FROZEN_STEPOVER  = 7,
-    ENGINESTATE_DEVMENU          = 8,
-    ENGINESTATE_VIDEOPLAYBACK    = 9,
-    ENGINESTATE_SHOWPNG          = 0x0A,
-    ENGINESTATE_ERRORMSG         = 0x0B,
-    ENGINESTATE_ERRORMSG_FATAL   = 0x0C,
-    ENGINESTATE_NULL             = 0x0D,
+    ENGINESTATE_LOAD             ,
+    ENGINESTATE_REGULAR          ,
+    ENGINESTATE_PAUSED           ,
+    ENGINESTATE_FROZEN           ,
+    ENGINESTATE_STEPOVER = 4,
+    ENGINESTATE_DEVMENU = 8,
+    ENGINESTATE_VIDEOPLAYBACK = 9,
+    ENGINESTATE_SHOWPNG         ,
+#if RETRO_REV02
+    ENGINESTATE_ERRORMSG         ,
+    ENGINESTATE_ERRORMSG_FATAL  ,
+#endif
+    ENGINESTATE_NULL             ,
 };
 
 // Utils
@@ -109,7 +152,9 @@ enum SeverityModes {
 #include "Link.hpp"
 
 #include "DefaultObject.hpp"
+#if RETRO_REV02
 #include "DevOutput.hpp"
+#endif
 #include "TestObject.hpp"
 
 struct RetroEngine {
@@ -192,8 +237,10 @@ void InitScriptSystem();
 
 inline void SetEngineState(byte state)
 {
-    if (state < 4)
-        sceneInfo.state = state & 3;
+    bool32 stepOver = (sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER;
+    sceneInfo.state = state;
+    if (stepOver)
+        sceneInfo.state |= ENGINESTATE_STEPOVER;
 }
 
 extern byte *gameOptionsPtr;

@@ -3,7 +3,7 @@
 #if RETRO_USE_PLUS
 ObjectOptions *Options;
 
-void Options_Reload()
+void Options_Reload(void)
 {
     globals->optionsRAM[23] = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
     globals->optionsRAM[25] = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
@@ -27,7 +27,7 @@ void Options_Reload()
     Game_Print("optionsPtr->windowSize = %d", globals->optionsRAM[30]);
 }
 
-void Options_GetWinSize()
+void Options_GetWinSize(void)
 {
     int windowed = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
     if (windowed == 2) {
@@ -59,18 +59,18 @@ void Options_LoadCallback(int success)
     }
 }
 
-void Options_LoadOptionsBin()
+void Options_LoadOptionsBin(void)
 {
     if (RSDK_sku->platform) {
-        if (globals->optionsLoaded != 100) {
-            if (globals->optionsLoaded == 200) {
+        if (globals->optionsLoaded != STATUS_CONTINUE) {
+            if (globals->optionsLoaded == STATUS_OK) {
                 Localization->loaded = 0;
                 Localization_LoadStrings();
                 UIWidgets_ApplyLanguage();
                 UIHeading_LoadSprites();
             }
             else {
-                globals->optionsLoaded = 100;
+                globals->optionsLoaded = STATUS_CONTINUE;
                 Options->loadEntityPtr = RSDK_sceneInfo->entity;
                 Options->loadCallback  = Options_LoadCallback;
                 User.LoadUserFile("Options.bin", globals->optionsRAM, 512, Options_LoadOptionsCallback);
@@ -78,7 +78,7 @@ void Options_LoadOptionsBin()
         }
     }
     else {
-        globals->optionsLoaded = 200;
+        globals->optionsLoaded = STATUS_OK;
         Localization->loaded   = false;
         Localization_LoadStrings();
         UIWidgets_ApplyLanguage();
@@ -90,7 +90,7 @@ void Options_SaveOptionsBin(void (*callback)(int))
 {
     if (Options->state) {
         if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
-            if (globals->optionsLoaded == 200) {
+            if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = RSDK_sceneInfo->entity;
                 Options->saveCallback  = callback;
                 User.SaveUserFile("Options.bin", globals->optionsRAM, 512, Options_SaveOptionsCallback, 0);
@@ -98,7 +98,7 @@ void Options_SaveOptionsBin(void (*callback)(int))
             else {
                 Options->state = 0;
                 if (callback)
-                    callback(0);
+                    callback(false);
             }
             return;
         }
@@ -151,9 +151,9 @@ void Options_Unknown1(int *optionsRAM)
 void Options_LoadOptionsCallback(int statusCode)
 {
     bool32 status = false;
-    if (statusCode == 200 || statusCode == 404) {
+    if (statusCode == STATUS_OK || statusCode == STATUS_NOTFOUND) {
         status                 = true;
-        globals->optionsLoaded = 200;
+        globals->optionsLoaded = STATUS_OK;
         byte *optionsRAM       = (byte *)&globals->optionsRAM[21];
         Game_Print("dataPtr.language = %d", optionsRAM[2]);
         Game_Print("dataPtr.overrideLanguage = %d", globals->optionsRAM[22]);
@@ -164,7 +164,7 @@ void Options_LoadOptionsCallback(int statusCode)
     }
     else {
         status                 = false;
-        globals->optionsLoaded = 500;
+        globals->optionsLoaded = STATUS_ERROR;
     }
 
     if (Options->loadCallback) {

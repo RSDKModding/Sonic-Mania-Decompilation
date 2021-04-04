@@ -2,7 +2,7 @@
 
 ObjectUFO_HUD *UFO_HUD;
 
-void UFO_HUD_Update()
+void UFO_HUD_Update(void)
 {
     RSDK_THIS(UFO_HUD);
     if (RSDK_controller->keyY.press)
@@ -30,11 +30,11 @@ void UFO_HUD_Update()
         entity->field_58 = (UFO_Setup->timer >> 3) & 1;
 }
 
-void UFO_HUD_LateUpdate() {}
+void UFO_HUD_LateUpdate(void) {}
 
-void UFO_HUD_StaticUpdate() {}
+void UFO_HUD_StaticUpdate(void) {}
 
-void UFO_HUD_Draw()
+void UFO_HUD_Draw(void)
 {
     RSDK_THIS(UFO_HUD);
 
@@ -87,13 +87,13 @@ void UFO_HUD_Create(void *data)
     }
 }
 
-void UFO_HUD_StageLoad()
+void UFO_HUD_StageLoad(void)
 {
     UFO_HUD->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->objectID, 0);
 }
 
-void UFO_HUD_CheckLevelUp()
+void UFO_HUD_CheckLevelUp(void)
 {
     EntityUFO_HUD *hud = RSDK_GET_ENTITY(SLOT_UFO_HUD, UFO_HUD);
     if (UFO_Setup->machPoints >= UFO_Setup->machQuotas[UFO_Setup->machLevel]) {
@@ -120,7 +120,7 @@ void UFO_HUD_CheckLevelUp()
     }
 }
 
-void UFO_HUD_LevelUpMach()
+void UFO_HUD_LevelUpMach(void)
 {
     EntityUFO_HUD *hud    = RSDK_GET_ENTITY(SLOT_UFO_HUD, UFO_HUD);
     UFO_Setup->machPoints = 0;
@@ -153,8 +153,8 @@ void UFO_HUD_DrawNumbers(Vector2 *drawPos, int value)
     }
 }
 
-void UFO_HUD_EditorDraw() {}
+void UFO_HUD_EditorDraw(void) {}
 
-void UFO_HUD_EditorLoad() {}
+void UFO_HUD_EditorLoad(void) {}
 
-void UFO_HUD_Serialize() {}
+void UFO_HUD_Serialize(void) {}

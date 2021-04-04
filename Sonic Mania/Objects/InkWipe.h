@@ -19,15 +19,15 @@ typedef struct {
 extern ObjectInkWipe *InkWipe;
 
 // Standard Entity Events
-void InkWipe_Update();
-void InkWipe_LateUpdate();
-void InkWipe_StaticUpdate();
-void InkWipe_Draw();
+void InkWipe_Update(void);
+void InkWipe_LateUpdate(void);
+void InkWipe_StaticUpdate(void);
+void InkWipe_Draw(void);
 void InkWipe_Create(void* data);
-void InkWipe_StageLoad();
-void InkWipe_EditorDraw();
-void InkWipe_EditorLoad();
-void InkWipe_Serialize();
+void InkWipe_StageLoad(void);
+void InkWipe_EditorDraw(void);
+void InkWipe_EditorLoad(void);
+void InkWipe_Serialize(void);
 
 // Extra Entity Functions
 

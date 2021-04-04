@@ -22,15 +22,15 @@ typedef struct {
 extern ObjectBurningLog *BurningLog;
 
 // Standard Entity Events
-void BurningLog_Update();
-void BurningLog_LateUpdate();
-void BurningLog_StaticUpdate();
-void BurningLog_Draw();
+void BurningLog_Update(void);
+void BurningLog_LateUpdate(void);
+void BurningLog_StaticUpdate(void);
+void BurningLog_Draw(void);
 void BurningLog_Create(void* data);
-void BurningLog_StageLoad();
-void BurningLog_EditorDraw();
-void BurningLog_EditorLoad();
-void BurningLog_Serialize();
+void BurningLog_StageLoad(void);
+void BurningLog_EditorDraw(void);
+void BurningLog_EditorLoad(void);
+void BurningLog_Serialize(void);
 
 // Extra Entity Functions
 

@@ -2,22 +2,22 @@
 
 ObjectPopcornKernel *PopcornKernel;
 
-void PopcornKernel_Update()
+void PopcornKernel_Update(void)
 {
 
 }
 
-void PopcornKernel_LateUpdate()
+void PopcornKernel_LateUpdate(void)
 {
 
 }
 
-void PopcornKernel_StaticUpdate()
+void PopcornKernel_StaticUpdate(void)
 {
 
 }
 
-void PopcornKernel_Draw()
+void PopcornKernel_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void PopcornKernel_Create(void* data)
 
 }
 
-void PopcornKernel_StageLoad()
+void PopcornKernel_StageLoad(void)
 {
 
 }
 
-void PopcornKernel_EditorDraw()
+void PopcornKernel_EditorDraw(void)
 {
 
 }
 
-void PopcornKernel_EditorLoad()
+void PopcornKernel_EditorLoad(void)
 {
 
 }
 
-void PopcornKernel_Serialize()
+void PopcornKernel_Serialize(void)
 {
 
 }

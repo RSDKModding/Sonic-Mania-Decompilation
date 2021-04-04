@@ -11,7 +11,7 @@ typedef struct {
     ushort sfx_Click;
     ushort sfx_Starpost;
     int dwordC;
-    int gap10;
+    int replaySaveEnabled;
     int compSession[4];
     int field_24;
     int field_28[PLAYER_MAX];
@@ -25,8 +25,8 @@ typedef struct {
     int field_7C[4];
     int playerLives[PLAYER_MAX];
     int field_9C;
-    int field_A0;
-    void (*competitionStates[PLAYER_MAX])();
+    int superButtonPos;
+    void (*competitionStates[PLAYER_MAX])(void);
     Vector2 dwordB4[4];
     Vector2 dwordD4[4];
     Vector2 dwordF4[4];
@@ -42,35 +42,37 @@ typedef struct {
     AnimationData hyperNumbersData;
     AnimationData lifeIconsData;
     AnimationData playerIDData;
+#if RETRO_GAMEVER != VER_100
     AnimationData superButtonsData;
     AnimationData superButtonData1;
+#endif
     AnimationData taData1;
-    AnimationData superButtonData2;
+    AnimationData taData4;
     AnimationData taData2;
-    AnimationData superButtonData3;
+    AnimationData taData3;
 } EntityHUD;
 
 // Object Struct
 extern ObjectHUD *HUD;
 
 // Standard Entity Events
-void HUD_Update();
-void HUD_LateUpdate();
-void HUD_StaticUpdate();
-void HUD_Draw();
+void HUD_Update(void);
+void HUD_LateUpdate(void);
+void HUD_StaticUpdate(void);
+void HUD_Draw(void);
 void HUD_Create(void* data);
-void HUD_StageLoad();
-void HUD_EditorDraw();
-void HUD_EditorLoad();
-void HUD_Serialize();
+void HUD_StageLoad(void);
+void HUD_EditorDraw(void);
+void HUD_EditorLoad(void);
+void HUD_Serialize(void);
 
 // Extra Entity Functions
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value);
 void HUD_GetKeyFrame(AnimationData *data, int buttonID);
-void HUD_GetSuperFrames();
-void HUD_Unknown5();
-void HUD_Unknown6();
+void HUD_GetSuperFrames(void);
+void HUD_Unknown5(void);
+void HUD_Unknown6(void);
 
 #endif //!OBJ_HUD_H

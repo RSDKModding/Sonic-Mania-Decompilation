@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPopcornMachine *PopcornMachine;
 
 // Standard Entity Events
-void PopcornMachine_Update();
-void PopcornMachine_LateUpdate();
-void PopcornMachine_StaticUpdate();
-void PopcornMachine_Draw();
+void PopcornMachine_Update(void);
+void PopcornMachine_LateUpdate(void);
+void PopcornMachine_StaticUpdate(void);
+void PopcornMachine_Draw(void);
 void PopcornMachine_Create(void* data);
-void PopcornMachine_StageLoad();
-void PopcornMachine_EditorDraw();
-void PopcornMachine_EditorLoad();
-void PopcornMachine_Serialize();
+void PopcornMachine_StageLoad(void);
+void PopcornMachine_EditorDraw(void);
+void PopcornMachine_EditorLoad(void);
+void PopcornMachine_Serialize(void);
 
 // Extra Entity Functions
 

@@ -28,15 +28,15 @@ typedef struct {
 extern ObjectTMZ2Outro *TMZ2Outro;
 
 // Standard Entity Events
-void TMZ2Outro_Update();
-void TMZ2Outro_LateUpdate();
-void TMZ2Outro_StaticUpdate();
-void TMZ2Outro_Draw();
+void TMZ2Outro_Update(void);
+void TMZ2Outro_LateUpdate(void);
+void TMZ2Outro_StaticUpdate(void);
+void TMZ2Outro_Draw(void);
 void TMZ2Outro_Create(void* data);
-void TMZ2Outro_StageLoad();
-void TMZ2Outro_EditorDraw();
-void TMZ2Outro_EditorLoad();
-void TMZ2Outro_Serialize();
+void TMZ2Outro_StageLoad(void);
+void TMZ2Outro_EditorDraw(void);
+void TMZ2Outro_EditorLoad(void);
+void TMZ2Outro_Serialize(void);
 
 // Extra Entity Functions
 

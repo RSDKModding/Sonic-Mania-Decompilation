@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectColorHelpers *ColorHelpers;
 
 // Standard Entity Events
-void ColorHelpers_Update();
-void ColorHelpers_LateUpdate();
-void ColorHelpers_StaticUpdate();
-void ColorHelpers_Draw();
+void ColorHelpers_Update(void);
+void ColorHelpers_LateUpdate(void);
+void ColorHelpers_StaticUpdate(void);
+void ColorHelpers_Draw(void);
 void ColorHelpers_Create(void* data);
-void ColorHelpers_StageLoad();
-void ColorHelpers_EditorDraw();
-void ColorHelpers_EditorLoad();
-void ColorHelpers_Serialize();
+void ColorHelpers_StageLoad(void);
+void ColorHelpers_EditorDraw(void);
+void ColorHelpers_EditorLoad(void);
+void ColorHelpers_Serialize(void);
 
 // Extra Entity Functions
 

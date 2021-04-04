@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectPuyoAttack *PuyoAttack;
 
 // Standard Entity Events
-void PuyoAttack_Update();
-void PuyoAttack_LateUpdate();
-void PuyoAttack_StaticUpdate();
-void PuyoAttack_Draw();
+void PuyoAttack_Update(void);
+void PuyoAttack_LateUpdate(void);
+void PuyoAttack_StaticUpdate(void);
+void PuyoAttack_Draw(void);
 void PuyoAttack_Create(void* data);
-void PuyoAttack_StageLoad();
-void PuyoAttack_EditorDraw();
-void PuyoAttack_EditorLoad();
-void PuyoAttack_Serialize();
+void PuyoAttack_StageLoad(void);
+void PuyoAttack_EditorDraw(void);
+void PuyoAttack_EditorLoad(void);
+void PuyoAttack_Serialize(void);
 
 // Extra Entity Functions
 

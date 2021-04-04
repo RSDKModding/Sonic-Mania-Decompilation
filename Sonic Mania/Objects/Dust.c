@@ -2,24 +2,24 @@
 
 ObjectDust *Dust;
 
-void Dust_Update()
+void Dust_Update(void)
 {
 
 }
 
-void Dust_LateUpdate()
+void Dust_LateUpdate(void)
 {
     RSDK_THIS(Dust);
     if (entity->state)
         entity->state();
 }
 
-void Dust_StaticUpdate()
+void Dust_StaticUpdate(void)
 {
 
 }
 
-void Dust_Draw()
+void Dust_Draw(void)
 {
     RSDK_THIS(Dust);
     RSDK.DrawSprite(&entity->data, NULL, false);
@@ -38,9 +38,9 @@ void Dust_Create(void* data)
     }
 }
 
-void Dust_StageLoad() { Dust->spriteIndex = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
+void Dust_StageLoad(void) { Dust->spriteIndex = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
 
-void Dust_State_DropDash()
+void Dust_State_DropDash(void)
 {
     RSDK_THIS(Dust);
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
@@ -49,7 +49,7 @@ void Dust_State_DropDash()
     if (entity->data.frameID == entity->data.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
-void Dust_State_HammerDrop()
+void Dust_State_HammerDrop(void)
 {
     RSDK_THIS(Dust);
     entity->position.x += entity->velocity.x;
@@ -59,7 +59,7 @@ void Dust_State_HammerDrop()
     if (entity->data.frameID == entity->data.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
-void Dust_State_GlideSlide()
+void Dust_State_GlideSlide(void)
 {
     RSDK_THIS(Dust);
     EntityPlayer *player = (EntityPlayer *)entity->parent;
@@ -80,7 +80,7 @@ void Dust_State_GlideSlide()
             RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
-void Dust_State_Skid()
+void Dust_State_Skid(void)
 {
     RSDK_THIS(Dust);
     EntityPlayer *player = (EntityPlayer *)entity->parent;
@@ -101,7 +101,7 @@ void Dust_State_Skid()
             RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
-void Dust_State_Spindash()
+void Dust_State_Spindash(void)
 {
     RSDK_THIS(Dust);
     EntityPlayer *player = (EntityPlayer *)entity->parent;
@@ -125,7 +125,7 @@ void Dust_State_Spindash()
             RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
-void Dust_State_EggLoco()
+void Dust_State_EggLoco(void)
 {
     RSDK_THIS(Dust);
     RSDK.ProcessAnimation(&entity->data);
@@ -136,17 +136,17 @@ void Dust_State_EggLoco()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void Dust_EditorDraw()
+void Dust_EditorDraw(void)
 {
 
 }
 
-void Dust_EditorLoad()
+void Dust_EditorLoad(void)
 {
 
 }
 
-void Dust_Serialize()
+void Dust_Serialize(void)
 {
 
 }

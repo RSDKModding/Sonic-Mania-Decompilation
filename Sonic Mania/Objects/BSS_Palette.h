@@ -30,15 +30,15 @@ typedef struct {
 extern ObjectBSS_Palette *BSS_Palette;
 
 // Standard Entity Events
-void BSS_Palette_Update();
-void BSS_Palette_LateUpdate();
-void BSS_Palette_StaticUpdate();
-void BSS_Palette_Draw();
+void BSS_Palette_Update(void);
+void BSS_Palette_LateUpdate(void);
+void BSS_Palette_StaticUpdate(void);
+void BSS_Palette_Draw(void);
 void BSS_Palette_Create(void* data);
-void BSS_Palette_StageLoad();
-void BSS_Palette_EditorDraw();
-void BSS_Palette_EditorLoad();
-void BSS_Palette_Serialize();
+void BSS_Palette_StageLoad(void);
+void BSS_Palette_EditorDraw(void);
+void BSS_Palette_EditorLoad(void);
+void BSS_Palette_Serialize(void);
 
 // Extra Entity Functions
 

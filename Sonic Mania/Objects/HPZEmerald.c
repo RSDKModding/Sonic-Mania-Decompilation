@@ -2,7 +2,7 @@
 
 ObjectHPZEmerald *HPZEmerald;
 
-void HPZEmerald_Update()
+void HPZEmerald_Update(void)
 {
     EntityHPZEmerald *entity = (EntityHPZEmerald *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->data2);
@@ -36,11 +36,11 @@ void HPZEmerald_Update()
     }
 }
 
-void HPZEmerald_LateUpdate() {}
+void HPZEmerald_LateUpdate(void) {}
 
-void HPZEmerald_StaticUpdate() {}
+void HPZEmerald_StaticUpdate(void) {}
 
-void HPZEmerald_Draw()
+void HPZEmerald_Draw(void)
 {
     EntityHPZEmerald *entity = (EntityHPZEmerald *)RSDK_sceneInfo->entity;
     if (entity->field_60) {
@@ -87,10 +87,10 @@ void HPZEmerald_Create(void *data)
     }
 }
 
-void HPZEmerald_StageLoad() { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
+void HPZEmerald_StageLoad(void) { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 
-void HPZEmerald_EditorDraw() {}
+void HPZEmerald_EditorDraw(void) {}
 
-void HPZEmerald_EditorLoad() {}
+void HPZEmerald_EditorLoad(void) {}
 
-void HPZEmerald_Serialize() { RSDK_EDITABLE_VAR(HPZEmerald, VAR_UINT8, type); }
+void HPZEmerald_Serialize(void) { RSDK_EDITABLE_VAR(HPZEmerald, VAR_UINT8, type); }

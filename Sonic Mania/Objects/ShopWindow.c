@@ -2,7 +2,7 @@
 
 ObjectShopWindow *ShopWindow;
 
-void ShopWindow_Update()
+void ShopWindow_Update(void)
 {
     RSDK_THIS(ShopWindow);
     CallFunction(entity->state);
@@ -13,17 +13,17 @@ void ShopWindow_Update()
             EntityShield *shield = RSDK_GET_ENTITY((Player->playerCount + RSDK.GetEntityID(player)), Shield);
             if (shield->objectID == Shield->objectID && shield->type == SHIELD_BLUE) {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2))
-                    shield->field_6C = Zone->timer & 1;
+                    shield->flag = Zone->timer & 1;
             }
         }
     }
 }
 
-void ShopWindow_LateUpdate() {}
+void ShopWindow_LateUpdate(void) {}
 
-void ShopWindow_StaticUpdate() {}
+void ShopWindow_StaticUpdate(void) {}
 
-void ShopWindow_Draw()
+void ShopWindow_Draw(void)
 {
     RSDK_THIS(ShopWindow);
     CallFunction(entity->stateDraw);
@@ -76,22 +76,22 @@ void ShopWindow_Create(void *data)
             entity->hitbox2.left   = -8 - entity->size.x;
             RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->data, 0, 0);
         }
-        // ThisEntity = 0;
-        // foreach_all(CircleBumper, bumper) {
+        
+        foreach_all(CircleBumper, bumper) {
         //    if (RSDK.CheckObjectCollisionTouchBox(bumper, (Hitbox *)&CircleBumper[1], entity, &entity->hitbox2))
-        //        ThisEntity->drawOrder = Zone->drawOrderLow;
-        //}
+        //        bumper->drawOrder = Zone->drawOrderLow;
+        }
     }
 }
 
-void ShopWindow_StageLoad()
+void ShopWindow_StageLoad(void)
 {
     ShopWindow->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE);
     RSDK.SetPaletteMask(RSDK.GetPaletteEntry(0, 253));
     ShopWindow->sfxShatter = RSDK.GetSFX("Stage/WindowShatter.wav");
 }
 
-void ShopWindow_State_Shard()
+void ShopWindow_State_Shard(void)
 {
     RSDK_THIS(ShopWindow);
     entity->position.x += entity->velocity.x;
@@ -108,7 +108,7 @@ void ShopWindow_State_Shard()
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
-void ShopWindow_State_Shattered()
+void ShopWindow_State_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
     if (++entity->data.animationTimer == 2) {
@@ -138,11 +138,11 @@ void ShopWindow_State_Shattered()
             posY += 0x100000;
         }
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
-        RSDK.PlaySFX(ShopWindow->sfxShatter, 0, 255);
+        RSDK.PlaySFX(ShopWindow->sfxShatter, 0, 0xFF);
     }
 }
 
-void ShopWindow_State_Silhouette()
+void ShopWindow_State_Silhouette(void)
 {
     RSDK_THIS(ShopWindow);
     if (entity->shatter) {
@@ -166,7 +166,7 @@ void ShopWindow_State_Silhouette()
     }
 }
 
-void ShopWindow_Draw_Normal()
+void ShopWindow_Draw_Normal(void)
 {
     RSDK_THIS(ShopWindow);
     Vector2 drawPos;
@@ -208,13 +208,13 @@ void ShopWindow_Draw_Normal()
     }
 }
 
-void ShopWindow_State_Draw_Shard()
+void ShopWindow_State_Draw_Shard(void)
 {
     RSDK_THIS(ShopWindow);
     RSDK.DrawSprite(&entity->data, NULL, false);
 }
 
-void ShopWindow_State_Draw_Shattered()
+void ShopWindow_State_Draw_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
@@ -222,11 +222,11 @@ void ShopWindow_State_Draw_Shattered()
                   (entity->position.y >> 0x10) - screen->position.y - entity->size.y, 2 * entity->size.x, 2 * entity->size.y, 0xF0F0F0, 255, 0, true);
 }
 
-void ShopWindow_EditorDraw() {}
+void ShopWindow_EditorDraw(void) {}
 
-void ShopWindow_EditorLoad() {}
+void ShopWindow_EditorLoad(void) {}
 
-void ShopWindow_Serialize()
+void ShopWindow_Serialize(void)
 {
     RSDK_EDITABLE_VAR(ShopWindow, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(ShopWindow, VAR_BOOL, shatter);

@@ -11,7 +11,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int timer;
     int gravity;
     int rotSpeed;
@@ -24,20 +24,20 @@ typedef struct {
 extern ObjectDebris *Debris;
 
 // Standard Entity Events
-void Debris_Update();
-void Debris_LateUpdate();
-void Debris_StaticUpdate();
-void Debris_Draw();
+void Debris_Update(void);
+void Debris_LateUpdate(void);
+void Debris_StaticUpdate(void);
+void Debris_Draw(void);
 void Debris_Create(void* data);
-void Debris_StageLoad();
-void Debris_EditorDraw();
-void Debris_EditorLoad();
-void Debris_Serialize();
+void Debris_StageLoad(void);
+void Debris_EditorDraw(void);
+void Debris_EditorLoad(void);
+void Debris_Serialize(void);
 
 // Extra Entity Functions
-void Debris_State_Fall();
-void Debris_State_LightningSpark();
-void Debris_State_Unknkown();
+void Debris_State_Fall(void);
+void Debris_State_LightningSpark(void);
+void Debris_State_Unknkown(void);
 
 void Debris_Unknkown1(int spriteIndex, int *a2, int animationID);
 void Debris_Unknkown2(int spriteIndex, int *a2);

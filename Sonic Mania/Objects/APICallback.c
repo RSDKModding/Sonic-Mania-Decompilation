@@ -3,18 +3,18 @@
 #if !RETRO_USE_PLUS
 ObjectAPICallback *APICallback;
 
-void APICallback_Update()
+void APICallback_Update(void)
 {
     RSDK_THIS(APICallback);
     if (entity->state)
         entity->state();
 }
 
-void APICallback_LateUpdate() {}
+void APICallback_LateUpdate(void) {}
 
-void APICallback_StaticUpdate() {}
+void APICallback_StaticUpdate(void) {}
 
-void APICallback_Draw() {}
+void APICallback_Draw(void) {}
 
 void APICallback_Create(void *data)
 {
@@ -25,7 +25,7 @@ void APICallback_Create(void *data)
     entity->state   = (void (*)())data;
 }
 
-void APICallback_StageLoad()
+void APICallback_StageLoad(void)
 {
     APICallback->achievementsDisabled         = false;
     APICallback->active                       = ACTIVE_ALWAYS;
@@ -614,10 +614,10 @@ void APICallback_UnlockAchievement(const char *name)
     Game_Print("EMPTY UnlockAchievement(%s)", name);
 }
 
-void APICallback_EditorDraw() {}
+void APICallback_EditorDraw(void) {}
 
-void APICallback_EditorLoad() {}
+void APICallback_EditorLoad(void) {}
 
-void APICallback_Serialize() {}
+void APICallback_Serialize(void) {}
 
 #endif

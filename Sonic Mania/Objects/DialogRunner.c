@@ -3,30 +3,30 @@
 #if RETRO_USE_PLUS
 ObjectDialogRunner *DialogRunner;
 
-void DialogRunner_Update()
+void DialogRunner_Update(void)
 {
     RSDK_THIS(DialogRunner);
     if (entity->state)
         entity->state();
 }
 
-void DialogRunner_LateUpdate() {}
+void DialogRunner_LateUpdate(void) {}
 
-void DialogRunner_StaticUpdate() {}
+void DialogRunner_StaticUpdate(void) {}
 
-void DialogRunner_Draw() {}
+void DialogRunner_Draw(void) {}
 
 void DialogRunner_Create(void *data)
 {
     RSDK_THIS(DialogRunner);
     entity->active   = ACTIVE_ALWAYS;
     entity->visible  = false;
-    entity->state    = (void (*)())data;
+    entity->state    = (void (*)(void))data;
     entity->timer    = 0;
     entity->field_88 = 0;
 }
 
-void DialogRunner_StageLoad()
+void DialogRunner_StageLoad(void)
 {
     DialogRunner->field_4  = 0;
     DialogRunner->field_8  = 0;
@@ -57,7 +57,7 @@ void DialogRunner_StageLoad()
     }
 }
 
-void DialogRunner_HandleCallback()
+void DialogRunner_HandleCallback(void)
 {
     RSDK_THIS(DialogRunner);
     if (entity->timer <= 0) {
@@ -71,14 +71,14 @@ void DialogRunner_HandleCallback()
     }
 }
 
-void DialogRunner_NotifyAutoSave_CB()
+void DialogRunner_NotifyAutoSave_CB(void)
 {
     DialogRunner->field_14    = 0;
     globals->notifiedAutosave = true;
     UIWaitSpinner_WaitReplay();
 }
 
-void DialogRunner_NotifyAutoSave()
+void DialogRunner_NotifyAutoSave(void)
 {
     TextInfo info;
 
@@ -98,24 +98,24 @@ void DialogRunner_NotifyAutoSave()
     }
 }
 
-void DialogRunner_Unknown4()
+void DialogRunner_Unknown4(void)
 {
     User.UserStorageStatusUnknown4();
     User.SetUserStorageNoSave(0);
 }
 
-void DialogRunner_Unknown5()
+void DialogRunner_Unknown5(void)
 {
     User.UserStorageStatusUnknown5();
     User.SetUserStorageNoSave(1);
 }
 
-void DialogRunner_Unknown6()
+void DialogRunner_Unknown6(void)
 {
     TextInfo info;
 
     RSDK_THIS(DialogRunner);
-    if (User.UserStorageStatusUnknown2() == 100) {
+    if (User.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
         /*if (!UIDialog->activeDialog) {
             int stringID = 30;
             switch (entity->unknownID) {
@@ -235,22 +235,21 @@ void DialogRunner_ManageNotifs(int a1)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
 }
-int DialogRunner_Wait(int a1)
+void DialogRunner_Wait(int success)
 {
     UIWaitSpinner_WaitReplay();
-    return 1;
 }
-void DialogRunner_GetNextNotif()
+void DialogRunner_GetNextNotif(void)
 {
     int *saveRAM = NULL;
-    if (RSDK_sceneInfo->inEditor || User.GetUserStorageNoSave() || globals->saveLoaded != 200)
+    if (RSDK_sceneInfo->inEditor || User.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK)
         saveRAM = NULL;
     else
         saveRAM = &globals->saveRAM[0x900];
     int id             = SaveGame_GetNextNotif();
     saveRAM[id + 0x35] = true;
 }
-bool32 DialogRunner_CheckUnreadNotifs()
+bool32 DialogRunner_CheckUnreadNotifs(void)
 {
     if (!SaveGame_CountUnreadNotifs())
         return false;
@@ -258,7 +257,7 @@ bool32 DialogRunner_CheckUnreadNotifs()
         DialogRunner->entityPtr = RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_ManageNotifs, 0, 0);
     return true;
 }
-bool32 DialogRunner_NotifyAutosave()
+bool32 DialogRunner_NotifyAutosave(void)
 {
     if (!DialogRunner->field_14 && !DialogRunner->entityPtr) {
         return false;
@@ -275,9 +274,9 @@ bool32 DialogRunner_NotifyAutosave()
     }
     return true;
 }
-void DialogRunner_GetUserAuthStatus()
+void DialogRunner_GetUserAuthStatus(void)
 {
-    if (User.GetUserAuthStatus() == 403) {
+    if (User.GetUserAuthStatus() == STATUS_FORBIDDEN) {
         if (DialogRunner->field_4)
             return;
         EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown7, 0, 0);
@@ -299,9 +298,10 @@ void DialogRunner_PromptSavePreference(int id)
 {
     if (User.GetUserStorageNoSave()) {
         Game_Print("PromptSavePreference() returning due to noSave");
+        return;
     }
     Game_Print("PromptSavePreference()");
-    if (User.UserStorageStatusUnknown2() == 100) {
+    if (User.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
         Game_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
     User.SetUserStorageStatus();
@@ -309,11 +309,11 @@ void DialogRunner_PromptSavePreference(int id)
     dialogRunner->unknownID          = id;
     DialogRunner->entityPtr          = dialogRunner;
 }
-void DialogRunner_Unknown14() { DialogRunner->field_8 = 1; }
+void DialogRunner_Unknown14(void) { DialogRunner->field_8 = 1; }
 
-void DialogRunner_EditorDraw() {}
+void DialogRunner_EditorDraw(void) {}
 
-void DialogRunner_EditorLoad() {}
+void DialogRunner_EditorLoad(void) {}
 
-void DialogRunner_Serialize() {}
+void DialogRunner_Serialize(void) {}
 #endif

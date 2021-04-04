@@ -2,22 +2,22 @@
 
 ObjectWhirlpool *Whirlpool;
 
-void Whirlpool_Update()
+void Whirlpool_Update(void)
 {
 
 }
 
-void Whirlpool_LateUpdate()
+void Whirlpool_LateUpdate(void)
 {
 
 }
 
-void Whirlpool_StaticUpdate()
+void Whirlpool_StaticUpdate(void)
 {
 
 }
 
-void Whirlpool_Draw()
+void Whirlpool_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void Whirlpool_Create(void* data)
 
 }
 
-void Whirlpool_StageLoad()
+void Whirlpool_StageLoad(void)
 {
 
 }
 
-void Whirlpool_EditorDraw()
+void Whirlpool_EditorDraw(void)
 {
 
 }
 
-void Whirlpool_EditorLoad()
+void Whirlpool_EditorLoad(void)
 {
 
 }
 
-void Whirlpool_Serialize()
+void Whirlpool_Serialize(void)
 {
 
 }

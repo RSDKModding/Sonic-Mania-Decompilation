@@ -616,7 +616,6 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, AnimationData *data, by
             Scene3D *scn          = &scene3DList[sceneID];
             ushort *indices       = mdl->indices;
             int vertID            = scn->vertexCount;
-            Scene3DVertex *vertex = &scn->vertices[vertID];
             byte *faceVertCounts  = &scn->faceVertCounts[scn->faceCount];
             int indCnt            = mdl->indexCount;
             if (scn->vertLimit - vertID >= indCnt) {

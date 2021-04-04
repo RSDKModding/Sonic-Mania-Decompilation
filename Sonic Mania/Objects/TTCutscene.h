@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectTTCutscene *TTCutscene;
 
 // Standard Entity Events
-void TTCutscene_Update();
-void TTCutscene_LateUpdate();
-void TTCutscene_StaticUpdate();
-void TTCutscene_Draw();
+void TTCutscene_Update(void);
+void TTCutscene_LateUpdate(void);
+void TTCutscene_StaticUpdate(void);
+void TTCutscene_Draw(void);
 void TTCutscene_Create(void* data);
-void TTCutscene_StageLoad();
-void TTCutscene_EditorDraw();
-void TTCutscene_EditorLoad();
-void TTCutscene_Serialize();
+void TTCutscene_StageLoad(void);
+void TTCutscene_EditorDraw(void);
+void TTCutscene_EditorLoad(void);
+void TTCutscene_Serialize(void);
 
 // Extra Entity Functions
 

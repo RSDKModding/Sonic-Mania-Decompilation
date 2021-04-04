@@ -36,15 +36,15 @@ typedef struct {
 extern ObjectImageTrail *ImageTrail;
 
 // Standard Entity Events
-void ImageTrail_Update();
-void ImageTrail_LateUpdate();
-void ImageTrail_StaticUpdate();
-void ImageTrail_Draw();
+void ImageTrail_Update(void);
+void ImageTrail_LateUpdate(void);
+void ImageTrail_StaticUpdate(void);
+void ImageTrail_Draw(void);
 void ImageTrail_Create(void* data);
-void ImageTrail_StageLoad();
-void ImageTrail_EditorDraw();
-void ImageTrail_EditorLoad();
-void ImageTrail_Serialize();
+void ImageTrail_StageLoad(void);
+void ImageTrail_EditorDraw(void);
+void ImageTrail_EditorLoad(void);
+void ImageTrail_Serialize(void);
 
 // Extra Entity Functions
 

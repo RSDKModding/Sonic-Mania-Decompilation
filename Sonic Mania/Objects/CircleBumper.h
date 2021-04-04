@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectCircleBumper *CircleBumper;
 
 // Standard Entity Events
-void CircleBumper_Update();
-void CircleBumper_LateUpdate();
-void CircleBumper_StaticUpdate();
-void CircleBumper_Draw();
+void CircleBumper_Update(void);
+void CircleBumper_LateUpdate(void);
+void CircleBumper_StaticUpdate(void);
+void CircleBumper_Draw(void);
 void CircleBumper_Create(void* data);
-void CircleBumper_StageLoad();
-void CircleBumper_EditorDraw();
-void CircleBumper_EditorLoad();
-void CircleBumper_Serialize();
+void CircleBumper_StageLoad(void);
+void CircleBumper_EditorDraw(void);
+void CircleBumper_EditorLoad(void);
+void CircleBumper_Serialize(void);
 
 // Extra Entity Functions
 

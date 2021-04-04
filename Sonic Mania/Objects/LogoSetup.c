@@ -2,7 +2,7 @@
 
 ObjectLogoSetup *LogoSetup;
 
-void LogoSetup_Update()
+void LogoSetup_Update(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     if (entity->state)
@@ -10,11 +10,11 @@ void LogoSetup_Update()
     RSDK_screens->position.x = 256 - RSDK_screens->centerX;
 }
 
-void LogoSetup_LateUpdate() {}
+void LogoSetup_LateUpdate(void) {}
 
-void LogoSetup_StaticUpdate() {}
+void LogoSetup_StaticUpdate(void) {}
 
-void LogoSetup_Draw()
+void LogoSetup_Draw(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     if (entity->stateDraw)
@@ -30,19 +30,18 @@ void LogoSetup_Create(void *data)
         entity->drawOrder = 12;
         entity->stateDraw = LogoSetup_Unknown4;
 #if RETRO_USE_PLUS
-        if (RSDK_sku->region == 1)
+        if (RSDK_sku->region == REGION_JP)
 #else
-        if (RSDK_info->region == 1)
+        if (RSDK_info->region == REGION_JP)
 #endif
             entity->state = LogoSetup_CESAScreen;
         else
             entity->state = LogoSetup_SegaScreen;
-        // TODO: pre-plus
         entity->timer = 1024;
     }
 }
 
-void LogoSetup_StageLoad()
+void LogoSetup_StageLoad(void)
 {
     LogoSetup->sfx_Sega = RSDK.GetSFX("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, LogoSetup->objectID, 0);
@@ -62,7 +61,7 @@ void LogoSetup_StageLoad()
     }
 }
 
-bool32 LogoSetup_PNGCallback()
+bool32 LogoSetup_PNGCallback(void)
 {
     if (LogoSetup->timer > 120
         && (RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyStart.press || LogoSetup->timer >= 300)) {
@@ -71,7 +70,7 @@ bool32 LogoSetup_PNGCallback()
     LogoSetup->timer++;
     return false;
 }
-void LogoSetup_CESAScreen()
+void LogoSetup_CESAScreen(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     LogoSetup->timer        = 0;
@@ -79,7 +78,7 @@ void LogoSetup_CESAScreen()
     entity->timer = 1024;
     entity->state = LogoSetup_SegaScreen;
 }
-void LogoSetup_SegaScreen()
+void LogoSetup_SegaScreen(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
 
@@ -94,7 +93,7 @@ void LogoSetup_SegaScreen()
         entity->timer -= 16;
     }
 }
-void LogoSetup_Unknown2()
+void LogoSetup_Unknown2(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
 
@@ -105,7 +104,7 @@ void LogoSetup_Unknown2()
         entity->stateDraw = LogoSetup_Unknown4;
     }
 }
-void LogoSetup_Unknown3()
+void LogoSetup_Unknown3(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
 
@@ -125,14 +124,14 @@ void LogoSetup_Unknown3()
         entity->timer += 16;
     }
 }
-void LogoSetup_Unknown4()
+void LogoSetup_Unknown4(void)
 {
     EntityLogoSetup *entity = (EntityLogoSetup *)RSDK_sceneInfo->entity;
     RSDK.FillScreen(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
 }
 
-void LogoSetup_EditorDraw() {}
+void LogoSetup_EditorDraw(void) {}
 
-void LogoSetup_EditorLoad() {}
+void LogoSetup_EditorLoad(void) {}
 
-void LogoSetup_Serialize() {}
+void LogoSetup_Serialize(void) {}

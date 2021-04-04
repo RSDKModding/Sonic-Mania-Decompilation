@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectSol *Sol;
 
 // Standard Entity Events
-void Sol_Update();
-void Sol_LateUpdate();
-void Sol_StaticUpdate();
-void Sol_Draw();
+void Sol_Update(void);
+void Sol_LateUpdate(void);
+void Sol_StaticUpdate(void);
+void Sol_Draw(void);
 void Sol_Create(void* data);
-void Sol_StageLoad();
-void Sol_EditorDraw();
-void Sol_EditorLoad();
-void Sol_Serialize();
+void Sol_StageLoad(void);
+void Sol_EditorDraw(void);
+void Sol_EditorLoad(void);
+void Sol_Serialize(void);
 
 // Extra Entity Functions
 

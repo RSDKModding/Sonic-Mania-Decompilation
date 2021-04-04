@@ -13,8 +13,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)();
-    void(*stateDraw)();
+    void(*state)(void);
+    void(*stateDraw)(void);
     Vector2 size;
     bool32 shatter;
     bool32 silhouette;
@@ -30,22 +30,22 @@ typedef struct {
 extern ObjectShopWindow *ShopWindow;
 
 // Standard Entity Events
-void ShopWindow_Update();
-void ShopWindow_LateUpdate();
-void ShopWindow_StaticUpdate();
-void ShopWindow_Draw();
+void ShopWindow_Update(void);
+void ShopWindow_LateUpdate(void);
+void ShopWindow_StaticUpdate(void);
+void ShopWindow_Draw(void);
 void ShopWindow_Create(void* data);
-void ShopWindow_StageLoad();
-void ShopWindow_EditorDraw();
-void ShopWindow_EditorLoad();
-void ShopWindow_Serialize();
+void ShopWindow_StageLoad(void);
+void ShopWindow_EditorDraw(void);
+void ShopWindow_EditorLoad(void);
+void ShopWindow_Serialize(void);
 
 // Extra Entity Functions
-void ShopWindow_State_Shard();
-void ShopWindow_State_Shattered();
-void ShopWindow_State_Silhouette();
-void ShopWindow_Draw_Normal();
-void ShopWindow_State_Draw_Shard();
-void ShopWindow_State_Draw_Shattered();
+void ShopWindow_State_Shard(void);
+void ShopWindow_State_Shattered(void);
+void ShopWindow_State_Silhouette(void);
+void ShopWindow_Draw_Normal(void);
+void ShopWindow_State_Draw_Shard(void);
+void ShopWindow_State_Draw_Shattered(void);
 
 #endif //!OBJ_SHOPWINDOW_H

@@ -2,22 +2,22 @@
 
 ObjectLottoBall *LottoBall;
 
-void LottoBall_Update()
+void LottoBall_Update(void)
 {
 
 }
 
-void LottoBall_LateUpdate()
+void LottoBall_LateUpdate(void)
 {
 
 }
 
-void LottoBall_StaticUpdate()
+void LottoBall_StaticUpdate(void)
 {
 
 }
 
-void LottoBall_Draw()
+void LottoBall_Draw(void)
 {
 
 }
@@ -27,22 +27,22 @@ void LottoBall_Create(void* data)
 
 }
 
-void LottoBall_StageLoad()
+void LottoBall_StageLoad(void)
 {
 
 }
 
-void LottoBall_EditorDraw()
+void LottoBall_EditorDraw(void)
 {
 
 }
 
-void LottoBall_EditorLoad()
+void LottoBall_EditorLoad(void)
 {
 
 }
 
-void LottoBall_Serialize()
+void LottoBall_Serialize(void)
 {
 
 }

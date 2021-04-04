@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectAquis *Aquis;
 
 // Standard Entity Events
-void Aquis_Update();
-void Aquis_LateUpdate();
-void Aquis_StaticUpdate();
-void Aquis_Draw();
+void Aquis_Update(void);
+void Aquis_LateUpdate(void);
+void Aquis_StaticUpdate(void);
+void Aquis_Draw(void);
 void Aquis_Create(void* data);
-void Aquis_StageLoad();
-void Aquis_EditorDraw();
-void Aquis_EditorLoad();
-void Aquis_Serialize();
+void Aquis_StageLoad(void);
+void Aquis_EditorDraw(void);
+void Aquis_EditorLoad(void);
+void Aquis_Serialize(void);
 
 // Extra Entity Functions
 

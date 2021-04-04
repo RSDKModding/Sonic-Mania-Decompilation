@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int field_5C;
     int timer;
     Vector2 startPos;
@@ -26,27 +26,27 @@ typedef struct {
 extern ObjectMotobug *Motobug;
 
 // Standard Entity Events
-void Motobug_Update();
-void Motobug_LateUpdate();
-void Motobug_StaticUpdate();
-void Motobug_Draw();
+void Motobug_Update(void);
+void Motobug_LateUpdate(void);
+void Motobug_StaticUpdate(void);
+void Motobug_Draw(void);
 void Motobug_Create(void* data);
-void Motobug_StageLoad();
-void Motobug_EditorDraw();
-void Motobug_EditorLoad();
-void Motobug_Serialize();
+void Motobug_StageLoad(void);
+void Motobug_EditorDraw(void);
+void Motobug_EditorLoad(void);
+void Motobug_Serialize(void);
 
 // Extra Entity Functions
-void Motobug_DebugDraw();
-void Motobug_DebugSpawn();
-void Motobug_CheckOnScreen();
-void Motobug_CheckPlayerCollisions();
+void Motobug_DebugDraw(void);
+void Motobug_DebugSpawn(void);
+void Motobug_CheckOnScreen(void);
+void Motobug_CheckPlayerCollisions(void);
 //States
-void Motobug_State_Fall();
-void Motobug_State_HandleMove();
-void Motobug_State_Move2();
-void Motobug_State_Move();
-void Motobug_State_Smoke();
-void Motobug_State_Turn();
+void Motobug_State_Fall(void);
+void Motobug_State_HandleMove(void);
+void Motobug_State_Move2(void);
+void Motobug_State_Move(void);
+void Motobug_State_Smoke(void);
+void Motobug_State_Turn(void);
 
 #endif //!OBJ_MOTOBUG_H

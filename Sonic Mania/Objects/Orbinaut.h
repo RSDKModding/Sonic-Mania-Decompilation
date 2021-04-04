@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectOrbinaut *Orbinaut;
 
 // Standard Entity Events
-void Orbinaut_Update();
-void Orbinaut_LateUpdate();
-void Orbinaut_StaticUpdate();
-void Orbinaut_Draw();
+void Orbinaut_Update(void);
+void Orbinaut_LateUpdate(void);
+void Orbinaut_StaticUpdate(void);
+void Orbinaut_Draw(void);
 void Orbinaut_Create(void* data);
-void Orbinaut_StageLoad();
-void Orbinaut_EditorDraw();
-void Orbinaut_EditorLoad();
-void Orbinaut_Serialize();
+void Orbinaut_StageLoad(void);
+void Orbinaut_EditorDraw(void);
+void Orbinaut_EditorLoad(void);
+void Orbinaut_Serialize(void);
 
 // Extra Entity Functions
 

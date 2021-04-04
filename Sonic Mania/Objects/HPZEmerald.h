@@ -25,15 +25,15 @@ typedef struct {
 extern ObjectHPZEmerald *HPZEmerald;
 
 // Standard Entity Events
-void HPZEmerald_Update();
-void HPZEmerald_LateUpdate();
-void HPZEmerald_StaticUpdate();
-void HPZEmerald_Draw();
+void HPZEmerald_Update(void);
+void HPZEmerald_LateUpdate(void);
+void HPZEmerald_StaticUpdate(void);
+void HPZEmerald_Draw(void);
 void HPZEmerald_Create(void* data);
-void HPZEmerald_StageLoad();
-void HPZEmerald_EditorDraw();
-void HPZEmerald_EditorLoad();
-void HPZEmerald_Serialize();
+void HPZEmerald_StageLoad(void);
+void HPZEmerald_EditorDraw(void);
+void HPZEmerald_EditorLoad(void);
+void HPZEmerald_Serialize(void);
 
 // Extra Entity Functions
 

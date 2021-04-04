@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectUIRankButton *UIRankButton;
 
 // Standard Entity Events
-void UIRankButton_Update();
-void UIRankButton_LateUpdate();
-void UIRankButton_StaticUpdate();
-void UIRankButton_Draw();
+void UIRankButton_Update(void);
+void UIRankButton_LateUpdate(void);
+void UIRankButton_StaticUpdate(void);
+void UIRankButton_Draw(void);
 void UIRankButton_Create(void* data);
-void UIRankButton_StageLoad();
-void UIRankButton_EditorDraw();
-void UIRankButton_EditorLoad();
-void UIRankButton_Serialize();
+void UIRankButton_StageLoad(void);
+void UIRankButton_EditorDraw(void);
+void UIRankButton_EditorLoad(void);
+void UIRankButton_Serialize(void);
 
 // Extra Entity Functions
 

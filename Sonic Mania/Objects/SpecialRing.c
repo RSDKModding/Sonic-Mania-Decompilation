@@ -2,18 +2,18 @@
 
 ObjectSpecialRing *SpecialRing;
 
-void SpecialRing_Update()
+void SpecialRing_Update(void)
 {
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
     if (entity->state)
         entity->state();
 }
 
-void SpecialRing_LateUpdate() {}
+void SpecialRing_LateUpdate(void) {}
 
-void SpecialRing_StaticUpdate() {}
+void SpecialRing_StaticUpdate(void) {}
 
-void SpecialRing_Draw()
+void SpecialRing_Draw(void)
 {
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
     if (entity->state == SpecialRing_State_Warp) {
@@ -49,7 +49,7 @@ void SpecialRing_Create(void *data)
     }
 }
 
-void SpecialRing_StageLoad()
+void SpecialRing_StageLoad(void)
 {
     SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
     SpecialRing->modelIndex  = RSDK.LoadMesh("Global/SpecialRing.bin", SCOPE_STAGE);
@@ -109,18 +109,18 @@ void SpecialRing_StageLoad()
     globals->specialRingID = 0;
 }
 
-void SpecialRing_DebugDraw()
+void SpecialRing_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
-void SpecialRing_DebugSpawn()
+void SpecialRing_DebugSpawn(void)
 {
     EntitySpecialRing *entity =
         (EntitySpecialRing *)RSDK.CreateEntity(SpecialRing->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
-    entity->enabled = 1;
+    entity->enabled = true;
 }
-void SpecialRing_StartWarp()
+void SpecialRing_StartWarp(void)
 {
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
     if (++entity->warpTimer == 30) {
@@ -135,19 +135,11 @@ void SpecialRing_StartWarp()
         if (globals->gameMode == MODE_ENCORE)
             RSDK_sceneInfo->listPos += 7;
 #endif
-        EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
-        zone->screenID   = 4;
-        zone->timer      = 0;
-        zone->fadeTimer      = 10;
-        zone->fadeColour      = 0xF0F0F0;
-        zone->state      = Zone_Unknown13;
-        zone->stateDraw  = Zone_Unknown12;
-        zone->visible    = true;
-        zone->drawOrder  = 15;
+        Zone_Unknown1(10, 0xF0F0F0);
         RSDK.StopChannel(Music->slotID);
     }
 }
-void SpecialRing_State_Warp()
+void SpecialRing_State_Warp(void)
 {
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
     RSDK.ProcessAnimation(&entity->warpData);
@@ -184,7 +176,7 @@ void SpecialRing_State_Warp()
         }
     }
 }
-void SpecialRing_State_Normal()
+void SpecialRing_State_Normal(void)
 {
     EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
     entity->angleZ            = (entity->angleZ + 4) & 0x3FF;
@@ -220,9 +212,9 @@ void SpecialRing_State_Normal()
                     entity->state   = SpecialRing_State_Warp;
                     int *saveRAM    = SaveGame->saveRAM;
                     if (saveRAM[28] != 0x7F && entity->id) {
-                        player->visible             = 0;
-                        player->active              = 0;
-                        RSDK_sceneInfo->timeEnabled = 0;
+                        player->visible             = false;
+                        player->active              = ACTIVE_NEVER;
+                        RSDK_sceneInfo->timeEnabled = false;
                     }
                     else {
                         Player_GiveRings(50, player, true);
@@ -240,11 +232,11 @@ void SpecialRing_State_Normal()
     }
 }
 
-void SpecialRing_EditorDraw() {}
+void SpecialRing_EditorDraw(void) {}
 
-void SpecialRing_EditorLoad() {}
+void SpecialRing_EditorLoad(void) {}
 
-void SpecialRing_Serialize()
+void SpecialRing_Serialize(void)
 {
     RSDK_EDITABLE_VAR(SpecialRing, VAR_ENUM, id);
     RSDK_EDITABLE_VAR(SpecialRing, VAR_ENUM, planeFilter);

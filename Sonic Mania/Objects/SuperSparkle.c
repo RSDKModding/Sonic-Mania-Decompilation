@@ -2,7 +2,7 @@
 
 ObjectSuperSparkle *SuperSparkle;
 
-void SuperSparkle_Update()
+void SuperSparkle_Update(void)
 {
     EntitySuperSparkle *entity = (EntitySuperSparkle *)RSDK_sceneInfo->entity;
     EntityPlayer *player       = (EntityPlayer *)entity->player;
@@ -54,17 +54,17 @@ void SuperSparkle_Update()
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void SuperSparkle_LateUpdate()
+void SuperSparkle_LateUpdate(void)
 {
 
 }
 
-void SuperSparkle_StaticUpdate()
+void SuperSparkle_StaticUpdate(void)
 {
 
 }
 
-void SuperSparkle_Draw()
+void SuperSparkle_Draw(void)
 {
 
 }
@@ -78,19 +78,19 @@ void SuperSparkle_Create(void *data)
     }
 }
 
-void SuperSparkle_StageLoad() { SuperSparkle->spriteIndex = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
+void SuperSparkle_StageLoad(void) { SuperSparkle->spriteIndex = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
 
-void SuperSparkle_EditorDraw()
+void SuperSparkle_EditorDraw(void)
 {
 
 }
 
-void SuperSparkle_EditorLoad()
+void SuperSparkle_EditorLoad(void)
 {
 
 }
 
-void SuperSparkle_Serialize()
+void SuperSparkle_Serialize(void)
 {
 
 }

@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectClucker *Clucker;
 
 // Standard Entity Events
-void Clucker_Update();
-void Clucker_LateUpdate();
-void Clucker_StaticUpdate();
-void Clucker_Draw();
+void Clucker_Update(void);
+void Clucker_LateUpdate(void);
+void Clucker_StaticUpdate(void);
+void Clucker_Draw(void);
 void Clucker_Create(void* data);
-void Clucker_StageLoad();
-void Clucker_EditorDraw();
-void Clucker_EditorLoad();
-void Clucker_Serialize();
+void Clucker_StageLoad(void);
+void Clucker_EditorDraw(void);
+void Clucker_EditorLoad(void);
+void Clucker_Serialize(void);
 
 // Extra Entity Functions
 

@@ -15,7 +15,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    void (*state)(void);
     int dword5C;
     int dword60;
     int dword64;
@@ -36,25 +36,25 @@ typedef struct {
 extern ObjectFXRuby *FXRuby;
 
 // Standard Entity Events
-void FXRuby_Update();
-void FXRuby_LateUpdate();
-void FXRuby_StaticUpdate();
-void FXRuby_Draw();
+void FXRuby_Update(void);
+void FXRuby_LateUpdate(void);
+void FXRuby_StaticUpdate(void);
+void FXRuby_Draw(void);
 void FXRuby_Create(void* data);
-void FXRuby_StageLoad();
-void FXRuby_EditorDraw();
-void FXRuby_EditorLoad();
-void FXRuby_Serialize();
+void FXRuby_StageLoad(void);
+void FXRuby_EditorDraw(void);
+void FXRuby_EditorLoad(void);
+void FXRuby_Serialize(void);
 
 // Extra Entity Functions
-void FXRuby_Unknown1();
-void FXRuby_Unknown2();
+void FXRuby_Unknown1(void);
+void FXRuby_Unknown2(void);
 
-void FXRuby_Unknown3();
-void FXRuby_Unknown4();
-void FXRuby_Unknown5();
-void FXRuby_Unknown6();
-void FXRuby_Unknown7();
-void FXRuby_Unknown9();
+void FXRuby_Unknown3(void);
+void FXRuby_Unknown4(void);
+void FXRuby_Unknown5(void);
+void FXRuby_Unknown6(void);
+void FXRuby_Unknown7(void);
+void FXRuby_Unknown9(void);
 
 #endif //!OBJ_FXRUBY_H

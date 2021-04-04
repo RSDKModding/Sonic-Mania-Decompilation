@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectFlamethrower *Flamethrower;
 
 // Standard Entity Events
-void Flamethrower_Update();
-void Flamethrower_LateUpdate();
-void Flamethrower_StaticUpdate();
-void Flamethrower_Draw();
+void Flamethrower_Update(void);
+void Flamethrower_LateUpdate(void);
+void Flamethrower_StaticUpdate(void);
+void Flamethrower_Draw(void);
 void Flamethrower_Create(void* data);
-void Flamethrower_StageLoad();
-void Flamethrower_EditorDraw();
-void Flamethrower_EditorLoad();
-void Flamethrower_Serialize();
+void Flamethrower_StageLoad(void);
+void Flamethrower_EditorDraw(void);
+void Flamethrower_EditorLoad(void);
+void Flamethrower_Serialize(void);
 
 // Extra Entity Functions
 

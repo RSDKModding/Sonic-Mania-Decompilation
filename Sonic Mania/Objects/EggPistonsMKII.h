@@ -17,15 +17,15 @@ typedef struct {
 extern ObjectEggPistonsMKII *EggPistonsMKII;
 
 // Standard Entity Events
-void EggPistonsMKII_Update();
-void EggPistonsMKII_LateUpdate();
-void EggPistonsMKII_StaticUpdate();
-void EggPistonsMKII_Draw();
+void EggPistonsMKII_Update(void);
+void EggPistonsMKII_LateUpdate(void);
+void EggPistonsMKII_StaticUpdate(void);
+void EggPistonsMKII_Draw(void);
 void EggPistonsMKII_Create(void* data);
-void EggPistonsMKII_StageLoad();
-void EggPistonsMKII_EditorDraw();
-void EggPistonsMKII_EditorLoad();
-void EggPistonsMKII_Serialize();
+void EggPistonsMKII_StageLoad(void);
+void EggPistonsMKII_EditorDraw(void);
+void EggPistonsMKII_EditorLoad(void);
+void EggPistonsMKII_Serialize(void);
 
 // Extra Entity Functions
 
