@@ -74,7 +74,7 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetLimitedFade(6, 0, 7, 216, 160, 255);
 
     int floorID = RSDK.GetSceneLayerID("3D Floor");
-    if (floorID) {
+    if (floorID != 0xFFFF) {
         TileLayer *floor3D = RSDK.GetSceneLayer(floorID);
         if (floor3D) {
             floor3D->drawLayer[0]     = 0;
@@ -83,7 +83,7 @@ void UFO_Setup_StageLoad(void)
     }
 
     int roofID = RSDK.GetSceneLayerID("3D Roof");
-    if (roofID) {
+    if (roofID != 0xFFFF) {
         TileLayer *roof3D = RSDK.GetSceneLayer(roofID);
         if (roof3D) {
             roof3D->drawLayer[0]     = 0;
@@ -99,7 +99,7 @@ void UFO_Setup_StageLoad(void)
             int val = RSDK.Rand(0, 4);
 
             int deformPos = i;
-            deformPos     = minVal(0xFF, deformPos);
+            deformPos     = minVal(0x200, deformPos);
             deformPos     = maxVal(0x00, deformPos);
 
             int angle = 0;
@@ -108,14 +108,14 @@ void UFO_Setup_StageLoad(void)
                 angle += 0x40;
             }
         }
-        memcpy(deformData + (0x200 * sizeof(int)), deformData, (0x200 * sizeof(int)));
+        memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int)));
 
         deformData = RSDK.GetSceneLayer(1)->deformationData;
         for (int i = 0; i < 0x200; i += 0x10) {
             int val = RSDK.Rand(0, 4);
 
             int deformPos = i;
-            deformPos     = minVal(0xFF, deformPos);
+            deformPos     = minVal(0x200, deformPos);
             deformPos     = maxVal(0x00, deformPos);
 
             int angle = 0;
@@ -124,7 +124,7 @@ void UFO_Setup_StageLoad(void)
                 angle += 0x40;
             }
         }
-        memcpy(deformData + (0x200 * sizeof(int)), deformData, (0x200 * sizeof(int)));
+        memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int)));
     }
     else {
         int *deformData = NULL;
@@ -152,7 +152,7 @@ void UFO_Setup_StageLoad(void)
         }
 
         if (deformData)
-            memcpy(deformData + (0x200 * sizeof(int)), deformData, (0x200 * sizeof(int)));
+            memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int)));
     }
 
     int listPos = RSDK_sceneInfo->listPos;

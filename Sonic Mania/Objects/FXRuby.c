@@ -4,7 +4,8 @@ ObjectFXRuby *FXRuby;
 
 void FXRuby_Update(void)
 {
-
+    RSDK_THIS(FXRuby);
+    CallFunction(entity->state);
 }
 
 void FXRuby_LateUpdate(void)
@@ -15,22 +16,40 @@ void FXRuby_LateUpdate(void)
 void FXRuby_StaticUpdate(void)
 {
     if (Zone) {
-        Entity *entity = NULL;
-        if (RSDK.GetActiveEntities(FXRuby->objectID, &entity)) {
-            RSDK.AddDrawListRef(Zone->uiDrawHigh + 1, RSDK.GetEntityID(entity));
-            RSDK.BreakForeachLoop();
+        foreach_active(FXRuby, fxRuby) {
+            RSDK.AddDrawListRef(Zone->uiDrawHigh + 1, RSDK.GetEntityID(fxRuby));
+            foreach_break;
         }
     }
 }
 
 void FXRuby_Draw(void)
 {
+    RSDK_THIS(FXRuby);
+    RSDK.SetLookupTable(FXRuby->lookupTable);
 
+    if (entity->waitForTrigger >= 512 || entity->timer >= 512 || RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+        if (entity->waitForTrigger > 0)
+            RSDK.FillScreen(0xFFF0F0, entity->waitForTrigger, entity->waitForTrigger - 0x100, entity->waitForTrigger - 0x100);
+        if (entity->timer > 0)
+            RSDK.FillScreen(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
+    }
+    else {
+        if (entity->outerRadius <= RSDK_screens->width) {
+            if (entity->field_68)
+                RSDK.DrawCircleOutline(entity->position.x, entity->position.y, entity->field_68, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
+            else
+                RSDK.DrawCircle(entity->position.x, entity->position.y, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
+        }
+        else {
+            RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, 0, 255, INK_LOOKUP, true);
+        }
+    }
 }
 
 void FXRuby_Create(void* data)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXRuby);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible = true;
         entity->active  = ACTIVE_NORMAL;
@@ -38,7 +57,7 @@ void FXRuby_Create(void* data)
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = 15;
-        entity->dword60 = 4;
+        entity->radiusSpeed = 4;
         if (data) {
             entity->state = (void (*)(void))data;
         }
@@ -53,13 +72,11 @@ void FXRuby_StageLoad(void)
     FXRuby->fgLow  = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG Low"));
     FXRuby->fgHigh = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG High"));
 
-    for (int i = 0; i < 0x200; ++i) {
-        FXRuby->unknown[i] = RSDK.Rand(-64, 64);
-    }
+    for (int i = 0; i < 0x200; ++i)
+        FXRuby->deformData[i] = RSDK.Rand(-64, 64);
 
-    for (int i = 0xFFFF; i > -1; --i) {
-        FXRuby->lookupTable[i] = i;
-    }
+    for (int i = 0; i < 0x10000; ++i)
+        FXRuby->lookupTable[0xFFFF - i] = i;
 }
 
 void FXRuby_Unknown1(void)
@@ -76,14 +93,14 @@ void FXRuby_Unknown1(void)
 
 void FXRuby_Unknown2(void)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXRuby);
 
     int timer = 0;
     int id    = 0;
-     if (Zone)
+    if (Zone)
         timer = Zone->timer;
-    //else
-    //    timer = UIWidgets->field_44;
+    else
+        timer = UIWidgets->arrayIndex;
 
     for (int l = 0; l < LAYER_COUNT; ++l) {
          TileLayer *layer = RSDK.GetSceneLayer(l);
@@ -105,11 +122,11 @@ void FXRuby_Unknown2(void)
                  int cnt = 8 * timer;
                  for (int s = 0; s < 0x200; ++s) {
                      int angle         = RSDK.Sin256(4 * id);
-                     int deform        = ((entity->fadeWhite * FXRuby->unknown[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
-                     *deformData       = deform;
-                     deformData[0x200] = deform;
+                     int deform        = ((entity->fadeWhite * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
+                     deformData[id]         = deform;
+                     deformData[id + 0x200] = deform;
 
-                     deformData++;
+                     //deformData++;
                      id++;
                  }
              }
@@ -119,8 +136,8 @@ void FXRuby_Unknown2(void)
 
 void FXRuby_Unknown3(void)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
-    entity->outerRadius += entity->dword60;
+    RSDK_THIS(FXRuby);
+    entity->outerRadius += entity->radiusSpeed;
     if (entity->outerRadius > RSDK_screens->width) {
         entity->flag  = true;
         entity->state = FXRuby_Unknown5;
@@ -128,8 +145,8 @@ void FXRuby_Unknown3(void)
 }
 void FXRuby_Unknown4(void)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
-    entity->outerRadius -= entity->dword60;
+    RSDK_THIS(FXRuby);
+    entity->outerRadius -= entity->radiusSpeed;
     if (entity->outerRadius <= 0) {
         entity->flag  = false;
         entity->state = FXRuby_Unknown5;
@@ -141,7 +158,7 @@ void FXRuby_Unknown5(void) {
 }
 void FXRuby_Unknown6(void)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXRuby);
     FXRuby_Unknown2();
     if (entity->fadeWhite >= entity->fadeBlack)
         entity->state = FXRuby_Unknown7;
@@ -150,20 +167,20 @@ void FXRuby_Unknown6(void)
 }
 void FXRuby_Unknown7(void)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXRuby);
     FXRuby_Unknown2();
     if (entity->fadeWhite > 0)
         entity->fadeWhite--;
 }
 void FXRuby_Unknown9(void)
 {
-    EntityFXRuby *entity = (EntityFXRuby *)RSDK_sceneInfo->entity;
-    entity->dword60 -= 0x3800;
-    entity->dword64 += entity->dword60;
+    RSDK_THIS(FXRuby);
+    entity->radiusSpeed -= 0x3800;
+    entity->dword64 += entity->radiusSpeed;
     entity->field_68    = 0;
     entity->outerRadius = entity->dword64 >> 16;
     if (entity->dword64 <= 0)
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
 void FXRuby_EditorDraw(void)

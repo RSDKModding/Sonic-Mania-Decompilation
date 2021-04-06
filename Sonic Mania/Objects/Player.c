@@ -752,7 +752,7 @@ void Player_LoadSprites(void)
             EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
             RSDK.CopyEntity(player1, entity, true);
             player1->camera = Camera_SetTargetEntity(0, (Entity *)player1);
-            RSDK.AddScreen(&player1->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+            RSDK.AddCamera(&player1->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
         }
         else {
             RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
@@ -771,7 +771,7 @@ void Player_LoadSprites(void)
         sidekick->position.y = entity->position.y;
 
         if (globals->gameMode != MODE_TIMEATTACK) {
-            RSDK.AddScreen(&sidekick->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+            RSDK.AddCamera(&sidekick->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
             sidekick->position.x -= 0x100000;
         }
 
@@ -1552,17 +1552,17 @@ void Player_HandleDeath(EntityPlayer *player)
 
 #if RETRO_USE_PLUS
                             if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageNoSave() && SaveGame->saveRAM
-                                && globals->saveLoaded == 200) {
+                                && globals->saveLoaded == STATUS_OK) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
                                 User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
                             }
 #else
-                    if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == 200) {
-                        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
-                        SaveGame->saveCallback = NULL;
-                        APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
-                    }
+                            if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
+                                SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+                                SaveGame->saveCallback = NULL;
+                                APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
+                            }
 #endif
 
                             EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
@@ -1592,17 +1592,17 @@ void Player_HandleDeath(EntityPlayer *player)
 
 #if RETRO_USE_PLUS
                             if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageNoSave() && SaveGame->saveRAM
-                                && globals->saveLoaded == 200) {
+                                && globals->saveLoaded == STATUS_OK) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
-                                SaveGame->saveCallback  = 0;
+                                SaveGame->saveCallback  = NULL;
                                 User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
                             }
 #else
-                    if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == 200) {
-                        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
-                        SaveGame->saveCallback = NULL;
-                        APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
-                    }
+                            if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
+                                SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+                                SaveGame->saveCallback = NULL;
+                                APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
+                            }
 #endif
                         }
                         Music_FadeOut(0.025);
@@ -1965,19 +1965,6 @@ bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox
     }
     return RSDK.CheckObjectCollisionTouchBox(entity, entityHitbox, player, otherHitbox);
 }
-
-void Game_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *statInfo, byte charID, bool32 encore, int x, int y)
-{
-    statInfo->statID = 2;
-    statInfo->name   = "ENEMY_DEFEAT";
-    memset(statInfo->data, 0, 0x100);
-    statInfo->data[0] = (void *)ZoneNames[zoneID];
-    statInfo->data[2] = (void *)PlayerNames[charID];
-    statInfo->data[3] = intToVoid(encore);
-    statInfo->data[4] = intToVoid(x);
-    statInfo->data[1] = (void *)ActNames[actID];
-    statInfo->data[5] = intToVoid(y);
-}
 bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 {
     Entity *entity   = (Entity *)e;
@@ -2024,7 +2011,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
             }
 
             StatInfo info;
-            Game_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, (entity->position.x >> 0x10),
+            TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, (entity->position.x >> 0x10),
                                   (entity->position.y >> 0x10));
             User.TryTrackStat(&info);
         }
@@ -2696,7 +2683,7 @@ void Player_StartJump(EntityPlayer *entity)
         entity->playerAnimData.animationSpeed = 120;
     }
     else {
-        entity->playerAnimData.animationSpeed = ((abs(entity->groundedStore) * 0xF0) / 0x60000) + 0x30;
+        entity->playerAnimData.animationSpeed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
     }
     if (entity->playerAnimData.animationSpeed > 0xF0)
         entity->playerAnimData.animationSpeed = 0xF0;
@@ -5834,7 +5821,7 @@ void Player_GetP1Inputs(void)
             if (RSDK_sku->platform == PLATFORM_DEV && controller->keyZ.press) {
                 Zone->swapGameMode = true;
                 RSDK.PlaySFX(Player->sfx_Transform2, 0, 254);
-                Zone_Unknown1(64, 0xF0F0F0);
+                Zone_StartFadeOut(64, 0xF0F0F0);
             }
             if (globals->gameMode == MODE_ENCORE && RSDK_controller[entity->controllerID].keyY.press) {
                 if (!HUD->field_24 && Player_CheckValidState(entity)) {

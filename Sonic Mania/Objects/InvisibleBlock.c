@@ -29,7 +29,7 @@ void InvisibleBlock_Update(void)
             }
         }
     }
-    entity->visible = DebugMode->active;
+    entity->visible = DebugMode->debugActive;
 }
 
 void InvisibleBlock_LateUpdate(void) {}

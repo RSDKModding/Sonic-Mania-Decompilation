@@ -4,11 +4,10 @@ ObjectCamera *Camera;
 
 void Camera_Update(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    entity->lastPos.x    = entity->position.x;
-    entity->lastPos.y    = entity->position.y;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(Camera);
+    entity->lastPos.x = entity->position.x;
+    entity->lastPos.y = entity->position.y;
+    CallFunction(entity->state);
     entity->velocity.x = entity->position.x - entity->lastPos.x;
     entity->velocity.y = entity->position.y - entity->lastPos.y;
     Camera_SetCameraBounds(entity);
@@ -48,13 +47,13 @@ void Camera_Draw(void) {}
 
 void Camera_Create(void *data)
 {
-    int screen           = (int)(size_t)data;
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    entity->field_8C     = 0x80000;
-    entity->field_98     = 104;
+    int screen = voidToInt(data);
+    RSDK_THIS(Camera);
+    entity->field_8C = 0x80000;
+    entity->field_98 = 104;
     if (entity->active != ACTIVE_NORMAL) {
         entity->screenID = screen;
-        RSDK.AddScreen(&entity->center, RSDK_screens[screen].centerX << 16, RSDK_screens[screen].centerY << 16, false);
+        RSDK.AddCamera(&entity->center, RSDK_screens[screen].centerX << 16, RSDK_screens[screen].centerY << 16, false);
     }
     entity->boundsOffset.x = 3;
     entity->boundsOffset.y = 2;
@@ -109,35 +108,37 @@ void Camera_SetCameraBounds(EntityCamera *entity)
     entity->center.x = screen->position.x + screen->centerX;
     entity->center.y = screen->position.y + screen->centerY;
 }
-EntityCamera *Camera_SetTargetEntity(int screen, Entity *target)
+EntityCamera *Camera_SetTargetEntity(int screen, void *t)
 {
+    Entity *target       = (Entity *)t;
     EntityCamera *entity = NULL;
-    while (RSDK.GetEntities(Camera->objectID, (Entity **)&entity)) {
-        if (entity->screenID == screen) {
-            entity->targetPtr  = target;
-            entity->position.x = target->position.x;
-            entity->position.y = target->position.y;
-            RSDK.BreakForeachLoop();
-            return entity;
+
+    foreach_all(Camera, camera)
+    {
+        if (camera->screenID == screen) {
+            camera->targetPtr  = target;
+            camera->position.x = target->position.x;
+            camera->position.y = target->position.y;
+            foreach_return entity;
         }
     }
     return NULL;
 }
 void Camera_ShakeScreen(int shakeX, int screen, int shakeY)
 {
-    EntityCamera *entity = NULL;
-    while (RSDK.GetEntities(Camera->objectID, (Entity **)&entity)) {
-        if (entity->screenID == screen) {
-            entity->shakePos.x = shakeX;
-            entity->shakePos.y = shakeY;
-            RSDK.BreakForeachLoop();
+    foreach_all(Camera, camera)
+    {
+        if (camera->screenID == screen) {
+            camera->shakePos.x = shakeX;
+            camera->shakePos.y = shakeY;
+            foreach_break;
         }
     }
 }
 void Camera_HandleHBounds(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    ScreenInfo *screen   = &RSDK_screens[entity->screenID];
+    RSDK_THIS(Camera);
+    ScreenInfo *screen = &RSDK_screens[entity->screenID];
 
     if (Zone->screenBoundsL1[entity->screenID] > entity->boundsL) {
         if (entity->boundsL > Zone->screenBoundsL1[entity->screenID])
@@ -187,8 +188,8 @@ void Camera_HandleHBounds(void)
 }
 void Camera_HandleVBounds(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    ScreenInfo *screen   = &RSDK_screens[entity->screenID];
+    RSDK_THIS(Camera);
+    ScreenInfo *screen = &RSDK_screens[entity->screenID];
 
     if (Zone->screenBoundsT1[entity->screenID] > entity->boundsT) {
         if (entity->boundsT > Zone->screenBoundsT1[entity->screenID])
@@ -237,11 +238,28 @@ void Camera_HandleVBounds(void)
     Zone->screenBoundsB2[entity->screenID] = entity->boundsB << 16;
 }
 
+void Camera_Unknown3(int a1, int screen, int x, int y, int a5)
+{
+    foreach_all(Camera, camera)
+    {
+        if (camera->screenID == screen) {
+            camera->field_B4   = camera->position.x;
+            camera->field_B8   = camera->position.y;
+            camera->field_AC.x = x;
+            camera->field_AC.y = y;
+            camera->field_A8   = a1;
+            camera->field_A4   = a5;
+            camera->state      = Camera_State_Unknown;
+            foreach_return;
+        }
+    }
+}
+
 // States
 void Camera_State_Roam(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
-    int speed            = 0x100000;
+    RSDK_THIS(Camera);
+    int speed = 0x100000;
     if (!RSDK_controller[0].keyA.down)
         speed = 0x40000;
 
@@ -283,7 +301,7 @@ void Camera_State_Roam(void)
 }
 void Camera_State_Follow(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Camera);
     if (entity->targetPtr) {
         Camera_HandleHBounds();
         Camera_HandleVBounds();
@@ -328,7 +346,7 @@ void Camera_State_Follow(void)
 }
 void Camera_State_HLock(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Camera);
     if (entity->targetPtr) {
         Camera_HandleHBounds();
         Entity *target = entity->targetPtr;
@@ -353,7 +371,7 @@ void Camera_State_HLock(void)
 }
 void Camera_State_VLock(void)
 {
-    EntityCamera *entity = (EntityCamera *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Camera);
     if (entity->targetPtr) {
         Camera_HandleVBounds();
         Entity *target = entity->targetPtr;
@@ -375,6 +393,32 @@ void Camera_State_VLock(void)
             entity->position.y = entity->position.y + pos;
             target->position.y -= entity->field_6C.y;
         }
+    }
+}
+void Camera_State_Unknown(void)
+{
+    RSDK_THIS(Camera);
+    entity->field_A0 += entity->field_A4;
+
+    switch (entity->field_A8) {
+        default: break;
+        case 0:
+            MathHelpers_Unknown1(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            break;
+        case 1:
+            MathHelpers_Unknown2(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            break;
+        case 2:
+            MathHelpers_Unknown3(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            break;
+        case 3:
+            MathHelpers_Unknown4(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            break;
+    }
+
+    if (entity->field_A0 >= 0x100) {
+        entity->field_A0 = 0;
+        entity->state    = NULL;
     }
 }
 

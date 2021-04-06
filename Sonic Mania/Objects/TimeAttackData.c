@@ -9,19 +9,142 @@ void TimeAttackData_Draw(void) {}
 void TimeAttackData_Create(void *data) {}
 void TimeAttackData_StageLoad(void) {}
 
+void TimeAttackData_TrackActClear(byte act, byte zone, StatInfo * stat, byte charID, int time, int rings, int score)
+{
+    stat->statID = 0;
+    stat->name   = "ACT_CLEAR";
+    memset(stat->data, 0, 0x40 * sizeof(void *));
+    stat->data[0] = (void *)ZoneNames[zone];
+    stat->data[1] = (void *)ActNames[act];
+    stat->data[2] = (void *)PlayerNames[charID];
+    stat->data[3] = 0;
+    stat->data[4] = intToVoid(time);
+    stat->data[5] = intToVoid(rings);
+    stat->data[6] = intToVoid(score);
+
+#if !RETRO_USE_PLUS
+    if (APICallback->TrackActClear)
+        APICallback->TrackActClear(Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
+    else
+        LogHelpers_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
+#endif
+}
+void TimeAttackData_TrackTAClear(byte actID, byte zone, StatInfo *stat, byte charID, int gameMode, int time)
+{
+    stat->statID = 1;
+    stat->name   = "TA_CLEAR";
+    memset(stat->data, 0, 0x40 * sizeof(void *));
+    stat->data[0] = (void *)ZoneNames[zone];
+    stat->data[1] = (void *)ActNames[actID];
+    stat->data[2] = (void *)PlayerNames[charID];
+    stat->data[3] = (void *)ModeNames[gameMode];
+    stat->data[4] = intToVoid(time);
+}
+void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, byte charID, bool32 encore, int x, int y)
+{
+    stat->statID   = 2;
+    stat->name   = "ENEMY_DEFEAT";
+    memset(stat->data, 0, 0x40 * sizeof(void *));
+    stat->data[0]     = (void *)ZoneNames[zoneID];
+    stat->data[2]     = (void *)PlayerNames[charID];
+    stat->data[3]     = intToVoid(encore);
+    stat->data[4]     = intToVoid(x);
+    stat->data[1]     = (void *)ActNames[actID];
+    stat->data[5]     = intToVoid(y);
+}
+
+void TimeAttackData_ClearOptions(void)
+{
+    globals->menuParam[22] = 0;
+    memset(&globals->menuParam[22] + 2, 0, 0x100);
+    globals->menuParam[87]     = 0;
+    globals->menuParam[88]     = 0;
+    globals->menuParam[89]     = 0;
+    globals->menuParam[92]     = 0;
+    globals->menuParam[93]     = 0;
+    globals->menuParam[94]     = 0;
+    globals->gameMode          = MODE_MANIA;
+    globals->suppressTitlecard = false;
+    globals->suppressAutoMusic = false;
+}
+int TimeAttackData_GetManiaListPos(int zoneID, int playerID, int act)
+{
+    int listPos = 0;
+    switch (zoneID) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5: listPos = act + 2 * zoneID; break;
+        case 6: listPos = act + (2 * zoneID + 1); break;
+        case 7:
+            if (act)
+                listPos = 2 * zoneID + 3;
+            else
+                listPos = (playerID == 3) + 1 + 2 * zoneID;
+            break;
+        case 8:
+        case 9: listPos = act + 2 * (zoneID + 1); break;
+        case 10:
+        case 11: listPos = act + (2 * zoneID + 3); break;
+        default: break;
+    }
+    LogHelpers_Print("playerID = %d, zoneID = %d, act = %d", playerID, zoneID, act);
+    LogHelpers_Print("listPos = %d", listPos);
+    return listPos;
+}
+int TimeAttackData_GetEncoreListPos(int zoneID, int playerID, int act)
+{
+    int listPos = 0;
+    switch (zoneID) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5: listPos = act + 2 * zoneID; break;
+        case 6:
+        case 7:
+        case 8:
+        case 9: listPos = act + 2 * zoneID + 1; break;
+        case 10:
+        case 11: listPos = act + 2 * (zoneID + 1); break;
+        default: break;
+    }
+    LogHelpers_Print("playerID = %d, zoneID = %d, act = %d", playerID, zoneID, act);
+    LogHelpers_Print("listPos = %d", listPos);
+    return listPos;
+}
+
+void TimeAttackData_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr)
+{
+    int m;
+    int s;
+    int ms;
+    m  = time / 6000;
+    s  = time % 6000 / 100;
+    ms = time % 100;
+    if (minsPtr)
+        *minsPtr = m;
+    if (secsPtr)
+        *secsPtr = s;
+    if (millisecsPtr)
+        *millisecsPtr = ms;
+}
 #if RETRO_USE_PLUS
 int TimeAttackData_LoadCB(int statusCode)
 {
     if (statusCode == STATUS_OK) {
         globals->taTableLoaded = STATUS_OK;
         User.Unknown31(globals->taTableID);
-        Game_Print("Load Succeeded! Replay count: %d", User.GetUserDBUnknownCount(globals->taTableID));
+        LogHelpers_Print("Load Succeeded! Replay count: %d", User.GetUserDBUnknownCount(globals->taTableID));
     }
     else {
-        Game_Print("Load Failed! Creating new Time Attack DB");
+        LogHelpers_Print("Load Failed! Creating new Time Attack DB");
         TimeAttackData_ResetTimeAttackDB();
     }
-    Game_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
+    LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
 
     if (TimeAttackData->loadCallback) {
         Entity *entStore = RSDK_sceneInfo->entity;
@@ -57,9 +180,9 @@ void TimeAttackData_MigrateLegacyTADB(void)
         // result = (GlobalVariables *)((char *)globals + 73892); //saveRAM[0x800]
         // if (globals != (GlobalVariables *)-73892) {
         TimeAttackData->dword1C = 1;
-        Game_Print("===========================");
-        Game_Print("Migrating Legacy TA Data...");
-        Game_Print("===========================");
+        LogHelpers_Print("===========================");
+        LogHelpers_Print("Migrating Legacy TA Data...");
+        LogHelpers_Print("===========================");
 
         for (int zone = 0; zone < 12; ++zone) {
             for (int act = 0; act < 2; ++act) {
@@ -74,7 +197,7 @@ void TimeAttackData_MigrateLegacyTADB(void)
                         int pos = act + 2 * (off + zone) - 10;
                         if (saveRAM[pos + rank + 2 * pos]) {
                             int time = saveRAM[pos + rank + 2 * pos];
-                            Game_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID + 1, rank, time);
+                            LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID + 1, rank, time);
                             TimeAttackData_AddTADBEntry(zone, charID + 1, act, MODE_MANIA, time, NULL);
                         }
                     }
@@ -105,10 +228,10 @@ int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mo
     char buf[0x20];
     memset(buf, 0, 0x20 * sizeof(char));
     User.GetUserDBCreationTime(globals->taTableID, rowID, buf, 23, "%Y/%m/%d %H:%M:%S");
-    Game_Print("Time Attack DB Added Entry");
-    Game_Print("Created at %s", buf);
-    Game_Print("Row ID: %d", rowID);
-    Game_Print("UUID: %08X", uuid);
+    LogHelpers_Print("Time Attack DB Added Entry");
+    LogHelpers_Print("Created at %s", buf);
+    LogHelpers_Print("Row ID: %d", rowID);
+    LogHelpers_Print("UUID: %08X", uuid);
     return rowID;
 }
 
@@ -158,7 +281,7 @@ int TimeAttackData_SaveTimeAttackDB(void (*callback)(int))
             callback(0);
     }
     else {
-        Game_Print("Saving Time Attack DB");
+        LogHelpers_Print("Saving Time Attack DB");
         TimeAttackData->saveEntityPtr = RSDK_sceneInfo->entity;
         TimeAttackData->saveCallback  = callback;
         User.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
@@ -200,7 +323,7 @@ int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int ds
 
 void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore)
 {
-    Game_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
+    LogHelpers_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
     User.Unknown31(globals->taTableID);
     User.Unknown33(globals->taTableID, 2, "zoneID", &zoneID);
     User.Unknown33(globals->taTableID, 2, "act", &act);

@@ -880,11 +880,16 @@ void readSettings()
     engineInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #endif
 
-    result = iniparser_getstring(ini, "Game:dataFile", "Data.rsdk");
-    if (CheckDataFile(result))
+    if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk")))
         engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
     else
         engine.devMenu = true;
+
+#if !RETRO_USE_ORIGINAL_CODE
+    sprintf(gameLogicName, "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+#else
+    sprintf(gameLogicName, "Game"));
+#endif
 
     engine.startFullScreen = !iniparser_getboolean(ini, "Video:windowed", true);
     engine.borderless      = !iniparser_getboolean(ini, "Video:border", true);
@@ -990,6 +995,12 @@ void writeSettings(bool32 writeToFile)
             if (!StrComp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound")) {
                 writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
+
+#if !RETRO_USE_ORIGINAL_CODE
+            if (!StrComp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound")) {
+                writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+            }
+#endif
 
             if (!StrComp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound"))
                 writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));

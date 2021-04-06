@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int unknown[0x200];
+    int deformData[0x200];
     ushort lookupTable[0x10000];
     TileLayer *fgLow;
     TileLayer *fgHigh;
@@ -17,7 +17,7 @@ typedef struct {
     RSDK_ENTITY
     void (*state)(void);
     int dword5C;
-    int dword60;
+    int radiusSpeed;
     int dword64;
     int field_68;
     int outerRadius;

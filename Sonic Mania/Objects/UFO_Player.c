@@ -161,8 +161,8 @@ void UFO_Player_StageLoad(void)
     UFO_Player->sfx_GrittyGround = RSDK.GetSFX("Special/GrittyGround.wav");
 
     EntityUFO_Player *player1 = (EntityUFO_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
-    RSDK.ClearScreens();
-    RSDK.AddScreen(&player1->position, 0x100000, 0x100000, true);
+    RSDK.ClearCameras();
+    RSDK.AddCamera(&player1->position, 0x100000, 0x100000, true);
 }
 
 void UFO_Player_EditorDraw(void) {}

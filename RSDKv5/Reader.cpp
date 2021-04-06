@@ -2,6 +2,7 @@
 
 RSDKContainer rsdkContainer;
 char rsdkName[0x400];
+char gameLogicName[0x400];
 
 bool32 useDataFile = false;
 

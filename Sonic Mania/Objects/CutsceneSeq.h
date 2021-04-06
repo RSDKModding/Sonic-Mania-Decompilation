@@ -47,6 +47,6 @@ void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_LockPlayerControl(void *plr);
 void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*skipCallback)(void));
 void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq);
-void CutsceneSeq_StartSequence(Entity *host, void *states);
+void CutsceneSeq_StartSequence(Entity *host, void **states);
 
 #endif //!OBJ_CUTSCENESEQ_H

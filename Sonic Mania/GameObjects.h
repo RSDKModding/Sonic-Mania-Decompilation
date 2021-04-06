@@ -107,8 +107,8 @@ typedef struct {
     int (*CheckStageFolder)(const char *folderName);
     int (*InitSceneLoad)(void);
     int (*GetObjectIDByName)(const char* name);
-    void (*ClearScreens)(void);
-    void (*AddScreen)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);
+    void (*ClearCameras)(void);
+    void (*AddCamera)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);
 #if !RETRO_USE_PLUS
     void *(*GetFuncPtr)(const char *funcName);
 #endif
@@ -290,9 +290,6 @@ typedef struct {
 extern UserFunctionTable User;
 #endif
 extern RSDKFunctionTable RSDK;
-
-void Game_Print(const char *message, ...);
-void Game_PrintString(TextInfo *text);
 
 #include "Objects/Acetone.h"
 #include "Objects/ActClear.h"
@@ -922,6 +919,12 @@ void Game_PrintString(TextInfo *text);
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
     while (RSDK.GetEntities(type->objectID, (Entity **)&entityOut))
+#define foreach_break                                                                                                                                \
+    RSDK.BreakForeachLoop();                                                                                                                         \
+    break
+#define foreach_return                                                                                                                                \
+    RSDK.BreakForeachLoop();                                                                                                                         \
+    return
 
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);

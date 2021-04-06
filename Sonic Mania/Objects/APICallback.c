@@ -71,13 +71,13 @@ void APICallback_SetRichPresence(int id, TextInfo *msg)
     if (globals->presenceID != id) {
         // RSDK.PrependString(&message, id + '.');
         if (APICallback->SetRichPresence) {
-            Game_Print("API SetRichPresence(%d)", id);
-            Game_PrintString(msg);
+            LogHelpers_Print("API SetRichPresence(%d)", id);
+            LogHelpers_PrintString(msg);
             APICallback->SetRichPresence(id, msg);
         }
         else {
-            Game_Print("EMPTY SetRichPresence(%d)", id);
-            Game_PrintString(msg);
+            LogHelpers_Print("EMPTY SetRichPresence(%d)", id);
+            LogHelpers_PrintString(msg);
         }
     }
 }
@@ -87,7 +87,7 @@ bool32 APICallback_GetConfirmButtonFlip()
     if (APICallback->GetConfirmButtonFlip)
         return APICallback->GetConfirmButtonFlip();
 
-    Game_Print("DUMMY GetConfirmButtonFlip()");
+    LogHelpers_Print("DUMMY GetConfirmButtonFlip()");
     return false;
 }
 
@@ -100,15 +100,15 @@ void APICallback_SetNoSave()
 void APICallback_SaveUserFile(void *buffer, const char *name, int size, int (*callback)(int))
 {
     if (globals->noSave) {
-        Game_Print("SaveUserFile(%s, %X, %d, %X) failing due to noSave", name, buffer, size, callback);
+        LogHelpers_Print("SaveUserFile(%s, %X, %d, %X) failing due to noSave", name, buffer, size, callback);
         callback(0);
     }
     else if (APICallback->SaveUserFile) {
-        Game_Print("API SaveUserFile(%s, %X, %d, %X)", name, buffer, size, callback);
+        LogHelpers_Print("API SaveUserFile(%s, %X, %d, %X)", name, buffer, size, callback);
         APICallback->SaveUserFile(name, buffer, size, callback);
     }
     else {
-        Game_Print("DUMMY SaveUserFile(%s, %X, %d)", name, buffer, size);
+        LogHelpers_Print("DUMMY SaveUserFile(%s, %X, %d)", name, buffer, size);
         // EntityAPICallback *entityentity = (EntityAPICallback *)RSDK.SpawnEntity(APICallback->id, APICallback_HandleCallback, 0, 0);
         // entity->callback     = APICallback_SaveCB;
         // entity->timer        = 30;
@@ -123,7 +123,7 @@ int APICallback_SaveCB(int status)
 {
     RSDK_THIS(APICallback);
     int saveResult = RSDK.SaveUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
-    Game_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, saveResult);
+    LogHelpers_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, saveResult);
 
     if (entity->fileCallback)
         entity->fileCallback(1);
@@ -135,12 +135,12 @@ int APICallback_ReadLeaderboardEntry(int rankID)
     if (APICallback->LeaderboardReadEntry)
         return APICallback->LeaderboardReadEntry(rankID);
     if (!RSDK_info->platformID) {
-        Game_Print("EMPTY LeaderboardReadEntry()");
+        LogHelpers_Print("EMPTY LeaderboardReadEntry()");
         return 0;
     }
-    Game_Print("DUMMY LeaderboardReadEntry()");
+    LogHelpers_Print("DUMMY LeaderboardReadEntry()");
     if (APICallback->leaderboardsStatus != 200 || rankID < 0 || rankID >= APICallback->leaderboardEntryCount) {
-        Game_Print("ERROR index out of bounds for RankEntry");
+        LogHelpers_Print("ERROR index out of bounds for RankEntry");
         return 0;
     }
 
@@ -256,7 +256,7 @@ int APICallback_ReadLeaderboardEntry(int rankID)
         // RSDK.SetText(&APICallback->entryName, &textBuffer, 0);
         // RSDK.FuncUnknown3((int)&APICallback->entryName, (int)dummyNames[rankID]);
     }
-    Game_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->globalRank, APICallback->score,
+    LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->globalRank, APICallback->score,
                APICallback->entryName.text, APICallback->isUser);
     return 1;
 }
@@ -264,13 +264,13 @@ int APICallback_ReadLeaderboardEntry(int rankID)
 void APICallback_PrompSavePreference(void *this)
 {
     if (globals->noSave) {
-        Game_Print("PromptSavePreference() returning due to noSave");
+        LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
-    Game_Print("PromptSavePreference()");
+    LogHelpers_Print("PromptSavePreference()");
 
     if (APICallback->statusUnknown2 == 100) {
-        Game_Print("WARNING PromptSavePreference() when prompt already in progress.");
+        LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
     APICallback->statusUnknown2 = 100;
 
@@ -282,16 +282,16 @@ void APICallback_PrompSavePreference(void *this)
 void APICallback_LoadUserFile(void *buffer, const char *name, int size, int (*callback)(int))
 {
     if (globals->noSave) {
-        Game_Print("LoadUserFile(%s, %X, %d, %X) loading 0's due to noSave", name, buffer, size, callback);
+        LogHelpers_Print("LoadUserFile(%s, %X, %d, %X) loading 0's due to noSave", name, buffer, size, callback);
         memset(buffer, 0, size);
         callback(0);
     }
     else if (APICallback->LoadUserFile) {
-        Game_Print("API LoadUserFile(%s, %X, %d, %X)", name, buffer, size, callback);
+        LogHelpers_Print("API LoadUserFile(%s, %X, %d, %X)", name, buffer, size, callback);
         APICallback->LoadUserFile(name, buffer, size, callback);
     }
     else {
-        Game_Print("DUMMY LoadUserFile(%s, %X, %d)", name, buffer, size);
+        LogHelpers_Print("DUMMY LoadUserFile(%s, %X, %d)", name, buffer, size);
         EntityAPICallback *entity = (EntityAPICallback *)RSDK.CreateEntity(APICallback->objectID, APICallback_HandleCallback, 0, 0);
         entity->callback          = (void (*)(void))APICallback_LoadCB;
         entity->timer             = 60;
@@ -306,7 +306,7 @@ int APICallback_LoadCB(int status)
 {
     RSDK_THIS(APICallback);
     int loadResult = RSDK.LoadUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
-    Game_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, loadResult);
+    LogHelpers_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, loadResult);
 
     if (entity->fileCallback)
         entity->fileCallback(1);
@@ -320,11 +320,11 @@ int APICallback_LeaderboardStatus()
 
     int status = 0;
     if (RSDK_info->platformID < PLATFORM_PS4) {
-        Game_Print("EMPTY LeaderboardStatus()");
+        LogHelpers_Print("EMPTY LeaderboardStatus()");
         status = 0;
     }
     else {
-        Game_Print("DUMMY LeaderboardStatus()");
+        LogHelpers_Print("DUMMY LeaderboardStatus()");
         if (APICallback->leaderboardsStatus == 100) {
             if (APICallback->unknown < 60) {
                 APICallback->unknown++;
@@ -346,10 +346,10 @@ int APICallback_LeaderboardEntryCount()
     if (APICallback->LeaderboardEntryCount)
         return APICallback->LeaderboardEntryCount();
     if (RSDK_info->platformID < PLATFORM_PS4) {
-        Game_Print("EMPTY LeaderboardEntryCount()");
+        LogHelpers_Print("EMPTY LeaderboardEntryCount()");
     }
     else {
-        Game_Print("DUMMY LeaderboardEntryCount()");
+        LogHelpers_Print("DUMMY LeaderboardEntryCount()");
         if (APICallback->leaderboardsStatus == 200)
             return APICallback->leaderboardEntryCount;
     }
@@ -364,10 +364,10 @@ void APICallback_LaunchManual(void *this)
         APICallback->LaunchManual(this);
     }
     else if (RSDK_info->platformID == PLATFORM_DEV) {
-        Game_Print("DUMMY LaunchManual()");
+        LogHelpers_Print("DUMMY LaunchManual()");
     }
     else {
-        Game_Print("EMPTY LaunchManual()");
+        LogHelpers_Print("EMPTY LaunchManual()");
     }
 }
 
@@ -376,7 +376,7 @@ void APICallback_HandleCallback()
     RSDK_THIS(APICallback);
 
     if (entity->timer <= 0) {
-        Game_Print("Callback: %x", entity->callback);
+        LogHelpers_Print("Callback: %x", entity->callback);
         if (entity->callback)
             entity->callback();
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
@@ -478,13 +478,13 @@ int APICallback_FetchLeaderboardData(byte a1, byte a2, int a3, int a4, int a5, i
     if (APICallback->FetchLeaderboard)
         return APICallback->FetchLeaderboard(a2, a1, a3, 0, 100, isUser);
     if (RSDK_info->platformID < PLATFORM_PS4) {
-        Game_Print("EMPTY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", a2, a1, (byte)a3, 0, 100, isUser);
+        LogHelpers_Print("EMPTY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", a2, a1, (byte)a3, 0, 100, isUser);
         return 0;
     }
 
-    Game_Print("DUMMY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", a2, a1, (byte)a3, 0, 100, isUser);
+    LogHelpers_Print("DUMMY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", a2, a1, (byte)a3, 0, 100, isUser);
     if (APICallback->leaderboardsStatus == 100) {
-        Game_Print("WARNING Called FetchLeaderboard() while loading");
+        LogHelpers_Print("WARNING Called FetchLeaderboard() while loading");
         return 0;
     }
 
@@ -508,18 +508,18 @@ void APICallback_ExitGame()
     else {
         if (RSDK_info->platformID == PLATFORM_DEV)
             exit(0);
-        Game_Print("EMPTY ExitGame()");
+        LogHelpers_Print("EMPTY ExitGame()");
     }
 }
 
 void APICallback_ClearPrerollErrors()
 {
     if (APICallback->TryAuth) {
-        Game_Print("API ClearPrerollErrors()");
+        LogHelpers_Print("API ClearPrerollErrors()");
         APICallback->ClearPrerollErrors();
     }
     else {
-        Game_Print("DUMMY ClearPrerollErrors()");
+        LogHelpers_Print("DUMMY ClearPrerollErrors()");
         if (APICallback->userStorageStatus != 200) {
             APICallback->userStorageStatus = 0;
         }
@@ -546,7 +546,7 @@ bool32 APICallback_CheckInputDisconnected()
 void APICallback_TrackGameProgress(int (*callback)(int), float a2)
 {
     if (globals->noSave || globals->saveLoaded != 200) {
-        Game_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
+        LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
     }
     else if (!globals->saveRAM[0x900]) {
         // sub_420250();
@@ -554,7 +554,7 @@ void APICallback_TrackGameProgress(int (*callback)(int), float a2)
         if (APICallback->TrackGameProgress)
             APICallback->TrackGameProgress(a2);
         else
-            Game_Print("EMPTY TrackGameProgress(%f)", a2);
+            LogHelpers_Print("EMPTY TrackGameProgress(%f)", a2);
        //SaveGame_SaveGameProgress(callback);
     }
     if (callback)
@@ -564,13 +564,13 @@ void APICallback_TrackGameProgress(int (*callback)(int), float a2)
 int APICallback_TryAuth()
 {
     if (APICallback->TryAuth) {
-        Game_Print("API TryAuth()");
+        LogHelpers_Print("API TryAuth()");
         return APICallback->TryAuth();
     }
     else {
-        Game_Print("DUMMY TryAuth()");
+        LogHelpers_Print("DUMMY TryAuth()");
         if (APICallback->userStorageStatus == 100) {
-            Game_Print("WARNING TryAuth() when auth already in progress.");
+            LogHelpers_Print("WARNING TryAuth() when auth already in progress.");
         }
         APICallback->unknown           = 0;
         APICallback->userStorageStatus = 100;
@@ -582,13 +582,13 @@ int APICallback_TryAuth()
 void APICallback_TryInitStorage()
 {
     if (APICallback->TryInitStorage) {
-        Game_Print("API TryInitStorage()");
+        LogHelpers_Print("API TryInitStorage()");
         APICallback->TryInitStorage();
     }
     else {
-        Game_Print("DUMMY TryInitStorage()");
+        LogHelpers_Print("DUMMY TryInitStorage()");
         if (APICallback->storageStatusCode == 100) {
-            Game_Print("WARNING TryInitStorage() when init already in progress.");
+            LogHelpers_Print("WARNING TryInitStorage() when init already in progress.");
         }
         APICallback->unknown           = 0;
         APICallback->storageStatusCode = 100;
@@ -598,7 +598,7 @@ void APICallback_TryInitStorage()
 void APICallback_UnlockAchievement(const char *name)
 {
     if (APICallback->achievementsDisabled) {
-        Game_Print("SKIP UnlockAchievement(%s)", name);
+        LogHelpers_Print("SKIP UnlockAchievement(%s)", name);
         return;
     }
 
@@ -607,11 +607,11 @@ void APICallback_UnlockAchievement(const char *name)
         return;
     }
     if (RSDK_info->platformID == PLATFORM_DEV) {
-        Game_Print("DUMMY UnlockAchievement(%s)", name);
+        LogHelpers_Print("DUMMY UnlockAchievement(%s)", name);
         return;
     }
 
-    Game_Print("EMPTY UnlockAchievement(%s)", name);
+    LogHelpers_Print("EMPTY UnlockAchievement(%s)", name);
 }
 
 void APICallback_EditorDraw(void) {}

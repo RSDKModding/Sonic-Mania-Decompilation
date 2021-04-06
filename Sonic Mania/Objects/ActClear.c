@@ -159,7 +159,7 @@ void ActClear_Draw(void)
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
     if (globals->gameMode == MODE_TIMEATTACK) {
-        ActClear_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
+        TimeAttackData_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
         drawPos.y -= 0xE0000;
         if (!entity->field_80 || (entity->field_80 == 1 && (Zone->timer & 8)))
@@ -270,27 +270,27 @@ void ActClear_Create(void *data)
             StatInfo *statPtr = NULL;
             ushort time       = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
             switch (globals->playerID & 0xFF) {
-                case ID_SONIC: statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
-                case ID_TAILS: statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
+                case ID_SONIC: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
+                case ID_TAILS: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
                 case ID_KNUCKLES:
-                    statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 3, time, player1->rings, player1->score);
+                    TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 3, time, player1->rings, player1->score);
                     break;
 #if RETRO_USE_PLUS
                 case ID_MIGHTY:
-                    statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 4, time, player1->rings, player1->score);
+                    TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 4, time, player1->rings, player1->score);
                     break;
 #endif
                 default:
 #if RETRO_USE_PLUS
                     if ((globals->playerID & 0xFF) == ID_RAY)
-                        statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 5, time, player1->rings, player1->score);
+                        TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 5, time, player1->rings, player1->score);
                     else
 #endif
-                        statPtr = ActClear_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score);
+                        TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score);
                     break;
             }
 #if RETRO_USE_PLUS
-            User.TryTrackStat(statPtr);
+            User.TryTrackStat(&stat);
 #endif
         }
 
@@ -922,45 +922,6 @@ void ActClear_ForcePlayerOnScreen(void)
             entity->timer++;
         }
     }
-}
-
-StatInfo *ActClear_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score)
-{
-    stat->statID = 0;
-    stat->name   = "ACT_CLEAR";
-    memset(stat->data, 0, 0x40 * sizeof(void *));
-    stat->data[0] = (void *)ZoneNames[zone];
-    stat->data[1] = (void *)ActNames[act];
-    stat->data[2] = (void *)PlayerNames[charID];
-    stat->data[3] = 0;
-    stat->data[4] = intToVoid(time);
-    stat->data[5] = intToVoid(rings);
-    stat->data[6] = intToVoid(score);
-
-#if !RETRO_USE_PLUS
-    if (APICallback->TrackActClear)
-        APICallback->TrackActClear(Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
-    else
-        Game_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
-#endif
-
-    return stat;
-}
-
-void ActClear_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr)
-{
-    int m;
-    int s;
-    int ms;
-    m  = time / 6000;
-    s  = time % 6000 / 100;
-    ms = time % 100;
-    if (minsPtr)
-        *minsPtr = m;
-    if (secsPtr)
-        *secsPtr = s;
-    if (millisecsPtr)
-        *millisecsPtr = ms;
 }
 
 void ActClear_EditorDraw(void) {}

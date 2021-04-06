@@ -6,7 +6,7 @@ void CutsceneSeq_Update(void) {}
 
 void CutsceneSeq_LateUpdate(void)
 {
-    EntityCutsceneSeq *entity = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CutsceneSeq);
     entity->currentState      = (bool32(*)(Entity *))entity->cutsceneStates[entity->stateID];
     if (entity->currentState) {
         EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
@@ -15,12 +15,12 @@ void CutsceneSeq_LateUpdate(void)
         RSDK_sceneInfo->entity         = (Entity *)cutsceneSeq;
         ++entity->timer;
         if (stateComplete) {
-            Game_Print("State completed");
+            LogHelpers_Print("State completed");
             CutsceneSeq_NewState(entity->stateID + 1, entity);
         }
 
         if (!entity->cutsceneStates[entity->stateID]) {
-            Game_Print("Sequence completed");
+            LogHelpers_Print("Sequence completed");
             RSDK.ResetEntityPtr(entity, 0, 0);
         }
     }
@@ -43,7 +43,7 @@ void CutsceneSeq_StaticUpdate(void) {}
 
 void CutsceneSeq_Draw(void)
 {
-    EntityCutsceneSeq *entity = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CutsceneSeq);
 
     colour colours[8];
     colours[0] = 0xFF00;
@@ -74,7 +74,7 @@ void CutsceneSeq_Draw(void)
 
 void CutsceneSeq_Create(void *data)
 {
-    EntityCutsceneSeq *entity = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CutsceneSeq);
     entity->active            = ACTIVE_NORMAL;
     entity->visible           = 0;
     entity->fillTimerA        = 0;
@@ -133,7 +133,7 @@ void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*ski
         globals->suppressAutoMusic = 0;
         globals->enableIntro       = 0;
         RSDK.SetGameMode(ENGINESTATE_FROZEN);
-        Zone_Unknown1(20, 0);
+        Zone_StartFadeOut(20, 0);
         Music_FadeOut(0.029999999);
     }
 }
@@ -167,26 +167,23 @@ void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq)
     CutsceneSeq->points[7].x = 0;
     CutsceneSeq->points[7].y = 0;
 }
-void CutsceneSeq_StartSequence(Entity *host, void *states)
+void CutsceneSeq_StartSequence(Entity *host, void **states)
 {
-    EntityCutsceneSeq *cutsceneSeq;
-    if (((Entity*)RSDK.GetEntityByID(SLOT_CUTSCENESEQ))->objectID)
+    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         return;
     RSDK.ResetEntitySlot(SLOT_CUTSCENESEQ, CutsceneSeq->objectID, 0);
-    cutsceneSeq                    = (EntityCutsceneSeq *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ);
+    EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ);
     cutsceneSeq->position.x   = 0;
     cutsceneSeq->position.y   = 0;
     cutsceneSeq->cutsceneCurEntity = RSDK_sceneInfo->entity;
     cutsceneSeq->hostEntity        = host;
     int id                         = 0;
-    if (states) {
-        void **curState = &states;
-        while (*curState) {
-            Game_Print("state = %x", states);
-            cutsceneSeq->cutsceneStates[id++] = *curState;
-        }
+    while (states[id]) {
+        LogHelpers_Print("state = %x", states[id]);
+        cutsceneSeq->cutsceneStates[id] = states[id];
+        id++;
     }
-    Game_Print("Starting sequence with %d states", id);
+    LogHelpers_Print("Starting sequence with %d states", id);
 }
 
 void CutsceneSeq_EditorDraw(void) {}

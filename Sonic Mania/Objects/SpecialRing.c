@@ -135,7 +135,7 @@ void SpecialRing_StartWarp(void)
         if (globals->gameMode == MODE_ENCORE)
             RSDK_sceneInfo->listPos += 7;
 #endif
-        Zone_Unknown1(10, 0xF0F0F0);
+        Zone_StartFadeOut(10, 0xF0F0F0);
         RSDK.StopChannel(Music->slotID);
     }
 }

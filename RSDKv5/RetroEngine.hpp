@@ -107,19 +107,19 @@ enum GameRegions {
 #define RETRO_REV02 (1)
 
 enum EngineStates {
-    ENGINESTATE_LOAD             ,
-    ENGINESTATE_REGULAR          ,
-    ENGINESTATE_PAUSED           ,
-    ENGINESTATE_FROZEN           ,
-    ENGINESTATE_STEPOVER = 4,
-    ENGINESTATE_DEVMENU = 8,
+    ENGINESTATE_LOAD,
+    ENGINESTATE_REGULAR,
+    ENGINESTATE_PAUSED,
+    ENGINESTATE_FROZEN,
+    ENGINESTATE_STEPOVER      = 4,
+    ENGINESTATE_DEVMENU       = 8,
     ENGINESTATE_VIDEOPLAYBACK = 9,
-    ENGINESTATE_SHOWPNG         ,
+    ENGINESTATE_SHOWPNG,
 #if RETRO_REV02
-    ENGINESTATE_ERRORMSG         ,
-    ENGINESTATE_ERRORMSG_FATAL  ,
+    ENGINESTATE_ERRORMSG,
+    ENGINESTATE_ERRORMSG_FATAL,
 #endif
-    ENGINESTATE_NULL             ,
+    ENGINESTATE_NULL,
 };
 
 // Utils
@@ -176,7 +176,6 @@ struct RetroEngine {
     int gameSpeed           = 1;
     int fastForwardSpeed    = 8;
     bool32 frameStep        = false;
-    bool32 masterPaused     = false;
     bool32 showPaletteOverlay = false;
     bool32 drawLayerVisible[DRAWLAYER_COUNT];
 
@@ -225,14 +224,14 @@ struct RetroEngine {
 
 extern RetroEngine engine;
 
-void initRetroEngine();
+bool initRetroEngine();
 void runRetroEngine();
 
 void parseArguments(int argc, char *argv[]);
 
-void startGameObjects();
+bool startGameObjects();
 
-void LoadGameConfig();
+bool LoadGameConfig();
 void InitScriptSystem();
 
 inline void SetEngineState(byte state)

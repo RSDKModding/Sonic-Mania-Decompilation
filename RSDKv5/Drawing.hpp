@@ -90,7 +90,7 @@ extern GFXSurface gfxSurface[SURFACE_MAX];
 extern byte graphicData[GFXDATA_MAX];
 
 extern int pixWidth;
-extern int screenCount;
+extern int cameraCount;
 extern ScreenInfo screens[SCREEN_MAX];
 extern CameraInfo cameras[SCREEN_MAX];
 extern ScreenInfo *currentScreen;
@@ -107,7 +107,7 @@ void InitGFXSystem();
 
 inline void SetScreenSize(byte screenID, ushort width, ushort height)
 {
-    if (screenCount < SCREEN_MAX) {
+    if (screenID < SCREEN_MAX) {
         int screenHeight     = height & 0xFFF0;
         ScreenInfo *screen   = &screens[screenID];
         screen->pitch        = width; //(width + 15) & 0xFFFFFFF0;
@@ -125,16 +125,16 @@ inline void SetScreenSize(byte screenID, ushort width, ushort height)
 
 inline void AddCamera(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative)
 {
-    if (screenCount < SCREEN_MAX) {
-        cameras[screenCount].targetPos     = pos;
-        cameras[screenCount].offset.x      = offsetX;
-        cameras[screenCount].offset.y      = offsetY;
-        cameras[screenCount].worldRelative = worldRelative;
-        ++screenCount;
+    if (cameraCount < SCREEN_MAX) {
+        cameras[cameraCount].targetPos     = pos;
+        cameras[cameraCount].offset.x      = offsetX;
+        cameras[cameraCount].offset.y      = offsetY;
+        cameras[cameraCount].worldRelative = worldRelative;
+        ++cameraCount;
     }
 }
 
-inline void ClearCameras() { screenCount = 0; }
+inline void ClearCameras() { cameraCount = 0; }
 
 inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
 {
@@ -173,10 +173,10 @@ inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
     }
 }
 
-inline void AddDrawListRef(byte layer, ushort entityID) {
-    if (layer < DRAWLAYER_COUNT) {
+inline void AddDrawListRef(byte layer, ushort entityID)
+{
+    if (layer < DRAWLAYER_COUNT)
         drawLayers[layer].entries[drawLayers[layer].entityCount++] = entityID;
-    }
 }
 
 inline ushort GetDrawListRef(byte layerID, ushort entityID)

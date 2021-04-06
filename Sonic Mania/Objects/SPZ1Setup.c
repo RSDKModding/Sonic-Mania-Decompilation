@@ -125,16 +125,16 @@ void SPZ1Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_PECKY;
     Animals->animalTypes[1] = ANIMAL_MICKY;
 #if RETRO_USE_PLUS
-    if ((globals->gameMode && globals->gameMode != MODE_ENCORE) || !globals->enableIntro || Game_CheckStageReload())
+    if ((globals->gameMode && globals->gameMode != MODE_ENCORE) || !globals->enableIntro || PlayerHelpers_CheckStageReload())
 #else
-    if ((globals->gameMode && globals->gameMode != MODE_MANIA) || !globals->enableIntro || Game_CheckStageReload())
+    if ((globals->gameMode && globals->gameMode != MODE_MANIA) || !globals->enableIntro || PlayerHelpers_CheckStageReload())
 #endif
         FXFade_StopAll();
 
 #if RETRO_USE_PLUS
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct1()) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct1()) {
 #else
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct1()) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct1()) {
 #endif
         Zone->forcePlayerOnScreenFlag = true;
         Zone->stageFinishCallback     = SPZ1Setup_SetupActTransition;

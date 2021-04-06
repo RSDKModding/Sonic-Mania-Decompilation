@@ -110,7 +110,7 @@ void UFO_Shadow_StageLoad(void)
         shadow->shadowScale = 0x100;
     }
 
-    Game_Print("%d shadow entities spawned", slot - 0x840);
+    LogHelpers_Print("%d shadow entities spawned", slot - 0x840);
 }
 
 void UFO_Shadow_EditorDraw(void) {}

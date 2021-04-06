@@ -15,16 +15,16 @@ void Options_Reload(void)
     globals->optionsRAM[32] = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
     globals->optionsRAM[33] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
     Options_GetWinSize();
-    Game_Print("optionsPtr->screenShader = %d", globals->optionsRAM[23]);
-    Game_Print("optionsPtr->volMusic = %d", globals->optionsRAM[25]);
-    Game_Print("optionsPtr->volSfx = %d", globals->optionsRAM[27]);
-    Game_Print("optionsPtr->language = %d", globals->optionsRAM[21]);
-    Game_Print("optionsPtr->overrideLanguage = %d", globals->optionsRAM[22]);
-    Game_Print("optionsPtr->vsync = %d", globals->optionsRAM[29]);
-    Game_Print("optionsPtr->tripleBuffering = %d", globals->optionsRAM[33]);
-    Game_Print("optionsPtr->windowBorder = %d", globals->optionsRAM[31]);
-    Game_Print("optionsPtr->windowed = %d", globals->optionsRAM[32]);
-    Game_Print("optionsPtr->windowSize = %d", globals->optionsRAM[30]);
+    LogHelpers_Print("optionsPtr->screenShader = %d", globals->optionsRAM[23]);
+    LogHelpers_Print("optionsPtr->volMusic = %d", globals->optionsRAM[25]);
+    LogHelpers_Print("optionsPtr->volSfx = %d", globals->optionsRAM[27]);
+    LogHelpers_Print("optionsPtr->language = %d", globals->optionsRAM[21]);
+    LogHelpers_Print("optionsPtr->overrideLanguage = %d", globals->optionsRAM[22]);
+    LogHelpers_Print("optionsPtr->vsync = %d", globals->optionsRAM[29]);
+    LogHelpers_Print("optionsPtr->tripleBuffering = %d", globals->optionsRAM[33]);
+    LogHelpers_Print("optionsPtr->windowBorder = %d", globals->optionsRAM[31]);
+    LogHelpers_Print("optionsPtr->windowed = %d", globals->optionsRAM[32]);
+    LogHelpers_Print("optionsPtr->windowSize = %d", globals->optionsRAM[30]);
 }
 
 void Options_GetWinSize(void)
@@ -155,8 +155,8 @@ void Options_LoadOptionsCallback(int statusCode)
         status                 = true;
         globals->optionsLoaded = STATUS_OK;
         byte *optionsRAM       = (byte *)&globals->optionsRAM[21];
-        Game_Print("dataPtr.language = %d", optionsRAM[2]);
-        Game_Print("dataPtr.overrideLanguage = %d", globals->optionsRAM[22]);
+        LogHelpers_Print("dataPtr.language = %d", optionsRAM[2]);
+        LogHelpers_Print("dataPtr.overrideLanguage = %d", globals->optionsRAM[22]);
         Options_Unknown1(globals->optionsRAM);
         RSDK.SetSettingsValue(SETTINGS_SHADERID, globals->optionsRAM[23]);
         RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, globals->optionsRAM[25]);

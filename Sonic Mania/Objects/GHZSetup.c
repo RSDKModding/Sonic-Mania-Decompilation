@@ -57,13 +57,13 @@ void GHZSetup_StageLoad(void)
 #else
         if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->atlEnabled) {
 #endif
-            if (!Game_CheckStageReload())
+            if (!PlayerHelpers_CheckStageReload())
                 GHZSetup_HandleActTransition();
         }
 #if RETRO_USE_PLUS
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct2())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2())
 #else
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct2())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct2())
 #endif
             Zone->stageFinishCallback = GHZSetup_SpawnGHZ2Outro;
     }
@@ -74,9 +74,9 @@ void GHZSetup_StageLoad(void)
         BGSwitch->switchCallback[0] = GHZSetup_SetupBGSwitchB1;
         BGSwitch->switchCallback[1] = GHZSetup_SetupBGSwitchB2;
 #if RETRO_USE_PLUS
-        if (!(globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) || !globals->atlEnabled || Game_CheckStageReload()) {
+        if (!(globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
 #else
-        if (!(globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) || !globals->atlEnabled || Game_CheckStageReload()) {
+        if (!(globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
 #endif
             BGSwitch->layerIDs[0] = 0;
             BGSwitch->layerIDs[1] = 0;
@@ -87,9 +87,9 @@ void GHZSetup_StageLoad(void)
             GHZSetup_SetupStartingBG();
         }
 #if RETRO_USE_PLUS
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct1())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct1())
 #else
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct1())
+        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct1())
 #endif
             Zone->stageFinishCallback = GHZSetup_SetupActTransition;
     }

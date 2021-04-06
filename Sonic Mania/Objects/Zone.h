@@ -142,7 +142,7 @@ void Zone_Serialize(void);
 int Zone_GetZoneID(void);
 void Zone_StoreEntities(int xOffset, int yOffset);
 void Zone_ReloadStoredEntities(int xOffset, int yOffset, bool32 flag);
-void Zone_Unknown1(int fadeTimer, int fadeColour);
+void Zone_StartFadeOut(int fadeTimer, int fadeColour);
 void Zone_Unknown2(void);
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
 void Zone_Unknown4(int screen);
@@ -161,16 +161,5 @@ void Zone_Unknown18(void);
 void Zone_Unknown19(void);
 void Zone_Unknown20(void);
 void Zone_Unknown21(void);
-
-bool32 Game_CheckAct1(void);
-bool32 Game_CheckAct2(void);
-bool32 Game_CheckStageReload(void);
-bool32 Game_CheckIntro(void);
-void Game_ClearOptions(void);
-
-int Game_Unknown20(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
-int Game_Unknown21(int px1, int py1, int px2, int py2, int tx1, int tx2);
-bool32 Game_Unknown22(int tx1, int tx2, int ty1, int ty2, int px2, int py2);
-bool32 Game_Unknown23(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
 
 #endif //!OBJ_ZONE_H

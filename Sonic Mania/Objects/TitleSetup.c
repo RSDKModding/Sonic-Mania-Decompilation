@@ -50,7 +50,7 @@ void TitleSetup_StageLoad(void)
     globals->noSave = false;
 #endif
     globals->blueSpheresInit = false;
-    Game_ClearOptions();
+    TimeAttackData_ClearOptions();
 #if RETRO_USE_PLUS
     User.UserStorageUnknown8();
     User.ClearUserStorageStatus();

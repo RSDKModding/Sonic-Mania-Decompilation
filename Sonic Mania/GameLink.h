@@ -765,13 +765,7 @@ typedef enum {
     CMODE_RWALL,
 } CModes;
 
-typedef enum {
-    STATUS_CONTINUE = 100,
-    STATUS_OK = 200,
-    STATUS_FORBIDDEN = 403,
-    STATUS_NOTFOUND = 404,
-    STATUS_ERROR = 500
-} StatusCodes;
+typedef enum { STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 } StatusCodes;
 
 typedef enum {
     REGION_US,
@@ -812,7 +806,7 @@ typedef enum {
     ENGINESTATE_NULL = 0x0D,
 } EngineStates;
 
-//Macros and other handy things
+// Macros and other handy things
 
 #define CallFunction(func)                                                                                                                           \
     if (func)                                                                                                                                        \

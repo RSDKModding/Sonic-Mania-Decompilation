@@ -5,12 +5,12 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
 } ObjectLogHelpers;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
 } EntityLogHelpers;
 
 // Object Entity
@@ -21,13 +21,14 @@ void LogHelpers_Update(void);
 void LogHelpers_LateUpdate(void);
 void LogHelpers_StaticUpdate(void);
 void LogHelpers_Draw(void);
-void LogHelpers_Create(void* data);
+void LogHelpers_Create(void *data);
 void LogHelpers_StageLoad(void);
 void LogHelpers_EditorDraw(void);
 void LogHelpers_EditorLoad(void);
 void LogHelpers_Serialize(void);
 
 // Extra Entity Functions
+void LogHelpers_Print(const char *message, ...);
+void LogHelpers_PrintString(TextInfo *text);
 
-
-#endif //!OBJ_LOGHELPERS_H
+#endif //! OBJ_LOGHELPERS_H

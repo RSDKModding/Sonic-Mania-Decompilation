@@ -59,6 +59,7 @@ struct RSDKContainer {
 
 extern RSDKContainer rsdkContainer;
 extern char rsdkName[0x400];
+extern char gameLogicName[0x400];
 
 extern bool32 useDataFile;
 

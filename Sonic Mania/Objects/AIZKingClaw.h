@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxClack;
+    ushort sfxWalkerLegs;
 } ObjectAIZKingClaw;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    void (*state)(void);
+    int timer;
+    int field_60;
+    Vector2 ballPos[12];
+    Vector2 clawPos;
+    Entity *grabbedEntities[8];
+    int count;
+    int field_F0;
+    AnimationData data1;
+    AnimationData data2;
+    AnimationData data3;
+    AnimationData data4;
 } EntityAIZKingClaw;
 
 // Object Struct
@@ -28,6 +43,7 @@ void AIZKingClaw_EditorLoad(void);
 void AIZKingClaw_Serialize(void);
 
 // Extra Entity Functions
-
+void AIZKingClaw_Unknown1(void);
+void AIZKingClaw_Unknown2(void);
 
 #endif //!OBJ_AIZKINGCLAW_H

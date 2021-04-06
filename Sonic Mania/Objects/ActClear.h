@@ -85,7 +85,5 @@ void ActClear_Unknown10(void);
 void ActClear_State_ActFinish(void);
 
 void ActClear_ForcePlayerOnScreen(void);
-StatInfo *ActClear_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
-void ActClear_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr);
 
 #endif //!OBJ_ACTCLEAR_H

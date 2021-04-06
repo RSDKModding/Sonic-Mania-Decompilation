@@ -101,7 +101,7 @@ void SPZ2Setup_StageLoad(void)
 #else
     if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->atlEnabled) {
 #endif
-        if (!Game_CheckStageReload()) {
+        if (!PlayerHelpers_CheckStageReload()) {
             Zone->screenBoundsL1[0] = 256 - RSDK_screens->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
             RSDK.CreateEntity(SPZ2Setup->objectID, 0, 0, 0);
@@ -109,9 +109,9 @@ void SPZ2Setup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && Game_CheckAct2()) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2()) {
 #else
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && Game_CheckAct2()) {
+    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct2()) {
 #endif
         EntitySPZ2Outro *entity = NULL;
         if (RSDK.GetEntities(SPZ2Outro->objectID, (Entity **)&entity)) {

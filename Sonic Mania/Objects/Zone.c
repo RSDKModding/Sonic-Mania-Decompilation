@@ -589,7 +589,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
     globals->atlEntityCount = 0;
 }
 
-void Zone_Unknown1(int fadeTimer, int fadeColour)
+void Zone_StartFadeOut(int fadeTimer, int fadeColour)
 {
     EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
     zone->fadeColour = fadeColour;
@@ -746,7 +746,7 @@ int Zone_GetEncoreStageID(void)
         pos2 = mOff + listPos;
     }
     RSDK_sceneInfo->listPos = pos;
-    Game_Print("Mania Mode offset %d, pos %d -> Encore Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
+    LogHelpers_Print("Mania Mode offset %d, pos %d -> Encore Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
     return pos2;
 }
 int Zone_GetManiaStageID(void)
@@ -773,7 +773,7 @@ int Zone_GetManiaStageID(void)
         pos2 = RSDK_sceneInfo->listPos + mOff;
     }
     RSDK_sceneInfo->listPos = pos;
-    Game_Print("Encore Mode offset %d, pos %d -> Mania Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
+    LogHelpers_Print("Encore Mode offset %d, pos %d -> Mania Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
     return pos2;
 }
 
@@ -912,195 +912,6 @@ void Zone_Unknown21(void)
         entity->timer -= entity->fadeTimer;
         Zone->field_4724 = true;
     }
-}
-
-bool32 Game_CheckAct1(void)
-{
-    if ((RSDK.CheckStageFolder("GHZ") && !Zone->actID) || (RSDK.CheckStageFolder("CPZ") && !Zone->actID) || RSDK.CheckStageFolder("SPZ1")
-        || (RSDK.CheckStageFolder("FBZ") && !Zone->actID) || RSDK.CheckStageFolder("PSZ1") || RSDK.CheckStageFolder("SSZ1")
-        || (RSDK.CheckStageFolder("HCZ") && !Zone->actID) || (RSDK.CheckStageFolder("MSZ") && !Zone->actID)
-        || (RSDK.CheckStageFolder("OOZ") && !Zone->actID) || RSDK.CheckStageFolder("LRZ1") || (RSDK.CheckStageFolder("MMZ") && !Zone->actID)
-        || RSDK.CheckStageFolder("TMZ1")) {
-        return true;
-    }
-    return false;
-}
-bool32 Game_CheckAct2(void)
-{
-    if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
-        || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2") || RSDK.CheckStageFolder("SSZ2")
-        || (RSDK.CheckStageFolder("HCZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("MSZ") && Zone->actID == 1) || RSDK.CheckStageFolder("OOZ2")
-        || RSDK.CheckStageFolder("LRZ3") || (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1) || RSDK.CheckStageFolder("TMZ2")) {
-        return true;
-    }
-    return false;
-}
-bool32 Game_CheckStageReload(void)
-{
-    if (StarPost && Player->playerCount > 0) {
-        for (int p = 0; p < Player->playerCount; ++p) {
-            if (StarPost->postIDs[p]) {
-                return true;
-            }
-        }
-    }
-
-    if (SpecialRing && globals->specialRingID > 0) {
-        EntitySpecialRing *specialRing = NULL;
-        while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&specialRing)) {
-            if (specialRing->id > 0 && globals->specialRingID == specialRing->id)
-                return true;
-        }
-    }
-    return false;
-}
-bool32 Game_CheckIntro(void)
-{
-#if RETRO_USE_PLUS
-    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->enableIntro && !Game_CheckStageReload();
-#else
-    return (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->enableIntro && !Game_CheckStageReload();
-#endif
-}
-void Game_ClearOptions(void)
-{
-    globals->menuParam[22] = 0;
-    memset(&globals->menuParam[22] + 2, 0, 0x100);
-    globals->menuParam[87]     = 0;
-    globals->menuParam[88]     = 0;
-    globals->menuParam[89]     = 0;
-    globals->menuParam[92]     = 0;
-    globals->menuParam[93]     = 0;
-    globals->menuParam[94]     = 0;
-    globals->gameMode          = MODE_MANIA;
-    globals->suppressTitlecard = false;
-    globals->suppressAutoMusic = false;
-}
-
-int Game_Unknown20(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2)
-{
-    if (!Game_Unknown23(px1, py1, px2, py2, tx1, tx2, ty1, ty2))
-        return false;
-
-    if (px1 == px2 && py1 == py2) {
-        if (px1 != tx1 || py1 != tx2) {
-            if (px1 == ty1 && py1 == ty2)
-                return true;
-            return false;
-        }
-        return true;
-    }
-
-    if (tx1 != ty1 || tx2 != ty2) {
-        int valA = Game_Unknown21(px1, py1, px2, py2, tx1, tx2);
-        int valB = Game_Unknown21(px1, py1, px2, py2, ty1, ty2);
-        if (valA) {
-            if (valA == valB)
-                return 0;
-        }
-        else if (!valB) {
-            if (Game_Unknown22(px1, py1, px2, py2, tx1, tx2) || Game_Unknown22(px1, py1, px2, py2, ty1, ty2)
-                || Game_Unknown22(tx1, tx2, ty1, ty2, px1, py1)) {
-                return true;
-            }
-            if (!Game_Unknown22(tx1, tx2, ty1, ty2, px2, py2))
-                return false;
-        }
-
-        int res = Game_Unknown21(tx1, tx2, ty1, ty2, px1, py1);
-        if (!res)
-            return true;
-        if (res == Game_Unknown21(tx1, tx2, ty1, ty2, px2, py2))
-            return false;
-        return true;
-    }
-    if (tx1 == px1 && tx2 == py1)
-        return true;
-    if (tx1 != px2 || tx2 != py2)
-        return false;
-    return true;
-}
-int Game_Unknown21(int px1, int py1, int px2, int py2, int tx1, int tx2)
-{
-    int result = ((tx2 - py1) >> 16) * ((px2 - px1) >> 16) - ((tx1 - px1) >> 16) * ((py2 - py1) >> 16);
-    if (((tx2 - py1) >> 16) * ((px2 - px1) >> 16) == ((tx1 - px1) >> 16) * ((py2 - py1) >> 16))
-        return 0;
-    if (result > 0)
-        return 1;
-    if (result < 0)
-        result = -1;
-    return result;
-}
-bool32 Game_Unknown22(int tx1, int tx2, int ty1, int ty2, int px2, int py2)
-{
-    if (ty1 <= tx1) {
-        if (ty1 >= tx1) {
-            if (ty2 <= tx2) {
-                if (ty2 >= tx2) {
-                    if (tx1 > px2)
-                        return false;
-                    if (tx1 <= px2)
-                        return true;
-                }
-                else {
-                    if (ty2 > py2)
-                        return false;
-                    if (ty2 <= py2)
-                        return true;
-                }
-            }
-            else {
-                if (tx2 > py2)
-                    return false;
-                if (tx2 <= px2)
-                    return true;
-            }
-        }
-        else {
-            if (ty1 > px2)
-                return false;
-            if (ty1 <= px2)
-                return true;
-        }
-    }
-    else {
-        if (tx1 > px2)
-            return false;
-        if (tx1 <= px2)
-            return true;
-    }
-    return true;
-    return false;
-}
-bool32 Game_Unknown23(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2)
-{
-    int v8 = px2;
-    int v9 = px2;
-    if (px1 < px2)
-        v9 = px1;
-    int v10 = py2;
-    int v11 = py2;
-    if (py1 < py2)
-        v11 = py1;
-    int v17 = v11;
-    int v12 = ty2;
-    if (px1 > px2)
-        v8 = px1;
-    int v18 = v8;
-    int v13 = ty1;
-    int v14 = ty2;
-    if (py1 > py2)
-        v10 = py1;
-    int v15 = ty1;
-    if (tx1 < ty1)
-        v15 = tx1;
-    if (tx2 < ty2)
-        v14 = tx2;
-    if (tx1 > ty1)
-        v13 = tx1;
-    if (tx2 > ty2)
-        v12 = tx2;
-    return v9 <= v13 && v18 >= v15 && v17 <= v12 && v10 >= v14;
 }
 
 void Zone_EditorDraw(void) {}

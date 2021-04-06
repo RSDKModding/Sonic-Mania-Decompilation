@@ -53,8 +53,8 @@ void Announcer_StageLoad(void)
         Announcer->sfx_RayWins      = RSDK.GetSFX("VO/RayWins.wav");
         Announcer->sfx_ItsADraw     = RSDK.GetSFX("VO/ItsADraw.wav");
         Announcer->sfx_ItsADraw_Set = RSDK.GetSFX("VO/ItsADraw_Set.wav");
-        Game_Print("sfxDrawRound = %d", Announcer->sfx_ItsADraw);
-        Game_Print("sfxDrawSet = %d", Announcer->sfx_ItsADraw_Set);
+        LogHelpers_Print("sfxDrawRound = %d", Announcer->sfx_ItsADraw);
+        LogHelpers_Print("sfxDrawSet = %d", Announcer->sfx_ItsADraw_Set);
     }
     else if (globals->gameMode == MODE_COMPETITION) {
         Announcer->spriteIndex = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);

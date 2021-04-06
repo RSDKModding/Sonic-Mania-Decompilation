@@ -3,8 +3,9 @@
 int main(int argc, char *argv[])
 {
     parseArguments(argc, argv);
-    initRetroEngine();
-    runRetroEngine();
+    if (initRetroEngine()) {
+        runRetroEngine();
+    }
 
 	return 0;
 }

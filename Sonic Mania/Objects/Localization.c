@@ -33,41 +33,43 @@ void Localization_LoadStrings(void)
     RSDK.SetText(&Localization->text, "", 0);
     switch (Localization->language) {
         case LANGUAGE_EN:
-            Game_Print("Loading EN strings...");
+            LogHelpers_Print("Loading EN strings...");
             RSDK.LoadStrings(&Localization->text, "StringsEN.txt", 16);
             break;
         case LANGUAGE_FR:
-            Game_Print("Loading FR strings...");
+            LogHelpers_Print("Loading FR strings...");
             RSDK.LoadStrings(&Localization->text, "StringsFR.txt", 16);
             break;
         case LANGUAGE_IT:
-            Game_Print("Loading IT strings...");
+            LogHelpers_Print("Loading IT strings...");
             RSDK.LoadStrings(&Localization->text, "StringsIT.txt", 16);
             break;
         case LANGUAGE_GE:
-            Game_Print("Loading GE strings...");
+            LogHelpers_Print("Loading GE strings...");
             RSDK.LoadStrings(&Localization->text, "StringsGE.txt", 16);
             break;
         case LANGUAGE_SP:
-            Game_Print("Loading SP strings...");
+            LogHelpers_Print("Loading SP strings...");
             RSDK.LoadStrings(&Localization->text, "StringsSP.txt", 16);
             break;
         case LANGUAGE_JP:
-            Game_Print("Loading JP strings...");
+            LogHelpers_Print("Loading JP strings...");
             RSDK.LoadStrings(&Localization->text, "StringsJP.txt", 16);
             break;
+#if RETRO_GAMEVER != VER_100
         case LANGUAGE_KO:
-            Game_Print("Loading KO strings...");
+            LogHelpers_Print("Loading KO strings...");
             RSDK.LoadStrings(&Localization->text, "StringsKO.txt", 16);
             break;
         case LANGUAGE_SC:
-            Game_Print("Loading Simp Chinese strings...");
+            LogHelpers_Print("Loading Simp Chinese strings...");
             RSDK.LoadStrings(&Localization->text, "StringsSC.txt", 16);
             break;
         case LANGUAGE_TC:
-            Game_Print("Loading Trad Chinese strings...");
+            LogHelpers_Print("Loading Trad Chinese strings...");
             RSDK.LoadStrings(&Localization->text, "StringsTC.txt", 16);
             break;
+#endif
         default: break;
     }
     RSDK.SplitStringList(Localization->strings, &Localization->text, 0, 68);
@@ -76,6 +78,7 @@ void Localization_LoadStrings(void)
 
 void Localization_GetString(TextInfo *textInfo, byte id)
 {
+    memset(textInfo, 0, sizeof(TextInfo));
     RSDK.SetText(textInfo, "", 0);
     RSDK.CopyString(textInfo, &Localization->strings[id]);
     for (int c = 0; c < textInfo->textLength; ++c) {

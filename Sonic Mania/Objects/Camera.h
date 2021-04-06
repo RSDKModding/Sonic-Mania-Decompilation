@@ -54,15 +54,17 @@ void Camera_Serialize(void);
 
 // Extra Entity Functions
 void Camera_SetCameraBounds(EntityCamera *entity);
-EntityCamera *Camera_SetTargetEntity(int screen, Entity *target);
+EntityCamera *Camera_SetTargetEntity(int screen, void *t);
 void Camera_ShakeScreen(int shakeX, int screen, int shakeY);
 void Camera_HandleHBounds(void);
 void Camera_HandleVBounds(void);
+void Camera_Unknown3(int a1, int screen, int x, int y, int a5);
 
 //States
 void Camera_State_Roam(void);
 void Camera_State_Follow(void);
 void Camera_State_HLock(void);
 void Camera_State_VLock(void);
+void Camera_State_Unknown(void);
 
 #endif //!OBJ_CAMERA_H

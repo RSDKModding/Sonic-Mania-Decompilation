@@ -149,37 +149,33 @@ void Ring_State_Attract(void)
     EntityPlayer *player = entity->storedPlayer;
     if (player->shield == SHIELD_LIGHTNING) {
         int startX = entity->position.x;
-        int xVel   = entity->velocity.x;
-        int newVel = 0;
+        int startY = entity->position.y;
 
         if (entity->position.x <= player->position.x) {
-            if (xVel >= 0)
-                newVel = xVel + 0x3000;
+            if (entity->velocity.x >= 0)
+                entity->velocity.x += 0x3000;
             else
-                newVel = xVel + 0xC000;
-        }
-        else if (xVel <= 0) {
-            newVel = xVel - 0x3000;
+                entity->velocity.x += 0xC000;
         }
         else {
-            newVel = xVel - 0xC000;
+            if (entity->velocity.x <= 0)
+                entity->velocity.x -= 0x3000;
+            else
+                entity->velocity.x -= 0xC000;
         }
-        entity->velocity.x = newVel;
-        int yVel           = entity->velocity.y;
-        int startY         = entity->position.y;
+
         if (startY <= player->position.y) {
-            if (yVel >= 0)
-                newVel = yVel + 0x3000;
+            if (entity->velocity.y >= 0)
+                entity->velocity.y += 0x3000;
             else
-                newVel = yVel + 0xC000;
-        }
-        else if (yVel <= 0) {
-            newVel = yVel - 0x3000;
+                entity->velocity.y += 0xC000;
         }
         else {
-            newVel = yVel - 0xC000;
+            if (entity->velocity.y <= 0)
+                entity->velocity.y -= 0x3000;
+            else
+                entity->velocity.y -= 0xC000;
         }
-        entity->velocity.y = newVel;
         entity->position.x = startX + entity->velocity.x;
         entity->position.y = startY + entity->velocity.y;
     }

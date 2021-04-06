@@ -86,7 +86,7 @@ void UIWidgets_StageLoad(void)
 
 void UIWidgets_ApplyLanguage(void)
 {
-    Game_Print("Apply Language %d", Localization->language);
+    LogHelpers_Print("Apply Language %d", Localization->language);
     switch (Localization->language) {
         case LANGUAGE_EN: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
         case LANGUAGE_FR: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;

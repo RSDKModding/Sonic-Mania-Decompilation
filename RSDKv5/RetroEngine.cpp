@@ -8,7 +8,7 @@ HMODULE hLibModule = NULL;
 typedef void(*linkPtr)(GameInfo *);
 #endif
 
-#if RETRO_PLATFORM == RETRO_OSX
+#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX
 #include <dlfcn.h>
 
 void* link_handle = NULL;
@@ -209,22 +209,22 @@ bool32 processEvents()
                         break;
 #if RETRO_PLATFORM == RETRO_OSX
                     case SDLK_F6:
-                        if (engine.masterPaused)
+                        if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
                             engine.frameStep = true;
                         break;
                     case SDLK_F7:
-                        if (engine.devMenu)
-                            engine.masterPaused ^= 1;
+                        if (engine.devMenu) {
+                            sceneInfo.state ^= ENGINESTATE_STEPOVER;
+                        }
                         break;
 #else
                     case SDLK_F11:
-                        if ((sceneInfo.state & 4) == 4)
+                        if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
                             engine.frameStep = true;
                         break;
                     case SDLK_F12:
                         if (engine.devMenu) {
-                            engine.masterPaused ^= 1;
-                            sceneInfo.state ^= ENGINESTATE_LOAD_STEPOVER;
+                            sceneInfo.state ^= ENGINESTATE_STEPOVER;
                         }
                         break;
 #endif
@@ -243,24 +243,28 @@ bool32 processEvents()
     return true;
 }
 
-void initRetroEngine()
+bool initRetroEngine()
 {
     InitStorage();
     initUserData();
 
     readSettings();
 
-    startGameObjects();
+    if (!startGameObjects()) {
+        engine.running = false;
+        return false;
+    }
 
     engine.running = true;
     if (!InitRenderDevice()) {
         engine.running = false;
-        return;
+        return false;
     }
     if (!InitAudioDevice()) {
         engine.running = false;
-        return;
+        return false;
     }
+    return true;
 }
 void runRetroEngine()
 {
@@ -463,7 +467,7 @@ void runRetroEngine()
     }
 #endif
     
-#if RETRO_PLATFORM == RETRO_OSX
+#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX
     if (link_handle)
         dlclose(link_handle);
 #endif
@@ -522,7 +526,7 @@ void parseArguments(int argc, char *argv[])
     }
 }
 
-void startGameObjects()
+bool startGameObjects()
 {
     memset(&objectList, 0, OBJECT_COUNT * sizeof(ObjectInfo));
     sceneInfo.classCount     = 0;
@@ -535,10 +539,10 @@ void startGameObjects()
     for (int l = 0; l < DRAWLAYER_COUNT; ++l) engine.drawLayerVisible[l] = true;
     setupFunctions();
     InitScriptSystem();
-    LoadGameConfig();
+    return LoadGameConfig();
 }
 
-void LoadGameConfig()
+bool LoadGameConfig()
 {
     FileInfo info;
     MEM_ZERO(info);
@@ -549,7 +553,7 @@ void LoadGameConfig()
 
         if (sig != 0x474643) {
             CloseFile(&info);
-            return;
+            return false;
         }
 
         ReadString(&info, engine.gameName);
@@ -562,7 +566,8 @@ void LoadGameConfig()
         sceneInfo.activeCategory = ReadInt8(&info);
         sceneInfo.listPos        = ReadInt16(&info);
 
-        byte objCnt = ReadInt8(&info);
+        byte objCnt       = ReadInt8(&info);
+        globalObjectCount = TYPE_DEFAULTCOUNT;
         for (int i = 0; i < objCnt; ++i) {
             ReadString(&info, hashBuffer);
 
@@ -571,7 +576,6 @@ void LoadGameConfig()
 
             if (objectCount > 0) {
                 int objID                          = 0;
-                globalObjectCount                  = TYPE_DEFAULTCOUNT;
                 globalObjectIDs[globalObjectCount] = 0;
                 for (objID = 0; objID < objectCount; ++objID) {
                     if (HASH_MATCH(hash, objectList[objID].hash)) {
@@ -655,7 +659,9 @@ void LoadGameConfig()
         }
 
         CloseFile(&info);
+        return true;
     }
+    return false;
 }
 
 void InitScriptSystem()
@@ -711,7 +717,7 @@ void InitScriptSystem()
     bool32 linked = false;
 #if RETRO_PLATFORM == RETRO_WIN
     if (!hLibModule)
-        hLibModule = LoadLibraryA("Game");
+        hLibModule = LoadLibraryA(gameLogicName);
 
     if (hLibModule) {
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
@@ -722,8 +728,22 @@ void InitScriptSystem()
     }
 #endif
 #if RETRO_PLATFORM == RETRO_OSX
+    sprintf(gameLogicName, "%s.dylib", gameLogicName);
     if (!link_handle)
-        link_handle = dlopen("Game.dylib", RTLD_LOCAL|RTLD_LAZY);
+        link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
+
+    if (link_handle) {
+        linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
+        if (linkGameLogic) {
+            linkGameLogic(&info);
+            linked = true;
+        }
+    }
+#endif
+#if RETRO_PLATFORM == RETRO_LINUX
+    sprintf(gameLogicName, "%s.so", gameLogicName);
+    if (!link_handle)
+        link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
 
     if (link_handle) {
         linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");

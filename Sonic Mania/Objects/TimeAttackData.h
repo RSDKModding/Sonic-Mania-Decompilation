@@ -44,6 +44,13 @@ void TimeAttackData_EditorLoad(void);
 void TimeAttackData_Serialize(void);
 
 //Extra Entity FUnctions
+void TimeAttackData_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
+void TimeAttackData_TrackTAClear(byte actID, byte zone, StatInfo *stat, byte charID, int gameMode, int time);
+void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, byte charID, bool32 encore, int x, int y);
+void TimeAttackData_ClearOptions(void);
+int TimeAttackData_GetManiaListPos(int zoneID, int playerID, int act);
+int TimeAttackData_GetEncoreListPos(int zoneID, int playerID, int act);
+void TimeAttackData_GetTimeFromValue(int time, int *minsPtr, int *secsPtr, int *millisecsPtr);
 #if RETRO_USE_PLUS
 int TimeAttackData_LoadCB(int statusCode);
 void TimeAttackData_ResetTimeAttackDB(void);

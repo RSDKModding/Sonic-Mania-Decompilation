@@ -9,7 +9,7 @@ GFXSurface gfxSurface[SURFACE_MAX];
 byte graphicData[GFXDATA_MAX];
 
 int pixWidth = 424;
-int screenCount  = 0;
+int cameraCount  = 0;
 ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[SCREEN_MAX];
 ScreenInfo *currentScreen = NULL;
@@ -33,6 +33,7 @@ bool32 InitRenderDevice()
     int size = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
     scanlines = (ScanlineInfo*)malloc(size * sizeof(ScanlineInfo));
     memset(scanlines, 0, size * sizeof(ScanlineInfo));
+    memset(drawLayers, 0, DRAWLAYER_COUNT * sizeof(DrawList));
 
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -183,6 +184,11 @@ void FlipScreen()
 
         SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, &destScreenPos[s]);
     }
+
+    SDL_SetRenderTarget(engine.renderer, NULL);
+    SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
+    if (dimAmount < 1.0)
+        SDL_RenderFillRect(engine.renderer, NULL);
     // no change here
     SDL_RenderPresent(engine.renderer);
 #endif
@@ -1148,6 +1154,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
     if (yRadiusBottom >= bottom) {
         bottom = y + radius;
+        bottom++;
         if (bottom > currentScreen->clipBound_Y2)
             bottom = currentScreen->clipBound_Y2;
     }
@@ -1169,7 +1176,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
             ScanEdge *scanEdge       = &scanEdgeBuffer[y];
             int dif                  = x - y;
 
-            for (int i = 0; i < radius + 1; ++i) {
+            for (int i = 0; i <= radius; ++i) {
                 int scanX = i + curX;
                 if (yRadiusBottom >= top && yRadiusBottom <= bottom && scanX > scanEdgeBottom->end)
                     scanEdgeBottom->end = scanX;

@@ -192,28 +192,28 @@ void PlayerProbe_Print(EntityPlayer *player)
 {
     EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
-        Game_Print("====================");
-        Game_Print("= Begin Probe      =");
-        Game_Print("====================");
+        LogHelpers_Print("====================");
+        LogHelpers_Print("= Begin Probe      =");
+        LogHelpers_Print("====================");
         if (entity->direction)
-            Game_Print("self->direction = S/U");
+            LogHelpers_Print("self->direction = S/U");
         else
-            Game_Print("self->direction = U/S");
-        Game_Print("self->angle = %i", entity->angle);
-        Game_Print("Cos256(self->angle) = %i", RSDK.Cos256(entity->angle));
-        Game_Print("Sin256(self->angle) = %i", RSDK.Sin256(entity->angle));
-        Game_Print("====================");
+            LogHelpers_Print("self->direction = U/S");
+        LogHelpers_Print("self->angle = %i", entity->angle);
+        LogHelpers_Print("Cos256(self->angle) = %i", RSDK.Cos256(entity->angle));
+        LogHelpers_Print("Sin256(self->angle) = %i", RSDK.Sin256(entity->angle));
+        LogHelpers_Print("====================");
         if (player->direction)
-            Game_Print("self->direction = FACING_LEFT");
+            LogHelpers_Print("self->direction = FACING_LEFT");
         else
-            Game_Print("self->direction = FACING_RIGHT");
-        Game_Print("playerPtr->groundVel = %1", player->groundVel);
-        Game_Print("playerPtr->angle = %i", player->angle);
-        Game_Print("playerPtr->collisionMode = %i", player->collisionMode);
-        Game_Print("playerPtr->onGround = %i", player->onGround);
-        Game_Print("====================");
-        Game_Print("= End Probe        =");
-        Game_Print("====================");
+            LogHelpers_Print("self->direction = FACING_RIGHT");
+        LogHelpers_Print("playerPtr->groundVel = %1", player->groundVel);
+        LogHelpers_Print("playerPtr->angle = %i", player->angle);
+        LogHelpers_Print("playerPtr->collisionMode = %i", player->collisionMode);
+        LogHelpers_Print("playerPtr->onGround = %i", player->onGround);
+        LogHelpers_Print("====================");
+        LogHelpers_Print("= End Probe        =");
+        LogHelpers_Print("====================");
     }
 }
 

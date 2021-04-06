@@ -61,7 +61,7 @@ void DialogRunner_HandleCallback(void)
 {
     RSDK_THIS(DialogRunner);
     if (entity->timer <= 0) {
-        Game_Print("Callback: %x", entity->callback);
+        LogHelpers_Print("Callback: %x", entity->callback);
         if (entity->callback)
             entity->callback();
         RSDK.ResetEntityPtr(entity, 0, 0);
@@ -148,7 +148,7 @@ void DialogRunner_Unknown7(int a1, int a2)
             /*if (!UIDialog->activeDialog) {
                 if (Zone && Zone_GetZoneID() != -1) {
                     RSDK.LoadScene("Presentation", "Title Screen");
-                    Zone_Unknown1(10, 0);
+                    Zone_StartFadeOut(10, 0);
                 }
                 else if (MenuSetup) {
                     //MenuSetup_Unknown11(a1, a2);
@@ -267,7 +267,7 @@ bool32 DialogRunner_NotifyAutosave(void)
         UIWaitSpinner_Wait();
         DialogRunner->field_14    = true;
         globals->notifiedAutosave = false;
-        Game_Print("DUMMY NotifyAutosave()");
+        LogHelpers_Print("DUMMY NotifyAutosave()");
         EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_NotifyAutoSave, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         DialogRunner->entityPtr          = dialogRunner;
@@ -297,12 +297,12 @@ void DialogRunner_GetUserAuthStatus(void)
 void DialogRunner_PromptSavePreference(int id)
 {
     if (User.GetUserStorageNoSave()) {
-        Game_Print("PromptSavePreference() returning due to noSave");
+        LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
-    Game_Print("PromptSavePreference()");
+    LogHelpers_Print("PromptSavePreference()");
     if (User.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
-        Game_Print("WARNING PromptSavePreference() when prompt already in progress.");
+        LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
     User.SetUserStorageStatus();
     EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown6, 0, 0);

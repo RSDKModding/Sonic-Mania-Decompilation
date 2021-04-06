@@ -6,20 +6,20 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[14]; //= { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 };
-    int value2;
-    int value3;
-    int value4;
-    int value5;
-    ushort value6;
-    ushort value7;
-    ushort value8;
-    bool32 value9;
-    int value10;
-    byte value11;
-    int value12;
-    ushort value13;
-    ushort value14;
+    int aniTilesDelay[14]; //= { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 };
+    int field_3C;
+    int timerB;
+    int timerA;
+    int field_48;
+    ushort aniTiles1;
+    ushort aniTiles2;
+    ushort aniTiles3;
+    TileLayer *bg;
+    int activePlayerCount;
+    bool32 playingLoopSFX;
+    int waterfallSFXTimer;
+    ushort sfxWaterfall;
+    ushort sfxWaterfallLoop;
 } ObjectHCZSetup;
 
 // Entity Class
@@ -42,6 +42,8 @@ void HCZSetup_EditorLoad(void);
 void HCZSetup_Serialize(void);
 
 // Extra Entity Functions
-
+void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines);
+void HCZSetup_HandleActTransition(void);
+void HCZSetup_HandleCutscene(void);
 
 #endif //!OBJ_HCZSETUP_H
