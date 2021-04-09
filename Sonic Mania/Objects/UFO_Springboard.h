@@ -43,7 +43,7 @@ typedef struct {
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;
-    AnimationData data;
+    Animator data;
 } EntityUFO_Springboard;
 
 // Object Struct

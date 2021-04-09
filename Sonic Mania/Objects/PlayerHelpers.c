@@ -77,8 +77,8 @@ bool32 PlayerHelpers_CheckStageReload(void)
     }
 
     if (SpecialRing && globals->specialRingID > 0) {
-        EntitySpecialRing *specialRing = NULL;
-        while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&specialRing)) {
+        foreach_all(SpecialRing, specialRing)
+        {
             if (specialRing->id > 0 && globals->specialRingID == specialRing->id)
                 return true;
         }

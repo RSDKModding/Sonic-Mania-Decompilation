@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     Entity *targetPtr;
     int screenID;
     Vector2 center;

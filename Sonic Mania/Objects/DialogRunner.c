@@ -6,8 +6,7 @@ ObjectDialogRunner *DialogRunner;
 void DialogRunner_Update(void)
 {
     RSDK_THIS(DialogRunner);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void DialogRunner_LateUpdate(void) {}
@@ -75,7 +74,7 @@ void DialogRunner_NotifyAutoSave_CB(void)
 {
     DialogRunner->field_14    = 0;
     globals->notifiedAutosave = true;
-    UIWaitSpinner_WaitReplay();
+    UIWaitSpinner_Wait2();
 }
 
 void DialogRunner_NotifyAutoSave(void)
@@ -237,7 +236,7 @@ void DialogRunner_ManageNotifs(int a1)
 }
 void DialogRunner_Wait(int success)
 {
-    UIWaitSpinner_WaitReplay();
+    UIWaitSpinner_Wait2();
 }
 void DialogRunner_GetNextNotif(void)
 {

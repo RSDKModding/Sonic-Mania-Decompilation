@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     TextInfo videoFile1;
     TextInfo videoFile2;
     TextInfo audioFile;

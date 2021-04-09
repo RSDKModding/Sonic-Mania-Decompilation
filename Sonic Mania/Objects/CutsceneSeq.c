@@ -89,8 +89,7 @@ Entity *CutsceneSeq_GetEntity(int type)
 {
     Entity *entity = NULL;
     if (RSDK.GetEntities(type, (Entity **)&entity)) {
-        RSDK.BreakForeachLoop();
-        return entity;
+        foreach_return entity;
     }
     return NULL;
 }

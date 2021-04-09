@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int type;
     int flipFlag;
     byte planeFilter;
@@ -21,7 +21,7 @@ typedef struct {
     char field_66;
     char field_67;
     int timer;
-    AnimationData data;
+    Animator data;
     Hitbox hitbox;
 } EntitySpring;
 

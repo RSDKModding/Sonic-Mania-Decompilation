@@ -7,11 +7,11 @@
 typedef struct {
     RSDK_OBJECT
     bool32 value1;
-    AnimationData value2;
-    AnimationData value3;
-    AnimationData value4;
-    AnimationData value5;
-    AnimationData value6;
+    Animator value2;
+    Animator value3;
+    Animator value4;
+    Animator value5;
+    Animator value6;
     int value7;
     int value8;
     byte value9;

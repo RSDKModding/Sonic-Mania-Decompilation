@@ -227,12 +227,12 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*nextAirState)(void);
-    void (*nextGroundState)(void);
+    StateMachine(state);
+    StateMachine(nextAirState);
+    StateMachine(nextGroundState);
     EntityCamera *camera;
-    AnimationData playerAnimData;
-    AnimationData tailSpriteAnimData;
+    Animator playerAnimData;
+    Animator tailSpriteAnimData;
     int maxWalkSpeed;
     int maxJogSpeed;
     int maxRunSpeed;
@@ -295,8 +295,8 @@ typedef struct {
     int sensorX[5];
     int sensorY;
     Vector2 field_194;
-    void (*inputState2)(void);
-    void (*inputState)(void);
+    StateMachine(inputState2);
+    StateMachine(inputState);
     int controllerID;
     int glideTimer;
     int up;
@@ -307,8 +307,8 @@ typedef struct {
     int jumpHold;
     int jumpAbility;
     int jumpAbilityTimer;
-    void (*movesetPtr)(void);
-    void (*move_Peelout)(void);
+    StateMachine(movesetState);
+    StateMachine(peeloutState);
     int flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;

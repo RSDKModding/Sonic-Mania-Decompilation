@@ -5,8 +5,7 @@ ObjectThanksSetup *ThanksSetup;
 void ThanksSetup_Update(void)
 {
     RSDK_THIS(ThanksSetup);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
@@ -17,8 +16,7 @@ void ThanksSetup_StaticUpdate(void) {}
 void ThanksSetup_Draw(void)
 {
     RSDK_THIS(ThanksSetup);
-    if (entity->stateDraw)
-        entity->stateDraw();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void ThanksSetup_Create(void *data)

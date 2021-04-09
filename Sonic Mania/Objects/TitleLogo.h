@@ -17,13 +17,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     int type;
-    void (*state)(void);
+    StateMachine(state);
     bool32 flag;
     int timer;
     int storeY;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
+    Animator data1;
+    Animator data2;
+    Animator data3;
 } EntityTitleLogo;
 
 // Object Struct

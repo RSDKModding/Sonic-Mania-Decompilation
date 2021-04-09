@@ -4,9 +4,9 @@ ObjectGenericTrigger *GenericTrigger;
 
 void GenericTrigger_Update(void)
 {
-    EntityPlayer *player = NULL;
-    EntityGenericTrigger *entity = (EntityGenericTrigger *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(GenericTrigger);
+    foreach_active(Player, player)
+    {
         if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
             GenericTrigger->playerID = player->playerID;
             if (GenericTrigger->callbacks[entity->triggerID])
@@ -15,24 +15,15 @@ void GenericTrigger_Update(void)
     }
 }
 
-void GenericTrigger_LateUpdate(void)
+void GenericTrigger_LateUpdate(void) {}
+
+void GenericTrigger_StaticUpdate(void) {}
+
+void GenericTrigger_Draw(void) {}
+
+void GenericTrigger_Create(void *data)
 {
-
-}
-
-void GenericTrigger_StaticUpdate(void)
-{
-
-}
-
-void GenericTrigger_Draw(void)
-{
-
-}
-
-void GenericTrigger_Create(void* data)
-{
-    EntityGenericTrigger *entity = (EntityGenericTrigger *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GenericTrigger);
     if (!RSDK_sceneInfo->inEditor) {
         entity->triggerID &= 0xF;
         entity->updateRange.x = entity->size.x;
@@ -45,24 +36,14 @@ void GenericTrigger_Create(void* data)
     }
 }
 
-void GenericTrigger_StageLoad(void)
-{
+void GenericTrigger_StageLoad(void) {}
 
-}
+void GenericTrigger_EditorDraw(void) {}
 
-void GenericTrigger_EditorDraw(void)
-{
-
-}
-
-void GenericTrigger_EditorLoad(void)
-{
-
-}
+void GenericTrigger_EditorLoad(void) {}
 
 void GenericTrigger_Serialize(void)
 {
     RSDK_EDITABLE_VAR(GenericTrigger, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(GenericTrigger, VAR_UINT8, triggerID);
 }
-

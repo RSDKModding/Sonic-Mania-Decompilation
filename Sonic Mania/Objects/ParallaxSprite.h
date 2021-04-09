@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
-    AnimationData data;
+    StateMachine(state);
+    Animator data;
     byte aniID;
     byte attribute;
     Vector2 parallaxFactor;

@@ -15,7 +15,7 @@ typedef struct {
     int size;
     byte activePlayers;
     int negAngle;
-    AnimationData data;
+    Animator data;
 } EntityPlayerProbe;
 
 // Object Struct

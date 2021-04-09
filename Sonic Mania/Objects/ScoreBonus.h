@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     int timer;
-    AnimationData data;
+    Animator data;
 } EntityScoreBonus;
 
 // Object Struct

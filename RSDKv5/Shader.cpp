@@ -24,25 +24,25 @@ bool InitShaders()
 bool ReloadShaders() {
     int maxShaders = 1;
     if (engine.shaderSupport) {
-        LoadShader("None", 0);
-        LoadShader("Clean", 1);
-        LoadShader("CRT-Yeetron", 1);
-        LoadShader("CRT-Yee64", 1);
-        LoadShader("YUV-420", 1);
-        LoadShader("YUV-422", 1);
-        LoadShader("YUV-444", 1);
-        LoadShader("RGB-Image", 1);
+        LoadShader("None", false);
+        LoadShader("Clean", true);
+        LoadShader("CRT-Yeetron", true);
+        LoadShader("CRT-Yee64", true);
+        LoadShader("YUV-420", true);
+        LoadShader("YUV-422", true);
+        LoadShader("YUV-444", true);
+        LoadShader("RGB-Image", true);
         maxShaders = shaderCount;
     }
     else {
         for (int i = 0; i < SHADER_MAX; ++i) {
-            shaderList[i].scope = 1;
+            shaderList[i].linear = true;
         }
 
-        if (!engine.isFullScreen)
-            shaderList[0].scope = 1;
+        if (engine.isFullScreen)
+            shaderList[0].linear = true;
         else
-            shaderList[0].scope = 0;
+            shaderList[0].linear = false;
     }
 
     if (engine.shaderID >= maxShaders)
@@ -51,7 +51,7 @@ bool ReloadShaders() {
     return true;
 }
 
-void LoadShader(const char* fileName, byte scope) {
+void LoadShader(const char* fileName, bool32 linear) {
     char buffer[0x100];
     FileInfo info;
 
@@ -64,10 +64,19 @@ void LoadShader(const char* fileName, byte scope) {
     if (shaderCount == SHADER_MAX)
         return;
 
-    shaderList[shaderCount].scope = scope;
-    sprintf(shaderList[shaderCount].name, "%s", fileName);
+    ShaderEntry *shader            = &shaderList[shaderCount];
+    shader->linear        = linear;
+    sprintf(shader->name, "%s", fileName);
 
-    sprintf(buffer, "Data/Shaders/CSO-DX9/%s.vso", fileName);
+    const char *csoPath = "Dummy"; //nothing will ever be in "Data/Shaders/Dummy" so it works out to never load anthing
+#if RETRO_USING_DIRECTX9
+    csoPath = "CSO-DX9"; //windows
+#endif
+#if RETRO_USING_DIRECTX11
+    csoPath = "CSO-DX11"; //xbox one
+#endif
+
+    sprintf(buffer, "Data/Shaders/%s/%s.vso", csoPath, fileName);
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -76,11 +85,22 @@ void LoadShader(const char* fileName, byte scope) {
         CloseFile(&info);
 
         // now compile it LOL
+#if RETRO_USING_DIRECTX9
+        //if (dx9Device->lpVtbl->CreateVertexShader(dx9Device, (int *)fileData, &shader->vertexShaderObject) >= 0) {
+        //}
+        //else {
+        //    fileData = NULL;
+        //    return;
+        //}
+#endif
+#if RETRO_USING_DIRECTX11
+
+#endif
 
         fileData = NULL;
     }
 
-    sprintf(buffer, "Data/Shaders/CSO-DX9/%s.fso", fileName);
+    sprintf(buffer, "Data/Shaders/%s/%s.fso", csoPath, fileName);
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -89,9 +109,21 @@ void LoadShader(const char* fileName, byte scope) {
         CloseFile(&info);
 
         //now compile it LOL
+#if RETRO_USING_DIRECTX9
+        //if (dx9Device->lpVtbl->CreatePixelShader(dx9Device, (int *)fileData, &shader->pixelShaderObject) >= 0) {
+        //
+        //}
+        //else {
+        //    fileData = NULL;
+        //    return;
+        //}
+#endif
+#if RETRO_USING_DIRECTX11
+
+#endif
 
         fileData = NULL;
     }
 
-    ++shaderCount;
+    shaderCount++;
 }

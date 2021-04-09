@@ -2,22 +2,15 @@
 
 ObjectDust *Dust;
 
-void Dust_Update(void)
-{
-
-}
+void Dust_Update(void) {}
 
 void Dust_LateUpdate(void)
 {
     RSDK_THIS(Dust);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
-void Dust_StaticUpdate(void)
-{
-
-}
+void Dust_StaticUpdate(void) {}
 
 void Dust_Draw(void)
 {
@@ -25,7 +18,7 @@ void Dust_Draw(void)
     RSDK.DrawSprite(&entity->data, NULL, false);
 }
 
-void Dust_Create(void* data)
+void Dust_Create(void *data)
 {
     RSDK_THIS(Dust);
     RSDK.SetSpriteAnimation(Dust->spriteIndex, 0, &entity->data, true, 0);
@@ -109,10 +102,10 @@ void Dust_State_Spindash(void)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
     else {
-        Hitbox *playerHitbox    = Player_GetHitbox(player);
-        entity->position.x = player->position.x;
-        entity->position.y = player->position.y;
-        int bottom                      = playerHitbox->bottom << 16;
+        Hitbox *playerHitbox = Player_GetHitbox(player);
+        entity->position.x   = player->position.x;
+        entity->position.y   = player->position.y;
+        int bottom           = playerHitbox->bottom << 16;
         if (player->invertGravity)
             entity->position.y -= bottom;
         else
@@ -136,18 +129,8 @@ void Dust_State_EggLoco(void)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
-void Dust_EditorDraw(void)
-{
+void Dust_EditorDraw(void) {}
 
-}
+void Dust_EditorLoad(void) {}
 
-void Dust_EditorLoad(void)
-{
-
-}
-
-void Dust_Serialize(void)
-{
-
-}
-
+void Dust_Serialize(void) {}

@@ -5,8 +5,7 @@ ObjectChopper *Chopper;
 void Chopper_Update(void)
 {
     RSDK_THIS(Chopper);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void Chopper_LateUpdate(void) {}

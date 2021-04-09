@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int type;
     Vector2 contentsPos;
     Vector2 unknownPos;
@@ -32,10 +32,10 @@ typedef struct {
     bool32 hidden;
     int planeFilter;
     bool32 lrzConvPhys;
-    AnimationData brokenData;
-    AnimationData contentsData;
-    AnimationData overlayData;
-    AnimationData debrisData;
+    Animator brokenData;
+    Animator contentsData;
+    Animator overlayData;
+    Animator debrisData;
     Entity *parent;
 } EntityItemBox;
 

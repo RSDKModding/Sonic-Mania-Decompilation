@@ -12,9 +12,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    AnimationData animData1;
-    AnimationData animData2;
-    AnimationData numbersData;
+    Animator animData1;
+    Animator animData2;
+    Animator numbersData;
 } EntityBSS_HUD;
 
 // Object Struct

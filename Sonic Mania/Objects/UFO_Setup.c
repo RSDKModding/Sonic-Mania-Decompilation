@@ -6,8 +6,7 @@ void UFO_Setup_Update(void)
 {
     RSDK_THIS(UFO_Setup);
 
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 
 #if RETRO_USE_PLUS
     if (entity->state != UFO_Setup_Unknown12 && globals->gameMode < MODE_TIMEATTACK)
@@ -299,7 +298,7 @@ void UFO_Setup_Unknown6(void) // success
 
     foreach_all(UFO_Player, player)
     {
-        player->inputState  = NULL;
+        player->inputState  = StateMachine_None;
         player->interaction = false;
     }
 
@@ -316,7 +315,7 @@ void UFO_Setup_Unknown7(void) // fail
 
     foreach_all(UFO_Player, player)
     {
-        player->inputState  = NULL;
+        player->inputState  = StateMachine_None;
         player->interaction = false;
     }
 
@@ -394,7 +393,7 @@ void UFO_Setup_Unknown12(void)
             }
 #endif
             entity->visible = false;
-            entity->state   = NULL;
+            entity->state   = StateMachine_None;
         }
     }
     else {

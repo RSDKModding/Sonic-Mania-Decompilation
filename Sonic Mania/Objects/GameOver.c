@@ -4,9 +4,8 @@ ObjectGameOver *GameOver;
 
 void GameOver_Update(void)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(GameOver);
+    StateMachine_Run(entity->state);
 }
 
 void GameOver_LateUpdate(void) {}
@@ -15,7 +14,7 @@ void GameOver_StaticUpdate(void) {}
 
 void GameOver_Draw(void)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GameOver);
     if (entity->state != GameOver_Unknown5 && globals->gameMode == MODE_COMPETITION) {
         if (RSDK_sceneInfo->currentScreenID != entity->playerID || RSDK.GetEntityCount(PauseMenu->objectID, true) > 0) {
             return;
@@ -37,7 +36,7 @@ void GameOver_Draw(void)
 
 void GameOver_Create(void *data)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GameOver);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active  = ACTIVE_ALWAYS;
         entity->visible = true;
@@ -118,13 +117,13 @@ void GameOver_StageLoad(void)
 
 void GameOver_SaveGameCallback(int status)
 {
-    UIWaitSpinner_WaitReplay();
+    UIWaitSpinner_Wait2();
     RSDK.InitSceneLoad();
 }
 
 void GameOver_Unknown2(void)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GameOver);
     if (entity->dword64 > 0)
         entity->dword64 -= 0x40000;
     ScreenInfo *screen = RSDK_screens;
@@ -238,7 +237,7 @@ void GameOver_Unknown2(void)
 
 void GameOver_Unknown3(void)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GameOver);
 
     void *ptr    = NULL; // Competition->field_28 + 92;
     int field_28 = 0;    // Competition->field_28;
@@ -267,7 +266,7 @@ void GameOver_Unknown3(void)
 
 void GameOver_Unknown4(void)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GameOver);
     ++entity->timer;
 
     int cID = 0;
@@ -284,8 +283,8 @@ void GameOver_Unknown4(void)
         Music_RemoveStoredEntities();
         Music_FadeOut(0.05);
 
-        EntityGameOver *gameOver = NULL;
-        while (RSDK.GetEntities(GameOver->objectID, (Entity **)&gameOver)) {
+        foreach_all(GameOver, gameOver)
+        {
             int angle = 0x88;
             for (int i = 0; i < 4; ++i) {
                 gameOver->letterPosMove[i].x   = RSDK.Cos256(angle) << 11;
@@ -301,7 +300,7 @@ void GameOver_Unknown4(void)
 
 void GameOver_Unknown5(void)
 {
-    EntityGameOver *entity = (EntityGameOver *)RSDK_sceneInfo->entity;
+    RSDK_THIS(GameOver);
     if (entity->timer < 120) {
         for (int i = 0; i < 8; ++i) {
             entity->letterPositions[i].x += entity->letterPosMove[i].x;

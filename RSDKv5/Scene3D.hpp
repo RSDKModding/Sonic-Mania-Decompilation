@@ -138,7 +138,7 @@ inline void Prepare3DScene(ushort sceneID)
     }
 }
 
-inline void SetMeshAnimation(ushort model, AnimationData *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
+inline void SetMeshAnimation(ushort model, Animator *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
 {
     if (model >= MODEL_MAX) {
         if (data)
@@ -188,7 +188,7 @@ inline void SetSpecularColour(ushort sceneID, byte x, byte y, byte z)
     }
 }
 void AddModelToScene(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
-void AddMeshFrameToScene(ushort animID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
+void AddMeshFrameToScene(ushort animID, ushort sceneID, Animator *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void Draw3DScene(ushort sceneID);
 
 #endif

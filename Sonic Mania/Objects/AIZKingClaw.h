@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int timer;
     int field_60;
     Vector2 ballPos[12];
@@ -22,10 +22,10 @@ typedef struct {
     Entity *grabbedEntities[8];
     int count;
     int field_F0;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
-    AnimationData data4;
+    Animator data1;
+    Animator data2;
+    Animator data3;
+    Animator data4;
 } EntityAIZKingClaw;
 
 // Object Struct

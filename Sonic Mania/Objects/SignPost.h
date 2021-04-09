@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     byte type;
     ushort field_5D;
     char field_5F;
@@ -36,11 +36,11 @@ typedef struct {
     int sparkleType;
     int itemBounceCount;
     Vector2 playerPosStore[4];
-    AnimationData eggPlateAnim;
-    AnimationData facePlateAnim;
-    AnimationData sidebarData;
-    AnimationData postTopData;
-    AnimationData standData;
+    Animator eggPlateAnim;
+    Animator facePlateAnim;
+    Animator sidebarData;
+    Animator postTopData;
+    Animator standData;
     byte activePlayers;
     bool32 debugObj;
 } EntitySignPost;

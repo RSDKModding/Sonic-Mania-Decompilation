@@ -37,14 +37,14 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
-    void(*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     int timer;
     int playerID;
     int screen;
     Vector2 pos;
-    AnimationData data;
-    AnimationData data2;
+    Animator data;
+    Animator data2;
 } EntityAnnouncer;
 
 // Object Struct

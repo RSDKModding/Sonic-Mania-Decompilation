@@ -5,8 +5,7 @@ ObjectTitleCard *TitleCard;
 void TitleCard_Update(void)
 {
     RSDK_THIS(TitleCard);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void TitleCard_LateUpdate(void) {}
@@ -16,8 +15,7 @@ void TitleCard_StaticUpdate(void) {}
 void TitleCard_Draw(void)
 {
     RSDK_THIS(TitleCard);
-    if (entity->stateDraw)
-        entity->stateDraw();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void TitleCard_Create(void *data)
@@ -110,8 +108,7 @@ void TitleCard_StageLoad(void)
 {
     TitleCard->spriteIndex = RSDK.LoadSpriteAnimation("Global/TitleCard.bin", SCOPE_STAGE);
 
-    EntityTitleCard *titleCard = NULL;
-    while (RSDK.GetEntities(TitleCard->objectID, (Entity **)&titleCard)) {
+    foreach_all(TitleCard, titleCard) {
         Zone->actID = titleCard->actID;
     }
 }
@@ -370,8 +367,8 @@ void TitleCard_Unknown4(void)
 }
 void TitleCard_Unknown5(void)
 {
-    EntityPlayer *player = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player)
+    {
         if (player->camera)
             player->camera->field_90 = 0;
     }
@@ -382,10 +379,8 @@ void TitleCard_Unknown6(void)
     RSDK_THIS(TitleCard);
     if (ActClear && ActClear->dword34)
         ActClear->dword34 = 0;
-    
-    foreach_all(Player, player) {
-        Zone_ApplyWorldBounds(player);
-    }
+
+    Zone_ApplyWorldBounds();
     
     if (!globals->atlEnabled && !globals->suppressTitlecard)
         RSDK.SetGameMode(ENGINESTATE_PAUSED);
@@ -423,10 +418,7 @@ void TitleCard_Unknown6(void)
 void TitleCard_Unknown7(void)
 {
     RSDK_THIS(TitleCard);
-    
-    foreach_all(Player, player) {
-        Zone_ApplyWorldBounds(player);
-    }
+    Zone_ApplyWorldBounds();
 
     if (entity->timer >= 1024) {
         entity->state     = TitleCard_Unknown8;
@@ -441,10 +433,7 @@ void TitleCard_Unknown7(void)
 void TitleCard_Unknown8(void)
 {
     RSDK_THIS(TitleCard);
-    
-    foreach_all(Player, player) {
-        Zone_ApplyWorldBounds(player);
-    }
+    Zone_ApplyWorldBounds();
 
     int val = entity->points0[0].x + (entity->points0[2].x - entity->points0[0].x - 0x100000) / 6;
     if (val < entity->points0[2].x)
@@ -497,9 +486,7 @@ void TitleCard_Unknown8(void)
 void TitleCard_Unknown9(void)
 {
     RSDK_THIS(TitleCard);
-    foreach_all(Player, player) {
-        Zone_ApplyWorldBounds(player);
-    }
+    Zone_ApplyWorldBounds();
     TitleCard_Unknown5();
 
     if (entity->field_60 >= 60) {
@@ -514,9 +501,9 @@ void TitleCard_Unknown9(void)
         entity->field_60++;
         if (entity->field_60 == 16) {
             if (Zone->field_158) {
-                EntityCamera *camera   = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
+                EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                 camera->state          = Camera_State_Follow;
-                player                 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+                EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 player->camera         = camera;
                 camera->targetPtr      = (Entity*)player;
                 Camera->centerBounds.x = 0x20000;
@@ -530,9 +517,7 @@ void TitleCard_Unknown9(void)
 void TitleCard_Unknown10(void)
 {
     RSDK_THIS(TitleCard);
-    foreach_all(Player, player) {
-        Zone_ApplyWorldBounds(player);
-    }
+    Zone_ApplyWorldBounds();
     int speed = ++entity->field_60 << 18;
     entity->points7[0].x -= speed;
     entity->points7[0].y -= speed;

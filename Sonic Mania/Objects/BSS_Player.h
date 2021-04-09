@@ -21,15 +21,15 @@ typedef struct {
     RSDK_ENTITY
     int gravityStrength;
     bool32 sideKick;
-    void (*inputState)(void);
+    StateMachine(inputState);
     int field_64;
     bool32 up;
     bool32 down;
     bool32 left;
     bool32 right;
     bool32 jumpPress;
-    AnimationData playerData;
-    AnimationData tailData;
+    Animator playerData;
+    Animator tailData;
     ushort spriteIndex;
     ushort field_AE;
 } EntityBSS_Player;

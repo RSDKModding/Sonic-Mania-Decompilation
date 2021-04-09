@@ -105,9 +105,8 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
 void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
 {
     EntityPlayer *player       = (EntityPlayer *)p;
-    EntityBoundsMarker *entity = NULL;
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
-        while (RSDK.GetEntities(BoundsMarker->objectID, (Entity **)&entity)) {
+        foreach_all(BoundsMarker, entity) {
             BoundsMarker_CheckBounds(player, entity, setPos);
         }
     }

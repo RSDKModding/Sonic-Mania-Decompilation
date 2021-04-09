@@ -15,10 +15,10 @@ typedef struct {
     int field_58;
     int timer;
     byte palID;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
-    AnimationData data4;
+    Animator data1;
+    Animator data2;
+    Animator data3;
+    Animator data4;
 } EntityUFO_HUD;
 
 // Object Struct

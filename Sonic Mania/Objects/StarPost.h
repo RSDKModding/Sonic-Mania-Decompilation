@@ -23,7 +23,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int id;
     bool32 vsRemove;
     int ballSpeed;
@@ -34,9 +34,9 @@ typedef struct {
     int starAngle;
     int starOffset;
     Vector2 ballPos;
-    AnimationData poleData;
-    AnimationData ballData;
-    AnimationData starData;
+    Animator poleData;
+    Animator ballData;
+    Animator starData;
     Hitbox starHitbox;
     byte activated;
 } EntityStarPost;

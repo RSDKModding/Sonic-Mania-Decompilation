@@ -12,40 +12,39 @@ void CollapsingPlatform_Update(void)
     if (entity->collapseDelay) {
 #if RETRO_USE_PLUS
         if (Player) {
-            EntityPlayer *player = NULL;
-            while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+            foreach_active(Player, player)
+            {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
-                    RSDK.BreakForeachLoop();
-                    entity->state();
+                    StateMachine_Run(entity->state);
                     RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
                     if (entity->respawn) {
                         entity->collapseDelay = 0;
                         entity->playerPos.x   = 0;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
-                    return;
+                    foreach_return;
                 }
             }
         }
 #endif
         if (--entity->collapseDelay == 0) {
-            entity->state();
+            StateMachine_Run(entity->state);
             RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
             if (entity->respawn) {
                 entity->collapseDelay = 0;
                 entity->playerPos.x   = 0;
             }
             else {
-                RSDK.ResetEntityPtr(entity, 0, 0);
+                RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
             }
         }
     }
     else if (Player) {
-        entity->direction    = FLIP_NONE;
-        EntityPlayer *player = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+        entity->direction = FLIP_NONE;
+        foreach_active(Player, player)
+        {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)
 #if RETRO_USE_PLUS
                 && (!entity->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)) 
@@ -55,16 +54,16 @@ void CollapsingPlatform_Update(void)
                 entity->playerPos.x = player->position.x;
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
-                    RSDK.BreakForeachLoop();
-                    entity->state();
+                    StateMachine_Run(entity->state);
                     RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
                     if (entity->respawn) {
                         entity->collapseDelay = 0;
                         entity->playerPos.x   = 0;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
                     }
+                    foreach_break;
                 }
 #endif
             }
@@ -72,14 +71,14 @@ void CollapsingPlatform_Update(void)
         if (entity->playerPos.x) {
             entity->collapseDelay = entity->delay;
             if (!entity->delay) {
-                entity->state();
+                StateMachine_Run(entity->state);
                 RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
                 if (entity->respawn) {
                     entity->collapseDelay = 0;
                     entity->playerPos.x   = 0;
                 }
                 else {
-                    RSDK.ResetEntityPtr(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                 }
             }
         }

@@ -9,9 +9,7 @@ void UIHeading_Update(void)
         RSDK.SetSpriteAnimation(UIHeading->spriteIndex, entity->headingID, &entity->data, true, 0);
         entity->spriteIndex = UIHeading->spriteIndex;
     }
-
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void UIHeading_LateUpdate(void) {}
@@ -21,8 +19,8 @@ void UIHeading_StaticUpdate(void) {}
 void UIHeading_Draw(void)
 {
     RSDK_THIS(UIHeading);
-    RSDK.DrawSprite(&entity->data2, 0, 0);
-    RSDK.DrawSprite(&entity->data, 0, 0);
+    RSDK.DrawSprite(&entity->data2, NULL, false);
+    RSDK.DrawSprite(&entity->data, NULL, false);
 }
 
 void UIHeading_Create(void *data)

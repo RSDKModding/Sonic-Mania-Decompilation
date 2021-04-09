@@ -190,11 +190,11 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(TextInfo) * arraySize; // 8/16
                         break;
-                    case 10: // AnimationData
+                    case 10: // Animator
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(AnimationData) * arraySize; // 24/32
+                        dataPos = tmp + sizeof(Animator) * arraySize; // 24/32
                         break;
                     case 11: // Hitbox
                         tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);

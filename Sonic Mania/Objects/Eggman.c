@@ -5,7 +5,7 @@ ObjectEggman *Eggman;
 void Eggman_Update(void)
 {
     RSDK_THIS(Eggman);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 }
 
 void Eggman_LateUpdate(void) {}

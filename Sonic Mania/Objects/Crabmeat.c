@@ -5,8 +5,7 @@ ObjectCrabmeat *Crabmeat;
 void Crabmeat_Update(void)
 {
     RSDK_THIS(Crabmeat);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void Crabmeat_LateUpdate(void) {}

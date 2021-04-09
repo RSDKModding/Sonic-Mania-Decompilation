@@ -27,7 +27,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     byte characterID;
     int oscillate;
     int hiddenAtStart;
@@ -48,8 +48,8 @@ typedef struct {
     bool32 timerFlag;
     ushort spriteIndex;
     ushort field_296;
-    AnimationData data;
-    AnimationData altData;
+    Animator data;
+    Animator altData;
 } EntityCutsceneHBH;
 
 // Object Struct

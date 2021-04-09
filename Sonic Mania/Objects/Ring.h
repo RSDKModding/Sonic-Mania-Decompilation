@@ -15,8 +15,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     int type;
     int planeFilter;
     int ringAmount;
@@ -28,7 +28,7 @@ typedef struct {
     Vector2 amplitude;
     int speed;
     Vector2 offset;
-    AnimationData animData;
+    Animator animData;
 } EntityRing;
 
 // Object Struct

@@ -5,7 +5,7 @@ ObjectFXRuby *FXRuby;
 void FXRuby_Update(void)
 {
     RSDK_THIS(FXRuby);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 }
 
 void FXRuby_LateUpdate(void)

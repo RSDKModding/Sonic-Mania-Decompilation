@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    AnimationData animData;
+    Animator animData;
     ushort spriteIndex;
     int value3[16]; //= { -524288, -1572864, 524288, -1572864, -524288, -524288, 524288, -524288, -524288, 524288, 524288, 524288, -524288, 1572864, 524288, 1572864 };
     int value4[16]; //= { -393216, -393216, -262144, -327680, -1179648, -131072, -393216, -65536, -524288, 131072, -393216, 65536, -393216, 393216, -262144, 327680 };
@@ -20,8 +20,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     byte type;
     bool32 onlyKnux;
     bool32 onlyMighty;

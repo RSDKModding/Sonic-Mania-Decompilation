@@ -5,8 +5,7 @@ ObjectWater *Water;
 void Water_Update(void)
 {
     RSDK_THIS(Water);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void Water_LateUpdate(void) {}
@@ -95,8 +94,7 @@ void Water_StaticUpdate(void)
 void Water_Draw(void)
 {
     RSDK_THIS(Water);
-    if (entity->stateDraw)
-        entity->stateDraw();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void Water_Create(void *data)
@@ -295,8 +293,7 @@ void Water_CheckButtonTag(void)
                         entity->updateRange.y = 0x800000 + abs(entity->position.y - button->position.y);
                     }
                     flag = true;
-                    RSDK.BreakForeachLoop();
-                    break;
+                    foreach_break;
                 }*/
             }
         }
@@ -314,8 +311,7 @@ void Water_CheckButtonTag(void)
                         entity->updateRange.y = 0x800000 + abs(entity->position.y - chain->position.y);
                     }
                     flag = true;
-                    RSDK.BreakForeachLoop();
-                    break;
+                    foreach_break;
                 }*/
             }
         }
@@ -851,8 +847,7 @@ EntityWater *Water_Unknown7(EntityPlayer *entityPtr)
     foreach_active(Water, water)
     {
         if (water->state == Water_Unknown8 && !((1 << playerID) & water->activePlayers)) {
-            RSDK.BreakForeachLoop();
-            return water;
+            foreach_return water;
         }
     }
     return NULL;

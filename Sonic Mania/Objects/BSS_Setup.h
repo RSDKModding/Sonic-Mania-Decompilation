@@ -71,7 +71,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int spinTimer;
     int speedupTimer;
     int speedupInterval;
@@ -101,8 +101,8 @@ typedef struct {
     int field_C0;
     int paletteID;
     int dwordC8;
-    AnimationData globeSpinData;
-    AnimationData shadowData;
+    Animator globeSpinData;
+    Animator shadowData;
 } EntityBSS_Setup;
 
 // Object Struct

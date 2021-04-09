@@ -293,7 +293,7 @@ void runRetroEngine()
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
-                    val->isSigned   = 0;
+                    val->type   = 0;
                     val->value      = &engine.drawLayerVisible[v];
                     val->valByteCnt = 4;
                     val->min        = 0;
@@ -348,7 +348,7 @@ void runRetroEngine()
                 for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
                     DebugValueInfo *val = &debugValues[debugValCnt++];
                     strncpy(val->name, drawGroupNames[v], 0x10);
-                    val->isSigned   = 0;
+                    val->type   = 0;
                     val->value      = &engine.drawLayerVisible[v];
                     val->valByteCnt = 4;
                     val->min   = 0;

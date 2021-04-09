@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int type;
     int timer;
     int angleY;
@@ -24,10 +24,10 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
-    AnimationData data4;
+    Animator data1;
+    Animator data2;
+    Animator data3;
+    Animator data4;
 } EntityEggPrison;
 
 // Object Struct

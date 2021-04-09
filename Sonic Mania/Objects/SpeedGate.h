@@ -15,7 +15,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     int id;
     int timer;
     int prize;
@@ -27,11 +27,11 @@ typedef struct {
     int field_80;
     int field_84;
     EntityPlayer *playerPtr;
-    AnimationData baseData;
-    AnimationData topData;
-    AnimationData timerData;
-    AnimationData finsData;
-    AnimationData bubbleData;
+    Animator baseData;
+    Animator topData;
+    Animator timerData;
+    Animator finsData;
+    Animator bubbleData;
     int activePlayers;
 } EntitySpeedGate;
 

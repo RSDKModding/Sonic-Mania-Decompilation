@@ -58,8 +58,8 @@ void Spikes_Update(void)
     entity->position.x -= entity->offset.x;
     entity->position.y -= entity->offset.y;
     if (entity->dword6C != 1) {
-        EntityPlayer *player = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+        foreach_active(Player, player)
+        {
             if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
                 if ((/*(!Ice || player->state != Ice_State_FrozenPlayer) &&*/ shield->data.animationID != 2) || Press) {
@@ -182,8 +182,7 @@ void Spikes_Update(void)
                                 Spikes_Unknown1(0, 0);
                                 player->position.x = posStoreX;
                                 player->position.y = posStoreY;
-                                RSDK.BreakForeachLoop();
-                                return;
+                                foreach_return;
                             }
                             break;
                         case 2:
@@ -191,8 +190,7 @@ void Spikes_Update(void)
                                 Spikes_Unknown1(player->velocity.x, 0);
                                 player->position.x = posStoreX;
                                 player->position.y = posStoreY;
-                                RSDK.BreakForeachLoop();
-                                return;
+                                foreach_return;
                             }
                             else {
                                 if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
@@ -212,8 +210,7 @@ void Spikes_Update(void)
                                 Spikes_Unknown1(player->velocity.x, 0);
                                 player->position.x = posStoreX;
                                 player->position.y = posStoreY;
-                                RSDK.BreakForeachLoop();
-                                return;
+                                foreach_return;
                             }
                             break;
                         case 4:
@@ -227,8 +224,7 @@ void Spikes_Update(void)
                                 Spikes_Unknown1(0, player->velocity.y);
                                 player->position.x = posStoreX;
                                 player->position.y = posStoreY;
-                                RSDK.BreakForeachLoop();
-                                return;
+                                foreach_return;
                             }
                         default:
                             if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {

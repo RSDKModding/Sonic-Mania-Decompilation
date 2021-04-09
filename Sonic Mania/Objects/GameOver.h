@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     int timer;
     int playerID;
     int dword64;
@@ -25,7 +25,7 @@ typedef struct {
     int unknownArray1[8];
     int letterRotations[8];
     int letterRotateSpeed[8];
-    AnimationData data;
+    Animator data;
 } EntityGameOver;
 
 // Object Struct

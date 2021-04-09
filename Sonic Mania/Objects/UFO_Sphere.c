@@ -5,8 +5,7 @@ ObjectUFO_Sphere *UFO_Sphere;
 void UFO_Sphere_Update(void)
 {
     RSDK_THIS(UFO_Sphere);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
     RSDK.ProcessAnimation(&entity->data);
 }
 

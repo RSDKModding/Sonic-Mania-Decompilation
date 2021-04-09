@@ -637,7 +637,7 @@ typedef struct {
     short frameCount;
     byte loopIndex;
     byte rotationFlag;
-} AnimationData;
+} Animator;
 
 typedef struct {
     int deadzone;
@@ -808,8 +808,10 @@ typedef enum {
 
 // Macros and other handy things
 
-#define CallFunction(func)                                                                                                                           \
+#define StateMachine(name) void (*name)(void)
+#define StateMachine_Run(func)                                                                                                                           \
     if (func)                                                                                                                                        \
         func();
+#define StateMachine_None NULL
 
 #endif /* GAMELINK_H */

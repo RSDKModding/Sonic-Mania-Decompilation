@@ -165,12 +165,11 @@ void LoadScene()
         }
 
         byte objCnt = ReadInt8(&info);
-
         for (int o = 0; o < objCnt; ++o) {
             ReadString(&info, hashBuffer);
 
             uint hash[4];
-            GenerateHash(hash, StrLength(hashBuffer));
+            GEN_HASH(hashBuffer, hash);
 
             if (objectCount > 0) {
                 int objID                            = 0;

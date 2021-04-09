@@ -5,7 +5,7 @@ ObjectUFO_ItemBox *UFO_ItemBox;
 void UFO_ItemBox_Update(void)
 {
     RSDK_THIS(UFO_ItemBox);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 }
 
 void UFO_ItemBox_LateUpdate(void)

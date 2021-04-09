@@ -5,8 +5,7 @@ ObjectTitleLogo *TitleLogo;
 void TitleLogo_Update(void)
 {
     RSDK_THIS(TitleLogo);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void TitleLogo_LateUpdate(void) {}
@@ -20,27 +19,27 @@ void TitleLogo_Draw(void)
         case 0:
             RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
             entity->direction = FLIP_NONE;
-            RSDK.DrawSprite(&entity->data1, 0, 0);
+            RSDK.DrawSprite(&entity->data1, NULL, false);
             entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->data1, 0, 0);
+            RSDK.DrawSprite(&entity->data1, NULL, false);
             break;
         case 1:
             entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->data1, 0, 0);
+            RSDK.DrawSprite(&entity->data1, NULL, false);
             entity->direction = FLIP_NONE;
-            RSDK.DrawSprite(&entity->data1, 0, 0);
+            RSDK.DrawSprite(&entity->data1, NULL, false);
             if (entity->flag)
-                RSDK.DrawSprite(&entity->data3, 0, 0);
+                RSDK.DrawSprite(&entity->data3, NULL, false);
             break;
         case 6:
             if (!(entity->timer & 0x10))
-                RSDK.DrawSprite(&entity->data1, 0, 0);
+                RSDK.DrawSprite(&entity->data1, NULL, false);
             break;
         case 7:
-            RSDK.DrawSprite(&entity->data1, 0, 0);
-            RSDK.DrawSprite(&entity->data2, 0, 0);
+            RSDK.DrawSprite(&entity->data1, NULL, false);
+            RSDK.DrawSprite(&entity->data2, NULL, false);
             break;
-        default: RSDK.DrawSprite(&entity->data1, 0, 0); break;
+        default: RSDK.DrawSprite(&entity->data1, NULL, false); break;
     }
 }
 
@@ -188,7 +187,7 @@ void TitleLogo_Unknown4(void)
                     if (entity->type == 1)
                         entity->state = TitleLogo_Unknown2;
                     else
-                        entity->state = NULL;
+                        entity->state = StateMachine_None;
                 }
             }
         }

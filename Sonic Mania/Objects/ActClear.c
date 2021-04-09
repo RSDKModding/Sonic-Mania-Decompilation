@@ -7,8 +7,7 @@ void ActClear_Update(void) {}
 void ActClear_LateUpdate(void)
 {
     RSDK_THIS(ActClear);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void ActClear_StaticUpdate(void) {}
@@ -449,14 +448,14 @@ void ActClear_CheckPlayerVictory(void)
             player->nextAirState    = 0;
             player->nextGroundState = 0;
             if (Zone->forcePlayerOnScreenFlag)
-                player->inputState = NULL;
+                player->inputState = StateMachine_None;
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_VICTORY, &player->playerAnimData, true, 0);
         }
     }
 }
 void ActClear_SaveGameCallback(int success)
 {
-    UIWaitSpinner_WaitReplay();
+    UIWaitSpinner_Wait2();
     ActClear->field_10 = 0;
 }
 
@@ -760,7 +759,7 @@ void ActClear_Unknown10(void)
             entity->state = ActClear_State_ActFinish;
         }
         else {
-            entity->state    = NULL;
+            entity->state    = StateMachine_None;
             EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
             zone->screenID   = 4;
             zone->timer      = 0;
@@ -838,7 +837,7 @@ void ActClear_ForcePlayerOnScreen(void)
     player1->jumpHold  = false;
 
     if (player1->position.x >= screenOffX) {
-        player1->inputState = NULL;
+        player1->inputState = StateMachine_None;
         player1->state      = Player_State_Ground;
         player1->groundVel  = -0x40000;
         player1->left       = true;

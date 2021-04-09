@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(stateDraw);
     int type;
     int timer;
     int field_64;

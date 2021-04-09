@@ -28,7 +28,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     int machQuota1;
     int machQuota2;
     int machQuota3;
@@ -49,7 +49,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     Matrix matrix4;
-    void(*inputState)();
+    StateMachine(inputState);
     int controllerID;
     bool32 up;
     bool32 down;
@@ -57,7 +57,7 @@ typedef struct {
     bool32 right;
     bool32 jumpPress;
     bool32 jumpHold;
-    AnimationData playerData;
+    Animator playerData;
 } EntityUFO_Player;
 
 // Object Struct

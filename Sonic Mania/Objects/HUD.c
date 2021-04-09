@@ -4,7 +4,7 @@ ObjectHUD *HUD;
 
 void HUD_Update(void)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     entity->field_150 = 0;
     entity->field_154 = 0;
     if (entity->taData2.animationID == 11)
@@ -13,7 +13,7 @@ void HUD_Update(void)
 
 void HUD_LateUpdate(void)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     if (globals->gameMode == MODE_COMPETITION) {
         for (entity->screenID = 0; entity->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++entity->screenID) {
             if (entity->competitionStates[entity->screenID])
@@ -21,8 +21,7 @@ void HUD_LateUpdate(void)
         }
     }
     else {
-        if (entity->state)
-            entity->state();
+        StateMachine_Run(entity->state);
     }
 
     if (globals->gameMode >= MODE_TIMEATTACK) {
@@ -76,8 +75,8 @@ void HUD_StaticUpdate(void) {}
 
 void HUD_Draw(void)
 {
-    EntityHUD *entity    = (EntityHUD *)RSDK_sceneInfo->entity;
-    EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(RSDK_sceneInfo->currentScreenID);
+    RSDK_THIS(HUD);
+    EntityPlayer *player = RSDK_GET_ENTITY(RSDK_sceneInfo->currentScreenID, Player);
 
     Vector2 lifePos;
 
@@ -93,8 +92,7 @@ void HUD_Draw(void)
         pos[3].x = entity->dword114[RSDK_sceneInfo->currentScreenID].x;
         pos[3].y = entity->dword114[RSDK_sceneInfo->currentScreenID].y;
 
-        EntityPlayer *plr = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&plr)) {
+        foreach_active(Player, plr) {
             if (plr != player) {
                 entity->playerIDData.frameID = plr->playerID;
                 RSDK.DrawSprite(&entity->playerIDData, &plr->position, 0);
@@ -447,7 +445,7 @@ void HUD_StageLoad(void)
 
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     int mult          = 1;
     if (!maxDigits) {
         if (value <= 0) {
@@ -472,8 +470,8 @@ void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
 
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
 {
+    RSDK_THIS(HUD);
     int mult          = 1;
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
     for (int i = 4; i; --i) {
         entity->numbersData.frameID = value / mult & 0xF;
         RSDK.DrawSprite(&entity->numbersData, drawPos, true);
@@ -484,7 +482,7 @@ void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
 
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     int cnt           = 0;
     int mult          = 1;
     int mult2         = 1;
@@ -515,7 +513,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 }
     
 #if RETRO_GAMEVER != VER_100
-void HUD_GetKeyFrame(AnimationData *data, int buttonID)
+void HUD_GetKeyFrame(Animator *data, int buttonID)
 {
     int val = 0; // UIButtonPrompt_Unknown1();
 #if RETRO_USE_PLUS
@@ -528,7 +526,7 @@ void HUD_GetKeyFrame(AnimationData *data, int buttonID)
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, data, true, buttonID);
     }
     else {
-        EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
         int id               = RSDK.ControllerIDForInputID(player->controllerID);
 #else
@@ -554,7 +552,7 @@ void HUD_GetKeyFrame(AnimationData *data, int buttonID)
 }
 void HUD_GetSuperFrames(void)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     HUD_GetKeyFrame(&entity->superButtonData1, 3);
     HUD_GetKeyFrame(&entity->taData3, 3);
     HUD_GetKeyFrame(&entity->taData4, 4);
@@ -563,7 +561,7 @@ void HUD_GetSuperFrames(void)
 
 void HUD_Unknown5(void)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     Vector2 *ptrs[4];
     void **statePtr = NULL;
 
@@ -600,7 +598,7 @@ void HUD_Unknown5(void)
 
 void HUD_Unknown6(void)
 {
-    EntityHUD *entity = (EntityHUD *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HUD);
     Vector2 *ptrs[4];
     void **statePtr = NULL;
 

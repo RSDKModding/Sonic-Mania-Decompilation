@@ -127,10 +127,9 @@ void SizeLaser_StageLoad(void)
 
 bool32 SizeLaser_SizeChangeSFXCheck(void)
 {
-    Entity *entity = NULL;
-
     int cnt = 0;
-    while (RSDK.GetActiveEntities(SizeLaser->objectID, &entity)) {
+    foreach_active(SizeLaser, entity)
+    {
         if (entity->activeScreens)
             ++cnt;
     }

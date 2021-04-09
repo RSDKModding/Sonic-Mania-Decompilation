@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    void(*state)(void);
+    StateMachine(state);
     int timedOut;
     bool32 encoreStage;
     int machLevel;
@@ -30,7 +30,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int timer;
     colour fadeColour;
 } EntityUFO_Setup;

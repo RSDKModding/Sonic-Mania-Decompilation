@@ -17,12 +17,12 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int id;
     int planeFilter;
     int warpTimer;
     int dword68;
-    AnimationData warpData;
+    Animator warpData;
     int angleZ;
     int angleY;
     bool32 enabled;

@@ -42,7 +42,7 @@ inline void printHitbox(SeverityModes severity, const char *message, Hitbox *hit
 struct DebugValueInfo {
     char name[0x10];
     void *value;
-    int isSigned;
+    int type;
     int valByteCnt;
     int min;
     int max;

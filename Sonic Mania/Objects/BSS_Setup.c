@@ -7,8 +7,7 @@ void BSS_Setup_Update(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 
     if (entity->palettePage) {
@@ -711,9 +710,8 @@ void BSS_Setup_State_Exit(void)
     entity->maxSpeed = 0;
     if (entity->spinTimer <= 0) {
         RSDK.CreateEntity(BSS_Message->objectID, (void *)2, entity->position.x, entity->position.y);
-        EntityBSS_Player *player = NULL;
-        while (RSDK.GetActiveEntities(BSS_Player->objectID, (Entity **)&player) == 1) {
-            player->inputState = NULL;
+        foreach_active(BSS_Player, player) {
+            player->inputState = StateMachine_None;
         }
     }
     else {

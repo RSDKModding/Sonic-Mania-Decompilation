@@ -5,8 +5,7 @@ ObjectDemoMenu *DemoMenu = NULL;
 void DemoMenu_Update(void)
 {
     RSDK_THIS(DemoMenu);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 
     entity->angle = (entity->angle + 1) & 0x1FF;
     if (!(entity->angle & 1)) {
@@ -57,7 +56,7 @@ void DemoMenu_Create(void *data)
 
 void DemoMenu_StageLoad(void) { DemoMenu->spriteIndex = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
 
-void DemoMenu_DrawStagePreview(Vector2 *pos, AnimationData *data, int zoneID)
+void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *data, int zoneID)
 {
     RSDK_THIS(DemoMenu);
     data->frameID = 0;
@@ -144,8 +143,8 @@ void DemoMenu_State_Load(void)
         else
             RSDK.LoadScene("Media Demo", "Studiopolis Zone 1");
 
-        EntityTitleSetup *titleSetup = NULL;
-        while (RSDK.GetEntities(TitleSetup->objectID, (Entity **)&titleSetup)) {
+        foreach_all(TitleSetup, titleSetup)
+        {
             titleSetup->state     = TitleSetup_Unknown11;
             titleSetup->stateDraw = TitleSetup_Unknown13;
         }

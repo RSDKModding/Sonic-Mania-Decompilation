@@ -182,8 +182,8 @@ void SaveGame_SaveLoadedCB(int status)
 {
     LogHelpers_Print("SaveLoadedCB(%d)", status);
     if (status) {
-        Entity *entity = NULL;
-        while (RSDK.GetEntities(UISaveSlot->objectID, (Entity **)&entity)) {
+        foreach_all(UISaveSlot, entity)
+        {
             /*if (!*(_DWORD *)(entity + 300)) {
                 Entity* store                     = RSDK_sceneInfo->entity;
                 RSDK_sceneInfo->entity = (RSDK_ENTITY *)entity;

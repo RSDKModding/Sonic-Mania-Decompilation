@@ -7,8 +7,7 @@ void Debris_Update(void)
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     if (entity->cooldown <= 0) {
         RSDK.ProcessAnimation(&entity->data);
-        if (entity->state)
-            entity->state();
+        StateMachine_Run(entity->state);
 
         if (entity->drawFX & FX_ROTATE)
             entity->rotation = (entity->rotation + entity->rotSpeed) & 0x1FF;

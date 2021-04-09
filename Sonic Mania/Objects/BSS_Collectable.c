@@ -89,7 +89,7 @@ void BSS_Collectable_Create(void *data)
         for (int i = 0; i < 8; ++i) {
             RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, i, &BSS_Collectable->sphereData[i + 1], true, 0);
         }
-        // RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 0, (AnimationData *)&BSS_Collectable[2].scaleXTable[21], true, 0);
+        // RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 0, (Animator *)&BSS_Collectable[2].scaleXTable[21], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 0, &BSS_Collectable->sphereData[7], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 1, &BSS_Collectable->sphereData[15], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 6, &BSS_Collectable->sphereData[16], true, 0);

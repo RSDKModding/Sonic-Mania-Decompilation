@@ -39,7 +39,7 @@ typedef struct {
     int field_D4;
     int wakePosX[4];
     byte wakeDir[4];
-    AnimationData wakeData;
+    Animator wakeData;
     int field_104;
     bool32 playingSkimSFX;
 } ObjectWater;
@@ -47,8 +47,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     int type;
     void *childPtr;
     int field_68;
@@ -81,7 +81,7 @@ typedef struct {
     int field_BC;
     int field_C0;
     int taggedObject;
-    AnimationData waterData;
+    Animator waterData;
 } EntityWater;
 
 // Object Struct

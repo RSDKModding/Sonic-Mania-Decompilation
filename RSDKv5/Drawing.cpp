@@ -2486,7 +2486,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
     }
 }
 
-void DrawSprite(AnimationData *data, Vector2 *position, bool32 screenRelative)
+void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
 {
     if (data && data->framePtrs) {
         SpriteFrame *frame = &data->framePtrs[data->frameID];
@@ -4255,7 +4255,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
 }
 
-void DrawText(AnimationData *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
+void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charOffsets, bool32 screenRelative)
 {
     if (data && info && data->framePtrs) {

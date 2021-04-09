@@ -7,8 +7,7 @@ void SpecialClear_Update(void) {}
 void SpecialClear_LateUpdate(void)
 {
     RSDK_THIS(SpecialClear);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void SpecialClear_StaticUpdate(void) {}
@@ -361,7 +360,7 @@ void SpecialClear_GiveScoreBonus(int score)
 void SpecialClear_SaveCB(int success)
 {
     RSDK_THIS(SpecialClear);
-    UIWaitSpinner_WaitReplay();
+    UIWaitSpinner_Wait2();
     entity->field_120 = 0;
 }
 

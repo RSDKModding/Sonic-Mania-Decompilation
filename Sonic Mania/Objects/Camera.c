@@ -7,7 +7,7 @@ void Camera_Update(void)
     RSDK_THIS(Camera);
     entity->lastPos.x = entity->position.x;
     entity->lastPos.y = entity->position.y;
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
     entity->velocity.x = entity->position.x - entity->lastPos.x;
     entity->velocity.y = entity->position.y - entity->lastPos.y;
     Camera_SetCameraBounds(entity);
@@ -418,7 +418,7 @@ void Camera_State_Unknown(void)
 
     if (entity->field_A0 >= 0x100) {
         entity->field_A0 = 0;
-        entity->state    = NULL;
+        entity->state    = StateMachine_None;
     }
 }
 

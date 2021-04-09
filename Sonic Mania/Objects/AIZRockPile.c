@@ -6,11 +6,10 @@ ObjectAIZRockPile *AIZRockPile;
 void AIZRockPile_Update(void)
 {
     RSDK_THIS(AIZRockPile);
-    entity         = (EntityAIZRockPile *)RSDK_sceneInfo->entity;
     Hitbox *hitbox = RSDK.GetHitbox(&entity->data, 1);
 
-    EntityPlayer *player = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player)
+    {
         if (!entity->onlyMighty || player->characterID == ID_MIGHTY) {
             if (!entity->onlyKnux || player->characterID == ID_KNUCKLES) {
                 int cMode     = player->collisionMode;
@@ -44,8 +43,7 @@ void AIZRockPile_Update(void)
                                 AIZRockPile_SpawnRocks(entity->rockSpeedsL);
                             else
                                 AIZRockPile_SpawnRocks(entity->rockSpeedsR);
-                            RSDK.BreakForeachLoop();
-                            return;
+                            foreach_return;
                         }
                     }
                 }
@@ -64,8 +62,7 @@ void AIZRockPile_Update(void)
                         else
                             player->velocity.y = -0x30000;
                         AIZRockPile_SpawnRocks(entity->rockSpeedsT);
-                        RSDK.BreakForeachLoop();
-                        return;
+                        foreach_return;
                     }
                 }
             }

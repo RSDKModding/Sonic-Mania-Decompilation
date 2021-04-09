@@ -4,10 +4,8 @@ ObjectItemBox *ItemBox;
 
 void ItemBox_Update(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
-
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(ItemBox);
+    StateMachine_Run(entity->state);
 
     if (entity->type == 17) {
         if (entity->contentsData.animationID == 2 || (uint)(entity->contentsData.animationID - 7) <= 1) {
@@ -50,44 +48,44 @@ void ItemBox_StaticUpdate(void)
 
 void ItemBox_Draw(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     if (!entity->hidden) {
-        if (entity->isContents == 1) {
+        if (entity->isContents) {
             if (RSDK_sceneInfo->currentDrawGroup == Zone->uiDrawLow) {
                 entity->drawFX = FX_NONE;
-                RSDK.DrawSprite(&entity->contentsData, &entity->contentsPos, 0);
+                RSDK.DrawSprite(&entity->contentsData, &entity->contentsPos, false);
             }
             else {
                 entity->drawFX    = FX_FLIP;
                 entity->inkEffect = INK_NONE;
-                RSDK.DrawSprite(&entity->brokenData, 0, 0);
+                RSDK.DrawSprite(&entity->brokenData, NULL, false);
                 RSDK.AddDrawListRef(Zone->uiDrawLow, RSDK_sceneInfo->entitySlot);
             }
         }
         else {
-            entity->inkEffect = 0;
-            RSDK.DrawSprite(&entity->brokenData, 0, 0);
-            RSDK.DrawSprite(&entity->contentsData, &entity->contentsPos, 0);
-            entity->inkEffect = INK_ADD;
-            RSDK.DrawSprite(&entity->overlayData, 0, 0);
             entity->inkEffect = INK_NONE;
-            RSDK.DrawSprite(&entity->debrisData, 0, 0);
+            RSDK.DrawSprite(&entity->brokenData, NULL, false);
+            RSDK.DrawSprite(&entity->contentsData, &entity->contentsPos, false);
+            entity->inkEffect = INK_ADD;
+            RSDK.DrawSprite(&entity->overlayData, NULL, false);
+            entity->inkEffect = INK_NONE;
+            RSDK.DrawSprite(&entity->debrisData, NULL, false);
         }
     }
 }
 
 void ItemBox_Create(void *data)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     if (data)
-        entity->type = (int)(size_t)data;
+        entity->type = voidToInt(data);
     if (entity->state != ItemBox_State_Broken) {
         RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->brokenData, true, 0);
         RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &entity->contentsData, true, 0);
         RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 3, &entity->overlayData, true, 0);
         RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 4, &entity->debrisData, true, 0);
 
-        EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         switch (entity->type) {
             case 7:
             case 8:
@@ -125,7 +123,7 @@ void ItemBox_Create(void *data)
 #endif
                     entity->contentsData.frameID = entity->type;
                 else
-                    RSDK.ResetEntityPtr(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                 return;
             default: entity->contentsData.frameID = entity->type; break;
         }
@@ -148,7 +146,7 @@ void ItemBox_Create(void *data)
             RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &entity->brokenData, true, entity->brokenData.frameID);
         }
         else if (entity->hidden) {
-            entity->state = NULL;
+            entity->state = StateMachine_None;
         }
         else if (entity->isFalling) {
             entity->active = ACTIVE_NORMAL;
@@ -184,11 +182,11 @@ void ItemBox_StageLoad(void)
 
     if (globals->gameMode == MODE_COMPETITION) {
         if (globals->itemMode == 1) {
-            for (EntityItemBox *entity = 0; RSDK.GetEntities(ItemBox->objectID, (Entity **)&entity); entity->type = 13) {
+            foreach_all(ItemBox, entity) { entity->type = 13;
             }
         }
         else if (globals->itemMode == 2) {
-            for (EntityItemBox *entity = 0; RSDK.GetEntities(ItemBox->objectID, (Entity **)&entity); entity->type = 12) {
+            foreach_all(ItemBox, entity) { entity->type = 12;
             }
         }
     }
@@ -202,7 +200,7 @@ void ItemBox_StageLoad(void)
 
 void ItemBox_DebugDraw(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
 #if RETRO_USE_PLUS
     DebugMode->subtypeCount = User.CheckDLC(DLC_PLUS) != 0 ? 18 : 15;
 #else
@@ -226,14 +224,14 @@ void ItemBox_DebugSpawn(void)
 
 void ItemBox_State_Broken(void)
 {
-    //EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     // if (LRZConvItem)
     //    LRZConvItem_Unknown2(entity);
     ItemBox_HandleFallingCollision();
 }
 void ItemBox_State_Contents(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     if (LRZConvItem && entity->lrzConvPhys) {
         // LRZConvItem_Unknown2(entity);
     }
@@ -255,7 +253,7 @@ void ItemBox_State_Contents(void)
 
 void ItemBox_State_Unknown(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     if (LRZConvItem && entity->lrzConvPhys) {
         // LRZConvItem_Unknown2(entity);
     }
@@ -272,7 +270,7 @@ void ItemBox_State_Unknown(void)
 
 void ItemBox_State_Normal(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     entity->contentsPos.x = RSDK_sceneInfo->entity->position.x;
 
     if (entity->direction == FLIP_NONE)
@@ -303,7 +301,7 @@ void ItemBox_State_Normal(void)
 }
 void ItemBox_State_Falling(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     if (ItemBox_HandleFallingCollision())
         entity->state = ItemBox_State_Normal;
 
@@ -336,7 +334,7 @@ void ItemBox_State_Falling(void)
 }
 void ItemBox_State_Conveyor(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
 
     // entity->contentsPos.x = LRZConvItem_Unknown2(entity);
     if (entity->direction == FLIP_NONE)
@@ -368,9 +366,8 @@ void ItemBox_State_Conveyor(void)
 
 void ItemBox_CheckHit(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
-    EntityPlayer *player  = 0;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(ItemBox);
+    foreach_active (Player, player) {
         if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
 #if RETRO_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1 && !entity->parent) {
@@ -460,7 +457,7 @@ void ItemBox_CheckHit(void)
                 }
                 else if (Player_CheckBadnikHit(player, entity, &ItemBox->hitbox)) {
                     ItemBox_Break(entity, player);
-                    RSDK.BreakForeachLoop();
+                    foreach_break;
                 }
             }
         }
@@ -468,7 +465,7 @@ void ItemBox_CheckHit(void)
 }
 void ItemBox_GivePowerup(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     EntityPlayer *player  = (EntityPlayer *)entity->storedEntity;
     while (true) {
         switch (entity->type) {
@@ -751,8 +748,8 @@ void ItemBox_GivePowerup(void)
                                     }
                                     player2->entPtr     = dust;
                                     player2->maxGlideSpeed = 0;
-                                    player2->nextAirState     = NULL;
-                                    player2->nextGroundState  = NULL;
+                                    player2->nextAirState     = StateMachine_None;
+                                    player2->nextGroundState  = StateMachine_None;
                                     player2->inputState      = Player_FlyCarryInputState;
                                     player2->tileCollisions  = false;
                                     player2->interaction     = false;
@@ -918,7 +915,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 }
 bool32 ItemBox_HandleFallingCollision(void)
 {
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
     if (entity->direction)
         return false;
 
@@ -949,7 +946,7 @@ bool32 ItemBox_HandleFallingCollision(void)
 bool32 ItemBox_HandlePlatformCollision(void *p)
 {
     EntityPlatform *platform = (EntityPlatform *)p;
-    EntityItemBox *entity    = (EntityItemBox *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ItemBox);
 
     bool32 collided = false;
     if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
@@ -1009,8 +1006,8 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
 }
 void ItemBox_HandleObjectCollisions(void)
 {
-    bool32 flag             = false;
-    EntityItemBox *entity = (EntityItemBox *)RSDK_sceneInfo->entity;
+    bool32 flag = false;
+    RSDK_THIS(ItemBox);
     if (Platform) {
         if (entity->parent) {
             EntityPlatform *platform = (EntityPlatform *)entity->parent;
@@ -1027,8 +1024,8 @@ void ItemBox_HandleObjectCollisions(void)
             }
         }
         else {
-            EntityPlatform *platform = NULL;
-            while (RSDK.GetActiveEntities(Platform->objectID, (Entity**)&platform)) {
+            foreach_active(Platform, platform)
+            {
                 if (ItemBox_HandlePlatformCollision(platform))
                     flag = true;
             }
@@ -1107,7 +1104,8 @@ void ItemBox_HandleObjectCollisions(void)
             }
         }*/
     }
-    for (EntitySpikes *spikes = 0; RSDK.GetActiveEntities(Spikes->objectID, (Entity **)&spikes);) {
+    foreach_active(Spikes, spikes)
+    {
         int storeX = spikes->position.x;
         int storeY = spikes->position.y;
         /*spikes->position.x -= spikes->unknownPos.x;
@@ -1127,8 +1125,8 @@ void ItemBox_HandleObjectCollisions(void)
         spikes->position.y = storeY;
     }
 
-    EntityItemBox *itemBox = 0;
-    while (RSDK.GetActiveEntities(ItemBox->objectID, (Entity **)&itemBox)) {
+    foreach_active(ItemBox, itemBox)
+    {
         if (itemBox != entity) {
             if (entity->state == ItemBox_State_Normal || entity->state == ItemBox_State_Falling) {
                 if (itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling) {

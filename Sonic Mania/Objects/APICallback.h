@@ -66,7 +66,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)();
+    StateMachine(state);
     int timer;
     void (*callback)(void);
     const char *fileName;

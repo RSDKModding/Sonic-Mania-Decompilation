@@ -5,8 +5,7 @@ ObjectUFO_Message *UFO_Message;
 void UFO_Message_Update(void)
 {
     RSDK_THIS(UFO_Message);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void UFO_Message_LateUpdate(void) {}

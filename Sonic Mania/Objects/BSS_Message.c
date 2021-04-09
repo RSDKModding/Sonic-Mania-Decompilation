@@ -6,8 +6,7 @@ void BSS_Message_Update(void)
 {
     RSDK_THIS(BSS_Message);
 
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void BSS_Message_LateUpdate(void) {}
@@ -154,7 +153,7 @@ void BSS_Message_TrackProgress_CB(int success)
 {
     RSDK_THIS(BSS_Message);
     entity->field_6C = 0;
-    UIWaitSpinner_WaitReplay();
+    UIWaitSpinner_Wait2();
 }
 
 void BSS_Message_LoadPrevScene(void)
@@ -182,7 +181,7 @@ void BSS_Message_LoadPrevScene(void)
                     RSDK.LoadScene("Mania Mode", "");
                 RSDK_sceneInfo->listPos = saveRAM[30];
                 RSDK.InitSceneLoad();
-                entity->state = NULL;
+                entity->state = StateMachine_None;
             }
             else {
                 entity->state    = BSS_Message_LoadGameState;
@@ -209,7 +208,7 @@ void BSS_Message_LoadGameState(void)
             RSDK.LoadScene("Mania Mode", "");
         RSDK_sceneInfo->listPos = saveRAM[30];
         RSDK.InitSceneLoad();
-        entity->state = NULL;
+        entity->state = StateMachine_None;
     }
 }
 

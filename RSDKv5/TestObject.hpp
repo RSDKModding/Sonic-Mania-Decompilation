@@ -18,7 +18,7 @@ struct ObjectTestObject : Object {
 
 // Entity Class
 struct EntityTestObject : Entity {
-    AnimationData data;
+    Animator data;
 };
 
 // Object Entity

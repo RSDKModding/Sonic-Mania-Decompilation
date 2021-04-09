@@ -24,14 +24,14 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     byte type;
     byte orientation;
     int timer;
     Vector2 storedPos;
     int extend;
-    AnimationData animData1;
-    AnimationData animData2;
+    Animator animData1;
+    Animator animData2;
 } EntitySizeLaser;
 
 // Object Struct

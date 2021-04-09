@@ -4,9 +4,9 @@ ObjectInvisibleBlock *InvisibleBlock;
 
 void InvisibleBlock_Update(void)
 {
-    EntityPlayer *player         = NULL;
-    EntityInvisibleBlock *entity = (EntityInvisibleBlock *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(InvisibleBlock);
+    foreach_active(Player, player)
+    {
         if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && (!entity->noChibi || !player->isChibi)) {
             switch (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
                 case 1:
@@ -40,11 +40,11 @@ void InvisibleBlock_Draw(void) { InvisibleBlock_DrawSprites(); }
 
 void InvisibleBlock_Create(void *data)
 {
-    EntityInvisibleBlock *entity = (EntityInvisibleBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(InvisibleBlock);
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->timeAttackOnly) {
             if (globals->gameMode < MODE_TIMEATTACK)
-                RSDK.ResetEntityPtr(entity, 0, 0);
+                RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
         }
         entity->visible = false;
         entity->active  = 2 * (entity->activeNormal == 0) + 2;
@@ -70,8 +70,7 @@ void InvisibleBlock_StageLoad(void)
 void InvisibleBlock_DrawSprites(void)
 {
     Vector2 drawPos;
-
-    EntityInvisibleBlock *entity = (EntityInvisibleBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(InvisibleBlock);
     drawPos.x                    = RSDK_sceneInfo->entity->position.x;
     drawPos.y                    = entity->position.y;
     drawPos.x -= entity->width << 19;

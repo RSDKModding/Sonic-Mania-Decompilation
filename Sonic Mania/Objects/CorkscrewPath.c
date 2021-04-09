@@ -4,9 +4,9 @@ ObjectCorkscrewPath *CorkscrewPath;
 
 void CorkscrewPath_Update(void)
 {
-    EntityCorkscrewPath *entity = (EntityCorkscrewPath *)RSDK_sceneInfo->entity;
-    EntityPlayer *player        = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(CorkscrewPath);
+    foreach_active(Player, player)
+    {
         if (abs(entity->position.x - player->position.x) >> 16 > entity->periodShifted) {
             entity->activePlayers &= ~RSDK.GetEntityID(player);
             if (player->playerAnimData.animationID != ANI_SPRINGCS)
@@ -63,24 +63,15 @@ void CorkscrewPath_Update(void)
     }
 }
 
-void CorkscrewPath_LateUpdate(void)
+void CorkscrewPath_LateUpdate(void) {}
+
+void CorkscrewPath_StaticUpdate(void) {}
+
+void CorkscrewPath_Draw(void) {}
+
+void CorkscrewPath_Create(void *data)
 {
-
-}
-
-void CorkscrewPath_StaticUpdate(void)
-{
-
-}
-
-void CorkscrewPath_Draw(void)
-{
-
-}
-
-void CorkscrewPath_Create(void* data)
-{
-    EntityCorkscrewPath *entity = (EntityCorkscrewPath *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CorkscrewPath);
     if (!RSDK_sceneInfo->inEditor) {
         entity->amplitude <<= 6;
         entity->periodShifted = abs(entity->period) >> 1;
@@ -91,20 +82,11 @@ void CorkscrewPath_Create(void* data)
     }
 }
 
-void CorkscrewPath_StageLoad(void)
-{
+void CorkscrewPath_StageLoad(void) {}
 
-}
+void CorkscrewPath_EditorDraw(void) {}
 
-void CorkscrewPath_EditorDraw(void)
-{
-
-}
-
-void CorkscrewPath_EditorLoad(void)
-{
-
-}
+void CorkscrewPath_EditorLoad(void) {}
 
 void CorkscrewPath_Serialize(void)
 {
@@ -112,4 +94,3 @@ void CorkscrewPath_Serialize(void)
     RSDK_EDITABLE_VAR(CorkscrewPath, VAR_ENUM, amplitude);
     RSDK_EDITABLE_VAR(CorkscrewPath, VAR_ENUM, angle);
 }
-

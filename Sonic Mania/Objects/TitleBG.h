@@ -17,7 +17,7 @@ typedef struct {
     RSDK_ENTITY
     int type;
     int timer;
-    AnimationData data;
+    Animator data;
 } EntityTitleBG;
 
 // Object Struct

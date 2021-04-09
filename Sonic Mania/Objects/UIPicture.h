@@ -17,7 +17,7 @@ typedef struct {
     int tag;
     byte zonePalette;
     int zoneID;
-    AnimationData data;
+    Animator data;
 } EntityUIPicture;
 
 // Object Struct

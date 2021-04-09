@@ -608,7 +608,7 @@ void AddModelToScene(ushort modelID, ushort sceneID, byte drawMode, Matrix *matW
         }
     }
 }
-void AddMeshFrameToScene(ushort modelID, ushort sceneID, AnimationData *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && data) {

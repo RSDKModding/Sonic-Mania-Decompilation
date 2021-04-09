@@ -7,8 +7,7 @@ void UFO_Camera_Update(void) {}
 void UFO_Camera_LateUpdate(void)
 {
     RSDK_THIS(UFO_Camera);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
     UFO_Camera_Unknown1();
 }
 

@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int timer;
     void (*callback)(void);
     int field_64;

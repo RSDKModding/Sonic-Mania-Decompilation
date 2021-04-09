@@ -47,7 +47,7 @@ struct SpriteAnimation {
     byte scope;
 };
 
-struct AnimationData {
+struct Animator {
     SpriteFrame *framePtrs;
     int frameID;
     short animationID;
@@ -92,7 +92,7 @@ inline SpriteFrame *GetFrame(ushort sprIndex, ushort anim, int frame)
     return &spr->frames[frame + spr->animations[anim].frameListOffset];
 }
 
-inline Hitbox *GetHitbox(AnimationData *data, byte hitboxID)
+inline Hitbox *GetHitbox(Animator *data, byte hitboxID)
 {
     if (data && data->framePtrs)
         return &data->framePtrs[data->frameID].hitboxes[hitboxID & (FRAMEHITBOX_COUNT - 1)];
@@ -100,7 +100,7 @@ inline Hitbox *GetHitbox(AnimationData *data, byte hitboxID)
         return NULL;
 }
 
-inline short GetFrameID(AnimationData *data)
+inline short GetFrameID(Animator *data)
 {
     if (data && data->framePtrs)
         return data->framePtrs[data->frameID].id;
@@ -108,9 +108,9 @@ inline short GetFrameID(AnimationData *data)
         return 0;
 }
 
-void ProcessAnimation(AnimationData *data);
+void ProcessAnimation(Animator *data);
 
-inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, AnimationData *data, bool32 forceApply, ushort frameID)
+inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, ushort frameID)
 {
     if (spriteIndex >= SPRFILE_COUNT) {
         if (data)

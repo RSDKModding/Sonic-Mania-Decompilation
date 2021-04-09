@@ -4,9 +4,8 @@ ObjectStarPost *StarPost;
 
 void StarPost_Update(void)
 {
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(StarPost);
+    StateMachine_Run(entity->state);
 }
 
 void StarPost_LateUpdate(void) {}
@@ -15,7 +14,7 @@ void StarPost_StaticUpdate(void) {}
 
 void StarPost_Draw(void)
 {
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(StarPost);
     RSDK.DrawSprite(&entity->poleData, &entity->position, false);
 
     entity->ballPos.x = entity->position.x - 640 * RSDK.Cos1024(entity->angle);
@@ -37,9 +36,9 @@ void StarPost_Draw(void)
 
 void StarPost_Create(void *data)
 {
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(StarPost);
     if (globals->gameMode == MODE_TIMEATTACK || (globals->gameMode == MODE_COMPETITION && entity->vsRemove)) {
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
     }
     else {
         if (!RSDK_sceneInfo->inEditor) {
@@ -83,11 +82,10 @@ void StarPost_StageLoad(void)
 
     for (int i = 0; i < Player->playerCount; ++i) {
         if (StarPost->postIDs[i]) {
-            EntityPlayer *player          = (EntityPlayer *)RSDK.GetEntityByID(i);
-            EntityStarPost *savedStarPost = (EntityStarPost *)RSDK.GetEntityByID(StarPost->postIDs[i]);
+            EntityPlayer *player          = RSDK_GET_ENTITY(i, Player);
+            EntityStarPost *savedStarPost = RSDK_GET_ENTITY(StarPost->postIDs[i], StarPost);
             if (!TMZ2Setup) {
-                EntityStarPost *starPost = NULL;
-                while (RSDK.GetEntities(StarPost->objectID, (Entity **)&starPost)) {
+                foreach_all(StarPost, starPost) {
                     if (starPost->id < savedStarPost->id && !starPost->activated) {
                         starPost->activated = StarPost->activePlayers;
                         RSDK.SetSpriteAnimation(StarPost->spriteIndex, 2, &starPost->ballData, true, 0);
@@ -113,7 +111,7 @@ void StarPost_StageLoad(void)
                 player->position.y += 0x100000;
                 player->direction = StarPost->playerDirections[i];
                 if (!i) {
-                    EntityPlayer *sideKick = (EntityPlayer *)RSDK.GetEntityByID(1);
+                    EntityPlayer *sideKick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                     if (globals->gameMode != MODE_COMPETITION) {
                         sideKick->position.x = player->position.x;
                         sideKick->position.y = player->position.y;
@@ -138,7 +136,7 @@ void StarPost_StageLoad(void)
 #else
         if (globals->gameMode == MODE_COMPETITION) {
 #endif
-            EntityPlayer *player           = (EntityPlayer *)RSDK.GetEntityByID(i);
+            EntityPlayer *player           = RSDK_GET_ENTITY(i, Player);
             StarPost->playerPositions[i].x = player->position.x;
             StarPost->playerPositions[i].y = player->position.y;
             StarPost->playerPositions[i].y -= 0x100000;
@@ -165,7 +163,7 @@ void StarPost_ResetStarPosts(void)
 }
 void StarPost_CheckBonusStageEntry(void)
 {
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(StarPost);
     entity->starAngle += 4;
     entity->starAngle &= 0x1FF;
     entity->starAngle2 += 18;
@@ -234,16 +232,14 @@ void StarPost_CheckBonusStageEntry(void)
 }
 void StarPost_CheckCollisions(void)
 {
-    EntityPlayer *player   = 0;
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(StarPost);
+    foreach_active(Player, player) {
         int playerSlot = RSDK.GetEntityID(player);
         if (!((1 << playerSlot) & entity->activated) && !player->sidekick) {
             if (Player_CheckCollisionTouch(player, entity, &StarPost->hitbox)) {
                 entity->state = StarPost_State_BallSpin;
                 if (!TMZ2Setup) {
-                    EntityStarPost *starPost = 0;
-                    while (RSDK.GetEntities(StarPost->objectID, (Entity **)&starPost)) {
+                    foreach_all(StarPost, starPost) {
                         if (starPost->id < entity->id && !starPost->activated) {
                             starPost->activated = 1 << playerSlot;
                             RSDK.SetSpriteAnimation(StarPost->spriteIndex, 2, &starPost->ballData, true, 0);
@@ -324,7 +320,7 @@ void StarPost_CheckCollisions(void)
 }
 void StarPost_State_Idle(void)
 {
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(StarPost);
     if (entity->activated < StarPost->activePlayers)
         StarPost_CheckCollisions();
     if (entity->starFlag > 0)
@@ -333,8 +329,8 @@ void StarPost_State_Idle(void)
 }
 void StarPost_State_BallSpin(void)
 {
-    EntityStarPost *entity = (EntityStarPost *)RSDK_sceneInfo->entity;
-    if (entity->activated < StarPost->activePlayers) // activated
+    RSDK_THIS(StarPost);
+    if (entity->activated < StarPost->activePlayers)
         StarPost_CheckCollisions();
 
     entity->angle += entity->ballSpeed;

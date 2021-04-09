@@ -12,18 +12,18 @@ typedef struct {
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int timer;
     int selectedZone;
     Vector2 drawPosA;
     Vector2 drawPosB;
     Vector2 drawPosC;
     float vDelta;
-    AnimationData zoneSelData;
-    AnimationData barBlackData;
-    AnimationData barFlashingData;
-    AnimationData GHZData;
-    AnimationData SPZData;
+    Animator zoneSelData;
+    Animator barBlackData;
+    Animator barFlashingData;
+    Animator GHZData;
+    Animator SPZData;
     SpriteFrame *ghzFrame;
     SpriteFrame *spzFrame;
 } EntityDemoMenu;
@@ -43,7 +43,7 @@ void DemoMenu_EditorLoad(void);
 void DemoMenu_Serialize(void);
 
 // Extra Entity Functions
-void DemoMenu_DrawStagePreview(Vector2 *pos, AnimationData *data, int zoneID);
+void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *data, int zoneID);
 
 void DemoMenu_State_Appear(void);
 void DemoMenu_State_Selection(void);

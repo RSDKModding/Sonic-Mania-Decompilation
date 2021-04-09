@@ -4,9 +4,9 @@ ObjectForceSpin *ForceSpin;
 
 void ForceSpin_Update(void)
 {
-    EntityPlayer *player      = NULL;
-    EntityForceSpin *entity = (EntityForceSpin *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(ForceSpin);
+    foreach_active(Player, player)
+    {
         int x     = (player->position.x - entity->position.x) >> 8;
         int y     = (player->position.y - entity->position.y) >> 8;
         int scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
@@ -26,8 +26,8 @@ void ForceSpin_Update(void)
                             player->state = Player_State_Roll;
                         else
                             player->state = Player_State_Air;
-                        player->nextGroundState = NULL;
-                        player->nextAirState    = NULL;
+                        player->nextGroundState = StateMachine_None;
+                        player->nextAirState    = StateMachine_None;
                     }
                 }
                 else {
@@ -41,8 +41,8 @@ void ForceSpin_Update(void)
                             player->state = Player_State_Roll;
                         else
                             player->state = Player_State_Air;
-                        player->nextGroundState = NULL;
-                        player->nextAirState    = NULL;
+                        player->nextGroundState = StateMachine_None;
+                        player->nextAirState    = StateMachine_None;
                     }
                 }
                 else {
@@ -54,21 +54,15 @@ void ForceSpin_Update(void)
     entity->visible = DebugMode->debugActive;
 }
 
-void ForceSpin_LateUpdate(void)
-{
+void ForceSpin_LateUpdate(void) {}
 
-}
-
-void ForceSpin_StaticUpdate(void)
-{
-
-}
+void ForceSpin_StaticUpdate(void) {}
 
 void ForceSpin_Draw(void) { ForceSpin_DrawSprites(); }
 
-void ForceSpin_Create(void* data)
+void ForceSpin_Create(void *data)
 {
-    EntityForceSpin *entity = (EntityForceSpin *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ForceSpin);
     RSDK.SetSpriteAnimation(ForceSpin->spriteIndex, 0, &entity->data, true, 0);
     entity->drawFX |= FX_FLIP;
     entity->data.frameID = 4;
@@ -100,7 +94,7 @@ void ForceSpin_DrawSprites(void)
 {
     Vector2 drawPos;
 
-    EntityForceSpin *entity = (EntityForceSpin *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ForceSpin);
     drawPos.x = RSDK_sceneInfo->entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.y -= entity->size << 19;
@@ -114,8 +108,8 @@ void ForceSpin_DrawSprites(void)
 }
 void ForceSpin_SetPlayerState(void *plr)
 {
-    EntityPlayer *player    = (EntityPlayer *)plr;
-    EntityForceSpin *entity = (EntityForceSpin *)RSDK_sceneInfo->entity;
+    RSDK_THIS(ForceSpin);
+    EntityPlayer *player = (EntityPlayer *)plr;
     if (player->state != Player_State_ForceRoll && player->state != Player_State_RollLock) {
         if (player->playerAnimData.animationID != ANI_JUMP) {
             RSDK.PlaySFX(Player->sfx_Roll, 0, 255);
@@ -125,13 +119,13 @@ void ForceSpin_SetPlayerState(void *plr)
             player->pushing = 0;
         }
 
-        player->nextAirState = NULL;
+        player->nextAirState = StateMachine_None;
         if (player->onGround)
             player->state = Player_State_ForceRoll;
         else
             player->state = Player_State_RollLock;
 
-        player->nextGroundState = NULL;
+        player->nextGroundState = StateMachine_None;
         if (abs(player->groundVel) < 0x10000) {
             if (entity->direction & FLIP_X)
                 player->groundVel = -0x40000;
@@ -141,15 +135,9 @@ void ForceSpin_SetPlayerState(void *plr)
     }
 }
 
-void ForceSpin_EditorDraw(void)
-{
+void ForceSpin_EditorDraw(void) {}
 
-}
-
-void ForceSpin_EditorLoad(void)
-{
-
-}
+void ForceSpin_EditorLoad(void) {}
 
 void ForceSpin_Serialize(void)
 {
@@ -157,4 +145,3 @@ void ForceSpin_Serialize(void)
     RSDK_EDITABLE_VAR(ForceSpin, VAR_ENUM, size);
     RSDK_EDITABLE_VAR(ForceSpin, VAR_INT32, angle);
 }
-

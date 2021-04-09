@@ -16,7 +16,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int type;
     int behavior;
     int height;
@@ -32,7 +32,7 @@ typedef struct {
     int dword9C;
     Matrix matrix;
     Matrix matrix2;
-    AnimationData data;
+    Animator data;
 } EntityUFO_Sphere;
 
 // Object Struct

@@ -6,8 +6,7 @@ ObjectSummary *Summary;
 void Summary_Update(void)
 {
     RSDK_THIS(Summary);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
@@ -27,8 +26,7 @@ void Summary_StaticUpdate(void)
 void Summary_Draw(void)
 {
     RSDK_THIS(Summary);
-    if (entity->stateDraw)
-        entity->stateDraw();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void Summary_Create(void *data)
@@ -119,7 +117,7 @@ void Summary_State_Unknown(void)
     if (entity->timer <= 0) {
         entity->timer     = 0;
         entity->state     = Summary_State_Unknown2;
-        entity->stateDraw = NULL;
+        entity->stateDraw = StateMachine_None;
     }
     else {
         entity->timer -= 16;

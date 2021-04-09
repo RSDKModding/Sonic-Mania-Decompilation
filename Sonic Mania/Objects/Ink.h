@@ -18,9 +18,9 @@ typedef struct {
     RSDK_ENTITY
     byte type;
     byte inkedPlayers;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
+    Animator data1;
+    Animator data2;
+    Animator data3;
 } EntityInk;
 
 // Object Struct

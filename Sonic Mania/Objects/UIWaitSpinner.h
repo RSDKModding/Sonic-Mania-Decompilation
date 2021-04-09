@@ -14,10 +14,10 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int timer;
     bool32 flag;
-    AnimationData data;
+    Animator data;
 } EntityUIWaitSpinner;
 
 // Object Struct
@@ -36,7 +36,7 @@ void UIWaitSpinner_Serialize(void);
 
 // Extra Entity Functions
 void UIWaitSpinner_Wait(void);
-void UIWaitSpinner_WaitReplay(void);
+void UIWaitSpinner_Wait2(void);
 void UIWaitSpinner_State_Wait(void);
 void UIWaitSpinner_State_Wait2(void);
 

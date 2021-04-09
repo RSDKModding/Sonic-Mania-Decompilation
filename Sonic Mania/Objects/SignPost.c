@@ -4,9 +4,8 @@ ObjectSignPost *SignPost;
 
 void SignPost_Update(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(SignPost);
+    StateMachine_Run(entity->state);
 }
 
 void SignPost_LateUpdate(void) {}
@@ -15,13 +14,13 @@ void SignPost_StaticUpdate(void) {}
 
 void SignPost_Draw(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     Vector2 drawPos;
     if (entity->state) {
         entity->drawFX = FX_SCALE;
         drawPos.y      = entity->position.y;
 
-        AnimationData *face = &entity->eggPlateAnim;
+        Animator *face = &entity->eggPlateAnim;
         if (entity->rotation <= 128 || entity->rotation >= 384)
             face = &entity->facePlateAnim;
 
@@ -61,7 +60,7 @@ void SignPost_Draw(void)
 
 void SignPost_Create(void *data)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
 
     if (!entity->vsBoundsSize.x)
         entity->vsBoundsSize.x = 0x2000000;
@@ -123,7 +122,7 @@ void SignPost_Create(void *data)
                         entity->state  = SignPost_State_SetupCompetition;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     break;
                 case 1:
@@ -132,7 +131,7 @@ void SignPost_Create(void *data)
                         entity->state  = NULL;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     break;
                 case 2:
@@ -141,7 +140,7 @@ void SignPost_Create(void *data)
                         entity->state  = SignPost_State_SetupCompetition;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     break;
                 case 3:
@@ -154,7 +153,7 @@ void SignPost_Create(void *data)
                         entity->state  = SignPost_State_SetupCompetition;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     break;
             }
@@ -200,7 +199,7 @@ void SignPost_DebugDraw(void)
 }
 void SignPost_SpinSpeed(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     entity->angle += entity->spinSpeed;
 
     if (entity->angle >= entity->maxAngle) {
@@ -220,7 +219,7 @@ void SignPost_SpinSpeed(void)
 }
 void SignPost_SpawnSparkle(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     if (!(Zone->timer & 3)) {
         EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000),
                                                            entity->position.y + RSDK.Rand(-0x200000, 0x80000));
@@ -241,7 +240,7 @@ void SignPost_SpawnSparkle(void)
 }
 void SignPost_State_SetupCompetition(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     entity->state          = SignPost_State_Competition;
 }
 void SignPost_State_Competition(void)
@@ -251,7 +250,7 @@ void SignPost_State_Competition(void)
 }
 void SignPost_State_Land(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     SignPost_SpinSpeed();
     SignPost_SpawnSparkle();
     RSDK.ProcessAnimation(&entity->facePlateAnim);
@@ -259,12 +258,12 @@ void SignPost_State_Land(void)
         entity->type  = 3;
         entity->state = SignPost_State_Finish;
         Music_PlayTrack(TRACK_ACTCLEAR);
-        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, 0);
+        RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, NULL);
     }
 }
 void SignPost_State_CompetitionFinish(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     SignPost_SpinSpeed();
     SignPost_SpawnSparkle();
     RSDK.ProcessAnimation(&entity->facePlateAnim);
@@ -295,7 +294,7 @@ void SignPost_State_CompetitionFinish(void)
 }
 void SignPost_State_Launched(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     SignPost_SpinSpeed();
     SignPost_SpawnSparkle();
     RSDK.ProcessAnimation(&entity->facePlateAnim);
@@ -307,7 +306,7 @@ void SignPost_State_Launched(void)
 }
 void SignPost_State_Fall(void)
 {
-    EntitySignPost *entity      = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     entity->active              = ACTIVE_NORMAL;
     RSDK_sceneInfo->timeEnabled = false;
     if (entity->type == 1) {
@@ -325,8 +324,7 @@ void SignPost_State_Fall(void)
         }
     }
 
-    EntityPlayer *player = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player) {
         if (entity->velocity.y >= 0) {
             if (player->velocity.y < 0 && player->playerAnimData.animationID == ANI_JUMP && !player->onGround) {
                 if (Player_CheckCollisionTouch(player, entity, &SignPost->hitbox)) {
@@ -369,8 +367,7 @@ void SignPost_State_Fall(void)
 
     entity->velocity.y += 0xC00;
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
-        EntityItemBox *itemBox = NULL;
-        while (RSDK.GetActiveEntities(ItemBox->objectID, (Entity **)&itemBox)) {
+        foreach_active(ItemBox, itemBox) {
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, entity, &SignPost->itemBoxHitbox)) {
                     RSDK.PlaySFX(SignPost->sfx_BubbleBounce, 0, 255);
@@ -400,7 +397,7 @@ void SignPost_State_Fall(void)
 }
 void SignPost_State_Finish(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     RSDK.ProcessAnimation(&entity->facePlateAnim);
     if (entity->debugObj) {
         Zone->stageFinishCallback  = NULL;
@@ -412,15 +409,15 @@ void SignPost_State_Finish(void)
 }
 void SignPost_CheckTouch(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     int ty1                = RSDK_sceneInfo->entity->position.y - (entity->vsExtendTop << 16);
     int ty2                = (entity->vsExtendBottom << 16) + RSDK_sceneInfo->entity->position.y;
     int tx                 = entity->position.x;
 
     int p = 0;
     for (; p < Player->playerCount; ++p) {
-        EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
-        if (!entity->activePlayers || ((Entity *)RSDK.GetEntityByID(p + Player->playerCount))->objectID != GameOver->objectID) {
+        EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
+        if (!entity->activePlayers || RSDK_GET_ENTITY(p + Player->playerCount, Player)->objectID != GameOver->objectID) {
             if (!p || globals->gameMode == MODE_COMPETITION) {
                 if (!((1 << p) & entity->activePlayers)) {
                     bool32 flag = false;
@@ -518,7 +515,7 @@ void SignPost_CheckTouch(void)
 }
 void SignPost_HandleCompetition(void)
 {
-    EntitySignPost *entity = (EntitySignPost *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SignPost);
     int x                  = entity->vsBoundsOffset.y + RSDK_sceneInfo->entity->position.y;
     int y                  = entity->vsBoundsOffset.x + RSDK_sceneInfo->entity->position.x;
 
@@ -529,7 +526,7 @@ void SignPost_HandleCompetition(void)
     hitbox.bottom = entity->vsBoundsSize.y >> 17;
 
     for (int p = 0; p < Player->playerCount; ++p) {
-        EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
+        EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (player->objectID == Player->objectID && !player->sidekick) {
             if (globals->gameMode == MODE_COMPETITION) {
                 int ex             = entity->position.x;

@@ -4,9 +4,8 @@ ObjectSpearBlock *SpearBlock = NULL;
 
 void SpearBlock_Update(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(SpearBlock);
+    StateMachine_Run(entity->state);
     SpearBlock_CheckPlayerCollisions();
 
     if (!RSDK.CheckOnScreen(entity, &entity->updateRange)) {
@@ -21,14 +20,14 @@ void SpearBlock_StaticUpdate(void) {}
 
 void SpearBlock_Draw(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
-    RSDK.DrawSprite(&entity->data, &entity->spearPos, 0);
-    RSDK.DrawSprite(&SpearBlock->data, 0, 0);
+    RSDK_THIS(SpearBlock);
+    RSDK.DrawSprite(&entity->data, &entity->spearPos, false);
+    RSDK.DrawSprite(&SpearBlock->data, NULL, false);
 }
 
 void SpearBlock_Create(void *data)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpearBlock);
     entity->visible          = true;
     entity->drawOrder        = Zone->drawOrderLow;
     entity->spearPos.x       = entity->position.x;
@@ -43,7 +42,7 @@ void SpearBlock_Create(void *data)
 
 void SpearBlock_StageLoad(void)
 {
-    SpearBlock->spriteIndex = RSDK.LoadSpriteAnimation("MTZ/SpearBlock.bin", SCOPE_STAGE);
+    SpearBlock->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/SpearBlock.bin", SCOPE_STAGE);
 
     SpearBlock->blockHitbox.left        = -16;
     SpearBlock->blockHitbox.top         = -16;
@@ -76,15 +75,14 @@ void SpearBlock_DebugDraw(void)
 }
 void SpearBlock_DebugSpawn(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpearBlock);
     RSDK.CreateEntity(SpearBlock->objectID, NULL, entity->position.x, entity->position.y);
 }
 
 void SpearBlock_CheckPlayerCollisions(void)
 {
-    EntityPlayer *player     = NULL;
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(SpearBlock);
+    foreach_active(Player, player) {
         Player_CheckCollisionBox(player, entity, &SpearBlock->blockHitbox);
         Vector2 storePos;
         storePos.x         = entity->position.x;
@@ -109,31 +107,31 @@ void SpearBlock_CheckPlayerCollisions(void)
 
 void SpearBlock_State_SetupSpears(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpearBlock);
     entity->active           = ACTIVE_NORMAL;
     entity->state            = SpearBlock_State_CheckSpearExtend;
-    if (Zone->timer & 0x7F)
-        return;
-    int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
-    entity->timer        = 4;
-    entity->state        = SpearBlock_State_ExtendSpears;
-    entity->data.frameID = (frameTimer & 3);
+    if (!(Zone->timer & 0x7F)) {
+        int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
+        entity->timer        = 4;
+        entity->state        = SpearBlock_State_ExtendSpears;
+        entity->data.frameID = (frameTimer & 3);
+    }
 }
 
 void SpearBlock_State_CheckSpearExtend(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
-    if (Zone->timer & 0x7F)
-        return;
-    int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
-    entity->timer        = 4;
-    entity->state        = SpearBlock_State_ExtendSpears;
-    entity->data.frameID = (frameTimer & 3);
+    RSDK_THIS(SpearBlock);
+    if (!(Zone->timer & 0x7F)) {
+        int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
+        entity->timer        = 4;
+        entity->state        = SpearBlock_State_ExtendSpears;
+        entity->data.frameID = (frameTimer & 3);
+    }
 }
 
 void SpearBlock_State_ExtendSpears(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpearBlock);
     switch (entity->data.frameID) {
         case FLIP_NONE: entity->spearPos.y -= 0x80000; break;
         case FLIP_X: entity->spearPos.x += 0x80000; break;
@@ -149,16 +147,16 @@ void SpearBlock_State_ExtendSpears(void)
 
 void SpearBlock_State_CheckSpearRetract(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
-    if (Zone->timer & 0x3F)
-        return;
-    entity->timer = 4;
-    entity->state = SpearBlock_State_RetractSpears;
+    RSDK_THIS(SpearBlock);
+    if (!(Zone->timer & 0x3F)) {
+        entity->timer = 4;
+        entity->state = SpearBlock_State_RetractSpears;
+    }
 }
 
 void SpearBlock_State_RetractSpears(void)
 {
-    EntitySpearBlock *entity = (EntitySpearBlock *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpearBlock);
     switch (entity->data.frameID) {
         case FLIP_NONE: entity->spearPos.y += 0x80000; break;
         case FLIP_X: entity->spearPos.x -= 0x80000; break;

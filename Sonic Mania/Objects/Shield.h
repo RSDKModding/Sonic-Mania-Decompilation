@@ -21,13 +21,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
-    void (*state)(void);
+    StateMachine(state);
     int type;
     int timer;
     int frameID;
     int flag;
-    AnimationData data;
-    AnimationData altData;
+    Animator data;
+    Animator altData;
 } EntityShield;
 
 // Object Struct

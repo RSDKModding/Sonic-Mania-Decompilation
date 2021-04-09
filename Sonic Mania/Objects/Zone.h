@@ -116,8 +116,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     int screenID;
     int timer;
     int fadeTimer;
@@ -147,7 +147,7 @@ void Zone_Unknown2(void);
 void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
 void Zone_Unknown4(int screen);
 void Zone_Unknown5(void);
-void Zone_ApplyWorldBounds(EntityPlayer *player);
+void Zone_ApplyWorldBounds(void);
 bool32 Zone_IsAct2(void);
 int Zone_GetEncoreStageID(void);
 int Zone_GetManiaStageID(void);

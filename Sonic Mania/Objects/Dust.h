@@ -12,10 +12,10 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     int timer;
     Entity *parent;
-    AnimationData data;
+    Animator data;
 } EntityDust;
 
 // Object Struct

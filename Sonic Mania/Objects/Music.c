@@ -4,9 +4,8 @@ ObjectMusic *Music;
 
 void Music_Update(void)
 {
-    EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(Music);
+    StateMachine_Run(entity->state);
 }
 
 void Music_LateUpdate(void) {}
@@ -17,7 +16,7 @@ void Music_Draw(void) {}
 
 void Music_Create(void *data)
 {
-    EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Music);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ((RSDK_sceneInfo->state & 3) != 3) + 1;
         if (entity->trackFile.textLength) {
@@ -85,27 +84,25 @@ void Music_SetMusicTrack(const char *path, byte track, uint loopPoint)
 
 void Music_State_PlayMusic(void)
 {
-    EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Music);
     if (globals->suppressAutoMusic) {
-        globals->suppressAutoMusic = 0;
+        globals->suppressAutoMusic = false;
         switch (Music->activeTrack) {
             case 1:
             case 2:
             case 13:
                 Music_Unknown9(entity->trackID, 0.025);
-                RSDK.ResetEntityPtr(entity, 0, 0);
                 break;
             case 10:
                 Music_Unknown2(Music->activeTrack);
-                RSDK.ResetEntityPtr(entity, 0, 0);
                 break;
-            default: RSDK.ResetEntityPtr(entity, 0, 0); break;
+            default: break;
         }
     }
     else {
         Music_PlayTrack(entity->trackID);
-        RSDK.ResetEntityPtr(entity, 0, 0);
     }
+    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
 void Music_PlayMusicTrack(byte trackID)
@@ -183,7 +180,7 @@ void Music_PlayTrack(byte trackID)
     if (trackID == TRACK_ACTCLEAR) {
         Music_RemoveStoredEntities();
 
-        RSDK.ResetEntitySlot(SLOT_MUSIC, 0, 0);
+        RSDK.ResetEntitySlot(SLOT_MUSIC, TYPE_BLANK, NULL);
         RSDK.StopChannel(Music->slotID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
@@ -537,7 +534,7 @@ void Music_State_FadeOut(void)
 
 void Music_State_TransitionTrack(void)
 {
-    EntityMusic *entity = (EntityMusic *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Music);
     entity->volume -= entity->fadeSpeed;
     RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {

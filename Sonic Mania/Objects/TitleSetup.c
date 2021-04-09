@@ -5,8 +5,7 @@ ObjectTitleSetup *TitleSetup;
 void TitleSetup_Update(void)
 {
     RSDK_THIS(TitleSetup);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
     RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
 }
 
@@ -17,8 +16,7 @@ void TitleSetup_StaticUpdate(void) {}
 void TitleSetup_Draw(void)
 {
     RSDK_THIS(TitleSetup);
-    if (entity->stateDraw)
-        entity->stateDraw();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void TitleSetup_Create(void *data)
@@ -138,15 +136,15 @@ void TitleSetup_Unknown5(void)
     RSDK_THIS(TitleSetup);
     RSDK.ProcessAnimation(&entity->data);
     if (entity->data.frameID == 31) {
-        EntityTitleLogo *titleLogo = NULL;
-        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+        foreach_all(TitleLogo, titleLogo)
+        {
             if (titleLogo->type >= 0) {
                 if (titleLogo->type <= 1) {
                     titleLogo->active  = ACTIVE_NORMAL;
                     titleLogo->visible = true;
                 }
                 else if (titleLogo->type == 3) {
-                    RSDK.ResetEntityPtr(titleLogo, 0, 0);
+                    RSDK.ResetEntityPtr(titleLogo, TYPE_BLANK, NULL);
                 }
             }
         }
@@ -160,8 +158,8 @@ void TitleSetup_Unknown6(void)
 
     RSDK.ProcessAnimation(&entity->data);
     if (entity->data.frameID == entity->data.frameCount - 1) {
-        EntityTitleLogo *titleLogo = NULL;
-        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+        foreach_all(TitleLogo, titleLogo)
+        {
             if (titleLogo->type == 7) {
                 titleLogo->position.y -= 0x200000;
             }
@@ -175,8 +173,8 @@ void TitleSetup_Unknown6(void)
             }
         }
 
-        Entity *titleSonic = NULL;
-        while (RSDK.GetEntities(TitleSonic->objectID, &titleSonic)) {
+        foreach_all(TitleSonic, titleSonic)
+        {
             titleSonic->active  = ACTIVE_NORMAL;
             titleSonic->visible = true;
         }
@@ -193,7 +191,7 @@ void TitleSetup_Unknown7(void)
     RSDK_THIS(TitleSetup);
     TitleSetup_CheckCheatCode();
     if (entity->timer <= 0) {
-        entity->stateDraw = NULL;
+        entity->stateDraw = StateMachine_None;
 #if RETRO_USE_PLUS
         if (User.CheckDLC(DLC_PLUS))
             entity->state = TitleSetup_SetupLogo_Plus;
@@ -212,8 +210,8 @@ void TitleSetup_SetupLogo_NoPlus(void)
     if (entity->timer < 120)
         TitleSetup_CheckCheatCode();
     if (++entity->timer == 120) {
-        EntityTitleLogo *titleLogo = NULL;
-        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+        foreach_all(TitleLogo, titleLogo)
+        {
             if (titleLogo->type == 6) {
                 titleLogo->active      = ACTIVE_NORMAL;
                 titleLogo->visible     = true;
@@ -233,8 +231,8 @@ void TitleSetup_SetupLogo_Plus(void)
     if (entity->timer < 120)
         TitleSetup_CheckCheatCode();
     if (++entity->timer == 120) {
-        EntityTitleLogo *titleLogo = NULL;
-        while (RSDK.GetEntities(TitleLogo->objectID, (Entity **)&titleLogo)) {
+        foreach_all(TitleLogo, titleLogo)
+        {
             switch (titleLogo->type) {
                 case 1:
                 case 2:

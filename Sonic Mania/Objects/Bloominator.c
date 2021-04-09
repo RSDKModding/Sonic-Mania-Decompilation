@@ -6,7 +6,7 @@ ObjectBloominator *Bloominator;
 void Bloominator_Update(void)
 {
     RSDK_THIS(Bloominator);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 }
 
 void Bloominator_LateUpdate(void) {}

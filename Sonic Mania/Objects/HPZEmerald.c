@@ -4,14 +4,11 @@ ObjectHPZEmerald *HPZEmerald;
 
 void HPZEmerald_Update(void)
 {
-    EntityHPZEmerald *entity = (EntityHPZEmerald *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HPZEmerald);
     RSDK.ProcessAnimation(&entity->data2);
     if (entity->field_60 == 1) {
         if (entity->type) {
-            for (EntityPlayer *player = 0; RSDK.GetActiveEntities(Player->objectID, (Entity **)&player);
-                 Player_CheckCollisionPlatform(player, entity, entity->hitbox)) {
-                ;
-            }
+            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, entity, entity->hitbox); }
         }
 
         // Entity *heavyKing = 0;
@@ -42,7 +39,7 @@ void HPZEmerald_StaticUpdate(void) {}
 
 void HPZEmerald_Draw(void)
 {
-    EntityHPZEmerald *entity = (EntityHPZEmerald *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HPZEmerald);
     if (entity->field_60) {
         RSDK.DrawSprite(&entity->data2, 0, 0);
     }
@@ -56,7 +53,7 @@ void HPZEmerald_Draw(void)
 
 void HPZEmerald_Create(void *data)
 {
-    EntityHPZEmerald *entity = (EntityHPZEmerald *)RSDK_sceneInfo->entity;
+    RSDK_THIS(HPZEmerald);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible = true;
         if (entity->type == 1) {

@@ -5,8 +5,7 @@ ObjectBuzzBomber *BuzzBomber;
 void BuzzBomber_Update(void)
 {
     RSDK_THIS(BuzzBomber);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void BuzzBomber_LateUpdate(void) {}

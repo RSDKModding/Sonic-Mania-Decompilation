@@ -18,7 +18,7 @@ typedef struct {
     int frame;
     int field_5C;
     int field_60;
-    AnimationData data;
+    Animator data;
 } EntityTitle3DSprite;
 
 // Object Struct

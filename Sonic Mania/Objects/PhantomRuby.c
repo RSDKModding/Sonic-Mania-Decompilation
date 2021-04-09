@@ -5,7 +5,7 @@ ObjectPhantomRuby *PhantomRuby;
 void PhantomRuby_Update(void)
 {
     RSDK_THIS(PhantomRuby);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
     if (entity->data1.animationID == 1 && entity->data1.frameID == entity->data1.frameCount - 1)
         RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->data1, true, 0);
     if (entity->data2.animationID == 2 && entity->data2.frameID == entity->data2.frameCount - 1)
@@ -122,7 +122,7 @@ void PhantomRuby_Unknown6(void)
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
     if (entity->position.y > (Zone->screenBoundsB1[0] + 64) << 16)
-        entity->state = NULL;
+        entity->state = StateMachine_None;
 }
 
 void PhantomRuby_Unknown7(void)
@@ -181,7 +181,7 @@ void PhantomRuby_Unknown10(void)
     if (entity->rotation > 0x200) {
         entity->rotation = 0;
         entity->drawFX   = FX_NONE;
-        entity->state    = NULL;
+        entity->state    = StateMachine_None;
     }
 }
 

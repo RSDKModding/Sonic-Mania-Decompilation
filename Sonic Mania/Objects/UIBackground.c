@@ -15,8 +15,7 @@ void UIBackground_StaticUpdate(void) {}
 void UIBackground_Draw(void)
 {
     RSDK_THIS(UIBackground);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void UIBackground_Create(void *data)
@@ -24,9 +23,9 @@ void UIBackground_Create(void *data)
     RSDK_THIS(UIBackground);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
-        entity->visible   = 1;
+        entity->visible   = true;
         entity->drawOrder = 0;
-        entity->state     = UIBackground_DrawNormal;
+        entity->stateDraw     = UIBackground_DrawNormal;
     }
 }
 

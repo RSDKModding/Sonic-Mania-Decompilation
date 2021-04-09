@@ -6,8 +6,7 @@ ObjectAPICallback *APICallback;
 void APICallback_Update(void)
 {
     RSDK_THIS(APICallback);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void APICallback_LateUpdate(void) {}

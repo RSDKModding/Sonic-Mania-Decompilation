@@ -41,7 +41,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     TextInfo trackFile;
     TextInfo soundTestTitle;
     int trackID;

@@ -5,8 +5,7 @@ ObjectUFO_Ring *UFO_Ring;
 void UFO_Ring_Update(void)
 {
     RSDK_THIS(UFO_Ring);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void UFO_Ring_LateUpdate(void)

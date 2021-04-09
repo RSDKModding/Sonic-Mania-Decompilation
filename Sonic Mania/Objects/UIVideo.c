@@ -5,8 +5,7 @@ ObjectUIVideo *UIVideo;
 void UIVideo_Update(void)
 {
     RSDK_THIS(UIVideo);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void UIVideo_LateUpdate(void) {}

@@ -4,9 +4,8 @@ ObjectRing *Ring;
 
 void Ring_Update(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(Ring);
+    StateMachine_Run(entity->state);
 }
 
 void Ring_LateUpdate(void) {}
@@ -15,14 +14,13 @@ void Ring_StaticUpdate(void) {}
 
 void Ring_Draw(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
-    if (entity->stateDraw)
-        entity->stateDraw();
+    RSDK_THIS(Ring);
+    StateMachine_Run(entity->stateDraw);
 }
 
 void Ring_Create(void *data)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->visible    = true;
 
     int layer = 2;
@@ -116,24 +114,24 @@ void Ring_DebugSpawn(void) { RSDK.CreateEntity(Ring->objectID, NULL, RSDK_sceneI
 void Ring_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
 }
 
 void Ring_StateDraw_Normal(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->direction  = entity->animData.frameID > 8;
     RSDK.DrawSprite(&entity->animData, NULL, 0);
 }
 void Ring_StateDraw_Oscillating(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->direction  = entity->animData.frameID > 8;
     RSDK.DrawSprite(&entity->animData, &entity->offset, 0);
 }
 void Ring_StateDraw_Sparkle(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     if (RSDK_sceneInfo->entity->alpha == 0xE0) {
         entity->animData.frameID += 16;
         entity->inkEffect = INK_ADD;
@@ -145,7 +143,7 @@ void Ring_StateDraw_Sparkle(void)
 }
 void Ring_State_Attract(void)
 {
-    EntityRing *entity   = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     EntityPlayer *player = entity->storedPlayer;
     if (player->shield == SHIELD_LIGHTNING) {
         int startX = entity->position.x;
@@ -190,7 +188,7 @@ void Ring_State_Attract(void)
 }
 void Ring_State_Big(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->position.x += entity->velocity.x;
     entity->velocity.y += 0x1200;
     entity->position.y += entity->velocity.y;
@@ -245,7 +243,7 @@ void Ring_State_Big(void)
 }
 void Ring_State_Bounce(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->velocity.y += 0x1800;
 
     entity->position.x += entity->velocity.x;
@@ -278,7 +276,7 @@ void Ring_State_Bounce(void)
 }
 void Ring_State_Circular(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->offset.x   = entity->amplitude.x * RSDK.Cos1024(entity->speed * Zone->timer + 4 * entity->angle) + entity->position.x;
     entity->offset.y   = entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer + 4 * entity->angle) + entity->position.y;
     Ring_Collect();
@@ -287,7 +285,7 @@ void Ring_State_Circular(void)
 }
 void Ring_State_Grow(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->position.x += entity->velocity.x;
     entity->velocity.y += 0x1800;
     entity->position.y += entity->velocity.y;
@@ -300,7 +298,7 @@ void Ring_State_Grow(void)
 }
 void Ring_State_Move(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->offset.x   = entity->amplitude.x * RSDK.Sin1024(entity->speed * Zone->timer) + entity->position.x;
     entity->offset.y   = entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer) + entity->position.y;
     Ring_Collect();
@@ -309,14 +307,14 @@ void Ring_State_Move(void)
 }
 void Ring_State_Normal(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     Ring_Collect();
 
     entity->animData.frameID = Zone->ringFrame;
 }
 void Ring_State_Path(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
 
     ushort timeVal = Zone->timer << 7;
     if ((timeVal & 0x100) == entity->direction) {
@@ -333,7 +331,7 @@ void Ring_State_Path(void)
 }
 void Ring_State_Sparkle(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
 
@@ -351,7 +349,7 @@ void Ring_State_Sparkle(void)
 }
 void Ring_State_Track(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     entity->offset.x += entity->velocity.x;
     entity->offset.y += entity->velocity.y;
     Entity *track = RSDK.GetEntityByID(entity->speed);
@@ -379,24 +377,17 @@ void Ring_State_Track(void)
 }
 void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 {
-    int flags          = 0;
-    //EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    int flags = 0;
+    RSDK_THIS(Ring);
     //int xVel           = entity->velocity.x;
     //int yVel           = entity->velocity.y;
 
     if (Platform) {
-        EntityPlatform *colEnt = NULL;
-        for (colEnt = NULL; RSDK.GetActiveEntities(Platform->objectID, (Entity **)&colEnt); flags |= 1 << Ring_CheckPlatformCollisions(colEnt)) {
-            ;
-        }
+        foreach_active(Platform, colEnt) { flags |= 1 << Ring_CheckPlatformCollisions(colEnt); }
     }
 
     if (Crate) {
-        EntityCrate *colEnt = NULL;
-        for (colEnt = NULL; RSDK.GetActiveEntities(Crate->objectID, (Entity **)&colEnt);
-             flags |= 1 << Ring_CheckPlatformCollisions((EntityPlatform *)colEnt)) {
-            ;
-        }
+        foreach_active(Crate, colEnt) { flags |= 1 << Ring_CheckPlatformCollisions((EntityPlatform *)colEnt); }
     }
 
     if (Bridge) {
@@ -404,11 +395,7 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
     }
 
     if (Spikes) {
-        //EntitySpikes *colEnt = NULL;
-        // for (colEnt = 0; RSDK.GetActiveObjects(Spikes->objectID, (Entity **)&colEnt) == 1;
-        //     flags |= 1 << RSDK.CheckObjectCollisionBox(colEnt, colEnt->hitbox, entity, &Ring->hitbox, 1)) {
-        //    ;
-        //}
+        foreach_active(Spikes, colEnt) { flags |= 1 << RSDK.CheckObjectCollisionBox(colEnt, &colEnt->hitbox, entity, &Ring->hitbox, true); }
     }
 
     if (Ice) {
@@ -425,7 +412,7 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 }
 byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
     int boxResult      = 0;
     if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
@@ -465,86 +452,68 @@ byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
 }
 void Ring_Collect(void)
 {
-    EntityRing *entity = (EntityRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Ring);
 
     int x = entity->position.x;
     int y = entity->position.y;
-    if (entity->stateDraw == Ring_StateDraw_Oscillating) {
-        entity->position.x = entity->offset.x;
-        entity->position.y = entity->offset.y;
-    }
-    EntityPlayer *player = NULL;
-    if (!RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
-        entity->position.x = x;
-        entity->position.y = y;
-        return;
-    }
-    while (true) {
-        if (Player_CheckCollisionTouch(player, entity, &Ring->hitbox))
-            break;
-        if (entity->state != Ring_State_Attract && player->shield == SHIELD_LIGHTNING
-            && RSDK.CheckObjectCollisionTouchCircle(entity, 0x500000, player, 0x10000)) {
+
+    foreach_active(Player, player)
+    {
+        if (Player_CheckCollisionTouch(player, entity, &Ring->hitbox)) {
+            if (!entity->planeFilter || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
+                if (player->sidekick)
+                    player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+
+                int ringAmount = 1;
+                if (entity->type == 1) {
+                    player->ringExtraLife += 100 * (entity->ringAmount / 100);
+                    ringAmount = entity->ringAmount;
+                }
+                Player_GiveRings(ringAmount, player, 1);
+                int max = 0x100000;
+                if (entity->type != 1)
+                    max = 0x80000;
+
+                int cnt = 4 * (entity->type == 1) + 4;
+                int min = -max;
+                for (int i = 0; i < cnt; ++i) {
+                    EntityRing *sparkle = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(min, max),
+                                                                          entity->position.y + RSDK.Rand(min, max));
+                    sparkle->state      = Ring_State_Sparkle;
+                    sparkle->stateDraw  = Ring_StateDraw_Sparkle;
+                    sparkle->active     = 2;
+                    sparkle->visible    = 0;
+                    if (entity->drawOrder == 1)
+                        sparkle->drawOrder = 1;
+                    else
+                        sparkle->drawOrder = Zone->drawOrderHigh;
+                    RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &sparkle->animData, true, 0);
+                    int frameCount = sparkle->animData.frameCount;
+                    if (sparkle->animData.animationID == 2) {
+                        sparkle->alpha = 0xE0;
+                        frameCount >>= 1;
+                    }
+                    sparkle->maxFrameCount           = frameCount - 1;
+                    sparkle->animData.animationSpeed = RSDK.Rand(6, 8);
+                    sparkle->timer                   = 2 * i++;
+                }
+                RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                entity->active = -1;
+                foreach_return;
+            }
+        }
+        else if (entity->state != Ring_State_Attract && player->shield == SHIELD_LIGHTNING
+                 && RSDK.CheckObjectCollisionTouchCircle(entity, 0x500000, player, 0x10000)) {
             entity->offset.x     = 0;
             entity->state        = Ring_State_Attract;
             entity->stateDraw    = Ring_StateDraw_Normal;
-            entity->active     = ACTIVE_NORMAL;
+            entity->active       = ACTIVE_NORMAL;
             entity->storedPlayer = player;
-            RSDK.BreakForeachLoop();
-            return;
-        }
-        else if (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player) != 1) {
-            entity->position.x = x;
-            entity->position.y = y;
-            return;
+            foreach_return;
         }
     }
-
-    if (entity->planeFilter > 0 && player->collisionPlane != (((byte)entity->planeFilter - 1) & 1)) {
-        if (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player) != 1) {
-            entity->position.x = x;
-            entity->position.y = y;
-            return;
-        }
-    }
-    if (player->sidekick)
-        player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-
-    int ringAmount = 1;
-    if (entity->type == 1) {
-        player->ringExtraLife += 100 * (entity->ringAmount / 100);
-        ringAmount = entity->ringAmount;
-    }
-    Player_GiveRings(ringAmount, player, 1);
-    int max = 0x100000;
-    if (entity->type != 1)
-        max = 0x80000;
-
-    int cnt = 4 * (entity->type == 1) + 4;
-    int min = -max;
-    for (int i = 0; i < cnt; ++i) {
-        EntityRing *sparkle =
-            (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(min, max), entity->position.y + RSDK.Rand(min, max));
-        sparkle->state     = Ring_State_Sparkle;
-        sparkle->stateDraw = Ring_StateDraw_Sparkle;
-        sparkle->active  = 2;
-        sparkle->visible   = 0;
-        if (entity->drawOrder == 1)
-            sparkle->drawOrder = 1;
-        else
-            sparkle->drawOrder = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &sparkle->animData, true, 0);
-        int frameCount = sparkle->animData.frameCount;
-        if (sparkle->animData.animationID == 2) {
-            sparkle->alpha = 0xE0;
-            frameCount >>= 1;
-        }
-        sparkle->maxFrameCount           = frameCount - 1;
-        sparkle->animData.animationSpeed = RSDK.Rand(6, 8);
-        sparkle->timer                   = 2 * i++;
-    }
-    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
-    entity->active = -1;
-    RSDK.BreakForeachLoop();
+    entity->position.x = x;
+    entity->position.y = y;
 }
 void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
 {

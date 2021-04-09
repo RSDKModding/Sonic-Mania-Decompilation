@@ -5,8 +5,7 @@ ObjectSpikeLog *SpikeLog;
 void SpikeLog_Update(void)
 {
     RSDK_THIS(SpikeLog);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void SpikeLog_LateUpdate(void) {}
@@ -16,7 +15,7 @@ void SpikeLog_StaticUpdate(void) { SpikeLog->timer = Zone->timer / 3 & 0x1F; }
 void SpikeLog_Draw(void)
 {
     RSDK_THIS(SpikeLog);
-    RSDK.DrawSprite(&entity->data, 0, 0);
+    RSDK.DrawSprite(&entity->data, NULL, false);
 }
 
 void SpikeLog_Create(void *data)

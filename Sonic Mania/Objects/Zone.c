@@ -9,12 +9,10 @@ void Zone_LateUpdate(void)
 {
     RSDK_THIS(Zone);
     if (RSDK_sceneInfo->entitySlot != SLOT_ZONE) {
-        if (entity->state)
-            entity->state();
+        StateMachine_Run(entity->state);
     }
     else {
-        EntityPlayer *player = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+        foreach_active(Player, player) {
             int playerID = 0;
             if (!player->sidekick) {
                 playerID = RSDK.GetEntityID(player);
@@ -90,8 +88,7 @@ void Zone_LateUpdate(void)
             }
         }
 
-        if (entity->state)
-            entity->state();
+        StateMachine_Run(entity->state);
 
         if (RSDK_sceneInfo->minutes == 10 && !(globals->medalMods & MEDAL_NOTIMEOVER)) {
             RSDK_sceneInfo->minutes      = 9;
@@ -99,8 +96,7 @@ void Zone_LateUpdate(void)
             RSDK_sceneInfo->milliseconds = 99;
             RSDK_sceneInfo->timeEnabled  = false;
             RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
-            EntityPlayer *playerLoop = NULL;
-            while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&playerLoop)) {
+            foreach_active(Player, playerLoop) {
                 bool32 flag = false;
                 if (globals->gameMode == MODE_COMPETITION && (globals->competitionSession[CS_FinishFlags + playerLoop->playerID]) == 2) {
                     flag = true;
@@ -116,11 +112,12 @@ void Zone_LateUpdate(void)
 
         if (RSDK_sceneInfo->minutes == 59 && RSDK_sceneInfo->seconds == 59)
             ActClear->field_30 = true;
+
         if (Player->playerCount > 0) {
-            EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+            EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
             if ((sidekick->state != Player_State_FlyIn && sidekick->state != Player_State_JumpIn) || sidekick->characterID == ID_TAILS
                 || sidekick->scale.x == 0x200) {
-                player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+                player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 RSDK.SwapDrawListEntries(player->drawOrder, 0, 1, Player->playerCount);
             }
         }
@@ -161,8 +158,7 @@ void Zone_Draw(void)
 {
     RSDK_THIS(Zone);
     if (entity->screenID >= PLAYER_MAX || entity->screenID == RSDK_sceneInfo->currentScreenID) {
-        if (entity->stateDraw)
-            entity->stateDraw();
+        StateMachine_Run(entity->stateDraw);
     }
 }
 
@@ -171,7 +167,7 @@ void Zone_Create(void *data)
     RSDK_THIS(Zone);
     entity->active = ACTIVE_ALWAYS;
     if (!entity->stateDraw) {
-        entity->visible   = 0;
+        entity->visible   = false;
         entity->drawOrder = -1;
     }
 }
@@ -385,12 +381,9 @@ void Zone_StageLoad(void)
         globals->initCoolBonus = true;
     }
 
-    EntityZone *ent = NULL;
-    while (RSDK.GetEntities(Zone->objectID, (Entity **)ent)) {
-        RSDK.ResetEntityPtr(ent, TYPE_BLANK, 0);
-    }
+    foreach_all(Zone, entity) { RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL); }
 
-    RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, 0);
+    RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, NULL);
     if (globals->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (globals->gameMode == MODE_COMPETITION) {
@@ -492,50 +485,44 @@ int Zone_GetZoneID(void)
 
 void Zone_StoreEntities(int xOffset, int yOffset)
 {
-    int count      = 0;
-    Entity *entity = NULL;
-    if (RSDK.GetActiveEntities(Player->objectID, &entity)) {
-        int pos = 0;
-        do {
-            entity->position.x -= xOffset;
-            entity->position.y -= yOffset;
-            globals->atlEntitySlot[count] = RSDK.GetEntityID(entity);
-            RSDK.CopyEntity(&globals->atlEntityData[pos], entity, 0);
-            count++;
-            pos += 0x200;
-        } while (RSDK.GetActiveEntities(Player->objectID, &entity));
+    int count = 0;
+    int pos   = 0;
+    foreach_active(Player, player)
+    {
+        player->position.x -= xOffset;
+        player->position.y -= yOffset;
+        globals->atlEntitySlot[count] = RSDK.GetEntityID(player);
+        RSDK.CopyEntity(&globals->atlEntityData[pos], player, false);
+        count++;
+        pos += 0x200;
     }
 
-    entity = NULL;
-    if (RSDK.GetActiveEntities(SignPost->objectID, &entity)) {
-        int pos = count << 9;
-        do {
-            entity->position.x -= xOffset;
-            entity->position.y -= yOffset;
-            globals->atlEntitySlot[count] = RSDK.GetEntityID(entity);
-            RSDK.CopyEntity(&globals->atlEntityData[pos], entity, 0);
-            count++;
-            pos += 0x200;
-        } while (RSDK.GetActiveEntities(SignPost->objectID, &entity));
+    pos = count << 9;
+    foreach_active(SignPost, signPost)
+    {
+        signPost->position.x -= xOffset;
+        signPost->position.y -= yOffset;
+        globals->atlEntitySlot[count] = RSDK.GetEntityID(signPost);
+        RSDK.CopyEntity(&globals->atlEntityData[pos], signPost, false);
+        count++;
+        pos += 0x200;
     }
 
-    entity = NULL;
-    if (RSDK.GetActiveEntities(ItemBox->objectID, &entity)) {
-        int pos = count << 9;
-        do {
-            entity->position.x -= xOffset;
-            entity->position.y -= yOffset;
-            globals->atlEntitySlot[count] = RSDK.GetEntityID(entity);
-            RSDK.CopyEntity(&globals->atlEntityData[pos], entity, 0);
-            count++;
-            pos += 0x200;
-        } while (RSDK.GetActiveEntities(ItemBox->objectID, &entity));
+    pos = count << 9;
+    foreach_active(ItemBox, itemBox)
+    {
+        itemBox->position.x -= xOffset;
+        itemBox->position.y -= yOffset;
+        globals->atlEntitySlot[count] = RSDK.GetEntityID(itemBox);
+        RSDK.CopyEntity(&globals->atlEntityData[pos], itemBox, false);
+        count++;
+        pos += 0x200;
     }
 
-    EntityPlayer *player     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-    globals->restartLives[0] = player->lives;
-    globals->restartScore    = player->score;
-    globals->restartPowerups = player->shield;
+    EntityPlayer *player1     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    globals->restartLives[0] = player1->lives;
+    globals->restartScore    = player1->score;
+    globals->restartPowerups = player1->shield;
     globals->atlEntityCount  = count;
     globals->atlEnabled      = true;
 }
@@ -546,9 +533,9 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
         Entity *entityData = (Entity *)&globals->atlEntityData[e << 9];
         Entity *entity;
         if (globals->atlEntitySlot[e] >= 12)
-            entity = (Entity *)RSDK.CreateEntity(0, 0, 0, 0);
+            entity = (Entity *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         else
-            entity = (Entity *)RSDK.GetEntityByID(globals->atlEntitySlot[e]);
+            entity = RSDK_GET_ENTITY(globals->atlEntitySlot[e], );
         if (entityData->objectID == Player->objectID) {
             EntityPlayer *playerData = (EntityPlayer *)entityData;
             EntityPlayer *player     = (EntityPlayer *)entity;
@@ -569,9 +556,9 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
     memset(globals->atlEntityData, 0, globals->atlEntityCount << 9);
     Zone->field_158 = flag;
     if (flag) {
-        EntityPlayer *player   = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->camera         = NULL;
-        EntityCamera *camera   = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
+        EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->position.x     = yOffset;
         camera->position.y     = xOffset;
         camera->state          = 0;
@@ -591,7 +578,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
 
 void Zone_StartFadeOut(int fadeTimer, int fadeColour)
 {
-    EntityZone *zone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
+    EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
     zone->fadeColour = fadeColour;
     zone->fadeTimer  = fadeTimer;
     zone->screenID   = PLAYER_MAX;
@@ -604,15 +591,15 @@ void Zone_StartFadeOut(int fadeTimer, int fadeColour)
 
 void Zone_Unknown2(void)
 {
-    EntityZone *entity = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
-    entity->screenID   = PLAYER_MAX;
-    entity->timer      = 0;
-    entity->fadeTimer  = 10;
-    entity->fadeColour = 0;
-    entity->state      = Zone_Unknown13;
-    entity->stateDraw  = Zone_Unknown12;
-    entity->visible    = true;
-    entity->drawOrder  = 15;
+    EntityZone *zone   = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+    zone->screenID   = PLAYER_MAX;
+    zone->timer      = 0;
+    zone->fadeTimer  = 10;
+    zone->fadeColour = 0;
+    zone->state      = Zone_Unknown13;
+    zone->stateDraw  = Zone_Unknown12;
+    zone->visible    = true;
+    zone->drawOrder  = 15;
     Music_FadeOut(0.025);
 }
 
@@ -626,7 +613,7 @@ void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)
 
 void Zone_Unknown4(int screen)
 {
-    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
+    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, NULL, 0, 0);
     entity->screenID   = screen;
     entity->timer      = 640;
     entity->fadeTimer  = 16;
@@ -651,7 +638,7 @@ void Zone_Unknown4(int screen)
 
 void Zone_Unknown5(void)
 {
-    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, 0, 0, 0);
+    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, NULL, 0, 0);
     entity->screenID   = 4;
     entity->timer      = 640;
     entity->fadeTimer  = 16;
@@ -663,12 +650,12 @@ void Zone_Unknown5(void)
     Zone->field_4724   = 1;
 }
 
-void Zone_ApplyWorldBounds(EntityPlayer *player)
+void Zone_ApplyWorldBounds(void)
 {
     if (Zone->field_158) {
-        EntityCamera *camera = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
-        player               = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+        EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+        foreach_active(Player, player)
+        {
             int camWorldL = camera->boundsL << 16;
             if (player->position.x - 0xA0000 <= camWorldL) {
                 player->position.x = camWorldL + 0xA0000;

@@ -16,13 +16,13 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     byte type;
     ushort timer;
     bool32 charge;
     Vector2 startPos;
     byte startDir;
-    AnimationData data;
+    Animator data;
 } EntityChopper;
 
 // Object Struct

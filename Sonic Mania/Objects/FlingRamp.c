@@ -4,9 +4,9 @@ ObjectFlingRamp *FlingRamp;
 
 void FlingRamp_Update(void)
 {
-    EntityFlingRamp *entity = (EntityFlingRamp *)RSDK_sceneInfo->entity;
-    EntityPlayer *player    = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(FlingRamp);
+    foreach_active(Player, player)
+    {
         if ((player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
             if (Player_CheckCollisionTouch(player, entity, &FlingRamp->hitbox)) {
                 player->velocity.x += 0x40000;
@@ -43,8 +43,8 @@ void FlingRamp_Draw(void)
 
 void FlingRamp_Create(void* data)
 {
-    EntityFlingRamp *entity = (EntityFlingRamp *)RSDK_sceneInfo->entity;
-    if (RSDK_sceneInfo->inEditor != 1) {
+    RSDK_THIS(FlingRamp);
+    if (!RSDK_sceneInfo->inEditor) {
         entity->active  = ACTIVE_BOUNDS;
         entity->visible = false;
     }

@@ -15,7 +15,7 @@ typedef struct {
     TextInfo value7;
     byte value8;
     int value9;
-    AnimationData value10;
+    Animator value10;
     ushort value11;
     ushort value12;
     ushort value13;

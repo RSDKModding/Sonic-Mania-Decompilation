@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     Vector2 startPos;
     int timer;
     int flag;
@@ -22,8 +22,8 @@ typedef struct {
     int sfx;
     int field_74;
     int field_78;
-    AnimationData data1;
-    AnimationData data2;
+    Animator data1;
+    Animator data2;
 } EntityPhantomRuby;
 
 // Object Struct

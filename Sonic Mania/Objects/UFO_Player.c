@@ -6,11 +6,8 @@ void UFO_Player_Update(void)
 {
     RSDK_THIS(UFO_Player);
 
-    if (entity->inputState)
-        entity->inputState();
-
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->inputState);
+    StateMachine_Run(entity->state);
 
     RSDK.ProcessAnimation(&entity->playerData);
     if (UFO_Setup->timedOut)

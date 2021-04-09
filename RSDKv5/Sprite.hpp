@@ -56,7 +56,11 @@ struct ImagePNG {
 };
 
 bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);
+#if RETRO_REV02
 bool32 LoadPNG(ImagePNG *image, const char *fileName, bool32 loadHeader);
+#elif !RETRO_REV02
+bool32 LoadTGA(const char *fileName);
+#endif
 
 ushort LoadSpriteSheet(const char *filename, Scopes scope);
 bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void));

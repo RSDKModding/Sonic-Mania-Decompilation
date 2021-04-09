@@ -7,8 +7,8 @@ void Ink_Update(void)
     RSDK_THIS(Ink);
     RSDK.ProcessAnimation(&entity->data3);
 
-    EntityPlayer *player = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player)
+    {
         int playerID = RSDK.GetEntityID(player);
         Player_CheckCollisionBox(player, entity, &Ink->hitbox);
         Player_CheckCollisionBox(player, entity, &Ink->hitbox2);

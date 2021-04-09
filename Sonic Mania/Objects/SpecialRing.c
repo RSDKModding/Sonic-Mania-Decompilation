@@ -4,9 +4,8 @@ ObjectSpecialRing *SpecialRing;
 
 void SpecialRing_Update(void)
 {
-    EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(SpecialRing);
+    StateMachine_Run(entity->state);
 }
 
 void SpecialRing_LateUpdate(void) {}
@@ -15,7 +14,7 @@ void SpecialRing_StaticUpdate(void) {}
 
 void SpecialRing_Draw(void)
 {
-    EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpecialRing);
     if (entity->state == SpecialRing_State_Warp) {
         entity->direction = entity->warpData.frameID > 8;
         RSDK.DrawSprite(&entity->warpData, 0, 0);
@@ -33,7 +32,7 @@ void SpecialRing_Draw(void)
 
 void SpecialRing_Create(void *data)
 {
-    EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpecialRing);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
@@ -68,8 +67,7 @@ void SpecialRing_StageLoad(void)
 
     DEBUGMODE_ADD_OBJ(SpecialRing);
 
-    EntitySpecialRing *entity = NULL;
-    while (RSDK.GetEntities(SpecialRing->objectID, (Entity **)&entity)) {
+    foreach_all(SpecialRing, entity) {
         if (entity->id <= 0 || globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION) {
             entity->enabled = false;
         }
@@ -122,7 +120,7 @@ void SpecialRing_DebugSpawn(void)
 }
 void SpecialRing_StartWarp(void)
 {
-    EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpecialRing);
     if (++entity->warpTimer == 30) {
         SaveGame_SaveGameState();
         RSDK.PlaySFX(SpecialRing->sfx_SpecialWarp, 0, 254);
@@ -141,7 +139,7 @@ void SpecialRing_StartWarp(void)
 }
 void SpecialRing_State_Warp(void)
 {
-    EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpecialRing);
     RSDK.ProcessAnimation(&entity->warpData);
     if (!(Zone->timer & 3)) {
         for (int i = 0; i < 3; ++i) {
@@ -165,8 +163,9 @@ void SpecialRing_State_Warp(void)
         }
         entity->dword68 -= 0x80000;
     }
+
     if (SaveGame->saveRAM[28] == 0x7F || !entity->id) {
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
     }
     else {
         if (entity->warpData.frameID == entity->warpData.frameCount - 1) {
@@ -178,7 +177,7 @@ void SpecialRing_State_Warp(void)
 }
 void SpecialRing_State_Normal(void)
 {
-    EntitySpecialRing *entity = (EntitySpecialRing *)RSDK_sceneInfo->entity;
+    RSDK_THIS(SpecialRing);
     entity->angleZ            = (entity->angleZ + 4) & 0x3FF;
     entity->angleY            = (entity->angleY + 4) & 0x3FF;
 
@@ -204,8 +203,7 @@ void SpecialRing_State_Normal(void)
     RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &entity->matrix4);
 
     if (entity->enabled && entity->scale.x > 256) {
-        EntityPlayer *player = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+        foreach_active(Player, player) {
             if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && !player->sidekick) {
                 if (Player_CheckCollisionTouch(player, entity, &SpecialRing->hitbox) && RSDK_sceneInfo->timeEnabled) {
                     entity->dword68 = 0x100000;

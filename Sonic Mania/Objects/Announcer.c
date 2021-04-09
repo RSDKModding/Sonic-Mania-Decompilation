@@ -5,8 +5,7 @@ ObjectAnnouncer *Announcer;
 void Announcer_Update(void)
 {
     RSDK_THIS(Announcer);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void Announcer_LateUpdate(void) {}
@@ -16,8 +15,7 @@ void Announcer_StaticUpdate(void) {}
 void Announcer_Draw(void)
 {
     RSDK_THIS(Announcer);
-    if (entity->stateDraw)
-        entity->stateDraw();
+    StateMachine_Run(entity->stateDraw);
 }
 
 void Announcer_Create(void *data)

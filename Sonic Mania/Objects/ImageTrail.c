@@ -46,7 +46,7 @@ void ImageTrail_LateUpdate(void)
         entity->stateScale[i]     = entity->stateScale[i - 1];
         entity->stateDirection[i] = entity->stateDirection[i - 1];
         entity->stateVisible[i]   = entity->stateVisible[i - 1];
-        memcpy(&entity->stateAnim[i], &entity->stateAnim[i - 1], sizeof(AnimationData));
+        memcpy(&entity->stateAnim[i], &entity->stateAnim[i - 1], sizeof(Animator));
     }
 
     entity->statePos[0].x     = entity->currentPos.x;
@@ -55,7 +55,7 @@ void ImageTrail_LateUpdate(void)
     entity->stateDirection[0] = entity->currentDirection;
     entity->stateScale[0]     = entity->currentScale;
     entity->stateVisible[0]   = entity->currentVisible;
-    memcpy(&entity->stateAnim[0], &entity->currentAnimData, sizeof(AnimationData));
+    memcpy(&entity->stateAnim[0], &entity->currentAnimData, sizeof(Animator));
 
     // Record Player
     entity->drawOrder        = player->drawOrder - 1;
@@ -63,7 +63,7 @@ void ImageTrail_LateUpdate(void)
     entity->currentPos.y     = player->position.y;
     entity->currentRotation  = player->rotation;
     entity->currentDirection = player->direction;
-    memcpy(&entity->currentAnimData, &player->playerAnimData, sizeof(AnimationData));
+    memcpy(&entity->currentAnimData, &player->playerAnimData, sizeof(Animator));
     if (player->isChibi || !(player->drawFX & FX_SCALE))
         entity->currentScale = 0x200;
     else

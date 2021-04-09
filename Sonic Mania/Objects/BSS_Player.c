@@ -5,10 +5,9 @@ ObjectBSS_Player *BSS_Player;
 void BSS_Player_Update(void)
 {
     RSDK_THIS(BSS_Player);
-    EntityBSS_Setup *setup = (EntityBSS_Setup *)RSDK.GetEntityByID(SLOT_BSS_SETUP);
+    EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
 
-    if (entity->inputState)
-        entity->inputState();
+    StateMachine_Run(entity->inputState);
     if (entity->onGround) {
         if (entity->jumpPress) {
             entity->velocity.y = -0x100000;

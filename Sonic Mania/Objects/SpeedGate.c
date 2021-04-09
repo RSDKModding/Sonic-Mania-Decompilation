@@ -56,8 +56,7 @@ void SpeedGate_Update(void)
         }
     }
 
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void SpeedGate_LateUpdate(void) {}
@@ -124,8 +123,7 @@ void SpeedGate_State_Unknown1(void)
                 if (entity->field_70 < 0)
                     entity->timer2 = 0x200;
                 RSDK.PlaySFX(SpeedGate->sfx_StarPost, 0, 255);
-                RSDK.BreakForeachLoop();
-                return;
+                foreach_return;
             }
         }
         playerBit <<= 1;
@@ -216,7 +214,7 @@ void SpeedGate_State_Unknown3(void)
         entity->timer        = 0;
         entity->posUnknown.y = y;
         entity->active       = ACTIVE_BOUNDS;
-        entity->state        = NULL;
+        entity->state        = StateMachine_None;
     }
 }
 

@@ -6,8 +6,7 @@ ObjectTitleEggman *TitleEggman;
 void TitleEggman_Update(void)
 {
     RSDK_THIS(TitleEggman);
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 }
 
 void TitleEggman_LateUpdate(void) {}
@@ -28,16 +27,16 @@ void TitleEggman_Draw(void)
         for (int i = 1; i < 5; ++i) {
             drawPos.x = (i << 8) * RSDK.Sin1024(angle) + entity->position.x;
             drawPos.y = entity->position.y + 0x80000 + (i << 8) * RSDK.Cos1024(angle);
-            RSDK.DrawSprite(&entity->data3, &drawPos, 0);
+            RSDK.DrawSprite(&entity->data3, &drawPos, false);
         }
         entity->drawFX   = FX_ROTATE;
         drawPos.x        = 0x500 * RSDK.Sin1024(angle) + entity->position.x;
         drawPos.y        = 0x500 * RSDK.Cos1024(angle) + entity->position.y + 0x80000;
         entity->rotation = -(angle >> 2);
-        RSDK.DrawSprite(&entity->data4, &drawPos, 0);
+        RSDK.DrawSprite(&entity->data4, &drawPos, false);
 
         entity->drawFX = FX_FLIP;
-        RSDK.DrawSprite(&entity->data2, 0, 0);
+        RSDK.DrawSprite(&entity->data2, NULL, false);
     }
 }
 

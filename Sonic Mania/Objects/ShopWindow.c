@@ -5,7 +5,7 @@ ObjectShopWindow *ShopWindow;
 void ShopWindow_Update(void)
 {
     RSDK_THIS(ShopWindow);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 
     if (entity->silhouette) {
         foreach_active(Player, player)
@@ -26,7 +26,7 @@ void ShopWindow_StaticUpdate(void) {}
 void ShopWindow_Draw(void)
 {
     RSDK_THIS(ShopWindow);
-    CallFunction(entity->stateDraw);
+    StateMachine_Run(entity->stateDraw);
 }
 
 void ShopWindow_Create(void *data)

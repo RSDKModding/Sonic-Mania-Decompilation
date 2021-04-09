@@ -4,30 +4,23 @@ ObjectFXFade *FXFade;
 
 void FXFade_Update(void)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(FXFade);
+    StateMachine_Run(entity->state);
 }
 
-void FXFade_LateUpdate(void)
-{
+void FXFade_LateUpdate(void) {}
 
-}
-
-void FXFade_StaticUpdate(void)
-{
-
-}
+void FXFade_StaticUpdate(void) {}
 
 void FXFade_Draw(void)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXFade);
     RSDK.FillScreen(entity->color, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
 void FXFade_Create(void *data)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXFade);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible = true;
         entity->active  = ACTIVE_NORMAL;
@@ -59,23 +52,19 @@ void FXFade_Create(void *data)
     }
 }
 
-void FXFade_StageLoad(void)
-{
-
-}
+void FXFade_StageLoad(void) {}
 
 void FXFade_StopAll(void)
 {
-    Entity *entity = NULL;
-    while (RSDK.GetEntities(FXFade->objectID, &entity)) RSDK.ResetEntityPtr(entity, 0, 0);
+    foreach_all(FXFade, entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
 void FXFade_State_FadeIn(void)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXFade);
     if (entity->timer >= 512) {
         if (entity->oneWay) {
-            entity->state = NULL;
+            entity->state = StateMachine_None;
             if (entity->transitionScene)
                 RSDK.InitSceneLoad();
         }
@@ -95,7 +84,7 @@ void FXFade_State_FadeIn(void)
 }
 void FXFade_State_Wait(void)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXFade);
     if (--entity->wait <= 0) {
         if (entity->fadeOutBlack)
             entity->state = FXFade_State_FadeOutBlack;
@@ -105,12 +94,12 @@ void FXFade_State_Wait(void)
 }
 void FXFade_State_FadeOut(void)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXFade);
     if (entity->timer <= 0) {
         if (entity->oneWay)
-            entity->state = NULL;
+            entity->state = StateMachine_None;
         else
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
         entity->timer -= entity->speedOut;
@@ -118,7 +107,7 @@ void FXFade_State_FadeOut(void)
 }
 void FXFade_State_FadeOutBlack(void)
 {
-    EntityFXFade *entity = (EntityFXFade *)RSDK_sceneInfo->entity;
+    RSDK_THIS(FXFade);
     if (entity->color >> 16) {
         if (((entity->color >> 16) - entity->speedOut) >= 0)
             entity->color += ((((entity->color >> 8) & 0xFF) + (((entity->color >> 16) - entity->speedOut) << 8)) << 8);
@@ -138,19 +127,13 @@ void FXFade_State_FadeOutBlack(void)
             entity->color = (entity->color & 0xFF) - entity->speedOut;
     }
     else {
-        entity->state = NULL;
+        entity->state = StateMachine_None;
     }
 }
 
-void FXFade_EditorDraw(void)
-{
+void FXFade_EditorDraw(void) {}
 
-}
-
-void FXFade_EditorLoad(void)
-{
-
-}
+void FXFade_EditorLoad(void) {}
 
 void FXFade_Serialize(void)
 {
@@ -164,4 +147,3 @@ void FXFade_Serialize(void)
     RSDK_EDITABLE_VAR(FXFade, VAR_BOOL, overHUD);
     RSDK_EDITABLE_VAR(FXFade, VAR_BOOL, fadeOutBlack);
 }
-

@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     TextInfo text;
     TextInfo tag;
     bool32 selectable;
@@ -24,7 +24,7 @@ typedef struct {
     int data2;
     int data3;
     bool32 highlighted;
-    AnimationData animData;
+    Animator animData;
 } EntityUIText;
 
 // Object Struct

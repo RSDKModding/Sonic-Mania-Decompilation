@@ -5,7 +5,7 @@ ObjectEggPrison *EggPrison;
 void EggPrison_Update(void)
 {
     RSDK_THIS(EggPrison);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 
     if (entity->type == 1) {
         RSDK.ProcessAnimation(&entity->data2);
@@ -390,7 +390,7 @@ void EggPrison_Unknown3(void)
             Music_FadeOut(0.025);
         }
         else {
-            entity->state = NULL;
+            entity->state = StateMachine_None;
         }
     }
 }
@@ -400,7 +400,7 @@ void EggPrison_Unknown4(void)
     RSDK_THIS(EggPrison);
     if (++entity->timer == 60) {
         entity->timer                 = 0;
-        entity->state                 = NULL;
+        entity->state                 = StateMachine_None;
         Zone->forcePlayerOnScreenFlag = false;
         Music_PlayTrack(TRACK_ACTCLEAR);
         RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, 0);

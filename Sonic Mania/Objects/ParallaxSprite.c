@@ -5,7 +5,7 @@ ObjectParallaxSprite *ParallaxSprite;
 void ParallaxSprite_Update(void)
 {
     RSDK_THIS(ParallaxSprite);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 }
 
 void ParallaxSprite_LateUpdate(void) {}

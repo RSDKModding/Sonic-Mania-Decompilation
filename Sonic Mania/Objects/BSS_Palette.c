@@ -21,8 +21,8 @@ void BSS_Palette_StageLoad(void)
     BSS_Palette->alpha1 = 0x100;
     BSS_Palette->alpha2 = 0x80;
 
-    EntityBSS_Palette *entity = NULL;
-    while (RSDK.GetEntities(BSS_Palette->objectID, (Entity **)&entity)) {
+    foreach_all(BSS_Palette, entity)
+    {
         if (entity->useStageConfig) {
             BSS_Palette->startColourID = 16 * entity->paletteID;
         }

@@ -14,12 +14,12 @@ typedef struct {
     RSDK_ENTITY
     byte pathMovement;
     Vector2 posUnknown;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
-    AnimationData data4;
-    AnimationData data5;
-    AnimationData data6;
+    Animator data1;
+    Animator data2;
+    Animator data3;
+    Animator data4;
+    Animator data5;
+    Animator data6;
 } EntityFilmProjector;
 
 // Object Struct

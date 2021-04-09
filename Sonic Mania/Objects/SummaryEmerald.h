@@ -14,7 +14,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     int emeraldID;
-    AnimationData data;
+    Animator data;
 } EntitySummaryEmerald;
 
 // Object Struct

@@ -35,7 +35,7 @@ typedef struct {
     int *rockSpeedsT;
     int *rockSpeedsL;
     int *rockSpeedsR;
-    AnimationData data;
+    Animator data;
 } EntityAIZRockPile;
 
 // Object Struct

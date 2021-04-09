@@ -5,7 +5,7 @@ ObjectAIZKingClaw *AIZKingClaw;
 void AIZKingClaw_Update(void)
 {
     RSDK_THIS(AIZKingClaw);
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
 
     for (int i = 0; i < (entity->count <= 8 ? entity->count : 8); ++i) {
         Entity *grabbed = entity->grabbedEntities[i];
@@ -116,7 +116,7 @@ void AIZKingClaw_Unknown2(void)
     ++entity->timer;
     if (!(entity->timer & 3)) {
         if (entity->data4.frameID >= 3) {
-            entity->state = NULL;
+            entity->state = StateMachine_None;
         }
         else {
             entity->data3.frameID++;

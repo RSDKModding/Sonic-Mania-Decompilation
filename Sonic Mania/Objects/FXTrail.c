@@ -16,14 +16,14 @@ void FXTrail_LateUpdate(void)
             entity->stateRotation[i]  = entity->stateRotation[i - 1];
             entity->stateDirection[i] = entity->stateDirection[i - 1];
             entity->stateVisible[i]   = entity->stateVisible[i - 1];
-            memcpy(&entity->stateAnim[i], &entity->stateAnim[i - 1], sizeof(AnimationData));
+            memcpy(&entity->stateAnim[i], &entity->stateAnim[i - 1], sizeof(Animator));
         }
         entity->statePos[0].x     = entity->currentPos.x;
         entity->statePos[0].y     = entity->currentPos.y;
         entity->stateRotation[0]  = entity->currentRotation;
         entity->stateDirection[0] = entity->currentDirection;
         entity->stateVisible[0]   = entity->currentVisible;
-        memcpy(&entity->stateAnim[0], &entity->currentAnim, sizeof(AnimationData));
+        memcpy(&entity->stateAnim[0], &entity->currentAnim, sizeof(Animator));
 
         // Record Parent
         entity->drawOrder        = parent->drawOrder - 1;
@@ -31,7 +31,7 @@ void FXTrail_LateUpdate(void)
         entity->currentPos.y     = parent->position.y;
         entity->currentRotation  = parent->rotation;
         entity->currentDirection = parent->direction;
-        memcpy(&entity->currentAnim, entity->dataPtr, sizeof(AnimationData));
+        memcpy(&entity->currentAnim, entity->dataPtr, sizeof(Animator));
     }
     else {
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);

@@ -86,13 +86,11 @@ void TitleBG_SetupFX(void)
     bg2->drawLayer[0]     = 1;
     bg2->scanlineCallback = TitleBG_ScanlineCallbackB;
 
-    Entity *entity = NULL;
-    while (RSDK.GetEntities(TitleBG->objectID, &entity)) entity->visible = true;
-    entity = NULL;
-    while (RSDK.GetEntities(Title3DSprite->objectID, &entity)) entity->visible = true;
+    foreach_all(TitleBG, titleBG) titleBG->visible = true;
+    foreach_all(Title3DSprite, title3DSprite) title3DSprite->visible = true;
 
     RSDK.SetPaletteEntry(0, 55, 0xFF00);
-    RSDK.SetPaletteMask(0xFF00u);
+    RSDK.SetPaletteMask(0xFF00);
     RSDK.SetDrawLayerProperties(2, true, 0);
 }
 

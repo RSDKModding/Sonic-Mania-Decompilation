@@ -113,10 +113,7 @@ void SPZ2Setup_StageLoad(void)
 #else
     if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct2()) {
 #endif
-        EntitySPZ2Outro *entity = NULL;
-        if (RSDK.GetEntities(SPZ2Outro->objectID, (Entity **)&entity)) {
-            RSDK.BreakForeachLoop();
-        }
+        foreach_all(SPZ2Outro, entity) { foreach_break; }
         SPZ2Setup->outroPtr       = (Entity*)entity;
         Zone->stageFinishCallback = SPZ2Setup_SetupOutro;
     }

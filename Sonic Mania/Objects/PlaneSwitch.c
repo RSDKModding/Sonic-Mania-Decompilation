@@ -4,20 +4,17 @@ ObjectPlaneSwitch *PlaneSwitch;
 
 void PlaneSwitch_Update(void)
 {
-    EntityPlayer *player = NULL;
-    EntityPlaneSwitch *entity = (EntityPlaneSwitch *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
-        int x    = (player->position.x - entity->position.x) >> 8;
-        int y    = (player->position.y - entity->position.y) >> 8;
+    RSDK_THIS(PlaneSwitch);
+    foreach_active(Player, player)
+    {
+        int x     = (player->position.x - entity->position.x) >> 8;
+        int y     = (player->position.y - entity->position.y) >> 8;
         int scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
         int scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-        int pos       = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
+        int pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
         RSDK.Cos256(entity->negAngle);
         RSDK.Sin256(entity->negAngle);
-        if (entity->onPath && !player->onGround) {
-            //Next loop, this one doesn't count
-        }
-        else {
+        if (!(entity->onPath && !player->onGround)) {
             int xDif = abs(scanX - entity->position.x);
             int yDif = abs(scanY - entity->position.y);
 
@@ -46,26 +43,20 @@ void PlaneSwitch_Update(void)
     entity->visible = DebugMode->debugActive;
 }
 
-void PlaneSwitch_LateUpdate(void)
-{
+void PlaneSwitch_LateUpdate(void) {}
 
-}
-
-void PlaneSwitch_StaticUpdate(void)
-{
-
-}
+void PlaneSwitch_StaticUpdate(void) {}
 
 void PlaneSwitch_Draw(void)
 {
     Vector2 drawPos;
-    EntityPlaneSwitch *entity = (EntityPlaneSwitch *)RSDK_sceneInfo->entity;
+    RSDK_THIS(PlaneSwitch);
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= 0x80000;
     drawPos.y -= entity->size << 19;
-    Zone_Unknown3((Entity*)entity, &drawPos, entity->angle);
+    Zone_Unknown3((Entity *)entity, &drawPos, entity->angle);
 
     entity->data.frameID = entity->flags & 3;
     for (int i = 0; i < entity->size; ++i) {
@@ -90,9 +81,9 @@ void PlaneSwitch_Draw(void)
     }
 }
 
-void PlaneSwitch_Create(void* data)
+void PlaneSwitch_Create(void *data)
 {
-    EntityPlaneSwitch *entity = (EntityPlaneSwitch *)RSDK_sceneInfo->entity;
+    RSDK_THIS(PlaneSwitch);
     RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->data, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
@@ -112,21 +103,15 @@ void PlaneSwitch_Create(void* data)
         entity->visible       = false;
         entity->updateRange.y = y + 0x200000;
         entity->drawOrder     = Zone->drawOrderLow;
-        entity->negAngle      = (byte)-(byte)entity->angle;
+        entity->negAngle      = (byte) - (byte)entity->angle;
     }
 }
 
 void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-void PlaneSwitch_EditorDraw(void)
-{
+void PlaneSwitch_EditorDraw(void) {}
 
-}
-
-void PlaneSwitch_EditorLoad(void)
-{
-
-}
+void PlaneSwitch_EditorLoad(void) {}
 
 void PlaneSwitch_Serialize(void)
 {
@@ -135,4 +120,3 @@ void PlaneSwitch_Serialize(void)
     RSDK_EDITABLE_VAR(PlaneSwitch, VAR_INT32, angle);
     RSDK_EDITABLE_VAR(PlaneSwitch, VAR_BOOL, onPath);
 }
-

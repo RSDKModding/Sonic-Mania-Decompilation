@@ -4,9 +4,9 @@ ObjectForceUnstick *ForceUnstick;
 
 void ForceUnstick_Update(void)
 {
-    EntityPlayer *player       = 0;
-    EntityForceUnstick *entity = (EntityForceUnstick *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(ForceUnstick);
+    foreach_active(Player, player)
+    {
         if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
             player->collisionMode = CMODE_FLOOR;
             if (entity->breakClimb && player->state == Player_State_KnuxWallClimb) {
@@ -35,10 +35,10 @@ void ForceUnstick_StageLoad(void)
 void ForceUnstick_DrawSprites(void)
 {
     Vector2 drawPos;
-    EntityForceUnstick *entity = (EntityForceUnstick *)RSDK_sceneInfo->entity;
-    drawPos.x                  = entity->position.x;
-    drawPos.y                  = entity->position.y - (entity->height << 19);
-    drawPos.x                  = entity->position.x - (entity->width << 19);
+    RSDK_THIS(ForceUnstick);
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y - (entity->height << 19);
+    drawPos.x = entity->position.x - (entity->width << 19);
 
     if (!entity->breakClimb)
         ForceUnstick->animData.frameID = 6;

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     byte shift;
-    AnimationData animData;
+    Animator animData;
     ushort spriteIndex;
     ushort sfx_Crumble;
 } ObjectCollapsingPlatform;
@@ -15,7 +15,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     Vector2 size;
     bool32 respawn;
     ushort targetLayer;

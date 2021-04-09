@@ -35,8 +35,8 @@ void SwingRope_Update(void)
     if (entity->ropeGrabDelay > 0)
         entity->ropeGrabDelay--;
 
-    EntityPlayer *player = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player)
+    {
         if (player->state == Player_State_None) {
             if (Player_CheckCollisionTouch(player, entity, &SwingRope->hitbox2)) {
                 if (player->jumpPress) {

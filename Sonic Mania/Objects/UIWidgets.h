@@ -9,8 +9,8 @@ typedef struct {
     int array1[0x10];
     int arrayIndex;
     int field_48[12];
-    AnimationData animData1;
-    AnimationData animData2;
+    Animator animData1;
+    Animator animData2;
     ushort uiSpriteIndex;
     ushort saveSelectSpriteIndex;
     ushort textSpriteIndex;

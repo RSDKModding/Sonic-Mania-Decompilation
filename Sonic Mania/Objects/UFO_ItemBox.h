@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     int type;
     int timer;
     int height;
@@ -48,7 +48,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     int field_17C;
-    AnimationData itemData;
+    Animator itemData;
     int field_198;
     int field_19C;
     int field_1A0;

@@ -14,8 +14,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
-    void (*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     int field_60;
     int timer;
     Vector2 decorationPos;
@@ -47,10 +47,10 @@ typedef struct {
     int dword2F4;
     Vector2 drawPos2;
     bool32 enableIntro;
-    AnimationData decorationData;
-    AnimationData nameLetterData;
-    AnimationData zoneLetterData;
-    AnimationData actNumbersData;
+    Animator decorationData;
+    Animator nameLetterData;
+    Animator zoneLetterData;
+    Animator actNumbersData;
     colour colours[5];
 } EntityTitleCard;
 

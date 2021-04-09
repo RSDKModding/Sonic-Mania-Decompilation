@@ -85,17 +85,31 @@ enum GameRegions {
 
 #define BASE_PATH ""
 
+#define RETRO_USING_SDL2      (0) // general
+#define RETRO_USING_DIRECTX9  (0) // windows
+#define RETRO_USING_DIRECTX11 (0) // xbox one
+
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX
+#undef RETRO_USING_SDL2
 #define RETRO_USING_SDL2 (1)
+
 #else // Since its an else & not an elif these platforms probably aren't supported yet
 #define RETRO_USING_SDL2 (0)
 #endif
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_UWP
+#undef RETRO_USING_DIRECTX9
+#define RETRO_USING_DIRECTX9 (1)
+
 #if RETRO_USING_SDL2
 #include <SDL.h>
 #endif
 //#include <vorbis/vorbisfile.h>
+#endif
+
+#if RETRO_PLATFORM == RETRO_XB1
+#undef RETRO_USING_DIRECTX11
+#define RETRO_USING_DIRECTX11 (1)
 #endif
 
 #if RETRO_PLATFORM == RETRO_OSX
@@ -249,6 +263,14 @@ inline void InitGameOptions(void **options, int size)
     AllocateStorage(size, options, DATASET_STG, true);
     gameOptionsPtr = (byte *)*options;
 }
+
+#if RETRO_USING_DIRECTX9
+
+#endif
+
+#if RETRO_USING_DIRECTX11
+
+#endif
 
 #include "Link.hpp"
 

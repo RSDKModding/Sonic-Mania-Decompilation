@@ -134,7 +134,7 @@ short CreateAnimation(const char *filename, uint frameCount, uint animCount, Sco
     return id;
 }
 
-void ProcessAnimation(AnimationData *data)
+void ProcessAnimation(Animator *data)
 {
     if (data) {
         if (data->framePtrs) {

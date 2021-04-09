@@ -224,15 +224,15 @@ void TryUnlockAchievement(const char *name) { printLog(SEVERITY_NONE, "DUMMY Try
 void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)", a2, a3); }
 void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)", a2, a3, a4); }
 
-void SetPresence(byte a2, TextInfo *info)
+void SetPresence(byte id, TextInfo *info)
 {
     char buffer[0xFF];
     char buffer2[0xFF];
     GetCString(buffer, info);
 #if RETRO_REV02
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", a2, buffer, (richPresence->status != a2 ? "Successful Set" : "Redundant Set"));
+    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
 #else
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s)", a2, buffer);
+    sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
 #endif
     printLog(SEVERITY_NONE, buffer2);
 }
@@ -257,11 +257,24 @@ void setupUserDebugValues()
     for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
         DebugValueInfo *val = &debugValues[debugValCnt++];
         StrCopy(val->name, userDebugValNames[i]);
-        val->isSigned   = 0;
-        val->valByteCnt = 4;
         val->value      = userCore->values[i];
         val->min        = 0;
-        val->max        = 1;
+
+        if (i == 2) {
+            val->type       = 2;
+            val->valByteCnt = 1;
+            val->max = REGION_EU;
+        }
+        else if (i == 3) {
+            val->type       = 2;
+            val->valByteCnt = 1;
+            val->max = LANGUAGE_TC;
+        }
+        else {
+            val->type       = 0;
+            val->valByteCnt = 4;
+            val->max = 1;
+        }
     }
 }
 void userInitUnknown1()

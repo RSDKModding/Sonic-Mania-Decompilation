@@ -14,16 +14,16 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
+    StateMachine(state);
     byte shotRange;
     int timer;
     byte field_64;
     Vector2 startPos;
     byte startDir;
     Entity *projectile;
-    AnimationData data1;
-    AnimationData data2;
-    AnimationData data3;
+    Animator data1;
+    Animator data2;
+    Animator data3;
     Hitbox rangeHitbox;
 } EntityBuzzBomber;
 

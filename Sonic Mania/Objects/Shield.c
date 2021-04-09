@@ -4,9 +4,8 @@ ObjectShield *Shield;
 
 void Shield_Update(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    RSDK_THIS(Shield);
+    StateMachine_Run(entity->state);
     EntityPlayer *player = entity->player;
     if (player) {
         int drawOrder = player->drawOrder;
@@ -24,7 +23,7 @@ void Shield_StaticUpdate(void) {}
 
 void Shield_Draw(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     EntityPlayer *player = (EntityPlayer *)entity->player;
     if (player) {
         if (player->isChibi) {
@@ -66,9 +65,9 @@ void Shield_Draw(void)
 
 void Shield_Create(void *data)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     entity->active       = ACTIVE_NORMAL;
-    entity->visible      = 1;
+    entity->visible      = true;
     if (data) {
         EntityPlayer *player = (EntityPlayer *)data;
         if (player->objectID == Player->objectID)
@@ -78,19 +77,19 @@ void Shield_Create(void *data)
 
     entity->drawFX = FX_FLIP;
     entity->state  = Shield_State_Generic;
-    switch (entity->type - 1) {
-        case SHIELD_NONE:
+    switch (entity->type) {
+        case SHIELD_BLUE:
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 0, &entity->data, true, 0);
             entity->inkEffect = INK_ADD;
             entity->alpha     = 0x80;
             break;
-        case SHIELD_BLUE:
+        case SHIELD_BUBBLE:
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->altData, true, 0);
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 6, &entity->data, true, 0);
             entity->alpha = 0x100;
             break;
-        case SHIELD_BUBBLE: RSDK.SetSpriteAnimation(Shield->spriteIndex, 1, &entity->data, true, 0); break;
-        case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->spriteIndex, 3, &entity->data, true, 0); break;
+        case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->spriteIndex, 1, &entity->data, true, 0); break;
+        case SHIELD_LIGHTNING: RSDK.SetSpriteAnimation(Shield->spriteIndex, 3, &entity->data, true, 0); break;
         default: break;
     }
 }
@@ -110,7 +109,7 @@ void Shield_StageLoad(void)
 
 void Shield_State_Generic(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->data);
     RSDK.ProcessAnimation(&entity->altData);
     int id            = RSDK.GetFrameID(&entity->data) & 7;
@@ -120,7 +119,7 @@ void Shield_State_Generic(void)
 
 void Shield_State_Bubble(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->data);
     RSDK.ProcessAnimation(&entity->altData);
     int id            = RSDK.GetFrameID(&entity->data) & 7;
@@ -135,7 +134,7 @@ void Shield_State_Bubble(void)
 
 void Shield_State_BubbleAlt(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->data);
     RSDK.ProcessAnimation(&entity->altData);
     int id            = RSDK.GetFrameID(&entity->data) & 7;
@@ -150,7 +149,7 @@ void Shield_State_BubbleAlt(void)
 
 void Shield_State_Fire(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->data);
     entity->frameID = RSDK.GetFrameID(&entity->data) & 7;
     ++entity->timer;
@@ -163,7 +162,7 @@ void Shield_State_Fire(void)
 
 void Shield_State_Lightning(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->altData);
     int id            = RSDK.GetFrameID(&entity->altData);
     entity->frameID   = id & 7;
@@ -226,14 +225,14 @@ void Shield_State_Lightning(void)
 
 void Shield_State_Insta(void)
 {
-    EntityShield *entity = (EntityShield *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->data);
     EntityPlayer *player = entity->player;
     if (player)
         player->invincibleTimer = 1;
 
     if (entity->data.frameID == entity->data.frameCount - 1)
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
 void Shield_EditorDraw(void) {}

@@ -4,9 +4,9 @@ ObjectPlayerProbe *PlayerProbe;
 
 void PlayerProbe_Update(void)
 {
-    EntityPlayer *player      = NULL;
-    EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    RSDK_THIS(PlayerProbe);
+    foreach_active(Player, player)
+    {
         int playerID = RSDK.GetEntityID(player);
         int x        = (player->position.x - entity->position.x) >> 8;
         int y        = (player->position.y - entity->position.y) >> 8;
@@ -46,10 +46,69 @@ void PlayerProbe_LateUpdate(void) {}
 
 void PlayerProbe_StaticUpdate(void) {}
 
+void PlayerProbe_Create(void *data)
+{
+    RSDK_THIS(PlayerProbe);
+    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->data, true, 0);
+
+    entity->drawFX |= FX_FLIP;
+    entity->active       = ACTIVE_BOUNDS;
+    entity->data.frameID = 4;
+
+    int x = 0;
+    if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
+        x = entity->size * RSDK.Sin256(entity->angle) << 11;
+    else
+        x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
+    entity->updateRange.x = x + 0x200000;
+
+    int y = 0;
+    if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
+        y = entity->size * RSDK.Cos256(entity->angle) << 11;
+    else
+        y = -0x800 * entity->size * RSDK.Cos256(entity->angle);
+    entity->visible       = false;
+    entity->updateRange.y = y + 0x200000;
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->activePlayers = 0;
+    entity->negAngle      = (byte)-entity->angle;
+}
+
+void PlayerProbe_StageLoad(void) { PlayerProbe->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+
+void PlayerProbe_Print(EntityPlayer *player)
+{
+    RSDK_THIS(PlayerProbe);
+    if (!RSDK_sceneInfo->inEditor) {
+        LogHelpers_Print("====================");
+        LogHelpers_Print("= Begin Probe      =");
+        LogHelpers_Print("====================");
+        if (entity->direction)
+            LogHelpers_Print("self->direction = S/U");
+        else
+            LogHelpers_Print("self->direction = U/S");
+        LogHelpers_Print("self->angle = %i", entity->angle);
+        LogHelpers_Print("Cos256(self->angle) = %i", RSDK.Cos256(entity->angle));
+        LogHelpers_Print("Sin256(self->angle) = %i", RSDK.Sin256(entity->angle));
+        LogHelpers_Print("====================");
+        if (player->direction)
+            LogHelpers_Print("self->direction = FACING_LEFT");
+        else
+            LogHelpers_Print("self->direction = FACING_RIGHT");
+        LogHelpers_Print("playerPtr->groundVel = %1", player->groundVel);
+        LogHelpers_Print("playerPtr->angle = %i", player->angle);
+        LogHelpers_Print("playerPtr->collisionMode = %i", player->collisionMode);
+        LogHelpers_Print("playerPtr->onGround = %i", player->onGround);
+        LogHelpers_Print("====================");
+        LogHelpers_Print("= End Probe        =");
+        LogHelpers_Print("====================");
+    }
+}
+
 void PlayerProbe_Draw(void)
 {
     Vector2 drawPos;
-    EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
+    RSDK_THIS(PlayerProbe);
 
     drawPos.x = RSDK_sceneInfo->entity->position.x;
     drawPos.y = entity->position.y;
@@ -155,65 +214,6 @@ void PlayerProbe_DrawDebug5(int x, int y)
     if (x || y) {
         RSDK.DrawLine(x - 0x100000, y - 0x100000, x + 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, 0);
         RSDK.DrawLine(x + 0x100000, y - 0x100000, x - 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, 0);
-    }
-}
-
-void PlayerProbe_Create(void *data)
-{
-    EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
-    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->data, true, 0);
-
-    entity->drawFX |= FX_FLIP;
-    entity->active       = ACTIVE_BOUNDS;
-    entity->data.frameID = 4;
-
-    int x = 0;
-    if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
-        x = entity->size * RSDK.Sin256(entity->angle) << 11;
-    else
-        x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
-    entity->updateRange.x = x + 0x200000;
-
-    int y = 0;
-    if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
-        y = entity->size * RSDK.Cos256(entity->angle) << 11;
-    else
-        y = -0x800 * entity->size * RSDK.Cos256(entity->angle);
-    entity->visible       = false;
-    entity->updateRange.y = y + 0x200000;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->activePlayers = 0;
-    entity->negAngle      = (byte)-entity->angle;
-}
-
-void PlayerProbe_StageLoad(void) { PlayerProbe->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
-
-void PlayerProbe_Print(EntityPlayer *player)
-{
-    EntityPlayerProbe *entity = (EntityPlayerProbe *)RSDK_sceneInfo->entity;
-    if (!RSDK_sceneInfo->inEditor) {
-        LogHelpers_Print("====================");
-        LogHelpers_Print("= Begin Probe      =");
-        LogHelpers_Print("====================");
-        if (entity->direction)
-            LogHelpers_Print("self->direction = S/U");
-        else
-            LogHelpers_Print("self->direction = U/S");
-        LogHelpers_Print("self->angle = %i", entity->angle);
-        LogHelpers_Print("Cos256(self->angle) = %i", RSDK.Cos256(entity->angle));
-        LogHelpers_Print("Sin256(self->angle) = %i", RSDK.Sin256(entity->angle));
-        LogHelpers_Print("====================");
-        if (player->direction)
-            LogHelpers_Print("self->direction = FACING_LEFT");
-        else
-            LogHelpers_Print("self->direction = FACING_RIGHT");
-        LogHelpers_Print("playerPtr->groundVel = %1", player->groundVel);
-        LogHelpers_Print("playerPtr->angle = %i", player->angle);
-        LogHelpers_Print("playerPtr->collisionMode = %i", player->collisionMode);
-        LogHelpers_Print("playerPtr->onGround = %i", player->onGround);
-        LogHelpers_Print("====================");
-        LogHelpers_Print("= End Probe        =");
-        LogHelpers_Print("====================");
     }
 }
 

@@ -23,8 +23,7 @@ void Platform_Update(void)
     entity->collisionOffset.x = -entity->position.x;
     entity->collisionOffset.y = -entity->position.y;
 
-    if (entity->state)
-        entity->state();
+    StateMachine_Run(entity->state);
 
     if (entity->objectID) {
         entity->stood = false;
@@ -539,8 +538,8 @@ void Platform_State_StartFalling(void)
     if (--entity->collapseDelay <= 0) {
         entity->collapseDelay = 0;
         entity->state         = Platform_State_Falling;
-        EntityPlayer *player  = NULL;
-        while (RSDK.GetActiveEntities(Player->objectID, (Entity**)&player)) {
+        foreach_active(Player, player)
+        {
             if ((1 << RSDK.GetEntityID(player)) & entity->stoodPlayers)
                 player->velocity.y = entity->velocity.y - 0x10000;
         }
@@ -556,10 +555,10 @@ void Platform_State_PlayerActivated(void)
     RSDK_THIS(Platform);
     int drawX            = -entity->drawPos.x;
     int drawY            = -entity->drawPos.y;
-    EntityPlayer *player = NULL;
 
     bool32 flag = false;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player)
+    {
         if (!player->sidekick) {
             int angle = (byte)((byte)(entity->angle) + -0x80);
             int xOff  = (player->position.x - entity->centerPos.x) >> 8;
@@ -645,10 +644,10 @@ void Platform_State_Pushable(void)
 {
     RSDK_THIS(Platform);
     entity->velocity.x   = 0;
-    entity->velocity.y   = 0;
-    EntityPlayer *player = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
-        byte id = 1 << RSDK.GetEntityID(player);
+    entity->velocity.y = 0;
+    foreach_active(Player, playerLoop)
+    {
+        byte id = 1 << RSDK.GetEntityID(playerLoop);
         if (id & entity->pushPlayersL)
             entity->velocity.x += entity->speed;
         if (id & entity->pushPlayersR)
@@ -681,8 +680,8 @@ void Platform_State_Pushable(void)
     entity->drawPos.x += entity->velocity.x;
     entity->position.x = entity->drawPos.x;
     entity->position.y = entity->drawPos.y;
-    player             = NULL;
-    while (RSDK.GetActiveEntities(Player->objectID, (Entity **)&player)) {
+    foreach_active(Player, player)
+    {
         Hitbox *playerHitbox = Player_GetHitbox(player);
         int bitID            = 1 << RSDK.GetEntityID(&player);
         if (bitID & entity->pushPlayersL)

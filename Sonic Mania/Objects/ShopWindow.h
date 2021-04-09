@@ -13,8 +13,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
-    void(*stateDraw)(void);
+    StateMachine(state);
+    StateMachine(stateDraw);
     Vector2 size;
     bool32 shatter;
     bool32 silhouette;
@@ -23,7 +23,7 @@ typedef struct {
     Hitbox hitbox2;
     Vector2 field_88;
     Vector2 field_90;
-    AnimationData data;
+    Animator data;
 } EntityShopWindow;
 
 // Object Struct

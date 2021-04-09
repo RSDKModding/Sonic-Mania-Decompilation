@@ -68,31 +68,31 @@ void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
         value->value = valPtr;
         switch (type) {
             case 1: //bool
-                value->isSigned   = 0;
+                value->type   = 0;
                 value->valByteCnt = 4;
                 break;
             case 2: //byte
-                value->isSigned   = 1;
+                value->type   = 1;
                 value->valByteCnt = 1;
                 break;
             case 3: //ushort
-                value->isSigned   = 1;
+                value->type   = 1;
                 value->valByteCnt = 2;
                 break;
             case 4: //uint
-                value->isSigned   = 1;
+                value->type   = 1;
                 value->valByteCnt = 4;
                 break;
             case 6: //sbyte
-                value->isSigned   = 2;
+                value->type   = 2;
                 value->valByteCnt = 1;
                 break;
             case 7: //short
-                value->isSigned   = 2;
+                value->type   = 2;
                 value->valByteCnt = 2;
                 break;
             case 8: //int
-                value->isSigned   = 2;
+                value->type   = 2;
                 value->valByteCnt = 4;
                 break;
             default: break;
@@ -629,10 +629,8 @@ void DevMenu_VideoOptions()
         fsOpt = "YES";
     DrawDevText(currentScreen->centerX + 80, fsOpt, dy, ALIGN_CENTER, 0xF0F080);
     dy += 8;
-    DrawDevText(currentScreen->centerX - 96, "Screen Shader:", dy, 0, optionColours[3]);
-    // v10 = ShaderSettings.ShaderID;
-    // DrawDevText(v0->centerX + 80, (const char *)&ShaderNames + 52 * ShaderSettings.ShaderID, v9, ALIGN_CENTER, 0xF0F080);
-    DrawDevText(currentScreen->centerX + 80, "None", dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(currentScreen->centerX - 96, "Screen Shader:", dy, ALIGN_LEFT, optionColours[3]);
+    DrawDevText(currentScreen->centerX + 80, shaderList[engine.shaderID].name, dy, ALIGN_CENTER, 0xF0F080);
     dy += 16;
     DrawDevText(currentScreen->centerX, "Confirm", dy, ALIGN_CENTER, optionColours[4]);
     DrawDevText(currentScreen->centerX, "Cancel", dy + 8, ALIGN_CENTER, optionColours[5]);
@@ -677,18 +675,81 @@ void DevMenu_VideoOptions()
 
     switch (devMenu.option) {
         case 0: // scale
+            if (controller[0].keyLeft.press) {
+                devMenu.winScale = (devMenu.winScale - 1) & 3;
+                settingsChanged  = true;
+            }
+            else if (controller[0].keyRight.press) {
+                devMenu.winScale = (devMenu.winScale + 1) & 3;
+                settingsChanged  = true;
+            }
             break;
         case 1: // aspect
+            if (controller[0].keyLeft.press) {
+                devMenu.winAspect--;
+                settingsChanged  = true;
+            }
+            else if (controller[0].keyRight.press) {
+                devMenu.winAspect++;
+                settingsChanged  = true;
+            }
+
+            if (devMenu.winAspect > 4) {
+                devMenu.winAspect = 0;
+            }
+            else if (devMenu.winAspect < 0) {
+                devMenu.winAspect = 4;
+            }
             break;
         case 2: // fullscreen
+            if (controller[0].keyLeft.press || controller[0].keyRight.press) {
+                devMenu.windowed ^= 1;
+                settingsChanged = true;
+            }
             break;
         case 3: // screenShader
+            if (controller[0].keyLeft.press) {
+                engine.shaderID--;
+                settingsChanged = true;
+            }
+            else if (controller[0].keyRight.press) {
+                engine.shaderID++;
+                settingsChanged = true;
+            }
+
+            if (engine.shaderID > SHADER_CRT_YEE64) {
+                engine.shaderID = SHADER_NONE;
+            }
+            else if (engine.shaderID < SHADER_NONE) {
+                engine.shaderID = SHADER_CRT_YEE64;
+            }
             break;
         case 4: // confirm
             if (controller[0].keyStart.press || controller[0].keyA.press) {
                 // do confirm
+                engine.isFullScreen   = !devMenu.windowed;
+                shaderList[0].linear = !devMenu.windowed;
+                if (!devMenu.winScale)
+                    engine.shaderID = SHADER_NONE;
+
+                int width = 0;
+                switch (devMenu.winAspect) {
+                    case 0: width = 3 - (float)((float)engine.gameHeight * -1.3333334); break;
+                    case 1: width = 3 - (float)((float)engine.gameHeight * -1.5); break;
+                    case 2: width = 3 - (float)((float)engine.gameHeight * -1.6); break;
+                    case 3: width = 3 - (float)((float)engine.gameHeight * -1.6666666); break;
+                    case 4: width = 3 - (float)((float)engine.gameHeight * -1.7777778); break;
+                    default: width = engine.windowWidth; break;
+                }
+                width &= 0x7FF8;
+                if (width > 424)
+                    width = 424;
+                engine.windowWidth  = width * (devMenu.winScale + 1);
+                engine.windowHeight = engine.gameHeight * (devMenu.winScale + 1);
+                UpdateWindow();
+
                 devMenu.state  = DevMenu_Options;
-                devMenu.option = 1;
+                devMenu.option = 0;
             }
             break;
         case 5: // cancel
@@ -890,8 +951,7 @@ void DevMenu_InputOptions()
         else {
             devMenu.state   = DevMenu_MappingsOptions;
             devMenu.scroll  = 0;
-            settingsChanged = 1;
-            //*(&key_Up_P2.press + 36 * devMenu.option) = -1;
+            settingsChanged = true;
         }
     }
 }
@@ -932,13 +992,13 @@ void DevMenu_DebugOptions()
                     default: DrawDevText(currentScreen->centerX + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
                     case sizeof(sbyte): {
                         sbyte *v = (sbyte *)val->value;
-                        if (val->isSigned == 2) {
+                        if (val->type == 2) {
                             valBuf[0] = ' ';
                             if (*v > 0x7F)
                                 valBuf[0] = '-';
                             *v &= 0x7FFF;
                         }
-                        else if (!val->isSigned) {
+                        else if (!val->type) {
                             valBuf[0] = 'Y';
                             if (!*v)
                                 valBuf[0] = 'N';
@@ -948,13 +1008,13 @@ void DevMenu_DebugOptions()
                     }
                     case sizeof(short): {
                         short *v = (short *)val->value;
-                        if (val->isSigned == 2) {
+                        if (val->type == 2) {
                             valBuf[0] = ' ';
                             if (*v > 0x7FFF)
                                 valBuf[0] = '-';
                             *v &= 0x7FFF;
                         }
-                        else if (!val->isSigned) {
+                        else if (!val->type) {
                             short *v  = (short *)val->value;
                             valBuf[0] = 'Y';
                             if (!*v)
@@ -965,13 +1025,13 @@ void DevMenu_DebugOptions()
                     }
                     case sizeof(int): {
                         int *v = (int *)val->value;
-                        if (val->isSigned == 2) {
+                        if (val->type == 2) {
                             valBuf[0] = ' ';
                             if (*v > 0x7FFFFFFF)
                                 valBuf[0] = '-';
                             *v &= 0x7FFFFFFF;
                         }
-                        else if (!val->isSigned) {
+                        else if (!val->type) {
                             valBuf[0] = 'Y';
                             if (!*v)
                                 valBuf[0] = 'N';
@@ -981,7 +1041,7 @@ void DevMenu_DebugOptions()
                     }
                 }
 
-                if (val->isSigned) {
+                if (val->type) {
                     if (2 * val->valByteCnt) {
                         char *bufPtr = &valBuf[2 * val->valByteCnt];
                         valBuf[(2 * val->valByteCnt) + 1] = 0;
@@ -1098,7 +1158,7 @@ void DevMenu_DebugOptions()
             case sizeof(sbyte): {
                 sbyte *v = (sbyte *)val->value;
                 if (controller[0].keyLeft.press) {
-                    if (!val->isSigned) {
+                    if (!val->type) {
                         *v ^= 1;
                     }
                     else {
@@ -1109,7 +1169,7 @@ void DevMenu_DebugOptions()
                 }
 
                 if (controller[0].keyRight.press) {
-                    if (!val->isSigned) {
+                    if (!val->type) {
                         *v ^= 1;
                     }
                     else {
@@ -1123,7 +1183,7 @@ void DevMenu_DebugOptions()
             case sizeof(short): {
                 short *v = (short *)val->value;
                 if (controller[0].keyLeft.press) {
-                    if (!val->isSigned) {
+                    if (!val->type) {
                         *v ^= 1;
                     }
                     else {
@@ -1134,7 +1194,7 @@ void DevMenu_DebugOptions()
                 }
 
                 if (controller[0].keyRight.press) {
-                    if (!val->isSigned) {
+                    if (!val->type) {
                         *v ^= 1;
                     }
                     else {
@@ -1148,7 +1208,7 @@ void DevMenu_DebugOptions()
             case sizeof(int): {
                 int *v = (int *)val->value;
                 if (controller[0].keyLeft.press) {
-                    if (!val->isSigned) {
+                    if (!val->type) {
                         *v ^= 1;
                     }
                     else {
@@ -1159,7 +1219,7 @@ void DevMenu_DebugOptions()
                 }
 
                 if (controller[0].keyRight.press) {
-                    if (!val->isSigned) {
+                    if (!val->type) {
                         *v ^= 1;
                     }
                     else {

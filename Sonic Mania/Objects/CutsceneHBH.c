@@ -12,7 +12,7 @@ void CutsceneHBH_Update(void)
     else
         entity->field_68 = Zone->timer;
 
-    CallFunction(entity->state);
+    StateMachine_Run(entity->state);
     RSDK.ProcessAnimation(&entity->data);
     RSDK.ProcessAnimation(&entity->altData);
 }
@@ -486,7 +486,7 @@ void CutsceneHBH_Unknown21(void)
 
     if (entity->data.frameID != entity->data.frameCount - 1) {
         RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->data, true, 0);
-        entity->state = NULL;
+        entity->state = StateMachine_None;
     }
 }
 

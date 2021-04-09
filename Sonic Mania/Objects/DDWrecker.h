@@ -27,8 +27,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void(*state)(void);
-    void(*lateState)(void);
+    StateMachine(state);
+    StateMachine(lateState);
     Vector2 startPos;
     int type;
     int timer;
@@ -47,7 +47,7 @@ typedef struct {
     int field_A8;
     int field_AC;
     int blendAmount;
-    AnimationData animData;
+    Animator animData;
     Hitbox hitbox;
 } EntityDDWrecker;
 

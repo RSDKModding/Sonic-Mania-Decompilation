@@ -20,7 +20,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    void (*state)(void);
+    StateMachine(state);
     Vector2 dword5C[4];
     int field_7C[4];
     int playerLives[PLAYER_MAX];
@@ -37,19 +37,19 @@ typedef struct {
     int ringFlashFrame;
     int field_150;
     int field_154;
-    AnimationData hudElementsData;
-    AnimationData numbersData;
-    AnimationData hyperNumbersData;
-    AnimationData lifeIconsData;
-    AnimationData playerIDData;
+    Animator hudElementsData;
+    Animator numbersData;
+    Animator hyperNumbersData;
+    Animator lifeIconsData;
+    Animator playerIDData;
 #if RETRO_GAMEVER != VER_100
-    AnimationData superButtonsData;
-    AnimationData superButtonData1;
+    Animator superButtonsData;
+    Animator superButtonData1;
 #endif
-    AnimationData taData1;
-    AnimationData taData4;
-    AnimationData taData2;
-    AnimationData taData3;
+    Animator taData1;
+    Animator taData4;
+    Animator taData2;
+    Animator taData3;
 } EntityHUD;
 
 // Object Struct
@@ -70,7 +70,7 @@ void HUD_Serialize(void);
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value);
-void HUD_GetKeyFrame(AnimationData *data, int buttonID);
+void HUD_GetKeyFrame(Animator *data, int buttonID);
 void HUD_GetSuperFrames(void);
 void HUD_Unknown5(void);
 void HUD_Unknown6(void);

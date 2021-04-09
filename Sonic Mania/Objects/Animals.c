@@ -4,22 +4,15 @@ ObjectAnimals *Animals;
 
 void Animals_Update(void)
 {
-    EntityAnimals *entity = (EntityAnimals*)RSDK_sceneInfo->entity;
-    if (entity->state)
-        entity->state();
+    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    StateMachine_Run(entity->state);
     if (!entity->behaviour && !RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
-void Animals_LateUpdate(void)
-{
+void Animals_LateUpdate(void) {}
 
-}
-
-void Animals_StaticUpdate(void)
-{
-
-}
+void Animals_StaticUpdate(void) {}
 
 void Animals_Draw(void)
 {
@@ -27,7 +20,7 @@ void Animals_Draw(void)
     RSDK.DrawSprite(&entity->data, NULL, false);
 }
 
-void Animals_Create(void* data)
+void Animals_Create(void *data)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     if (entity->behaviour == 2)
@@ -123,7 +116,7 @@ void Animals_CheckPlayerPos(void)
         }
         case 2: entity->direction = RSDK.Random(0, 2, &Zone->timeStart); break;
     }
-    
+
     if (!entity->direction)
         entity->velocity.x = -Animals->xVelocity[entity->type];
     else
@@ -133,8 +126,8 @@ void Animals_CheckPlayerPos(void)
 bool32 Animals_CheckPlatformCollision(void *plat)
 {
     EntityPlatform *platform = (EntityPlatform *)plat;
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
-    bool32 flag     = false;
+    EntityAnimals *entity    = (EntityAnimals *)RSDK_sceneInfo->entity;
+    bool32 flag              = false;
     if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
@@ -164,51 +157,51 @@ bool32 Animals_CheckGroundCollision(void)
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, Animals->hitboxes[entity->type], false))
         return true;
     if (Animals->hasPlatform) {
-        EntityPlatform *platform = NULL;
-        while (RSDK.GetActiveEntities(Platform->objectID, (Entity **)&platform)) {
+        foreach_active(Platform, platform)
+        {
             if (Animals_CheckPlatformCollision(platform))
                 return true;
         }
     }
 
     if (Animals->hasBridge) {
-        //EntityBridge *bridge = NULL;
-        //while (RSDK.GetActiveEntities(bridge->objectID, (Entity **)&bridge)) {
-            /*v2 = entity->position.x;
-            v3 = bridge->field_74;
-            if (entity->position.x > v3) {
-                v4 = bridge->field_78;
-                if (v2 < v4 && entity->velocity.y >= 0) {
-                    ThisHitbox  = -1024;
-                    HIWORD(v13) = 1024;
-                    v5          = *(_DWORD *)&bridge->field_64;
-                    v15         = v5;
-                    if (v2 - v3 <= v5) {
-                        v6 = (v2 - v3) << 7;
-                    }
-                    else {
-                        v5 = v4 - v15 - v3;
-                        v6 = (v4 - v2) << 7;
-                    }
-                    v7          = RSDK_Sin512(v6 / v5);
-                    v8          = (bridge->field_6C * v7 >> 9) - 0x80000;
-                    v9          = v8 >> 16;
-                    v11         = __OFSUB__(entity->velocity.y, 0x8000);
-                    v10         = entity->velocity.y - 0x8000 < 0;
-                    LOWORD(v13) = v9;
-                    if (v10 ^ v11) {
-                        v14         = v9;
-                        LOWORD(v13) = v9 - 8;
-                    }
-                    else {
-                        v14 = v13 + 8;
-                    }
-                    if (RSDK.CheckObjectCollisionTouchBox(bridge, &ThisHitbox, entity, &entity->hitbox)) {
-                        entity->position.y = v8 + bridge->position.y - (entity->hitbox.bottom << 16);
-                        return true;
-                    }
+        //foreach_active(Bridge, bridge)
+        //{
+        /*v2 = entity->position.x;
+        v3 = bridge->field_74;
+        if (entity->position.x > v3) {
+            v4 = bridge->field_78;
+            if (v2 < v4 && entity->velocity.y >= 0) {
+                ThisHitbox  = -1024;
+                HIWORD(v13) = 1024;
+                v5          = *(_DWORD *)&bridge->field_64;
+                v15         = v5;
+                if (v2 - v3 <= v5) {
+                    v6 = (v2 - v3) << 7;
                 }
-            }*/
+                else {
+                    v5 = v4 - v15 - v3;
+                    v6 = (v4 - v2) << 7;
+                }
+                v7          = RSDK_Sin512(v6 / v5);
+                v8          = (bridge->field_6C * v7 >> 9) - 0x80000;
+                v9          = v8 >> 16;
+                v11         = __OFSUB__(entity->velocity.y, 0x8000);
+                v10         = entity->velocity.y - 0x8000 < 0;
+                LOWORD(v13) = v9;
+                if (v10 ^ v11) {
+                    v14         = v9;
+                    LOWORD(v13) = v9 - 8;
+                }
+                else {
+                    v14 = v13 + 8;
+                }
+                if (RSDK.CheckObjectCollisionTouchBox(bridge, &ThisHitbox, entity, &entity->hitbox)) {
+                    entity->position.y = v8 + bridge->position.y - (entity->hitbox.bottom << 16);
+                    return true;
+                }
+            }
+        }*/
         //}
     }
     return false;
@@ -277,19 +270,12 @@ void Animals_State_BounceAround(void)
         entity->delay--;
 }
 
-void Animals_EditorDraw(void)
-{
+void Animals_EditorDraw(void) {}
 
-}
-
-void Animals_EditorLoad(void)
-{
-
-}
+void Animals_EditorLoad(void) {}
 
 void Animals_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Animals, VAR_ENUM, type);
     RSDK_EDITABLE_VAR(Animals, VAR_ENUM, behaviour);
 }
-

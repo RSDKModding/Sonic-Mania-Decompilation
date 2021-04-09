@@ -21,7 +21,7 @@ typedef struct {
     int field_64;
     int worldX;
     int worldY;
-    AnimationData data;
+    Animator data;
 } EntityUFO_Dust;
 
 // Object Struct

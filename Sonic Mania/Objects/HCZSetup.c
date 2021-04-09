@@ -91,7 +91,7 @@ void HCZSetup_StaticUpdate(void)
                             player->interaction    = true;
                             player->tileCollisions = true;
                             player->position.y += player->cameraOffset;
-                            player->nextGroundState = NULL;
+                            player->nextGroundState = StateMachine_None;
                             player->state           = Player_State_WaterSlide;
                         }
 
