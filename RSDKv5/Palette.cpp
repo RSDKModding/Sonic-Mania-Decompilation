@@ -16,14 +16,13 @@ int maskColour = 0;
 ushort *lookupTable = NULL;
 
 #if RETRO_REV02
-void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags)
+void LoadPalette(byte paletteID, const char *filename, ushort rowFlags)
 {
     FileInfo info;
     MEM_ZERO(info);
 
     char buffer[0x80];    
-    StrCopy(buffer, "Data/Palettes/");
-    StrAdd(buffer, filePath);
+    sprintf(buffer, "Data/Palettes/%s", filename);
 
     if (LoadFile(&info, buffer, FMODE_RB)) {
         for (int r = 0; r < 0x10; ++r) {

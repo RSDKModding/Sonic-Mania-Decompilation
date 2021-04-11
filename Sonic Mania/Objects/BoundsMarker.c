@@ -91,6 +91,7 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
                 default: break;
             }
         }
+
         if (setPos) {
             EntityCamera *camera = player->camera;
             if (camera) {

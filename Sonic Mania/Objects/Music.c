@@ -112,7 +112,7 @@ void Music_PlayMusicTrack(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
-            RSDK.ResetEntityPtr(music, 0, 0);
+            RSDK.ResetEntityPtr(music, TYPE_BLANK, NULL);
         }
     }
 
@@ -120,7 +120,7 @@ void Music_PlayMusicTrack(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         entity = RSDK_GET_ENTITY(slot, Music);
         if (entity->objectID != Music->objectID) {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
             break;
         }
     }
@@ -313,13 +313,13 @@ void Music_Unknown5(EntityMusic *entity)
         }
     }
 }
-void Music_Unknown6(byte trackID, int a2)
+void Music_ResumePrevTrack(byte trackID, bool32 transitionFade)
 {
     trackID &= 0xF;
     for (int slot = 40; slot < 48; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
-            if (a2) {
+            if (transitionFade) {
                 music->state    = Music_State_Unknown12;
                 music->fadeSpeed = 0.05;
             }

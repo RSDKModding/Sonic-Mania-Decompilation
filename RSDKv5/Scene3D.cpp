@@ -358,15 +358,13 @@ void matrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(
 ushort LoadMesh(const char *filename, Scopes scope)
 {
     char buffer[0x100];
-    StrCopy(buffer, "Data/Meshes/");
-    StrAdd(buffer, filename);
+    sprintf(buffer, "Data/Meshes/%s", filename);
 
     uint hash[4];
-    StrCopy(hashBuffer, buffer);
-    GenerateHash(hash, StrLength(buffer));
+    GEN_HASH(buffer, hash);
 
     for (int i = 0; i < MODEL_MAX; ++i) {
-        if (memcmp(hash, modelList[i].hash, 4 * sizeof(uint)) == 0) {
+        if (HASH_MATCH(hash, modelList[i].hash)) {
             return i;
         }
     }
@@ -384,7 +382,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
 
         if (sig != 0x4C444D) {
             CloseFile(&info);
@@ -415,7 +413,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
 
         if (model->flags & MODEL_USECOLOURS) {
             for (int v = 0; v < model->vertCount; ++v) {
-                model->colours[v].colour = ReadInt32(&info);
+                model->colours[v].colour = ReadInt32(&info, false);
             }
         }
 

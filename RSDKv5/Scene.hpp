@@ -158,11 +158,7 @@ inline bool32 CheckValidStage()
 inline bool32 CheckSceneFolder(const char *folderName)
 {
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-    int res = strcmp(folderName, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder);
-    if (res)
-        return (-(res < 0) | 1) == 0;
-    else
-        return 1;
+    return strcmp(folderName, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0;
 }
 
 inline ushort GetSceneLayerID(const char *name)

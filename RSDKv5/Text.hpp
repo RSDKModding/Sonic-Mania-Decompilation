@@ -7,68 +7,6 @@ struct TextInfo {
     short length;
 };
 
-inline void StrCopy(char *dest, const char *src)
-{
-#ifdef USE_STDLIB
-    strcpy(dest, src);
-#else
-    int i = 0;
-
-    for (; src[i]; ++i) dest[i] = src[i];
-
-    dest[i] = 0;
-#endif
-}
-
-inline void StrAdd(char *dest, const char *src)
-{
-    int destStrPos = 0;
-    int srcStrPos  = 0;
-    while (dest[destStrPos]) ++destStrPos;
-    while (true) {
-        if (!src[srcStrPos]) {
-            break;
-        }
-        dest[destStrPos++] = src[srcStrPos++];
-    }
-    dest[destStrPos] = 0;
-}
-
-inline bool32 StrComp(const char *stringA, const char *stringB)
-{
-    bool32 match    = true;
-    bool32 finished = false;
-    while (!finished) {
-        if (*stringA == *stringB || *stringA == *stringB + ' ' || *stringA == *stringB - ' ') {
-            if (*stringA) {
-                ++stringA;
-                ++stringB;
-            }
-            else {
-                finished = true;
-            }
-        }
-        else {
-            match    = false;
-            finished = true;
-        }
-    }
-    return match;
-}
-
-inline int StrLength(const char *string)
-{
-#ifdef USE_STDLIB
-    return strlen(string);
-#else
-    int len = 0;
-    for (len = 0; string[len]; len++)
-        ;
-    return len;
-
-#endif
-}
-
 inline void StringLowerCase(char *dest, const char *src)
 {
     int destPos = 0;
@@ -123,13 +61,16 @@ void GenerateCRC(uint *id, char *fileName);
 
 #define HASH_SIZE            (4 * sizeof(uint))
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
-#define GEN_HASH(text, hash) StrCopy(hashBuffer, text); GenerateHash(hash, StrLength(hashBuffer))
+#define GEN_HASH(text, hash)                                                                                                                         \
+    strcpy(hashBuffer, text);                                                                                                                        \
+    GenerateHash(hash, strlen(hashBuffer))
 #define HASH_COPY(dst, src) memcpy(dst, src, 0x10)
 
 extern char textBuffer[0x400];
 inline void SetText(TextInfo *textInfo, char *text, uint size)
 {
     if (text) {
+        textInfo->text = NULL;
         if (*text) {
             int cnt = 0;
             do
@@ -142,7 +83,7 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
             textInfo->length = textInfo->textLength;
         if (!textInfo->length)
             textInfo->length = 1;
-        AllocateStorage(sizeof(ushort) * textInfo->length, (void **)textInfo, DATASET_STR, false);
+        AllocateStorage(sizeof(ushort) * textInfo->length, (void **)&textInfo->text, DATASET_STR, false);
 
         char *txt = text;
         if (*text) {
@@ -158,14 +99,15 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
 inline void CopyString(TextInfo *dst, TextInfo *src)
 {
     int textLen = src->textLength;
+    dst->text   = NULL;
     if (dst->length >= textLen) {
         if (!dst->text) {
-            AllocateStorage(sizeof(ushort) * dst->length, (void **)dst, DATASET_STR, 0);
+            AllocateStorage(sizeof(ushort) * dst->length, (void **)&dst->text, DATASET_STR, false);
         }
     }
     else {
         dst->length = textLen;
-        AllocateStorage(sizeof(ushort) * dst->length, (void **)dst, DATASET_STR, 0);
+        AllocateStorage(sizeof(ushort) * dst->length, (void **)&dst->text, DATASET_STR, false);
     }
     
     dst->textLength = src->textLength;

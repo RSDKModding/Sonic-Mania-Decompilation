@@ -480,7 +480,7 @@ void ItemBox_GivePowerup(void)
                 Player_ApplyShieldEffect(player);
                 RSDK.PlaySFX(Shield->sfx_BubbleShield, 0, 255);
                 player->airTimer = 0;
-                // Music_Unknown6(8, 0);
+                Music_ResumePrevTrack(TRACK_DROWNING, false);
                 return;
             case 3:
                 player->shield = SHIELD_FIRE;
@@ -497,14 +497,14 @@ void ItemBox_GivePowerup(void)
                     Entity *shield = (Entity *)RSDK.GetEntityByID((ushort)(Player->playerCount + RSDK.GetEntityID(player)));
                     RSDK.ResetEntityPtr(shield, InvincibleStars->objectID, player);
                     player->invincibleTimer = 1260;
-                    // Music_PlayMusicTrack(1);
+                    Music_PlayMusicTrack(TRACK_INVINCIBLE);
                 }
                 return;
             case 6:
                 player->speedShoesTimer = 1320;
                 Player_ChangePhysicsState(player);
                 if (!player->superState) {
-                    // Music_PlayMusicTrack(2);
+                    Music_PlayMusicTrack(TRACK_SNEAKERS);
                     Entity *powerup = (Entity *)RSDK.GetEntityByID((ushort)(2 * Player->playerCount + RSDK.GetEntityID(player)));
                     RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
                 }

@@ -396,14 +396,14 @@ void runRetroEngine()
                 //    sceneInfo.state = engine.prevEngineMode;
                 break;
             case ENGINESTATE_SHOWPNG: 
-                if (engine.imageDelta <= 0.0 || engine.imageUnknown >= 1.0) {
+                if (engine.imageDelta <= 0.0 || engine.dimMax >= 1.0) {
                     if (engine.displayTime <= 0.0) {
-                        engine.imageUnknown += engine.imageDelta;
-                        if (engine.imageUnknown <= 0.0) {
+                        engine.dimMax += engine.imageDelta;
+                        if (engine.dimMax <= 0.0) {
                             engine.shaderID = engine.prevShaderID;
                             engine.screenCount  = 1;
                             sceneInfo.state     = engine.prevEngineMode;
-                            engine.imageUnknown = 1.0;
+                            engine.dimMax       = 1.0;
                         }
                     }
                     else {
@@ -415,10 +415,10 @@ void runRetroEngine()
                     }
                 }
                 else {
-                    engine.imageUnknown += engine.imageDelta;
-                    if (engine.imageUnknown >= 1.0) {
-                        engine.imageDelta   = 1.0;
-                        engine.imageUnknown = 1.0;
+                    engine.dimMax += engine.imageDelta;
+                    if (engine.dimMax >= 1.0) {
+                        engine.imageDelta = -engine.imageDelta;
+                        engine.dimMax     = 1.0;
                     }
                 }
                 break;
@@ -452,7 +452,7 @@ void runRetroEngine()
     // Shutdown
     ReleaseAudioDevice();
     ReleaseRenderDevice();
-    writeSettings(true);
+    writeSettings(false);
     releaseUserData();
     ReleaseStorage();
 
@@ -549,7 +549,7 @@ bool LoadGameConfig()
 
     if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
         char buffer[0x100];
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
 
         if (sig != 0x474643) {
             CloseFile(&info);
@@ -558,7 +558,7 @@ bool LoadGameConfig()
 
         ReadString(&info, engine.gameName);
         if (!useDataFile) {
-            StrAdd(engine.gameName, " (Using Data Folder)");
+            sprintf(engine.gameName, "%s (Using Data Folder)", engine.gameName);
         }
         ReadString(&info, engine.gameSubName);
         ReadString(&info, engine.gameVersion);
@@ -651,8 +651,8 @@ bool LoadGameConfig()
 
         byte cfmCount = ReadInt8(&info);
         for (int i = 0; i < cfmCount && gameOptionsPtr; ++i) {
-            int offset = ReadInt32(&info);
-            int count  = ReadInt32(&info);
+            int offset = ReadInt32(&info, false);
+            int count  = ReadInt32(&info, false);
             for (int v = 0; v < count; ++v) {
                 ReadBytes(&info, &gameOptionsPtr[offset + v], sizeof(int));
             }

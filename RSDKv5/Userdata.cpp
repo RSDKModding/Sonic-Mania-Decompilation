@@ -256,7 +256,7 @@ void setupUserDebugValues()
 
     for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
         DebugValueInfo *val = &debugValues[debugValCnt++];
-        StrCopy(val->name, userDebugValNames[i]);
+        strcpy(val->name, userDebugValNames[i]);
         val->value      = userCore->values[i];
         val->min        = 0;
 
@@ -990,7 +990,7 @@ inline void writeText(FileIO *file, const char *string, ...)
     sprintf(buffer, "%s", buffer);
     va_end(args);
 
-    fWrite(buffer, sizeof(char), StrLength(buffer), file);
+    fWrite(buffer, sizeof(char), strlen(buffer), file);
 }
 
 void writeSettings(bool32 writeToFile)
@@ -1005,17 +1005,17 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "; Retro Engine Config File\n\n");
         writeText(file, "[Game]\n");
         if (ini) {
-            if (!StrComp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound")) {
+            if (!strcmp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound") == 0) {
                 writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
 
 #if !RETRO_USE_ORIGINAL_CODE
-            if (!StrComp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound")) {
-                writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+            if (!strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") == 0) {
+                writeText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
             }
 #endif
 
-            if (!StrComp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound"))
+            if (!strcmp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound") == 0)
                 writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
         }
 
@@ -1033,7 +1033,7 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "vsync=%s\n", (engine.vsync ? "y" : "n"));
         writeText(file, "tripleBuffering=%s\n", (engine.tripleBuffer ? "y" : "n"));
         if (ini) {
-            if (!StrComp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound"))
+            if (!strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
                 writeText(file, "pixWidth=%d\n", pixWidth);
         }
         writeText(file, "winWidth=%d\n", engine.windowWidth);

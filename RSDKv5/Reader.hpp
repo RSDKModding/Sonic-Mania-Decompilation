@@ -204,7 +204,7 @@ inline short ReadInt16(FileInfo *info)
     return result;
 }
 
-inline int ReadInt32(FileInfo *info)
+inline int ReadInt32(FileInfo *info, bool32 swapEndian)
 {
     int result   = 0;
     size_t bytesRead = 0;
@@ -218,6 +218,20 @@ inline int ReadInt32(FileInfo *info)
     }
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
+
+    if (swapEndian) {
+        byte bytes[sizeof(int)];
+        memcpy(bytes, &result, sizeof(int));
+
+        int max = sizeof(int) - 1;
+        for (int i = 0; i < sizeof(int) / 2; ++i) {
+            byte store     = bytes[i];
+            bytes[i]       = bytes[max - i];
+            bytes[max - i] = store;
+        }
+        memcpy(&result, bytes, sizeof(int));
+    }
+
     info->readPos += bytesRead;
     return result;
 }
@@ -267,8 +281,8 @@ inline int ReadZLibRSDK(FileInfo *info, byte **buffer)
 {
     if (!buffer)
         return 0;
-    uint complen      = ReadInt32(info) - 4;
-    uint decompLE     = ReadInt32(info);
+    uint complen  = ReadInt32(info, false) - 4;
+    uint decompLE = ReadInt32(info, false);
     uint destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
@@ -300,10 +314,10 @@ inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
 
 inline void ReadHash(FileInfo *info, uint *buffer)
 {
-    buffer[0] = ReadInt32(info);
-    buffer[1] = ReadInt32(info);
-    buffer[2] = ReadInt32(info);
-    buffer[3] = ReadInt32(info);
+    buffer[0] = ReadInt32(info, false);
+    buffer[1] = ReadInt32(info, false);
+    buffer[2] = ReadInt32(info, false);
+    buffer[3] = ReadInt32(info, false);
 }
 
 #endif

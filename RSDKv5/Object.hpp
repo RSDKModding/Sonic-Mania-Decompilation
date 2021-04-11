@@ -163,8 +163,8 @@ inline void SetEditableVar(byte type, const char *name, byte object, int storeOf
 {
     if (editableVarCount < 255) {
         EditableVarInfo *editableVar = &editableVarList[editableVarCount];
-        StrCopy(hashBuffer, name);
-        GenerateHash(editableVar->hash, StrLength(name));
+        strcpy(hashBuffer, name);
+        GenerateHash(editableVar->hash, strlen(name));
         editableVar->type   = type;
         editableVar->offset = storeOffset;
         editableVar->active = true;

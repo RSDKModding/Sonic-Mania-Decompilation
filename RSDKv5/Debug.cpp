@@ -52,7 +52,7 @@ void printLog(SeverityModes severity, const char *message, ...)
         sprintf(pathBuffer, BASE_PATH "log.txt");
         FileIO *file = fOpen(pathBuffer, "a");
         if (file) {
-            fWrite(&buffer, 1, StrLength(buffer), file);
+            fWrite(&buffer, 1, strlen(buffer), file);
             fClose(file);
         }
     }
@@ -987,7 +987,7 @@ void DevMenu_DebugOptions()
             }
             else {
                 char valBuf[0x10];
-                StrCopy(valBuf, "--------");
+                strcpy(valBuf, "--------");
                 switch (val->valByteCnt) {
                     default: DrawDevText(currentScreen->centerX + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
                     case sizeof(sbyte): {

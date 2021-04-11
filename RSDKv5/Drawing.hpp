@@ -99,6 +99,7 @@ bool32 InitRenderDevice();
 void FlipScreen();
 void ReleaseRenderDevice();
 void UpdateWindow();
+void SetImageTexture(int width, int height, byte *imagePixels);
 
 void GenerateBlendLookupTable();
 

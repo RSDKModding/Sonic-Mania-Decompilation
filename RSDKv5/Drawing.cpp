@@ -108,90 +108,119 @@ void FlipScreen()
     }
 
     float dimAmount = engine.dimMax * engine.dimPercent;
+
+    switch (sceneInfo.state) {
+        default: {
 #if RETRO_USING_SDL2
-    SDL_Rect destScreenPos[SCREEN_MAX];
+            SDL_Rect destScreenPos[SCREEN_MAX];
 
-    switch (engine.screenCount) {
-        default: break;
-        case 1:
-            destScreenPos[0].x = 0;
-            destScreenPos[0].y = 0;
-            destScreenPos[0].w = pixWidth;
-            destScreenPos[0].h = SCREEN_YSIZE;
-            break;
-        case 2:
-            destScreenPos[0].x = (pixWidth / 4);
-            destScreenPos[0].y = 0;
-            destScreenPos[0].w = pixWidth / 2;
-            destScreenPos[0].h = SCREEN_YSIZE / 2;
+            switch (engine.screenCount) {
+                default: break;
+                case 1:
+                    destScreenPos[0].x = 0;
+                    destScreenPos[0].y = 0;
+                    destScreenPos[0].w = pixWidth;
+                    destScreenPos[0].h = SCREEN_YSIZE;
+                    break;
+                case 2:
+                    destScreenPos[0].x = (pixWidth / 4);
+                    destScreenPos[0].y = 0;
+                    destScreenPos[0].w = pixWidth / 2;
+                    destScreenPos[0].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[1].x = (pixWidth / 4);
-            destScreenPos[1].y = SCREEN_YSIZE / 2;
-            destScreenPos[1].w = pixWidth / 2;
-            destScreenPos[1].h = SCREEN_YSIZE / 2;
-            break;
+                    destScreenPos[1].x = (pixWidth / 4);
+                    destScreenPos[1].y = SCREEN_YSIZE / 2;
+                    destScreenPos[1].w = pixWidth / 2;
+                    destScreenPos[1].h = SCREEN_YSIZE / 2;
+                    break;
 #if RETRO_REV02
-        case 3:
-            destScreenPos[0].x = 0;
-            destScreenPos[0].y = 0;
-            destScreenPos[0].w = pixWidth / 2;
-            destScreenPos[0].h = SCREEN_YSIZE / 2;
+                case 3:
+                    destScreenPos[0].x = 0;
+                    destScreenPos[0].y = 0;
+                    destScreenPos[0].w = pixWidth / 2;
+                    destScreenPos[0].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[1].x = pixWidth / 2;
-            destScreenPos[1].y = 0;
-            destScreenPos[1].w = pixWidth / 2;
-            destScreenPos[1].h = SCREEN_YSIZE / 2;
+                    destScreenPos[1].x = pixWidth / 2;
+                    destScreenPos[1].y = 0;
+                    destScreenPos[1].w = pixWidth / 2;
+                    destScreenPos[1].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[2].x = (pixWidth / 4);
-            destScreenPos[2].y = SCREEN_YSIZE / 2;
-            destScreenPos[2].w = pixWidth / 2;
-            destScreenPos[2].h = SCREEN_YSIZE / 2;
-            break;
-        case 4:
-            destScreenPos[0].x = 0;
-            destScreenPos[0].y = 0;
-            destScreenPos[0].w = pixWidth / 2;
-            destScreenPos[0].h = SCREEN_YSIZE / 2;
+                    destScreenPos[2].x = (pixWidth / 4);
+                    destScreenPos[2].y = SCREEN_YSIZE / 2;
+                    destScreenPos[2].w = pixWidth / 2;
+                    destScreenPos[2].h = SCREEN_YSIZE / 2;
+                    break;
+                case 4:
+                    destScreenPos[0].x = 0;
+                    destScreenPos[0].y = 0;
+                    destScreenPos[0].w = pixWidth / 2;
+                    destScreenPos[0].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[1].x = pixWidth / 2;
-            destScreenPos[1].y = 0;
-            destScreenPos[1].w = pixWidth / 2;
-            destScreenPos[1].h = SCREEN_YSIZE / 2;
+                    destScreenPos[1].x = pixWidth / 2;
+                    destScreenPos[1].y = 0;
+                    destScreenPos[1].w = pixWidth / 2;
+                    destScreenPos[1].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[2].x = 0;
-            destScreenPos[2].y = SCREEN_YSIZE / 2;
-            destScreenPos[2].w = pixWidth / 2;
-            destScreenPos[2].h = SCREEN_YSIZE / 2;
+                    destScreenPos[2].x = 0;
+                    destScreenPos[2].y = SCREEN_YSIZE / 2;
+                    destScreenPos[2].w = pixWidth / 2;
+                    destScreenPos[2].h = SCREEN_YSIZE / 2;
 
-            destScreenPos[3].x = pixWidth / 2;
-            destScreenPos[3].y = SCREEN_YSIZE / 2;
-            destScreenPos[3].w = pixWidth / 2;
-            destScreenPos[3].h = SCREEN_YSIZE / 2;
-            break;
+                    destScreenPos[3].x = pixWidth / 2;
+                    destScreenPos[3].y = SCREEN_YSIZE / 2;
+                    destScreenPos[3].w = pixWidth / 2;
+                    destScreenPos[3].h = SCREEN_YSIZE / 2;
+                    break;
 #endif
-    }
+            }
 
-    // Clear the screen. This is needed to keep the
-    // pillarboxes in fullscreen from displaying garbage data.
-    SDL_RenderClear(engine.renderer);
+            // Clear the screen. This is needed to keep the
+            // pillarboxes in fullscreen from displaying garbage data.
+            SDL_RenderClear(engine.renderer);
 
-    int pitch      = 0;
-    ushort *pixels = NULL;
-    for (int s = 0; s < engine.screenCount; ++s) {
-        SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
-        memcpy(pixels, screens[s].frameBuffer, pitch * SCREEN_YSIZE);
-        SDL_UnlockTexture(engine.screenBuffer[s]);
+            int pitch      = 0;
+            ushort *pixels = NULL;
+            for (int s = 0; s < engine.screenCount; ++s) {
+                SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
+                memcpy(pixels, screens[s].frameBuffer, pitch * SCREEN_YSIZE);
+                SDL_UnlockTexture(engine.screenBuffer[s]);
 
-        SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, &destScreenPos[s]);
-    }
+                SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, &destScreenPos[s]);
+            }
 
-    SDL_SetRenderTarget(engine.renderer, NULL);
-    SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
-    if (dimAmount < 1.0)
-        SDL_RenderFillRect(engine.renderer, NULL);
-    // no change here
-    SDL_RenderPresent(engine.renderer);
+            SDL_SetRenderTarget(engine.renderer, NULL);
+            SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
+            if (dimAmount < 1.0)
+                SDL_RenderFillRect(engine.renderer, NULL);
+            // no change here
+            SDL_RenderPresent(engine.renderer);
 #endif
+            break;
+        }
+        case ENGINESTATE_SHOWPNG: 
+#if RETRO_USING_SDL2
+            SDL_Rect destScreenPos;
+            destScreenPos.x = 0;
+            destScreenPos.y = 0;
+            destScreenPos.w = pixWidth;
+            destScreenPos.h = SCREEN_YSIZE;
+
+            // Clear the screen. This is needed to keep the
+            // pillarboxes in fullscreen from displaying garbage data.
+            SDL_RenderClear(engine.renderer);
+
+            SDL_RenderCopy(engine.renderer, engine.imageTexture, NULL, &destScreenPos);
+
+            SDL_SetRenderTarget(engine.renderer, NULL);
+            SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
+            if (dimAmount < 1.0)
+                SDL_RenderFillRect(engine.renderer, NULL);
+            // no change here
+            SDL_RenderPresent(engine.renderer);
+#endif
+            break;
+        case ENGINESTATE_VIDEOPLAYBACK: break;
+    }
 }
 void ReleaseRenderDevice()
 {
@@ -209,6 +238,9 @@ void ReleaseRenderDevice()
     scanlines = NULL;
 
 #if RETRO_USING_SDL2
+    if (engine.imageTexture)
+        SDL_DestroyTexture(engine.imageTexture);
+
     SDL_DestroyRenderer(engine.renderer);
     SDL_DestroyWindow(engine.window);
 #endif
@@ -271,6 +303,22 @@ void UpdateWindow()
 #endif
 }
 
+void SetImageTexture(int width, int height, byte *imagePixels)
+{
+#if RETRO_USING_SDL2
+    if (engine.imageTexture)
+        SDL_DestroyTexture(engine.imageTexture);
+
+    engine.imageTexture = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+
+    int pitch = 0;
+    byte *pixels;
+    SDL_LockTexture(engine.imageTexture, NULL, (void **)&pixels, &pitch);
+    memcpy(pixels, imagePixels, pitch * SCREEN_YSIZE);
+    SDL_UnlockTexture(engine.imageTexture);
+#endif
+}
+
 void GenerateBlendLookupTable()
 {
     int blendTableID = 0;
@@ -291,28 +339,16 @@ void GenerateBlendLookupTable()
 void InitGFXSystem()
 {
     uint hash[4];
-    memset(hash, 0, 4 * sizeof(int));
 
-    memset(hashBuffer, 0, 0x400u);
-    int len = StrLength("TileBuffer");
-    if (len < 1024) {
-        memcpy(hashBuffer, "TileBuffer", len);
-        GenerateHash(hash, len);
-    }
+    GEN_HASH("TileBuffer", hash);
     gfxSurface[0].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[0].hash, hash, 4 * sizeof(int));
     gfxSurface[0].width    = 16;
-    gfxSurface[0].height   = 0x4000 /*0*/;
+    gfxSurface[0].height   = 0x4000;
     gfxSurface[0].lineSize = 4;
     gfxSurface[0].dataPtr  = tilesetGFXData;
 
-    memset(hash, 0, 4 * sizeof(int));
-    memset(hashBuffer, 0, 0x400u);
-    len = StrLength("EngineText");
-    if (len < 1024) {
-        memcpy(hashBuffer, "EngineText", len);
-        GenerateHash(hash, len);
-    }
+    GEN_HASH("EngineText", hash);
     gfxSurface[1].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[1].hash, hash, 4 * sizeof(int));
     gfxSurface[1].width    = 8;

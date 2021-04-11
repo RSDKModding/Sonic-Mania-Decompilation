@@ -749,6 +749,7 @@ typedef enum {
     ACTIVE_XBOUNDS,
     ACTIVE_YBOUNDS,
     ACTIVE_RBOUNDS,
+    ACTIVE_NEVER2 = 0xFF,
 } ActiveFlags;
 
 typedef enum {

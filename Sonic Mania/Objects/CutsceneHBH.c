@@ -41,7 +41,7 @@ void CutsceneHBH_Create(void *data)
     entity->spriteIndex   = 0;
     entity->dword70       = entity->position.x;
     entity->dword74       = entity->position.y;
-    entity->drawFX        = 1;
+    entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
     entity->dword84       = RSDK.Rand(0, 256);

@@ -147,8 +147,8 @@ inline void EditAnimation(ushort spriteIndex, ushort animID, const char *name, i
         SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
         if (animID < spr->animCount) {
             SpriteAnimationEntry *anim = &spr->animations[animID];
-            StrCopy(hashBuffer, name);
-            GenerateHash(anim->hash, StrLength(hashBuffer));
+            strcpy(hashBuffer, name);
+            GenerateHash(anim->hash, strlen(hashBuffer));
             anim->frameListOffset = frameOffset;
             anim->frameCount      = frameCount;
             anim->animationSpeed  = animSpeed;

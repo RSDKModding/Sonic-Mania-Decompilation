@@ -35,7 +35,7 @@ void LoadScene()
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
 #if RETRO_REV02
-    if (StrComp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) && !hardResetFlag) {
+    if (strcmp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0 && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter;
@@ -113,7 +113,7 @@ void LoadScene()
     }
 
     SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
-    StrCopy(currentSceneFolder, sceneEntry->folder);
+    strcpy(currentSceneFolder, sceneEntry->folder);
 
 #if RETRO_REV02
     hardResetFlag    = false;
@@ -129,20 +129,16 @@ void LoadScene()
 #endif
 
     char buffer[0x40];
-    StrCopy(buffer, "Data/Stages/");
-    StrAdd(buffer, currentSceneFolder);
-    StrAdd(buffer, "/TileConfig.bin");
+    sprintf(buffer, "Data/Stages/%s/TileConfig.bin", currentSceneFolder);
     LoadTileConfig(buffer);
 
-    StrCopy(buffer, "Data/Stages/");
-    StrAdd(buffer, currentSceneFolder);
-    StrAdd(buffer, "/StageConfig.bin");
+    sprintf(buffer, "Data/Stages/%s/StageConfig.bin", currentSceneFolder);
 
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         char buffer[0x100];
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
 
         if (sig != 0x474643) {
             CloseFile(&info);
@@ -226,39 +222,31 @@ void LoadScene()
         CloseFile(&info);
     }
 
-    StrCopy(buffer, "Data/Stages/");
-    StrAdd(buffer, currentSceneFolder);
-    StrAdd(buffer, "/16x16Tiles.gif");
+    sprintf(buffer, "Data/Stages/%s/16x16Tiles.gif", currentSceneFolder);
     LoadStageGIF(buffer);
 }
 void LoadSceneFile()
 {
-
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
     SceneListInfo *list        = &sceneInfo.listCategory[sceneInfo.activeCategory];
     SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
     char buffer[0x40];
-    StrCopy(buffer, "Data/Stages/");
-    StrAdd(buffer, currentSceneFolder);
-    StrAdd(buffer, "/Scene");
-    StrAdd(buffer, sceneEntry->sceneID);
-    StrAdd(buffer, ".bin");
+    sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->sceneID);
 
     dataStorage[DATASET_TMP].usedStorage = 0;
 
     for (int s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].height;
 
-    if (screens[0].height > 0) {
+    if (screens[0].height > 0)
         memset(gfxLineBuffer, 0, screens[0].height * sizeof(byte));
-    }
 
     memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
 
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
 
         if (sig != 0x4E4353) {
             CloseFile(&info);
@@ -275,7 +263,7 @@ void LoadSceneFile()
 
             ReadInt8(&info);
             ReadString(&info, hashBuffer);
-            GenerateHash(layer->name, StrLength(hashBuffer));
+            GEN_HASH(hashBuffer, layer->name);
 
             layer->behaviour    = ReadInt8(&info);
             layer->drawLayer[0] = ReadInt8(&info);
@@ -402,22 +390,20 @@ void LoadSceneFile()
                     entity = &entList[slotID];
                 else
                     entity = &entList[SCENEENTITY_COUNT - slotID];
-                // if (entity->objectID)
-                //    printf("wait");
 
                 entity->objectID = objID;
 #if RETRO_REV02
                 entity->filter = 0xFF;
 #endif
-                entity->position.x = ReadInt32(&info);
-                entity->position.y = ReadInt32(&info);
+                entity->position.x = ReadInt32(&info, false);
+                entity->position.y = ReadInt32(&info, false);
 
+                byte *ptr = (byte *)entity;
                 for (int v = 1; v < varCnt; ++v) {
                     switch (varList[v].type) {
                         case VAR_UINT8:
                         case VAR_INT8:
                             if (varList[v].active) {
-                                byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(byte));
                             }
                             else {
@@ -427,7 +413,6 @@ void LoadSceneFile()
                         case VAR_UINT16:
                         case VAR_INT16:
                             if (varList[v].active) {
-                                byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(short));
                             }
                             else {
@@ -440,48 +425,42 @@ void LoadSceneFile()
                         case VAR_BOOL:
                         case VAR_COLOUR:
                             if (varList[v].active) {
-                                byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
                             }
                             else {
-                                ReadInt32(&info);
+                                ReadInt32(&info, false);
                             }
                             break;
                         case VAR_STRING:
                             if (varList[v].active) {
-                                byte *ptr      = (byte *)entity;
-                                TextInfo *text = (TextInfo *)&ptr[varList[v].offset];
-                                ushort len     = ReadInt16(&info);
+                                TextInfo *textInfo = (TextInfo *)&ptr[varList[v].offset];
+                                ushort len         = ReadInt16(&info);
 
-                                SetText(text, textBuffer, len);
-                                for (text->textLength = 0; text->textLength < len; ++text->textLength) {
-                                    ushort c                     = ReadInt16(&info);
-                                    text->text[text->textLength] = c;
+                                SetText(textInfo, (char *)"", len);
+                                for (textInfo->textLength = 0; textInfo->textLength < len; ++textInfo->textLength) {
+                                    textInfo->text[textInfo->textLength] = ReadInt16(&info);
                                 }
                             }
                             else {
-                                ushort cnt = ReadInt16(&info);
-                                Seek_Cur(&info, cnt * sizeof(ushort));
+                                Seek_Cur(&info, ReadInt16(&info) * sizeof(ushort));
                             }
                             break;
                         case VAR_VECTOR2:
                             if (varList[v].active) {
-                                byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
                                 ReadBytes(&info, &ptr[varList[v].offset + sizeof(int)], sizeof(int));
                             }
                             else {
-                                ReadInt32(&info); // x
-                                ReadInt32(&info); // y
+                                ReadInt32(&info, false); // x
+                                ReadInt32(&info, false); // y
                             }
                             break;
                         case VAR_UNKNOWN:
                             if (varList[v].active) {
-                                byte *ptr = (byte *)entity;
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
                             }
                             else {
-                                ReadInt32(&info);
+                                ReadInt32(&info, false);
                             }
                             break;
                     }
@@ -531,7 +510,7 @@ void LoadTileConfig(char *filepath)
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, filepath, FMODE_RB)) {
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
         if (sig != 0x4C4954) {
             CloseFile(&info);
             return;

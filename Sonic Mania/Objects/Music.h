@@ -86,7 +86,7 @@ void Music_Unknown2(byte trackID);
 void Music_Unknown3(EntityMusic *entity);
 bool32 Music_Unknown4(void);
 void Music_Unknown5(EntityMusic *entity);
-void Music_Unknown6(byte trackID, int a2);
+void Music_ResumePrevTrack(byte trackID, bool32 transitionFade);
 void Music_Unknown7(EntityMusic *entity);
 void Music_RemoveStoredEntities(void);
 void Music_Unknown9(byte trackID, float a2);

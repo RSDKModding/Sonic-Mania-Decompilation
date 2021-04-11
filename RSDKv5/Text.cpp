@@ -316,14 +316,12 @@ void InitStringsBuffer(TextInfo *info, int size)
         info->textLength = size;
 }
 
-void LoadStrings(TextInfo *buffer, const char *filePath)
+void LoadStrings(TextInfo *buffer, const char *filename)
 {
     char nameBuf[0x100];
-    FileInfo info;
-    StrCopy(nameBuf, "Data/Strings/");
-    StrAdd(nameBuf, filePath);
-
+    sprintf(nameBuf, "Data/Strings/%s", filename);
     
+    FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, nameBuf, FMODE_RB)) {
         ushort header = ReadInt16(&info);

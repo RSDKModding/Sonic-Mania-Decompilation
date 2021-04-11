@@ -5,9 +5,7 @@ SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 short LoadAnimation(const char *filename, Scopes scope)
 {
     char buffer[0x100];
-    FileInfo info;
-    StrCopy(buffer, "Data/Sprites/");
-    StrAdd(buffer, filename);
+    sprintf(buffer, "Data/Sprites/%s", filename);
 
     uint hash[4];
     GEN_HASH(filename, hash);
@@ -30,9 +28,11 @@ short LoadAnimation(const char *filename, Scopes scope)
     char nameBuffer[0x8][0x20];
     byte sheetIDs[0x18];
     sheetIDs[0] = 0;
+
+    FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
 
         if (sig != 0x525053) {
             CloseFile(&info);
@@ -43,7 +43,7 @@ short LoadAnimation(const char *filename, Scopes scope)
         spr->scope           = scope;
         memcpy(spr->hash, hash, 4 * sizeof(uint));
 
-        uint frameCount = ReadInt32(&info);
+        uint frameCount = ReadInt32(&info, false);
         AllocateStorage(frameCount * sizeof(SpriteFrame), (void**)&spr->frames, DATASET_STG, false);
 
         byte sheetCount = ReadInt8(&info);
@@ -63,7 +63,7 @@ short LoadAnimation(const char *filename, Scopes scope)
         for (int a = 0; a < spr->animCount; ++a) {
             SpriteAnimationEntry *animation = &spr->animations[a];
             ReadString(&info, hashBuffer);
-            GenerateHash(animation->hash, StrLength(hashBuffer));
+            GEN_HASH(hashBuffer, animation->hash);
 
             animation->frameCount      = ReadInt16(&info);
             animation->frameListOffset = frameID;
@@ -103,8 +103,7 @@ short LoadAnimation(const char *filename, Scopes scope)
 short CreateAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope)
 {
     char buffer[0x100];
-    StrCopy(buffer, "Data/Sprites/");
-    StrAdd(buffer, filename);
+    sprintf(buffer, "Data/Sprites/%s", filename);
 
     uint hash[4];
     GEN_HASH(filename, hash);

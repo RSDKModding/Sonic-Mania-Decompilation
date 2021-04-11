@@ -9,11 +9,11 @@
 #define CHANNEL_COUNT (0x4)
 #endif
 
-#define MAX_VOLUME (100)
+#define MAX_VOLUME (1.0f)
 
 struct SFXInfo {
     uint hash[4];
-    Sint16 *buffer;
+    float *buffer;
     size_t length;
     int unknown;
     byte maxConcurrentPlays;
@@ -21,8 +21,8 @@ struct SFXInfo {
 };
 
 struct ChannelInfo {
-    Sint16 *samplePtr;
-    int pan;
+    float *samplePtr;
+    float pan;
     float volume;
     int speed;
     size_t sampleLength;
@@ -41,23 +41,14 @@ extern ChannelInfo channels[CHANNEL_COUNT];
 
 extern bool32 audioEnabled;
 
-extern char streamFilename[0x100];
-extern byte *streamFileBuffer;
-extern int streamFileSize;
-extern void *streamBuffer;
-extern int streamBufferSize;
-extern int streamStartPos;
-extern int streamLoopPoint;
-
 bool32 InitAudioDevice();
 void ReleaseAudioDevice();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
 #if !RETRO_USE_ORIGINAL_CODE
 // These functions did exist, but with different signatures
-void ProcessMusicStream(Sint32 *stream, size_t bytes_wanted);
 void ProcessAudioPlayback(void *data, Uint8 *stream, int len);
-void ProcessAudioMixing(Sint32 *dst, const Sint16 *src, int len, int volume, sbyte pan);
+void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *channel);
 #endif
 
 #endif

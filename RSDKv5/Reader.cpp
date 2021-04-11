@@ -25,7 +25,7 @@ bool32 CheckDataFile(const char *filePath)
         }
         useDataFile = true;
 
-        StrCopy(rsdkName, filePath);
+        strcpy(rsdkName, filePath);
 
         rsdkContainer.fileCount = ReadInt16(&info);
         for (int f = 0; f < rsdkContainer.fileCount; ++f) {
@@ -36,8 +36,8 @@ bool32 CheckDataFile(const char *filePath)
                 //rsdkContainer.files[f].hash[y] = ReadInt32(&info);
             }
 
-            rsdkContainer.files[f].offset  = ReadInt32(&info);
-            rsdkContainer.files[f].filesize = ReadInt32(&info);
+            rsdkContainer.files[f].offset   = ReadInt32(&info, false);
+            rsdkContainer.files[f].filesize = ReadInt32(&info, false);
 
             rsdkContainer.files[f].encrypted = (rsdkContainer.files[f].filesize & 0x80000000) != 0;
             rsdkContainer.files[f].filesize &= 0x7FFFFFFF;
@@ -57,18 +57,16 @@ bool32 CheckDataFile(const char *filePath)
 
 bool32 OpenDataFile(FileInfo *info, const char *filename)
 {
-    memset(hashBuffer, 0, 0x400);
     StringLowerCase(hashBuffer, filename);
-    uint buffer[0x4];
-    int len = StrLength(hashBuffer);
-    GenerateHash(buffer, len);
+    uint hash[0x4];
+    GEN_HASH(hashBuffer, hash);
 
     for (int f = 0; f < rsdkContainer.fileCount; ++f) {
         RSDKFileInfo *file = &rsdkContainer.files[f];
 
         bool32 match = true;
         for (int h = 0; h < 4; ++h) {
-            if (buffer[h] != file->hash[h]) {
+            if (hash[h] != file->hash[h]) {
                 match = false;
                 break;
             }
@@ -111,8 +109,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int key2)
 
     // StringA
     StringUpperCase(hashBuffer, key1);
-    int len = StrLength(hashBuffer);
-    GenerateHash((uint *)hash, len);
+    GEN_HASH(hashBuffer, (uint *)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyA[y + 3] = hash[y + 0];
@@ -123,8 +120,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int key2)
 
     // StringB
     sprintf(hashBuffer, "%d", key2); // Vary lazy ik
-    len = StrLength(hashBuffer);
-    GenerateHash((uint*)hash, len);
+    GEN_HASH(hashBuffer, (uint*)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyB[y + 3] = hash[y + 0];

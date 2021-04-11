@@ -7,7 +7,7 @@ void InitStorage()
     // storage limit (in ints)
     dataStorage[DATASET_STG].storageLimit = 0x1800000; 
     dataStorage[DATASET_MUS].storageLimit = 0x800000; 
-    dataStorage[DATASET_SFX].storageLimit = 0x2000000;
+    dataStorage[DATASET_SFX].storageLimit = 0x4000000; // 0x2000000;
     dataStorage[DATASET_STR].storageLimit = 0x200000; 
     dataStorage[DATASET_TMP].storageLimit = 0x800000; 
     
@@ -24,6 +24,7 @@ void ReleaseStorage()
     for (int s = 0; s < DATASET_MAX; ++s) {
         if (dataStorage[s].memPtr)
             free(dataStorage[s].memPtr);
+        dataStorage[s].memPtr      = NULL;
         dataStorage[s].usedStorage = 0;
         dataStorage[s].entryCount  = 0;
         dataStorage[s].unknown     = 0;
@@ -41,14 +42,11 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
     int **data = (int **)dataPtr;
     *data       = NULL;
 
-    if (dataSet == DATASET_STG)
-        printf("");
-
     if (dataSet < DATASET_MAX) {
         DataStorage *storage = &dataStorage[dataSet];
 
-        if ((size & 0xFFFFFFFC) < size)
-            size &= 0xFFFFFFFC;
+        if ((size & -4) < size)
+            size = (size & -4) + sizeof(int);
 
         if (storage->entryCount < 0x1000) {
             if (size + sizeof(int) * storage->usedStorage >= storage->storageLimit) {
@@ -69,7 +67,7 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
                     storage->memPtr[storage->usedStorage++] = storage->usedStorage + 2;
                     storage->memPtr[storage->usedStorage++] = size;
                     *data                                   = &storage->memPtr[storage->usedStorage];
-                    storage->usedStorage += size >> 2;
+                    storage->usedStorage += size / sizeof(int);
                     storage->startPtrs1[storage->entryCount] = data;
                     storage->startPtrs2[storage->entryCount] = *data;
                 }
@@ -80,7 +78,7 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
                 storage->memPtr[storage->usedStorage++] = storage->usedStorage + 2;
                 storage->memPtr[storage->usedStorage++] = size;
                 *data                                   = &storage->memPtr[storage->usedStorage];
-                storage->usedStorage += size >> 2;
+                storage->usedStorage += size / sizeof(int);
                 storage->startPtrs1[storage->entryCount] = data;
                 storage->startPtrs2[storage->entryCount] = *data;
             }

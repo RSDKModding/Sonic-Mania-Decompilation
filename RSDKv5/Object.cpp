@@ -26,16 +26,8 @@ void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint 
         ObjectInfo *info = &objectList[objectCount];
         if (entitySize > sizeof(EntityBase))
             printf("Class exceeds max entity memory: %s \n", name);
+        GEN_HASH(name, info->hash);
         info->type = structPtr;
-        memset(hashBuffer, 0, 0x400);
-        int nameLen = 0;
-        while (name[nameLen]) ++nameLen;
-
-        if (nameLen < 0x400) {
-            memcpy(hashBuffer, name, nameLen);
-            GenerateHash(info->hash, nameLen);
-        }
-        ++objectCount;
         info->entitySize   = entitySize;
         info->objectSize   = objectSize;
         info->update       = update;
@@ -47,18 +39,15 @@ void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint 
         info->editorDraw   = editorDraw;
         info->editorLoad   = editorLoad;
         info->serialize    = serialize;
+        ++objectCount;
     }
 }
 
 #if RETRO_REV02
 void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize)
 {
-    memset(hashBuffer, 0, 0x400);
-    int len = StrLength(name);
     uint hash[4];
-
-    memcpy(hashBuffer, name, len);
-    GenerateHash(hash, len);
+    GEN_HASH(name, hash);
     AllocateStorage(objectSize, (void **)structPtr, DATASET_STG, true);
     LoadStaticObject((byte *)*structPtr, hash, 0);
 }
@@ -68,7 +57,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 {
     char buffer[0x40];
     const char *hexChars = "0123456789ABCDEF";
-    StrCopy(buffer, "Data/Objects/Static/00000000000000000000000000000000.bin");
+    sprintf(buffer, "%s", "Data/Objects/Static/00000000000000000000000000000000.bin");
 
     int strPos = 20;
     for (int i = 0; i < 32; i += 4) {
@@ -91,7 +80,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
     FileInfo info;
     MEM_ZERO(info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
-        uint sig = ReadInt32(&info);
+        uint sig = ReadInt32(&info, false);
 
         if (sig != 0x4A424F) {
             CloseFile(&info);
@@ -100,10 +89,10 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 
         while (info.readPos < info.fileSize) {
             int dataType  = ReadInt8(&info);
-            int arraySize = ReadInt32(&info);
+            int arraySize = ReadInt32(&info, false);
 
             if (dataType & 0x80) {
-                uint dataSize = ReadInt32(&info);
+                uint dataSize = ReadInt32(&info, false);
                 dataType &= 0x7F;
 
                 switch (dataType) {
@@ -679,12 +668,11 @@ void ProcessObjectDrawLists()
 
 ushort GetObjectByName(const char *name)
 {
-    StrCopy(hashBuffer, name);
     uint hash[4];
-    GenerateHash(hash, StrLength(hashBuffer));
+    GEN_HASH(name, hash);
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
-        if (memcmp(hash, objectList[stageObjectIDs[o]].hash, 4 * sizeof(int)) == 0)
+        if (HASH_MATCH(hash, objectList[stageObjectIDs[o]].hash))
             return o;
     }
     return 0;

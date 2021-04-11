@@ -4,36 +4,30 @@ ObjectUIPicture *UIPicture;
 
 void UIPicture_Update(void)
 {
-    EntityUIPicture *entity = (EntityUIPicture *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIPicture);
     RSDK.ProcessAnimation(&entity->data);
 }
 
-void UIPicture_LateUpdate(void)
-{
+void UIPicture_LateUpdate(void) {}
 
-}
-
-void UIPicture_StaticUpdate(void)
-{
-
-}
+void UIPicture_StaticUpdate(void) {}
 
 void UIPicture_Draw(void)
 {
-    EntityUIPicture *entity = (EntityUIPicture *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIPicture);
     if (entity->zonePalette)
         RSDK.CopyPalette((entity->zonePalette >> 3) + 1, 32 * entity->zonePalette, 0, 224, 32);
     RSDK.DrawSprite(&entity->data, NULL, false);
 }
 
-void UIPicture_Create(void* data)
+void UIPicture_Create(void *data)
 {
-    EntityUIPicture *entity = (EntityUIPicture *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIPicture);
     RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->data, true, entity->frameID);
     if (!RSDK_sceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
-            entity->active  = ACTIVE_BOUNDS;
-            entity->visible   = 1;
+            entity->active    = ACTIVE_BOUNDS;
+            entity->visible   = true;
             entity->drawOrder = 2;
         }
         else {
@@ -55,15 +49,9 @@ void UIPicture_StageLoad(void)
     }
 }
 
-void UIPicture_EditorDraw(void)
-{
+void UIPicture_EditorDraw(void) {}
 
-}
-
-void UIPicture_EditorLoad(void)
-{
-
-}
+void UIPicture_EditorLoad(void) {}
 
 void UIPicture_Serialize(void)
 {
@@ -73,4 +61,3 @@ void UIPicture_Serialize(void)
     RSDK_EDITABLE_VAR(UIPicture, VAR_BOOL, zonePalette);
     RSDK_EDITABLE_VAR(UIPicture, VAR_UINT8, zoneID);
 }
-

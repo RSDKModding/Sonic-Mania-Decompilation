@@ -104,7 +104,7 @@ enum GameRegions {
 #if RETRO_USING_SDL2
 #include <SDL.h>
 #endif
-//#include <vorbis/vorbisfile.h>
+#include <vorbis/vorbisfile.h>
 #endif
 
 #if RETRO_PLATFORM == RETRO_XB1
@@ -211,7 +211,6 @@ struct RetroEngine {
     //Image/Video support
     float displayTime;
     float imageDelta;
-    float imageUnknown;
     bool32 (*skipCallback)();
 
     bool32 shaderSupport = true;
@@ -231,6 +230,8 @@ struct RetroEngine {
     SDL_Window *window     = nullptr;
     SDL_Renderer *renderer = nullptr;
     SDL_Texture *screenBuffer[SCREEN_MAX];
+
+    SDL_Texture *imageTexture = nullptr;
 
     SDL_Event sdlEvents;
 #endif

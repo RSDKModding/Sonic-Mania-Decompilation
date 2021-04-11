@@ -38,7 +38,7 @@ void StarPost_Create(void *data)
 {
     RSDK_THIS(StarPost);
     if (globals->gameMode == MODE_TIMEATTACK || (globals->gameMode == MODE_COMPETITION && entity->vsRemove)) {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
         if (!RSDK_sceneInfo->inEditor) {
@@ -151,7 +151,7 @@ void StarPost_StageLoad(void)
 void StarPost_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(StarPost->spriteIndex, 0, &DebugMode->debugData, true, 1);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, 0);
+    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
 }
 void StarPost_DebugSpawn(void) { RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
 void StarPost_ResetStarPosts(void)
@@ -190,22 +190,14 @@ void StarPost_CheckBonusStageEntry(void)
         if (!globals->recallEntities) {
             if (Player_CheckCollisionTouch(RSDK.GetEntityByID(SLOT_PLAYER1), entity, &entity->starHitbox)) {
                 SaveGame_SaveGameState();
-                RSDK.PlaySFX(StarPost->sfx_Warp, 0, 254);
+                RSDK.PlaySFX(StarPost->sfx_Warp, 0, 0xFE);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 int *saveRAM = SaveGame_GetGlobalData();
 #if RETRO_USE_PLUS
                 if ((User.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Pinball", "");
-                    EntityZone *entityZone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
-                    entityZone->screenID   = 4;
-                    entityZone->timer      = 0;
-                    entityZone->fadeTimer  = 10;
-                    entityZone->fadeColour = 0xF0F0F0;
-                    entityZone->state      = Zone_Unknown13;
-                    entityZone->stateDraw  = Zone_Unknown12;
-                    entityZone->visible    = true;
-                    entityZone->drawOrder  = 15;
+                    Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->slotID);
                 }
                 else {
@@ -213,15 +205,7 @@ void StarPost_CheckBonusStageEntry(void)
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Blue Spheres", "");
                     RSDK_sceneInfo->listPos += globals->blueSpheresID;
-                    EntityZone *entityZone = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
-                    entityZone->screenID   = 4;
-                    entityZone->timer      = 0;
-                    entityZone->fadeTimer  = 10;
-                    entityZone->fadeColour = 0xF0F0F0;
-                    entityZone->state      = Zone_Unknown13;
-                    entityZone->stateDraw  = Zone_Unknown12;
-                    entityZone->visible    = true;
-                    entityZone->drawOrder  = 15;
+                    Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->slotID);
 #if RETRO_USE_PLUS
                 }

@@ -31,7 +31,7 @@ void TitleSonic_Create(void *data)
     RSDK.SetSpriteAnimation(TitleSonic->spriteIndex, 1, &entity->data2, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible   = false;
-        entity->active    = ACTIVE_BOUNDS;
+        entity->active    = ACTIVE_NEVER;
         entity->drawOrder = 4;
     }
 }

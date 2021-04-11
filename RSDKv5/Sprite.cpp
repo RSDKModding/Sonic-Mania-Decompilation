@@ -575,105 +575,97 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
     if (fileName) {
         if (LoadFile(&image->info, fileName, FMODE_RB)) {
             if (ReadInt64(&image->info) == 0xA1A0A0D474E5089LL) {
-                image->chunkSize   = ReadInt32(&image->info);
-                image->chunkHeader = ReadInt32(&image->info);
-                if (image->chunkHeader == 'RDHI' && image->chunkSize == 13) {
-                    ReadBytes(&image->info, &image->width, 4);
-                    ReadBytes(&image->info, &image->height, 4);
-                    image->bitDepth = ReadInt8(&image->info);
-                    image->clrType = ReadInt8(&image->info);
-                    image->compression = ReadInt8(&image->info);
-                    image->filter = ReadInt8(&image->info);
-                    image->interlaced = ReadInt8(&image->info);
-                    if (image->interlaced || image->bitDepth != 8) {
-                        CloseFile(&image->info);
-                        return false;
+                while (true) {
+                    image->chunkSize   = ReadInt32(&image->info, true);
+                    image->chunkHeader = ReadInt32(&image->info, false);
+
+                    bool32 endFlag = false;
+                    if (image->chunkHeader == 'RDHI' && image->chunkSize == 13) {
+                        ReadBytes(&image->info, &image->width, 4);
+                        ReadBytes(&image->info, &image->height, 4);
+                        image->bitDepth    = ReadInt8(&image->info);
+                        image->clrType     = ReadInt8(&image->info);
+                        image->compression = ReadInt8(&image->info);
+                        image->filter      = ReadInt8(&image->info);
+                        image->interlaced  = ReadInt8(&image->info);
+                        if (image->interlaced || image->bitDepth != 8) {
+                            CloseFile(&image->info);
+                            return false;
+                        }
+                        image->depth    = 32;
+                        if (loadHeader)
+                            return true;
                     }
-                    image->depth    = 32;
-                    image->chunkCRC = ReadInt32(&image->info);
-                    CloseFile(&image->info);
-                    if (loadHeader)
+                    else if (image->chunkHeader == 'DNEI') {
+                        endFlag = true;
+                    }
+                    else if (image->chunkHeader == 'ETLP') {
+                        int colourCnt = image->chunkSize / 3;
+                        if (!(image->chunkSize % 3)) {
+                            image->chunkSize = colourCnt;
+                            if (colourCnt <= 0x100) {
+                                if (!image->palette)
+                                    AllocateStorage(sizeof(uint) * colourCnt, (void **)&image->palette, DATASET_TMP, true);
+
+                                byte clr[3];
+                                for (int c = 0; c < colourCnt; ++c) {
+                                    ReadBytes(&image->info, clr, 3 * sizeof(byte));
+                                    image->palette[c] = clr[2] + ((clr[1] + (clr[0] << 8)) << 8);
+                                }
+                            }
+                        }
+                    }
+                    else if (/*image->chunkHeader == 'TADI'*/ false) {
+                        if (!image->dataPtr) {
+                            AllocateStorage(sizeof(uint) * image->height * (image->width + 1), (void **)&image->dataPtr, DATASET_TMP, 0);
+                            if (!image->dataPtr) {
+                                CloseFile(&image->info);
+                                return false;
+                            }
+                        }
+                        AllocateStorage(image->chunkSize, (void **)&image->dataBuffer, DATASET_TMP, 0);
+                        ReadBytes(&image->info, image->dataBuffer, image->chunkSize);
+
+                        byte *dataPtr = NULL;
+                        switch (image->clrType) {
+                            case 0:
+                            case 3: dataPtr = &image->dataPtr[3 * image->width * image->height]; break;
+                            case 2: dataPtr = &image->dataPtr[image->width * image->height]; break;
+                            case 4: dataPtr = &image->dataPtr[2 * image->width * image->height]; break;
+                            default: dataPtr = image->dataPtr; break;
+                        }
+
+                        image->dataSize = 4 * image->height * (image->width + 1);
+                        ReadZLib(&image->info, (byte **)&image->dataBuffer, image->chunkSize, image->dataSize);
+                        PNGDecodeData(image, dataPtr);
+                        switch (image->clrType) {
+                            case 0: PNGUnpackGreyscale(image, dataPtr); break;
+                            case 2: PNGUnpackRGB(image, dataPtr); break;
+                            case 3:
+                                for (int c = 0; c < image->width * image->height; ++c) {
+                                    image->dataPtr[c] = image->palette[*dataPtr] | 0xFF000000;
+                                    ++dataPtr;
+                                }
+                                break;
+                            case 4: PNGUnpackGreyscaleA(image, dataPtr); break;
+                            case 6: PNGUnpackRGBA(image, dataPtr); break;
+                            default: break;
+                        }
+                    }
+                    else {
+                        Seek_Cur(&image->info, image->chunkSize);
+                    }
+                    image->chunkCRC = ReadInt32(&image->info, false);
+
+                    if (endFlag) {
+                        CloseFile(&image->info);
                         return true;
+                    }
                 }
             }
             else {
                 CloseFile(&image->info);
-                return false;
             }
-        }
-        else {
-            return false;
-        }
-    }
-
-    while (true) {
-        image->chunkSize   = ReadInt32(&image->info);
-        image->chunkHeader = ReadInt32(&image->info);
-
-        bool32 endFlag = false;
-        if (image->chunkHeader == 'DNEI') {
-            endFlag = true;
-        }
-        else if (image->chunkHeader == 'ETLP') {
-            int colourCnt = image->chunkSize / 3;
-            if (!(image->chunkSize % 3)) {
-                image->chunkSize = colourCnt;
-                if (colourCnt <= 0x100) {
-                    if (!image->palette)
-                        AllocateStorage(sizeof(uint) * colourCnt, (void **)&image->palette, DATASET_TMP, true);
-
-                    byte clr[3];
-                    for (int c = 0; c < colourCnt; ++c) {
-                        ReadBytes(&image->info, clr, 3 * sizeof(byte));
-                        image->palette[c] = clr[2] + ((clr[1] + (clr[0] << 8)) << 8);
-                    }
-                }
-            }
-        }
-        else if (image->chunkHeader == 'TADI') {
-            if (!image->dataPtr) {
-                AllocateStorage(sizeof(uint) * image->height * (image->width + 1), (void **)&image->dataPtr, DATASET_TMP, 0);
-                if (!image->dataPtr) {
-                    CloseFile(&image->info);
-                    return false;
-                }
-            }
-            AllocateStorage(image->chunkSize, (void **)&image->dataBuffer, DATASET_TMP, 0);
-            ReadBytes(&image->info, image->dataBuffer, image->chunkSize);
-
-            byte *dataPtr = NULL;
-            switch (image->clrType) {
-                case 0:
-                case 3: dataPtr = &image->dataPtr[3 * image->width * image->height]; break;
-                case 2: dataPtr = &image->dataPtr[image->width * image->height]; break;
-                case 4: dataPtr = &image->dataPtr[2 * image->width * image->height]; break;
-                default: dataPtr = image->dataPtr; break;
-            }
-
-            image->dataSize = 4 * image->height * (image->width + 1);
-            ReadZLib(&image->info, (byte**)&image->dataBuffer, image->chunkSize, image->dataSize);
-            PNGDecodeData(image, dataPtr);
-            switch (image->clrType) {
-                case 0: PNGUnpackGreyscale(image, dataPtr); break;
-                case 2: PNGUnpackRGB(image, dataPtr); break;
-                case 3:
-                    for (int c = 0; c < image->width * image->height; ++c) {
-                        image->dataPtr[c] = image->palette[*dataPtr] | 0xFF000000;
-                        ++dataPtr;
-                    }
-                    break;
-                case 4: PNGUnpackGreyscaleA(image, dataPtr); break;
-                case 6: PNGUnpackRGBA(image, dataPtr); break;
-                default: break;
-            }
-        }
-        else {
-            Seek_Cur(&image->info, image->chunkSize);
-        }
-        image->chunkCRC = ReadInt32(&image->info);
-        if (endFlag) {
-            CloseFile(&image->info);
-            return true;
         }
     }
 
@@ -867,8 +859,7 @@ bool32 LoadTGA(const char *filename)
 ushort LoadSpriteSheet(const char *filename, Scopes scope)
 {
     char buffer[0x100];
-    StrCopy(buffer, "Data/Sprites/");
-    StrAdd(buffer, filename);
+    sprintf(buffer, "Data/Sprites/%s", filename);
 
     uint hash[4];
     GEN_HASH(filename, hash);
@@ -934,8 +925,7 @@ ushort LoadSpriteSheet(const char *filename, Scopes scope)
 bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void))
 {
     char buffer[0x100];
-    StrCopy(buffer, "Data/Images/");
-    StrAdd(buffer, filename);
+    sprintf(buffer, "Data/Images/%s", filename);
 
     ImagePNG image;
     MEM_ZERO(image);

@@ -43,14 +43,14 @@ void Player_Update(void)
 #else
                     if (!entity->sidekick) {
 #endif
-                        bool32 flag = false;
+                        bool32 flag = true;
                         foreach_active(Player, player)
                         {
                             if (player->invincibleTimer > 0)
                                 flag = false;
                         }
                         if (flag)
-                            Music_Unknown6(TRACK_INVINCIBLE, 1);
+                            Music_ResumePrevTrack(TRACK_INVINCIBLE, true);
                     }
                 }
             }
@@ -60,14 +60,14 @@ void Player_Update(void)
             entity->speedShoesTimer--;
             if (!entity->speedShoesTimer) {
                 Player_ChangePhysicsState(entity);
-                bool32 flag = false;
+                bool32 flag = true;
                 foreach_active(Player, player)
                 {
                     if (player->speedShoesTimer > 0)
                         flag = false;
                 }
                 if (flag)
-                    Music_Unknown6(TRACK_SNEAKERS, 1);
+                    Music_ResumePrevTrack(TRACK_SNEAKERS, true);
             }
         }
 
@@ -166,9 +166,9 @@ void Player_LateUpdate(void)
         if (entity->gravityStrength <= 1)
             entity->direction |= FLIP_Y;
         else
-            entity->direction &= FLIP_X;
-        entity->visible         = 1;
-        entity->onGround        = 0;
+            entity->direction &= ~FLIP_Y;
+        entity->visible         = true;
+        entity->onGround        = false;
         entity->groundVel       = 0;
         entity->velocity.x      = 0;
         entity->nextGroundState = StateMachine_None;
@@ -176,11 +176,11 @@ void Player_LateUpdate(void)
         entity->interaction     = false;
         entity->tileCollisions  = false;
         if (globals->gameMode != MODE_COMPETITION)
-            entity->active = ACTIVE_ALWAYS;
-        entity->shield     = 0;
+            entity->active = ACTIVE_NORMAL;
+        entity->shield     = SHIELD_NONE;
         entity->killFlagA  = 0;
         entity->killFlagB  = 0;
-        entity->underwater = 0;
+        entity->underwater = false;
         Player_ChangePhysicsState(entity);
         Entity *powerup = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(entity));
         RSDK.ResetEntityPtr(powerup, 0, 0);
@@ -196,7 +196,7 @@ void Player_LateUpdate(void)
                 entity->state = Player_State_Drown;
                 if (!entity->sidekick) {
                     if (globals->gameMode == MODE_COMPETITION) {
-                        Music_Unknown6(TRACK_DROWNING, 0);
+                        Music_ResumePrevTrack(TRACK_DROWNING, false);
                     }
 #if RETRO_USE_PLUS
                     else if (globals->gameMode != MODE_ENCORE) {
@@ -1421,7 +1421,7 @@ void Player_HandleDeath(EntityPlayer *player)
         EntityDust *dust    = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player->position.x, player->position.y);
         ScreenInfo *screen  = RSDK_screens;
         dust->visible       = 0;
-        dust->active        = 0;
+        dust->active        = ACTIVE_NEVER;
         dust->isPermament   = true;
         dust->position.y    = (screen->position.y - 128) << 16;
 #if RETRO_USE_PLUS
@@ -2053,8 +2053,8 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
         if (player->scoreBonus < 15)
             player->scoreBonus++;
         if (destroy) {
-            RSDK.ResetEntityPtr(entity, 0, 0);
-            entity->active = -1;
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            entity->active = ACTIVE_NEVER2;
         }
         return true;
     }
@@ -3663,12 +3663,8 @@ void Player_State_Crouch(void)
 void Player_State_Spindash(void)
 {
     RSDK_THIS(Player);
-    float chargeSpeeds[12] = { 1.00000000, 1.06140053, 1.12553096, 1.19264507, 1.26303434, 1.33703494,
-                               1.41503751, 1.49749970, 1.58496249, 1.67807186, 1.77760756, 1.88452280 };
-    //*(_OWORD *)chargeSpeeds     = SpindashChargeSpeeds;
-    //*(_OWORD *)&chargeSpeeds[4] = SpindashChargeSpeeds2;
-    //*(_OWORD *)&chargeSpeeds[8] = SpindashChargeSpeeds3;
-    // v10                         = 2.0;
+    float chargeSpeeds[13] = { 1.00000000, 1.06140053, 1.12553096, 1.19264507, 1.26303434, 1.33703494, 1.41503751,
+                               1.49749970, 1.58496249, 1.67807186, 1.77760756, 1.88452280, 2.00000000 };
     if (entity->jumpPress) {
         entity->abilityTimer += 0x20000;
         if (entity->abilityTimer > 0x90000)
@@ -5336,7 +5332,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
 
     thisEntity->collisionPlane = player->collisionPlane;
     thisEntity->drawOrder      = player->drawOrder;
-    thisEntity->active         = 2;
+    thisEntity->active         = ACTIVE_NORMAL;
     thisEntity->position.x     = ((Entity *)thisEntity->entPtr)->position.x;
     thisEntity->position.y     = ((Entity *)thisEntity->entPtr)->position.y;
     if (thisEntity->playerID == 0)
@@ -5841,8 +5837,8 @@ void Player_GetP1Inputs(void)
                 RSDK.SetGameMode(ENGINESTATE_REGULAR);
                 entity->jumpHold       = 0;
                 entity->jumpPress      = 0;
-                entity->visible        = 1;
-                entity->active         = ACTIVE_ALWAYS;
+                entity->visible        = true;
+                entity->active         = ACTIVE_NORMAL;
                 DebugMode->debugActive = true;
             }
             //}
