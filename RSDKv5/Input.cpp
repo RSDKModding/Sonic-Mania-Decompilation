@@ -115,5 +115,23 @@ void InputDevice::ProcessInput()
             ++engine.dimTimer;
         }
     }
+
+    int mx = 0, my = 0;
+    SDL_GetMouseState(&mx, &my);
+
+    if (mx == touchMouseData.x[0] * engine.windowWidth && my == touchMouseData.y[0] * engine.windowHeight) {
+        ++mouseHideTimer;
+        if (mouseHideTimer >= 120) {
+            mouseHideTimer = 0;
+            SDL_ShowCursor(false);
+        }
+    }
+    else if (mouseHideTimer >= 120) {
+        mouseHideTimer = 0;
+        SDL_ShowCursor(true);
+    }
+
+    if (touchMouseData.count)
+        engine.dimTimer = 0;
 #endif
 }

@@ -137,6 +137,9 @@
     <ClCompile Include="TestObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -251,6 +254,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="TestObject.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Video.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

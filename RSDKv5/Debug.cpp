@@ -24,75 +24,73 @@ void printLog(SeverityModes severity, const char *message, ...)
         sprintf(buffer, "%s\n", buffer);
         va_end(args);
 
-        if (severity == SEVERITY_WARN) {
-            if (sceneInfo.state & ENGINESTATE_FROZEN) {
-                CreateEntity(DevOutput->objectID, outputString, 0, 0);
-                return;
-            }
+#if RETRO_REV02
+        if (severity == SEVERITY_WARN && sceneInfo.state & 3) {
+            CreateEntity(DevOutput->objectID, outputString, 0, 0);
         }
-        else if (severity == SEVERITY_ERROR) {
-            if (sceneInfo.state & ENGINESTATE_FROZEN) {
-                engine.prevEngineMode = sceneInfo.state;
-                sceneInfo.state       = ENGINESTATE_ERRORMSG;
-                return;
-            }
+        else if (severity == SEVERITY_ERROR && sceneInfo.state & 3) {
+            engine.prevEngineMode = sceneInfo.state;
+            sceneInfo.state       = ENGINESTATE_ERRORMSG;
         }
-        else if (severity == SEVERITY_FATAL && sceneInfo.state & ENGINESTATE_FROZEN) {
+        else if (severity == SEVERITY_FATAL && sceneInfo.state & 3) {
             engine.prevEngineMode = sceneInfo.state;
             sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
-            return;
         }
+        else {
+#endif
+            if (engine.printConsole)
+                printConsole(outputString);
+            // else
+            //    OutputDebugStringA(outputString);
 
-        if (engine.printConsole)
-            printConsole(outputString);
-        // else
-        //    OutputDebugStringA(outputString);
-
-        char pathBuffer[0x100];
-        sprintf(pathBuffer, BASE_PATH "log.txt");
-        FileIO *file = fOpen(pathBuffer, "a");
-        if (file) {
-            fWrite(&buffer, 1, strlen(buffer), file);
-            fClose(file);
+            char pathBuffer[0x100];
+            sprintf(pathBuffer, BASE_PATH "log.txt");
+            FileIO *file = fOpen(pathBuffer, "a");
+            if (file) {
+                fWrite(&buffer, 1, strlen(buffer), file);
+                fClose(file);
+            }
+#if RETRO_REV02
         }
+#endif
     }
 #endif
 }
 
 #if RETRO_REV02
-void SetDebugValue(const char *name, void* valPtr, int type, int min, int max)
+void SetDebugValue(const char *name, void *valPtr, int type, int min, int max)
 {
     if (debugValCnt < DEBUGVAL_MAX) {
         DebugValueInfo *value = &debugValues[debugValCnt++];
         strncpy(value->name, name, 0x10);
         value->value = valPtr;
         switch (type) {
-            case 1: //bool
-                value->type   = 0;
+            case 1: // bool
+                value->type       = 0;
                 value->valByteCnt = 4;
                 break;
-            case 2: //byte
-                value->type   = 1;
+            case 2: // byte
+                value->type       = 1;
                 value->valByteCnt = 1;
                 break;
-            case 3: //ushort
-                value->type   = 1;
+            case 3: // ushort
+                value->type       = 1;
                 value->valByteCnt = 2;
                 break;
-            case 4: //uint
-                value->type   = 1;
+            case 4: // uint
+                value->type       = 1;
                 value->valByteCnt = 4;
                 break;
-            case 6: //sbyte
-                value->type   = 2;
+            case 6: // sbyte
+                value->type       = 2;
                 value->valByteCnt = 1;
                 break;
-            case 7: //short
-                value->type   = 2;
+            case 7: // short
+                value->type       = 2;
                 value->valByteCnt = 2;
                 break;
-            case 8: //int
-                value->type   = 2;
+            case 8: // int
+                value->type       = 2;
                 value->valByteCnt = 4;
                 break;
             default: break;
@@ -135,9 +133,9 @@ void DevMenu_MainMenu()
     y += 8;
     DrawDevText(currentScreen->centerX, "Dev Menu", y, ALIGN_CENTER, 0xF0F0F0);
     y += 16;
-    DrawDevText(currentScreen->centerX, engine.gameName, y, ALIGN_CENTER, 0x808090);
+    DrawDevText(currentScreen->centerX, gameVerInfo.gameName, y, ALIGN_CENTER, 0x808090);
     y += 8;
-    DrawDevText(currentScreen->centerX, engine.gameVersion, y, ALIGN_CENTER, 0x808090);
+    DrawDevText(currentScreen->centerX, gameVerInfo.gameVersion, y, ALIGN_CENTER, 0x808090);
     y += 24;
 
     // Options Box
@@ -483,12 +481,12 @@ void DevMenu_Options()
     const byte optionCount = RETRO_REV02 ? 5 : 4;
 
     uint optionColours[optionCount];
-    optionColours[0]              = 0x808090;
-    optionColours[1]              = 0x808090;
-    optionColours[2]              = 0x808090;
-    optionColours[3]              = 0x808090;
+    optionColours[0] = 0x808090;
+    optionColours[1] = 0x808090;
+    optionColours[2] = 0x808090;
+    optionColours[3] = 0x808090;
 #if RETRO_REV02
-    optionColours[4]              = 0x808090;
+    optionColours[4] = 0x808090;
 #endif
     optionColours[devMenu.option] = 0xF0F0F0;
 
@@ -687,11 +685,11 @@ void DevMenu_VideoOptions()
         case 1: // aspect
             if (controller[0].keyLeft.press) {
                 devMenu.winAspect--;
-                settingsChanged  = true;
+                settingsChanged = true;
             }
             else if (controller[0].keyRight.press) {
                 devMenu.winAspect++;
-                settingsChanged  = true;
+                settingsChanged = true;
             }
 
             if (devMenu.winAspect > 4) {
@@ -727,7 +725,7 @@ void DevMenu_VideoOptions()
         case 4: // confirm
             if (controller[0].keyStart.press || controller[0].keyA.press) {
                 // do confirm
-                engine.isFullScreen   = !devMenu.windowed;
+                engine.isFullScreen  = !devMenu.windowed;
                 shaderList[0].linear = !devMenu.windowed;
                 if (!devMenu.winScale)
                     engine.shaderID = SHADER_NONE;
@@ -1004,7 +1002,7 @@ void DevMenu_DebugOptions()
                                 valBuf[0] = 'N';
                             valBuf[1] = 0;
                         }
-                            break;
+                        break;
                     }
                     case sizeof(short): {
                         short *v = (short *)val->value;
@@ -1043,7 +1041,7 @@ void DevMenu_DebugOptions()
 
                 if (val->type) {
                     if (2 * val->valByteCnt) {
-                        char *bufPtr = &valBuf[2 * val->valByteCnt];
+                        char *bufPtr                      = &valBuf[2 * val->valByteCnt];
                         valBuf[(2 * val->valByteCnt) + 1] = 0;
 
                         switch (val->valByteCnt) {
@@ -1238,6 +1236,5 @@ void DevMenu_DebugOptions()
             devMenu.option = 4;
         }
     }
-
 }
 #endif

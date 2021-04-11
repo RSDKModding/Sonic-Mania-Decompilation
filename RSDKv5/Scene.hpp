@@ -63,11 +63,12 @@ struct SceneInfo {
 };
 
 struct ScrollInfo {
-    int unknown;
+    int tilePos;
     int parallaxFactor;
     int scrollSpeed;
     int scrollPos;
-    bool32 deform;
+    byte deform;
+    byte unknown;
 };
 
 struct ScanlineInfo {
@@ -253,9 +254,23 @@ inline void CopyTile(ushort dest, ushort src, ushort count)
 
     byte *destPtr = &tilesetGFXData[TILE_DATASIZE * dest];
     byte *srcPtr  = &tilesetGFXData[TILE_DATASIZE * src];
+
+    byte *destPtrX = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_X)];
+    byte *srcPtrX  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_X)];
+
+    byte *destPtrY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_Y)];
+    byte *srcPtrY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_Y)];
+
+    byte *destPtrXY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_XY)];
+    byte *srcPtrXY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_XY)];
     while (count--) {
         int pxCnt = TILE_DATASIZE;
-        while (pxCnt--) *destPtr++ = *srcPtr++;
+        while (pxCnt--) {
+            *destPtr++   = *srcPtr++;
+            *destPtrX++  = *srcPtrX++;
+            *destPtrY++  = *srcPtrY++;
+            *destPtrXY++ = *srcPtrXY++;
+        }
     }
 }
 

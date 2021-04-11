@@ -33,14 +33,17 @@ void LoadScene()
 #endif
     lookupTable = NULL;
 
+    for (int l = 0; l < LAYER_COUNT; ++l) {
+        MEM_ZERO(tileLayers[l]);
+        tileLayers[l].drawLayer[0] = -1;
+    }
+
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
 #if RETRO_REV02
     if (strcmp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0 && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter;
-        if (sceneInfo.filter == 0x00)
-            sceneInfo.filter = 0xFF;
         printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\" with filter %d", list->name,
                  sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name,
                  sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter);
@@ -49,7 +52,7 @@ void LoadScene()
 #endif
 
 #if !RETRO_REV02
-    if (StrComp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder)) {
+    if (strcmp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
         printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name);
@@ -101,7 +104,7 @@ void LoadScene()
 
     for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
         MEM_ZERO(drawLayers[l]);
-        drawLayers[l].sorted = true;
+        drawLayers[l].sorted = false;
     }
 
     ClearUnusedStorage(DATASET_STG);
@@ -118,9 +121,6 @@ void LoadScene()
 #if RETRO_REV02
     hardResetFlag    = false;
     sceneInfo.filter = sceneEntry->filter;
-    if (sceneInfo.filter == 0x00)
-        sceneInfo.filter = 0xFF;
-
     printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
@@ -146,6 +146,8 @@ void LoadScene()
         }
 
         sceneInfo.useGlobalScripts = ReadInt8(&info);
+        sceneInfo.classCount       = 0;
+
         if (sceneInfo.useGlobalScripts) {
             for (int o = 0; o < globalObjectCount; ++o) {
                 stageObjectIDs[o] = globalObjectIDs[o];
@@ -312,7 +314,7 @@ void LoadSceneFile()
                 layer->scrollInfo[s].scrollSpeed    = ReadInt16(&info) << 8;
                 layer->scrollInfo[s].scrollPos      = 0;
                 layer->scrollInfo[s].deform         = ReadInt8(&info);
-                layer->scrollInfo[s].unknown        = ReadInt8(&info);
+                layer->scrollInfo[s].tilePos        = ReadInt8(&info);
             }
 
             byte *scrollIndexes = NULL;
@@ -334,6 +336,7 @@ void LoadSceneFile()
         }
 
         byte objCount = ReadInt8(&info);
+        editableVarList = NULL;
         AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);
 
         EntityBase *entList = NULL;
@@ -501,6 +504,7 @@ void LoadSceneFile()
         }
 #endif
         entList = NULL;
+        editableVarList = NULL;
 
         CloseFile(&info);
     }
@@ -810,11 +814,11 @@ void ProcessParallax(TileLayer *layer)
         default: break;
         case LAYER_HSCROLL: {
             for (int i = 0; i < layer->scrollInfoCount; ++i) {
-                scrollInfo->unknown = scrollInfo->scrollPos + (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
-                short pos           = (scrollInfo->unknown >> 16) % pixelWidth;
+                scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
+                short pos           = (scrollInfo->tilePos >> 16) % pixelWidth;
                 if (pos < 0)
                     pos += pixelWidth;
-                scrollInfo->unknown = pos << 0x10;
+                scrollInfo->tilePos = pos << 0x10;
                 ++scrollInfo;
             }
 
@@ -827,7 +831,7 @@ void ProcessParallax(TileLayer *layer)
             // Above water
             int *deformationData = &layer->deformationData[(posY + (ushort)layer->deformationOffset) & 0x1FF];
             for (int i = 0; i < currentScreen->waterDrawPos; ++i) {
-                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].unknown;
+                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform) {
                     scanlinePtr->position.x += *deformationData << 0x10;
                 }
@@ -847,7 +851,7 @@ void ProcessParallax(TileLayer *layer)
             // Under water
             deformationData = &layer->deformationDataW[(posY + (ushort)layer->deformationOffsetW) & 0x1FF];
             for (int i = currentScreen->waterDrawPos; i < currentScreen->height; ++i) {
-                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].unknown;
+                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform) {
                     scanlinePtr->position.x += *deformationData << 0x10;
                 }
@@ -870,9 +874,9 @@ void ProcessParallax(TileLayer *layer)
         }
         case LAYER_VSCROLL: {
             for (int i = 0; i < layer->scrollInfoCount; ++i) {
-                scrollInfo->unknown = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
-                scrollInfo->unknown = (scrollInfo->unknown >> 16) % pixelHeight;
-                scrollInfo->unknown <<= 0x10;
+                scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
+                scrollInfo->tilePos = (scrollInfo->tilePos >> 16) % pixelHeight;
+                scrollInfo->tilePos <<= 0x10;
                 ++scrollInfo;
             }
 
@@ -885,7 +889,7 @@ void ProcessParallax(TileLayer *layer)
             // Above water
             for (int i = 0; i < currentScreen->width; ++i) {
                 scanlinePtr->position.x = posX++ << 0x10;
-                scanlinePtr->position.y = layer->scrollInfo[*lineScrollPtr].unknown;
+                scanlinePtr->position.y = layer->scrollInfo[*lineScrollPtr].tilePos;
                 scanlinePtr->deform.x   = 0x10000;
                 scanlinePtr->deform.y   = 0x00000;
 
@@ -920,11 +924,11 @@ void ProcessParallax(TileLayer *layer)
         }
         case LAYER_BASIC: {
             for (int i = 0; i < layer->scrollInfoCount; ++i) {
-                scrollInfo->unknown = scrollInfo->scrollPos + (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
-                short pos           = (scrollInfo->unknown >> 16) % pixelWidth;
+                scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.x * scrollInfo->parallaxFactor << 8);
+                short pos           = (scrollInfo->tilePos >> 16) % pixelWidth;
                 if (pos < 0)
                     pos += pixelWidth;
-                scrollInfo->unknown = pos << 0x10;
+                scrollInfo->tilePos = pos << 0x10;
                 ++scrollInfo;
             }
 
@@ -937,7 +941,7 @@ void ProcessParallax(TileLayer *layer)
             // Above water
             int *deformationData = &layer->deformationData[((posY >> 16) + (ushort)layer->deformationOffset) & 0x1FF];
             for (int i = 0; i < currentScreen->waterDrawPos; ++i) {
-                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].unknown;
+                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform) {
                     scanlinePtr->position.x += *deformationData;
                 }
@@ -959,7 +963,7 @@ void ProcessParallax(TileLayer *layer)
             // Under water
             deformationData = &layer->deformationDataW[((posY >> 16) + (ushort)layer->deformationOffsetW) & 0x1FF];
             for (int i = currentScreen->waterDrawPos; i < currentScreen->height; ++i) {
-                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].unknown;
+                scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform) {
                     scanlinePtr->position.x += *deformationData;
                 }

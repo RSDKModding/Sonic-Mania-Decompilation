@@ -1,15 +1,18 @@
 #include "RetroEngine.hpp"
 
-RSDKContainer rsdkContainer;
-char rsdkName[0x400];
+RSDKFileInfo dataFiles[0x1000];
+RSDKContainer dataPacks[4];
+
+byte dataPackCount = 0;
+ushort dataFileCount = 0;
+
 char gameLogicName[0x400];
 
 bool32 useDataFile = false;
 
-bool32 CheckDataFile(const char *filePath)
+bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 {
-    MEM_ZERO(rsdkContainer);
-    MEM_ZERO(rsdkName);
+    MEM_ZERO(dataPacks[dataPackCount]);
     useDataFile = false;
     FileInfo info;
 
@@ -25,24 +28,19 @@ bool32 CheckDataFile(const char *filePath)
         }
         useDataFile = true;
 
-        strcpy(rsdkName, filePath);
+        strcpy(dataPacks[dataPackCount].name, filePath);
 
-        rsdkContainer.fileCount = ReadInt16(&info);
-        for (int f = 0; f < rsdkContainer.fileCount; ++f) {
-            byte b[4];
-            for (int y = 0; y < 4; y++) {
-                ReadBytes(&info, b, 4);
-                rsdkContainer.files[f].hash[y] = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | (b[3] << 0);
-                //rsdkContainer.files[f].hash[y] = ReadInt32(&info);
-            }
+        dataPacks[dataPackCount].fileCount = ReadInt16(&info);
+        for (int f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
+            ReadHash(&info, dataFiles[f].hash);
 
-            rsdkContainer.files[f].offset   = ReadInt32(&info, false);
-            rsdkContainer.files[f].filesize = ReadInt32(&info, false);
+            dataFiles[f].offset = ReadInt32(&info, false);
+            dataFiles[f].size   = ReadInt32(&info, false);
 
-            rsdkContainer.files[f].encrypted = (rsdkContainer.files[f].filesize & 0x80000000) != 0;
-            rsdkContainer.files[f].filesize &= 0x7FFFFFFF;
-
-            rsdkContainer.files[f].fileID = f;
+            dataFiles[f].encrypted = (dataFiles[f].size & 0x80000000) != 0;
+            dataFiles[f].size &= 0x7FFFFFFF;
+            dataFiles[f].useFileBuffer = useBuffer;
+            dataFiles[f].packID        = dataPackCount;
         }
 
         CloseFile(&info);
@@ -61,38 +59,35 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
     uint hash[0x4];
     GEN_HASH(hashBuffer, hash);
 
-    for (int f = 0; f < rsdkContainer.fileCount; ++f) {
-        RSDKFileInfo *file = &rsdkContainer.files[f];
+    for (int f = 0; f < dataFileCount; ++f) {
+        RSDKFileInfo *file = &dataFiles[f];
 
-        bool32 match = true;
-        for (int h = 0; h < 4; ++h) {
-            if (hash[h] != file->hash[h]) {
-                match = false;
-                break;
-            }
-        }
-        if (!match)
+        if (!HASH_MATCH(hash, file->hash))
             continue;
 
-        
-        info->file = fOpen(rsdkName, "rb");
-        if (!info->file) {
-            return false;
+        if (!file->useFileBuffer) {
+            info->file = fOpen(dataPacks[file->packID].name, "rb");
+            if (!info->file) {
+                return false;
+            }
+            fSeek(info->file, file->offset, SEEK_SET);
         }
-        fSeek(info->file, 0, SEEK_END);
-        info->fileSize         = file->filesize;
-        info->readPos           = 0;
-        fSeek(info->file, file->offset, SEEK_SET);
+        else {
+            info->file = NULL;
+            info->fileData = &dataPacks[file->packID].dataPtr[file->offset];
+        }
 
+        info->fileSize   = file->size;
+        info->readPos    = 0;
         info->fileOffset = file->offset;
-        info->encrypted = file->encrypted;
+        info->encrypted  = file->encrypted;
         memset(info->encryptionKeyA, 0, 0x10 * sizeof(byte));
         memset(info->encryptionKeyB, 0, 0x10 * sizeof(byte));
         if (info->encrypted) {
             GenerateELoadKeys(info, filename, info->fileSize);
             info->eKeyNo      = (info->fileSize / 4) & 0x7F;
-            info->eKeyPosA = 0;
-            info->eKeyPosB = 8;
+            info->eKeyPosA    = 0;
+            info->eKeyPosB    = 8;
             info->eNybbleSwap = false;
         }
         printLog(SEVERITY_NONE, "Loaded File '%s'", filename);

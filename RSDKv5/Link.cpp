@@ -281,9 +281,9 @@ enum FunctionTableIDs {
 #if RETRO_REV02
 SKUInfo curSKU;
 UnknownInfo unknownInfo;
-#else
-EngineInfo engineInfo;
 #endif
+
+GameVersionInfo gameVerInfo;
 
 void NullFunc() {}
 
@@ -310,9 +310,9 @@ void setupFunctions()
     curSKU.language = language;
     curSKU.region   = region;
 #else
-    engineInfo.platformID = platform;
-    engineInfo.language   = language;
-    engineInfo.region     = region;
+    gameVerInfo.platform = platform;
+    gameVerInfo.language   = language;
+    gameVerInfo.region     = region;
 #endif
 
     CalculateTrigAngles();
@@ -552,7 +552,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SfxPlaying, SfxPlaying);
     addToRSDKFunctionTable(FunctionTable_ChannelActive, ChannelActive);
     addToRSDKFunctionTable(FunctionTable_GetChannelPos, GetChannelPos);
-    addToRSDKFunctionTable(FunctionTable_LoadVideo, NullFunc); // LoadVideo);
+    addToRSDKFunctionTable(FunctionTable_LoadVideo, LoadVideo);
     addToRSDKFunctionTable(FunctionTable_LoadImage, LoadImage);
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, NullFunc);       // Unknown98);

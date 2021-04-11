@@ -15,7 +15,7 @@ TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 bool32 validDraw = false;
 
-ForeachStackInfo foreachStackList[0x20];
+ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
 ForeachStackInfo *foreachStackPtr = NULL;
 
 void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),

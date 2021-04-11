@@ -14,6 +14,8 @@
 #define EDITABLEVAR_COUNT (0x100)
 #define TYPEGROUP_COUNT (0x104)
 
+#define FOREACH_STACK_COUNT (0x400)
+
 enum TypeGroups {
     GROUP_ALL     = 0,
     GROUP_CUSTOM1 = TYPE_COUNT,
@@ -141,7 +143,7 @@ extern EntityBase objectEntityList[ENTITY_COUNT];
 extern EditableVarInfo *editableVarList;
 extern int editableVarCount;
 
-extern ForeachStackInfo foreachStackList[0x20];
+extern ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
 extern ForeachStackInfo *foreachStackPtr;
 
 extern TypeGroupList typeGroups[TYPEGROUP_COUNT];

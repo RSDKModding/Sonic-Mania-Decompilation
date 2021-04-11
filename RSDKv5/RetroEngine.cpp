@@ -53,12 +53,11 @@ bool32 processEvents()
 #if RETRO_USING_SDL2
                 if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
 #endif                                                                                     //! RETRO_USING_SDL2
-                    SDL_GetMouseState(&touchX[0], &touchY[0]);
-                    touchX[0] /= engine.windowScale;
-                    touchX[0] /= 65536.0f;
-                    touchY[0] /= engine.windowScale;
-                    touchY[0] /= 65536.0f;
-                    touches = 1;
+                    int mx = 0, my = 0;
+                    SDL_GetMouseState(&mx, &my);
+                    touchMouseData.x[0] = mx / (float)engine.windowWidth;
+                    touchMouseData.y[0] = my / (float)engine.windowHeight;
+                    touchMouseData.count = 1;
 #if RETRO_USING_SDL2
                 }
 #endif //! RETRO_USING_SDL2
@@ -68,9 +67,11 @@ bool32 processEvents()
                 if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
 #endif                                                                                     //! RETRO_USING_SDL2
                     switch (engine.sdlEvents.button.button) {
-                        case SDL_BUTTON_LEFT: touchDown[0] = 1; break;
+                        case SDL_BUTTON_LEFT: touchMouseData.down[0] = true; break;
+                        case SDL_BUTTON_MIDDLE: touchMouseData.down[0] = true; break;
+                        case SDL_BUTTON_RIGHT: touchMouseData.down[0] = true; break;
                     }
-                    touches = 1;
+                    touchMouseData.count = 1;
 #if RETRO_USING_SDL2
                 }
 #endif //! RETRO_USING_SDL2
@@ -80,9 +81,11 @@ bool32 processEvents()
                 if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
 #endif                                                                                     //! RETRO_USING_SDL2
                     switch (engine.sdlEvents.button.button) {
-                        case SDL_BUTTON_LEFT: touchDown[0] = 0; break;
+                        case SDL_BUTTON_LEFT: touchMouseData.down[0] = false; break;
+                        case SDL_BUTTON_MIDDLE: touchMouseData.down[0] = false; break;
+                        case SDL_BUTTON_RIGHT: touchMouseData.down[0] = false; break;
                     }
-                    touches = 1;
+                    touchMouseData.count = 1;
 #if RETRO_USING_SDL2
                 }
 #endif //! RETRO_USING_SDL2
@@ -91,30 +94,24 @@ bool32 processEvents()
 
 #if defined(RETRO_USING_TOUCH) && defined(RETRO_USING_SDL2)
             case SDL_FINGERMOTION:
-                touches = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE));
-                for (int i = 0; i < touches; i++) {
-                    touchDown[i]       = true;
-                    SDL_Finger *finger = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
-                    touchX[i]          = (finger->x * pixWidth * engine.windowScale) / engine.windowScale;
-                    touchX[i] /= 65536.0f;
-
-                    touchY[i] = (finger->y * SCREEN_YSIZE * engine.windowScale) / engine.windowScale;
-                    touchY[i] /= 65536.0f;
+                touchMouseData.count = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE));
+                for (int i = 0; i < touchMouseData.count; i++) {
+                    SDL_Finger *finger     = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
+                    touchMouseData.down[i] = true;
+                    touchMouseData.x[i]    = finger->x;
+                    touchMouseData.y[i]    = finger->y;
                 }
                 break;
             case SDL_FINGERDOWN:
-                touches = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE));
-                for (int i = 0; i < touches; i++) {
-                    touchDown[i]       = true;
-                    SDL_Finger *finger = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
-                    touchX[i]          = (finger->x * pixWidth * engine.windowScale) / engine.windowScale;
-                    touchX[i] /= 65536.0f;
-
-                    touchY[i] = (finger->y * SCREEN_YSIZE * engine.windowScale) / engine.windowScale;
-                    touchY[i] /= 65536.0f;
+                touchMouseData.count = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE));
+                for (int i = 0; i < touchMouseData.count; i++) {
+                    SDL_Finger *finger     = SDL_GetTouchFinger(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE), i);
+                    touchMouseData.down[i] = true;
+                    touchMouseData.x[i]    = finger->x;
+                    touchMouseData.y[i]    = finger->y;
                 }
                 break;
-            case SDL_FINGERUP: touches = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)); break;
+            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)); break;
 #endif //! RETRO_USING_SDL2
 
             case SDL_KEYDOWN:
@@ -160,14 +157,16 @@ bool32 processEvents()
 #endif
                         }
                         break;
-                    case SDLK_F1:
+                    case SDLK_F3: engine.shaderID = (engine.shaderID + 1) % (shaderCount - 4); break;
+#if !RETRO_USE_ORIGINAL_CODE
+                    case SDLK_F5:
                         if (engine.devMenu) {
                             sceneInfo.activeCategory = 0;
                             sceneInfo.listPos        = 0;
                             sceneInfo.state   = ENGINESTATE_LOAD;
                         }
                         break;
-                    case SDLK_F2:
+                    case SDLK_F6:
                         if (engine.devMenu) {
                             sceneInfo.listPos--;
                             SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
@@ -184,7 +183,7 @@ bool32 processEvents()
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
-                    case SDLK_F3:
+                    case SDLK_F7:
                         if (engine.devMenu) {
                             sceneInfo.listPos++;
                             SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
@@ -203,6 +202,7 @@ bool32 processEvents()
                         if (engine.devMenu)
                             engine.showPaletteOverlay ^= 1;
                         break;
+#endif
                     case SDLK_BACKSPACE:
                         if (engine.devMenu)
                             engine.gameSpeed = engine.fastForwardSpeed;
@@ -219,10 +219,12 @@ bool32 processEvents()
                         break;
 #else
                     case SDLK_F11:
+                    case SDLK_INSERT:
                         if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
                             engine.frameStep = true;
                         break;
                     case SDLK_F12:
+                    case SDLK_PAUSE:
                         if (engine.devMenu) {
                             sceneInfo.state ^= ENGINESTATE_STEPOVER;
                         }
@@ -249,11 +251,7 @@ bool initRetroEngine()
     initUserData();
 
     readSettings();
-
-    if (!startGameObjects()) {
-        engine.running = false;
-        return false;
-    }
+    startGameObjects();
 
     engine.running = true;
     if (!InitRenderDevice()) {
@@ -285,25 +283,30 @@ void runRetroEngine()
         switch (sceneInfo.state) {
             default: break;
             case ENGINESTATE_LOAD:
-                LoadScene();
-                LoadSceneFile();
-                InitObjects();
-#if RETRO_REV02
-                userCore->SetupDebugValues();
-                for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
-                    DebugValueInfo *val = &debugValues[debugValCnt++];
-                    strncpy(val->name, drawGroupNames[v], 0x10);
-                    val->type   = 0;
-                    val->value      = &engine.drawLayerVisible[v];
-                    val->valByteCnt = 4;
-                    val->min        = 0;
-                    val->max        = 1;
+                if (!sceneInfo.listData) {
+                    sceneInfo.state = ENGINESTATE_NULL;
                 }
+                else {
+                    LoadScene();
+                    LoadSceneFile();
+                    InitObjects();
+#if RETRO_REV02
+                    userCore->SetupDebugValues();
+                    for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
+                        DebugValueInfo *val = &debugValues[debugValCnt++];
+                        strncpy(val->name, drawGroupNames[v], 0x10);
+                        val->type       = 0;
+                        val->value      = &engine.drawLayerVisible[v];
+                        val->valByteCnt = 4;
+                        val->min        = 0;
+                        val->max        = 1;
+                    }
 #endif
-                // dim after 5 mins
-                engine.dimLimit = (5 * 60) * engine.refreshRate;
-                inputDevice.ProcessInput();
-                ProcessObjects();
+                    // dim after 5 mins
+                    engine.dimLimit = (5 * 60) * engine.refreshRate;
+                    inputDevice.ProcessInput();
+                    ProcessObjects();
+                }
                 break;
             case ENGINESTATE_REGULAR:
                 inputDevice.ProcessInput();
@@ -526,7 +529,7 @@ void parseArguments(int argc, char *argv[])
     }
 }
 
-bool startGameObjects()
+void startGameObjects()
 {
     memset(&objectList, 0, OBJECT_COUNT * sizeof(ObjectInfo));
     sceneInfo.classCount     = 0;
@@ -539,10 +542,10 @@ bool startGameObjects()
     for (int l = 0; l < DRAWLAYER_COUNT; ++l) engine.drawLayerVisible[l] = true;
     setupFunctions();
     InitScriptSystem();
-    return LoadGameConfig();
+    LoadGameConfig();
 }
 
-bool LoadGameConfig()
+void LoadGameConfig()
 {
     FileInfo info;
     MEM_ZERO(info);
@@ -553,15 +556,15 @@ bool LoadGameConfig()
 
         if (sig != 0x474643) {
             CloseFile(&info);
-            return false;
+            return;
         }
 
-        ReadString(&info, engine.gameName);
+        ReadString(&info, gameVerInfo.gameName);
         if (!useDataFile) {
-            sprintf(engine.gameName, "%s (Using Data Folder)", engine.gameName);
+            sprintf(gameVerInfo.gameName, "%s (Using Data Folder)", gameVerInfo.gameName);
         }
-        ReadString(&info, engine.gameSubName);
-        ReadString(&info, engine.gameVersion);
+        ReadString(&info, gameVerInfo.gameSubName);
+        ReadString(&info, gameVerInfo.gameVersion);
 
         sceneInfo.activeCategory = ReadInt8(&info);
         sceneInfo.listPos        = ReadInt16(&info);
@@ -643,6 +646,8 @@ bool LoadGameConfig()
 
 #if RETRO_REV02
                 scene->filter = ReadInt8(&info);
+                if (scene->filter == 0x00)
+                    scene->filter = 0xFF;
 #endif
             }
             category->sceneOffsetEnd = category->sceneOffsetStart + category->sceneCount;
@@ -659,9 +664,7 @@ bool LoadGameConfig()
         }
 
         CloseFile(&info);
-        return true;
     }
-    return false;
 }
 
 void InitScriptSystem()
@@ -690,12 +693,9 @@ void InitScriptSystem()
     info.functionPtrs = RSDKFunctionTable;
 #if RETRO_REV02
     info.userdataPtrs = userFunctionTable;
-    info.gameName = engine.gameName;
     info.currentSKU   = &curSKU;
 #endif
-#if !RETRO_REV02
-    info.engineInfo = &engineInfo;
-#endif
+    info.engineInfo   = &gameVerInfo;
     info.sceneInfo    = &sceneInfo;
     info.controller   = controller;
     info.stickL       = stickR;

@@ -186,7 +186,7 @@ int GetUserLanguage()
 #if RETRO_REV02
     return curSKU.language;
 #else
-    return engineInfo.language;
+    return gameVerInfo.language;
 #endif
 }
 int GetUserRegion()
@@ -194,7 +194,7 @@ int GetUserRegion()
 #if RETRO_REV02
     return curSKU.region;
 #else
-    return engineInfo.region;
+    return gameVerInfo.region;
 #endif
 }
 int GetUserPlatform()
@@ -202,7 +202,7 @@ int GetUserPlatform()
 #if RETRO_REV02
     return curSKU.platform; 
 #else 
-    return engineInfo.platformID;
+    return gameVerInfo.platform;
 #endif
 }
 int GetConfirmButtonFlip()
@@ -732,7 +732,7 @@ int GetSettingsValue(int id)
 #if RETRO_REV02
             return curSKU.language; 
 #else
-            return engineInfo.language;
+            return gameVerInfo.language;
 #endif
         case 20: return settingsChanged;
         default: break;
@@ -819,7 +819,7 @@ void SetSettingsValue(int id, int val)
 #if RETRO_REV02
             curSKU.language = val; 
 #else
-            engineInfo.language = val;
+            gameVerInfo.language = val;
 #endif
             break;
         case 18:
@@ -890,10 +890,11 @@ void readSettings()
 #if RETRO_REV02
     curSKU.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #else
-    engineInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+    gameVerInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #endif
 
-    if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk")))
+    //Consoles load the entire file and buffer it, while pc just io's the file when needed
+    if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, RETRO_PLATFORM != RETRO_WIN))
         engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
     else
         engine.devMenu = true;
@@ -910,11 +911,16 @@ void readSettings()
     engine.vsync           = iniparser_getboolean(ini, "Video:vsync", false);
     engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
-    result       = iniparser_getstring(ini, "Video:pixWidth", "424");
+    char scrWBuf[6];
+    char scrHBuf[6];
+    sprintf(scrWBuf, "%d", DEFAULT_SCREEN_XSIZE);
+    sprintf(scrHBuf, "%d", SCREEN_YSIZE);
+
+    result   = iniparser_getstring(ini, "Video:pixWidth", scrWBuf);
     pixWidth = (int)strtol(result, NULL, 0);
 
-    engine.windowWidth   = (int)strtol(iniparser_getstring(ini, "Video:winWidth", "424"), NULL, 0);
-    engine.windowHeight  = (int)strtol(iniparser_getstring(ini, "Video:winHeight", "240"), NULL, 0);
+    engine.windowWidth   = (int)strtol(iniparser_getstring(ini, "Video:winWidth", scrWBuf), NULL, 0);
+    engine.windowHeight  = (int)strtol(iniparser_getstring(ini, "Video:winHeight", scrHBuf), NULL, 0);
     engine.fsWidth       = (int)strtol(iniparser_getstring(ini, "Video:fsWidth", "0"), NULL, 0);
     engine.fsHeight      = (int)strtol(iniparser_getstring(ini, "Video:fsHeight", "0"), NULL, 0);
     engine.refreshRate   = (int)strtol(iniparser_getstring(ini, "Video:refreshRate", "60"), NULL, 0);
@@ -996,8 +1002,13 @@ inline void writeText(FileIO *file, const char *string, ...)
 void writeSettings(bool32 writeToFile)
 {
     //only done on windows and "dev", consoles use "options.bin"
+#if RETRO_REV02
     if (curSKU.platform != PLATFORM_WIN && curSKU.platform != PLATFORM_DEV)
         return;
+#else
+    if (gameVerInfo.platform != PLATFORM_WIN && gameVerInfo.platform != PLATFORM_DEV)
+        return;
+#endif
 
     if (settingsChanged || writeToFile) {
         dictionary *ini = iniparser_load("Settings.ini");
@@ -1022,7 +1033,7 @@ void writeSettings(bool32 writeToFile)
 #if RETRO_REV02
         writeText(file, "language=%d\n", curSKU.language);
 #else
-        writeText(file, "language=%d\n", engineInfo.language);
+        writeText(file, "language=%d\n", gameVerInfo.language);
 #endif
         writeText(file, "\n[Video]\n");
         writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");

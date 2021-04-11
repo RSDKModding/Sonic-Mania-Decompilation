@@ -29,12 +29,9 @@ typedef enum {
 #include "GameObjects.h"
 
 extern SceneInfo *RSDK_sceneInfo;
-#if RETRO_USE_PLUS
-extern char *RSDK_name;
-extern SKUInfo *RSDK_sku;
-#endif
-#if !RETRO_USE_PLUS
 extern EngineInfo *RSDK_info;
+#if RETRO_USE_PLUS
+extern SKUInfo *RSDK_sku;
 #endif
 extern ControllerState *RSDK_controller;
 extern AnalogState *RSDK_stickL;

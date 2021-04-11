@@ -55,7 +55,7 @@ void UIVideo_State_PlayVid1(void)
         else
             RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCallback);
         entity->state = UIVideo_State_PlayVid2;
-        RSDK.PlayMusic(audioFile, Music->slotID, 0, 0, 0);
+        RSDK.PlayStream(audioFile, Music->slotID, 0, 0, 0);
         entity->timer = 0;
     }
 }

@@ -46,24 +46,30 @@ struct FileInfo {
 
 struct RSDKFileInfo {
     uint hash[0x4];
+    int size;
     int offset;
-    int filesize;
-    bool32 encrypted;
-    int fileID;
+    byte encrypted;
+    byte useFileBuffer;
+    int packID;
 };
 
 struct RSDKContainer {
-    RSDKFileInfo files[0x1000];
+    char name[0x100];
+    byte *dataPtr;
     int fileCount;
 };
 
-extern RSDKContainer rsdkContainer;
-extern char rsdkName[0x400];
+extern RSDKFileInfo dataFiles[0x1000];
+extern RSDKContainer dataPacks[4];
+
+extern byte dataPackCount;
+extern ushort dataFileCount;
+
 extern char gameLogicName[0x400];
 
 extern bool32 useDataFile;
 
-bool32 CheckDataFile(const char *filename);
+bool32 CheckDataFile(const char *filename, size_t fileOffset, bool32 useBuffer);
 bool32 OpenDataFile(FileInfo *info, const char *filename);
 
 enum FileModes {
@@ -128,7 +134,7 @@ inline void Seek_Set(FileInfo* info, int count) {
         }
 
         if (info->usingFileBuffer) {
-            info->fileData = (byte *)info->file + info->readPos;
+            info->fileData = &info->fileData[info->readPos];
         }
         else {
             fSeek(info->file, info->readPos + info->fileOffset, SEEK_SET);
@@ -173,12 +179,12 @@ inline byte ReadInt8(FileInfo *info)
     byte result = 0;
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
-        bytesRead          = 1;
+        bytesRead = sizeof(byte);
         result             = *info->fileData;
         info->fileData++;
     }
     else {
-        bytesRead = fRead(&result, 1, 1, info->file);
+        bytesRead = fRead(&result, 1, sizeof(byte), info->file);
     }
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
@@ -191,12 +197,12 @@ inline short ReadInt16(FileInfo *info)
     short result  = 0;
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
-        bytesRead = 2;
-        result    = *info->fileData;
-        info->fileData++;
+        bytesRead = sizeof(short);
+        result    = *(short *)info->fileData;
+        info->fileData += sizeof(short);
     }
     else {
-        bytesRead = fRead(&result, 1, 2, info->file);
+        bytesRead = fRead(&result, 1, sizeof(short), info->file);
     }
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
@@ -209,12 +215,12 @@ inline int ReadInt32(FileInfo *info, bool32 swapEndian)
     int result   = 0;
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
-        bytesRead = 4;
-        result    = *info->fileData;
-        info->fileData++;
+        bytesRead = sizeof(int);
+        result    = *(int *)info->fileData;
+        info->fileData += sizeof(int);
     }
     else {
-        bytesRead = fRead(&result, 1, 4, info->file);
+        bytesRead = fRead(&result, 1, sizeof(int), info->file);
     }
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
@@ -240,12 +246,12 @@ inline int64 ReadInt64(FileInfo *info)
     int64 result  = 0;
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
-        bytesRead = 8;
-        result    = *info->fileData;
-        info->fileData++;
+        bytesRead = sizeof(int64);
+        result    = *(int64 *)info->fileData;
+        info->fileData += sizeof(int64);
     }
     else {
-        bytesRead = fRead(&result, 1, 8, info->file);
+        bytesRead = fRead(&result, 1, sizeof(int64), info->file);
     }
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);
@@ -258,12 +264,12 @@ inline float ReadSingle(FileInfo *info)
     float result    = 0;
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
-        bytesRead = 4;
-        result    = *info->fileData;
-        info->fileData++;
+        bytesRead = sizeof(float);
+        result    = *(float *)info->fileData;
+        info->fileData += sizeof(float);
     }
     else {
-        bytesRead = fRead(&result, 1, 4, info->file);
+        bytesRead = fRead(&result, 1, sizeof(float), info->file);
     }
     if (info->encrypted)
         DecryptBytes(info, &result, bytesRead);

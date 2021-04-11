@@ -235,7 +235,7 @@ typedef struct {
     int (*GetSFX)(const char *path);
     int (*PlaySFX)(ushort sfx, int loop, int pan);
     void (*StopSFX)(ushort sfx);
-    int (*PlayMusic)(const char *filename, uint slot, int a3, uint loopPoint, bool32 loadASync);
+    int (*PlayStream)(const char *filename, uint slot, int a3, uint loopPoint, bool32 loadASync);
     int (*SetChannelAttributes)(byte slot, float volume, float pan, float playbackSpeed);
     void (*StopChannel)(byte slot);
     void (*PauseChannel)(byte slot);

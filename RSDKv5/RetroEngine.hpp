@@ -117,8 +117,20 @@ enum GameRegions {
 //#include <vorbis/vorbisfile.h>
 #endif
 
-
+//Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
 #define RETRO_REV02 (1)
+
+#define DEFAULT_SCREEN_XSIZE (424)
+#define DEFAULT_FULLSCREEN   false
+#define RETRO_USING_MOUSE
+#define RETRO_USING_TOUCH
+
+// this macro defines the touch device read by the game (UWP requires DIRECT)
+#if RETRO_PLATFORM == RETRO_UWP
+#define RETRO_TOUCH_DEVICE 0
+#else
+#define RETRO_TOUCH_DEVICE 1
+#endif
 
 enum EngineStates {
     ENGINESTATE_LOAD,
@@ -161,6 +173,7 @@ enum SeverityModes {
 #include "Collision.hpp"
 #include "Scene.hpp"
 #include "Sprite.hpp"
+#include "Video.hpp"
 #include "Userdata.hpp"
 #include "Debug.hpp"
 #include "Link.hpp"
@@ -173,9 +186,6 @@ enum SeverityModes {
 
 struct RetroEngine {
     RetroEngine() {}
-    char gameName[0x80];
-    char gameSubName[0x80];
-    char gameVersion[0x20];
 
     bool32 useExternalCode = true;
 
@@ -244,9 +254,9 @@ void runRetroEngine();
 
 void parseArguments(int argc, char *argv[]);
 
-bool startGameObjects();
+void startGameObjects();
 
-bool LoadGameConfig();
+void LoadGameConfig();
 void InitScriptSystem();
 
 inline void SetEngineState(byte state)

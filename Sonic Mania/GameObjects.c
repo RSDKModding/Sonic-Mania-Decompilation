@@ -1,12 +1,9 @@
 #include "SonicMania.h"
 
 SceneInfo *RSDK_sceneInfo = NULL;
-#if RETRO_USE_PLUS
-char *RSDK_name   = NULL;
-SKUInfo *RSDK_sku = NULL;
-#endif
-#if !RETRO_USE_PLUS
 EngineInfo *RSDK_info;
+#if RETRO_USE_PLUS
+SKUInfo *RSDK_sku = NULL;
 #endif
 ControllerState *RSDK_controller = NULL;
 AnalogState *RSDK_stickL         = NULL;
@@ -40,12 +37,9 @@ void LinkGameLogicDLL(GameInfo *info)
         memcpy(&User, info->userdataPtrs, sizeof(UserFunctionTable));
 #endif
 
-#if RETRO_USE_PLUS
-    RSDK_name = info->gameName;
-    RSDK_sku  = info->currentSKU;
-#endif
-#if !RETRO_USE_PLUS
     RSDK_info = info->engineInfo;
+#if RETRO_USE_PLUS
+    RSDK_sku  = info->currentSKU;
 #endif
     RSDK_sceneInfo  = info->sceneInfo;
     RSDK_controller = info->controller;

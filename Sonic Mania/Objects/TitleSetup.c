@@ -316,12 +316,12 @@ void TitleSetup_Unknown12(void)
         RSDK.InitSceneLoad();
         RSDK.StopChannel(Music->slotID);
         if (TitleSetup->altMusic) {
-            RSDK.PlayMusic("IntroTee.ogg", Music->slotID, 0, 0, false);
+            RSDK.PlayStream("IntroTee.ogg", Music->slotID, 0, 0, false);
             RSDK.LoadVideo("Mania.ogv", 1.8, TitleSetup_IntroCallback);
             TitleSetup->altMusic = 0;
         }
         else {
-            RSDK.PlayMusic("IntroHP.ogg", Music->slotID, 0, 0, false);
+            RSDK.PlayStream("IntroHP.ogg", Music->slotID, 0, 0, false);
             RSDK.LoadVideo("Mania.ogv", 0, TitleSetup_IntroCallback);
             TitleSetup->altMusic = true;
         }

@@ -87,6 +87,8 @@ struct InputDevice {
 
     SDL_GameController *controllers[PLAYER_COUNT];
 
+    int mouseHideTimer = 0;
+
     void ProcessInput();
 };
 

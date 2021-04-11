@@ -59,6 +59,7 @@
     <ClCompile Include="Userdata.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RetroEngine.cpp" />
+    <ClCompile Include="Video.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\iniparser\dictionary.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="unistd.h" />
     <ClInclude Include="Userdata.hpp" />
     <ClInclude Include="RetroEngine.hpp" />
+    <ClInclude Include="Video.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RSDKv5.rc" />

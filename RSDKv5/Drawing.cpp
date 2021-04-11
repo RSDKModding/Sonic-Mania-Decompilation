@@ -6,7 +6,6 @@ ushort blendLookupTable[BLENDTABLE_SIZE];
 ushort subtractLookupTable[BLENDTABLE_SIZE];
 
 GFXSurface gfxSurface[SURFACE_MAX];
-byte graphicData[GFXDATA_MAX];
 
 int pixWidth = 424;
 int cameraCount  = 0;
@@ -43,7 +42,7 @@ bool32 InitRenderDevice()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(engine.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
+    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
                                      SDL_WINDOW_ALLOW_HIGHDPI);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
@@ -258,7 +257,7 @@ void UpdateWindow()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(engine.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
+    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
                                      SDL_WINDOW_ALLOW_HIGHDPI);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);

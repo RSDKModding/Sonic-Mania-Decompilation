@@ -166,7 +166,7 @@ void Music_PlayMusicTrack(byte trackID)
 
     RSDK.StopChannel(Music->slotID);
     Music->activeTrack = trackID;
-    Music->slotID      = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+    Music->slotID      = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 #if RETRO_USE_PLUS
     if (globals->vapeMode)
         RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
@@ -184,7 +184,7 @@ void Music_PlayTrack(byte trackID)
         RSDK.StopChannel(Music->slotID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
-        Music->slotID      = RSDK.PlayMusic(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
+        Music->slotID      = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
             RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
@@ -198,7 +198,7 @@ void Music_PlayTrack(byte trackID)
         RSDK.StopChannel(Music->slotID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
-        Music->slotID      = RSDK.PlayMusic(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
+        Music->slotID      = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
             RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
@@ -214,7 +214,7 @@ void Music_Unknown1(EntityMusic *entity)
     RSDK.StopChannel(Music->slotID);
     Music->activeTrack = 0;
     Music->dword244    = 0;
-    Music->slotID      = RSDK.PlayMusic(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
+    Music->slotID      = RSDK.PlayStream(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
 
 #if RETRO_USE_PLUS
     if (globals->vapeMode)
@@ -366,7 +366,7 @@ void Music_Unknown7(EntityMusic *entity)
                     Music->activeTrack = ptr->trackID;
                     if (flag)
                         ptr->field_84 = 0;
-                    Music->slotID = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+                    Music->slotID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                     if (ptr->field_84) {
 #if RETRO_USE_PLUS
                         RSDK.SetChannelAttributes(Music->slotID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
@@ -387,7 +387,7 @@ void Music_Unknown7(EntityMusic *entity)
                 Music->dword250    = -1;
                 if (flag)
                     Music->dword244 = 0;
-                Music->slotID = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+                Music->slotID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                 if (Music->dword244) {
 #if RETRO_USE_PLUS 
                     RSDK.SetChannelAttributes(Music->slotID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
@@ -541,7 +541,7 @@ void Music_State_TransitionTrack(void)
         RSDK.StopChannel(Music->slotID);
         Music->activeTrack = Music->dword250;
         Music->dword244    = 0;
-        Music->slotID      = RSDK.PlayMusic(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+        Music->slotID      = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
             RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);

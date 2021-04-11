@@ -66,7 +66,6 @@ void GenerateCRC(uint *id, char *fileName);
     GenerateHash(hash, strlen(hashBuffer))
 #define HASH_COPY(dst, src) memcpy(dst, src, 0x10)
 
-extern char textBuffer[0x400];
 inline void SetText(TextInfo *textInfo, char *text, uint size)
 {
     if (text) {
@@ -121,7 +120,7 @@ inline void GetCString(char *dest, TextInfo *info)
     if (!info->text)
         return;
 
-    char* text = textBuffer;
+    char* text = (char*)"";
     if (dest)
         text = dest;
     int textLen = 0x400;

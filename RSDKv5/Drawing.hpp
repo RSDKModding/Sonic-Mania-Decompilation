@@ -3,7 +3,6 @@
 
 #define SPRITESHEETS_MAX (16)
 #define SURFACE_MAX      (0x40)
-#define GFXDATA_MAX      (0x200000)
 
 #if RETRO_REV02
 #define SCREEN_MAX (0x4)
@@ -87,7 +86,6 @@ extern ushort blendLookupTable[BLENDTABLE_SIZE];
 extern ushort subtractLookupTable[BLENDTABLE_SIZE];
 
 extern GFXSurface gfxSurface[SURFACE_MAX];
-extern byte graphicData[GFXDATA_MAX];
 
 extern int pixWidth;
 extern int cameraCount;
