@@ -342,8 +342,8 @@ void InitGFXSystem()
     GEN_HASH("TileBuffer", hash);
     gfxSurface[0].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[0].hash, hash, 4 * sizeof(int));
-    gfxSurface[0].width    = 16;
-    gfxSurface[0].height   = 0x4000;
+    gfxSurface[0].width    = TILE_SIZE;
+    gfxSurface[0].height   = 0x40000;
     gfxSurface[0].lineSize = 4;
     gfxSurface[0].dataPtr  = tilesetGFXData;
 
@@ -351,7 +351,7 @@ void InitGFXSystem()
     gfxSurface[1].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[1].hash, hash, 4 * sizeof(int));
     gfxSurface[1].width    = 8;
-    gfxSurface[1].height   = 0x400;
+    gfxSurface[1].height   = 0x400; // 128 chars
     gfxSurface[1].lineSize = 3;
     gfxSurface[1].dataPtr  = engineTextBuffer;
 }
@@ -393,36 +393,37 @@ void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count)
     }
 }
 
-void FillScreen(int colour, int a2, int a3, int a4)
+void FillScreen(int colour, int redAlpha, int greenAlpha, int blueAlpha)
 {
-    a2 = minVal(0xFF, a2);
-    a2 = maxVal(0x00, a2);
+    redAlpha = minVal(0xFF, redAlpha);
+    redAlpha = maxVal(0x00, redAlpha);
 
-    a3 = minVal(0xFF, a3);
-    a3 = maxVal(0x00, a3);
+    greenAlpha = minVal(0xFF, greenAlpha);
+    greenAlpha = maxVal(0x00, greenAlpha);
 
-    a4 = minVal(0xFF, a4);
-    a4 = maxVal(0x00, a4);
+    blueAlpha = minVal(0xFF, blueAlpha);
+    blueAlpha = maxVal(0x00, blueAlpha);
 
-    if (a2 + a3 + a4) {
-        validDraw    = true;
-        ushort a2Val = blendLookupTable[BLENDTABLE_XSIZE * a2 + bIndexes[(colour >> 0x10) & 0xFF]];
-        ushort a3Val = blendLookupTable[BLENDTABLE_XSIZE * a3 + bIndexes[(colour >> 0x08) & 0xFF]];
-        ushort a4Val = blendLookupTable[BLENDTABLE_XSIZE * a4 + bIndexes[(colour >> 0x00) & 0xFF]];
+    if (redAlpha + greenAlpha + blueAlpha) {
+        validDraw       = true;
+        ushort redVal   = blendLookupTable[BLENDTABLE_XSIZE * redAlpha + bIndexes[(colour >> 0x10) & 0xFF]];
+        ushort greenVal = blendLookupTable[BLENDTABLE_XSIZE * greenAlpha + bIndexes[(colour >> 0x08) & 0xFF]];
+        ushort blueVal  = blendLookupTable[BLENDTABLE_XSIZE * blueAlpha + bIndexes[(colour >> 0x00) & 0xFF]];
 
-        ushort *a2Ptr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - a2)];
-        ushort *a3Ptr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - a3)];
-        ushort *a4Ptr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - a4)];
+        ushort *redPtr   = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - redAlpha)];
+        ushort *greenPtr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - greenAlpha)];
+        ushort *bluePtr  = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - blueAlpha)];
+
 
         int cnt = currentScreen->height * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
             ushort px = currentScreen->frameBuffer[id];
 
-            int r = a2Val + a2Ptr[px >> 11];
-            int g = a3Val + a3Ptr[(px >> 6) & 0x1F];
-            int b = a4Val + a4Ptr[px & 0x1F];
+            int r = redPtr[(px & 0xF800) >> 11] + redVal;
+            int g = greenPtr[(px & 0x7E0) >> 6] + greenVal;
+            int b = bluePtr[px & 0x1F] + blueVal;
 
-            currentScreen->frameBuffer[id] = (r << 11) | (g << 6) | (b);
+            currentScreen->frameBuffer[id] = (b) | (g << 6) | (r << 11);
         }
     }
 }
@@ -1088,14 +1089,14 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
                 int w = width;
                 while (w--) {
                     ushort finalColour = 0;
-                    if ((*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
+                    if ((*frameBufferPtr & 0xF800) - (subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
                         finalColour = 0;
                     else
-                        finalColour = (ushort)(*frameBufferPtr & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11);
-                    int v12 = (*frameBufferPtr & 0x7E0) - ((ushort)subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
+                        finalColour = (*frameBufferPtr & 0xF800) - (subBlendTable[(colour16 & 0xF800) >> 11] << 11);
+                    int v12 = (*frameBufferPtr & 0x7E0) - (subBlendTable[(colour16 & 0x7E0) >> 6] << 6);
                     if (v12 > 0)
                         finalColour |= v12;
-                    int v13 = (*frameBufferPtr & (BLENDTABLE_XSIZE - 1)) - (ushort)subBlendTable[colour16 & (BLENDTABLE_XSIZE - 1)];
+                    int v13 = (*frameBufferPtr & 0x1F) - subBlendTable[colour16 & 0x1F];
                     if (v13 > 0)
                         finalColour |= v13;
                     *frameBufferPtr = finalColour;

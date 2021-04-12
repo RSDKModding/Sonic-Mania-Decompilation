@@ -277,10 +277,10 @@ void SignPost_State_CompetitionFinish(void)
             EntityZone *zone            = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
             zone->screenID              = 4;
             zone->timer                 = 0;
-            zone->fadeTimer             = 10;
+            zone->fadeSpeed             = 10;
             zone->fadeColour            = 0;
-            zone->state                 = Zone_Unknown15;
-            zone->stateDraw             = Zone_Unknown12;
+            zone->state                 = Zone_State_Fadeout_Unknown;
+            zone->stateDraw             = Zone_StateDraw_Fadeout;
             zone->visible               = 1;
             zone->drawOrder             = 15;
         }

@@ -265,16 +265,16 @@ typedef struct {
     int scrollDelay;
     int skidding;
     int pushing;
-    bool32 underwater;
-    int groundedStore;
-    int invertGravity;
-    int isChibi;
-    int forceTransform;
+    int underwater;        // 0 = not in water, 1 = in palette water, else water entityID
+    bool32 groundedStore;  // stored grounded state
+    bool32 invertGravity;  // FBZ magnet flip
+    bool32 isChibi;        // MMZ Chibi form flag
+    bool32 forceTransform; // force transform flag
     int superState;
     int superSecondTimer;
     int superBlendAmount;
     int superBlendDirection;
-    int sidekick;
+    bool32 sidekick;
     int scoreBonus;
     int cameraOffset;
     int killFlagA;
@@ -298,7 +298,7 @@ typedef struct {
     StateMachine(inputState2);
     StateMachine(inputState);
     int controllerID;
-    int glideTimer;
+    int controlLock;
     int up;
     int down;
     int left;
@@ -312,10 +312,7 @@ typedef struct {
     int flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;
-    char hurtFlag;
-    char field_1E9;
-    char field_1EA;
-    char field_1EB;
+    byte hurtFlag;
     bool32 forceJumpIn;
 #if RETRO_USE_PLUS
     bool32 isGhost;

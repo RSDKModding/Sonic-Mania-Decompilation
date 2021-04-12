@@ -176,14 +176,14 @@ void Player_LateUpdate(void)
         entity->interaction     = false;
         entity->tileCollisions  = false;
         if (globals->gameMode != MODE_COMPETITION)
-            entity->active = ACTIVE_NORMAL;
+            entity->active = ACTIVE_ALWAYS;
         entity->shield     = SHIELD_NONE;
         entity->killFlagA  = 0;
         entity->killFlagB  = 0;
         entity->underwater = false;
         Player_ChangePhysicsState(entity);
         Entity *powerup = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(entity));
-        RSDK.ResetEntityPtr(powerup, 0, 0);
+        RSDK.ResetEntityPtr(powerup, TYPE_BLANK, NULL);
         if (entity->hurtFlag == 1) {
             RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
         }
@@ -1420,7 +1420,7 @@ void Player_HandleDeath(EntityPlayer *player)
         Player->jumpInDelay = 0;
         EntityDust *dust    = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player->position.x, player->position.y);
         ScreenInfo *screen  = RSDK_screens;
-        dust->visible       = 0;
+        dust->visible       = false;
         dust->active        = ACTIVE_NEVER;
         dust->isPermament   = true;
         dust->position.y    = (screen->position.y - 128) << 16;
@@ -1629,7 +1629,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
                         RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                        RSDK_sceneInfo->timeEnabled = 0;
+                        RSDK_sceneInfo->timeEnabled = false;
                     }
                 }
 
@@ -1664,7 +1664,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
                         RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                        RSDK_sceneInfo->timeEnabled = 0;
+                        RSDK_sceneInfo->timeEnabled = false;
                     }
 
                     if (player->objectID == Player->objectID) {
@@ -1787,7 +1787,7 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
         case 0:
         default: return false;
         case 1: {
-            player->glideTimer    = 0;
+            player->controlLock    = 0;
             player->collisionMode = CMODE_FLOOR;
 
             int colPos[2];
@@ -1822,14 +1822,14 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
             return 1;
         }
         case 2:
-            player->glideTimer = 0;
+            player->controlLock = 0;
             if (player->left && player->onGround) {
                 player->groundVel  = -0x8000;
                 player->position.x = 0;
             }
             return 2;
         case 3:
-            player->glideTimer = 0;
+            player->controlLock = 0;
             if (player->right && player->onGround)
                 player->groundVel = 0x8000;
             return 3;
@@ -1851,7 +1851,7 @@ bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *e, Hitbox *enti
         otherHitbox = playerHitbox;
     if (!RSDK.CheckObjectCollisionPlatform(entity, entityHitbox, player, otherHitbox, true))
         return false;
-    player->glideTimer    = 0;
+    player->controlLock    = 0;
     player->collisionMode = CMODE_FLOOR;
 
     int colPos[2];
@@ -2339,22 +2339,10 @@ void Player_HandleGroundMovement(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->glideTimer > 0) {
-        entity->glideTimer--;
+    if (entity->controlLock > 0) {
+        entity->controlLock--;
         if (!entity->invertGravity) {
             entity->groundVel += RSDK.Sin256(entity->angle) << 13 >> 8;
-            byte cmode = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-            if (cmode <= CMODE_ROOF) {
-                if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                    if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                        entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                        entity->onGround      = false;
-                        entity->angle         = 0;
-                        entity->collisionMode = CMODE_FLOOR;
-                        entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                    }
-                }
-            }
         }
     }
     else {
@@ -2420,55 +2408,17 @@ void Player_HandleGroundMovement(void)
 
                 if (entity->right) {
                     if (!entity->left) {
-                        if (entity->angle > 0xC0 && entity->angle < 0xE4 && entity->groundVel > -0x20000) {
-                            if (entity->groundVel >= -0x28000) {
-                                entity->glideTimer = 30;
-                                byte cmode         = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-                                if (cmode <= CMODE_ROOF) {
-                                    if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                                        if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                                            entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                                            entity->onGround      = false;
-                                            entity->angle         = 0;
-                                            entity->collisionMode = CMODE_FLOOR;
-                                            entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                                        }
-                                    }
-                                }
+                        if (entity->angle > 0xC0 && entity->angle < 0xE4) {
+                            if (entity->groundVel > -0x20000 && entity->groundVel < 0x28000) {
+                                entity->controlLock = 30;
                             }
                         }
                     }
                 }
                 else if (entity->left) {
-                    if (entity->angle > 0x1C && entity->angle < 0x40 && entity->groundVel > -0x28000) {
-                        if (entity->groundVel <= 0x20000) {
-                            entity->glideTimer = 30;
-                            byte cmode         = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-                            if (cmode <= CMODE_ROOF) {
-                                if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                                    if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                                        entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                                        entity->onGround      = false;
-                                        entity->angle         = 0;
-                                        entity->collisionMode = CMODE_FLOOR;
-                                        entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else {
-                    byte cmode = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-                    if (cmode <= CMODE_ROOF) {
-                        if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                            if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                                entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                                entity->onGround      = false;
-                                entity->angle         = 0;
-                                entity->collisionMode = CMODE_FLOOR;
-                                entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                            }
+                    if (entity->angle > 0x1C && entity->angle < 0x40) {
+                        if (entity->groundVel > -0x28000 && entity->groundVel < 0x20000) {
+                            entity->controlLock = 30;
                         }
                     }
                 }
@@ -2490,49 +2440,29 @@ void Player_HandleGroundMovement(void)
                 if (entity->groundVel > 0x2000 || entity->groundVel < -0x2000)
                     entity->groundVel += RSDK.Sin256(entity->angle) << 13 >> 8;
 
-                if ((entity->angle <= 0xC0 || entity->angle >= 0xE4) && (entity->angle <= 0x1C || entity->angle >= 0x40)) {
-                    byte cmode = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-                    if (cmode <= CMODE_ROOF) {
-                        if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                            if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                                entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                                entity->onGround      = false;
-                                entity->angle         = 0;
-                                entity->collisionMode = CMODE_FLOOR;
-                                entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                            }
-                        }
+                if (entity->angle > 0xC0 && entity->angle < 0xE4) {
+                    if (entity->groundVel > -0x10000 && entity->groundVel < 0x10000) {
+                        entity->controlLock = 30;
                     }
                 }
-                else if (entity->groundVel <= -0x10000) {
-                    byte cmode = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-                    if (cmode <= CMODE_ROOF) {
-                        if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                            if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                                entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                                entity->onGround      = false;
-                                entity->angle         = 0;
-                                entity->collisionMode = CMODE_FLOOR;
-                                entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                            }
-                        }
+                if (entity->angle > 0x1C && entity->angle < 0x40) {
+                    if (entity->groundVel > -0x10000 && entity->groundVel < 0x10000) {
+                        entity->controlLock = 30;
                     }
                 }
-                else if (entity->groundVel >= -0x10000) {
-                    entity->glideTimer = 30;
+            }
+        }
+    }
 
-                    byte cmode = entity->collisionMode - 1; // makes CMODE_FLOOR 0xFF so only non-floor modes are checked
-                    if (cmode <= CMODE_ROOF) {
-                        if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                            if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                                entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                                entity->onGround      = false;
-                                entity->angle         = 0;
-                                entity->collisionMode = CMODE_FLOOR;
-                                entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-                            }
-                        }
-                    }
+    if (!entity->invertGravity) {
+        if (entity->collisionMode && entity->collisionMode <= CMODE_RWALL) {
+            if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
+                if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
+                    entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
+                    entity->onGround      = false;
+                    entity->angle         = 0;
+                    entity->collisionMode = CMODE_FLOOR;
+                    entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
                 }
             }
         }
@@ -2655,7 +2585,7 @@ void Player_HandleAirFriction(void)
 }
 void Player_StartJump(EntityPlayer *entity)
 {
-    entity->glideTimer = 0;
+    entity->controlLock = 0;
     entity->onGround   = 0;
     if (entity->collisionMode == CMODE_FLOOR && entity->state != Player_State_Roll)
         entity->position.y += entity->cameraOffset;
@@ -3408,7 +3338,7 @@ void Player_State_Ground(void)
                 }
             }
             else {
-                if (((entity->angle < 32 || entity->angle > 224) && !entity->collisionMode) || (entity->invertGravity && entity->angle == 128)) {
+                if (((entity->angle < 0x20 || entity->angle > 0xE0) && !entity->collisionMode) || (entity->invertGravity && entity->angle == 0x80)) {
                     if (entity->up) {
                         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_LOOKUP, &entity->playerAnimData, true, 1);
                         entity->timer = 0;
@@ -3509,10 +3439,10 @@ void Player_State_ForceRoll(void)
     Player_HandleGroundRotation();
     bool32 left  = entity->left;
     bool32 right = entity->right;
-    if (entity->glideTimer > 0) {
+    if (entity->controlLock > 0) {
         entity->left  = 0;
         entity->right = 0;
-        entity->glideTimer--;
+        entity->controlLock--;
     }
     Player_HandleRollDeceleration();
     entity->left        = left;
@@ -3543,10 +3473,10 @@ void Player_State_RollLock(void)
     Player_HandleGroundRotation();
     bool32 left  = entity->left;
     bool32 right = entity->right;
-    if (entity->glideTimer > 0) {
+    if (entity->controlLock > 0) {
         entity->left  = 0;
         entity->right = 0;
-        entity->glideTimer--;
+        entity->controlLock--;
     }
     Player_HandleRollDeceleration();
     entity->left        = left;
@@ -3890,7 +3820,7 @@ void Player_State_Hit(void)
             entity->groundVel += 0x20000;
         }
         entity->pushing    = 0;
-        entity->glideTimer = 0;
+        entity->controlLock = 0;
         if (entity->camera)
             entity->camera->field_94 = 0;
         entity->jumpAbilityTimer = 0;
@@ -4054,7 +3984,7 @@ void Player_State_BubbleBounce(void)
             Player_HandleAirMovement();
         }
         else {
-            entity->glideTimer = 0;
+            entity->controlLock = 0;
             int vel            = 0;
             if (!entity->underwater)
                 vel = entity->gravityStrength + 0x78000;
@@ -4748,7 +4678,7 @@ void Player_State_MightyHammerDrop(void)
 {
     RSDK_THIS(Player);
     if (entity->onGround) {
-        entity->glideTimer = 0;
+        entity->controlLock = 0;
         int vel            = 0x10000;
         if (!entity->underwater)
             vel = 0x20000;
@@ -4909,8 +4839,8 @@ void Player_State_RayGlide(void)
         }
     }
 
-    if (entity->glideTimer) {
-        entity->glideTimer--;
+    if (entity->controlLock) {
+        entity->controlLock--;
     }
     else if ((!entity->right || entity->abilityValue != 16) && entity->direction == FLIP_X) {
         if (entity->left && entity->abilityValue == 112 && entity->rotation == 1) {
@@ -5312,7 +5242,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
     thisEntity->onGround       = 0;
     thisEntity->tileCollisions = true;
     thisEntity->interaction    = true;
-    thisEntity->glideTimer     = 0;
+    thisEntity->controlLock     = 0;
     thisEntity->angle          = 0;
     if (!thisEntity->sidekick) {
         thisEntity->inputState = Player_GetP1Inputs;
@@ -5502,7 +5432,7 @@ void Player_State_WaterSlide(void)
 
         int vel = RSDK.Sin256(entity->angle) << 13 >> 8;
         entity->groundVel += vel;
-        entity->glideTimer = 30;
+        entity->controlLock = 30;
         entity->direction  = vel + entity->groundVel < 0;
         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLUME, &entity->playerAnimData, 0, 0);
 
@@ -5773,7 +5703,7 @@ void Player_RayJumpAbility(void)
         }
         entity->velocity.y >>= 1;
         entity->abilityValue  = 64;
-        entity->glideTimer    = 0;
+        entity->controlLock    = 0;
         entity->maxGlideSpeed = abs(entity->velocity.x);
         entity->state         = Player_State_RayGlide;
         entity->abilityTimer  = 256;
@@ -5808,7 +5738,7 @@ void Player_GetP1Inputs(void)
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_DEV && controller->keyZ.press) {
                 Zone->swapGameMode = true;
-                RSDK.PlaySFX(Player->sfx_Transform2, 0, 254);
+                RSDK.PlaySFX(Player->sfx_Transform2, 0, 0xFE);
                 Zone_StartFadeOut(64, 0xF0F0F0);
             }
             if (globals->gameMode == MODE_ENCORE && RSDK_controller[entity->controllerID].keyY.press) {
@@ -5817,11 +5747,11 @@ void Player_GetP1Inputs(void)
                         return;
                     }
                     else {
-                        RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
+                        RSDK.PlaySFX(Player->sfx_SwapFail, 0, 0xFF);
                     }
                 }
                 else {
-                    RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
+                    RSDK.PlaySFX(Player->sfx_SwapFail, 0, 0xFF);
                 }
             }
 #endif
@@ -5986,7 +5916,7 @@ void Player_GetP2Inputs(void)
                     entity->jumpAbility         = 0;
                     Player->p2UnknownInputTimer = 0;
                 }
-                if (entity->glideTimer > 0) {
+                if (entity->controlLock > 0) {
                     if (abs(entity->groundVel) < 0x8000)
                         entity->inputState = Player_GetP2NoInput;
                 }
@@ -5994,7 +5924,7 @@ void Player_GetP2Inputs(void)
             else {
                 if (entity->position.y - Player->curFlyCarryPos.y <= 0x200000) {
                     Player->p2UnknownInputTimer = 0;
-                    if (entity->glideTimer > 0) {
+                    if (entity->controlLock > 0) {
                         if (abs(entity->groundVel) < 0x8000)
                             entity->inputState = Player_GetP2NoInput;
                     }
@@ -6013,7 +5943,7 @@ void Player_GetP2Inputs(void)
                         entity->jumpAbility         = 0;
                         Player->p2UnknownInputTimer = 0;
                     }
-                    if (entity->glideTimer > 0) {
+                    if (entity->controlLock > 0) {
                         if (abs(entity->groundVel) < 0x8000)
                             entity->inputState = Player_GetP2NoInput;
                     }
@@ -6035,7 +5965,7 @@ void Player_GetP2NoInput(void)
     entity->right     = false;
     entity->jumpPress = false;
     entity->jumpHold  = false;
-    if (entity->glideTimer == 0 && entity->onGround && entity->groundVel < 0x4000) {
+    if (entity->controlLock == 0 && entity->onGround && entity->groundVel < 0x4000) {
         entity->groundVel           = 0;
         entity->inputState          = Player_GetP2InputUnknown;
         Player->p2UnknownInputTimer = 1;

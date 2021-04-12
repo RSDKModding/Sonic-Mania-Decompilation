@@ -661,10 +661,10 @@ void ActClear_LoadNextScene(void)
                 EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
                 zone->screenID   = 4;
                 zone->timer      = 0;
-                zone->fadeTimer  = 10;
+                zone->fadeSpeed  = 10;
                 zone->fadeColour = 0x000000;
-                zone->state      = Zone_Unknown13;
-                zone->stateDraw  = Zone_Unknown12;
+                zone->state      = Zone_State_Fadeout;
+                zone->stateDraw  = Zone_StateDraw_Fadeout;
                 zone->visible    = true;
                 zone->drawOrder  = 15;
             }
@@ -740,10 +740,10 @@ void ActClear_Unknown9(void)
                 EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
                 zone->screenID   = 4;
                 zone->timer      = 0;
-                zone->fadeTimer  = 10;
+                zone->fadeSpeed  = 10;
                 zone->fadeColour = 0;
-                zone->state      = Zone_Unknown13;
-                zone->stateDraw  = Zone_Unknown12;
+                zone->state      = Zone_State_Fadeout;
+                zone->stateDraw  = Zone_StateDraw_Fadeout;
                 zone->visible    = true;
                 zone->drawOrder  = 15;
             }
@@ -763,10 +763,10 @@ void ActClear_Unknown10(void)
             EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
             zone->screenID   = 4;
             zone->timer      = 0;
-            zone->fadeTimer  = 10;
+            zone->fadeSpeed  = 10;
             zone->fadeColour = 0;
-            zone->state      = Zone_Unknown13;
-            zone->stateDraw  = Zone_Unknown12;
+            zone->state      = Zone_State_Fadeout;
+            zone->stateDraw  = Zone_StateDraw_Fadeout;
             zone->visible    = true;
             zone->drawOrder  = 15;
         }

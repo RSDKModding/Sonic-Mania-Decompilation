@@ -4,35 +4,35 @@ ObjectDebugMode *DebugMode;
 
 void DebugMode_Update(void)
 {
-    EntityDebugMode *entity = (EntityDebugMode *)RSDK_sceneInfo->entity;
+    RSDK_THIS(DebugMode);
 
     bool32 flag = false;
 #if RETRO_USE_PLUS
-    User.SetAchievementStatus(0);
+    User.SetAchievementStatus(false); // Disables Achievements
 #else
     if (!APICallback->achievementsDisabled)
         APICallback->achievementsDisabled = true;
 #endif
     if (Zone)
         Zone->stageFinishCallback = NULL;
-    if (RSDK_controller[0].keyUp.down || (RSDK_stickL[0].vDelta > 0.30000001)) {
+    if (RSDK_controller[0].keyUp.down || (RSDK_stickL[0].vDelta > 0.3)) {
         entity->position.y -= entity->velocity.y;
         flag = true;
     }
-    else if (RSDK_controller[0].keyDown.down || (RSDK_stickL[0].vDelta < -0.30000001)) {
+    else if (RSDK_controller[0].keyDown.down || (RSDK_stickL[0].vDelta < -0.3)) {
         entity->position.y += entity->velocity.y;
         flag = true;
     }
 
-    if (RSDK_controller[0].keyLeft.down || (RSDK_stickL[0].hDelta < -0.30000001)) {
+    if (RSDK_controller[0].keyLeft.down || (RSDK_stickL[0].hDelta < -0.3)) {
         entity->position.x -= entity->velocity.y;
         flag = true;
     }
-    else if (RSDK_controller[0].keyRight.down || (RSDK_stickL[0].hDelta > 0.30000001)) {
+    else if (RSDK_controller[0].keyRight.down || (RSDK_stickL[0].hDelta > 0.3)) {
         entity->position.x += entity->velocity.y;
         flag = true;
     }
-    
+
     if (!flag) {
         entity->velocity.y = 0;
     }
@@ -55,9 +55,9 @@ void DebugMode_Update(void)
         player->velocity.y          = 0;
         player->state               = Player_State_Air;
         player->collisionPlane      = 0;
-        player->tileCollisions      = 1;
-        player->interaction         = 1;
-        player->visible             = 1;
+        player->tileCollisions      = true;
+        player->interaction         = true;
+        player->visible             = true;
         player->drawOrder           = Zone->playerDrawLow;
         RSDK_sceneInfo->timeEnabled = true;
         if (RSDK_sceneInfo->minutes == 9 && RSDK_sceneInfo->seconds == 59 && RSDK_sceneInfo->milliseconds == 99) {
@@ -94,27 +94,21 @@ void DebugMode_Update(void)
     }
 }
 
-void DebugMode_LateUpdate(void)
-{
+void DebugMode_LateUpdate(void) {}
 
-}
-
-void DebugMode_StaticUpdate(void)
-{
-
-}
+void DebugMode_StaticUpdate(void) {}
 
 void DebugMode_Draw(void)
 {
     if (DebugMode->draw[DebugMode->objID])
-         DebugMode->draw[DebugMode->objID]();
+        DebugMode->draw[DebugMode->objID]();
 }
 
-void DebugMode_Create(void* data)
+void DebugMode_Create(void *data)
 {
-    EntityDebugMode *entity = (EntityDebugMode *)RSDK_sceneInfo->entity;
-    entity->active        = ACTIVE_NORMAL;
-    entity->visible         = true;
+    RSDK_THIS(DebugMode);
+    entity->active  = ACTIVE_NORMAL;
+    entity->visible = true;
 }
 
 void DebugMode_StageLoad(void)
@@ -141,18 +135,8 @@ void DebugMode_AddObject(ushort id, void (*draw)(void), void (*spawn)(void))
     }
 }
 
-void DebugMode_EditorDraw(void)
-{
+void DebugMode_EditorDraw(void) {}
 
-}
+void DebugMode_EditorLoad(void) {}
 
-void DebugMode_EditorLoad(void)
-{
-
-}
-
-void DebugMode_Serialize(void)
-{
-
-}
-
+void DebugMode_Serialize(void) {}

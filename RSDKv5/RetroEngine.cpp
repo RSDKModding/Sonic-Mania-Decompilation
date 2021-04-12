@@ -21,6 +21,7 @@ RetroEngine engine  = RetroEngine();
 
 bool32 processEvents()
 {
+    touchMouseData.count = 0;
 #if RETRO_USING_SDL2
     while (SDL_PollEvent(&engine.sdlEvents)) {
         // Main Events
@@ -49,29 +50,21 @@ bool32 processEvents()
 #endif
 
 #ifdef RETRO_USING_MOUSE
-            case SDL_MOUSEMOTION:
-#if RETRO_USING_SDL2
-                if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
-#endif                                                                                     //! RETRO_USING_SDL2
-                    int mx = 0, my = 0;
-                    SDL_GetMouseState(&mx, &my);
-                    touchMouseData.x[0] = mx / (float)engine.windowWidth;
-                    touchMouseData.y[0] = my / (float)engine.windowHeight;
-                    touchMouseData.count = 1;
-#if RETRO_USING_SDL2
-                }
-#endif //! RETRO_USING_SDL2
-                break;
+            /*case SDL_MOUSEMOTION:
+
+                break;*/
             case SDL_MOUSEBUTTONDOWN:
 #if RETRO_USING_SDL2
                 if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
 #endif                                                                                     //! RETRO_USING_SDL2
                     switch (engine.sdlEvents.button.button) {
-                        case SDL_BUTTON_LEFT: touchMouseData.down[0] = true; break;
-                        case SDL_BUTTON_MIDDLE: touchMouseData.down[0] = true; break;
-                        case SDL_BUTTON_RIGHT: touchMouseData.down[0] = true; break;
+                        case SDL_BUTTON_LEFT:
+                            touchMouseData.down[0] = true;
+                            touchMouseData.count   = 1;
+                            break;
+                        //case SDL_BUTTON_MIDDLE: touchMouseData.down[0] = true; break;
+                        //case SDL_BUTTON_RIGHT: touchMouseData.down[0] = true; break;
                     }
-                    touchMouseData.count = 1;
 #if RETRO_USING_SDL2
                 }
 #endif //! RETRO_USING_SDL2
@@ -81,11 +74,13 @@ bool32 processEvents()
                 if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
 #endif                                                                                     //! RETRO_USING_SDL2
                     switch (engine.sdlEvents.button.button) {
-                        case SDL_BUTTON_LEFT: touchMouseData.down[0] = false; break;
-                        case SDL_BUTTON_MIDDLE: touchMouseData.down[0] = false; break;
-                        case SDL_BUTTON_RIGHT: touchMouseData.down[0] = false; break;
+                        case SDL_BUTTON_LEFT:
+                            touchMouseData.down[0] = false;
+                            touchMouseData.count   = 0;
+                            break;
+                        //case SDL_BUTTON_MIDDLE: touchMouseData.down[0] = false; break;
+                        //case SDL_BUTTON_RIGHT: touchMouseData.down[0] = false; break;
                     }
-                    touchMouseData.count = 1;
 #if RETRO_USING_SDL2
                 }
 #endif //! RETRO_USING_SDL2

@@ -654,18 +654,18 @@ void LoadTileConfig(char *filepath)
                 for (int c = 0; c < TILE_SIZE; ++c) {
                     int h = collisionMasks[p][t].lWallMasks[c];
                     if (h == 255)
-                        collisionMasks[p][t + off].rWallMasks[c] = 1;
+                        collisionMasks[p][t + off].rWallMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].rWallMasks[c] = 0xF - h;
 
                     h = collisionMasks[p][t].rWallMasks[c];
                     if (h == 255)
-                        collisionMasks[p][t + off].lWallMasks[c] = 1;
+                        collisionMasks[p][t + off].lWallMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].lWallMasks[c] = 0xF - h;
 
-                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t].floorMasks[c];
-                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t].roofMasks[c];
+                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t].floorMasks[0xF - c];
+                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t].roofMasks[0xF - c];
                 }
             }
 
@@ -681,16 +681,16 @@ void LoadTileConfig(char *filepath)
                 for (int c = 0; c < TILE_SIZE; ++c) {
                     int h = collisionMasks[p][t].roofMasks[c];
                     if (h == 255)
-                        collisionMasks[p][t + off].floorMasks[c] = 1;
+                        collisionMasks[p][t + off].floorMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].floorMasks[c] = 0xF - h;
 
-                    collisionMasks[p][t + off].lWallMasks[c] = collisionMasks[p][t].rWallMasks[c];
-                    collisionMasks[p][t + off].rWallMasks[c] = collisionMasks[p][t].lWallMasks[c];
+                    collisionMasks[p][t + off].lWallMasks[c] = collisionMasks[p][t].lWallMasks[0xF - c];
+                    collisionMasks[p][t + off].rWallMasks[c] = collisionMasks[p][t].rWallMasks[0xF - c];
 
                     h = collisionMasks[p][t].floorMasks[c];
                     if (h == 0xFF)
-                        collisionMasks[p][t + off].roofMasks[c] = 1;
+                        collisionMasks[p][t + off].roofMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].roofMasks[c] = 0xF - h;
                 }
@@ -709,18 +709,18 @@ void LoadTileConfig(char *filepath)
                 for (int c = 0; c < TILE_SIZE; ++c) {
                     int h = collisionMasks[p][t + offY].lWallMasks[c];
                     if (h == 255)
-                        collisionMasks[p][t + off].rWallMasks[c] = 1;
+                        collisionMasks[p][t + off].rWallMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].rWallMasks[c] = 0xF - h;
 
                     h = collisionMasks[p][t + offY].rWallMasks[c];
                     if (h == 255)
-                        collisionMasks[p][t + off].lWallMasks[c] = 1;
+                        collisionMasks[p][t + off].lWallMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].lWallMasks[c] = 0xF - h;
 
-                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t + offY].floorMasks[c];
-                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t + offY].roofMasks[c];
+                    collisionMasks[p][t + off].floorMasks[c] = collisionMasks[p][t + offY].floorMasks[0xF - c];
+                    collisionMasks[p][t + off].roofMasks[c]  = collisionMasks[p][t + offY].roofMasks[0xF - c];
                 }
             }
         }
@@ -822,7 +822,7 @@ void ProcessParallax(TileLayer *layer)
                 ++scrollInfo;
             }
 
-            short posY = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
+            short posY = ((int)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
             if (posY < 0)
                 posY += pixelHeight;
 
@@ -880,7 +880,7 @@ void ProcessParallax(TileLayer *layer)
                 ++scrollInfo;
             }
 
-            short posX = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 16) % pixelWidth;
+            short posX = ((int)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 16) % pixelWidth;
             if (posX < 0)
                 posX += pixelWidth;
 
@@ -905,11 +905,11 @@ void ProcessParallax(TileLayer *layer)
             break;
         }
         case LAYER_ROTOZOOM: {
-            short posX = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 0x10) % pixelWidth;
+            short posX = ((int)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000) >> 0x10) % pixelWidth;
             if (posX < 0)
                 posX += pixelWidth;
 
-            short posY = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 0x10) % pixelHeight;
+            short posY = ((int)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 0x10) % pixelHeight;
             if (posY < 0)
                 posY += pixelHeight;
 
@@ -932,7 +932,7 @@ void ProcessParallax(TileLayer *layer)
                 ++scrollInfo;
             }
 
-            short posY = (((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
+            short posY = ((int)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.y << 8)) & 0xFFFF0000) >> 16) % pixelHeight;
             if (posY < 0)
                 posY += pixelHeight;
 

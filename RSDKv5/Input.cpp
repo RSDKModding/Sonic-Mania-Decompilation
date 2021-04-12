@@ -4,11 +4,14 @@
 InputDevice inputDevice;
 #endif
 
-ControllerState controller[PLAYER_COUNT];
-AnalogState stickL[PLAYER_COUNT];
-AnalogState stickR[PLAYER_COUNT];
-TriggerState triggerL[PLAYER_COUNT];
-TriggerState triggerR[PLAYER_COUNT];
+sbyte activeControllers[PLAYER_COUNT];
+InputDevice *activeInputDevices[PLAYER_COUNT];
+
+ControllerState controller[PLAYER_COUNT + 1];
+AnalogState stickL[PLAYER_COUNT + 1];
+AnalogState stickR[PLAYER_COUNT + 1];
+TriggerState triggerL[PLAYER_COUNT + 1];
+TriggerState triggerR[PLAYER_COUNT + 1];
 TouchMouseData touchMouseData;
 
 #if RETRO_USING_SDL2
@@ -116,22 +119,47 @@ void InputDevice::ProcessInput()
         }
     }
 
-    int mx = 0, my = 0;
-    SDL_GetMouseState(&mx, &my);
+#ifdef RETRO_USING_MOUSE
+#if RETRO_USING_SDL2
+    if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
+#endif                                                                         //! RETRO_USING_SDL2
+        int mx = 0, my = 0;
+        SDL_GetMouseState(&mx, &my);
 
-    if (mx == touchMouseData.x[0] * engine.windowWidth && my == touchMouseData.y[0] * engine.windowHeight) {
-        ++mouseHideTimer;
-        if (mouseHideTimer >= 120) {
-            mouseHideTimer = 0;
-            SDL_ShowCursor(false);
+        if ((mx == touchMouseData.x[0] * engine.windowWidth && my == touchMouseData.y[0] * engine.windowHeight)) {
+            ++inputDevice.mouseHideTimer;
+            if (inputDevice.mouseHideTimer == 120) {
+                SDL_ShowCursor(false);
+            }
         }
+        else {
+            if (inputDevice.mouseHideTimer >= 120)
+                SDL_ShowCursor(true);
+            inputDevice.mouseHideTimer = 0;
+        }
+        touchMouseData.x[0] = mx / (float)engine.windowWidth;
+        touchMouseData.y[0] = my / (float)engine.windowHeight;
+        // touchMouseData.count = 1;
+#if RETRO_USING_SDL2
     }
-    else if (mouseHideTimer >= 120) {
-        mouseHideTimer = 0;
-        SDL_ShowCursor(true);
-    }
+#endif //! RETRO_USING_SDL2
+#endif //! RETRO_USING_MOUSE
 
     if (touchMouseData.count)
         engine.dimTimer = 0;
 #endif
+}
+
+void InitInputDevice()
+{
+    for (int i = 0; i < PLAYER_COUNT; ++i) {
+        activeControllers[i]  = CONT_UNASSIGNED;
+        activeInputDevices[i] = NULL;
+    }
+}
+
+void ProcessInput() {
+
+    inputDevice.ProcessInput();
+
 }

@@ -194,7 +194,7 @@ void Spring_State_Horizontal(void)
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimData.animationID = ANI_WALK;
                 //}
-                player->glideTimer          = 16;
+                player->controlLock          = 16;
                 player->skidding            = 0;
                 player->pushing             = 0;
                 player->direction           = 0;
@@ -233,7 +233,7 @@ void Spring_State_Horizontal(void)
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimData.animationID = ANI_WALK;
                 //}
-                player->glideTimer          = 16;
+                player->controlLock          = 16;
                 player->skidding            = 0;
                 player->pushing             = 0;
                 player->direction           = 1;

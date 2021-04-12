@@ -3,6 +3,16 @@
 
 #define PLAYER_COUNT (4)
 
+enum ControllerIDs {
+    CONT_UNASSIGNED = -2,
+    CONT_AUTOASSIGN = -1,
+    CONT_ANY        = 0,
+    CONT_P1         = 1,
+    CONT_P2         = 2,
+    CONT_P3         = 3,
+    CONT_P4         = 4,
+};
+
 enum ControllerKeys {
     KEY_UP,
     KEY_DOWN,
@@ -108,11 +118,16 @@ inline void controllerClose(byte controllerID)
 }
 #endif
 
-extern ControllerState controller[PLAYER_COUNT];
-extern AnalogState stickL[PLAYER_COUNT];
-extern AnalogState stickR[PLAYER_COUNT];
-extern TriggerState triggerL[PLAYER_COUNT];
-extern TriggerState triggerR[PLAYER_COUNT];
+extern sbyte activeControllers[PLAYER_COUNT];
+extern InputDevice *activeInputDevices[PLAYER_COUNT];
+
+extern ControllerState controller[PLAYER_COUNT + 1];
+extern AnalogState stickL[PLAYER_COUNT + 1];
+extern AnalogState stickR[PLAYER_COUNT + 1];
+extern TriggerState triggerL[PLAYER_COUNT + 1];
+extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
+
+inline int Missing24() { return 0xFFFF; }
 
 #endif

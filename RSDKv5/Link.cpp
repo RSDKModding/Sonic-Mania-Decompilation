@@ -311,8 +311,8 @@ void setupFunctions()
     curSKU.region   = region;
 #else
     gameVerInfo.platform = platform;
-    gameVerInfo.language   = language;
-    gameVerInfo.region     = region;
+    gameVerInfo.language = language;
+    gameVerInfo.region   = region;
 #endif
 
     CalculateTrigAngles();
@@ -562,7 +562,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_Missing21, NullFunc);                    // UserDataUnknown1);
     addToRSDKFunctionTable(FunctionTable_Missing22, NullFunc);                    // UserDataUnknown2);
     addToRSDKFunctionTable(FunctionTable_Missing23, NullFunc);                    // UserDataUnknown3);
-    addToRSDKFunctionTable(FunctionTable_Missing24, NullFunc);                    // UserDataUnknown4);
+    addToRSDKFunctionTable(FunctionTable_Missing24, Missing24);                   
     addToRSDKFunctionTable(FunctionTable_Missing25, NullFunc);                    // UserDataUnknown5);
     addToRSDKFunctionTable(FunctionTable_Missing26, NullFunc);                    // UserDataUnknown6);
     addToRSDKFunctionTable(FunctionTable_AssignControllerID, NullFunc);           // Unknown102);
