@@ -530,11 +530,11 @@ void HUD_GetKeyFrame(Animator *data, int buttonID)
 #if RETRO_USE_PLUS
         int id               = RSDK.ControllerIDForInputID(player->controllerID);
 #else
-        int id = 0;
+        int id = CONT_ANY;
 #endif
         int contID           = player->controllerID;
-        if (id == -2)
-            contID = 1;
+        if (id == CONT_UNASSIGNED)
+            contID = CONT_P1;
 
         int map = 0;
         switch (buttonID) {

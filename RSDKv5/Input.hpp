@@ -130,4 +130,7 @@ extern TouchMouseData touchMouseData;
 
 inline int Missing24() { return 0xFFFF; }
 
+void InitInputDevice();
+void ProcessInput();
+
 #endif

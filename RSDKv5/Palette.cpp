@@ -32,7 +32,6 @@ void LoadPalette(byte paletteID, const char *filename, ushort rowFlags)
                     byte green                           = ReadInt8(&info);
                     byte blue                            = ReadInt8(&info);
                     fullPalette[paletteID][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
-                    printLog(SEVERITY_NONE, "deez NU 0x%X", GetPaletteEntry(paletteID, (r << 4) + c));
                 }
             }
             else {

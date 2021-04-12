@@ -413,6 +413,16 @@ typedef enum { FLIP_NONE, FLIP_X, FLIP_Y, FLIP_XY } FlipFlags;
 typedef enum { TYPE_BLANK } DefaultObjTypes;
 
 typedef enum {
+    CONT_UNASSIGNED = -2,
+    CONT_AUTOASSIGN = -1,
+    CONT_ANY        = 0,
+    CONT_P1         = 1,
+    CONT_P2         = 2,
+    CONT_P3         = 3,
+    CONT_P4         = 4,
+} ControllerIDs;
+
+typedef enum {
     ALIGN_LEFT,
     ALIGN_RIGHT,
     ALIGN_CENTER,

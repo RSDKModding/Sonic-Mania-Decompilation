@@ -84,7 +84,7 @@ void UFO_Player_Create(void *data)
         entity->onGround         = true;
         UFO_Player_ChangeMachState();
         entity->inputState   = UFO_Player_ProcessPlayerControl;
-        entity->controllerID = 0;
+        entity->controllerID = CONT_ANY;
         entity->state        = UFO_Player_StateRun;
         RSDK.SetModelAnimation(UFO_Player->jogModel, &entity->playerData, 128, 0, true, 0);
     }

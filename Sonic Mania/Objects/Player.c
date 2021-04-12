@@ -558,7 +558,7 @@ void Player_Create(void *data)
         entity->drawOrder      = Zone->playerDrawLow;
         entity->scale.x        = 0x200;
         entity->scale.y        = 0x200;
-        entity->controllerID   = entity->playerID;
+        entity->controllerID   = entity->playerID + 1;
         entity->state          = Player_State_Ground;
 
         if (RSDK_sceneInfo->entitySlot && globals->gameMode != MODE_COMPETITION) {
@@ -5717,7 +5717,7 @@ void Player_GetP1Inputs(void)
 {
     RSDK_THIS(Player);
     if (entity->controllerID < PLAYER_MAX) {
-        if (globals->gameMode != MODE_COMPETITION /*|| Announcer[14]*/) {
+        if (globals->gameMode != MODE_COMPETITION || Announcer->dword38) {
             ControllerState *controller = &RSDK_controller[entity->controllerID];
             entity->up                  = controller->keyUp.down;
             entity->down                = controller->keyDown.down;
@@ -5741,7 +5741,7 @@ void Player_GetP1Inputs(void)
                 RSDK.PlaySFX(Player->sfx_Transform2, 0, 0xFE);
                 Zone_StartFadeOut(64, 0xF0F0F0);
             }
-            if (globals->gameMode == MODE_ENCORE && RSDK_controller[entity->controllerID].keyY.press) {
+            if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
                 if (!HUD->field_24 && Player_CheckValidState(entity)) {
                     if (Player_SwapMainPlayer(false)) {
                         return;
@@ -5756,7 +5756,7 @@ void Player_GetP1Inputs(void)
             }
 #endif
 
-            if (entity->controllerID == 0 && RSDK_sceneInfo->debugMode && entity->state != Player_State_Transform && RSDK_controller[0].keyX.press
+            if (entity->controllerID == CONT_P1 && RSDK_sceneInfo->debugMode && entity->state != Player_State_Transform && RSDK_controller[0].keyX.press
                 && globals->gameMode != MODE_TIMEATTACK) {
                 entity->objectID   = DebugMode->objectID;
                 entity->velocity.x = 0;
@@ -5999,7 +5999,7 @@ void Player_GetP2InputUnknown(void)
 void Player_GetP2PlayerInputs(void)
 {
     RSDK_THIS(Player);
-    if (entity->controllerID <= 4) {
+    if (entity->controllerID <= CONT_P4) {
 #if RETRO_USE_PLUS
         if (RSDK.InputIDIsDisconnected(entity->controllerID)) {
 #else

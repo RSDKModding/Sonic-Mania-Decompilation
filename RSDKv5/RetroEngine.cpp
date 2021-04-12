@@ -257,6 +257,9 @@ bool initRetroEngine()
         engine.running = false;
         return false;
     }
+
+    InitInputDevice();
+
     return true;
 }
 void runRetroEngine()
@@ -299,12 +302,12 @@ void runRetroEngine()
 #endif
                     // dim after 5 mins
                     engine.dimLimit = (5 * 60) * engine.refreshRate;
-                    inputDevice.ProcessInput();
+                    ProcessInput();
                     ProcessObjects();
                 }
                 break;
             case ENGINESTATE_REGULAR:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 ProcessSceneTimer();
                 ProcessObjects();
                 ProcessParallaxAutoScroll();
@@ -318,7 +321,7 @@ void runRetroEngine()
                 ProcessObjectDrawLists();
                 break;
             case ENGINESTATE_PAUSED:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 ProcessPausedObjects();
                 for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_PAUSED)
@@ -328,7 +331,7 @@ void runRetroEngine()
                 ProcessObjectDrawLists();
                 break;
             case ENGINESTATE_FROZEN:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 ProcessFrozenObjects();
                 for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_FROZEN)
@@ -353,12 +356,12 @@ void runRetroEngine()
                     val->max   = 1;
                 }
 #endif
-                inputDevice.ProcessInput();
+                ProcessInput();
                 ProcessObjects();
                 sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
                 break;
             case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 if (engine.frameStep) {
                     ProcessSceneTimer();
                     ProcessObjects();
@@ -368,7 +371,7 @@ void runRetroEngine()
                 }
                 break;
             case ENGINESTATE_PAUSED | ENGINESTATE_STEPOVER:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 if (engine.frameStep) {
                     ProcessPausedObjects();
                     ProcessObjectDrawLists();
@@ -376,7 +379,7 @@ void runRetroEngine()
                 }
                 break;
             case ENGINESTATE_FROZEN | ENGINESTATE_STEPOVER:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 if (engine.frameStep) {
                     ProcessFrozenObjects();
                     ProcessObjectDrawLists();
@@ -384,7 +387,7 @@ void runRetroEngine()
                 }
                 break;
             case ENGINESTATE_DEVMENU:
-                inputDevice.ProcessInput();
+                ProcessInput();
                 currentScreen = &screens[0];
                 if (devMenu.state)
                     devMenu.state();
@@ -422,7 +425,7 @@ void runRetroEngine()
                 break;
 #if RETRO_REV02
             case ENGINESTATE_ERRORMSG: {
-                inputDevice.ProcessInput();
+                ProcessInput();
                 if (controller[0].keyStart.down)
                     sceneInfo.state = engine.prevEngineMode;
                 currentScreen = &screens[0];
@@ -432,7 +435,7 @@ void runRetroEngine()
                 break;
             }
             case ENGINESTATE_ERRORMSG_FATAL: {
-                inputDevice.ProcessInput();
+                ProcessInput();
                 currentScreen = &screens[0];
                 if (controller[0].keyStart.down)
                     engine.running = false;

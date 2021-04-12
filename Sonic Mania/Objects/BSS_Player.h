@@ -22,7 +22,7 @@ typedef struct {
     int gravityStrength;
     bool32 sideKick;
     StateMachine(inputState);
-    int field_64;
+    int controllerID;
     bool32 up;
     bool32 down;
     bool32 left;

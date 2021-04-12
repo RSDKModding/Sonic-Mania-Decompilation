@@ -25,7 +25,7 @@ void BSS_Player_Update(void)
         entity->velocity.y += (speed << 12);
         if (entity->gravityStrength >= 0) {
             entity->gravityStrength = 0;
-            entity->onGround   = 1;
+            entity->onGround        = 1;
             if (!entity->sideKick) {
                 if (entity->playerData.animationID == 3)
                     setup->globeSpeed >>= 1;
@@ -39,8 +39,8 @@ void BSS_Player_Update(void)
         }
     }
 
-    int grav                      = (entity->gravityStrength >> 1) - (entity->gravityStrength >> 4);
-    entity->position.y            = grav;
+    int grav           = (entity->gravityStrength >> 1) - (entity->gravityStrength >> 4);
+    entity->position.y = grav;
     if (RSDK_sceneInfo->entitySlot)
         entity->position.y += 0xBA0000;
     else
@@ -70,15 +70,9 @@ void BSS_Player_Update(void)
     RSDK.ProcessAnimation(&entity->tailData);
 }
 
-void BSS_Player_LateUpdate(void)
-{
+void BSS_Player_LateUpdate(void) {}
 
-}
-
-void BSS_Player_StaticUpdate(void)
-{
-
-}
+void BSS_Player_StaticUpdate(void) {}
 
 void BSS_Player_Draw(void)
 {
@@ -88,7 +82,7 @@ void BSS_Player_Draw(void)
     drawPos.y = entity->position.y;
     drawPos.x = RSDK_screens->centerX << 16;
     RSDK.DrawSprite(&entity->playerData, &drawPos, true);
-    
+
     byte charID = globals->playerID & 0xFF;
     if (charID == ID_TAILS && entity->playerData.animationID == 1)
         RSDK.DrawSprite(&entity->tailData, &drawPos, true);
@@ -98,7 +92,7 @@ void BSS_Player_Draw(void)
 #endif
 }
 
-void BSS_Player_Create(void* data)
+void BSS_Player_Create(void *data)
 {
     RSDK_THIS(BSS_Player);
     if (!RSDK_sceneInfo->inEditor) {
@@ -112,20 +106,15 @@ void BSS_Player_Create(void* data)
                 entity->spriteIndex = BSS_Player->tailsSpriteIndex;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailData, true, 0);
                 break;
-            case ID_KNUCKLES:
-                entity->spriteIndex = BSS_Player->knuxSpriteIndex; break;
+            case ID_KNUCKLES: entity->spriteIndex = BSS_Player->knuxSpriteIndex; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY:
-                entity->spriteIndex = BSS_Player->mightySpriteIndex;
-                break;
+            case ID_MIGHTY: entity->spriteIndex = BSS_Player->mightySpriteIndex; break;
             case ID_RAY:
                 entity->spriteIndex = BSS_Player->raySpriteIndex;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailData, true, 0);
                 break;
 #endif
-            default:
-                entity->spriteIndex = BSS_Player->sonicSpriteIndex;
-                break;
+            default: entity->spriteIndex = BSS_Player->sonicSpriteIndex; break;
         }
 
         if (RSDK_sceneInfo->entitySlot) {
@@ -134,7 +123,7 @@ void BSS_Player_Create(void* data)
         }
         else {
             entity->inputState = BSS_Player_HandleP1Inputs;
-            entity->field_64   = 1;
+            entity->controllerID = CONT_P1;
             entity->sideKick   = false;
         }
         RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->playerData, true, 0);
@@ -156,7 +145,7 @@ void BSS_Player_StageLoad(void)
 
 void BSS_Player_HandleP1Inputs(void)
 {
-    EntityPlayer *entity = (EntityPlayer *)RSDK_sceneInfo->entity;
+    RSDK_THIS(BSS_Player);
     if (entity->controllerID < PLAYER_MAX) {
         ControllerState *controller = &RSDK_controller[entity->controllerID];
         entity->up                  = controller->keyUp.down;
@@ -173,7 +162,7 @@ void BSS_Player_HandleP1Inputs(void)
             entity->right = false;
         }
         entity->jumpPress = controller->keyA.press | controller->keyB.press | controller->keyC.press | controller->keyX.press;
-        entity->jumpHold  = controller->keyA.down | controller->keyB.down | controller->keyC.down | controller->keyX.down;
+        //entity->jumpHold  = controller->keyA.down | controller->keyB.down | controller->keyC.down | controller->keyX.down;
 
 #if RETRO_USE_PLUS
         if (RSDK_controller[entity->controllerID].keyStart.press || RSDK_unknown->field_10 == 1) {
@@ -202,18 +191,8 @@ void BSS_Player_HandleP2Inputs(void)
     entity->jumpPress = BSS_Player->jumpPressState >> 15;
 }
 
-void BSS_Player_EditorDraw(void)
-{
+void BSS_Player_EditorDraw(void) {}
 
-}
+void BSS_Player_EditorLoad(void) {}
 
-void BSS_Player_EditorLoad(void)
-{
-
-}
-
-void BSS_Player_Serialize(void)
-{
-
-}
-
+void BSS_Player_Serialize(void) {}

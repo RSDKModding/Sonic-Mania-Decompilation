@@ -59,9 +59,10 @@ void APICallback_StageLoad(void)
     APICallback->GetInputType                 = RSDK.GetFuncPtr("GetInputType");
     APICallback->GetControllerType            = (int (*)(EngineInfo *, int))RSDK.GetFuncPtr("GetControllerType");
     APICallback->ShowSteamControllerOverlay   = (int (*)(int))RSDK.GetFuncPtr("ShowSteamControllerOverlay");
-    APICallback->controllerIDs[1]             = 1;
-    APICallback->controllerIDs[2]             = 2;
-    APICallback->controllerIDs[3]             = 3;
+    APICallback->controllerIDs[0]             = CONT_P1;
+    APICallback->controllerIDs[1]             = CONT_P2;
+    APICallback->controllerIDs[2]             = CONT_P3;
+    APICallback->controllerIDs[3]             = CONT_P4;
     APICallback->controllerCount              = 4;
 }
 

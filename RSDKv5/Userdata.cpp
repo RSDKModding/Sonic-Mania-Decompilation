@@ -932,7 +932,9 @@ void readSettings()
     engine.soundFXVolume  = iniparser_getdouble(ini, "Audio:sfxVolume", 1.0);
 
 #if RETRO_USING_SDL2
-    int defKeyMaps[PLAYER_COUNT][12] = {
+    int defKeyMaps[PLAYER_COUNT + 1][12] = {
+        { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+          SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
         { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
           SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_RETURN, SDL_SCANCODE_TAB },
         { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
@@ -952,10 +954,11 @@ void readSettings()
     int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 #endif
 
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
+    for (int i = 1; i < PLAYER_COUNT + 1; ++i) {
         char buffer[0x30];
 
         sprintf(buffer, "Keyboard Map %d:up", i);
@@ -1063,8 +1066,8 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "streamVolume=%f\n", engine.streamVolume);
         writeText(file, "sfxVolume=%f\n", engine.soundFXVolume);
 
-        for (int i = 0; i < SCREEN_MAX; ++i) {
-            writeText(file, "\n[Keyboard Map %d]\n", i + 1);
+        for (int i = 1; i < PLAYER_COUNT + 1; ++i) {
+            writeText(file, "\n[Keyboard Map %d]\n", i);
             writeText(file, "up=0x%x\n", controller[i].keyUp.keyMap);
             writeText(file, "down=0x%x\n", controller[i].keyDown.keyMap);
             writeText(file, "left=0x%x\n", controller[i].keyLeft.keyMap);

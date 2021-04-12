@@ -283,7 +283,7 @@ void TitleSetup_Unknown10(void)
         RSDK.LoadScene("Presentation", "Menu");
 #if RETRO_USE_PLUS
         RSDK.ResetControllerAssignments();
-        RSDK.AssignControllerID(1, RSDK.MostRecentActiveControllerID(0, 0, 5));
+        RSDK.AssignControllerID(CONT_P1, RSDK.MostRecentActiveControllerID(0, 0, 5));
 #else
 
 #endif

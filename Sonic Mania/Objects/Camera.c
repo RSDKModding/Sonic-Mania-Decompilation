@@ -260,19 +260,19 @@ void Camera_State_Roam(void)
 {
     RSDK_THIS(Camera);
     int speed = 0x100000;
-    if (!RSDK_controller[0].keyA.down)
+    if (!RSDK_controller[CONT_P1].keyA.down)
         speed = 0x40000;
 
-    if (RSDK_controller[0].keyUp.down) {
+    if (RSDK_controller[CONT_P1].keyUp.down) {
         entity->position.y -= speed;
     }
-    else if (RSDK_controller[0].keyDown.down) {
+    else if (RSDK_controller[CONT_P1].keyDown.down) {
         entity->position.y += speed;
     }
-    if (RSDK_controller[0].keyLeft.down) {
+    if (RSDK_controller[CONT_P1].keyLeft.down) {
         entity->position.x -= speed;
     }
-    else if (RSDK_controller[0].keyRight.down) {
+    else if (RSDK_controller[CONT_P1].keyRight.down) {
         entity->position.x += speed;
     }
 

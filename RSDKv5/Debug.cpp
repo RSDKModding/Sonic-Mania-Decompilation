@@ -192,13 +192,13 @@ void DevMenu_MainMenu()
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "TMP", y, 0, 0xF0F080);
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         devMenu.timer = 1;
         if (devMenu.option < 0)
             devMenu.option += 5;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
         }
@@ -210,13 +210,13 @@ void DevMenu_MainMenu()
         }
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         devMenu.timer = 1;
         if (devMenu.option > 4)
             devMenu.option -= 5;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (devMenu.timer) {
             devMenu.timer = ++devMenu.timer & 7;
         }
@@ -228,7 +228,7 @@ void DevMenu_MainMenu()
         }
     }
 
-    if (controller[0].keyStart.press || controller[0].keyA.press) {
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         switch (devMenu.option) {
             case 0: sceneInfo.state = devMenu.stateStore; break;
             case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
@@ -274,7 +274,7 @@ void DevMenu_ListSel()
         }
     }
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         if (--devMenu.option < 0)
             devMenu.option += sceneInfo.categoryCount;
         if (devMenu.option >= devMenu.scroll) {
@@ -287,7 +287,7 @@ void DevMenu_ListSel()
         }
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
             if (devMenu.option >= devMenu.scroll) {
@@ -314,7 +314,7 @@ void DevMenu_ListSel()
         }
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         if (++devMenu.option == sceneInfo.categoryCount)
             devMenu.option = 0;
         if (devMenu.option >= devMenu.scroll) {
@@ -327,7 +327,7 @@ void DevMenu_ListSel()
         }
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (devMenu.timer) {
             devMenu.timer = (devMenu.timer + 1) & 7;
             if (devMenu.option >= devMenu.scroll) {
@@ -354,7 +354,7 @@ void DevMenu_ListSel()
         }
     }
 
-    if (controller[0].keyStart.press || controller[0].keyA.press) {
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         if (sceneInfo.listCategory[devMenu.option].sceneCount) {
             devMenu.state   = DevMenu_SceneSel;
             devMenu.listPos = devMenu.option;
@@ -393,7 +393,7 @@ void DevMenu_SceneSel()
         }
     }
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (off + devMenu.option < list->sceneOffsetStart) {
             devMenu.option = list->sceneCount - 1;
@@ -409,7 +409,7 @@ void DevMenu_SceneSel()
         }
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (off + devMenu.option < list->sceneOffsetStart) {
@@ -428,7 +428,7 @@ void DevMenu_SceneSel()
         }
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         if (devMenu.option > list->sceneCount) {
             devMenu.option = 0;
@@ -444,7 +444,7 @@ void DevMenu_SceneSel()
         }
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
             if (devMenu.option > list->sceneCount) {
@@ -463,7 +463,7 @@ void DevMenu_SceneSel()
         }
     }
 
-    if (controller[0].keyStart.press || controller[0].keyA.press) {
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         sceneInfo.activeCategory = devMenu.listPos;
         sceneInfo.listPos        = devMenu.option;
         sceneInfo.state          = ENGINESTATE_LOAD;
@@ -501,7 +501,7 @@ void DevMenu_Options()
 #endif
     DrawDevText(currentScreen->centerX, "Back", dy + 12, ALIGN_CENTER, optionColours[optionCount - 1]);
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
             devMenu.option = optionCount - 1;
@@ -509,7 +509,7 @@ void DevMenu_Options()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
@@ -520,7 +520,7 @@ void DevMenu_Options()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         if (devMenu.option >= optionCount) {
             devMenu.option = 0;
@@ -528,7 +528,7 @@ void DevMenu_Options()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
             if (devMenu.option >= optionCount) {
@@ -539,7 +539,7 @@ void DevMenu_Options()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[0].keyStart.press || controller[0].keyA.press) {
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         switch (devMenu.option) {
             case 0: {
                 devMenu.windowed = !engine.isFullScreen;
@@ -633,7 +633,7 @@ void DevMenu_VideoOptions()
     DrawDevText(currentScreen->centerX, "Confirm", dy, ALIGN_CENTER, optionColours[4]);
     DrawDevText(currentScreen->centerX, "Cancel", dy + 8, ALIGN_CENTER, optionColours[5]);
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
             devMenu.option = 5;
@@ -641,7 +641,7 @@ void DevMenu_VideoOptions()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
@@ -652,7 +652,7 @@ void DevMenu_VideoOptions()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         if (devMenu.option > 5) {
             devMenu.option = 0;
@@ -660,7 +660,7 @@ void DevMenu_VideoOptions()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
             if (devMenu.option > 5) {
@@ -673,21 +673,21 @@ void DevMenu_VideoOptions()
 
     switch (devMenu.option) {
         case 0: // scale
-            if (controller[0].keyLeft.press) {
+            if (controller[CONT_P1].keyLeft.press) {
                 devMenu.winScale = (devMenu.winScale - 1) & 3;
                 settingsChanged  = true;
             }
-            else if (controller[0].keyRight.press) {
+            else if (controller[CONT_P1].keyRight.press) {
                 devMenu.winScale = (devMenu.winScale + 1) & 3;
                 settingsChanged  = true;
             }
             break;
         case 1: // aspect
-            if (controller[0].keyLeft.press) {
+            if (controller[CONT_P1].keyLeft.press) {
                 devMenu.winAspect--;
                 settingsChanged = true;
             }
-            else if (controller[0].keyRight.press) {
+            else if (controller[CONT_P1].keyRight.press) {
                 devMenu.winAspect++;
                 settingsChanged = true;
             }
@@ -700,17 +700,17 @@ void DevMenu_VideoOptions()
             }
             break;
         case 2: // fullscreen
-            if (controller[0].keyLeft.press || controller[0].keyRight.press) {
+            if (controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
                 devMenu.windowed ^= 1;
                 settingsChanged = true;
             }
             break;
         case 3: // screenShader
-            if (controller[0].keyLeft.press) {
+            if (controller[CONT_P1].keyLeft.press) {
                 engine.shaderID--;
                 settingsChanged = true;
             }
-            else if (controller[0].keyRight.press) {
+            else if (controller[CONT_P1].keyRight.press) {
                 engine.shaderID++;
                 settingsChanged = true;
             }
@@ -723,7 +723,7 @@ void DevMenu_VideoOptions()
             }
             break;
         case 4: // confirm
-            if (controller[0].keyStart.press || controller[0].keyA.press) {
+            if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
                 // do confirm
                 engine.isFullScreen  = !devMenu.windowed;
                 shaderList[0].linear = !devMenu.windowed;
@@ -751,7 +751,7 @@ void DevMenu_VideoOptions()
             }
             break;
         case 5: // cancel
-            if (controller[0].keyStart.press || controller[0].keyA.press) {
+            if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
                 devMenu.state  = DevMenu_Options;
                 devMenu.option = 0;
             }
@@ -792,7 +792,7 @@ void DevMenu_AudioOptions()
     DrawRectangle(currentScreen->centerX + 9, dy + 1, (int)(engine.soundFXVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     DrawDevText(currentScreen->centerX, "Back", dy + 16, ALIGN_CENTER, optionColours[3]);
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
             devMenu.option = 3;
@@ -800,7 +800,7 @@ void DevMenu_AudioOptions()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
@@ -811,7 +811,7 @@ void DevMenu_AudioOptions()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         if (devMenu.option > 3) {
             devMenu.option = 0;
@@ -819,7 +819,7 @@ void DevMenu_AudioOptions()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
             if (devMenu.option > 3) {
@@ -832,20 +832,20 @@ void DevMenu_AudioOptions()
 
     switch (devMenu.option) {
         case 0:
-            if (controller[0].keyLeft.press || controller[0].keyRight.press) {
+            if (controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
                 engine.streamsEnabled ^= 1;
                 settingsChanged = 1;
             }
             break;
         case 1:
-            if (controller[0].keyLeft.down) {
+            if (controller[CONT_P1].keyLeft.down) {
                 engine.streamVolume -= 0.015625;
                 if (engine.streamVolume < 0.0)
                     engine.streamVolume = 0.0;
                 settingsChanged = 1;
             }
             else {
-                if (controller[0].keyRight.down) {
+                if (controller[CONT_P1].keyRight.down) {
                     engine.streamVolume += 0.015625;
                     if (engine.streamVolume > 1.0)
                         engine.streamVolume = 1.0;
@@ -854,14 +854,14 @@ void DevMenu_AudioOptions()
             }
             break;
         case 2:
-            if (controller[0].keyLeft.down) {
+            if (controller[CONT_P1].keyLeft.down) {
                 engine.soundFXVolume -= 0.015625;
                 if (engine.soundFXVolume < 0.0)
                     engine.soundFXVolume = 0.0;
                 settingsChanged = 1;
             }
             else {
-                if (controller[0].keyRight.down) {
+                if (controller[CONT_P1].keyRight.down) {
                     engine.soundFXVolume += 0.015625;
                     if (engine.soundFXVolume > 1.0)
                         engine.soundFXVolume = 1.0;
@@ -870,7 +870,7 @@ void DevMenu_AudioOptions()
             }
             break;
         case 3:
-            if (controller[0].keyStart.press || controller[0].keyA.press) {
+            if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
                 devMenu.state  = DevMenu_Options;
                 devMenu.option = 1;
             }
@@ -903,7 +903,7 @@ void DevMenu_InputOptions()
     DrawDevText(currentScreen->centerX, "Set Keys For Input 4", dy, ALIGN_CENTER, optionColours[3]);
     DrawDevText(currentScreen->centerX, "Back", dy + 18, ALIGN_CENTER, optionColours[4]);
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
             devMenu.option = 4;
@@ -911,7 +911,7 @@ void DevMenu_InputOptions()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
@@ -922,7 +922,7 @@ void DevMenu_InputOptions()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         if (devMenu.option > 4) {
             devMenu.option = 0;
@@ -930,7 +930,7 @@ void DevMenu_InputOptions()
 
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
             if (devMenu.option > 4) {
@@ -941,7 +941,7 @@ void DevMenu_InputOptions()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[0].keyStart.press || controller[0].keyA.press) {
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         if (devMenu.option == 4) {
             devMenu.state  = DevMenu_Options;
             devMenu.option = 3;
@@ -974,7 +974,7 @@ void DevMenu_DebugOptions()
     optionColours[7]                               = 0x808090;
     optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
 
-    bool32 confirm = controller[0].keyStart.press || controller[0].keyA.press;
+    bool32 confirm = controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press;
 
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < debugValCnt) {
@@ -1079,7 +1079,7 @@ void DevMenu_DebugOptions()
         }
     }
 
-    if (controller[0].keyUp.press) {
+    if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
             devMenu.option = debugValCnt;
@@ -1095,7 +1095,7 @@ void DevMenu_DebugOptions()
         }
         devMenu.timer = 1;
     }
-    else if (controller[0].keyUp.down) {
+    else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
@@ -1114,7 +1114,7 @@ void DevMenu_DebugOptions()
         }
     }
 
-    if (controller[0].keyDown.press) {
+    if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         if (devMenu.option > debugValCnt) {
             devMenu.option = 0;
@@ -1130,7 +1130,7 @@ void DevMenu_DebugOptions()
         }
         devMenu.timer = 1;
     }
-    else if (controller[0].keyDown.down) {
+    else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
             if (devMenu.option >= debugValCnt) {
@@ -1155,7 +1155,7 @@ void DevMenu_DebugOptions()
             default: DrawDevText(currentScreen->centerX + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
             case sizeof(sbyte): {
                 sbyte *v = (sbyte *)val->value;
-                if (controller[0].keyLeft.press) {
+                if (controller[CONT_P1].keyLeft.press) {
                     if (!val->type) {
                         *v ^= 1;
                     }
@@ -1166,7 +1166,7 @@ void DevMenu_DebugOptions()
                     }
                 }
 
-                if (controller[0].keyRight.press) {
+                if (controller[CONT_P1].keyRight.press) {
                     if (!val->type) {
                         *v ^= 1;
                     }
@@ -1180,7 +1180,7 @@ void DevMenu_DebugOptions()
             }
             case sizeof(short): {
                 short *v = (short *)val->value;
-                if (controller[0].keyLeft.press) {
+                if (controller[CONT_P1].keyLeft.press) {
                     if (!val->type) {
                         *v ^= 1;
                     }
@@ -1191,7 +1191,7 @@ void DevMenu_DebugOptions()
                     }
                 }
 
-                if (controller[0].keyRight.press) {
+                if (controller[CONT_P1].keyRight.press) {
                     if (!val->type) {
                         *v ^= 1;
                     }
@@ -1205,7 +1205,7 @@ void DevMenu_DebugOptions()
             }
             case sizeof(int): {
                 int *v = (int *)val->value;
-                if (controller[0].keyLeft.press) {
+                if (controller[CONT_P1].keyLeft.press) {
                     if (!val->type) {
                         *v ^= 1;
                     }
@@ -1216,7 +1216,7 @@ void DevMenu_DebugOptions()
                     }
                 }
 
-                if (controller[0].keyRight.press) {
+                if (controller[CONT_P1].keyRight.press) {
                     if (!val->type) {
                         *v ^= 1;
                     }

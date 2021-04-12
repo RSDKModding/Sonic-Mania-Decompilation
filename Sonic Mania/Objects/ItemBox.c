@@ -759,7 +759,7 @@ void ItemBox_GivePowerup(void)
                                     player2->collisionPlane  = 0;
                                     player2->collisionMode   = CMODE_FLOOR;
                                     player2->collisionLayers = Zone->fgLayers;
-                                    player2->controllerID    = 2;
+                                    player2->controllerID    = CONT_P2;
                                     player2->sidekick        = true;
                                     player2->drawFX          = FX_FLIP | FX_ROTATE;
                                     player2->visible          = true;

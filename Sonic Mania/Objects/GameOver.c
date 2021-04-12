@@ -269,11 +269,9 @@ void GameOver_Unknown4(void)
     RSDK_THIS(GameOver);
     ++entity->timer;
 
-    int cID = 0;
+    int cID = CONT_ANY;
     if (globals->gameMode == MODE_COMPETITION)
-        cID = entity->playerID;
-    else
-        cID = 0;
+        cID = entity->playerID + 1;
 
     if (RSDK_controller[cID].keyA.press || RSDK_controller[cID].keyB.press || RSDK_controller[cID].keyC.press || RSDK_controller[cID].keyX.press
         || RSDK_controller[cID].keyStart.press)

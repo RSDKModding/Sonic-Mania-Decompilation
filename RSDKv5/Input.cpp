@@ -47,7 +47,13 @@ void InputDevice::ProcessInput()
 
     bool32 anyPress = false;
 
-    for (int c = 0; c < PLAYER_COUNT; ++c) {
+    InputState *anyButtons[] = {
+        &controller[0].keyUp, &controller[0].keyDown, &controller[0].keyLeft,  &controller[0].keyRight,
+        &controller[0].keyA,  &controller[0].keyB,    &controller[0].keyC,     &controller[0].keyX,
+        &controller[0].keyY,  &controller[0].keyZ,    &controller[0].keyStart, &controller[0].keySelect,
+    };
+
+    for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
         InputState *buttons[] = {
             &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
             &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
@@ -59,7 +65,7 @@ void InputDevice::ProcessInput()
             SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_GUIDE,
         };
 
-        if (inputDevice.inputType[c] == 0) {
+        if (inputDevice.inputType[c - 1] == 0) {
             for (int i = 0; i < KEY_MAX; i++) {
                 if (keyState[buttons[i]->keyMap]) {
                     buttons[i]->setHeld();
@@ -69,9 +75,9 @@ void InputDevice::ProcessInput()
                 }
             }
         }
-        else if (inputDevice.inputType[c] == 1) {
+        else if (inputDevice.inputType[c - 1] == 1) {
             for (int i = 0; i < KEY_MAX; i++) {
-                if (getControllerButton(c, buttonMap[i])) {
+                if (getControllerButton(c - 1, buttonMap[i])) {
                     buttons[i]->setHeld();
                 }
                 else if (buttons[i]->down) {
@@ -88,17 +94,17 @@ void InputDevice::ProcessInput()
             }
         }
         if (isPressed)
-            inputDevice.inputType[c] = 0;
+            inputDevice.inputType[c - 1] = 0;
 
         isPressed = false;
         for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; i++) {
-            if (getControllerButton(c, i)) {
+            if (getControllerButton(c - 1, i)) {
                 isPressed = true;
                 break;
             }
         }
         if (isPressed)
-            inputDevice.inputType[c] = 1;
+            inputDevice.inputType[c - 1] = 1;
 
         for (int i = 0; i < keyCount && !anyPress; i++) {
             if (keyState[i]) {
@@ -106,7 +112,7 @@ void InputDevice::ProcessInput()
             }
         }
         for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX && !anyPress; i++) {
-            if (getControllerButton(c, i)) {
+            if (getControllerButton(c - 1, i)) {
                 anyPress = true;
             }
         }
@@ -118,6 +124,24 @@ void InputDevice::ProcessInput()
             ++engine.dimTimer;
         }
     }
+
+    for (int i = 0; i < 12; ++i) {
+        anyButtons[i]->press = false;
+        anyButtons[i]->down = false;
+    }
+    for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
+        InputState *buttons[] = {
+            &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
+            &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
+            &controller[c].keyY,  &controller[c].keyZ,    &controller[c].keyStart, &controller[c].keySelect,
+        };
+
+        for (int i = 0; i < 12; ++i) {
+            anyButtons[i]->press |= buttons[i]->press;
+            anyButtons[i]->down  |= buttons[i]->down;
+        }
+    }
+
 
 #ifdef RETRO_USING_MOUSE
 #if RETRO_USING_SDL2

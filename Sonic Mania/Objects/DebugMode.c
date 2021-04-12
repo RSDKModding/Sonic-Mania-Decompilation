@@ -15,20 +15,20 @@ void DebugMode_Update(void)
 #endif
     if (Zone)
         Zone->stageFinishCallback = NULL;
-    if (RSDK_controller[0].keyUp.down || (RSDK_stickL[0].vDelta > 0.3)) {
+    if (RSDK_controller[CONT_P1].keyUp.down || (RSDK_stickL[CONT_P1].vDelta > 0.3)) {
         entity->position.y -= entity->velocity.y;
         flag = true;
     }
-    else if (RSDK_controller[0].keyDown.down || (RSDK_stickL[0].vDelta < -0.3)) {
+    else if (RSDK_controller[CONT_P1].keyDown.down || (RSDK_stickL[CONT_P1].vDelta < -0.3)) {
         entity->position.y += entity->velocity.y;
         flag = true;
     }
 
-    if (RSDK_controller[0].keyLeft.down || (RSDK_stickL[0].hDelta < -0.3)) {
+    if (RSDK_controller[CONT_P1].keyLeft.down || (RSDK_stickL[CONT_P1].hDelta < -0.3)) {
         entity->position.x -= entity->velocity.y;
         flag = true;
     }
-    else if (RSDK_controller[0].keyRight.down || (RSDK_stickL[0].hDelta > 0.3)) {
+    else if (RSDK_controller[CONT_P1].keyRight.down || (RSDK_stickL[CONT_P1].hDelta > 0.3)) {
         entity->position.x += entity->velocity.y;
         flag = true;
     }
