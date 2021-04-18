@@ -4,7 +4,7 @@ ObjectSpikes *Spikes;
 
 void Spikes_Update(void)
 {
-    EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Spikes);
     switch (entity->dword6C) {
         case 1:
             if (entity->stagger << 6 == (Zone->timer & 0x40)) {
@@ -69,18 +69,18 @@ void Spikes_Update(void)
                     byte side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     if (side) {
                         if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !entity->field_7E) {
-                            //Ice_Unknown6(16, 0, 0, 0);
+                            // Ice_Unknown6(16, 0, 0, 0);
                             entity->field_7E = 15;
                         }
 
                         bool32 flag = false;
                         if (side == 4) {
-                            player->killFlagB |= 2;
+                            player->collisionFlagV |= 2;
                             flag = 0;
                         }
                         else {
                             if (side == 1) {
-                                player->killFlagB |= 1u;
+                                player->collisionFlagV |= 1u;
                                 if (entity->dword70 == 0x80000)
                                     player->onGround = 0;
                             }
@@ -101,7 +101,7 @@ void Spikes_Update(void)
                         }
                         switch (side) {
                             case 1:
-                                player->killFlagB |= 1;
+                                player->collisionFlagV |= 1;
                                 if (player->velocity.y >= 0 || entity->dword6C == 2) {
                                     player->position.x += entity->offset.x;
                                     player->position.y += entity->offset.y;
@@ -110,20 +110,20 @@ void Spikes_Update(void)
                                 }
                                 break;
                             case 2:
-                                player->killFlagA |= 1;
+                                player->collisionFlagH |= 1;
                                 if (player->velocity.x >= 0) {
                                     if (entity->dword6C == 2) {
                                         if (side == entity->type)
                                             Spikes_CheckHit(player, playerVelX, playerVelY);
                                     }
                                 }
-                                else  {
+                                else {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case 3:
-                                player->killFlagA |= 2;
+                                player->collisionFlagH |= 2;
                                 if (player->velocity.x <= 0) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
@@ -134,7 +134,7 @@ void Spikes_Update(void)
                                 }
                                 break;
                             case 4:
-                                player->killFlagB |= 2;
+                                player->collisionFlagV |= 2;
                                 if (player->velocity.y <= 0) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
@@ -148,26 +148,22 @@ void Spikes_Update(void)
                         }
 
                         if (flag) {
-                            //RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
-                            //Ice_Unknown6(16, 0, 0, 0);
-                            RSDK.ResetEntityPtr(entity, 0, 0);
+                            // RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
+                            // Ice_Unknown6(16, 0, 0, 0);
+                            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                         }
                     }
                 }
                 else {
-                    int posStoreX         = player->position.x;
+                    int posStoreX = player->position.x;
                     int posStoreY = player->position.y;
 
                     byte side = 0;
-                    //if (player->state == Ice_State_FrozenPlayer) {
+                    // if (player->state == Ice_State_FrozenPlayer) {
                     //    side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &Ice->hitbox2, 0);
                     //}
-                    //else {
-                        Hitbox* playerHitbox = RSDK.GetHitbox(&player->playerAnimData, 0);
-                        Hitbox *otherHitbox = &defaultHitbox;
-                        if (playerHitbox)
-                            otherHitbox = playerHitbox;
-                        side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, otherHitbox, 0);
+                    // else {
+                    side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, Player_GetHitbox(player), 0);
                     //}
 
                     switch (side) {
@@ -260,15 +256,9 @@ void Spikes_Update(void)
     }
 }
 
-void Spikes_LateUpdate(void)
-{
+void Spikes_LateUpdate(void) {}
 
-}
-
-void Spikes_StaticUpdate(void)
-{
-
-}
+void Spikes_StaticUpdate(void) {}
 
 void Spikes_Draw(void)
 {
@@ -276,10 +266,10 @@ void Spikes_Draw(void)
         Spikes->stateDraw();
 }
 
-void Spikes_Create(void* data)
+void Spikes_Create(void *data)
 {
-    EntitySpikes *entity           = (EntitySpikes *)RSDK_sceneInfo->entity;
-    RSDK_sceneInfo->entity->drawFX = FX_FLIP;
+    RSDK_THIS(Spikes);
+    entity->drawFX = FX_FLIP;
     if (entity->count < 2)
         entity->count = 2;
     if (!RSDK_sceneInfo->inEditor) {
@@ -365,10 +355,10 @@ void Spikes_StateDraw_Global(void)
 {
     Vector2 drawPos;
 
-    EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
-    drawPos.x            = entity->position.x;
-    drawPos.y            = entity->position.y;
-    int cnt              = entity->count >> 1;
+    RSDK_THIS(Spikes);
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    int cnt   = entity->count >> 1;
     switch (entity->type) {
         case 1:
         case 4:
@@ -407,10 +397,10 @@ void Spikes_StateDraw_Stage(void)
 {
     Vector2 drawPos;
 
-    EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Spikes);
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    int cnt        = entity->count >> 1;
+    int cnt   = entity->count >> 1;
     switch (entity->type) {
         case 1:
         case 4:
@@ -442,14 +432,14 @@ void Spikes_StateDraw_Stage(void)
 
 void Spikes_Unknown1(int a1, int a2)
 {
-    EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
-    //RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
-    //Ice_Unknown6(16, a1, a2, 0);
+    RSDK_THIS(Spikes);
+    // RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
+    // Ice_Unknown6(16, a1, a2, 0);
     RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
 {
-    EntitySpikes *entity = (EntitySpikes *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Spikes);
     if (player->state == Player_State_Hit)
         return;
     if (!Player_CheckValidState(player) || player->invincibleTimer || player->blinkTimer > 0)
@@ -568,7 +558,7 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
                 player->nextAirState    = Player_State_Air;
             }
         }
-        return; //dont do the code below
+        return; // dont do the code below
     }
 #endif
 
@@ -587,15 +577,9 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
     }
 }
 
-void Spikes_EditorDraw(void)
-{
+void Spikes_EditorDraw(void) {}
 
-}
-
-void Spikes_EditorLoad(void)
-{
-
-}
+void Spikes_EditorLoad(void) {}
 
 void Spikes_Serialize(void)
 {
@@ -606,4 +590,3 @@ void Spikes_Serialize(void)
     RSDK_EDITABLE_VAR(Spikes, VAR_UINT8, timer);
     RSDK_EDITABLE_VAR(Spikes, VAR_ENUM, planeFilter);
 }
-

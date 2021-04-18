@@ -162,10 +162,10 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
                     case 7: // any pointer
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
+                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(void *);
                         if ((dataPos & 0xFFFFFFFC) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + sizeof(int *) * arraySize; // 4/8
+                        dataPos = tmp + sizeof(void *) * arraySize; // 4/8
                         break;
                     case 8:
                         tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
@@ -204,6 +204,9 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
         CloseFile(&info);
     }
 }
+
+void SetActiveVariable(int objectID, const char *name) { printLog(SEVERITY_NONE, "SetActiveVariable(%d, %s) called", objectID, name); }
+void AddEnumVar(const char* name) { printLog(SEVERITY_NONE, "AddEnumVar(%s) called", name); }
 
 void InitObjects()
 {
@@ -308,10 +311,10 @@ void ProcessObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
-                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x) >> 0x10;
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y) >> 0x10;
 
-                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
+                        if (sx * sx + sy * sy <= sceneInfo.entity->updateRange.x + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -495,10 +498,10 @@ void ProcessFrozenObjects()
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
-                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
-                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+                        int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x) >> 0x10;
+                        int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y) >> 0x10;
 
-                        if (sx * sx + sy * sy <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
+                        if (sx * sx + sy * sy <= sceneInfo.entity->updateRange.x + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }

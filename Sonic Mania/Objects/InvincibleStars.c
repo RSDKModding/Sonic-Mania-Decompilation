@@ -4,8 +4,8 @@ ObjectInvincibleStars *InvincibleStars;
 
 void InvincibleStars_Update(void)
 {
-    EntityInvincibleStars *entity = (EntityInvincibleStars *)RSDK_sceneInfo->entity;
-    EntityPlayer *player          = (EntityPlayer *)entity->parent;
+    RSDK_THIS(InvincibleStars);
+    EntityPlayer *player = (EntityPlayer *)entity->parent;
     if (player) {
         entity->starAngle[2] = (entity->starAngle[2] + 1) % 12;
         entity->starAngle[3] = (entity->starAngle[3] + 1) % 10;
@@ -44,24 +44,18 @@ void InvincibleStars_Update(void)
         entity->starOffset = 11;
     }
     else {
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
 }
 
-void InvincibleStars_LateUpdate(void)
-{
+void InvincibleStars_LateUpdate(void) {}
 
-}
-
-void InvincibleStars_StaticUpdate(void)
-{
-
-}
+void InvincibleStars_StaticUpdate(void) {}
 
 void InvincibleStars_Draw(void)
 {
-    EntityInvincibleStars *entity = (EntityInvincibleStars *)RSDK_sceneInfo->entity;
-    EntityPlayer *player          = (EntityPlayer *)entity->parent;
+    RSDK_THIS(InvincibleStars);
+    EntityPlayer *player = (EntityPlayer *)entity->parent;
     if (player) {
         if (player->isChibi) {
             entity->drawFX |= FX_SCALE;
@@ -119,14 +113,14 @@ void InvincibleStars_Draw(void)
     RSDK.DrawSprite(entity->starsData, &drawPos, 0);
 }
 
-void InvincibleStars_Create(void* data)
+void InvincibleStars_Create(void *data)
 {
-    EntityInvincibleStars *entity = (EntityInvincibleStars *)RSDK_sceneInfo->entity;
+    RSDK_THIS(InvincibleStars);
     if (!RSDK_sceneInfo->inEditor) {
-        Entity *player       = (Entity *)data;
+        Entity *player  = (Entity *)data;
         entity->active  = ACTIVE_NORMAL;
         entity->visible = true;
-        entity->parent       = player;
+        entity->parent  = player;
         for (int i = 0; i < 8; ++i) {
             entity->starPos[i].x = player->position.x;
             entity->starPos[i].y = player->position.y;
@@ -145,18 +139,8 @@ void InvincibleStars_Create(void* data)
 
 void InvincibleStars_StageLoad(void) { InvincibleStars->spriteIndex = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
 
-void InvincibleStars_EditorDraw(void)
-{
+void InvincibleStars_EditorDraw(void) {}
 
-}
+void InvincibleStars_EditorLoad(void) {}
 
-void InvincibleStars_EditorLoad(void)
-{
-
-}
-
-void InvincibleStars_Serialize(void)
-{
-
-}
-
+void InvincibleStars_Serialize(void) {}

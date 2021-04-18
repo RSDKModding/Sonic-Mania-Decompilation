@@ -73,8 +73,7 @@ void BSS_Setup_StageLoad(void)
     BSS_Setup->frustrum2Layer = RSDK.GetSceneLayerID("Frustum 2");
     BSS_Setup->playFieldLayer = RSDK.GetSceneLayerID("Playfield");
     BSS_Setup->ringCountLayer = RSDK.GetSceneLayerID("Ring Count");
-    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, BSS_Setup->objectID, 0);
-    // BSS_Setup_SetupCollectables();
+    BSS_Setup_SetupCollectables();
     BSS_Setup->ringCount = 0;
     TileLayer *playField = RSDK.GetSceneLayer(BSS_Setup->playFieldLayer);
 
@@ -83,7 +82,7 @@ void BSS_Setup_StageLoad(void)
             for (int x = 0; x < BSS_PLAYFIELD_W; ++x) {
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, x, y);
 
-                int playFieldPos                   = (x * BSS_PLAYFIELD_W) + y;
+                int playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = 0;
@@ -113,7 +112,7 @@ void BSS_Setup_StageLoad(void)
 
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int playFieldPos                   = (x * BSS_PLAYFIELD_W) + y;
+                int playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = 0;
@@ -133,7 +132,7 @@ void BSS_Setup_StageLoad(void)
 
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int playFieldPos                    = (x * BSS_PLAYFIELD_W) + y;
+                int playFieldPos                    = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField2[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField2[playFieldPos] > 0x18) {
                     BSS_Setup->playField2[playFieldPos] = 0;
@@ -153,7 +152,7 @@ void BSS_Setup_StageLoad(void)
 
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int playFieldPos                   = (x * BSS_PLAYFIELD_W) + y;
+                int playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = 0;
@@ -173,7 +172,7 @@ void BSS_Setup_StageLoad(void)
 
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int playFieldPos                    = (x * BSS_PLAYFIELD_W) + y;
+                int playFieldPos                    = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField2[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField2[playFieldPos] > 0x18) {
                     BSS_Setup->playField2[playFieldPos] = 0;
@@ -188,6 +187,7 @@ void BSS_Setup_StageLoad(void)
         // BSS_Setup->playField[515] = 9;
     }
 
+    RSDK.ResetEntitySlot(SLOT_BSS_SETUP, BSS_Setup->objectID, NULL);
     BSS_Setup_SetupPalette();
     globals->specialCleared    = false;
     BSS_Setup->sfx_BlueSphere  = RSDK.GetSFX("Special/BlueSphere.wav");
@@ -236,6 +236,70 @@ void BSS_Setup_SetupPalette(void)
     for (int i = 0; i < 0x100; i += 0x10) {
         RSDK.CopyPalette(0, 0x80, 2, i, 0x10);
         RSDK.RotatePalette(0, 0x80, 0x9F, true);
+    }
+}
+
+void BSS_Setup_SetupCollectables(void)
+{
+    int offset     = 0;
+    int count  = 0;
+    for (int f = 0; f < 2; ++f) {
+        int frustrumID = 0;
+        if (f)
+            frustrumID = BSS_Setup->frustrum2Layer;
+        else
+            frustrumID = BSS_Setup->frustrum1Layer;
+        TileLayer *frustrum = RSDK.GetSceneLayer(frustrumID);
+
+        count       = offset;
+        int lastX   = 0;
+        int lastY   = 0;
+
+        for (int y = 0; y < frustrum->height; ++y) {
+            for (int x = 0; x < frustrum->width; ++x) {
+                ushort id = (RSDK.GetTileInfo(frustrumID, x, y) & 0x3FF);
+                if (id == 1 || id == 8) {
+                    BSS_Setup->offsetTable[count].x      = x;
+                    BSS_Setup->offsetTable[count].y = y;
+                    count++;
+                    lastX = x;
+                    lastY = y;
+                }
+            }
+        }
+
+        BSS_Setup->frustrumOffsetCount[f] = count - offset;
+        BSS_Setup->frustrumOffset[f]      = offset;
+        Vector2 *offsetTable          = &BSS_Setup->offsetTable[BSS_Setup->frustrumOffset[f]];
+        int *unknownTable             = &BSS_Setup->unknownTable[BSS_Setup->frustrumOffset[f]];
+
+        for (int i = 0; i < BSS_Setup->frustrumOffsetCount[f]; ++i) {
+            offsetTable[i].x -= lastX;
+            offsetTable[i].y -= lastY;
+            unknownTable[i] = offsetTable[i].x * offsetTable[i].x + offsetTable[i].y * offsetTable[i].y;
+        }
+
+        for (int o = 0; o < BSS_Setup->frustrumOffsetCount[f]; ++offsetTable, ++o) {
+            int i = o;
+            for (int i = o; i > 0; --i) {
+                int id = unknownTable[i - 1];
+                if (unknownTable[i] > id) {
+                    int ox               = offsetTable[i - 1].x;
+                    int oy               = offsetTable[i - 1].y;
+                    offsetTable[i - 1].x = offsetTable[i].x;
+                    offsetTable[i - 1].y = offsetTable[i].y;
+                    unknownTable[i - 1]  = unknownTable[i];
+                    offsetTable[i].y     = oy;
+                    offsetTable[i].x     = ox;
+                    unknownTable[i]      = id;
+                }
+            }
+        }
+        offset += BSS_Setup->frustrumOffsetCount[f];
+    }
+
+    for (int i = 0x40; i < 0xA0; ++i) {
+        RSDK.ResetEntitySlot(i, BSS_Collectable->objectID, NULL);
     }
 }
 
@@ -599,7 +663,7 @@ void BSS_Setup_HandleCollectableMovement(void)
 {
     RSDK_THIS(BSS_Setup);
     entity->field_9C = entity->angle >> 6;
-    int id           = BSS_Setup->field_142C[(entity->angle & 0x3F) != 0];
+    int id           = BSS_Setup->frustrumOffset[(entity->angle & 0x3F) != 0];
     Vector2 *offset  = &BSS_Setup->offsetTable[id];
 
     int slot = 0x40;
@@ -626,14 +690,14 @@ void BSS_Setup_HandleCollectableMovement(void)
             }
 
             ushort tile = BSS_Setup->playField[((entity->offset.y + entity->playerPos.y) & 0x1F)
-                                               + (BSS_PLAYFIELD_W * ((entity->offset.x + entity->playerPos.x) & 0x1F))];
+                                               + (BSS_PLAYFIELD_H * ((entity->offset.x + entity->playerPos.x) & 0x1F))];
             if (tile) {
                 EntityBSS_Collectable *collectable = (EntityBSS_Collectable *)RSDK.GetEntityByID(slot);
                 collectable->position.x = ((entity->offset.x * RSDK.Cos256(entity->angle)) + entity->offset.y * RSDK.Sin256(entity->angle)) >> 4;
                 collectable->position.y = ((entity->offset.y * RSDK.Cos256(entity->angle)) - entity->offset.x * RSDK.Sin256(entity->angle)) >> 4;
                 collectable->position.y = -(collectable->position.y + entity->paletteLine - 16);
                 if (collectable->position.y < 0) {
-                    collectable->objectID = 0;
+                    collectable->objectID = TYPE_BLANK;
                 }
                 else {
                     collectable->objectID = BSS_Collectable->objectID;
@@ -700,7 +764,90 @@ void BSS_Setup_State_FinishWalk(void)
     BSS_Setup_HandleCollectableMovement();
 }
 
-void BSS_Setup_State_PinkSphereWarp(void) { RSDK_THIS(BSS_Setup); }
+void BSS_Setup_State_PinkSphereWarp(void)
+{
+    RSDK_THIS(BSS_Setup);
+    entity->alpha += 8;
+    if (entity->alpha == 320) {
+        EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
+        EntityBSS_Player *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, BSS_Player);
+        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerData, true, 0);
+        RSDK.SetSpriteAnimation(player2->spriteIndex, 0, &player2->playerData, true, 0);
+
+        int count = BSS_Setup->pinkSphereCount;
+        int val     = RSDK.Rand(0, count - 1);
+        bool32 flag = false;
+        for (; (count && val >= 0) && !flag; --count) {
+            for (int y = 0; y < BSS_PLAYFIELD_H; ++y) {
+                int x = 0;
+                for (int x = 0; x < 0x20; ++x) {
+                    ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
+                    if ((tile & 0x7F) == BSS_SPHERE_PINK && (x != entity->playerPos.x || y != entity->playerPos.y) && --val <= -1) {
+                        entity->playerPos.x = x;
+                        entity->playerPos.y = y;
+
+                        x    = 0x20;
+                        y    = 0x20;
+                        flag = true;
+                    }
+                }
+            }
+        }
+
+        val = RSDK.Rand(0, 4);
+        flag = false;
+        for (int i = 0; i < 4; ++i) {
+            int x = entity->playerPos.x;
+            int y = entity->playerPos.y;
+            switch (val) {
+                case 0: y = (y - 1) & 0x1F; break;
+                case 1: x = (x + 1) & 0x1F; break;
+                case 2: y = (y + 1) & 0x1F; break;
+                case 3: x = (x - 1) & 0x1F; break;
+                default: break;
+            }
+            ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
+            if (tile < BSS_SPHERE_RED || tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK) {
+                flag = true;
+                break;
+            }
+
+            val = (val + 1) & 3;
+        }
+
+        if (!flag) {
+            for (int i = 0; i < 4; ++i) {
+                int x = entity->playerPos.x;
+                int y = entity->playerPos.y;
+                switch (val) {
+                    case 0: y = (y - 2) & 0x1F; break;
+                    case 1: x = (x + 2) & 0x1F; break;
+                    case 2: y = (y + 2) & 0x1F; break;
+                    case 3: x = (x - 2) & 0x1F; break;
+                    default: break;
+                }
+
+                ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
+                if (tile < BSS_SPHERE_RED || tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK) {
+                    flag = true;
+                    break;
+                }
+
+                val = (val + 1) & 3;
+            }
+        }
+
+        entity->angle = val << 6;
+        RSDK.CreateEntity(BSS_Collected->objectID, (void *)5, entity->playerPos.x, entity->playerPos.y);
+        BSS_Setup->playField[entity->playerPos.y + (BSS_PLAYFIELD_H * entity->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
+        entity->timer                                                          = 100;
+        entity->state                                                          = BSS_Setup_State_Unknown23;
+        BSS_Setup_HandleCollectableMovement();
+    }
+    else {
+        BSS_Setup_HandleCollectableMovement();
+    }
+}
 
 void BSS_Setup_State_Exit(void)
 {
@@ -853,7 +1000,7 @@ void BSS_Setup_State_SpinLeft(void)
         entity->spinTimer   = 0;
         globe->drawLayer[0] = 1;
         entity->palettePage ^= 1;
-        if (!entity->gap68)
+        if (!entity->timer)
             entity->state = BSS_Setup_State_HandleStage;
         else
             entity->state = BSS_Setup_State_Unknown23;
@@ -865,8 +1012,8 @@ void BSS_Setup_State_SpinLeft(void)
         entity->globeSpinData.frameID = BSS_Setup->globeFrameTable[entity->spinTimer];
         entity->direction             = BSS_Setup->globeDirTableL[entity->spinTimer];
         entity->spinTimer++;
-        if (entity->gap68 > 1)
-            entity->gap68--;
+        if (entity->timer > 1)
+            entity->timer--;
         BSS_Setup_HandleCollectableMovement();
     }
 }
@@ -888,7 +1035,7 @@ void BSS_Setup_State_SpinRight(void)
     if (entity->spinTimer == 15) {
         entity->spinTimer   = 0;
         globe->drawLayer[0] = 1;
-        if (!entity->gap68)
+        if (!entity->timer)
             entity->state = BSS_Setup_State_HandleStage;
         else
             entity->state = BSS_Setup_State_Unknown23;
@@ -902,8 +1049,8 @@ void BSS_Setup_State_SpinRight(void)
         entity->globeSpinData.frameID = BSS_Setup->globeFrameTable[entity->spinTimer];
         entity->direction             = BSS_Setup->globeDirTableR[entity->spinTimer];
         entity->spinTimer++;
-        if (entity->gap68 > 1)
-            entity->gap68--;
+        if (entity->timer > 1)
+            entity->timer--;
         BSS_Setup_HandleCollectableMovement();
     }
 }
@@ -915,7 +1062,7 @@ void BSS_Setup_State_Unknown23(void)
     EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
     if (entity->alpha <= 0) {
         if (player->up) {
-            entity->gap68 = 1;
+            entity->timer = 1;
         }
         else if (player->left) {
             entity->state = BSS_Setup_State_SpinLeft;
@@ -928,7 +1075,7 @@ void BSS_Setup_State_Unknown23(void)
         entity->alpha -= 8;
     }
 
-    if (!--entity->gap68) {
+    if (!--entity->timer) {
         entity->state = BSS_Setup_State_HandleStage;
 
         EntityBSS_Player *player1 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);

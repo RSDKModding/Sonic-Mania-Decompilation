@@ -47,9 +47,9 @@ typedef struct {
                            // 18, 17, 17, 17, 17, 16, 16, 16, 15, 15, 14, 14, 14, 13, 13, 13, 12, 12, 12, 11, 11, 10, 10, 10, 10, 9, 9, 9, 9, 8, 8, 8,
                            // 8, 7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     Vector2 offsetTable[0x100];
-    int field_1024[0x100];
-    int field_1424[2];
-    int field_142C[2];
+    int unknownTable[0x100];
+    int frustrumOffsetCount[2];
+    int frustrumOffset[2];
     int field_1434;
     ushort playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
     ushort playField2[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
@@ -75,7 +75,7 @@ typedef struct {
     int spinTimer;
     int speedupTimer;
     int speedupInterval;
-    int gap68;
+    int timer;
     int spinState;
     int palettePage;
     int field_74;
@@ -122,6 +122,7 @@ void BSS_Setup_Serialize(void);
 // Extra Entity Functions
 int BSS_Setup_ReloadScene(void);
 void BSS_Setup_SetupPalette(void);
+void BSS_Setup_SetupCollectables(void);
 void BSS_Setup_CollectRing(void);
 void BSS_Setup_GetStartupInfo(void);
 void BSS_Setup_Finished(void);

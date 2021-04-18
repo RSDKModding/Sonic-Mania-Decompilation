@@ -643,7 +643,7 @@ void HUD_Unknown6(void)
             //}
         }
         else {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
         }
     }
 }

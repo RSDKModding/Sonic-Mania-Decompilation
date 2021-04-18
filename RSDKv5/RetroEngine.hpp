@@ -243,6 +243,9 @@ struct RetroEngine {
 
     SDL_Texture *imageTexture = nullptr;
 
+    SDL_DisplayMode *displays = nullptr;
+    int displayCount          = 0;
+
     SDL_Event sdlEvents;
 #endif
 };

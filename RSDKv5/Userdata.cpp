@@ -1,7 +1,5 @@
 #include "RetroEngine.hpp"
 
-bool32 settingsChanged = false;
-
 #if !RETRO_REV02
 FunctionListEntry functionList[FUNCLIST_COUNT];
 int functionListCount;
@@ -20,6 +18,10 @@ DummyUserStorage *userStorage   = NULL;
 UserDBStorage userDBStorage[RETRO_USERDB_MAX];
 #endif
 
+GamePadMappings *gamePadMappings = NULL;
+int gamePadCount                 = 0;
+
+bool32 settingsChanged = false;
 SettingsStorage settingsStorage;
 
 inline void nullUserFunc() {}
@@ -70,7 +72,7 @@ void initUserData()
         userCore->GetConfirmButtonFlip = GetConfirmButtonFlip;
         userCore->LaunchManual         = LaunchManual;
         userCore->ExitGame             = ExitGame;
-        userCore->unknown14            = nullUserFunc;
+        userCore->controllerUnknown    = controllerUnknown;
         userCore->unknown15            = UserCoreUnknown15;
         userCore->CheckDLC             = checkDLC;
         userCore->ShowExtensionOverlay = ShowExtensionOverlay;
@@ -212,6 +214,7 @@ int GetConfirmButtonFlip()
 }
 void LaunchManual() { printLog(SEVERITY_NONE, "DUMMY LaunchManual()"); }
 void ExitGame() { engine.running = false; }
+int controllerUnknown() { return 0; }
 
 int ShowExtensionOverlay(byte overlay)
 {
@@ -711,30 +714,32 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
 int GetSettingsValue(int id)
 {
     switch (id) {
-        case 0: return !engine.isFullScreen; // windowed
-        case 1: return !engine.borderless;   // bordered
-        case 2: return engine.exclusiveFS;
-        case 3: return engine.vsync;
-        case 4: return engine.tripleBuffer;
-        case 5: return engine.windowWidth;
-        case 6: return engine.windowHeight;
-        case 7: return engine.fsWidth;
-        case 8: return engine.fsHeight;
-        case 9: return engine.refreshRate;
-        case 10: return engine.shaderSupport;
-        case 11: return engine.shaderID;
-        case 12: return engine.screenCount;
-        case 13: return engine.dimTimer;
-        case 14: return engine.streamsEnabled;
-        case 15: return (int)(engine.streamVolume * 1024.0); 
-        case 16: return (int)(engine.soundFXVolume * 1024.0); 
-        case 17:
+        case SETTINGS_WINDOWED: return !engine.isFullScreen; // windowed
+        case SETTINGS_BORDERED: return !engine.borderless;   // bordered
+        case SETTINGS_EXCLUSIVEFS: return engine.exclusiveFS;
+        case SETTINGS_VSYNC: return engine.vsync;
+        case SETTINGS_TRIPLEBUFFERED: return engine.tripleBuffer;
+        case SETTINGS_WINDOW_WIDTH: return engine.windowWidth;
+        case SETTINGS_WINDOW_HEIGHT: return engine.windowHeight;
+        case SETTINGS_FSWIDTH: return engine.fsWidth;
+        case SETTINGS_FSHEIGHT: return engine.fsHeight;
+        case SETTINGS_REFRESHRATE: return engine.refreshRate;
+        case SETTINGS_SHADERSUPPORT: return engine.shaderSupport;
+        case SETTINGS_SHADERID: return engine.shaderID;
+        case SETTINGS_SCREENCOUNT: return engine.screenCount;
+#if RETRO_REV02
+        case SETTINGS_DIMTIMER: return engine.dimTimer;
+#endif
+        case SETTINGS_STREAMSENABLED: return engine.streamsEnabled;
+        case SETTINGS_STREAM_VOL: return (int)(engine.streamVolume * 1024.0); 
+        case SETTINGS_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0); 
+        case SETTINGS_LANGUAGE:
 #if RETRO_REV02
             return curSKU.language; 
 #else
             return gameVerInfo.language;
 #endif
-        case 20: return settingsChanged;
+        case SETTINGS_CHANGED: return settingsChanged;
         default: break;
     }
     return 0;
@@ -744,85 +749,87 @@ void SetSettingsValue(int id, int val)
 {
     bool32 bVal = val;
     switch (id) {
-        case 0:
+        case SETTINGS_WINDOWED:
             if ((!engine.isFullScreen) != bVal) {
                 settingsChanged     = true;
                 engine.isFullScreen = !bVal;
             }
             break;
-        case 1:
+        case SETTINGS_BORDERED:
             if ((!engine.borderless) != bVal) {
                 settingsChanged   = true;
                 engine.borderless = !bVal;
             }
             break;
-        case 2:
+        case SETTINGS_EXCLUSIVEFS:
             if (engine.exclusiveFS != bVal) {
                 settingsChanged    = 1;
                 engine.exclusiveFS = bVal;
             }
             break;
-        case 3:
+        case SETTINGS_VSYNC:
             if (engine.vsync != bVal) {
                 settingsChanged = true;
                 engine.vsync    = bVal;
             }
             break;
-        case 4:
+        case SETTINGS_TRIPLEBUFFERED:
             if (engine.tripleBuffer != bVal) {
                 settingsChanged     = true;
                 engine.tripleBuffer = bVal;
             }
             break;
-        case 5:
+        case SETTINGS_WINDOW_WIDTH:
             if (engine.windowWidth != val) {
                 engine.windowWidth = val;
                 settingsChanged    = true;
             }
             break;
-        case 6:
+        case SETTINGS_WINDOW_HEIGHT:
             if (engine.windowHeight != val) {
                 engine.windowHeight = val;
                 settingsChanged     = true;
             }
             break;
-        case 7: engine.fsWidth = val; break;
-        case 8: engine.fsHeight = val; break;
-        case 9: engine.refreshRate = val; break;
-        case 10: engine.shaderSupport = val; break;
-        case 11:
+        case SETTINGS_FSWIDTH: engine.fsWidth = val; break;
+        case SETTINGS_FSHEIGHT: engine.fsHeight = val; break;
+        case SETTINGS_REFRESHRATE: engine.refreshRate = val; break;
+        case SETTINGS_SHADERSUPPORT: engine.shaderSupport = val; break;
+        case SETTINGS_SHADERID:
             if (engine.shaderID != val) {
                 engine.shaderID = val;
                 settingsChanged     = true;
             }
             break;
-        case 12: engine.screenCount = val; break;
-        case 13: engine.dimTimer = val; break;
-        case 14:
+        case SETTINGS_SCREENCOUNT: engine.screenCount = val; break;
+#if RETRO_REV02
+        case SETTINGS_DIMTIMER: engine.dimTimer = val; break;
+#endif
+        case SETTINGS_STREAMSENABLED:
             if (engine.streamsEnabled != bVal)
                 settingsChanged = true;
             engine.streamsEnabled = bVal;
             break;
-        case 15:
-            if (engine.streamVolume != ((float)val * 0.0009765625)) {
-                engine.streamVolume = val * 0.0009765625;
+        case SETTINGS_STREAM_VOL:
+            if (engine.streamVolume != (val / 1024.0f)) {
+                engine.streamVolume = (float)val / 1024.0f;
                 settingsChanged     = true;
             }
             break;
-        case 16:
-            if (engine.soundFXVolume != ((float)val * 0.0009765625)) {
-                engine.soundFXVolume = val * 0.0009765625;
+        case SETTINGS_SFX_VOL:
+            if (engine.soundFXVolume != ((float)val / 1024.0f)) {
+                engine.soundFXVolume = (float)val / 1024.0f;
                 settingsChanged      = true;
             }
             break;
-        case 17:
+        case SETTINGS_LANGUAGE:
 #if RETRO_REV02
             curSKU.language = val; 
 #else
             gameVerInfo.language = val;
 #endif
             break;
-        case 18:
+        case SETTINGS_STORE:
             settingsStorage.windowed      = engine.isFullScreen;
             settingsStorage.bordered      = engine.borderless;
             settingsStorage.exclusiveFS   = engine.exclusiveFS;
@@ -847,7 +854,7 @@ void SetSettingsValue(int id, int val)
             //settingsStorage.field_8       = 0;
             //settingsStorage.field_C       = 0;
             break;
-        case 19:
+        case SETTINGS_RELOAD:
             settingsChanged               = true;
 
             engine.isFullScreen  = settingsStorage.windowed;
@@ -874,82 +881,75 @@ void SetSettingsValue(int id, int val)
             //0                    = settingsStorage.field_8;
             //0                    = settingsStorage.field_C;
             break;
-        case 20: settingsChanged = val; break;
-        case 21: writeSettings(val); break;
+        case SETTINGS_CHANGED: settingsChanged = val; break;
+        case SETTINGS_WRITE: writeSettings(val); break;
         default: return;
     }
 }
 
+char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RSTICK", "L1", "R1", "C", "Z", "A", "B", "X", "Y", "L2", "R2" };
+
 void readSettings()
 {
+    engine.screenCount = 1;
+    engine.gameHeight  = SCREEN_YSIZE;
 
     dictionary *ini = iniparser_load("Settings.ini");
 
-    const char *result = "";
+    if (ini) {
+        const char *result = "";
 
 #if RETRO_REV02
-    curSKU.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+        curSKU.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
 #else
-    gameVerInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
+        gameVerInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #endif
 
-    //Consoles load the entire file and buffer it, while pc just io's the file when needed
-    if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, RETRO_PLATFORM != RETRO_WIN))
-        engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
-    else
-        engine.devMenu = true;
+        // Consoles load the entire file and buffer it, while pc just io's the file when needed
+        if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, RETRO_PLATFORM != RETRO_WIN))
+            engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
+        else
+            engine.devMenu = true;
 
 #if !RETRO_USE_ORIGINAL_CODE
-    sprintf(gameLogicName, "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+        sprintf(gameLogicName, "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 #else
     sprintf(gameLogicName, "Game"));
 #endif
 
-    engine.startFullScreen = !iniparser_getboolean(ini, "Video:windowed", true);
-    engine.borderless      = !iniparser_getboolean(ini, "Video:border", true);
-    engine.exclusiveFS     = iniparser_getboolean(ini, "Video:exclusiveFS", false);
-    engine.vsync           = iniparser_getboolean(ini, "Video:vsync", false);
-    engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
+        engine.startFullScreen = !iniparser_getboolean(ini, "Video:windowed", true);
+        engine.borderless      = !iniparser_getboolean(ini, "Video:border", true);
+        engine.exclusiveFS     = iniparser_getboolean(ini, "Video:exclusiveFS", false);
+        engine.vsync           = iniparser_getboolean(ini, "Video:vsync", false);
+        engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
 
-    char scrWBuf[6];
-    char scrHBuf[6];
-    sprintf(scrWBuf, "%d", DEFAULT_SCREEN_XSIZE);
-    sprintf(scrHBuf, "%d", SCREEN_YSIZE);
+        pixWidth = iniparser_getint(ini, "Video:pixWidth", DEFAULT_SCREEN_XSIZE);
 
-    result   = iniparser_getstring(ini, "Video:pixWidth", scrWBuf);
-    pixWidth = (int)strtol(result, NULL, 0);
+        engine.windowWidth   = iniparser_getint(ini, "Video:winWidth", DEFAULT_SCREEN_XSIZE);
+        engine.windowHeight  = iniparser_getint(ini, "Video:winHeight", SCREEN_YSIZE);
+        engine.fsWidth       = iniparser_getint(ini, "Video:fsWidth", 0);
+        engine.fsHeight      = iniparser_getint(ini, "Video:fsHeight", 0);
+        engine.refreshRate   = iniparser_getint(ini, "Video:refreshRate", 60);
+        engine.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
+        engine.shaderID      = iniparser_getint(ini, "Video:screenShader", 0);
 
-    engine.windowWidth   = (int)strtol(iniparser_getstring(ini, "Video:winWidth", scrWBuf), NULL, 0);
-    engine.windowHeight  = (int)strtol(iniparser_getstring(ini, "Video:winHeight", scrHBuf), NULL, 0);
-    engine.fsWidth       = (int)strtol(iniparser_getstring(ini, "Video:fsWidth", "0"), NULL, 0);
-    engine.fsHeight      = (int)strtol(iniparser_getstring(ini, "Video:fsHeight", "0"), NULL, 0);
-    engine.refreshRate   = (int)strtol(iniparser_getstring(ini, "Video:refreshRate", "60"), NULL, 0);
-    engine.shaderSupport = iniparser_getboolean(ini, "Video:shaderSupport", true);
-    engine.shaderID      = (int)strtol(iniparser_getstring(ini, "Video:screenShader", "0"), NULL, 0);
-
-    engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
-    engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 1.0);
-    engine.soundFXVolume  = iniparser_getdouble(ini, "Audio:sfxVolume", 1.0);
+        engine.streamsEnabled = iniparser_getboolean(ini, "Audio:streamsEnabled", true);
+        engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 0.8);
+        engine.soundFXVolume  = iniparser_getdouble(ini, "Audio:sfxVolume", 1.0);
 
 #if RETRO_USING_SDL2
-    int defKeyMaps[PLAYER_COUNT + 1][12] = {
-        { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-          SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
-        { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
-          SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_RETURN, SDL_SCANCODE_TAB },
-        { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
-          SDL_SCANCODE_U, SDL_SCANCODE_I, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_LEFTBRACKET, SDL_SCANCODE_RIGHTBRACKET },
-        { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-          SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
-        { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-          SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN }
-    };
-    for (int i = 0; i < PLAYER_COUNT; ++i) {
-        inputDevice.LSTICK_DEADZONE[i]   = 20000;
-        inputDevice.RSTICK_DEADZONE[i]   = 20000;
-        inputDevice.LTRIGGER_DEADZONE[i] = 20000;
-        inputDevice.RTRIGGER_DEADZONE[i] = 20000;
-    }
+        int defKeyMaps[PLAYER_COUNT + 1][12] = {
+            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
+            { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
+              SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_RETURN, SDL_SCANCODE_TAB },
+            { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_U, SDL_SCANCODE_I, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_LEFTBRACKET, SDL_SCANCODE_RIGHTBRACKET },
+            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
+            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN }
+        };
 #else
     int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -958,35 +958,160 @@ void readSettings()
                                          { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 #endif
 
-    for (int i = 1; i < PLAYER_COUNT + 1; ++i) {
-        char buffer[0x30];
+        for (int i = 1; i <= PLAYER_COUNT; ++i) {
+            char buffer[0x30];
 
-        sprintf(buffer, "Keyboard Map %d:up", i);
-        controller[i].keyUp.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][0]);
-        sprintf(buffer, "Keyboard Map %d:dpwn", i);
-        controller[i].keyDown.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][1]);
-        sprintf(buffer, "Keyboard Map %d:left", i);
-        controller[i].keyLeft.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][2]);
-        sprintf(buffer, "Keyboard Map %d:right", i);
-        controller[i].keyRight.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][3]);
-        sprintf(buffer, "Keyboard Map %d:buttonA", i);
-        controller[i].keyA.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][4]);
-        sprintf(buffer, "Keyboard Map %d:buttonB", i);
-        controller[i].keyB.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][5]);
-        sprintf(buffer, "Keyboard Map %d:buttonC", i);
-        controller[i].keyC.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][6]);
-        sprintf(buffer, "Keyboard Map %d:buttonX", i);
-        controller[i].keyX.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][7]);
-        sprintf(buffer, "Keyboard Map %d:buttonY", i);
-        controller[i].keyY.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][8]);
-        sprintf(buffer, "Keyboard Map %d:buttonZ", i);
-        controller[i].keyZ.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][9]);
-        sprintf(buffer, "Keyboard Map %d:start", i);
-        controller[i].keyStart.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][10]);
-        sprintf(buffer, "Keyboard Map %d:select", i);
-        controller[i].keySelect.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][11]);
+            sprintf(buffer, "Keyboard Map %d:up", i);
+            controller[i].keyUp.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][0]);
+            sprintf(buffer, "Keyboard Map %d:dpwn", i);
+            controller[i].keyDown.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][1]);
+            sprintf(buffer, "Keyboard Map %d:left", i);
+            controller[i].keyLeft.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][2]);
+            sprintf(buffer, "Keyboard Map %d:right", i);
+            controller[i].keyRight.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][3]);
+            sprintf(buffer, "Keyboard Map %d:buttonA", i);
+            controller[i].keyA.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][4]);
+            sprintf(buffer, "Keyboard Map %d:buttonB", i);
+            controller[i].keyB.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][5]);
+            sprintf(buffer, "Keyboard Map %d:buttonC", i);
+            controller[i].keyC.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][6]);
+            sprintf(buffer, "Keyboard Map %d:buttonX", i);
+            controller[i].keyX.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][7]);
+            sprintf(buffer, "Keyboard Map %d:buttonY", i);
+            controller[i].keyY.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][8]);
+            sprintf(buffer, "Keyboard Map %d:buttonZ", i);
+            controller[i].keyZ.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][9]);
+            sprintf(buffer, "Keyboard Map %d:start", i);
+            controller[i].keyStart.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][10]);
+            sprintf(buffer, "Keyboard Map %d:select", i);
+            controller[i].keySelect.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][11]);
+        }
+
+        gamePadCount = 0;
+        while (true) {
+            char buffer[0x30];
+            sprintf(buffer, "GamePad Map %d:name", gamePadCount + 1);
+            if (strcmp(iniparser_getstring(ini, buffer, "optionNotFound"), "optionNotFound") != 0) {
+                gamePadCount++;
+            }
+            else {
+                break;
+            }
+        }
+
+        AllocateStorage(sizeof(GamePadMappings) * gamePadCount, (void **)&gamePadMappings, DATASET_STG, true);
+
+        for (int i = 1; i <= gamePadCount; ++i) {
+            char buffer[0x30];
+            char buffer2[0x100];
+
+            sprintf(buffer, "GamePad Map %d:name", i);
+            sprintf(gamePadMappings[i].name, "%s", iniparser_getstring(ini, buffer, 0));
+
+            sprintf(buffer, "GamePad Map %d:type", i);
+            gamePadMappings[i].type = iniparser_getint(ini, buffer, 0);
+
+            sprintf(buffer, "GamePad Map %d:vendorID", i);
+            gamePadMappings[i].vendorID = iniparser_getint(ini, buffer, 0);
+
+            sprintf(buffer, "GamePad Map %d:productID", i);
+            gamePadMappings[i].productID = iniparser_getint(ini, buffer, 0);
+
+            sprintf(buffer, "GamePad Map %d:mappingTypes", i);
+            sprintf(buffer2, "%s", iniparser_getstring(ini, buffer, 0));
+
+            char *tok = strtok(buffer2, ", ");
+            for (int b = 0; tok; ++b) {
+                gamePadMappings[i].buttons[b].mappingType = atoi(tok);
+                tok                                       = strtok(0, " ,.-");
+            }
+
+            sprintf(buffer, "GamePad Map %d:offsets", i);
+            sprintf(buffer2, "%s", iniparser_getstring(ini, buffer, 0));
+
+            tok = strtok(buffer2, ", ");
+            for (int b = 0; tok; ++b) {
+                gamePadMappings[i].buttons[b].offset = atoi(tok);
+                tok                                  = strtok(0, " ,.-");
+            }
+
+            sprintf(buffer, "GamePad Map %d:maskVals", i);
+            sprintf(buffer2, "%s", iniparser_getstring(ini, buffer, 0));
+            tok = strtok(buffer2, ", ");
+            for (int b = 0; tok; ++b) {
+                int mask = 1;
+                for (int m = 0; m < 18; ++m) {
+                    if (strcmp(buttonNames[i], tok) == 0) {
+                        gamePadMappings[i].buttons[b].maskVal = mask;
+                        break;
+                    }
+                    mask <<= 1;
+                }
+
+                tok = strtok(0, " ,.-");
+            }
+        }
+
+        iniparser_freedict(ini);
     }
-    iniparser_freedict(ini);
+    else {
+        engine.startFullScreen = engine.startFullScreen = false;
+        engine.borderless                               = false;
+        engine.exclusiveFS                              = true;
+        engine.vsync                                    = true;
+        engine.tripleBuffer                             = false;
+        engine.shaderSupport                            = true;
+        pixWidth                                        = 424;
+        engine.fsWidth                                  = 0;
+        engine.windowWidth                              = pixWidth * 1;
+        engine.fsHeight                                 = 0;
+        engine.refreshRate                              = 0;
+        engine.shaderID                                 = SHADER_NONE;
+        engine.streamsEnabled                           = 1;
+        engine.windowHeight                             = SCREEN_YSIZE * 1;
+        engine.streamVolume                             = 1.0f;
+        engine.soundFXVolume                            = 1.0f;
+        engine.devMenu                                  = false;
+
+#if RETRO_USING_SDL2
+        int defKeyMaps[PLAYER_COUNT + 1][12] = {
+            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
+            { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
+              SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_RETURN, SDL_SCANCODE_TAB },
+            { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_U, SDL_SCANCODE_I, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_LEFTBRACKET, SDL_SCANCODE_RIGHTBRACKET },
+            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
+            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
+              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN }
+        };
+#else
+        int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+#endif
+
+       for (int i = 1; i <= PLAYER_COUNT; ++i) {
+            controller[i].keyUp.keyMap     = defKeyMaps[i][0];
+            controller[i].keyDown.keyMap   = defKeyMaps[i][1];
+            controller[i].keyLeft.keyMap   = defKeyMaps[i][2];
+            controller[i].keyRight.keyMap  = defKeyMaps[i][3];
+            controller[i].keyA.keyMap      = defKeyMaps[i][4];
+            controller[i].keyB.keyMap      = defKeyMaps[i][5];
+            controller[i].keyC.keyMap      = defKeyMaps[i][6];
+            controller[i].keyX.keyMap      = defKeyMaps[i][7];
+            controller[i].keyY.keyMap      = defKeyMaps[i][8];
+            controller[i].keyZ.keyMap      = defKeyMaps[i][9];
+            controller[i].keyStart.keyMap  = defKeyMaps[i][10];
+            controller[i].keySelect.keyMap = defKeyMaps[i][11];
+        }
+
+        writeSettings(true);
+        engine.devMenu = CheckDataFile("Data.rsdk", 0, RETRO_PLATFORM != RETRO_WIN);
+    }
 }
 
 inline void writeText(FileIO *file, const char *string, ...)
@@ -1019,17 +1144,17 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "; Retro Engine Config File\n\n");
         writeText(file, "[Game]\n");
         if (ini) {
-            if (!strcmp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound") == 0) {
+            if (strcmp(iniparser_getstring(ini, "Game:dataFile", "optionNotFound"), "optionNotFound") != 0) {
                 writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
 
 #if !RETRO_USE_ORIGINAL_CODE
-            if (!strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") == 0) {
+            if (strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") != 0) {
                 writeText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
             }
 #endif
 
-            if (!strcmp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound") == 0)
+            if (strcmp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound") != 0)
                 writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
         }
 
@@ -1066,7 +1191,7 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "streamVolume=%f\n", engine.streamVolume);
         writeText(file, "sfxVolume=%f\n", engine.soundFXVolume);
 
-        for (int i = 1; i < PLAYER_COUNT + 1; ++i) {
+        for (int i = 1; i <= PLAYER_COUNT; ++i) {
             writeText(file, "\n[Keyboard Map %d]\n", i);
             writeText(file, "up=0x%x\n", controller[i].keyUp.keyMap);
             writeText(file, "down=0x%x\n", controller[i].keyDown.keyMap);
@@ -1080,6 +1205,44 @@ void writeSettings(bool32 writeToFile)
             writeText(file, "buttonZ=0x%x\n", controller[i].keyZ.keyMap);
             writeText(file, "start=0x%x\n", controller[i].keyStart.keyMap);
             writeText(file, "select=0x%x\n", controller[i].keySelect.keyMap);
+        }
+
+        for (int i = 0; i < gamePadCount; ++i) {
+            writeText(file, "\n[Keyboard Map %d]\n", i + 1);
+            writeText(file, "name=%s\n", gamePadMappings[i].name);
+            writeText(file, "type=0x%x\n", gamePadMappings[i].type);
+            writeText(file, "vendorID=0x%x\n", gamePadMappings[i].vendorID);
+            writeText(file, "productID=0x%x\n", gamePadMappings[i].productID);
+
+            writeText(file, "mappingTypes=");
+            for (int b = 0; b < 24; ++b) {
+                writeText(file, "%d,", gamePadMappings[i].buttons[b].mappingType);
+            }
+            writeText(file, "\n");
+            writeText(file, "offsets=");
+            for (int b = 0; b < 24; ++b) {
+                writeText(file, "%d,", gamePadMappings[i].buttons[b].offset);
+            }
+            writeText(file, "\n");
+            writeText(file, "maskVals=");
+            for (int b = 0; b < 24; ++b) {
+                if (gamePadMappings[i].buttons[b].maskVal) {
+                    int m = 0;
+                    while (true) {
+                        if (1 << m == gamePadMappings[i].buttons[b].maskVal) {
+                            writeText(file, "%d,", gamePadMappings[i].buttons[b].maskVal);
+                            break;
+                        }
+                    }
+                    if (m == 18) {
+                        writeText(file, "?,");
+                    }
+                }
+                else {
+                    writeText(file, "?,");
+                }
+            }
+            writeText(file, "\n");
         }
 
         iniparser_freedict(ini);

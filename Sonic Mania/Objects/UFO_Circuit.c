@@ -4,46 +4,327 @@ ObjectUFO_Circuit *UFO_Circuit;
 
 void UFO_Circuit_Update(void)
 {
-
+    RSDK_THIS(UFO_Circuit);
+    StateMachine_Run(entity->state);
+    RSDK.ProcessAnimation(&entity->ufoData);
 }
 
 void UFO_Circuit_LateUpdate(void)
 {
-
+    RSDK_THIS(UFO_Circuit);
+    int z         = entity->position.y;
+    int y         = entity->height;
+    int x         = entity->position.x;
+    entity->depth = UFO_Camera->matWorld.values[2][1] * (y >> 16) + UFO_Camera->matWorld.values[2][2] * (z >> 16)
+                    + UFO_Camera->matWorld.values[2][0] * (x >> 16) + UFO_Camera->matWorld.values[2][3];
+    if (entity->depth >= 1024) {
+        int depth = (int)((UFO_Camera->matWorld.values[0][3] << 8) + (UFO_Camera->matWorld.values[0][2] * (z >> 8) & 0xFFFFFF00)
+                    + (UFO_Camera->matWorld.values[0][0] * (x >> 8) & 0xFFFFFF00)
+                    + (UFO_Camera->matWorld.values[0][1] * (y >> 8) & 0xFFFFFF00)) / entity->depth;
+        entity->visible = abs(depth) < 0x100;
+    }
 }
 
-void UFO_Circuit_StaticUpdate(void)
-{
-
-}
+void UFO_Circuit_StaticUpdate(void) {}
 
 void UFO_Circuit_Draw(void)
 {
-
+    RSDK_THIS(UFO_Circuit);
+    if (entity->depth >= 0x4000) {
+        RSDK.Prepare3DScene(UFO_Circuit->sceneIndex);
+        RSDK.MatrixScaleXYZ(&entity->matrix1, 0x200, 0x200, 0x200);
+        RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, false);
+        RSDK.MatrixRotateY(&entity->matrix3, entity->angleY);
+        RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix3, &entity->matrix1);
+        RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &UFO_Camera->matWorld);
+        RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &UFO_Camera->matView);
+        RSDK.AddMeshFrameTo3DScene(entity->ufoData.animationID, UFO_Circuit->sceneIndex, &entity->ufoData, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+                                   &entity->matrix2, &entity->matrix3, 0xFFFFFF);
+        RSDK.AddMeshFrameTo3DScene(UFO_Circuit->emeraldModel, UFO_Circuit->sceneIndex, &entity->ufoData, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+                                   &entity->matrix2, &entity->matrix3, 0xFFFFFF);
+        RSDK.Draw3DScene(UFO_Circuit->sceneIndex);
+    }
 }
 
-void UFO_Circuit_Create(void* data)
+void UFO_Circuit_Create(void *data)
 {
+    RSDK_THIS(UFO_Circuit);
+    if (!RSDK_sceneInfo->inEditor) {
+        entity->startPos.x = entity->position.x;
+        entity->startPos.y = entity->position.y;
+        int id             = RSDK.GetEntityID(entity);
 
+        bool32 flag = false;
+        for (int e = id - 1; true; --e) {
+            if (e < 0 && !flag) {
+                e = 0x840 - 1;
+                flag = true;
+            }
+            else if (e < 0 && flag) {
+                entity->prevNode = NULL;
+                break;
+            }
+                
+
+            Entity *node = RSDK.GetEntityByID(e);
+            if (node->objectID == UFO_Circuit->objectID) {
+                entity->prevNode = node;
+                break;
+            }
+        }
+
+        flag = false;
+        for (int e = id + 1; true; ++e) {
+            if (e >= 0x840 && !flag) {
+                e    = 0;
+                flag = true;
+            }
+            else if (e >= 0x840 && flag) {
+                entity->nextNode = NULL;
+                break;
+            }
+                
+            Entity *node = RSDK.GetEntityByID(e);
+            if (node->objectID == UFO_Circuit->objectID) {
+                entity->nextNode = node;
+                break;
+            }
+        }
+
+        if (entity->startNode) {
+            entity->active    = ACTIVE_NORMAL;
+            entity->visible   = true;
+            entity->drawOrder = 4;
+            if (entity->reverse)
+                entity->curNode = entity->prevNode;
+            else
+                entity->curNode = entity->nextNode;
+            entity->groundVel = 0x70000;
+            entity->field_7C  = 0x70000;
+            RSDK.SetModelAnimation(UFO_Circuit->ufoModel, &entity->ufoData, 128, 0, true, 0);
+            UFO_Circuit_Unknown1();
+            entity->state = UFO_Circuit_Unknown4;
+        }
+    }
 }
 
 void UFO_Circuit_StageLoad(void)
 {
-
+    UFO_Circuit->ufoModel = RSDK.LoadMesh("Special/UFOChase.bin", SCOPE_STAGE);
+    switch (UFO_Setup->specialStageID) {
+        case 1: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldYellow.bin", SCOPE_STAGE); break;
+        case 2: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldBlue.bin", SCOPE_STAGE); break;
+        case 3: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldPurple.bin", SCOPE_STAGE); break;
+        case 4: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldGrey.bin", SCOPE_STAGE); break;
+        case 5: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldCyan.bin", SCOPE_STAGE); break;
+        case 6: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldRed.bin", SCOPE_STAGE); break;
+        default: UFO_Circuit->emeraldModel = RSDK.LoadMesh("Special/EmeraldGreen.bin", SCOPE_STAGE); break;
+    }
+    UFO_Circuit->sceneIndex = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
+    UFO_Circuit->nodeCount  = 0;
+    foreach_all(UFO_Circuit, node) { UFO_Circuit->nodeCount++; }
+    UFO_Circuit->field_8 = 0;
+    UFO_Circuit->field_C = 0;
 }
 
-void UFO_Circuit_EditorDraw(void)
+void UFO_Circuit_Unknown1(void)
 {
-
+    RSDK_THIS(UFO_Circuit);
+    EntityUFO_Circuit *node = (EntityUFO_Circuit *)entity->curNode;
+    entity->angle           = RSDK.ATan2((entity->position.x - node->startPos.x) >> 16, (entity->position.y - node->startPos.y) >> 16);
+    switch (node->throttle) {
+        case 2:
+            UFO_Circuit->field_8 = 0x2000;
+            UFO_Circuit->field_C = 0x8000;
+            break;
+        case 3:
+            UFO_Circuit->field_8 = 0x4000;
+            UFO_Circuit->field_C = 0x10000;
+            break;
+        case 4:
+            UFO_Circuit->field_8 = 0x8000;
+            UFO_Circuit->field_C = 0x20000;
+            break;
+        default:
+            UFO_Circuit->field_8 = 0;
+            UFO_Circuit->field_C = 0;
+            break;
+    }
 }
-
-void UFO_Circuit_EditorLoad(void)
+void UFO_Circuit_Unknown2(void)
 {
-
+    RSDK_THIS(UFO_Circuit);
+    EntityUFO_Circuit *node = (EntityUFO_Circuit *)entity->curNode;
+    entity->angle           = RSDK.ATan2((entity->position.x - node->startPos.x) >> 16, (entity->position.y - node->startPos.y) >> 16);
+    switch (node->throttle) {
+        case 1:
+            UFO_Circuit->field_8 = 0;
+            UFO_Circuit->field_C = 0;
+            break;
+        case 2:
+            UFO_Circuit->field_8 = 0x2000;
+            UFO_Circuit->field_C = 0x8000;
+            break;
+        case 3:
+            UFO_Circuit->field_8 = 0x4000;
+            UFO_Circuit->field_C = 0x10000;
+            break;
+        case 4:
+            UFO_Circuit->field_8 = 0x8000;
+            UFO_Circuit->field_C = 0x20000;
+            break;
+        default: break;
+    }
 }
+bool32 UFO_Circuit_Unknown3(void)
+{
+    RSDK_THIS(UFO_Circuit);
+
+    foreach_active(UFO_Player, player)
+    {
+        EntityUFO_Circuit *curNode  = entity->curNode;
+        EntityUFO_Circuit *targetNode = NULL;
+        EntityUFO_Circuit *prevNode = curNode->prevNode;
+
+        if (((player->position.x - entity->position.x) >> 16) * ((player->position.x - entity->position.x) >> 16)
+                    + ((player->position.y - entity->position.y) >> 16) * ((player->position.y - entity->position.y) >> 16)
+                >= 0x100000
+            && prevNode != curNode) {
+            int pos  = 0x7FFFFFFF;
+            int pos2 = 0;
+
+            while (prevNode != curNode) {
+                int pos2 = ((player->position.x - prevNode->position.x) >> 16) * ((player->position.x - prevNode->position.x) >> 16)
+                           + ((player->position.y - prevNode->position.y) >> 16) * ((player->position.y - prevNode->position.y) >> 16);
+                if (pos2 < pos)
+                    targetNode = prevNode;
+                if (pos2 >= pos)
+                    pos2 = pos;
+                prevNode = prevNode->prevNode;
+                pos      = pos2;
+                if (!prevNode)
+                    break;
+            }
+
+            if (targetNode) {
+                int id                     = 0;
+                EntityUFO_Circuit *nodePtr = entity->curNode;
+                if (entity->reverse) {
+                    for (; nodePtr != targetNode; ++id) nodePtr = nodePtr->prevNode;
+                }
+                else {
+                    for (; nodePtr != targetNode; ++id) nodePtr = nodePtr->nextNode;
+                }
+                if (id > UFO_Circuit->nodeCount >> 1) {
+                    entity->reverse ^= 1;
+                    EntityUFO_Circuit *node = entity->curNode;
+                    if (entity->reverse)
+                        entity->curNode = node->prevNode;
+                    else
+                        entity->curNode = node->nextNode;
+                    UFO_Circuit_Unknown2();
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+void UFO_Circuit_Unknown4(void)
+{
+    RSDK_THIS(UFO_Circuit);
+
+    if (entity->groundVel >= entity->field_7C) {
+        if (entity->groundVel > entity->field_7C) {
+            if (entity->groundVel - 0x8000 < entity->field_7C)
+                entity->groundVel = entity->field_7C;
+            else
+                entity->groundVel -= 0x8000;
+        }
+    }
+    else {
+        if (entity->groundVel + 0x8000 > entity->field_7C)
+            entity->groundVel = entity->field_7C;
+        else
+            entity->groundVel += 0x8000;
+    }
+
+    entity->field_7C = UFO_Player->maxSpeed - (UFO_Player->maxSpeed - 0x70000) / 3;
+    int vx           = ((((-entity->groundVel >> 8) * RSDK.Cos256(entity->angle)) - entity->velocity.x) >> 3) + entity->velocity.x;
+    int vy           = ((((-entity->groundVel >> 8) * RSDK.Sin256(entity->angle)) - entity->velocity.y) >> 3) + entity->velocity.y;
+    entity->position.x += vx;
+    entity->velocity.x = vx;
+    entity->position.y += vy;
+    entity->velocity.y = vy;
+    entity->angleY     = 4 * RSDK.ATan2(vy, -vx);
+    if (!UFO_Circuit_Unknown3()) {
+        EntityUFO_Circuit *curNode = entity->curNode;
+        int rx                     = (entity->position.x - curNode->startPos.x) >> 16;
+        int ry                     = (entity->position.y - curNode->startPos.y) >> 16;
+        int r                      = entity->groundVel >> 5;
+        if (rx * rx + ry * ry < r) {
+            if (entity->reverse)
+                entity->curNode = curNode->nextNode;
+            else
+                entity->curNode = curNode->prevNode;
+            UFO_Circuit_Unknown2();
+        }
+        if (!UFO_Setup->timedOut) {
+            foreach_active(UFO_Player, player)
+            {
+                int ry = (entity->height - player->height - 0xA0000) >> 16;
+                int rx = (entity->position.y - player->position.y) >> 16;
+                int r  = ((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + (rx * rx + ry * ry);
+                if (!UFO_Setup->machLevel && r < 0xC000) {
+                    entity->field_7C += (abs(player->velocity.y) + abs(player->velocity.x)) >> 1;
+                }
+                if (r >= 0x6000) {
+                    if (r > 0xC0000) {
+                        if (UFO_Setup->machLevel) {
+                            if (UFO_Setup->machLevel == 1)
+                                continue;
+                            if (abs(player->velocity.y) + abs(player->velocity.x) >= entity->field_7C >> 1)
+                                continue;
+                            if (entity->groundVel <= 192 * entity->field_7C >> 8)
+                                continue;
+                            entity->groundVel -= UFO_Circuit->field_C;
+                        }
+                        else {
+                            if (entity->groundVel > 192 * entity->field_7C >> 8) {
+                                entity->groundVel -= UFO_Circuit->field_8;
+                            }
+                        }
+                    }
+                }
+                else {
+                    player->timer               = 0;
+                    player->circuitPtr          = entity;
+                    player->inputState          = NULL;
+                    player->state               = UFO_Player_Unknown10;
+                    entity->state               = UFO_Circuit_Unknown5;
+                    RSDK_sceneInfo->timeEnabled = false;
+                }
+            }
+        }
+    }
+}
+void UFO_Circuit_Unknown5(void)
+{
+    RSDK_THIS(UFO_Circuit);
+    entity->velocity.x = entity->velocity.y - (entity->velocity.y >> 4);
+    entity->velocity.y = entity->velocity.y - (entity->velocity.y >> 4);
+    entity->position.x += entity->velocity.x;
+    entity->position.y += entity->velocity.y;
+}
+
+void UFO_Circuit_EditorDraw(void) {}
+
+void UFO_Circuit_EditorLoad(void) {}
 
 void UFO_Circuit_Serialize(void)
 {
-
+    RSDK_EDITABLE_VAR(UFO_Circuit, VAR_UINT8, mode);
+    RSDK_EDITABLE_VAR(UFO_Circuit, VAR_UINT8, throttle);
+    RSDK_EDITABLE_VAR(UFO_Circuit, VAR_BOOL, startNode);
+    RSDK_EDITABLE_VAR(UFO_Circuit, VAR_BOOL, reverse);
 }
-

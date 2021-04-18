@@ -20,7 +20,7 @@ struct DummyCore {
     int (*GetConfirmButtonFlip)();
     void (*LaunchManual)();
     void (*ExitGame)();
-    void (*unknown14)();
+    int (*controllerUnknown)();
     int (*unknown15)(byte inputID);
     int (*CheckDLC)(byte id);
     int (*ShowExtensionOverlay)(byte overlay);
@@ -201,6 +201,7 @@ int GetUserPlatform();
 int GetConfirmButtonFlip();
 void LaunchManual();
 void ExitGame();
+int controllerUnknown();
 #if RETRO_REV02
 inline int checkDLC(byte dlcID)
 {
@@ -627,6 +628,50 @@ struct SettingsStorage {
     int mouseY;
     int field_8;
     int field_C;
+};
+
+struct GamePadButtonMap {
+    int maskVal;
+    short mappingType;
+    short offset;
+};
+
+struct GamePadMappings {
+    char name[0x40];
+    GamePadButtonMap buttons[24];
+    int vendorID;
+    int productID;
+    int type;
+};
+
+extern GamePadMappings *gamePadMappings;
+extern int gamePadCount;
+
+enum SettingsValues {
+    SETTINGS_WINDOWED,
+    SETTINGS_BORDERED,
+    SETTINGS_EXCLUSIVEFS,
+    SETTINGS_VSYNC,
+    SETTINGS_TRIPLEBUFFERED,
+    SETTINGS_WINDOW_WIDTH,
+    SETTINGS_WINDOW_HEIGHT,
+    SETTINGS_FSWIDTH,
+    SETTINGS_FSHEIGHT,
+    SETTINGS_REFRESHRATE,
+    SETTINGS_SHADERSUPPORT,
+    SETTINGS_SHADERID,
+    SETTINGS_SCREENCOUNT,
+#if RETRO_REV02
+    SETTINGS_DIMTIMER,
+#endif
+    SETTINGS_STREAMSENABLED,
+    SETTINGS_STREAM_VOL,
+    SETTINGS_SFX_VOL,
+    SETTINGS_LANGUAGE,
+    SETTINGS_STORE,
+    SETTINGS_RELOAD,
+    SETTINGS_CHANGED,
+    SETTINGS_WRITE,
 };
 
 extern SettingsStorage settingsStorage;

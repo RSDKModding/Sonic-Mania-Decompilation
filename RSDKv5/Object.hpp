@@ -161,18 +161,21 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos);
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
 
-inline void SetEditableVar(byte type, const char *name, byte object, int storeOffset)
+inline void SetEditableVar(byte type, const char *name, byte object, int offset)
 {
     if (editableVarCount < 255) {
         EditableVarInfo *editableVar = &editableVarList[editableVarCount];
         strcpy(hashBuffer, name);
         GenerateHash(editableVar->hash, strlen(name));
         editableVar->type   = type;
-        editableVar->offset = storeOffset;
+        editableVar->offset = offset;
         editableVar->active = true;
         editableVarCount++;
     }
 }
+
+void SetActiveVariable(int objectID, const char *name);
+void AddEnumVar(const char *name);
 
 void InitObjects();
 void ProcessObjects();

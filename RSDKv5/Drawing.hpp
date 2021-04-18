@@ -9,6 +9,7 @@
 #else
 #define SCREEN_MAX (0x2)
 #endif
+#define CAMERA_MAX (0x4)
 
 #define BLENDTABLE_YSIZE (0x100)
 #define BLENDTABLE_XSIZE (0x20)
@@ -90,8 +91,11 @@ extern GFXSurface gfxSurface[SURFACE_MAX];
 extern int pixWidth;
 extern int cameraCount;
 extern ScreenInfo screens[SCREEN_MAX];
-extern CameraInfo cameras[SCREEN_MAX];
+extern CameraInfo cameras[CAMERA_MAX];
 extern ScreenInfo *currentScreen;
+
+extern byte startVertex_2P[2];
+extern byte startVertex_3P[3];
 
 bool32 InitRenderDevice();
 void FlipScreen();
@@ -103,6 +107,17 @@ void GenerateBlendLookupTable();
 
 void InitGFXSystem();
 
+void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
+void GetWindowSize(int *width, int *height);
+
+inline void SetScreenSplitVerticies(sbyte p2_1, sbyte p2_2, sbyte p3_1, sbyte p3_2, sbyte p3_3)
+{
+    startVertex_2P[0] = p2_1;
+    startVertex_2P[1] = p2_2;
+    startVertex_3P[0] = p3_1;
+    startVertex_3P[1] = p3_2;
+    startVertex_3P[2] = p3_3;
+}
 
 inline void SetScreenSize(byte screenID, ushort width, ushort height)
 {
@@ -124,7 +139,7 @@ inline void SetScreenSize(byte screenID, ushort width, ushort height)
 
 inline void AddCamera(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative)
 {
-    if (cameraCount < SCREEN_MAX) {
+    if (cameraCount < CAMERA_MAX) {
         cameras[cameraCount].targetPos     = pos;
         cameras[cameraCount].offset.x      = offsetX;
         cameras[cameraCount].offset.y      = offsetY;
@@ -207,7 +222,7 @@ inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(v
 
 void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count);
 
-void FillScreen(int a1, int a2, int a3, int a4);
+void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha);
 
 void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);

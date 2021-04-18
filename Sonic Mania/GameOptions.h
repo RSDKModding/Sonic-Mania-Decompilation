@@ -16,7 +16,6 @@ typedef enum {
 typedef enum { MEDIA_DEMO } CategoryIDS;
 
 typedef enum {
-    MAX_PLAYERS = 4,
     ID_NONE     = 0x00,
     ID_SONIC    = 0x01,
     ID_TAILS    = 0x02,
@@ -26,7 +25,7 @@ typedef enum {
     ID_RAY    = 0x10,
 #endif
     ID_TAILS_ASSIST   = 0x200,
-    ID_DEFAULT_PLAYER = 0x201,
+    ID_DEFAULT_PLAYER = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
 
 typedef enum { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT } ItemModes;
@@ -76,46 +75,6 @@ typedef enum {
     SLOT_CAMERA3          = 62,
     SLOT_CAMERA4          = 63,
 } ReservedEntities;
-
-typedef enum {
-    S3D_FLATCLR_WIREFRAME               = 0x0,
-    S3D_FLATCLR                         = 0x1,
-    S3D_UNKNOWN_2                       = 0x2,
-    S3D_UNKNOWN_3                       = 0x3,
-    S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
-    S3D_FLATCLR_SHADED                  = 0x5,
-    S3D_FLATCLR_SHADED_BLENDED          = 0x6,
-    S3D_FLATCLR_SCREEN_WIREFRAME        = 0x7,
-    S3D_FLATCLR_SCREEN                  = 0x8,
-    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME = 0x9,
-    S3D_FLATCLR_SHADED_SCREEN           = 0xA,
-    S3D_FLATCLR_SHADED_BLENDED_SCREEN   = 0xB,
-} Scene3DDrawTypes;
-
-typedef enum {
-    SETTINGS_WINDOWED,
-    SETTINGS_BORDERED,
-    SETTINGS_EXCLUSIVEFS,
-    SETTINGS_VSYNC,
-    SETTINGS_TRIPLEBUFFERED,
-    SETTINGS_WINDOW_WIDTH,
-    SETTINGS_WINDOW_HEIGHT,
-    SETTINGS_FSWIDTH,
-    SETTINGS_FSHEIGHT,
-    SETTINGS_REFRESHRATE,
-    SETTINGS_SHADERSUPPORT,
-    SETTINGS_SHADERID,
-    SETTINGS_SCREENCOUNT,
-    SETTINGS_DIMTIMER,
-    SETTINGS_STREAMSENABLED,
-    SETTINGS_STREAM_VOL,
-    SETTINGS_SFX_VOL,
-    SETTINGS_LANGUAGE,
-    SETTINGS_STORESETTINGS,
-    SETTINGS_RELOADSETTINGS,
-    SETTINGS_SETTINGSCHANGED,
-    SETTINGS_WRITE,
-} SettingsValues;
 
 typedef enum {
     CS_Unknown0,
@@ -253,7 +212,7 @@ typedef struct {
     int suppressTitlecard;
     int suppressAutoMusic;
     int competitionSession[0x4000];
-    int medalMods; // Stuff Like Instashieldand etc (Bonus Stuff that medals unlock)
+    int medalMods;
     int parallaxOffset[256];
     int enableIntro;
     int optionsLoaded;
@@ -293,7 +252,7 @@ typedef struct {
     int replayTableLoaded;
     int taTableID;
     int taTableLoaded;
-    int stock; // Encore Lives
+    int stock;
     int characterFlags;
     int vapeMode;
     int secrets;

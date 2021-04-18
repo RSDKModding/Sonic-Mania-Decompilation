@@ -144,14 +144,14 @@ bool32 InitAudioDevice()
     }
 
     for (int i = 0; i < 0x400; i += 2) {
-        speedValues[i]     = (float)i * 0.00097656;
-        speedValues[i + 1] = (float)(i + 1) * 0.00097656;
+        speedValues[i]     = (float)i * (1.0f / 1024.0f);
+        speedValues[i + 1] = (float)(i + 1) * (1.0f / 1024.0f); // 0.00097656;
     }
 
     GEN_HASH("Stream Channel 0", sfxList[SFX_COUNT - 1].hash);
     sfxList[SFX_COUNT - 1].scope              = SCOPE_GLOBAL;
     sfxList[SFX_COUNT - 1].maxConcurrentPlays = 1;
-    sfxList[SFX_COUNT - 1].length    = 2048;
+    sfxList[SFX_COUNT - 1].length             = 2048;
     AllocateStorage(0x2000, (void **)&sfxList[SFX_COUNT - 1].buffer, DATASET_MUS, false);
 
     return true;

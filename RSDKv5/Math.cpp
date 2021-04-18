@@ -69,8 +69,8 @@ void CalculateTrigAngles()
         sinVal256[i]  = (int)((sinVal512[i * 2] >> 1));
         cosVal256[i]  = (int)((cosVal512[i * 2] >> 1));
         tanVal256[i]  = (int)((tanVal512[i * 2] >> 1));
-        aSinVal256[i] = (int)((asin(i / 255.0f) * 128.0f) / M_PI);
-        aCosVal256[i] = (int)((acos(i / 255.0f) * 128.0f) / M_PI);
+        aSinVal256[i] = (int)((asin(i / 255.0) * 128.0) / M_PI);
+        aCosVal256[i] = (int)((acos(i / 255.0) * 128.0) / M_PI);
     }
 
     for (int y = 0; y < 0x100; ++y) {

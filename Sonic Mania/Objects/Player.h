@@ -4,69 +4,71 @@
 #include "../SonicMania.h"
 
 enum PLAYER_ANI {
-    ANI_IDLE           = 0x0,
-    ANI_BORED1         = 0x1,
-    ANI_BORED2         = 0x2,
-    ANI_LOOKUP         = 0x3,
-    ANI_CROUCH         = 0x4,
-    ANI_WALK           = 0x5,
-    ANI_AIRWALK        = 0x6,
-    ANI_JOG            = 0x7,
-    ANI_RUN            = 0x8,
-    ANI_DASH           = 0x9,
-    ANI_JUMP           = 0xA,
-    ANI_SPRINGTWIRL    = 0xB,
-    ANI_SPRINGDIAGONAL = 0xC,
-    ANI_SKID           = 0xD,
-    ANI_SKIDTURN       = 0xE,
-    ANI_SPINDASH       = 0xF,
-    ANI_DROPDASH       = 0x10,
-    ANI_PUSH           = 0x11,
-    ANI_HURT           = 0x12,
-    ANI_DIE            = 0x13,
-    ANI_DROWN          = 0x14,
-    ANI_BALANCE1       = 0x15,
-    ANI_BALANCE2       = 0x16,
-    ANI_SPRINGCS       = 0x17,
-    ANI_STANDCS        = 0x18,
-    ANI_FAN            = 0x19,
-    ANI_VICTORY        = 0x1A,
-    ANI_OUTTAHERE      = 0x1B,
-    ANI_HANG           = 0x1C,
-    ANI_HANGMOVE       = 0x1D,
-    ANI_POLESWINGH     = 0x1E,
-    ANI_POLESWINGV     = 0x1F,
-    ANI_SHAFTSWING     = 0x20,
-    ANI_TURNTABLE      = 0x21,
-    ANI_TWISTER        = 0x22,
-    ANI_SPIRALRUN      = 0x23,
-    ANI_STICK          = 0x24,
-    ANI_PULLEYHOLD     = 0x25,
-    ANI_SHIMMYIDLE     = 0x26,
-    ANI_SHIMMYMOVE     = 0x27,
-    ANI_BREATHE        = 0x28,
-    ANI_BUBBLE         = 0x29,
-    ANI_RIDE           = 0x2A,
-    ANI_CLING          = 0x2B,
-    ANI_BUNGEE         = 0x2C,
-    ANI_TWISTRUN       = 0x2D,
-    ANI_FLUME          = 0x2E,
-    ANI_TRANSFORM      = 0x2F,
-    ANI_FLY            = 0x30,
-    ANI_FLYTIRED       = 0x31,
-    ANI_FLYLIFT        = 0x32,
-    ANI_FLYLIFTTIRED   = 0x33,
-    ANI_SWIM           = 0x34,
-    ANI_SWIMTIRED      = 0x35,
-    ANI_SWIMLIFT       = 0x36,
+    ANI_IDLE,
+    ANI_BORED1,
+    ANI_BORED2,
+    ANI_LOOKUP,
+    ANI_CROUCH,
+    ANI_WALK,
+    ANI_AIRWALK,
+    ANI_JOG,
+    ANI_RUN,
+    ANI_DASH,
+    ANI_JUMP,
+    ANI_SPRINGTWIRL,
+    ANI_SPRINGDIAGONAL,
+    ANI_SKID,
+    ANI_SKIDTURN,
+    ANI_SPINDASH,
+    ANI_DROPDASH,
+    ANI_PUSH,
+    ANI_HURT,
+    ANI_DIE,
+    ANI_DROWN,
+    ANI_BALANCE1,
+    ANI_BALANCE2,
+    ANI_SPRINGCS,
+    ANI_STANDCS,
+    ANI_FAN,
+    ANI_VICTORY,
+    ANI_OUTTAHERE,
+    ANI_HANG,
+    ANI_HANGMOVE,
+    ANI_POLESWINGH,
+    ANI_POLESWINGV,
+    ANI_SHAFTSWING,
+    ANI_TURNTABLE,
+    ANI_TWISTER,
+    ANI_SPIRALRUN,
+    ANI_STICK,
+    ANI_PULLEYHOLD,
+    ANI_SHIMMYIDLE,
+    ANI_SHIMMYMOVE,
+    ANI_BREATHE,
+    ANI_BUBBLE,
+    ANI_RIDE,
+    ANI_CLING,
+    ANI_BUNGEE,
+    ANI_TWISTRUN,
+#if RETRO_USE_PLUS
+    ANI_FLUME,
+#endif
+    ANI_TRANSFORM,
+    ANI_FLY,
+    ANI_FLYTIRED,
+    ANI_FLYLIFT,
+    ANI_FLYLIFTTIRED,
+    ANI_SWIM,
+    ANI_SWIMTIRED,
+    ANI_SWIMLIFT,
 };
 
 enum ShieldTypes {
-    SHIELD_NONE      = 0,
-    SHIELD_BLUE      = 1,
-    SHIELD_BUBBLE    = 2,
-    SHIELD_FIRE      = 3,
-    SHIELD_LIGHTNING = 4,
+    SHIELD_NONE,
+    SHIELD_BLUE,
+    SHIELD_BUBBLE,
+    SHIELD_FIRE,
+    SHIELD_LIGHTNING,
 };
 
 // Object Class
@@ -273,12 +275,12 @@ typedef struct {
     int superState;
     int superSecondTimer;
     int superBlendAmount;
-    int superBlendDirection;
+    int superBlendState;
     bool32 sidekick;
     int scoreBonus;
     int cameraOffset;
-    int killFlagA;
-    int killFlagB;
+    int collisionFlagH;
+    int collisionFlagV;
     int topSpeed;
     int acceleration;
     int deceleration;
@@ -384,6 +386,14 @@ void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int character);
 bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags);
+void Player_BlendSuperSonicColours(int bankID);
+void Player_BlendSuperTailsColours(int bankID);
+void Player_BlendSuperKnuxColours(int bankID);
+#if RETRO_USE_PLUS
+void Player_BlendSuperMightyColours(int bankID);
+void Player_BlendSuperRayColours(int bankID);
+#endif
+void Player_HandleSuperPalette(void);
 bool32 Player_CheckKeyPress(void);
 void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane);
 void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane);
@@ -457,6 +467,7 @@ void Player_State_KnuxLedgePullUp(void);
 void Player_State_MightyHammerDrop(void);
 void Player_State_MightyUnspin(void);
 void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox);
+bool32 Player_CheckMightyUnspin(int bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int *uncurlTimer);
 void Player_State_RayGlide(void);
 #endif
 void Player_State_FlyIn(void);

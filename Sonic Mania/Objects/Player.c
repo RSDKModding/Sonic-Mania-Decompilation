@@ -88,15 +88,16 @@ void Player_Update(void)
             entity->uncurlTimer--;
 #endif
 
-        // Player_HandleSuperPalette();
+        Player_HandleSuperPalette();
         if (entity->characterID == ID_TAILS && entity->state != Player_State_TailsFlight && entity->abilitySpeed)
             entity->abilitySpeed = 0;
 
-        if (entity->killFlagA == 3 || entity->killFlagB == 3)
+        //Hurt Player if we're touching T/B or L/R sides at same time
+        if (entity->collisionFlagH == 3 || entity->collisionFlagV == 3)
             entity->hurtFlag = 1;
 
-        entity->killFlagA = 0;
-        entity->killFlagB = 0;
+        entity->collisionFlagH = 0;
+        entity->collisionFlagV = 0;
         if (entity->collisionLayers & Zone->moveID) {
             TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
             move->position.x = -entity->field_194.x >> 16;
@@ -126,7 +127,7 @@ void Player_Update(void)
             }
             entity->collisionLayers &= ~Zone->moveID;
             if (entity->onGround && !entity->collisionMode)
-                entity->killFlagB |= 1;
+                entity->collisionFlagV |= 1;
         }
     }
 }
@@ -178,17 +179,50 @@ void Player_LateUpdate(void)
         if (globals->gameMode != MODE_COMPETITION)
             entity->active = ACTIVE_ALWAYS;
         entity->shield     = SHIELD_NONE;
-        entity->killFlagA  = 0;
-        entity->killFlagB  = 0;
+        entity->collisionFlagH  = 0;
+        entity->collisionFlagV  = 0;
         entity->underwater = false;
         Player_ChangePhysicsState(entity);
         Entity *powerup = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(entity));
         RSDK.ResetEntityPtr(powerup, TYPE_BLANK, NULL);
-        if (entity->hurtFlag == 1) {
-            RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
-        }
-        else if (entity->hurtFlag != 2) {
-            if (entity->hurtFlag == 3) {
+
+        switch (entity->hurtFlag) {
+            default: break;
+            case 1: RSDK.PlaySFX(Player->sfx_Hurt, 0, 255); break;
+            case 2:
+                entity->hurtFlag   = 0;
+                entity->velocity.y = -0x68000;
+                entity->state      = Player_State_Die;
+                if ((entity->drawFX & FX_SCALE) == 0 || entity->scale.x == 0x200)
+                    entity->drawOrder = Zone->uiDrawLow;
+                if (entity->sidekick || globals->gameMode == MODE_COMPETITION) {
+                    if (entity->camera) {
+                        entity->scrollDelay   = 2;
+                        entity->camera->state = StateMachine_None;
+                    }
+                }
+#if RETRO_USE_PLUS
+                else if (globals->gameMode == MODE_ENCORE) {
+                    EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+                    if (globals->stock == 0 && !sidekick->objectID) {
+
+                        if (entity->camera) {
+                            entity->scrollDelay   = 2;
+                            entity->camera->state = StateMachine_None;
+                        }
+                    }
+                }
+#endif
+                else {
+                    RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                    RSDK_sceneInfo->timeEnabled = false;
+                    if (entity->camera) {
+                        entity->scrollDelay   = 2;
+                        entity->camera->state = StateMachine_None;
+                    }
+                }
+                break;
+            case 3:
                 entity->hurtFlag        = 0;
                 entity->gravityStrength = 0x1000;
                 entity->velocity.y      = 0;
@@ -212,7 +246,7 @@ void Player_LateUpdate(void)
                     }
 #if RETRO_USE_PLUS
                     else {
-                        EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+                        EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (globals->stock == 0 && !sidekick->objectID) {
                             RSDK_sceneInfo->timeEnabled = false;
                         }
@@ -222,52 +256,13 @@ void Player_LateUpdate(void)
                             entity->camera->state = StateMachine_None;
                         }
                     }
+                }
 #endif
-                }
-            }
-            if (entity->camera) {
-                entity->scrollDelay   = 2;
-                entity->camera->state = StateMachine_None;
-            }
-        }
-        else if (entity->hurtFlag == 2) {
-            entity->hurtFlag   = 0;
-            entity->velocity.y = -0x68000;
-            entity->state      = Player_State_Die;
-            if ((entity->drawFX & FX_SCALE) == 0 || entity->scale.x == 0x200)
-                entity->drawOrder = Zone->uiDrawLow;
-            if (entity->sidekick) {
                 if (entity->camera) {
                     entity->scrollDelay   = 2;
                     entity->camera->state = StateMachine_None;
                 }
-            }
-#if RETRO_USE_PLUS
-            else if (globals->gameMode == MODE_ENCORE) {
-                EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                if (globals->stock == 0 && !sidekick->objectID) {
-
-                    if (entity->camera) {
-                        entity->scrollDelay   = 2;
-                        entity->camera->state = StateMachine_None;
-                    }
-                }
-            }
-#endif
-            else if (globals->gameMode == MODE_COMPETITION) {
-                if (entity->camera) {
-                    entity->scrollDelay   = 2;
-                    entity->camera->state = StateMachine_None;
-                }
-            }
-            else {
-                RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                RSDK_sceneInfo->timeEnabled = false;
-                if (entity->camera) {
-                    entity->scrollDelay   = 2;
-                    entity->camera->state = StateMachine_None;
-                }
-            }
+                break;
         }
     }
 
@@ -276,7 +271,7 @@ void Player_LateUpdate(void)
             entity->state           = entity->nextGroundState;
             entity->nextGroundState = StateMachine_None;
             if (entity->sidekick) {
-                EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+                EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 player->scoreBonus   = 0;
             }
             else {
@@ -494,7 +489,7 @@ void Player_Create(void *data)
 {
     RSDK_THIS(Player);
     if (RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, 0, &entity->playerAnimData, 1, 0);
+        RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_IDLE, &entity->playerAnimData, true, 0);
         entity->characterID = ID_SONIC;
     }
     else {
@@ -576,7 +571,7 @@ void Player_Create(void *data)
                 APICallback->func_AssignControllerID(entity->controllerID, -1);
             }
             else {
-                OBJ_APICallback->controllerIDs[entity->controllerID] = -1;
+                APICallback->controllerIDs[entity->controllerID] = -1;
             }
             entity->inputState = Player_GetP2Inputs;
             entity->sidekick = true;
@@ -1190,10 +1185,359 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
         player->superState       = 1;
     }
     player->superBlendAmount    = 0;
-    player->superBlendDirection = 0;
+    player->superBlendState = 0;
     player->superSecondTimer    = 60;
     player->timer               = 0;
     return true;
+}
+void Player_BlendSuperSonicColours(int bankID)
+{
+    RSDK_THIS(Player);
+    if (entity->superState == 2) {
+        if (entity->superBlendState & 1) {
+            if (entity->superBlendAmount <= 0)
+                entity->superBlendState &= 2;
+            else
+                entity->superBlendAmount -= 4;
+        }
+        else if (entity->superBlendAmount >= 256) {
+            entity->superBlendState |= 1;
+            if (entity->superBlendState == 1) {
+                for (int i = 0; i < 6; ++i) {
+                    RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i]);
+                    RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 6]);
+                }
+                entity->superBlendState  = 2;
+                entity->superBlendAmount = 0;
+            }
+        }
+        else {
+            entity->superBlendAmount += 4;
+        }
+    }
+    else {
+        if (entity->superBlendAmount <= 0)
+            entity->superState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 64, 69);
+}
+void Player_BlendSuperTailsColours(int bankID)
+{
+    RSDK_THIS(Player);
+    if (entity->superState != 2) {
+        if (entity->superBlendAmount <= 0)
+            entity->superState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else if (entity->superBlendState) {
+        if (entity->superBlendAmount <= 0)
+            entity->superBlendState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else {
+        if (entity->superBlendAmount >= 256)
+            entity->superBlendState = 1;
+        else
+            entity->superBlendAmount += 4;
+    }
+    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 70, 76);
+}
+void Player_BlendSuperKnuxColours(int bankID)
+{
+    RSDK_THIS(Player);
+    if (entity->superState != 2) {
+        if (entity->superBlendAmount <= 0)
+            entity->superState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else if (entity->superBlendState) {
+        if (entity->superBlendAmount <= 0)
+            entity->superBlendState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else {
+        if (entity->superBlendAmount >= 256)
+            entity->superBlendState = 1;
+        else
+            entity->superBlendAmount += 4;
+    }
+    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 80, 86);
+}
+#if RETRO_USE_PLUS
+void Player_BlendSuperMightyColours(int bankID)
+{
+    RSDK_THIS(Player);
+    if (entity->superState != 2) {
+        if (entity->superBlendAmount <= 0)
+            entity->superState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else if (entity->superBlendState) {
+        if (entity->superBlendAmount <= 0)
+            entity->superBlendState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else {
+        if (entity->superBlendAmount >= 256)
+            entity->superBlendState = 1;
+        else
+            entity->superBlendAmount += 4;
+    }
+    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 96, 102);
+}
+void Player_BlendSuperRayColours(int bankID)
+{
+    RSDK_THIS(Player);
+    if (entity->superState != 2) {
+        if (entity->superBlendAmount <= 0)
+            entity->superState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else if (entity->superBlendState) {
+        if (entity->superBlendAmount <= 0)
+            entity->superBlendState = 0;
+        else
+            entity->superBlendAmount -= 4;
+    }
+    else {
+        if (entity->superBlendAmount >= 256)
+            entity->superBlendState = 1;
+        else
+            entity->superBlendAmount += 4;
+    }
+    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 113, 119);
+}
+#endif
+void Player_HandleSuperPalette(void)
+{
+    RSDK_THIS(Player);
+    if (entity->superState) {
+        switch (entity->characterID) {
+            case ID_SONIC:
+                Player_BlendSuperSonicColours(0);
+                if (FarPlane) {
+                    RSDK.CopyPalette(0, 64, 3, 64, 6);
+                }
+                else if (OOZSetup) {
+                    RSDK.CopyPalette(0, 64, 1, 64, 6);
+                    RSDK.CopyPalette(0, 64, 2, 64, 6);
+                }
+                else if (HCZSetup) {
+                    if (entity->superBlendState > 1) {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic_HCZ[i + 6]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic_HCZ[i + 12]);
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic_HCZ[i]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic_HCZ[i + 6]);
+                        }
+                    }
+
+                    Player_BlendSuperSonicColours(1);
+
+                    if (entity->superBlendState > 1) {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i + 6]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 12]);
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 6]);
+                        }
+                    }
+                }
+                else if (CPZSetup) {
+                    if (entity->superBlendState > 1) {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic_CPZ[i + 6]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic_CPZ[i + 12]);
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic_CPZ[i]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic_CPZ[i + 6]);
+                        }
+                    }
+
+                    Player_BlendSuperSonicColours(2);
+
+                    if (entity->superBlendState > 1) {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i + 6]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 12]);
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < 6; ++i) {
+                            RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i]);
+                            RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 6]);
+                        }
+                    }
+                }
+                break;
+            case ID_TAILS:
+                Player_BlendSuperTailsColours(0);
+                if (FarPlane) {
+                    RSDK.CopyPalette(0, 70, 3, 70, 6);
+                }
+                else if (OOZSetup) {
+                    RSDK.CopyPalette(0, 70, 1, 70, 6);
+                    RSDK.CopyPalette(0, 70, 2, 70, 6);
+                }
+                else if (HCZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 70, Player->superPalette_Tails_HCZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 70, Player->superPalette_Tails_HCZ[i + 12]);
+                    }
+
+                    Player_BlendSuperTailsColours(1);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 70, Player->superPalette_Tails[i + 6]);
+                        RSDK.SetPaletteEntry(7, i + 70, Player->superPalette_Tails[i + 12]);
+                    }
+                }
+                else if (CPZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 70, Player->superPalette_Tails_CPZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 70, Player->superPalette_Tails_CPZ[i + 12]);
+                    }
+
+                    Player_BlendSuperTailsColours(2);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 70, Player->superPalette_Tails[i]);
+                        RSDK.SetPaletteEntry(7, i + 70, Player->superPalette_Tails[i + 12]);
+                    }
+                }
+                break;
+            case ID_KNUCKLES:
+                Player_BlendSuperKnuxColours(0);
+                if (FarPlane) {
+                    RSDK.CopyPalette(0, 0x50, 3, 0x50, 6);
+                }
+                else if (OOZSetup) {
+                    RSDK.CopyPalette(0, 0x50, 1, 0x50, 6);
+                    RSDK.CopyPalette(0, 0x50, 2, 0x50, 6);
+                }
+                else if (HCZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x50, Player->superPalette_Knux_HCZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x50, Player->superPalette_Knux_HCZ[i + 12]);
+                    }
+
+                    Player_BlendSuperKnuxColours(1);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x50, Player->superPalette_Knux[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x50, Player->superPalette_Knux[i + 12]);
+                    }
+                }
+                else if (CPZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x50, Player->superPalette_Knux_CPZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x50, Player->superPalette_Knux_CPZ[i + 12]);
+                    }
+
+                    Player_BlendSuperKnuxColours(2);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x50, Player->superPalette_Knux[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x50, Player->superPalette_Knux[i + 12]);
+                    }
+                }
+                break;
+#if RETRO_USE_PLUS
+            case ID_MIGHTY:
+                Player_BlendSuperMightyColours(0);
+                if (FarPlane) {
+                    RSDK.CopyPalette(0, 0x60, 3, 0x60, 6);
+                }
+                else if (OOZSetup) {
+                    RSDK.CopyPalette(0, 0x60, 1, 0x60, 6);
+                    RSDK.CopyPalette(0, 0x60, 2, 0x60, 6);
+                }
+                else if (HCZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x60, Player->superPalette_Mighty_HCZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x60, Player->superPalette_Mighty_HCZ[i + 12]);
+                    }
+
+                    Player_BlendSuperMightyColours(1);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x60, Player->superPalette_Mighty[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x60, Player->superPalette_Mighty[i + 12]);
+                    }
+                }
+                else if (CPZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x60, Player->superPalette_Mighty_CPZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x60, Player->superPalette_Mighty_CPZ[i + 12]);
+                    }
+
+                    Player_BlendSuperMightyColours(2);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 0x60, Player->superPalette_Mighty[i]);
+                        RSDK.SetPaletteEntry(7, i + 0x60, Player->superPalette_Mighty[i + 12]);
+                    }
+                }
+                break;
+            case ID_RAY:
+                Player_BlendSuperRayColours(0);
+                if (FarPlane) {
+                    RSDK.CopyPalette(0, 113, 3, 113, 6);
+                }
+                else if (OOZSetup) {
+                    RSDK.CopyPalette(0, 113, 1, 113, 6);
+                    RSDK.CopyPalette(0, 113, 2, 113, 6);
+                }
+                else if (HCZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 113, Player->superPalette_Ray_HCZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 113, Player->superPalette_Ray_HCZ[i + 12]);
+                    }
+
+                    Player_BlendSuperRayColours(1);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 113, Player->superPalette_Ray[i]);
+                        RSDK.SetPaletteEntry(7, i + 113, Player->superPalette_Ray[i + 12]);
+                    }
+                }
+                else if (CPZSetup) {
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 113, Player->superPalette_Ray_CPZ[i]);
+                        RSDK.SetPaletteEntry(7, i + 113, Player->superPalette_Ray_CPZ[i + 12]);
+                    }
+
+                    Player_BlendSuperRayColours(2);
+
+                    for (int i = 0; i < 6; ++i) {
+                        RSDK.SetPaletteEntry(6, i + 113, Player->superPalette_Ray[i]);
+                        RSDK.SetPaletteEntry(7, i + 113, Player->superPalette_Ray[i + 12]);
+                    }
+                }
+                break;
+#endif
+        }
+    }
 }
 bool32 Player_CheckKeyPress(void)
 {
@@ -1818,7 +2162,7 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
                 player->flailing |= 0x10;
 
             if (entity->velocity.y <= 0)
-                player->killFlagB |= 1;
+                player->collisionFlagV |= 1;
             return 1;
         }
         case 2:
@@ -1882,7 +2226,7 @@ bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *e, Hitbox *enti
         player->flailing |= 0x10;
 
     if (entity->velocity.y <= 0)
-        player->killFlagB |= 1;
+        player->collisionFlagV |= 1;
     return true;
 }
 
@@ -2946,7 +3290,7 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         }
         RSDK.ProcessTileCollisions(entity, player2OuterBox, player2InnerBox);
         if (entity->onGround && !entity->collisionMode)
-            entity->killFlagB |= 1;
+            entity->collisionFlagV |= 1;
         player1->sidekickPos.x = entity->position.x;
         player1->sidekickPos.y = entity->position.y;
         entity->velocity.y     = entityYVel;
@@ -2973,7 +3317,7 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         }
         RSDK.ProcessTileCollisions(player1, player1OuterBox, player1InnerBox);
         if (player1->onGround)
-            player1->killFlagB |= 1;
+            player1->collisionFlagV |= 1;
         player1->collisionPlane = entity->collisionPlane;
         player1->direction      = entity->direction;
         player1->velocity.x     = 0;
@@ -4771,13 +5115,88 @@ void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox)
     }
 
     if (!entity->angle)
-        RSDK.ObjectTileGrip(dust, dust->collisionLayers, 0, dust->collisionPlane, 0, 0, 4);
+        RSDK.ObjectTileGrip(dust, dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 4);
 
     for (int i = 0; i < 0x10; ++i) {
-        if (RSDK.ObjectTileGrip(dust, dust->collisionLayers, 0, dust->collisionPlane, 0, 0, 8))
+        if (RSDK.ObjectTileGrip(dust, dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 8))
             break;
         dust->position.y += 0x80000;
     }
+}
+bool32 Player_CheckMightyUnspin(int bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int *uncurlTimer)
+{
+    Entity *entity = RSDK_sceneInfo->entity;
+    if (player->characterID != ID_MIGHTY)
+        return false;
+
+    if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == Player_State_Drown || player->invincibleTimer
+        || player->blinkTimer > 0) {
+        return false;
+    }
+
+    int anim = player->playerAnimData.animationID;
+    if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
+        int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+        if (player->playerAnimData.animationID != ANI_FLY) {
+            player->velocity.x = bounceDistance * RSDK.Cos256(angle);
+            player->groundVel  = player->velocity.x;
+        }
+        player->velocity.y = bounceDistance * RSDK.Sin256(angle);
+
+        if (checkHammerDrop) {
+            if (player->state == Player_State_MightyHammerDrop) {
+                player->state = Player_State_Air;
+                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, false, 0);
+            }
+            if (player->playerAnimData.animationID == ANI_SPINDASH) {
+                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, false, 0);
+                if (player->state == Player_State_Spindash) {
+                    if (player->onGround)
+                        player->state = Player_State_Roll;
+                    else
+                        player->state = Player_State_Air;
+                }
+            }
+        }
+        else {
+            player->velocity.y = -0x48000;
+            if (!(player->direction & FLIP_X))
+                player->velocity.x = -0x28000;
+            else
+                player->velocity.x = 0x28000;
+
+            if (player->underwater) {
+                player->velocity.x >>= 1;
+                player->velocity.y = -0x24000;
+            }
+            player->blinkTimer = 121;
+            player->visible    = true;
+            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimData, false, 0);
+            RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
+            player->onGround         = 0;
+            player->jumpAbility      = 0;
+            player->jumpAbilityTimer = 0;
+            player->state            = Player_State_MightyUnspin;
+        }
+        player->jumpAbility = 0;
+        if (uncurlTimer && !*uncurlTimer) {
+            if (player->playerAnimData.animationID != ANI_FLY)
+                RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+            *uncurlTimer = 8;
+        }
+        return true;
+    }
+    if (checkHammerDrop != 2 || anim != ANI_CROUCH)
+        return false;
+    if (!player->uncurlTimer) {
+        RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+        player->uncurlTimer = 30;
+        if (entity->position.x > player->position.x)
+            player->groundVel = -0x10000;
+        else
+            player->groundVel = 0x10000;
+    }
+    return true;
 }
 void Player_State_RayGlide(void)
 {
@@ -6001,7 +6420,7 @@ void Player_GetP2PlayerInputs(void)
     RSDK_THIS(Player);
     if (entity->controllerID <= CONT_P4) {
 #if RETRO_USE_PLUS
-        if (RSDK.InputIDIsDisconnected(entity->controllerID)) {
+        if (!RSDK.InputIDIsDisconnected(entity->controllerID)) {
 #else
         if (false) {
 #endif

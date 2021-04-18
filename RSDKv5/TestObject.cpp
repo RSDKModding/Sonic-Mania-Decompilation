@@ -130,7 +130,7 @@ void TestObject_Draw() {
     vertClr[3] = 0x000000;
 
     //DrawFace(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
-    //DrawBlendedFace(vertPos, vertClr, 3, 0xFF, INK_NONE);
+    DrawBlendedFace(vertPos, vertClr, 4, 0xFF, INK_NONE);
 }
 void TestObject_Create(void *data)
 {
@@ -174,7 +174,7 @@ void TestObject_StageLoad()
     TestObject->fgLayers = 1 << TestObject->fgLow;
     TestObject->fgLayers |= 1 << TestObject->fgHigh;
 
-    CreateEntity(TestObject->objectID, NULL, 0, 0);
+    //CreateEntity(TestObject->objectID, NULL, 0, 0);
 }
 void TestObject_EditorDraw() {}
 void TestObject_EditorLoad() {}

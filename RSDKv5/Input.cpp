@@ -1,8 +1,11 @@
 #include "RetroEngine.hpp"
 
 #if RETRO_USING_SDL2
-InputDevice inputDevice;
+InputManagerInfo InputManager;
 #endif
+
+InputDevice InputDevices[INPUTDEVICE_COUNT];
+int InputDeviceCount = 0;
 
 sbyte activeControllers[PLAYER_COUNT];
 InputDevice *activeInputDevices[PLAYER_COUNT];
@@ -15,49 +18,57 @@ TriggerState triggerR[PLAYER_COUNT + 1];
 TouchMouseData touchMouseData;
 
 #if RETRO_USING_SDL2
-bool32 getControllerButton(byte inputID, byte buttonID)
+bool32 getControllerButton(byte deviceID, byte buttonID)
 {
-    if (SDL_GameControllerGetButton(inputDevice.controllers[inputID], (SDL_GameControllerButton)buttonID)) {
+    if (SDL_GameControllerGetButton(InputManager.controllers[deviceID], (SDL_GameControllerButton)buttonID)) {
         return true;
     }
-
-    //switch (buttonID) {
-    //    default: break;
-    //    case SDL_CONTROLLER_BUTTON_ZL: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_TRIGGERLEFT) > inputDevice.LTRIGGER_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_ZR: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > inputDevice.RTRIGGER_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_UP: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTY) < -inputDevice.LSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_DOWN: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTY) > inputDevice.LSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_LEFT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTX) < -inputDevice.LSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_LSTICK_RIGHT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_LEFTX) > inputDevice.LSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_UP: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTY) < -inputDevice.RSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_DOWN: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTY) > inputDevice.RSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_LEFT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTX) < -inputDevice.RSTICK_DEADZONE[inputID];
-    //    case SDL_CONTROLLER_BUTTON_RSTICK_RIGHT: return SDL_GameControllerGetAxis(inputDevice.controllers[inputID], SDL_CONTROLLER_AXIS_RIGHTX) > inputDevice.RSTICK_DEADZONE[inputID];
-    //}
 
     return false;
 }
 #endif
 
-void InputDevice::ProcessInput()
+void InputManagerInfo::ProcessInput()
 {
 #if RETRO_USING_SDL2
     int keyCount         = 0;
     const byte *keyState = SDL_GetKeyboardState(&keyCount);
 
     bool32 anyPress = false;
-
-    InputState *anyButtons[] = {
-        &controller[0].keyUp, &controller[0].keyDown, &controller[0].keyLeft,  &controller[0].keyRight,
-        &controller[0].keyA,  &controller[0].keyB,    &controller[0].keyC,     &controller[0].keyX,
-        &controller[0].keyY,  &controller[0].keyZ,    &controller[0].keyStart, &controller[0].keySelect,
-    };
+    bool32 keyPress[PLAYER_COUNT];
 
     for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
+        keyPress[c - 1] = false;
         InputState *buttons[] = {
             &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
             &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
             &controller[c].keyY,  &controller[c].keyZ,    &controller[c].keyStart, &controller[c].keySelect,
+        };
+
+        for (int i = 0; i < KEY_MAX; i++) {
+            if (keyState[buttons[i]->keyMap]) {
+                buttons[i]->setHeld();
+                keyPress[c - 1] = true;
+            }
+            else if (buttons[i]->down) {
+                buttons[i]->setReleased();
+            }
+        }
+
+        for (int i = 0; i < keyCount && !anyPress; i++) {
+            if (keyState[i]) {
+                anyPress = true;
+            }
+        }
+    }
+
+    for (int c = 0; c < InputDeviceCount; ++c) {
+        InputDevice *device = &InputDevices[c];
+
+        InputState *buttons[] = {
+            &controller[device->inputID].keyUp, &controller[device->inputID].keyDown, &controller[device->inputID].keyLeft,  &controller[device->inputID].keyRight,
+            &controller[device->inputID].keyA,  &controller[device->inputID].keyB,    &controller[device->inputID].keyC,     &controller[device->inputID].keyX,
+            &controller[device->inputID].keyY,  &controller[device->inputID].keyZ,    &controller[device->inputID].keyStart, &controller[device->inputID].keySelect,
         };
         int buttonMap[] = {
             SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
@@ -65,83 +76,29 @@ void InputDevice::ProcessInput()
             SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_GUIDE,
         };
 
-        if (inputDevice.inputType[c - 1] == 0) {
-            for (int i = 0; i < KEY_MAX; i++) {
-                if (keyState[buttons[i]->keyMap]) {
-                    buttons[i]->setHeld();
-                }
-                else if (buttons[i]->down) {
-                    buttons[i]->setReleased();
-                }
+        //dont update buttons from controllers if a key was pressed
+        for (int i = 0; i < KEY_MAX && !keyPress[device->inputID]; i++) {
+            if (getControllerButton(c, buttonMap[i])) {
+                buttons[i]->setHeld();
             }
-        }
-        else if (inputDevice.inputType[c - 1] == 1) {
-            for (int i = 0; i < KEY_MAX; i++) {
-                if (getControllerButton(c - 1, buttonMap[i])) {
-                    buttons[i]->setHeld();
-                }
-                else if (buttons[i]->down) {
-                    buttons[i]->setReleased();
-                }
+            else if (buttons[i]->down) {
+                buttons[i]->setReleased();
             }
         }
 
-        bool32 isPressed = false;
-        for (int i = 0; i < KEY_MAX; i++) {
-            if (keyState[buttons[i]->keyMap]) {
-                isPressed = true;
-                break;
-            }
-        }
-        if (isPressed)
-            inputDevice.inputType[c - 1] = 0;
-
-        isPressed = false;
-        for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; i++) {
-            if (getControllerButton(c - 1, i)) {
-                isPressed = true;
-                break;
-            }
-        }
-        if (isPressed)
-            inputDevice.inputType[c - 1] = 1;
-
-        for (int i = 0; i < keyCount && !anyPress; i++) {
-            if (keyState[i]) {
-                anyPress = true;
-            }
-        }
         for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX && !anyPress; i++) {
-            if (getControllerButton(c - 1, i)) {
+            if (getControllerButton(c, i)) {
                 anyPress = true;
             }
         }
-
-        if (anyPress) {
-            engine.dimTimer = 0;
-        }
-        else if (engine.dimTimer < engine.dimLimit) {
-            ++engine.dimTimer;
-        }
     }
 
-    for (int i = 0; i < 12; ++i) {
-        anyButtons[i]->press = false;
-        anyButtons[i]->down = false;
+    if (anyPress) {
+        engine.dimTimer = 0;
     }
-    for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
-        InputState *buttons[] = {
-            &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
-            &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
-            &controller[c].keyY,  &controller[c].keyZ,    &controller[c].keyStart, &controller[c].keySelect,
-        };
-
-        for (int i = 0; i < 12; ++i) {
-            anyButtons[i]->press |= buttons[i]->press;
-            anyButtons[i]->down  |= buttons[i]->down;
-        }
+    else if (engine.dimTimer < engine.dimLimit) {
+        ++engine.dimTimer;
     }
-
 
 #ifdef RETRO_USING_MOUSE
 #if RETRO_USING_SDL2
@@ -151,15 +108,15 @@ void InputDevice::ProcessInput()
         SDL_GetMouseState(&mx, &my);
 
         if ((mx == touchMouseData.x[0] * engine.windowWidth && my == touchMouseData.y[0] * engine.windowHeight)) {
-            ++inputDevice.mouseHideTimer;
-            if (inputDevice.mouseHideTimer == 120) {
+            ++InputManager.mouseHideTimer;
+            if (InputManager.mouseHideTimer == 120) {
                 SDL_ShowCursor(false);
             }
         }
         else {
-            if (inputDevice.mouseHideTimer >= 120)
+            if (InputManager.mouseHideTimer >= 120)
                 SDL_ShowCursor(true);
-            inputDevice.mouseHideTimer = 0;
+            InputManager.mouseHideTimer = 0;
         }
         touchMouseData.x[0] = mx / (float)engine.windowWidth;
         touchMouseData.y[0] = my / (float)engine.windowHeight;
@@ -176,14 +133,90 @@ void InputDevice::ProcessInput()
 
 void InitInputDevice()
 {
+    char buffer[0x100];
+#if RETRO_USING_SDL2
+    // Support for extra controller types SDL doesn't recognise
+#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_UWP
+    if (!usingCWD)
+        sprintf(buffer, "%s/controllerdb.txt", getResourcesPath());
+    else
+        sprintf(buffer, "%scontrollerdb.txt", gamePath);
+#else
+    sprintf(buffer, BASE_PATH "controllerdb.txt");
+#endif
+    FileIO *file = fOpen(buffer, "rb");
+    if (file) {
+        fClose(file);
+
+        //SDL_GameControllerAddMapping()
+        int nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
+        if (nummaps >= 0)
+            printLog(SEVERITY_NONE, "loaded %d controller mappings from '%s'", buffer, nummaps);
+    }
+#endif
+
     for (int i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_UNASSIGNED;
         activeInputDevices[i] = NULL;
+
+        sprintf(buffer, "SDLInputDevice%d", i);
+        //GenerateCRC(&device->inputID, buffer);
     }
 }
 
 void ProcessInput() {
 
-    inputDevice.ProcessInput();
+    InputManager.ProcessInput();
 
+    for (int i = 0; i < PLAYER_COUNT; ++i) {
+        int assign = activeControllers[i];
+        if (assign && assign != CONT_UNASSIGNED) {
+            if (assign == CONT_AUTOASSIGN) {
+                int id                   = GetControllerInputID();
+                activeControllers[i] = id;
+                if (id < -1)
+                    AssignControllerID(i + 1, id);
+            }
+            else {
+                InputDevice *device = activeInputDevices[i];
+                //if (device && device->inputID == assign && device->active)
+                //    device->GetInput(i + 1);
+            }
+        }
+    }
+
+
+    InputState *anyButtons[] = {
+        &controller[0].keyUp, &controller[0].keyDown, &controller[0].keyLeft,  &controller[0].keyRight,
+        &controller[0].keyA,  &controller[0].keyB,    &controller[0].keyC,     &controller[0].keyX,
+        &controller[0].keyY,  &controller[0].keyZ,    &controller[0].keyStart, &controller[0].keySelect,
+    };
+
+    for (int i = 0; i < 12; ++i) {
+        anyButtons[i]->press = false;
+        anyButtons[i]->down  = false;
+    }
+    for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
+        InputState *buttons[] = {
+            &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
+            &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
+            &controller[c].keyY,  &controller[c].keyZ,    &controller[c].keyStart, &controller[c].keySelect,
+        };
+
+        for (int i = 0; i < 12; ++i) {
+            anyButtons[i]->press |= buttons[i]->press;
+            anyButtons[i]->down |= buttons[i]->down;
+        }
+    }
+}
+
+int Unknown100(int inputID)
+{
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        if (InputDevices[i].inputID == inputID) {
+            return InputDevices[i].activeInputIDs;
+        }
+    }
+
+    return userCore->controllerUnknown();
 }

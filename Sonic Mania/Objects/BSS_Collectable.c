@@ -48,21 +48,21 @@ void BSS_Collectable_Draw(void)
             RSDK.DrawSprite(&BSS_Collectable->sphereData[entity->type], &drawPos, true);
             entity->drawFX = FX_NONE;
             break;
-        case 129:
+        case BSS_SPHERE_GREEN_STOOD:
             BSS_Collectable->sphereData[BSS_SPHERE_GREEN].frameID = entity->frameID;
             entity->alpha                          = 0x80;
             entity->inkEffect                      = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_GREEN], NULL, true);
             entity->inkEffect = INK_NONE;
             break;
-        case 130:
+        case BSS_BLUE_STOOD:
             BSS_Collectable->sphereData[BSS_SPHERE_BLUE].frameID = entity->frameID;
             entity->alpha                          = 0x80;
             entity->inkEffect                      = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_BLUE], NULL, true);
             entity->inkEffect = INK_NONE;
             break;
-        case 134:
+        case BSS_SPHERE_PINK_STOOD:
             BSS_Collectable->sphereData[BSS_SPHERE_PINK].frameID = entity->frameID;
             entity->alpha                          = 0x80;
             entity->inkEffect                      = INK_ALPHA;

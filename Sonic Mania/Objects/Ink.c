@@ -37,11 +37,12 @@ void Ink_StaticUpdate(void) {}
 void Ink_Draw(void)
 {
     RSDK_THIS(Ink);
+
     RSDK_sceneInfo->entity->inkEffect = INK_SUB;
-    RSDK.DrawSprite(&entity->data3, 0, 0);
-    RSDK.DrawSprite(&entity->data2, 0, 0);
+    RSDK.DrawSprite(&entity->data3, NULL, false);
+    RSDK.DrawSprite(&entity->data2, NULL, false);
     entity->inkEffect = INK_NONE;
-    RSDK.DrawSprite(&entity->data1, 0, 0);
+    RSDK.DrawSprite(&entity->data1, NULL, false);
 }
 
 void Ink_Create(void *data)

@@ -109,7 +109,7 @@ typedef struct {
     byte field_471F;
     bool32 swapGameMode;
 #endif
-    int field_4724;
+    int flag;
     int timeStart;
 } ObjectZone;
 

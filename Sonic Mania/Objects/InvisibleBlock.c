@@ -11,19 +11,19 @@ void InvisibleBlock_Update(void)
             switch (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
                 case 1:
                     if (!entity->noCrush)
-                        player->killFlagB |= 1;
+                        player->collisionFlagV |= 1;
                     break;
                 case 2:
                     if (!entity->noCrush)
-                        player->killFlagA |= 1;
+                        player->collisionFlagH |= 1;
                     break;
                 case 3:
                     if (!entity->noCrush)
-                        player->killFlagA |= 2;
+                        player->collisionFlagH |= 2;
                     break;
                 case 4:
                     if (!entity->noCrush)
-                        player->killFlagB |= 2;
+                        player->collisionFlagV |= 2;
                     break;
                 default: break;
             }
@@ -47,7 +47,7 @@ void InvisibleBlock_Create(void *data)
                 RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
         }
         entity->visible = false;
-        entity->active  = 2 * (entity->activeNormal == 0) + 2;
+        entity->active  = entity->activeNormal ? ACTIVE_NORMAL : ACTIVE_BOUNDS;
 
         entity->updateRange.x = (entity->width + 5) << 19;
         entity->updateRange.y = (entity->height + 5) << 19;

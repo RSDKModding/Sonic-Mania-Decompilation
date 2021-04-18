@@ -148,12 +148,12 @@ enum FunctionTableIDs {
     FunctionTable_SplitStringList,
     FunctionTable_GetCString,
     FunctionTable_StringCompare,
-    FunctionTable_GetWindowSettings,
-    FunctionTable_Unknown71,
+    FunctionTable_GetDisplayInfo,
+    FunctionTable_GetWindowSize,
     FunctionTable_SetScreenSize,
     FunctionTable_SetClipBounds,
 #if RETRO_REV02
-    FunctionTable_SetScreenUnknown,
+    FunctionTable_SetScreenSplitVerticies,
 #endif
     FunctionTable_LoadSpriteSheet,
     FunctionTable_SetLookupTable,
@@ -204,8 +204,8 @@ enum FunctionTableIDs {
     FunctionTable_GetFrameID,
     FunctionTable_GetStringWidth,
     FunctionTable_ProcessAnimation,
-    FunctionTable_GetSceneLayer,
     FunctionTable_GetSceneLayerID,
+    FunctionTable_GetSceneLayer,
     FunctionTable_GetLayerSize,
     FunctionTable_GetTileInfo,
     FunctionTable_SetTileInfo,
@@ -240,8 +240,8 @@ enum FunctionTableIDs {
     FunctionTable_ControllerIDForInputID,
     FunctionTable_MostRecentActiveControllerID,
     FunctionTable_Unknown100,
-    FunctionTable_Unknown101,
-    FunctionTable_Missing21,
+    FunctionTable_GetAssignedControllerID,
+    FunctionTable_GetAssignedUnknown,
     FunctionTable_Missing22,
     FunctionTable_Missing23,
     FunctionTable_Missing24,
@@ -466,12 +466,12 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SplitStringList, SplitStringList);
     addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);
     addToRSDKFunctionTable(FunctionTable_StringCompare, StringCompare);
-    addToRSDKFunctionTable(FunctionTable_GetWindowSettings, NullFunc); // Unknown70);
-    addToRSDKFunctionTable(FunctionTable_Unknown71, NullFunc);         // Unknown71);
+    addToRSDKFunctionTable(FunctionTable_GetDisplayInfo, GetDisplayInfo);
+    addToRSDKFunctionTable(FunctionTable_GetWindowSize, GetWindowSize);   
     addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
     addToRSDKFunctionTable(FunctionTable_SetClipBounds, SetClipBounds);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetScreenUnknown, NullFunc); // SetScreenUnknown);
+    addToRSDKFunctionTable(FunctionTable_SetScreenSplitVerticies, SetScreenSplitVerticies);
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, LoadSpriteSheet);
     addToRSDKFunctionTable(FunctionTable_SetLookupTable, SetLookupTable);
@@ -555,19 +555,19 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_LoadVideo, LoadVideo);
     addToRSDKFunctionTable(FunctionTable_LoadImage, LoadImage);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, NullFunc);       // Unknown98);
-    addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, NullFunc); // Unknown99);
-    addToRSDKFunctionTable(FunctionTable_Unknown100, NullFunc);                   // Unknown100);
-    addToRSDKFunctionTable(FunctionTable_Unknown101, NullFunc);                   // Unknown101);
-    addToRSDKFunctionTable(FunctionTable_Missing21, NullFunc);                    // UserDataUnknown1);
-    addToRSDKFunctionTable(FunctionTable_Missing22, NullFunc);                    // UserDataUnknown2);
-    addToRSDKFunctionTable(FunctionTable_Missing23, NullFunc);                    // UserDataUnknown3);
-    addToRSDKFunctionTable(FunctionTable_Missing24, Missing24);                   
-    addToRSDKFunctionTable(FunctionTable_Missing25, NullFunc);                    // UserDataUnknown5);
-    addToRSDKFunctionTable(FunctionTable_Missing26, NullFunc);                    // UserDataUnknown6);
-    addToRSDKFunctionTable(FunctionTable_AssignControllerID, NullFunc);           // Unknown102);
-    addToRSDKFunctionTable(FunctionTable_InputIDIsDisconnected, NullFunc);        // Unknown103);
-    addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, NullFunc);   // Unknown104);
+    addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
+    addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
+    addToRSDKFunctionTable(FunctionTable_Unknown100, Unknown100);
+    addToRSDKFunctionTable(FunctionTable_GetAssignedControllerID, GetAssignedControllerID);
+    addToRSDKFunctionTable(FunctionTable_GetAssignedUnknown, GetAssignedUnknown);
+    addToRSDKFunctionTable(FunctionTable_Missing22, DoInputUnknown2);
+    addToRSDKFunctionTable(FunctionTable_Missing23, DoInputUnknown3);
+    addToRSDKFunctionTable(FunctionTable_Missing24, Missing24);
+    addToRSDKFunctionTable(FunctionTable_Missing25, DoInputUnknown2_Active);
+    addToRSDKFunctionTable(FunctionTable_Missing26, DoInputUnknown3_Active);
+    addToRSDKFunctionTable(FunctionTable_AssignControllerID, AssignControllerID);
+    addToRSDKFunctionTable(FunctionTable_InputIDIsDisconnected, InputIDIsDisconnected);
+    addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
 #endif
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_Unknown92, NullFunc);
@@ -584,8 +584,8 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_printVector2, printVector2);
     addToRSDKFunctionTable(FunctionTable_printHitbox, printHitbox);
 #endif
-    addToRSDKFunctionTable(FunctionTable_Unknown105, NullFunc); // UserDataUnknown7);
-    addToRSDKFunctionTable(FunctionTable_Unknown106, NullFunc); // UserDataUnknown8);
+    addToRSDKFunctionTable(FunctionTable_Unknown105, SetActiveVariable);
+    addToRSDKFunctionTable(FunctionTable_Unknown106, AddEnumVar);
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
 #endif

@@ -5,12 +5,15 @@ ObjectPlatform *Platform;
 void Platform_Update(void)
 {
     RSDK_THIS(Platform);
-    if (Zone->field_4724) {
+    if (Zone->flag) {
         entity->pushPlayersL = 0;
         entity->pushPlayersR = 0;
     }
-    entity->position.x = entity->drawPos.x >> 0x10 << 0x10;
-    entity->position.y = entity->drawPos.y >> 0x10 << 0x10;
+    entity->position.x = entity->drawPos.x;
+    entity->position.y = entity->drawPos.y;
+    entity->position.x &= 0xFFFF0000;
+    entity->position.y &= 0xFFFF0000;
+
     if (entity->hasTension) {
         if (entity->stood && entity->stoodAngle < 64) {
             entity->stoodAngle += 4;
@@ -30,8 +33,7 @@ void Platform_Update(void)
         entity->collisionOffset.x += entity->drawPos.x & 0xFFFF0000;
         entity->collisionOffset.y += entity->drawPos.y & 0xFFFF0000;
         if (entity->state != Platform_State_Falling && entity->state != Platform_State_OffScreenReset) {
-            if (entity->stateCollide)
-                entity->stateCollide();
+            StateMachine_Run(entity->stateCollide);
         }
 
         entity->position.x = entity->centerPos.x;
@@ -51,8 +53,8 @@ void Platform_Update(void)
                 }
             }
             else {
-                entity->position.x += entity->collisionOffset.x;
-                entity->position.y += entity->collisionOffset.y;
+                child->position.x += entity->collisionOffset.x;
+                child->position.y += entity->collisionOffset.y;
                 if (child->objectID == Spikes->objectID) {
                     EntitySpikes *spikes = (EntitySpikes *)child;
                     spikes->offset.x     = entity->collisionOffset.x;
@@ -84,14 +86,10 @@ void Platform_LateUpdate(void) {}
 
 void Platform_StaticUpdate(void)
 {
-    Platform->stoodPos[0].x = 0;
-    Platform->stoodPos[0].y = 0;
-    Platform->stoodPos[1].x = 0;
-    Platform->stoodPos[1].y = 0;
-    Platform->stoodPos[2].x = 0;
-    Platform->stoodPos[2].y = 0;
-    Platform->stoodPos[3].x = 0;
-    Platform->stoodPos[3].y = 0;
+    for (int i = 0; i < 4; ++i) {
+        Platform->stoodPos[i].x = 0;
+        Platform->stoodPos[i].y = 0;
+    }
 }
 
 void Platform_Draw(void)
@@ -99,12 +97,12 @@ void Platform_Draw(void)
     Vector2 drawPos;
     RSDK_THIS(Platform);
     if (entity->frameID >= 0) {
-        if ((entity->state != Platform_State_Circular
-            || !entity->hasTension) && (entity->state != Platform_State_Swing && entity->state != Platform_State_14 && entity->type != 12)) {
+        if ((entity->state != Platform_State_Circular || !entity->hasTension)
+            && (entity->state != Platform_State_Swing && entity->state != Platform_State_14 && entity->type != 12)) {
             if (Platform->spriteIndex == 0xFFFF)
-                RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, 0, 0);
+                RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, INK_NONE, false);
             else
-                RSDK.DrawSprite(&entity->animData, &entity->drawPos, 0);
+                RSDK.DrawSprite(&entity->animData, &entity->drawPos, false);
         }
         else {
             int ang = 0;
@@ -135,7 +133,7 @@ void Platform_Draw(void)
             entity->animData.frameID = entity->frameID;
 
             if (Platform->spriteIndex == 0xFFFF)
-                RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, 0, 0);
+                RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, INK_NONE, false);
             else
                 RSDK.DrawSprite(&entity->animData, &entity->drawPos, 0);
         }
@@ -328,27 +326,28 @@ void Platform_Create(void *data)
                 entity->hitbox.bottom = 0xE0;
             }
         }
-        // switch (entity->collision) {
-        //    case 0u:
-        //        entity->stateCollide  = Platform_CollisionState_TopSolid;
-        //        entity->hitbox.bottom = entity->hitbox.top + 8;
-        //        break;
-        //    case 2u: entity->stateCollide = Platform_CollisionState_None; break;
-        //    case 3u: entity->stateCollide = Platform_CollisionState_AllHazard; break;
-        //    case 4u: entity->stateCollide = Platform_CollisionState_4; break;
-        //    case 5u: entity->stateCollide = Platform_CollisionState_LRHazard; break;
-        //    case 6u: entity->stateCollide = Platform_CollisionState_BottomHazard; break;
-        //    case 7u: entity->stateCollide = Platform_CollisionState_TopHazard; break;
-        //    case 8u: entity->stateCollide = Platform_CollisionState_Twister; break;
-        //    case 9u:
-        //    case 0xAu:
-        //    case 0xBu:
-        //    case 0xCu:
-        //    case 0xDu: entity->stateCollide = Platform_CollisionState_Sticky; break;
-        //    case 0xEu: entity->stateCollide = Platform_CollisionState_TurnTable; break;
-        //    case 0xFu: entity->stateCollide = Platform_CollisionState_15; break;
-        //    default: entity->stateCollide = Platform_CollisionState_AllSolid; break;
-        //}
+        switch (entity->collision) {
+            case 0x00:
+                entity->stateCollide  = Platform_CollisionState_TopSolid;
+                entity->hitbox.bottom = entity->hitbox.top + 8;
+                break;
+            case 0x01:
+            default: entity->stateCollide = Platform_CollisionState_AllSolid; break;
+            case 0x2: entity->stateCollide = Platform_CollisionState_None; break;
+            case 0x3: entity->stateCollide = Platform_CollisionState_AllHazard; break;
+            case 0x4: entity->stateCollide = Platform_CollisionState_Null; break;
+            case 0x5: entity->stateCollide = Platform_CollisionState_LRHazard; break;
+            case 0x6: entity->stateCollide = Platform_CollisionState_BottomHazard; break;
+            case 0x7: entity->stateCollide = Platform_CollisionState_TopHazard; break;
+            case 0x8: entity->stateCollide = Platform_CollisionState_Twister; break;
+            case 0x9:
+            case 0xA:
+            case 0xB:
+            case 0xC:
+            case 0xD: entity->stateCollide = Platform_CollisionState_Sticky; break;
+            case 0xE: entity->stateCollide = Platform_CollisionState_TurnTable; break;
+            case 0xF: entity->stateCollide = Platform_CollisionState_15; break;
+        }
         for (int i = 0; i < entity->childCount; ++i) {
             EntityPlatform *ent = (EntityPlatform *)RSDK.GetEntityByID((i + RSDK.GetEntityID(entity) + 1));
             ent->tileCollisions = false;
@@ -553,8 +552,8 @@ void Platform_State_StartFalling(void)
 void Platform_State_PlayerActivated(void)
 {
     RSDK_THIS(Platform);
-    int drawX            = -entity->drawPos.x;
-    int drawY            = -entity->drawPos.y;
+    int drawX = -entity->drawPos.x;
+    int drawY = -entity->drawPos.y;
 
     bool32 flag = false;
     foreach_active(Player, player)
@@ -568,7 +567,7 @@ void Platform_State_PlayerActivated(void)
 
             int cy = (yOff * RSDK.Cos256(angle)) - xOff * RSDK.Sin256(angle);
 
-            //int center = cy + entity->centerPos.y;
+            // int center = cy + entity->centerPos.y;
             if (abs(player->position.x - entity->centerPos.x) <= 0x4000000) {
                 if (abs(player->position.y - entity->centerPos.y) <= 0x4000000 && cy < entity->centerPos.y) {
                     if (entity->centerPos.y - cy < 0x1000000)
@@ -643,7 +642,7 @@ void Platform_State_PlayerMove(void)
 void Platform_State_Pushable(void)
 {
     RSDK_THIS(Platform);
-    entity->velocity.x   = 0;
+    entity->velocity.x = 0;
     entity->velocity.y = 0;
     foreach_active(Player, playerLoop)
     {
@@ -1259,6 +1258,838 @@ void Platform_Unknown14(void)
     entity->velocity.x = drawX + entity->drawPos.x;
     entity->drawPos.y  = entity->centerPos.y + y1 - y2;
     entity->velocity.y = drawY + entity->drawPos.y;
+}
+
+//Collision States
+void Platform_CollisionState_AllSolid(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animData, 1);
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    int stoodPlayers       = entity->stoodPlayers;
+    entity->stoodPlayers   = 0;
+    entity->pushPlayersL   = 0;
+    entity->pushPlayersR   = 0;
+    foreach_active(Player, player)
+    {
+        int pid = RSDK.GetEntityID(player);
+        Player_CheckCollisionPlatform(player, entity, platformHitbox);
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 1:
+                entity->stood = true;
+                if (!((1 << pid) & stoodPlayers) && !player->sidekick && entity->state == Platform_State_Collapsing
+                    && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                        entity->collapseDelay = 1;
+                    else
+#endif
+                        entity->collapseDelay = 30;
+                }
+                entity->stoodPlayers |= 1 << pid;
+
+                if (Platform->stoodPos[pid].x) {
+                    player->position.x = Platform->stoodPos[pid].x;
+                    player->position.y = Platform->stoodPos[pid].y;
+                }
+                else {
+                    Platform->stoodPos[pid].x = player->position.x;
+                    Platform->stoodPos[pid].y = player->position.y;
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+                if (entity->velocity.y <= 0)
+                    player->collisionFlagV |= 1;
+                break;
+            case 2:
+                if (player->onGround && player->right) {
+                    entity->pushPlayersL |= 1 << pid;
+                }
+
+                if (entity->velocity.x <= 0) {
+                    if (player->left) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x -= player->acceleration;
+                    }
+                    player->collisionFlagH |= 1;
+                }
+                break;
+            case 3:
+                if (player->onGround && player->left) {
+                    entity->pushPlayersR |= 1 << pid;
+                }
+
+                if (entity->velocity.x >= 0) {
+                    if (player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                    player->collisionFlagH |= 2;
+                }
+                break;
+            case 4:
+                if (entity->velocity.y >= 0)
+                    player->collisionFlagV |= 2;
+                break;
+            default: break;
+        }
+    }
+}
+void Platform_CollisionState_AllHazard(void)
+{
+    RSDK_THIS(Platform);
+    if (entity->collapseDelay)
+        entity->collapseDelay--;
+
+    foreach_active(Player, player)
+    {
+        if (Player_CheckCollisionBox(player, entity, &entity->hitbox)
+            && !Player_CheckMightyUnspin(1024, player, entity->type == 3, &player->uncurlTimer)) {
+            Player_CheckHit(player, &entity);
+        }
+    }
+}
+void Platform_CollisionState_BottomHazard(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animData, 1);
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    entity->stoodPlayers   = 0;
+    entity->pushPlayersL   = 0;
+    entity->pushPlayersR   = 0;
+
+    foreach_active(Player, player)
+    {
+        int pid = RSDK.GetEntityID(player);
+        Player_CheckCollisionPlatform(player, entity, platformHitbox);
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 1:
+                entity->stood = true;
+                entity->stoodPlayers |= (1 << pid);
+                if (!player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                        entity->collapseDelay = 1;
+                    else
+#endif
+                        entity->collapseDelay = 30;
+                }
+                if (Platform->stoodPos[pid].x) {
+                    player->position.x = Platform->stoodPos[pid].x;
+                    player->position.y = Platform->stoodPos[pid].y;
+                }
+                else {
+                    Platform->stoodPos[pid].x = player->position.x;
+                    Platform->stoodPos[pid].y = player->position.y;
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+                if (entity->velocity.y <= 0)
+                    player->collisionFlagV |= 1;
+                break;
+            case 2:
+                if (player->onGround && player->right) {
+                    entity->pushPlayersL |= 1 << pid;
+                }
+
+                if (entity->velocity.x <= 0) {
+                    if (player->left) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x -= player->acceleration;
+                    }
+                    player->collisionFlagH |= 1;
+                }
+                break;
+            case 3:
+                if (player->onGround && player->left) {
+                    entity->pushPlayersR |= 1 << pid;
+                }
+
+                if (entity->velocity.x >= 0) {
+                    if (player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                    player->collisionFlagH |= 2;
+                }
+                break;
+            case 4:
+                if (entity->velocity.y >= 0)
+                    player->collisionFlagV |= 2;
+                if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
+                    Player_CheckHit(player, entity);
+                break;
+            default: break;
+        }
+    }
+}
+void Platform_CollisionState_LRHazard(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox  = RSDK.GetHitbox(&entity->animData, 1);
+    entity->stoodPlayers = 0;
+    entity->pushPlayersL = 0;
+    entity->pushPlayersR = 0;
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 1:
+                entity->stood = true;
+                entity->stoodPlayers |= (1 << pid);
+                if (!player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                        entity->collapseDelay = 1;
+                    else
+#endif
+                        entity->collapseDelay = 30;
+                }
+                if (Platform->stoodPos[pid].x) {
+                    player->position.x = Platform->stoodPos[pid].x;
+                    player->position.y = Platform->stoodPos[pid].y;
+                }
+                else {
+                    Platform->stoodPos[pid].x = player->position.x;
+                    Platform->stoodPos[pid].y = player->position.y;
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+                if (entity->velocity.y <= 0)
+                    player->collisionFlagV |= 1;
+                break;
+            case 2:
+                if (Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) || Player_CheckHit(player, entity)) {
+                    player->velocity.x += entity->velocity.x;
+                }
+
+                if (!player->blinkTimer || player->velocity.x >= entity->velocity.x) {
+                    if (player->onGround && player->right) {
+                        entity->pushPlayersL |= 1 << pid;
+                    }
+
+                    if (entity->velocity.x < 0 && player->velocity.x >= entity->velocity.x && player->left) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x -= player->acceleration;
+                    }
+                }
+                if (entity->velocity.x <= 0)
+                    player->collisionFlagH |= 1;
+                break;
+            case 3:
+                if (Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) || Player_CheckHit(player, entity)) {
+                    player->velocity.x += entity->velocity.x;
+                }
+
+                if (!player->blinkTimer || player->velocity.x <= entity->velocity.x) {
+                    if (player->onGround && player->left) {
+                        entity->pushPlayersR |= 1 << pid;
+                    }
+
+                    if (entity->velocity.x > 0 && player->velocity.x <= entity->velocity.x && player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                }
+                if (entity->velocity.x >= 0)
+                    player->collisionFlagH |= 2;
+                break;
+            case 4:
+                if (entity->velocity.y >= 0)
+                    player->collisionFlagV |= 2;
+                break;
+            default: continue;
+        }
+    }
+}
+void Platform_CollisionState_None(void)
+{
+    RSDK_THIS(Platform);
+    entity->stoodPlayers = 0;
+    entity->pushPlayersL = 0;
+    entity->pushPlayersR = 0;
+    foreach_active(Player, player)
+    {
+        int pid = RSDK.GetEntityID(player);
+
+        Hitbox hitbox;
+        hitbox.left   = entity->hitbox.left;
+        hitbox.top    = entity->hitbox.top;
+        hitbox.right  = entity->hitbox.right;
+        hitbox.bottom = entity->hitbox.bottom;
+        hitbox.left -= 16;
+        hitbox.right += 16;
+        hitbox.bottom += 16;
+        hitbox.top -= 16;
+
+        if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
+            player->collisionLayers |= Zone->moveID;
+            player->field_194.x = entity->tileOrigin.x - entity->drawPos.x;
+            player->field_194.y = entity->tileOrigin.y - entity->drawPos.y;
+            if (player->playerAnimData.animationID == ANI_PUSH && player->onGround) {
+                if (player->right)
+                    entity->pushPlayersL |= 1 << pid;
+                if (player->onGround && player->left)
+                    entity->pushPlayersR |= 1 << pid;
+            }
+
+            bool32 climbFlag = false;
+            if (player->state == Player_State_KnuxWallClimb || player->state == Player_State_KnuxLedgePullUp) {
+                climbFlag = true;
+                if (player->state == Player_State_KnuxLedgePullUp)
+                    hitbox.top -= 16;
+                if (player->position.x >= entity->position.x) {
+                    hitbox.top += 16;
+                    hitbox.left += 16;
+                }
+                else {
+                    hitbox.top += 16;
+                    hitbox.right -= 16;
+                }
+                hitbox.bottom -= 16;
+            }
+            else {
+                switch (player->collisionMode) {
+                    case CMODE_FLOOR:
+                        hitbox.right -= 16;
+                        hitbox.left += 16;
+                        hitbox.bottom -= 16;
+                        break;
+                    case CMODE_LWALL:
+                        hitbox.top += 16;
+                        hitbox.right -= 16;
+                        hitbox.bottom -= 16;
+                        break;
+                    case CMODE_ROOF:
+                        hitbox.top += 16;
+                        hitbox.left += 16;
+                        hitbox.right -= 16;
+                        break;
+                    case CMODE_RWALL:
+                        hitbox.top += 16;
+                        hitbox.left += 16;
+                        hitbox.bottom -= 16;
+                        break;
+                    default: break;
+                }
+            }
+
+            if (Player_CheckCollisionTouch(player, entity, &hitbox) && (player->onGround || climbFlag)) {
+                entity->stoodPlayers |= 1 << pid;
+                if (!player->sidekick) {
+                    entity->stood = true;
+                    if (entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                            entity->collapseDelay = 1;
+                        else
+#endif
+                            entity->collapseDelay = 30;
+                    }
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+            }
+        }
+    }
+}
+void Platform_CollisionState_Sticky(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animData, 1);
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    entity->pushPlayersL   = 0;
+    entity->pushPlayersR   = 0;
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        Player_CheckCollisionPlatform(player, entity, platformHitbox);
+        int side = Player_CheckCollisionBox(player, entity, solidHitbox);
+
+        bool32 flag = false;
+        if ((entity->collision != 9 && entity->collision != side + 9) || !side)
+            flag = true;
+        if (player->state != Player_State_None && !flag) {
+            player->state                         = Player_State_None;
+            player->nextGroundState               = NULL;
+            player->nextAirState                  = NULL;
+            player->velocity.x                    = 0;
+            player->velocity.y                    = 0;
+            player->groundVel                     = 0;
+            player->playerAnimData.animationSpeed = 0;
+            switch (side) {
+                case 1: player->angle = 0x00; break;
+                case 2:
+                    player->angle    = 0xC0;
+                    player->onGround = false;
+                    break;
+                case 3: player->angle = 0x40; break;
+                case 4: player->angle = 0x80; break;
+                default: break;
+            }
+
+            player->tileCollisions = false;
+            if (!player->sidekick) {
+                entity->stood = true;
+                if (entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                        entity->collapseDelay = 1;
+                    else
+#endif
+                        entity->collapseDelay = 30;
+                }
+            }
+            entity->stoodPlayers |= 1 << pid;
+        }
+        else {
+            if ((1 << pid) & entity->stoodPlayers) {
+                if (player->state == Player_State_None) {
+                    if (Platform->stoodPos[pid].x) {
+                        player->position.x = Platform->stoodPos[pid].x;
+                        player->position.y = Platform->stoodPos[pid].y;
+                    }
+                    else {
+                        Platform->stoodPos[pid].x = player->position.x;
+                        Platform->stoodPos[pid].y = player->position.y;
+                    }
+                    player->position.x += entity->collisionOffset.x;
+                    player->position.y += entity->collisionOffset.y;
+                    player->position.y &= 0xFFFF0000;
+                    if (player->jumpPress) {
+                        player->tileCollisions = true;
+                        Player_StartJump(player);
+                    }
+                }
+                else {
+                    entity->stoodPlayers = entity->stoodPlayers & ~(1 << pid);
+                }
+            }
+            else if (side == 1) {
+                if (Platform->stoodPos[pid].x) {
+                    player->position.x = Platform->stoodPos[pid].x;
+                    player->position.y = Platform->stoodPos[pid].y;
+                }
+                else {
+                    Platform->stoodPos[pid].x = player->position.x;
+                    Platform->stoodPos[pid].y = player->position.y;
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+            }
+        }
+    }
+}
+void Platform_CollisionState_TopHazard(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox  = RSDK.GetHitbox(&entity->animData, 1);
+    entity->stoodPlayers = 0;
+    entity->pushPlayersL = 0;
+    entity->pushPlayersR = 0;
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 1:
+                entity->stood = true;
+                entity->stoodPlayers |= (1 << pid);
+                if (!player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                        entity->collapseDelay = 1;
+                    else
+#endif
+                        entity->collapseDelay = 30;
+                }
+
+                if (Platform->stoodPos[pid].x) {
+                    player->position.x = Platform->stoodPos[pid].x;
+                    player->position.y = Platform->stoodPos[pid].y;
+                }
+                else {
+                    Platform->stoodPos[pid].x = player->position.x;
+                    Platform->stoodPos[pid].y = player->position.y;
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+
+                if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
+                    Player_CheckHit(player, entity);
+                if (entity->velocity.y <= 0)
+                    player->collisionFlagV |= 1;
+                break;
+            case 2:
+                if (player->onGround && player->right)
+                    entity->pushPlayersL |= 1 << pid;
+
+                if (entity->velocity.x <= 0) {
+                    if (player->left) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x -= player->acceleration;
+                    }
+                    player->collisionFlagH |= 1u;
+                }
+                break;
+            case 3:
+                if (player->onGround && player->left)
+                    entity->pushPlayersR |= 1 << pid;
+
+                if (entity->velocity.x >= 0) {
+                    if (player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                    player->collisionFlagH |= 2;
+                }
+                break;
+            case 4:
+                if (entity->velocity.y >= 0)
+                    player->collisionFlagV |= 2;
+                break;
+            default: break;
+        }
+    }
+}
+void Platform_CollisionState_TopSolid(void)
+{
+    RSDK_THIS(Platform);
+    int stoodPlayers       = entity->stoodPlayers;
+    entity->stoodPlayers   = 0;
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        int yVel   = player->velocity.y;
+        if (entity->collisionOffset.y < 0)
+            player->velocity.y = yVel - entity->collisionOffset.y;
+        if (Player_CheckCollisionPlatform(player, entity, platformHitbox)) {
+            entity->stood = true;
+            if (!((1 << pid) & stoodPlayers) && !player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    entity->collapseDelay = 1;
+                else
+#endif
+                    entity->collapseDelay = 30;
+            }
+            entity->stoodPlayers |= 1 << pid;
+
+            if (Platform->stoodPos[pid].x) {
+                player->position.x = Platform->stoodPos[pid].x;
+                player->position.y = Platform->stoodPos[pid].y;
+            }
+            else {
+                Platform->stoodPos[pid].x = player->position.x;
+                Platform->stoodPos[pid].y = player->position.y;
+            }
+            player->position.x += entity->collisionOffset.x;
+            player->position.y += entity->collisionOffset.y;
+            player->position.y &= 0xFFFF0000;
+        }
+        else {
+            player->velocity.y = yVel;
+        }
+    }
+}
+void Platform_CollisionState_TurnTable(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animData, 1);
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    int stoodPlayers       = entity->stoodPlayers;
+    entity->stoodPlayers   = 0;
+    entity->pushPlayersL   = 0;
+    entity->pushPlayersR   = 0;
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        Player_CheckCollisionPlatform(player, entity, platformHitbox);
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 1: entity->stood = true;
+#if RETRO_USE_PLUS
+                if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
+#endif
+                    if (!((1 << pid) & stoodPlayers)) {
+                        player->state           = Player_State_None;
+                        player->nextGroundState = NULL;
+                        player->nextAirState    = NULL;
+                        player->velocity.x      = 0;
+                        player->velocity.y      = 0;
+                        player->groundVel       = 0;
+                        if (entity->objectID == Platform->objectID)
+                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TURNTABLE, &player->playerAnimData, false, 0);
+                        player->playerAnimData.animationSpeed = 64;
+                        player->direction                     = FLIP_NONE;
+                        if (!player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                            if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                                entity->collapseDelay = 1;
+                            else
+#endif
+                                entity->collapseDelay = 30;
+                        }
+                    }
+                    entity->stoodPlayers |= 1 << pid;
+                    if (Platform->stoodPos[pid].x) {
+                        player->position.x = Platform->stoodPos[pid].x;
+                        player->position.y = Platform->stoodPos[pid].y;
+                    }
+                    else {
+                        Platform->stoodPos[pid].x = player->position.x;
+                        Platform->stoodPos[pid].y = player->position.y;
+                    }
+
+                    if ((player->position.x ^ entity->position.x) & 0xFFFF0000) {
+                        if (player->position.x >= entity->position.x)
+                            player->position.x -= 0x10000;
+                        else
+                            player->position.x += 0x10000;
+                    }
+                    player->position.x += entity->collisionOffset.x;
+                    player->position.y += entity->collisionOffset.y;
+                    player->position.y &= 0xFFFF0000;
+                    if (player->jumpPress) {
+                        Player_StartJump(player);
+                    }
+                    else if (entity->velocity.y <= 0) {
+                        player->collisionFlagV |= 1;
+                    }
+#if RETRO_USE_PLUS
+                }
+#endif
+                break;
+            case 2:
+                if (player->onGround && player->right) {
+                    entity->pushPlayersL |= 1 << pid;
+                }
+
+                if (entity->velocity.x <= 0) {
+                    if (player->left) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x -= player->acceleration;
+                    }
+                    player->collisionFlagH |= 1u;
+                }
+                break;
+            case 3:
+                if (player->onGround && player->left) {
+                    entity->pushPlayersR |= 1 << pid;
+                }
+
+                if (entity->velocity.x >= 0) {
+                    if (player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                    player->collisionFlagH |= 2;
+                }
+                break;
+            case 4:
+                if (entity->velocity.y >= 0)
+                    player->collisionFlagV |= 2;
+                break;
+            default: break;
+        }
+    }
+}
+void Platform_CollisionState_Twister(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animData, 1);
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    int stoodPlayers       = entity->stoodPlayers;
+    entity->stoodPlayers   = 0;
+    entity->pushPlayersL   = 0;
+    entity->pushPlayersR   = 0;
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        Player_CheckCollisionPlatform(player, entity, platformHitbox);
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 0:
+                if ((1 << pid) & stoodPlayers) {
+                    if (player->state == Player_State_None) {
+                        player->state = Player_State_Air;
+                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_AIRWALK, &player->playerAnimData, false, 0);
+                    }
+                }
+                break;
+            case 1:
+#if RETRO_USE_PLUS
+                if (player->characterID != ID_MIGHTY || player->state != Player_State_MightyHammerDrop) {
+#endif
+                    if (!((1 << pid) & stoodPlayers)) {
+                        player->state           = Player_State_None;
+                        player->nextGroundState = NULL;
+                        player->nextAirState    = NULL;
+                        player->velocity.x      = 0;
+                        player->velocity.y      = 0;
+                        player->groundVel       = 0;
+                        if (entity->objectID == Platform->objectID)
+                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTER, &player->playerAnimData, false, 0);
+                        player->playerAnimData.animationSpeed = 64;
+                        player->direction                     = FLIP_X;
+                        if (!player->sidekick) {
+                            entity->stood = true;
+                            if (entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                                if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                                    entity->collapseDelay = 1;
+                                else
+#endif
+                                    entity->collapseDelay = 30;
+                            }
+                        }
+                    }
+                    entity->stoodPlayers |= 1 << pid;
+                    if (Platform->stoodPos[pid].x) {
+                        player->position.x = Platform->stoodPos[pid].x;
+                        player->position.y = Platform->stoodPos[pid].y;
+                    }
+                    else {
+                        Platform->stoodPos[pid].x = player->position.x;
+                        Platform->stoodPos[pid].y = player->position.y;
+                    }
+
+                    if ((player->position.x ^ entity->position.x) & 0xFFFF0000) {
+                        if (player->position.x >= entity->position.x)
+                            player->position.x -= 0x10000;
+                        else
+                            player->position.x += 0x10000;
+                    }
+                    player->position.x += entity->collisionOffset.x;
+                    player->position.y += entity->collisionOffset.y;
+                    player->position.y &= 0xFFFF0000;
+                    if (player->jumpPress) {
+                        Player_StartJump(player);
+                    }
+                    else if (entity->velocity.y <= 0) {
+                        player->collisionFlagV |= 1;
+                    }
+#if RETRO_USE_PLUS
+                }
+#endif
+                break;
+            case 2:
+                if (player->onGround && player->right) {
+                    entity->pushPlayersL |= 1 << pid;
+                }
+
+                if (entity->velocity.x <= 0) {
+                    if (player->left) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x -= player->acceleration;
+                    }
+                    player->collisionFlagH |= 1u;
+                }
+                break;
+            case 3:
+                if (player->onGround && player->left) {
+                    entity->pushPlayersR |= 1 << pid;
+                }
+
+                if (entity->velocity.x >= 0) {
+                    if (player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                    player->collisionFlagH |= 2;
+                }
+                break;
+            case 4:
+                if (entity->velocity.y >= 0)
+                    player->collisionFlagV |= 2;
+                break;
+            default: break;
+        }
+    }
+}
+void Platform_CollisionState_Null(void) {}
+void Platform_CollisionState_15(void)
+{
+    RSDK_THIS(Platform);
+    Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animData, 1);
+    Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animData, 0);
+    int stoodPlayers       = entity->stoodPlayers;
+    entity->stoodPlayers   = 0;
+    entity->pushPlayersL   = 0;
+    entity->pushPlayersR   = 0;
+    foreach_active(Player, player)
+    {
+        ushort pid = RSDK.GetEntityID(player);
+        Player_CheckCollisionPlatform(player, entity, platformHitbox);
+
+        switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            case 1:
+                entity->stood = true;
+                if (!((1 << pid) & stoodPlayers) && !player->sidekick && entity->state == Platform_State_Collapsing
+                    && !entity->collapseDelay) {
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                        entity->collapseDelay = 1;
+                    else
+#endif
+                        entity->collapseDelay = 30;
+                }
+                entity->stoodPlayers |= 1 << pid;
+                if (Platform->stoodPos[pid].x) {
+                    player->position.x = Platform->stoodPos[pid].x;
+                    player->position.y = Platform->stoodPos[pid].y;
+                }
+                else {
+                    Platform->stoodPos[pid].x = player->position.x;
+                    Platform->stoodPos[pid].y = player->position.y;
+                }
+                player->position.x += entity->collisionOffset.x;
+                player->position.y += entity->collisionOffset.y;
+                player->position.y &= 0xFFFF0000;
+                break;
+            case 2:
+                if (player->onGround && player->right) {
+                    entity->pushPlayersL |= 1 << pid;
+                }
+
+                if (entity->velocity.x <= 0 && player->left) {
+                    player->groundVel  = entity->velocity.x;
+                    player->velocity.x = player->groundVel;
+                    player->velocity.x -= player->acceleration;
+                }
+                break;
+            case 3:
+                if (player->onGround && player->left)
+                    entity->pushPlayersR |= 1 << pid;
+
+                if (entity->velocity.x >= 0) {
+                    if (player->right) {
+                        player->groundVel  = entity->velocity.x;
+                        player->velocity.x = player->groundVel;
+                        player->velocity.x += player->acceleration;
+                    }
+                }
+                break;
+            case 4: break;
+            default: break;
+        }
+    }
 }
 
 void Platform_EditorDraw(void) {}

@@ -103,7 +103,7 @@ void Options_SaveOptionsBin(void (*callback)(int))
             return;
         }
         else {
-            RSDK.SetSettingsValue(SETTINGS_SETTINGSCHANGED, 1);
+            RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
             Options_Reload();
         }
     }

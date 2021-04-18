@@ -39,8 +39,8 @@ bool32 processEvents()
                     case SDL_WINDOWEVENT_CLOSE: return false;
                 }
                 break;
-            case SDL_CONTROLLERDEVICEADDED: controllerInit(SDL_NumJoysticks() - 1); break;
-            case SDL_CONTROLLERDEVICEREMOVED: controllerClose(SDL_NumJoysticks() - 1); break;
+            case SDL_CONTROLLERDEVICEADDED: controllerInit(engine.sdlEvents.cdevice.which); break;
+            case SDL_CONTROLLERDEVICEREMOVED: controllerClose(engine.sdlEvents.cdevice.which); break;
             case SDL_WINDOWEVENT_CLOSE:
                 if (engine.window) {
                     SDL_DestroyWindow(engine.window);

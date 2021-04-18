@@ -23,7 +23,7 @@ void UFO_Shadow_LateUpdate(void)
             entity->depth = mat->values[2][3] + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
             if (entity->depth >= 0x4000)
                 entity->visible =
-                    abs(((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00)) / entity->depth)
+                    abs((int)((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00)) / entity->depth)
                     < 0x100;
         }
     }

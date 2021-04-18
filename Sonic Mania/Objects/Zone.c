@@ -396,8 +396,8 @@ void Zone_StageLoad(void)
         }
         else {
             if (globals->competitionSession[CS_PlayerCount] >= 2) {
-                if (globals->competitionSession[CS_PlayerCount] > MAX_PLAYERS)
-                    globals->competitionSession[CS_PlayerCount] = MAX_PLAYERS;
+                if (globals->competitionSession[CS_PlayerCount] > PLAYER_MAX)
+                    globals->competitionSession[CS_PlayerCount] = PLAYER_MAX;
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[CS_PlayerCount]);
             }
             else {
@@ -647,7 +647,7 @@ void Zone_Unknown5(void)
     entity->stateDraw  = Zone_StateDraw_Fadeout;
     entity->visible    = true;
     entity->drawOrder  = DRAWLAYER_COUNT - 1;
-    Zone->field_4724   = 1;
+    Zone->flag   = 1;
 }
 
 void Zone_ApplyWorldBounds(void)
@@ -892,12 +892,12 @@ void Zone_Unknown21(void)
 {
     RSDK_THIS(Zone);
     if (entity->timer <= 0) {
-        Zone->field_4724 = false;
+        Zone->flag = false;
         RSDK.ResetEntityPtr(entity, 0, 0);
     }
     else {
         entity->timer -= entity->fadeSpeed;
-        Zone->field_4724 = true;
+        Zone->flag = true;
     }
 }
 

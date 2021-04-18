@@ -5,12 +5,12 @@ ObjectNoSwap *NoSwap;
 
 void NoSwap_Update(void)
 {
-    EntityNoSwap *entity = (EntityNoSwap *)RSDK_sceneInfo->entity;
+    RSDK_THIS(NoSwap);
     if (Player->playerCount) {
         Vector2 *pos = &entity->posPtr;
-        int cnt = 0;
+        int cnt      = 0;
         for (int p = 0; p < Player->playerCount; ++p) {
-            EntityPlayer * player = (EntityPlayer *)RSDK.GetEntityByID(p);
+            EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
             if (!Player_CheckValidState(player)) {
                 if (entity->noDeathSwap) {
@@ -43,10 +43,7 @@ void NoSwap_Update(void)
     }
 }
 
-void NoSwap_LateUpdate(void)
-{
-
-}
+void NoSwap_LateUpdate(void) {}
 
 void NoSwap_StaticUpdate(void)
 {
@@ -58,21 +55,21 @@ void NoSwap_StaticUpdate(void)
 
 void NoSwap_Draw(void)
 {
-    EntityNoSwap *entity = (EntityNoSwap *)RSDK_sceneInfo->entity;
+    RSDK_THIS(NoSwap);
 
     RSDK.DrawLine(entity->position.x - 16 * entity->size.x, entity->position.y - 16 * entity->size.y, entity->position.x + 16 * entity->size.x,
-                  entity->position.y - 16 * entity->size.y, 0xFF0000, 255, INK_NONE, 0);
+                  entity->position.y - 16 * entity->size.y, 0xFF0000, 255, INK_NONE, false);
     RSDK.DrawLine(entity->position.x - 16 * entity->size.x, entity->position.y + 16 * entity->size.y, entity->position.x + 16 * entity->size.x,
-                  entity->position.y + 16 * entity->size.y, 0xFF0000, 255, INK_NONE, 0);
+                  entity->position.y + 16 * entity->size.y, 0xFF0000, 255, INK_NONE, false);
     RSDK.DrawLine(entity->position.x - 16 * entity->size.x, entity->position.y - 16 * entity->size.y, entity->position.x - 16 * entity->size.x,
-                  entity->position.y + 16 * entity->size.y, 0xFF0000, 255, INK_NONE, 0);
+                  entity->position.y + 16 * entity->size.y, 0xFF0000, 255, INK_NONE, false);
     RSDK.DrawLine(entity->position.x + 16 * entity->size.x, entity->position.y - 16 * entity->size.y, entity->position.x + 16 * entity->size.x,
-                  entity->position.y + 16 * entity->size.y, 0xFF0000, 255, INK_NONE, 0);
+                  entity->position.y + 16 * entity->size.y, 0xFF0000, 255, INK_NONE, false);
 }
 
-void NoSwap_Create(void* data)
+void NoSwap_Create(void *data)
 {
-    EntityNoSwap *entity = (EntityNoSwap *)RSDK_sceneInfo->entity;
+    RSDK_THIS(NoSwap);
     if (!RSDK_sceneInfo->inEditor) {
         entity->updateRange.x = 16 * entity->size.x;
         entity->updateRange.y = 16 * entity->size.y;
@@ -87,15 +84,9 @@ void NoSwap_Create(void* data)
 
 void NoSwap_StageLoad(void) { NoSwap->active = ACTIVE_ALWAYS; }
 
-void NoSwap_EditorDraw(void)
-{
+void NoSwap_EditorDraw(void) {}
 
-}
-
-void NoSwap_EditorLoad(void)
-{
-
-}
+void NoSwap_EditorLoad(void) {}
 
 void NoSwap_Serialize(void)
 {

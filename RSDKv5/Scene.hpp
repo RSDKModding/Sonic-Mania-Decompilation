@@ -221,20 +221,20 @@ inline void SetTileInfo(ushort layerID, int tileX, int tileY, ushort tile)
 inline int GetTileAngle(ushort tile, byte cLayer, byte cMode) { 
     switch (cMode) {
         default: return 0;
-        case CMODE_FLOOR: return collisionMasks[cLayer & 1][tile & 0x3FF].floorAngle;
-        case CMODE_LWALL: return collisionMasks[cLayer & 1][tile & 0x3FF].lWallAngle;
-        case CMODE_ROOF: return collisionMasks[cLayer & 1][tile & 0x3FF].roofAngle;
-        case CMODE_RWALL: return collisionMasks[cLayer & 1][tile & 0x3FF].rWallAngle;
+        case CMODE_FLOOR: return collisionMasks[cLayer & 1][tile & 0xFFF].floorAngle;
+        case CMODE_LWALL: return collisionMasks[cLayer & 1][tile & 0xFFF].lWallAngle;
+        case CMODE_ROOF: return collisionMasks[cLayer & 1][tile & 0xFFF].roofAngle;
+        case CMODE_RWALL: return collisionMasks[cLayer & 1][tile & 0xFFF].rWallAngle;
     }
 }
 inline void SetTileAngle(ushort tile, byte cLayer, byte cMode, int value)
 {
     switch (cMode) {
         default: break;
-        case CMODE_FLOOR: collisionMasks[cLayer & 1][tile & 0x3FF].floorAngle = value;
-        case CMODE_LWALL: collisionMasks[cLayer & 1][tile & 0x3FF].lWallAngle = value;
-        case CMODE_ROOF: collisionMasks[cLayer & 1][tile & 0x3FF].roofAngle = value;
-        case CMODE_RWALL: collisionMasks[cLayer & 1][tile & 0x3FF].rWallAngle = value;
+        case CMODE_FLOOR: collisionMasks[cLayer & 1][tile & 0xFFF].floorAngle = value;
+        case CMODE_LWALL: collisionMasks[cLayer & 1][tile & 0xFFF].lWallAngle = value;
+        case CMODE_ROOF: collisionMasks[cLayer & 1][tile & 0xFFF].roofAngle = value;
+        case CMODE_RWALL: collisionMasks[cLayer & 1][tile & 0xFFF].rWallAngle = value;
     }
 }
 

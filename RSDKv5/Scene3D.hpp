@@ -23,12 +23,12 @@ enum Scene3DDrawTypes {
 struct ScanEdge {
     int start;
     int end;
-    int start1;
-    int end1;
-    int start2;
-    int end2;
-    int start3;
-    int end3;
+    int startR;
+    int endR;
+    int startG;
+    int endG;
+    int startB;
+    int endB;
 };
 
 struct Matrix {

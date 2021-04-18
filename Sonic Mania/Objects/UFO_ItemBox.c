@@ -11,21 +11,27 @@ void UFO_ItemBox_Update(void)
 void UFO_ItemBox_LateUpdate(void)
 {
     RSDK_THIS(UFO_ItemBox);
-    entity->visible = true;
-    int x           = entity->position.x >> 8;
-    int y           = entity->height >> 8;
-    int z           = entity->position.y >> 8;
+    if (entity->state == UFO_ItemBox_Unknown1) {
+        entity->visible = true;
+        int x           = entity->position.x >> 8;
+        int y           = entity->height >> 8;
+        int z           = entity->position.y >> 8;
 
-    Matrix *mat = &UFO_Camera->matWorld;
+        Matrix *mat = &UFO_Camera->matWorld;
 
-    entity->worldX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
-    entity->worldY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-    entity->depth  = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+        entity->worldX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
+        entity->worldY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
+        entity->depth  = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 
-    if (entity->depth >= 0x2000) {
-        int depth       = ((mat->values[0][3] << 8) + (y * mat->values[0][1] & 0xFFFFFF00) + (z * mat->values[0][2] & 0xFFFFFF00)
-                     + (x * mat->values[0][0] & 0xFFFFFF00));
-        entity->visible = abs(depth) >= 256;
+        if (entity->depth >= 0x2000) {
+            int depth = (int)((mat->values[0][3] << 8) + (y * mat->values[0][1] & 0xFFFFFF00) + (z * mat->values[0][2] & 0xFFFFFF00)
+                              + (x * mat->values[0][0] & 0xFFFFFF00))
+                        / entity->depth;
+            entity->visible = abs(depth) < 0x100;
+        }
+        else {
+            entity->visible = false;
+        }
     }
 }
 
@@ -42,7 +48,8 @@ void UFO_ItemBox_Draw(void)
         RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix3, &entity->matrix1);
         RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &UFO_Camera->matWorld);
         RSDK.MatrixRotateXYZ(&entity->matrix3, 0, 8 * UFO_Setup->timer, 4 * UFO_Setup->timer);
-        RSDK.AddModelTo3DScene(UFO_ItemBox->itemBoxModel, UFO_ItemBox->sceneIndex, S3D_FLATCLR_SHADED_SCREEN_WIREFRAME, &entity->matrix2, &entity->matrix3, 0xFFFF00);
+        RSDK.AddModelTo3DScene(UFO_ItemBox->itemBoxModel, UFO_ItemBox->sceneIndex, S3D_FLATCLR_SHADED_SCREEN_WIREFRAME, &entity->matrix2,
+                               &entity->matrix3, 0xFFFF00);
         RSDK.Draw3DScene(UFO_ItemBox->sceneIndex);
 
         entity->drawPos.x = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth) << 16;
@@ -63,9 +70,9 @@ void UFO_ItemBox_Create(void *data)
         entity->active        = ACTIVE_RBOUNDS;
         entity->updateRange.x = 0x400;
         entity->updateRange.y = 0x400;
-        entity->field_68      = 256;
-        entity->field_17C     = 10;
-        if (entity->height)
+        entity->timer2        = 256;
+        entity->sfxTimer      = 10;
+        if (!entity->height)
             entity->height = 12;
 
         entity->height <<= 16;
@@ -79,7 +86,7 @@ void UFO_ItemBox_StageLoad(void)
     UFO_ItemBox->itemBoxSprite = RSDK.LoadSpriteAnimation("SpecialUFO/Items.bin", SCOPE_STAGE);
     UFO_ItemBox->itemBoxModel  = RSDK.LoadMesh("Special/ItemBox.bin", SCOPE_STAGE);
     UFO_ItemBox->sceneIndex    = RSDK.Create3DScene("View:Items", 1024, SCOPE_STAGE);
-    UFO_ItemBox->field_4       = -1;
+    UFO_ItemBox->breakCount    = -1;
     RSDK.SetAmbientColour(UFO_ItemBox->sceneIndex, 160, 160, 0);
     RSDK.SetDiffuseColour(UFO_ItemBox->sceneIndex, 8, 8, 0);
     RSDK.SetSpecularColour(UFO_ItemBox->sceneIndex, 14, 14, 0);
@@ -101,7 +108,7 @@ void UFO_ItemBox_Unknown1(void)
                 int pr = ((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16);
 
                 int rx = (entity->position.y - player->position.y) >> 16;
-                int ry = (entity->height - player->timer - 0xA0000) >> 16;
+                int ry = (entity->height - player->height - 0xA0000) >> 16;
 
                 int spd = UFO_Player->maxSpeed >> 8;
                 if (pr + (rx * rx + ry * ry) < spd) {
@@ -119,7 +126,7 @@ void UFO_ItemBox_Unknown1(void)
                         entity->active    = 2;
                         entity->state     = UFO_ItemBox_Unknown2;
                     }
-                    ++UFO_ItemBox->field_4;
+                    ++UFO_ItemBox->breakCount;
                 }
             }
         }
@@ -137,8 +144,8 @@ void UFO_ItemBox_Unknown2(void)
     entity->scale.x = scale;
     entity->scale.y = scale;
 
-    if (entity->field_68 > 0) {
-        entity->field_68 -= 8;
+    if (entity->timer2 > 0) {
+        entity->timer2 -= 8;
     }
 
     if (++entity->timer > 15) {
@@ -147,14 +154,14 @@ void UFO_ItemBox_Unknown2(void)
         switch (entity->type) {
             case 0:
                 if (!(entity->timer & 3)) {
-                    if (entity->field_17C > 0) {
-                        entity->field_17C--;
+                    if (entity->sfxTimer > 0) {
+                        entity->sfxTimer--;
                         UFO_Ring_PlayRingSFX();
                     }
                 }
                 break;
             case 1:
-                if (!(entity->timer & 1) && entity->field_17C > 0) {
+                if (!(entity->timer & 1) && entity->sfxTimer > 0) {
                     ++UFO_Setup->machPoints;
                     UFO_HUD_CheckLevelUp();
                     UFO_Setup_PlaySphereSFX();
@@ -168,8 +175,8 @@ void UFO_ItemBox_Unknown2(void)
     }
 
     if (entity->timer == 80) {
-        if (UFO_ItemBox->field_4 > -1)
-            UFO_ItemBox->field_4--;
+        if (UFO_ItemBox->breakCount > -1)
+            UFO_ItemBox->breakCount--;
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
 }
@@ -181,5 +188,5 @@ void UFO_ItemBox_EditorLoad(void) {}
 void UFO_ItemBox_Serialize(void)
 {
     RSDK_EDITABLE_VAR(UFO_ItemBox, VAR_ENUM, type);
-    RSDK_EDITABLE_VAR(UFO_ItemBox, VAR_ENUM, timer);
+    RSDK_EDITABLE_VAR(UFO_ItemBox, VAR_ENUM, height);
 }

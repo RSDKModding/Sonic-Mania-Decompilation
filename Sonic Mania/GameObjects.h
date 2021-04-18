@@ -153,12 +153,12 @@ typedef struct {
     void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
     void (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
-    void (*Unknown70)(void);
-    void (*Unknown71)(void);
-    int (*SetScreenSize)(void *, void *, void *, void *, void *);
+    void (*GetDisplayInfo)(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
+    void (*GetWindowSize)(int *width, int *height);
+    int (*SetScreenSize)(byte screenID, ushort width, ushort height);
     void (*SetClipBounds)(byte screenID, int x1, int y1, int x2, int y2);
 #if RETRO_USE_PLUS
-    void (*SetScreenUnknown)(byte, byte, byte, byte, byte);
+    void (*SetScreenSplitVerticies)(sbyte p2_1, sbyte p2_2, sbyte p3_1, sbyte p3_2, sbyte p3_3);
 #endif
     short (*LoadSpriteSheet)(const char *path, Scopes scope);
     void (*SetLookupTable)(ushort *tablePtr);
@@ -211,8 +211,8 @@ typedef struct {
     short (*GetFrameID)(Animator *data);
     int (*GetStringWidth)(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
     void (*ProcessAnimation)(Animator *data);
-    TileLayer *(*GetSceneLayer)(int layerID);
     int (*GetSceneLayerID)(const char *name);
+    TileLayer *(*GetSceneLayer)(int layerID);
     void (*GetLayerSize)(ushort layer, Vector2 *size, bool32 pixelSize);
     ushort (*GetTileInfo)(ushort layer, int x, int y);
     void (*SetTileInfo)(ushort layer, int x, int y, ushort tile);
@@ -247,15 +247,15 @@ typedef struct {
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
     int (*ControllerIDForInputID)(byte controllerID);
-    int (*MostRecentActiveControllerID)(int a1, int a2, uint a3);
-    void (*Unknown100)(int a1);
-    void (*Unknown101)(int a1);
-    void (*Missing21)(int a1);
-    void (*Missing22)(int a1, int a2, int a3);
-    void (*Missing23)(int a1, int a2, int a3);
-    void (*Missing24)(void);
-    void (*Missing25)(byte controllerID, int a2, int a3);
-    void (*Missing26)(byte controllerID, int a2, int a3);
+    int (*MostRecentActiveControllerID)(int inputID, int a2, uint a3);
+    int (*Unknown100)(int inputID);
+    int (*GetAssignedControllerID)(int inputID);
+    int (*GetAssignedUnknown)(int inputID);
+    int (*DoInputUnknown2)(int inputID, int a2, int a3);
+    int (*DoInputUnknown3)(int inputID, int a2, int a3);
+    int (*Missing24)(void);
+    int (*DoInputUnknown2_Active)(byte controllerID, int a2, int a3);
+    int (*DoInputUnknown3_Active)(byte controllerID, int a2, int a3);
     void (*AssignControllerID)(byte controllerID, int a2);
     bool32 (*InputIDIsDisconnected)(byte controllerID);
     void (*ResetControllerAssignments)(void);
@@ -275,8 +275,8 @@ typedef struct {
     void (*PrintVector2)(SeverityModes severity, const char *message, int x, int y);
     void (*PrintHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
 #endif
-    void (*Unknown105)(void);
-    void (*Unknown106)(void);
+    void (*SetActiveVariable)(int objectID, const char *name);
+    void (*AddVarEnumValue)(const char* name);
 #if RETRO_USE_PLUS
     void (*ClearDebugValues)(void);
     void (*SetDebugValue)(const char *name, void *valPtr, int type, int unknown1, int unknown2);
@@ -902,6 +902,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/Zone.h"
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
+#define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,             \
                       object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,           \

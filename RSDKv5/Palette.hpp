@@ -40,6 +40,9 @@ inline void SetActivePalette(byte newActivePal, int startLine, int endLine)
 
 inline uint GetPaletteEntry(byte paletteID, byte index)
 {
+    //0x1F   = 0000 0000 0001 1110
+    //0x7E0  = 0000 0111 1110 0000
+    //0xF800 = 1111 1000 0000 0000
     ushort clr = fullPalette[(paletteID & 7)][index];
     return 8 * (clr & 0x1F | 4 * (clr & 0x7E0 | 8 * (clr & 0xF800)));
 }

@@ -10,8 +10,11 @@ GFXSurface gfxSurface[SURFACE_MAX];
 int pixWidth = 424;
 int cameraCount  = 0;
 ScreenInfo screens[SCREEN_MAX];
-CameraInfo cameras[SCREEN_MAX];
+CameraInfo cameras[CAMERA_MAX];
 ScreenInfo *currentScreen = NULL;
+
+byte startVertex_2P[2];
+byte startVertex_3P[3];
 
 char drawGroupNames[0x10][0x10]{
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
@@ -84,9 +87,17 @@ bool32 InitRenderDevice()
 
     InitShaders();
 
-    SDL_DisplayMode disp;
-    if (SDL_GetDisplayMode(0, 0, &disp) == 0) {
-        // engine.screenRefreshRate = disp.refresh_rate;
+    if (engine.displays)
+        free(engine.displays);
+
+    engine.displayCount = SDL_GetNumVideoDisplays();
+    engine.displays     = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
+    for (int d = 0; d < engine.displayCount; ++d) {
+        if (SDL_GetDisplayMode(d, 0, &engine.displays[d]) == 0) {
+        }
+        else {
+            // what the
+        }
     }
     return true;
 #endif
@@ -239,6 +250,11 @@ void ReleaseRenderDevice()
 #if RETRO_USING_SDL2
     if (engine.imageTexture)
         SDL_DestroyTexture(engine.imageTexture);
+    engine.imageTexture = NULL;
+
+    if (engine.displays)
+        free(engine.displays);
+    engine.displays = NULL;
 
     SDL_DestroyRenderer(engine.renderer);
     SDL_DestroyWindow(engine.window);
@@ -299,6 +315,21 @@ void UpdateWindow()
         SDL_RestoreWindow(engine.window);
         SDL_SetWindowBordered(engine.window, SDL_FALSE);
     }
+
+    InitShaders();
+
+    if (engine.displays)
+        free(engine.displays);
+
+    engine.displayCount = SDL_GetNumVideoDisplays();
+    engine.displays = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
+    for (int d = 0; d < engine.displayCount; ++d) {
+        if (SDL_GetDisplayMode(d, 0, &engine.displays[d]) == 0) {
+        }
+        else {
+            // what the
+        }
+    }
 #endif
 }
 
@@ -347,6 +378,7 @@ void InitGFXSystem()
     gfxSurface[0].lineSize = 4;
     gfxSurface[0].dataPtr  = tilesetGFXData;
 
+#if RETRO_REV02
     GEN_HASH("EngineText", hash);
     gfxSurface[1].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[1].hash, hash, 4 * sizeof(int));
@@ -354,6 +386,77 @@ void InitGFXSystem()
     gfxSurface[1].height   = 0x400; // 128 chars
     gfxSurface[1].lineSize = 3;
     gfxSurface[1].dataPtr  = engineTextBuffer;
+#endif
+}
+
+void GetDisplayInfo(int* displayID, int* width, int* height, int* refreshRate, TextInfo* text) {
+    if (!displayID)
+        return;
+
+    int id = *displayID;
+    int dispID = 0;
+
+    if (*displayID == -2) {
+        if (engine.fsWidth && engine.fsHeight) {
+            int d = 0;
+            for (; d < engine.displayCount; ++d) {
+                if (engine.displays[d].w == engine.fsWidth && engine.displays[d].h == engine.fsHeight
+                    && engine.displays[d].refresh_rate == engine.refreshRate) {
+                    break;
+                }
+            }
+            dispID = d + 1;
+        }
+        else {
+            dispID = 0;
+        }
+    }
+    else {
+        dispID = engine.displayCount;
+        if (id <= engine.displayCount + 1) {
+            if (id == engine.displayCount + 1)
+                dispID = 0;
+            else
+                dispID = *displayID;
+        }
+    }
+
+    *displayID = dispID;
+    if (dispID) {
+        int d = dispID - 1;
+        if (width) {
+            *width = engine.displays[d].w;
+        }
+
+        if (height) {
+            *height = engine.displays[d].h;
+        }
+        if (refreshRate) {
+            *refreshRate = engine.displays[d].refresh_rate;
+        }
+        if (text) {
+            char buffer[0x20];
+            sprintf(buffer, "%ix%i @%iHz", engine.displays[d].w, engine.displays[d].h, engine.displays[d].refresh_rate);
+            SetText(text, buffer, 0);
+        }
+    }
+    else {
+        if (width)
+            *width = 0;
+        if (height)
+            *height = 0;
+        if (refreshRate)
+            *refreshRate = 0;
+        if (text) {
+            SetText(text, (char*)"DEFAULT", 0);
+        }
+    }
+}
+
+void GetWindowSize(int *width, int *height) { 
+#if RETRO_USING_SDL2
+    SDL_GetRendererOutputSize(engine.renderer, width, height); 
+#endif
 }
 
 void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count)
@@ -393,7 +496,7 @@ void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count)
     }
 }
 
-void FillScreen(int colour, int redAlpha, int greenAlpha, int blueAlpha)
+void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
 {
     redAlpha = minVal(0xFF, redAlpha);
     redAlpha = maxVal(0x00, redAlpha);
@@ -1277,8 +1380,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             frameBufferPtr[edge->start + x] = colour16;
                         }
                         ++edge;
@@ -1297,8 +1400,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             frameBufferPtr[edge->start + x] = ((colour16 & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
                         }
                         ++edge;
@@ -1317,8 +1420,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
                             ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                             frameBufferPtr[edge->start + x] =
@@ -1345,8 +1448,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             int v20         = 0;
                             int v21         = 0;
                             int finalColour = 0;
@@ -1385,8 +1488,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             ushort finalColour = 0;
                             if ((frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
                                 finalColour = 0;
@@ -1419,8 +1522,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
                         }
                         ++edge;
@@ -1439,8 +1542,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             if (frameBufferPtr[edge->start + x] == maskColour)
                                 frameBufferPtr[edge->start + x] = colour16;
                         }
@@ -1460,8 +1563,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
                             edge->end = currentScreen->clipBound_X2;
 
-                        int xCnt = edge->end - edge->start;
-                        for (int x = 0; x < xCnt; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
                             if (frameBufferPtr[edge->start + x] != maskColour)
                                 frameBufferPtr[edge->start + x] = colour16;
                         }
@@ -1862,8 +1965,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         frameBufferPtr[edge->start + x] = colour16;
                     }
                     ++edge;
@@ -1872,14 +1975,18 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             case INK_BLEND:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                    if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
+                    if (edge->start > currentScreen->clipBound_X2)
+                        edge->start = currentScreen->clipBound_X2;
 
-                    if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                    if (edge->end < currentScreen->clipBound_X1)
+                        edge->end = currentScreen->clipBound_X1;
+                    if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         frameBufferPtr[edge->start + x] = ((colour16 & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
                     }
                     ++edge;
@@ -1898,8 +2005,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         ushort *blendTablePtrA = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
                         ushort *blendTablePtrB = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                         frameBufferPtr[edge->start + x] =
@@ -1925,8 +2032,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         int v20         = 0;
                         int v21         = 0;
                         int finalColour = 0;
@@ -1965,8 +2072,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         ushort finalColour = 0;
                         if ((frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour16 & 0xF800) >> 11] << 11) <= 0)
                             finalColour = 0;
@@ -1997,8 +2104,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
@@ -2017,8 +2124,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         if (frameBufferPtr[edge->start + x] == maskColour)
                             frameBufferPtr[edge->start + x] = colour16;
                     }
@@ -2038,8 +2145,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                     if (edge->end > currentScreen->clipBound_X2)
                         edge->end = currentScreen->clipBound_X2;
 
-                    int xCnt = edge->end - edge->start;
-                    for (int x = 0; x < xCnt; ++x) {
+                    int count = edge->end - edge->start;
+                    for (int x = 0; x < count; ++x) {
                         if (frameBufferPtr[edge->start + x] != maskColour)
                             frameBufferPtr[edge->start + x] = colour16;
                     }
@@ -2098,7 +2205,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
 
     if (topScreen != bottomScreen) {
         ScanEdge *edge = &scanEdgeBuffer[topScreen];
-        for (int s = topScreen; s < bottomScreen; ++s) {
+        for (int s = topScreen; s <= bottomScreen; ++s) {
             edge->start = 0x7FFF;
             edge->end   = -1;
             ++edge;
@@ -2107,7 +2214,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
         for (int v = 0; v < vertCount - 1; ++v) {
             ProcessScanEdgeClr(colours[v + 0], colours[v + 1], vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
         }
-        ProcessScanEdgeClr(colours[0], colours[vertCount - 1], vertices[0].x, vertices[0].y, vertices[vertCount - 1].x, vertices[vertCount - 1].y);
+        ProcessScanEdgeClr(colours[vertCount - 1], colours[0], vertices[vertCount - 1].x, vertices[vertCount - 1].y, vertices[0].x, vertices[0].y);
 
         ushort *frameBufferPtr = &currentScreen->frameBuffer[topScreen * currentScreen->pitch];
 
@@ -2115,34 +2222,35 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
         switch (inkEffect) {
             default: break;
             case INK_NONE:
-                for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start = edge->start;
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int count    = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1   = edge->start1;
-                    int start2   = edge->start2;
-                    int start3   = edge->start3;
+                    int startR   = edge->startR;
+                    int startG   = edge->startG;
+                    int startB   = edge->startB;
 
-                    if (start > currentScreen->clipBound_X2) {
+                    if (edge->start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
-                    if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
-                        count -= (currentScreen->clipBound_X1 - edge->start);
+                    else if (edge->start < currentScreen->clipBound_X1) {
+                        int dif = (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * dif;
+                        startG += deltaG * dif;
+                        startB += deltaB * dif;
+                        count -= dif;
                         edge->start = currentScreen->clipBound_X1;
                     }
 
                     if (edge->end < currentScreen->clipBound_X1) {
                         edge->end = currentScreen->clipBound_X1;
+                        count     = currentScreen->clipBound_X1 - edge->start;
                     }
                     if (edge->end > currentScreen->clipBound_X2) {
                         edge->end = currentScreen->clipBound_X2;
@@ -2150,10 +2258,11 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        frameBufferPtr[edge->start + x] = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        ushort colour16                 = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        frameBufferPtr[edge->start + x] = colour16;
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2163,25 +2272,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2195,10 +2304,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        ushort colour                   = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
+                        ushort colour                   = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         frameBufferPtr[edge->start + x] = ((colour & 0xF7DE) >> 1) + ((frameBufferPtr[edge->start + x] & 0xF7DE) >> 1);
                     }
                     ++edge;
@@ -2209,25 +2318,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2241,10 +2350,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        ushort colour                      = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
+                        ushort colour                      = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         ushort *blendTablePtrA          = &blendLookupTable[BLENDTABLE_XSIZE * ((BLENDTABLE_YSIZE - 1) - alpha)];
                         ushort *blendTablePtrB          = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                         frameBufferPtr[edge->start + x] =
@@ -2262,25 +2371,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2294,10 +2403,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        ushort colour   = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
+                        ushort colour   = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         int v20         = 0;
                         int v21         = 0;
                         int finalColour = 0;
@@ -2328,25 +2437,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2360,10 +2469,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        ushort colour      = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
+                        ushort colour      = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         ushort finalColour = 0;
                         if ((frameBufferPtr[edge->start + x] & 0xF800) - ((ushort)subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)
                             finalColour = 0;
@@ -2386,25 +2495,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2418,9 +2527,9 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
                         frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
@@ -2431,25 +2540,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2460,10 +2569,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        ushort colour = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
+                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         if (frameBufferPtr[edge->start + x] == maskColour)
                             frameBufferPtr[edge->start + x] = colour;
                     }
@@ -2475,25 +2584,25 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 for (int s = topScreen; s < bottomScreen; ++s) {
                     int start        = edge->start;
                     int count        = edge->end - edge->start;
-                    int bufferedPos1 = 0;
-                    int bufferedPos2 = 0;
-                    int bufferedPos3 = 0;
+                    int deltaR = 0;
+                    int deltaG = 0;
+                    int deltaB = 0;
                     if (count > 0) {
-                        bufferedPos1 = (edge->end1 - edge->start1) / count;
-                        bufferedPos2 = (edge->end2 - edge->start2) / count;
-                        bufferedPos3 = (edge->end3 - edge->start3) / count;
+                        deltaR = (edge->endR - edge->startR) / count;
+                        deltaG = (edge->endG - edge->startG) / count;
+                        deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int start1 = edge->start1;
-                    int start2 = edge->start2;
-                    int start3 = edge->start3;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
                     }
                     if (start < currentScreen->clipBound_X1) {
-                        start1 += bufferedPos1 * (currentScreen->clipBound_X1 - edge->start);
-                        start2 += bufferedPos2 * (currentScreen->clipBound_X1 - edge->start);
-                        start3 += bufferedPos3 * (currentScreen->clipBound_X1 - edge->start);
+                        startR += deltaR * (currentScreen->clipBound_X1 - edge->start);
+                        startG += deltaG * (currentScreen->clipBound_X1 - edge->start);
+                        startB += deltaB * (currentScreen->clipBound_X1 - edge->start);
                         count -= (currentScreen->clipBound_X1 - edge->start);
                         edge->start = currentScreen->clipBound_X1;
                     }
@@ -2507,10 +2616,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        start1 += bufferedPos1;
-                        start2 += bufferedPos2;
-                        start3 += bufferedPos3;
-                        ushort colour = (start3 >> 19) + ((start2 >> 13) & 0x7E0) + ((start1 >> 8) & 0xF800);
+                        startR += deltaR;
+                        startG += deltaG;
+                        startB += deltaB;
+                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         if (frameBufferPtr[edge->start + x] != maskColour)
                             frameBufferPtr[edge->start + x] = colour;
                     }
@@ -4419,7 +4528,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
                     char curChar           = *textPtr;
                     if ((curChar < '\t' || curChar > '\n') && curChar != ' ') {
                         byte h              = 8;
-                        byte *engineTextPtr = &engineTextBuffer[64 * *textPtr];
+                        byte *engineTextPtr = &engineTextBuffer[0x40 * *textPtr];
                         do {
                             --h;
                             int w = 8;

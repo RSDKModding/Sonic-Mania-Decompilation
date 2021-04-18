@@ -31,13 +31,29 @@ typedef uint color;
 #define SCREEN_XMAX     (1280)
 #define SCREEN_YSIZE    (240)
 #define SCREEN_YCENTER  (SCREEN_YSIZE / 2)
+
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
+
 #if RETRO_USE_PLUS
 #define PLAYER_MAX (4)
+#define SCREEN_MAX (4)
 #else
 #define PLAYER_MAX (2)
+#define SCREEN_MAX (2)
 #endif
+
+#define CAMERA_MAX (4)
+
+//0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
+#define RESERVE_ENTITY_COUNT (0x40)
+#define TEMPENTITY_COUNT     (0x100)
+#define SCENEENTITY_COUNT    (0x800)
+#define ENTITY_COUNT         (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT + TEMPENTITY_COUNT)
+#define TEMPENTITY_START     (ENTITY_COUNT - TEMPENTITY_COUNT)
+
+#define TYPE_COUNT        (0x100)
+#define TYPEGROUP_COUNT   (0x104)
 
 typedef struct {
     int x;
@@ -475,6 +491,56 @@ typedef enum {
     CMODE_ROOF,
     CMODE_RWALL,
 } CModes;
+
+typedef enum {
+    S3D_FLATCLR_WIREFRAME               = 0x0,
+    S3D_FLATCLR                         = 0x1,
+    S3D_UNKNOWN_2                       = 0x2,
+    S3D_UNKNOWN_3                       = 0x3,
+    S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
+    S3D_FLATCLR_SHADED                  = 0x5,
+    S3D_FLATCLR_SHADED_BLENDED          = 0x6,
+    S3D_FLATCLR_SCREEN_WIREFRAME        = 0x7,
+    S3D_FLATCLR_SCREEN                  = 0x8,
+    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME = 0x9,
+    S3D_FLATCLR_SHADED_SCREEN           = 0xA,
+    S3D_FLATCLR_SHADED_BLENDED_SCREEN   = 0xB,
+} Scene3DDrawTypes;
+
+typedef enum {
+    SETTINGS_WINDOWED,
+    SETTINGS_BORDERED,
+    SETTINGS_EXCLUSIVEFS,
+    SETTINGS_VSYNC,
+    SETTINGS_TRIPLEBUFFERED,
+    SETTINGS_WINDOW_WIDTH,
+    SETTINGS_WINDOW_HEIGHT,
+    SETTINGS_FSWIDTH,
+    SETTINGS_FSHEIGHT,
+    SETTINGS_REFRESHRATE,
+    SETTINGS_SHADERSUPPORT,
+    SETTINGS_SHADERID,
+    SETTINGS_SCREENCOUNT,
+#if RETRO_USE_PLUS
+    SETTINGS_DIMTIMER,
+#endif
+    SETTINGS_STREAMSENABLED,
+    SETTINGS_STREAM_VOL,
+    SETTINGS_SFX_VOL,
+    SETTINGS_LANGUAGE,
+    SETTINGS_STORE,
+    SETTINGS_RELOAD,
+    SETTINGS_CHANGED,
+    SETTINGS_WRITE,
+} SettingsValues;
+
+typedef enum {
+    GROUP_ALL     = 0,
+    GROUP_CUSTOM1 = TYPE_COUNT,
+    GROUP_CUSTOM2,
+    GROUP_CUSTOM3,
+    GROUP_CUSTOM4,
+} TypeGroups;
 
 typedef enum { STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 } StatusCodes;
 

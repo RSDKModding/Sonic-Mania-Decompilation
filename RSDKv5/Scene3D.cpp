@@ -14,39 +14,40 @@ enum ModelFlags {
 
 void ProcessScanEdge(int x1, int y1, int x2, int y2)
 {
+    int top = y1 >> 16;
     int iy1 = y1 >> 16;
     int iy2 = y2 >> 16;
     int ix2 = x2 >> 16;
     int ix1 = x1 >> 16;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
+            top = y2 >> 16;
             ix1 = x2 >> 16;
             ix2 = x1 >> 16;
             iy1 = y2 >> 16;
             iy2 = y1 >> 16;
         }
 
-        int end = iy2 + 1;
-        if (iy1 < currentScreen->clipBound_Y2 && end >= currentScreen->clipBound_Y1) {
-            if (end > currentScreen->clipBound_Y2)
-                end = currentScreen->clipBound_Y2;
+        int bottom = iy2 + 1;
+        if (top < currentScreen->clipBound_Y2 && bottom >= currentScreen->clipBound_Y1) {
+            if (bottom > currentScreen->clipBound_Y2)
+                bottom = currentScreen->clipBound_Y2;
             int scanPos = ix1 << 16;
-            int dif     = ((ix2 - ix1) << 16) / (iy2 - iy1);
-            if (iy1 < 0) {
-                scanPos -= iy1 * dif;
-                iy1 = 0;
+            int delta     = ((ix2 - ix1) << 16) / (iy2 - iy1);
+            if (top < 0) {
+                scanPos -= top * delta;
+                top = 0;
             }
 
-            ScanEdge *edge = &scanEdgeBuffer[iy1];
-            if (iy1 < end) {
-                for (int i = iy1; i < end; ++i) {
-                    if (scanPos >> 16 < edge->start)
-                        edge->start = scanPos >> 16;
-                    if (scanPos >> 16 > edge->end)
-                        edge->end = scanPos >> 16;
-                    scanPos += dif;
-                    ++edge;
-                }
+            ScanEdge *edge = &scanEdgeBuffer[top];
+            for (int i = top; i < bottom; ++i) {
+                int scanX = scanPos >> 16;
+                if (scanX < edge->start)
+                    edge->start = scanX;
+                if (scanX > edge->end)
+                    edge->end = scanX;
+                scanPos += delta;
+                ++edge;
             }
         }
     }
@@ -59,75 +60,78 @@ void ProcessScanEdgeClr(uint c1, uint c2, int x1, int y1, int x2, int y2)
     int ix1 = x1 >> 16;
     int ix2 = x2 >> 16;
 
-    int y   = y1 >> 16;
-    int clr = c1;
+    int top   = y1 >> 16;
+    uint clr1 = c1;
+    uint clr2 = c2;
     if (y1 >> 16 != y2 >> 16) {
         if (y1 >> 16 > y2 >> 16) {
-            y   = y2 >> 16;
-            ix1 = x2 >> 16;
-            ix2 = x1 >> 16;
-            iy1 = y2 >> 16;
-            iy2 = y1 >> 16;
-            clr = c1;
+            top  = y2 >> 16;
+            ix1  = x2 >> 16;
+            ix2  = x1 >> 16;
+            iy1  = y2 >> 16;
+            iy2  = y1 >> 16;
+            clr1 = c2;
+            clr2 = c1;
         }
 
-        int end = iy2 + 1;
-        if (iy1 < currentScreen->clipBound_Y2 && end >= currentScreen->clipBound_Y1) {
-            if (end > currentScreen->clipBound_Y2)
-                end = currentScreen->clipBound_Y2;
+        int bottom = iy2 + 1;
+        if (top < currentScreen->clipBound_Y2 && bottom >= currentScreen->clipBound_Y1) {
+            if (bottom > currentScreen->clipBound_Y2)
+                bottom = currentScreen->clipBound_Y2;
 
-            int yDif       = iy2 - iy1;
-            int scanPos1   = c1 & 0xFF0000;
-            int scanPos    = ix1 << 16;
-            int scanOffset = ((ix2 - ix1) << 16) / yDif;
+            int size    = iy2 - iy1;
+            int scanPosX = ix1 << 16;
+            int deltaX  = ((ix2 - ix1) << 16) / size;
 
-            int scanOffset1 = 0;
-            if ((clr & 0xFF0000) == (c1 & 0xFF0000))
-                scanOffset1 = 0;
-            else
-                scanOffset1 = ((c1 & 0xFF0000) - scanPos1) / yDif;
+            int c1R     = (clr1 & 0xFF0000);
+            int c2R     = (clr2 & 0xFF0000);
+            int scanPosR = c1R;
+            int deltaR   = 0;
+            if (c1R != c2R)
+                deltaR = (c2R - c1R) / size;
 
-            int scanPos2    = (ushort)(clr & 0xFF00) << 8;
-            int scanOffset2 = 0;
-            if (scanPos2 == (ushort)(c1 & 0xFF00) << 8)
-                scanOffset2 = 0;
-            else
-                scanOffset2 = (((ushort)(c1 & 0xFF00) << 8) - scanPos2) / yDif;
+            int c1G     = (clr1 & 0x00FF00) << 8;
+            int c2G     = (clr2 & 0x00FF00) << 8;
+            int scanPosG = c1G;
+            int deltaG   = 0;
+            if (c1G != c2G)
+                deltaG = (c2G - c1G) / size;
 
-            int scanPos3    = (byte)clr << 16;
-            int scanOffset3 = 0;
-            if (scanPos3 == (byte)c1 << 16)
-                scanOffset3 = 0;
-            else
-                scanOffset3 = (((byte)c1 << 16) - ((byte)clr << 16)) / yDif;
+            int c1B     = (clr1 & 0x0000FF) << 16;
+            int c2B     = (clr2 & 0x0000FF) << 16;
+            int scanPosB = c1B;
+            int deltaB   = 0;
+            if (c1B != c2B)
+                deltaB = (c2B - c1B) / size;
 
-            if (y < 0) {
-                scanPos -= y * scanOffset;
-                scanPos2 -= y * scanOffset2;
-                scanPos1 -= y * scanOffset1;
-                scanPos3 = ((byte)clr << 16) - y * scanOffset3;
-                y        = 0;
+            if (top < 0) {
+                scanPosX -= top * deltaX;
+                scanPosR -= top * deltaR;
+                scanPosG -= top * deltaG;
+                scanPosB -= top * deltaB;
+                top = 0;
             }
 
-            ScanEdge *scanEdge = &scanEdgeBuffer[y];
-            for (int i = 0; i < end - y; ++i) {
-                if (scanPos >> 16 < scanEdge->start) {
-                    scanEdge->start  = scanPos >> 16;
-                    scanEdge->start1 = scanPos1;
-                    scanEdge->start2 = scanPos2;
-                    scanEdge->start3 = scanPos3;
+            ScanEdge *edge = &scanEdgeBuffer[top];
+            for (int i = top; i < bottom; ++i) {
+                int scanX = scanPosX >> 16;
+                if (scanX < edge->start) {
+                    edge->start  = scanX;
+                    edge->startR = scanPosR;
+                    edge->startG = scanPosG;
+                    edge->startB = scanPosB;
                 }
-                if (scanPos >> 16 > scanEdge->end) {
-                    scanEdge->end  = scanPos >> 16;
-                    scanEdge->end1 = scanPos1;
-                    scanEdge->end2 = scanPos2;
-                    scanEdge->end3 = scanPos3;
+                if (scanX > edge->end) {
+                    edge->end  = scanX;
+                    edge->endR = scanPosR;
+                    edge->endG = scanPosG;
+                    edge->endB = scanPosB;
                 }
-                scanPos += scanOffset;
-                ++scanEdge;
-                scanPos1 += scanOffset1;
-                scanPos2 += scanOffset2;
-                scanPos3 += scanOffset3;
+                scanPosX += deltaX;
+                scanPosR += deltaR;
+                scanPosG += deltaG;
+                scanPosB += deltaB;
+                ++edge;
             }
         }
     }
@@ -744,6 +748,7 @@ void Draw3DScene(ushort sceneID)
         Scene3DVertex *vertices = scn->vertices;
         int vertID              = 0;
         for (int i = 0; i < scn->faceCount; ++i) {
+            scn->zBuffer[i].depth = 0;
             switch (scn->faceVertCounts[i]) {
                 default: break;
                 case 1:
@@ -915,13 +920,11 @@ void Draw3DScene(ushort sceneID)
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
                     int vertCount           = *vertCnt;
 
-                    int ny = 0;
                     for (int v = 0; v < vertCount; ++v) {
-                        ny = drawVert[v].ny;
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
 
-                        int normal    = ny;
+                        int normal    = drawVert[v].ny;
                         int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
                         int specular = normalVal >> 6 >> scn->specularX;
@@ -962,7 +965,7 @@ void Draw3DScene(ushort sceneID)
                     Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
 
                     int v = 0;
-                    for (; v < *vertCnt - 1 && v < 0xFF; ++v) {
+                    for (; v < *vertCnt && v < 0xFF; ++v) {
                         int vertZ = drawVert[v].z;
                         if (vertZ < 0x100) {
                             v = 0xFF;
@@ -1015,7 +1018,7 @@ void Draw3DScene(ushort sceneID)
 
                     int v   = 0;
                     int ny1 = 0;
-                    for (; v < *vertCnt - 1 && v < 0xFF; ++v) {
+                    for (; v < *vertCnt && v < 0xFF; ++v) {
                         int vertZ = drawVert[v].z;
                         if (vertZ < 0x100) {
                             v = 0xFF;
@@ -1057,11 +1060,11 @@ void Draw3DScene(ushort sceneID)
 
                         drawVert = &scn->vertices[scn->zBuffer[i].index];
                         for (int v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, colour,
-                                     entity->alpha, (InkEffects)entity->inkEffect, false);
+                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, colour, entity->alpha,
+                                     (InkEffects)entity->inkEffect, true);
                         }
-                        DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, colour,
-                                 entity->alpha, (InkEffects)entity->inkEffect, false);
+                        DrawLine(vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, vertPos[0].x, vertPos[0].y, colour, entity->alpha,
+                                 (InkEffects)entity->inkEffect, true);
                     }
 
                     vertCnt++;
@@ -1128,7 +1131,6 @@ void Draw3DScene(ushort sceneID)
                     int vertCount           = *vertCnt;
 
                     int v  = 0;
-                    int ny = 0;
                     for (; v < vertCount && v < 0xFF; ++v) {
                         int vertZ = drawVert[v].z;
                         if (vertZ < 0x100) {
@@ -1137,9 +1139,8 @@ void Draw3DScene(ushort sceneID)
                         else {
                             vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->unknownX) / vertZ << 16);
                             vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->unknownY) / vertZ << 16);
-                            ny += drawVert[v].ny;
 
-                            int normal    = ny / vertCount;
+                            int normal    = drawVert[v].ny;
                             int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
                             int specular = normalVal >> 6 >> scn->specularX;

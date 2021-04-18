@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int breakCount;
     int field_8;
     int field_C;
     ushort itemBoxSprite;
@@ -24,7 +24,7 @@ typedef struct {
     int type;
     int timer;
     int height;
-    int field_68;
+    int timer2;
     int worldX;
     int worldY;
     Vector2 drawPos;
@@ -47,7 +47,7 @@ typedef struct {
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;
-    int field_17C;
+    int sfxTimer;
     Animator itemData;
     int field_198;
     int field_19C;
