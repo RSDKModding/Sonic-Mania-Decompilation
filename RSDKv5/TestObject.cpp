@@ -87,8 +87,8 @@ void TestObject_StaticUpdate()
     //DrawAniTile(TestObject->sheetIndex, 2, 0, 32 * (TestObject->timer % 8), 32, 32);
 }
 void TestObject_Draw() { 
-    //EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
-    //Vector2 drawPos;
+    EntityTestObject *entity = (EntityTestObject *)sceneInfo.entity;
+    Vector2 drawPos;
     //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + 0x10, currentScreen->centerY + 0x20, 0x00FF00, 0xFF, INK_NONE,
     //         true);
     //DrawLine(currentScreen->centerX, currentScreen->centerY, currentScreen->centerX + (cos(TestObject->timer) * 0x40),
@@ -97,11 +97,14 @@ void TestObject_Draw() {
     //DrawRectangle(currentScreen->centerX, currentScreen->centerY, 0x40 + (TestObject->timer / 0x08) % 0x80, 0x40 + (TestObject->timer / 0x04) % 0x80,
     //              0x00FF00, 0xFF, INK_NONE, true);
 
-    //drawPos.x = currentScreen->centerX;
-    //drawPos.y = currentScreen->centerY;
-    //entity->drawFX    = FX_FLIP;
+    drawPos.x = currentScreen->centerX << 0x10;
+    drawPos.y = currentScreen->centerY << 0x10;
+    entity->drawFX    = FX_FLIP | FX_ROTATE | FX_SCALE;
+    entity->rotation = TestObject->timer;
+    entity->scale.x     = 0x200;
+    entity->scale.y     = 0x200;
     //entity->direction = (TestObject->timer / 4) % 4;
-    //DrawSprite(&entity->data, NULL, false);
+    DrawSprite(&entity->data, &drawPos, true);
     //DrawDeformedSprite(2, INK_NONE, 0xFF);
 
     //if (tileLayers[0].layout)
@@ -130,7 +133,7 @@ void TestObject_Draw() {
     vertClr[3] = 0x000000;
 
     //DrawFace(vertPos, 4, 0xFF, 0x80, 0xFF, 0x40, INK_BLEND);
-    DrawBlendedFace(vertPos, vertClr, 4, 0xFF, INK_NONE);
+    //DrawBlendedFace(vertPos, vertClr, 4, 0xFF, INK_NONE);
 }
 void TestObject_Create(void *data)
 {
@@ -174,7 +177,7 @@ void TestObject_StageLoad()
     TestObject->fgLayers = 1 << TestObject->fgLow;
     TestObject->fgLayers |= 1 << TestObject->fgHigh;
 
-    //CreateEntity(TestObject->objectID, NULL, 0, 0);
+    CreateEntity(TestObject->objectID, NULL, 0, 0);
 }
 void TestObject_EditorDraw() {}
 void TestObject_EditorLoad() {}

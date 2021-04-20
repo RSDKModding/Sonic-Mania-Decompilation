@@ -67,7 +67,7 @@ void UFO_Shadow_StageLoad(void)
     UFO_Shadow->modelIndex = RSDK.LoadMesh("Special/Shadow.bin", SCOPE_STAGE);
     UFO_Shadow->sceneID    = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
 
-    int slot = 0x840;
+    int slot = TEMPENTITY_START;
     foreach_all(UFO_Player, player)
     {
         EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
@@ -80,14 +80,14 @@ void UFO_Shadow_StageLoad(void)
 
     foreach_all(UFO_Circuit, ufo)
     {
-        //if (entityPtr[1].scale.x == 1 false) {
-        //    EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
-        //    RSDK.ResetEntityPtr(shadow, UFO_Shadow->objectID, 0);
-        //    shadow->position.x  = ufo->position.x;
-        //    shadow->position.y  = ufo->position.y;
-        //    shadow->parent      = (Entity *)ufo;
-        //    shadow->shadowScale = 0x400;
-        //}
+        if (ufo->startNode) {
+            EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
+            RSDK.ResetEntityPtr(shadow, UFO_Shadow->objectID, 0);
+            shadow->position.x  = ufo->position.x;
+            shadow->position.y  = ufo->position.y;
+            shadow->parent      = (Entity *)ufo;
+            shadow->shadowScale = 0x400;
+        }
     }
 
     foreach_all(UFO_Ring, ring)
@@ -110,7 +110,7 @@ void UFO_Shadow_StageLoad(void)
         shadow->shadowScale = 0x100;
     }
 
-    LogHelpers_Print("%d shadow entities spawned", slot - 0x840);
+    LogHelpers_Print("%d shadow entities spawned", slot - TEMPENTITY_START);
 }
 
 void UFO_Shadow_EditorDraw(void) {}

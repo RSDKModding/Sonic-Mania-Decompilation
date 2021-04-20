@@ -10,7 +10,7 @@ void CorkscrewPath_Update(void)
         if (abs(entity->position.x - player->position.x) >> 16 > entity->periodShifted) {
             entity->activePlayers &= ~RSDK.GetEntityID(player);
             if (player->playerAnimData.animationID != ANI_SPRINGCS)
-                player->direction &= FLIP_X;
+                player->direction &= ~FLIP_Y;
         }
         else {
             int x     = entity->periodShifted + ((player->position.x - entity->position.x) >> 16);
@@ -32,10 +32,10 @@ void CorkscrewPath_Update(void)
                             if (player->groundVel < 0) {
                                 player->direction |= FLIP_Y;
                                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimData, true,
-                                                        CorkscrewPath->frameTable[frame + 1]);
+                                                        CorkscrewPath->frameTable[frame]);
                             }
                             else {
-                                player->direction &= FLIP_X;
+                                player->direction &= ~FLIP_Y;
                                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimData, true, frame);
                             }
                         }
@@ -51,10 +51,10 @@ void CorkscrewPath_Update(void)
                     if (player->groundVel < 0) {
                         player->direction |= FLIP_Y;
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimData, true,
-                                                CorkscrewPath->frameTable[frame + 1]);
+                                                CorkscrewPath->frameTable[frame]);
                     }
                     else {
-                        player->direction &= FLIP_X;
+                        player->direction &= ~FLIP_Y;
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimData, true, frame);
                     }
                 }

@@ -21,7 +21,6 @@ void SwingRope_Update(void)
     int rotateX   = entity->rotatePos.x;
     int rotateY   = entity->rotatePos.y;
     entity->angle = (sine >> 6) & 0x1FF;
-    int playerX   = -0x800 * RSDK.Sin512(entity->angle) + rotateX;
     rotateY += 0x700 * RSDK.Cos512(entity->angle);
     entity->rotatePos.x -= RSDK.Sin512(entity->angle) << 11;
     entity->rotatePos.y += RSDK.Cos512(entity->angle) << 11;
@@ -43,7 +42,7 @@ void SwingRope_Update(void)
                     player->jumpAbilityTimer = 1;
                     player->state            = Player_State_Air;
                     player->drawOrder        = entity->playerLayers[player->playerID];
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, 0, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, false, 0);
                     player->velocity.x = entity->velocity.x >> 1;
                     if (player->left) {
                         player->velocity.x = -0x20000;
@@ -52,12 +51,12 @@ void SwingRope_Update(void)
                         player->velocity.x = 0x20000;
                     }
                     player->velocity.y    = (entity->velocity.y >> 1) - 0x38000;
-                    player->onGround      = 0;
+                    player->onGround      = false;
                     player->jumpAbility   = 0;
                     entity->ropeGrabDelay = 30;
                 }
                 else {
-                    player->position.x = playerX;
+                    player->position.x = rotateX + (-0x800 * RSDK.Sin512(entity->angle));
                     player->position.y = rotateY - ((Player_GetHitbox(player)->top + 2) << 16);
                 }
             }
@@ -77,9 +76,9 @@ void SwingRope_Update(void)
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;
-                player->position.x = playerX;
+                player->position.x = -0x800 * RSDK.Sin512(entity->angle) + rotateX;
                 player->position.y = rotateY - ((playerHitbox->top + 2) << 16);
-                RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
+                RSDK.PlaySFX(Player->sfx_Grab, false, 255);
             }
         }
     }
@@ -98,17 +97,18 @@ void SwingRope_Draw(void)
     entity->ropeData.frameID = (entity->rotatedAngle >> 10) & 0x1F;
     entity->rotation         = entity->rotatedAngle & 0xF;
     entity->drawFX           = FX_ROTATE;
-    RSDK.DrawSprite(&entity->ropeData, 0, 0);
+    RSDK.DrawSprite(&entity->ropeData, NULL, false);
 
     entity->ropePos.x = entity->position.x;
     entity->ropePos.y = entity->position.y;
 
     int angle = entity->rotatedAngle >> 6;
+    int rotAngle = entity->rotatedAngle;
     for (int s = 0; s < entity->ropeSize; ++s) {
         entity->angle = angle & 0x1FF;
         entity->ropePos.x -= RSDK.Sin512(entity->angle) << 11;
         entity->ropePos.y += RSDK.Cos512(entity->angle) << 11;
-        int rotAngle             = entity->rotatedOffset + entity->rotatedAngle;
+        rotAngle += entity->rotatedOffset;
         angle                    = rotAngle >> 6;
         entity->ropeData.frameID = (rotAngle >> 10) & 0x1F;
         entity->rotation         = (rotAngle >> 6) & 0xF;

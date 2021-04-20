@@ -14,14 +14,11 @@ void printLog(SeverityModes severity, const char *message, ...)
 {
 #ifndef RETRO_DISABLE_LOG
     if (engineDebugMode) {
-        char buffer[0x100];
-
         // make the full string
         va_list args;
         va_start(args, message);
-        vsprintf(buffer, message, args);
-        printf("%s\n", buffer);
-        sprintf(buffer, "%s\n", buffer);
+        vsprintf(outputString, message, args);
+        sprintf(outputString, "%s\n", outputString);
         va_end(args);
 
 #if RETRO_REV02
@@ -47,7 +44,7 @@ void printLog(SeverityModes severity, const char *message, ...)
             sprintf(pathBuffer, BASE_PATH "log.txt");
             FileIO *file = fOpen(pathBuffer, "a");
             if (file) {
-                fWrite(&buffer, 1, strlen(buffer), file);
+                fWrite(&outputString, 1, strlen(outputString), file);
                 fClose(file);
             }
 #if RETRO_REV02

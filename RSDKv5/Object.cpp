@@ -739,18 +739,14 @@ void CreateEntity(ushort type, void *data, int x, int y)
     ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
     Entity *entityPtr   = &objectEntityList[sceneInfo.createSlot];
 
-    int cntA = 0, cntB = 0;
+    int permCnt = 0, loopCnt = 0;
     while (entityPtr->objectID) {
-        if (cntA >= TEMPENTITY_COUNT)
-            break;
-
         // after 16 loops, the game says fuck it and will start overwriting non-temp objects
-        if (!entityPtr->isPermanent && cntB >= 16)
+        if (!entityPtr->isPermanent && loopCnt >= 16)
             break;
-        if (!entityPtr->isPermanent)
-            ++cntA;
+        if (entityPtr->isPermanent)
+            ++permCnt;
         sceneInfo.createSlot++;
-        ++cntB;
         if (sceneInfo.createSlot == ENTITY_COUNT) {
             sceneInfo.createSlot = TEMPENTITY_START;
             entityPtr            = &objectEntityList[sceneInfo.createSlot];
@@ -758,6 +754,9 @@ void CreateEntity(ushort type, void *data, int x, int y)
         else {
             entityPtr = &objectEntityList[sceneInfo.createSlot];
         }
+        if (permCnt >= TEMPENTITY_COUNT)
+            break;
+        ++loopCnt;
     }
 
     memset(entityPtr, 0, objInfo->entitySize);

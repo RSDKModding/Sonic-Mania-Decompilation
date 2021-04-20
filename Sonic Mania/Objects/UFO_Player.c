@@ -184,8 +184,8 @@ void UFO_Player_ProcessPlayerControl(void)
             entity->left  = false;
             entity->right = false;
         }
-        entity->jumpPress = controller->keyA.press | controller->keyB.press | controller->keyC.press | controller->keyX.press;
-        entity->jumpHold  = controller->keyA.down | controller->keyB.down | controller->keyC.down | controller->keyX.down;
+        entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+        entity->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
 #if RETRO_USE_PLUS
         if (RSDK_controller[entity->controllerID].keyStart.press || RSDK_unknown->field_10 == 1) {
@@ -194,11 +194,11 @@ void UFO_Player_ProcessPlayerControl(void)
 #endif
 
             if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-                Entity *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
+                EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                 if (!pauseMenu->objectID) {
-                    RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, 0);
-                    // pauseMenu->field_7C = entity->playerID;
-                    // pauseMenu->field_80 = true;
+                    RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                    pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
+                    pauseMenu->disableRestart = true;
                 }
             }
         }

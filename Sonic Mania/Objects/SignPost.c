@@ -425,7 +425,7 @@ void SignPost_CheckTouch(void)
                         flag = player->position.x > entity->position.x;
                     }
                     else if (entity->playerPosStore[p].x && entity->playerPosStore[p].y) {
-                        flag = Game_Unknown20(player->position.x, player->position.y, entity->playerPosStore[p].x, entity->playerPosStore[p].y, tx,
+                        flag = MathHelpers_Unknown12(player->position.x, player->position.y, entity->playerPosStore[p].x, entity->playerPosStore[p].y, tx,
                                               ty1, tx, ty2);
                         entity->activePlayers |= 1 << p;
                     }

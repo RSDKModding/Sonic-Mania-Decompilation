@@ -20,54 +20,54 @@ void AIZRockPile_Update(void)
                 int jumping   = player->playerAnimData.animationID == ANI_JUMP;
                 int groundVel = player->groundVel;
 
-                if (entity->smashSides) {
+                
+                if (entity->smashSides || entity->smashTop) {
                     int side = Player_CheckCollisionBox(player, entity, hitbox);
-                    if (side == 1)
-                        continue;
+                    if (entity->smashSides && (side == 2 || side == 3)) {
+                        if ((byte)(side - 2) <= 1) {
+                            bool32 flag = jumping && (player->onGround) && (abs(groundVel) >= 0x48000);
+                            if (player->shield == SHIELD_FIRE) {
+                                EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
+                                flag |= shield->data.animationID == 2;
+                            }
 
-                    if ((byte)(side - 2) <= 1) {
-                        bool32 flag = jumping && (player->onGround) && (abs(groundVel) >= 0x48000);
-                        if (player->shield == SHIELD_FIRE) {
-                            EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
-                            flag |= shield->data.animationID == 2;
+                            flag |= player->characterID == ID_SONIC && player->superState == 2;
+                            if (!player->sidekick && (flag || (player->characterID == ID_KNUCKLES))) {
+                                player->position.x = playerX;
+                                player->position.y = playerY;
+                                player->velocity.x = xVelocity;
+                                player->velocity.y = yVelocity;
+                                player->groundVel  = groundVel;
+                                if (xVelocity <= 0)
+                                    AIZRockPile_SpawnRocks(entity->rockSpeedsL);
+                                else
+                                    AIZRockPile_SpawnRocks(entity->rockSpeedsR);
+                                foreach_return;
+                            }
                         }
+                    }
 
-                        flag |= player->characterID == ID_SONIC && player->superState == 2;
-                        if (!player->sidekick && (flag || (player->characterID == ID_KNUCKLES))) {
-                            player->position.x = playerX;
-                            player->position.y = playerY;
-                            player->velocity.x = xVelocity;
-                            player->velocity.y = yVelocity;
-                            player->groundVel  = groundVel;
-                            if (xVelocity <= 0)
-                                AIZRockPile_SpawnRocks(entity->rockSpeedsL);
+                    if (entity->smashTop && side == 1) {
+                        bool32 flag = jumping;
+                        flag |= player->characterID == ID_SONIC && player->playerAnimData.animationID == ANI_DROPDASH;
+                        flag |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
+                        if (player->groundedStore && cMode != CMODE_FLOOR && cMode != CMODE_ROOF)
+                            flag = 0;
+
+                        if (flag && !player->sidekick) {
+                            player->onGround = false;
+                            if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                                player->velocity.y = yVelocity - 0x10000;
                             else
-                                AIZRockPile_SpawnRocks(entity->rockSpeedsR);
+                                player->velocity.y = -0x30000;
+                            AIZRockPile_SpawnRocks(entity->rockSpeedsT);
                             foreach_return;
                         }
                     }
                 }
-
-                if (entity->smashTop) {
-                    bool32 flag = jumping;
-                    flag |= player->characterID == ID_SONIC && player->playerAnimData.animationID == ANI_DROPDASH;
-                    flag |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
-                    if (player->groundedStore && cMode != CMODE_FLOOR && cMode != CMODE_ROOF)
-                        flag = 0;
-
-                    if (flag && !player->sidekick) {
-                        player->onGround = false;
-                        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            player->velocity.y = yVelocity - 0x10000;
-                        else
-                            player->velocity.y = -0x30000;
-                        AIZRockPile_SpawnRocks(entity->rockSpeedsT);
-                        foreach_return;
-                    }
-                }
             }
         }
-        Player_CheckCollisionBox(player, &entity, hitbox);
+        Player_CheckCollisionBox(player, entity, hitbox);
     }
 }
 
@@ -86,37 +86,35 @@ void AIZRockPile_Create(void *data)
     RSDK_THIS(AIZRockPile);
     RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 0, &entity->data, true, entity->size + 3);
     if (!RSDK_sceneInfo->inEditor) {
-        if (entity->size) {
-            int s = entity->size - 1;
-            if (s) {
-                if (s == 1) {
-                    entity->size          = 8;
-                    entity->rockPositions = AIZRockPile->rockPositions_large;
-                    entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_large;
-                    entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_large;
-                    entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_large;
-                }
-                else {
-                    entity->size          = 5;
-                    entity->rockPositions = AIZRockPile->rockPositions_med;
-                    entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_med;
-                    entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_med;
-                    entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_med;
-                }
-            }
-            else {
+        switch (entity->size) {
+            case 0:
                 entity->size          = 4;
                 entity->rockPositions = AIZRockPile->rockPositions_small;
                 entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_small;
                 entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_small;
                 entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_small;
-            }
-            entity->active        = ACTIVE_BOUNDS;
-            entity->visible       = true;
-            entity->drawOrder     = Zone->drawOrderLow;
-            entity->updateRange.x = 0x800000;
-            entity->updateRange.y = 0x800000;
+                break;
+            case 1:
+                entity->size          = 5;
+                entity->rockPositions = AIZRockPile->rockPositions_med;
+                entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_med;
+                entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_med;
+                entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_med;
+                break;
+            case 2:
+                entity->size          = 8;
+                entity->rockPositions = AIZRockPile->rockPositions_large;
+                entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_large;
+                entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_large;
+                entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_large;
+                break;
         }
+
+        entity->active        = ACTIVE_BOUNDS;
+        entity->visible       = true;
+        entity->drawOrder     = Zone->drawOrderLow;
+        entity->updateRange.x = 0x800000;
+        entity->updateRange.y = 0x800000;
     }
 }
 

@@ -230,7 +230,7 @@ typedef struct {
     void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
     int (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
     void (*SetTileAngle)(ushort tileID, byte cPlane, byte cMode, byte value);
-    int (*GetTileBehaviour)(ushort tileID, byte cPlane);
+    byte (*GetTileBehaviour)(ushort tileID, byte cPlane);
     void (*SetTileBehaviour)(ushort tileID, byte cPlane, byte value);
     int (*GetSFX)(const char *path);
     int (*PlaySFX)(ushort sfx, int loop, int pan);

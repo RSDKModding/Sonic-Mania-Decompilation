@@ -2,8 +2,6 @@
 #define ANIMATION_H
 
 #define SPRFILE_COUNT     (0x400)
-#define ANIMATION_COUNT   (0x400)
-#define SPRITEFRAME_COUNT (0x1000)
 
 #define FRAMEHITBOX_COUNT (0x8)
 

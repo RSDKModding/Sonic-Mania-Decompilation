@@ -143,30 +143,27 @@ void UIWidgets_Unknown5(int red, int a2, int green, int blue, int x, int y)
     Vector2 verts[3];
 
     if (a2) {
-        int v7     = x;
-        int v8     = y;
         verts[0].x = x;
         verts[0].y = y;
         verts[1].x = x;
         verts[1].y = y;
         verts[2].x = x;
         verts[2].y = y;
+
         if (a2 <= 0) {
-            v8         = (a2 << 16) + y;
             verts[0].y = (a2 << 16) + y;
             verts[2].x = (a2 << 16) + x;
         }
         else {
-            v7         = (a2 << 16) + x;
             verts[1].x = (a2 << 16) + x;
             verts[2].y = (a2 << 16) + y;
         }
 
         if (RSDK_sceneInfo->inEditor) {
             colour clr = blue + ((green + (red << 8)) << 8);
-            RSDK.DrawLine(x, verts[0].x, verts[0].y, verts[1].y, clr, 255, 0, 0);
-            RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 255, 0, 0);
-            RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 255, 0, 0);
+            RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, clr, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 0xFF, INK_NONE, false);
         }
         else {
             int sx = RSDK_screens->position.x << 16;
@@ -174,10 +171,10 @@ void UIWidgets_Unknown5(int red, int a2, int green, int blue, int x, int y)
             verts[1].y -= sy;
             verts[2].y -= sy;
             verts[2].x -= sx;
-            verts[0].x = x - sx;
-            verts[0].y = y - sy;
-            verts[1].x = x - sx;
-            RSDK.DrawQuad(verts, 3, red, green, blue, 255, 0);
+            verts[0].x -= sx;
+            verts[0].y -= sy;
+            verts[1].x -= sx;
+            RSDK.DrawQuad(verts, 3, red, green, blue, 0xFF, INK_NONE);
         }
     }
 }
@@ -186,9 +183,6 @@ void UIWidgets_Unknown6(char a1, int red, int green, int blue, InkEffects ink, i
     Vector2 verts[3];
 
     if (a1) {
-        int v8     = x;
-        int v9     = x;
-        int v10    = y;
         verts[0].x = x;
         verts[0].y = y;
         verts[1].x = x;
@@ -196,28 +190,26 @@ void UIWidgets_Unknown6(char a1, int red, int green, int blue, InkEffects ink, i
         verts[2].x = x;
         verts[2].y = y;
         if (a1 == 1) {
-            v9         = x - 0x80000;
-            v8         = x + 0x80000;
-            v10        = y + 0x80000;
             verts[0].x = x - 0x80000;
             verts[1].x = x + 0x80000;
             verts[2].y = y + 0x80000;
         }
+
         if (RSDK_sceneInfo->inEditor) {
             colour clr = blue + ((green + (red << 8)) << 8);
-            RSDK.DrawLine(v9, y, v8, y, clr, 255, ink, 0);
-            RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 255, ink, 0);
-            RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 255, ink, 0);
+            RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, clr, 0xFF, ink, false);
+            RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 0xFF, ink, false);
+            RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 0xFF, ink, false);
         }
         else {
             int sx = RSDK_screens->position.x << 16;
             int sy = RSDK_screens->position.y << 16;
             verts[1].y -= sy;
             verts[2].x -= sx;
-            verts[0].x = v9 - sx;
-            verts[0].y = y - sy;
-            verts[1].x = v8 - sx;
-            verts[2].y = v10 - sy;
+            verts[0].x -= sx;
+            verts[0].y -= sy;
+            verts[1].x -= sx;
+            verts[2].y -= sy;
             RSDK.DrawQuad(verts, 3, red, green, blue, 255, ink);
         }
     }
@@ -258,7 +250,7 @@ void UIWidgets_Unknown7(int a1, int a2, int a3, int red, int green, int blue, in
 
     if (RSDK_sceneInfo->inEditor) {
         colour clr = blue + ((green + (red << 8)) << 8);
-        RSDK.DrawLine(v8, Y1, v9, verts[1].y, clr, 255, 0, 0);
+        RSDK.DrawLine(v8, Y1, v9, verts[1].y, clr, 0xFF, INK_NONE, false);
         RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 255, 0, 0);
         RSDK.DrawLine(verts[2].x, verts[2].y, verts[3].x, verts[3].y, clr, 255, 0, 0);
         RSDK.DrawLine(verts[3].x, verts[3].y, verts[0].x, verts[0].y, clr, 255, 0, 0);
@@ -274,7 +266,7 @@ void UIWidgets_Unknown7(int a1, int a2, int a3, int red, int green, int blue, in
         verts[1].x = v18 - sx;
         verts[2].x = v12 - sx;
         verts[3].x = v10 - sx;
-        RSDK.DrawQuad(verts, 4, red, green, blue, 255, 0);
+        RSDK.DrawQuad(verts, 4, red, green, blue, 0xFF, INK_NONE);
     }
 }
 void UIWidgets_Unknown8(int x, int y)

@@ -6151,8 +6151,8 @@ void Player_GetP1Inputs(void)
                 entity->left  = false;
                 entity->right = false;
             }
-            entity->jumpPress = controller->keyA.press | controller->keyB.press | controller->keyC.press | controller->keyX.press;
-            entity->jumpHold  = controller->keyA.down | controller->keyB.down | controller->keyC.down | controller->keyX.down;
+            entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+            entity->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
             // if (!LottoMachine || !((1 << entity->playerID) & LottoMachine[5].objectID)) {
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_DEV && controller->keyZ.press) {
@@ -6199,15 +6199,15 @@ void Player_GetP1Inputs(void)
 #endif
 
                 if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-                    Entity *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
+                    EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                     bool32 flag       = true;
                     if (ActClear && ActClear->dword34)
                         flag = false;
                     if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, 0);
-                        // pauseMenu->field_7C = entity->playerID;
-                        // if (globals->gameMode == MODE_COMPETITION)
-                        //    result->field_80 = 1;
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        pauseMenu->triggerPlayer = entity->playerID;
+                        if (globals->gameMode == MODE_COMPETITION)
+                            pauseMenu->disableRestart = true;
                     }
                 }
             }

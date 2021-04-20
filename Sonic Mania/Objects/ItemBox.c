@@ -820,11 +820,11 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     }
     RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
-    if (player->characterID != ID_MIGHTY && player->playerAnimData.animationID != ANI_DROPDASH)
-        player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
+    if (player->characterID == ID_MIGHTY && player->playerAnimData.animationID == ANI_DROPDASH)
+        player->velocity.y -= 0x10000;
     else
 #endif
-        player->velocity.y -= 0x10000;
+        player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
     itemBox->storedEntity  = (Entity*)player;
     itemBox->alpha         = 256;
     itemBox->contentsSpeed = -0x30000;

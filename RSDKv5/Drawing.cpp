@@ -2650,7 +2650,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
 
         int rotation = sceneInfo.entity->rotation;
         int drawFX   = sceneInfo.entity->drawFX;
-        if (sceneInfo.entity->drawFX & FX_ROTATE) {
+        if (sceneInfo.entity->drawFX & FX_ROTATE && false) {
             switch (data->rotationFlag) {
                 case ROTFLAG_NONE:
                     rotation = 0;
@@ -3895,7 +3895,6 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 break;
         }
     }
-
 }
 
 void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
@@ -4330,14 +4329,14 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
 }
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height) {
 
-   if (sheetID < 0x40 && tileIndex < 0x400) {
+   if (sheetID < SPRITESHEETS_MAX && tileIndex < TILE_COUNT) {
         GFXSurface *surface       = &gfxSurface[sheetID];
 
         //FLIP_NONE
         byte *tileGFXData = &tilesetGFXData[tileIndex << 8];
-        for (int fy = 0; fy < height; fy += 0x10) {
+        for (int fy = 0; fy < height; fy += TILE_SIZE) {
             byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += 0x10) {
+            for (int fx = 0; fx < width; fx += TILE_SIZE) {
                 byte *gfxDataPtr = &gfxData[fx];
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
                     for (int tx = 0; tx < TILE_SIZE; ++tx) {
@@ -4350,9 +4349,9 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
         //FLIP_X
         tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_X * TILESET_SIZE)];
-        for (int fy = 0; fy < height; fy += 0x10) {
+        for (int fy = 0; fy < height; fy += TILE_SIZE) {
             byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += 0x10) {
+            for (int fx = 0; fx < width; fx += TILE_SIZE) {
                 byte *gfxDataPtr = &gfxData[fx];
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
                     for (int tx = 0; tx < TILE_SIZE; ++tx) {
@@ -4366,9 +4365,9 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
         //FLIP_Y
         tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE)];
-        for (int fy = 0; fy < height; fy += 0x10) {
+        for (int fy = 0; fy < height; fy += TILE_SIZE) {
             byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += 0x10) {
+            for (int fx = 0; fx < width; fx += TILE_SIZE) {
                 byte *gfxDataPtr = &gfxData[fx];
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
                     for (int tx = 0; tx < TILE_SIZE; ++tx) {
@@ -4382,11 +4381,11 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
         //FLIP_XY
         tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_XY * TILESET_SIZE)];
-        for (int fy = 0; fy < height; fy += 0x10) {
+        for (int fy = 0; fy < height; fy += TILE_SIZE) {
             byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += 0x10) {
+            for (int fx = 0; fx < width; fx += TILE_SIZE) {
                 byte *gfxDataPtr = &gfxData[fx];
-                tileGFXData += TILE_DATASIZE - 1;
+                //tileGFXData += TILE_DATASIZE - 1;
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
                     for (int tx = 0; tx < TILE_SIZE; ++tx) {
                         tileGFXData[(((TILE_SIZE - 1) * TILE_SIZE) - ty) + ((TILE_SIZE - 1) * tx)] = *gfxDataPtr++;

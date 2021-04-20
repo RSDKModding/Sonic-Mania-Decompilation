@@ -2,20 +2,11 @@
 
 ObjectUFO_Plasma *UFO_Plasma;
 
-void UFO_Plasma_Update(void)
-{
+void UFO_Plasma_Update(void) {}
 
-}
+void UFO_Plasma_LateUpdate(void) {}
 
-void UFO_Plasma_LateUpdate(void)
-{
-
-}
-
-void UFO_Plasma_StaticUpdate(void)
-{
-
-}
+void UFO_Plasma_StaticUpdate(void) {}
 
 void UFO_Plasma_Draw(void)
 {
@@ -41,7 +32,7 @@ void UFO_Plasma_Draw(void)
     RSDK.SetActivePalette(0, 0, RSDK_screens->height);
 }
 
-void UFO_Plasma_Create(void* data)
+void UFO_Plasma_Create(void *data)
 {
     RSDK_THIS(UFO_Plasma);
     if (!RSDK_sceneInfo->inEditor) {
@@ -56,8 +47,8 @@ void UFO_Plasma_StageLoad(void)
     UFO_Plasma->spriteIndex = RSDK.LoadSpriteSheet("SpecialUFO/Plasma.gif", SCOPE_STAGE);
     UFO_Plasma->scanlines   = RSDK.GetScanlines();
 
-    int angle = 0;
-    int *deform        = UFO_Plasma->deform;
+    int angle   = 0;
+    int *deform = UFO_Plasma->deform;
     for (int i = 0; i < 0x100; ++i) {
         deform[2] = (RSDK.Sin256(angle >> 1) + 0x400) << 6;
         deform[3] = (RSDK.Sin256(angle >> 1) + 0x800) << 5;
@@ -66,26 +57,15 @@ void UFO_Plasma_StageLoad(void)
         angle += 2;
     }
 
-    for (int i = 0; i < 8; ++i)
-        RSDK.SetPaletteEntry(i, 0xDB, 0xF000);
+    for (int i = 0; i < 8; ++i) RSDK.SetPaletteEntry(i, 0xDB, 0xF000);
 
     RSDK.SetPaletteMask(0xF000);
-    RSDK.ResetEntitySlot(SLOT_UFO_CAMERA, UFO_Plasma->objectID, 0);
-    RSDK.SetDrawLayerProperties(3, 0, 0);
+    RSDK.ResetEntitySlot(SLOT_UFO_PLASMA, UFO_Plasma->objectID, NULL);
+    RSDK.SetDrawLayerProperties(3, false, NULL);
 }
 
-void UFO_Plasma_EditorDraw(void)
-{
+void UFO_Plasma_EditorDraw(void) {}
 
-}
+void UFO_Plasma_EditorLoad(void) {}
 
-void UFO_Plasma_EditorLoad(void)
-{
-
-}
-
-void UFO_Plasma_Serialize(void)
-{
-
-}
-
+void UFO_Plasma_Serialize(void) {}
