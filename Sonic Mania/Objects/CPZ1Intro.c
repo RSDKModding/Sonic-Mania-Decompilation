@@ -32,6 +32,12 @@ void CPZ1Intro_StageLoad(void)
 
 }
 
+void CPZ1Intro_Particle_CB(Entity *debris)
+{
+    debris->velocity.y += RSDK.Rand(-0x28000, -0x20000);
+    //RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 1, &debris->data, true, 0);
+}
+
 void CPZ1Intro_EditorDraw(void)
 {
 

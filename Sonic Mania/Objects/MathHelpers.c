@@ -80,18 +80,18 @@ void MathHelpers_Unknown4(Vector2 *pos, int a1, int a3, int a4, int a5, int a6)
     }
 }
 
-uint MathHelpers_Unknown5(int a1, int a2, int a3, int a4, int a5, int a6, int a7)
+Vector2 MathHelpers_Unknown5(int percent, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 {
-    int v7;          // ecx
-    int v8;          // eax
-    uint v9; // ST10_4
-
-    //v8 = 0x10000 - v7;
-    //v9 = (0x10000 - v7) * ((uint)(v7 * v7) >> 16) >> 16;
-    //return (v7 * ((uint)(v7 * v7) >> 16) >> 16) * (a7 >> 16) + v9 * (a5 >> 16) + (v7 * ((uint)(v8 * v8) >> 16) >> 16) * (a3 >> 16)
-    //       + (v8 * ((uint)(v8 * v8) >> 16) >> 16) * (a1 >> 16) + 2 * (v7 * ((uint)(v8 * v8) >> 16) >> 16) * (a3 >> 16)
-    //       + 2 * v9 * (a5 >> 16);
-    return 0;
+    int v9  = 0x10000 - percent;
+    int v10 = v9 * ((uint)(v9 * v9) >> 16) >> 16;
+    int v11 = percent * ((uint)(v9 * v9) >> 16) >> 16;
+    int v12 = percent * ((uint)(percent * percent) >> 16) >> 16;
+    int v13 = (0x10000 - percent) * ((uint)(percent * percent) >> 16) >> 16;
+    
+    Vector2 result;
+    result.x = v12 * (x4 >> 16) + v13 * (x3 >> 16) + v11 * (x2 >> 16) + v10 * (x1 >> 16) + 2 * v11 * (x2 >> 16) + 2 * v13 * (x3 >> 16);
+    result.y = v12 * (y4 >> 16) + v13 * (y3 >> 16) + v11 * (y2 >> 16) + v10 * (y1 >> 16) + 2 * v11 * (y2 >> 16) + 2 * v13 * (y3 >> 16);
+    return result;
 }
 
 uint MathHelpers_Unknown6(uint a1)
@@ -119,20 +119,20 @@ uint MathHelpers_Unknown6(uint a1)
         return id + 1;
 }
 
-int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7)
+int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8)
 {
     int prev1 = a1;
     int prev2 = a2;
 
     int val = 0;
-    /*for (int i = 0xCCC; i <= 0x10000; i += 0xCCC) {
-        int unk = MathHelpers_Unknown5(a1, a2, a3, a4, a5, a6, a7);
-        int val1 = abs(unk - prev1);
-        int val2 = abs(v11 - prev2);
+    for (int i = 0xCCC; i <= 0x10000; i += 0xCCC) {
+        Vector2 res = MathHelpers_Unknown5(i, a1, a2, a3, a4, a5, a6, a7, a8);
+        int val1    = abs(res.x - prev1);
+        int val2    = abs(res.y - prev2);
         val += MathHelpers_Unknown6((val2 >> 16) * (val2 >> 16) + (val1 >> 16) * (val1 >> 16)) << 16;
-        prev1 = unk;
-        prev2 = v11;
-    }*/
+        prev1 = res.x;
+        prev2 = res.y;
+    }
     return val;
 }
 

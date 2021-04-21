@@ -100,8 +100,8 @@ void ParallaxSprite_Create(void *data)
             entity->parallaxFactor.x >>= 8;
             entity->parallaxFactor.y >>= 8;
             entity->sprX      = RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 1)->sprX;
-            entity->field_B0  = RSDK.Random(0, 2, &Zone->timeStart);
-            entity->field_B4  = RSDK.Random(0, 128, &Zone->timeStart);
+            entity->field_B0  = RSDK.Random(0, 2, &Zone->randKey);
+            entity->field_B4  = RSDK.Random(0, 128, &Zone->randKey);
             entity->inkEffect = INK_MASKED;
             entity->visible   = true;
             entity->state     = NULL;

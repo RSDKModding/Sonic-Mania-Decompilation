@@ -177,7 +177,7 @@ void TestObject_StageLoad()
     TestObject->fgLayers = 1 << TestObject->fgLow;
     TestObject->fgLayers |= 1 << TestObject->fgHigh;
 
-    CreateEntity(TestObject->objectID, NULL, 0, 0);
+    //CreateEntity(TestObject->objectID, NULL, 0, 0);
 }
 void TestObject_EditorDraw() {}
 void TestObject_EditorLoad() {}

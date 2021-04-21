@@ -175,7 +175,7 @@ void Zone_Create(void *data)
 void Zone_StageLoad(void)
 {
     int *saveRAM    = SaveGame->saveRAM;
-    Zone->timeStart = (uint)time(0);
+    Zone->randKey = (uint)time(0);
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == 0) {

@@ -836,8 +836,8 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
 
     if (range) {
         for (int s = 0; s < cameraCount; ++s) {
-            int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
-            int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
+            int sx = abs(entity->position.x - cameras[s].position.x);
+            int sy = abs(entity->position.y - cameras[s].position.y);
             if (sx <= range->x + cameras[s].offset.x && sy <= range->y + cameras[s].offset.y) {
                 return true;
             }

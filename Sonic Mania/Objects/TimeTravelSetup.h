@@ -5,7 +5,9 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    int timer;
 } ObjectTimeTravelSetup;
 
 // Entity Class
@@ -28,6 +30,6 @@ void TimeTravelSetup_EditorLoad(void);
 void TimeTravelSetup_Serialize(void);
 
 // Extra Entity Functions
-
+void TimeTravelSetup_Particle_CB(EntityDebris *debris);
 
 #endif //!OBJ_TIMETRAVELSETUP_H

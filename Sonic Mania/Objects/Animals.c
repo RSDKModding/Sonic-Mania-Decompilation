@@ -37,7 +37,7 @@ void Animals_Create(void *data)
     if (!(globals->secrets & 1))
         type = voidToInt(data);
 #endif
-    if (!entity->type && RSDK.Random(0, 256, &Zone->timeStart) == 21) {
+    if (!entity->type && RSDK.Random(0, 256, &Zone->randKey) == 21) {
         type                  = 2;
         entity->velocity.y    = -0x40000;
         entity->type          = type - 1;
@@ -114,7 +114,7 @@ void Animals_CheckPlayerPos(void)
             }
             break;
         }
-        case 2: entity->direction = RSDK.Random(0, 2, &Zone->timeStart); break;
+        case 2: entity->direction = RSDK.Random(0, 2, &Zone->randKey); break;
     }
 
     if (!entity->direction)

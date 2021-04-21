@@ -128,41 +128,28 @@ inline void setRandKey(int key) { randKey = key; }
 
 inline int RSDK_random(int min, int max)
 {
-    int v2;        
-    uint v4; 
-    int v5;  
-
-    v2      = 1103515245 * randKey + 12345;
-    v4      = 1103515245 * v2 + 12345;
-    randKey = 1103515245 * v4 + 12345;
-    v5      = ((((((v2 >> 16) & 0x7FF) << 10) ^ (v4 >> 16) & 0x7FF) << 10) ^ (randKey >> 16) & 0x7FF);
+    uint v2  = 1103515245 * randKey + 12345;
+    uint v3  = 1103515245 * v2 + 12345;
+    randKey = 1103515245 * v3 + 12345;
+    signed int v4  = (randKey >> 16) & 0x7FF ^ (((v3 >> 16) & 0x7FF ^ (v2 >> 6) & 0x1FFC00) << 10);
     if (min >= max)
-        return max + (v5 % (min - max));
+        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
     else
-        return min + (v5 % (max - min));
+        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + min);
 }
 
 inline int RSDK_random2(int min, int max, int *randKey)
 {
-    int v4;
-    int v5;
-    int v6;
-    int v7;
-    int v8;
-    int v9;
-
     if (!randKey)
         return 0;
-    v4       = 1103515245 * *randKey + 12345;
-    v6       = 1103515245 * v4 + 12345;
-    v7       = (((v4 >> 16) & 0x7FF) << 10) ^ (v6 >> 16) & 0x7FF;
-    v8       = 1103515245 * v6 + 12345;
-    *randKey = v8;
-    v9       = ((v7 << 10) ^ (v8 >> 16)) & 0x7FF;
+    uint v2  = 1103515245 * *randKey + 12345;
+    uint v3  = 1103515245 * v2 + 12345;
+    *randKey = 1103515245 * v3 + 12345;
+    signed int v4  = (*randKey >> 16) & 0x7FF ^ (((v3 >> 16) & 0x7FF ^ (v2 >> 6) & 0x1FFC00) << 10);
     if (min >= max)
-        return max + (v9 % (min - max));
+        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
     else
-        return min + (v9 % (max - min));
+        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + min);
 }
 
 #endif // !MATH_H

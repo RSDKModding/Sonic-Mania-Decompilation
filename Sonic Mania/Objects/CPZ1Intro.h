@@ -28,6 +28,7 @@ void CPZ1Intro_EditorLoad(void);
 void CPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
+void CPZ1Intro_Particle_CB(Entity *debris);
 
 
 #endif //!OBJ_CPZ1INTRO_H

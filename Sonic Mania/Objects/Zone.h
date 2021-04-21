@@ -110,7 +110,7 @@ typedef struct {
     bool32 swapGameMode;
 #endif
     int flag;
-    int timeStart;
+    int randKey;
 } ObjectZone;
 
 // Entity Class

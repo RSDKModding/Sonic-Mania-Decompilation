@@ -23,11 +23,9 @@ void Ring_Create(void *data)
     RSDK_THIS(Ring);
     entity->visible    = true;
 
-    int layer = 2;
+    int layer = Zone->drawOrderLow;
     if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
         layer = Zone->drawOrderHigh;
-    else
-        layer = Zone->drawOrderLow;
 
     entity->drawOrder = layer + 1;
     if (entity->type == 1) {
@@ -37,51 +35,37 @@ void Ring_Create(void *data)
 
     if (data) {
         entity->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &entity->animData, 1, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &entity->animData, true, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->type, &entity->animData, 1, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->type, &entity->animData, true, 0);
 
         entity->amplitude.x >>= 10;
         entity->amplitude.y >>= 10;
-        int ax           = entity->amplitude.x;
-        int ay           = entity->amplitude.y;
         entity->active = ACTIVE_BOUNDS;
         switch (entity->moveType) {
             case 1:
-                if (ax < 0)
-                    ax = -ax;
-                entity->updateRange.x = (ax + 0x1000) << 10;
-                if (ay < 0)
-                    ay = -ay;
+                entity->updateRange.x = (abs(entity->amplitude.x) + 0x1000) << 10;
+                entity->updateRange.y = (abs(entity->amplitude.y) + 0x1000) << 10;
                 entity->state         = Ring_State_Move;
-                entity->updateRange.y = (ay + 0x1000) << 10;
                 entity->stateDraw     = Ring_StateDraw_Oscillating;
                 break;
             case 2:
-                if (ax < 0)
-                    ax = -ax;
-                entity->updateRange.x = (ax + 0x1000) << 10;
-                if (ay < 0)
-                    ay = -ay;
+                entity->updateRange.x = (abs(entity->amplitude.x) + 0x1000) << 10;
+                entity->updateRange.y = (abs(entity->amplitude.y) + 0x1000) << 10;
                 entity->state         = Ring_State_Circular;
-                entity->updateRange.y = (ay + 0x1000) << 10;
                 entity->stateDraw     = Ring_StateDraw_Oscillating;
                 break;
             case 3:
-                if (ax < 0)
-                    ax = -ax;
-                entity->updateRange.x = (ax + 0x2000) << 9;
-                if (ay < 0)
-                    ay = -ay;
+                entity->updateRange.x = (abs(entity->amplitude.x) + 0x2000) << 9;
+                entity->updateRange.y = (abs(entity->amplitude.y) + 0x2000) << 9;
                 entity->state         = Ring_State_Path;
-                entity->updateRange.y = (ay + 0x2000) << 9;
                 entity->stateDraw     = Ring_StateDraw_Oscillating;
                 break;
             case 4:
                 entity->updateRange.x = 0x400000;
                 entity->updateRange.y = 0x400000;
-                entity->active      = 0;
+                entity->active        = ACTIVE_NEVER;
                 entity->state         = Ring_State_Track;
                 entity->stateDraw     = Ring_StateDraw_Oscillating;
                 break;

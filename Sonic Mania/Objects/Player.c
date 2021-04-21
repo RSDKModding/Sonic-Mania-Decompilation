@@ -635,7 +635,7 @@ void Player_Create(void *data)
 void Player_StageLoad(void)
 {
     if (!globals->playerID) {
-        globals->playerID = RSDK.CheckStageFolder("MSZCutscene") != 1 ? ID_SONIC : ID_KNUCKLES;
+        globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
     }
 
     RSDK_sceneInfo->debugMode = (globals->medalMods & getMod(MEDAL_DEBUGMODE)) > 0;
