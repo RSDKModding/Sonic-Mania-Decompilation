@@ -30,7 +30,7 @@ void SpecialClear_Draw(void)
         if ((id & saveRAM[28]) > 0)
             frame = id;
         entity->data4.frameID = frame;
-        drawPos.y             = entity->positions[7 + i].y;
+        drawPos.y             = entity->emeraldPositions[i];
         RSDK.DrawSprite(&entity->data4, &drawPos, true);
         drawPos.x += 0x200000;
         id <<= 1;
@@ -256,20 +256,20 @@ void SpecialClear_Create(void *data)
         entity->positions[6].x = 0x5480000;
         entity->positions[6].y = 0xCC0000;
         RSDK.CopyPalette(1, 0, 0, 128, 48);
-        entity->positions[7].x  = 0x1100000;
-        entity->positions[10].y = -0xA0000;
-        entity->positions[7].y  = 0x1300000;
-        entity->positions[11].x = -0xAA000;
-        entity->positions[8].x  = 0x1500000;
-        entity->positions[11].y = -0xB4000;
-        entity->positions[8].y  = 0x1700000;
-        entity->positions[12].x = -0xBE000;
-        entity->positions[9].x  = 0x1900000;
-        entity->positions[12].y = -0xC8000;
-        entity->positions[9].y  = 0x1B00000;
-        entity->positions[13].x = -0xD2000;
-        entity->positions[10].x = 0x1D00000;
-        entity->positions[13].y = -0xDC000;
+        entity->emeraldPositions[0] = 0x1100000;
+        entity->emeraldSpeeds[0]    = -0xA0000;
+        entity->emeraldPositions[1] = 0x1300000;
+        entity->emeraldSpeeds[1]    = -0xAA000;
+        entity->emeraldPositions[2] = 0x1500000;
+        entity->emeraldSpeeds[2]    = -0xB4000;
+        entity->emeraldPositions[3] = 0x1700000;
+        entity->emeraldSpeeds[3]    = -0xBE000;
+        entity->emeraldPositions[4] = 0x1900000;
+        entity->emeraldSpeeds[4]    = -0xC8000;
+        entity->emeraldPositions[5] = 0x1B00000;
+        entity->emeraldSpeeds[5]    = -0xD2000;
+        entity->emeraldPositions[6] = 0x1D00000;
+        entity->emeraldSpeeds[6]    = -0xDC000;
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 5, &entity->data2, true, 0);
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 6, &entity->data3, true, 0);
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 7, &entity->data4, true, 0);
@@ -475,53 +475,13 @@ void SpecialClear_HandlePositions(void)
     if (!entity->finishType)
         val = 0x680000;
 
-    entity->positions[10].y += 0x4000;
-    entity->positions[7].x += entity->positions[10].y;
-    if (entity->positions[7].x > val && entity->positions[10].y >= 0) {
-        entity->positions[7].x  = val;
-        entity->positions[10].y = -(entity->positions[10].y >> 1);
-    }
-
-    entity->positions[11].x += 0x4000;
-    entity->positions[7].y += entity->positions[11].x;
-    if (entity->positions[7].y > val && entity->positions[11].x >= 0) {
-        entity->positions[7].y  = val;
-        entity->positions[11].x = -(entity->positions[11].x >> 1);
-    }
-
-    entity->positions[11].y += 0x4000;
-    entity->positions[8].x += entity->positions[11].y;
-    if (entity->positions[8].x > val && entity->positions[11].y >= 0) {
-        entity->positions[8].x  = val;
-        entity->positions[11].y = -(entity->positions[11].y >> 1);
-    }
-
-    entity->positions[12].x += 0x4000;
-    entity->positions[8].y += entity->positions[12].x;
-    if (entity->positions[8].y > val && entity->positions[12].x >= 0) {
-        entity->positions[8].y  = val;
-        entity->positions[12].x = -(entity->positions[12].x >> 1);
-    }
-
-    entity->positions[12].y += 0x4000;
-    entity->positions[9].x += entity->positions[12].y;
-    if (entity->positions[9].x > val && entity->positions[12].y >= 0) {
-        entity->positions[9].x  = val;
-        entity->positions[12].y = -(entity->positions[12].y >> 1);
-    }
-
-    entity->positions[13].x += 0x4000;
-    entity->positions[9].y += entity->positions[13].x;
-    if (entity->positions[9].y > val && entity->positions[13].x >= 0) {
-        entity->positions[9].y  = val;
-        entity->positions[13].x = -(entity->positions[13].x >> 1);
-    }
-
-    entity->positions[13].y += 0x4000;
-    entity->positions[10].x += entity->positions[13].y;
-    if (entity->positions[10].x > val && entity->positions[13].y >= 0) {
-        entity->positions[10].x = val;
-        entity->positions[13].y = -(entity->positions[13].y >> 1);
+    for (int i = 0; i < 7; ++i) {
+        entity->emeraldSpeeds[i] += 0x4000;
+        entity->emeraldPositions[i] += entity->emeraldSpeeds[i];
+        if (entity->emeraldPositions[i] > val && entity->emeraldSpeeds[i] >= 0) {
+            entity->emeraldPositions[i] = val;
+            entity->emeraldSpeeds[i]    = -(entity->emeraldSpeeds[i] >> 1);
+        }
     }
 }
 

@@ -34,10 +34,11 @@ typedef struct {
     Vector2 points8[4];
     Vector2 points9[4];
     TextInfo zoneName;
-    Vector2 field_1C8[4];
+    int zoneCharPos[4];
+    int zoneCharSpeed[4];
     int dword1E8;
     Vector2 charPos[20];
-    int field_28C[20];
+    int charSpeeds[20];
     int word2Offset;
     int field_2E0;
     int field_2E4;

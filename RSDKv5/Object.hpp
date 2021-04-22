@@ -16,6 +16,22 @@
 
 #define FOREACH_STACK_COUNT (0x400)
 
+enum StaticObjectTypes {
+    SVAR_UINT8,
+    SVAR_UINT16,
+    SVAR_UINT32,
+    SVAR_INT8,
+    SVAR_INT16,
+    SVAR_INT32,
+    SVAR_BOOL,
+    SVAR_PTR,
+    SVAR_VEC2,
+    SVAR_TEXT,
+    SVAR_ANIMATOR,
+    SVAR_HITBOX,
+    SVAR_UNKNOWN,
+};
+
 enum TypeGroups {
     GROUP_ALL     = 0,
     GROUP_CUSTOM1 = TYPE_COUNT,
@@ -57,6 +73,18 @@ enum DefaultObjects {
 #endif
     TYPE_TESTOBJECT,
     TYPE_DEFAULTCOUNT, //max
+};
+
+struct UnknownStruct {
+    short v1;
+    short v2;
+    short v3;
+    short v4;
+    short v5;
+    short v6;
+    short v7;
+    short v8;
+    short v9;
 };
 
 struct Object {

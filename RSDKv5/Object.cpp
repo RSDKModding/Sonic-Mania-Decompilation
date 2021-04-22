@@ -96,8 +96,8 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                 dataType &= 0x7F;
 
                 switch (dataType) {
-                    case VAR_UINT8:
-                    case VAR_INT8:
+                    case SVAR_UINT8:
+                    case SVAR_INT8:
                         if (info.readPos + dataSize <= info.fileSize && &obj[dataPos]) {
                             for (int i = 0; i < dataSize * sizeof(byte); i += sizeof(byte)) ReadBytes(&info, &obj[dataPos + i], sizeof(byte));
                         }
@@ -106,10 +106,10 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         }
                         dataPos += arraySize;
                         break;
-                    case VAR_UINT16:
-                    case VAR_INT16: {
-                        int tmp = (dataPos & 0xFFFFFFFE) + 2;
-                        if ((dataPos & 0xFFFFFFFE) >= dataPos)
+                    case SVAR_UINT16:
+                    case SVAR_INT16: {
+                        int tmp = (dataPos & -(int)sizeof(short)) + sizeof(short);
+                        if ((dataPos & -(int)sizeof(short)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
                         if (info.readPos + (dataSize * sizeof(short)) <= info.fileSize && &obj[dataPos]) {
@@ -121,11 +121,11 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         dataPos = tmp + sizeof(short) * arraySize;
                         break;
                     }
-                    case VAR_UINT32:
-                    case VAR_INT32:
-                    case VAR_ENUM: {
-                        int tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                    case SVAR_UINT32:
+                    case SVAR_INT32:
+                    case SVAR_BOOL: {
+                        int tmp = (dataPos & -(int)sizeof(int)) + sizeof(int);
+                        if ((dataPos & -(int)sizeof(int)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp;
                         if (info.readPos + (dataSize * sizeof(int)) <= info.fileSize && &obj[dataPos]) {
@@ -142,60 +142,60 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
             else {
                 int tmp = 0;
                 switch (dataType) {
-                    case 0:
-                    case 3: // byte, sbyte
+                    case SVAR_UINT8:
+                    case SVAR_INT8: 
                         dataPos += sizeof(byte) * arraySize;
                         break;
-                    case 1:
-                    case 4: // short, ushort
-                        tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
-                        if ((dataPos & 0xFFFFFFFE) >= dataPos)
+                    case SVAR_UINT16:
+                    case SVAR_INT16:
+                        tmp = (dataPos & -(int)sizeof(short)) + sizeof(short);
+                        if ((dataPos & -(int)sizeof(short)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(short) * arraySize;
                         break;
-                    case 2:
-                    case 5:
-                    case 6: // int, uint, bool32
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                    case SVAR_UINT32:
+                    case SVAR_INT32:
+                    case SVAR_BOOL: 
+                        tmp = (dataPos & -(int)sizeof(int)) + sizeof(int);
+                        if ((dataPos & -(int)sizeof(int)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
-                    case 7: // any pointer
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(void *);
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                    case SVAR_PTR: 
+                        tmp = (dataPos & -(int)sizeof(void *)) + sizeof(void *);
+                        if ((dataPos & -(int)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(void *) * arraySize; // 4/8
                         break;
-                    case 8:
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int);
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                    case SVAR_VEC2:
+                        tmp = (dataPos & -(int)sizeof(int)) + sizeof(int);
+                        if ((dataPos & -(int)sizeof(int)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Vector2) * arraySize; // 8
                         break;
-                    case 9: //
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                    case SVAR_TEXT:
+                        tmp = (dataPos & -(int)sizeof(void *)) + sizeof(void *);
+                        if ((dataPos & -(int)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(TextInfo) * arraySize; // 8/16
                         break;
-                    case 10: // Animator
-                        tmp = (dataPos & 0xFFFFFFFC) + sizeof(int *);
-                        if ((dataPos & 0xFFFFFFFC) >= dataPos)
+                    case SVAR_ANIMATOR: // Animator
+                        tmp = (dataPos & -(int)sizeof(void *)) + sizeof(void *);
+                        if ((dataPos & -(int)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Animator) * arraySize; // 24/32
                         break;
-                    case 11: // Hitbox
-                        tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
-                        if ((dataPos & 0xFFFFFFFE) >= dataPos)
+                    case SVAR_HITBOX: // Hitbox
+                        tmp = (dataPos & -(int)sizeof(short)) + sizeof(short);
+                        if ((dataPos & -(int)sizeof(short)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(Hitbox) * arraySize; // 8
                         break;
-                    case 12: //???
-                        tmp = (dataPos & 0xFFFFFFFE) + sizeof(short);
-                        if ((dataPos & 0xFFFFFFFE) >= dataPos)
+                    case SVAR_UNKNOWN: //???
+                        tmp = (dataPos & -(int)sizeof(short)) + sizeof(short);
+                        if ((dataPos & -(int)sizeof(short)) >= dataPos)
                             tmp = dataPos;
-                        dataPos = tmp + (2 * 9) * arraySize; // 18 (2 * 9)
+                        dataPos = tmp + sizeof(UnknownStruct) * arraySize; // 18 (2 * 9)
                         break;
                     default: break;
                 }

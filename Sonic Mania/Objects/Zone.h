@@ -3,35 +3,25 @@
 
 #include "../SonicMania.h"
 
+#define Zone_AddCallback(callback)                                                                                                                   \
+    if (Zone->callbackCount < 0x10) {                                                                                                                  \
+        Zone->callbacks[Zone->callbackCount] = ZipLine_Unknown1;                                                                                     \
+        ++Zone->callbackCount;                                                                                                                       \
+    }
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     int actID;
     void (*stageFinishCallback)(void);
     bool32 forcePlayerOnScreenFlag;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
-    int field_30;
-    int field_34;
-    int field_38;
-    int field_3C;
-    int field_40;
-    int field_44;
-    int field_48;
-    int field_4C;
-    int field_50;
-    int field_54[4];
-    byte field_64;
-    char field_65;
-    char field_66;
-    char field_67;
-    int field_68;
+    void (*callbacks[0x10])(void);
+    int callbackCount;
+    int playerFlags[4];
+    byte playerID;
+    byte playerCount;
+    byte field_66[2];
+    byte field_68[4];
     int field_6C;
     int listPos;
     int prevListPos;
@@ -52,7 +42,7 @@ typedef struct {
     int playerBoundActiveT[PLAYER_MAX];
     int playerBoundActiveB[PLAYER_MAX];
     int field_154;
-    int field_158;
+    bool32 field_158;
     int field_15C;
     void (*timeOverState)(void);
     ushort fgLayers;

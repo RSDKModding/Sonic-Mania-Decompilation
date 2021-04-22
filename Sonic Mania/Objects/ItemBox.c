@@ -750,7 +750,7 @@ void ItemBox_GivePowerup(void)
                                     player2->maxGlideSpeed = 0;
                                     player2->nextAirState     = StateMachine_None;
                                     player2->nextGroundState  = StateMachine_None;
-                                    player2->inputState      = Player_FlyCarryInputState;
+                                    player2->inputState      = Player_ProcessInputFlyCarry;
                                     player2->tileCollisions  = false;
                                     player2->interaction     = false;
                                     player2->drawOrder       = Zone->uiDrawLow;

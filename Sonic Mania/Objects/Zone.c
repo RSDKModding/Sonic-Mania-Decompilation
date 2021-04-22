@@ -320,7 +320,7 @@ void Zone_StageLoad(void)
     Zone->field_154      = 0;
     Zone->ringFrame      = 0;
     Zone->field_15C      = 0;
-    Zone->field_50       = 0;
+    Zone->callbackCount  = 0;
     Zone->fgLayerLow     = 0;
     Zone->drawOrderLow   = 2;
     Zone->playerDrawLow  = 4;

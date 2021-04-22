@@ -427,7 +427,7 @@ void DevMenu_SceneSel()
 
     if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
-        if (devMenu.option > list->sceneCount) {
+        if (devMenu.option >= list->sceneCount) {
             devMenu.option = 0;
         }
 
@@ -444,7 +444,7 @@ void DevMenu_SceneSel()
     else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
-            if (devMenu.option > list->sceneCount) {
+            if (devMenu.option >= list->sceneCount) {
                 devMenu.option = 0;
             }
         }

@@ -42,12 +42,12 @@ void DebugMode_Update(void)
             entity->velocity.y = 0x100000;
     }
 
-    if (RSDK_controller[0].keyA.press) {
+    if (RSDK_controller[CONT_P1].keyA.press) {
         ++DebugMode->objID;
         DebugMode->objID %= DebugMode->itemCount;
         DebugMode->itemSubType = 0;
     }
-    else if (RSDK_controller[0].keyX.press) {
+    else if (RSDK_controller[CONT_P1].keyX.press) {
         EntityPlayer *player        = (EntityPlayer *)RSDK_sceneInfo->entity;
         player->objectID            = Player->objectID;
         player->groundVel           = 0;
@@ -67,26 +67,26 @@ void DebugMode_Update(void)
         }
         DebugMode->debugActive = false;
     }
-    else if (RSDK_controller[0].keyA.down) {
-        if (RSDK_controller[0].keyC.press || RSDK_controller[0].keyY.press) {
+    else if (RSDK_controller[CONT_P1].keyA.down) {
+        if (RSDK_controller[CONT_P1].keyC.press || RSDK_controller[CONT_P1].keyY.press) {
             --DebugMode->objID;
             if (DebugMode->objID < 0) {
                 DebugMode->objID = DebugMode->itemCount - 1;
             }
             DebugMode->itemSubType = 0;
         }
-        if (RSDK_controller[0].keyB.press) {
+        if (RSDK_controller[CONT_P1].keyB.press) {
             int val = DebugMode->itemSubType;
             if (!DebugMode->itemSubType)
                 DebugMode->itemSubType = DebugMode->subtypeCount;
             DebugMode->itemSubType = val - 1;
         }
     }
-    else if (RSDK_controller[0].keyC.press || RSDK_controller[0].keyY.press) {
+    else if (RSDK_controller[CONT_P1].keyC.press || RSDK_controller[CONT_P1].keyY.press) {
         if (DebugMode->spawn[DebugMode->objID])
             DebugMode->spawn[DebugMode->objID]();
     }
-    else if (RSDK_controller[0].keyB.press) {
+    else if (RSDK_controller[CONT_P1].keyB.press) {
         if (DebugMode->itemSubType >= DebugMode->subtypeCount - 1)
             DebugMode->itemSubType = 0;
         else

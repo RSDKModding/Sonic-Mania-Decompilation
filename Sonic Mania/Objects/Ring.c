@@ -363,8 +363,8 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 {
     int flags = 0;
     RSDK_THIS(Ring);
-    //int xVel           = entity->velocity.x;
-    //int yVel           = entity->velocity.y;
+    int xVel           = entity->velocity.x;
+    int yVel           = entity->velocity.y;
 
     if (Platform) {
         foreach_active(Platform, colEnt) { flags |= 1 << Ring_CheckPlatformCollisions(colEnt); }
@@ -375,7 +375,39 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
     }
 
     if (Bridge) {
-        // TODO
+        foreach_active(Bridge, bridge)
+        {
+            if (entity->position.x > bridge->startPos && entity->position.x < bridge->endPos && entity->velocity.y >= 0) {
+                Hitbox bridgeHitbox;
+                bridgeHitbox.left  = -0x400;
+                bridgeHitbox.right = 0x400;
+
+                int divisor = 0;
+                int ang     = 0;
+                if (entity->position.x - bridge->startPos <= divisor) {
+                    divisor = bridge->stoodPos;
+                    ang     = (entity->position.x - bridge->startPos) << 7;
+                }
+                else {
+                    divisor = bridge->endPos - divisor - bridge->startPos;
+                    ang     = (bridge->endPos - entity->position.x) << 7;
+                }
+
+                int hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                if (entity->velocity.y >= 0x8000) {
+                    bridgeHitbox.bottom = (hitY >> 16);
+                    bridgeHitbox.top    = (hitY >> 16) - 8;
+                }
+                else {
+                    bridgeHitbox.top    = (hitY >> 16);
+                    bridgeHitbox.bottom = (hitY >> 16) + 8;
+                }
+                if (RSDK.CheckObjectCollisionTouchBox(bridge, &bridgeHitbox, entity, &Ring->hitbox)) {
+                    entity->position.y = hitY + bridge->position.y - (Ring->hitbox.bottom << 16);
+                    flags |= 2;
+                }
+            }
+        }
     }
 
     if (Spikes) {
@@ -392,6 +424,26 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 
     if (SpikeCorridor) {
         // TODO
+    }
+
+    if (xVel <= 0) {
+        if ((flags & 8) || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, entity->collisionPlane, -offsetX, 0, true)) {
+            entity->velocity.x = -xVel;
+        }
+    }
+    else if (!(flags & 4) || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, entity->collisionPlane, offsetX, 0, true)) {
+        entity->velocity.x = -xVel;
+    }
+
+    if (yVel <= 0) {
+        if (flags & 0x10 || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, entity->collisionPlane, 0, -offsetY, true)) {
+            entity->velocity.y = -yVel;
+        }
+    }
+    else if (flags & 2 || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, entity->collisionPlane, 0, offsetY, true)) {
+        entity->velocity.y = (yVel >> 2) - yVel;
+        if (entity->velocity.y > -0x10000)
+            entity->velocity.y = -0x10000;
     }
 }
 byte Ring_CheckPlatformCollisions(EntityPlatform *platform)

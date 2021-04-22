@@ -296,7 +296,7 @@ typedef struct {
     int flailing;
     int sensorX[5];
     int sensorY;
-    Vector2 field_194;
+    Vector2 moveOffset;
     StateMachine(inputState2);
     StateMachine(inputState);
     int controllerID;
@@ -488,11 +488,11 @@ void Player_RayJumpAbility(void);
 #endif
 
 //Input States
-void Player_GetP1Inputs(void);
-void Player_FlyCarryInputState(void);
-void Player_GetP2Inputs(void);
+void Player_ProcessP1Input(void);
+void Player_ProcessInputFlyCarry(void);
+void Player_ProcessP2Input(void);
 void Player_GetP2NoInput(void);
-void Player_GetP2InputUnknown(void);
-void Player_GetP2PlayerInputs(void);
+void Player_ProcessP2UnknownInput(void);
+void Player_ProcessP2PlayerInput(void);
 
 #endif //!OBJ_PLAYER_H

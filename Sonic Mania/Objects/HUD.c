@@ -169,7 +169,7 @@ void HUD_Draw(void)
             HUD_DrawNumbersBase10(&lifePos, player->rings, 0);
     }
 
-    if (((Entity *)RSDK.GetEntityByID(SLOT_PLAYER1))->objectID == DebugMode->objectID) {
+    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->objectID == DebugMode->objectID) {
         if (player->camera) {
             lifePos.y = 0x180000;
             lifePos.x = (RSDK_screens[player->camera->screenID].width - 16) << 16;
@@ -632,7 +632,7 @@ void HUD_Unknown6(void)
             EntityGameOver *gameOver = (EntityGameOver *)RSDK.GetEntityByID(entity->screenID + Player->playerCount);
             // v9       = Competition->field_28;
             // if (!v9 || *(_DWORD *)(v9 + 108)) {
-            //    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
+            //    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, NULL);
             //    gameOver->playerID = entity->screenID;
             //}
             // else {

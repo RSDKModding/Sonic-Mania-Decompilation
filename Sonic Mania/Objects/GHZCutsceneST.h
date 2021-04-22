@@ -49,6 +49,6 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host);
 bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host);
 bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host);
 bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityGHZCutsceneST *host);
-void GHZCutsceneST_Skip(void);
+void GHZCutsceneST_SkipCB(void);
 
 #endif //!OBJ_GHZCUTSCENEST_H

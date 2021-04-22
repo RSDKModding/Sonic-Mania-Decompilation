@@ -13,10 +13,10 @@ void GHZCutsceneST_Update(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
                 CutsceneSeq_StartSequence((Entity *)entity, states);
-                if (((Entity *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ))->objectID) {
+                if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ);
                     cutsceneSeq->skipState         = 3;
-                    cutsceneSeq->skipCallback      = GHZCutsceneST_Skip;
+                    cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
                 entity->timer = 1;
             }
@@ -186,75 +186,76 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
 }
 bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
 {
-    RSDK_GET_PLAYER(player1, player1, camera);
-    unused(player);
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
     EntityPhantomRuby *ruby  = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
     EntityAIZKingClaw *claw  = (EntityAIZKingClaw *)GHZCutsceneST->claw;
     EntityPlatform *platform = (EntityPlatform *)GHZCutsceneST->platform;
-    if (host->timer < 60)
-        return false;
-    if (host->timer == 60) {
-        int id = 0;
-        for (int i = 0; i < 2; ++i) {
-            EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
-            if (!player || player->objectID == TYPE_BLANK)
-                break;
-            player->up = false;
-        }
-        Music_FadeOut(0.025);
-        return false;
-    }
-    else if (host->timer == 180) {
-        player1->camera = camera;
-        Camera_SetTargetEntity(0, player1);
-        return true;
-    }
-    else {
-        claw->velocity.y -= 0x1800;
-        byte hbhChar = 0;
-        for (int hbhChar = 0; hbhChar < 5; ++hbhChar) {
-            EntityCutsceneHBH *hbh = (EntityCutsceneHBH *)GHZCutsceneST->cutsceneHBH[hbhChar];
-            switch (hbhChar) {
-                case HBH_GUNNER:
-                    hbh->velocity.x += 0x800;
-                    hbh->velocity.y -= 0x1800;
-                    hbh->position.x += hbh->velocity.x;
-                    hbh->position.y += hbh->velocity.y;
+    if (host->timer >= 60) {
+        if (host->timer == 60) {
+            int id = 0;
+            for (int i = 0; i < 2; ++i) {
+                EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
+                if (!player || player->objectID == TYPE_BLANK)
                     break;
-                case HBH_SHINOBI:
-                    if (host->timer == 60) {
-                        RSDK.SetSpriteAnimation(hbh->spriteIndex, 3, &hbh->data, true, 0);
-                        RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->altData, true, 0);
-                    }
-                    hbh->position.x -= 0x4000;
-                    hbh->position.y -= 0x40000;
-                    break;
-                case HBH_MYSTIC:
-                    hbh->velocity.x += 0x2000;
-                    hbh->velocity.y -= 0x1000;
-                    hbh->position.x += hbh->velocity.x;
-                    hbh->position.y += hbh->velocity.y;
-                    break;
-                case HBH_RIDER:
-                case HBH_KING:
-                    hbh->position.x += claw->velocity.x;
-                    hbh->position.y += claw->velocity.y;
-                    break;
-                default: break;
+                player->up = false;
             }
+            Music_FadeOut(0.025);
+            return false;
         }
+        
+        if (host->timer == 180) {
+            player1->camera = camera;
+            Camera_SetTargetEntity(0, player1);
+            return true;
+        }
+        else {
+            claw->velocity.y -= 0x1800;
+            byte hbhChar = 0;
+            for (int hbhChar = 0; hbhChar < 5; ++hbhChar) {
+                EntityCutsceneHBH *hbh = (EntityCutsceneHBH *)GHZCutsceneST->cutsceneHBH[hbhChar];
+                switch (hbhChar) {
+                    case HBH_GUNNER:
+                        hbh->velocity.x += 0x800;
+                        hbh->velocity.y -= 0x1800;
+                        hbh->position.x += hbh->velocity.x;
+                        hbh->position.y += hbh->velocity.y;
+                        break;
+                    case HBH_SHINOBI:
+                        if (host->timer == 60) {
+                            RSDK.SetSpriteAnimation(hbh->spriteIndex, 3, &hbh->data, true, 0);
+                            RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->altData, true, 0);
+                        }
+                        hbh->position.x -= 0x4000;
+                        hbh->position.y -= 0x40000;
+                        break;
+                    case HBH_MYSTIC:
+                        hbh->velocity.x += 0x2000;
+                        hbh->velocity.y -= 0x1000;
+                        hbh->position.x += hbh->velocity.x;
+                        hbh->position.y += hbh->velocity.y;
+                        break;
+                    case HBH_RIDER:
+                    case HBH_KING:
+                        hbh->position.x += claw->velocity.x;
+                        hbh->position.y += claw->velocity.y;
+                        break;
+                    default: break;
+                }
+            }
 
-        ruby->position.x += claw->velocity.x;
-        ruby->position.y += claw->velocity.y;
-        platform->position.x += claw->velocity.x;
-        platform->position.y += claw->velocity.y;
-        platform->drawPos.x   = platform->position.x;
-        platform->drawPos.y   = platform->position.y;
-        platform->centerPos.x = platform->position.x;
-        platform->centerPos.y = platform->position.y;
-        claw->position.x += claw->velocity.x;
-        claw->position.y += claw->velocity.y;
-        return false;
+            ruby->position.x += claw->velocity.x;
+            ruby->position.y += claw->velocity.y;
+            platform->position.x += claw->velocity.x;
+            platform->position.y += claw->velocity.y;
+            platform->drawPos.x   = platform->position.x;
+            platform->drawPos.y   = platform->position.y;
+            platform->centerPos.x = platform->position.x;
+            platform->centerPos.y = platform->position.y;
+            claw->position.x += claw->velocity.x;
+            claw->position.y += claw->velocity.y;
+            return false;
+        }
     }
     return false;
 }
@@ -277,7 +278,7 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityGHZCutsceneST *host)
     return true;
 }
 
-void GHZCutsceneST_Skip(void)
+void GHZCutsceneST_SkipCB(void)
 {
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)

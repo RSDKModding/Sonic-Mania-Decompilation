@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitbox;
 } ObjectZipLine;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte activePlayers;
+    Animator animator;
+    int length;
+    Vector2 startPos;
+    Vector2 endPos;
+    Vector2 handlePos;
+    byte grabDelay[PLAYER_MAX];
+    Vector2 field_98;
+    int field_A0;
 } EntityZipLine;
 
 // Object Struct
@@ -28,6 +40,7 @@ void ZipLine_EditorLoad(void);
 void ZipLine_Serialize(void);
 
 // Extra Entity Functions
-
+void ZipLine_Unknown1(void);
+void ZipLine_Unknown2(void);
 
 #endif //!OBJ_ZIPLINE_H

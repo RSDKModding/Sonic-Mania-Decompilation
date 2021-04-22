@@ -380,7 +380,7 @@ void Platform_StageLoad(void)
         Platform->spriteIndex = RSDK.LoadSpriteAnimation("GHZCutscene/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
+        Platform->spriteIndex = RSDK.LoadSpriteAnimation("CPZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SPZ1")) {
         Platform->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/Platform.bin", SCOPE_STAGE);
@@ -1533,8 +1533,8 @@ void Platform_CollisionState_None(void)
 
         if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->field_194.x = entity->tileOrigin.x - entity->drawPos.x;
-            player->field_194.y = entity->tileOrigin.y - entity->drawPos.y;
+            player->moveOffset.x = entity->tileOrigin.x - entity->drawPos.x;
+            player->moveOffset.y = entity->tileOrigin.y - entity->drawPos.y;
             if (player->playerAnimData.animationID == ANI_PUSH && player->onGround) {
                 if (player->right)
                     entity->pushPlayersL |= 1 << pid;

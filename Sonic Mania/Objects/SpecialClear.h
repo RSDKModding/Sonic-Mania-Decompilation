@@ -32,7 +32,11 @@ typedef struct {
     int ringBonus;
     int perfectBonus;
     int machBonus;
-    Vector2 positions[15];
+    Vector2 positions[7];
+    int emeraldPositions[7];
+    int emeraldSpeeds[7];
+    int field_100;
+    int field_104;
     int field_108;
     int field_10C;
     int field_110;

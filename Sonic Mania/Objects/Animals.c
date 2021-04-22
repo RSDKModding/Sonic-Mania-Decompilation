@@ -154,7 +154,7 @@ bool32 Animals_CheckGroundCollision(void)
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     if (entity->velocity.y <= 0)
         return false;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, Animals->hitboxes[entity->type], false))
+    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, Animals->hitboxes[entity->type], false))
         return true;
     if (Animals->hasPlatform) {
         foreach_active(Platform, platform)
@@ -165,44 +165,39 @@ bool32 Animals_CheckGroundCollision(void)
     }
 
     if (Animals->hasBridge) {
-        //foreach_active(Bridge, bridge)
-        //{
-        /*v2 = entity->position.x;
-        v3 = bridge->field_74;
-        if (entity->position.x > v3) {
-            v4 = bridge->field_78;
-            if (v2 < v4 && entity->velocity.y >= 0) {
-                ThisHitbox  = -1024;
-                HIWORD(v13) = 1024;
-                v5          = *(_DWORD *)&bridge->field_64;
-                v15         = v5;
-                if (v2 - v3 <= v5) {
-                    v6 = (v2 - v3) << 7;
+        foreach_active(Bridge, bridge)
+        {
+            if (entity->position.x > bridge->startPos && entity->position.x < bridge->endPos && entity->velocity.y >= 0) {
+                Hitbox bridgeHitbox;
+                bridgeHitbox.left  = -0x400;
+                bridgeHitbox.right = 0x400;
+
+                int divisor = 0;
+                int ang     = 0;
+                if (entity->position.x - bridge->startPos <= divisor) {
+                    divisor = bridge->stoodPos;
+                    ang     = (entity->position.x - bridge->startPos) << 7;
                 }
                 else {
-                    v5 = v4 - v15 - v3;
-                    v6 = (v4 - v2) << 7;
+                    divisor = bridge->endPos - divisor - bridge->startPos;
+                    ang     = (bridge->endPos - entity->position.x) << 7;
                 }
-                v7          = RSDK_Sin512(v6 / v5);
-                v8          = (bridge->field_6C * v7 >> 9) - 0x80000;
-                v9          = v8 >> 16;
-                v11         = __OFSUB__(entity->velocity.y, 0x8000);
-                v10         = entity->velocity.y - 0x8000 < 0;
-                LOWORD(v13) = v9;
-                if (v10 ^ v11) {
-                    v14         = v9;
-                    LOWORD(v13) = v9 - 8;
+
+                int hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                if (entity->velocity.y >= 0x8000) {
+                    bridgeHitbox.bottom = (hitY >> 16);
+                    bridgeHitbox.top    = (hitY >> 16) - 8;
                 }
                 else {
-                    v14 = v13 + 8;
+                    bridgeHitbox.top    = (hitY >> 16);
+                    bridgeHitbox.bottom = (hitY >> 16) + 8;
                 }
-                if (RSDK.CheckObjectCollisionTouchBox(bridge, &ThisHitbox, entity, &entity->hitbox)) {
-                    entity->position.y = v8 + bridge->position.y - (entity->hitbox.bottom << 16);
+                if (RSDK.CheckObjectCollisionTouchBox(bridge, &bridgeHitbox, entity, &entity->hitbox)) {
+                    entity->position.y = hitY + bridge->position.y - (entity->hitbox.bottom << 16);
                     return true;
                 }
             }
-        }*/
-        //}
+        }
     }
     return false;
 }

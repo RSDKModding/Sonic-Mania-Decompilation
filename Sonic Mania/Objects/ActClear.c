@@ -880,7 +880,7 @@ void ActClear_ForcePlayerOnScreen(void)
             }
         }
         else if (player2->position.x >= screenOffX) {
-            player2->inputState = Player_GetP2Inputs;
+            player2->inputState = Player_ProcessP2Input;
             RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimData, 0, 0);
             player2->state     = Player_State_Ground;
             player2->groundVel = -0x40000;

@@ -339,8 +339,10 @@ void LoadSceneFile()
         editableVarList = NULL;
         AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);
 
+#if RETRO_REV02
         EntityBase *entList = NULL;
         AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&entList, DATASET_TMP, true);
+#endif
         for (int i = 0; i < objCount; ++i) {
             uint hashBuf[4];
             ReadHash(&info, hashBuf);
@@ -389,10 +391,15 @@ void LoadSceneFile()
                 ushort slotID = ReadInt16(&info);
 
                 EntityBase *entity = NULL;
+
+#if RETRO_REV02
                 if (slotID < SCENEENTITY_COUNT)
-                    entity = &entList[slotID];
+                    entity = &objectEntityList[slotID + RESERVE_ENTITY_COUNT];
                 else
-                    entity = &entList[SCENEENTITY_COUNT - slotID];
+                    entity = &entList[slotID - SCENEENTITY_COUNT];
+#else
+                entity = &objectEntityList[slotID + RESERVE_ENTITY_COUNT];
+#endif
 
                 entity->objectID = objID;
 #if RETRO_REV02
@@ -473,37 +480,31 @@ void LoadSceneFile()
 
 #if RETRO_REV02
         // handle filter and stuff
-        int slot       = RESERVE_ENTITY_COUNT;
-        int activeSlot = RESERVE_ENTITY_COUNT;
-        /*for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
-            if (sceneInfo.filter & entList[e].filter) {
-                if (activeSlot != slot) {
-                    memcpy(&objectEntityList[slot], &objectEntityList[e], sizeof(EntityBase));
-                    memset(&objectEntityList[e], 0, sizeof(EntityBase));
+        EntityBase *entity = &objectEntityList[RESERVE_ENTITY_COUNT];
+        int activeSlot     = RESERVE_ENTITY_COUNT;
+        for (int i = RESERVE_ENTITY_COUNT; i < SCENEENTITY_COUNT + RESERVE_ENTITY_COUNT; ++i) {
+            if (sceneInfo.filter & entity->filter) {
+                if (i != activeSlot) {
+                    memcpy(&objectEntityList[activeSlot], entity, sizeof(EntityBase));
+                    memset(entity, 0, sizeof(EntityBase));
                 }
-                activeSlot++;
+                ++activeSlot;
             }
             else {
-                memset(&objectEntityList[slot], 0, sizeof(EntityBase));
+                memset(entity, 0, sizeof(EntityBase));
             }
-            slot++;
-        }*/
-
-        slot = activeSlot;
-        for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
-            if (sceneInfo.filter & entList[e].filter) {
-                memcpy(&objectEntityList[e + RESERVE_ENTITY_COUNT], &entList[e], sizeof(EntityBase));
-            }
-            slot++;
+            entity++;
         }
-#endif
 
-#if !RETRO_REV02
-        for (int e = 0; e < SCENEENTITY_COUNT; ++e) {
-            memcpy(&objectEntityList[e + RESERVE_ENTITY_COUNT], &entList[e], sizeof(EntityBase));
+        for (int i = 0; i < SCENEENTITY_COUNT; ++i) {
+            if (sceneInfo.filter & entList[i].filter)
+                memcpy(&objectEntityList[activeSlot++], &entList[i], sizeof(EntityBase));
+            if (activeSlot >= SCENEENTITY_COUNT + RESERVE_ENTITY_COUNT)
+                break;
         }
-#endif
         entList = NULL;
+#endif
+
         editableVarList = NULL;
 
         CloseFile(&info);

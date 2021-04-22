@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
 } ObjectGHZCutsceneK;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    int timer;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int field_78;
+    Hitbox hitbox;
 } EntityGHZCutsceneK;
 
 // Object Struct
@@ -28,6 +38,6 @@ void GHZCutsceneK_EditorLoad(void);
 void GHZCutsceneK_Serialize(void);
 
 // Extra Entity Functions
-
+bool32 GHZCutsceneK_Unknown(void);
 
 #endif //!OBJ_GHZCUTSCENEK_H

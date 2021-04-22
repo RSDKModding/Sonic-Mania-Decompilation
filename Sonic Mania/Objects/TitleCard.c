@@ -241,23 +241,19 @@ void TitleCard_Unknown2(void)
     RSDK.SetSpriteString(TitleCard->spriteIndex, 1, &entity->zoneName);
 
     int offset       = 0x280000;
-    int *unknownPtr  = entity->field_28C;
-    Vector2 *charPos = entity->charPos;
     for (int c = 0; c < entity->zoneName.textLength; ++c) {
-        charPos->y  = offset;
-        *unknownPtr = -0x80000;
-        ++unknownPtr;
-        charPos++;
+        entity->charPos[c].y  = offset;
+        entity->charSpeeds[c] = -0x80000;
         offset += 0x100000;
     }
 
     for (int i = 0; i < 4; ++i) {
-        entity->field_1C8[i].x = ((2 - entity->zoneName.textLength) << 19) - (i << 19);
-        entity->field_1C8[i].y = 0x40000;
+        entity->zoneCharPos[i] = ((2 - entity->zoneName.textLength) << 19) - ((i * 2) << 19);
+        entity->zoneCharSpeed[i] = 0x40000;
     }
 
     for (int c = 0; c < entity->zoneName.textLength; ++c) {
-        if ((short)entity->zoneName.text[c] == -1) {
+        if (entity->zoneName.text[c] == 0xFFFF) {
             entity->word2Offset = c;
         }
     }
@@ -326,44 +322,23 @@ void TitleCard_Unknown4(void)
 {
     RSDK_THIS(TitleCard);
 
-    int *unknownPtr  = entity->field_28C;
-    Vector2 *charPos = entity->charPos;
     for (int c = 0; c < entity->zoneName.textLength; ++c) {
-        if (charPos->y < 0)
-            *unknownPtr += 0x28000;
-        charPos->y += *unknownPtr;
-        if (charPos->y > 0 && *unknownPtr > 0)
-            charPos->y = 0;
-        charPos++;
-        unknownPtr++;
+        if (entity->charPos[c].y < 0)
+            entity->charSpeeds[c] += 0x28000;
+
+        entity->charPos[c].y += entity->charSpeeds[c];
+        if (entity->charPos[c].y > 0 && entity->charSpeeds[c] > 0)
+            entity->charPos[c].y = 0;
     }
 
-    if (entity->field_1C8[0].x > 0)
-        entity->field_1C8[2].x -= 0x14000;
+    for (int i = 0; i < 4; ++i) {
+        if (entity->zoneCharPos[i] > 0)
+            entity->zoneCharSpeed[i] -= 0x14000;
 
-    entity->field_1C8[0].x += entity->field_1C8[2].x;
-    if (entity->field_1C8[2].x < 0)
-        entity->field_1C8[0].x = 0;
-
-    if (entity->field_1C8[0].y > 0)
-        entity->field_1C8[2].y -= 0x14000;
-
-    entity->field_1C8[0].y += entity->field_1C8[2].y;
-    if (entity->field_1C8[0].y < 0)
-        entity->field_1C8[0].y = 0;
-
-    if (entity->field_1C8[1].x > 0)
-        entity->field_1C8[3].x -= 0x14000;
-
-    entity->field_1C8[1].x += entity->field_1C8[3].x;
-    if (entity->field_1C8[1].x < 0)
-        entity->field_1C8[1].x = 0;
-
-    if (entity->field_1C8[1].y > 0)
-        entity->field_1C8[3].y -= 0x14000;
-    entity->field_1C8[1].y += entity->field_1C8[3].y;
-    if (entity->field_1C8[3].y < 0)
-        entity->field_1C8[1].y = 0;
+        entity->zoneCharPos[i] += entity->zoneCharSpeed[i];
+        if (entity->zoneCharPos[i] < 0 && entity->zoneCharSpeed[i] < 0)
+            entity->zoneCharPos[i] = 0;
+    }
 }
 void TitleCard_Unknown5(void)
 {
@@ -480,7 +455,7 @@ void TitleCard_Unknown8(void)
     if (entity->dword2F4 < 0x300)
         entity->dword2F4 += 0x40;
 
-    if (!entity->field_1C8[1].y && entity->field_1C8[3].y < 0)
+    if (!entity->zoneCharPos[3] && entity->zoneCharSpeed[3] < 0)
         entity->state = TitleCard_Unknown9;
 }
 void TitleCard_Unknown9(void)
@@ -509,7 +484,7 @@ void TitleCard_Unknown9(void)
                 Camera->centerBounds.x = 0x20000;
                 Camera->centerBounds.y = 0x20000;
             }
-            Zone->field_158 = 0;
+            Zone->field_158 = false;
         }
     }
 }
@@ -721,21 +696,13 @@ void TitleCard_Unknown13(void)
     Vector2 drawPos;
     drawPos.x = entity->dword1E8;
     RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 170, RSDK_screens[RSDK_sceneInfo->currentScreenID].width, 240);
-    entity->zoneLetterData.frameID = 0;
-    drawPos.y                      = 0xBA0000 + entity->field_1C8[0].x;
-    RSDK.DrawSprite(&entity->zoneLetterData, &drawPos, true);
 
-    entity->zoneLetterData.frameID = 1;
-    drawPos.y                      = 0xBA0000 + entity->field_1C8[0].y;
-    RSDK.DrawSprite(&entity->zoneLetterData, &drawPos, true);
+    for (int i = 0; i < 4; ++i) {
+        entity->zoneLetterData.frameID = i;
+        drawPos.y                      = 0xBA0000 + entity->zoneCharPos[i];
+        RSDK.DrawSprite(&entity->zoneLetterData, &drawPos, true);
+    }
 
-    entity->zoneLetterData.frameID = 2;
-    drawPos.y                      = 0xBA0000 + entity->field_1C8[1].x;
-    RSDK.DrawSprite(&entity->zoneLetterData, &drawPos, true);
-
-    entity->zoneLetterData.frameID = 3;
-    drawPos.y                      = 0xBA0000 + entity->field_1C8[1].y;
-    RSDK.DrawSprite(&entity->zoneLetterData, &drawPos, true);
     if (entity->word2Offset > 0) {
         RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].width, 130);
         drawPos.y = 0x720000;

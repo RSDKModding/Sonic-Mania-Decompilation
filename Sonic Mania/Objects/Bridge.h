@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectBridge;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte length;
+    bool32 burnable;
+    byte field_60;
+    byte activePlayerCount;
+    byte timer;
+    byte field_63;
+    int stoodPos;
+    int field_68;
+    int field_6C;
+    Entity *playerPtr;
+    int startPos;
+    int endPos;
+    Animator animator;
+    int dword94;
 } EntityBridge;
 
 // Object Struct
@@ -28,6 +43,7 @@ void Bridge_EditorLoad(void);
 void Bridge_Serialize(void);
 
 // Extra Entity Functions
+void Bridge_Burn(int offset);
 
 
 #endif //!OBJ_BRIDGE_H

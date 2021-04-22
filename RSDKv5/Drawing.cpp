@@ -618,12 +618,10 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         else if (curFlags & 2) {
             x = currentScreen->clipBound_X2;
             y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X2 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
-            y = drawY1 + (y >> 8);
         }
         else if (curFlags & 1) {
             x = currentScreen->clipBound_X1;
             y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X1 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
-            y = drawY1 + (y >> 8);
         }
 
         if (curFlags == flags1) {
