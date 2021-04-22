@@ -352,7 +352,7 @@ void Platform_Create(void *data)
             EntityPlatform *ent = (EntityPlatform *)RSDK.GetEntityByID((i + RSDK.GetEntityID(entity) + 1));
             ent->tileCollisions = false;
             if (HangPoint && ent->objectID == HangPoint->objectID) {
-                EntityHangPoint *hang = (EntityHangPoint *)ent;
+                //EntityHangPoint *hang = (EntityHangPoint *)ent;
                 // v53 = hang[1].groundVel;
                 // int posY = hang->position.y;
                 // if (ent->position.y - (v53 << 16) - posY >= 0)

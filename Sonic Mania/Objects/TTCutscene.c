@@ -71,9 +71,7 @@ void TTCutscene_SkipCB(void)
 
 bool32 TTCutscene_CutsceneState_Setup(EntityTTCutscene *host)
 {
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
         Zone->playerBoundActiveB[0] = 0;
         Zone->playerBoundActiveB[1] = 0;
@@ -106,9 +104,8 @@ bool32 TTCutscene_CutsceneState_Setup(EntityTTCutscene *host)
 
 bool32 TTCutscene_CutsceneState_FlyIn(EntityTTCutscene *host)
 {
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     int scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
     int scrY2 = (RSDK_screens->position.y + RSDK_screens->height + 32) << 16;
@@ -151,10 +148,9 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityTTCutscene *host)
 
 bool32 TTCutscene_CutsceneState_Wait(EntityTTCutscene *host)
 {
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+    
     player1->position.y = (RSDK_screens->centerY + RSDK_screens->position.y) << 16;
     if (player2->objectID == Player->objectID)
         player2->position.y = (RSDK_screens->centerY + RSDK_screens->position.y) << 16;
@@ -164,9 +160,8 @@ bool32 TTCutscene_CutsceneState_Wait(EntityTTCutscene *host)
 
 bool32 TTCutscene_CutsceneState_FlyOut(EntityTTCutscene *host)
 {
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     int scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
     int scrY2 = (RSDK_screens->position.y - 32) << 16;
@@ -212,9 +207,11 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityTTCutscene *host)
 
 bool32 TTCutscene_CutsceneState_NextScene(EntityTTCutscene *host)
 {
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player1);
+    unused(player2);
+    unused(camera);
+    
     if (host->timer >= 64) {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)

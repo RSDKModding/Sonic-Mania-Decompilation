@@ -186,9 +186,8 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
 }
 bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
 {
-    EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2    = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera     = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    RSDK_GET_PLAYER(player1, player1, camera);
+    unused(player);
     EntityPhantomRuby *ruby  = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
     EntityAIZKingClaw *claw  = (EntityAIZKingClaw *)GHZCutsceneST->claw;
     EntityPlatform *platform = (EntityPlatform *)GHZCutsceneST->platform;

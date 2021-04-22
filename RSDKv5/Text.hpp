@@ -63,7 +63,7 @@ void GenerateCRC(uint *id, char *fileName);
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
 #define GEN_HASH(text, hash)                                                                                                                         \
     strcpy(hashBuffer, text);                                                                                                                        \
-    GenerateHash(hash, strlen(hashBuffer))
+    GenerateHash(hash, (int)strlen(hashBuffer))
 #define HASH_COPY(dst, src) memcpy(dst, src, 0x10)
 
 inline void SetText(TextInfo *textInfo, char *text, uint size)

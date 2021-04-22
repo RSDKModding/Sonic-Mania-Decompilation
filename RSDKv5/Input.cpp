@@ -137,10 +137,11 @@ void InitInputDevice()
 #if RETRO_USING_SDL2
     // Support for extra controller types SDL doesn't recognise
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_UWP
-    if (!usingCWD)
-        sprintf(buffer, "%s/controllerdb.txt", getResourcesPath());
-    else
-        sprintf(buffer, "%scontrollerdb.txt", gamePath);
+    //if (!usingCWD)
+    //    sprintf(buffer, "%s/controllerdb.txt", getResourcesPath());
+    //else
+    //    sprintf(buffer, "%scontrollerdb.txt", gamePath);
+    sprintf(buffer, BASE_PATH "controllerdb.txt");
 #else
     sprintf(buffer, BASE_PATH "controllerdb.txt");
 #endif
@@ -178,7 +179,7 @@ void ProcessInput() {
                     AssignControllerID(i + 1, id);
             }
             else {
-                InputDevice *device = activeInputDevices[i];
+                //InputDevice *device = activeInputDevices[i];
                 //if (device && device->inputID == assign && device->active)
                 //    device->GetInput(i + 1);
             }

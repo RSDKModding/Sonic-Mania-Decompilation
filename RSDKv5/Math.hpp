@@ -131,7 +131,7 @@ inline int RSDK_random(int min, int max)
     uint v2  = 1103515245 * randKey + 12345;
     uint v3  = 1103515245 * v2 + 12345;
     randKey = 1103515245 * v3 + 12345;
-    signed int v4  = (randKey >> 16) & 0x7FF ^ (((v3 >> 16) & 0x7FF ^ (v2 >> 6) & 0x1FFC00) << 10);
+    signed int v4  = ((randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
     if (min >= max)
         return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
     else
@@ -145,7 +145,7 @@ inline int RSDK_random2(int min, int max, int *randKey)
     uint v2  = 1103515245 * *randKey + 12345;
     uint v3  = 1103515245 * v2 + 12345;
     *randKey = 1103515245 * v3 + 12345;
-    signed int v4  = (*randKey >> 16) & 0x7FF ^ (((v3 >> 16) & 0x7FF ^ (v2 >> 6) & 0x1FFC00) << 10);
+    signed int v4  = ((*randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
     if (min >= max)
         return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
     else

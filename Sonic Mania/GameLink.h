@@ -55,6 +55,8 @@ typedef uint color;
 #define TYPE_COUNT        (0x100)
 #define TYPEGROUP_COUNT   (0x104)
 
+#define CHANNEL_COUNT (0x10)
+
 typedef struct {
     int x;
     int y;

@@ -191,7 +191,6 @@ bool32 UFO_Circuit_Unknown3(void)
                 >= 0x100000
             && prevNode != curNode) {
             int pos  = 0x7FFFFFFF;
-            int pos2 = 0;
 
             while (prevNode != curNode) {
                 int pos2 = ((player->position.x - prevNode->position.x) >> 16) * ((player->position.x - prevNode->position.x) >> 16)

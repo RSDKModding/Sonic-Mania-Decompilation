@@ -164,12 +164,11 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos);
 inline void SetEditableVar(byte type, const char *name, byte object, int offset)
 {
     if (editableVarCount < 255) {
-        EditableVarInfo *editableVar = &editableVarList[editableVarCount];
-        strcpy(hashBuffer, name);
-        GenerateHash(editableVar->hash, strlen(name));
-        editableVar->type   = type;
-        editableVar->offset = offset;
-        editableVar->active = true;
+        EditableVarInfo *var = &editableVarList[editableVarCount];
+        GEN_HASH(name, var->hash);
+        var->type   = type;
+        var->offset = offset;
+        var->active = true;
         editableVarCount++;
     }
 }

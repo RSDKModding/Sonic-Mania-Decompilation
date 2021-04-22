@@ -280,7 +280,6 @@ void BSS_Setup_SetupCollectables(void)
         }
 
         for (int o = 0; o < BSS_Setup->frustrumOffsetCount[f]; ++offsetTable, ++o) {
-            int i = o;
             for (int i = o; i > 0; --i) {
                 int id = unknownTable[i - 1];
                 if (unknownTable[i] > id) {
@@ -779,7 +778,6 @@ void BSS_Setup_State_PinkSphereWarp(void)
         bool32 flag = false;
         for (; (count && val >= 0) && !flag; --count) {
             for (int y = 0; y < BSS_PLAYFIELD_H; ++y) {
-                int x = 0;
                 for (int x = 0; x < 0x20; ++x) {
                     ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
                     if ((tile & 0x7F) == BSS_SPHERE_PINK && (x != entity->playerPos.x || y != entity->playerPos.y) && --val <= -1) {
@@ -828,7 +826,7 @@ void BSS_Setup_State_PinkSphereWarp(void)
                 }
 
                 ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
-                if (tile < BSS_SPHERE_RED || tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK) {
+                if (tile < BSS_SPHERE_RED || (tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK)) {
                     flag = true;
                     break;
                 }

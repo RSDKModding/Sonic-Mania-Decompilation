@@ -146,7 +146,7 @@ void PauseMenu_SetupLookupTable(void)
 {
     for (int i = 0; i < 0x10000; ++i) {
         int val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
-        val                            = min(0xFF, val);
+        val                            = minVal(0xFF, val);
         PauseMenu->lookupTable[i] = (val >> 3) | ((val >> 3) << 11) | 8 * val & 0xFFE0;
 
         // found as the "default" lookup table in rev01, produces a similar (but lighter) effect
@@ -250,7 +250,7 @@ void PauseMenu_Unknown6(void)
     for (; i < 3; ++i) {
         if (!entity->buttonPtrs[i])
             break;
-        EntityUIButton *button = (EntityUIButton*)entity->buttonPtrs[i];
+        //EntityUIButton *button = (EntityUIButton*)entity->buttonPtrs[i];
         // button->field_8C       = uiControl;
         // uiControl->entities[i] = button;
     }
@@ -270,15 +270,14 @@ void PauseMenu_ClearButtons(EntityPauseMenu *entity)
     RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
-bool32 PauseMenu_Unknown8(void)
+void PauseMenu_Unknown8(void)
 {
     globals->specialRingID = 0;
     PauseMenu_StopSound();
     RSDK.InitSceneLoad();
-    return true;
 }
 
-bool32 PauseMenu_Unknown9(void)
+void PauseMenu_Unknown9(void)
 {
     if (StarPost) {
         StarPost->postIDs[0] = 0;
@@ -289,7 +288,7 @@ bool32 PauseMenu_Unknown9(void)
     globals->specialRingID = 0;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        byte *param            = (byte *)&globals->menuParam[22];
+        //byte *param            = (byte *)&globals->menuParam[22];
         ushort *param2         = (ushort *)&globals->menuParam[26];
         //param[2]               = "Competition Zone";
         param2[1]              = 115;
@@ -298,7 +297,6 @@ bool32 PauseMenu_Unknown9(void)
     RSDK.LoadScene("Presentation", "Menu");
     PauseMenu_StopSound();
     RSDK.InitSceneLoad();
-    return true;
 }
 
 void PauseMenu_FocusCamera(void)

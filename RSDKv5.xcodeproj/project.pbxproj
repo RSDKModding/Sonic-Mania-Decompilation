@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C92834EA2631150A00D51CCE /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92834E92631150A00D51CCE /* Ogg.framework */; };
+		C92834EB2631150A00D51CCE /* Ogg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C92834E92631150A00D51CCE /* Ogg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C92834ED2631151B00D51CCE /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92834EC2631151B00D51CCE /* Vorbis.framework */; };
+		C92834EE2631151B00D51CCE /* Vorbis.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C92834EC2631151B00D51CCE /* Vorbis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C92834F12631163900D51CCE /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C92834EF2631163900D51CCE /* Video.cpp */; };
 		C96881FA25DF3C8B00BEE4B8 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C96881F925DF3C8A00BEE4B8 /* Info.plist */; };
 		C968825C25DF3D7E00BEE4B8 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968822E25DF3D7B00BEE4B8 /* Shader.cpp */; };
 		C968825D25DF3D7E00BEE4B8 /* Text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968823025DF3D7C00BEE4B8 /* Text.cpp */; };
@@ -59,7 +64,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C92834EB2631150A00D51CCE /* Ogg.framework in Embed Frameworks */,
 				C968886625DF3EF300BEE4B8 /* SDL2.framework in Embed Frameworks */,
+				C92834EE2631151B00D51CCE /* Vorbis.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,6 +74,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C92834E92631150A00D51CCE /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = dependencies/mac/libogg/macosx/Ogg.framework; sourceTree = "<group>"; };
+		C92834EC2631151B00D51CCE /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = dependencies/mac/libvorbis/macosx/Vorbis.framework; sourceTree = "<group>"; };
+		C92834EF2631163900D51CCE /* Video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Video.cpp; sourceTree = "<group>"; };
+		C92834F02631163900D51CCE /* Video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Video.hpp; sourceTree = "<group>"; };
 		C96881F125DF3C8700BEE4B8 /* RSDKv5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RSDKv5.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C96881F925DF3C8A00BEE4B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../dependencies/mac/RSDKv5/Info.plist; sourceTree = "<group>"; };
 		C96881FE25DF3C8B00BEE4B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../dependencies/mac/RSDKv5/Assets.xcassets; sourceTree = "<group>"; };
@@ -154,7 +165,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92834EA2631150A00D51CCE /* Ogg.framework in Frameworks */,
 				C968886525DF3EF300BEE4B8 /* SDL2.framework in Frameworks */,
+				C92834ED2631151B00D51CCE /* Vorbis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +206,8 @@
 		C968822C25DF3D5E00BEE4B8 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				C92834EF2631163900D51CCE /* Video.cpp */,
+				C92834F02631163900D51CCE /* Video.hpp */,
 				C968825025DF3D7D00BEE4B8 /* Animation.cpp */,
 				C968824E25DF3D7D00BEE4B8 /* Animation.hpp */,
 				C968824225DF3D7D00BEE4B8 /* Audio.cpp */,
@@ -246,6 +261,8 @@
 		C968886325DF3EF200BEE4B8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C92834EC2631151B00D51CCE /* Vorbis.framework */,
+				C92834E92631150A00D51CCE /* Ogg.framework */,
 				C968886425DF3EF300BEE4B8 /* SDL2.framework */,
 			);
 			name = Frameworks;
@@ -369,6 +386,7 @@
 				C968889325DF48CE00BEE4B8 /* inffast.c in Sources */,
 				C968889D25DF48CE00BEE4B8 /* adler32.c in Sources */,
 				C968886F25DF3F4C00BEE4B8 /* iniparser.cpp in Sources */,
+				C92834F12631163900D51CCE /* Video.cpp in Sources */,
 				C968889C25DF48CE00BEE4B8 /* gzclose.c in Sources */,
 				C968826D25DF3D7E00BEE4B8 /* Animation.cpp in Sources */,
 				C968889425DF48CE00BEE4B8 /* inftrees.c in Sources */,
@@ -531,6 +549,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/dependencies/mac",
+					"$(PROJECT_DIR)/dependencies/mac/libogg/macosx",
+					"$(PROJECT_DIR)/dependencies/mac/libvorbis/macosx",
 				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/dependencies/all";
 				INFOPLIST_FILE = "$(PROJECT_DIR)/dependencies/mac/RSDKv5/Info.plist";
@@ -555,6 +575,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/dependencies/mac",
+					"$(PROJECT_DIR)/dependencies/mac/libogg/macosx",
+					"$(PROJECT_DIR)/dependencies/mac/libvorbis/macosx",
 				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/dependencies/all";
 				INFOPLIST_FILE = "$(PROJECT_DIR)/dependencies/mac/RSDKv5/Info.plist";

@@ -2650,7 +2650,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
 
         int rotation = sceneInfo.entity->rotation;
         int drawFX   = sceneInfo.entity->drawFX;
-        if (sceneInfo.entity->drawFX & FX_ROTATE && false) {
+        if (sceneInfo.entity->drawFX & FX_ROTATE) {
             switch (data->rotationFlag) {
                 case ROTFLAG_NONE:
                     rotation = 0;

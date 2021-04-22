@@ -31,8 +31,8 @@ void PlayerHelpers_Serialize(void);
 bool32 PlayerHelpers_CheckAct1(void);
 bool32 PlayerHelpers_CheckAct2(void);
 bool32 PlayerHelpers_CheckIntro(void);
-bool32 Game_CheckAct1Regular(void);
+bool32 PlayerHelpers_CheckAct1Regular(void);
 bool32 PlayerHelpers_CheckStageReload(void);
-bool32 Player_CheckPlayerPos(int x1, int y1, int x2, int y2);
+bool32 PlayerHelpers_CheckPlayerPos(int x1, int y1, int x2, int y2);
 
 #endif //!OBJ_PLAYERHELPERS_H

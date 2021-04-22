@@ -897,8 +897,6 @@ void readSettings()
     dictionary *ini = iniparser_load("Settings.ini");
 
     if (ini) {
-        const char *result = "";
-
 #if RETRO_REV02
         curSKU.language = iniparser_getint(ini, "Game:language", LANGUAGE_EN);
 #else
@@ -1172,7 +1170,7 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "vsync=%s\n", (engine.vsync ? "y" : "n"));
         writeText(file, "tripleBuffering=%s\n", (engine.tripleBuffer ? "y" : "n"));
         if (ini) {
-            if (!strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
+            if (strcmp(iniparser_getstring(ini, "Video:pixWidth", "optionNotFound"), "optionNotFound") == 0)
                 writeText(file, "pixWidth=%d\n", pixWidth);
         }
         writeText(file, "winWidth=%d\n", engine.windowWidth);

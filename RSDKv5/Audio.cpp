@@ -234,8 +234,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
 
         const size_t samples_to_do = (samples_remaining < MIX_BUFFER_SAMPLES) ? samples_remaining : MIX_BUFFER_SAMPLES;
 
-        float sfxVol = engine.soundFXVolume * MAX_VOLUME;
-        // Mix SFX
+        // Mix Sounds
         for (byte i = 0; i < CHANNEL_COUNT; ++i) {
             ChannelInfo *channel = &channels[i];
 
@@ -259,7 +258,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                             size_t sampleLen = (remain < samples_to_do - samples_done) ? remain : samples_to_do - samples_done;
 
                             int s = 0;
-                            int outPos      = samples_done;
+                            size_t outPos      = samples_done;
                             float *soundBuf = &channel->samplePtr[channel->bufferPos];
                             while (s < sampleLen && !flag) {
                                 float fVal = speedValues[spdVal >> 6];
@@ -272,7 +271,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                                 buffer[outPos]     = outA;
                                 buffer[outPos + 1] = outB;
 
-                                int cnt = ((byte *)soundBuf - (byte *)&channel->samplePtr[channel->bufferPos]) / sizeof(float);
+                                //int cnt = ((byte *)soundBuf - (byte *)&channel->samplePtr[channel->bufferPos]) / sizeof(float);
                                 channel->bufferPos += spdVal >> 16;
 
                                 s += 1;
@@ -393,8 +392,8 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
         }
 
         for (size_t i = 0; i < sizeof(mix_buffer) / sizeof(*mix_buffer); ++i) {
-            const float max_audioval = 1.0;
-            const float min_audioval  = 0.0;
+            //const float max_audioval = 1.0;
+            //const float min_audioval  = 0.0;
 
             const float sample = mix_buffer[i];
 

@@ -202,17 +202,6 @@ bool32 processEvents()
                         if (engine.devMenu)
                             engine.gameSpeed = engine.fastForwardSpeed;
                         break;
-#if RETRO_PLATFORM == RETRO_OSX
-                    case SDLK_F6:
-                        if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
-                            engine.frameStep = true;
-                        break;
-                    case SDLK_F7:
-                        if (engine.devMenu) {
-                            sceneInfo.state ^= ENGINESTATE_STEPOVER;
-                        }
-                        break;
-#else
                     case SDLK_F11:
                     case SDLK_INSERT:
                         if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
@@ -224,7 +213,6 @@ bool32 processEvents()
                             sceneInfo.state ^= ENGINESTATE_STEPOVER;
                         }
                         break;
-#endif
                 }
                 break;
             case SDL_KEYUP:

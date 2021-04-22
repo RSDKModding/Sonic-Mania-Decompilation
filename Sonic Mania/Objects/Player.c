@@ -1860,8 +1860,8 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->objectID = TYPE_BLANK;
                         int *saveRAM     = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
-                            int playerID      = RSDK.GetEntityID(player);
-                            byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
+                            //int playerID      = RSDK.GetEntityID(player);
+                            //byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
                             // if (!finishFlags[playerID])
                             //    Competition_Unknown4(playerID, 1);
                             foreach_all(HUD, hud) {
@@ -1902,7 +1902,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
 
                             EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
-                            GameOver->activeScreens |= 1 << player->playerID;
+                            gameOver->activeScreens |= 1 << player->playerID;
                             RSDK.SetGameMode(ENGINESTATE_FROZEN);
                             RSDK_sceneInfo->timeEnabled = false;
                         }
@@ -3766,7 +3766,7 @@ void Player_State_Roll(void)
             entity->playerAnimData.animationSpeed = 120;
         }
         else {
-            entity->playerAnimData.animationSpeed = ((abs(entity->groundedStore) * 0xF0) / 0x60000) + 0x30;
+            entity->playerAnimData.animationSpeed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
         }
         if (entity->playerAnimData.animationSpeed > 0xF0)
             entity->playerAnimData.animationSpeed = 0xF0;
@@ -3801,7 +3801,7 @@ void Player_State_ForceRoll(void)
             entity->playerAnimData.animationSpeed = 120;
         }
         else {
-            entity->playerAnimData.animationSpeed = ((abs(entity->groundedStore) * 0xF0) / 0x60000) + 0x30;
+            entity->playerAnimData.animationSpeed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
         }
         if (entity->playerAnimData.animationSpeed > 0xF0)
             entity->playerAnimData.animationSpeed = 0xF0;

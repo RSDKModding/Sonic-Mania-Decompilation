@@ -224,7 +224,7 @@ void ItemBox_DebugSpawn(void)
 
 void ItemBox_State_Broken(void)
 {
-    RSDK_THIS(ItemBox);
+    //RSDK_THIS(ItemBox);
     // if (LRZConvItem)
     //    LRZConvItem_Unknown2(entity);
     ItemBox_HandleFallingCollision();

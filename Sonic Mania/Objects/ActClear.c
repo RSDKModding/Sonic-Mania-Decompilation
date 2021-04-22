@@ -266,7 +266,6 @@ void ActClear_Create(void *data)
 
         if (Zone_GetZoneID() >= 0) {
             StatInfo stat;
-            StatInfo *statPtr = NULL;
             ushort time       = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
             switch (globals->playerID & 0xFF) {
                 case ID_SONIC: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;

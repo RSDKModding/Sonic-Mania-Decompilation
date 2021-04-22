@@ -7,6 +7,8 @@
 #define intToVoid(x) (void*)(size_t)(x)
 #define voidToInt(x) (int)(size_t)(x)
 
+#define unused(x) (void)x
+
 // Userdata Table
 typedef struct {
     int (*GetUserLanguage)(void);
@@ -927,6 +929,11 @@ extern RSDKFunctionTable RSDK;
     RSDK.BreakForeachLoop();                                                                                                                         \
     return
 
+//used mainly for cutscenes
+#define RSDK_GET_PLAYER(p1, p2, cam) \
+EntityPlayer *p1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player); \
+EntityPlayer *p2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player); \
+EntityCamera *cam  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 
