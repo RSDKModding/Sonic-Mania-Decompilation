@@ -79,7 +79,7 @@ void DialogRunner_NotifyAutoSave_CB(void)
 
 void DialogRunner_NotifyAutoSave(void)
 {
-    TextInfo info;
+    //TextInfo info;
 
     RSDK_THIS(DialogRunner);
     if (DialogRunner->field_14) {
@@ -111,7 +111,7 @@ void DialogRunner_Unknown5(void)
 
 void DialogRunner_Unknown6(void)
 {
-    TextInfo info;
+    //TextInfo info;
 
     RSDK_THIS(DialogRunner);
     if (User.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
