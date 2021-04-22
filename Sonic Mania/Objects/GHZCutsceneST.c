@@ -201,7 +201,6 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
                 player->up = false;
             }
             Music_FadeOut(0.025);
-            return false;
         }
         
         if (host->timer == 180) {
@@ -254,7 +253,6 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
             platform->centerPos.y = platform->position.y;
             claw->position.x += claw->velocity.x;
             claw->position.y += claw->velocity.y;
-            return false;
         }
     }
     return false;

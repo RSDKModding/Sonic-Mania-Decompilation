@@ -78,8 +78,7 @@ void Camera_Create(void *data)
 void Camera_StageLoad(void)
 {
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i)
-            RSDK.ResetEntitySlot(i + SLOT_CAMERA1, Camera->objectID, (void *)(size_t)i);
+        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->objectID, intToVoid(i));
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;
     }
@@ -110,8 +109,7 @@ void Camera_SetCameraBounds(EntityCamera *entity)
 }
 EntityCamera *Camera_SetTargetEntity(int screen, void *t)
 {
-    Entity *target       = (Entity *)t;
-    EntityCamera *entity = NULL;
+    Entity *target = (Entity *)t;
 
     foreach_all(Camera, camera)
     {
@@ -119,7 +117,7 @@ EntityCamera *Camera_SetTargetEntity(int screen, void *t)
             camera->targetPtr  = target;
             camera->position.x = target->position.x;
             camera->position.y = target->position.y;
-            foreach_return entity;
+            foreach_return camera;
         }
     }
     return NULL;
