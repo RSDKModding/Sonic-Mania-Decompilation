@@ -18,10 +18,10 @@ UnknownInfo *RSDK_unknown = NULL;
 #endif
 ScreenInfo *RSDK_screens = NULL;
 
+RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
 UserFunctionTable User;
 #endif
-RSDKFunctionTable RSDK;
 
 void LinkGameLogicDLL(GameInfo *info)
 {

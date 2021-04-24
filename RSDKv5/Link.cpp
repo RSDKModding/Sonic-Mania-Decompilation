@@ -459,9 +459,9 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_MatrixCopy, matrixCopy);
     addToRSDKFunctionTable(FunctionTable_SetText, SetText);
     addToRSDKFunctionTable(FunctionTable_CopyString, CopyString);
-    addToRSDKFunctionTable(FunctionTable_PrependString, NullFunc); // PrependString);
+    addToRSDKFunctionTable(FunctionTable_PrependString, PrependString);
     addToRSDKFunctionTable(FunctionTable_AppendString, AppendString);
-    addToRSDKFunctionTable(FunctionTable_Unknown67, NullFunc); // Unknown67);
+    addToRSDKFunctionTable(FunctionTable_Unknown67, Unknown67);
     addToRSDKFunctionTable(FunctionTable_LoadStrings, LoadStrings);
     addToRSDKFunctionTable(FunctionTable_SplitStringList, SplitStringList);
     addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);

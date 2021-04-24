@@ -184,7 +184,6 @@ typedef struct {
     int field_24;
     int field_28;
     int field_2C;
-    byte field_30;
 } UnknownInfo;
 #endif
 

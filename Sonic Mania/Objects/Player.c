@@ -2187,41 +2187,42 @@ bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *e, Hitbox *enti
     Hitbox *otherHitbox = &defaultHitbox;
     if (playerHitbox)
         otherHitbox = playerHitbox;
-    if (!RSDK.CheckObjectCollisionPlatform(entity, entityHitbox, player, otherHitbox, true))
-        return false;
-    player->controlLock   = 0;
-    player->collisionMode = CMODE_FLOOR;
+    if (RSDK.CheckObjectCollisionPlatform(entity, entityHitbox, player, otherHitbox, true)) {
+        player->controlLock   = 0;
+        player->collisionMode = CMODE_FLOOR;
 
-    int colPos[2];
-    if (entity->direction & FLIP_X) {
-        colPos[0] = entity->position.x - (entityHitbox->right << 16);
-        colPos[1] = entity->position.x - (entityHitbox->left << 16);
+        int colPos[2];
+        if (entity->direction & FLIP_X) {
+            colPos[0] = entity->position.x - (entityHitbox->right << 16);
+            colPos[1] = entity->position.x - (entityHitbox->left << 16);
+        }
+        else {
+            colPos[0] = entity->position.x + (entityHitbox->left << 16);
+            colPos[1] = entity->position.x + (entityHitbox->right << 16);
+        }
+
+        int sensorX1 = player->position.x + player->sensorX[0];
+        int sensorX3 = player->position.x + player->sensorX[2];
+        int sensorX2 = player->position.x + player->sensorX[1];
+        int sensorX4 = player->position.x + player->sensorX[3];
+        int sensorX5 = player->position.x + player->sensorX[4];
+
+        if (sensorX1 >= colPos[0] && sensorX1 <= colPos[1])
+            player->flailing |= 0x01;
+        if (sensorX2 >= colPos[0] && sensorX2 <= colPos[1])
+            player->flailing |= 0x02;
+        if (sensorX3 >= colPos[0] && sensorX3 <= colPos[1])
+            player->flailing |= 0x04;
+        if (sensorX4 >= colPos[0] && sensorX4 <= colPos[1])
+            player->flailing |= 0x08;
+        if (sensorX5 >= colPos[0] && sensorX5 <= colPos[1])
+            player->flailing |= 0x10;
+
+        if (entity->velocity.y <= 0)
+            player->collisionFlagV |= 1;
+        return true;
     }
-    else {
-        colPos[0] = entity->position.x + (entityHitbox->left << 16);
-        colPos[1] = entity->position.x + (entityHitbox->right << 16);
-    }
-
-    int sensorX1 = player->position.x + player->sensorX[0];
-    int sensorX3 = player->position.x + player->sensorX[2];
-    int sensorX2 = player->position.x + player->sensorX[1];
-    int sensorX4 = player->position.x + player->sensorX[3];
-    int sensorX5 = player->position.x + player->sensorX[4];
-
-    if (sensorX1 >= colPos[0] && sensorX1 <= colPos[1])
-        player->flailing |= 1;
-    if (sensorX2 >= colPos[0] && sensorX2 <= colPos[1])
-        player->flailing |= 2;
-    if (sensorX3 >= colPos[0] && sensorX3 <= colPos[1])
-        player->flailing |= 4;
-    if (sensorX4 >= colPos[0] && sensorX4 <= colPos[1])
-        player->flailing |= 8;
-    if (sensorX5 >= colPos[0] && sensorX5 <= colPos[1])
-        player->flailing |= 0x10;
-
-    if (entity->velocity.y <= 0)
-        player->collisionFlagV |= 1;
-    return true;
+    return false;
 }
 
 bool32 Player_CheckHit(EntityPlayer *player, void *e)

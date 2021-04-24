@@ -196,71 +196,147 @@ byte stringFlags[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                        1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                        2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
 
+void Unknown67(TextInfo *info, char *text)
+{
+    if (!*text)
+        return;
+
+    int len = 0;
+    for (int pos = 0; text[pos]; ++len) {
+        pos += stringFlags[*text & 0xFF];
+    }
+    if (!len)
+        return;
+
+    int length = info->length;
+    if (length < len || !info->text) {
+        info->length = len;
+        length       = len;
+        AllocateStorage(sizeof(ushort) * length, (void **)&info->text, DATASET_STR, false);
+    }
+
+    for (int pos = 0; pos < info->textLength; ++pos) {
+        ushort c = 0;
+        switch (stringFlags[*text & 0xFF]) {
+            case 1:
+                ++text;
+                c = text[0];
+                break;
+            case 2:
+                c = text[1] & 0x3F | ((text[0] & 0x1F) << 6);
+                text += 2;
+                break;
+            case 3:
+                c = text[2] & 0x3F | ((text[1] & 0x3F) << 6) | (text[0] << 12);
+                text += 3;
+                break;
+            case 4:
+                c = text[3] & 0x3F | ((text[2] & 0x3F) << 6) | (text[1] << 12);
+                text += 4;
+                break;
+            case 5: text += 5; break;
+            case 6: text += 6; break;
+            default: break;
+        }
+        info->text[pos] = c;
+    }
+}
+
+void PrependString(TextInfo *info, char *text)
+{
+    if (!*text)
+        return;
+
+    int len = 0;
+    for (int pos = 0; text[pos]; ++len) {
+        pos += stringFlags[*text & 0xFF];
+    }
+    if (!len)
+        return;
+
+    int length = info->length;
+    if (length < len || !info->text) {
+        info->length = len;
+        length       = len;
+        AllocateStorage(sizeof(ushort) * length, (void **)&info->text, DATASET_STR, false);
+    }
+
+    for (int pos = 0; pos < info->textLength; ++pos) {
+        ushort c = 0;
+        switch (stringFlags[*text & 0xFF]) {
+            case 1:
+                ++text;
+                c = text[0];
+                break;
+            case 2:
+                c = text[1] & 0x3F | ((text[0] & 0x1F) << 6);
+                text += 2;
+                break;
+            case 3:
+                c = text[2] & 0x3F | ((text[1] & 0x3F) << 6) | (text[0] << 12);
+                text += 3;
+                break;
+            case 4:
+                c = text[3] & 0x3F | ((text[2] & 0x3F) << 6) | (text[1] << 12);
+                text += 4;
+                break;
+            case 5: text += 5; break;
+            case 6: text += 6; break;
+            default: break;
+        }
+        info->text[pos] = c;
+    }
+}
+
 void AppendString(TextInfo *textA, TextInfo *textB)
 {
     uint charID   = 0;
     uint totalLen = textB->textLength + textA->textLength;
     if (textA->length < totalLen || !textA->text) {
-        AllocateStorage(sizeof(ushort) * totalLen, (void **)&textA, DATASET_STR, 0);
-        if (textA->textLength > 0) {
-            do {
-                textA->text[charID] = textA->text[charID];
-                ++charID;
-            } while (charID < textA->textLength);
+        AllocateStorage(sizeof(ushort) * totalLen, (void **)&textA, DATASET_STR, false);
+        for (int charID = 0; charID < textA->textLength; ++charID) {
+            textA->text[charID] = textA->text[charID];
         }
         CopyStorage((int **)textA, (int **)&textA);
         textA->length = textB->textLength + textA->textLength;
     }
 
     int textLen           = textA->textLength;
-    textA->textLength = textLen + textB->textLength;
-    if (textLen < textA->textLength) {
-        int id = 0;
-        do {
-            textA->text[textLen++] = textB->text[id];
-            ++id;
-        } while (textLen < textA->textLength);
+    textA->textLength += textB->textLength;
+    int id            = 0;
+    for (; textLen < textA->textLength; ++textLen) {
+        textA->text[textLen] = textB->text[id++];
     }
 }
 
 bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3)
 {
-    int lengthA = textA->textLength;
-    if (lengthA != textB->textLength)
-        return 0;
+    if (textA->textLength != textB->textLength)
+        return false;
     ushort *textPtrA = textA->text;
-    int id           = 0;
     ushort *textPtrB = textB->text;
+
     if (a3) {
-        if (lengthA > 0u) {
-            int dif = (char *)textPtrB - (char *)textPtrA;
-            while (*textPtrA == textPtrA[dif]) {
-                ++id;
-                ++textPtrA;
-                if (id >= lengthA)
-                    return true;
+        for (int i = 0; i < textA->textLength; ++i) {
+            if (textPtrA[i] != textPtrB[i])
+                return false;
+        }
+        return true;
+    }
+    else {
+        if (textA->textLength <= 0)
+            return true;
+
+        for (int i = 0; i < textA->textLength; ++i) {
+            if (textPtrA[i] != textPtrB[i]) {
+                if (textPtrA[i] != textPtrB[i] + 0x10 && textPtrA[i] != textPtrB[i] - 0x10) {
+                    return false;
+                }
             }
-            return false;
         }
         return true;
     }
 
-    if (lengthA <= 0)
-        return true;
-    int dif = (char *)textPtrB - (char *)textPtrA;
-    while (true) {
-        int v9 = textPtrA[dif];
-        if (*textPtrA != v9) {
-            ushort cur = *textPtrA;
-            if (cur != v9 + ' ' && cur != v9 - ' ')
-                break;
-        }
-        ++id;
-        ++textPtrA;
-        if (id >= lengthA)
-            return true;
-    }
-    return false;
 }
 
 void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)

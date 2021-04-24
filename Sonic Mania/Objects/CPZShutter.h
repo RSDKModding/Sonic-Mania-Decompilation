@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectCPZShutter;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int field_60;
+    int field_64;
+    Animator animator;
 } EntityCPZShutter;
 
 // Object Struct
@@ -28,6 +34,7 @@ void CPZShutter_EditorLoad(void);
 void CPZShutter_Serialize(void);
 
 // Extra Entity Functions
-
+void CPZShutter_State_Open(void);
+void CPZShutter_State_Close(void);
 
 #endif //!OBJ_CPZSHUTTER_H

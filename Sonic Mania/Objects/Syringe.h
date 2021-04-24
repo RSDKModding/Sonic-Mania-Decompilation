@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox bodyHitbox;
+    Hitbox handleHitbox;
+    ushort aniFrames;
+    ushort sfxBloop;
 } ObjectSyringe;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int type;
+    int offsetY;
+    bool32 activated;
+    colour colour;
+    byte tag;
+    Animator animator1;
+    Animator animator2;
 } EntitySyringe;
 
 // Object Struct

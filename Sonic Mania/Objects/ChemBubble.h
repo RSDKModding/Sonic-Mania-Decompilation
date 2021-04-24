@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectChemBubble;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int shiftY2;
+    int shiftY;
+    Vector2 startPos;
+    Entity *parent;
+    Animator animator;
 } EntityChemBubble;
 
 // Object Struct
@@ -28,6 +36,8 @@ void ChemBubble_EditorLoad(void);
 void ChemBubble_Serialize(void);
 
 // Extra Entity Functions
-
+void ChemBubble_Unknown1(void);
+void ChemBubble_Unknown2(void);
+void ChemBubble_Unknown3(void);
 
 #endif //!OBJ_CHEMBUBBLE_H

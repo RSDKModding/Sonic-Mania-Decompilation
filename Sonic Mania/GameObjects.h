@@ -150,7 +150,7 @@ typedef struct {
     void (*CopyString)(TextInfo *dst, TextInfo *src);
     void (*PrependString)(TextInfo *info, const char *str);
     void (*AppendString)(TextInfo *info, const char *str);
-    void (*Unknown67)(TextInfo *, TextInfo *);
+    void (*Unknown67)(TextInfo *, const char *);
     void (*LoadStrings)(TextInfo *dst, const char* path, int);
     void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
@@ -190,7 +190,7 @@ typedef struct {
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
-    void (*FillScreen)(int a1, int a2, int a3, int a4);
+    void (*FillScreen)(uint colour, int alphaR, int alphaG, int alphaB);
     ushort (*LoadMesh)(const char* filename, byte scope);
     ushort (*Create3DScene)(const char* identifier, ushort faceCount, byte scope);
     void (*Prepare3DScene)(ushort index);

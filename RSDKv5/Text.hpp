@@ -134,10 +134,10 @@ inline void GetCString(char *dest, TextInfo *info)
     text[c] = 0;
 }
 
-
-void Unknown64(TextInfo *textA, TextInfo *textB);
+void Unknown67(TextInfo *info, char *text);
+void PrependString(TextInfo *info, char *text);
 void AppendString(TextInfo *textA, TextInfo *textB);
-bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3);
+bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte flag);
 void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count);
 
 void LoadStrings(TextInfo *buffer, const char *filePath);
