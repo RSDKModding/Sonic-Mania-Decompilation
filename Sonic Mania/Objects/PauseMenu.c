@@ -51,7 +51,7 @@ void PauseMenu_StaticUpdate(void)
 
         bool32 flag = true;
         if (Zone) {
-            flag = Zone->timer < 1;
+            flag = Zone->timer <= 1;
         }
 
         if (!cnt && !pauseMenu->objectID && flag && PauseMenu->dword8 != 1) {
@@ -67,10 +67,9 @@ void PauseMenu_StaticUpdate(void)
                 pauseMenu->triggerPlayer = 0;
             }
             else {
-                for (int i = 0; i < PauseMenu_CheckVSMode(); ++i) {
+                for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
                     int id = RSDK.ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
-                        continue; //TEMP
                         PauseMenu->controllerDisconnect = true;
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                         pauseMenu->triggerPlayer = i;
@@ -129,7 +128,7 @@ void PauseMenu_StageLoad(void)
     PauseMenu_SetupLookupTable();
 }
 
-byte PauseMenu_CheckVSMode(void)
+byte PauseMenu_GetPlayerCount(void)
 {
     if (RSDK.CheckStageFolder("Puyo")) {
         int param = globals->menuParam[22];

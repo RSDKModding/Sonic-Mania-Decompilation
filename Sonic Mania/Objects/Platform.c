@@ -9,16 +9,14 @@ void Platform_Update(void)
         entity->pushPlayersL = 0;
         entity->pushPlayersR = 0;
     }
-    entity->position.x = entity->drawPos.x;
-    entity->position.y = entity->drawPos.y;
-    entity->position.x &= 0xFFFF0000;
-    entity->position.y &= 0xFFFF0000;
+    entity->position.x = entity->drawPos.x & 0xFFFF0000;
+    entity->position.y = entity->drawPos.y & 0xFFFF0000;
 
     if (entity->hasTension) {
         if (entity->stood && entity->stoodAngle < 64) {
             entity->stoodAngle += 4;
         }
-        else if (entity->stoodAngle > 0) {
+        else if (!entity->stood && entity->stoodAngle > 0) {
             entity->stoodAngle -= 4;
         }
     }
@@ -1298,7 +1296,7 @@ void Platform_CollisionState_AllSolid(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
@@ -1387,7 +1385,7 @@ void Platform_CollisionState_BottomHazard(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
@@ -1461,7 +1459,7 @@ void Platform_CollisionState_LRHazard(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
@@ -1598,7 +1596,7 @@ void Platform_CollisionState_None(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
             }
         }
     }
@@ -1665,7 +1663,7 @@ void Platform_CollisionState_Sticky(void)
                     }
                     player->position.x += entity->collisionOffset.x;
                     player->position.y += entity->collisionOffset.y;
-                    player->position.y &= 0xFFFF0000;
+                    // player->position.y &= 0xFFFF0000;
                     if (player->jumpPress) {
                         player->tileCollisions = true;
                         Player_StartJump(player);
@@ -1686,7 +1684,7 @@ void Platform_CollisionState_Sticky(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
             }
         }
     }
@@ -1724,7 +1722,7 @@ void Platform_CollisionState_TopHazard(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
 
                 if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
                     Player_CheckHit(player, entity);
@@ -1776,7 +1774,7 @@ void Platform_CollisionState_TopSolid(void)
         ushort pid = RSDK.GetEntityID(player);
         int yVel   = player->velocity.y;
         if (entity->collisionOffset.y < 0)
-            player->velocity.y = yVel - entity->collisionOffset.y;
+            player->velocity.y -= entity->collisionOffset.y;
         if (Player_CheckCollisionPlatform(player, entity, platformHitbox)) {
             entity->stood = true;
             if (!((1 << pid) & stoodPlayers) && !player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
@@ -1799,7 +1797,7 @@ void Platform_CollisionState_TopSolid(void)
             }
             player->position.x += entity->collisionOffset.x;
             player->position.y += entity->collisionOffset.y;
-            player->position.y &= 0xFFFF0000;
+            //player->position.y &= 0xFFFF0000;
         }
         else {
             player->velocity.y = yVel;
@@ -1862,7 +1860,7 @@ void Platform_CollisionState_TurnTable(void)
                     }
                     player->position.x += entity->collisionOffset.x;
                     player->position.y += entity->collisionOffset.y;
-                    player->position.y &= 0xFFFF0000;
+                    // player->position.y &= 0xFFFF0000;
                     if (player->jumpPress) {
                         Player_StartJump(player);
                     }
@@ -1976,7 +1974,7 @@ void Platform_CollisionState_Twister(void)
                     }
                     player->position.x += entity->collisionOffset.x;
                     player->position.y += entity->collisionOffset.y;
-                    player->position.y &= 0xFFFF0000;
+                    // player->position.y &= 0xFFFF0000;
                     if (player->jumpPress) {
                         Player_StartJump(player);
                     }
@@ -2061,7 +2059,7 @@ void Platform_CollisionState_15(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                player->position.y &= 0xFFFF0000;
+                // player->position.y &= 0xFFFF0000;
                 break;
             case 2:
                 if (player->onGround && player->right) {

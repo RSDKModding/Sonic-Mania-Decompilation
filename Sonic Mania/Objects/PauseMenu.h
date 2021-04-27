@@ -58,7 +58,7 @@ void PauseMenu_EditorLoad(void);
 void PauseMenu_Serialize(void);
 
 // Extra Entity Functions
-byte PauseMenu_CheckVSMode(void);
+byte PauseMenu_GetPlayerCount(void);
 void PauseMenu_SetupLookupTable(void);
 void PauseMenu_Unknown3(void);
 void PauseMenu_Unknown4(void);

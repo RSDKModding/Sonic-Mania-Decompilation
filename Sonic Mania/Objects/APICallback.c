@@ -538,7 +538,7 @@ bool32 APICallback_CheckInputDisconnected()
 {
     RSDK_THIS(APICallback);
     if (APICallback->InputIDIsDisconnected) {
-        return APICallback->InputIDIsDisconnected(entity->field_7C) /*|| *(_DWORD *)(PauseMenu + 16)*/;
+        return APICallback->InputIDIsDisconnected(entity->animIDs) /*|| *(_DWORD *)(PauseMenu + 16)*/;
     }
     return false;
 }

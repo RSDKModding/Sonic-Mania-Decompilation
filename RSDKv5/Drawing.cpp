@@ -3946,7 +3946,7 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
 }
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height) {
 
-   if (sheetID < SPRITESHEETS_MAX && tileIndex < TILE_COUNT) {
+   if (sheetID < SURFACE_MAX && tileIndex < TILE_COUNT) {
         GFXSurface *surface       = &gfxSurface[sheetID];
 
         //FLIP_NONE
@@ -3987,8 +3987,9 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
             for (int fx = 0; fx < width; fx += TILE_SIZE) {
                 byte *gfxDataPtr = &gfxData[fx];
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
+                    int py = (((TILE_SIZE - 1) - ty) * TILE_SIZE);
                     for (int tx = 0; tx < TILE_SIZE; ++tx) {
-                        tileGFXData[(((TILE_SIZE - 1) * TILE_SIZE) - ty) + tx] = *gfxDataPtr++;
+                        tileGFXData[py + tx] = *gfxDataPtr++;
                     }
                     gfxDataPtr += surface->width - TILE_SIZE;
                 }
@@ -4005,7 +4006,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
                 //tileGFXData += TILE_DATASIZE - 1;
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
                     for (int tx = 0; tx < TILE_SIZE; ++tx) {
-                        tileGFXData[(((TILE_SIZE - 1) * TILE_SIZE) - ty) + ((TILE_SIZE - 1) * tx)] = *gfxDataPtr++;
+                        tileGFXData[(((TILE_SIZE - 1) - ty) * TILE_SIZE) + ((TILE_SIZE - 1) - tx)] = *gfxDataPtr++;
                     }
                     gfxDataPtr += surface->width - TILE_SIZE;
                 }

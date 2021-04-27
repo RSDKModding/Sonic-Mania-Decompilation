@@ -31,10 +31,10 @@ enum ControllerKeys {
 };
 
 struct InputDevice {
-    int activeInputIDs;
+    int gamePadType;
     int inputID;
     byte active;
-    byte assignedController;
+    byte assignedControllerID;
     byte field_E;
     byte field_F;
     byte field_10;
@@ -42,9 +42,17 @@ struct InputDevice {
     byte field_12;
     byte field_13;
     int field_14[4];
+};
+
+struct InputDeviceBase : InputDevice {
     byte data[0x3DC];
 };
 
+#if RETRO_USING_SDL2
+struct InputDeviceSDL : InputDevice {
+    SDL_GameController *controllerPtr;
+};
+#endif
 
 struct InputState {
     bool32 down;
@@ -90,10 +98,10 @@ struct AnalogState {
 };
 
 struct TriggerState {
-    InputState key1;
-    InputState key2;
-    float unknown1;
-    float unknown2;
+    InputState keyL;
+    InputState keyR;
+    float deadzone;
+    float delta;
 };
 
 struct TouchMouseData {
@@ -105,33 +113,18 @@ struct TouchMouseData {
 
 #if RETRO_USING_SDL2
 struct InputManagerInfo {
-    SDL_GameController *controllers[INPUTDEVICE_COUNT];
-
     int mouseHideTimer = 0;
-
-    void ProcessInput();
+    bool32 keyPress[PLAYER_COUNT][12];
+    bool32 anyPress;
 };
 
 extern InputManagerInfo InputManager;
-
-extern InputDevice InputDevices[INPUTDEVICE_COUNT];
-extern int InputDeviceCount;
-
-inline void controllerInit(byte controllerID)
-{
-    InputDevices[controllerID].active      = true;
-    InputManager.controllers[controllerID] = SDL_GameControllerOpen(controllerID);
-};
-
-inline void controllerClose(byte controllerID)
-{
-    if (controllerID >= PLAYER_COUNT)
-        return;
-    InputDevices[controllerID].active    = false;
-}
 #endif
 
-extern sbyte activeControllers[PLAYER_COUNT];
+extern InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
+extern int InputDeviceCount;
+
+extern uint activeControllers[PLAYER_COUNT];
 extern InputDevice *activeInputDevices[PLAYER_COUNT];
 
 extern ControllerState controller[PLAYER_COUNT + 1];
@@ -141,8 +134,57 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
+#if RETRO_USING_SDL2
+inline InputDevice* controllerInit(byte controllerID)
+{
+    if (InputDeviceCount >= INPUTDEVICE_COUNT)
+        return NULL;
+    InputDeviceSDL *device = (InputDeviceSDL *)&InputDevices[InputDeviceCount++];
+    device->controllerPtr  = SDL_GameControllerOpen(controllerID);
+    uint id;
+    char buffer[0x20];
+    sprintf(buffer, "%s%d", "SDLDevice", controllerID);
+    GenerateCRC(&id, buffer);
+    device->active         = true;
+    device->field_F        = 0;
+    device->gamePadType    = 0x00000;
+    device->inputID        = id;
+
+    for (int i = 0; i < PLAYER_COUNT; ++i) {
+        if (activeControllers[i] == id) {
+            activeInputDevices[i]        = (InputDevice *)device;
+            device->assignedControllerID = i + 1;
+        }
+    }
+
+    return device;
+};
+
+inline void controllerClose(byte controllerID)
+{
+    if (controllerID >= INPUTDEVICE_COUNT || InputDeviceCount <= 0)
+        return;
+
+    uint id;
+    char buffer[0x20];
+    sprintf(buffer, "%s%d", "SDLDevice", controllerID);
+    GenerateCRC(&id, buffer);
+
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        if (InputDevices[i].inputID == id && InputDevices[i].active) {
+            InputDeviceSDL *device = (InputDeviceSDL *)&InputDevices[i];
+            device->active         = false;
+            SDL_GameControllerClose(device->controllerPtr);
+            device->controllerPtr = NULL;
+            InputDeviceCount--;
+        }
+    }
+}
+#endif
+
 void InitInputDevice();
 void ProcessInput();
+void ProcessDeviceInput(InputDevice* device, int controllerID);
 
 inline int controllerUnknown2(int a2, int a3) { return 0; }
 inline int controllerUnknown3(int a2, int a3) { return 0; }
@@ -159,7 +201,7 @@ inline InputDevice *InputDeviceFromID(int inputID)
 inline int GetControllerInputID()
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && !InputDevices[i].assignedController && !InputDevices[i].field_10) {
+        if (InputDevices[i].active && !InputDevices[i].field_F && !InputDevices[i].assignedControllerID && !InputDevices[i].field_10) {
             return InputDevices[i].inputID;
         }
     }
@@ -168,8 +210,9 @@ inline int GetControllerInputID()
 
 inline int ControllerIDForInputID(byte inputID)
 {
-    if (inputID < PLAYER_COUNT)
-        return activeControllers[inputID];
+    byte i = inputID - 1;
+    if (i < PLAYER_COUNT)
+        return activeControllers[i];
     return 0;
 }
 
@@ -184,7 +227,7 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
 
     if (InputDeviceCount) {
         for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i].active && !InputDevices[i].field_F && (InputDevices[i].assignedController != 1 || a2 != 1)) {
+            if (InputDevices[i].active && !InputDevices[i].field_F && (InputDevices[i].assignedControllerID != 1 || a2 != 1)) {
                 if (InputDevices[i].field_14[a1] < v4) {
                     v4 = InputDevices[i].field_14[a1];
                     if (InputDevices[i].field_14[a1] <= v3)
@@ -201,7 +244,7 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
         return inputIDStore;
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && (InputDevices[i].assignedController != 1 || a2 != 1)) {
+        if (InputDevices[i].active && !InputDevices[i].field_F && (InputDevices[i].assignedControllerID != 1 || a2 != 1)) {
             return InputDevices[i].inputID;
         }
     }
@@ -209,13 +252,13 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
     return inputIDStore;
 }
 
-int Unknown100(int inputID);
+int GetGamePadType(int inputID);
 
 inline int GetAssignedControllerID(int inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
-            return InputDevices[i].assignedController;
+            return InputDevices[i].assignedControllerID;
         }
     }
 
@@ -290,7 +333,7 @@ inline void AssignControllerID(sbyte controllerID, int inputID)
             else {
                 for (int i = 0; i < InputDeviceCount; ++i) {
                     if (InputDevices[i].inputID == inputID) {
-                        InputDevices[i].assignedController = true;
+                        InputDevices[i].assignedControllerID = true;
                         activeControllers[contID]          = inputID;
                         activeInputDevices[contID]         = &InputDevices[i];
                         break;
@@ -301,7 +344,7 @@ inline void AssignControllerID(sbyte controllerID, int inputID)
         else {
             InputDevice *device = InputDeviceFromID(activeControllers[contID]);
             if (device)
-                device->assignedController = false;
+                device->assignedControllerID = false;
             activeControllers[contID] = inputID;
         }
     }
@@ -322,7 +365,7 @@ inline void ResetControllerAssignments()
     }
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        InputDevices[i].assignedController = false;
+        InputDevices[i].assignedControllerID = false;
     }
 }
 

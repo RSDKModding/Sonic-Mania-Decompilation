@@ -686,7 +686,7 @@ void InitScriptSystem()
     info.engineInfo   = &gameVerInfo;
     info.sceneInfo    = &sceneInfo;
     info.controller   = controller;
-    info.stickL       = stickR;
+    info.stickL       = stickL;
 #if RETRO_REV02
     info.stickR       = stickR;
     info.triggerL     = triggerL;

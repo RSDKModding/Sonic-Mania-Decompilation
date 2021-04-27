@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[8]; //= { 9, 7, 6, 7, 9, 7, 6, 7 };
-    int value2;
-    int value3;
-    byte value4;
-    short value5;
-    ushort value6;
-    ushort value7;
+    int aniTileDelays[8]; //= { 9, 7, 6, 7, 9, 7, 6, 7 };
+    int aniTileDelay;
+    int aniTileFrame;
+    bool32 flag;
+    short timer;
+    ushort aniTiles1;
+    ushort aniTiles2;
 } ObjectPSZ2Setup;
 
 // Entity Class
@@ -35,6 +35,9 @@ void PSZ2Setup_EditorLoad(void);
 void PSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
-
+void PSZ2Setup_TriggerCB2(void);
+void PSZ2Setup_TriggerCB1(void);
+void PSZ2Setup_ActTransitionLoad(void);
+void PSZ2Setup_StageFinishCB(void);
 
 #endif //!OBJ_PSZ2SETUP_H

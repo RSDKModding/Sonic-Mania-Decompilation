@@ -6147,7 +6147,6 @@ void Player_ProcessP1Input(void)
             entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
             entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
             entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
-
             if (entity->left && entity->right) {
                 entity->left  = false;
                 entity->right = false;

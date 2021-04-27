@@ -1,7 +1,6 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-#define SPRITESHEETS_MAX (16)
 #define SURFACE_MAX      (0x40)
 
 #if RETRO_REV02

@@ -75,7 +75,7 @@ typedef struct {
     int(*fileCallback)(int);
     int field_74;
     int field_78;
-    int field_7C;
+    int animIDs;
     int field_80;
     int field_84;
 } EntityAPICallback;

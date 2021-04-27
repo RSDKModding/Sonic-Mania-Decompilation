@@ -557,7 +557,7 @@ void setupFunctions()
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
     addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
-    addToRSDKFunctionTable(FunctionTable_Unknown100, Unknown100);
+    addToRSDKFunctionTable(FunctionTable_Unknown100, GetGamePadType);
     addToRSDKFunctionTable(FunctionTable_GetAssignedControllerID, GetAssignedControllerID);
     addToRSDKFunctionTable(FunctionTable_GetAssignedUnknown, GetAssignedUnknown);
     addToRSDKFunctionTable(FunctionTable_Missing22, DoInputUnknown2);
