@@ -6,12 +6,38 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    Hitbox innerBox;
+    Hitbox outerBox;
+    ushort sfxPlunger;
+    ushort jumpModel;
+    ushort ballModel;
+    ushort sceneIndex;
 } ObjectPBL_Player;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int angleX;
+    int height;
+    int field_68;
+    int field_6C;
+    Matrix matrix1;
+    Matrix matrix2;
+    Matrix matrix3;
+    Matrix matrix4;
+    StateMachine(inputState);
+    int controllerID;
+    bool32 up;
+    bool32 down;
+    bool32 left;
+    bool32 right;
+    bool32 jumpPress;
+    int field_18C;
+    Animator data;
 } EntityPBL_Player;
 
 // Object Struct
@@ -29,6 +55,13 @@ void PBL_Player_EditorLoad(void);
 void PBL_Player_Serialize(void);
 
 // Extra Entity Functions
+void PBL_Player_ProcessPlayerControl(void);
+
+//States
+void PBL_Player_State_Launcher(void);
+void PBL_Player_State_Ground(void);
+void PBL_Player_State_Air(void);
+
 #endif
 
 #endif //!OBJ_PBL_PLAYER_H

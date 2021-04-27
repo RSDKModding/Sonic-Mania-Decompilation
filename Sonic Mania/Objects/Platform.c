@@ -413,7 +413,7 @@ void Platform_StageLoad(void)
     else if (RSDK.CheckStageFolder("MSZ")) {
         Platform->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("OOZ")) {
+    else if (RSDK.CheckStageFolder("OOZ") || RSDK.CheckStageFolder("OOZ2")) {
         Platform->spriteIndex = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ1")) {

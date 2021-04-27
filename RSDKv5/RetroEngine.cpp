@@ -248,6 +248,8 @@ bool initRetroEngine()
 
     InitInputDevice();
 
+    SetUserFileCallbacks("", NULL, NULL);
+
     return true;
 }
 void runRetroEngine()

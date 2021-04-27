@@ -170,7 +170,7 @@ void CollapsingPlatform_StageLoad(void)
     CollapsingPlatform->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animData, true, 0);
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
-        CollapsingPlatform->shift = true;
+        CollapsingPlatform->shift = 1;
 
     if (RSDK.CheckStageFolder("FBZ") || RSDK.CheckStageFolder("HCZ") || RSDK.CheckStageFolder("LRZ1") || RSDK.CheckStageFolder("LRZ2")
         || RSDK.CheckStageFolder("AIZ")) {

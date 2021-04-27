@@ -75,7 +75,7 @@ struct Scene3DVertex {
     uint colour;
 };
 
-struct ZBufferEntry {
+struct FaceBufferEntry {
     int depth;
     int index;
 };
@@ -84,19 +84,19 @@ struct Scene3D {
     uint hash[4];
     Scene3DVertex *vertices;
     Scene3DVertex *normals;
-    ZBufferEntry *zBuffer;
+    FaceBufferEntry *faceBuffer;
     byte *faceVertCounts;
-    int unknownX;
-    int unknownY;
-    int ambientX;
-    int ambientY;
-    int ambientZ;
+    int projectionX;
+    int projectionY;
     int diffuseX;
     int diffuseY;
     int diffuseZ;
-    int specularX;
-    int specularY;
-    int specularZ;
+    int diffuseIntensityX;
+    int diffuseIntensityY;
+    int diffuseIntensityZ;
+    int specularIntensityX;
+    int specularIntensityY;
+    int specularIntensityZ;
     ushort vertLimit;
     ushort vertexCount;
     ushort faceCount;
@@ -134,7 +134,7 @@ inline void Prepare3DScene(ushort sceneID)
         memset(scn->vertices, 0, sizeof(Scene3DVertex) * scn->vertLimit);
         memset(scn->normals, 0, sizeof(Scene3DVertex) * scn->vertLimit);
         memset(scn->faceVertCounts, 0, sizeof(byte) * scn->vertLimit);
-        memset(scn->zBuffer, 0, sizeof(ZBufferEntry) * scn->vertLimit);
+        memset(scn->faceBuffer, 0, sizeof(FaceBufferEntry) * scn->vertLimit);
     }
 }
 
@@ -160,15 +160,6 @@ inline void SetMeshAnimation(ushort model, Animator *data, short animSpeed, byte
     data->loopIndex       = loopIndex;
     data->animationID     = model;
 }
-inline void SetAmbientColour(ushort sceneID, byte x, byte y, byte z)
-{
-    if (sceneID < SCENE3D_MAX) {
-        Scene3D *scn  = &scene3DList[sceneID];
-        scn->ambientX = x;
-        scn->ambientY = y;
-        scn->ambientZ = z;
-    }
-}
 inline void SetDiffuseColour(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
@@ -178,13 +169,22 @@ inline void SetDiffuseColour(ushort sceneID, byte x, byte y, byte z)
         scn->diffuseZ = z;
     }
 }
-inline void SetSpecularColour(ushort sceneID, byte x, byte y, byte z)
+inline void SetDiffuseIntensity(ushort sceneID, byte x, byte y, byte z)
+{
+    if (sceneID < SCENE3D_MAX) {
+        Scene3D *scn  = &scene3DList[sceneID];
+        scn->diffuseIntensityX = x;
+        scn->diffuseIntensityY = y;
+        scn->diffuseIntensityZ = z;
+    }
+}
+inline void SetSpecularIntensity(ushort sceneID, byte x, byte y, byte z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn   = &scene3DList[sceneID];
-        scn->specularX  = x;
-        scn->specularY = y;
-        scn->specularZ = z;
+        scn->specularIntensityX  = x;
+        scn->specularIntensityY = y;
+        scn->specularIntensityZ = z;
     }
 }
 void AddModelToScene(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);

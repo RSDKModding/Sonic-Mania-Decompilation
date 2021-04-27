@@ -59,9 +59,12 @@ void SpecialRing_StageLoad(void)
     SpecialRing->hitbox.right  = 18;
     SpecialRing->hitbox.bottom = 18;
 
-    RSDK.SetAmbientColour(SpecialRing->sceneIndex, 160, 160, 160);
-    RSDK.SetDiffuseColour(SpecialRing->sceneIndex, 8, 8, 8);
-    RSDK.SetSpecularColour(SpecialRing->sceneIndex, 14, 14, 14);
+    // sets diffuse colour (overrides)
+    RSDK.SetDiffuseColour(SpecialRing->sceneIndex, 160, 160, 160);
+    // sets diffuse intensity (0-8 means more diffuse, any more and it'll start darkening to black (9-12), any greater than 11 is full black)
+    RSDK.SetDiffuseIntensity(SpecialRing->sceneIndex, 8, 8, 8);
+    // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)
+    RSDK.SetSpecularIntensity(SpecialRing->sceneIndex, 14, 14, 14);
     SpecialRing->sfx_SpecialRing = RSDK.GetSFX("Global/SpecialRing.wav");
     SpecialRing->sfx_SpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
 

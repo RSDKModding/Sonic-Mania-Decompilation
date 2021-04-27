@@ -406,20 +406,20 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
 
 void (*userFileCallback)();
 void (*userFileCallback2)();
-char userFiles[1024];
+char userFileDir[0x100];
 
 bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = (int)strlen(userFiles);
-    sprintf(userFiles, "%s", filename);
+    int len = (int)strlen(userFileDir);
+    sprintf(userFileDir, "%s", filename);
     if (len >= 0x400) {
         // oh shit
     }
-    printLog(SEVERITY_NONE, "Attempting to load user file: %s", userFiles);
+    printLog(SEVERITY_NONE, "Attempting to load user file: %s", userFileDir);
 
-    FileIO *file = fOpen(userFiles, "rb");
+    FileIO *file = fOpen(userFileDir, "rb");
     if (file) {
         fSeek(file, 0, SEEK_END);
         int fSize = (int)fTell(file);
@@ -444,14 +444,14 @@ bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = (int)strlen(userFiles);
-    sprintf(userFiles, "%s", filename);
+    int len = (int)strlen(userFileDir);
+    sprintf(userFileDir, "%s", filename);
     if (len >= 0x400) {
         // oh shit
     }
-    printLog(SEVERITY_NONE, "Attempting to save user file: %s", userFiles);
+    printLog(SEVERITY_NONE, "Attempting to save user file: %s", userFileDir);
 
-    FileIO *file = fOpen(userFiles, "rb");
+    FileIO *file = fOpen(userFileDir, "rb");
     if (file) {
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
@@ -473,13 +473,13 @@ bool32 DeleteUserFile(const char *filename)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = (int)strlen(userFiles);
-    sprintf(userFiles, "%s", filename);
+    int len = (int)strlen(userFileDir);
+    sprintf(userFileDir, "%s", filename);
     if (len >= 0x400) {
         // oh shit
     }
-    printLog(SEVERITY_NONE, "Attempting to delete user file: %s", userFiles);
-    int status = remove(userFiles);
+    printLog(SEVERITY_NONE, "Attempting to delete user file: %s", userFileDir);
+    int status = remove(userFileDir);
 
     if (userFileCallback2)
         userFileCallback2();

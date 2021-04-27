@@ -20,50 +20,27 @@ CollisionSensor sensors[6];
 
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox)
 {
-    int store, store2, store3;
+    int store = 0;
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
-        return 0;
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store             = -thisHitbox->left;
-            thisHitbox->left  = -thisHitbox->right;
-            thisHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store              = -thisHitbox->top;
-            thisHitbox->top    = -thisHitbox->bottom;
-            thisHitbox->bottom = store;
-            break;
-        case FLIP_XY:
-            store              = -thisHitbox->left;
-            thisHitbox->left   = -thisHitbox->right;
-            store2             = thisHitbox->bottom;
-            thisHitbox->right  = store;
-            store3             = -thisHitbox->top;
-            thisHitbox->top    = -store2;
-            thisHitbox->bottom = store3;
-            break;
+        return false;
+
+    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+        store             = -thisHitbox->left;
+        thisHitbox->left  = -thisHitbox->right;
+        thisHitbox->right = store;
+
+        store              = -otherHitbox->left;
+        otherHitbox->left  = -otherHitbox->right;
+        otherHitbox->right = store;
     }
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store              = -otherHitbox->left;
-            otherHitbox->left  = -otherHitbox->right;
-            otherHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store               = -otherHitbox->top;
-            otherHitbox->top    = -otherHitbox->bottom;
-            otherHitbox->bottom = store;
-            break;
-        case FLIP_XY:
-            store               = -otherHitbox->left;
-            otherHitbox->left   = -otherHitbox->right;
-            store2              = otherHitbox->bottom;
-            otherHitbox->right  = store;
-            store3              = -otherHitbox->top;
-            otherHitbox->top    = -store2;
-            otherHitbox->bottom = store3;
-            break;
+    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+        store              = -thisHitbox->top;
+        thisHitbox->top    = -thisHitbox->bottom;
+        thisHitbox->bottom = store;
+
+        store               = -otherHitbox->top;
+        otherHitbox->top    = -otherHitbox->bottom;
+        otherHitbox->bottom = store;
     }
 
     int thisIX  = thisEntity->position.x >> 0x10;
@@ -71,64 +48,34 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
     int otherIX = otherEntity->position.x >> 0x10;
     int otherIY = otherEntity->position.y >> 0x10;
 
-    bool32 result = false;
-    if (thisIX + thisHitbox->left >= otherIX + otherHitbox->right || thisIX + thisHitbox->right <= otherIX + otherHitbox->left
-        || thisIY + thisHitbox->top >= otherIY + otherHitbox->bottom || thisIY + thisHitbox->bottom <= otherIY + otherHitbox->top) {
-        result = 0;
-    }
-    else {
-        result = 1;
-    }
+    bool32 collided = thisIX + thisHitbox->left < otherIX + otherHitbox->right && thisIX + thisHitbox->right > otherIX + otherHitbox->left
+                    && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom && thisIY + thisHitbox->bottom > otherIY + otherHitbox->top;
 
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store             = -thisHitbox->left;
-            thisHitbox->left  = -thisHitbox->right;
-            thisHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store              = -thisHitbox->top;
-            thisHitbox->top    = -thisHitbox->bottom;
-            thisHitbox->bottom = store;
-            break;
-        case FLIP_XY:
-            store              = -thisHitbox->left;
-            thisHitbox->left   = -thisHitbox->right;
-            store2             = thisHitbox->bottom;
-            thisHitbox->right  = store;
-            store3             = -thisHitbox->top;
-            thisHitbox->top    = -store2;
-            thisHitbox->bottom = store3;
-            break;
+    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+        store             = -thisHitbox->left;
+        thisHitbox->left  = -thisHitbox->right;
+        thisHitbox->right = store;
+
+        store              = -otherHitbox->left;
+        otherHitbox->left  = -otherHitbox->right;
+        otherHitbox->right = store;
     }
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store              = -otherHitbox->left;
-            otherHitbox->left  = -otherHitbox->right;
-            otherHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store               = -otherHitbox->top;
-            otherHitbox->top    = -otherHitbox->bottom;
-            otherHitbox->bottom = store;
-            return result;
-        case FLIP_XY:
-            store2              = otherHitbox->left;
-            otherHitbox->left   = -otherHitbox->right;
-            store2              = otherHitbox->bottom;
-            otherHitbox->right  = -store2;
-            store3              = -otherHitbox->top;
-            otherHitbox->top    = -store2;
-            otherHitbox->bottom = store3;
-            return result;
+    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+        store              = -thisHitbox->top;
+        thisHitbox->top    = -thisHitbox->bottom;
+        thisHitbox->bottom = store;
+
+        store               = -otherHitbox->top;
+        otherHitbox->top    = -otherHitbox->bottom;
+        otherHitbox->bottom = store;
     }
-    return result;
+    return collided;
 }
 
 byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
     if (thisEntity && otherEntity && thisHitbox && otherHitbox) {
-        int store, store2, store3;
+        int store            = 0;
         int collisionResultX = 0;
         int collisionResultY = 0;
 
@@ -136,48 +83,26 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
         int otherY      = otherEntity->position.y;
         int otherX2     = otherEntity->position.x;
         int otherY2     = otherEntity->position.y;
-        switch (thisEntity->direction) {
-            case FLIP_X:
-                store             = -thisHitbox->left;
-                thisHitbox->left  = -thisHitbox->right;
-                thisHitbox->right = store;
-                break;
-            case FLIP_Y:
-                store              = -thisHitbox->top;
-                thisHitbox->top    = -thisHitbox->bottom;
-                thisHitbox->bottom = store;
-                break;
-            case FLIP_XY:
-                store              = -thisHitbox->left;
-                thisHitbox->left   = -thisHitbox->right;
-                store2             = thisHitbox->bottom;
-                thisHitbox->right  = store;
-                store3             = -thisHitbox->top;
-                thisHitbox->top    = -store2;
-                thisHitbox->bottom = store3;
-                break;
+        
+        if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+            store             = -thisHitbox->left;
+            thisHitbox->left  = -thisHitbox->right;
+            thisHitbox->right = store;
+
+            store              = -otherHitbox->left;
+            otherHitbox->left  = -otherHitbox->right;
+            otherHitbox->right = store;
         }
-        switch (thisEntity->direction) {
-            case FLIP_X:
-                store              = -otherHitbox->left;
-                otherHitbox->left  = -otherHitbox->right;
-                otherHitbox->right = store;
-                break;
-            case FLIP_Y:
-                store               = -otherHitbox->top;
-                otherHitbox->top    = -otherHitbox->bottom;
-                otherHitbox->bottom = store;
-                break;
-            case FLIP_XY:
-                store               = -otherHitbox->left;
-                otherHitbox->left   = -otherHitbox->right;
-                store2              = otherHitbox->bottom;
-                otherHitbox->right  = store;
-                store3              = -otherHitbox->top;
-                otherHitbox->top    = -store2;
-                otherHitbox->bottom = store3;
-                break;
+        if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+            store              = -thisHitbox->top;
+            thisHitbox->top    = -thisHitbox->bottom;
+            thisHitbox->bottom = store;
+
+            store               = -otherHitbox->top;
+            otherHitbox->top    = -otherHitbox->bottom;
+            otherHitbox->bottom = store;
         }
+
         int thisIX  = thisEntity->position.x >> 0x10;
         int thisIY  = thisEntity->position.y >> 0x10;
         int otherIX = otherEntity->position.x >> 0x10;
@@ -219,47 +144,24 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
 
         otherHitbox->left--;
         otherHitbox->right++;
-        switch (thisEntity->direction) {
-            case FLIP_X:
-                store             = -thisHitbox->left;
-                thisHitbox->left  = -thisHitbox->right;
-                thisHitbox->right = store;
-                break;
-            case FLIP_Y:
-                store              = -thisHitbox->top;
-                thisHitbox->top    = -thisHitbox->bottom;
-                thisHitbox->bottom = store;
-                break;
-            case FLIP_XY:
-                store              = -thisHitbox->left;
-                thisHitbox->left   = -thisHitbox->right;
-                store2             = thisHitbox->bottom;
-                thisHitbox->right  = store;
-                store3             = -thisHitbox->top;
-                thisHitbox->top    = -store2;
-                thisHitbox->bottom = store3;
-                break;
+
+        if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+            store             = -thisHitbox->left;
+            thisHitbox->left  = -thisHitbox->right;
+            thisHitbox->right = store;
+
+            store              = -otherHitbox->left;
+            otherHitbox->left  = -otherHitbox->right;
+            otherHitbox->right = store;
         }
-        switch (thisEntity->direction) {
-            case FLIP_X:
-                store              = -otherHitbox->left;
-                otherHitbox->left  = -otherHitbox->right;
-                otherHitbox->right = store;
-                break;
-            case FLIP_Y:
-                store               = -otherHitbox->top;
-                otherHitbox->top    = -otherHitbox->bottom;
-                otherHitbox->bottom = store;
-                break;
-            case FLIP_XY:
-                store               = -otherHitbox->left;
-                otherHitbox->left   = -otherHitbox->right;
-                store2              = otherHitbox->bottom;
-                otherHitbox->right  = store;
-                store3              = -otherHitbox->top;
-                otherHitbox->top    = -store2;
-                otherHitbox->bottom = store3;
-                break;
+        if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+            store              = -thisHitbox->top;
+            thisHitbox->top    = -thisHitbox->bottom;
+            thisHitbox->bottom = store;
+
+            store               = -otherHitbox->top;
+            otherHitbox->top    = -otherHitbox->bottom;
+            otherHitbox->bottom = store;
         }
 
         int ox  = ((otherX - otherEntity->position.x) >> 0x10);
@@ -338,54 +240,29 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
 
 bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
-    int store;
-    int store2;
-    int store3;
-    bool32 status;
+    int store       = 0;
+    bool32 collided = false;
 
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
-        return 0;
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store             = -thisHitbox->left;
-            thisHitbox->left  = -thisHitbox->right;
-            thisHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store              = -thisHitbox->top;
-            thisHitbox->top    = -thisHitbox->bottom;
-            thisHitbox->bottom = store;
-            break;
-        case FLIP_XY:
-            store              = -thisHitbox->left;
-            thisHitbox->left   = -thisHitbox->right;
-            store2             = thisHitbox->bottom;
-            thisHitbox->right  = store;
-            store3             = -thisHitbox->top;
-            thisHitbox->top    = -store2;
-            thisHitbox->bottom = store3;
-            break;
+        return false;
+
+    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+        store             = -thisHitbox->left;
+        thisHitbox->left  = -thisHitbox->right;
+        thisHitbox->right = store;
+
+        store              = -otherHitbox->left;
+        otherHitbox->left  = -otherHitbox->right;
+        otherHitbox->right = store;
     }
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store              = -otherHitbox->left;
-            otherHitbox->left  = -otherHitbox->right;
-            otherHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store               = -otherHitbox->top;
-            otherHitbox->top    = -otherHitbox->bottom;
-            otherHitbox->bottom = store;
-            break;
-        case FLIP_XY:
-            store               = -otherHitbox->left;
-            otherHitbox->left   = -otherHitbox->right;
-            store2              = otherHitbox->bottom;
-            otherHitbox->right  = store;
-            store3              = -otherHitbox->top;
-            otherHitbox->top    = -store2;
-            otherHitbox->bottom = store3;
-            break;
+    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+        store              = -thisHitbox->top;
+        thisHitbox->top    = -thisHitbox->bottom;
+        thisHitbox->bottom = store;
+
+        store               = -otherHitbox->top;
+        otherHitbox->top    = -otherHitbox->bottom;
+        otherHitbox->bottom = store;
     }
 
     int thisIX  = (thisEntity->position.x >> 16);
@@ -393,13 +270,10 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
     int otherIX = (otherEntity->position.x >> 16);
     int otherIY = (otherEntity->position.y >> 16);
 
-    if (otherHitbox->bottom + otherIY < thisIY + thisHitbox->top
-        || otherHitbox->bottom + ((otherEntity->position.y - otherEntity->velocity.y) >> 16) > thisIY + thisHitbox->bottom
-        || (thisIX + thisHitbox->left >= otherIX + otherHitbox->right) || thisIX + thisHitbox->right <= otherIX + otherHitbox->left
-        || otherEntity->velocity.y < 0) {
-        status = false;
-    }
-    else {
+    if (otherHitbox->bottom + otherIY >= thisIY + thisHitbox->top
+        && otherHitbox->bottom + ((otherEntity->position.y - otherEntity->velocity.y) >> 16) <= thisIY + thisHitbox->bottom
+        && (thisIX + thisHitbox->left < otherIX + otherHitbox->right) && thisIX + thisHitbox->right > otherIX + otherHitbox->left
+        && otherEntity->velocity.y >= 0) {
         otherEntity->position.y = thisEntity->position.y + ((thisHitbox->top - otherHitbox->bottom) << 16);
         if (setValues) {
             otherEntity->velocity.y = 0;
@@ -409,52 +283,29 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
                 otherEntity->onGround  = true;
             }
         }
-        status = true;
+        collided = true;
     }
 
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store             = -thisHitbox->left;
-            thisHitbox->left  = -thisHitbox->right;
-            thisHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store              = -thisHitbox->top;
-            thisHitbox->top    = -thisHitbox->bottom;
-            thisHitbox->bottom = store;
-            break;
-        case FLIP_XY:
-            store              = -thisHitbox->left;
-            thisHitbox->left   = -thisHitbox->right;
-            store2             = thisHitbox->bottom;
-            thisHitbox->right  = store;
-            store3             = -thisHitbox->top;
-            thisHitbox->top    = -store2;
-            thisHitbox->bottom = store3;
-            break;
+    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+        store             = -thisHitbox->left;
+        thisHitbox->left  = -thisHitbox->right;
+        thisHitbox->right = store;
+
+        store              = -otherHitbox->left;
+        otherHitbox->left  = -otherHitbox->right;
+        otherHitbox->right = store;
     }
-    switch (thisEntity->direction) {
-        case FLIP_X:
-            store              = -otherHitbox->left;
-            otherHitbox->left  = -otherHitbox->right;
-            otherHitbox->right = store;
-            break;
-        case FLIP_Y:
-            store2              = otherHitbox->top;
-            otherHitbox->top    = -otherHitbox->bottom;
-            otherHitbox->bottom = -store2;
-            break;
-        case FLIP_XY:
-            store               = otherHitbox->left;
-            otherHitbox->left   = -otherHitbox->right;
-            store2              = otherHitbox->bottom;
-            otherHitbox->right  = -store;
-            store3              = otherHitbox->top;
-            otherHitbox->top    = -store2;
-            otherHitbox->bottom = -store3;
-            break;
+    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+        store              = -thisHitbox->top;
+        thisHitbox->top    = -thisHitbox->bottom;
+        thisHitbox->bottom = store;
+
+        store               = -otherHitbox->top;
+        otherHitbox->top    = -otherHitbox->bottom;
+        otherHitbox->bottom = store;
     }
-    return status;
+
+    return collided;
 }
 
 bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPlane, int xOffset, int yOffset, bool32 setPos)

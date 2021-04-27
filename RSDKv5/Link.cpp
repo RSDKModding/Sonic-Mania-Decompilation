@@ -185,10 +185,10 @@ enum FunctionTableIDs {
     FunctionTable_FillScreen,
     FunctionTable_LoadMesh,
     FunctionTable_Create3DScene,
-    FunctionTable_Init3DScene,
-    FunctionTable_SetAmbientUnknown,
-    FunctionTable_SetDiffuseUnknown,
-    FunctionTable_SetSpecularUnknown,
+    FunctionTable_Prepare3DScene,
+    FunctionTable_SetDiffuseColour,
+    FunctionTable_SetDiffuseIntensity,
+    FunctionTable_SetSpecularIntensity,
     FunctionTable_SetupMesh,
     FunctionTable_SetModelAnimation,
     FunctionTable_SetupMeshAnimation,
@@ -503,10 +503,10 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_FillScreen, FillScreen);
     addToRSDKFunctionTable(FunctionTable_LoadMesh, LoadMesh);
     addToRSDKFunctionTable(FunctionTable_Create3DScene, Create3DScene);
-    addToRSDKFunctionTable(FunctionTable_Init3DScene, Prepare3DScene);
-    addToRSDKFunctionTable(FunctionTable_SetAmbientUnknown, SetAmbientColour);
-    addToRSDKFunctionTable(FunctionTable_SetDiffuseUnknown, SetDiffuseColour);
-    addToRSDKFunctionTable(FunctionTable_SetSpecularUnknown, SetSpecularColour);
+    addToRSDKFunctionTable(FunctionTable_Prepare3DScene, Prepare3DScene);
+    addToRSDKFunctionTable(FunctionTable_SetDiffuseColour, SetDiffuseColour);
+    addToRSDKFunctionTable(FunctionTable_SetDiffuseIntensity, SetDiffuseIntensity);
+    addToRSDKFunctionTable(FunctionTable_SetSpecularIntensity, SetSpecularIntensity);
     addToRSDKFunctionTable(FunctionTable_SetupMesh, AddModelToScene);
     addToRSDKFunctionTable(FunctionTable_SetModelAnimation, SetMeshAnimation);
     addToRSDKFunctionTable(FunctionTable_SetupMeshAnimation, AddMeshFrameToScene);

@@ -33,12 +33,12 @@ extern Entity *collisionEntity;
 extern CollisionSensor sensors[6];
 
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox);
-
 inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int thisOffset, Entity *otherEntity, int otherOffset)
 {
+    int x = (thisEntity->position.x - otherEntity->position.x) >> 16;
     int y = (thisEntity->position.y - otherEntity->position.y) >> 16;
-    return ((thisEntity->position.x - otherEntity->position.x) >> 16) * ((thisEntity->position.x - otherEntity->position.x) >> 16) + y * y
-           < ((thisOffset + otherOffset) >> 16) * ((thisOffset + otherOffset) >> 16);
+    int r = (thisOffset + otherOffset) >> 16;
+    return x * x + y * y < r * r;
 }
 byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues);
 bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues);

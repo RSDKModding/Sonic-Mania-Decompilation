@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectPathInverter;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte type;
+    Vector2 size2;
+    Vector2 size;
+    Entity *playerPtrs[PLAYER_MAX];
+    int groundVelStore[PLAYER_MAX];
+    int playerFlipFlags[PLAYER_MAX];
+    Animator animator;
 } EntityPathInverter;
 
 // Object Struct
@@ -28,6 +37,8 @@ void PathInverter_EditorLoad(void);
 void PathInverter_Serialize(void);
 
 // Extra Entity Functions
-
+void PathInverter_Unknown1(Entity *player);
+void PathInverter_State_Horizontal(void);
+void PathInverter_State_Vertical(void);
 
 #endif //!OBJ_PATHINVERTER_H

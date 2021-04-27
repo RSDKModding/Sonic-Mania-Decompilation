@@ -194,9 +194,9 @@ typedef struct {
     ushort (*LoadMesh)(const char* filename, byte scope);
     ushort (*Create3DScene)(const char* identifier, ushort faceCount, byte scope);
     void (*Prepare3DScene)(ushort index);
-    void (*SetAmbientColour)(ushort index, int x, int y, int z);
     void (*SetDiffuseColour)(ushort index, int x, int y, int z);
-    void (*SetSpecularColour)(ushort index, int x, int y, int z);
+    void (*SetDiffuseIntensity)(ushort index, int x, int y, int z);
+    void (*SetSpecularIntensity)(ushort index, int x, int y, int z);
     void (*AddModelTo3DScene)(ushort modelIndex, ushort sceneIndex, byte type, Matrix *mat1, Matrix *mat2, colour colour);
     void (*SetModelAnimation)(ushort modelAnim, Animator *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID);
     void (*AddMeshFrameTo3DScene)(ushort modelID, ushort sceneID, Animator *data, byte drawMode, Matrix *mat1, Matrix *mat, colour colour);
@@ -903,7 +903,7 @@ extern RSDKFunctionTable RSDK;
 #include "Objects/ZipLine.h"
 #include "Objects/Zone.h"
 
-#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
+#define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (byte)object->objectID, offsetof(Entity##object, var))
 #define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,             \

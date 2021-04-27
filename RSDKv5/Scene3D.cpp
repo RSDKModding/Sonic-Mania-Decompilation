@@ -478,12 +478,12 @@ ushort Create3DScene(const char *name, ushort vertexLimit, Scopes scope)
     HASH_COPY(scene->hash, hash);
     scene->vertLimit = vertexLimit;
     scene->faceCount  = 6;
-    scene->unknownX   = 8;
-    scene->unknownY   = 8;
+    scene->projectionX   = 8;
+    scene->projectionY   = 8;
     AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, DATASET_STG, true);
     AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, DATASET_STG, true);
     AllocateStorage(sizeof(byte) * vertexLimit, (void **)&scene->faceVertCounts, DATASET_STG, true);
-    AllocateStorage(sizeof(ZBufferEntry) * vertexLimit, (void **)&scene->zBuffer, DATASET_STG, true);
+    AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, DATASET_STG, true);
 
     return id;
 }
@@ -748,45 +748,45 @@ void Draw3DScene(ushort sceneID)
         Scene3DVertex *vertices = scn->vertices;
         int vertID              = 0;
         for (int i = 0; i < scn->faceCount; ++i) {
-            scn->zBuffer[i].depth = 0;
+            scn->faceBuffer[i].depth = 0;
             switch (scn->faceVertCounts[i]) {
                 default: break;
                 case 1:
-                    scn->zBuffer[i].depth = vertices->z;
+                    scn->faceBuffer[i].depth = vertices->z;
                     vertices++;
                     break;
                 case 2:
-                    scn->zBuffer[i].depth = vertices[0].z >> 1;
-                    scn->zBuffer[i].depth += vertices[1].z >> 1;
+                    scn->faceBuffer[i].depth = vertices[0].z >> 1;
+                    scn->faceBuffer[i].depth += vertices[1].z >> 1;
                     vertices += 2;
                     break;
                 case 3:
-                    scn->zBuffer[i].depth = vertices[0].z >> 1;
-                    scn->zBuffer[i].depth += vertices[1].z >> 1;
-                    scn->zBuffer[i].depth += vertices[2].z >> 1;
+                    scn->faceBuffer[i].depth = vertices[0].z >> 1;
+                    scn->faceBuffer[i].depth += vertices[1].z >> 1;
+                    scn->faceBuffer[i].depth += vertices[2].z >> 1;
                     vertices += 3;
                     break;
                 case 4:
-                    scn->zBuffer[i].depth = vertices[0].z >> 2;
-                    scn->zBuffer[i].depth += vertices[1].z >> 2;
-                    scn->zBuffer[i].depth += vertices[2].z >> 2;
-                    scn->zBuffer[i].depth += vertices[3].z >> 2;
+                    scn->faceBuffer[i].depth = vertices[0].z >> 2;
+                    scn->faceBuffer[i].depth += vertices[1].z >> 2;
+                    scn->faceBuffer[i].depth += vertices[2].z >> 2;
+                    scn->faceBuffer[i].depth += vertices[3].z >> 2;
                     vertices += 4;
                     break;
             }
-            scn->zBuffer[i].index = vertID;
+            scn->faceBuffer[i].index = vertID;
             vertID += scn->faceVertCounts[i];
         }
 
         for (int i = 0; i < scn->faceCount; ++i) {
             for (int j = scn->faceCount - 1; j > i; --j) {
-                if (scn->zBuffer[j].depth > scn->zBuffer[j - 1].depth) {
-                    int index                 = scn->zBuffer[j].index;
-                    int depth                 = scn->zBuffer[j].depth;
-                    scn->zBuffer[j].index     = scn->zBuffer[j - 1].index;
-                    scn->zBuffer[j].depth     = scn->zBuffer[j - 1].depth;
-                    scn->zBuffer[j - 1].index = index;
-                    scn->zBuffer[j - 1].depth = depth;
+                if (scn->faceBuffer[j].depth > scn->faceBuffer[j - 1].depth) {
+                    int index                 = scn->faceBuffer[j].index;
+                    int depth                 = scn->faceBuffer[j].depth;
+                    scn->faceBuffer[j].index     = scn->faceBuffer[j - 1].index;
+                    scn->faceBuffer[j].depth     = scn->faceBuffer[j - 1].depth;
+                    scn->faceBuffer[j - 1].index = index;
+                    scn->faceBuffer[j - 1].depth = depth;
                 }
             }
         }
@@ -798,7 +798,7 @@ void Draw3DScene(ushort sceneID)
             default: break;
             case S3D_FLATCLR_WIREFRAME:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     for (int v = 0; v < *vertCnt - 1; ++v) {
                         DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].colour,
                                  entity->alpha, (InkEffects)entity->inkEffect, false);
@@ -810,8 +810,8 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
-                    for (int v = 0; v < *vertCnt - 1; ++v) {
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
+                    for (int v = 0; v < *vertCnt; ++v) {
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
                     }
@@ -824,7 +824,7 @@ void Draw3DScene(ushort sceneID)
             case S3D_UNKNOWN_3: break;
             case S3D_FLATCLR_SHADED_WIREFRAME:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     int ny1 = 0;
@@ -835,20 +835,20 @@ void Draw3DScene(ushort sceneID)
                     int normal    = ny1 / vertCount;
                     int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
-                    int specular = normalVal >> 6 >> scn->specularX;
+                    int specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular     = minVal(0xFF, specular);
                     specular     = maxVal(0, specular);
-                    int clrR     = specular + (((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
+                    int clrR     = specular + (((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                    specular = normalVal >> 6 >> scn->specularY;
+                    specular = normalVal >> 6 >> scn->specularIntensityY;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrG = specular + (((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
+                    int clrG = specular + (((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                    specular = normalVal >> 6 >> scn->specularZ;
+                    specular = normalVal >> 6 >> scn->specularIntensityZ;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrB = specular + (((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
+                    int clrB = specular + (((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                     clrR = minVal(0xFF, clrR);
                     clrR = maxVal(0, clrR);
@@ -871,7 +871,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SHADED:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     int ny = 0;
@@ -884,20 +884,20 @@ void Draw3DScene(ushort sceneID)
                     int normal    = ny / vertCount;
                     int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
-                    int specular = normalVal >> 6 >> scn->specularX;
+                    int specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular     = minVal(0xFF, specular);
                     specular     = maxVal(0, specular);
-                    int clrR     = specular + (((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
+                    int clrR     = specular + (((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                    specular = normalVal >> 6 >> scn->specularY;
+                    specular = normalVal >> 6 >> scn->specularIntensityY;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrG = specular + (((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
+                    int clrG = specular + (((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                    specular = normalVal >> 6 >> scn->specularZ;
+                    specular = normalVal >> 6 >> scn->specularIntensityZ;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrB = specular + (((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
+                    int clrB = specular + (((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                     clrR = minVal(0xFF, clrR);
                     clrR = maxVal(0, clrR);
@@ -908,7 +908,7 @@ void Draw3DScene(ushort sceneID)
 
                     uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
-                    drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     DrawFace(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF,
                              entity->alpha, (InkEffects)entity->inkEffect);
 
@@ -917,7 +917,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SHADED_BLENDED:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     for (int v = 0; v < vertCount; ++v) {
@@ -927,23 +927,23 @@ void Draw3DScene(ushort sceneID)
                         int normal    = drawVert[v].ny;
                         int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
-                        int specular = normalVal >> 6 >> scn->specularX;
+                        int specular = (normalVal >> 6) >> scn->specularIntensityX;
                         specular     = minVal(0xFF, specular);
-                        specular     = maxVal(0, specular);
-                        int ambDif   = ((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX);
-                        int clrR     = specular + (ambDif >> scn->diffuseX);
+                        specular     = maxVal(0x00, specular);
+                        int ambDif   = ((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX);
+                        int clrR     = specular + (ambDif >> scn->diffuseIntensityX);
 
-                        specular = normalVal >> 6 >> scn->specularY;
+                        specular = (normalVal >> 6) >> scn->specularIntensityY;
                         specular = minVal(0xFF, specular);
-                        specular = maxVal(0, specular);
-                        ambDif   = ((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY);
-                        int clrG = specular + (ambDif >> scn->diffuseY);
+                        specular = maxVal(0x00, specular);
+                        ambDif   = ((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY);
+                        int clrG = specular + (ambDif >> scn->diffuseIntensityY);
 
-                        specular = normalVal >> 6 >> scn->specularZ;
+                        specular = (normalVal >> 6) >> scn->specularIntensityZ;
                         specular = minVal(0xFF, specular);
-                        specular = maxVal(0, specular);
-                        ambDif   = ((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ);
-                        int clrB = specular + (ambDif >> scn->diffuseZ);
+                        specular = maxVal(0x00, specular);
+                        ambDif   = ((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ);
+                        int clrB = specular + (ambDif >> scn->diffuseIntensityZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -962,7 +962,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SCREEN_WIREFRAME:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
 
                     int v = 0;
                     for (; v < *vertCnt && v < 0xFF; ++v) {
@@ -971,8 +971,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = currentScreen->centerX + (drawVert[v].x << scn->unknownX) / vertZ;
-                            vertPos[v].y = currentScreen->centerY - (drawVert[v].y << scn->unknownY) / vertZ;
+                            vertPos[v].x = currentScreen->centerX + (drawVert[v].x << scn->projectionX) / vertZ;
+                            vertPos[v].y = currentScreen->centerY - (drawVert[v].y << scn->projectionY) / vertZ;
                         }
                     }
 
@@ -989,7 +989,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SCREEN:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     int v = 0;
@@ -999,8 +999,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->unknownX) / vertZ << 16);
-                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->unknownY) / vertZ << 16);
+                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
+                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
                         }
                     }
 
@@ -1013,7 +1013,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SHADED_SCREEN_WIREFRAME:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     int v   = 0;
@@ -1024,8 +1024,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = currentScreen->centerX + (drawVert[v].x << scn->unknownX) / vertZ;
-                            vertPos[v].y = currentScreen->centerY - (drawVert[v].y << scn->unknownY) / vertZ;
+                            vertPos[v].x = currentScreen->centerX + (drawVert[v].x << scn->projectionX) / vertZ;
+                            vertPos[v].y = currentScreen->centerY - (drawVert[v].y << scn->projectionY) / vertZ;
                             ny1 += drawVert[v].ny;
                         }
                     }
@@ -1034,20 +1034,20 @@ void Draw3DScene(ushort sceneID)
                         int normal    = ny1 / vertCount;
                         int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
-                        int specular = normalVal >> 6 >> scn->specularX;
+                        int specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0, specular);
-                        int clrR     = specular + (((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
+                        int clrR     = specular + (((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                        specular = normalVal >> 6 >> scn->specularY;
+                        specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrG = specular + (((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
+                        int clrG = specular + (((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                        specular = normalVal >> 6 >> scn->specularZ;
+                        specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrB = specular + (((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
+                        int clrB = specular + (((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -1058,7 +1058,7 @@ void Draw3DScene(ushort sceneID)
 
                         uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
-                        drawVert = &scn->vertices[scn->zBuffer[i].index];
+                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         for (int v = 0; v < *vertCnt - 1; ++v) {
                             DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, colour, entity->alpha,
                                      (InkEffects)entity->inkEffect, true);
@@ -1072,7 +1072,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SHADED_SCREEN:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     int v  = 0;
@@ -1083,8 +1083,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->unknownX) / vertZ << 16);
-                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->unknownY) / vertZ << 16);
+                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
+                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
                             ny += drawVert[v].ny;
                         }
                     }
@@ -1093,20 +1093,20 @@ void Draw3DScene(ushort sceneID)
                         int normal    = ny / vertCount;
                         int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
-                        int specular = normalVal >> 6 >> scn->specularX;
+                        int specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0, specular);
-                        int clrR     = specular + (((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
+                        int clrR     = specular + (((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                        specular = normalVal >> 6 >> scn->specularY;
+                        specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrG = specular + (((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
+                        int clrG = specular + (((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                        specular = normalVal >> 6 >> scn->specularZ;
+                        specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrB = specular + (((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
+                        int clrB = specular + (((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -1117,7 +1117,7 @@ void Draw3DScene(ushort sceneID)
 
                         uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
-                        drawVert = &scn->vertices[scn->zBuffer[i].index];
+                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         DrawFace(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF,
                                  (colour >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
                     }
@@ -1127,7 +1127,7 @@ void Draw3DScene(ushort sceneID)
                 break;
             case S3D_FLATCLR_SHADED_BLENDED_SCREEN:
                 for (int i = 0; i < scn->faceCount; ++i) {
-                    Scene3DVertex *drawVert = &scn->vertices[scn->zBuffer[i].index];
+                    Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     int vertCount           = *vertCnt;
 
                     int v  = 0;
@@ -1137,26 +1137,26 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->unknownX) / vertZ << 16);
-                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->unknownY) / vertZ << 16);
+                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
+                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
 
                             int normal    = drawVert[v].ny;
                             int normalVal = (normal >> 2) * (abs(normal) >> 2);
 
-                            int specular = normalVal >> 6 >> scn->specularX;
+                            int specular = normalVal >> 6 >> scn->specularIntensityX;
                             specular     = minVal(0xFF, specular);
                             specular     = maxVal(0, specular);
-                            int clrR     = specular + (((drawVert[v].colour >> 16) & 0xFF) * ((normal >> 10) + scn->ambientX) >> scn->diffuseX);
+                            int clrR     = specular + (((drawVert[v].colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
-                            specular = normalVal >> 6 >> scn->specularY;
+                            specular = normalVal >> 6 >> scn->specularIntensityY;
                             specular = minVal(0xFF, specular);
                             specular = maxVal(0, specular);
-                            int clrG = specular + (((drawVert[v].colour >> 8) & 0xFF) * ((normal >> 10) + scn->ambientY) >> scn->diffuseY);
+                            int clrG = specular + (((drawVert[v].colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
-                            specular = normalVal >> 6 >> scn->specularZ;
+                            specular = normalVal >> 6 >> scn->specularIntensityZ;
                             specular = minVal(0xFF, specular);
                             specular = maxVal(0, specular);
-                            int clrB = specular + (((drawVert[v].colour >> 0) & 0xFF) * ((normal >> 10) + scn->ambientZ) >> scn->diffuseZ);
+                            int clrB = specular + (((drawVert[v].colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                             clrR = minVal(0xFF, clrR);
                             clrR = maxVal(0, clrR);
@@ -1170,7 +1170,7 @@ void Draw3DScene(ushort sceneID)
                     }
 
                     if (v < 0xFF) {
-                        drawVert = &scn->vertices[scn->zBuffer[i].index];
+                        drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         DrawBlendedFace(vertPos, vertClrs, *vertCnt, entity->alpha, (InkEffects)entity->inkEffect);
                     }
 

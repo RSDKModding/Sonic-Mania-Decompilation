@@ -350,6 +350,17 @@ void SetFuncPtr(const char *name, void *ptr);
 void *GetFuncPtr(const char *name);
 #endif
 
+extern void (*userFileCallback)();
+extern void (*userFileCallback2)();
+extern char userFileDir[0x100];
+
+inline void SetUserFileCallbacks(const char *userDir, void (*callback1)(void), void (*callback2)(void))
+{
+    userFileCallback  = callback1;
+    userFileCallback2 = callback2;
+    strcpy(userFileDir, userDir);
+}
+
 bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
 bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
 bool32 TryDeleteUserFile(const char *filename, int (*callback)(int));

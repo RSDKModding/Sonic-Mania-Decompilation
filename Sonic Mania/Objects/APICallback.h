@@ -43,7 +43,7 @@ typedef struct {
     int authFlag;
     int flag;
     int field_8C;
-    int field_90;
+    int playerFlipFlags;
     int notifyAutoSaveFlag;
     int unknown;
     int leaderboardsStatus;

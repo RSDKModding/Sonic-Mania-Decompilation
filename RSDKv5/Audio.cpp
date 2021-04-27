@@ -29,8 +29,7 @@ struct StreamInfo {
 
 StreamInfo streamInfo;
 
-
-float speedValues[0x400];
+float speedMixAmounts[0x400];
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
 
@@ -140,12 +139,12 @@ bool32 InitAudioDevice()
 
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
         channels[i].soundID = -1;
-        channels[i].state = CHANNEL_NONE;
+        channels[i].state   = CHANNEL_NONE;
     }
 
     for (int i = 0; i < 0x400; i += 2) {
-        speedValues[i]     = (float)i * (1.0f / 1024.0f);
-        speedValues[i + 1] = (float)(i + 1) * (1.0f / 1024.0f); // 0.00097656;
+        speedMixAmounts[i]     = (float)i * (1.0f / 1024.0f);
+        speedMixAmounts[i + 1] = (float)(i + 1) * (1.0f / 1024.0f); // 0.00097656;
     }
 
     GEN_HASH("Stream Channel 0", sfxList[SFX_COUNT - 1].hash);
@@ -212,10 +211,7 @@ long tellVorbis(void *ptr)
     StreamInfo *info = (StreamInfo *)ptr;
     return info->bufferPos;
 }
-int closeVorbis(void *ptr)
-{
-    return 1;
-}
+int closeVorbis(void *ptr) { return 1; }
 
 void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
 {
@@ -223,7 +219,6 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
 
     if (!audioEnabled)
         return;
-
 
     float *output_buffer = (float *)stream;
 
@@ -257,25 +252,18 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                             size_t remain    = channel->sampleLength - channel->bufferPos;
                             size_t sampleLen = (remain < samples_to_do - samples_done) ? remain : samples_to_do - samples_done;
 
-                            int s = 0;
-                            size_t outPos      = samples_done;
+                            int s           = 0;
+                            size_t outPos   = samples_done;
                             float *soundBuf = &channel->samplePtr[channel->bufferPos];
-                            while (s < sampleLen && !flag) {
-                                float fVal = speedValues[spdVal >> 6];
+                            for (int s = 0; s < sampleLen && !flag; ++s) {
+                                float mixAmount = speedMixAmounts[spdVal >> 6];
                                 spdVal += channel->speed;
-                                float bufVal = soundBuf[0] + ((soundBuf[1] - soundBuf[0]) * fVal);
+                                float bufVal = soundBuf[0] + ((soundBuf[1] - soundBuf[0]) * mixAmount);
                                 soundBuf += spdVal >> 16;
 
-                                float outA         = buffer[outPos] + bufVal;
-                                float outB         = buffer[outPos + 1] + bufVal;
-                                buffer[outPos]     = outA;
-                                buffer[outPos + 1] = outB;
-
-                                //int cnt = ((byte *)soundBuf - (byte *)&channel->samplePtr[channel->bufferPos]) / sizeof(float);
+                                buffer[outPos++] += bufVal;
                                 channel->bufferPos += spdVal >> 16;
 
-                                s += 1;
-                                outPos += 1;
                                 samples_done += 1;
                                 spdVal &= 0xFFFF;
 
@@ -308,7 +296,17 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                     if (channel->soundID < 0)
                         continue;
 
-                    size_t bytes_wanted = samples_to_do * sizeof(float);
+                    size_t samples_gotten = 0;
+                    int spdVal            = 0;
+                    size_t sLen = (MIX_BUFFER_SAMPLES < samples_to_do - samples_gotten) ? MIX_BUFFER_SAMPLES : samples_to_do - samples_gotten;
+
+                    for (int s = 0; s < samples_to_do; ++s) {
+                        spdVal += channel->speed;
+                        samples_gotten += spdVal >> 16;
+                        spdVal &= 0xFFFF;
+                    }
+
+                    size_t bytes_wanted = samples_gotten * sizeof(float);
 
 #if RETRO_USING_SDL2
                     while (SDL_AudioStreamAvailable(streamInfo.musicStream) < bytes_wanted) {
@@ -340,44 +338,34 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
 
                     // Now that we know there are enough samples, read them and mix them
                     int bytes_done = SDL_AudioStreamGet(streamInfo.musicStream, streamInfo.buffer, bytes_wanted);
-                    if (bytes_done == -1) {
+                    if (bytes_done == -1)
                         return;
-                    }
                     if (bytes_done == 0)
                         continue;
 #endif
 
                     float buffer[MIX_BUFFER_SAMPLES + 1];
-                    memset(buffer, 0, MIX_BUFFER_SAMPLES * sizeof(float));
+                    memset(buffer, 0, sizeof(buffer));
 
+                    float *soundBuf     = streamInfo.buffer;
+                    spdVal              = 0;
                     size_t samples_done = 0;
-                    int spdVal          = 0;
-                    bool32 flag         = false;
+                    for (int s = 0; s < samples_to_do;) {
+                        float mixAmount = speedMixAmounts[spdVal >> 6];
+                        spdVal += channel->speed;
 
-                    while (samples_done != samples_to_do && !flag) {
-                        size_t remain    = MIX_BUFFER_SAMPLES;
-                        size_t sampleLen = (remain < samples_to_do - samples_done) ? remain : samples_to_do - samples_done;
-
-                        int s           = 0;
-                        int outPos      = 0;
-                        float *soundBuf = streamInfo.buffer;
-                        while (s < sampleLen && !flag) {
-                            float fVal = speedValues[spdVal >> 6];
-                            spdVal += channel->speed;
-                            float bufVal = soundBuf[0] + ((soundBuf[1] - soundBuf[0]) * fVal);
-                            soundBuf += spdVal >> 16;
-
-                            float outA         = buffer[outPos] + bufVal;
-                            float outB         = buffer[outPos + 1] + bufVal;
-                            buffer[outPos]     = outA;
-                            buffer[outPos + 1] = outB;
-
-                            s += 1;
-                            outPos += 1;
-                            samples_done += 1;
-                            spdVal &= 0xFFFF;
+                        if (s == samples_to_do - 1) {
+                            float bufVal = soundBuf[0] + ((0.0f - soundBuf[0]) * mixAmount);
+                            buffer[s++] += bufVal;
                         }
-                        printf("");
+                        else {
+                            float bufVal = soundBuf[0] + ((soundBuf[1] - soundBuf[0]) * mixAmount);
+                            buffer[s++] += bufVal;
+                        }
+
+                        soundBuf += spdVal >> 16;
+                        samples_done += 1;
+                        spdVal &= 0xFFFF;
                     }
 
 #if RETRO_USING_SDL2
@@ -387,22 +375,20 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                 }
                 case CHANNEL_STREAM_LOAD: break;
             }
-
-            
         }
 
         for (size_t i = 0; i < sizeof(mix_buffer) / sizeof(*mix_buffer); ++i) {
-            //const float max_audioval = 1.0;
-            //const float min_audioval  = 0.0;
+            // const float max_audioval = 1.0;
+            // const float min_audioval  = 0.0;
 
             const float sample = mix_buffer[i];
 
-            //if (sample > max_audioval)
+            // if (sample > max_audioval)
             //    *output_buffer++ = max_audioval;
-            //else if (sample < min_audioval)
+            // else if (sample < min_audioval)
             //    *output_buffer++ = min_audioval;
-            //else
-                *output_buffer++ = sample;
+            // else
+            *output_buffer++ = sample;
         }
 
         samples_remaining -= samples_to_do;
@@ -438,7 +424,7 @@ void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *chan
     while (len--) {
         float sample = *src++;
         ADJUST_VOLUME(sample, volume);
-        
+
         if ((i % 2) != 0) {
             sample *= panR;
         }
@@ -471,7 +457,7 @@ void LoadStream(ChannelInfo *channel)
     MEM_ZERO(info);
 
     if (LoadFile(&info, streamInfo.filename, FMODE_RB)) {
-        streamInfo.fileSize = info.fileSize;
+        streamInfo.fileSize   = info.fileSize;
         streamInfo.fileBuffer = NULL;
         AllocateStorage(info.fileSize, (void **)&streamInfo.fileBuffer, DATASET_MUS, false);
         ReadBytes(&info, streamInfo.fileBuffer, info.fileSize);
@@ -490,7 +476,7 @@ void LoadStream(ChannelInfo *channel)
             callbacks.close_func = closeVorbis;
 
             streamInfo.bufferPos = 0;
-            int error = ov_open_callbacks(&streamInfo, &streamInfo.vorbisFile, NULL, 0, callbacks);
+            int error            = ov_open_callbacks(&streamInfo, &streamInfo.vorbisFile, NULL, 0, callbacks);
             if (error != 0) {
             }
 
@@ -517,9 +503,9 @@ void LoadStream(ChannelInfo *channel)
             streamInfo.startPos = 0;
             streamInfo.loaded   = true;
 
-            //musicFileInfo = Unknown118(streamFileBuffer, streamFileSize);
+            // musicFileInfo = Unknown118(streamFileBuffer, streamFileSize);
             if (/*musicFileInfo*/ true) {
-                //if (streamStartPos)
+                // if (streamStartPos)
                 //    Unknown114(v8, musicStartPos[0]);
                 channel->state = CHANNEL_STREAMING;
             }
@@ -534,7 +520,6 @@ int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loo
         return -1;
 
     if (slot >= CHANNEL_COUNT) {
-    
     }
 
     ChannelInfo *channel  = &channels[slot];
@@ -547,12 +532,12 @@ int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loo
     channel->sampleLength = sfxList[SFX_COUNT - 1].length;
     channel->samplePtr    = sfxList[SFX_COUNT - 1].buffer;
     channel->bufferPos    = 0;
-    channel->speed        = (int)(1.0 * 65536); // 1 << 0x10;
+    channel->speed        = 1 << 0x10;
 
     sprintf(streamInfo.filename, "Data/Music/%s", filename);
-    streamInfo.startPos = a3;
+    streamInfo.startPos  = a3;
     streamInfo.loopPoint = loopPoint;
-    
+
     if (loadASync) {
         SDL_CreateThread((SDL_ThreadFunction)LoadStream, "LoadStream", (void *)channel);
     }
@@ -695,7 +680,7 @@ int PlaySfx(ushort sfx, uint loopPoint, int unknown)
         return -1;
 
     channels[slot].state        = CHANNEL_SFX;
-    channels[slot].bufferPos     = 0;
+    channels[slot].bufferPos    = 0;
     channels[slot].samplePtr    = sfxList[sfx].buffer;
     channels[slot].sampleLength = sfxList[sfx].length;
     channels[slot].volume       = 1.0;

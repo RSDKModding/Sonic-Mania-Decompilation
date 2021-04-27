@@ -5,21 +5,19 @@ ObjectSSZSpotlight *SSZSpotlight;
 void SSZSpotlight_Update(void)
 {
     RSDK_THIS(SSZSpotlight);
-    entity->angle    = (entity->angle + entity->speed) & 0x1FF;
-    entity->rotation = RSDK.Sin512(entity->angle) >> 2;
-    Vector2 *vert    = entity->vertPos;
+    entity->angle      = (entity->angle + entity->speed) & 0x1FF;
+    entity->rotation   = RSDK.Sin512(entity->angle) >> 2;
+    Vector2 *vertStore = entity->vertStore;
+    Vector2 *vert      = entity->vertPos;
 
     for (int i = 0; i < 8; ++i) {
-        vert->x = vert[-8].x;
-        vert->y = vert[-8].y;
+        entity->vertPos[i].x = vertStore[i].x;
+        entity->vertPos[i].y = vertStore[i].y;
 
-        int xOff = (vert->x - entity->offsetPos.x) >> 4;
-        int yOff = (vert->y - entity->offsetPos.y) >> 4;
-        int x    = yOff * RSDK.Sin1024(entity->rotation) >> 6;
-        vert->x  = x + (xOff * RSDK.Cos1024(entity->rotation) >> 6) + entity->offsetPos.x;
-        int y    = yOff * RSDK.Cos1024(entity->rotation) >> 6;
-        vert->y  = y - (xOff * RSDK.Sin1024(entity->rotation) >> 6) + entity->offsetPos.y;
-        ++vert;
+        int xOff = (entity->vertPos[i].x - entity->offsetPos.x) >> 4;
+        int yOff = (entity->vertPos[i].y - entity->offsetPos.y) >> 4;
+        entity->vertPos[i].x  = (yOff * RSDK.Sin1024(entity->rotation) >> 6) + (xOff * RSDK.Cos1024(entity->rotation) >> 6) + entity->offsetPos.x;
+        entity->vertPos[i].y  = (yOff * RSDK.Cos1024(entity->rotation) >> 6) - (xOff * RSDK.Sin1024(entity->rotation) >> 6) + entity->offsetPos.y;
     }
 
     if (entity->flashSpeed)
@@ -37,27 +35,26 @@ void SSZSpotlight_Draw(void)
     Vector2 vertPos[4];
     colour vertClrs[4];
 
-    int screenX = RSDK_sceneInfo->entity->position.x - (RSDK_screens[RSDK_sceneInfo->currentScreenID].position.x << 16);
+    int screenX = entity->position.x - (RSDK_screens[RSDK_sceneInfo->currentScreenID].position.x << 16);
 
     for (int i = 0; i < 6; i += 2) {
-        vertPos[0].x = screenX + vertPosPtr[0].x;
-        vertPos[0].y = vertPosPtr[0].y;
+        vertPos[0].x = screenX + vertPosPtr[i + 0].x;
+        vertPos[0].y = vertPosPtr[i + 0].y;
         vertClrs[0]  = entity->vertClrPtrs[i];
 
-        vertPos[1].x = screenX + vertPosPtr[1].x;
-        vertPos[1].y = vertPosPtr[1].y;
+        vertPos[1].x = screenX + vertPosPtr[i + 1].x;
+        vertPos[1].y = vertPosPtr[i + 1].y;
         vertClrs[1]  = entity->vertClrPtrs[i + 1];
 
-        vertPos[2].x = screenX + vertPosPtr[2].x;
-        vertPos[2].y = vertPosPtr[2].y;
+        vertPos[2].x = screenX + vertPosPtr[i + 3].x;
+        vertPos[2].y = vertPosPtr[i + 3].y;
         vertClrs[2]  = entity->vertClrPtrs[i + 3];
 
-        vertPos[3].x = screenX + vertPosPtr[3].x;
-        vertPos[3].y = vertPosPtr[3].y;
+        vertPos[3].x = screenX + vertPosPtr[i + 2].x;
+        vertPos[3].y = vertPosPtr[i + 2].y;
         vertClrs[3]  = entity->vertClrPtrs[i + 2];
 
         RSDK.DrawBlendedQuad(vertPos, vertClrs, 4, entity->alpha, INK_ADD);
-        vertPosPtr++;
     }
 }
 

@@ -16,7 +16,7 @@ typedef struct {
     int value8[9]; //= { 60, 60, 3, 3, 3, 3, 3, 3, 4 };
     int value9;
     int value10;
-    byte value11;
+    byte flags;
     byte value12;
     bool32 value13;
     TextInfo value14;

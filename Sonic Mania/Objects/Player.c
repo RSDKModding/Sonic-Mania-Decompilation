@@ -6143,6 +6143,11 @@ void Player_ProcessP1Input(void)
             entity->down |= RSDK_stickL[entity->controllerID].keyDown.down;
             entity->left |= RSDK_stickL[entity->controllerID].keyLeft.down;
             entity->right |= RSDK_stickL[entity->controllerID].keyRight.down;
+            entity->up |= RSDK_stickL[entity->controllerID].vDelta > 0.3;
+            entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
+            entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
+            entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
+
             if (entity->left && entity->right) {
                 entity->left  = false;
                 entity->right = false;

@@ -137,9 +137,9 @@ void UFO_Player_StageLoad(void)
     }
 
     UFO_Player->sceneIndex = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
-    RSDK.SetAmbientColour(UFO_Player->sceneIndex, 160, 160, 160);
-    RSDK.SetDiffuseColour(UFO_Player->sceneIndex, 8, 8, 8);
-    RSDK.SetSpecularColour(UFO_Player->sceneIndex, 15, 15, 15);
+    RSDK.SetDiffuseColour(UFO_Player->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseIntensity(UFO_Player->sceneIndex, 8, 8, 8);
+    RSDK.SetSpecularIntensity(UFO_Player->sceneIndex, 15, 15, 15);
 
     foreach_all(UFO_Player, player)
     {
@@ -180,6 +180,11 @@ void UFO_Player_ProcessPlayerControl(void)
         entity->down |= RSDK_stickL[entity->controllerID].keyDown.down;
         entity->left |= RSDK_stickL[entity->controllerID].keyLeft.down;
         entity->right |= RSDK_stickL[entity->controllerID].keyRight.down;
+        entity->up |= RSDK_stickL[entity->controllerID].vDelta > 0.3;
+        entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
+        entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
+        entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
+
         if (entity->left && entity->right) {
             entity->left  = false;
             entity->right = false;
