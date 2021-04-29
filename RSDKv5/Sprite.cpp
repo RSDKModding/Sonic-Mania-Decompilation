@@ -882,6 +882,7 @@ ushort LoadSpriteSheet(const char *filename, Scopes scope)
     GFXSurface *surface = &gfxSurface[id];
     ImageGIF image;
     MEM_ZERO(image);
+    InitFileInfo(&image.info);
 
     AllocateStorage(sizeof(GifDecoder), (void **)&image.decoder, DATASET_TMP, true);
 
@@ -929,6 +930,7 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
 
     ImagePNG image;
     MEM_ZERO(image);
+    InitFileInfo(&image.info);
 
 #if RETRO_REV02
     if (LoadPNG(&image, buffer, false)) {

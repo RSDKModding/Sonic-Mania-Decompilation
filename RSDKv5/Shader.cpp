@@ -77,7 +77,7 @@ void LoadShader(const char* fileName, bool32 linear) {
 #endif
 
     sprintf(buffer, "Data/Shaders/%s/%s.vso", csoPath, fileName);
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
@@ -101,7 +101,7 @@ void LoadShader(const char* fileName, bool32 linear) {
     }
 
     sprintf(buffer, "Data/Shaders/%s/%s.fso", csoPath, fileName);
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
         AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);

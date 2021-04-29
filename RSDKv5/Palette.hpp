@@ -16,6 +16,7 @@ extern ushort bIndexes[0x100];
 extern ushort globalPalette[PALETTE_COUNT][PALETTE_SIZE];
 extern ushort activeGlobalRows[PALETTE_COUNT];
 extern ushort activeStageRows[PALETTE_COUNT];
+extern ushort stagePalette[PALETTE_COUNT][PALETTE_SIZE];
 
 extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 

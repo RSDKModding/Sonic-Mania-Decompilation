@@ -269,10 +269,9 @@ void UIWidgets_Unknown7(int a1, int a2, int a3, int red, int green, int blue, in
         RSDK.DrawQuad(verts, 4, red, green, blue, 0xFF, INK_NONE);
     }
 }
-void UIWidgets_Unknown8(int x, int y)
+void UIWidgets_Unknown8(int a1, int x, int y)
 {
     Vector2 drawPos;
-    int a1 = 0; //???
 
     drawPos.x                    = x;
     drawPos.y                    = y;
@@ -283,10 +282,9 @@ void UIWidgets_Unknown8(int x, int y)
     drawPos.y += a1 << 16;
     RSDK.DrawSprite(&UIWidgets->animData2, &drawPos, 0);
 }
-void UIWidgets_Unknown9(int x, int y)
+void UIWidgets_Unknown9(int a1, int x, int y)
 {
     Vector2 drawPos;
-    int a1 = 0; //???
 
     drawPos.x                    = x;
     drawPos.y                    = y;

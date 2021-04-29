@@ -7,6 +7,7 @@ ushort bIndexes[0x100];
 ushort globalPalette[PALETTE_COUNT][PALETTE_SIZE];
 ushort activeGlobalRows[PALETTE_COUNT];
 ushort activeStageRows[PALETTE_COUNT];
+ushort stagePalette[PALETTE_COUNT][PALETTE_SIZE];
 
 ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
@@ -18,12 +19,11 @@ ushort *lookupTable = NULL;
 #if RETRO_REV02
 void LoadPalette(byte paletteID, const char *filename, ushort rowFlags)
 {
-    FileInfo info;
-    MEM_ZERO(info);
-
     char buffer[0x80];    
     sprintf(buffer, "Data/Palettes/%s", filename);
 
+    FileInfo info;
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         for (int r = 0; r < 0x10; ++r) {
             if (!(rowFlags >> r & 1)) {

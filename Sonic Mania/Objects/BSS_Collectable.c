@@ -22,8 +22,8 @@ void BSS_Collectable_Draw(void)
     switch (entity->type) {
         case BSS_RING:
             entity->drawFX    = FX_SCALE | FX_SCALE;
-            entity->scale.x   = BSS_Collectable->scaleXTable[entity->frameID];
-            entity->scale.y   = BSS_Collectable->scaleYTable[entity->frameID];
+            entity->scale.x   = BSS_Collectable->ringScaleTableX[entity->frameID];
+            entity->scale.y   = BSS_Collectable->ringScaleTableY[entity->frameID];
             entity->direction = BSS_Collectable->sphereData[entity->type].frameID > 8;
             drawPos.x         = entity->position.x;
             drawPos.y         = entity->position.y;
@@ -40,8 +40,8 @@ void BSS_Collectable_Draw(void)
         case BSS_MEDAL_SILVER:
         case BSS_MEDAL_GOLD:
             entity->drawFX  = FX_SCALE;
-            entity->scale.x = BSS_Collectable->scaleTable2[entity->frameID];
-            entity->scale.y = BSS_Collectable->scaleTable2[entity->frameID];
+            entity->scale.x = BSS_Collectable->medalScaleTable[entity->frameID];
+            entity->scale.y = BSS_Collectable->medalScaleTable[entity->frameID];
             drawPos.x       = entity->position.x;
             drawPos.y       = entity->position.y;
             drawPos.y -= BSS_Collectable->screenYValues[entity->frameID];
@@ -50,22 +50,22 @@ void BSS_Collectable_Draw(void)
             break;
         case BSS_SPHERE_GREEN_STOOD:
             BSS_Collectable->sphereData[BSS_SPHERE_GREEN].frameID = entity->frameID;
-            entity->alpha                          = 0x80;
-            entity->inkEffect                      = INK_ALPHA;
+            entity->alpha                                         = 0x80;
+            entity->inkEffect                                     = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_GREEN], NULL, true);
             entity->inkEffect = INK_NONE;
             break;
         case BSS_BLUE_STOOD:
             BSS_Collectable->sphereData[BSS_SPHERE_BLUE].frameID = entity->frameID;
-            entity->alpha                          = 0x80;
-            entity->inkEffect                      = INK_ALPHA;
+            entity->alpha                                        = 0x80;
+            entity->inkEffect                                    = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_BLUE], NULL, true);
             entity->inkEffect = INK_NONE;
             break;
         case BSS_SPHERE_PINK_STOOD:
             BSS_Collectable->sphereData[BSS_SPHERE_PINK].frameID = entity->frameID;
-            entity->alpha                          = 0x80;
-            entity->inkEffect                      = INK_ALPHA;
+            entity->alpha                                        = 0x80;
+            entity->inkEffect                                    = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_PINK], NULL, true);
             entity->inkEffect = INK_NONE;
             break;
@@ -89,7 +89,7 @@ void BSS_Collectable_Create(void *data)
         for (int i = 0; i < 8; ++i) {
             RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, i, &BSS_Collectable->sphereData[i + 1], true, 0);
         }
-        // RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 0, (Animator *)&BSS_Collectable[2].scaleXTable[21], true, 0);
+        // RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 0, (Animator *)&BSS_Collectable[2].ringScaleTableX[21], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 0, &BSS_Collectable->sphereData[7], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 1, &BSS_Collectable->sphereData[15], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 6, &BSS_Collectable->sphereData[16], true, 0);
@@ -109,15 +109,15 @@ void BSS_Collectable_StageLoad(void)
 
         int id = 0x20;
         for (int i = 0; i < 0x20; ++i) {
-            BSS_Collectable->scaleXTable[i] *= 14;
-            BSS_Collectable->scaleYTable[i] *= 14;
-            BSS_Collectable->scaleTable2[i] *= 16;
-            BSS_Collectable->screenYValues[i] = id * (BSS_Collectable->scaleYTable[i] << 6);
-            BSS_Collectable->screenYValues[i] = id * (BSS_Collectable->scaleTable2[i] << 6);
+            BSS_Collectable->ringScaleTableX[i] *= 14;
+            BSS_Collectable->ringScaleTableY[i] *= 14;
+            BSS_Collectable->medalScaleTable[i] *= 16;
+            BSS_Collectable->screenYValues[i] = id * (BSS_Collectable->ringScaleTableY[i] << 6);
+            BSS_Collectable->screenYValues[i] = id * (BSS_Collectable->medalScaleTable[i] << 6);
 
-            int scale                       = i * (BSS_Collectable->scaleYTable[i] - BSS_Collectable->scaleXTable[i]);
-            int sx                          = BSS_Collectable->scaleXTable[i];
-            BSS_Collectable->scaleYTable[i] = sx + (scale >> 5);
+            int scale                           = i * (BSS_Collectable->ringScaleTableY[i] - BSS_Collectable->ringScaleTableX[i]);
+            int sx                              = BSS_Collectable->ringScaleTableX[i];
+            BSS_Collectable->ringScaleTableY[i] = sx + (scale >> 5);
 
             --id;
         }

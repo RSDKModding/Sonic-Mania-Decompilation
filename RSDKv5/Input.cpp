@@ -86,6 +86,20 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
         }
     }
 
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSTICK)) {
+        stickL[controllerID].keyStick.setHeld();
+    }
+    else {
+        stickL[controllerID].keyStick.setReleased();
+    }
+
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) {
+        stickR[controllerID].keyStick.setHeld();
+    }
+    else {
+        stickR[controllerID].keyStick.setReleased();
+    }
+
     for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX && !InputManager.anyPress; ++i) {
         if (getControllerButton(device, i)) {
             InputManager.anyPress = true;

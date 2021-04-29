@@ -536,7 +536,7 @@ void startGameObjects()
 void LoadGameConfig()
 {
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
 
     if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
         char buffer[0x100];

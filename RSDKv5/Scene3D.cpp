@@ -384,7 +384,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
 
     Model *model = &modelList[id];
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info, false);
 

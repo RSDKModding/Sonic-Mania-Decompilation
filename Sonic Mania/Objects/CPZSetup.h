@@ -6,16 +6,16 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort value1;
-    bool32 value2;
-    int value3[64]; //= { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
-    int value4;
-    int value5;
-    int value6;
-    int value7;
-    int value8;
-    int value9;
-    bool32 value10;
+    ushort aniTiles;
+    TileLayer* layerPtr;
+    int deformation[64]; //= { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
+    int palAnimFrameA;
+    int palAnimFrameB;
+    int palAnimFrameC;
+    int palAnimFrameD;
+    int palAnimFrameE;
+    ushort aniTileFrame;
+    Entity* outro;
 } ObjectCPZSetup;
 
 // Entity Class
@@ -38,6 +38,9 @@ void CPZSetup_EditorLoad(void);
 void CPZSetup_Serialize(void);
 
 // Extra Entity Functions
-
+void CPZSetup_BGSwitchCB1(void);
+void CPZSetup_BGSwitchCB2(void);
+void CPZSetup_StageFinishCBAct1(void);
+void CPZSetup_StageFinishCBAct2(void);
 
 #endif //!OBJ_CPZSETUP_H

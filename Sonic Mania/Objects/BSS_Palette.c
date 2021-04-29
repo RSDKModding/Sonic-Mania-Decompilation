@@ -13,7 +13,7 @@ void BSS_Palette_Draw(void) {}
 void BSS_Palette_Create(void *data)
 {
     if (!RSDK_sceneInfo->inEditor)
-        RSDK.ResetEntityPtr(RSDK_sceneInfo->entity, TYPE_BLANK, 0);
+        RSDK.ResetEntityPtr(RSDK_sceneInfo->entity, TYPE_BLANK, NULL);
 }
 
 void BSS_Palette_StageLoad(void)
@@ -33,8 +33,9 @@ void BSS_Palette_StageLoad(void)
             RSDK.SetPaletteEntry(1, 3, entity->bgColor2);
             RSDK.SetPaletteEntry(1, 4, entity->bgColor3);
         }
-        BSS_Palette->alpha1 = entity->skyAlpha;
-        BSS_Palette->alpha2 = entity->globeAlpha;
+        BSS_Palette->alpha1        = entity->skyAlpha;
+        BSS_Palette->alpha2        = entity->globeAlpha;
+        BSS_Palette->startColourID = 0;
     }
 }
 

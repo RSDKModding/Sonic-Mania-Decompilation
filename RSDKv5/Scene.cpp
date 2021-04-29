@@ -29,7 +29,7 @@ void LoadScene()
         typeGroups[i].entryCount = 0;
     }
 #if RETRO_REV02
-    debugValCnt = 0;
+    ClearDebugValues();
 #endif
     lookupTable = NULL;
 
@@ -135,7 +135,7 @@ void LoadScene()
     sprintf(buffer, "Data/Stages/%s/StageConfig.bin", currentSceneFolder);
 
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         char buffer[0x100];
         uint sig = ReadInt32(&info, false);
@@ -193,14 +193,6 @@ void LoadScene()
         }
 
         for (int i = 0; i < PALETTE_COUNT; ++i) {
-            for (int r = 0; r < 0x10; ++r) {
-                if ((activeGlobalRows[i] >> r & 1)) {
-                    for (int c = 0; c < 0x10; ++c) {
-                        fullPalette[i][(r << 4) + c] = globalPalette[i][(r << 4) + c];
-                    }
-                }
-            }
-
             activeStageRows[i] = ReadInt16(&info);
             for (int r = 0; r < 0x10; ++r) {
                 if ((activeStageRows[i] >> r & 1)) {
@@ -208,7 +200,7 @@ void LoadScene()
                         byte red                     = ReadInt8(&info);
                         byte green                   = ReadInt8(&info);
                         byte blue                    = ReadInt8(&info);
-                        fullPalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                        stagePalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
                     }
                 }
             }
@@ -245,8 +237,24 @@ void LoadSceneFile()
 
     memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
 
+    //Reload palette
+    for (int i = 0; i < 8; ++i) {
+        for (int r = 0; r < 0x10; ++r) {
+            if ((activeGlobalRows[i] >> r & 1)) {
+                for (int c = 0; c < 0x10; ++c) {
+                    fullPalette[i][(r << 4) + c] = globalPalette[i][(r << 4) + c];
+                }
+            }
+            if ((activeStageRows[i] >> r & 1)) {
+                for (int c = 0; c < 0x10; ++c) {
+                    fullPalette[i][(r << 4) + c] = stagePalette[i][(r << 4) + c];
+                }
+            }
+        }
+    }
+
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info, false);
 
@@ -513,7 +521,7 @@ void LoadSceneFile()
 void LoadTileConfig(char *filepath)
 {
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, filepath, FMODE_RB)) {
         uint sig = ReadInt32(&info, false);
         if (sig != 0x4C4954) {

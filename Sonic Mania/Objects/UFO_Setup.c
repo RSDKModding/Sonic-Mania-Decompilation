@@ -307,7 +307,7 @@ void UFO_Setup_Unknown6(void) // success
     setup->state   = UFO_Setup_Unknown12;
     RSDK.PlaySFX(UFO_Setup->sfx_SSExit, 0, 255);
     Music_FadeOut(0.025);
-    // PauseMenu->dword8 = true;
+    // PauseMenu->disableEvents = true;
 }
 void UFO_Setup_Unknown7(void) // fail
 {
@@ -323,7 +323,7 @@ void UFO_Setup_Unknown7(void) // fail
     setup->state   = UFO_Setup_Unknown12;
     RSDK.PlaySFX(UFO_Setup->sfx_SSExit, 0, 255);
     Music_FadeOut(0.025);
-    // PauseMenu->dword8 = true;
+    // PauseMenu->disableEvents = true;
 }
 
 void UFO_Setup_Unknown8(void)

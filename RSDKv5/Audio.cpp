@@ -92,7 +92,7 @@ bool32 InitAudioDevice()
 #endif
 
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
 
     if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
         char buffer[0x100];
@@ -454,7 +454,7 @@ void LoadStream(ChannelInfo *channel)
     }
 
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
 
     if (LoadFile(&info, streamInfo.filename, FMODE_RB)) {
         streamInfo.fileSize   = info.fileSize;
@@ -553,8 +553,6 @@ void LoadSfx(char *filename, byte plays, byte scope)
     if (!audioEnabled)
         return;
 
-    FileInfo info;
-    MEM_ZERO(info);
     char fullPath[0x80];
     sprintf(fullPath, "Data/SoundFX/%s", filename);
 
@@ -570,6 +568,8 @@ void LoadSfx(char *filename, byte plays, byte scope)
     if (id >= SFX_COUNT)
         return;
 
+    FileInfo info;
+    InitFileInfo(&info);
     if (LoadFile(&info, fullPath, FMODE_RB)) {
 #if !RETRO_USE_ORIGINAL_CODE
         byte type = fullPath[strlen(fullPath) - 3];

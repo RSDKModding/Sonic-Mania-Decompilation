@@ -104,13 +104,13 @@ void RemoveStorageEntry(void **dataPtr)
 
             for (int e = 0; e < dataStorage[set].entryCount; ++e) {
                 if (data == dataStorage[set].startPtrs1[e]) {
-                    *dataStorage[set].startPtrs1[e] = NULL;
+                    dataStorage[set].startPtrs1[e] = NULL;
                 }
             }
 
             int c = 0;
             for (int e = 0; e < dataStorage[set].entryCount; ++e) {
-                if (*dataStorage[set].startPtrs1[e]) {
+                if (dataStorage[set].startPtrs1[e]) {
                     if (e != c) {
                         dataStorage[set].startPtrs1[c] = dataStorage[set].startPtrs1[e];
                         dataStorage[set].startPtrs2[c] = dataStorage[set].startPtrs2[e];
@@ -239,13 +239,13 @@ void CleanEmptyStorage(StorageDataSets set)
         DataStorage *storage = &dataStorage[set];
 
         for (int e = 0; e < storage->entryCount; ++e) {
-            if (*storage->startPtrs1[e] && *storage->startPtrs1[e] != storage->startPtrs2[e])
-                *storage->startPtrs1[e] = NULL;
+            if (storage->startPtrs1[e] && *storage->startPtrs1[e] != storage->startPtrs2[e])
+                storage->startPtrs1[e] = NULL;
         }
 
         int c = 0;
         for (int e = 0; e < storage->entryCount; ++e) {
-            if (*storage->startPtrs1[e]) {
+            if (storage->startPtrs1[e]) {
                 if (e != c) {
                     storage->startPtrs1[c] = storage->startPtrs1[e];
                     storage->startPtrs2[c] = storage->startPtrs2[e];

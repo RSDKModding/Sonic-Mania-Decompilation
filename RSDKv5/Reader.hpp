@@ -82,6 +82,17 @@ enum FileModes {
 
 static const char *openModes[3] = { "rb", "wb", "rb+" };
 
+inline void InitFileInfo(FileInfo *info)
+{
+    info->file            = 0;
+    info->fileSize        = 0;
+    info->externalFile    = false;
+    info->usingFileBuffer = false;
+    info->encrypted       = false;
+    info->readPos         = 0;
+    info->fileOffset      = 0;
+}
+
 inline bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
 {
     if (info->file)

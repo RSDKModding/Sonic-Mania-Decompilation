@@ -83,14 +83,14 @@ void BSS_Message_State_GetBS(void)
 void BSS_Message_State_GetBSWait(void)
 {
     RSDK_THIS(BSS_Message);
-    EntityBSS_Setup *setup   = (EntityBSS_Setup *)RSDK.GetEntityByID(SLOT_BSS_SETUP);
-    EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityBSS_Setup *setup   = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
+    EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
 
     if (!setup->maxSpeed) {
         if (player->up) {
-            setup->maxSpeed   = 16;
-            setup->globeSpeed = 16;
-            setup->field_8C   = 2;
+            setup->maxSpeed      = 16;
+            setup->globeSpeed    = 16;
+            setup->globeSpeedInc = 2;
             if (player->onGround)
                 RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerData, 0, 0);
             entity->state = BSS_Message_State_Idle;
@@ -104,10 +104,10 @@ void BSS_Message_State_GetBSWait(void)
     }
 
     if (++entity->timer >= 180) {
-        entity->timer     = 0;
-        setup->maxSpeed   = 16;
-        setup->globeSpeed = 16;
-        setup->field_8C   = 2;
+        entity->timer        = 0;
+        setup->maxSpeed      = 16;
+        setup->globeSpeed    = 16;
+        setup->globeSpeedInc = 2;
         if (player->onGround)
             RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerData, 0, 0);
         entity->state = BSS_Message_State_Finish;

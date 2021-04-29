@@ -30,7 +30,7 @@ short LoadAnimation(const char *filename, Scopes scope)
     sheetIDs[0] = 0;
 
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info, false);
 

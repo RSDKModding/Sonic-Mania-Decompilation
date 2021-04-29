@@ -396,7 +396,7 @@ void LoadStrings(TextInfo *buffer, const char *filename)
     sprintf(nameBuf, "Data/Strings/%s", filename);
     
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, nameBuf, FMODE_RB)) {
         ushort header = ReadInt16(&info);
         if (header == 0xFEFF) {

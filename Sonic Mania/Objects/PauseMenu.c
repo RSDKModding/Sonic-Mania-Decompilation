@@ -54,9 +54,9 @@ void PauseMenu_StaticUpdate(void)
             flag = Zone->timer <= 1;
         }
 
-        if (!cnt && !pauseMenu->objectID && flag && PauseMenu->dword8 != 1) {
+        if (!cnt && !pauseMenu->objectID && flag && !PauseMenu->disableEvents) {
             if (User.GetUserAuthStatus() == STATUS_FORBIDDEN) {
-                PauseMenu->signoutDetected = 1;
+                PauseMenu->signoutDetected = true;
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                 pauseMenu->triggerPlayer = 0;
             }
@@ -113,7 +113,7 @@ void PauseMenu_StageLoad(void)
     PauseMenu->active               = ACTIVE_ALWAYS;
     PauseMenu->sfxBleep             = RSDK.GetSFX("Global/MenuBleep.wav");
     PauseMenu->sfxAccept            = RSDK.GetSFX("Global/MenuAccept.wav");
-    PauseMenu->dword8               = false;
+    PauseMenu->disableEvents               = false;
     PauseMenu->controllerDisconnect = false;
     PauseMenu->dword10              = false;
     PauseMenu->signoutDetected      = false;
@@ -250,7 +250,7 @@ void PauseMenu_Unknown6(void)
         if (!entity->buttonPtrs[i])
             break;
         //EntityUIButton *button = (EntityUIButton*)entity->buttonPtrs[i];
-        // button->field_8C       = uiControl;
+        // button->globeSpeedInc       = uiControl;
         // uiControl->entities[i] = button;
     }
     // uiControl->countUnknown = i;

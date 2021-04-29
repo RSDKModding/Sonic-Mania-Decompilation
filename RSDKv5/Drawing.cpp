@@ -411,13 +411,13 @@ void GenerateBlendLookupTable()
     for (int y = 0; y < BLENDTABLE_YSIZE; y++) {
         for (int x = 0; x < BLENDTABLE_XSIZE; x++) {
             blendLookupTable[blendTableID]      = y * x >> 8;
-            subtractLookupTable[blendTableID++] = y * ((BLENDTABLE_XSIZE - 1) - x) >> 8;
+            subtractLookupTable[blendTableID++] = y * (0x1F - x) >> 8;
         }
     }
 
     for (int c = 0; c < 0x100; ++c) {
         rIndexes[c] = (c & 0xFFF8) << 8;
-        gIndexes[c] = 8 * (c & 0xFFFC);
+        gIndexes[c] = (c & 0xFFFC) << 3;
         bIndexes[c] = c >> 3;
     }
 }
@@ -1084,14 +1084,14 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     if (width + x > currentScreen->clipBound_X2)
         width = currentScreen->clipBound_X2 - x;
     if (x < currentScreen->clipBound_X1) {
-        width += x;
+        width += x - currentScreen->clipBound_X1;
         x = currentScreen->clipBound_X1;
     }
 
     if (height + y > currentScreen->clipBound_Y2)
         height = currentScreen->clipBound_Y2 - y;
     if (y < currentScreen->clipBound_Y1) {
-        height += y;
+        height += y - currentScreen->clipBound_Y1;
         y = currentScreen->clipBound_Y1;
     }
 
@@ -1102,6 +1102,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     validDraw              = true;
     ushort *frameBufferPtr = &currentScreen->frameBuffer[x + (y * currentScreen->pitch)];
     ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+
     switch (inkEffect) {
         case INK_NONE: {
             int h = height;

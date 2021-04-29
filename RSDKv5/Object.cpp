@@ -78,7 +78,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
     }
 
     FileInfo info;
-    MEM_ZERO(info);
+    InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         uint sig = ReadInt32(&info, false);
 

@@ -144,30 +144,30 @@ void PathInverter_State_Horizontal(void)
                 }
             }
             else if (player->state == Player_State_None) {
-                PathInverter_Unknown1(player);
+                PathInverter_Unknown1((Entity*)player);
             }
             else {
                 if (!player->onGround) {
                     if (entity->playerPtrs[player->playerID])
-                        PathInverter_Unknown1(player);
+                        PathInverter_Unknown1((Entity *)player);
                     continue;
                 }
                 else {
                     if (abs(player->groundVel) < 0x40000) {
                         if (entity->playerPtrs[player->playerID])
-                            PathInverter_Unknown1(player);
+                            PathInverter_Unknown1((Entity *)player);
                     }
                     else if (player->velocity.x <= 0) {
                         if (player->position.x <= entity->position.x + 0x80000)
                             entity->playerPtrs[player->playerID] = 0;
                         else
-                            PathInverter_Unknown1(player);
+                            PathInverter_Unknown1((Entity *)player);
                     }
                     else {
                         if (player->position.x >= entity->position.x - 0x80000)
                             entity->playerPtrs[player->playerID] = 0;
                         else
-                            PathInverter_Unknown1(player);
+                            PathInverter_Unknown1((Entity *)player);
                     }
                 }
             }

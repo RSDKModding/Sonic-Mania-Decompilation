@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     ushort sfxBleep;
     ushort sfxAccept;
-    int dword8;
+    int disableEvents;
     bool32 controllerDisconnect;
     int dword10;
     bool32 signoutDetected;

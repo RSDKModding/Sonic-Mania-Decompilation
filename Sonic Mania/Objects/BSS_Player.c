@@ -11,8 +11,8 @@ void BSS_Player_Update(void)
     if (entity->onGround) {
         if (entity->jumpPress) {
             entity->velocity.y = -0x100000;
-            entity->onGround   = 0;
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->playerData, 0, 0);
+            entity->onGround   = false;
+            RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->playerData, false, 0);
             RSDK.PlaySFX(BSS_Player->sfx_Jump, 0, 255);
         }
     }
@@ -25,17 +25,17 @@ void BSS_Player_Update(void)
         entity->velocity.y += (speed << 12);
         if (entity->gravityStrength >= 0) {
             entity->gravityStrength = 0;
-            entity->onGround        = 1;
+            entity->onGround        = true;
             if (!entity->sideKick) {
                 if (entity->playerData.animationID == 3)
                     setup->globeSpeed >>= 1;
-                setup->field_8C = 2;
+                setup->globeSpeedInc = 2;
             }
 
             if (setup->maxSpeed)
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->playerData, 0, 0);
+                RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->playerData, false, 0);
             else
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->playerData, 0, 0);
+                RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->playerData, false, 0);
         }
     }
 
@@ -53,7 +53,7 @@ void BSS_Player_Update(void)
         if (entity->playerData.animationTimer > 0x1F) {
             entity->playerData.animationTimer &= 0x1F;
             if (setup->globeSpeed <= 0) {
-                if (!--entity->playerData.frameID)
+                if (--entity->playerData.frameID < 0)
                     entity->playerData.frameID = 11;
             }
             else if (++entity->playerData.frameID > 11) {
@@ -122,9 +122,9 @@ void BSS_Player_Create(void *data)
             entity->sideKick   = true;
         }
         else {
-            entity->inputState = BSS_Player_HandleP1Inputs;
+            entity->inputState   = BSS_Player_HandleP1Inputs;
             entity->controllerID = CONT_P1;
-            entity->sideKick   = false;
+            entity->sideKick     = false;
         }
         RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->playerData, true, 0);
     }
@@ -139,7 +139,7 @@ void BSS_Player_StageLoad(void)
     BSS_Player->raySpriteIndex    = RSDK.LoadSpriteAnimation("SpecialBS/Ray.bin", SCOPE_STAGE);
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
-    RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, 0);
+    RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, NULL);
     BSS_Player->sfx_Jump = RSDK.GetSFX("Global/Jump.wav");
 }
 
