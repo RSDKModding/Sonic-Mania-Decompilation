@@ -42,5 +42,7 @@ void ZipLine_Serialize(void);
 // Extra Entity Functions
 void ZipLine_Unknown1(void);
 void ZipLine_Unknown2(void);
+Vector2 ZipLine_Unknown3(void);
+void ZipLine_Unknown4(void);
 
 #endif //!OBJ_ZIPLINE_H

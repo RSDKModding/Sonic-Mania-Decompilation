@@ -2163,7 +2163,7 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
             player->controlLock = 0;
             if (player->left && player->onGround) {
                 player->groundVel  = -0x8000;
-                player->position.x = 0;
+                player->position.x &= 0xFFFF0000;
             }
             return 2;
         case 3:

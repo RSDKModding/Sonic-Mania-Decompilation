@@ -437,34 +437,14 @@ void BreakableWall_Break4(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
+        int yVel = player->velocity.y;
+        if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
 #if RETRO_USE_PLUS
             if (!entity->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimData.animationID == ANI_DROPDASH)) {
 #endif
                 if (!entity->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 flag = player->playerAnimData.animationID == ANI_JUMP;
-
-                    switch (player->characterID) {
-                        default: break;
-                        case ID_SONIC:
-                            if (!flag)
-                                flag = player->playerAnimData.animationID == ANI_DROPDASH;
-                            break;
-                        case ID_KNUCKLES: flag = true; break;
-#if RETRO_USE_PLUS
-                        case ID_MIGHTY:
-                            if (!flag)
-                                flag = player->state == Player_State_MightyHammerDrop;
-                            break;
-#endif
-                    }
-
-                    if (player->groundedStore && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
-                        flag = false;
-
-                    if (flag && !player->sidekick) {
+                    if (!player->sidekick) {
                         BreakableWall_BreakV();
-                        int yVel           = player->velocity.y;
                         player->velocity.y = 0;
 
                         if (entity->size.y < 2) {
@@ -596,25 +576,25 @@ void BreakableWall_BreakV()
     }
 
     int startX = entity->position.x;
-    int curX   = entity->position.x - (entity->size.x << 19) + 0x80000;
-    int ty     = entity->position.y - (entity->size.y << 19) + 0x80000;
-    int th     = (entity->size.y << 19) + entity->position.y;
+    int endX   = entity->position.x - (entity->size.x << 19) + 0x80000;
+    int curY     = entity->position.y - (entity->size.y << 19) + 0x80000;
+    int startY     = (entity->size.y << 19) + entity->position.y;
 
-    int yAngle = ty - th;
+    int distY = curY - startY;
     for (int y = 0; y < entity->size.y; ++y) {
-        int tx     = curX;
-        int xDif   = curX - startX;
-        int tileY  = ty >> 20;
-        int xAngle = 2 * xDif;
-        int speed  = 3 * abs(yAngle);
+        int tx     = endX;
+        int distX   = endX - startX;
+        int tileY  = curY >> 20;
+        int angleX = 2 * distX;
+        int speed  = 3 * abs(distY);
         for (int x = 0; x < entity->size.x; ++x) {
             int tileX                      = tx >> 20;
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, tx, ty);
+            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, tx, curY);
             tileChunk->tileInfo            = RSDK.GetTileInfo(entity->priority, tileX, tileY);
             tileChunk->drawOrder           = entity->drawOrder;
 
-            int angle = RSDK.ATan2(xAngle, yAngle);
-            int spd   = (speed + abs(xDif)) >> 18;
+            int angle = RSDK.ATan2(angleX, distY);
+            int spd   = (speed + abs(distX)) >> 18;
             tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
             tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
             RSDK.SetTileInfo(entity->priority, tileX, tileY, 0xFFFF);
@@ -624,11 +604,11 @@ void BreakableWall_BreakV()
             }
 
             tx += 0x100000;
-            xDif += 0x100000;
-            xAngle += 0x200000;
+            distX += 0x100000;
+            angleX += 0x200000;
         }
-        ty += 0x100000;
-        yAngle += 0x100000;
+        curY += 0x100000;
+        distY += 0x100000;
     }
 
     entity->size.x     = sizeX;
@@ -641,8 +621,8 @@ void BreakableWall_BreakUnknown(EntityBreakableWall *entity, byte flip)
 {
     int startX = entity->position.x;
     int startY = entity->position.y;
-    int curX   = entity->position.x - (entity->size.x << 19) + 0x80000;
-    int curY   = entity->position.y - (entity->size.y << 19) + 0x80000;
+    int endX   = entity->position.x - (entity->size.x << 19) + 0x80000;
+    int endY   = entity->position.y - (entity->size.y << 19) + 0x80000;
     switch (flip) {
         case FLIP_NONE: startX += entity->size.x << 19; break;
         case FLIP_X: startX -= entity->size.x << 19; break;
@@ -650,42 +630,43 @@ void BreakableWall_BreakUnknown(EntityBreakableWall *entity, byte flip)
         case FLIP_XY: startY -= entity->size.y << 19; break;
         default: break;
     }
+
+    int curY = endY - startY;
     for (int y = 0; y < entity->size.y; ++y) {
-        int yDif   = curY - startY;
-        int xDif   = curX - startX;
-        int tileY  = (yDif + startY) >> 20;
-        int angleX = 2 * (curX - startX);
+        int curX   = endX - startX;
+        int tileY  = (curY + startY) >> 20;
+        int angleX = 2 * (endX - startX);
         for (int x = 0; x < entity->size.x; ++x) {
-            int tileX = (xDif + startX) >> 20;
+            int tileX = (curX + startX) >> 20;
             EntityBreakableWall *tileChunk =
-                (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, xDif + startX, yDif + startY);
+                (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, curX + startX, curY + startY);
             tileChunk->tileInfo  = RSDK.GetTileInfo(entity->priority, tileX, tileY);
             tileChunk->drawOrder = entity->drawOrder;
 
             switch (flip) {
                 case FLIP_NONE:
                 case FLIP_X: {
-                    int angle  = RSDK.ATan2(angleX, yDif);
+                    int angle  = RSDK.ATan2(angleX, curY);
                     int angle2 = 0;
-                    if (abs(xDif) > 0x80000) {
-                        if (xDif + startX >= startX)
-                            angle2 = RSDK.ATan2(0x80000, yDif);
+                    if (abs(curX) > 0x80000) {
+                        if (curX + startX >= startX)
+                            angle2 = RSDK.ATan2(0x80000, curY);
                         else
-                            angle2 = RSDK.ATan2(-0x80000, yDif);
+                            angle2 = RSDK.ATan2(-0x80000, curY);
                     }
                     else {
-                        angle2 = RSDK.ATan2(xDif, yDif);
+                        angle2 = RSDK.ATan2(curX, curY);
                     }
                     tileChunk->velocity.x = flip == FLIP_NONE ? -0x10000 : 0x10000;
                     tileChunk->velocity.y = 0x10000;
-                    tileChunk->velocity.x += 40 * (((entity->size.y << 19) + 3 * abs(xDif) - abs(yDif)) >> 18) * RSDK.Cos256(angle);
-                    tileChunk->velocity.y += 32 * ((abs(yDif) + abs(xDif) + 2 * abs(yDif)) >> 18) * RSDK.Sin256(angle2);
+                    tileChunk->velocity.x += 40 * (((entity->size.y << 19) + 3 * abs(curX) - abs(curY)) >> 18) * RSDK.Cos256(angle);
+                    tileChunk->velocity.y += 32 * ((abs(curY) + abs(curX) + 2 * abs(curY)) >> 18) * RSDK.Sin256(angle2);
                     break;
                 }
                 case FLIP_Y: {
-                    int angle = RSDK.ATan2(angleX, yDif);
-                    tileChunk->velocity.x += 40 * ((abs(xDif) + 3 * abs(yDif)) >> 18) * RSDK.Cos256(angle);
-                    tileChunk->velocity.y += 40 * ((abs(xDif) + 3 * abs(yDif)) >> 18) * RSDK.Sin256(angle);
+                    int angle = RSDK.ATan2(angleX, curY);
+                    tileChunk->velocity.x += 40 * ((abs(curX) + 3 * abs(curY)) >> 18) * RSDK.Cos256(angle);
+                    tileChunk->velocity.y += 40 * ((abs(curX) + 3 * abs(curY)) >> 18) * RSDK.Sin256(angle);
                 }
             }
 
@@ -694,10 +675,10 @@ void BreakableWall_BreakUnknown(EntityBreakableWall *entity, byte flip)
                 if (BreakableWall->farPlaneLayer != 0xFFFF)
                     RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, 0xFFFF);
             }
-            xDif += 0x100000;
+            curX += 0x10 << 16;
             angleX += 0x200000;
         }
-        yDif += 0x100000;
+        curY += 0x10 << 16;
     }
 }
 
