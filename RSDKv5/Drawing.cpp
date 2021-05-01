@@ -23,61 +23,61 @@ char drawGroupNames[0x10][0x10]{
 
 #include "DevFont.hpp"
 
-//50% alpha, but way faster
+// 50% alpha, but way faster
 #define setPixelBlend(colour, frameBufferClr) frameBufferClr = ((colour >> 1) & 0x7BEF) + ((frameBufferClr >> 1) & 0x7BEF)
 
-//Alpha blending
+// Alpha blending
 #define setPixelAlpha(colour, frameBufferClr, alpha)                                                                                                 \
     ushort *blendPtrB = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - alpha)];                                                                        \
     ushort *blendPtrA = &blendLookupTable[BLENDTABLE_XSIZE * alpha];                                                                                 \
     frameBufferClr    = (blendPtrB[frameBufferClr & 0x1F] + blendPtrA[colour & 0x1F])                                                                \
-                      | ((blendPtrB[(frameBufferClr & 0x7E0) >> 6] + blendPtrA[(colour & 0x7E0) >> 6]) << 6)                                         \
-                      | ((blendPtrB[(frameBufferClr & 0xF800) >> 11] + blendPtrA[(colour & 0xF800) >> 11]) << 11) \
+                     | ((blendPtrB[(frameBufferClr & 0x7E0) >> 6] + blendPtrA[(colour & 0x7E0) >> 6]) << 6)                                          \
+                     | ((blendPtrB[(frameBufferClr & 0xF800) >> 11] + blendPtrA[(colour & 0xF800) >> 11]) << 11)
 
-//Additive Blending
-#define setPixelAdditive(colour, frameBufferClr)                                                                                                        \
-    int v20         = 0;                                                                                                                             \
-    int v21         = 0;                                                                                                                             \
+// Additive Blending
+#define setPixelAdditive(colour, frameBufferClr)                                                                                                     \
+    int v20 = 0;                                                                                                                                     \
+    int v21 = 0;                                                                                                                                     \
                                                                                                                                                      \
-    if ((blendTablePtr[(colour & 0xF800) >> 11] << 11) + (frameBufferClr & 0xF800) <= 0xF800)                                             \
-        v20 = (blendTablePtr[(colour & 0xF800) >> 11] << 11) + (frameBufferClr & 0xF800);                                         \
+    if ((blendTablePtr[(colour & 0xF800) >> 11] << 11) + (frameBufferClr & 0xF800) <= 0xF800)                                                        \
+        v20 = (blendTablePtr[(colour & 0xF800) >> 11] << 11) + (frameBufferClr & 0xF800);                                                            \
     else                                                                                                                                             \
         v20 = 0xF800;                                                                                                                                \
-    int v12 = (blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (frameBufferClr & 0x7E0);                                                     \
+    int v12 = (blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (frameBufferClr & 0x7E0);                                                                \
     if (v12 <= 0x7E0)                                                                                                                                \
         v21 = v12 | v20;                                                                                                                             \
     else                                                                                                                                             \
         v21 = v20 | 0x7E0;                                                                                                                           \
-    int v13 = blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (frameBufferClr & 0x1F);                                                   \
-    if (v13 <= 0x1F)                                                                                                                                   \
-        frameBufferClr = v21 | v13;                                                                                                                     \
+    int v13 = blendTablePtr[colour & (BLENDTABLE_XSIZE - 1)] + (frameBufferClr & 0x1F);                                                              \
+    if (v13 <= 0x1F)                                                                                                                                 \
+        frameBufferClr = v21 | v13;                                                                                                                  \
     else                                                                                                                                             \
-        frameBufferClr = v21 | 0x1F;   
+        frameBufferClr = v21 | 0x1F;
 
-//Subtractive Blending
+// Subtractive Blending
 #define setPixelSubtractive(colour, frameBufferClr)                                                                                                  \
     ushort finalColour = 0;                                                                                                                          \
-    if ((frameBufferClr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)                                                           \
+    if ((frameBufferClr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11) <= 0)                                                             \
         finalColour = 0;                                                                                                                             \
     else                                                                                                                                             \
-        finalColour = (frameBufferClr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11);                                                  \
-    int v12 = (frameBufferClr & 0x7E0) - (subBlendTable[(colour & 0x7E0) >> 6] << 6);                                                              \
+        finalColour = (frameBufferClr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11);                                                    \
+    int v12 = (frameBufferClr & 0x7E0) - (subBlendTable[(colour & 0x7E0) >> 6] << 6);                                                                \
     if (v12 > 0)                                                                                                                                     \
         finalColour |= v12;                                                                                                                          \
-    int v13 = (frameBufferClr & (BLENDTABLE_XSIZE - 1)) - subBlendTable[colour & (BLENDTABLE_XSIZE - 1)];                                          \
+    int v13 = (frameBufferClr & 0x1F) - subBlendTable[colour & 0x1F];                                                                                \
     if (v13 > 0)                                                                                                                                     \
         finalColour |= v13;                                                                                                                          \
     frameBufferClr = finalColour;
 
-//Only draw if framebuffer clr IS maskColour
+// Only draw if framebuffer clr IS maskColour
 #define setPixelMasked(colour, frameBufferClr)                                                                                                       \
     if (frameBufferClr == maskColour)                                                                                                                \
         frameBufferClr = colour;
 
 // Only draw if framebuffer clr is NOT maskColour
-#define setPixelUnmasked(colour, frameBufferClr)                                                                                                       \
+#define setPixelUnmasked(colour, frameBufferClr)                                                                                                     \
     if (frameBufferClr != maskColour)                                                                                                                \
-        frameBufferClr = colour; \
+        frameBufferClr = colour; 
 
 bool32 InitRenderDevice()
 {
@@ -1147,6 +1147,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
                 int w = width;
                 while (w--) {
                     setPixelAdditive(colour16, *frameBufferPtr);
+                    ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
             }
@@ -1159,6 +1160,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
                 int w = width;
                 while (w--) {
                     setPixelSubtractive(colour16, *frameBufferPtr);
+                    ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
             }

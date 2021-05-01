@@ -127,7 +127,7 @@ void Shield_State_Bubble(void)
     entity->direction = id & 3;
     if (entity->altData.frameID == entity->altData.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &entity->altData, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->altData, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data, true, 0);
         entity->state = Shield_State_BubbleAlt;
     }
 }

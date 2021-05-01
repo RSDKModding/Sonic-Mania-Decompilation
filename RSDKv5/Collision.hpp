@@ -10,23 +10,23 @@ enum {
 
 struct CollisionSensor {
     Vector2 pos;
-    int angle;
     bool32 collided;
+    byte angle;
 };
 
 extern int collisionTolerance;
 extern int collisionOffset;
 extern int collisionMaskAir;
 
-extern int collisionLeft_Outer;
-extern int collisionTop_Outer;
-extern int collisionRight_Outer;
-extern int collisionBottom_Outer;
+extern int collisionOuter_Left;
+extern int collisionOuter_Top;
+extern int collisionOuter_Right;
+extern int collisionOuter_Bottom;
 
-extern int collisionLeft_Inner;
-extern int collisionTop_Inner;
-extern int collisionRight_Inner;
-extern int collisionBottom_Inner;
+extern int collisionInner_Left;
+extern int collisionInner_Top;
+extern int collisionInner_Right;
+extern int collisionInner_Bottom;
 
 extern Entity *collisionEntity;
 

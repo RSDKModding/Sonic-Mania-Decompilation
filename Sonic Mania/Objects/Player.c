@@ -3072,22 +3072,24 @@ void Player_HandleRollDeceleration(void)
         entity->groundVel -= entity->rollingDeceleration;
 
     if (entity->groundVel) {
-        if (entity->groundVel <= 0) {
+        if (entity->groundVel < 0) {
             entity->groundVel += entity->rollingFriction;
 
             if (RSDK.Sin256(entity->angle) >= 0)
-                entity->groundVel += (0x1400 * RSDK.Sin256(entity->angle)) >> 8;
+                entity->groundVel += 0x1400 * RSDK.Sin256(entity->angle) >> 8;
             else
-                entity->groundVel += (0x5000 * RSDK.Sin256(entity->angle)) >> 8;
+                entity->groundVel += 0x5000 * RSDK.Sin256(entity->angle) >> 8;
+
             if (entity->groundVel < -0x120000)
                 entity->groundVel = -0x120000;
         }
         else {
             entity->groundVel -= entity->rollingFriction;
-            if (RSDK.Sin256(entity->angle) >= 0)
-                entity->groundVel += (0x1400 * RSDK.Sin256(entity->angle)) >> 8;
+            if (RSDK.Sin256(entity->angle) <= 0)
+                entity->groundVel += 0x1400 * RSDK.Sin256(entity->angle) >> 8;
             else
-                entity->groundVel += (0x5000 * RSDK.Sin256(entity->angle)) >> 8;
+                entity->groundVel += 0x5000 * RSDK.Sin256(entity->angle) >> 8;
+
             if (entity->groundVel > 0x120000)
                 entity->groundVel = 0x120000;
         }
@@ -3098,59 +3100,48 @@ void Player_HandleRollDeceleration(void)
 
     switch (entity->collisionMode) {
         case CMODE_FLOOR:
-            if (entity->state != Player_State_ForceRoll) {
-                if (initialVel <= 0) {
-                    if (entity->groundVel >= 0) {
-                        entity->groundVel = 0;
-                        entity->state     = Player_State_Ground;
-                    }
-                }
-                else if (entity->groundVel <= 0) {
-                    entity->groundVel = 0;
-                    entity->state     = Player_State_Ground;
+            if (entity->state == Player_State_ForceRoll) {
+                if (abs(entity->groundVel) < 0x10000) {
+                    if (entity->direction & FLIP_Y)
+                        entity->groundVel = -0x40000;
+                    else
+                        entity->groundVel = 0x40000;
                 }
             }
             else {
-                if (entity->groundVel < 0x10000 && entity->groundVel > -0x10000) {
-                    entity->groundVel = 0x40000;
-                    if (entity->direction & FLIP_Y)
-                        entity->groundVel = -0x40000;
+                if ((entity->groundVel >= 0 && initialVel <= 0) || (entity->groundVel <= 0 && initialVel >= 0)) {
+                    entity->groundVel = 0;
+                    entity->state     = Player_State_Ground;
                 }
             }
             break;
         case CMODE_LWALL:
         case CMODE_RWALL:
             if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
+                if (abs(entity->groundVel) < 0x20000) {
                     entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
+                    entity->velocity.y    = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
                     entity->onGround      = false;
                     entity->angle         = 0;
                     entity->collisionMode = CMODE_FLOOR;
-                    entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
                 }
             }
             break;
         case CMODE_ROOF:
             if (entity->invertGravity) {
-                if (initialVel <= 0) {
-                    if (entity->groundVel >= 0) {
-                        entity->groundVel = 0;
-                        entity->state     = Player_State_Ground;
-                    }
-                }
-                else if (entity->groundVel <= 0) {
+                if ((entity->groundVel >= 0 && initialVel <= 0) || (entity->groundVel <= 0 && initialVel >= 0)) {
                     entity->groundVel = 0;
                     entity->state     = Player_State_Ground;
                 }
             }
             else {
                 if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                    if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
+                    if (abs(entity->groundVel) < 0x20000) {
                         entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
+                        entity->velocity.y    = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
                         entity->onGround      = false;
                         entity->angle         = 0;
                         entity->collisionMode = CMODE_FLOOR;
-                        entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
                     }
                 }
             }

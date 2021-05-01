@@ -111,6 +111,7 @@ void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID);
 EntityWater *Water_Unknown7(EntityPlayer *entityPtr);
 
 void Water_State_Palette(void);
+void Water_State_Tint(void);
 void Water_State_Splash(void);
 void Water_Unknown4(void);
 void Water_Unknown5(EntityWater *entity, int a2);

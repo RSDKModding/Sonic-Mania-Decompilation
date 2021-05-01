@@ -93,7 +93,7 @@ void Newtron_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
 }
 
-void Newtron_DebugSpawn(void) { RSDK.CreateEntity(Newtron->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Newtron_DebugSpawn(void) { RSDK.CreateEntity(Newtron->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
 
 void Newtron_CheckHit(void)
 {
@@ -152,7 +152,7 @@ void Newtron_Unknown5(void)
     RSDK_THIS(Newtron);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionPlatform(player, entity, &Newtron->hitbox4)) {
+        if (Player_CheckCollisionTouch(player, entity, &Newtron->hitbox4)) {
             entity->state = Newtron_Unknown6;
         }
     }

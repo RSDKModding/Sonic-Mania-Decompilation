@@ -37,7 +37,7 @@ void Platform_Update(void)
         entity->position.x = entity->centerPos.x;
         entity->position.y = entity->centerPos.y;
         for (int s = RSDK_sceneInfo->entitySlot + 1, i = 0; i < entity->childCount; ++i) {
-            Entity *child = RSDK.GetEntityByID(s);
+            Entity *child = RSDK.GetEntityByID(s++);
             if (child->objectID == ItemBox->objectID) {
                 if (!child->scale.y) {
                     EntityItemBox *itemBox = (EntityItemBox *)child;

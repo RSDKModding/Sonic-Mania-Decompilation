@@ -555,8 +555,8 @@ void LoadTileConfig(char *filepath)
                 {
                     for (int c = 0; c < TILE_SIZE; c++) {
                         if (hasCollision[c]) {
+                            collisionMasks[p][t].floorMasks[c] = 0x00;
                             collisionMasks[p][t].roofMasks[c]  = collision[c];
-                            collisionMasks[p][t].floorMasks[c] = 0;
                         }
                         else {
                             collisionMasks[p][t].floorMasks[c] = 0xFF;
@@ -567,35 +567,44 @@ void LoadTileConfig(char *filepath)
                     // LWall rotations
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         int h = 0;
-                        while (h > -1) {
+                        while (true) {
                             if (h == TILE_SIZE) {
                                 collisionMasks[p][t].lWallMasks[c] = 0xFF;
-                                h                                  = -1;
+                                break;
                             }
-                            else if (c > collisionMasks[p][t].roofMasks[h]) {
-                                ++h;
+
+                            byte m = collisionMasks[p][t].roofMasks[h];
+                            if (m != 0xFF && c <= m) {
+                                collisionMasks[p][t].lWallMasks[c] = h;
+                                break;
                             }
                             else {
-                                collisionMasks[p][t].lWallMasks[c] = h;
-                                h                                  = -1;
+                                ++h;
+                                if (h <= -1)
+                                    break;
                             }
                         }
                     }
 
+                    
                     // RWall rotations
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         int h = TILE_SIZE - 1;
-                        while (h < TILE_SIZE) {
+                        while (true) {
                             if (h == -1) {
                                 collisionMasks[p][t].rWallMasks[c] = 0xFF;
-                                h                                  = TILE_SIZE;
+                                break;
                             }
-                            else if (c > collisionMasks[p][t].roofMasks[h]) {
-                                --h;
+
+                            byte m = collisionMasks[p][t].roofMasks[h];
+                            if (m != 0xFF && c <= m) {
+                                collisionMasks[p][t].rWallMasks[c] = h;
+                                break;
                             }
                             else {
-                                collisionMasks[p][t].rWallMasks[c] = h;
-                                h                                  = TILE_SIZE;
+                                --h;
+                                if (h >= TILE_SIZE)
+                                    break;
                             }
                         }
                     }
@@ -606,7 +615,7 @@ void LoadTileConfig(char *filepath)
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         if (hasCollision[c]) {
                             collisionMasks[p][t].floorMasks[c] = collision[c];
-                            collisionMasks[p][t].roofMasks[c]  = 0xF;
+                            collisionMasks[p][t].roofMasks[c]  = 0x0F;
                         }
                         else {
                             collisionMasks[p][t].floorMasks[c] = 0xFF;
@@ -614,19 +623,24 @@ void LoadTileConfig(char *filepath)
                         }
                     }
 
+                    // LWall rotations
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         int h = 0;
-                        while (h > -1) {
+                        while (true) {
                             if (h == TILE_SIZE) {
                                 collisionMasks[p][t].lWallMasks[c] = 0xFF;
-                                h                                  = -1;
+                                break;
                             }
-                            else if (c < collisionMasks[p][t].floorMasks[h]) {
-                                ++h;
+
+                            byte m = collisionMasks[p][t].floorMasks[h];
+                            if (m != 0xFF && c >= m) {
+                                collisionMasks[p][t].lWallMasks[c] = h;
+                                break;
                             }
                             else {
-                                collisionMasks[p][t].lWallMasks[c] = h;
-                                h                                  = -1;
+                                ++h;
+                                if (h <= -1)
+                                    break;
                             }
                         }
                     }
@@ -634,17 +648,21 @@ void LoadTileConfig(char *filepath)
                     // RWall rotations
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         int h = TILE_SIZE - 1;
-                        while (h < TILE_SIZE) {
+                        while (true) {
                             if (h == -1) {
                                 collisionMasks[p][t].rWallMasks[c] = 0xFF;
-                                h                                  = TILE_SIZE;
+                                break;
                             }
-                            else if (c < collisionMasks[p][t].floorMasks[h]) {
-                                --h;
+
+                            byte m = collisionMasks[p][t].floorMasks[h];
+                            if (m != 0xFF && c >= m) {
+                                collisionMasks[p][t].rWallMasks[c] = h;
+                                break;
                             }
                             else {
-                                collisionMasks[p][t].rWallMasks[c] = h;
-                                h                                  = TILE_SIZE;
+                                --h;
+                                if (h >= TILE_SIZE)
+                                    break;
                             }
                         }
                     }

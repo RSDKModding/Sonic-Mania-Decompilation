@@ -140,13 +140,13 @@ void Water_Create(void *data)
                 entity->hitbox.left   = -(entity->size.x >> 17);
                 entity->hitbox.bottom = (entity->size.y >> 17);
                 entity->hitbox.top    = -(entity->size.y >> 17);
-                entity->state         = Water_State_Palette;
+                entity->state         = Water_State_Tint;
                 entity->stateDraw     = Water_State_Draw_Tint;
                 break;
             case 2:
             case 4:
                 entity->drawOrder     = Zone->drawOrderLow;
-                entity->inkEffect     = 3;
+                entity->inkEffect     = INK_ADD;
                 entity->alpha         = 0x100;
                 entity->active        = ACTIVE_BOUNDS;
                 entity->updateRange.x = 0x100000;
@@ -186,7 +186,7 @@ void Water_Create(void *data)
                 entity->active        = ACTIVE_NORMAL;
                 entity->drawOrder     = Zone->uiDrawLow;
                 entity->drawFX        = FX_SCALE;
-                entity->inkEffect     = INK_SUB;
+                entity->inkEffect     = INK_ADD;
                 entity->alpha         = 0x100;
                 entity->updateRange.x = 0x800000;
                 entity->updateRange.y = 0x800000;
@@ -201,7 +201,7 @@ void Water_Create(void *data)
                 entity->active        = ACTIVE_NORMAL;
                 entity->drawOrder     = Zone->uiDrawLow;
                 entity->drawFX        = FX_SCALE;
-                entity->inkEffect     = INK_SUB;
+                entity->inkEffect     = INK_ADD;
                 entity->alpha         = 0x100;
                 entity->updateRange.x = 0x800000;
                 entity->updateRange.y = 0x800000;
@@ -460,7 +460,7 @@ void Water_State_Palette(void)
                         }
 
                         if (player->velocity.y >= -0x40000) {
-                            player->velocity.y *= 2;
+                            player->velocity.y <<= 1;
                             if (player->velocity.y < -0x100000)
                                 player->velocity.y = -0x100000;
                         }
@@ -468,20 +468,13 @@ void Water_State_Palette(void)
                 }
                 else {
                     if (abs(player->groundVel) >= 0x78000) {
-                        Hitbox *playerHitbox = player->outerbox;
-                        if (!playerHitbox) {
-                            playerHitbox = RSDK.GetHitbox(&player->playerAnimData, 0);
-                        }
-                        Hitbox *otherHitbox = &defaultHitbox;
-                        if (playerHitbox)
-                            otherHitbox = playerHitbox;
-
-                        if (abs(player->position.y + (otherHitbox->bottom << 16) - Water->waterLevel) <= 0x40000 && player->groundedStore) {
+                        Hitbox *playerHitbox = Player_GetHitbox(player);
+                        if (abs(player->position.y + (playerHitbox->bottom << 16) - Water->waterLevel) <= 0x40000 && player->groundedStore) {
                             Water->wakePosX[p] = player->position.x;
                             Water->wakeDir[p]  = player->groundVel < 0;
                             if (!player->onGround) {
                                 player->onGround   = true;
-                                player->position.y = Water->waterLevel - (otherHitbox->bottom << 16);
+                                player->position.y = Water->waterLevel - (playerHitbox->bottom << 16);
                             }
                         }
                     }
@@ -578,6 +571,11 @@ void Water_State_Palette(void)
             }
         }
     }
+}
+
+void Water_State_Tint(void)
+{
+    // nothing, its handled by a "master" palette state
 }
 
 void Water_State_Splash(void)
@@ -1131,7 +1129,7 @@ void Water_State_CountDownBubble(void)
     else {
         foreach_active(Water, water)
         {
-            if (water->type == 1 && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox) == 1) {
+            if (water->type == 1 && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
                 flag = true;
             }
         }
@@ -1146,11 +1144,11 @@ void Water_State_CountDownBubble(void)
         RSDK.SetSpriteAnimation(Water->spriteIndex, entity->countdownID + 8, &entity->waterData, true, 0);
         if (player->camera) {
             entity->size.x = (entity->position.x & 0xFFFF0000) - (player->camera->position.x & 0xFFFF0000);
-            entity->size.y = (player->camera->position.y & 0xFFFF0000) - (entity->position.y & 0xFFFF0000);
+            entity->size.y = (entity->position.y & 0xFFFF0000) - (player->camera->position.y & 0xFFFF0000);
         }
         else {
             entity->size.x = (entity->position.x & 0xFFFF0000) - (player->position.x & 0xFFFF0000);
-            entity->size.y = (entity->position.y & 0xFFFF0000) - (entity->position.y & 0xFFFF0000);
+            entity->size.y = (entity->position.y & 0xFFFF0000) - (player->position.y & 0xFFFF0000);
         }
         entity->state = Water_State_BubbleMove;
     }

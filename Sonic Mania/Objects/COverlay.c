@@ -48,10 +48,13 @@ void COverlay_DebugDraw(void)
 
 void COverlay_DebugSpawn(void)
 {
+    int count = 0;
     foreach_all(COverlay, entity) {
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        ++count;
     }
-    RSDK.CreateEntity(COverlay->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    if (!count)
+        RSDK.CreateEntity(COverlay->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
 }
 
 void COverlay_DrawTile(void)
