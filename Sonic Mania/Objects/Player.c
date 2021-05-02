@@ -704,8 +704,8 @@ void Player_StageLoad(void)
 #endif
 
 #if RETRO_USE_PLUS
-    Soundboard_LoadSFX("Global/RaySwoop.wav", 41417, NULL, NULL); // Player_CheckRaySwooping, Player_ChangeRaySwoopSFX
-    Soundboard_LoadSFX("Global/RayDive.wav", 72323, NULL, NULL);  // Player_CheckRayDiving, Player_ChangeRayDiveSFX
+    Soundboard_LoadSFX("Global/RaySwoop.wav", 41417, Player_CheckRaySwooping, Player_ChangeRaySwoopSFX);
+    Soundboard_LoadSFX("Global/RayDive.wav", 72323, Player_CheckRayDiving, Player_ChangeRayDiveSFX);
 #endif
 
     for (int p = 0; p < PLAYER_MAX; ++p) Player->gotHit[p] = false;
@@ -6116,6 +6116,18 @@ void Player_RayJumpAbility(void)
         entity->nextAirState  = StateMachine_None;
         entity->timer         = 0;
     }
+}
+
+bool32 Player_CheckRayDiving(void) { return Player->rayDiveTimer > 0; }
+bool32 Player_CheckRaySwooping(void) { return Player->raySwoopTimer > 0; }
+
+void Player_ChangeRayDiveSFX(int sfxID)
+{
+    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (float)Player->rayDiveTimer * 0.00390625, 0.0, 1.0);
+}
+void Player_ChangeRaySwoopSFX(int sfxID)
+{
+    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (float)((float)Player->raySwoopTimer * 0.8) * 0.00390625, 0.0, 1.0);
 }
 #endif
 

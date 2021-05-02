@@ -5,12 +5,23 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort meshIndex;
+    ushort sceneIndex;
 } ObjectMonarchBG;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    Animator animatorTop;
+    Animator animatorBottom;
+    Matrix matrix1;
+    Matrix matrix2;
+    Matrix matrix3;
+    Matrix matrix4;
 } EntityMonarchBG;
 
 // Object Struct

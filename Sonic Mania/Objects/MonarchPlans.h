@@ -6,12 +6,31 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitbox;
+    ushort field_10;
+    ushort meshIndex;
+    ushort sceneIndex;
 } ObjectMonarchPlans;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int field_5C;
+    int field_60;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int rotationZ;
+    int rotationY;
+    Matrix matrix1;
+    Matrix matrix2;
+    Matrix matrix3;
+    Matrix matrix4;
 } EntityMonarchPlans;
 
 // Object Struct

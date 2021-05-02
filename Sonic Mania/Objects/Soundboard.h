@@ -12,7 +12,7 @@ typedef struct {
     void *sfxCheckCallback[32];
     void *sfxChangeCallback[32];
     bool32 sfxUnknown4[32];
-    int sfxUnknownVal[32];
+    int sfxChannel[32];
     int sfxUnknown6[32];
     int sfxUnknown7[32];
     int sfxUnknown8[32];

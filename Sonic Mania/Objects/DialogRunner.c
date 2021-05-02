@@ -196,7 +196,7 @@ void DialogRunner_Unknown7(int a1, int a2)
         if (dialog) {
             if (dialog->state != UIDialog_Unknown13) {
                 dialog->uiControl->gapC8 = 1;
-                dialog->field_5C         = 0;
+                dialog->turnTimer         = 0;
                 dialog->state            = UIDialog_Unknown13;
                 dialog->field_B0         = 0;
             }

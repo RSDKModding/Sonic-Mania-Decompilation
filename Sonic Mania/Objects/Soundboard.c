@@ -22,7 +22,7 @@ void Soundboard_StaticUpdate(void)
             if (checkCallback()) {
                 Soundboard->sfxUnknown7[s] = 0;
                 if (!Soundboard->sfxUnknown4[s]) {
-                    Soundboard->sfxUnknownVal[s] = RSDK.PlaySFX(Soundboard->sfxList[s], Soundboard->sfxLoopPoint[s], 255);
+                    Soundboard->sfxChannel[s]    = RSDK.PlaySFX(Soundboard->sfxList[s], Soundboard->sfxLoopPoint[s], 255);
                     Soundboard->sfxUnknown4[s]   = true;
                     Soundboard->sfxUnknown6[s]   = 0;
                 }
@@ -44,12 +44,12 @@ void Soundboard_StaticUpdate(void)
             Soundboard->sfxUnknown4[s] = 0;
             Soundboard->sfxUnknown6[s] = 0;
         }
-        else if (Soundboard->sfxUnknown8[s] > 0 && Soundboard->sfxUnknownVal[s] > 0) {
+        else if (Soundboard->sfxUnknown8[s] > 0 && Soundboard->sfxChannel[s] > 0) {
             if (Soundboard->sfxUnknown7[s] >= Soundboard->sfxUnknown8[s]) {
                 RSDK.StopSFX(Soundboard->sfxList[s]);
             }
             else {
-                RSDK.SetChannelAttributes(Soundboard->sfxUnknownVal[s],
+                RSDK.SetChannelAttributes(Soundboard->sfxChannel[s],
                                         1.0 - (float)((float)Soundboard->sfxUnknown7[s] / (float)Soundboard->sfxUnknown8[s]), 0.0, 1.0);
                 ++Soundboard->sfxUnknown7[s];
             }
@@ -80,7 +80,7 @@ void Soundboard_StageLoad(void)
         Soundboard->sfxUnknown6[i]       = 0;
         Soundboard->sfxUnknown8[i]       = 0;
 
-        //Soundboard->sfxUnknownVal[i]     = 0;
+        //Soundboard->sfxChannel[i]     = 0;
         //Soundboard->sfxUnknown7[i]       = 0;
     }
 }

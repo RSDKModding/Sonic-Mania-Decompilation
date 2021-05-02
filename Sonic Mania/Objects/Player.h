@@ -485,6 +485,11 @@ void Player_KnuxJumpAbility(void);
 #if RETRO_USE_PLUS
 void Player_MightyJumpAbility(void);
 void Player_RayJumpAbility(void);
+
+bool32 Player_CheckRayDiving(void);
+bool32 Player_CheckRaySwooping(void);
+void Player_ChangeRayDiveSFX(int sfxID);
+void Player_ChangeRaySwoopSFX(int sfxID);
 #endif
 
 //Input States

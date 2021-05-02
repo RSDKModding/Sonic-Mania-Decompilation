@@ -774,7 +774,7 @@ void PauseMenu_Unknown33(void)
         if (dialog) {
             /*if (dialog->state != UIDialog_Unknown13) {
                 dialog->uiControl->userdataInitialized = true;
-                dialog->field_5C                       = 0;
+                dialog->turnTimer                       = 0;
                 dialog->state                          = (int)UIDialog_Unknown13;
                 dialog->curCallback                    = 0;
             }*/

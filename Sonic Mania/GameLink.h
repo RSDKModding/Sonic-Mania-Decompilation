@@ -57,6 +57,8 @@ typedef uint color;
 
 #define CHANNEL_COUNT (0x10)
 
+#define TILE_SIZE (16)
+
 typedef struct {
     int x;
     int y;
