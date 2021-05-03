@@ -45,7 +45,7 @@ typedef struct {
     int field_FC;
     int field_100;
     int field_104;
-    Vector2 pos;
+    Vector2 targetPos;
 } EntityPBL_Camera;
 
 // Object Struct

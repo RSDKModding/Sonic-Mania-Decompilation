@@ -15,7 +15,7 @@ void PBL_Setup_LateUpdate(void) {}
 
 void PBL_Setup_StaticUpdate(void)
 {
-    Entity *entity = &RSDK_sceneInfo->entity;
+    Entity *entity = RSDK_sceneInfo->entity;
     ++PBL_Setup->timer;
     PBL_Setup->timer &= 0x7FFF;
 
@@ -64,8 +64,8 @@ void PBL_Setup_StageLoad(void)
     PBL_Setup->tableLow                                        = RSDK.GetSceneLayerID("Table Low");
     PBL_Setup->tableHigh                                       = RSDK.GetSceneLayerID("Table High");
     PBL_Setup->rings                                           = 0;
-    PBL_Setup->dword20                                         = 0;
-    PBL_Setup->dword24                                         = 0;
+    PBL_Setup->sectorID                                        = 0;
+    PBL_Setup->sectorCount                                     = 0;
     PBL_Setup->score                                           = 0;
     PBL_Setup->score1UP                                        = 10000;
     RSDK.GetSceneLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_TableLow_ScanlineCallback;
@@ -84,12 +84,68 @@ void PBL_Setup_StageLoad(void)
     PBL_Setup->sfxContinue = RSDK.GetSFX("Special/Continue.wav");
 }
 
-void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines) {}
-void PBL_Setup_TableHigh_ScanlineCallback(ScanlineInfo *scanlines) {}
+void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines)
+{
+    EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
+    RSDK.SetClipBounds(0, 0, camera->field_80, RSDK_screens->width, RSDK_screens->height);
+
+    int sin    = RSDK.Sin1024(camera->angle) >> 2;
+    int cos    = RSDK.Cos1024(camera->angle) >> 2;
+    int negSin = RSDK.Sin1024(-camera->rotationY) >> 2;
+    int negCos = RSDK.Cos1024(-camera->rotationY) >> 2;
+    int cosVal = -RSDK_screens->centerY * negCos;
+
+    for (int i = -RSDK_screens->centerY; i < RSDK_screens->centerY; ++i) {
+        int divisor = negSin + (cosVal >> 8);
+        if (!divisor)
+            divisor = 1;
+        int mult            = camera->worldY / divisor;
+        scanlines->deform.x = -(cos * mult) >> 8;
+        scanlines->deform.y = sin * mult >> 8;
+
+        int val = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal((abs(val) >> 12) - 27, 0, 7), i + 120, i + 121);
+
+        scanlines->position.x = (sin * val - RSDK_screens->centerX * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * val - RSDK_screens->centerX * scanlines->deform.y) + camera->position.y;
+
+        cosVal += negCos;
+        scanlines++;
+    }
+}
+void PBL_Setup_TableHigh_ScanlineCallback(ScanlineInfo *scanlines)
+{
+    EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
+    RSDK.SetClipBounds(0, 0, camera->field_80, RSDK_screens->width, RSDK_screens->height);
+
+    int sin    = RSDK.Sin1024(camera->angle) >> 2;
+    int cos    = RSDK.Cos1024(camera->angle) >> 2;
+    int negSin = RSDK.Sin1024(-camera->rotationY) >> 2;
+    int negCos = RSDK.Cos1024(-camera->rotationY) >> 2;
+    int cosVal = -RSDK_screens->centerY * negCos;
+
+    for (int i = -RSDK_screens->centerY; i < RSDK_screens->centerY; ++i) {
+        int divisor = negSin + (cosVal >> 8);
+        if (!divisor)
+            divisor = 1;
+        int mult            = (camera->worldY - 0x100000) / divisor;
+        scanlines->deform.x = -(cos * mult) >> 8;
+        scanlines->deform.y = sin * mult >> 8;
+
+        int val = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal((abs(val) >> 12) - 24, 0, 7), i + 120, i + 121);
+
+        scanlines->position.x = (sin * val - RSDK_screens->centerX * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * val - RSDK_screens->centerX * scanlines->deform.y) + camera->position.y;
+
+        cosVal += negCos;
+        scanlines++;
+    }
+}
 void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, 112);
-    int x       = 0x74C6BA;
+    int x       = 116 << 16;
     int centerX = RSDK_screens->centerX;
     int sin     = RSDK.Sin256(32);
     int cos     = RSDK.Cos256(32);
@@ -103,10 +159,7 @@ void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines)
         scanlines->deform.y   = sin * val >> 7;
         scanlines->position.x = timer + sin * val - centerX * scanlines->deform.x;
         scanlines->position.y = timer + cos * val - centerX * (sin * val >> 7);
-        int palID             = (abs(val) >> 11) - 16;
-        palID                 = min(7, palID);
-        palID                 = max(0, palID);
-        RSDK.SetActivePalette(palID, clr, clr + 1);
+        RSDK.SetActivePalette(clampVal((abs(val) >> 11) - 16, 0, 7), clr, clr + 1);
         scanlines++;
         ++clr;
     }
@@ -137,7 +190,7 @@ void PBL_Setup_Unknown5(void)
     }
 }
 
-void PBL_Setup_Unknown7(int score)
+void PBL_Setup_GiveScore(int score)
 {
     PBL_Setup->score += score;
     if (PBL_Setup->score > 9999999) {
@@ -154,10 +207,7 @@ void PBL_Setup_Unknown7(int score)
             PBL_Setup->score1UP += 10000;
         }
 
-        foreach_active(PBL_HUD, hud)
-        {
-            // PBL_HUD_DisplayMessage(entity, "!CONTINUE!", true);
-        }
+        foreach_active(PBL_HUD, hud) { PBL_HUD_DisplayMessage(hud, "!CONTINUE!", 1); }
     }
 }
 

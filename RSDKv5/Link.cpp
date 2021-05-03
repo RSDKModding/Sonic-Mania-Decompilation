@@ -141,9 +141,9 @@ enum FunctionTableIDs {
     FunctionTable_MatrixCopy,
     FunctionTable_SetText,
     FunctionTable_CopyString,
-    FunctionTable_PrependString,
+    FunctionTable_PrependText,
     FunctionTable_AppendString,
-    FunctionTable_Unknown67,
+    FunctionTable_AppendText,
     FunctionTable_LoadStrings,
     FunctionTable_SplitStringList,
     FunctionTable_GetCString,
@@ -459,9 +459,9 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_MatrixCopy, matrixCopy);
     addToRSDKFunctionTable(FunctionTable_SetText, SetText);
     addToRSDKFunctionTable(FunctionTable_CopyString, CopyString);
-    addToRSDKFunctionTable(FunctionTable_PrependString, PrependString);
+    addToRSDKFunctionTable(FunctionTable_PrependText, PrependText);
     addToRSDKFunctionTable(FunctionTable_AppendString, AppendString);
-    addToRSDKFunctionTable(FunctionTable_Unknown67, Unknown67);
+    addToRSDKFunctionTable(FunctionTable_AppendText, AppendText);
     addToRSDKFunctionTable(FunctionTable_LoadStrings, LoadStrings);
     addToRSDKFunctionTable(FunctionTable_SplitStringList, SplitStringList);
     addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);

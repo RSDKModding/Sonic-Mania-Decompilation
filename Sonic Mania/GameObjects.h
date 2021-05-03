@@ -1,8 +1,9 @@
 #ifndef GAMEOBJECTS_H
 #define GAMEOBJECTS_H
 
-#define maxVal(a, b) (a >= b ? a : b)
-#define minVal(a, b) (a <= b ? a : b)
+#define minVal(a, b)                   ((a) < (b) ? (a) : (b))
+#define maxVal(a, b)                   ((a) > (b) ? (a) : (b))
+#define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
 
 #define intToVoid(x) (void*)(size_t)(x)
 #define voidToInt(x) (int)(size_t)(x)
@@ -148,9 +149,9 @@ typedef struct {
     void (*MatrixCopy)(Matrix *matDest, Matrix *matSrc);
     void (*SetText)(TextInfo *textInfo, const char *text, uint size);
     void (*CopyString)(TextInfo *dst, TextInfo *src);
-    void (*PrependString)(TextInfo *info, const char *str);
-    void (*AppendString)(TextInfo *info, const char *str);
-    void (*Unknown67)(TextInfo *, const char *);
+    void (*PrependText)(TextInfo *info, const char *text);
+    void (*AppendString)(TextInfo *info, TextInfo *str);
+    void (*AppendText)(TextInfo *info, const char *text);
     void (*LoadStrings)(TextInfo *dst, const char* path, int);
     void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
@@ -238,7 +239,7 @@ typedef struct {
     int (*PlaySFX)(ushort sfx, int loop, int pan);
     void (*StopSFX)(ushort sfx);
     int (*PlayStream)(const char *filename, uint slot, int a3, uint loopPoint, bool32 loadASync);
-    int (*SetChannelAttributes)(byte slot, float volume, float pan, float playbackSpeed);
+    int (*SetChannelAttributes)(byte slot, float volume, float pan, float speed);
     void (*StopChannel)(byte slot);
     void (*PauseChannel)(byte slot);
     void (*ResumeChannel)(byte slot);
@@ -248,18 +249,18 @@ typedef struct {
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
-    int (*ControllerIDForInputID)(byte controllerID);
-    int (*MostRecentActiveControllerID)(int inputID, int a2, uint a3);
-    int (*Unknown100)(int inputID);
+    int (*ControllerIDForInputID)(byte inputID);
+    int (*MostRecentActiveControllerID)(int deviceID, int a2, uint a3);
+    int (*GetControllerType)(int inputID);
     int (*GetAssignedControllerID)(int inputID);
     int (*GetAssignedUnknown)(int inputID);
     int (*DoInputUnknown2)(int inputID, int a2, int a3);
     int (*DoInputUnknown3)(int inputID, int a2, int a3);
     int (*Missing24)(void);
-    int (*DoInputUnknown2_Active)(byte controllerID, int a2, int a3);
-    int (*DoInputUnknown3_Active)(byte controllerID, int a2, int a3);
-    void (*AssignControllerID)(byte controllerID, int a2);
-    bool32 (*InputIDIsDisconnected)(byte controllerID);
+    int (*DoInputUnknown2_Active)(byte inputID, int a2, int a3);
+    int (*DoInputUnknown3_Active)(byte inputID, int a2, int a3);
+    void (*AssignControllerID)(byte inputID, int deviceID);
+    bool32 (*InputIDIsDisconnected)(byte inputID);
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS

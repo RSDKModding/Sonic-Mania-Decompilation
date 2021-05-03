@@ -30,7 +30,6 @@ void MonarchBG_Draw(void)
 void MonarchBG_Create(void *data)
 {
     RSDK_THIS(MonarchBG);
-    entity = (EntityMonarchBG *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_FLIP;

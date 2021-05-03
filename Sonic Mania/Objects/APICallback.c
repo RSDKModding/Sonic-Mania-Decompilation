@@ -69,7 +69,7 @@ void APICallback_StageLoad(void)
 void APICallback_SetRichPresence(int id, TextInfo *msg)
 {
     if (globals->presenceID != id) {
-        // RSDK.PrependString(&message, id + '.');
+        // RSDK.PrependText(&message, id + '.');
         if (APICallback->SetRichPresence) {
             LogHelpers_Print("API SetRichPresence(%d)", id);
             LogHelpers_PrintString(msg);

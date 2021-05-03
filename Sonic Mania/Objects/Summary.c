@@ -158,7 +158,7 @@ void Summary_SetTextString(byte anim, void *text, const char *str)
     else
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, anim, &uiText->animData, true, 0);
 
-    RSDK.PrependString(&uiText->text, str);
+    RSDK.PrependText(&uiText->text, str);
     uiText->listID = anim;
     if (!UIWidgets || UIText->spriteIndex)
         RSDK.SetSpriteString(UIText->spriteIndex, uiText->listID, &uiText->text);

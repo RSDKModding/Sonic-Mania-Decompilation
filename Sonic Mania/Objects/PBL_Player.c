@@ -21,34 +21,51 @@ void PBL_Player_Update(void)
 void PBL_Player_LateUpdate(void)
 {
     RSDK_THIS(PBL_Player);
-    // Matrix *mat = &PBL_Camera->matWorld;
-    //
-    // entity->depth = mat->values[2][3] + mat->values[2][0] * (entity->position.x >> 0x10) + mat->values[2][2] * (entity->position.y >> 0x10)
-    //                + mat->values[2][1] * (entity->height >> 0x10);
+    Matrix *mat = &PBL_Camera->matrix1;
+
+    
+    entity->depth = mat->values[2][3] + mat->values[2][0] * (entity->position.x >> 0x10) + mat->values[2][2] * (entity->position.y >> 0x10)
+                    + mat->values[2][1] * (entity->height >> 0x10);
 }
 
 void PBL_Player_StaticUpdate(void) {}
 
-void PBL_Player_Draw(void) {}
+void PBL_Player_Draw(void)
+{
+    RSDK_THIS(PBL_Player);
+    if (entity->depth >= 0x4000) {
+        RSDK.Prepare3DScene(PBL_Player->sceneIndex);
+        RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->height + 0x100000, entity->position.y, true);
+        RSDK.MatrixRotateX(&entity->matrix1, entity->angleX);
+        RSDK.MatrixRotateY(&entity->matrix3, entity->rotation);
+        RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix1, &entity->matrix3);
+        RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix4, &entity->matrix2);
+        RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &PBL_Camera->matrix1);
+        RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix4, &PBL_Camera->matrix2);
+        RSDK.AddModelTo3DScene(entity->data.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &entity->matrix3,
+                               &entity->matrix4, 0xFFFFFF);
+        RSDK.Draw3DScene(PBL_Player->sceneIndex);
+    }
+}
 
 void PBL_Player_Create(void *data)
 {
     RSDK_THIS(PBL_Player);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->active         = ACTIVE_NORMAL;
-        entity->visible        = true;
-        entity->updateRange.x  = 0x800000;
-        entity->updateRange.y  = 0x800000;
-        entity->drawOrder      = 4;
-        entity->inputState     = PBL_Player_ProcessPlayerControl;
-        entity->state          = PBL_Player_State_Launcher;
-        entity->controllerID   = 1;
-        entity->onGround       = false;
-        entity->tileCollisions = true;
-        // entity->collisionLayers = 1 << PBL_Setup->tableHigh;
+        entity->active          = ACTIVE_NORMAL;
+        entity->visible         = true;
+        entity->updateRange.x   = 0x800000;
+        entity->updateRange.y   = 0x800000;
+        entity->drawOrder       = 4;
+        entity->inputState      = PBL_Player_ProcessPlayerControl;
+        entity->state           = PBL_Player_State_Launcher;
+        entity->controllerID    = 1;
+        entity->onGround        = false;
+        entity->tileCollisions  = true;
+        entity->collisionLayers = 1 << PBL_Setup->tableHigh;
         RSDK.SetModelAnimation(PBL_Player->jumpModel, &entity->data, 128, 0, true, 0);
 
-        // foreach_all(UFO_Camera, camera) { camera->targetPtr = (Entity*)entity; }
+        foreach_all(PBL_Camera, camera) { camera->targetPtr = (Entity *)entity; }
     }
 }
 
@@ -164,10 +181,10 @@ void PBL_Player_State_Launcher(void)
         entity->velocity.y += 0x3800;
 
     RSDK.ProcessTileCollisions(entity, &PBL_Player->outerBox, &PBL_Player->innerBox);
-    if (entity->timer == 60) {
+    if (++entity->timer == 60) {
         entity->velocity.y     = -0xE0000;
         entity->timer          = 0;
-        entity->collisionPlane = CMODE_LWALL;
+        entity->collisionPlane = 1;
         entity->onGround       = false;
         entity->state          = PBL_Player_State_Air;
         RSDK.PlaySFX(PBL_Player->sfxPlunger, 0, 255);
@@ -184,7 +201,7 @@ void PBL_Player_State_Ground(void)
 
     entity->groundVel += 0x2800 * RSDK.Sin256(entity->angle) >> 8;
     if (entity->collisionMode) {
-        if (entity->angle >= 0x40 && entity->angle <= 0xC0 && entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
+        if (entity->angle >= 0x40 && entity->angle <= 0xC0 && abs(entity->groundVel) < 0x20000) {
             entity->velocity.x    = (entity->groundVel * RSDK.Cos256(entity->angle)) >> 8;
             entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
             entity->onGround      = false;

@@ -704,7 +704,7 @@ void PauseMenu_Unknown31(void)
     else
         RSDK.AssignControllerID(entity->triggerPlayer + 1, CONT_AUTOASSIGN);
     if (globals->gameMode < MODE_TIMEATTACK && !RSDK.ControllerIDForInputID(2))
-        RSDK.AssignControllerID(2, -1);
+        RSDK.AssignControllerID(2, CONT_AUTOASSIGN);
 
     PauseMenu->dword10 = true;
 }

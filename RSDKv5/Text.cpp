@@ -196,7 +196,7 @@ byte stringFlags[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                        1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                        2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
 
-void Unknown67(TextInfo *info, char *text)
+void PrependText(TextInfo *info, char *text)
 {
     if (!*text)
         return;
@@ -208,19 +208,18 @@ void Unknown67(TextInfo *info, char *text)
     if (!len)
         return;
 
-    int length = info->length;
-    if (length < len || !info->text) {
+    if (info->length < len || !info->text) {
         info->length = len;
-        length       = len;
-        AllocateStorage(sizeof(ushort) * length, (void **)&info->text, DATASET_STR, false);
+        AllocateStorage(sizeof(ushort) * info->length, (void **)&info->text, DATASET_STR, false);
     }
 
+    info->textLength = len;
     for (int pos = 0; pos < info->textLength; ++pos) {
         ushort c = 0;
         switch (stringFlags[*text & 0xFF]) {
             case 1:
-                ++text;
                 c = text[0];
+                ++text;
                 break;
             case 2:
                 c = text[1] & 0x3F | ((text[0] & 0x1F) << 6);
@@ -242,7 +241,7 @@ void Unknown67(TextInfo *info, char *text)
     }
 }
 
-void PrependString(TextInfo *info, char *text)
+void AppendText(TextInfo *info, char *text)
 {
     if (!*text)
         return;
@@ -254,19 +253,18 @@ void PrependString(TextInfo *info, char *text)
     if (!len)
         return;
 
-    int length = info->length;
-    if (length < len || !info->text) {
-        info->length = len;
-        length       = len;
-        AllocateStorage(sizeof(ushort) * length, (void **)&info->text, DATASET_STR, false);
+    int newLen = (len + info->length);
+    if (info->length < newLen || !info->text) {
+        info->length = newLen;
+        AllocateStorage(sizeof(ushort) * info->length, (void **)&info->text, DATASET_STR, false);
     }
 
-    for (int pos = 0; pos < info->textLength; ++pos) {
+    for (int pos = info->textLength; pos < len; ++pos) {
         ushort c = 0;
         switch (stringFlags[*text & 0xFF]) {
             case 1:
-                ++text;
                 c = text[0];
+                ++text;
                 break;
             case 2:
                 c = text[1] & 0x3F | ((text[0] & 0x1F) << 6);
@@ -286,26 +284,27 @@ void PrependString(TextInfo *info, char *text)
         }
         info->text[pos] = c;
     }
+    info->textLength = newLen;
 }
 
-void AppendString(TextInfo *textA, TextInfo *textB)
+void AppendString(TextInfo *info, TextInfo *string)
 {
     uint charID   = 0;
-    uint totalLen = textB->textLength + textA->textLength;
-    if (textA->length < totalLen || !textA->text) {
-        AllocateStorage(sizeof(ushort) * totalLen, (void **)&textA, DATASET_STR, false);
-        for (int charID = 0; charID < textA->textLength; ++charID) {
-            textA->text[charID] = textA->text[charID];
+    uint totalLen = string->textLength + info->textLength;
+    if (info->length < totalLen || !info->text) {
+        AllocateStorage(sizeof(ushort) * totalLen, (void **)&info, DATASET_STR, false);
+        for (int charID = 0; charID < info->textLength; ++charID) {
+            info->text[charID] = info->text[charID];
         }
-        CopyStorage((int **)textA, (int **)&textA);
-        textA->length = textB->textLength + textA->textLength;
+        CopyStorage((int **)info, (int **)&info);
+        info->length = string->textLength + info->textLength;
     }
 
-    int textLen           = textA->textLength;
-    textA->textLength += textB->textLength;
+    int textLen           = info->textLength;
+    info->textLength += string->textLength;
     int id            = 0;
-    for (; textLen < textA->textLength; ++textLen) {
-        textA->text[textLen] = textB->text[id++];
+    for (; textLen < info->textLength; ++textLen) {
+        info->text[textLen] = string->text[id++];
     }
 }
 

@@ -311,7 +311,7 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
 bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPlane, int xOffset, int yOffset, bool32 setPos)
 {
     int layerID     = 1;
-    bool32 collided = 0;
+    bool32 collided = false;
     int posX        = (xOffset + entity->position.x) >> 16;
     int posY        = (yOffset + entity->position.y) >> 16;
     switch (cMode) {
@@ -515,9 +515,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
             return collided;
         }
         case CMODE_LWALL: {
-            int solid = 0x2000;
+            int solid = 1 << 13;
             if (cPlane)
-                solid = 0x8000;
+                solid = 1 << 15;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
@@ -555,9 +555,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
             return collided;
         }
         case CMODE_ROOF: {
-            int solid = 0x1000;
+            int solid = 1 << 13;
             if (cPlane)
-                solid = 0x4000;
+                solid = 1 << 15;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
@@ -595,9 +595,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
             return collided;
         }
         case CMODE_RWALL: {
-            int solid = 0x2000;
+            int solid = 1 << 13;
             if (cPlane)
-                solid = 0x8000;
+                solid = 1 << 15;
             for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];

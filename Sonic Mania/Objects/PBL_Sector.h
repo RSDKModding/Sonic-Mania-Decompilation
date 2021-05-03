@@ -6,12 +6,18 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort field_4;
 } ObjectPBL_Sector;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    byte craneID;
+    int timer;
+    bool32 flag;
+    Animator animator;
 } EntityPBL_Sector;
 
 // Object Struct

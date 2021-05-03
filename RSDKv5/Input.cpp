@@ -308,11 +308,11 @@ void ProcessInput()
             &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
             &controller[c].keyY,  &controller[c].keyZ,    &controller[c].keyStart, &controller[c].keySelect,
         };
-        InputState *lStick[] = { &stickL[0].keyUp, &stickL[0].keyDown, &stickL[0].keyLeft, &stickL[0].keyRight, &stickL[0].keyStick };
-        InputState *rStick[] = { &stickR[0].keyUp, &stickR[0].keyDown, &stickR[0].keyLeft, &stickR[0].keyRight, &stickR[0].keyStick };
+        InputState *lStick[] = { &stickL[c].keyUp, &stickL[c].keyDown, &stickL[c].keyLeft, &stickL[c].keyRight, &stickL[c].keyStick };
+        InputState *rStick[] = { &stickR[c].keyUp, &stickR[c].keyDown, &stickR[c].keyLeft, &stickR[c].keyRight, &stickR[c].keyStick };
 
-        InputState *lTrigger[] = { &triggerL[0].keyL, &triggerL[0].keyR };
-        InputState *rTrigger[] = { &triggerR[0].keyL, &triggerR[0].keyR };
+        InputState *lTrigger[] = { &triggerL[c].keyL, &triggerL[c].keyR };
+        InputState *rTrigger[] = { &triggerR[c].keyL, &triggerR[c].keyR };
 
         for (int i = 0; i < 12; ++i) {
             anyController[i]->press |= cont[i]->press;

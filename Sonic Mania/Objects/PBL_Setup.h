@@ -14,8 +14,8 @@ typedef struct {
     int rings;
     int timer2;
     int ringPan;
-    int dword20;
-    int dword24;
+    int sectorID;
+    int sectorCount;
     int timer3;
     byte tableLow;
     byte tableHigh;
@@ -67,7 +67,7 @@ void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines);
 void PBL_Setup_DrawLayer_Callback(void);
 
 void PBL_Setup_Unknown5(void);
-void PBL_Setup_Unknown7(int score);
+void PBL_Setup_GiveScore(int score);
 void PBL_Setup_GiveLife(void);
 void PBL_Setup_Unknown9(void);
 void PBL_Setup_Unknown10(void);

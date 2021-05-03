@@ -6,12 +6,23 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int field_8;
+    ushort aniFrames;
+    ushort sfxRing;
 } ObjectPBL_Ring;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int height;
+    int field_64;
+    int worldX;
+    int worldY;
+    Animator animator;
 } EntityPBL_Ring;
 
 // Object Struct
@@ -29,6 +40,10 @@ void PBL_Ring_EditorLoad(void);
 void PBL_Ring_Serialize(void);
 
 // Extra Entity Functions
+void PBL_Ring_GiveRing(void);
+void PBL_Ring_State_Ring(void);
+void PBL_Ring_State_RingSparkle(void);
+
 #endif
 
 #endif //!OBJ_PBL_RING_H
