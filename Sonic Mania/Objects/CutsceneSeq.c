@@ -21,7 +21,7 @@ void CutsceneSeq_LateUpdate(void)
 
         if (!entity->cutsceneStates[entity->stateID]) {
             LogHelpers_Print("Sequence completed");
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
         }
     }
 
@@ -128,9 +128,9 @@ void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*ski
             skipCallback();
 
         if (skipState == 2 || skipState != 3 || entity->skipState == 3 || entity->skipState)
-            globals->suppressTitlecard = 0;
-        globals->suppressAutoMusic = 0;
-        globals->enableIntro       = 0;
+            globals->suppressTitlecard = false;
+        globals->suppressAutoMusic = false;
+        globals->enableIntro       = false;
         RSDK.SetGameMode(ENGINESTATE_FROZEN);
         Zone_StartFadeOut(20, 0);
         Music_FadeOut(0.029999999);

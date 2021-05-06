@@ -274,7 +274,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                                     }
                                     else if (channel->loop) {
                                         channel->bufferPos    = channel->loop;
-                                        channel->sampleLength = channel->sampleLength - channel->loop;
+                                        channel->sampleLength = channel->sampleLength;
                                     }
                                     else {
                                         MEM_ZEROP(channel);

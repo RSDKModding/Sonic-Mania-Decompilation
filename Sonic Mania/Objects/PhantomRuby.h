@@ -3,6 +3,16 @@
 
 #include "../SonicMania.h"
 
+typedef enum {
+    RUBYSFX_ATTACK1 = 1,
+    RUBYSFX_ATTACK2,
+    RUBYSFX_ATTACK3,
+    RUBYSFX_ATTACK4,
+    RUBYSFX_ATTACK5,
+    RUBYSFX_ATTACK6,
+    RUBYSFX_REDCUBE,
+} RubySFX;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

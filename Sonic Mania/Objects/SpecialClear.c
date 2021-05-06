@@ -350,7 +350,7 @@ void SpecialClear_GiveScoreBonus(int score)
         if (entity->lives < 99)
             entity->lives++;
         Music_PlayMusicTrack(TRACK_1UP);
-        Music->dword250 = -1;
+        Music->nextTrack = -1;
         while (entity->score <= entity->score1UP) {
             entity->score1UP += 50000;
         }

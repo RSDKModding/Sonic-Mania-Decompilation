@@ -127,7 +127,7 @@ void DemoMenu_State_Selection(void)
 
     if (RSDK_controller->keyStart.press || RSDK_controller->keyA.press) {
         entity->state = DemoMenu_State_Load;
-        RSDK.StopChannel(Music->slotID);
+        RSDK.StopChannel(Music->channelID);
         RSDK.PlaySFX(TitleSetup->sfx_MenuAccept, 0, 255);
     }
 }

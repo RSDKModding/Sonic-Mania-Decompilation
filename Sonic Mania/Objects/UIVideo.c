@@ -42,7 +42,7 @@ void UIVideo_State_PlayVid1(void)
 {
     RSDK_THIS(UIVideo);
     if (!entity->timer)
-        RSDK.StopChannel(Music->slotID);
+        RSDK.StopChannel(Music->channelID);
 
     if (++entity->timer >= 16) {
         char videoFile1[64];
@@ -55,7 +55,7 @@ void UIVideo_State_PlayVid1(void)
         else
             RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCallback);
         entity->state = UIVideo_State_PlayVid2;
-        RSDK.PlayStream(audioFile, Music->slotID, 0, 0, 0);
+        RSDK.PlayStream(audioFile, Music->channelID, 0, 0, 0);
         entity->timer = 0;
     }
 }

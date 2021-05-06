@@ -20,8 +20,8 @@ void PauseMenu_LateUpdate(void)
 {
     RSDK_THIS(PauseMenu);
     if (entity->state) {
-        if (RSDK.ChannelActive(Music->slotID))
-            RSDK.PauseChannel(Music->slotID);
+        if (RSDK.ChannelActive(Music->channelID))
+            RSDK.PauseChannel(Music->channelID);
     }
     else {
         void *state = RSDK_GET_ENTITY(entity->triggerPlayer, Player)->state;
@@ -370,7 +370,7 @@ void PauseMenu_Unknown13(void)
         StarPost->postIDs[2] = 0;
         StarPost->postIDs[3] = 0;
     }
-    RSDK.StopChannel(Music->slotID);
+    RSDK.StopChannel(Music->channelID);
     EntityPauseMenu *entity =
         (EntityPauseMenu *)RSDK.CreateEntity(PauseMenu->objectID, (void *)1, (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
                                              (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
@@ -410,7 +410,7 @@ void PauseMenu_Unknown15(void)
         StarPost->postIDs[3] = 0;
     }
 
-    RSDK.StopChannel(Music->slotID);
+    RSDK.StopChannel(Music->channelID);
     EntityPauseMenu *entity =
         (EntityPauseMenu *)RSDK.CreateEntity(PauseMenu->objectID, (void *)1, (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
                                              (RSDK_screens->position.y + RSDK_screens->centerY) << 16);

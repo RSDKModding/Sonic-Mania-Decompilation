@@ -602,7 +602,7 @@ void ActClear_TallyScore(void)
         entity->timer = 0;
         RSDK.PlaySFX(ActClear->sfx_ScoreAdd, 0, 255);
     }
-    Music->dword250 = -1;
+    Music->nextTrack = -1;
     ActClear_CheckPlayerVictory();
 }
 

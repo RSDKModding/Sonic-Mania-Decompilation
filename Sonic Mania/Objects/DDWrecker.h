@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
+    int camBoundL;
+    int camBoundR;
+    int bossBoundL;
+    int bossBoundR;
+    int bossBoundT;
     int xVelocityUnknown[3];
-    int array1[6];
-    int array2[6];
+    int angleOffsets1[6];
+    int angleOffsets2[6];
     ushort spriteIndex;
     ushort sfx_BossHit;
     ushort sfx_Explosion;

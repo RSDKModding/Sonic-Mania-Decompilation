@@ -427,11 +427,11 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
     }
 
     if (xVel <= 0) {
-        if ((flags & 8) || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, entity->collisionPlane, -offsetX, 0, true)) {
+        if (!(flags & 8) && RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, entity->collisionPlane, -offsetX, 0, true)) {
             entity->velocity.x = -xVel;
         }
     }
-    else if (!(flags & 4) || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, entity->collisionPlane, offsetX, 0, true)) {
+    else if (!(flags & 4) && RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, entity->collisionPlane, offsetX, 0, true)) {
         entity->velocity.x = -xVel;
     }
 

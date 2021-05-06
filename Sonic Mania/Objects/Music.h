@@ -4,6 +4,7 @@
 #include "../SonicMania.h"
 
 enum MusicTracks {
+    TRACK_NONE       = -1,
     TRACK_STAGE       = 0,
     TRACK_INVINCIBLE  = 1,
     TRACK_SNEAKERS    = 2,
@@ -31,9 +32,9 @@ typedef struct {
     char trackNames[16][32];
     uint trackLoops[16];
     int dword244;
-    int slotID;
+    int channelID;
     int activeTrack;
-    int dword250;
+    int nextTrack;
     int field_254;
     int field_258;
 } ObjectMusic;
@@ -84,12 +85,12 @@ void Music_PlayTrack(byte trackID);
 void Music_Unknown1(EntityMusic *entity);
 void Music_Unknown2(byte trackID);
 void Music_Unknown3(EntityMusic *entity);
-bool32 Music_Unknown4(void);
+bool32 Music_CheckMusicStack(void);
 void Music_Unknown5(EntityMusic *entity);
 void Music_ResumePrevTrack(byte trackID, bool32 transitionFade);
 void Music_Unknown7(EntityMusic *entity);
-void Music_RemoveStoredEntities(void);
-void Music_Unknown9(byte trackID, float a2);
+void Music_ClearMusicStack(void);
+void Music_TransitionTrack(byte trackID, float a2);
 void Music_FadeOut(float fadeSpeed);
 void Music_State_Unknown11(void);
 void Music_State_Unknown12(void);

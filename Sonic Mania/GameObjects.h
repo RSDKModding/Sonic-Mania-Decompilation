@@ -92,8 +92,8 @@ typedef struct {
     int (*GetEntityCount)(ushort type, bool32 isActive);
     int (*GetDrawListRef)(byte layerID, ushort entityID);
     void *(*GetDrawListRefPtr)(byte layerID, ushort entityID);
-    int (*ResetEntityPtr)(void *entity, ushort type, void *data);
-    int (*ResetEntitySlot)(ushort slotID, ushort type, void *data);
+    void (*ResetEntityPtr)(void *entity, ushort type, void *data);
+    void (*ResetEntitySlot)(ushort slotID, ushort type, void *data);
     Entity* (*CreateEntity)(ushort type, void *data, int x, int y);
     void (*CopyEntity)(void *destEntity, void *srcEntity, bool32 clearSrcEntity);
     bool32 (*CheckOnScreen)(void *entity, Vector2 *range);

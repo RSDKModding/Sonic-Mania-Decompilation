@@ -198,7 +198,7 @@ void StarPost_CheckBonusStageEntry(void)
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);
-                    RSDK.StopChannel(Music->slotID);
+                    RSDK.StopChannel(Music->channelID);
                 }
                 else {
 #endif
@@ -206,7 +206,7 @@ void StarPost_CheckBonusStageEntry(void)
                     RSDK.LoadScene("Blue Spheres", "");
                     RSDK_sceneInfo->listPos += globals->blueSpheresID;
                     Zone_StartFadeOut(10, 0xF0F0F0);
-                    RSDK.StopChannel(Music->slotID);
+                    RSDK.StopChannel(Music->channelID);
 #if RETRO_USE_PLUS
                 }
 #endif

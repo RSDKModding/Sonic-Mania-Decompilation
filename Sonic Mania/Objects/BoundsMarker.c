@@ -6,8 +6,8 @@ void BoundsMarker_Update(void)
 {
     EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
     for (int p = 0; p < Player->playerCount; ++p) {
-        EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
-        BoundsMarker_CheckBounds(player, entity, true);
+        EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
+        BoundsMarker_CheckBounds(player, entity, false);
     }
 }
 
@@ -42,7 +42,7 @@ void BoundsMarker_Create(void* data)
             entity->updateRange.x += entity->width << 15;
 
             for (int p = 0; p < Player->playerCount; ++p) {
-                EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
+                EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
                 BoundsMarker_CheckBounds(player, entity, true);
             }
         }

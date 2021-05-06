@@ -159,9 +159,9 @@ void GameOver_Unknown2(void)
 
     if (entity->timer == 0) {
         if (globals->gameMode != MODE_COMPETITION) {
-            Music_RemoveStoredEntities();
-            if (Music_Unknown4()) {
-                Music->dword250 = 9;
+            Music_ClearMusicStack();
+            if (Music_CheckMusicStack()) {
+                Music->nextTrack = 9;
             }
             else {
                 Music_FadeOut(0.025);
@@ -176,9 +176,9 @@ void GameOver_Unknown2(void)
                 }
 
                 if (!flag) {
-                    Music_RemoveStoredEntities();
-                    if (Music_Unknown4()) {
-                        Music->dword250 = 9;
+                    Music_ClearMusicStack();
+                    if (Music_CheckMusicStack()) {
+                        Music->nextTrack = 9;
                     }
                     else {
                         Music_FadeOut(0.025);
@@ -214,9 +214,9 @@ void GameOver_Unknown2(void)
                 }
 
                 if (!flag) {
-                    Music_RemoveStoredEntities();
-                    if (Music_Unknown4()) {
-                        Music->dword250 = 9;
+                    Music_ClearMusicStack();
+                    if (Music_CheckMusicStack()) {
+                        Music->nextTrack = 9;
                     }
                     else {
                         Music_FadeOut(0.025);
@@ -278,7 +278,7 @@ void GameOver_Unknown4(void)
         entity->timer = 420;
 
     if (entity->timer == 420) {
-        Music_RemoveStoredEntities();
+        Music_ClearMusicStack();
         Music_FadeOut(0.05);
 
         foreach_all(GameOver, gameOver)

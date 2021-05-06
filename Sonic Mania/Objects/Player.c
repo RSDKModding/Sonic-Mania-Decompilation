@@ -793,7 +793,7 @@ void Player_LoadSpritesVS(void)
 #if RETRO_USE_PLUS
             for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i, ++slotID) {
 #else
-                for (int i = 0; i < PLAYER_MAX; ++i, ++slotID) {
+                for (int i = 0; i < PLAYER_MAX; ++i, ++channelID) {
 #endif
                 EntityPlayer *player = RSDK_GET_ENTITY(slotID, Player);
                 RSDK.CopyEntity(player, entity, false);
@@ -1564,33 +1564,20 @@ bool32 Player_CheckKeyPress(void)
 void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
 {
     RSDK_THIS(Player);
-    int ringCntB = 16;
-    int ringCntA = rings - 16;
+    int ringCntA = rings;
+    int ringCntB = rings - 16;
     int ringCntC = rings - 32;
-    if (rings <= 16)
-        ringCntB = rings;
 
-    ringCntA = maxVal(ringCntA, 0);
-    ringCntA = minVal(ringCntA, 16);
-    ringCntB = maxVal(ringCntB, 0);
-    ringCntB = minVal(ringCntB, 16);
-    ringCntC = maxVal(ringCntC, 0);
-    ringCntC = minVal(ringCntC, 16);
+    ringCntA = clampVal(ringCntA, 0, 16);
+    ringCntB = clampVal(ringCntB, 0, 16);
+    ringCntC = clampVal(ringCntC, 0, 16);
 
-    if (ringCntC <= 16) {
-        if (ringCntC < 0)
-            ringCntC = 0;
-    }
-    else {
-        ringCntC = 16;
-    }
-
-    int angleStart = 0xC0 - 8 * (ringCntA & 0xFFFFFFFE);
+    int angleStart = 0xC0 - 8 * (ringCntB & -2);
     int angle      = angleStart + 8;
-    if (!(ringCntA & 1))
+    if (!(ringCntB & 1))
         angle = angleStart - 8;
 
-    for (int i = 0; i < ringCntA; ++i) {
+    for (int i = 0; i < ringCntB; ++i) {
         EntityRing *ring              = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
         ring->velocity.x              = RSDK.Cos256(angle) << 9;
         ring->velocity.y              = RSDK.Sin256(angle) << 9;
@@ -1606,18 +1593,18 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         angle += 16;
     }
 
-    angleStart = 0xC0 - 8 * (ringCntB & 0xFFFFFFFE);
+    angleStart = 0xC0 - 8 * (ringCntA & -2);
     angle      = angleStart + 8;
-    if (!(ringCntB & 1))
+    if (!(ringCntA & 1))
         angle = angleStart - 8;
 
-    for (int i = 0; i < ringCntB; ++i) {
+    for (int i = 0; i < ringCntA; ++i) {
         EntityRing *ring              = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
         ring->velocity.x              = RSDK.Cos256(angle) << 10;
         ring->velocity.y              = RSDK.Sin256(angle) << 10;
         ring->animData.animationSpeed = 512;
         ring->collisionPlane          = cPlane;
-        ring->inkEffect               = 2;
+        ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 256;
         ring->isPermament             = true;
         ring->state                   = Ring_State_Bounce;
@@ -1626,7 +1613,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         angle += 16;
     }
 
-    angleStart = 0xC0 - 8 * (ringCntC & 0xFFFFFFFE);
+    angleStart = 0xC0 - 8 * (ringCntC & -2);
     angle      = angleStart + 8;
     if (!(ringCntC & 1))
         angle = angleStart - 8;
@@ -1639,7 +1626,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         ring->scale.x                 = 0x100;
         ring->animData.animationSpeed = 0x200;
         ring->scale.y                 = 0x100;
-        ring->drawFX                  = 5;
+        ring->drawFX                  = FX_FLIP | FX_ROTATE | FX_SCALE;
         ring->state                   = Ring_State_Grow;
         ring->stateDraw               = Ring_StateDraw_Normal;
         angle += 16;

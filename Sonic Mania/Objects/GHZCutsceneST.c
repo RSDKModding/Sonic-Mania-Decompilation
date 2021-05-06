@@ -103,7 +103,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
         if (host->timer >= 60) {
             if (fxRuby->timer <= 0) {
                 if (fxRuby->waitForTrigger <= 0) {
-                    PhantomRuby_PlaySFX(4);
+                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     return true;
                 }
                 fxRuby->waitForTrigger -= 16;

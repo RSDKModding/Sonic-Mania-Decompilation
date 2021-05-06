@@ -26,7 +26,7 @@ void Music_Create(void *data)
                 if (entity->playOnLoad)
                     entity->state = Music_State_PlayMusic;
                 else
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
             }
         }
     }
@@ -50,15 +50,15 @@ void Music_StageLoad(void)
     Music_SetMusicTrack("1up.ogg", TRACK_1UP, false);
 
     if (globals->suppressAutoMusic) {
-        if (globals->restartMusicID > 0)
+        if (globals->restartMusicID > TRACK_STAGE)
             Music->activeTrack = globals->restartMusicID;
     }
     else {
         Music->activeTrack = TRACK_STAGE;
     }
 
-    globals->restartMusicID = 0;
-    Music->dword250         = -1;
+    globals->restartMusicID = TRACK_STAGE;
+    Music->nextTrack        = TRACK_NONE;
 #if RETRO_USE_PLUS
     if (RSDK_sku->platform == PLATFORM_DEV)
         RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, 1, 0, 1);
@@ -88,12 +88,12 @@ void Music_State_PlayMusic(void)
     if (globals->suppressAutoMusic) {
         globals->suppressAutoMusic = false;
         switch (Music->activeTrack) {
-            case 1:
-            case 2:
-            case 13:
-                Music_Unknown9(entity->trackID, 0.025);
+            case TRACK_INVINCIBLE:
+            case TRACK_SNEAKERS:
+            case TRACK_1UP:
+                Music_TransitionTrack(entity->trackID, 0.025);
                 break;
-            case 10:
+            case TRACK_SUPER:
                 Music_Unknown2(Music->activeTrack);
                 break;
             default: break;
@@ -130,22 +130,22 @@ void Music_PlayMusicTrack(byte trackID)
     entity->field_80 = 0;
     entity->fadeSpeed = 0.08;
     switch (trackID) {
-        case 1:
-        case 2:
+        case TRACK_INVINCIBLE:
+        case TRACK_SNEAKERS:
             Music_Unknown3(entity);
             entity->field_80 = 100;
             entity->field_78 = 1;
             break;
-        case 8:
+        case TRACK_DROWNING:
             entity->timer    = 960;
             entity->field_80 = 10000;
             entity->field_78 = 1;
             break;
-        case 10:
+        case TRACK_SUPER:
             entity->field_80 = 1000;
             entity->field_78 = 1;
             break;
-        case 13:
+        case TRACK_1UP:
             entity->timer    = 224;
             entity->field_80 = 100000;
             break;
@@ -164,12 +164,12 @@ void Music_PlayMusicTrack(byte trackID)
         }
     }
 
-    RSDK.StopChannel(Music->slotID);
+    RSDK.StopChannel(Music->channelID);
     Music->activeTrack = trackID;
-    Music->slotID      = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+    Music->channelID      = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 #if RETRO_USE_PLUS
     if (globals->vapeMode)
-        RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+        RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
     entity->volume = 1.0;
 }
@@ -178,30 +178,30 @@ void Music_PlayTrack(byte trackID)
 {
     trackID &= 0xF;
     if (trackID == TRACK_ACTCLEAR) {
-        Music_RemoveStoredEntities();
+        Music_ClearMusicStack();
 
         RSDK.ResetEntitySlot(SLOT_MUSIC, TYPE_BLANK, NULL);
-        RSDK.StopChannel(Music->slotID);
+        RSDK.StopChannel(Music->channelID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
-        Music->slotID      = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
+        Music->channelID      = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
-            RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+            RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
     }
-    else if (Music_Unknown4()) {
-        Music->dword250 = trackID;
+    else if (Music_CheckMusicStack()) {
+        Music->nextTrack = trackID;
     }
     else {
-        RSDK.ResetEntitySlot(SLOT_MUSIC, 0, 0);
-        RSDK.StopChannel(Music->slotID);
+        RSDK.ResetEntitySlot(SLOT_MUSIC, 0, NULL);
+        RSDK.StopChannel(Music->channelID);
         Music->activeTrack = trackID;
         Music->dword244    = 0;
-        Music->slotID      = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
+        Music->channelID      = RSDK.PlayStream(Music->trackNames[trackID], 0, 0, Music->trackLoops[trackID], true);
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
-            RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+            RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
     }
 }
@@ -210,27 +210,27 @@ void Music_Unknown1(EntityMusic *entity)
 {
     RSDK.GetCString(Music->trackNames[0], &entity->trackFile);
     Music->trackLoops[0] = entity->trackLoop;
-    RSDK.ResetEntitySlot(SLOT_MUSIC, TYPE_BLANK, 0);
-    RSDK.StopChannel(Music->slotID);
+    RSDK.ResetEntitySlot(SLOT_MUSIC, TYPE_BLANK, NULL);
+    RSDK.StopChannel(Music->channelID);
     Music->activeTrack = 0;
     Music->dword244    = 0;
-    Music->slotID      = RSDK.PlayStream(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
+    Music->channelID      = RSDK.PlayStream(Music->trackNames[0], 0, 0, Music->trackLoops[0], true);
 
 #if RETRO_USE_PLUS
     if (globals->vapeMode)
-        RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+        RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
 }
 
 void Music_Unknown2(byte trackID)
 {
     trackID &= 0xF;
-    Music->dword250 = 0;
+    Music->nextTrack = TRACK_STAGE;
 
     for (int slot = 40; slot < 48; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
-            RSDK.ResetEntityPtr(music, 0, 0);
+            RSDK.ResetEntityPtr(music, TYPE_BLANK, NULL);
         }
     }
 
@@ -238,7 +238,7 @@ void Music_Unknown2(byte trackID)
     for (int slot = 40; slot < 48; ++slot) {
         entity = RSDK_GET_ENTITY(slot, Music);
         if (entity->objectID != Music->objectID) {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
             break;
         }
     }
@@ -249,22 +249,22 @@ void Music_Unknown2(byte trackID)
     entity->volume   = 1.0;
     entity->fadeSpeed = 0.08;
     switch (trackID) {
-        case 1:
-        case 2:
+        case TRACK_INVINCIBLE:
+        case TRACK_SNEAKERS:
             Music_Unknown3(entity);
             entity->field_80 = 100;
             entity->field_78 = 1;
             break;
-        case 8:
+        case TRACK_DROWNING:
             entity->timer    = 960;
             entity->field_80 = 10000;
             entity->field_78 = 1;
             break;
-        case 10:
+        case TRACK_SUPER:
             entity->field_80 = 1000;
             entity->field_78 = 1;
             break;
-        case 13:
+        case TRACK_1UP:
             entity->timer    = 224;
             entity->field_80 = 100000;
             break;
@@ -280,7 +280,7 @@ void Music_Unknown3(EntityMusic *entity)
             music->field_80 = 10;
     }
 }
-bool32 Music_Unknown4(void)
+bool32 Music_CheckMusicStack(void)
 {
     bool32 flag = false;
     for (int slot = 40; slot < 48; ++slot) {
@@ -297,7 +297,7 @@ void Music_Unknown5(EntityMusic *entity)
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && entity != music) {
             if (music->trackID == Music->activeTrack) {
-                entity->field_84 = RSDK.GetChannelPos(Music->slotID);
+                entity->field_84 = RSDK.GetChannelPos(Music->channelID);
                 entity->volume   = 0.0;
             }
             activeCnt++;
@@ -305,11 +305,11 @@ void Music_Unknown5(EntityMusic *entity)
     }
 
     if (!activeCnt) {
-        if (Music->activeTrack > -1) {
-            if (Music->dword250 == -1) {
-                Music->dword250 = Music->activeTrack;
+        if (Music->activeTrack > TRACK_NONE) {
+            if (Music->nextTrack == TRACK_NONE) {
+                Music->nextTrack = Music->activeTrack;
             }
-            Music->dword244 = RSDK.GetChannelPos(Music->slotID);
+            Music->dword244 = RSDK.GetChannelPos(Music->channelID);
         }
     }
 }
@@ -334,18 +334,18 @@ void Music_Unknown7(EntityMusic *entity)
     if (entity) {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
         if (music->objectID != Music->objectID || music->state != Music_State_TransitionTrack) {
-            RSDK.ResetEntityPtr(music, 0, 0);
+            RSDK.ResetEntityPtr(music, TYPE_BLANK, NULL);
 
             for (int slot = 40; slot < 48; ++slot) {
                 EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
                 if (music->objectID == Music->objectID && music->field_80 > entity->field_80) {
-                    RSDK.ResetEntityPtr(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     return;
                 }
             }
 
             bool32 flag = entity->field_78;
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
             int cnt = 0;
 
             EntityMusic *ptr = NULL;
@@ -358,7 +358,7 @@ void Music_Unknown7(EntityMusic *entity)
             }
 
             if (ptr) {
-                RSDK.StopChannel(Music->slotID);
+                RSDK.StopChannel(Music->channelID);
                 if (ptr->trackID == Music->activeTrack) {
                     ptr->field_84 = 0;
                 }
@@ -366,33 +366,33 @@ void Music_Unknown7(EntityMusic *entity)
                     Music->activeTrack = ptr->trackID;
                     if (flag)
                         ptr->field_84 = 0;
-                    Music->slotID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+                    Music->channelID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                     if (ptr->field_84) {
 #if RETRO_USE_PLUS
-                        RSDK.SetChannelAttributes(Music->slotID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
+                        RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
 #else
-                        RSDK.SetChannelAttributes(Music->slotID, 0.0, 0.0, 1.0);
+                        RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, 1.0);
 #endif
                     }
 #if RETRO_USE_PLUS
                     else if (globals->vapeMode) {
-                        RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+                        RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
                     }
 #endif
                 }
             }
-            else if (Music->dword250 > -1) {
-                RSDK.StopChannel(Music->slotID);
-                Music->activeTrack = Music->dword250;
-                Music->dword250    = -1;
+            else if (Music->nextTrack > -1) {
+                RSDK.StopChannel(Music->channelID);
+                Music->activeTrack = Music->nextTrack;
+                Music->nextTrack   = TRACK_NONE;
                 if (flag)
                     Music->dword244 = 0;
-                Music->slotID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+                Music->channelID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
                 if (Music->dword244) {
 #if RETRO_USE_PLUS 
-                    RSDK.SetChannelAttributes(Music->slotID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
+                    RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, globals->vapeMode ? 0.75 : 1.0);
 #else
-                    RSDK.SetChannelAttributes(Music->slotID, 0.0, 0.0, 1.0);
+                    RSDK.SetChannelAttributes(Music->channelID, 0.0, 0.0, 1.0);
 #endif
                     music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
                     RSDK.ResetEntityPtr(music, Music->objectID, 0);
@@ -402,67 +402,67 @@ void Music_Unknown7(EntityMusic *entity)
                 }
 #if RETRO_USE_PLUS
                 else if (globals->vapeMode) {
-                    RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+                    RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
                 }
 #endif
             }
         }
         else {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
         }
     }
 }
-void Music_RemoveStoredEntities(void)
+void Music_ClearMusicStack(void)
 {
     for (int slot = 40; slot < 48; ++slot) {
         RSDK.ResetEntityPtr(RSDK.GetEntityByID(slot), TYPE_BLANK, NULL);
     }
 }
 
-void Music_Unknown9(byte trackID, float a2)
+void Music_TransitionTrack(byte trackID, float fadeSpeed)
 {
     trackID &= 0xF;
     switch (trackID) {
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 11: {
+        case TRACK_MINIBOSS:
+        case TRACK_HBHBOSS:
+        case TRACK_EGGMAN1:
+        case TRACK_EGGMAN2:
+        case TRACK_HBHMISCHIEF: {
             EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-            Music->dword250    = trackID;
+            Music->nextTrack    = trackID;
             if (music->objectID != Music->objectID || music->state != Music_State_TransitionTrack) {
-                RSDK.ResetEntityPtr(music, Music->objectID, 0);
+                RSDK.ResetEntityPtr(music, Music->objectID, NULL);
                 music->state    = Music_State_TransitionTrack;
                 music->volume   = 1.0;
-                music->fadeSpeed = a2;
+                music->fadeSpeed = fadeSpeed;
             }
             break;
         }
-        case 7: {
-            Music_RemoveStoredEntities();
+        case TRACK_ACTCLEAR: {
+            Music_ClearMusicStack();
 
             EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-            Music->dword250    = trackID;
+            Music->nextTrack    = trackID;
             if (music->objectID != Music->objectID || music->state != Music_State_TransitionTrack) {
-                RSDK.ResetEntityPtr(music, Music->objectID, 0);
+                RSDK.ResetEntityPtr(music, Music->objectID, NULL);
                 music->state    = Music_State_TransitionTrack;
                 music->volume   = 1.0;
-                music->fadeSpeed = a2;
+                music->fadeSpeed = fadeSpeed;
             }
             break;
         }
         default:
-            if (Music_Unknown4()) {
-                Music->dword250 = trackID;
+            if (Music_CheckMusicStack()) {
+                Music->nextTrack = trackID;
             }
             else {
                 EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
-                Music->dword250    = trackID;
+                Music->nextTrack    = trackID;
                 if (music->objectID != Music->objectID || music->state != Music_State_TransitionTrack) {
-                    RSDK.ResetEntityPtr(music, Music->objectID, 0);
+                    RSDK.ResetEntityPtr(music, Music->objectID, NULL);
                     music->state    = Music_State_TransitionTrack;
                     music->volume   = 1.0;
-                    music->fadeSpeed = a2;
+                    music->fadeSpeed = fadeSpeed;
                 }
             }
             break;
@@ -473,19 +473,19 @@ void Music_FadeOut(float fadeSpeed)
     if (Music->activeTrack != TRACK_DROWNING) {
         EntityMusic *music = RSDK_GET_ENTITY(SLOT_MUSIC, Music);
         RSDK.ResetEntityPtr(music, Music->objectID, NULL);
-        music->state    = Music_State_FadeOut;
-        music->volume   = 1.0;
+        music->state     = Music_State_FadeOut;
+        music->volume    = 1.0;
         music->fadeSpeed = fadeSpeed;
     }
 }
 void Music_State_Unknown11(void)
 {
     RSDK_THIS(Music);
-    if (Music->activeTrack == entity->trackID && RSDK.GetChannelPos(Music->slotID) > entity->field_84) {
+    if (Music->activeTrack == entity->trackID && RSDK.GetChannelPos(Music->channelID) > entity->field_84) {
         entity->field_84 = 0;
         if (entity->volume < 1.0) {
             entity->volume += entity->fadeSpeed;
-            RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
+            RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
             if (entity->volume >= 1.0)
                 entity->volume = 1.0;
         }
@@ -503,7 +503,7 @@ void Music_State_Unknown12(void)
     if (entity->volume > -0.5) {
         entity->volume -= entity->fadeSpeed;
         if (Music->activeTrack == entity->trackID)
-            RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
+            RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
         if (entity->volume <= -0.5)
             Music_Unknown7(entity);
     }
@@ -511,13 +511,13 @@ void Music_State_Unknown12(void)
 void Music_State_Unknown13(void)
 {
     RSDK_THIS(Music);
-    if (RSDK.GetChannelPos(Music->slotID) > Music->dword244) {
+    if (RSDK.GetChannelPos(Music->channelID) > Music->dword244) {
         Music->dword244 = 0;
         entity->volume += entity->fadeSpeed;
-        RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
+        RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
         if (entity->volume >= 1.0) {
             entity->volume = 1.0;
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
         }
     }
 }
@@ -525,10 +525,10 @@ void Music_State_FadeOut(void)
 {
     RSDK_THIS(Music);
     entity->volume -= entity->fadeSpeed;
-    RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
+    RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {
-        RSDK.StopChannel(Music->slotID);
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        RSDK.StopChannel(Music->channelID);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
 }
 
@@ -536,18 +536,18 @@ void Music_State_TransitionTrack(void)
 {
     RSDK_THIS(Music);
     entity->volume -= entity->fadeSpeed;
-    RSDK.SetChannelAttributes(Music->slotID, entity->volume, 0.0, 1.0);
+    RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
     if (entity->volume < -0.5) {
-        RSDK.StopChannel(Music->slotID);
-        Music->activeTrack = Music->dword250;
+        RSDK.StopChannel(Music->channelID);
+        Music->activeTrack = Music->nextTrack;
         Music->dword244    = 0;
-        Music->slotID      = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
+        Music->channelID   = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, 0, Music->trackLoops[Music->activeTrack], true);
 #if RETRO_USE_PLUS
         if (globals->vapeMode)
-            RSDK.SetChannelAttributes(Music->slotID, 1.0, 0.0, 0.75);
+            RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
-        Music->dword250 = -1;
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        Music->nextTrack = TRACK_NONE;
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
 }
 

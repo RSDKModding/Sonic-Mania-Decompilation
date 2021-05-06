@@ -549,7 +549,7 @@ void ItemBox_GivePowerup(void)
                     return;
                 }
 #endif
-                Zone_Unknown5();
+                Zone_StartTeleportAction();
                 RSDK.PlaySFX(ItemBox->sfx_Teleport, 0, 255);
                 return;
             case 13: {
@@ -927,9 +927,13 @@ bool32 ItemBox_HandleFallingCollision(void)
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
     ItemBox_HandleObjectCollisions();
-    if (!((entity->velocity.y < 0 || entity->direction != FLIP_Y || entity->brokenData.animationID != 1)
-             ? RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
-             : RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
+
+    bool32 flag = entity->velocity.y < 0;
+
+    if (flag
+        || (entity->direction != FLIP_Y || entity->brokenData.animationID != 1
+             ? !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
+             : !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
         entity->unknownPos.x += entity->position.x;
         entity->unknownPos.y += entity->position.y;
         return false;

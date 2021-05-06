@@ -137,7 +137,7 @@ void SpecialRing_StartWarp(void)
             RSDK_sceneInfo->listPos += 7;
 #endif
         Zone_StartFadeOut(10, 0xF0F0F0);
-        RSDK.StopChannel(Music->slotID);
+        RSDK.StopChannel(Music->channelID);
     }
 }
 void SpecialRing_State_Warp(void)

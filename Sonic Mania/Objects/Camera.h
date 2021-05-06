@@ -23,7 +23,7 @@ typedef struct {
     int field_8C;
     int field_90;
     int field_94;
-    int field_98;
+    int centerY;
     int adjustY;
     int field_A0;
     int field_A4;
