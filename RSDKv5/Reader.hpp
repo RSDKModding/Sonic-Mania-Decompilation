@@ -93,32 +93,7 @@ inline void InitFileInfo(FileInfo *info)
     info->fileOffset      = 0;
 }
 
-inline bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
-{
-    if (info->file)
-        return false;
-
-    if (!info->externalFile && fileMode == FMODE_RB && useDataFile) {
-        return OpenDataFile(info, filename);
-    }
-    else {
-        if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
-            info->file = fOpen(filename, openModes[fileMode - 1]);
-        }
-        if (!info->file)
-            return false;
-        info->readPos  = 0;
-        info->fileSize = 0;
-
-        if (fileMode != FMODE_WB) {
-            fSeek(info->file, 0, SEEK_END);
-            info->fileSize = (int)fTell(info->file);
-            fSeek(info->file, 0, SEEK_SET);
-        }
-        return info->file != NULL;
-    }
-    return false;
-}
+bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode);
 
 inline void CloseFile(FileInfo *info)
 {

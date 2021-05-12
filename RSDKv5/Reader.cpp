@@ -93,6 +93,36 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
         printLog(SEVERITY_NONE, "Loaded File '%s'", filename);
         return true;
     }
+    return false;
+}
+
+bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
+{
+    if (info->file)
+        return false;
+
+    if (!info->externalFile && fileMode == FMODE_RB && useDataFile) {
+        return OpenDataFile(info, filename);
+    }
+    else {
+        if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
+            info->file = fOpen(filename, openModes[fileMode - 1]);
+        }
+        if (!info->file) {
+            printLog(SEVERITY_NONE, "Couldn't load file '%s'", filename);
+            return false;
+        }
+        info->readPos  = 0;
+        info->fileSize = 0;
+
+        if (fileMode != FMODE_WB) {
+            fSeek(info->file, 0, SEEK_END);
+            info->fileSize = (int)fTell(info->file);
+            fSeek(info->file, 0, SEEK_SET);
+        }
+        printLog(SEVERITY_NONE, "Loaded file '%s'", filename);
+        return true;
+    }
     printLog(SEVERITY_NONE, "Couldn't load file '%s'", filename);
     return false;
 }

@@ -573,14 +573,16 @@ void LoadSfx(char *filename, byte plays, byte scope)
     if (LoadFile(&info, fullPath, FMODE_RB)) {
 #if !RETRO_USE_ORIGINAL_CODE
         byte type = fullPath[strlen(fullPath) - 3];
-        if (type == 'w') {
+        if (type == 'w' || type == 'W') {
             byte *sfx = new byte[info.fileSize];
             ReadBytes(&info, sfx, info.fileSize);
             CloseFile(&info);
 
             SDL_RWops *src = SDL_RWFromMem(sfx, info.fileSize);
             if (src == NULL) {
-                printLog(SEVERITY_ERROR, "Unable to open sfx: %s", fullPath);
+                SDL_RWclose(src);
+                delete[] sfx;
+                printLog(SEVERITY_ERROR, "Unable to read sfx: %s", fullPath);
             }
             else {
                 SDL_AudioSpec wav_spec;
@@ -591,7 +593,109 @@ void LoadSfx(char *filename, byte plays, byte scope)
                 SDL_RWclose(src);
                 delete[] sfx;
                 if (wav == NULL) {
-                    printLog(SEVERITY_ERROR, "Unable to read sfx: %s", fullPath);
+                    printLog(SEVERITY_WARN, "Unable to open sfx: '%s'\nError: %s\nTrying native method", fullPath, SDL_GetError());
+
+                    // Try Again, this time with RSDK's loader
+                    InitFileInfo(&info);
+                    if (LoadFile(&info, fullPath, FMODE_RB)) {
+                        uint signature = ReadInt32(&info, false);
+
+                        if (signature == 'FFIR') {
+                            ReadInt32(&info, false); //chunk size
+                            ReadInt32(&info, false); //WAVE
+                            ReadInt32(&info, false); //FMT
+                            ReadInt32(&info, false); //chunk size
+                            ReadInt16(&info); //audio format
+                            ushort channels = ReadInt16(&info);
+                            uint freq       = ReadInt32(&info, false);
+                            ReadInt32(&info, false); //bytes per sec
+                            ReadInt16(&info);        // block align
+                            uint format = 0x8000 | (ReadInt16(&info) & 0xFF);
+                            Seek_Set(&info, 34);
+
+                            ushort sampleBits = ReadInt16(&info);
+                            int loop               = 0;
+                            while (true) {
+                                signature = ReadInt32(&info, false);
+                                if (signature == 'atad')
+                                    break;
+
+                                loop += 4;
+                                if (loop >= 0x40) {
+                                    if (loop != 0x100) {
+                                        CloseFile(&info);
+                                        printLog(SEVERITY_ERROR, "Unable to read sfx: %s", fullPath);
+                                        return;
+                                    }
+                                    else {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            uint length = ReadInt32(&info, false);
+                            uint size   = length;
+                            if (sampleBits == 16) {
+                                length >>= 1;
+                            }
+                            AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                            float *buffer      = sfxList[id].buffer;
+                            sfxList[id].length = length;
+                            
+                            if (sampleBits == 8) {
+                                for (int remaining = length; remaining; --remaining) {
+                                    int sample = ReadInt8(&info);
+                                    *buffer    = (float)(sample - 128) * 0.0078125;
+                                    buffer++;
+                                }
+                            }
+                            else {
+                                for (int remaining = length; remaining; --remaining) {
+                                    uint sample = ReadInt16(&info);
+                                    if ((signed int)sample > 0x7FFF)
+                                        sample = (sample & 0x7FFF) - 0x8000;
+                                    *buffer = (float)sample * 0.0078125;
+                                    buffer++;
+                                }
+                            }
+
+                            
+                            SDL_AudioCVT convert;
+                            if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format,
+                                                  audioDeviceFormat.channels, audioDeviceFormat.freq)
+                                > 0) {
+                                convert.buf = (byte *)malloc(size * convert.len_mult);
+                                convert.len = size;
+                                memcpy(convert.buf, sfxList[id].buffer, size);
+                                SDL_ConvertAudio(&convert);
+
+                                LOCK_AUDIO_DEVICE()
+                                GEN_HASH(filename, sfxList[id].hash);
+                                sfxList[id].buffer = NULL;
+                                AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                                memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
+                                sfxList[id].length             = convert.len_cvt / sizeof(float);
+                                sfxList[id].scope              = scope;
+                                sfxList[id].maxConcurrentPlays = plays;
+                                UNLOCK_AUDIO_DEVICE()
+                                free(convert.buf);
+                            }
+                            else {
+                                LOCK_AUDIO_DEVICE()
+                                GEN_HASH(filename, sfxList[id].hash);
+                                //AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                                //memcpy(sfxList[id].buffer, wav_buffer, wav_length);
+                                //sfxList[id].length             = wav_length / sizeof(float);
+                                sfxList[id].scope              = scope;
+                                sfxList[id].maxConcurrentPlays = plays;
+                                UNLOCK_AUDIO_DEVICE()
+                            }
+
+                        }
+                    }
+                    else {
+                        printLog(SEVERITY_ERROR, "Unable to open sfx: %s", fullPath);
+                    }
                 }
                 else {
                     SDL_AudioCVT convert;
