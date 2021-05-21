@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitboxes[4];
+    ushort sfxSignPost;
 } ObjectSpinSign;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(stateDraw);
+    StateMachine(state);
+    byte type;
+    int timer;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntitySpinSign;
 
 // Object Struct
@@ -28,6 +38,15 @@ void SpinSign_EditorLoad(void);
 void SpinSign_Serialize(void);
 
 // Extra Entity Functions
+void SpinSign_DebugSpawn(void);
+void SpinSign_DebugDraw(void);
 
+void SpinSign_Unknown1(void);
+void SpinSign_Unknown2(void);
+
+void SpinSign_Unknown3(void);
+void SpinSign_Unknown4(void);
+void SpinSign_Unknown5(void);
+void SpinSign_Unknown6(void);
 
 #endif //!OBJ_SPINSIGN_H

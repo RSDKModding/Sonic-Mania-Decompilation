@@ -601,14 +601,14 @@ void LoadSfx(char *filename, byte plays, byte scope)
                         uint signature = ReadInt32(&info, false);
 
                         if (signature == 'FFIR') {
-                            ReadInt32(&info, false); //chunk size
-                            ReadInt32(&info, false); //WAVE
-                            ReadInt32(&info, false); //FMT
-                            ReadInt32(&info, false); //chunk size
-                            ReadInt16(&info); //audio format
+                            ReadInt32(&info, false); // chunk size
+                            ReadInt32(&info, false); // WAVE
+                            ReadInt32(&info, false); // FMT
+                            ReadInt32(&info, false); // chunk size
+                            ReadInt16(&info);        // audio format
                             ushort channels = ReadInt16(&info);
                             uint freq       = ReadInt32(&info, false);
-                            ReadInt32(&info, false); //bytes per sec
+                            ReadInt32(&info, false); // bytes per sec
                             ReadInt16(&info);        // block align
                             uint format = 0x8000 | (ReadInt16(&info) & 0xFF);
                             Seek_Set(&info, 34);

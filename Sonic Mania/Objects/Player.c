@@ -750,23 +750,23 @@ void Player_LoadSprites(void)
     }
 
     if ((globals->playerID & -0x100) > 0) {
-        entity                 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+        EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
         for (int i = 0; i < 0x10; ++i) {
-            Player->flyCarryPositions[i] = entity->position;
+            Player->flyCarryPositions[i] = player1->position;
         }
-        sidekick->objectID   = Player->objectID;
-        sidekick->position.x = entity->position.x;
-        sidekick->position.y = entity->position.y;
+        player2->objectID   = Player->objectID;
+        player2->position.x = player1->position.x;
+        player2->position.y = player1->position.y;
 
         if (globals->gameMode != MODE_TIMEATTACK) {
-            RSDK.AddCamera(&sidekick->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
-            sidekick->position.x -= 0x100000;
+            RSDK.AddCamera(&player2->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+            player2->position.x -= 0x100000;
         }
 
-        sidekick->characterID = globals->playerID >> 8;
-        switch (sidekick->characterID) {
+        player2->characterID = globals->playerID >> 8;
+        switch (player2->characterID) {
             case ID_TAILS:
                 Player->tailsSpriteIndex      = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
                 Player->tailsTailsSpriteIndex = RSDK.LoadSpriteAnimation("Players/TailSprite.bin", SCOPE_STAGE);
@@ -777,7 +777,7 @@ void Player_LoadSprites(void)
             case ID_RAY: Player->raySpriteIndex = RSDK.LoadSpriteAnimation("Players/Ray.bin", SCOPE_STAGE); break;
 #endif
             default:
-                sidekick->characterID    = ID_SONIC;
+                player2->characterID     = ID_SONIC;
                 Player->sonicSpriteIndex = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
                 Player->superSpriteIndex = RSDK.LoadSpriteAnimation("Players/SuperSonic.bin", SCOPE_STAGE);
                 break;
@@ -1036,7 +1036,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimData, false, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, entity->playerAnimData.animationID, &entity->playerAnimData, 0, 0);
+        RSDK.SetSpriteAnimation(entity->spriteIndex, entity->playerAnimData.animationID, &entity->playerAnimData, false, 0);
     }
 
     if (entity->superState) {

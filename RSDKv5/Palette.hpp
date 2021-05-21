@@ -71,14 +71,15 @@ inline void CopyPalette(byte sourcePalette, byte srcPaletteStart, byte destinati
 
 inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool32 right)
 {
-    ushort startClr = fullPalette[palID][endIndex];
     if (right) {
+        ushort startClr = fullPalette[palID][endIndex];
         for (int i = endIndex; i > startIndex; --i) {
             fullPalette[palID][i] = fullPalette[palID][i - 1];
         }
         fullPalette[palID][startIndex] = startClr;
     }
     else {
+        ushort startClr = fullPalette[palID][startIndex];
         for (int i = startIndex; i < endIndex; ++i) {
             fullPalette[palID][i] = fullPalette[palID][i + 1];
         }

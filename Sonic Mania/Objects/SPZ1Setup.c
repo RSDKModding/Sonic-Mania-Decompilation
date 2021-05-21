@@ -18,19 +18,20 @@ void SPZ1Setup_StaticUpdate(void)
         ++SPZ1Setup->bgLayer->deformationOffset;
         ++SPZ1Setup->bgLayer2->deformationOffset;
     }
+
     SPZ1Setup->timerA += 16;
     SPZ1Setup->timerA &= 0x3F;
     RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 613, 144, SPZ1Setup->timerA + 160, 112, 16);
 
     SPZ1Setup->palRotateTimerA += 6;
-    if (SPZ1Setup->palRotateTimerA > 255) {
-        SPZ1Setup->palRotateTimerA -= 256;
-        RSDK.RotatePalette(1, 128, 135, 0);
-        RSDK.RotatePalette(2, 128, 135, 0);
+    if (SPZ1Setup->palRotateTimerA >= 0x100) {
+        SPZ1Setup->palRotateTimerA -= 0x100;
+        RSDK.RotatePalette(1, 128, 135, false);
+        RSDK.RotatePalette(2, 128, 135, false);
     }
     RSDK.SetLimitedFade(0, 1, 2, SPZ1Setup->palRotateTimerA, 128, 135);
-    ++SPZ1Setup->palRotateTimerB;
 
+    ++SPZ1Setup->palRotateTimerB;
     if (SPZ1Setup->palRotateTimerB == 6) {
         SPZ1Setup->palRotateTimerB = 0;
         RSDK.RotatePalette(0, 240, 243, true);
@@ -38,7 +39,11 @@ void SPZ1Setup_StaticUpdate(void)
 
     SPZ1Setup->angle += 3;
     SPZ1Setup->angle &= 0x1FF;
-    RSDK.SetLimitedFade(0, 1, 3, abs(RSDK.Sin512(SPZ1Setup->angle) >> 1), 152, 159);
+    int percent = RSDK.Sin512(SPZ1Setup->angle) >> 1;
+    if (percent <= 0)
+        RSDK.SetLimitedFade(0, 1, 2, -percent, 152, 159);
+    else
+        RSDK.SetLimitedFade(0, 1, 3, percent, 152, 159);
     ++SPZ1Setup->timerB;
 
     if (SPZ1Setup->timerB == 3) {
