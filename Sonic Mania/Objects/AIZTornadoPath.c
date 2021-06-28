@@ -200,7 +200,7 @@ void AIZTornadoPath_Unknown6(void)
     RSDK_THIS(AIZTornadoPath);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->position.x > entity->position.x) {
-        player->inputState = StateMachine_None;
+        player->stateInput = StateMachine_None;
         player->left       = false;
         player->right      = true;
         if (player->pushing > 0) {
@@ -231,7 +231,7 @@ void AIZTornadoPath_Unknown7(void)
 
     if (entity->timer == 90) {
         entity->timer      = 0;
-        player->inputState = Player_ProcessP1Input;
+        player->stateInput = Player_ProcessP1Input;
         int xOffset        = 0;
         foreach_all(AIZTornadoPath, node)
         {

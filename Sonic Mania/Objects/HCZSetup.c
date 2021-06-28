@@ -99,7 +99,7 @@ void HCZSetup_StaticUpdate(void)
                             ++HCZSetup->activePlayerCount;
                         }
                     }
-                    else if (player->playerAnimData.animationID == ANI_FLUME) {
+                    else if (player->playerAnimator.animationID == ANI_FLUME) {
                         ++HCZSetup->activePlayerCount;
                     }
                 }

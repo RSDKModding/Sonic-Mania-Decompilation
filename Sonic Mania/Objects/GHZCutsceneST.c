@@ -116,12 +116,12 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
     else {
         player1->position.y = ruby->position.y;
         player1->state      = Player_State_None;
-        player1->inputState = 0;
+        player1->stateInput = 0;
         CutsceneSeq_LockAllPlayerControl();
         if (player2->objectID == Player->objectID) {
             player2->position.y = ruby->position.y;
             player2->state      = Player_State_None;
-            player2->inputState = StateMachine_None;
+            player2->stateInput = StateMachine_None;
         }
     }
 
@@ -130,7 +130,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
         EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
         if (!player || player->objectID == TYPE_BLANK)
             break;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimData, 0, 0);
+        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
         player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->timer2)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
@@ -154,7 +154,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimData, false, 0);
+            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
             int x              = (player->position.x - player->position.x) >> 3;
             int y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->timer2)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
@@ -174,7 +174,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimData, 0, 0);
+            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
             player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->timer2)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;

@@ -103,7 +103,7 @@ void UFO_ItemBox_Unknown1(void)
         if (entity->timer) {
             entity->timer--;
         }
-        else if (player->inputState) {
+        else if (player->stateInput) {
             if (player->state != UFO_Player_Unknown9) {
                 int pr = ((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16);
 

@@ -202,7 +202,7 @@ void Splats_Unknown5(void)
     {
         Player_CheckCollisionBox(player, entity, &Splats->hitbox2);
         flag |= Player_CheckCollisionTouch(player, entity, &Splats->hitbox3);
-        flag |= (player->playerAnimData.animationID == ANI_SPINDASH);
+        flag |= (player->playerAnimator.animationID == ANI_SPINDASH);
     }
 
     if (--entity->delay <= 0) {

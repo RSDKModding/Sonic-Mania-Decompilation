@@ -7,7 +7,7 @@ void UFO_Springboard_Update(void)
     RSDK_THIS(UFO_Springboard);
     foreach_active(UFO_Player, player)
     {
-        if (player->bumperTimer <= 12 && player->inputState) {
+        if (player->bumperTimer <= 12 && player->stateInput) {
             int xDif = (player->position.x - entity->position.x) >> 8;
             int yDif = (player->position.y - entity->position.y) >> 8;
             int valX  = (yDif * RSDK.Sin256(entity->angle >> 2)) + xDif * RSDK.Cos256(entity->angle >> 2) + entity->position.x;

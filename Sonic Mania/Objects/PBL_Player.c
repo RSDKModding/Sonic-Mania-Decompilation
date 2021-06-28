@@ -6,7 +6,7 @@ ObjectPBL_Player *PBL_Player;
 void PBL_Player_Update(void)
 {
     RSDK_THIS(PBL_Player);
-    StateMachine_Run(entity->inputState);
+    StateMachine_Run(entity->stateInput);
     StateMachine_Run(entity->state);
 
     entity->angleX   = ((ushort)entity->angleX - (ushort)((abs(entity->velocity.y) + abs(entity->velocity.x)) >> 12)) & 0x3FF;
@@ -57,7 +57,7 @@ void PBL_Player_Create(void *data)
         entity->updateRange.x   = 0x800000;
         entity->updateRange.y   = 0x800000;
         entity->drawOrder       = 4;
-        entity->inputState      = PBL_Player_ProcessPlayerControl;
+        entity->stateInput      = PBL_Player_ProcessPlayerControl;
         entity->state           = PBL_Player_State_Launcher;
         entity->controllerID    = 1;
         entity->onGround        = false;

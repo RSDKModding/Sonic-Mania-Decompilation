@@ -298,7 +298,7 @@ void UFO_Setup_Unknown6(void) // success
 
     foreach_all(UFO_Player, player)
     {
-        player->inputState  = StateMachine_None;
+        player->stateInput  = StateMachine_None;
         player->interaction = false;
     }
 
@@ -315,7 +315,7 @@ void UFO_Setup_Unknown7(void) // fail
 
     foreach_all(UFO_Player, player)
     {
-        player->inputState  = StateMachine_None;
+        player->stateInput  = StateMachine_None;
         player->interaction = false;
     }
 

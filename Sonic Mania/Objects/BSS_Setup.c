@@ -413,7 +413,7 @@ void BSS_Setup_Finished(void)
         entity->globeSpeed = 8;
         BSS_Setup_Unknown13();
         EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
-        player->inputState       = false;
+        player->stateInput       = false;
         player->jumpPress        = false;
         entity->state            = BSS_Setup_State_FinishWalk;
     }
@@ -863,7 +863,7 @@ void BSS_Setup_State_Exit(void)
     entity->maxSpeed         = 0;
     if (entity->spinTimer <= 0) {
         RSDK.CreateEntity(BSS_Message->objectID, (void *)2, entity->position.x, entity->position.y);
-        foreach_active(BSS_Player, player) { player->inputState = StateMachine_None; }
+        foreach_active(BSS_Player, player) { player->stateInput = StateMachine_None; }
     }
     else {
         TileLayer *bg = RSDK.GetSceneLayer(BSS_Setup->bgLayer);

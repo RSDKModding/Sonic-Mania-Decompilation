@@ -13,7 +13,7 @@ void FlingRamp_Update(void)
                     player->velocity.x += 0x40000;
                     player->velocity.y = -0x70000;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimData, true, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, 0);
                 }
             }
             else if ((player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
@@ -21,7 +21,7 @@ void FlingRamp_Update(void)
                     player->velocity.x -= 0x40000;
                     player->velocity.y = -0x70000;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimData, true, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, 0);
                 }
             }
         }

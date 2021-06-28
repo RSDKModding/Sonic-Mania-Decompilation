@@ -447,8 +447,8 @@ void ActClear_CheckPlayerVictory(void)
             player->nextAirState    = 0;
             player->nextGroundState = 0;
             if (Zone->forcePlayerOnScreenFlag)
-                player->inputState = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_VICTORY, &player->playerAnimData, true, 0);
+                player->stateInput = StateMachine_None;
+            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_VICTORY, &player->playerAnimator, true, 0);
         }
     }
 }
@@ -836,7 +836,7 @@ void ActClear_ForcePlayerOnScreen(void)
     player1->jumpHold  = false;
 
     if (player1->position.x >= screenOffX) {
-        player1->inputState = StateMachine_None;
+        player1->stateInput = StateMachine_None;
         player1->state      = Player_State_Ground;
         player1->groundVel  = -0x40000;
         player1->left       = true;
@@ -873,15 +873,15 @@ void ActClear_ForcePlayerOnScreen(void)
         if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn) {
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimData, 0, 0);
+                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, 0, 0);
                     player2->direction = FLIP_NONE;
                     flagA              = true;
                 }
             }
         }
         else if (player2->position.x >= screenOffX) {
-            player2->inputState = Player_ProcessP2Input;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimData, 0, 0);
+            player2->stateInput = Player_ProcessP2Input;
+            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, 0, 0);
             player2->state     = Player_State_Ground;
             player2->groundVel = -0x40000;
             player2->left      = true;
@@ -889,7 +889,7 @@ void ActClear_ForcePlayerOnScreen(void)
 
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimData, 0, 0);
+                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, 0, 0);
                     player2->direction = FLIP_NONE;
                     flagA              = true;
                 }
@@ -897,7 +897,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else {
             if (player2->onGround && !player2->groundVel) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimData, 0, 0);
+                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, 0, 0);
                 player2->direction = FLIP_NONE;
                 flagA              = true;
             }
@@ -905,7 +905,7 @@ void ActClear_ForcePlayerOnScreen(void)
     }
 
     if (flagB) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimData, 0, 0);
+        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, 0, 0);
         player1->direction = FLIP_NONE;
     }
     ++entity->stageFinishTimer;

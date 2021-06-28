@@ -115,7 +115,7 @@ void AIZTornado_Unknown2(void)
     entity->position.y     = entity->prevPos.y;
 
     if (Player_CheckCollisionPlatform(player, entity, hitbox)) {
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RIDE, &player->playerAnimData, false, 0);
+        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RIDE, &player->playerAnimator, false, 0);
         player->state = Player_State_None;
         player->position.x += entity->moveVelocity.x;
         player->position.y += entity->moveVelocity.y;

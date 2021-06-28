@@ -17,7 +17,7 @@ void AIZRockPile_Update(void)
                 int playerY   = player->position.y;
                 int xVelocity = player->velocity.x;
                 int yVelocity = player->velocity.y;
-                int jumping   = player->playerAnimData.animationID == ANI_JUMP;
+                int jumping   = player->playerAnimator.animationID == ANI_JUMP;
                 int groundVel = player->groundVel;
 
                 
@@ -49,7 +49,7 @@ void AIZRockPile_Update(void)
 
                     if (entity->smashTop && side == 1) {
                         bool32 flag = jumping;
-                        flag |= player->characterID == ID_SONIC && player->playerAnimData.animationID == ANI_DROPDASH;
+                        flag |= player->characterID == ID_SONIC && player->playerAnimator.animationID == ANI_DROPDASH;
                         flag |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
                         if (player->groundedStore && cMode != CMODE_FLOOR && cMode != CMODE_ROOF)
                             flag = 0;

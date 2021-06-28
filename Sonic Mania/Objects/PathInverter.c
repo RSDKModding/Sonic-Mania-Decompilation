@@ -92,7 +92,7 @@ void PathInverter_Unknown1(Entity *player)
     int val    = entity->size.x + ((entity->position.x - player->position.x) >> 16);
     int angle2 = 4 * (3 * val) / entity->size2.x;
     int angle  = (val << 8) / entity->size2.x;
-    if (plr->playerAnimData.animationID != ANI_JUMP || !plr->groundedStore) {
+    if (plr->playerAnimator.animationID != ANI_JUMP || !plr->groundedStore) {
         int frame = 12 - angle2;
         if (player->collisionMode != CMODE_ROOF * (entity->playerFlipFlags[plr->playerID] >= 0))
             frame = angle2;
@@ -104,7 +104,7 @@ void PathInverter_Unknown1(Entity *player)
             player->direction &= ~FLIP_Y;
         else
             player->direction |= FLIP_Y;
-        RSDK.SetSpriteAnimation(plr->spriteIndex, ANI_SPRINGCS, &plr->playerAnimData, true, frame);
+        RSDK.SetSpriteAnimation(plr->spriteIndex, ANI_SPRINGCS, &plr->playerAnimator, true, frame);
     }
     player->onGround   = true;
     player->position.y = entity->playerFlipFlags[plr->playerID] * RSDK.Cos512(angle) + entity->position.y;
@@ -130,14 +130,14 @@ void PathInverter_State_Horizontal(void)
                     player->angle += 0x80;
                     player->angle &= 0xFF;
                     player->controlLock = 30;
-                    if (player->playerAnimData.animationID == ANI_JUMP) {
+                    if (player->playerAnimator.animationID == ANI_JUMP) {
                         player->state = Player_State_Roll;
                     }
                     else {
                         player->direction &= FLIP_X;
                         player->direction ^= FLIP_X;
                         player->state = Player_State_Ground;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JOG, &player->playerAnimData, false, 0);
+                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JOG, &player->playerAnimator, false, 0);
                         player->rotation = player->angle << 1;
                     }
                     player->tileCollisions = true;

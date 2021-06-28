@@ -233,8 +233,8 @@ typedef struct {
     StateMachine(nextAirState);
     StateMachine(nextGroundState);
     EntityCamera *camera;
-    Animator playerAnimData;
-    Animator tailSpriteAnimData;
+    Animator playerAnimator;
+    Animator tailAnimator;
     int maxWalkSpeed;
     int maxJogSpeed;
     int maxRunSpeed;
@@ -297,8 +297,8 @@ typedef struct {
     int sensorX[5];
     int sensorY;
     Vector2 moveOffset;
-    StateMachine(inputState2);
-    StateMachine(inputState);
+    StateMachine(stateInput2);
+    StateMachine(stateInput);
     int controllerID;
     int controlLock;
     int up;

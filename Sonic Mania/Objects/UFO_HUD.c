@@ -5,8 +5,10 @@ ObjectUFO_HUD *UFO_HUD;
 void UFO_HUD_Update(void)
 {
     RSDK_THIS(UFO_HUD);
+#if RETRO_USE_PLUS && RETRO_GAMEVER != VER_107
     if (RSDK_controller->keyY.press)
         UFO_HUD_LevelUpMach();
+#endif
 
     if (entity->scale.x > 512) {
         entity->scale.x -= 0x10;

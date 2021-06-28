@@ -83,20 +83,20 @@ bool32 TTCutscene_CutsceneState_Setup(EntityTTCutscene *host)
         Zone->deathBoundary[3]      = 0x7FFF0000;
         camera->targetPtr           = NULL;
         player1->camera             = NULL;
-        player1->inputState         = StateMachine_None;
+        player1->stateInput         = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->state      = Player_State_None;
         player1->position.x = player1->position.x;
         player1->position.y = (RSDK_screens->position.y + 32 + RSDK_screens->height) << 16;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_SPRINGTWIRL, &player1->playerAnimData, false, 0);
+        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_SPRINGTWIRL, &player1->playerAnimator, false, 0);
 
         if (player2->objectID == Player->objectID) {
             player1->position.x += 0x100000;
-            player1->inputState = StateMachine_None;
+            player1->stateInput = StateMachine_None;
             player2->position.x = player1->position.x - 0x200000;
             player2->position.y = player1->position.y;
             player2->state      = Player_State_None;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SPRINGTWIRL, &player2->playerAnimData, false, 0);
+            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SPRINGTWIRL, &player2->playerAnimator, false, 0);
         }
     }
     return host->timer == 64;

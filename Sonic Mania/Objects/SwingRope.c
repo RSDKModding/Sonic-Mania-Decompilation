@@ -42,7 +42,7 @@ void SwingRope_Update(void)
                     player->jumpAbilityTimer = 1;
                     player->state            = Player_State_Air;
                     player->drawOrder        = entity->playerLayers[player->playerID];
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, false, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->velocity.x = entity->velocity.x >> 1;
                     if (player->left) {
                         player->velocity.x = -0x20000;
@@ -72,7 +72,7 @@ void SwingRope_Update(void)
                 entity->playerLayers[player->playerID] = player->drawOrder;
                 player->drawOrder                      = Zone->drawOrderLow;
                 player->state                          = Player_State_None;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimData, 0, 0);
+                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, 0, 0);
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;

@@ -324,7 +324,7 @@ void Ring_State_Sparkle(void)
         RSDK.ProcessAnimation(&entity->animData);
 
         if (entity->animData.frameID >= entity->maxFrameCount)
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
         entity->visible = 0;
@@ -505,7 +505,7 @@ void Ring_Collect(void)
                     player->ringExtraLife += 100 * (entity->ringAmount / 100);
                     ringAmount = entity->ringAmount;
                 }
-                Player_GiveRings(ringAmount, player, 1);
+                Player_GiveRings(ringAmount, player, true);
                 int max = 0x100000;
                 if (entity->type != 1)
                     max = 0x80000;

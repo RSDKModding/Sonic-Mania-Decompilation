@@ -29,7 +29,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     Matrix matrix4;
-    StateMachine(inputState);
+    StateMachine(stateInput);
     int controllerID;
     bool32 up;
     bool32 down;

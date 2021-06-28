@@ -414,7 +414,7 @@ void ItemBox_CheckHit(void)
                 }
             }
             else {
-                int anim    = player->playerAnimData.animationID;
+                int anim    = player->playerAnimator.animationID;
                 bool32 flag = anim == ANI_JUMP
                               && (player->velocity.y >= 0 || player->onGround || entity->direction); //|| player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
@@ -522,7 +522,7 @@ void ItemBox_GivePowerup(void)
             case 12:
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
-                    if (!globals->stock || player->playerAnimData.animationID == ANI_TRANSFORM) {
+                    if (!globals->stock || player->playerAnimator.animationID == ANI_TRANSFORM) {
                         RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
                         return;
                     }
@@ -556,7 +556,7 @@ void ItemBox_GivePowerup(void)
                 /*v23         = 0;
                 int arr1[5] = { 0x0FF00000, 0x0FF00000, 0x0FF00000, 0x0FF00000 };
                 arr1[4]     = 0xFF;
-                if (player->playerAnimData.animationID == ANI_TRANSFORM) {
+                if (player->playerAnimator.animationID == ANI_TRANSFORM) {
                     RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
                     return;
                 }
@@ -750,7 +750,7 @@ void ItemBox_GivePowerup(void)
                                     player2->maxGlideSpeed = 0;
                                     player2->nextAirState     = StateMachine_None;
                                     player2->nextGroundState  = StateMachine_None;
-                                    player2->inputState      = Player_ProcessInputFlyCarry;
+                                    player2->stateInput      = Player_ProcessInputFlyCarry;
                                     player2->tileCollisions  = false;
                                     player2->interaction     = false;
                                     player2->drawOrder       = Zone->uiDrawLow;
@@ -820,7 +820,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     }
     RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
-    if (player->characterID == ID_MIGHTY && player->playerAnimData.animationID == ANI_DROPDASH)
+    if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)
         player->velocity.y -= 0x10000;
     else
 #endif

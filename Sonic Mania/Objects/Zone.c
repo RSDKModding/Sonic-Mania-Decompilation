@@ -966,11 +966,11 @@ void Zone_Unknown19(void)
             playerPtr->direction       = player->direction;
             playerPtr->tileCollisions  = player->tileCollisions;
             playerPtr->interaction     = player->interaction;
-            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, player->playerAnimData.animationID, &playerPtr->playerAnimData, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
         }
         else {
             playerPtr->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimData, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
             playerPtr->tileCollisions = true;
             playerPtr->interaction    = true;
         }

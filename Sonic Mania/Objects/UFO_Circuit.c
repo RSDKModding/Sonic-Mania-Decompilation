@@ -298,7 +298,7 @@ void UFO_Circuit_Unknown4(void)
                 else {
                     player->timer               = 0;
                     player->circuitPtr          = entity;
-                    player->inputState          = NULL;
+                    player->stateInput          = NULL;
                     player->state               = UFO_Player_Unknown10;
                     entity->state               = UFO_Circuit_Unknown5;
                     RSDK_sceneInfo->timeEnabled = false;

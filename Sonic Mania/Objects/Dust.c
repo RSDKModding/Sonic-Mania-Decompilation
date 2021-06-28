@@ -69,7 +69,7 @@ void Dust_State_GlideSlide(void)
             dust->drawOrder = player->drawOrder;
         }
         entity->timer = ((byte)entity->timer + 1) & 7;
-        if (player->playerAnimData.animationID != ANI_FLYLIFTTIRED || !player->groundVel)
+        if (player->playerAnimator.animationID != ANI_FLYLIFTTIRED || !player->groundVel)
             RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }
@@ -90,7 +90,7 @@ void Dust_State_Skid(void)
             dust->drawOrder = player->drawOrder;
         }
         entity->timer = ((byte)entity->timer + 1) & 7;
-        if (player->playerAnimData.animationID != ANI_SKID)
+        if (player->playerAnimator.animationID != ANI_SKID)
             RSDK.ResetEntityPtr(entity, 0, 0);
     }
 }

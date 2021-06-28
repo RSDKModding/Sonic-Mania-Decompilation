@@ -114,9 +114,9 @@ void Spring_State_Vertical(void)
                 int col = (entity->type != 0xFF || player->velocity.y >= -0x50000) ? Player_CheckCollisionBox(player, entity, &entity->hitbox)
                                                                                  : Player_CheckCollisionPlatform(player, entity, &entity->hitbox);
                 if (col == 1) {
-                    int anim = player->playerAnimData.animationID;
+                    int anim = player->playerAnimator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                        player->storedAnim = player->playerAnimData.animationID;
+                        player->storedAnim = player->playerAnimator.animationID;
                     else
                         player->storedAnim = ANI_WALK;
 
@@ -125,7 +125,7 @@ void Spring_State_Vertical(void)
                             player->state = Player_State_RollLock;
                         }
                         else {
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimData, true, 0);
+                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                             player->state = Player_State_Air;
                         }
                     //}
@@ -190,9 +190,9 @@ void Spring_State_Horizontal(void)
                         else
                             player->state = Player_State_Air;
                     }
-                    int anim = player->playerAnimData.animationID;
+                    int anim = player->playerAnimator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                        player->playerAnimData.animationID = ANI_WALK;
+                        player->playerAnimator.animationID = ANI_WALK;
                 //}
                 player->controlLock          = 16;
                 player->skidding            = 0;
@@ -229,9 +229,9 @@ void Spring_State_Horizontal(void)
                         else
                             player->state = Player_State_Air;
                     }
-                    int anim = player->playerAnimData.animationID;
+                    int anim = player->playerAnimator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                        player->playerAnimData.animationID = ANI_WALK;
+                        player->playerAnimator.animationID = ANI_WALK;
                 //}
                 player->controlLock          = 16;
                 player->skidding            = 0;
@@ -278,19 +278,19 @@ void Spring_State_Diagonal(void)
                     }
                     else {
                         player->state = Player_State_Air;
-                        int anim      = player->playerAnimData.animationID;
+                        int anim      = player->playerAnimator.animationID;
                         if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                            player->playerAnimData.animationID = ANI_WALK;
+                            player->playerAnimator.animationID = ANI_WALK;
                     }
                     //}
                     if (entity->direction < FLIP_Y) {
                         if (player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
-                            int anim = player->playerAnimData.animationID;
+                            int anim = player->playerAnimator.animationID;
                             if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                                player->storedAnim = player->playerAnimData.animationID;
+                                player->storedAnim = player->playerAnimator.animationID;
                             else
                                 player->storedAnim = ANI_WALK;
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimData, true, 0);
+                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                         }
                     }
                     player->direction           = entity->direction & 1;

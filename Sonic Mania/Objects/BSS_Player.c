@@ -7,7 +7,7 @@ void BSS_Player_Update(void)
     RSDK_THIS(BSS_Player);
     EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
 
-    StateMachine_Run(entity->inputState);
+    StateMachine_Run(entity->stateInput);
     if (entity->onGround) {
         if (entity->jumpPress) {
             entity->velocity.y = -0x100000;
@@ -118,11 +118,11 @@ void BSS_Player_Create(void *data)
         }
 
         if (RSDK_sceneInfo->entitySlot) {
-            entity->inputState = BSS_Player_HandleP2Inputs;
+            entity->stateInput = BSS_Player_HandleP2Inputs;
             entity->sideKick   = true;
         }
         else {
-            entity->inputState   = BSS_Player_HandleP1Inputs;
+            entity->stateInput   = BSS_Player_HandleP1Inputs;
             entity->controllerID = CONT_P1;
             entity->sideKick     = false;
         }

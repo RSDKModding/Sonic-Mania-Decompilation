@@ -74,7 +74,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
     {
         player->state = Player_State_Ground;
         if (!player->sidekick) {
-            player->inputState = StateMachine_None;
+            player->stateInput = StateMachine_None;
             player->left       = true;
             player->right      = false;
             player->up         = false;
@@ -132,8 +132,8 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
 
         foreach_active(Player, player)
         {
-            player->inputState = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, false, 0);
+            player->stateInput = StateMachine_None;
+            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
         }
 
         foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->drawOrderLow; }
@@ -185,9 +185,9 @@ bool32 GHZ2Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
                 if (player->onGround && player->groundedStore) {
                     player->state = Player_State_None;
                     if (player->characterID == ID_TAILS)
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BALANCE2, &player->playerAnimData, false, 0);
+                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BALANCE2, &player->playerAnimator, false, 0);
                     else
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimData, false, 0);
+                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, false, 0);
                 }
             }
         }
@@ -310,7 +310,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host)
         if (ruby->state = PhantomRuby_Unknown5) {
             if (player2->objectID == Player->objectID && player2->characterID == ID_TAILS) {
                 player2->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimData, false, 0);
+                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimator, false, 0);
             }
             return true;
         }
@@ -380,7 +380,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimData, false, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
 
                     int valX = (deRobot->position.x - 0x400000) - player->position.x;
                     int valY = (deRobot->position.y - (0xA00000 + 944)) - player->position.y;

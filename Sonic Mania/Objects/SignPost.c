@@ -326,7 +326,7 @@ void SignPost_State_Fall(void)
 
     foreach_active(Player, player) {
         if (entity->velocity.y >= 0) {
-            if (player->velocity.y < 0 && player->playerAnimData.animationID == ANI_JUMP && !player->onGround) {
+            if (player->velocity.y < 0 && player->playerAnimator.animationID == ANI_JUMP && !player->onGround) {
                 if (Player_CheckCollisionTouch(player, entity, &SignPost->hitbox)) {
                     entity->velocity.x = (entity->position.x - player->position.x) >> 4;
                     entity->velocity.y = -131072;

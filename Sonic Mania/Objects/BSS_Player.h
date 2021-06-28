@@ -21,7 +21,7 @@ typedef struct {
     RSDK_ENTITY
     int gravityStrength;
     bool32 sideKick;
-    StateMachine(inputState);
+    StateMachine(stateInput);
     int controllerID;
     bool32 up;
     bool32 down;

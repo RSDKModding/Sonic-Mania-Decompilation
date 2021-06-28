@@ -52,8 +52,8 @@ void ZipLine_Update(void)
                             if (!entity->grabDelay[pid] && player->jumpPress) {
                                 player->velocity.y       = -0x40000;
                                 player->jumpAbilityTimer = 1;
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimData, 0, 0);
-                                player->playerAnimData.animationSpeed = 48;
+                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, 0, 0);
+                                player->playerAnimator.animationSpeed = 48;
                                 player->state                         = Player_State_Air;
                                 entity->grabDelay[pid]                = 60;
                                 entity->activePlayers &= ~(1 << pid);
@@ -110,7 +110,7 @@ void ZipLine_Update(void)
                         player->position.y +=
                             ((ZipLine->hitbox.top - playerHitbox->top) << 16) + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                         player->tileCollisions = false;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimData, true, 0);
+                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
                         player->state           = Player_State_None;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
@@ -156,7 +156,7 @@ void ZipLine_Update(void)
                                     player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                           + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                     player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimData, true, 0);
+                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
@@ -190,7 +190,7 @@ void ZipLine_Update(void)
                                     player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                           + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                     player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimData, true, 0);
+                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
@@ -218,7 +218,7 @@ void ZipLine_Update(void)
                                         player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                               + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                         player->tileCollisions = false;
-                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimData, true, 0);
+                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
                                         player->state           = Player_State_None;
                                         player->nextAirState    = StateMachine_None;
                                         player->nextGroundState = StateMachine_None;
@@ -242,7 +242,7 @@ void ZipLine_Update(void)
                                     player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                           + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                     player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimData, true, 0);
+                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
