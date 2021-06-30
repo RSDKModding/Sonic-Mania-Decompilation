@@ -455,7 +455,7 @@ byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         switch (platform->collision) {
             case 0x0:
-                boxResult = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animData, 0), entity, &Ring->hitbox, 1);
+                boxResult = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), entity, &Ring->hitbox, 1);
                 break;
             case 0x1:
             case 0x5:
@@ -468,7 +468,7 @@ byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
             case 0xC:
             case 0xD:
             case 0xE:
-            case 0xF: boxResult = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animData, 1), entity, &Ring->hitbox, 1); break;
+            case 0xF: boxResult = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), entity, &Ring->hitbox, 1); break;
             case 0x2:
                 boxResult = 0;
                 if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, entity, &Ring->hitbox) && entity->collisionLayers & Zone->moveID) {

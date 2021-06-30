@@ -76,10 +76,9 @@ void DebugMode_Update(void)
             DebugMode->itemSubType = 0;
         }
         if (RSDK_controller[CONT_P1].keyB.press) {
-            int val = DebugMode->itemSubType;
-            if (!DebugMode->itemSubType)
-                DebugMode->itemSubType = DebugMode->subtypeCount;
-            DebugMode->itemSubType = val - 1;
+            DebugMode->itemSubType--;
+            if (DebugMode->itemSubType >= DebugMode->subtypeCount)
+                DebugMode->itemSubType = DebugMode->subtypeCount - 1;
         }
     }
     else if (RSDK_controller[CONT_P1].keyC.press || RSDK_controller[CONT_P1].keyY.press) {

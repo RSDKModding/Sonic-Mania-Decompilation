@@ -132,7 +132,7 @@ bool32 Animals_CheckPlatformCollision(void *plat)
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         if (platform->collision <= 1) {
-            flag = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animData, 0), entity, &entity->hitbox, true);
+            flag = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), entity, &entity->hitbox, true);
         }
         else if (platform->collision == 2 && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, entity, &entity->hitbox)) {
             if (entity->collisionLayers & Zone->moveID) {

@@ -63,7 +63,7 @@ typedef struct {
     int (*UserStorageStatusUnknown5)(void);
     void (*SetUserStorageNoSave)(bool32 state);
     bool32 (*GetUserStorageNoSave)(void);
-    void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status)); //load user file from game dir
+    void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));                  // load user file from game dir
     void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress); // save user file to game dir
     void (*DeleteUserFile)(const char *filename, void (*callback)(int status));                                 // delete user file from game dir
     ushort (*InitUserDB)(const char *name, ...);

@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectTurntable;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte type;
+    int angleVel;
+    byte activePlayers;
+    Vector2 size;
+    Vector2 origin;
+    int field_74;
+    int field_78[4];
+    int field_88[4];
+    int field_98[4];
+    Hitbox hitbox;
+    Animator animator;
 } EntityTurntable;
 
 // Object Struct
@@ -28,6 +40,7 @@ void Turntable_EditorLoad(void);
 void Turntable_Serialize(void);
 
 // Extra Entity Functions
+void Turntable_SetupSize(void);
 
 
 #endif //!OBJ_TURNTABLE_H

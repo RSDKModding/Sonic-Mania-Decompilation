@@ -363,6 +363,9 @@ void LoadSceneFile()
                 }
             }
 
+            if (!objID && i >= TYPE_DEFAULTCOUNT)
+                printLog(SEVERITY_NONE, "Object %d is unimplimented!", i);
+
             ObjectInfo *obj          = &objectList[stageObjectIDs[objID]];
             byte varCnt              = ReadInt8(&info);
             EditableVarInfo *varList = NULL;

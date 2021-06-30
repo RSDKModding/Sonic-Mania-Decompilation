@@ -292,7 +292,7 @@ void ProcessObjects()
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
                         int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
-                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
+                        if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -302,7 +302,7 @@ void ProcessObjects()
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
                         int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
-                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + cameras[s].offset.y) {
+                        if (sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -479,7 +479,7 @@ void ProcessFrozenObjects()
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
                         int sx = abs(sceneInfo.entity->position.x - cameras[s].position.x);
-                        if (sx <= (sceneInfo.entity->updateRange.x >> 0x10) + cameras[s].offset.x) {
+                        if (sx <= sceneInfo.entity->updateRange.x + cameras[s].offset.x) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }
@@ -489,7 +489,7 @@ void ProcessFrozenObjects()
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
                         int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
-                        if (sy <= (sceneInfo.entity->updateRange.y >> 0x10) + cameras[s].offset.y) {
+                        if (sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }

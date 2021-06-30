@@ -17,8 +17,6 @@ typedef struct {
     bool32 debugActive;
     byte itemSubType;
     byte subtypeCount;
-    byte field_A2A;
-    byte field_A2B;
     int field_A2C;
 } ObjectDebugMode;
 

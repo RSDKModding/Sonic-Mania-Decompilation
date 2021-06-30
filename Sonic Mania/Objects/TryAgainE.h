@@ -6,12 +6,23 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort playerAniFrames;
 } ObjectTryAgainE;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int field_60;
+    int field_64;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator player1Animator;
+    Animator player2Animator;
 } EntityTryAgainE;
 
 // Object Struct
@@ -29,6 +40,8 @@ void TryAgainE_EditorLoad(void);
 void TryAgainE_Serialize(void);
 
 // Extra Entity Functions
+void TryAgainE_Unknown1(void);
+void TryAgainE_Unknown2(void);
 #endif
 
 #endif //!OBJ_TRYAGAINE_H

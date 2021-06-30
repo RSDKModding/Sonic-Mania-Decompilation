@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort playerAniFrames;
+    ushort tailAniFrames;
+    ushort sfxRoll;
+    ushort sfxCharge;
+    ushort sfxRelease;
 } ObjectContinuePlayer;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    bool32 isPlayer2;
+    int timer;
+    int field_64;
+    int field_68;
+    Animator animator;
+    ushort aniFrames;
 } EntityContinuePlayer;
 
 // Object Struct
@@ -28,6 +41,9 @@ void ContinuePlayer_EditorLoad(void);
 void ContinuePlayer_Serialize(void);
 
 // Extra Entity Functions
-
+void ContinuePlayer_Unknown1(void);
+void ContinuePlayer_Unknown2(void);
+void ContinuePlayer_Unknown3(void);
+void ContinuePlayer_Unknown4(void);
 
 #endif //!OBJ_CONTINUEPLAYER_H

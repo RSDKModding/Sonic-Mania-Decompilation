@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectTAEmerald;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte color;
+    int timer;
+    Vector2 startPos;
+    Animator animator;
 } EntityTAEmerald;
 
 // Object Struct
@@ -28,6 +34,7 @@ void TAEmerald_EditorLoad(void);
 void TAEmerald_Serialize(void);
 
 // Extra Entity Functions
-
+void TAEmerald_Unknown1(void);
+void TAEmerald_Unknown2(void);
 
 #endif //!OBJ_TAEMERALD_H

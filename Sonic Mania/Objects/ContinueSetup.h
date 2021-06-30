@@ -5,12 +5,29 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Animator animator;
+    ushort sfxAccept;
+    ushort countIndex[10];
+    ushort sceneIndex;
 } ObjectContinueSetup;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int timer2;
+    int countTimer;
+    int rotationX;
+    int field_6C;
+    int colour;
+    int dword74;
+    Matrix matrix1;
+    Matrix matrix2;
+    Matrix matrix3;
+    Matrix matrix4;
+    Matrix matrix5;
 } EntityContinueSetup;
 
 // Object Struct
@@ -28,6 +45,9 @@ void ContinueSetup_EditorLoad(void);
 void ContinueSetup_Serialize(void);
 
 // Extra Entity Functions
-
+void ContinueSetup_Unknown1(void);
+void ContinueSetup_Unknown2(void);
+void ContinueSetup_Unknown3(void);
+void ContinueSetup_Unknown4(void);
 
 #endif //!OBJ_CONTINUESETUP_H

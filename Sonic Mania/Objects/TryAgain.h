@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectTryAgain;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int field_60;
+    int field_64;
+    Vector2 unknownPos1;
+    int field_70;
+    int field_74;
+    Vector2 unknownPos2;
+    Vector2 emeraldVelocity;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntityTryAgain;
 
 // Object Struct
@@ -28,6 +41,9 @@ void TryAgain_EditorLoad(void);
 void TryAgain_Serialize(void);
 
 // Extra Entity Functions
-
+void TryAgain_Unknown1(void);
+void TryAgain_Unknown2(void);
+void TryAgain_Unknown3(void);
+void TryAgain_Unknown4(void);
 
 #endif //!OBJ_TRYAGAIN_H

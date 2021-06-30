@@ -24,8 +24,9 @@ typedef enum {
     ID_MIGHTY = 0x08,
     ID_RAY    = 0x10,
 #endif
-    ID_TAILS_ASSIST   = 0x200,
-    ID_DEFAULT_PLAYER = ID_SONIC | ID_TAILS_ASSIST,
+    ID_TAILS_ASSIST    = ID_TAILS << 8,
+    ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, //custom-added, can be used to check if & knux is active
+    ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
 
 typedef enum { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT } ItemModes;

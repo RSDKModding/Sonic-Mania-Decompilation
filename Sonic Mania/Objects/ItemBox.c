@@ -207,12 +207,12 @@ void ItemBox_DebugDraw(void)
     DebugMode->subtypeCount = 15;
 #endif
     RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
     RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &DebugMode->debugData, true, DebugMode->itemSubType);
     Vector2 drawPos;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y - 0x30000;
-    RSDK.DrawSprite(&DebugMode->debugData, &drawPos, 0);
+    RSDK.DrawSprite(&DebugMode->debugData, &drawPos, false);
 }
 void ItemBox_DebugSpawn(void)
 {
@@ -978,11 +978,11 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
                 collided = true;
             }
             else {
-                collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animData, 1), entity, &ItemBox->hitbox, 1);
+                collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), entity, &ItemBox->hitbox, 1);
             }
         }
         else {
-            collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animData, 0), entity, &ItemBox->hitbox, 1);
+            collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), entity, &ItemBox->hitbox, 1);
         }
 
         if (!collided) {

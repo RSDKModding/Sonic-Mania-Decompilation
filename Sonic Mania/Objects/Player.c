@@ -909,7 +909,7 @@ void Player_GiveLife(EntityPlayer *entity)
 void Player_ApplyShieldEffect(EntityPlayer *player)
 {
     if (player->shield && player->superState != 2 && player->invincibleTimer <= 0) {
-        Entity *shield = (Entity *)RSDK.GetEntityByID((ushort)(Player->playerCount + RSDK.GetEntityID(player)));
+        Entity *shield = (Entity *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
         RSDK.ResetEntityPtr(shield, Shield->objectID, player);
     }
 }

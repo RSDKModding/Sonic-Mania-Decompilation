@@ -207,7 +207,7 @@ void DDWrecker_State_InitChildren(void)
         }
     }
     else {
-        Entity *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->position.x > entity->position.x) {
             Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
             ++entity->timer;

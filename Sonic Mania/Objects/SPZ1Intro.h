@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxGasPop;
+    ushort sfxPon;
+    EntityDebris *debris;
 } ObjectSPZ1Intro;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    int timer;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int field_78;
+    Hitbox hitbox;
+    int field_84;
 } EntitySPZ1Intro;
 
 // Object Struct
@@ -28,6 +42,8 @@ void SPZ1Intro_EditorLoad(void);
 void SPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-
+bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SPZ1INTRO_H

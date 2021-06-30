@@ -20,7 +20,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    void (*stateCollide)(void);
+    StateMachine(stateCollide);
     int type;
     Vector2 amplitude;
     int speed;
@@ -38,7 +38,7 @@ typedef struct {
     byte pushPlayersL;
     byte pushPlayersR;
     Hitbox hitbox;
-    Animator animData;
+    Animator animator;
     int childCount;
 } EntityPlatform;
 
