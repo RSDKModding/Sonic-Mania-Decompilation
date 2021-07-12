@@ -411,7 +411,7 @@ void Platform_StageLoad(void)
     else if (RSDK.CheckStageFolder("MSZ")) {
         Platform->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Platform.bin", SCOPE_STAGE);
     }
-    else if (RSDK.CheckStageFolder("OOZ") || RSDK.CheckStageFolder("OOZ2")) {
+    else if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2")) {
         Platform->spriteIndex = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ1")) {
@@ -490,8 +490,8 @@ void Platform_State_Wait(void)
         if (entity->hasTension)
             entity->collapseDelay = 120;
         entity->rotation     = 0;
-        entity->tileOrigin.x = 0;
-        entity->tileOrigin.y = 0;
+        entity->targetPos.x = 0;
+        entity->targetPos.y = 0;
         entity->active       = ACTIVE_NORMAL;
         entity->state        = Platform_State_PlayerMove;
     }
@@ -507,11 +507,11 @@ void Platform_State_WaitBobbing(void)
     if (entity->stood) {
         if (entity->hasTension)
             entity->collapseDelay = 120;
-        entity->tileOrigin.x = entity->drawPos.x - entity->centerPos.x;
+        entity->targetPos.x  = entity->drawPos.x - entity->centerPos.x;
         entity->centerPos.x  = entity->drawPos.x;
-        entity->tileOrigin.y = RSDK.Sin1024(entity->rotation) << 9;
-        entity->centerPos.y  = RSDK.Sin1024(entity->rotation) << 9;
-        entity->active       = 2;
+        entity->targetPos.y  = RSDK.Sin1024(entity->rotation) << 9;
+        entity->centerPos.y  = entity->drawPos.y;
+        entity->active       = ACTIVE_NORMAL;
         entity->state        = Platform_State_PlayerMove;
     }
     entity->velocity.y = 0;
@@ -567,8 +567,8 @@ void Platform_State_PlayerActivated(void)
 
             // int center = cy + entity->centerPos.y;
             if (abs(player->position.x - entity->centerPos.x) <= 0x4000000) {
-                if (abs(player->position.y - entity->centerPos.y) <= 0x4000000 && cy < entity->centerPos.y) {
-                    if (entity->centerPos.y - cy < 0x1000000)
+                if (abs(player->position.y - entity->centerPos.y) <= 0x4000000 && (cy + entity->centerPos.y) < entity->centerPos.y) {
+                    if (entity->centerPos.y - (cy + entity->centerPos.y) < 0x1000000)
                         flag = true;
                 }
             }
@@ -595,11 +595,11 @@ void Platform_State_PlayerActivated(void)
 
     if (entity->direction) {
         entity->drawPos.x = (-entity->amplitude.y >> 8) * RSDK.Cos256(entity->angle) + entity->centerPos.x;
-        entity->drawPos.y = drawY + (-entity->amplitude.y >> 8) * RSDK.Sin256(entity->angle) + entity->centerPos.y;
+        entity->drawPos.y = (-entity->amplitude.y >> 8) * RSDK.Sin256(entity->angle) + entity->centerPos.y;
     }
     else {
         entity->drawPos.x = (entity->amplitude.y >> 8) * RSDK.Cos256(entity->angle) + entity->centerPos.x;
-        entity->drawPos.y = drawY + (entity->amplitude.y >> 8) * RSDK.Sin256(entity->angle) + entity->centerPos.y;
+        entity->drawPos.y = (entity->amplitude.y >> 8) * RSDK.Sin256(entity->angle) + entity->centerPos.y;
     }
 
     entity->velocity.x = entity->drawPos.x + drawX;
@@ -1006,8 +1006,8 @@ void Platform_Unknown5(void)
     entity->drawPos.y = (entity->amplitude.y >> 8) * RSDK.Sin256(entity->angle) + entity->centerPos.y;
 
     if (entity->groundVel <= 0) {
-        entity->centerPos.x = entity->drawPos.x - entity->tileOrigin.x;
-        entity->centerPos.y = entity->drawPos.y - entity->tileOrigin.y;
+        entity->centerPos.x = entity->drawPos.x - entity->targetPos.x;
+        entity->centerPos.y = entity->drawPos.y - entity->targetPos.y;
         entity->groundVel   = 0;
         entity->amplitude.y = 0;
         entity->angle       = -entity->angle;
@@ -1063,8 +1063,8 @@ void Platform_Unknown7(void)
     }
     else {
         if (--entity->collapseDelay) {
-            entity->tileOrigin.x  = entity->drawPos.x - entity->centerPos.x;
-            entity->tileOrigin.y  = entity->drawPos.y - entity->centerPos.y;
+            entity->targetPos.x  = entity->drawPos.x - entity->centerPos.x;
+            entity->targetPos.y  = entity->drawPos.y - entity->centerPos.y;
             entity->centerPos.x   = entity->drawPos.x;
             entity->collapseDelay = -1;
             entity->centerPos.y   = entity->drawPos.y;
@@ -1531,8 +1531,8 @@ void Platform_CollisionState_None(void)
 
         if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = entity->tileOrigin.x - entity->drawPos.x;
-            player->moveOffset.y = entity->tileOrigin.y - entity->drawPos.y;
+            player->moveOffset.x = entity->targetPos.x - entity->drawPos.x;
+            player->moveOffset.y = entity->targetPos.y - entity->drawPos.y;
             if (player->playerAnimator.animationID == ANI_PUSH && player->onGround) {
                 if (player->right)
                     entity->pushPlayersL |= 1 << pid;
@@ -2102,7 +2102,7 @@ void Platform_Serialize(void)
     RSDK_EDITABLE_VAR(Platform, VAR_BOOL, hasTension);
     RSDK_EDITABLE_VAR(Platform, VAR_INT8, frameID);
     RSDK_EDITABLE_VAR(Platform, VAR_UINT8, collision);
-    RSDK_EDITABLE_VAR(Platform, VAR_VECTOR2, tileOrigin);
+    RSDK_EDITABLE_VAR(Platform, VAR_VECTOR2, targetPos);
     RSDK_EDITABLE_VAR(Platform, VAR_ENUM, childCount);
     RSDK_EDITABLE_VAR(Platform, VAR_INT32, angle);
 }

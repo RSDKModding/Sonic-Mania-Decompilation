@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    Hitbox innerBox;
+    Hitbox outerBox;
+    byte array1[24];
+    sbyte array2[24];
+    ushort aniFrames;
 } ObjectCheckerBall;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    bool32 flag;
+    int field_5C;
+    int field_60;
+    Vector2 roundedPos;
+    Vector2 collisionOffset;
+    byte activePlayers;
+    Animator animator;
 } EntityCheckerBall;
 
 // Object Struct
@@ -28,6 +41,13 @@ void CheckerBall_EditorLoad(void);
 void CheckerBall_Serialize(void);
 
 // Extra Entity Functions
+void CheckerBall_DebugSpawn(void);
+void CheckerBall_DebugDraw(void);
 
+void CheckerBall_Unknown1(void);
+void CheckerBall_Unknown2(void);
+void CheckerBall_Unknown3(void);
+void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox);
+void CheckerBall_Unknown5(void);
 
 #endif //!OBJ_CHECKERBALL_H

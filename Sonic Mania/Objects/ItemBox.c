@@ -51,7 +51,7 @@ void ItemBox_Draw(void)
     RSDK_THIS(ItemBox);
     if (!entity->hidden) {
         if (entity->isContents) {
-            if (RSDK_sceneInfo->currentDrawGroup == Zone->uiDrawLow) {
+            if (RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
                 entity->drawFX = FX_NONE;
                 RSDK.DrawSprite(&entity->contentsData, &entity->contentsPos, false);
             }
@@ -59,7 +59,7 @@ void ItemBox_Draw(void)
                 entity->drawFX    = FX_FLIP;
                 entity->inkEffect = INK_NONE;
                 RSDK.DrawSprite(&entity->brokenData, NULL, false);
-                RSDK.AddDrawListRef(Zone->uiDrawLow, RSDK_sceneInfo->entitySlot);
+                RSDK.AddDrawListRef(Zone->playerDrawHigh, RSDK_sceneInfo->entitySlot);
             }
         }
         else {
@@ -135,7 +135,7 @@ void ItemBox_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;
-        entity->visible       = 1;
+        entity->visible       = true;
         if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
@@ -271,7 +271,7 @@ void ItemBox_State_Unknown(void)
 void ItemBox_State_Normal(void)
 {
     RSDK_THIS(ItemBox);
-    entity->contentsPos.x = RSDK_sceneInfo->entity->position.x;
+    entity->contentsPos.x = entity->position.x;
 
     if (entity->direction == FLIP_NONE)
         entity->contentsPos.y = entity->position.y - 0x30000;
@@ -554,7 +554,7 @@ void ItemBox_GivePowerup(void)
                 return;
             case 13: {
                 /*v23         = 0;
-                int arr1[5] = { 0x0FF00000, 0x0FF00000, 0x0FF00000, 0x0FF00000 };
+                int arr1[5] = { 0xFF, 0xFF, 0xFF, 0xFF };
                 arr1[4]     = 0xFF;
                 if (player->playerAnimator.animationID == ANI_TRANSFORM) {
                     RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
@@ -706,7 +706,7 @@ void ItemBox_GivePowerup(void)
 
                                 dust->visible         = 0;
                                 dust->active          = ACTIVE_NEVER;
-                                dust->isPermament     = true;
+                                dust->isPermanent     = true;
                                 dust->position.y      = (RSDK_screens->position.y - 128) << 16;
                                 player2->playerID     = 1;
                                 EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
@@ -753,7 +753,7 @@ void ItemBox_GivePowerup(void)
                                     player2->stateInput      = Player_ProcessInputFlyCarry;
                                     player2->tileCollisions  = false;
                                     player2->interaction     = false;
-                                    player2->drawOrder       = Zone->uiDrawLow;
+                                    player2->drawOrder       = Zone->playerDrawHigh;
                                     player2->airTimer        = 0;
                                     player2->active          = ACTIVE_NORMAL;
                                     player2->collisionPlane  = 0;
@@ -828,7 +828,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     itemBox->storedEntity  = (Entity*)player;
     itemBox->alpha         = 256;
     itemBox->contentsSpeed = -0x30000;
-    itemBox->active        = 2;
+    itemBox->active        = ACTIVE_NORMAL;
     itemBox->velocity.y    = -0x20000;
     itemBox->isContents    = true;
     itemBox->state         = ItemBox_State_Contents;
@@ -965,8 +965,8 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
                 }
                 if (entity->collisionLayers & Zone->moveID) {
                     TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
-                    move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
-                    move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
+                    move->position.x = -(platform->drawPos.x + platform->targetPos.x) >> 16;
+                    move->position.y = -(platform->drawPos.y + platform->targetPos.y) >> 16;
                 }
                 if (entity->state == ItemBox_State_Normal || entity->velocity.y > 0x3800) {
                     platform->position.x = platform->centerPos.x;

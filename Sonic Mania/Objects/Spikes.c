@@ -76,22 +76,22 @@ void Spikes_Update(void)
                         bool32 flag = false;
                         if (side == 4) {
                             player->collisionFlagV |= 2;
-                            flag = 0;
+                            flag = false;
                         }
                         else {
                             if (side == 1) {
-                                player->collisionFlagV |= 1u;
+                                player->collisionFlagV |= 1;
                                 if (entity->dword70 == 0x80000)
-                                    player->onGround = 0;
+                                    player->onGround = false;
                             }
-                            flag = 0;
+                            flag = false;
 #if RETRO_USE_PLUS
                             if (side == 1 && player->state == Player_State_MightyHammerDrop) {
                                 if (Ice) {
                                     if (!Press) {
-                                        flag = 1;
+                                        flag = true;
                                         if (entity->type != 1) {
-                                            player->onGround   = 0;
+                                            player->onGround   = false;
                                             player->velocity.y = playerVelY;
                                         }
                                     }
@@ -99,6 +99,7 @@ void Spikes_Update(void)
                             }
 #endif
                         }
+
                         switch (side) {
                             case 1:
                                 player->collisionFlagV |= 1;
@@ -111,35 +112,21 @@ void Spikes_Update(void)
                                 break;
                             case 2:
                                 player->collisionFlagH |= 1;
-                                if (player->velocity.x >= 0) {
-                                    if (entity->dword6C == 2) {
-                                        if (side == entity->type)
-                                            Spikes_CheckHit(player, playerVelX, playerVelY);
-                                    }
-                                }
-                                else {
+                                if (player->velocity.x >= 0 || entity->dword6C == 2) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case 3:
                                 player->collisionFlagH |= 2;
-                                if (player->velocity.x <= 0) {
-                                    if (side == entity->type)
-                                        Spikes_CheckHit(player, playerVelX, playerVelY);
-                                }
-                                if (entity->dword6C == 2) {
+                                if (player->velocity.x <= 0 || entity->dword6C == 2) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case 4:
                                 player->collisionFlagV |= 2;
-                                if (player->velocity.y <= 0) {
-                                    if (side == entity->type)
-                                        Spikes_CheckHit(player, playerVelX, playerVelY);
-                                }
-                                if (entity->dword6C == 2) {
+                                if (player->velocity.y <= 0 || entity->dword6C == 2) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }

@@ -34,10 +34,10 @@ void PlayerProbe_Serialize(void);
 
 // Extra Entity Functions
 void PlayerProbe_Print(EntityPlayer *player);
-void PlayerProbe_DrawEditor(int x1, int y1, int x2, int y2);
-void PlayerProbe_DrawDebug2(uint colour, byte dir, int x, int y, Hitbox *hitbox);
-void PlayerProbe_DrawDebug3(int x1, int y1, int x2, int y2);
+void PlayerProbe_DrawEditor(uint colour, int x1, int y1, int x2, int y2);
+void PlayerProbe_DrawHitboxOutline(uint colour, byte dir, int x, int y, Hitbox *hitbox);
+void PlayerProbe_DrawDebug3(uint colour, int x1, int y1, int x2, int y2);
 void PlayerProbe_DrawDebug4(uint colour, int a2, int alpha, int x1, int y1, int x2, int y2);
-void PlayerProbe_DrawDebug5(int x, int y);
+void PlayerProbe_DrawDebug5(uint colour, int x, int y);
 
 #endif //!OBJ_PLAYERPROBE_H

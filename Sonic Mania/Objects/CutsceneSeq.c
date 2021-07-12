@@ -78,7 +78,7 @@ void CutsceneSeq_Create(void *data)
     entity->active            = ACTIVE_NORMAL;
     entity->visible           = 0;
     entity->fillTimerA        = 0;
-    entity->drawOrder         = Zone->uiDrawHigh + 1;
+    entity->drawOrder         = Zone->hudDrawOrder + 1;
     entity->fillTimerB        = 0;
     CutsceneSeq_CheckSkip(entity->skipState, entity, entity->skipCallback);
 }

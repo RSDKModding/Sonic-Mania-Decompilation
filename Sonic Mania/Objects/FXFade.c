@@ -29,9 +29,9 @@ void FXFade_Create(void *data)
         }
         else if (Zone) {
             if (!entity->overHUD)
-                entity->drawOrder = Zone->uiDrawHigh - 1;
+                entity->drawOrder = Zone->hudDrawOrder - 1;
             else
-                entity->drawOrder = Zone->uiDrawHigh;
+                entity->drawOrder = Zone->hudDrawOrder;
         }
         else {
             entity->drawOrder = 15;

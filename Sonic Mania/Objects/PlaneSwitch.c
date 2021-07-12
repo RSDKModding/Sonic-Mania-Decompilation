@@ -25,7 +25,7 @@ void PlaneSwitch_Update(void)
                         player->drawOrder = Zone->playerDrawLow;
                     }
                     else {
-                        player->drawOrder = Zone->uiDrawLow;
+                        player->drawOrder = Zone->playerDrawHigh;
                     }
                 }
                 else {
@@ -34,7 +34,7 @@ void PlaneSwitch_Update(void)
                         player->drawOrder = Zone->playerDrawLow;
                     }
                     else {
-                        player->drawOrder = Zone->uiDrawLow;
+                        player->drawOrder = Zone->playerDrawHigh;
                     }
                 }
             }

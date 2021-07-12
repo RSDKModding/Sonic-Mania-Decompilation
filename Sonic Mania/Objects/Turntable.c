@@ -72,7 +72,7 @@ void Turntable_Update(void)
                 frame = entity->field_78[pID] / 42 % 24;
 
             if (entity->field_78[pID] < 512)
-                player->drawOrder = Zone->uiDrawLow;
+                player->drawOrder = Zone->playerDrawHigh;
             else
                 player->drawOrder = Zone->playerDrawLow;
             player->playerAnimator.frameID = (entity->field_98[pID] + frame) % -24;

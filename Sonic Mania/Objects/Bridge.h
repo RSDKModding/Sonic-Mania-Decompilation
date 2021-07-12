@@ -17,7 +17,6 @@ typedef struct {
     byte field_60;
     byte activePlayerCount;
     byte timer;
-    byte field_63;
     int stoodPos;
     int field_68;
     int field_6C;

@@ -170,7 +170,7 @@ typedef struct {
     void (*LoadStrings)(TextInfo *dst, const char* path, int);
     void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
-    void (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
+    bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
     void (*GetDisplayInfo)(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
     void (*GetWindowSize)(int *width, int *height);
     int (*SetScreenSize)(byte screenID, ushort width, ushort height);
@@ -931,6 +931,11 @@ extern RSDKFunctionTable RSDK;
 
 #define RSDK_THIS(type) Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
 #define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
+
+#define INIT_TEXTINFO(info)                                                                                                                          \
+    info.text       = NULL;                                                                                                                             \
+    info.textLength = 0;                                                                                                                             \
+    info.length     = 0;
 
 #define foreach_active(type, entityOut)                                                                                                              \
     Entity##type *entityOut = NULL;                                                                                                                  \

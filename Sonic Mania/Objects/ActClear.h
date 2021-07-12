@@ -30,8 +30,8 @@ typedef struct {
     int timer;
     int stageFinishTimer;
     int scoreBonus;
-    int field_68;
-    int dword6C;
+    int ringBonus;
+    int coolBonus;
     int field_70;
     int time;
     int dword78;

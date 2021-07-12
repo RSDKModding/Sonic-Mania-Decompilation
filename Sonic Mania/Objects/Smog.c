@@ -90,7 +90,7 @@ void Smog_Create(void *data)
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
         entity->inkEffect = INK_ALPHA;
-        entity->drawOrder = Zone->uiDrawHigh - 1;
+        entity->drawOrder = Zone->hudDrawOrder - 1;
         OOZSetup->value10 = 0;
         if (!(RSDK_sceneInfo->milliseconds || RSDK_sceneInfo->seconds || RSDK_sceneInfo->minutes)) {
             Smog->starPostID      = 0;
@@ -140,7 +140,7 @@ void Smog_StageLoad(void)
     RSDK.CopyPalette(0, 0, 2, 0, 128);
     RSDK.SetLimitedFade(2, 1, 3, 64, 0, 127);
     RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
-    RSDK.SetDrawLayerProperties(Zone->uiDrawHigh - 1, false, Smog_DrawLayerCB);
+    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder - 1, false, Smog_DrawLayerCB);
 }
 
 void Smog_DrawLayerCB(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }

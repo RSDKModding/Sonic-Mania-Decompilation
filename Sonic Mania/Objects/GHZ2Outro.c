@@ -343,12 +343,12 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
     }
     else {
         fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, deRobot->position.x, deRobot->position.y);
-        fxRuby->drawOrder = Zone->uiDrawLow;
+        fxRuby->drawOrder = Zone->playerDrawHigh;
         entity->fxRuby    = (Entity *)fxRuby;
         Camera_ShakeScreen(4, 0, 4);
-        player1->drawOrder = Zone->uiDrawLow + 1;
+        player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
-            player2->drawOrder = Zone->uiDrawLow + 1;
+            player2->drawOrder = Zone->playerDrawHigh + 1;
     }
 
     if (!host->field_6C[0]) {

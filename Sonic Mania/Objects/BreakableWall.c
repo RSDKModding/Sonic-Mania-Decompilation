@@ -157,7 +157,7 @@ void BreakableWall_State_HandleHWall(void)
                 bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->playerAnimator.animationID == ANI_JUMP;
 
                 if (player->shield == SHIELD_FIRE) {
-                    EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
+                    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                     flag |= shield->data.animationID == 2;
                 }
 
@@ -183,7 +183,7 @@ void BreakableWall_State_HandleHWall(void)
                                 player->velocity.x -= player->velocity.x >> 2;
                                 if (abs(player->velocity.x) <= 0x30000) {
                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, 0, 0);
-                                    // player->state = Player_State_KnuxGlideDrop;
+                                    player->state = Player_State_KnuxGlideDrop;
                                 }
                             }
                             else if (player->playerAnimator.animationID == ANI_FLYLIFTTIRED) {
@@ -192,7 +192,7 @@ void BreakableWall_State_HandleHWall(void)
                             }
                         }
                         RSDK.PlaySFX(BreakableWall->sfx_Break, 0, 255);
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     continue; // skip to next loop, so we dont do the box collision
                 }
@@ -213,11 +213,11 @@ void BreakableWall_State_Tile(void)
         entity->rotation += entity->dword88;
     if (entity->drawOrder >= Zone->drawOrderLow) {
         if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
         if (++entity->timer == 120)
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
 }
 void BreakableWall_State_Top(void)
@@ -325,10 +325,10 @@ void BreakableWall_Break1(void)
 
                     if (flag && !player->sidekick) {
                         player->onGround = false;
-                        int tx           = entity->position.x - (entity->size.x << 19) + 0x80000;
                         int ty           = entity->position.y - (entity->size.y << 19) + 0x80000;
                         int th           = entity->position.y - (entity->size.y << 19) + 0x80000 - ((entity->size.y << 19) + entity->position.y);
                         for (int y = 0; y < entity->size.y; ++y) {
+                            int tx          = entity->position.x - (entity->size.x << 19) + 0x80000;
                             int posY        = ty >> 20;
                             int speed       = 3 * abs(th);
                             int offsetX     = tx - entity->position.x;
@@ -352,7 +352,6 @@ void BreakableWall_Break1(void)
                                 blockSpeedX += 0x200000;
                                 tx += 0x100000;
                                 offsetX += 0x100000;
-                                tx += 0x100000;
                             }
                             ty += 0x100000;
                             th += 0x100000;
@@ -366,7 +365,7 @@ void BreakableWall_Break1(void)
                         else
 #endif
                             player->velocity.y = -0x30000;
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                 }
 #if RETRO_USE_PLUS
@@ -422,7 +421,7 @@ void BreakableWall_Break2AND3(void)
                         --entity->size.y;
                         entity->position.y += 0x80000;
                         if (entity->size.y <= 0)
-                            RSDK.ResetEntityPtr(entity, 0, 0);
+                            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                 }
 #if RETRO_USE_PLUS
@@ -461,7 +460,7 @@ void BreakableWall_Break4(void)
                         }
 
                         if (entity->size.y <= 0)
-                            RSDK.ResetEntityPtr(entity, 0, 0);
+                            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                         player->velocity.y = yVel;
                     }
                 }
@@ -516,7 +515,8 @@ void BreakableWall_Break5(void)
                             int blockSpeedX = 2 * (tx - entity->position.x);
                             for (int x = 0; x < entity->size.x; ++x) {
                                 int posX                       = tx >> 20;
-                                EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, tx, ty);
+                                EntityBreakableWall *tileChunk =
+                                    (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, intToVoid(1), tx, ty);
                                 tileChunk->tileInfo            = RSDK.GetTileInfo(entity->priority, posX, posY);
                                 tileChunk->drawOrder           = entity->drawOrder;
                                 int angle                      = RSDK.ATan2(blockSpeedX, offsetY);
@@ -548,7 +548,7 @@ void BreakableWall_Break5(void)
                         else
 #endif
                             player->velocity.y = -0x30000;
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                 }
 #if RETRO_USE_PLUS

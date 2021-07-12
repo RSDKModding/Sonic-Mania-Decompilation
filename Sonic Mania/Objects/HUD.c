@@ -359,7 +359,7 @@ void HUD_Create(void *data)
         ActClear->field_30   = 0;
         entity->active       = ACTIVE_NORMAL;
         entity->visible      = true;
-        entity->drawOrder    = Zone->uiDrawHigh;
+        entity->drawOrder    = Zone->hudDrawOrder;
         entity->dword5C[0].x = 0x100000;
         entity->dword5C[0].y = 0xC0000;
         entity->dword5C[1].x = 0x100000;

@@ -54,12 +54,12 @@ typedef struct {
     ushort fgHighID;
     ushort moveID;
     byte fgLayerLow;
-    byte playerDrawHigh;
+    byte fgLayerHigh;
     byte drawOrderLow;
     byte drawOrderHigh;
     byte playerDrawLow;
-    byte uiDrawLow;
-    byte uiDrawHigh;
+    byte playerDrawHigh;
+    byte hudDrawOrder;
     ushort sfx_fail;
 #if RETRO_USE_PLUS
     byte entityData[16][ENTITY_SIZE];

@@ -125,7 +125,7 @@ struct Entity {
 };
 
 struct EntityBase : Entity {
-    byte data[0x400];
+    void *data[0x100];
 };
 
 struct ObjectInfo {

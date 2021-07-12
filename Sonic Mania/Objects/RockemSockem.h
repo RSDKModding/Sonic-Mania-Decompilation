@@ -3,14 +3,32 @@
 
 #include "../SonicMania.h"
 
+//Extras
+#define RockemSockem_coilCount 6
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
+    ushort sfxRockemSockem;
 } ObjectRockemSockem;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int timer;
+    int timer2;
+    Vector2 drawPos;
+    Vector2 startPos;
+    Vector2 jointPositions[RockemSockem_coilCount];
+    Vector2 unknownPositions[RockemSockem_coilCount];
+    int jointRotations[RockemSockem_coilCount];
+    int field_E8;
+    int field_EC;
+    Animator baseAnimator;
+    Animator jointAnimator;
+    Animator ballAnimator;
 } EntityRockemSockem;
 
 // Object Struct
@@ -28,6 +46,6 @@ void RockemSockem_EditorLoad(void);
 void RockemSockem_Serialize(void);
 
 // Extra Entity Functions
-
+void RockemSockem_Unknown1(void);
 
 #endif //!OBJ_ROCKEMSOCKEM_H

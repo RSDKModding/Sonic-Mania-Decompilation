@@ -5,12 +5,30 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    bool32 hasButton;
+    ushort aniFrames;
 } ObjectPopOut;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte orientation;
+    byte tag;
+    bool32 manualTrigger;
+    int delay;
+    Vector2 field_64;
+    int field_6C;
+    int childType;
+    bool32 flag;
+    int field_78;
+    int field_7C;
+    int field_80;
+    int field_84;
+    Hitbox hitbox2;
+    Hitbox hitbox;
+    Animator animator;
+    Animator animator2;
 } EntityPopOut;
 
 // Object Struct
@@ -28,6 +46,6 @@ void PopOut_EditorLoad(void);
 void PopOut_Serialize(void);
 
 // Extra Entity Functions
-
+void PopOut_Unknown(void);
 
 #endif //!OBJ_POPOUT_H

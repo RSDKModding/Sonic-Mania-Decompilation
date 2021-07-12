@@ -74,7 +74,7 @@ void SpeedGate_Create(void *data)
     RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 5, &entity->bubbleData, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible       = true;
-        entity->drawOrder     = Zone->uiDrawLow;
+        entity->drawOrder     = Zone->playerDrawHigh;
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;

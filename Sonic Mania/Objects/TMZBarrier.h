@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    byte flags;
+    int postID;
 } ObjectTMZBarrier;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte type;
+    byte warpTag;
+    byte iD;
+    int field_5C;
 } EntityTMZBarrier;
 
 // Object Struct

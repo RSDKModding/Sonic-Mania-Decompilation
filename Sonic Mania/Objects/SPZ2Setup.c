@@ -78,7 +78,7 @@ void SPZ2Setup_Create(void *data)
     entity->active    = ACTIVE_NORMAL;
     entity->visible   = true;
     entity->timer     = 384;
-    entity->drawOrder = Zone->uiDrawHigh + 1;
+    entity->drawOrder = Zone->hudDrawOrder + 1;
 }
 
 void SPZ2Setup_StageLoad(void)

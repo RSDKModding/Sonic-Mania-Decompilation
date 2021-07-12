@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    ushort sfxPiano;
+    ushort aniFrames;
 } ObjectHonkytonk;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int negAngle;
+    int depression;
+    Animator animator;
 } EntityHonkytonk;
 
 // Object Struct

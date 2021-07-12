@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort modelIndex;
+    ushort sceneIndex;
 } ObjectEggTower;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int field_5C;
+    int rotationX;
+    Matrix matrix1;
+    Matrix matrix2;
+    Matrix matrix3;
+    Matrix matrix4;
 } EntityEggTower;
 
 // Object Struct

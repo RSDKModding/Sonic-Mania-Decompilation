@@ -6,6 +6,7 @@
 #include <stdarg.h>
 
 extern bool32 engineDebugMode;
+extern bool32 useEndLine;
 extern char outputString[0x400];
 
 void printLog(SeverityModes severity, const char *message, ...);
@@ -13,11 +14,14 @@ inline void printConsole(const char *message) { printf("%s", message); }
 
 #if RETRO_REV02
 inline void printString(SeverityModes severity, const char *message) { printLog(severity, "%s", message); }
-inline void printText(SeverityModes severity, const char *message, TextInfo *text)
+inline void printText(SeverityModes severity, TextInfo *text)
 {
+    useEndLine = false;
     for (int c = 0; c < text->textLength; ++c) {
         printLog(severity, "%c", text->text[c]);
     }
+    printLog(severity, "\n");
+    useEndLine = true;
 }
 inline void printIntegerUnsigned(SeverityModes severity, const char *message, uint integer) { printLog(severity, "%s: %d", message, integer); }
 inline void printInteger(SeverityModes severity, const char *message, int integer) { printLog(severity, "%s: %d", message, integer); }

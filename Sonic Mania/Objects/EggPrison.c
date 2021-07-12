@@ -21,7 +21,7 @@ void EggPrison_Update(void)
                 if (entity->state == EggPrison_Unknown2) {
                     if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == 4) {
                         entity->velocity.x = 0;
-                        entity->active     = 2;
+                        entity->active     = ACTIVE_NORMAL;
                         entity->state      = EggPrison_Activated;
                         entity->offsetY    = -0x80000;
                     }
@@ -56,7 +56,7 @@ void EggPrison_Update(void)
         {
             Player_CheckCollisionBox(player, entity, &entity->hitbox1);
             if (entity->state == EggPrison_Unknown2) {
-                if (Player_CheckCollisionBox(player, &entity, &entity->hitbox2) == 1) {
+                if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == 1) {
                     entity->offsetY = 0x80000;
                     if (entity->type < 2)
                         RSDK_sceneInfo->timeEnabled = false;
@@ -67,7 +67,7 @@ void EggPrison_Update(void)
                         else
                             player->storedAnim = ANI_WALK;
                         player->state      = Player_State_Air;
-                        player->onGround   = 0;
+                        player->onGround   = false;
                         player->velocity.y = -0xA0000;
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                         RSDK.PlaySFX(EggPrison->sfxSpring, 0, 255);
@@ -148,15 +148,15 @@ void EggPrison_Create(void *data)
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->data4, true, 0);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->data3, true, 1);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->data2, true, 0);
-                entity->hitbox2.left   = -0x10;
-                entity->hitbox2.top    = 0x18;
-                entity->hitbox2.right  = 0x10;
-                entity->hitbox2.bottom = 0x26;
+                entity->hitbox2.left   = -16;
+                entity->hitbox2.top    = 24;
+                entity->hitbox2.right  = 16;
+                entity->hitbox2.bottom = 38;
 
-                entity->hitbox3.left   = -0x0F;
-                entity->hitbox3.top    = 0x18;
-                entity->hitbox3.right  = 0x0F;
-                entity->hitbox3.bottom = 0x30;
+                entity->hitbox3.left   = -15;
+                entity->hitbox3.top    = 24;
+                entity->hitbox3.right  = 15;
+                entity->hitbox3.bottom = 48;
                 entity->velocity.x     = 0x10000;
                 entity->velocity.y     = 0x4000;
             }
@@ -164,20 +164,20 @@ void EggPrison_Create(void *data)
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->data4, true, 0);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->data3, true, 0);
-                entity->hitbox2.left   = -0x10;
-                entity->hitbox2.top    = -0x25;
-                entity->hitbox2.right  = -0x10;
-                entity->hitbox2.bottom = -0x17;
+                entity->hitbox2.left   = -16;
+                entity->hitbox2.top    = -37;
+                entity->hitbox2.right  = 16;
+                entity->hitbox2.bottom = -23;
 
-                entity->hitbox3.left  = -0x0F;
-                entity->hitbox3.top   = -0x2F;
-                entity->hitbox3.right = -0x0F;
-                entity->hitbox3.top   = -0x17;
+                entity->hitbox3.left  = -15;
+                entity->hitbox3.top   = -47;
+                entity->hitbox3.right = -15;
+                entity->hitbox3.top   = -23;
             }
-            entity->hitbox1.right  = 0x20;
-            entity->hitbox1.bottom = 0x20;
-            entity->hitbox1.left   = -0x20;
-            entity->hitbox1.top    = -0x17;
+            entity->hitbox1.left   = -32;
+            entity->hitbox1.top    = -23;
+            entity->hitbox1.right  = 32;
+            entity->hitbox1.bottom = 32;
             entity->state          = EggPrison_Unknown1;
             entity->active         = ACTIVE_BOUNDS;
             entity->updateRange.x  = 0x800000;
@@ -187,7 +187,7 @@ void EggPrison_Create(void *data)
         }
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
 }
 
@@ -251,6 +251,16 @@ void EggPrison_Activated(void)
         case 0:
         case 1:
         case 2:
+            for (int i = 0; i < 10; ++i) {
+                EntityAnimals *animals =
+                    (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[i & 1] + 1),
+                                                       (((RSDK.Rand(0, 48) & -4) - 24) << 16) + entity->position.x, entity->position.y + 0x40000);
+                animals->delay          = 4 * i;
+                animals->state          = Animals_State_BounceAround;
+                animals->behaviour      = 1;
+                animals->direction      = (i ^ (i >> 1)) & 1;
+            }
+            break;
         case 3: {
             int angle = 144;
             for (int r = 0; r < 6; ++r) {
@@ -421,4 +431,4 @@ void EggPrison_EditorDraw(void) {}
 
 void EggPrison_EditorLoad(void) {}
 
-void EggPrison_Serialize(void) {}
+void EggPrison_Serialize(void) { RSDK_EDITABLE_VAR(EggPrison, VAR_ENUM, type); }

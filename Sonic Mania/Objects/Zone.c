@@ -326,10 +326,10 @@ void Zone_StageLoad(void)
     Zone->fgLayerLow     = 0;
     Zone->drawOrderLow   = 2;
     Zone->playerDrawLow  = 4;
-    Zone->playerDrawHigh = 6;
+    Zone->fgLayerHigh    = 6;
     Zone->drawOrderHigh  = 8;
-    Zone->uiDrawLow      = 12;
-    Zone->uiDrawHigh     = 14;
+    Zone->playerDrawHigh = 12;
+    Zone->hudDrawOrder   = 14;
 
     Zone->fgLow        = RSDK.GetSceneLayerID("FG Low");
     Zone->fgHigh       = RSDK.GetSceneLayerID("FG High");

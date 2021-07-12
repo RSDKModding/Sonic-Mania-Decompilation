@@ -177,7 +177,7 @@ void Shield_State_Lightning(void)
     debris->timer      = 22;
     debris->velocity.x = -0x20000;
     debris->velocity.y = -0x20000;
-    debris->drawOrder  = Zone->uiDrawLow;
+    debris->drawOrder  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->data, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -189,7 +189,7 @@ void Shield_State_Lightning(void)
     debris->timer = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = -0x20000;
-    debris->drawOrder  = Zone->uiDrawLow;
+    debris->drawOrder  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->data, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -201,7 +201,7 @@ void Shield_State_Lightning(void)
     debris->timer = 22;
     debris->velocity.x = -0x20000;
     debris->velocity.y = 0x20000;
-    debris->drawOrder  = Zone->uiDrawLow;
+    debris->drawOrder  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->data, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -213,7 +213,7 @@ void Shield_State_Lightning(void)
     debris->timer = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = 0x20000;
-    debris->drawOrder  = Zone->uiDrawLow;
+    debris->drawOrder  = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->data, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;

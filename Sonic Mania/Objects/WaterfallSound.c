@@ -22,7 +22,7 @@ void WaterfallSound_Draw(void)
     RSDK.DrawLine(entity->position.x + TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
                   entity->position.x + TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
     if (entity->flag)
-        PlayerProbe_DrawDebug5(entity->posUnk.x, entity->posUnk.y);
+        PlayerProbe_DrawDebug5(0xFF00FF, entity->posUnk.x, entity->posUnk.y);
 }
 
 void WaterfallSound_Create(void *data)

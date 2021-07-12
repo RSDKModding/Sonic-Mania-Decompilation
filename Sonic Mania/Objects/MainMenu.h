@@ -6,7 +6,10 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Entity *menuControlPtr;
+    Entity *promptPtr;
+    Entity *dioramaPtr;
 } ObjectMainMenu;
 
 // Entity Class
@@ -29,6 +32,17 @@ void MainMenu_EditorLoad(void);
 void MainMenu_Serialize(void);
 
 // Extra Entity Functions
+void MainMenu_Initialize(void);
+int MainMenu_ReturnToTitleOption(void);
+int MainMenu_ExitGame(void);
+void MainMenu_ExitGameOption(void);
+int MainMenu_ReturnToTitleOption(void);
+int MainMenu_StartExitGame(void);
+void MainMenu_ChangeMenu(void);
+
+void MainMenu_Unknown2(void);
+void MainMenu_Unknown3();
+void MainMenu_Unknown4(int a1, int *a2);
 #endif
 
 #endif //!OBJ_MAINMENU_H

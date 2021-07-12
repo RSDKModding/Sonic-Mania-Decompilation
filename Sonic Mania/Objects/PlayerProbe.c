@@ -130,20 +130,23 @@ void PlayerProbe_Draw(void)
             angle = -0x80 - (byte)(entity->angle);
         x2 += 0x5000 * RSDK.Cos256(angle);
         y2 += 0x5000 * RSDK.Sin256(angle);
-        PlayerProbe_DrawEditor(x1, y1, x2, y2);
+        uint clr = 0xFF00FF;
+        if (!entity->direction)
+            clr = 0xFFFF;
+
+        PlayerProbe_DrawEditor(clr, x1, y1, x2, y2);
     }
 }
 
-void PlayerProbe_DrawEditor(int x1, int y1, int x2, int y2)
+void PlayerProbe_DrawEditor(uint colour, int x1, int y1, int x2, int y2)
 {
-    uint colour = 0xFFFFFF; // wasn't assigned in ida so...
     RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, 0);
     int angle = RSDK.ATan2(x1 - x2, y1 - y2);
     RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), (RSDK.Sin256(angle + 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
     RSDK.DrawLine(x2, y2, (RSDK.Cos256(angle - 12) << 12) + x2, (RSDK.Sin256(angle - 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
 }
 
-void PlayerProbe_DrawDebug2(uint colour, byte dir, int x, int y, Hitbox *hitbox)
+void PlayerProbe_DrawHitboxOutline(uint colour, byte dir, int x, int y, Hitbox *hitbox)
 {
     short left, top, right, bottom;
 
@@ -165,19 +168,18 @@ void PlayerProbe_DrawDebug2(uint colour, byte dir, int x, int y, Hitbox *hitbox)
         bottom = hitbox->bottom;
     }
 
-    RSDK.DrawLine(x + (left << 16), (top << 16) + y, x + (right << 16), (top << 16) + y, colour, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(x + (right << 16), y + (top << 16), x + (right << 16), y + (bottom << 16), colour, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(x + (right << 16), y + (top << 16), x + (left << 16), y + (bottom << 16), colour, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(x + (left << 16), y + (top << 16), x + (left << 16), y + (top << 16), colour, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(x + (left << 16),  y + (top << 16),     x + (right << 16),  y + (top << 16), colour, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(x + (right << 16), y + (top << 16),     x + (right << 16),  y + (bottom << 16), colour, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(x + (right << 16), y + (bottom << 16),  x + (left << 16),   y + (bottom << 16), colour, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(x + (left << 16),  y + (bottom << 16),  x + (left << 16),   y + (top << 16), colour, 0xFF, INK_NONE, false);
 }
 
-void PlayerProbe_DrawDebug3(int x1, int y1, int x2, int y2)
+void PlayerProbe_DrawDebug3(uint colour, int x1, int y1, int x2, int y2)
 {
-    uint colour = 0xFFFFFF; // wasn't assigned in ida so...
-    RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, 0);
     int angle = RSDK.ATan2(x1 - x2, y1 - y2);
-    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), (RSDK.Sin256(angle + 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
-    RSDK.DrawLine(x2, y2, (RSDK.Cos256(angle - 12) << 12) + x2, (RSDK.Sin256(angle - 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), y2 + (RSDK.Sin256(angle + 12) << 12), colour, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle - 12) << 12), y2 + (RSDK.Sin256(angle - 12) << 12), colour, 0x7F, INK_ADD, false);
 }
 
 void PlayerProbe_DrawDebug4(uint colour, int a2, int alpha, int x1, int y1, int x2, int y2)
@@ -208,9 +210,8 @@ void PlayerProbe_DrawDebug4(uint colour, int a2, int alpha, int x1, int y1, int 
     }
 }
 
-void PlayerProbe_DrawDebug5(int x, int y)
+void PlayerProbe_DrawDebug5(uint colour, int x, int y)
 {
-    uint colour = 0xFFFFFF; // wasn't assigned in ida so...
     if (x || y) {
         RSDK.DrawLine(x - 0x100000, y - 0x100000, x + 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, 0);
         RSDK.DrawLine(x + 0x100000, y - 0x100000, x - 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, 0);

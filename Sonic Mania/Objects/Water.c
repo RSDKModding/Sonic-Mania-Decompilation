@@ -113,7 +113,7 @@ void Water_Create(void *data)
                 else {
                     entity->active    = ACTIVE_NORMAL;
                     entity->inkEffect = INK_ADD;
-                    entity->drawOrder = Zone->uiDrawHigh - 1;
+                    entity->drawOrder = Zone->hudDrawOrder - 1;
                     entity->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
                     RSDK.SetSpriteAnimation(Water->spriteIndex, 0, &entity->waterData, true, 0);
                     entity->state     = Water_State_Palette;
@@ -129,8 +129,8 @@ void Water_Create(void *data)
                 switch (entity->priority) {
                     case 0: entity->drawOrder = Zone->drawOrderLow - 1; break;
                     case 1: entity->drawOrder = Zone->playerDrawLow; break;
-                    case 2: entity->drawOrder = Zone->uiDrawLow; break;
-                    case 3: entity->drawOrder = Zone->uiDrawHigh - 1; break;
+                    case 2: entity->drawOrder = Zone->playerDrawHigh; break;
+                    case 3: entity->drawOrder = Zone->hudDrawOrder - 1; break;
                     default: break;
                 }
 
@@ -177,14 +177,14 @@ void Water_Create(void *data)
                 break;
             case 6:
                 entity->active    = ACTIVE_NORMAL;
-                entity->drawOrder = Zone->uiDrawHigh - 2;
+                entity->drawOrder = Zone->hudDrawOrder - 2;
                 RSDK.SetSpriteAnimation(Water->spriteIndex, 1, &entity->waterData, true, 0);
                 entity->state     = Water_State_Splash;
                 entity->stateDraw = Water_State_Draw_Splash;
                 break;
             case 7:
                 entity->active        = ACTIVE_NORMAL;
-                entity->drawOrder     = Zone->uiDrawLow;
+                entity->drawOrder     = Zone->playerDrawHigh;
                 entity->drawFX        = FX_SCALE;
                 entity->inkEffect     = INK_ADD;
                 entity->alpha         = 0x100;
@@ -194,12 +194,12 @@ void Water_Create(void *data)
                 entity->scale.y       = 0x200;
                 RSDK.SetSpriteAnimation(Water->spriteIndex, 5, &entity->waterData, true, 0);
                 entity->state     = Water_State_Bubble;
-                entity->isPermament = true;
+                entity->isPermanent = true;
                 entity->stateDraw = Water_State_Draw_Bubble;
                 break;
             case 8:
                 entity->active        = ACTIVE_NORMAL;
-                entity->drawOrder     = Zone->uiDrawLow;
+                entity->drawOrder     = Zone->playerDrawHigh;
                 entity->drawFX        = FX_SCALE;
                 entity->inkEffect     = INK_ADD;
                 entity->alpha         = 0x100;
@@ -273,7 +273,7 @@ void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, RSDK_screens[RS
 void Water_CheckButtonTag(void)
 {
     RSDK_THIS(Water);
-    // EntityButton *button = RSDK_GET_ENTITY((ushort)(RSDK.GetEntityID(entity) - 1), Button);
+    EntityButton *button = RSDK_GET_ENTITY(RSDK.GetEntityID(entity) - 1, Button);
 
     if (entity->buttonTag <= 0) {
         entity->taggedObject = TYPE_BLANK;
@@ -283,7 +283,7 @@ void Water_CheckButtonTag(void)
         if (Button) {
             foreach_all(Button, button)
             {
-                /*if (button->tag == entity->buttonTag) {
+                if (button->tag == entity->buttonTag) {
                     entity->taggedObject = button->objectID;
                     if (entity->updateRange.x < 0x800000 + abs(entity->position.x - button->position.x)) {
                         entity->updateRange.x = 0x800000 + abs(entity->position.x - button->position.x);
@@ -294,7 +294,7 @@ void Water_CheckButtonTag(void)
                     }
                     flag = true;
                     foreach_break;
-                }*/
+                }
             }
         }
 
@@ -381,7 +381,7 @@ void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID)
     bubble->velocity.y  = -0x8800;
     bubble->childPtr    = player;
     bubble->countdownID = bubbleID;
-    bubble->drawOrder   = Zone->uiDrawLow + 1;
+    bubble->drawOrder   = Zone->playerDrawHigh + 1;
 }
 
 void Water_State_Palette(void)
@@ -544,7 +544,7 @@ void Water_State_Palette(void)
                             case 1800:
                                 player->hurtFlag = 3;
                                 if (!water)
-                                    player->drawOrder = Zone->uiDrawLow;
+                                    player->drawOrder = Zone->playerDrawHigh;
                                 break;
                             case 1140:
                             case 1380:
@@ -1099,7 +1099,7 @@ void Water_State_Bubbler(void)
             bubble->field_68 = bubble->position.x;
             if (entity->field_6E & 2 && (!RSDK.Rand(0, 4) || !entity->bubbleType1) && !(entity->field_6E & 4)) {
                 RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &bubble->waterData, 0, 0);
-                bubble->isPermament = true;
+                bubble->isPermanent = true;
                 entity->field_6E |= 4;
             }
 

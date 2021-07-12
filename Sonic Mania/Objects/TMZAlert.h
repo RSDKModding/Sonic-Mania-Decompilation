@@ -5,12 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectTMZAlert;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    Animator animator;
+    Animator animator2;
 } EntityTMZAlert;
 
 // Object Struct
@@ -28,6 +33,9 @@ void TMZAlert_EditorLoad(void);
 void TMZAlert_Serialize(void);
 
 // Extra Entity Functions
+void TMZAlert_Unknown1(void);
+void TMZAlert_Unknown2(void);
+void TMZAlert_Unknown3(void);
 
 
 #endif //!OBJ_TMZALERT_H

@@ -27,7 +27,7 @@ typedef struct {
     int hasTension;
     sbyte frameID;
     byte collision;
-    Vector2 tileOrigin;
+    Vector2 targetPos;
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;

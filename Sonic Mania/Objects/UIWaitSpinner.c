@@ -71,7 +71,7 @@ void UIWaitSpinner_Wait(void)
     else {
         if (!activeSpinner) {
             activeSpinner                = (EntityUIWaitSpinner *)RSDK.CreateEntity(UIWaitSpinner->objectID, NULL, 0, 0);
-            activeSpinner->isPermament   = true;
+            activeSpinner->isPermanent   = true;
             UIWaitSpinner->activeSpinner = (Entity *)activeSpinner;
         }
         activeSpinner->state = UIWaitSpinner_State_Wait;
@@ -91,7 +91,7 @@ void UIWaitSpinner_Wait2(void)
     else {
         if (!activeSpinner) {
             activeSpinner                = (EntityUIWaitSpinner *)RSDK.CreateEntity(UIWaitSpinner->objectID, NULL, 0, 0);
-            activeSpinner->isPermament   = true;
+            activeSpinner->isPermanent   = true;
             UIWaitSpinner->activeSpinner = (Entity *)activeSpinner;
         }
         activeSpinner->state = UIWaitSpinner_State_Wait;

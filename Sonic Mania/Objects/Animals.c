@@ -137,8 +137,8 @@ bool32 Animals_CheckPlatformCollision(void *plat)
         else if (platform->collision == 2 && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, entity, &entity->hitbox)) {
             if (entity->collisionLayers & Zone->moveID) {
                 TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
-                move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
-                move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
+                move->position.x = -(platform->drawPos.x + platform->targetPos.x) >> 16;
+                move->position.y = -(platform->drawPos.y + platform->targetPos.y) >> 16;
             }
             if (entity->velocity.y >= 0x3800)
                 flag = true;
@@ -174,17 +174,17 @@ bool32 Animals_CheckGroundCollision(void)
 
                 int divisor = 0;
                 int ang     = 0;
-                if (entity->position.x - bridge->startPos <= divisor) {
+                if (entity->position.x - bridge->startPos <= bridge->stoodPos) {
                     divisor = bridge->stoodPos;
                     ang     = (entity->position.x - bridge->startPos) << 7;
                 }
                 else {
-                    divisor = bridge->endPos - divisor - bridge->startPos;
+                    divisor = bridge->endPos - bridge->stoodPos - bridge->startPos;
                     ang     = (bridge->endPos - entity->position.x) << 7;
                 }
 
                 int hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
-                if (entity->velocity.y >= 0x8000) {
+                if (entity->velocity.y < 0x8000) {
                     bridgeHitbox.bottom = (hitY >> 16);
                     bridgeHitbox.top    = (hitY >> 16) - 8;
                 }

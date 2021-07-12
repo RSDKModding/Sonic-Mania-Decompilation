@@ -162,7 +162,7 @@ void AIZTornadoPath_Unknown4(void)
     player->collisionPlane = 1;
     player->interaction    = false;
 
-    foreach_active(Player, playerPtr) { playerPtr->drawOrder = Zone->uiDrawLow; }
+    foreach_active(Player, playerPtr) { playerPtr->drawOrder = Zone->playerDrawHigh; }
 
     AIZTornadoPath_Unknown1();
     entity->state = AIZTornadoPath_Unknown2;

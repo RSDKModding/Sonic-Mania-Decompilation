@@ -25,7 +25,7 @@ void Announcer_Create(void *data)
     entity->drawOrder     = 13;
     entity->visible       = true;
     entity->drawFX        = FX_FLIP | FX_SCALE;
-    entity->isPermament   = true;
+    entity->isPermanent   = true;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
 }

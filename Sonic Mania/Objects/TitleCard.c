@@ -24,7 +24,7 @@ void TitleCard_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->active      = ACTIVE_ALWAYS;
         entity->visible     = true;
-        entity->drawOrder   = Zone->uiDrawHigh;
+        entity->drawOrder   = Zone->hudDrawOrder;
         entity->enableIntro = globals->enableIntro;
         if (!globals->suppressTitlecard || globals->enableIntro || globals->gameMode == MODE_TIMEATTACK)
             RSDK_sceneInfo->timeEnabled = false;

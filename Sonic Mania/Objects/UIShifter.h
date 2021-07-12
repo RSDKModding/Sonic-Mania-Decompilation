@@ -11,7 +11,15 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 shift;
+    int field_60;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    Vector2 startPos;
+    EntityUIControl *parent;
 } EntityUIShifter;
 
 // Object Struct
@@ -29,6 +37,7 @@ void UIShifter_EditorLoad(void);
 void UIShifter_Serialize(void);
 
 // Extra Entity Functions
+void UIShifter_Unknown(void);
 #endif
 
 #endif //!OBJ_UISHIFTER_H

@@ -5,7 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    Entity *saveSelectMenu;
+    Entity *noSaveMenu;
+    Entity *secretsMenu;
+    int field_14;
+    Entity *encoreSaveSelect;
+    int field_1C;
+    Entity *noSaveMenuEncore;
+    int field_24;
+    int field_28;
 } ObjectManiaModeMenu;
 
 // Entity Class

@@ -473,8 +473,8 @@ byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
                 boxResult = 0;
                 if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, entity, &Ring->hitbox) && entity->collisionLayers & Zone->moveID) {
                     TileLayer *moveLayer  = RSDK.GetSceneLayer(Zone->moveLayer);
-                    moveLayer->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
-                    moveLayer->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
+                    moveLayer->position.x = -(platform->drawPos.x + platform->targetPos.x) >> 16;
+                    moveLayer->position.y = -(platform->drawPos.y + platform->targetPos.y) >> 16;
                 }
                 break;
             default: break;

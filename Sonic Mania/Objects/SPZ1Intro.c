@@ -75,7 +75,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_JUMP, &player2->playerAnimator, false, 0);
         }
         EntityDebris *debris  = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, curEnt->position.x, curEnt->position.y + 0x390000);
-        debris->drawOrder     = Zone->uiDrawLow;
+        debris->drawOrder     = Zone->playerDrawHigh;
         debris->state         = StateMachine_None;
         debris->drawFX        = FX_SCALE | FX_ROTATE;
         debris->scale.x       = 0x200;

@@ -1,6 +1,13 @@
 #include "RetroEngine.hpp"
 
+#if RETRO_PLATFORM == RETRO_WIN
+#include <Windows.h>
+
+#undef SEVERITY_ERROR //causes conflicts
+#endif
+
 bool32 engineDebugMode = true;
+bool32 useEndLine = true;
 char outputString[0x400];
 
 #if RETRO_REV02
@@ -18,38 +25,64 @@ void printLog(SeverityModes severity, const char *message, ...)
         va_list args;
         va_start(args, message);
         vsprintf(outputString, message, args);
-        sprintf(outputString, "%s\n", outputString);
+        if (useEndLine)
+            sprintf(outputString, "%s\n", outputString);
+        else
+            sprintf(outputString, "%s", outputString);
         va_end(args);
 
 #if RETRO_REV02
-        if (severity == SEVERITY_WARN && sceneInfo.state & 3) {
-            CreateEntity(DevOutput->objectID, outputString, 0, 0);
+        switch (severity) {
+            case SEVERITY_NONE:
+            default: break;
+                break;
+            case SEVERITY_WARN:
+                if (sceneInfo.state & 3) {
+                    CreateEntity(DevOutput->objectID, outputString, 0, 0);
+                }
+#if !RETRO_USE_ORIGINAL_CODE
+                sprintf(outputString, "WARN: %s", outputString);
+#endif
+                break;
+            case SEVERITY_ERROR:
+                if (sceneInfo.state & 3) {
+                    engine.prevEngineMode = sceneInfo.state;
+                    sceneInfo.state       = ENGINESTATE_ERRORMSG;
+                }
+#if !RETRO_USE_ORIGINAL_CODE
+                sprintf(outputString, "ERROR: %s", outputString);
+#endif
+                break;
+            case SEVERITY_FATAL:
+                if (sceneInfo.state & 3) {
+                    engine.prevEngineMode = sceneInfo.state;
+                    sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
+                }
+#if !RETRO_USE_ORIGINAL_CODE
+                sprintf(outputString, "FATAL: %s", outputString);
+#endif
+                break;
         }
-        else if (severity == SEVERITY_ERROR && sceneInfo.state & 3) {
-            engine.prevEngineMode = sceneInfo.state;
-            sceneInfo.state       = ENGINESTATE_ERRORMSG;
-        }
-        else if (severity == SEVERITY_FATAL && sceneInfo.state & 3) {
-            engine.prevEngineMode = sceneInfo.state;
-            sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
+#endif
+        if (engine.printConsole) {
+            printConsole(outputString);
         }
         else {
+#if RETRO_PLATFORM == RETRO_WIN
+            OutputDebugStringA(outputString);
 #endif
-            if (engine.printConsole)
-                printConsole(outputString);
-            // else
-            //    OutputDebugStringA(outputString);
+        }
 
-            char pathBuffer[0x100];
-            sprintf(pathBuffer, BASE_PATH "log.txt");
-            FileIO *file = fOpen(pathBuffer, "a");
-            if (file) {
-                fWrite(&outputString, 1, strlen(outputString), file);
-                fClose(file);
-            }
-#if RETRO_REV02
+#if !RETRO_USE_ORIGINAL_CODE
+        char pathBuffer[0x100];
+        sprintf(pathBuffer, BASE_PATH "log.txt");
+        FileIO *file = fOpen(pathBuffer, "a");
+        if (file) {
+            fWrite(&outputString, 1, strlen(outputString), file);
+            fClose(file);
         }
 #endif
+
     }
 #endif
 }

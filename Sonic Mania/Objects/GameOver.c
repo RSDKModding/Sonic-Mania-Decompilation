@@ -100,7 +100,7 @@ void GameOver_Create(void *data)
         entity->dword68              = screen->centerY << 16;
         entity->scale.x              = 0x800;
         entity->state                = GameOver_Unknown2;
-        entity->drawOrder            = Zone->uiDrawHigh + 1;
+        entity->drawOrder            = Zone->hudDrawOrder + 1;
 
         foreach_all(HUD, hud) {
             hud->state  = HUD_Unknown6;

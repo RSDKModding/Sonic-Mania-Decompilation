@@ -113,7 +113,7 @@ void PauseMenu_StageLoad(void)
     PauseMenu->active               = ACTIVE_ALWAYS;
     PauseMenu->sfxBleep             = RSDK.GetSFX("Global/MenuBleep.wav");
     PauseMenu->sfxAccept            = RSDK.GetSFX("Global/MenuAccept.wav");
-    PauseMenu->disableEvents               = false;
+    PauseMenu->disableEvents        = false;
     PauseMenu->controllerDisconnect = false;
     PauseMenu->dword10              = false;
     PauseMenu->signoutDetected      = false;
@@ -145,7 +145,7 @@ void PauseMenu_SetupLookupTable(void)
 {
     for (int i = 0; i < 0x10000; ++i) {
         int val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
-        val                            = minVal(0xFF, val);
+        val     = minVal(0xFF, val);
         PauseMenu->lookupTable[i] = (val >> 3) | ((val >> 3) << 11) | 8 * val & 0xFFE0;
 
         // found as the "default" lookup table in rev01, produces a similar (but lighter) effect
@@ -188,11 +188,11 @@ void PauseMenu_Unknown4(void)
     for (int i = 0; i < entity->buttonCount; ++i) {
         if (!entity->buttonPtrs[i])
             break;
-        EntityUIButton *button = (EntityUIButton*)entity->buttonPtrs[i];
-        // button->field_84       = pos.x;
-        // button->field_88       = pos.y;
-        button->position.x = pos.x;
-        button->position.y = pos.y;
+        EntityUIButton *button = (EntityUIButton *)entity->buttonPtrs[i];
+        button->posUnknown2.x  = pos.x;
+        button->posUnknown2.y  = pos.y;
+        button->position.x     = pos.x;
+        button->position.y     = pos.y;
         pos.x -= 0x240000;
         pos.y += 0x240000;
     }
@@ -207,21 +207,21 @@ void PauseMenu_AddButton(byte id, void *action)
         entity->buttonIDs[buttonID]     = id;
         entity->buttonActions[buttonID] = action;
 
-        int buttonID = entity->buttonCount + 18;
-        RSDK.ResetEntitySlot(buttonID, UIButton->objectID, NULL);
-        EntityUIButton *button = (EntityUIButton *)RSDK.GetEntityByID(buttonID);
+        int buttonSlot = entity->buttonCount + 18;
+        RSDK.ResetEntitySlot(buttonSlot, UIButton->objectID, NULL);
+        EntityUIButton *button = (EntityUIButton *)RSDK.GetEntityByID(buttonSlot);
 
         button->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
         button->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-        // RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 10, &button->data, true, id);
-        // button->options[2]           = PauseMenu_Unknown16;
-        // button->size.x               = 0x3C0000;
-        // button->size.y               = 0x150000;
-        // button->dword138             = 21;
-        // button->align                = ALIGN_LEFT;
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 10, &button->animator, true, id);
+        button->options2             = PauseMenu_Unknown16;
+        button->size.x               = 0x3C0000;
+        button->size.y               = 0x150000;
+        button->dword138             = 21;
+        button->align                = ALIGN_LEFT;
         button->drawOrder            = entity->drawOrder;
         button->active               = ACTIVE_ALWAYS;
-        entity->buttonPtrs[buttonID] = (Entity*)button;
+        entity->buttonPtrs[buttonID] = (Entity *)button;
         ++entity->buttonCount;
     }
 }
@@ -233,27 +233,27 @@ void PauseMenu_Unknown6(void)
     Vector2 size;
     size.x = RSDK_screens->width << 16;
     size.y = RSDK_screens->height << 16;
-    RSDK.ResetEntitySlot(SLOT_UICONTROL, UIControl->objectID, &size);
+    RSDK.ResetEntitySlot(SLOT_PAUSEMENU_UICONTROL, UIControl->objectID, &size);
 
-    EntityUIControl *uiControl = RSDK_GET_ENTITY(SLOT_UICONTROL, UIControl);
+    EntityUIControl *control = RSDK_GET_ENTITY(SLOT_PAUSEMENU_UICONTROL, UIControl);
 
-    uiControl->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    uiControl->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    control->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    control->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
-    // uiControl->rowCount    = 1;
-    // uiControl->columnCount = 3;
-    // uiControl->dword60     = 0;
-    entity->manager = (Entity*)uiControl;
+    control->rowCount       = 1;
+    control->columnCount    = 3;
+    control->activeEntityID = 0;
+    entity->manager         = (Entity *)control;
 
     int i = 0;
     for (; i < 3; ++i) {
         if (!entity->buttonPtrs[i])
             break;
-        //EntityUIButton *button = (EntityUIButton*)entity->buttonPtrs[i];
-        // button->globeSpeedInc       = uiControl;
-        // uiControl->entities[i] = button;
+        EntityUIButton *button = (EntityUIButton *)entity->buttonPtrs[i];
+        button->parent         = (Entity *)control;
+        control->entities[i]   = button;
     }
-    // uiControl->countUnknown = i;
+    control->unknownCount1 = i;
 }
 
 void PauseMenu_ClearButtons(EntityPauseMenu *entity)
@@ -287,9 +287,9 @@ void PauseMenu_Unknown9(void)
     globals->specialRingID = 0;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        //byte *param            = (byte *)&globals->menuParam[22];
-        ushort *param2         = (ushort *)&globals->menuParam[26];
-        //param[2]               = "Competition Zone";
+        // byte *param            = (byte *)&globals->menuParam[22];
+        ushort *param2 = (ushort *)&globals->menuParam[26];
+        // param[2]               = "Competition Zone";
         param2[1]              = 115;
         globals->menuParam[87] = globals->competitionSession[24];
     }
@@ -351,19 +351,19 @@ void PauseMenu_Restart_CB(void)
         strID = STR_RESTARTWARNING;
     Localization_GetString(&textBuffer, strID);
 
-    /*EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
-        //UIDialog_Unknown2(1, dialog, 0, 1);
-        //UIDialog_Unknown2(0, dialog, PauseMenu_Unknown15, 0);
-        //UIDialog_Unknown3(dialog);
-    }*/
+        UIDialog_Unknown2(1, dialog, 0, 1);
+        UIDialog_Unknown2(0, dialog, PauseMenu_Unknown15, 0);
+        UIDialog_Unknown3(dialog);
+    }
 }
 
 void PauseMenu_Unknown13(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
 
-    // UIDialog->activeDialog->uiControl->state = NULL;
+    ((EntityUIDialog*)UIDialog->activeDialog)->parent->state = NULL;
     if (StarPost) {
         StarPost->postIDs[0] = 0;
         StarPost->postIDs[1] = 0;
@@ -388,18 +388,18 @@ void PauseMenu_Exit_CB(void)
         strID = STR_QUITWARNINGLOSEPROGRESS;
     Localization_GetString(&textBuffer, strID);
 
-    /*EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
-        //UIDialog_Unknown2(1, dialog, 0, 1);
-        //UIDialog_Unknown2(0, dialog, PauseMenu_Unknown15, 0);
-        //UIDialog_Unknown3(dialog);
-    }*/
+        UIDialog_Unknown2(1, dialog, 0, 1);
+        UIDialog_Unknown2(0, dialog, PauseMenu_Unknown15, 0);
+        UIDialog_Unknown3(dialog);
+    }
 }
 
-void PauseMenu_Unknown15(void)
+int PauseMenu_Unknown15(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
-    // UIDialog->activeDialog->uiControl->state = NULL;
+    ((EntityUIDialog *)UIDialog->activeDialog)->parent->state = NULL;
     globals->recallEntities = false;
     globals->initCoolBonus  = false;
 
@@ -416,15 +416,18 @@ void PauseMenu_Unknown15(void)
                                              (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
     entity->funcPtrUnknown = PauseMenu_Unknown9;
     entity->state          = PauseMenu_Unknown27;
+    return 1;
 }
 
 void PauseMenu_Unknown16(void)
 {
-    /*EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-    if (manager->dword60 >= 0 && manager->dword60 < manager->countUnknown) {
-        if (pauseMenu->buttonActions[manager->dword60])
-            pauseMenu->buttonActions[manager->dword60]();
-    }*/
+    EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
+    EntityUIControl *manager   = (EntityUIControl *)pauseMenu->manager;
+
+    if (manager->activeEntityID >= 0 && manager->activeEntityID < manager->unknownCount1) {
+        if (pauseMenu->buttonActions[manager->activeEntityID])
+            pauseMenu->buttonActions[manager->activeEntityID]();
+    }
 }
 
 void PauseMenu_PauseSound(void)
@@ -485,8 +488,8 @@ void PauseMenu_SetupButtons(void)
         else
             entity->state = PauseMenu_Unknown24;
         entity->stateDraw = PauseMenu_Unknown36;
-        if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(2) == CONT_AUTOASSIGN)
-            RSDK.AssignControllerID(2, 0);
+        if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(CONT_P2) == CONT_AUTOASSIGN)
+            RSDK.AssignControllerID(CONT_P2, CONT_ANY);
     }
 
     StateMachine_Run(entity->state);
@@ -497,8 +500,8 @@ void PauseMenu_Unknown21(void)
     RSDK_THIS(PauseMenu);
 
     if (entity->timer == 1) {
-        // UIControl->field_8 = 0;
-        // UIControl_Unknown5(entity->manager);
+        UIControl->inputLocked = 0;
+        UIControl_Unknown5((EntityUIControl *)entity->manager);
     }
 
     if (entity->timer >= 8) {
@@ -535,7 +538,8 @@ void PauseMenu_Unknown22(void)
     entity->field_70.x = 0;
     entity->field_70.y = 0;
 
-    if (RSDK_unknown->field_10 /*&& entity->manager->field_BC*/) {
+    EntityUIControl *manager = (EntityUIControl *)entity->manager;
+    if (RSDK_unknown->field_10 && !manager->dialogHasFocus) {
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
         if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
             pauseMenu->state = PauseMenu_Unknown23;
@@ -548,7 +552,7 @@ void PauseMenu_Unknown23(void)
 {
     RSDK_THIS(PauseMenu);
     if (!entity->timer && globals->gameMode < MODE_TIMEATTACK && !RSDK.ControllerIDForInputID(2))
-        RSDK.AssignControllerID(2u, -1);
+        RSDK.AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     if (entity->timer >= 8) {
         entity->field_68.y = 0;
@@ -618,8 +622,8 @@ void PauseMenu_Unknown26(void)
     RSDK_THIS(PauseMenu);
 
     if (entity->timer == 1) {
-        // UIControl->field_8 = 0;
-        // UIControl_Unknown5(entity->controller);
+        UIControl->inputLocked = 0;
+        UIControl_Unknown5((EntityUIControl *)entity->manager);
     }
 
     if (entity->timer >= 8) {
@@ -685,15 +689,16 @@ void PauseMenu_Unknown28(void)
     }
 }
 
-void PauseMenu_Unknown29(void)
+int PauseMenu_Unknown29(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     pauseMenu->timer           = 0;
     pauseMenu->fillTimer       = 0;
     pauseMenu->state           = PauseMenu_Unknown28;
+    return 1;
 }
 
-void PauseMenu_Unknown31(void)
+int PauseMenu_Unknown31(void)
 {
     EntityPauseMenu *entity = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     RSDK.ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
@@ -704,9 +709,10 @@ void PauseMenu_Unknown31(void)
     else
         RSDK.AssignControllerID(entity->triggerPlayer + 1, CONT_AUTOASSIGN);
     if (globals->gameMode < MODE_TIMEATTACK && !RSDK.ControllerIDForInputID(2))
-        RSDK.AssignControllerID(2, CONT_AUTOASSIGN);
+        RSDK.AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     PauseMenu->dword10 = true;
+    return 1;
 }
 
 bool32 PauseMenu_Unknown32(void)
@@ -722,18 +728,18 @@ void PauseMenu_Unknown33(void)
     TextInfo textBuffer;
 
     if (entity->timer == 1) {
-        // UIControl->field_8 = 0;
+        UIControl->inputLocked = 0;
         if (PauseMenu->controllerDisconnect) {
             int strID = STR_RECONNECTWIRELESSCONTROLLER;
             if (RSDK_sku->platform == PLATFORM_SWITCH)
                 strID = STR_RECONNECTCONTROLLER;
             Localization_GetString(&textBuffer, strID);
 
-            // void *dialog = UIDialog_CreateActiveDialog(&textBuffer);
-            // UIDialog_Unknown2(4u, dialog, PauseMenu_Unknown31, 0);
-            // UIDialog_Unknown3(dialog);
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
+            UIDialog_Unknown2(4, dialog, PauseMenu_Unknown31, 0);
+            UIDialog_Unknown3(dialog);
             if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(2) == CONT_AUTOASSIGN)
-                RSDK.AssignControllerID(2, 0);
+                RSDK.AssignControllerID(CONT_P2, CONT_ANY);
         }
         else if (PauseMenu->signoutDetected || PauseMenu->plusChanged) {
             int strID = STR_TESTSTR;
@@ -745,9 +751,9 @@ void PauseMenu_Unknown33(void)
             }
             Localization_GetString(&textBuffer, strID);
 
-            // void *dialog = UIDialog_CreateActiveDialog(&textBuffer);
-            // UIDialog_Unknown2(2, dialog, PauseMenu_Unknown29, 1);
-            // UIDialog_Unknown3(dialog);
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
+            UIDialog_Unknown2(2, dialog, PauseMenu_Unknown29, 1);
+            UIDialog_Unknown3(dialog);
         }
     }
 
@@ -772,12 +778,12 @@ void PauseMenu_Unknown33(void)
 
         EntityUIDialog *dialog = UIDialog->activeDialog;
         if (dialog) {
-            /*if (dialog->state != UIDialog_Unknown13) {
-                dialog->uiControl->userdataInitialized = true;
-                dialog->turnTimer                       = 0;
-                dialog->state                          = (int)UIDialog_Unknown13;
-                dialog->curCallback                    = 0;
-            }*/
+            //if (dialog->state != UIDialog_Unknown13) {
+            //    dialog->parent->userdataInitialized = true;
+            //    dialog->field_5C                       = 0;
+            //    dialog->state                          = (int)UIDialog_Unknown13;
+            //    dialog->curCallback                    = 0;
+            //}
         }
         entity->field_B0 = true;
     }
@@ -787,7 +793,7 @@ void PauseMenu_Unknown34(void)
 {
     RSDK_THIS(PauseMenu);
     if (entity->timer == 1) {
-        // UIControl->field_8 = 0;
+        UIControl->inputLocked = 0;
     }
 
     if (entity->timer >= 8) {

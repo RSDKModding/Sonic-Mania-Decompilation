@@ -5,7 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int frameA;
+    int frameC;
+    int frameD;
+    int frameB;
+    int array1[0x400];
+    int array2[0x400];
+    int array3[0x400];
+    ushort aniTiles;
+    ushort bgOutsideLayer;
+    EntityFBZ1Outro *outroPtr;
 } ObjectFBZSetup;
 
 // Entity Class
@@ -28,6 +39,19 @@ void FBZSetup_EditorLoad(void);
 void FBZSetup_Serialize(void);
 
 // Extra Entity Functions
+void FBZSetup_ActTransitionLoad(void);
 
+void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, int a6);
+void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines);
+
+void FBZSetup_BGSwitchCB_A(void);
+void FBZSetup_BGSwitchCB_B(void);
+void FBZSetup_BGSwitchCB_C(void);
+
+void FBZSetup_GenericTriggerCB_A(void);
+void FBZSetup_GenericTriggerCB_B(void);
+
+void FBZSetup_StageFinishCB_Act1(void);
+void FBZSetup_StageFinishCB_Act2(void);
 
 #endif //!OBJ_FBZSETUP_H

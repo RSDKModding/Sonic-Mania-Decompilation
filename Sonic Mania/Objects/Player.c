@@ -194,7 +194,7 @@ void Player_LateUpdate(void)
                 entity->velocity.y = -0x68000;
                 entity->state      = Player_State_Die;
                 if ((entity->drawFX & FX_SCALE) == 0 || entity->scale.x == 0x200)
-                    entity->drawOrder = Zone->uiDrawLow;
+                    entity->drawOrder = Zone->playerDrawHigh;
                 if (entity->sidekick || globals->gameMode == MODE_COMPETITION) {
                     if (entity->camera) {
                         entity->scrollDelay   = 2;
@@ -1585,7 +1585,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 0x100;
-        ring->isPermament             = true;
+        ring->isPermanent             = true;
         ring->state                   = Ring_State_Bounce;
         ring->stateDraw               = Ring_StateDraw_Normal;
         ring->drawOrder               = entity->drawOrder;
@@ -1606,7 +1606,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 256;
-        ring->isPermament             = true;
+        ring->isPermanent             = true;
         ring->state                   = Ring_State_Bounce;
         ring->stateDraw               = Ring_StateDraw_Normal;
         ring->drawOrder               = entity->drawOrder;
@@ -1654,7 +1654,7 @@ void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane)
         RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ring->animData, true, 0);
         ring->type                    = 1;
         ring->velocity.x              = 0x300 * RSDK.Cos256(angle);
-        ring->isPermament             = true;
+        ring->isPermanent             = true;
         ring->drawFX                  = 5;
         ring->alpha                   = 0x100;
         ring->velocity.y              = 0x300 * RSDK.Sin256(angle);
@@ -1753,7 +1753,7 @@ void Player_HandleDeath(EntityPlayer *player)
         ScreenInfo *screen  = RSDK_screens;
         dust->visible       = false;
         dust->active        = ACTIVE_NEVER;
-        dust->isPermament   = true;
+        dust->isPermanent   = true;
         dust->position.y    = (screen->position.y - 128) << 16;
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_ENCORE || (player->state != Player_State_Die && player->state != Player_State_Drown)) {
@@ -1771,7 +1771,7 @@ void Player_HandleDeath(EntityPlayer *player)
             player->groundVel       = 0;
             player->tileCollisions  = 0;
             player->interaction     = 0;
-            player->drawOrder       = Zone->uiDrawLow;
+            player->drawOrder       = Zone->playerDrawHigh;
             player->airTimer        = 0;
             player->active          = ACTIVE_NORMAL;
         }
@@ -3335,7 +3335,7 @@ void Player_P2JumpBackIn(void)
                 entity->airTimer  = 0;
             }
             else {
-                entity->drawOrder = Zone->uiDrawLow;
+                entity->drawOrder = Zone->playerDrawHigh;
                 entity->airTimer  = 0;
             }
         }
@@ -3910,8 +3910,8 @@ void Player_State_Crouch(void)
 void Player_State_Spindash(void)
 {
     RSDK_THIS(Player);
-    float chargeSpeeds[13] = { 1.00000000, 1.06140053, 1.12553096, 1.19264507, 1.26303434, 1.33703494, 1.41503751,
-                               1.49749970, 1.58496249, 1.67807186, 1.77760756, 1.88452280, 2.00000000 };
+    float chargeSpeeds[13] = { 1.0,       1.0614005, 1.125531,  1.1926451, 1.2630343, 1.3370349, 1.4150375,
+                               1.4974997, 1.5849625, 1.6780719, 1.7776076, 1.8845228, 2.00000000 };
     if (entity->jumpPress) {
         entity->abilityTimer += 0x20000;
         if (entity->abilityTimer > 0x90000)
@@ -5343,7 +5343,7 @@ void Player_State_FlyIn(void)
     if (player1->underwater && player1->position.y < Water->waterLevel)
         entity->drawOrder = player1->drawOrder;
     else
-        entity->drawOrder = Zone->uiDrawLow;
+        entity->drawOrder = Zone->playerDrawHigh;
 
     Entity *entPtr = entity->entPtr;
     int screenX    = (RSDK_screens->width + RSDK_screens->centerX) << 16;
@@ -5439,7 +5439,7 @@ void Player_State_FlyIn(void)
         }
     }
     else {
-        entity->drawOrder  = Zone->uiDrawLow;
+        entity->drawOrder  = Zone->playerDrawHigh;
         entPtr->position.x = Player->curFlyCarryPos.x;
         entPtr->position.y = (RSDK_screens->centerY + 32 + RSDK_screens->position.y) << 16;
         entPtr->position.y += (RSDK_screens->centerY - 32) * RSDK.Sin512(entity->angle) << 8;
@@ -5524,12 +5524,12 @@ void Player_State_StartJumpIn(void)
             EntityDust *dust       = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
             dust->visible          = false;
             dust->active           = ACTIVE_NEVER;
-            dust->isPermament      = true;
+            dust->isPermanent      = true;
             dust->position.y       = (RSDK_screens->position.y - 128) << 16;
             entity->tileCollisions = 0;
             entity->interaction    = 0;
             entity->forceJumpIn    = 0;
-            entity->drawOrder      = Zone->uiDrawLow + 1;
+            entity->drawOrder      = Zone->playerDrawHigh + 1;
             entity->angle          = 128;
 
             bool32 flag = (entity->characterID != ID_TAILS && entity->characterID != ID_KNUCKLES);
@@ -5687,7 +5687,7 @@ void Player_State_Unknown(void)
             EntityDust *dust        = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
             dust->visible           = false;
             dust->active            = ACTIVE_NEVER;
-            dust->isPermament       = true;
+            dust->isPermanent       = true;
             dust->position.y        = (RSDK_screens->position.y - 128) << 16;
             player1->angle          = 128;
             entity->state           = Player_State_FlyIn;
@@ -5703,7 +5703,7 @@ void Player_State_Unknown(void)
             entity->groundVel       = 0;
             entity->tileCollisions  = 0;
             entity->interaction     = 0;
-            entity->drawOrder       = Zone->uiDrawLow;
+            entity->drawOrder       = Zone->playerDrawHigh;
             entity->airTimer        = 0;
             entity->active          = ACTIVE_NORMAL;
         }
@@ -6171,7 +6171,7 @@ void Player_ProcessP1Input(void)
                 entity->velocity.x = 0;
                 entity->velocity.y = 0;
                 entity->groundVel  = 0;
-                entity->drawOrder  = Zone->uiDrawLow;
+                entity->drawOrder  = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_AIRWALK, &entity->playerAnimator, true, 0);
                 RSDK.SetGameMode(ENGINESTATE_REGULAR);
                 entity->jumpHold       = false;

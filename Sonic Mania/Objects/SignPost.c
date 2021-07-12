@@ -20,9 +20,9 @@ void SignPost_Draw(void)
         entity->drawFX = FX_SCALE;
         drawPos.y      = entity->position.y;
 
-        Animator *face = &entity->eggPlateAnim;
+        Animator *face = &entity->facePlateAnim;
         if (entity->rotation <= 128 || entity->rotation >= 384)
-            face = &entity->facePlateAnim;
+            face = &entity->eggPlateAnim;
 
         if (RSDK.Cos512(entity->rotation) >= 0)
             entity->scale.x = RSDK.Cos512(entity->rotation);
@@ -51,10 +51,10 @@ void SignPost_Draw(void)
             default: break;
         }
         entity->scale.x = angle;
-        RSDK.DrawSprite(&entity->sidebarData, &drawPos, 0);
+        RSDK.DrawSprite(&entity->sidebarData, &drawPos, false);
         entity->drawFX = FX_NONE;
-        RSDK.DrawSprite(&entity->postTopData, 0, 0);
-        RSDK.DrawSprite(&entity->standData, 0, 0);
+        RSDK.DrawSprite(&entity->postTopData, NULL, false);
+        RSDK.DrawSprite(&entity->standData, NULL, false);
     }
 }
 
@@ -115,7 +115,7 @@ void SignPost_Create(void *data)
             entity->scale.y   = 512;
 
             switch (entity->type) {
-                default: RSDK.ResetEntityPtr(entity, 0, 0); break;
+                default: RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL); break;
                 case 0:
                     if (globals->gameMode != MODE_COMPETITION) {
                         entity->active = ACTIVE_BOUNDS;
@@ -144,8 +144,13 @@ void SignPost_Create(void *data)
                     }
                     break;
                 case 3:
-                    entity->active = ACTIVE_BOUNDS;
-                    entity->state  = SignPost_State_Finish;
+                    if (globals->gameMode != MODE_COMPETITION) {
+                        entity->active = ACTIVE_BOUNDS;
+                        entity->state  = SignPost_State_Finish;
+                    }
+                    else {
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                    }
                     break;
                 case 4:
                     if (globals->gameMode != MODE_COMPETITION) {
@@ -241,7 +246,7 @@ void SignPost_SpawnSparkle(void)
 void SignPost_State_SetupCompetition(void)
 {
     RSDK_THIS(SignPost);
-    entity->state          = SignPost_State_Competition;
+    entity->state = SignPost_State_Competition;
 }
 void SignPost_State_Competition(void)
 {

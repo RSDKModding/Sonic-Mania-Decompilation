@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Animator animator;
+    ushort aniFrames;
+    Hitbox hitbox;
+    ushort sfxWhack;
 } ObjectTetherBall;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte type;
+    byte chainCount;
+    int angleStart;
+    int angleEnd;
+    int timer;
+    int size;
+    int field_70;
+    Vector2 posUnknown;
+    EntityPlayer *playerPtr;
 } EntityTetherBall;
 
 // Object Struct
@@ -28,6 +42,9 @@ void TetherBall_EditorLoad(void);
 void TetherBall_Serialize(void);
 
 // Extra Entity Functions
+void TetherBall_Unknown1(void);
+void TetherBall_Unknown2(void);
+void TetherBall_Unknown3(void);
 
 
 #endif //!OBJ_TETHERBALL_H

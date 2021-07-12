@@ -199,7 +199,7 @@ void HCZSetup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_ROCKY;
     RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
-    RSDK.SetDrawLayerProperties(Zone->uiDrawHigh, false, Water_RemoveWaterEffect);
+    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
     
     Water->waterPalette = 1;
     if (Zone->actID) {

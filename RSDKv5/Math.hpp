@@ -35,18 +35,9 @@ extern byte atanVal256[0x100 * 0x100];
 // Setup angles
 void CalculateTrigAngles();
 
-inline int sin1024(int angle)
-{
-    return sinVal1024[angle & 0x3FF];
-}
-
-inline int cos1024(int angle)
-{
-    return cosVal1024[angle & 0x3FF];
-}
-
+inline int sin1024(int angle) { return sinVal1024[angle & 0x3FF]; }
+inline int cos1024(int angle) { return cosVal1024[angle & 0x3FF]; }
 inline int tan1024(short angle) { return tanVal1024[angle & 0x3FF]; }
-
 inline int aSin1024(int angle)
 {
     if (angle > 0x3FF)
@@ -64,16 +55,8 @@ inline int aCos1024(int angle)
     return aCosVal1024[angle];
 }
 
-inline int sin512(int angle)
-{
-    return sinVal512[angle & 0x1FF];
-}
-
-inline int cos512(int angle)
-{
-    return cosVal512[angle & 0x1FF];
-}
-
+inline int sin512(int angle) { return sinVal512[angle & 0x1FF]; }
+inline int cos512(int angle) { return cosVal512[angle & 0x1FF]; }
 inline int tan512(short angle) { return tanVal512[angle & 0x1FF]; }
 inline int aSin512(int angle)
 {
@@ -92,15 +75,8 @@ inline int aCos512(int angle)
     return aCosVal512[angle];
 }
 
-inline int sin256(int angle)
-{
-    return sinVal256[angle & 0xFF];
-}
-
-inline int cos256(int angle)
-{
-    return cosVal256[angle & 0xFF];
-}
+inline int sin256(int angle) { return sinVal256[angle & 0xFF]; }
+inline int cos256(int angle) { return cosVal256[angle & 0xFF]; }
 inline int tan256(byte angle) { return tanVal256[angle & 0xFF]; }
 inline int aSin256(int angle)
 {
@@ -125,27 +101,25 @@ byte ArcTanLookup(int x, int y);
 extern uint randKey;
 
 inline void setRandKey(int key) { randKey = key; }
-
 inline int RSDK_random(int min, int max)
 {
-    uint v2  = 1103515245 * randKey + 12345;
-    uint v3  = 1103515245 * v2 + 12345;
-    randKey = 1103515245 * v3 + 12345;
-    signed int v4  = ((randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
+    uint v2       = 1103515245 * randKey + 12345;
+    uint v3       = 1103515245 * v2 + 12345;
+    randKey       = 1103515245 * v3 + 12345;
+    signed int v4 = ((randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
     if (min >= max)
         return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
     else
         return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + min);
 }
-
 inline int RSDK_random2(int min, int max, int *randKey)
 {
     if (!randKey)
         return 0;
-    uint v2  = 1103515245 * *randKey + 12345;
-    uint v3  = 1103515245 * v2 + 12345;
-    *randKey = 1103515245 * v3 + 12345;
-    signed int v4  = ((*randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
+    uint v2       = 1103515245 * *randKey + 12345;
+    uint v3       = 1103515245 * v2 + 12345;
+    *randKey      = 1103515245 * v3 + 12345;
+    signed int v4 = ((*randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
     if (min >= max)
         return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
     else

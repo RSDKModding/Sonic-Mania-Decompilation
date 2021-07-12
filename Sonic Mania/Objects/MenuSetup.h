@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int dword8;
+    bool32 initialized;
+    int dword10;
+    bool32 gameLoaded;
+    int dword18;
+    EntityFXFade *fxFade;
 } ObjectMenuSetup;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(timedState);
+    int timer;
+    int timeOut;
+    int field_68;
+    int fadeTimer;
+    int fadeColour;
 } EntityMenuSetup;
 
 // Object Struct
@@ -28,6 +42,16 @@ void MenuSetup_EditorLoad(void);
 void MenuSetup_Serialize(void);
 
 // Extra Entity Functions
-
+void MenuSetup_Initialize(void);
+bool32 MenuSetup_InitUserdata(void);
+void MenuSetup_InitLocalization(int a1);
+int MenuSetup_GetActiveMenu(void);
+void MenuSetup_ChangeMenuTrack(void);
+int MenuSetup_StartReturnToTitle(void);
+void MenuSetup_SetBGColours(void);
+void MenuSetup_ReturnToTitle(void);
+void MenuSetup_Unknown13(void);
+void MenuSetup_Unknown6(void);
+void MenuSetup_Unknown7(void);
 
 #endif //!OBJ_MENUSETUP_H

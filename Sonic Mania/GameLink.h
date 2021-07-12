@@ -77,7 +77,7 @@ typedef struct {
     ushort group;
     ushort objectID;
     bool32 inBounds;
-    bool32 isPermament;
+    bool32 isPermanent;
     bool32 tileCollisions;
     bool32 interaction;
     bool32 onGround;
@@ -119,7 +119,7 @@ typedef struct {
     ushort group;                                                                                                                                    \
     ushort objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
-    bool32 isPermament;                                                                                                                              \
+    bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
     bool32 onGround;                                                                                                                                 \
@@ -148,7 +148,7 @@ typedef struct {
     ushort group;                                                                                                                                    \
     ushort objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
-    bool32 isPermament;                                                                                                                              \
+    bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
     bool32 onGround;                                                                                                                                 \
@@ -164,7 +164,7 @@ typedef struct {
     byte activeScreens;
 #endif
 
-#define ENTITY_SIZE (sizeof(Entity) + 0x400)
+#define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void*)))
 
 #if RETRO_USE_PLUS
 typedef struct {
@@ -312,6 +312,32 @@ typedef struct {
 #endif
     ScreenInfo *screenInfo;
 } GameInfo;
+
+typedef struct {
+    void *functionPtrs;
+    EngineInfo *engineInfo;
+    SceneInfo *sceneInfo;
+    ControllerState *controller;
+    AnalogState *stickL;
+    TouchMouseData *touchMouse;
+    ScreenInfo *screenInfo;
+} GameInfo_103;
+
+typedef struct {
+    void *functionPtrs;
+    void *userdataPtrs;
+    SKUInfo *currentSKU;
+    EngineInfo *engineInfo;
+    SceneInfo *sceneInfo;
+    ControllerState *controller;
+    AnalogState *stickL;
+    AnalogState *stickR;
+    TriggerState *triggerL;
+    TriggerState *triggerR;
+    TouchMouseData *touchMouse;
+    UnknownInfo *unknown;
+    ScreenInfo *screenInfo;
+} GameInfo_105;
 
 typedef struct {
     int values[4][4];

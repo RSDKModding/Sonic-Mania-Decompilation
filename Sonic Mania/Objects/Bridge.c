@@ -10,12 +10,14 @@ void Bridge_Update(void)
         if (entity->timer < 0x80)
             entity->timer += 8;
     }
-    else if (entity->timer) {
-        entity->playerPtr = (Entity *)-1;
-        entity->timer -= 8;
-    }
     else {
-        entity->field_68 = 0;
+        if (entity->timer) {
+            entity->playerPtr = (Entity *)-1;
+            entity->timer -= 8;
+        }
+        else {
+            entity->field_68 = 0;
+        }
     }
 
     entity->activePlayerCount = 0;
@@ -26,30 +28,26 @@ void Bridge_Update(void)
         Hitbox *playerHitbox = Player_GetHitbox(player);
         if (player->state == Player_State_KnuxLedgePullUp)
             continue;
-        int startPos = entity->startPos;
-        int endPos   = entity->endPos;
-        if (player->position.x <= entity->startPos || player->position.x >= endPos) {
-            if (player == (EntityPlayer *)entity->playerPtr) {
-                entity->timer     = 32;
-                entity->playerPtr = (Entity *)-2;
-            }
-        }
-        else {
+
+        if (player->position.x > entity->startPos && player->position.x < entity->endPos) {
             if (player != (EntityPlayer *)entity->playerPtr) {
                 if (!entity->activePlayerCount)
                     entity->stoodPos = player->position.x - entity->startPos;
+
                 if (player->velocity.y >= 0) {
                     Hitbox bridgeHitbox;
                     bridgeHitbox.left  = -0x400;
                     bridgeHitbox.right = 0x400;
-                    int divisor        = entity->stoodPos;
-                    int ang            = 0;
-                    if (player->position.x - entity->startPos <= divisor) {
-                        ang = (player->position.x - entity->startPos) << 7;
+
+                    int divisor = 0;
+                    int ang     = 0;
+                    if (player->position.x - entity->startPos <= entity->stoodPos) {
+                        divisor = entity->stoodPos;
+                        ang     = (player->position.x - entity->startPos) << 7;
                     }
                     else {
-                        divisor = endPos - entity->stoodPos - entity->startPos;
-                        ang     = (endPos - player->position.x) << 7;
+                        divisor = entity->endPos - entity->startPos - entity->stoodPos;
+                        ang     = (entity->endPos - player->position.x) << 7;
                     }
 
                     int hitY = (entity->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
@@ -61,6 +59,7 @@ void Bridge_Update(void)
                         bridgeHitbox.bottom = (hitY >> 16);
                         bridgeHitbox.top    = (hitY >> 16) - 8;
                     }
+
                     if (Player_CheckCollisionTouch(player, entity, &bridgeHitbox)) {
                         ++entity->activePlayerCount;
                         player->position.y = hitY + entity->position.y - (playerHitbox->bottom << 16);
@@ -73,50 +72,50 @@ void Bridge_Update(void)
                         EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
                         if (player == player1) {
                             if (entity->playerPtr != (Entity *)-1 && entity->playerPtr != (Entity *)-2) {
+                                int distance     = entity->endPos - entity->startPos;
                                 entity->stoodPos = player->position.x - entity->startPos;
-                                int val          = ((entity->endPos - entity->startPos) >> 13)
-                                          * RSDK.Sin512((entity->stoodPos >> 8) / ((entity->endPos - entity->startPos) >> 16));
-                                entity->field_68 = val;
-                                entity->field_6C = (val * entity->timer) >> 7;
+                                entity->field_68 = (distance >> 13) * RSDK.Sin512((entity->stoodPos >> 8) / (distance >> 16));
+                                entity->field_6C = (entity->field_68 * entity->timer) >> 7;
                             }
                             entity->playerPtr = (Entity *)player;
                             if (player->velocity.y < 0x10000)
-                                entity->timer = -0x80;
+                                entity->timer = 0x80;
                         }
                         else {
                             if (entity->playerPtr == (Entity *)-1) {
                                 entity->playerPtr = (Entity *)player;
                                 if (player->velocity.y < 0x10000)
-                                    entity->timer = -0x80;
+                                    entity->timer = 0x80;
                             }
                             if (entity->playerPtr == (Entity *)-2)
                                 entity->playerPtr = (Entity *)player;
                         }
+
                         if (!player->onGround) {
                             player->onGround  = true;
                             player->groundVel = player->velocity.x;
                         }
                         player->velocity.y = 0;
-                        if (player->shield == SHIELD_FIRE && entity->burnable == 1)
+                        if (player->shield == SHIELD_FIRE && entity->burnable)
                             Bridge_Burn((player->position.x - entity->startPos) >> 20);
                     }
                 }
             }
             else {
                 entity->stoodPos = player->position.x - entity->startPos;
-                entity->field_68 =
-                    RSDK.Sin512((entity->stoodPos >> 8) / ((endPos - entity->startPos) >> 16)) * ((entity->endPos - entity->startPos) >> 13);
+                int distance     = (entity->endPos - entity->startPos);
+                entity->field_68 = RSDK.Sin512((entity->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);
 
                 if (player->position.y > entity->position.y - 0x300000) {
                     if (player->velocity.y >= 0) {
                         ++entity->activePlayerCount;
                         player->position.y = entity->field_6C + entity->position.y - ((playerHitbox->bottom + 8) << 16);
-                        if (player->onGround == false) {
-                            player->onGround  = 1;
+                        if (!player->onGround) {
+                            player->onGround  = true;
                             player->groundVel = player->velocity.x;
                         }
                         player->velocity.y = 0;
-                        player->flailing   = 0;
+                        player->flailing   = false;
                         if (player->shield == SHIELD_FIRE && entity->burnable)
                             Bridge_Burn((player->position.x - entity->startPos) >> 20);
                     }
@@ -125,6 +124,10 @@ void Bridge_Update(void)
                     }
                 }
             }
+        }
+        else if (player == (EntityPlayer *)entity->playerPtr) {
+            entity->timer     = 32;
+            entity->playerPtr = (Entity *)-2;
         }
     }
 

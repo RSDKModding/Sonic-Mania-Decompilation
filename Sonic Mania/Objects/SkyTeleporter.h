@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectSkyTeleporter;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int field_5C;
+    Vector2 startPos;
+    int field_68;
+    int timer;
+    Hitbox hitbox;
+    Animator animator;
 } EntitySkyTeleporter;
 
 // Object Struct
@@ -28,6 +36,6 @@ void SkyTeleporter_EditorLoad(void);
 void SkyTeleporter_Serialize(void);
 
 // Extra Entity Functions
-
+void SkyTeleporter_Unknown1(void);
 
 #endif //!OBJ_SKYTELEPORTER_H

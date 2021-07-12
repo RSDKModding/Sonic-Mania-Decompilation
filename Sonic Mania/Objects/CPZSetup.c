@@ -47,7 +47,7 @@ void CPZSetup_StageLoad(void)
 {
     CPZSetup->aniTiles = RSDK.LoadSpriteSheet("CPZ/Objects.gif", SCOPE_STAGE);
     RSDK.SetDrawLayerProperties(0, 0, Water_SetWaterLevel);
-    RSDK.SetDrawLayerProperties(Zone->uiDrawHigh, 0, Water_RemoveWaterEffect);
+    RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, 0, Water_RemoveWaterEffect);
     Water->waterPalette     = 2;
     CPZSetup->palAnimFrameC = 0;
     CPZSetup->palAnimFrameD = 1;

@@ -2476,17 +2476,17 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_2:
+                case ROTFLAG_45DEG: // 0x00, 0x40, 0x80, 0xC0, 0x100, 0x140, 0x180, 0x1C0
                     rotation = (sceneInfo.entity->rotation + 0x20) & 0x1C0;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_3:
+                case ROTFLAG_90DEG: // 0x00, 0x80, 0x100, 0x180
                     rotation = (sceneInfo.entity->rotation + 0x40) & 0x180;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_4:
+                case ROTFLAG_180DEG: // 0x00, 0x100
                     rotation = (sceneInfo.entity->rotation + 0x80) & 0x100;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
@@ -2500,34 +2500,40 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                     }
 
                     switch (rotation) {
-                        case 0:
-                        case 8:
+                        case 0: // 0 deg
+                        case 8: // 360 deg
                             rotation = 0x00;
                             if ((sceneInfo.entity->drawFX & FX_SCALE) != FX_NONE)
                                 drawFX ^= FX_ROTATE;
                             break;
-                        case 1:
+                        case 1: // 45 deg
                             rotation = 0x80;
                             frame += data->frameCount;
                             if (sceneInfo.entity->direction)
                                 rotation = 0x00;
                             break;
-                        case 2: rotation = 0x80; break;
-                        case 3:
+                        case 2: // 90 deg
+                            rotation = 0x80;
+                            break;
+                        case 3: // 135 deg
                             rotation = 0x100;
                             frame += data->frameCount;
                             if (sceneInfo.entity->direction)
                                 rotation = 0x80;
                             break;
-                        case 4: rotation = 0x100; break;
-                        case 5:
+                        case 4: // 180 deg
+                            rotation = 0x100;
+                            break;
+                        case 5: // 225 deg
                             rotation = 0x180;
                             frame += data->frameCount;
                             if (sceneInfo.entity->direction)
                                 rotation = 0x100;
                             break;
-                        case 6: rotation = 0x180; break;
-                        case 7:
+                        case 6: // 270 deg
+                            rotation = 0x180;
+                            break;
+                        case 7: // 315 deg
                             rotation = 0x180;
                             frame += data->frameCount;
                             if (!sceneInfo.entity->direction)
