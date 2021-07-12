@@ -3,7 +3,7 @@
 ObjectSaveGame *SaveGame;
 
 #if RETRO_USE_PLUS
-#define noSave User.GetUserStorageNoSave()
+#define noSave API.GetUserStorageNoSave()
 #else
 #define noSave globals->noSave
 #endif
@@ -144,23 +144,21 @@ void SaveGame_LoadSaveData(void)
 
 void SaveGame_LoadFile(void)
 {
-    if (!SaveGame->saveRAM) {
-        SaveGame_SaveLoadedCB(0);
-        return;
-    }
-    if (globals->saveLoaded == STATUS_CONTINUE) {
-        SaveGame_SaveLoadedCB(0);
+    if (!SaveGame->saveRAM || globals->saveLoaded == STATUS_CONTINUE) {
+        SaveGame_SaveLoadedCB(false);
         return;
     }
     if (globals->saveLoaded == STATUS_OK) {
-        SaveGame_SaveLoadedCB(1);
+        SaveGame_SaveLoadedCB(true);
         return;
     }
     globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = RSDK_sceneInfo->entity;
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
 #if RETRO_USE_PLUS
-    User.LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
+    API.LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
+#else
+    APICallback_LoadUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_LoadFile_CB);
 #endif
 }
 void SaveGame_SaveFile(void (*callback)(int status))
@@ -173,7 +171,17 @@ void SaveGame_SaveFile(void (*callback)(int status))
     else {
         SaveGame->saveEntityPtr = (Entity *)RSDK_sceneInfo->entity;
         SaveGame->saveCallback  = callback;
-        User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
+        API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
+    }
+#else
+    if (noSave || !SaveGame->saveRAM || globals->saveLoaded != 200) {
+        if (callback)
+            callback(0);
+    }
+    else {
+        SaveGame->saveEntityPtr = (Entity *)RSDK_sceneInfo->entity;
+        SaveGame->saveCallback = callback;
+        APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
     }
 #endif
 }
@@ -202,7 +210,7 @@ void SaveGame_SaveLoadedCB(int status)
         globals->taTableLoaded        = STATUS_CONTINUE;
         TimeAttackData->loadEntityPtr = RSDK_sceneInfo->entity;
         TimeAttackData->loadCallback  = NULL;
-        ushort table                  = User.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
+        ushort table                  = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
         globals->taTableID            = table;
         if (globals->taTableID == 0xFFFF) {
             LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
@@ -227,6 +235,7 @@ void SaveGame_SaveGameState(void)
     globals->restartDir[1]  = StarPost->playerDirections[1];
     globals->restartSlot[1] = StarPost->postIDs[1];
 
+#if RETRO_USE_PLUS
     globals->restartPos[4]  = StarPost->playerPositions[2].x;
     globals->restartPos[5]  = StarPost->playerPositions[2].y;
     globals->restartDir[2]  = StarPost->playerDirections[2];
@@ -236,6 +245,7 @@ void SaveGame_SaveGameState(void)
     globals->restartPos[7]  = StarPost->playerPositions[3].y;
     globals->restartDir[3]  = StarPost->playerDirections[3];
     globals->restartSlot[3] = StarPost->postIDs[3];
+#endif
 
     EntityPlayer *player1        = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
     globals->restartMilliseconds = StarPost->storedMS;
@@ -489,7 +499,7 @@ void SaveGame_TrackGameProgress(void (*callback)(int))
         stat.name   = "GAME_PROGRESS";
         // stat.data[0]   = SaveGame_Unknown15(&globals->saveRAM[0x900]);
 #if RETRO_USE_PLUS
-        User.TryTrackStat(&stat);
+        API.TryTrackStat(&stat);
 #else
         APICallback_TrackGameProgress(callback, voidToInt(stat.data[0]));
 #endif

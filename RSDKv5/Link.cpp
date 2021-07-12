@@ -3,69 +3,69 @@
 void *RSDKFunctionTable[FUNCTABLE_COUNT];
 
 #if RETRO_REV02
-void *userFunctionTable[UDATATABLE_COUNT];
+void *APIFunctionTable[APITABLE_COUNT];
 
 enum UserdataTableIDs {
-    UserdataTable_GetUserLanguage,
-    UserdataTable_GetConfirmButtonFlip,
-    UserdataTable_ExitGame,
-    UserdataTable_LaunchManual,
-    UserdataTable_Unknown4,
-    UserdataTable_CheckDLC,
-    UserdataTable_ClearAchievements,
-    UserdataTable_UnlockAchievement,
-    UserdataTable_GetAchievementsStatus,
-    UserdataTable_SetAchievementsStatus,
-    UserdataTable_LeaderboardsUnknown4,
-    UserdataTable_FetchLeaderboard,
-    UserdataTable_TrackScore,
-    UserdataTable_LeaderboardsUnknown7,
-    UserdataTable_LeaderboardEntryCount,
-    UserdataTable_Missing2,
-    UserdataTable_Unknown12,
-    UserdataTable_Missing3,
-    UserdataTable_ReadLeaderboardEntry,
-    UserdataTable_SetPresence,
-    UserdataTable_TryTrackStat,
-    UserdataTable_GetStatsStatus,
-    UserdataTable_SetStatsStatus,
-    UserdataTable_Unknown16,
-    UserdataTable_TryAuth,
-    UserdataTable_GetUserAuthStatus,
-    UserdataTable_GetUsername,
-    UserdataTable_TryInitStorage,
-    UserdataTable_UserStorageStatusUnknown1,
-    UserdataTable_Unknown22,
-    UserdataTable_Unknown23,
-    UserdataTable_Unknown24,
-    UserdataTable_Missing5,
-    UserdataTable_Unknown25,
-    UserdataTable_Unknown26,
-    UserdataTable_SetUserStorageNoSave,
-    UserdataTable_GetUserStorageNoSave,
-    UserdataTable_LoadUserFile,
-    UserdataTable_SaveUserFile,
-    UserdataTable_DeleteUserFile,
-    UserdataTable_AddUserDBEntry,
-    UserdataTable_OpenUserDB,
-    UserdataTable_SaveUserDB,
-    UserdataTable_ClearUserDB,
-    UserdataTable_ClearAllUserDBs,
-    UserdataTable_Unknown31,
-    UserdataTable_GetUserDBSatus,
-    UserdataTable_Unknown33,
-    UserdataTable_Unknown34,
-    UserdataTable_GetUserDBUnknownCount,
-    UserdataTable_GetUserDBUnknown,
-    UserdataTable_Unknown37,
-    UserdataTable_SetUserDBValue,
-    UserdataTable_Unknown39,
-    UserdataTable_GetEntryUUID,
-    UserdataTable_GetUserDBByID,
-    UserdataTable_GetUserDBCreationTime,
-    UserdataTable_RemoveDBEntry,
-    UserdataTable_RemoveAllDBEntries,
-    UserdataTable_Count,
+    APITable_GetUserLanguage,
+    APITable_GetConfirmButtonFlip,
+    APITable_ExitGame,
+    APITable_LaunchManual,
+    APITable_Unknown4,
+    APITable_CheckDLC,
+    APITable_ClearAchievements,
+    APITable_UnlockAchievement,
+    APITable_GetAchievementsStatus,
+    APITable_SetAchievementsStatus,
+    APITable_LeaderboardsUnknown4,
+    APITable_FetchLeaderboard,
+    APITable_TrackScore,
+    APITable_LeaderboardsUnknown7,
+    APITable_LeaderboardEntryCount,
+    APITable_Missing2,
+    APITable_Unknown12,
+    APITable_Missing3,
+    APITable_ReadLeaderboardEntry,
+    APITable_SetPresence,
+    APITable_TryTrackStat,
+    APITable_GetStatsStatus,
+    APITable_SetStatsStatus,
+    APITable_Unknown16,
+    APITable_TryAuth,
+    APITable_GetUserAuthStatus,
+    APITable_GetUsername,
+    APITable_TryInitStorage,
+    APITable_UserStorageStatusUnknown1,
+    APITable_Unknown22,
+    APITable_Unknown23,
+    APITable_Unknown24,
+    APITable_Missing5,
+    APITable_Unknown25,
+    APITable_Unknown26,
+    APITable_SetUserStorageNoSave,
+    APITable_GetUserStorageNoSave,
+    APITable_LoadUserFile,
+    APITable_SaveUserFile,
+    APITable_DeleteUserFile,
+    APITable_AddUserDBEntry,
+    APITable_OpenUserDB,
+    APITable_SaveUserDB,
+    APITable_ClearUserDB,
+    APITable_ClearAllUserDBs,
+    APITable_Unknown31,
+    APITable_GetUserDBSatus,
+    APITable_Unknown33,
+    APITable_Unknown34,
+    APITable_GetUserDBUnknownCount,
+    APITable_GetUserDBUnknown,
+    APITable_Unknown37,
+    APITable_SetUserDBValue,
+    APITable_Unknown39,
+    APITable_GetEntryUUID,
+    APITable_GetUserDBByID,
+    APITable_GetUserDBCreationTime,
+    APITable_RemoveDBEntry,
+    APITable_RemoveAllDBEntries,
+    APITable_Count,
 };
 #endif
 
@@ -288,7 +288,7 @@ GameVersionInfo gameVerInfo;
 void NullFunc() {}
 
 #define addToRSDKFunctionTable(id, func) RSDKFunctionTable[id] = (void *)func;
-#define addToUserFunctionTable(id, func) userFunctionTable[id] = (void *)func;
+#define addToUserFunctionTable(id, func) APIFunctionTable[id] = (void *)func;
 
 void setupFunctions()
 {
@@ -321,70 +321,70 @@ void setupFunctions()
 
     memset(RSDKFunctionTable, NULL, FUNCTABLE_COUNT * sizeof(void *));
 #if RETRO_REV02
-    memset(userFunctionTable, NULL, UDATATABLE_COUNT * sizeof(void *));
+    memset(APIFunctionTable, NULL, APITABLE_COUNT * sizeof(void *));
 #endif
 
 #if RETRO_REV02
     // Userdata
-    addToUserFunctionTable(UserdataTable_GetUserLanguage, userCore->GetUserLanguage);
-    addToUserFunctionTable(UserdataTable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
-    addToUserFunctionTable(UserdataTable_ExitGame, userCore->ExitGame);
-    addToUserFunctionTable(UserdataTable_LaunchManual, userCore->LaunchManual);
-    addToUserFunctionTable(UserdataTable_Unknown4, userCore->unknown15);
-    addToUserFunctionTable(UserdataTable_CheckDLC, userCore->CheckDLC);
-    addToUserFunctionTable(UserdataTable_ClearAchievements, userCore->ShowExtensionOverlay);
-    addToUserFunctionTable(UserdataTable_UnlockAchievement, achievements->UnlockAchievement);
-    addToUserFunctionTable(UserdataTable_GetAchievementsStatus, GetAchievementsStatus);
-    addToUserFunctionTable(UserdataTable_SetAchievementsStatus, SetAchievementsStatus);
-    addToUserFunctionTable(UserdataTable_LeaderboardsUnknown4, NullFunc);
-    addToUserFunctionTable(UserdataTable_FetchLeaderboard, leaderboards->FetchLeaderboard);
-    addToUserFunctionTable(UserdataTable_TrackScore, leaderboards->TrackScore);
-    addToUserFunctionTable(UserdataTable_LeaderboardsUnknown7, leaderboards->unknown7);
-    addToUserFunctionTable(UserdataTable_LeaderboardEntryCount, NullFunc);
-    addToUserFunctionTable(UserdataTable_Missing2, NullFunc);
-    addToUserFunctionTable(UserdataTable_Unknown12, NullFunc);
-    addToUserFunctionTable(UserdataTable_Missing3, NullFunc);
-    addToUserFunctionTable(UserdataTable_ReadLeaderboardEntry, NullFunc);
-    addToUserFunctionTable(UserdataTable_SetPresence, richPresence->SetPresence);
-    addToUserFunctionTable(UserdataTable_TryTrackStat, stats->TryTrackStat);
-    addToUserFunctionTable(UserdataTable_GetStatsStatus, GetStatsStatus);
-    addToUserFunctionTable(UserdataTable_SetStatsStatus, SetStatsStatus);
-    addToUserFunctionTable(UserdataTable_Unknown16, userStorage->unknown8);
-    addToUserFunctionTable(UserdataTable_TryAuth, userStorage->TryAuth);
-    addToUserFunctionTable(UserdataTable_GetUserAuthStatus, GetUserStorageStatus);
-    addToUserFunctionTable(UserdataTable_GetUsername, userStorage->GetUsername);
-    addToUserFunctionTable(UserdataTable_TryInitStorage, userStorage->TryInitStorage);
-    addToUserFunctionTable(UserdataTable_UserStorageStatusUnknown1, UserStorageStatusUnknown1);
-    addToUserFunctionTable(UserdataTable_Unknown22, UserStorageStatusUnknown2);
-    addToUserFunctionTable(UserdataTable_Unknown23, ClearUserStorageStatus);
-    addToUserFunctionTable(UserdataTable_Unknown24, SetUserStorageStatus);
-    addToUserFunctionTable(UserdataTable_Missing5, UserStorageStatusUnknown3);
-    addToUserFunctionTable(UserdataTable_Unknown25, UserStorageStatusUnknown4);
-    addToUserFunctionTable(UserdataTable_Unknown26, UserStorageStatusUnknown5);
-    addToUserFunctionTable(UserdataTable_SetUserStorageNoSave, SetUserStorageNoSave);
-    addToUserFunctionTable(UserdataTable_GetUserStorageNoSave, GetUserStorageNoSave);
-    addToUserFunctionTable(UserdataTable_LoadUserFile, userStorage->LoadUserFile);
-    addToUserFunctionTable(UserdataTable_SaveUserFile, userStorage->SaveUserFile);
-    addToUserFunctionTable(UserdataTable_DeleteUserFile, userStorage->DeleteUserFile);
-    addToUserFunctionTable(UserdataTable_AddUserDBEntry, InitUserDB);
-    addToUserFunctionTable(UserdataTable_OpenUserDB, LoadUserDB);
-    addToUserFunctionTable(UserdataTable_SaveUserDB, SaveUserDB);
-    addToUserFunctionTable(UserdataTable_ClearUserDB, ClearUserDB);
-    addToUserFunctionTable(UserdataTable_ClearAllUserDBs, ClearAllUserDBs);
-    addToUserFunctionTable(UserdataTable_Unknown31, NullFunc); // Unknown31);
-    addToUserFunctionTable(UserdataTable_GetUserDBSatus, GetUserDBStatus);
-    addToUserFunctionTable(UserdataTable_Unknown33, NullFunc); // Unknown33);
-    addToUserFunctionTable(UserdataTable_Unknown34, NullFunc); // Unknown34);
-    addToUserFunctionTable(UserdataTable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
-    addToUserFunctionTable(UserdataTable_GetUserDBUnknown, GetUserDBRowUnknown);
-    addToUserFunctionTable(UserdataTable_Unknown37, AddUserDBEntry);
-    addToUserFunctionTable(UserdataTable_SetUserDBValue, NullFunc); // SetUserDBValue);
-    addToUserFunctionTable(UserdataTable_Unknown39, NullFunc);      // Unknown39);
-    addToUserFunctionTable(UserdataTable_GetEntryUUID, GetUserDBRowUUID);
-    addToUserFunctionTable(UserdataTable_GetUserDBByID, GetUserDBByID);
-    addToUserFunctionTable(UserdataTable_GetUserDBCreationTime, GetUserDBCreationTime);
-    addToUserFunctionTable(UserdataTable_RemoveDBEntry, RemoveDBEntry);
-    addToUserFunctionTable(UserdataTable_RemoveAllDBEntries, RemoveAllDBEntries);
+    addToUserFunctionTable(APITable_GetUserLanguage, userCore->GetUserLanguage);
+    addToUserFunctionTable(APITable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
+    addToUserFunctionTable(APITable_ExitGame, userCore->ExitGame);
+    addToUserFunctionTable(APITable_LaunchManual, userCore->LaunchManual);
+    addToUserFunctionTable(APITable_Unknown4, userCore->unknown15);
+    addToUserFunctionTable(APITable_CheckDLC, userCore->CheckDLC);
+    addToUserFunctionTable(APITable_ClearAchievements, userCore->ShowExtensionOverlay);
+    addToUserFunctionTable(APITable_UnlockAchievement, achievements->UnlockAchievement);
+    addToUserFunctionTable(APITable_GetAchievementsStatus, GetAchievementsStatus);
+    addToUserFunctionTable(APITable_SetAchievementsStatus, SetAchievementsStatus);
+    addToUserFunctionTable(APITable_LeaderboardsUnknown4, NullFunc);
+    addToUserFunctionTable(APITable_FetchLeaderboard, leaderboards->FetchLeaderboard);
+    addToUserFunctionTable(APITable_TrackScore, leaderboards->TrackScore);
+    addToUserFunctionTable(APITable_LeaderboardsUnknown7, leaderboards->unknown7);
+    addToUserFunctionTable(APITable_LeaderboardEntryCount, NullFunc);
+    addToUserFunctionTable(APITable_Missing2, NullFunc);
+    addToUserFunctionTable(APITable_Unknown12, NullFunc);
+    addToUserFunctionTable(APITable_Missing3, NullFunc);
+    addToUserFunctionTable(APITable_ReadLeaderboardEntry, NullFunc);
+    addToUserFunctionTable(APITable_SetPresence, richPresence->SetPresence);
+    addToUserFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
+    addToUserFunctionTable(APITable_GetStatsStatus, GetStatsStatus);
+    addToUserFunctionTable(APITable_SetStatsStatus, SetStatsStatus);
+    addToUserFunctionTable(APITable_Unknown16, userStorage->unknown8);
+    addToUserFunctionTable(APITable_TryAuth, userStorage->TryAuth);
+    addToUserFunctionTable(APITable_GetUserAuthStatus, GetUserStorageStatus);
+    addToUserFunctionTable(APITable_GetUsername, userStorage->GetUsername);
+    addToUserFunctionTable(APITable_TryInitStorage, userStorage->TryInitStorage);
+    addToUserFunctionTable(APITable_UserStorageStatusUnknown1, UserStorageStatusUnknown1);
+    addToUserFunctionTable(APITable_Unknown22, UserStorageStatusUnknown2);
+    addToUserFunctionTable(APITable_Unknown23, ClearUserStorageStatus);
+    addToUserFunctionTable(APITable_Unknown24, SetUserStorageStatus);
+    addToUserFunctionTable(APITable_Missing5, UserStorageStatusUnknown3);
+    addToUserFunctionTable(APITable_Unknown25, UserStorageStatusUnknown4);
+    addToUserFunctionTable(APITable_Unknown26, UserStorageStatusUnknown5);
+    addToUserFunctionTable(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
+    addToUserFunctionTable(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
+    addToUserFunctionTable(APITable_LoadUserFile, userStorage->LoadUserFile);
+    addToUserFunctionTable(APITable_SaveUserFile, userStorage->SaveUserFile);
+    addToUserFunctionTable(APITable_DeleteUserFile, userStorage->DeleteUserFile);
+    addToUserFunctionTable(APITable_AddUserDBEntry, InitUserDB);
+    addToUserFunctionTable(APITable_OpenUserDB, LoadUserDB);
+    addToUserFunctionTable(APITable_SaveUserDB, SaveUserDB);
+    addToUserFunctionTable(APITable_ClearUserDB, ClearUserDB);
+    addToUserFunctionTable(APITable_ClearAllUserDBs, ClearAllUserDBs);
+    addToUserFunctionTable(APITable_Unknown31, NullFunc); // Unknown31);
+    addToUserFunctionTable(APITable_GetUserDBSatus, GetUserDBStatus);
+    addToUserFunctionTable(APITable_Unknown33, NullFunc); // Unknown33);
+    addToUserFunctionTable(APITable_Unknown34, NullFunc); // Unknown34);
+    addToUserFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
+    addToUserFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
+    addToUserFunctionTable(APITable_Unknown37, AddUserDBEntry);
+    addToUserFunctionTable(APITable_SetUserDBValue, NullFunc); // SetUserDBValue);
+    addToUserFunctionTable(APITable_Unknown39, NullFunc);      // Unknown39);
+    addToUserFunctionTable(APITable_GetEntryUUID, GetUserDBRowUUID);
+    addToUserFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
+    addToUserFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);
+    addToUserFunctionTable(APITable_RemoveDBEntry, RemoveDBEntry);
+    addToUserFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBEntries);
 #endif
 
     // Function Table

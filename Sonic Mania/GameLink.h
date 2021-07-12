@@ -294,7 +294,7 @@ typedef struct {
 typedef struct {
     void *functionPtrs;
 #if RETRO_USE_PLUS
-    void *userdataPtrs;
+    void *APIPtrs;
     SKUInfo *currentSKU;
 #endif
     EngineInfo *engineInfo;
@@ -312,32 +312,6 @@ typedef struct {
 #endif
     ScreenInfo *screenInfo;
 } GameInfo;
-
-typedef struct {
-    void *functionPtrs;
-    EngineInfo *engineInfo;
-    SceneInfo *sceneInfo;
-    ControllerState *controller;
-    AnalogState *stickL;
-    TouchMouseData *touchMouse;
-    ScreenInfo *screenInfo;
-} GameInfo_103;
-
-typedef struct {
-    void *functionPtrs;
-    void *userdataPtrs;
-    SKUInfo *currentSKU;
-    EngineInfo *engineInfo;
-    SceneInfo *sceneInfo;
-    ControllerState *controller;
-    AnalogState *stickL;
-    AnalogState *stickR;
-    TriggerState *triggerL;
-    TriggerState *triggerR;
-    TouchMouseData *touchMouse;
-    UnknownInfo *unknown;
-    ScreenInfo *screenInfo;
-} GameInfo_105;
 
 typedef struct {
     int values[4][4];

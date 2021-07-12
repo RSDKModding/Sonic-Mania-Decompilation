@@ -33,7 +33,7 @@ void DialogRunner_StageLoad(void)
     DialogRunner->field_C  = 0;
     DialogRunner->field_14 = 0;
     if (!globals->hasPlusInitial) {
-        globals->lastHasPlus    = User.CheckDLC(DLC_PLUS);
+        globals->lastHasPlus    = API.CheckDLC(DLC_PLUS);
         globals->hasPlusInitial = true;
     }
     DialogRunner->entityPtr = NULL;
@@ -99,14 +99,14 @@ void DialogRunner_NotifyAutoSave(void)
 
 void DialogRunner_Unknown4(void)
 {
-    User.UserStorageStatusUnknown4();
-    User.SetUserStorageNoSave(0);
+    API.UserStorageStatusUnknown4();
+    API.SetUserStorageNoSave(0);
 }
 
 void DialogRunner_Unknown5(void)
 {
-    User.UserStorageStatusUnknown5();
-    User.SetUserStorageNoSave(1);
+    API.UserStorageStatusUnknown5();
+    API.SetUserStorageNoSave(1);
 }
 
 void DialogRunner_Unknown6(void)
@@ -114,7 +114,7 @@ void DialogRunner_Unknown6(void)
     //TextInfo info;
 
     RSDK_THIS(DialogRunner);
-    if (User.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
+    if (API.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
         /*if (!UIDialog->activeDialog) {
             int stringID = 30;
             switch (entity->unknownID) {
@@ -241,7 +241,7 @@ void DialogRunner_Wait(int success)
 void DialogRunner_GetNextNotif(void)
 {
     int *saveRAM = NULL;
-    if (RSDK_sceneInfo->inEditor || User.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK)
+    if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK)
         saveRAM = NULL;
     else
         saveRAM = &globals->saveRAM[0x900];
@@ -275,7 +275,7 @@ bool32 DialogRunner_NotifyAutosave(void)
 }
 void DialogRunner_GetUserAuthStatus(void)
 {
-    if (User.GetUserAuthStatus() == STATUS_FORBIDDEN) {
+    if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
         if (DialogRunner->field_4)
             return;
         EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown7, 0, 0);
@@ -284,26 +284,26 @@ void DialogRunner_GetUserAuthStatus(void)
         DialogRunner->field_4            = 1;
     }
 
-    if (User.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->field_4) {
+    if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->field_4) {
         EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown7, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         dialogRunner->field_88           = 1;
         DialogRunner->entityPtr          = dialogRunner;
         DialogRunner->field_4            = 1;
-        globals->lastHasPlus             = User.CheckDLC(DLC_PLUS);
+        globals->lastHasPlus             = API.CheckDLC(DLC_PLUS);
     }
 }
 void DialogRunner_PromptSavePreference(int id)
 {
-    if (User.GetUserStorageNoSave()) {
+    if (API.GetUserStorageNoSave()) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
     LogHelpers_Print("PromptSavePreference()");
-    if (User.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
+    if (API.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
         LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
-    User.SetUserStorageStatus();
+    API.SetUserStorageStatus();
     EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown6, 0, 0);
     dialogRunner->unknownID          = id;
     DialogRunner->entityPtr          = dialogRunner;

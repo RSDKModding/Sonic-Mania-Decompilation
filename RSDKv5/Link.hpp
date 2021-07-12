@@ -3,14 +3,14 @@
 
 #if RETRO_REV02
 #define FUNCTABLE_COUNT  (180)
-#define UDATATABLE_COUNT (59)
+#define APITABLE_COUNT (59)
 #else
 #define FUNCTABLE_COUNT (155)
 #endif
 
 extern void *RSDKFunctionTable[FUNCTABLE_COUNT];
 #if RETRO_REV02
-extern void *userFunctionTable[UDATATABLE_COUNT];
+extern void *APIFunctionTable[APITABLE_COUNT];
 #endif
 
 #if RETRO_REV02
@@ -56,7 +56,7 @@ extern GameVersionInfo gameVerInfo;
 struct GameInfo {
     void *functionPtrs;
 #if RETRO_REV02
-    void *userdataPtrs;
+    void *APIPtrs;
     SKUInfo *currentSKU;
 #endif
     GameVersionInfo *engineInfo;

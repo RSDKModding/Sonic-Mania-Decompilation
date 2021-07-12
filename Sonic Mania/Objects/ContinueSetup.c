@@ -146,9 +146,11 @@ void ContinueSetup_Unknown3(void)
         fade->wait         = 240;
     }
     if (entity->timer == 260) {
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.LoadScene("Encore Mode", "");
         else
+#endif
             RSDK.LoadScene("Mania Mode", "");
         SaveGame->saveRAM[29]   = globals->continues;
         RSDK_sceneInfo->listPos = SaveGame->saveRAM[30];

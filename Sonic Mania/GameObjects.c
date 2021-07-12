@@ -20,21 +20,21 @@ ScreenInfo *RSDK_screens = NULL;
 
 RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
-UserFunctionTable User;
+APIFunctionTable API;
 #endif
 
 void LinkGameLogicDLL(GameInfo *info)
 {
 #if RETRO_USE_PLUS
-    memset(&User, 0, sizeof(UserFunctionTable));
+    memset(&API, 0, sizeof(APIFunctionTable));
 #endif
     memset(&RSDK, 0, sizeof(RSDKFunctionTable));
 
     if (info->functionPtrs)
         memcpy(&RSDK, info->functionPtrs, sizeof(RSDKFunctionTable));
 #if RETRO_USE_PLUS
-    if (info->userdataPtrs)
-        memcpy(&User, info->userdataPtrs, sizeof(UserFunctionTable));
+    if (info->APIPtrs)
+        memcpy(&API, info->APIPtrs, sizeof(APIFunctionTable));
 #endif
 
     RSDK_info = info->engineInfo;

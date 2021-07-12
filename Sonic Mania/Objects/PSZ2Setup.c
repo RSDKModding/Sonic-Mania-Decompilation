@@ -79,21 +79,27 @@ void PSZ2Setup_StageLoad(void)
     GenericTrigger->callbacks[1] = PSZ2Setup_TriggerCB2;
     PSZ2Setup->aniTiles1         = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
     PSZ2Setup->aniTiles2         = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
-    if (globals->gameMode && globals->gameMode != MODE_ENCORE || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
+
+    if (isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
         Zone->screenBoundsL1[0] = 1024;
         Zone->screenBoundsL1[1] = 1024;
+#if RETRO_USE_PLUS
         Zone->screenBoundsL1[2] = 1024;
         Zone->screenBoundsL1[3] = 1024;
+#endif
         FXFade_StopAll();
     }
     else {
         Zone->screenBoundsB1[0] = 1556;
         Zone->screenBoundsB1[1] = 1556;
+#if RETRO_USE_PLUS
         Zone->screenBoundsB1[2] = 1556;
         Zone->screenBoundsB1[3] = 1556;
+#endif
         PSZ2Setup_ActTransitionLoad();
     }
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2())
+
+    if (isMainGameMode() && PlayerHelpers_CheckAct2())
         Zone->stageFinishCallback = PSZ2Setup_StageFinishCB;
 
 #if RETRO_USE_PLUS

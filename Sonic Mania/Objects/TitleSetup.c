@@ -41,8 +41,8 @@ void TitleSetup_StageLoad(void)
     TextInfo presence;
     Localization_GetString(&presence, STR_RPC_TITLE);
 #if RETRO_USE_PLUS
-    User.SetRichPresence(PRESENCE_TITLE, &presence);
-    User.SetUserStorageNoSave(false);
+    API.SetRichPresence(PRESENCE_TITLE, &presence);
+    API.SetUserStorageNoSave(false);
 #else
     APICallback_SetRichPresence(PRESENCE_TITLE, &presence);
     globals->noSave = false;
@@ -50,8 +50,8 @@ void TitleSetup_StageLoad(void)
     globals->blueSpheresInit = false;
     TimeAttackData_ClearOptions();
 #if RETRO_USE_PLUS
-    User.UserStorageUnknown8();
-    User.ClearUserStorageStatus();
+    API.UserStorageUnknown8();
+    API.ClearUserStorageStatus();
 #else
     APICallback_ClearPrerollErrors();
 #endif
@@ -60,10 +60,10 @@ void TitleSetup_StageLoad(void)
     globals->optionsLoaded = 0;
     memset(globals->optionsRAM, 0, 0x200);
 #if RETRO_USE_PLUS
-    User.ClearUserDB(globals->replayTableID);
+    API.ClearUserDB(globals->replayTableID);
     globals->replayTableID     = -1;
     globals->replayTableLoaded = false;
-    User.ClearUserDB(globals->taTableID);
+    API.ClearUserDB(globals->taTableID);
     globals->taTableID     = -1;
     globals->taTableLoaded = false;
 #endif
@@ -193,7 +193,7 @@ void TitleSetup_Unknown7(void)
     if (entity->timer <= 0) {
         entity->stateDraw = StateMachine_None;
 #if RETRO_USE_PLUS
-        if (User.CheckDLC(DLC_PLUS))
+        if (API.CheckDLC(DLC_PLUS))
             entity->state = TitleSetup_SetupLogo_Plus;
         else
 #endif

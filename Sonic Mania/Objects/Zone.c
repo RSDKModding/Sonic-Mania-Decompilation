@@ -420,7 +420,7 @@ void Zone_StageLoad(void)
 #endif
         case MODE_MANIA: Localization_GetString(&textInfo, STR_RPC_MANIA);
 #if RETRO_USE_PLUS
-            User.SetRichPresence(PRESENCE_MANIA, &textInfo);
+            API.SetRichPresence(PRESENCE_MANIA, &textInfo);
 #else
             APICallback_SetRichPresence(PRESENCE_MANIA, &textInfo);
 #endif
@@ -428,19 +428,19 @@ void Zone_StageLoad(void)
 #if RETRO_USE_PLUS
         case MODE_ENCORE:
             Localization_GetString(&textInfo, STR_RPC_ENCORE);
-            User.SetRichPresence(PRESENCE_ENCORE, &textInfo);
+            API.SetRichPresence(PRESENCE_ENCORE, &textInfo);
             break;
 #endif
         case MODE_TIMEATTACK: Localization_GetString(&textInfo, STR_RPC_TA);
 #if RETRO_USE_PLUS
-            User.SetRichPresence(PRESENCE_TA, &textInfo);
+            API.SetRichPresence(PRESENCE_TA, &textInfo);
 #else
             APICallback_SetRichPresence(PRESENCE_TA, &textInfo);
 #endif
             break;
         case MODE_COMPETITION: Localization_GetString(&textInfo, STR_RPC_COMP);
 #if RETRO_USE_PLUS
-            User.SetRichPresence(PRESENCE_COMP, &textInfo);
+            API.SetRichPresence(PRESENCE_COMP, &textInfo);
 #else
             APICallback_SetRichPresence(PRESENCE_COMP, &textInfo);
 #endif
@@ -897,6 +897,7 @@ void Zone_Unknown19(void)
     int screenBoundsL1[4];
     int layerIDs[8];
 
+#if RETRO_USE_PLUS
     for (int p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerIDs[p], Player);
         RSDK.CopyEntity(Zone->entityData[p], player, false);
@@ -1038,6 +1039,7 @@ void Zone_Unknown19(void)
         memset(&Zone->entityData[8 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityData[12 + p], 0, ENTITY_SIZE);
     }
+#endif
 }
 
 void Zone_Unknown20(void)

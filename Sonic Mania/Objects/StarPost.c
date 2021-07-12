@@ -194,7 +194,7 @@ void StarPost_CheckBonusStageEntry(void)
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 int *saveRAM = SaveGame_GetGlobalData();
 #if RETRO_USE_PLUS
-                if ((User.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
+                if ((API.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM[30] = RSDK_sceneInfo->listPos;
                     RSDK.LoadScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);
@@ -320,7 +320,7 @@ void StarPost_State_BallSpin(void)
     entity->angle += entity->ballSpeed;
     if (!StarPost->hasAchievement && entity->timer == 10) {
 #if RETRO_USE_PLUS
-        User.UnlockAchievement("ACH_STARPOST");
+        API.UnlockAchievement("ACH_STARPOST");
 #else
         APICallback_UnlockAchievement("ACH_STARPOST");
 #endif

@@ -91,7 +91,8 @@ void FBZSetup_StageLoad(void)
     if (globals->gameMode == MODE_COMPETITION) {
         foreach_all(ParallaxSprite, parallaxSprite) { RSDK.ResetEntityPtr(parallaxSprite, TYPE_BLANK, NULL); }
     }
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct1()) {
+
+    if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         foreach_all(FBZ1Outro, outro) {
             Zone->forcePlayerOnScreenFlag = true;
             FBZSetup->outroPtr            = outro;
@@ -99,11 +100,15 @@ void FBZSetup_StageLoad(void)
         }
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act1;
     }
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
+
+    if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
         FBZSetup_ActTransitionLoad();
     }
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2())
+
+#if RETRO_USE_PLUS
+    if (isMainGameMode() && PlayerHelpers_CheckAct2())
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act2;
+
     if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreFBZ.act", 0xFF);
         RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
@@ -111,6 +116,7 @@ void FBZSetup_StageLoad(void)
         RSDK.LoadPalette(3, "EncoreFBZf.act", 0xFF);
         RSDK.LoadPalette(4, "EncoreFBZi.act", 0xFF);
     }
+#endif
 }
 
 void FBZSetup_ActTransitionLoad(void)
@@ -120,10 +126,12 @@ void FBZSetup_ActTransitionLoad(void)
     Zone->screenBoundsB1[0] = 4324;
     Zone->screenBoundsL1[1] = 0;
     Zone->screenBoundsB1[1] = 4324;
+#if RETRO_USE_PLUS
     Zone->screenBoundsL1[2] = 0;
     Zone->screenBoundsB1[2] = 4324;
     Zone->screenBoundsL1[3] = 0;
     Zone->screenBoundsB1[3] = 4324;
+#endif
 
     int id = 0;
     TileLayer *layer                          = RSDK.GetSceneLayer(2);
@@ -246,7 +254,9 @@ void FBZSetup_GenericTriggerCB_B(void)
 }
 
 void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outroPtr->active = ACTIVE_NORMAL; }
+#if RETRO_USE_PLUS
 void FBZSetup_StageFinishCB_Act2(void) { RSDK.CreateEntity(FBZ2Outro->objectID, NULL, 0, 0); }
+#endif
 
 void FBZSetup_EditorDraw(void)
 {

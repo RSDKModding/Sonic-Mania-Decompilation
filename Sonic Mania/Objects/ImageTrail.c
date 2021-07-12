@@ -14,16 +14,18 @@ void ImageTrail_LateUpdate(void)
         entity->baseAlpha = 0x100;
     }
     else {
+#if RETRO_USE_PLUS
         if (player->state == Player_State_MightyHammerDrop) {
             entity->fadeoutTimer = 0x10;
         }
         else {
+#endif
             if (entity->fadeoutTimer <= 0) {
                 if (player->speedShoesTimer < 32) {
                     entity->baseAlpha = player->speedShoesTimer;
                     entity->baseAlpha *= 8;
                     if (entity->baseAlpha == 0) {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                 }
             }
@@ -32,10 +34,12 @@ void ImageTrail_LateUpdate(void)
                 entity->baseAlpha = 0x10;
                 entity->baseAlpha *= entity->fadeoutTimer;
                 if (entity->baseAlpha == 0) {
-                    RSDK.ResetEntityPtr(entity, 0, 0);
+                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                 }
             }
+#if RETRO_USE_PLUS
         }
+#endif
     }
 
     // Update recordings

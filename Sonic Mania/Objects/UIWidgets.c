@@ -10,7 +10,9 @@ void UIWidgets_StaticUpdate(void)
 {
     ++UIWidgets->arrayIndex;
     UIWidgets->arrayIndex &= 0x7FFF;
+#if RETRO_USE_PLUS
     UIWidgets->value = UIWidgets->array1[(UIWidgets->arrayIndex >> 1) & 0xF];
+#endif  
 }
 
 void UIWidgets_Draw(void) {}
@@ -33,6 +35,7 @@ void UIWidgets_StageLoad(void)
     UIWidgets->sfx_Woosh  = RSDK.GetSFX("Global/MenuWoosh.wav");
     UIWidgets->sfx_Fail   = RSDK.GetSFX("Stage/Fail.wav");
 
+#if RETRO_USE_PLUS
     byte *arrPtr = (byte *)UIWidgets->array1;
     arrPtr[2]    = -80;
     arrPtr[1]    = 0;
@@ -82,6 +85,7 @@ void UIWidgets_StageLoad(void)
     arrPtr[62]   = -80;
     arrPtr[61]   = 0;
     arrPtr[60]   = 0;
+#endif
 }
 
 void UIWidgets_ApplyLanguage(void)

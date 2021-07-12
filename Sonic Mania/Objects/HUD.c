@@ -31,7 +31,7 @@ void HUD_LateUpdate(void)
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV) {
 #else
-            if (RSDK_info->platformID == PLATFORM_PC || RSDK_info->platformID == PLATFORM_SWITCH || RSDK_info->platformID == PLATFORM_DEV) {
+            if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_SWITCH || RSDK_info->platform == PLATFORM_DEV) {
 #endif
                 entity = (EntityHUD *)RSDK_sceneInfo->entity;
                 HUD_GetKeyFrame(&entity->superButtonData1, 3);
@@ -57,7 +57,7 @@ void HUD_LateUpdate(void)
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV)
 #else
-            if (RSDK_info->platformID == PLATFORM_PC || RSDK_info->platformID == PLATFORM_SWITCH || RSDK_info->platformID == PLATFORM_DEV)
+            if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_SWITCH || RSDK_info->platform == PLATFORM_DEV)
 #endif
                 HUD_GetSuperFrames();
             if (entity->superButtonPos < 0x180000)
@@ -214,7 +214,7 @@ void HUD_Draw(void)
         lifePos.y = 0x140000;
         lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->superButtonPos;
 #if RETRO_USE_PLUS
-        if (User.CheckDLC(DLC_PLUS)) {
+        if (API.CheckDLC(DLC_PLUS)) {
             RSDK.DrawSprite(&entity->taData2, &lifePos, true);
             lifePos.x -= 0x1C0000;
 
@@ -517,7 +517,7 @@ void HUD_GetKeyFrame(Animator *data, int buttonID)
 {
     int val = 0; // UIButtonPrompt_Unknown1();
 #if RETRO_USE_PLUS
-    if (User.GetConfirmButtonFlip() && buttonID <= 1)
+    if (API.GetConfirmButtonFlip() && buttonID <= 1)
 #else
     if (APICallback_GetConfirmButtonFlip() && buttonID <= 1)
 #endif

@@ -26,6 +26,7 @@ void FBZSinkTrash_Update(void)
             {
                 if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
                     if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
+#if RETRO_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop) {
                             player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
                             if (player->velocity.y < 0x30000) {
@@ -37,6 +38,7 @@ void FBZSinkTrash_Update(void)
                                 player->position.y += 0x10000;
                             }
                         }
+#endif
                         if ((Zone->timer & 7) == 0) {
                             EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
                                                                                      player->position.x + RSDK.Rand(-0x40000, 0x40000),
@@ -52,6 +54,7 @@ void FBZSinkTrash_Update(void)
                     }
                 }
                 else if (player->velocity.y >= 0) {
+#if RETRO_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
                         if (player->velocity.y >= 0x30000) {
@@ -92,6 +95,7 @@ void FBZSinkTrash_Update(void)
                         }
                     }
                     else {
+#endif
                         player->onGround      = true;
                         player->velocity.y    = 0;
                         player->collisionMode = CMODE_FLOOR;
@@ -110,7 +114,9 @@ void FBZSinkTrash_Update(void)
                             debris->updateRange.x = 0x200000;
                             debris->drawOrder     = Zone->drawOrderLow;
                         }
+#if RETRO_USE_PLUS
                     }
+#endif
                 }
             }
         }

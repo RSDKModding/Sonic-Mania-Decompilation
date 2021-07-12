@@ -73,7 +73,7 @@ void Options_LoadOptionsBin(void)
                 globals->optionsLoaded = STATUS_CONTINUE;
                 Options->loadEntityPtr = RSDK_sceneInfo->entity;
                 Options->loadCallback  = Options_LoadCallback;
-                User.LoadUserFile("Options.bin", globals->optionsRAM, 512, Options_LoadOptionsCallback);
+                API.LoadUserFile("Options.bin", globals->optionsRAM, 512, Options_LoadOptionsCallback);
             }
         }
     }
@@ -93,7 +93,7 @@ void Options_SaveOptionsBin(void (*callback)(int))
             if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = RSDK_sceneInfo->entity;
                 Options->saveCallback  = callback;
-                User.SaveUserFile("Options.bin", globals->optionsRAM, 512, Options_SaveOptionsCallback, 0);
+                API.SaveUserFile("Options.bin", globals->optionsRAM, 512, Options_SaveOptionsCallback, 0);
             }
             else {
                 Options->state = 0;

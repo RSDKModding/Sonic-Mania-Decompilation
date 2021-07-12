@@ -86,7 +86,7 @@ typedef struct {
     void (*RemoveDBEntry)(ushort tableID, ushort entry);
     void (*RemoveAllDBEntries)(ushort tableID);
     // count: 59
-} UserFunctionTable;
+} APIFunctionTable;
 #endif
 
 // Function Table
@@ -305,7 +305,7 @@ typedef struct {
 } RSDKFunctionTable;
 
 #if RETRO_USE_PLUS
-extern UserFunctionTable User;
+extern APIFunctionTable API;
 #endif
 extern RSDKFunctionTable RSDK;
 
@@ -955,6 +955,12 @@ extern RSDKFunctionTable RSDK;
 EntityPlayer *p1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player); \
 EntityPlayer *p2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player); \
 EntityCamera *cam  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+
+#if RETRO_USE_PLUS
+#define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
+#else
+#define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
+#endif
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 

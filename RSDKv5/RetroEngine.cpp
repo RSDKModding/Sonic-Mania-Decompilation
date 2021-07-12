@@ -680,8 +680,8 @@ void InitScriptSystem()
 
     info.functionPtrs = RSDKFunctionTable;
 #if RETRO_REV02
-    info.userdataPtrs = userFunctionTable;
-    info.currentSKU   = &curSKU;
+    info.APIPtrs    = APIFunctionTable;
+    info.currentSKU = &curSKU;
 #endif
     info.engineInfo   = &gameVerInfo;
     info.sceneInfo    = &sceneInfo;

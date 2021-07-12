@@ -85,7 +85,11 @@ void HCZSetup_StaticUpdate(void)
             ushort tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20)
                   & 0x3FF;
             if ((tile >= 0xE2 && (tile <= 0xF4 || tile - 0x370 <= 8)) && player->collisionPlane == 1) {
+#if RETRO_USE_PLUS
                 if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
+#else
+                if (player->state != Player_State_BubbleBounce) {
+#endif
                     if (player->onGround) {
                         if (player->state != Player_State_WaterSlide) {
                             player->interaction    = true;
@@ -99,9 +103,11 @@ void HCZSetup_StaticUpdate(void)
                             ++HCZSetup->activePlayerCount;
                         }
                     }
+#if RETRO_USE_PLUS
                     else if (player->playerAnimator.animationID == ANI_FLUME) {
                         ++HCZSetup->activePlayerCount;
                     }
+#endif
                 }
             }
         }
@@ -207,22 +213,26 @@ void HCZSetup_StageLoad(void)
             PlayerHelpers_CheckPlayerPos(0x5900000, 0xB00000, 0x2600000, 0x6800000);
         Zone->screenBoundsL1[0] = 0xA8;
         Zone->screenBoundsL1[1] = 0xA8;
+#if RETRO_USE_PLUS
         Zone->screenBoundsL1[2] = 0xA8;
         Zone->screenBoundsL1[3] = 0xA8;
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
+#endif
+        if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
             Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
         }
         Zone->stageFinishCallback = HCZSetup_HandleCutscene;
     }
-    else if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct1()) {
+    else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         Zone->forcePlayerOnScreenFlag = true;
         Zone->stageFinishCallback     = HCZSetup_HandleActTransition;
     }
 
+#if RETRO_USE_PLUS
     if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreHCZ.act", 255);
         RSDK.LoadPalette(1, "EncoreHCZw.act", 255);
     }
+#endif
 
     HCZSetup->sfxWaterfall     = RSDK.GetSFX("Stage/Waterfall.wav");
     HCZSetup->sfxWaterfallLoop = RSDK.GetSFX("Stage/Waterfall2.wav");

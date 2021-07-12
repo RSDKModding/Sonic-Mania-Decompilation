@@ -383,7 +383,7 @@ void SignPost_State_Fall(void)
                     entity->velocity.y = -0x20000;
 #if RETRO_USE_PLUS
                     if (entity->itemBounceCount == 2)
-                        User.UnlockAchievement("ACH_SIGNPOST");
+                        API.UnlockAchievement("ACH_SIGNPOST");
 #else
                     if (entity->itemBounceCount == 2)
                         APICallback_UnlockAchievement("ACH_SIGNPOST");

@@ -14,8 +14,13 @@ void Turntable_Update(void)
         int pID = RSDK.GetEntityID(player);
         if (!((1 << pID) & entity->activePlayers)) {
             if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 1) {
+#if RETRO_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop || player->state == Player_State_BubbleBounce)
                     continue;
+#else
+                if (player->state == Player_State_BubbleBounce)
+                    continue;
+#endif
                 entity->active          = ACTIVE_NORMAL;
                 entity->activePlayers   = entity->activePlayers | (1 << pID);
                 player->nextGroundState = StateMachine_None;

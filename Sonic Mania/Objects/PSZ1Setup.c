@@ -113,7 +113,7 @@ void PSZ1Setup_StageLoad(void)
     PSZ1Setup->aniTilesFrameH = 0;
     RSDK.DrawAniTiles(PSZ1Setup->aniTilesA, 223, 0, 224, 16, 32);
 
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct1())
+    if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = PSZ1Setup_ActTransitionCB;
 #if RETRO_USE_PLUS
     if (RSDK_sceneInfo->filter & FILTER_ENCORE)
@@ -152,17 +152,22 @@ void PSZ1Setup_TriggerCB3(void)
     if (!PSZ1Setup->hasAchievement) {
         RSDK_THIS(GenericTrigger);
 
-        int count = 1; // 0;
+        int count = 0;
         foreach_all(Crate, crate)
         {
-            //if (MathHelpers_Unknown8(entity->position.x, entity->position.y, &entity->hitbox, crate->position.x, crate->position.y)) {
-            //    if (LOBYTE(v3[1].updateRange.y) == 1)
-            //       ++v1;
-            //}
+            if (MathHelpers_Unknown8(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, crate->position.x,
+                                     crate->position.y)) {
+                if (crate->frameID == 1)
+                    ++count;
+            }
         }
 
         if (!count) {
-            User.UnlockAchievement("ACH_PGZ");
+#if RETRO_USE_PLUS
+            API.UnlockAchievement("ACH_PGZ");
+#else
+            APICallback_UnlockAchievement("ACH_PGZ");
+#endif
             PSZ1Setup->hasAchievement = true;
         }
     }

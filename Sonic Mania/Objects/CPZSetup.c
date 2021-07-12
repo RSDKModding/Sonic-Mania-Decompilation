@@ -84,17 +84,18 @@ void CPZSetup_StageLoad(void)
             flag                    = true;
             Zone->screenBoundsB1[0] = 0x1980;
             Zone->screenBoundsB1[1] = 0x1980;
+#if RETRO_USE_PLUS
             Zone->screenBoundsB1[2] = 0x1980;
             Zone->screenBoundsB1[3] = 0x1980;
+#endif
         }
 
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
+        if (isMainGameMode() && globals->atlEnabled) {
             if (!PlayerHelpers_CheckStageReload())
                 Zone_ReloadStoredEntities(0x19800000, 0x1800000, true);
         }
 
-        if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2()) {
-
+        if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
             foreach_all(CPZ2Outro, outro)
             {
                 CPZSetup->outro           = (Entity *)outro;
@@ -137,7 +138,7 @@ void CPZSetup_StageLoad(void)
         }
     }
     else {
-        if (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) {
+        if (isMainGameMode()) {
             if (globals->enableIntro) {
                 if (!PlayerHelpers_CheckStageReload()) {
                     globals->suppressAutoMusic = true;
@@ -146,7 +147,7 @@ void CPZSetup_StageLoad(void)
             }
         }
 
-        if (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) {
+        if (isMainGameMode()) {
             if (PlayerHelpers_CheckAct1())
                 Zone->stageFinishCallback = CPZSetup_StageFinishCBAct1;
         }

@@ -59,7 +59,7 @@ void TitleLogo_Create(void *data)
             case 6: entity->state = TitleLogo_Unknown3; break;
             case 7:
 #if RETRO_USE_PLUS
-                if (User.CheckDLC(DLC_PLUS)) {
+                if (API.CheckDLC(DLC_PLUS)) {
                     RSDK.SetSpriteAnimation(TitleLogo->plusIndex, 0, &entity->data1, true, 0);
                     entity->storeY = entity->position.y;
                 }
@@ -99,7 +99,7 @@ void TitleLogo_StageLoad(void)
 {
     TitleLogo->logoIndex = RSDK.LoadSpriteAnimation("Title/Logo.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
-    if (User.CheckDLC(DLC_PLUS))
+    if (API.CheckDLC(DLC_PLUS))
         TitleLogo->plusIndex = RSDK.LoadSpriteAnimation("Title/PlusLogo.bin", SCOPE_STAGE);
     TitleLogo->sfx_Plus = RSDK.GetSFX("Stage/Plus.wav");
 #endif
@@ -115,7 +115,7 @@ void TitleLogo_Unknown1(void)
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_SWITCH)
 #else
-            if (RSDK_info->platformID == PLATFORM_SWITCH)
+            if (RSDK_info->platform == PLATFORM_SWITCH)
 #endif
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 2);
             else
@@ -125,7 +125,7 @@ void TitleLogo_Unknown1(void)
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_XB1 || RSDK_sku->platform == PLATFORM_SWITCH)
 #else
-            if (RSDK_info->platformID == PLATFORM_XB1 || RSDK_info->platformID == PLATFORM_SWITCH)
+            if (RSDK_info->platform == PLATFORM_XB1 || RSDK_info->platform == PLATFORM_SWITCH)
             #endif
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 4);
             else
@@ -135,7 +135,7 @@ void TitleLogo_Unknown1(void)
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_SWITCH)
 #else
-            if (RSDK_info->platformID == PLATFORM_SWITCH)
+            if (RSDK_info->platform == PLATFORM_SWITCH)
 #endif
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->data1, true, 6);
             else

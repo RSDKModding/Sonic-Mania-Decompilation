@@ -90,7 +90,7 @@ void SpikeLog_State_Main(void)
             if (Player_CheckCollisionTouch(player, entity, &SpikeLog->hitbox)) {
                 if (!SpikeLog->hasAchievement) {
 #if RETRO_USE_PLUS
-                    User.UnlockAchievement("ACH_GHZ");
+                    API.UnlockAchievement("ACH_GHZ");
 #else
                     APICallback_UnlockAchievement("ACH_GHZ");
 #endif

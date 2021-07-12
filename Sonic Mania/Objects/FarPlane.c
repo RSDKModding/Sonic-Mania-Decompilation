@@ -71,22 +71,26 @@ void FarPlane_StageLoad(void)
         layer->scanlineCallback                        = FarPlane_Unknown5;
         RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0]  = 2;
         RSDK.GetSceneLayer(Zone->fgHigh)->drawLayer[0] = 7;
-        RSDK.SetDrawLayerProperties(1u, 0, 0);
-        RSDK.SetDrawLayerProperties(2u, 0, 0);
+        RSDK.SetDrawLayerProperties(1, 0, 0);
+        RSDK.SetDrawLayerProperties(2, 0, 0);
         RSDK.CopyPalette(0, 0, 3, 0, 128);
         RSDK.CopyPalette(0, 144, 3, 144, 112);
         RSDK.CopyPalette(3, 0, 4, 0, 255);
+#if RETRO_USE_PLUS
         if (RSDK_sceneInfo->filter & FILTER_MANIA)
+#endif
             RSDK.SetLimitedFade(4, 0, 3, 96, 128, 143);
         RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLow, 0, 192, 1024, 208);
         Zone->screenBoundsB1[0] -= 0x800;
         Zone->deathBoundary[0] -= 0x8000000;
         Zone->screenBoundsB1[1] -= 0x800;
         Zone->deathBoundary[1] -= 0x8000000;
+#if RETRO_USE_PLUS
         Zone->screenBoundsB1[2] -= 0x800;
         Zone->deathBoundary[2] -= 0x8000000;
         Zone->screenBoundsB1[3] -= 0x800;
         Zone->deathBoundary[3] -= 0x8000000;
+#endif
         ++Zone->drawOrderLow;
         ++Zone->playerDrawLow;
         ++Zone->fgLayerHigh;

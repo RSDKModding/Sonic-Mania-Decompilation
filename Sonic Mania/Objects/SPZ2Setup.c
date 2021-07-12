@@ -96,11 +96,7 @@ void SPZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_PECKY;
     Animals->animalTypes[1] = ANIMAL_MICKY;
 
-#if RETRO_USE_PLUS
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->atlEnabled) {
-#else
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && globals->atlEnabled) {
-#endif
+    if (isMainGameMode() && globals->atlEnabled) {
         if (!PlayerHelpers_CheckStageReload()) {
             Zone->screenBoundsL1[0] = 256 - RSDK_screens->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
@@ -108,11 +104,7 @@ void SPZ2Setup_StageLoad(void)
         }
     }
 
-#if RETRO_USE_PLUS
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2()) {
-#else
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_NOSAVE) && PlayerHelpers_CheckAct2()) {
-#endif
+    if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
         foreach_all(SPZ2Outro, entity) { foreach_break; }
         SPZ2Setup->outroPtr       = (Entity*)entity;
         Zone->stageFinishCallback = SPZ2Setup_SetupOutro;

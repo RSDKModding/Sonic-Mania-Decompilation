@@ -77,11 +77,11 @@ void UIControl_Create(void *data)
                         hitbox.left   = -(entity->size.x >> 17);
                         hitbox.bottom = entity->size.y >> 17;
                         hitbox.top    = -(entity->size.y >> 17);
-                        // if (MathHelpers_Unknown8(entity->startPos.x - entity->cameraOffset.x, entity->startPos.y - entity->cameraOffset.y, hitbox,
-                        //                         prompt->position.x, prompt->position.y)) {
-                        //    //prompt->parent                            = entity;
-                        //    entity->unknown2[entity->unknownCount2++] = prompt;
-                        //}
+                        if (MathHelpers_Unknown8(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x, entity->startPos.y - entity->cameraOffset.y, &hitbox,
+                                                 prompt->position.x, prompt->position.y)) {
+                            // prompt->parent                            = entity;
+                            entity->unknown2[entity->unknownCount2++] = prompt;
+                        }
                     }
                 }
             }
@@ -91,7 +91,7 @@ void UIControl_Create(void *data)
         RSDK_stickL[2].deadzone = 0.75f;
         RSDK_stickL[3].deadzone = 0.75f;
         RSDK_stickL[4].deadzone = 0.75f;
-        // UIControl_Unknown7();
+        UIControl_Unknown7();
         if (entity->noWidgets) {
             entity->active  = ACTIVE_NORMAL;
             entity->visible = true;
@@ -137,7 +137,9 @@ void UIControl_ClearInputs(char id)
     UIControl->xPress[0]       = false;
     UIControl->backPress[0]    = false;
     UIControl->confirmPress[0] = false;
-    UIControl->startPress[0]   = false;
+#if RETRO_USE_PLUS
+    UIControl->startPress[0] = false;
+#endif
     UIControl->upPress[1]      = false;
     UIControl->downPress[1]    = false;
     UIControl->leftPress[1]    = false;
@@ -146,7 +148,9 @@ void UIControl_ClearInputs(char id)
     UIControl->xPress[1]       = false;
     UIControl->backPress[1]    = false;
     UIControl->confirmPress[1] = false;
-    UIControl->startPress[1]   = false;
+#if RETRO_USE_PLUS
+    UIControl->startPress[1] = false;
+#endif
     UIControl->upPress[2]      = false;
     UIControl->downPress[2]    = false;
     UIControl->leftPress[2]    = false;
@@ -155,7 +159,9 @@ void UIControl_ClearInputs(char id)
     UIControl->xPress[2]       = false;
     UIControl->backPress[2]    = false;
     UIControl->confirmPress[2] = false;
-    UIControl->startPress[2]   = false;
+#if RETRO_USE_PLUS
+    UIControl->startPress[2] = false;
+#endif
     UIControl->upPress[3]      = false;
     UIControl->downPress[3]    = false;
     UIControl->leftPress[3]    = false;
@@ -164,15 +170,24 @@ void UIControl_ClearInputs(char id)
     UIControl->xPress[3]       = false;
     UIControl->backPress[3]    = false;
     UIControl->confirmPress[3] = false;
-    UIControl->startPress[3]   = false;
-    UIControl->keyUp           = false;
-    UIControl->keyDown         = false;
-    UIControl->keyLeft         = false;
-    UIControl->keyRight        = false;
-    UIControl->keyY            = id == 3;
-    UIControl->keyX            = id == 2;
-    UIControl->keyStart        = id == 5;
-    if (User.GetConfirmButtonFlip()) {
+#if RETRO_USE_PLUS
+    UIControl->startPress[3] = false;
+#endif
+    UIControl->keyUp    = false;
+    UIControl->keyDown  = false;
+    UIControl->keyLeft  = false;
+    UIControl->keyRight = false;
+    UIControl->keyY     = id == 3;
+    UIControl->keyX     = id == 2;
+#if RETRO_USE_PLUS
+    UIControl->keyStart = id == 5;
+#endif
+
+#if RETRO_USE_PLUS
+    if (API.GetConfirmButtonFlip()) {
+#else
+    if (APICallback_GetConfirmButtonFlip()) {
+#endif
         UIControl->keyBack    = id == 1;
         UIControl->keyConfirm = id == 0;
         UIControl->flagA      = id == 0;
@@ -210,10 +225,14 @@ void UIControl_ProcessInputs(void)
                 UIControl->rightPress[i] = false;
             }
 
-            UIControl->yPress[i]     = RSDK_controller[i].keyY.press;
-            UIControl->xPress[i]     = RSDK_controller[i].keyX.press;
+            UIControl->yPress[i] = RSDK_controller[i].keyY.press;
+            UIControl->xPress[i] = RSDK_controller[i].keyX.press;
+#if RETRO_USE_PLUS
             UIControl->startPress[i] = RSDK_controller[i].keyStart.press;
-            if (User.GetConfirmButtonFlip()) {
+            if (API.GetConfirmButtonFlip()) {
+#else
+            if (APICallback_GetConfirmButtonFlip()) {
+#endif
                 UIControl->confirmPress[i] = RSDK_controller[i].keyStart.press || RSDK_controller[i].keyB.press;
                 UIControl->backPress[i]    = RSDK_controller[i].keyA.press;
             }
@@ -229,8 +248,12 @@ void UIControl_ProcessInputs(void)
         UIControl->keyRight = RSDK_controller->keyRight.press || RSDK_stickL->keyRight.press;
         UIControl->keyY     = RSDK_controller->keyY.press;
         UIControl->keyX     = RSDK_controller->keyX.press;
+#if RETRO_USE_PLUS
         UIControl->keyStart = RSDK_controller->keyStart.press;
-        if (User.GetConfirmButtonFlip()) {
+        if (API.GetConfirmButtonFlip()) {
+#else
+        if (APICallback_GetConfirmButtonFlip()) {
+#endif
             UIControl->keyBack    = RSDK_controller->keyStart.press || RSDK_controller->keyB.press;
             UIControl->keyConfirm = RSDK_controller->keyA.press;
         }
@@ -238,7 +261,11 @@ void UIControl_ProcessInputs(void)
             UIControl->keyBack    = RSDK_controller->keyStart.press || RSDK_controller->keyA.press;
             UIControl->keyConfirm = RSDK_controller->keyB.press;
         }
+#if RETRO_USE_PLUS
         UIControl->keyConfirm |= RSDK_unknown->field_10;
+#else
+
+#endif
         UIControl->keyConfirm |= UIControl->flagA;
 
         if (UIControl->keyConfirm) {
@@ -345,9 +372,9 @@ void UIControl_Unknown2(EntityUIControl *control)
             if (entity->position.x >= control->position.x + (x << 16) && entity->position.x <= control->position.x + (centerX << 16)) {
                 if (entity->position.y >= control->position.y + (y << 16) && entity->position.y <= control->position.y + (negCenterY << 16)) {
                     int id                 = RSDK.GetEntityID(entity);
-                    RSDK_sceneInfo->entity = (Entity*)entity;
+                    RSDK_sceneInfo->entity = (Entity *)entity;
                     if (UIButton && entity->objectID == UIButton->objectID) {
-                        //UIButton_Unknown1(entity);
+                        // UIButton_Unknown1(entity);
                         UIButton_Update();
                     }
                     else if (UIChoice && entity->objectID == UIChoice->objectID) {
@@ -356,9 +383,11 @@ void UIControl_Unknown2(EntityUIControl *control)
                     else if (UITAZoneModule && entity->objectID == UITAZoneModule->objectID) {
                         UITAZoneModule_Update();
                     }
+#if RETRO_USE_PLUS
                     else if (UIReplayCarousel && entity->objectID == UIReplayCarousel->objectID) {
                         UIReplayCarousel_Update();
                     }
+#endif
                     else if (UIModeButton && entity->objectID == UIModeButton->objectID) {
                         UIModeButton_Update();
                     }
@@ -395,7 +424,9 @@ void UIControl_Unknown3(EntityUIControl *entity)
 
 void UIControl_Unknown4(EntityUIControl *entity)
 {
+#if RETRO_USE_PLUS
     RSDK.PrintText(SEVERITY_NONE, &entity->tag);
+#endif
     entity->active  = ACTIVE_ALWAYS;
     entity->visible = true;
     if (entity->dwordC4) {
@@ -425,8 +456,8 @@ void UIControl_Unknown4(EntityUIControl *entity)
     }
     if (entity->unknownCallback3) {
         Entity *storeEntity    = RSDK_sceneInfo->entity;
-        RSDK_sceneInfo->entity = (Entity*)entity;
-        // entity->unknownCallback3(v5, v4); //TODO
+        RSDK_sceneInfo->entity = (Entity *)entity;
+        entity->unknownCallback3();
         RSDK_sceneInfo->entity = storeEntity;
     }
 }
@@ -475,14 +506,96 @@ void UIControl_Unknown5(EntityUIControl *entity)
 
 void UIControl_Unknown6(EntityUIControl *control)
 {
-    UIControl->field_C8   = 0;
-    control->active        = ACTIVE_NEVER;
-    control->visible       = false;
-    control->state         = StateMachine_None;
+    UIControl->field_C8 = 0;
+    control->active     = ACTIVE_NEVER;
+    control->visible    = false;
+    control->state      = StateMachine_None;
     RSDK_THIS(UIControl);
     if (entity->unknownCount2) {
         for (int i = 0; i < control->unknownCount2; ++i) {
             control->unknown2[i]->active = ACTIVE_BOUNDS;
+        }
+    }
+}
+
+void UIControl_Unknown7(void)
+{
+    RSDK_THIS(UIControl);
+    int slotID = RSDK.GetEntityID(entity);
+    Hitbox bounds;
+
+    if (UIHeading && slotID != SLOT_DIALOG_UICONTROL) {
+        foreach_all(UIHeading, heading)
+        {
+            int x         = entity->startPos.x - entity->cameraOffset.x;
+            int y         = entity->startPos.y - entity->cameraOffset.y;
+            bounds.right  = entity->size.x >> 17;
+            bounds.left   = -(entity->size.x >> 17);
+            bounds.bottom = entity->size.y >> 17;
+            bounds.top    = -(entity->size.y >> 17);
+            if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, heading->position.x, heading->position.y))
+                entity->heading = (Entity *)heading;
+        }
+    }
+
+    if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
+        foreach_all(UIShifter, shifter)
+        {
+            int x         = entity->startPos.x - entity->cameraOffset.x;
+            int y         = entity->startPos.y - entity->cameraOffset.y;
+            bounds.right  = entity->size.x >> 17;
+            bounds.left   = -(entity->size.x >> 17);
+            bounds.bottom = (entity->size.y >> 17);
+            bounds.top    = -(entity->size.y >> 17);
+            if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, shifter->position.x, shifter->position.y)) {
+                entity->shifter = (Entity *)shifter;
+                shifter->parent = entity;
+            }
+        }
+    }
+
+    if (UICarousel && slotID != SLOT_DIALOG_UICONTROL) {
+        foreach_all(UICarousel, carousel)
+        {
+            int x         = entity->startPos.x - entity->cameraOffset.x;
+            int y         = entity->startPos.y - entity->cameraOffset.y;
+            bounds.right  = entity->size.x >> 17;
+            bounds.left   = -(entity->size.x >> 17);
+            bounds.bottom = entity->size.y >> 17;
+            bounds.top    = -(entity->size.y >> 17);
+            if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, carousel->position.x, carousel->position.y)) {
+                entity->carousel = carousel;
+                // carousel->parent = entity;
+            }
+        }
+    }
+
+    for (int i = 0; i < SCENEENTITY_COUNT; ++i) {
+        EntityUIButton *entPtr = RSDK_GET_ENTITY(i, UIButton);
+        if (entPtr) {
+            int id = entPtr->objectID;
+            if (id != UIButton->objectID && (!UIModeButton || id != UIModeButton->objectID) && (!UISaveSlot || id != UISaveSlot->objectID)
+                && (!UICharButton || id != UICharButton->objectID) && (!UITAZoneModule || id != UITAZoneModule->objectID)
+                && (!UIRankButton || id != UIRankButton->objectID) && (!UIReplayCarousel || id != UIReplayCarousel->objectID)
+                && (!UILeaderboard || id != UILeaderboard->objectID) && (!UIVsCharSelector || id != UIVsCharSelector->objectID)
+                && (!UIVsZoneButton || id != UIVsZoneButton->objectID) && (!UIVsResults || id != UIVsResults->objectID)
+                && (!UISlider || id != UISlider->objectID) && (!UIKeyBinder || id != UIKeyBinder->objectID)) {
+            }
+            else {
+                int x         = entity->startPos.x - entity->cameraOffset.x;
+                int y         = entity->startPos.y - entity->cameraOffset.y;
+                bounds.right  = entity->size.x >> 17;
+                bounds.left   = -(entity->size.x >> 17);
+                bounds.bottom = entity->size.y >> 17;
+                bounds.top    = -(entity->size.y >> 17);
+                if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, entPtr->position.x, entPtr->position.y)) {
+                    if (entity->unknownCount1 < 64) {
+                        if (!entPtr->parent)
+                            entPtr->parent = (Entity *)entity;
+                        entity->entities[entity->unknownCount1++] = entPtr;
+                    }
+                }
+            }
         }
     }
 }
@@ -542,7 +655,7 @@ void UIControl_Unknown12(Entity *control)
         if (entity->active == ACTIVE_ALWAYS) {
             UIControl_Unknown6(entity);
         }
-        else if (entity == (EntityUIControl*)control) {
+        else if (entity == (EntityUIControl *)control) {
             UIControl_Unknown5(entity);
         }
         else {
@@ -639,6 +752,8 @@ void UIControl_Serialize(void)
     RSDK_EDITABLE_VAR(UIControl, VAR_VECTOR2, size);
     RSDK_EDITABLE_VAR(UIControl, VAR_VECTOR2, cameraOffset);
     RSDK_EDITABLE_VAR(UIControl, VAR_VECTOR2, scrollSpeed);
+#if RETRO_USE_PLUS
     RSDK_EDITABLE_VAR(UIControl, VAR_BOOL, noClamp);
     RSDK_EDITABLE_VAR(UIControl, VAR_BOOL, noWrap);
+#endif
 }

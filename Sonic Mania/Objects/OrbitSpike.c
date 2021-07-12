@@ -37,7 +37,11 @@ void OrbitSpike_Update(void)
     if (entity->drawOrder == Zone->drawOrderHigh) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &OrbitSpike->hitbox) && !Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)) {
+            if (Player_CheckCollisionTouch(player, entity, &OrbitSpike->hitbox)
+#if RETRO_USE_PLUS
+                && !Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)
+#endif
+                ) {
                 Player_CheckHit(player, entity);
             }
         }

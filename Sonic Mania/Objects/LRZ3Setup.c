@@ -34,24 +34,29 @@ void LRZ3Setup_StageLoad(void)
         entZone->visible    = true;
         entZone->drawOrder  = DRAWLAYER_COUNT - 1;
     }
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->enableIntro && !PlayerHelpers_CheckStageReload()
+
+    if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()
         || !PlayerHelpers_CheckStageReload()) {
         RSDK.CreateEntity(LRZ3Cutscene->objectID, NULL, 0, 0);
     }
 
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE && globals->tempFlags) {
         if (!PlayerHelpers_CheckStageReload()) {
             foreach_all(Player, player) { player->position.y += 0x8000000; }
         }
     }
+#endif
 
-    if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && PlayerHelpers_CheckAct2()) {
+    if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             if (!globals->tempFlags) {
                 // Zone->stageFinishCallback = LRZ3Outro_Unknown5;
             }
         }
         else {
+#endif
             if (!(globals->playerID & ID_KNUCKLES)) {
                 // Zone->stageFinishCallback = LRZ3Outro_Unknown5;
             }
@@ -60,7 +65,9 @@ void LRZ3Setup_StageLoad(void)
                 if (LRZ3Setup->cutscenePtr)
                     Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
             }
+#if RETRO_USE_PLUS
         }
+#endif
     }
 }
 

@@ -282,7 +282,7 @@ void ActClear_Create(void *data)
                     break;
             }
 #if RETRO_USE_PLUS
-            User.TryTrackStat(&stat);
+            API.TryTrackStat(&stat);
 #endif
         }
 
@@ -670,7 +670,11 @@ void ActClear_Unknown9(void)
     RSDK_THIS(ActClear);
 
     if (entity->dword78 > 0) {
+#if RETRO_USE_PLUS
         if (TimeAttackData->field_14 <= 0 || ReplayRecorder->dword13C) {
+#else
+        if (TimeAttackData->field_14 <= 0) {
+#endif
             --entity->dword78;
         }
         else {
@@ -705,11 +709,12 @@ void ActClear_Unknown9(void)
     if (ActClear->field_10 || ActClear->field_14) {
     }
     else {
+#if RETRO_USE_PLUS
         if (RSDK_controller->keyY.press) {
             if (!ActClear->field_2C) {
                 if (HUD->replaySaveEnabled) {
                     if (!UIDialog->activeDialog) {
-                        if (User.CheckDLC(DLC_PLUS)) {
+                        if (API.CheckDLC(DLC_PLUS)) {
                             if (ActClear->saveReplay_CB) {
                                 ActClear->saveReplay_CB();
                             }
@@ -721,6 +726,7 @@ void ActClear_Unknown9(void)
                 }
             }
         }
+#endif
         if (RSDK_controller->keyStart.press) {
             RSDK.PlaySFX(UIWidgets->sfx_Accept, 0, 255);
 

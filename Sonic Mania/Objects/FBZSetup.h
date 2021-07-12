@@ -52,6 +52,8 @@ void FBZSetup_GenericTriggerCB_A(void);
 void FBZSetup_GenericTriggerCB_B(void);
 
 void FBZSetup_StageFinishCB_Act1(void);
+#if RETRO_USE_PLUS
 void FBZSetup_StageFinishCB_Act2(void);
+#endif
 
 #endif //!OBJ_FBZSETUP_H

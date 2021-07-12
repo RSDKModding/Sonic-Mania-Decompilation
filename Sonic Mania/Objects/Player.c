@@ -6,7 +6,7 @@ void Player_Update(void)
 {
     RSDK_THIS(Player);
 #if RETRO_USE_PLUS
-    if (!User.CheckDLC(DLC_PLUS) && entity->characterID > ID_KNUCKLES)
+    if (!API.CheckDLC(DLC_PLUS) && entity->characterID > ID_KNUCKLES)
         Player_ChangeCharacter(entity, ID_SONIC);
 #endif
 
@@ -256,8 +256,8 @@ void Player_LateUpdate(void)
                             entity->camera->state = StateMachine_None;
                         }
                     }
-                }
 #endif
+                }
                 if (entity->camera) {
                     entity->scrollDelay   = 2;
                     entity->camera->state = StateMachine_None;
@@ -567,8 +567,8 @@ void Player_Create(void *data)
                 Player->configureGhost_CB();
             }
 #else
-                if (APICallback->func_AssignControllerID) {
-                    APICallback->func_AssignControllerID(entity->controllerID, -1);
+                if (APICallback->AssignControllerID) {
+                    APICallback->AssignControllerID(entity->controllerID, -1);
                 }
                 else {
                     APICallback->controllerIDs[entity->controllerID] = -1;
@@ -793,7 +793,7 @@ void Player_LoadSpritesVS(void)
 #if RETRO_USE_PLUS
             for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i, ++slotID) {
 #else
-                for (int i = 0; i < PLAYER_MAX; ++i, ++channelID) {
+                for (int i = 0; i < PLAYER_MAX; ++i, ++slotID) {
 #endif
                 EntityPlayer *player = RSDK_GET_ENTITY(slotID, Player);
                 RSDK.CopyEntity(player, entity, false);
@@ -1028,10 +1028,17 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
     entity->sensorX[3] = -0x50000;
     entity->sensorX[4] = -0xA0000;
 
-    if (entity->state == Player_State_KnuxWallClimb || entity->state == Player_State_MightyHammerDrop || entity->state == Player_State_DropDash
+    if (entity->state == Player_State_KnuxWallClimb
+#if RETRO_USE_PLUS
+        || entity->state == Player_State_MightyHammerDrop 
+#endif
+        || entity->state == Player_State_DropDash
         || entity->state == Player_State_TailsFlight || entity->state == Player_State_KnuxGlideDrop || entity->state == Player_State_KnuxGlideLeft
         || entity->state == Player_State_KnuxGlideRight || entity->state == Player_State_GlideSlide || entity->state == Player_State_KnuxLedgePullUp
-        || entity->state == Player_State_RayGlide || entity->state == Player_State_MightyUnspin) {
+#if RETRO_USE_PLUS
+        || entity->state == Player_State_RayGlide || entity->state == Player_State_MightyUnspin
+#endif
+        ) {
         entity->state = Player_State_Air;
         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
     }
@@ -1872,11 +1879,11 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
 
 #if RETRO_USE_PLUS
-                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageNoSave() && SaveGame->saveRAM
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !API.GetUserStorageNoSave() && SaveGame->saveRAM
                                 && globals->saveLoaded == STATUS_OK) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
-                                User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
+                                API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
                             }
 #else
                         if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
@@ -1912,11 +1919,11 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
 
 #if RETRO_USE_PLUS
-                            if (globals->saveSlotID != NO_SAVE_SLOT && !User.GetUserStorageNoSave() && SaveGame->saveRAM
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !API.GetUserStorageNoSave() && SaveGame->saveRAM
                                 && globals->saveLoaded == STATUS_OK) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
-                                User.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
+                                API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
                             }
 #else
                         if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
@@ -2318,18 +2325,25 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
                 case ID_SONIC: id = 1; break;
                 case ID_TAILS: id = 2; break;
                 case ID_KNUCKLES: id = 3; break;
+#if RETRO_USE_PLUS
                 case ID_MIGHTY: id = 4; break;
-                default:
-                    id = 0;
+#endif
+                default: id = 0;
+#if RETRO_USE_PLUS
                     if (player->characterID == ID_RAY)
                         id = 5;
+#endif
                     break;
             }
 
             StatInfo info;
+#if RETRO_USE_PLUS
             TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE,
                                             (entity->position.x >> 0x10), (entity->position.y >> 0x10));
-            User.TryTrackStat(&info);
+            API.TryTrackStat(&info);
+#else
+            APICallback->TrackActClear(Zone->actID, Zone_GetZoneID(), id, &info, (entity->position.x >> 0x10), (entity->position.y >> 0x10));
+#endif
         }
 
         int yVel = 0;
@@ -5827,7 +5841,9 @@ void Player_State_WaterSlide(void)
         entity->groundVel += vel;
         entity->controlLock = 30;
         entity->direction   = vel + entity->groundVel < 0;
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLUME, &entity->playerAnimator, 0, 0);
+#if RETRO_USE_PLUS
+        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLUME, &entity->playerAnimator, false, 0);
+#endif
 
         if (entity->jumpPress) {
             Player_StartJump(entity);

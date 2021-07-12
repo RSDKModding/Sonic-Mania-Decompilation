@@ -17,17 +17,21 @@ typedef struct {
     bool32 confirmPress[4];
     bool32 yPress[4];
     bool32 xPress[4];
+#if RETRO_USE_PLUS
     bool32 startPress[4];
+#endif
     bool32 keyUp;
     bool32 keyDown;
     bool32 keyLeft;
     bool32 keyRight;
-    int keyBack;
-    int keyConfirm;
-    int keyY;
-    int keyX;
-    int keyStart;
-    int flagA;
+    bool32 keyBack;
+    bool32 keyConfirm;
+    bool32 keyY;
+    bool32 keyX;
+#if RETRO_USE_PLUS
+    bool32 keyStart;
+#endif
+    bool32 flagA;
     int field_C8;
     int timer;
     int field_D0;
@@ -68,7 +72,9 @@ typedef struct {
     int field_D8;
     Entity *heading;
     Entity *shifter;
+#if RETRO_USE_PLUS
     EntityUICarousel *carousel;
+#endif
     EntityUIButtonPrompt *unknown2[4];
     EntityUIButton *entities[7];
     int field_114;
@@ -125,7 +131,7 @@ typedef struct {
     int field_1F4;
     bool32 (*backPressCB)(void);
     void (*unknownCallback2)(void);
-    void (*unknownCallback3)(int, int *);
+    void (*unknownCallback3)(void);
     void (*unknownCallback4)(void);
     void (*yPressCB)(void);
     void (*xPressCB)(void);
@@ -158,6 +164,7 @@ void UIControl_Unknown3(EntityUIControl *entity);
 void UIControl_Unknown4(EntityUIControl *entity);
 void UIControl_Unknown5(EntityUIControl *entity);
 void UIControl_Unknown6(EntityUIControl *entity);
+void UIControl_Unknown7(void);
 EntityUIControl *UIControl_GetUIControl(void);
 bool32 UIControl_Unknown9(EntityUIControl *entity);
 void UIControl_MatchMenuTag(const char *text);

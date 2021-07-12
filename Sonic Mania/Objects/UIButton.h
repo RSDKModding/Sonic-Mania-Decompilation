@@ -98,6 +98,8 @@ void UIButton_EditorLoad(void);
 void UIButton_Serialize(void);
 
 // Extra Entity Functions
-
+void UIButton_Unknown1(EntityUIButton *button);
+Entity *UIButton_Unknown2(EntityUIButton *button, int a2);
+void UIButton_Fail(void);
 
 #endif //!OBJ_UIBUTTON_H

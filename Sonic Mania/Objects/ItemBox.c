@@ -202,7 +202,7 @@ void ItemBox_DebugDraw(void)
 {
     RSDK_THIS(ItemBox);
 #if RETRO_USE_PLUS
-    DebugMode->subtypeCount = User.CheckDLC(DLC_PLUS) != 0 ? 18 : 15;
+    DebugMode->subtypeCount = API.CheckDLC(DLC_PLUS) != 0 ? 18 : 15;
 #else
     DebugMode->subtypeCount = 15;
 #endif
@@ -283,7 +283,7 @@ void ItemBox_State_Normal(void)
     if (entity->type == 17) {
         RSDK.ProcessAnimation(&entity->contentsData);
 #if RETRO_USE_PLUS
-        if (!User.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
+        if (!API.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
             entity->contentsData.frameID = 0;
 #endif
     }
@@ -316,7 +316,7 @@ void ItemBox_State_Falling(void)
     if (entity->type == 17) {
         RSDK.ProcessAnimation(&entity->contentsData);
 #if RETRO_USE_PLUS
-        if (!User.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
+        if (!API.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
             entity->contentsData.frameID = 0;
 #endif
     }
@@ -347,7 +347,7 @@ void ItemBox_State_Conveyor(void)
     if (entity->type == 17) {
         RSDK.ProcessAnimation(&entity->contentsData);
 #if RETRO_USE_PLUS
-        if (!User.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
+        if (!API.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
             entity->contentsData.frameID = 0;
 #endif
     }

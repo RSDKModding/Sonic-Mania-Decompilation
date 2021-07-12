@@ -210,7 +210,7 @@ int ReplayRecorder_CreateReplayDBEntry(void)
         ReplayRecorder_SavedReplay(false);
     }
     else {
-        uint uuid                          = User.GetUserDBEntryUUID(globals->replayTableID, entry);
+        uint uuid                          = API.GetUserDBEntryUUID(globals->replayTableID, entry);
         ReplayRecorder->lastRowID = entry;
         ReplayRecorder->lastUUID  = uuid;
         char fileName[0x20];
@@ -266,7 +266,7 @@ void ReplayRecorder_SavedReplay(bool32 status)
     }
     else {
         if (ReplayRecorder->lastRowID != -1)
-            User.RemoveDBEntry(globals->replayTableID, ReplayRecorder->lastRowID);
+            API.RemoveDBEntry(globals->replayTableID, ReplayRecorder->lastRowID);
         TextInfo buffer;
         INIT_TEXTINFO(buffer);
         Localization_GetString(&buffer, STR_NOREPLAYSPACE);
@@ -294,7 +294,7 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 a1)
             HUD->replaySaveEnabled = 0;
         }
         else {
-            User.SetUserDBValue(globals->taTableID, TimeAttackData->unknown, 4, "replayID", &ReplayRecorder->lastUUID);
+            API.SetUserDBValue(globals->taTableID, TimeAttackData->unknown, 4, "replayID", &ReplayRecorder->lastUUID);
             TimeAttackData_SaveTimeAttackDB(ReplayRecorder_Unknown10);
         }
     }
@@ -304,8 +304,8 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 a1)
         char fileName[0x20];
         sprintf(fileName, "Replay_%08X.bin", ReplayRecorder->lastUUID);
         if (ReplayRecorder->lastRowID != -1)
-            User.RemoveDBEntry(globals->replayTableID, ReplayRecorder->lastRowID);
-        User.DeleteUserFile(fileName, 0);
+            API.RemoveDBEntry(globals->replayTableID, ReplayRecorder->lastRowID);
+        API.DeleteUserFile(fileName, 0);
         Localization_GetString(&buffer, STR_NOREPLAYSPACE);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
         if (dialog) {
@@ -415,7 +415,7 @@ void ReplayRecorder_Buffer_SaveFile(const char *fileName, int *buffer)
     LogHelpers_Print("Buffer_SaveFile(%s, %08x)", fileName, buffer);
     if (buffer[3]) {
         ReplayRecorder->saveFinishPtr = ReplayRecorder_SavedReplay;
-        User.SaveUserFile(fileName, buffer, buffer[11], ReplayRecorder_SetReplayStatus, true);
+        API.SaveUserFile(fileName, buffer, buffer[11], ReplayRecorder_SetReplayStatus, true);
     }
     else {
         LogHelpers_Print("Attempted to save an empty replay buffer");
@@ -437,7 +437,7 @@ void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*c
     ReplayRecorder->buffer       = buffer;
     ReplayRecorder->loadCallback = callback;
     strcpy(ReplayRecorder->filename, fileName);
-    User.LoadUserFile(fileName, buffer, 0x100000, ReplayRecorder_Load_CB);
+    API.LoadUserFile(fileName, buffer, 0x100000, ReplayRecorder_Load_CB);
 }
 
 void ReplayRecorder_Load_CB(int status)
@@ -1387,7 +1387,7 @@ void ReplayRecorder_LoadReplayDB(void (*callback)(bool32))
     globals->replayTableLoaded   = STATUS_CONTINUE;
     ReplayDB->loadEntity   = RSDK_sceneInfo->entity;
     ReplayDB->loadCallback = NULL;
-    globals->replayTableID       = User.LoadUserDB("ReplayDB.bin", ReplayRecorder_SetStatus); //, callback
+    globals->replayTableID       = API.LoadUserDB("ReplayDB.bin", ReplayRecorder_SetStatus); //, callback
     if (globals->replayTableID == -1) {
         LogHelpers_Print("Couldn't claim a slot for loading %s", "ReplayDB.bin");
         globals->replayTableLoaded = STATUS_ERROR;
@@ -1396,7 +1396,7 @@ void ReplayRecorder_LoadReplayDB(void (*callback)(bool32))
 
 void ReplayRecorder_SaveReplayDB(void(*callback)(bool32))
 {
-    if (User.GetUserStorageNoSave() || globals->replayTableID == 0xFFFF || globals->replayTableLoaded != STATUS_OK) {
+    if (API.GetUserStorageNoSave() || globals->replayTableID == 0xFFFF || globals->replayTableLoaded != STATUS_OK) {
         if (callback)
             callback(false);
     }
@@ -1404,14 +1404,14 @@ void ReplayRecorder_SaveReplayDB(void(*callback)(bool32))
         LogHelpers_Print("Saving Replay DB");
         ReplayDB->saveEntity   = RSDK_sceneInfo->entity;
         ReplayDB->saveCallback = callback;
-        User.SaveUserDB(globals->replayTableID, ReplayRecorder_ReplaySaveFinish);
+        API.SaveUserDB(globals->replayTableID, ReplayRecorder_ReplaySaveFinish);
     }
 }
 
 void ReplayRecorder_CreateReplayDB(void)
 {
     globals->replayTableID =
-        User.InitUserDB("ReplayDB.bin", 4, "score", 2, "zoneID", 2, "act", 2, "characterID", 2, "encore", 4, "zoneSortVal", 0);
+        API.InitUserDB("ReplayDB.bin", 4, "score", 2, "zoneID", 2, "act", 2, "characterID", 2, "encore", 4, "zoneSortVal", 0);
 
     if (globals->replayTableID == -1)
         globals->replayTableLoaded = STATUS_ERROR;
@@ -1422,18 +1422,18 @@ void ReplayRecorder_CreateReplayDB(void)
 uint ReplayRecorder_AddReplayID(byte actID, char zone, int charID, int score, char mode)
 {
     if (globals->replayTableLoaded == STATUS_OK) {
-        uint entry        = User.AddUserDBEntry(globals->replayTableID);
+        uint entry        = API.AddUserDBEntry(globals->replayTableID);
         int zoneStortVal = score & 0x3FFFFFF | ((actID & 1 | 2 * (mode & 1 | 2 * zone)) << 26);
-        User.SetUserDBValue(globals->replayTableID, entry, 4, "score", &score);
-        User.SetUserDBValue(globals->replayTableID, entry, 2, "zoneID", &zone);
-        User.SetUserDBValue(globals->replayTableID, entry, 2, "act", &actID);
-        User.SetUserDBValue(globals->replayTableID, entry, 2, "characterID", &charID);
-        User.SetUserDBValue(globals->replayTableID, entry, 2, "encore", &actID);
-        User.SetUserDBValue(globals->replayTableID, entry, 4, "zoneSortVal", &zoneStortVal);
-        uint UUID = User.GetUserDBEntryUUID(globals->replayTableID, entry);
+        API.SetUserDBValue(globals->replayTableID, entry, 4, "score", &score);
+        API.SetUserDBValue(globals->replayTableID, entry, 2, "zoneID", &zone);
+        API.SetUserDBValue(globals->replayTableID, entry, 2, "act", &actID);
+        API.SetUserDBValue(globals->replayTableID, entry, 2, "characterID", &charID);
+        API.SetUserDBValue(globals->replayTableID, entry, 2, "encore", &actID);
+        API.SetUserDBValue(globals->replayTableID, entry, 4, "zoneSortVal", &zoneStortVal);
+        uint UUID = API.GetUserDBEntryUUID(globals->replayTableID, entry);
         char createTime[24];
         sprintf(createTime, "");
-        User.GetUserDBCreationTime(globals->replayTableID, entry, createTime, 23, "%Y/%m/%d %H:%M:%S");
+        API.GetUserDBCreationTime(globals->replayTableID, entry, createTime, 23, "%Y/%m/%d %H:%M:%S");
         LogHelpers_Print("Replay DB Added Entry");
         LogHelpers_Print("Created at %s", createTime);
         LogHelpers_Print("Row ID: %d", entry);
@@ -1445,39 +1445,39 @@ uint ReplayRecorder_AddReplayID(byte actID, char zone, int charID, int score, ch
 
 void ReplayRecorder_DeleteTimeAttackRow(int a1, void(*callback)(bool32), int a3)
 {
-    int id                   = User.GetUserDBEntryUUID(globals->replayTableID, a1);
+    int id                   = API.GetUserDBEntryUUID(globals->replayTableID, a1);
     int value                = 0;
     ReplayDB->deleteEntity   = RSDK_sceneInfo->entity;
     ReplayDB->deleteCallback = callback;
-    User.RemoveDBEntry(globals->replayTableID, a1);
+    API.RemoveDBEntry(globals->replayTableID, a1);
     TimeAttackData->status = 0;
-    User.Unknown31(globals->taTableID);
-    User.Unknown33(globals->taTableID, 4, "replayID", &id);
-    int count = User.GetUserDBUnknownCount(globals->taTableID);
+    API.Unknown31(globals->taTableID);
+    API.Unknown33(globals->taTableID, 4, "replayID", &id);
+    int count = API.GetUserDBUnknownCount(globals->taTableID);
     for (int i = 0; i < count; ++i) {
-        uint uuid = User.GetUserDBUnknown(globals->taTableID, i);
+        uint uuid = API.GetUserDBUnknown(globals->taTableID, i);
         LogHelpers_Print("Deleting Time Attack replay from row #%d", uuid);
-        User.SetUserDBValue(globals->taTableID, uuid, 4, "replayID", &value);
+        API.SetUserDBValue(globals->taTableID, uuid, 4, "replayID", &value);
     }
 
     char filename[0x20];
     sprintf(filename, "Replay_%08X.bin", id);
     if (!a3)
-        User.DeleteUserFile(filename, ReplayRecorder_DeleteReplayCB);
+        API.DeleteUserFile(filename, ReplayRecorder_DeleteReplayCB);
     else
-        User.DeleteUserFile(filename, ReplayRecorder_DeleteReplaySave2CB);
+        API.DeleteUserFile(filename, ReplayRecorder_DeleteReplaySave2CB);
 }
 
 void ReplayRecorder_DeleteReplayCB(int status)
 {
     LogHelpers_Print("DeleteReplay_CB(%d)", status);
-    User.SaveUserDB(globals->replayTableID, ReplayRecorder_DeleteReplaySaveCB);
+    API.SaveUserDB(globals->replayTableID, ReplayRecorder_DeleteReplaySaveCB);
 }
 
 int ReplayRecorder_DeleteReplaySaveCB(int status)
 {
     LogHelpers_Print("DeleteReplaySave_CB(%d)", status);
-    User.SaveUserDB(globals->taTableID, ReplayRecorder_DeleteReplaySave2CB);
+    API.SaveUserDB(globals->taTableID, ReplayRecorder_DeleteReplaySave2CB);
     return 1;
 }
 
@@ -1500,8 +1500,8 @@ int ReplayRecorder_SetStatus(int status)
 {
     if (status == STATUS_OK) {
         globals->replayTableLoaded = STATUS_OK;
-        User.Unknown31(globals->replayTableID);
-        LogHelpers_Print("Load Succeeded! Replay count: %d", User.GetUserDBUnknownCount(globals->replayTableID));
+        API.Unknown31(globals->replayTableID);
+        LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetUserDBUnknownCount(globals->replayTableID));
     }
     else {
         LogHelpers_Print("Load Failed! Creating new Replay DB");

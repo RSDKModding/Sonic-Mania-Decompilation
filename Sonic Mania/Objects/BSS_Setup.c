@@ -210,7 +210,7 @@ void BSS_Setup_StageLoad(void)
         TextInfo info;
         Localization_GetString(&info, STR_RPC_PLAYING);
 #if RETRO_USE_PLUS
-        User.SetRichPresence(PRESENCE_GENERIC, &info);
+        API.SetRichPresence(PRESENCE_GENERIC, &info);
 #else
         APICallback_SetRichPresence(PRESENCE_GENERIC, &info);
 #endif
@@ -637,9 +637,9 @@ void BSS_Setup_HandleSteppedObjects(void)
 
 #if RETRO_USE_PLUS
                             if (saveRAM[30] && saveRAM[71] == 0x1F)
-                                User.UnlockAchievement("ACH_GOLD_MEDAL");
+                                API.UnlockAchievement("ACH_GOLD_MEDAL");
                             if (saveRAM[31] && saveRAM[72] == 0x1F)
-                                User.UnlockAchievement("ACH_SILVER_MEDAL");
+                                API.UnlockAchievement("ACH_SILVER_MEDAL");
 #else
                             if (saveRAM[30] && saveRAM[71] == 0x1F)
                                 APICallback_UnlockAchievement("ACH_GOLD_MEDAL");

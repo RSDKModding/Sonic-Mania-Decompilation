@@ -57,8 +57,10 @@ void TryAgain_Unknown1(void)
     RSDK_THIS(TryAgain);
     if (++entity->timer == 60) {
         entity->timer    = 0;
-        entity->field_74 = 0xFFFA4000;
+        entity->field_74 = -0x5C000;
+#if RETRO_USE_PLUS
         Music_PlayTrack(TRACK_STAGE);
+#endif
         entity->state = TryAgain_Unknown2;
     }
 }
@@ -83,7 +85,7 @@ void TryAgain_Unknown2(void)
 void TryAgain_Unknown3(void)
 {
     RSDK_THIS(TryAgain);
-    if (entity->timer > 15)
+    if (entity->timer > RETRO_USE_PLUS ? 15 : 30)
         RSDK.ProcessAnimation(&entity->animator2);
     if (++entity->timer == 120) {
         entity->timer = 0;
@@ -127,15 +129,23 @@ void TryAgain_Unknown4(void)
         entity->timer = 600;
     if (entity->timer == 600) {
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
+#if RETRO_USE_PLUS
         EntityFXFade *fxFade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;
         fxFade->fadeOutBlack = true;
+#else
+        EntityFXFade *fxFade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0x000000), entity->position.x, entity->position.y);
+        fxFade->speedIn = 12;
+        fxFade->wait    = 240;
+#endif
     }
-    if (entity->timer >= 740) {
-        if (User.CheckDLC(DLC_PLUS))
+    if (entity->timer >= RETRO_USE_PLUS ? 740 : 680) {
+#if RETRO_USE_PLUS
+        if (API.CheckDLC(DLC_PLUS))
             RSDK.LoadScene("Presentation", "Game Summary");
         else
+#endif
             RSDK.LoadScene("Presentation", "Menu");
         RSDK.InitSceneLoad();
     }

@@ -136,6 +136,42 @@ int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
     return val;
 }
 
+bool32 MathHelpers_Unknown8(int direction, int x1, int y1, Hitbox* hitbox, int x2, int y2) {
+    int left, top, right, bottom;
+
+    if ((direction & 1) != 0) {
+        left           = -*&hitbox->left;
+        right           = -*&hitbox->right;
+        hitbox->right = -hitbox->right;
+    }
+    else {
+        right = hitbox->right;
+        left       = hitbox->left;
+    }
+    if ((direction & 2) != 0) {
+        bottom = -hitbox->bottom;
+        top    = -hitbox->top;
+    }
+    else {
+        bottom = hitbox->bottom;
+        top    = hitbox->top;
+    }
+    int hitboxX2 = right;
+    if (left < right)
+        hitboxX2 = left;
+    int hitboxX1 = left;
+    if (right > left)
+        hitboxX1 = right;
+
+    int hitboxY1 = top;
+    int hitboxY2 = bottom;
+    if (top < bottom)
+        hitboxY2 = top;
+    if (bottom > top)
+        hitboxY1 = bottom;
+    return x2 >= x1 + (hitboxX2 << 16) && x2 <= x1 + (hitboxX1 << 16) && y2 >= y1 + (hitboxY2 << 16) && y2 <= y1 + (hitboxY1 << 16);
+}
+
 bool32 MathHelpers_Unknown9(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2)
 {
     int v8 = px2;

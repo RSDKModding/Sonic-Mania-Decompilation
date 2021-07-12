@@ -43,7 +43,9 @@ void FXFade_Create(void *data)
         if (!entity->color)
             entity->color = voidToInt(data);
         if (!entity->eventOnly) {
+#if RETRO_USE_PLUS
             entity->transitionScene = false;
+#endif
             if (entity->timer <= 0)
                 entity->state = FXFade_State_FadeIn;
             else
@@ -65,8 +67,10 @@ void FXFade_State_FadeIn(void)
     if (entity->timer >= 512) {
         if (entity->oneWay) {
             entity->state = StateMachine_None;
+#if RETRO_USE_PLUS
             if (entity->transitionScene)
                 RSDK.InitSceneLoad();
+#endif
         }
         else if (entity->wait <= 0) {
             if (entity->fadeOutBlack)

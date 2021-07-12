@@ -3,6 +3,7 @@
 
 #include "../SonicMania.h"
 
+#if RETRO_USE_PLUS
 // Object Class
 typedef struct {
 	RSDK_OBJECT
@@ -28,6 +29,6 @@ void FBZ2Outro_EditorLoad(void);
 void FBZ2Outro_Serialize(void);
 
 // Extra Entity Functions
-
+#endif
 
 #endif //!OBJ_FBZ2OUTRO_H

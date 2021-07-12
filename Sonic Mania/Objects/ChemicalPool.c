@@ -333,7 +333,7 @@ void ChemicalPool_State_Blue(void)
 
     foreach_active(Player, player)
     {
-        if (player->velocity.y >= 0 && !player->isGhost) {
+        if (player->velocity.y >= 0) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 ChemicalPool_SetDeform(player->position.x, player->velocity.y >> 1);
                 ChemicalPool_SpawnDebris(player->position.x, player->position.y);

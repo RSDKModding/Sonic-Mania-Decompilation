@@ -282,6 +282,7 @@ void SpecialClear_Create(void *data)
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 2, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 2);
                 break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY:
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 3, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 3);
@@ -290,6 +291,7 @@ void SpecialClear_Create(void *data)
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 4, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 4);
                 break;
+#endif
             default:
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 0, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 0);
@@ -343,8 +345,10 @@ void SpecialClear_GiveScoreBonus(int score)
     if (entity->score > 9999999)
         entity->score = 9999999;
 
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         return;
+#endif
 
     if (entity->score >= entity->score1UP) {
         if (entity->lives < 99)
@@ -377,9 +381,11 @@ void SpecialClear_LoadScene(void)
         }
         else {
             int *saveRAM = SaveGame->saveRAM;
+#if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
                 RSDK.LoadScene("Encore Mode", "");
             else
+#endif
                 RSDK.LoadScene("Mania Mode", "");
             RSDK_sceneInfo->listPos = saveRAM[30];
             RSDK.InitSceneLoad();
@@ -502,8 +508,13 @@ void SpecialClear_Unknown6(void)
         entity->positions[5].x -= 0x100000;
 
     if (entity->positions[6].x <= 0) {
-        if (entity->finishType == 2)
-            User.UnlockAchievement("ACH_EMERALDS");
+        if (entity->finishType == 2) {
+#if RETRO_USE_PLUS
+            API.UnlockAchievement("ACH_EMERALDS");
+#else
+            APICallback_UnlockAchievement("ACH_EMERALDS");
+#endif
+        }
         entity->state = SpecialClear_Unknown7;
     }
     else {
@@ -546,9 +557,11 @@ void SpecialClear_Unknown9(void)
         saveRAM[27]           = entity->score1UP;
         saveRAM[25]           = entity->lives;
         saveRAM[29]           = globals->continues;
+#if RETRO_USE_PLUS
         saveRAM[66]           = globals->characterFlags;
         saveRAM[67]           = globals->stock;
         saveRAM[68]           = globals->playerID;
+#endif
 
         if (saveRAM[28] == 0x7F) {
             entity->state = SpecialClear_Unknown11;

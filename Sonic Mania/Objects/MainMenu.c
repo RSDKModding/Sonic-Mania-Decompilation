@@ -55,34 +55,30 @@ void MainMenu_Initialize(void)
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        // v2        = prompt->position.y;
-        // v3        = prompt->position.x;
-        // v4        = menuControl->startPos.x - menuControl->cameraOffset.x;
-        // v5        = menuControl->startPos.y - menuControl->cameraOffset.y;
+        int x = menuControl->startPos.x - menuControl->cameraOffset.x;
+        int y = menuControl->startPos.y - menuControl->cameraOffset.y;
         Hitbox hitbox;
         hitbox.right  = (menuControl->size.x >> 17);
         hitbox.left   = -(menuControl->size.x >> 17);
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
-        // if (MathHelpers_Unknown8(v4, v5, hitbox, v3, v2) && !prompt->buttonID)
-        //    MainMenu->promptPtr = prompt;
+        if (MathHelpers_Unknown8(FLIP_NONE, x, y, &hitbox, prompt->position.x, prompt->position.y) /*&& !prompt->buttonID*/)
+            MainMenu->promptPtr = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
     {
-        // v10       = diorama->position.y;
-        // v11       = diorama->position.x;
-        // v12       = menuControl->startPos.x - menuControl->cameraOffset.x;
-        // v13       = menuControl->startPos.y - menuControl->cameraOffset.y;
+        int x = menuControl->startPos.x - menuControl->cameraOffset.x;
+        int y = menuControl->startPos.y - menuControl->cameraOffset.y;
         Hitbox hitbox;
         hitbox.right  = (menuControl->size.x >> 17);
         hitbox.left   = -(menuControl->size.x >> 17);
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
-        // if (MathHelpers_Unknown8(v12, v13, hitbox, v11, v10)) {
-        //    MainMenu->dioramaPtr = diorama;
-        //    //diorama->parent = MainMenu->menuControlPtr;
-        //}
+        if (MathHelpers_Unknown8(FLIP_NONE, x, y, &hitbox, diorama->position.x, diorama->position.y)) {
+            MainMenu->dioramaPtr = diorama;
+            // diorama->parent = MainMenu->menuControlPtr;
+        }
     }
 
     int button1Frame         = 1;
@@ -92,7 +88,7 @@ void MainMenu_Initialize(void)
     int button4Frame         = 4;
     int button5Frame         = 6;
     bool32 button5Transition = false;
-    if (User.CheckDLC(DLC_PLUS)) {
+    if (API.CheckDLC(DLC_PLUS)) {
         button1Frame      = 5;
         button2Frame      = 1;
         button3Frame      = 2;
@@ -146,7 +142,7 @@ int MainMenu_ReturnToTitleOption(void)
 
 int MainMenu_ExitGame(void)
 {
-    User.ExitGame();
+    API.ExitGame();
     return 1;
 }
 
@@ -183,7 +179,7 @@ void MainMenu_ChangeMenu(void)
     EntityUIButton *button = (EntityUIButton *)RSDK_sceneInfo->entity;
     switch (button->frameID) {
         case 0:
-            if (User.GetUserStorageNoSave()) {
+            if (API.GetUserStorageNoSave()) {
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
@@ -201,7 +197,7 @@ void MainMenu_ChangeMenu(void)
             }
             break;
         case 1:
-            if (User.CheckDLC(DLC_PLUS)) {
+            if (API.CheckDLC(DLC_PLUS)) {
                 // v6                 = TimeAttackMenu->menu1;
                 // v6->activeEntityID = 0;
                 // v6->dwordCC        = 0;
@@ -215,7 +211,7 @@ void MainMenu_ChangeMenu(void)
             }
             break;
         case 2:
-            if (User.CheckDLC(DLC_PLUS))
+            if (API.CheckDLC(DLC_PLUS))
                 UIControl_MatchMenuTag("Competition");
             else
                 UIControl_MatchMenuTag("Competition Legacy");
@@ -223,7 +219,7 @@ void MainMenu_ChangeMenu(void)
         case 3: UIControl_MatchMenuTag("Options"); break;
         case 4: UIControl_MatchMenuTag("Extras"); break;
         case 5:
-            if (User.GetUserStorageNoSave()) {
+            if (API.GetUserStorageNoSave()) {
                 UIControl_MatchMenuTag("No Save Encore");
             }
             else {
@@ -239,7 +235,7 @@ void MainMenu_ChangeMenu(void)
                 UIControl_MatchMenuTag("Encore Mode");
             }
             break;
-        case 6: User.ShowExtensionOverlay(0); break;
+        case 6: API.ShowExtensionOverlay(0); break;
         default: break;
     }
 }
@@ -248,12 +244,12 @@ void MainMenu_Unknown2(void)
 {
     EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
     EntityUIButton *taButton = control->entities[1];
-    if (User.CheckDLC(DLC_PLUS))
+    if (API.CheckDLC(DLC_PLUS))
         taButton = control->entities[2];
     taButton->disabled = !SaveGame_CheckUnlock(0);
 
     EntityUIButton *compButton = control->entities[2];
-    if (User.CheckDLC(DLC_PLUS))
+    if (API.CheckDLC(DLC_PLUS))
         compButton = control->entities[3];
     compButton->disabled = !SaveGame_CheckUnlock(1);
 }

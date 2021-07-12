@@ -1345,7 +1345,10 @@ void Platform_CollisionState_AllHazard(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionBox(player, entity, &entity->hitbox)
-            && !Player_CheckMightyUnspin(1024, player, entity->type == 3, &player->uncurlTimer)) {
+#if RETRO_USE_PLUS
+            && !Player_CheckMightyUnspin(1024, player, entity->type == 3, &player->uncurlTimer)
+#endif
+            ) {
             Player_CheckHit(player, &entity);
         }
     }
@@ -1420,7 +1423,9 @@ void Platform_CollisionState_BottomHazard(void)
             case 4:
                 if (entity->velocity.y >= 0)
                     player->collisionFlagV |= 2;
+#if RETRO_USE_PLUS
                 if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
+#endif
                     Player_CheckHit(player, entity);
                 break;
             default: break;
@@ -1464,7 +1469,11 @@ void Platform_CollisionState_LRHazard(void)
                     player->collisionFlagV |= 1;
                 break;
             case 2:
-                if (Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) || Player_CheckHit(player, entity)) {
+                if (
+#if RETRO_USE_PLUS
+                    Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) || 
+#endif
+                    Player_CheckHit(player, entity)) {
                     player->velocity.x += entity->velocity.x;
                 }
 
@@ -1483,7 +1492,11 @@ void Platform_CollisionState_LRHazard(void)
                     player->collisionFlagH |= 1;
                 break;
             case 3:
-                if (Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) || Player_CheckHit(player, entity)) {
+                if (
+#if RETRO_USE_PLUS
+                    Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) || 
+#endif
+                    Player_CheckHit(player, entity)) {
                     player->velocity.x += entity->velocity.x;
                 }
 
@@ -1724,7 +1737,9 @@ void Platform_CollisionState_TopHazard(void)
                 player->position.y += entity->collisionOffset.y;
                 // player->position.y &= 0xFFFF0000;
 
+#if RETRO_USE_PLUS
                 if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
+#endif
                     Player_CheckHit(player, entity);
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;

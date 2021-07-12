@@ -65,7 +65,7 @@ void TitleEggman_Create(void *data)
 
 void TitleEggman_StageLoad(void)
 {
-    if (User.CheckDLC(DLC_PLUS))
+    if (API.CheckDLC(DLC_PLUS))
         TitleEggman->spriteIndex = RSDK.LoadSpriteAnimation("Title/PlusLogo.bin", SCOPE_STAGE);
 }
 

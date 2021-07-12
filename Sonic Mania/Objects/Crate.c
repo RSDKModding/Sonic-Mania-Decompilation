@@ -144,6 +144,7 @@ bool32 Crate_Unknown3(void)
                     Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     break;
                 }
+#if RETRO_USE_PLUS
                 else if (player->state == Player_State_MightyHammerDrop) {
                     player->velocity.y -= 0x10000;
                     Crate_Unknown1(entity);
@@ -155,6 +156,7 @@ bool32 Crate_Unknown3(void)
                     player->onGround   = storeGrounded;
                     foreach_return true;
                 }
+#endif
                 else if (player->shield == SHIELD_BUBBLE && player->invincibleTimer <= 0) {
                     if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->data.animationID == 8
                         && player->velocity.y >= 0x80000) {

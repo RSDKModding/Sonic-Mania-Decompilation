@@ -15,10 +15,10 @@ void ERZSetup_LateUpdate(void)
 void ERZSetup_StaticUpdate(void)
 {
     ERZSetup->timer += 0x10000;
-    ERZSetup->timer &= 0x7FFFFFFFu;
+    ERZSetup->timer &= 0x7FFFFFFF;
     if (!(Zone->timer & 3)) {
         ERZSetup->aniTileTimer += 128;
-        ERZSetup->aniTileTimer &= 0xFFFu;
+        ERZSetup->aniTileTimer &= 0xFFF;
         RSDK.DrawAniTiles(ERZSetup->skySheet, 520, ERZSetup->aniTileTimer & 0x1FF, (ERZSetup->aniTileTimer >> 2) & 0xFF80, 128, 128);
     }
 }

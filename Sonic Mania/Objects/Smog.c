@@ -99,7 +99,7 @@ void Smog_Create(void *data)
             OOZSetup->flags       = 1;
             return;
         }
-        else if ((globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE) && globals->enableIntro) {
+        else if (isMainGameMode() && globals->enableIntro) {
             if (!PlayerHelpers_CheckStageReload()) {
                 Smog->starPostID      = 0;
                 globals->restartFlags = 1;

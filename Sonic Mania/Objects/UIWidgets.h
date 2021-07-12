@@ -6,7 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
+#if RETRO_USE_PLUS
     int array1[0x10];
+#endif
     int arrayIndex;
     int field_48[12];
     Animator animData1;

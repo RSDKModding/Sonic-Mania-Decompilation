@@ -63,14 +63,18 @@ void ParallaxSprite_Create(void *data)
         entity->attribute = (byte)voidToInt(data);
     switch (entity->attribute) {
         case 2:
+#if RETRO_USE_PLUS
             if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
                 entity->unknownPosA.x = 0x189098;
                 entity->unknownPosA.y = 0xD098;
             }
             else {
+#endif
                 entity->unknownPosA.x = 0x885820;
                 entity->unknownPosA.y = 0xE89850;
+#if RETRO_USE_PLUS
             }
+#endif
             entity->parallaxFactor.x >>= 8;
             entity->parallaxFactor.y >>= 8;
             entity->drawFX  = FX_ROTATE;

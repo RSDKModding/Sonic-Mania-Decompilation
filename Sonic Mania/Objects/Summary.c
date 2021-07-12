@@ -127,7 +127,7 @@ void Summary_State_Unknown(void)
 void Summary_State_Unknown2(void)
 {
     RSDK_THIS(Summary);
-    if (RSDK_controller->keyStart.press || (User.GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)) {
+    if (RSDK_controller->keyStart.press || (API.GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)) {
         RSDK.LoadScene("Presentation", "Menu");
         entity->timer     = 0;
         entity->state     = Summary_State_Unknown3;

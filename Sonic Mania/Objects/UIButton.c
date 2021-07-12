@@ -21,10 +21,12 @@ void UIButton_Update(void)
         entity->startFrameID    = entity->frameID;
         entity->isDisabled      = entity->disabled;
     }
-    //Entity* ent = UIButton_Unknown2(entity, entity->field_15C);
-    //if (ent)
-    //    ent->visible = true;
+    Entity* ent = UIButton_Unknown2(entity, entity->field_15C);
+    if (ent)
+        ent->visible = true;
+
     StateMachine_Run(entity->state);
+
     /*EntityUIControl *parent = entity->parent;
     if (parent && entity->state == UIButton_Unknown17
         && (parent->state != UIControl_ProcessInputs || parent->entities[parent->activeEntityID] != entity)) {
@@ -97,7 +99,7 @@ void UIButton_Create(void* data)
         // entity->options0 = UIButton_Unknown9;
         // entity->touchCB  = UIButton_ProcessTouch;
         // entity->options3 = UIButton_Unknown15;
-        // entity->failCB   = UIButton_Fail;
+        entity->failCB   = UIButton_Fail;
         // entity->options5 = UIButton_Unknown12;
         // entity->options6 = UIButton_Unknown13;
         // entity->options7 = UIButton_Unknown10;
@@ -133,6 +135,34 @@ void UIButton_StageLoad(void)
 {
 
 }
+
+void UIButton_Unknown1(EntityUIButton *button)
+{
+    for (int i = 0; i < button->choiceCount; ++i) {
+        Entity *entity = RSDK.GetEntityByID(i % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button));
+        if (button->choiceCount > 0
+            && (entity->objectID == UIChoice->objectID || entity->objectID == UIVsRoundPicker->objectID || entity->objectID == UIResPicker->objectID
+                || entity->objectID == UIWinSize->objectID)) {
+            entity->visible = i == button->field_15C;
+            entity->active  = i == button->field_15C ? ACTIVE_NORMAL : ACTIVE_NEVER;
+        }
+    }
+}
+
+Entity *UIButton_Unknown2(EntityUIButton *button, int a2)
+{
+    Entity *entity = RSDK.GetEntityByID(a2 % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button));
+    if (button->choiceCount > 0
+        && (entity->objectID == UIChoice->objectID || entity->objectID == UIVsRoundPicker->objectID || entity->objectID == UIResPicker->objectID
+            || entity->objectID == UIWinSize->objectID)) {
+        return entity;
+    }
+    else {
+        return NULL;
+    }
+}
+
+void UIButton_Fail(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, 0, 255); }
 
 void UIButton_EditorDraw(void)
 {

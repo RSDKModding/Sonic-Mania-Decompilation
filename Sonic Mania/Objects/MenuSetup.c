@@ -39,7 +39,11 @@ void MenuSetup_StaticUpdate(void)
             MenuSetup->dword18           = 1;
             TextInfo info;
             Localization_GetString(&info, STR_RPC_MENU);
-            User.SetRichPresence(1, &info);
+#if RETRO_USE_PLUS
+            API.SetRichPresence(1, &info);
+#else
+            APICallback_SetRichPresence(1, &info);
+#endif
         }
     }
     if (!MenuSetup->initialized) {
@@ -56,7 +60,11 @@ void MenuSetup_StaticUpdate(void)
         globals->suppressAutoMusic = false;
     }
     MenuSetup->fxFade->speedOut = 12;
+#if RETRO_USE_PLUS
     DialogRunner_GetUserAuthStatus();
+#else
+    APICallback_GetUserAuthStatus();
+#endif
 }
 
 void MenuSetup_Draw(void)
@@ -87,20 +95,40 @@ void MenuSetup_StageLoad(void)
         Music->activeTrack = -1;
     }
     if (!RSDK_sceneInfo->inEditor) {
+#if RETRO_USE_PLUS
         switch (RSDK_sku->platform) {
+#else
+        switch (RSDK_info->platform) {
+#endif
             case PLATFORM_PC: LogHelpers_Print("PC SKU"); break;
             case PLATFORM_PS4: LogHelpers_Print("PS4 SKU"); break;
             case PLATFORM_XB1: LogHelpers_Print("XB1 SKU"); break;
             case PLATFORM_SWITCH: LogHelpers_Print("NX SKU"); break;
             case PLATFORM_DEV: LogHelpers_Print("DEV SKU"); break;
-            default: LogHelpers_Print("INVALID PLATFORM: %d", RSDK_sku->platform); break;
+            default:
+#if RETRO_USE_PLUS
+                LogHelpers_Print("INVALID PLATFORM: %d", RSDK_sku->platform);
+#else
+                LogHelpers_Print("INVALID PLATFORM: %d", RSDK_info->platform);
+#endif 
+                break;
         }
 
+#if RETRO_USE_PLUS
         switch (RSDK_sku->region) {
+#else
+        switch (RSDK_info->region) {
+#endif
             case REGION_US: LogHelpers_Print("US REGION"); break;
             case REGION_JP: LogHelpers_Print("JP REGION"); break;
             case REGION_EU: LogHelpers_Print("EU REGION"); break;
-            default: LogHelpers_Print("INVALID REGION: %d", RSDK_sku->region); break;
+            default:
+#if RETRO_USE_PLUS
+                LogHelpers_Print("INVALID REGION: %d", RSDK_sku->region);
+#else
+                LogHelpers_Print("INVALID REGION: %d", RSDK_info->region);
+#endif
+                break;
         }
     }
 
@@ -113,6 +141,7 @@ void MenuSetup_StageLoad(void)
 
 void MenuSetup_Initialize(void)
 {
+#if RETRO_USE_PLUS
     LogHelpers_Print("ManiaModeMenu_Initialize()");
     MainMenu_Initialize();
     //UISubHeading_Initialize();
@@ -127,24 +156,26 @@ void MenuSetup_Initialize(void)
     //CompetitionMenu_Unknown2();
     //OptionsMenu_Unknown3();
     //ExtrasMenu_Unknown3();
+#endif
 }
 
 bool32 MenuSetup_InitUserdata(void)
 {
+#if RETRO_USE_PLUS
     if (!MenuSetup->dword10)
         MenuSetup->fxFade->timer = 512;
-    int authStatus = User.GetUserAuthStatus();
+    int authStatus = API.GetUserAuthStatus();
     if (!authStatus) {
-        User.TryAuth();
+        API.TryAuth();
     }
     else if (authStatus != STATUS_CONTINUE) {
-        int storageStatus = User.UserStorageStatusUnknown1();
+        int storageStatus = API.UserStorageStatusUnknown1();
         if (!storageStatus) {
-            User.TryInitStorage();
+            API.TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
-            int statusUnknown2 = User.UserStorageStatusUnknown2();
-            if (!User.GetUserStorageNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
+            int statusUnknown2 = API.UserStorageStatusUnknown2();
+            if (!API.GetUserStorageNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
                 if (statusUnknown2 != STATUS_CONTINUE) {
                     if (statusUnknown2 != STATUS_FORBIDDEN) {
                         DialogRunner_PromptSavePreference(storageStatus);
@@ -168,7 +199,7 @@ bool32 MenuSetup_InitUserdata(void)
                 return true;
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK
                 && globals->taTableLoaded == STATUS_OK) {
-                if (!User.GetUserStorageNoSave() && DialogRunner_NotifyAutosave())
+                if (!API.GetUserStorageNoSave() && DialogRunner_NotifyAutosave())
                     return false;
                 UIWaitSpinner_Wait2();
                 if (DialogRunner_CheckUnreadNotifs())
@@ -177,7 +208,7 @@ bool32 MenuSetup_InitUserdata(void)
                 return true;
             }
 
-            if (User.GetUserStorageNoSave()) {
+            if (API.GetUserStorageNoSave()) {
                 UIWaitSpinner_Wait2();
                 return true;
             }
@@ -186,7 +217,7 @@ bool32 MenuSetup_InitUserdata(void)
                     && globals->taTableLoaded != STATUS_ERROR) {
                 }
                 else {
-                    int status = User.UserStorageStatusUnknown2();
+                    int status = API.UserStorageStatusUnknown2();
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {
                             RSDK.LoadScene("Presentation", "Title Screen");
@@ -200,6 +231,7 @@ bool32 MenuSetup_InitUserdata(void)
             }
         }
     }
+#endif
     return false;
 }
 
@@ -216,6 +248,7 @@ void MenuSetup_InitLocalization(int a1)
 int MenuSetup_GetActiveMenu(void)
 {
     Entity *control = (Entity *)UIControl_GetUIControl();
+#if RETRO_USE_PLUS
     if (control == MainMenu->menuControlPtr /*|| control == ExtrasMenu[1] || control == OptionsMenu[1] || control == OptionsMenu[3]
         || control == OptionsMenu[5] || control == OptionsMenu[6] || control == OptionsMenu[7] || control == OptionsMenu[8]
         || control == OptionsMenu[9] || control == OptionsMenu[10] || control == OptionsMenu[11] || control == OptionsMenu[12]
@@ -235,6 +268,7 @@ int MenuSetup_GetActiveMenu(void)
     }
     if (control == ManiaModeMenu->encoreSaveSelect || control == ManiaModeMenu->noSaveMenuEncore)
         return 4;
+#endif
     return 0;
 }
 
@@ -277,7 +311,9 @@ void MenuSetup_SetBGColours(void)
         case 1:
         case 2: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
         case 3: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
+#if RETRO_USE_PLUS
         case 4: UIBackground->activeColours = &UIBackground->bgColours[15]; break;
+#endif
         default: break;
     }
 }
@@ -301,6 +337,7 @@ void MenuSetup_Unknown13(void)
 
 void MenuSetup_Unknown6(void)
 {
+#if RETRO_USE_PLUS
     MainMenu_Unknown2();
     // UISubHeading_Unknown2();
     // TimeAttackMenu_Unknown2();
@@ -314,6 +351,7 @@ void MenuSetup_Unknown6(void)
     }*/
     // OptionsMenu_Unknown2();
     // ExtrasMenu_Unknown2();
+#endif
 }
 
 void MenuSetup_Unknown7(void)

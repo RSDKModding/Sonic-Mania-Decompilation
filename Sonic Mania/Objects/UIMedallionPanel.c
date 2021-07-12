@@ -11,7 +11,7 @@ void UIMedallionPanel_StaticUpdate(void) {}
 void UIMedallionPanel_Draw(void)
 {
 #if RETRO_USE_PLUS
-    if (!User.GetUserStorageNoSave())
+    if (!API.GetUserStorageNoSave())
 #else
     if (!globals->noSave)
 #endif
@@ -40,7 +40,7 @@ void UIMedallionPanel_DrawPanel(void)
     if (!RSDK_sceneInfo->inEditor) {
         if (globals->saveLoaded == STATUS_OK) {
 #if RETRO_USE_PLUS
-            if (!User.GetUserStorageNoSave())
+            if (!API.GetUserStorageNoSave())
 #else
             if (globals->noSave)
 #endif

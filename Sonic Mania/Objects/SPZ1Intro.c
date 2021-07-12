@@ -8,7 +8,7 @@ void SPZ1Intro_Update(void)
 
     RSDK_THIS(SPZ1Intro);
     if (!entity->timer) {
-        if (globals->gameMode && globals->gameMode != MODE_ENCORE || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
+        if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             entity->active = ACTIVE_NEVER;
         }
         else {
