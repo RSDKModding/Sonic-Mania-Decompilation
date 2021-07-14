@@ -108,7 +108,7 @@ inline short GetFrameID(Animator *data)
 
 void ProcessAnimation(Animator *data);
 
-inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, ushort frameID)
+inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, short frameID)
 {
     if (spriteIndex >= SPRFILE_COUNT) {
         if (data)

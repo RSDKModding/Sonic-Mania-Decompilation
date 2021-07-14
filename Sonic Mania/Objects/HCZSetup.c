@@ -248,27 +248,19 @@ void HCZSetup_ScanlineCallback(ScanlineInfo* scanlines) {
     int height         = 0x210 - (scrY >> 2);
     int waterPos       = (Water->waterLevel >> 0x10) - scrY;
 
-    int val = 0x640000 / (abs(height - waterPos) < 1 ? 1 : abs(height - waterPos));
-    if (val < 0x10000)
-        val = 0x10000;
+    int div = maxVal(1, abs(height - waterPos));
+    int val = maxVal(0x10000, 0x640000 / div);
 
-    height = minVal(scrH, height);
-    height = maxVal(0, height);
-
-    waterPos = minVal(scrH, waterPos);
-    waterPos = maxVal(0, waterPos);
+    height = clampVal(height, 0, scrH);
+    waterPos = clampVal(waterPos, 0, scrH);
 
     ScanlineInfo *scanlinePtr = &scanlines[height];
     if (height >= waterPos) {
         int pos = 0x4D00000;
         if (waterPos < height) {
             for (int i = 0; i < height - waterPos; ++i) {
+                scanlinePtr->position.x = (((0x3540000 - 0xC000 * (pos >> 16)) / 100 + 0x10000) * scrX) & 0x1FFFFFF;
                 scanlinePtr->position.y = pos;
-                int distance            = 0x470 - (pos >> 16);
-                // This is awful code, please find a way to do this with a cleaner algorithm
-                int a = (int)((int64)(67553994424320LL * distance) >> 32) >> 5;
-                int r = scrX * (a + 0x10000) & 0x1FFFFFF;
-                scanlinePtr->position.x = r;
                 pos -= val;
                 --scanlinePtr;
             }
@@ -277,12 +269,9 @@ void HCZSetup_ScanlineCallback(ScanlineInfo* scanlines) {
     else {
         int pos = 0x40C0000;
         for (int i = 0; i < waterPos - height; ++i) {
+            int distance            = 0x46C - (pos >> 16);
+            scanlinePtr->position.x = (((-0xC000 * distance) / 100 + 0x10000) * scrX) & 0x1FFFFFF;
             scanlinePtr->position.y = pos;
-            int distance            = (pos >> 16) - 0x46C;
-            //This is awful code, please find a way to do this with a cleaner algorithm
-            int a = ((int)((int64)(0x3D70A3D74000LL * distance) >> 32) >> 5) + ((int)((int64)(0x3D70A3D74000LL * distance) >> 32) >> 31);
-            int b = scrX * (a + 0x10000) & 0x1FFFFFF;
-            scanlinePtr->position.x = b;
             pos += val;
             ++scanlinePtr;
         }

@@ -272,8 +272,26 @@ void Spikes_Create(void *data)
         else
             entity->drawOrder = Zone->drawOrderLow;
         entity->alpha = 128;
-        if (entity->type) {
-            if (entity->type == 1) {
+
+        switch (entity->type) {
+            case 0:
+                entity->updateRange.x = (entity->count + 6) << 20;
+                entity->updateRange.y = 0x600000;
+                entity->direction     = FLIP_Y * dir;
+                if (entity->direction) {
+                    entity->velocity.y = 0x80000;
+                    entity->type       = 4;
+                }
+                else {
+                    entity->velocity.y = -0x80000;
+                    entity->type       = 1;
+                }
+                entity->hitbox.left   = -8 * entity->count;
+                entity->hitbox.top    = -16;
+                entity->hitbox.right  = 8 * entity->count;
+                entity->hitbox.bottom = 16;
+                break;
+            case 1:
                 entity->updateRange.x = 0x600000;
                 entity->updateRange.y = (entity->count + 6) << 20;
                 entity->direction     = dir;
@@ -289,24 +307,7 @@ void Spikes_Create(void *data)
                 entity->hitbox.top    = -8 * entity->count;
                 entity->hitbox.right  = 16;
                 entity->hitbox.bottom = 8 * entity->count;
-            }
-        }
-        else {
-            entity->updateRange.x = 0x600000;
-            entity->updateRange.y = (entity->count + 6) << 20;
-            entity->direction     = FLIP_Y * dir;
-            if (entity->direction) {
-                entity->velocity.y = 0x80000;
-                entity->type       = 4;
-            }
-            else {
-                entity->velocity.y = -0x80000;
-                entity->type       = 1;
-            }
-            entity->hitbox.left   = -8 * entity->count;
-            entity->hitbox.top    = -16;
-            entity->hitbox.right  = 8 * entity->count;
-            entity->hitbox.bottom = 16;
+                break;
         }
 
         if (entity->moving) {

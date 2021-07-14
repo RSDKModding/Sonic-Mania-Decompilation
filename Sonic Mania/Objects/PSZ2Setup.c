@@ -33,37 +33,36 @@ void PSZ2Setup_StaticUpdate(void)
         RSDK.SetLimitedFade(0, 1, 2, -RSDK.Sin256(16 * Zone->timer), 224, 227);
 
     if (PSZ2Setup->flag) {
-        if ((ushort)PSZ2Setup->timer <= 0) {
+        if (PSZ2Setup->petalTimer <= 0) {
             foreach_active(Player, player)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
-                int playerY          = (player->position.y + (playerHitbox->bottom << 16));
-                ushort tile          = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, playerY >> 20);
-
-                bool32 flag = true;
+                ushort tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                bool32 lowFlag = true;
                 if (tile == 0xFFFF) {
-                    tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, playerY >> 20);
-                    flag = false;
+                    tile    = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    lowFlag = false;
                 }
+
                 if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
-                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, entity, player->position.x, playerY);
-                        // HIBYTE(v12[1].scale.x)     = v10;
-                        // BYTE2(v12[1].scale.x)      = 4;
-                        // v12[1].scale.y             = 0x40000;
-                        // v12[1].velocity.x          = 0x40000;
-                        // v12[1].onGround            = 1;
-                        // v13                        = player->direction == 0;
-                        // v12[1].tileCollisions      = 0xB5555;
-                        // LOBYTE(v12[1].isPermanent) = 2 * !v13 - 1;
-                        //*(_DWORD *)&v12[1].group   = player->groundVel >> 1;
-                        PSZ2Setup->timer = 3;
+                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, RSDK_sceneInfo->entity, player->position.x,
+                                                                                     player->position.y + (playerHitbox->bottom << 16));
+                        // pile->field_62   = 4;
+                        // pile->field_63   = lowFlag;
+                        // pile->field_64 = 0x40000;
+                        // pile->field_68 = 0x40000;
+                        // pile->field_A0 = 1;
+                        // pile->field_98      = 0xB5555;
+                        // pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
+                        // pile->field_8C = player->groundVel >> 1;
+                        PSZ2Setup->petalTimer = 3;
                     }
                 }
             }
         }
         else {
-            PSZ2Setup->timer--;
+            PSZ2Setup->petalTimer--;
         }
     }
 }

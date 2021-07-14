@@ -219,7 +219,7 @@ typedef struct {
     void (*Draw3DScene)(ushort index);
     ushort (*LoadSpriteAnimation)(const char *path, Scopes scope);
     ushort (*CreateSpriteAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
-    void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, ushort frameID);
+    void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, short frameID);
     void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
                           byte rotationFlag);
     void (*SetSpriteString)(ushort spriteIndex, ushort animID, TextInfo *info);
@@ -955,6 +955,8 @@ extern RSDKFunctionTable RSDK;
 EntityPlayer *p1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player); \
 EntityPlayer *p2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player); \
 EntityCamera *cam  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+
+#define destroyEntity(entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 
 #if RETRO_USE_PLUS
 #define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)

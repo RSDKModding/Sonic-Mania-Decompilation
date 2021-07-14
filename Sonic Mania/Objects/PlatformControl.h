@@ -10,7 +10,15 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int nodeCount;
+    int childCount;
+    int speed;
+    bool32 setActive;
+    byte type;
+    int field_6C;
+    int buttonTag;
+    Entity *controller;
 } EntityPlatformControl;
 
 // Object Struct
@@ -28,6 +36,6 @@ void PlatformControl_EditorLoad(void);
 void PlatformControl_Serialize(void);
 
 // Extra Entity Functions
-
+void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, Entity *node);
 
 #endif //!OBJ_PLATFORMCONTROL_H

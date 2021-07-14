@@ -5,7 +5,12 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int value;
+    int dword8;
+    int field_C;
+    int aniTileFrame;
+    ushort aniTiles;
 } ObjectTMZ3Setup;
 
 // Entity Class
@@ -28,6 +33,7 @@ void TMZ3Setup_EditorLoad(void);
 void TMZ3Setup_Serialize(void);
 
 // Extra Entity Functions
-
+void TMZ3Setup_DrawLayerCB_A(void);
+void TMZ3Setup_DrawLayerCB_B(void);
 
 #endif //!OBJ_TMZ3SETUP_H

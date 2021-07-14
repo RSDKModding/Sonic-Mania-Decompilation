@@ -28,9 +28,8 @@ typedef struct {
     int field_A0;
     int field_A4;
     int field_A8;
-    Vector2 field_AC;
-    int field_B4;
-    int field_B8;
+    Vector2 endLerpPos;
+    Vector2 startLerpPos;
     Vector2 boundsOffset;
     int boundsL;
     int boundsR;

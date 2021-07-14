@@ -241,13 +241,13 @@ void Camera_Unknown3(int a1, int screen, int x, int y, int a5)
     foreach_all(Camera, camera)
     {
         if (camera->screenID == screen) {
-            camera->field_B4   = camera->position.x;
-            camera->field_B8   = camera->position.y;
-            camera->field_AC.x = x;
-            camera->field_AC.y = y;
-            camera->field_A8   = a1;
-            camera->field_A4   = a5;
-            camera->state      = Camera_State_Unknown;
+            camera->startLerpPos.x = camera->position.x;
+            camera->startLerpPos.y = camera->position.y;
+            camera->endLerpPos.x   = x;
+            camera->endLerpPos.y   = y;
+            camera->field_A8       = a1;
+            camera->field_A4       = a5;
+            camera->state          = Camera_State_Unknown;
             foreach_return;
         }
     }
@@ -401,16 +401,20 @@ void Camera_State_Unknown(void)
     switch (entity->field_A8) {
         default: break;
         case 0:
-            MathHelpers_Unknown1(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            MathHelpers_Unknown1(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+                                 entity->endLerpPos.y);
             break;
         case 1:
-            MathHelpers_Unknown2(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            MathHelpers_Unknown2(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+                                 entity->endLerpPos.y);
             break;
         case 2:
-            MathHelpers_Unknown3(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            MathHelpers_Unknown3(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+                                 entity->endLerpPos.y);
             break;
         case 3:
-            MathHelpers_Unknown4(&entity->position, entity->field_A0, entity->field_B4, entity->field_B8, entity->field_AC.x, entity->field_AC.y);
+            MathHelpers_Unknown4(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+                                 entity->endLerpPos.y);
             break;
     }
 

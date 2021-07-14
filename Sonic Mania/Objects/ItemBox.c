@@ -12,7 +12,7 @@ void ItemBox_Update(void)
 #if RETRO_USE_PLUS
             if (globals->characterFlags != 0x1F || globals->gameMode != MODE_ENCORE) {
 #endif
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 7, &entity->contentsData, 0, 0);
+                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 7, &entity->contentsData, false, 0);
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     int id = 0;
@@ -20,7 +20,7 @@ void ItemBox_Update(void)
                         if (++entity->contentsData.frameID > 4)
                             entity->contentsData.frameID = 0;
                         if (++id > 5) {
-                            RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, 0, 0);
+                            RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, false, 0);
                             RSDK.PrintLog(SEVERITY_NONE, "Bad Change Item State");
                         }
                     }
@@ -29,7 +29,7 @@ void ItemBox_Update(void)
 #if RETRO_USE_PLUS
             }
             else {
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, 0, 0);
+                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, false, 0);
             }
 #endif
         }

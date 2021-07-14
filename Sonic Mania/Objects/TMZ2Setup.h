@@ -5,7 +5,14 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    bool32 paletteInit;
+    int aniTileDelay;
+    int aniTileFrame;
+    int dword10;
+    int dword14;
+    ushort aniTiles;
+    ushort dynTiles;
 } ObjectTMZ2Setup;
 
 // Entity Class
@@ -28,6 +35,10 @@ void TMZ2Setup_EditorLoad(void);
 void TMZ2Setup_Serialize(void);
 
 // Extra Entity Functions
+void TMZ2Setup_DrawLayerCB_A(void);
+void TMZ2Setup_DrawLayerCB_B(void);
 
+void TMZ2_DrawDynTiles1(void);
+void TMZ2_DrawDynTiles2(void);
 
 #endif //!OBJ_TMZ2SETUP_H

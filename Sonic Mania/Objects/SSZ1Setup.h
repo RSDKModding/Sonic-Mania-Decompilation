@@ -6,6 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
+    int field_4;
+    TileLayer *layer1Ptr;
+    EntitySSZ1Outro *outroPtr;
 } ObjectSSZ1Setup;
 
 // Entity Class
@@ -28,6 +31,7 @@ void SSZ1Setup_EditorLoad(void);
 void SSZ1Setup_Serialize(void);
 
 // Extra Entity Functions
+void SSZ1Setup_StageFinishCB(void);
 
 
 #endif //!OBJ_SSZ1SETUP_H

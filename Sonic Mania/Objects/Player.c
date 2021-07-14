@@ -188,7 +188,7 @@ void Player_LateUpdate(void)
 
         switch (entity->hurtFlag) {
             default: break;
-            case 1: RSDK.PlaySFX(Player->sfx_Hurt, 0, 255); break;
+            case 1: RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
             case 2:
                 entity->hurtFlag   = 0;
                 entity->velocity.y = -0x68000;
@@ -2270,7 +2270,7 @@ bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox
     Hitbox *otherHitbox  = &defaultHitbox;
     if (shield->objectID != Shield->objectID || shield->state != Shield_State_Insta) {
         Hitbox *hitbox = player->outerbox;
-        if (hitbox)
+        if (!hitbox)
             hitbox = RSDK.GetHitbox(&player->playerAnimator, 0);
 
         if (hitbox)

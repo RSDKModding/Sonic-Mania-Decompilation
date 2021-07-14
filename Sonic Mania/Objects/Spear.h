@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxSpear;
 } ObjectSpear;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    byte orientation;
+    int interval;
+    int intervalOffset;
+    int duration;
+    int field_6C;
+    Vector2 startPos;
+    int field_78;
+    int field_7C;
+    Hitbox hitbox;
+    Animator animator;
+    Animator animator2;
 } EntitySpear;
 
 // Object Struct
@@ -28,6 +42,7 @@ void Spear_EditorLoad(void);
 void Spear_Serialize(void);
 
 // Extra Entity Functions
+void Spear_Unknown1(void);
 
 
 #endif //!OBJ_SPEAR_H

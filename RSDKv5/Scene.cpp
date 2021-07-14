@@ -764,7 +764,7 @@ void LoadStageGIF(char *filepath)
 
     AllocateStorage(sizeof(GifDecoder), (void **)&tileset.decoder, DATASET_TMP, true);
 
-    if (LoadGIF(&tileset, filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x4000) {
+    if (LoadGIF(&tileset, filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
         tileset.dataPtr = tilesetGFXData;
         LoadGIF(&tileset, 0, false);
 
@@ -780,42 +780,41 @@ void LoadStageGIF(char *filepath)
             }
         }
 
-        tileset.palette = NULL;
-        tileset.decoder = NULL;
-        tileset.dataPtr = NULL;
-
         // Flip X
-        for (int t = 0; t < TILE_COUNT; ++t) {
-            for (int y = 0; y < TILE_SIZE; ++y) {
-                for (int x = 0; x < TILE_SIZE; ++x) {
-                    int dst             = (TILESET_SIZE * FLIP_X) + (t * TILE_DATASIZE) + (y * TILE_SIZE) + x;
-                    int src             = (t * TILE_DATASIZE) + (y * TILE_SIZE) + ((TILE_SIZE - 1) - x);
-                    tilesetGFXData[dst] = tilesetGFXData[src];
-                }
+        byte *srcGFXData = tilesetGFXData;
+        byte *dstGFXData = &tilesetGFXData[(FLIP_X * TILESET_SIZE) + (TILE_SIZE - 1)];
+        for (int t = 0; t < 0x400 * TILE_SIZE; ++t) {
+            for (int r = 0; r < TILE_SIZE; ++r) {
+                *dstGFXData-- = *srcGFXData++;
             }
+            dstGFXData += (TILE_SIZE * 2);
         }
 
         // Flip Y
-        for (int t = 0; t < TILE_COUNT; ++t) {
+        srcGFXData = tilesetGFXData;
+        for (int t = 0; t < 0x400; ++t) {
+            dstGFXData = &tilesetGFXData[(FLIP_Y * TILESET_SIZE) + (t * TILE_DATASIZE) + (TILE_DATASIZE - TILE_SIZE)];
             for (int y = 0; y < TILE_SIZE; ++y) {
                 for (int x = 0; x < TILE_SIZE; ++x) {
-                    int dst             = (TILESET_SIZE * FLIP_Y) + (t * TILE_DATASIZE) + (y * TILE_SIZE) + x;
-                    int src             = (t * TILE_DATASIZE) + (((TILE_SIZE - 1) - y) * TILE_SIZE) + x;
-                    tilesetGFXData[dst] = tilesetGFXData[src];
+                    *dstGFXData++ = *srcGFXData++;
                 }
+                dstGFXData -= (TILE_SIZE * 2);
             }
         }
 
         // Flip XY
-        for (int t = 0; t < TILE_COUNT; ++t) {
-            for (int y = 0; y < TILE_SIZE; ++y) {
-                for (int x = 0; x < TILE_SIZE; ++x) {
-                    int dst             = (TILESET_SIZE * FLIP_XY) + (t * TILE_DATASIZE) + (y * TILE_SIZE) + x;
-                    int src             = (t * TILE_DATASIZE) + (((TILE_SIZE - 1) - y) * TILE_SIZE) + ((TILE_SIZE - 1) - x);
-                    tilesetGFXData[dst] = tilesetGFXData[src];
-                }
+        srcGFXData = &tilesetGFXData[(FLIP_Y * TILESET_SIZE)];
+        dstGFXData = &tilesetGFXData[(FLIP_XY * TILESET_SIZE) + (TILE_SIZE - 1)];
+        for (int t = 0; t < 0x400 * TILE_SIZE; ++t) {
+            for (int r = 0; r < TILE_SIZE; ++r) {
+                *dstGFXData-- = *srcGFXData++;
             }
+            dstGFXData += (TILE_SIZE * 2);
         }
+
+        tileset.palette = NULL;
+        tileset.decoder = NULL;
+        tileset.dataPtr = NULL;
     }
 }
 

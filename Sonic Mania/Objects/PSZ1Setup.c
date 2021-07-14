@@ -75,7 +75,105 @@ void PSZ1Setup_StaticUpdate(void)
         }
     }
 
-    //TODO: the rest
+    if (Zone->screenBoundsB1[0] == 2944) {
+        EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        if (player->position.y < 0xAA00000) {
+            if (player->position.y <= 0x900000) {
+                if (0xAC0000 > 0) {
+                    EntityCamera *camera = player->camera;
+                    camera->position.y += 167772160;
+                    camera->center.y += 2560;
+                    RSDK_screens[camera->screenID].position.y += 2560;
+                    player->position.y += 0xA000000;
+                    TileLayer *layer0 = RSDK.GetSceneLayer(0);
+                    TileLayer *layer1 = RSDK.GetSceneLayer(1);
+                    layer0->scrollPos -= 0xA00000;
+                    layer1->scrollPos -= 0x2800000;
+                    if (layer0->scrollPos < 0)
+                        layer0->scrollPos += 0x4000000;
+
+                    if (layer1->scrollPos < 0)
+                        layer1->scrollPos += 0x6000000;
+                }
+
+                if (RSDK_screens->position.y >= 384) {
+                    RSDK_screens->position.y += 2560;
+                }
+            }
+        }
+        else {
+            if (0xAC0000 > 0) {
+                EntityCamera* camera = player->camera;
+                camera->position.y -= 0xA000000;
+                camera->center.y -= 0xA00;
+                RSDK_screens[camera->screenID].position.y -= 2560;
+                player->position.y -= 0xA000000;
+                TileLayer *layer0 = RSDK.GetSceneLayer(0);
+                TileLayer *layer1 = RSDK.GetSceneLayer(1);
+                layer0->scrollPos += 0xA00000;
+                layer1->scrollPos += 0x2800000;
+
+                if (layer0->scrollPos >= 0x6E000000)
+                    layer0->scrollPos -= 0x4000000;
+
+                if (layer1->scrollPos >= 0x6E000000)
+                    layer1->scrollPos -= 0x6000000;
+            }
+
+            if (RSDK_screens->position.y >= 2560) {
+                RSDK_screens->position.y -= 2560;
+            }
+        }
+
+        int camY = player->camera->position.y;
+        if (camY < 0x6100000) {
+            if (camY <= 0x2800000) {
+                if (PSZ1Setup->field_A0 == 1) {
+                    PSZ1Setup->field_A0 = 0;
+                    PSZ1Setup_LevelWrap_Top();
+                }
+            }
+        }
+        else {
+            if (!PSZ1Setup->field_A0) {
+                PSZ1Setup->field_A0 = 1;
+                PSZ1Setup_LevelWrap_Bottom();
+            }
+        }
+    }
+
+    if (PSZ1Setup->flag) {
+        if (PSZ1Setup->petalTimer <= 0) {
+            foreach_active(Player, player) {
+                Hitbox *playerHitbox = Player_GetHitbox(player);
+                ushort tile                  = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                bool32 lowFlag = true;
+                if (tile == 0xFFFF) {
+                    tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    lowFlag = false;
+                }
+
+                if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
+                    if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
+                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, RSDK_sceneInfo->entity, player->position.x,
+                                                                                     player->position.y + (playerHitbox->bottom << 16));
+                        //pile->field_62   = 4;
+                        //pile->field_63   = lowFlag;
+                        //pile->field_64 = 0x40000;
+                        //pile->field_68 = 0x40000;
+                        //pile->field_A0 = 1;
+                        //pile->field_98      = 0xB5555;
+                        //pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
+                        //pile->field_8C = player->groundVel >> 1;
+                        PSZ1Setup->petalTimer = 3;
+                    }
+                }
+            }
+        }
+        else {
+            PSZ1Setup->petalTimer--;
+        }
+    }
 }
 
 void PSZ1Setup_Draw(void) {}

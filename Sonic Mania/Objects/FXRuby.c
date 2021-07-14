@@ -8,15 +8,13 @@ void FXRuby_Update(void)
     StateMachine_Run(entity->state);
 }
 
-void FXRuby_LateUpdate(void)
-{
-
-}
+void FXRuby_LateUpdate(void) {}
 
 void FXRuby_StaticUpdate(void)
 {
     if (Zone) {
-        foreach_active(FXRuby, fxRuby) {
+        foreach_active(FXRuby, fxRuby)
+        {
             RSDK.AddDrawListRef(Zone->hudDrawOrder + 1, RSDK.GetEntityID(fxRuby));
             foreach_break;
         }
@@ -47,7 +45,7 @@ void FXRuby_Draw(void)
     }
 }
 
-void FXRuby_Create(void* data)
+void FXRuby_Create(void *data)
 {
     RSDK_THIS(FXRuby);
     if (!RSDK_sceneInfo->inEditor) {
@@ -56,7 +54,7 @@ void FXRuby_Create(void* data)
         if (Zone)
             entity->drawOrder = Zone->drawOrderHigh;
         else
-            entity->drawOrder = 15;
+            entity->drawOrder = DRAWLAYER_COUNT - 1;
         entity->radiusSpeed = 4;
         if (data) {
             entity->state = (void (*)(void))data;
@@ -72,11 +70,9 @@ void FXRuby_StageLoad(void)
     FXRuby->fgLow  = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG Low"));
     FXRuby->fgHigh = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG High"));
 
-    for (int i = 0; i < 0x200; ++i)
-        FXRuby->deformData[i] = RSDK.Rand(-64, 64);
+    for (int i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
 
-    for (int i = 0; i < 0x10000; ++i)
-        FXRuby->lookupTable[0xFFFF - i] = i;
+    for (int i = 0; i < 0x10000; ++i) FXRuby->lookupTable[0xFFFF - i] = i;
 }
 
 void FXRuby_Unknown1(void)
@@ -96,41 +92,35 @@ void FXRuby_Unknown2(void)
     RSDK_THIS(FXRuby);
 
     int timer = 0;
-    int id    = 0;
     if (Zone)
         timer = Zone->timer;
     else
         timer = UIWidgets->arrayIndex;
 
+    
+    int *dataPtr = NULL;
     for (int l = 0; l < LAYER_COUNT; ++l) {
-         TileLayer *layer = RSDK.GetSceneLayer(l);
-         if (layer->width && layer->drawLayer[0] != DRAWLAYER_COUNT) {
-             layer->deformationOffset += 3;
+        TileLayer *layer = RSDK.GetSceneLayer(l);
+        if (layer->width && layer->drawLayer[0] != DRAWLAYER_COUNT) {
+            layer->deformationOffset += 3;
 
-             int *deformData = layer->deformationData;
-             if (id) {
-                 //TODO: fix this lol
-                 int offset  = id - (int)(size_t)deformData;
-                 for (int s = 0; s < 0x200; ++s) {
-                     int val           = *(int *)((char *)deformData + offset);
-                     *deformData       = val;
-                     deformData[0x200] = val;
-                     deformData++;
-                 }
-             }
-             else {
-                 int cnt = 8 * timer;
-                 for (int s = 0; s < 0x200; ++s) {
-                     int angle         = RSDK.Sin256(4 * id);
-                     int deform        = ((entity->fadeWhite * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
-                     deformData[id]         = deform;
-                     deformData[id + 0x200] = deform;
-
-                     //deformData++;
-                     id++;
-                 }
-             }
-         }
+            int *deformData = layer->deformationData;
+            if (dataPtr) {
+                for (int s = 0; s < 0x200; ++s) {
+                    deformData[s]         = dataPtr[s];
+                    deformData[s + 0x200] = dataPtr[s + 0x200];
+                }
+            }
+            else {
+                int cnt = 8 * timer;
+                for (int s = 0; s < 0x200; ++s) {
+                    int angle             = RSDK.Sin256(4 * s);
+                    deformData[s]         = ((entity->fadeWhite * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
+                    deformData[s + 0x200] = deformData[s];
+                }
+                dataPtr = deformData;
+            }
+        }
     }
 }
 
@@ -153,8 +143,9 @@ void FXRuby_Unknown4(void)
     }
 }
 
-void FXRuby_Unknown5(void) {
-    //what
+void FXRuby_Unknown5(void)
+{
+    // what
 }
 void FXRuby_Unknown6(void)
 {
@@ -183,15 +174,9 @@ void FXRuby_Unknown9(void)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
-void FXRuby_EditorDraw(void)
-{
+void FXRuby_EditorDraw(void) {}
 
-}
-
-void FXRuby_EditorLoad(void)
-{
-
-}
+void FXRuby_EditorLoad(void) {}
 
 void FXRuby_Serialize(void)
 {
@@ -200,4 +185,3 @@ void FXRuby_Serialize(void)
     RSDK_EDITABLE_VAR(FXRuby, VAR_ENUM, fadeBlack);
     RSDK_EDITABLE_VAR(FXRuby, VAR_BOOL, waitForTrigger);
 }
-

@@ -10,7 +10,16 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    bool32 field_60;
+    int timer;
+    int timer2;
+    int gravityStrength;
+    int field_70;
+    Hitbox hitbox;
+    Animator animator;
 } EntityProjectile;
 
 // Object Struct
@@ -28,6 +37,8 @@ void Projectile_EditorLoad(void);
 void Projectile_Serialize(void);
 
 // Extra Entity Functions
-
+void Projectile_Unknown1(void);
+void Projectile_Unknown2(void);
+void Projectile_Unknown3(void);
 
 #endif //!OBJ_PROJECTILE_H

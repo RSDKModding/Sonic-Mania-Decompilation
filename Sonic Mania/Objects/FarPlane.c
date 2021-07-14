@@ -65,7 +65,7 @@ void FarPlane_Create(void *data)
 void FarPlane_StageLoad(void)
 {
     FarPlane->layerID = RSDK.GetSceneLayerID("Far Plane");
-    if (FarPlane->layerID != -1) {
+    if (FarPlane->layerID != 0xFFFF) {
         TileLayer *layer                               = RSDK.GetSceneLayer(FarPlane->layerID);
         layer->drawLayer[0]                            = DRAWLAYER_COUNT;
         layer->scanlineCallback                        = FarPlane_Unknown5;

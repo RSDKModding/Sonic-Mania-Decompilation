@@ -3960,8 +3960,10 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
         //FLIP_NONE
         byte *tileGFXData = &tilesetGFXData[tileIndex << 8];
+        int cnt           = 0;
         for (int fy = 0; fy < height; fy += TILE_SIZE) {
-            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
+            byte *gfxData = &surface->dataPtr[((fy + srcY) << surface->lineSize) + srcX];
+            cnt += ((width - 1) / TILE_SIZE) + 1;
             for (int fx = 0; fx < width; fx += TILE_SIZE) {
                 byte *gfxDataPtr = &gfxData[fx];
                 for (int ty = 0; ty < TILE_SIZE; ++ty) {
@@ -3974,52 +3976,41 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
         }
 
         //FLIP_X
-        tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_X * TILESET_SIZE)];
-        for (int fy = 0; fy < height; fy += TILE_SIZE) {
-            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += TILE_SIZE) {
-                byte *gfxDataPtr = &gfxData[fx];
-                for (int ty = 0; ty < TILE_SIZE; ++ty) {
-                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
-                        tileGFXData[(TILE_SIZE - 1) - tx] = *gfxDataPtr++;
-                    }
-                    tileGFXData += TILE_SIZE;
-                    gfxDataPtr += surface->width - TILE_SIZE;
+        byte *srcTileGFXData = &tilesetGFXData[tileIndex << 8];
+        if (cnt * TILE_SIZE > 0) {
+            tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_X * TILESET_SIZE) + (TILE_SIZE - 1)];
+
+            for (int i = 0; i < cnt * TILE_SIZE; ++i) {
+                for (int p = 0; p < TILE_SIZE; ++p) {
+                    *tileGFXData-- = *srcTileGFXData++;
                 }
+                tileGFXData += (TILE_SIZE * 2);
             }
         }
 
         //FLIP_Y
-        tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE)];
-        for (int fy = 0; fy < height; fy += TILE_SIZE) {
-            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += TILE_SIZE) {
-                byte *gfxDataPtr = &gfxData[fx];
-                for (int ty = 0; ty < TILE_SIZE; ++ty) {
-                    int py = (((TILE_SIZE - 1) - ty) * TILE_SIZE);
-                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
-                        tileGFXData[py + tx] = *gfxDataPtr++;
-                    }
-                    gfxDataPtr += surface->width - TILE_SIZE;
+        srcTileGFXData = &tilesetGFXData[tileIndex << 8];
+        if (cnt * TILE_SIZE > 0) {
+            tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE) + (TILE_DATASIZE - TILE_SIZE)];
+
+            for (int i = 0; i < cnt * TILE_SIZE; ++i) {
+                for (int p = 0; p < TILE_SIZE; ++p) {
+                    *tileGFXData++ = *srcTileGFXData++;
                 }
-                tileGFXData += TILE_DATASIZE;
+                tileGFXData -= (TILE_SIZE * 2);
             }
         }
 
         //FLIP_XY
-        tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_XY * TILESET_SIZE)];
-        for (int fy = 0; fy < height; fy += TILE_SIZE) {
-            byte *gfxData = &surface->dataPtr[((fy + srcY) * surface->width) + srcX];
-            for (int fx = 0; fx < width; fx += TILE_SIZE) {
-                byte *gfxDataPtr = &gfxData[fx];
-                //tileGFXData += TILE_DATASIZE - 1;
-                for (int ty = 0; ty < TILE_SIZE; ++ty) {
-                    for (int tx = 0; tx < TILE_SIZE; ++tx) {
-                        tileGFXData[(((TILE_SIZE - 1) - ty) * TILE_SIZE) + ((TILE_SIZE - 1) - tx)] = *gfxDataPtr++;
-                    }
-                    gfxDataPtr += surface->width - TILE_SIZE;
+        srcTileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE)];
+        if (cnt * TILE_SIZE > 0) {
+            tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_XY * TILESET_SIZE) + (TILE_SIZE - 1)];
+
+            for (int i = 0; i < cnt * TILE_SIZE; ++i) {
+                for (int p = 0; p < TILE_SIZE; ++p) {
+                    *tileGFXData-- = *srcTileGFXData++;
                 }
-                tileGFXData += TILE_DATASIZE;
+                tileGFXData += (TILE_SIZE * 2);
             }
         }
    }

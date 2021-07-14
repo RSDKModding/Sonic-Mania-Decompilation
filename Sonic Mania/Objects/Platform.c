@@ -976,22 +976,24 @@ void Platform_Unknown4(void)
     RSDK_THIS(Platform);
     entity->drawPos.x += entity->velocity.x;
     entity->drawPos.y += entity->velocity.y;
-    EntityPlatform *platform = (EntityPlatform *)RSDK.GetEntityByID(entity->speed);
+    EntityPlatformNode *node = RSDK_GET_ENTITY(entity->speed, PlatformNode);
 
     if (entity->velocity.y <= 0) {
-        if (entity->drawPos.y < platform->position.y)
-            entity->drawPos.y = platform->position.y;
+        if (entity->drawPos.y < node->position.y)
+            entity->drawPos.y = node->position.y;
     }
-    else if (entity->drawPos.y > platform->position.y) {
-        entity->drawPos.y = platform->position.y;
+    else {
+        if (entity->drawPos.y > node->position.y)
+            entity->drawPos.y = node->position.y;
     }
 
     if (entity->velocity.x <= 0) {
-        if (entity->drawPos.x < platform->position.x)
-            entity->drawPos.x = platform->position.x;
+        if (entity->drawPos.x < node->position.x)
+            entity->drawPos.x = node->position.x;
     }
-    else if (entity->drawPos.x > platform->position.x) {
-        entity->drawPos.x = platform->position.x;
+    else {
+        if (entity->drawPos.x > node->position.x)
+            entity->drawPos.x = node->position.x;
     }
 }
 

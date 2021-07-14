@@ -38,8 +38,7 @@ typedef struct {
     char field_6F;
     int dword70;
     int dword74;
-    int field_78;
-    int field_7C;
+    Vector2 originPos;
     int timer;
     int dword84;
     int colourSet;

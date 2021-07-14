@@ -4,14 +4,11 @@ ObjectGHZ2Outro *GHZ2Outro;
 
 void GHZ2Outro_Update(void)
 {
-    void *states_GHZ2[3]  = { GHZ2Outro_CutsceneState1_Unknown1, GHZ2Outro_CutsceneState1_Unknown2, NULL };
-    void *states_Outro[7] = { GHZ2Outro_CutsceneState2_Unknown1,
-                              GHZ2Outro_CutsceneState2_Unknown2,
-                              GHZ2Outro_CutsceneState2_Unknown3,
-                              GHZ2Outro_CutsceneState2_Unknown4,
-                              GHZ2Outro_CutsceneState2_Unknown5,
-                              GHZ2Outro_CutsceneState2_Unknown6,
-                              NULL };
+    void *states_GHZ2[]  = { GHZ2Outro_CutsceneState1_Unknown1, GHZ2Outro_CutsceneState1_Unknown2, NULL };
+    void *states_Outro[] = { GHZ2Outro_CutsceneState2_Unknown1, GHZ2Outro_CutsceneState2_Unknown2,
+                              GHZ2Outro_CutsceneState2_Unknown3, GHZ2Outro_CutsceneState2_Unknown4,
+                              GHZ2Outro_CutsceneState2_Unknown5, GHZ2Outro_CutsceneState2_Unknown6,
+                              GHZ2Outro_LoadNextStage,           NULL };
 
     RSDK_THIS(GHZ2Outro);
     if (!entity->type) {
@@ -64,7 +61,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
     EntityDERobot *robot = (EntityDERobot *)entity->DERobot;
-    // robot->state       = StateMachine_None;
+    robot->state       = StateMachine_None;
     robot->active = ACTIVE_NEVER;
     for (int p = 0; p < Player->playerCount; ++p) {
         CutsceneSeq_LockPlayerControl(RSDK_GET_ENTITY(p, Player));
@@ -140,12 +137,12 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
 
         foreach_all(DERobot, robot)
         {
-            // robot->state  = StateMachine_None;
+            robot->state  = StateMachine_None;
             robot->active  = ACTIVE_NORMAL;
             robot->visible = true;
         }
-        // EntityDERobot *deRobot = (EntityDERobot *)entity->DERobot;
-        // deRobot->state  = (int)DERobot_Unknown43;
+        EntityDERobot *deRobot = (EntityDERobot *)entity->DERobot;
+        deRobot->state  = DERobot_Unknown43;
 
         CutsceneHBH_Unknown8();
         CutsceneHBH_Unknown10();
@@ -238,24 +235,23 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         eggman->animID     = 3;
     }
     if (host->timer == 160) {
-        /*foreach_active(DERobot, robot)
+        foreach_active(DERobot, robot)
         {
             if (robot->aniID == 2 && robot->frameID == 2) {
-                robot->currentState = (int)DERobot_Unknown23;
+                robot->state = DERobot_Unknown23;
             }
-            robot->currentState = (int)DERobot_Unknown23;
         }
-        RSDK.PlaySFX(DERobot->sfxButton2, 0, 255);*/
+        RSDK.PlaySFX(DERobot->sfxButton2, 0, 255);
     }
     if (host->timer == 240) {
         eggman->state  = Eggman_Unknown2;
         eggman->animID = 2;
-        Music_SetMusicTrack("RubyPresence.ogg", 5, 198457);
+        Music_SetMusicTrack("RubyPresence.ogg", TRACK_EGGMAN1, 198457);
         Music_TransitionTrack(TRACK_EGGMAN1, 0.025);
     }
 
     if (host->timer == 272) {
-        EntityCutsceneHBH *shinobi = CutsceneHBH_GetEntity(HBH_SHINOBI);
+        EntityCutsceneHBH *shinobi = CutsceneHBH_GetEntity(HBH_MYSTIC);
         if (shinobi)
             shinobi->state = CutsceneHBH_Unknown15;
         Camera_Unknown3(0, 0, entity->position.x, entity->position.y - 0x400000, 1);
@@ -333,7 +329,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown5(EntityCutsceneSeq *host)
 bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityDERobot *deRobot = (EntityDERobot *)entity->DERobot;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
     EntityPlayer *player1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
@@ -342,7 +338,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
         fxRuby = (EntityFXRuby *)entity->fxRuby;
     }
     else {
-        fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, deRobot->position.x, deRobot->position.y);
+        fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
         entity->fxRuby    = (Entity *)fxRuby;
         Camera_ShakeScreen(4, 0, 4);
@@ -357,13 +353,13 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
                 if (host->timer == host->field_68 + 48) {
                     fxRuby->fadeBlack = 64;
                     fxRuby->state     = FXRuby_Unknown6;
-                    PhantomRuby_PlaySFX(4);
+                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(4, 0, 4);
                 }
                 else if (host->timer == host->field_68 + 180) {
                     fxRuby->fadeBlack = 32;
                     fxRuby->state     = FXRuby_Unknown6;
-                    PhantomRuby_PlaySFX(1);
+                    PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(4, 0, 4);
                     Music_FadeOut(0.025);
                     host->field_68    = host->timer;
@@ -382,8 +378,8 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
                         break;
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
 
-                    int valX = (deRobot->position.x - 0x400000) - player->position.x;
-                    int valY = (deRobot->position.y - (0xA00000 + 944)) - player->position.y;
+                    int valX = (ruby->position.x - 0x400000) - player->position.x;
+                    int valY = (ruby->position.y - (0xA00000 + 944)) - player->position.y;
 
                     player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->field_68)) << 12) + valX) >> 5;
                     player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->field_68)) << 12) + valY) >> 5;
@@ -410,6 +406,22 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
         }
     }
 
+    return false;
+}
+
+bool32 GHZ2Outro_LoadNextStage(EntityCutsceneSeq *host)
+{
+    if (host->timer == 16) {
+        globals->enableIntro = true;
+#if RETRO_USE_PLUS
+        if (globals->gameMode == MODE_ENCORE)
+            RSDK.LoadScene("Encore Mode", "Chemical Plant Zone+ 1");
+        else
+#endif
+            RSDK.LoadScene("Mania Mode", "Chemical Plant Zone 1");
+        RSDK.InitSceneLoad();
+        return true;
+    }
     return false;
 }
 

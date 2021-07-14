@@ -56,6 +56,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_CutsceneState2_Unknown5(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_LoadNextStage(EntityCutsceneSeq *host);
 
 void GHZ2Outro_Cutscene_SkipCB(void);
 

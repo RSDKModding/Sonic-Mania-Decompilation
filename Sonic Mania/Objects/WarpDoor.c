@@ -93,10 +93,10 @@ void WarpDoor_Update(void)
                                            barrier->field_5C = 1;
                                     }
                                     tag->fadeTimer = 512;
-                                    // if (entity->destinationTag == 99 || entity->destinationTag == 100)
-                                    //    TMZ2_DrawDynTiles1();
-                                    // else
-                                    //    TMZ2_DrawDynTiles2();
+                                    if (entity->destinationTag == 99 || entity->destinationTag == 100)
+                                       TMZ2_DrawDynTiles1();
+                                    else
+                                       TMZ2_DrawDynTiles2();
                                 }
                             }
                             else if (RSDK.CheckStageFolder("OOZ2")) {

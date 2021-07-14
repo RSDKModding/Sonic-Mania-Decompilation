@@ -73,7 +73,7 @@ void Eggman_Unknown2(void)
     RSDK_THIS(Eggman);
 
     RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID >= entity->data.frameCount) {
+    if (entity->data.frameID >= entity->data.frameCount - 1) {
         RSDK.SetSpriteAnimation(Eggman->spriteIndex, entity->animID, &entity->data, true, 0);
         entity->state = Eggman_Unknown1;
     }

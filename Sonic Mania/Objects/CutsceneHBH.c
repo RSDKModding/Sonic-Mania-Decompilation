@@ -289,7 +289,8 @@ void CutsceneHBH_Unknown9(void)
         RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->data, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->altData, true, 0);
         entity->timer      = 0;
-        entity->field_7C   = entity->position.y;
+        entity->originPos.x   = entity->position.x;
+        entity->originPos.y   = entity->position.y;
         entity->velocity.x = 0x30000;
         entity->state      = CutsceneHBH_Unknown16;
     }
@@ -377,50 +378,38 @@ void CutsceneHBH_Unknown16(void)
         if (entity->velocity.x < 0x30000)
             entity->velocity.x += 0x4000;
 
-        if (!entity->direction) {
-            if (entity->position.x - entity->field_78 <= 0x300000) {
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
-            }
-            else {
+        if (entity->direction == FLIP_NONE) {
+            if (entity->position.x - entity->originPos.x > 0x300000) {
                 entity->timer = 1;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->data, true, 0);
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
             }
+            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
-            if (entity->data.frameID != entity->data.frameCount - 1) {
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
-            }
-            else {
+            if (entity->data.frameID == entity->data.frameCount - 1) {
                 entity->direction = FLIP_NONE;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->data, true, 0);
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
             }
+            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
     }
     else {
         if (entity->velocity.x > -0x30000)
             entity->velocity.x -= 0x4000;
+
         if (entity->direction != FLIP_X) {
-            if (entity->data.frameID != entity->data.frameCount - 1) {
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
-            }
-            else {
+            if (entity->data.frameID == entity->data.frameCount - 1) {
                 entity->direction = FLIP_X;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->data, true, 0);
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
             }
+            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
-
-            if (entity->position.x - entity->field_78 >= -0x300000) {
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
-            }
-            else {
+            if (entity->position.x - entity->originPos.x < -0x300000) {
                 entity->timer = 0;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->data, true, 0);
-                RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
             }
+            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
     }
 }

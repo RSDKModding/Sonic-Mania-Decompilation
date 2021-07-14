@@ -7,7 +7,7 @@ void Animals_Update(void)
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     StateMachine_Run(entity->state);
     if (!entity->behaviour && !RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
 }
 
 void Animals_LateUpdate(void) {}
@@ -29,14 +29,14 @@ void Animals_Create(void *data)
         entity->active = ACTIVE_NORMAL;
     entity->drawFX |= FX_FLIP;
     int type              = 2;
-    entity->visible       = 1;
+    entity->visible       = true;
     entity->updateRange.x = 0x400000;
     entity->updateRange.y = 0x400000;
     entity->drawOrder     = Zone->drawOrderLow;
 #if RETRO_USE_PLUS
     if (!(globals->secrets & 1))
-        type = voidToInt(data);
 #endif
+        type = voidToInt(data);
     if (!entity->type && RSDK.Random(0, 256, &Zone->randKey) == 21) {
         type                  = 2;
         entity->velocity.y    = -0x40000;
@@ -105,12 +105,15 @@ void Animals_CheckPlayerPos(void)
         default:
         case 0: entity->direction = FLIP_X; break;
         case 1: {
-            EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+            EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             if (!player) {
                 entity->direction = FLIP_NONE;
             }
             else if (entity->position.x < player->position.x) {
                 entity->direction = FLIP_NONE;
+            }
+            else {
+                entity->direction = FLIP_X; 
             }
             break;
         }

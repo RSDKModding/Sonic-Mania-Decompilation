@@ -10,7 +10,7 @@ typedef struct {
     int aniTileDelays2[14]; //= { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 };
     int field_58;
     bool32 flag;
-    int field_60;
+    int petalTimer;
     int aniTilesDelayC;
     int aniTilesFrameC;
     int aniTilesDelayD;
@@ -27,7 +27,7 @@ typedef struct {
     int aniTilesFrameB;
     int aniTilesFrameA;
     int field_A0;
-    int hasAchievement;
+    bool32 hasAchievement;
     ushort aniTilesA;
     ushort aniTilesB;
     ushort aniTilesC;

@@ -63,7 +63,7 @@ void MainMenu_Initialize(void)
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_Unknown8(FLIP_NONE, x, y, &hitbox, prompt->position.x, prompt->position.y) /*&& !prompt->buttonID*/)
-            MainMenu->promptPtr = prompt;
+            MainMenu->promptPtr = (Entity*)prompt;
     }
 
     foreach_all(UIDiorama, diorama)
@@ -76,7 +76,7 @@ void MainMenu_Initialize(void)
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_Unknown8(FLIP_NONE, x, y, &hitbox, diorama->position.x, diorama->position.y)) {
-            MainMenu->dioramaPtr = diorama;
+            MainMenu->dioramaPtr = (Entity *)diorama;
             // diorama->parent = MainMenu->menuControlPtr;
         }
     }
@@ -254,7 +254,7 @@ void MainMenu_Unknown2(void)
     compButton->disabled = !SaveGame_CheckUnlock(1);
 }
 
-void MainMenu_Unknown3()
+void MainMenu_Unknown3(void)
 {
     foreach_all(UIButton, button)
     {
@@ -279,7 +279,7 @@ void MainMenu_Unknown3()
     ((EntityUIControl *)MainMenu->menuControlPtr)->unknownCallback3 = MainMenu_Unknown4;
 }
 
-void MainMenu_Unknown4(int a1, int* a2)
+void MainMenu_Unknown4()
 {
     //((EntityUIDiorama *)MainMenu->dioramaPtr)->field_5C = -1;
 }

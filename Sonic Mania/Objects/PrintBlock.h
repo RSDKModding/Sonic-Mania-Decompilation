@@ -5,12 +5,40 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Animator animator;
+    ushort aniFrames;
+    ushort sfxLetter;
 } ObjectPrintBlock;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateCollide);
+    int type;
+    Vector2 amplitude;
+    int speed;
+    int hasTension;
+    sbyte frameID;
+    byte collision;
+    Vector2 targetPos;
+    Vector2 centerPos;
+    Vector2 drawPos;
+    Vector2 collisionOffset;
+    int stood;
+    int collapseDelay;
+    int stoodAngle;
+    byte stoodPlayers;
+    byte pushPlayersL;
+    byte pushPlayersR;
+    Hitbox hitbox;
+    Animator animator;
+    int childCount;
+    ushort interval;
+    ushort intervalOffset;
+    ushort duration;
+    byte letter;
 } EntityPrintBlock;
 
 // Object Struct
@@ -28,6 +56,7 @@ void PrintBlock_EditorLoad(void);
 void PrintBlock_Serialize(void);
 
 // Extra Entity Functions
-
+void PrintBlock_Unknown1(void);
+void PrintBlock_Unknown2(void);
 
 #endif //!OBJ_PRINTBLOCK_H
