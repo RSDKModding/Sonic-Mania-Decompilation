@@ -64,6 +64,7 @@ void LoadScene()
     for (int m = 0; m < MODEL_MAX; ++m) {
         if (modelList[m].scope != SCOPE_GLOBAL) {
             MEM_ZERO(modelList[m]);
+            modelList[m].scope = SCOPE_NONE;
         }
     }
 
@@ -71,6 +72,7 @@ void LoadScene()
     for (int s = 0; s < SCENE3D_MAX; ++s) {
         if (scene3DList[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(scene3DList[s]);
+            scene3DList[s].scope = SCOPE_NONE;
         }
     }
 
@@ -78,6 +80,7 @@ void LoadScene()
     for (int s = 0; s < SPRFILE_COUNT; ++s) {
         if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(spriteAnimationList[s]);
+            spriteAnimationList[s].scope = SCOPE_NONE;
         }
     }
 
@@ -85,6 +88,15 @@ void LoadScene()
     for (int s = 0; s < SURFACE_MAX; ++s) {
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(gfxSurface[s]);
+            gfxSurface[s].scope = SCOPE_NONE;
+        }
+    }
+
+    // Unload sfx channels
+    for (int c = 0; c < CHANNEL_COUNT; ++c) {
+        if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
+            channels[c].soundID = -1;
+            channels[c].state = CHANNEL_NONE;
         }
     }
 
@@ -92,6 +104,7 @@ void LoadScene()
     for (int s = 0; s < SFX_COUNT; ++s) {
         if (sfxList[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(sfxList[s]);
+            sfxList[s].scope = SCOPE_NONE;
         }
     }
 

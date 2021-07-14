@@ -15,7 +15,7 @@ typedef struct {
     int field_14;
     int actID;
     int field_1C;
-    int field_20;
+    bool32 forceNoSave;
     void (*bufferMove_CB)(void);
     void (*saveReplay_CB)(void);
     int field_2C;

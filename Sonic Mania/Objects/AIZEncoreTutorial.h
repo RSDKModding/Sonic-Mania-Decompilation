@@ -6,12 +6,22 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort cutsceneFrames;
+    ushort dustFrames;
 } ObjectAIZEncoreTutorial;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int timer2;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
 } EntityAIZEncoreTutorial;
 
 // Object Struct
@@ -29,6 +39,12 @@ void AIZEncoreTutorial_EditorLoad(void);
 void AIZEncoreTutorial_Serialize(void);
 
 // Extra Entity Functions
+void AIZEncoreTutorial_Unknown1(void);
+void AIZEncoreTutorial_Unknown2(void);
+void AIZEncoreTutorial_Unknown3(void);
+void AIZEncoreTutorial_Unknown4(void);
+void *AIZEncoreTutorial_Unknown5(void);
+
 #endif
 
 #endif //!OBJ_AIZENCORETUTORIAL_H

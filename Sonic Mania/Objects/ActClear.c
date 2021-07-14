@@ -365,7 +365,7 @@ void ActClear_StageLoad(void)
     ActClear->sfx_ScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
     ActClear->sfx_ScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
     ActClear->sfx_Event      = RSDK.GetSFX("Special/Event.wav");
-    ActClear->field_20       = 0;
+    ActClear->forceNoSave       = false;
 }
 
 void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
@@ -618,7 +618,7 @@ void ActClear_LoadNextScene(void)
                 if (Zone->actID > 0)
                     SaveGame->saveRAM[32] = 0;
                 SaveGame_SaveProgress();
-                if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->field_20) {
+                if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
                     if (Zone_IsAct2())
                         SaveGame_MarkZoneCompleted(Zone_GetZoneID());
                     ActClear->field_10 = 1;
@@ -634,7 +634,7 @@ void ActClear_LoadNextScene(void)
             SaveGame_ClearRestartData();
             StarPost_ResetStarPosts();
             SaveGame_SaveProgress();
-            if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->field_20) {
+            if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
                 ActClear->field_10 = 1;
                 SaveGame_SaveFile(ActClear_SaveGameCallback);
             }

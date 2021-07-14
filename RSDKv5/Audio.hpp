@@ -11,6 +11,9 @@
 
 #define MAX_VOLUME (1.0f)
 
+#define LockAudioDevice()   SDL_LockAudio()
+#define UnlockAudioDevice() SDL_UnlockAudio()
+
 struct SFXInfo {
     uint hash[4];
     float *buffer;

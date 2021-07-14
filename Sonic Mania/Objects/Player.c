@@ -979,7 +979,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
         case ID_RAY:
             Player->raySpriteIndex = RSDK.LoadSpriteAnimation("Players/Ray.bin", SCOPE_STAGE);
             if (SizeLaser) {
-                SizeLaser[30].objectID = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE);
+                //SizeLaser[30].objectID = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE);
             }
             if (entity->isChibi) {
                 // entity->spriteIndex  = SizeLaser[30].objectID;
@@ -3394,8 +3394,9 @@ void Player_State_Ground(void)
             }
         }
         else {
-            if (!entity->left && !entity->right)
+            if (!entity->left && !entity->right) {
                 entity->pushing = 0;
+            }
             else {
                 if (abs(entity->groundVel) > 0x10000)
                     entity->pushing = 0;
@@ -5770,8 +5771,8 @@ void Player_State_Victory(void)
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
             case ID_RAY:
-                entity->nextAirState    = 0;
-                entity->nextGroundState = 0;
+                entity->nextAirState    = StateMachine_None;
+                entity->nextGroundState = StateMachine_None;
                 entity->groundVel       = 0;
                 entity->velocity.x      = 0;
                 entity->velocity.y      = 0;
@@ -5781,11 +5782,11 @@ void Player_State_Victory(void)
                         entity->groundVel  = 0;
                     }
                     else {
-                        int id = RSDK.GetFrameID(&entity->playerAnimator);
+                        int id = RSDK.GetFrameID(&entity->playerAnimator) - 48;
                         if (!entity->direction)
-                            entity->groundVel = (id << 16);
+                            entity->groundVel = -(id << 16);
                         else
-                            entity->groundVel = id << 16;
+                            entity->groundVel = (id << 16);
                     }
                 }
                 break;

@@ -38,9 +38,6 @@ SDL_AudioDeviceID audioDevice;
 #endif
 SDL_AudioSpec audioDeviceFormat;
 
-#define LOCK_AUDIO_DEVICE()   SDL_LockAudio();
-#define UNLOCK_AUDIO_DEVICE() SDL_UnlockAudio();
-
 #define AUDIO_FREQUENCY (44100)
 #define AUDIO_FORMAT    (AUDIO_F32SYS) /**< Floating-Point samples */
 #define AUDIO_SAMPLES   (0x800)
@@ -49,8 +46,8 @@ SDL_AudioSpec audioDeviceFormat;
 #define ADJUST_VOLUME(s, v) (s = (s * v) / MAX_VOLUME)
 
 #else
-#define LOCK_AUDIO_DEVICE()   ;
-#define UNLOCK_AUDIO_DEVICE() ;
+#define LockAudioDevice()   ;
+#define UnlockAudioDevice() ;
 #endif
 
 #define MIX_BUFFER_SAMPLES (256)
@@ -157,7 +154,7 @@ bool32 InitAudioDevice()
 }
 void ReleaseAudioDevice()
 {
-    LOCK_AUDIO_DEVICE()
+    LockAudioDevice();
 
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
         MEM_ZERO(channels[i]);
@@ -180,7 +177,7 @@ void ReleaseAudioDevice()
 
     MEM_ZERO(streamInfo);
 
-    UNLOCK_AUDIO_DEVICE()
+    UnlockAudioDevice();
 }
 
 size_t readVorbis(void *mem, size_t size, size_t nmemb, void *ptr)
@@ -442,7 +439,7 @@ void LoadStream(ChannelInfo *channel)
     if (channel->state != CHANNEL_STREAM_LOAD)
         return;
 
-    LOCK_AUDIO_DEVICE();
+    LockAudioDevice();
 
     if (streamInfo.loaded) {
 #if RETRO_USING_SDL2
@@ -511,7 +508,7 @@ void LoadStream(ChannelInfo *channel)
             }
         }
     }
-    UNLOCK_AUDIO_DEVICE();
+    UnlockAudioDevice();
 }
 
 int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loopPoint, bool32 loadASync)
@@ -669,7 +666,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 memcpy(convert.buf, sfxList[id].buffer, size);
                                 SDL_ConvertAudio(&convert);
 
-                                LOCK_AUDIO_DEVICE()
+                                LockAudioDevice();
                                 GEN_HASH(filename, sfxList[id].hash);
                                 sfxList[id].buffer = NULL;
                                 AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
@@ -677,18 +674,18 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 sfxList[id].length             = convert.len_cvt / sizeof(float);
                                 sfxList[id].scope              = scope;
                                 sfxList[id].maxConcurrentPlays = plays;
-                                UNLOCK_AUDIO_DEVICE()
+                                UnlockAudioDevice();
                                 free(convert.buf);
                             }
                             else {
-                                LOCK_AUDIO_DEVICE()
+                                LockAudioDevice();
                                 GEN_HASH(filename, sfxList[id].hash);
                                 //AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
                                 //memcpy(sfxList[id].buffer, wav_buffer, wav_length);
                                 //sfxList[id].length             = wav_length / sizeof(float);
                                 sfxList[id].scope              = scope;
                                 sfxList[id].maxConcurrentPlays = plays;
-                                UNLOCK_AUDIO_DEVICE()
+                                UnlockAudioDevice();
                             }
 
                         }
@@ -707,26 +704,26 @@ void LoadSfx(char *filename, byte plays, byte scope)
                         memcpy(convert.buf, wav_buffer, wav_length);
                         SDL_ConvertAudio(&convert);
 
-                        LOCK_AUDIO_DEVICE()
+                        LockAudioDevice();
                         GEN_HASH(filename, sfxList[id].hash);
                         AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
                         memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
                         sfxList[id].length             = convert.len_cvt / sizeof(float);
                         sfxList[id].scope              = scope;
                         sfxList[id].maxConcurrentPlays = plays;
-                        UNLOCK_AUDIO_DEVICE()
+                        UnlockAudioDevice();
                         SDL_FreeWAV(wav_buffer);
                         free(convert.buf);
                     }
                     else {
-                        LOCK_AUDIO_DEVICE()
+                        LockAudioDevice();
                         GEN_HASH(filename, sfxList[id].hash);
                         AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
                         memcpy(sfxList[id].buffer, wav_buffer, wav_length);
                         sfxList[id].length             = wav_length / sizeof(float);
                         sfxList[id].scope              = scope;
                         sfxList[id].maxConcurrentPlays = plays;
-                        UNLOCK_AUDIO_DEVICE()
+                        UnlockAudioDevice();
                     }
                 }
             }
