@@ -548,6 +548,11 @@ typedef enum {
 } SettingsValues;
 
 typedef enum {
+    SECRET_RICKYMODE = 0,
+    SECRET_SUPERDASH = 1,
+} GameCheats;
+
+typedef enum {
     GROUP_ALL     = 0,
     GROUP_CUSTOM1 = TYPE_COUNT,
     GROUP_CUSTOM2,

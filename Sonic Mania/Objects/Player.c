@@ -1120,8 +1120,8 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
 
 #if RETRO_USE_PLUS
     RSDK.StopSFX(Player->sfx_SwapFail);
-    // if (globals->secrets & 2)
-    // player->movesetPtr = Player_State_ERZSuperDash;
+    //if (globals->medalMods & getMod(SECRET_SUPERDASH))
+    //     player->movesetState = Player_State_ERZSuperDash;
 #endif
 
     switch (player->characterID) {
