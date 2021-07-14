@@ -470,6 +470,16 @@ typedef enum {
 } VarTypes;
 
 typedef enum {
+    DTYPE_BOOL = 1,
+    DTYPE_UINT8,
+    DTYPE_UINT16,
+    DTYPE_UINT32,
+    DTYPE_INT8,
+    DTYPE_INT16,
+    DTYPE_INT32,
+} DebugVarTypes;
+
+typedef enum {
     ACTIVE_NEVER,
     ACTIVE_ALWAYS,
     ACTIVE_NORMAL,

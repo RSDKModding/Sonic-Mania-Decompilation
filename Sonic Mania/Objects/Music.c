@@ -61,7 +61,7 @@ void Music_StageLoad(void)
     Music->nextTrack        = TRACK_NONE;
 #if RETRO_USE_PLUS
     if (RSDK_sku->platform == PLATFORM_DEV)
-        RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, 1, 0, 1);
+        RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, DTYPE_BOOL, false, true);
 #endif
 }
 

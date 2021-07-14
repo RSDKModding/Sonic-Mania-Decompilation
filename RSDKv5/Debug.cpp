@@ -95,31 +95,31 @@ void SetDebugValue(const char *name, void *valPtr, int type, int min, int max)
         strncpy(value->name, name, 0x10);
         value->value = valPtr;
         switch (type) {
-            case 1: // bool
+            case DTYPE_BOOL: // bool
                 value->type       = 0;
                 value->valByteCnt = 4;
                 break;
-            case 2: // byte
+            case DTYPE_UINT8: // byte
                 value->type       = 1;
                 value->valByteCnt = 1;
                 break;
-            case 3: // ushort
+            case DTYPE_UINT16: // ushort
                 value->type       = 1;
                 value->valByteCnt = 2;
                 break;
-            case 4: // uint
+            case DTYPE_UINT32: // uint
                 value->type       = 1;
                 value->valByteCnt = 4;
                 break;
-            case 6: // sbyte
+            case DTYPE_INT8: // sbyte
                 value->type       = 2;
                 value->valByteCnt = 1;
                 break;
-            case 7: // short
+            case DTYPE_INT16: // short
                 value->type       = 2;
                 value->valByteCnt = 2;
                 break;
-            case 8: // int
+            case DTYPE_INT32: // int
                 value->type       = 2;
                 value->valByteCnt = 4;
                 break;

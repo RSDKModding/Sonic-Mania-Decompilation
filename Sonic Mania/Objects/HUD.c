@@ -423,7 +423,7 @@ void HUD_Create(void *data)
         HUD_GetKeyFrame(&entity->taData4, 4);
 #endif
 #if RETRO_USE_PLUS
-        RSDK.SetDebugValue("Show HUD", &entity->visible, 2, 0, 1);
+        RSDK.SetDebugValue("Show HUD", &entity->visible, DTYPE_UINT8, false, true);
 #endif
     }
 }

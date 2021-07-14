@@ -52,6 +52,16 @@ struct DebugValueInfo {
     int max;
 };
 
+typedef enum {
+    DTYPE_BOOL = 1,
+    DTYPE_UINT8,
+    DTYPE_UINT16,
+    DTYPE_UINT32,
+    DTYPE_INT8,
+    DTYPE_INT16,
+    DTYPE_INT32,
+} DebugVarTypes;
+
 extern int debugValCnt;
 extern DebugValueInfo debugValues[DEBUGVAL_MAX];
 

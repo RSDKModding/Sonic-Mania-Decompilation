@@ -641,11 +641,11 @@ void Player_StageLoad(void)
     RSDK_sceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
     RSDK_sceneInfo->debugMode = true; // TEMP
 #if RETRO_USE_PLUS
-    RSDK.SetDebugValue("Debug Mode", &RSDK_sceneInfo->debugMode, 1, 0, 1);
+    RSDK.SetDebugValue("Debug Mode", &RSDK_sceneInfo->debugMode, DTYPE_BOOL, false, true);
 #endif
     if (globals->medalMods & getMod(MEDAL_ANDKNUCKLES)) {
         globals->playerID &= 0xFF;
-        globals->playerID |= (ID_KNUCKLES << 8);
+        globals->playerID |= ID_KNUCKLES_ASSIST;
     }
     Player->playerCount = 0;
     Player->active      = ACTIVE_ALWAYS;

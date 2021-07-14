@@ -297,7 +297,7 @@ typedef struct {
     void (*AddVarEnumValue)(const char* name);
 #if RETRO_USE_PLUS
     void (*ClearDebugValues)(void);
-    void (*SetDebugValue)(const char *name, void *valPtr, int type, int unknown1, int unknown2);
+    void (*SetDebugValue)(const char *name, void *valPtr, DebugVarTypes type, int min, int max);
 #endif
 #if !RETRO_USE_PLUS
     void (*PrintMessage)(void *message, byte type);
