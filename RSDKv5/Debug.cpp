@@ -1032,6 +1032,9 @@ void DevMenu_DebugOptions()
                                 valBuf[0] = 'N';
                             valBuf[1] = 0;
                         }
+                        else {
+                            valBuf[0] = ' ';
+                        }
                         break;
                     }
                     case sizeof(short): {
@@ -1049,6 +1052,9 @@ void DevMenu_DebugOptions()
                                 valBuf[0] = 'N';
                             valBuf[1] = 0;
                         }
+                        else {
+                            valBuf[0] = ' ';
+                        }
                         break;
                     }
                     case sizeof(int): {
@@ -1064,6 +1070,9 @@ void DevMenu_DebugOptions()
                             if (!*v)
                                 valBuf[0] = 'N';
                             valBuf[1] = 0;
+                        }
+                        else {
+                            valBuf[0] = ' ';
                         }
                         break;
                     }
