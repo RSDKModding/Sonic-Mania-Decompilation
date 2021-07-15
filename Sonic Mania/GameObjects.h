@@ -1,11 +1,11 @@
 #ifndef GAMEOBJECTS_H
 #define GAMEOBJECTS_H
 
-#define minVal(a, b)                   ((a) < (b) ? (a) : (b))
-#define maxVal(a, b)                   ((a) > (b) ? (a) : (b))
+#define minVal(a, b)                      ((a) < (b) ? (a) : (b))
+#define maxVal(a, b)                      ((a) > (b) ? (a) : (b))
 #define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
 
-#define intToVoid(x) (void*)(size_t)(x)
+#define intToVoid(x) (void *)(size_t)(x)
 #define voidToInt(x) (int)(size_t)(x)
 
 #define unused(x) (void)x
@@ -21,9 +21,9 @@ typedef struct {
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(byte overlay);
 #if RETRO_GAMEVER == VER_107
-    void(*EGS_Checkout)(int a1);
-    void(*EGS_ShowEncorePage)(int a1);
-    void(*EGS_Unknown4)(int a1);
+    void (*EGS_Checkout)(int a1);
+    void (*EGS_ShowEncorePage)(int a1);
+    void (*EGS_Unknown4)(int a1);
     void (*EGS_RegisterHIDDevice)(void);
 #endif
     void (*UnlockAchievement)(const char *achName);
@@ -93,8 +93,8 @@ typedef struct {
 typedef struct {
     void (*InitGlobalVariables)(void **globals, int size);
     void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
-                         void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void),
-                         void (*editorDraw)(void), void (*editorLoad)(void), void (*serialize)(void));
+                           void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                           void (*editorLoad)(void), void (*serialize)(void));
 #if RETRO_USE_PLUS
     void (*RegisterObjectContainer)(void **structPtr, const char *name, uint objectSize);
 #endif
@@ -109,14 +109,14 @@ typedef struct {
     void *(*GetDrawListRefPtr)(byte layerID, ushort entityID);
     void (*ResetEntityPtr)(void *entity, ushort type, void *data);
     void (*ResetEntitySlot)(ushort slotID, ushort type, void *data);
-    Entity* (*CreateEntity)(ushort type, void *data, int x, int y);
+    Entity *(*CreateEntity)(ushort type, void *data, int x, int y);
     void (*CopyEntity)(void *destEntity, void *srcEntity, bool32 clearSrcEntity);
     bool32 (*CheckOnScreen)(void *entity, Vector2 *range);
     bool32 (*CheckPosOnScreen)(Vector2 *pos, Vector2 *range);
     void (*AddDrawListRef)(byte layer, ushort entityID);
     void (*SwapDrawListEntries)(byte layer, ushort entryStart, ushort entryEnd, ushort count);
     void (*SetDrawLayerProperties)(byte layer, bool32 sorted, void (*callback)(void));
-    void (*LoadScene)(const char* categoryName, const char* sceneName);
+    void (*LoadScene)(const char *categoryName, const char *sceneName);
     void (*SetGameMode)(byte mode);
 #if RETRO_USE_PLUS
     void (*SetHardResetFlag)(bool32 set);
@@ -124,7 +124,7 @@ typedef struct {
     bool32 (*CheckValidScene)(void);
     int (*CheckStageFolder)(const char *folderName);
     int (*InitSceneLoad)(void);
-    int (*GetObjectIDByName)(const char* name);
+    int (*GetObjectIDByName)(const char *name);
     void (*ClearCameras)(void);
     void (*AddCamera)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);
 #if !RETRO_USE_PLUS
@@ -167,7 +167,7 @@ typedef struct {
     void (*PrependText)(TextInfo *info, const char *text);
     void (*AppendString)(TextInfo *info, TextInfo *str);
     void (*AppendText)(TextInfo *info, const char *text);
-    void (*LoadStrings)(TextInfo *dst, const char* path, int);
+    void (*LoadStrings)(TextInfo *dst, const char *path, int);
     void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
     bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
@@ -207,8 +207,8 @@ typedef struct {
     void (*CopyTile)(void);
     void (*DrawAniTiles)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
     void (*FillScreen)(uint colour, int alphaR, int alphaG, int alphaB);
-    ushort (*LoadMesh)(const char* filename, byte scope);
-    ushort (*Create3DScene)(const char* identifier, ushort faceCount, byte scope);
+    ushort (*LoadMesh)(const char *filename, byte scope);
+    ushort (*Create3DScene)(const char *identifier, ushort faceCount, byte scope);
     void (*Prepare3DScene)(ushort index);
     void (*SetDiffuseColour)(ushort index, int x, int y, int z);
     void (*SetDiffuseIntensity)(ushort index, int x, int y, int z);
@@ -220,8 +220,8 @@ typedef struct {
     ushort (*LoadSpriteAnimation)(const char *path, Scopes scope);
     ushort (*CreateSpriteAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
     void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, short frameID);
-    void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
-                          byte rotationFlag);
+    void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed,
+                                byte loopIndex, byte rotationFlag);
     void (*SetSpriteString)(ushort spriteIndex, ushort animID, TextInfo *info);
     void *(*GetSpriteAnimation)(ushort sprIndex, const char *name);
     SpriteFrame *(*GetFrame)(ushort sprIndex, ushort anim, int frame);
@@ -236,13 +236,13 @@ typedef struct {
     void (*SetTileInfo)(ushort layer, int x, int y, ushort tile);
     int (*CopyTileLayer)(ushort dstLayer, int startX1, int startY1, ushort srcLayer, int startX2, int startY2, int countX, int countY);
     void (*ProcessParallax)(TileLayer *TileLayer);
-    ScanlineInfo* (*GetScanlines)(void);
+    ScanlineInfo *(*GetScanlines)(void);
     bool32 (*CheckObjectCollisionTouchBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox);
     bool32 (*CheckObjectCollisionTouchCircle)(void *thisEntity, int thisOffset, void *otherEntity, int otherOffset);
     byte (*CheckObjectCollisionBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*CheckObjectCollisionPlatform)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*ObjectTileCollision)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
-                                bool32 setPos);
+                                  bool32 setPos);
     bool32 (*ObjectTileGrip)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                              sbyte tolerance);
     void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
@@ -294,7 +294,7 @@ typedef struct {
     void (*PrintHitbox)(SeverityModes severity, const char *message, Hitbox *hitbox);
 #endif
     void (*SetActiveVariable)(int objectID, const char *name);
-    void (*AddVarEnumValue)(const char* name);
+    void (*AddVarEnumValue)(const char *name);
 #if RETRO_USE_PLUS
     void (*ClearDebugValues)(void);
     void (*SetDebugValue)(const char *name, void *valPtr, DebugVarTypes type, int min, int max);
@@ -922,18 +922,19 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (byte)object->objectID, offsetof(Entity##object, var))
 #define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
-    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,             \
-                      object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,           \
-                      object##_Serialize)
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
+                        object##_Serialize)
 #if RETRO_USE_PLUS
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
-#define RSDK_THIS(type) Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
+#define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
 #define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
+#define SPAWN_CHILD(obj, data)      Entity##obj *child = (Entity##obj *)RSDK.CreateEntity(obj->objectID, (void*)(data), entity->position.x, entity->position.y)
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
-    info.text       = NULL;                                                                                                                             \
+    info.text       = NULL;                                                                                                                          \
     info.textLength = 0;                                                                                                                             \
     info.length     = 0;
 
@@ -946,15 +947,15 @@ extern RSDKFunctionTable RSDK;
 #define foreach_break                                                                                                                                \
     RSDK.BreakForeachLoop();                                                                                                                         \
     break
-#define foreach_return                                                                                                                                \
+#define foreach_return                                                                                                                               \
     RSDK.BreakForeachLoop();                                                                                                                         \
     return
 
-//used mainly for cutscenes
-#define RSDK_GET_PLAYER(p1, p2, cam) \
-EntityPlayer *p1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player); \
-EntityPlayer *p2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player); \
-EntityCamera *cam  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+// used mainly for cutscenes
+#define RSDK_GET_PLAYER(p1, p2, cam)                                                                                                                 \
+    EntityPlayer *p1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);                                                                                       \
+    EntityPlayer *p2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);                                                                                       \
+    EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
 #define destroyEntity(entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 

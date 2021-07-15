@@ -6,11 +6,24 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	ushort sfxID;
+	ushort animID;
 } ObjectStickyPlatform;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+	StateMachine(state);
+	int type;
+	Vector2 amplitude;
+	int speed;
+	bool32 oscillate;
+	int unused_70;
+	int freeSpots;
+	int cooldowns[4];
+	Vector2 internalPos;
+	Hitbox hitbox;
+	Animator animator;
 } EntityStickyPlatform;
 
 // Object Struct
@@ -28,6 +41,11 @@ void StickyPlatform_EditorLoad(void);
 void StickyPlatform_Serialize(void);
 
 // Extra Entity Functions
+void StickyPlatform_Interact(void);
 
+void StickyPlatform_HandleMovement(void);
+void StickyPlatform_MoveBack(void);
+void StickyPlatform_MoveBackForth(void);
+void StickyPlatform_AddSpeed(void);
 
 #endif //!OBJ_STICKYPLATFORM_H

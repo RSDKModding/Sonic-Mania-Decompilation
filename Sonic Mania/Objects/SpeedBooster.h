@@ -6,11 +6,23 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	void (*defaultState)(void);
+	Hitbox hitbox;
+	unsigned __int16 animID;
+	unsigned __int16 sfxID;
+
 } ObjectSpeedBooster;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+	void (*state)(void);
+	byte speed;
+	int playerPos[4];
+	Vector2 drawPos;
+	byte cooldown;
+	byte playerCooldown[4];
+	Animator animator;
 } EntitySpeedBooster;
 
 // Object Struct
@@ -27,7 +39,17 @@ void SpeedBooster_EditorDraw(void);
 void SpeedBooster_EditorLoad(void);
 void SpeedBooster_Serialize(void);
 
-// Extra Entity Functions
+void SpeedBooster_DebugSpawn(void);
+void SpeedBooster_DebugDraw(void);
 
+// Extra Entity Functions
+void SpeedBooster_BasicState(void);
+void SpeedBooster_SSZState(void);
+void SpeedBooster_MovingState(void);
+
+void SpeedBooster_Interact(void);
+
+void SpeedBooster_Wait1(void);
+void SpeedBooster_Wait2(void);
 
 #endif //!OBJ_SPEEDBOOSTER_H

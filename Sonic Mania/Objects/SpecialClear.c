@@ -28,7 +28,7 @@ void SpecialClear_Draw(void)
     for (int i = 0; i < 7; ++i) {
         int frame = 7;
         if ((id & saveRAM[28]) > 0)
-            frame = id;
+            frame = i;
         entity->data4.frameID = frame;
         drawPos.y             = entity->emeraldPositions[i];
         RSDK.DrawSprite(&entity->data4, &drawPos, true);
