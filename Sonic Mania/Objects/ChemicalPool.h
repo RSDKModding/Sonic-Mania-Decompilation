@@ -65,6 +65,6 @@ void ChemicalPool_SetupColours(void);
 void ChemicalPool_State_HarmfulBlue(void);
 void ChemicalPool_State_Green(void);
 void ChemicalPool_State_Blue(void);
-void ChecmicalPool_State_Change(void);
+void ChemicalPool_State_Change(void);
 
 #endif //!OBJ_CHEMICALPOOL_H
