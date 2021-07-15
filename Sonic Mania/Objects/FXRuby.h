@@ -19,7 +19,7 @@ typedef struct {
     int dword5C;
     int radiusSpeed;
     int dword64;
-    int field_68;
+    int innerRadius;
     int outerRadius;
     int field_70;
     int field_74;

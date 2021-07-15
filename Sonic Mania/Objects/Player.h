@@ -376,8 +376,8 @@ void Player_HandleSuperPalette(void);
 bool32 Player_CheckKeyPress(void);
 void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane);
 void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane);
-Entity* Player_Unknown2(void);
-Entity *Player_Unknown3(void);
+EntityPlayer *Player_Unknown2(void);
+EntityPlayer *Player_Unknown3(void);
 #if RETRO_USE_PLUS
 void Player_Unknown4(void);
 #endif

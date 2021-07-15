@@ -6,12 +6,28 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
+    ushort sfxHuff;
 } ObjectRhinobot;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(timedState);
+    int field_60;
+    int timer;
+    int field_68;
+    int field_6C;
+    bool32 flag;
+    int field_74;
+    int field_78;
+    Vector2 startPos;
+    char startDir;
+    Animator animatorBot;
+    Animator animatorDust;
 } EntityRhinobot;
 
 // Object Struct
@@ -29,6 +45,23 @@ void Rhinobot_EditorLoad(void);
 void Rhinobot_Serialize(void);
 
 // Extra Entity Functions
+bool32 Rhinobot_CheckTileCollisions(void);
+void Rhinobot_CheckHit(void);
+void Rhinobot_CheckOnScreen(void);
+
+void Rhinobot_DebugDraw(void);
+void Rhinobot_DebugSpawn(void);
+
+void Rhinobot_State4(void);
+void Rhinobot_StateSkidding(void);
+void Rhinobot_StateFinishSkid(void);
+void Rhinobot_State1(void);
+
+void Rhinobot_State2(void);
+void Rhinobot_HandleUpdate2(void);
+void Rhinobot_HandleUpdate3(void);
+void Rhinobot_HandleUpdate4(void);
+
 #endif
 
 #endif //!OBJ_RHINOBOT_H

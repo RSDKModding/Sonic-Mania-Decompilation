@@ -34,8 +34,8 @@ void FXRuby_Draw(void)
     }
     else {
         if (entity->outerRadius <= RSDK_screens->width) {
-            if (entity->field_68)
-                RSDK.DrawCircleOutline(entity->position.x, entity->position.y, entity->field_68, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
+            if (entity->innerRadius)
+                RSDK.DrawCircleOutline(entity->position.x, entity->position.y, entity->innerRadius, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
             else
                 RSDK.DrawCircle(entity->position.x, entity->position.y, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
         }
@@ -168,7 +168,7 @@ void FXRuby_Unknown9(void)
     RSDK_THIS(FXRuby);
     entity->radiusSpeed -= 0x3800;
     entity->dword64 += entity->radiusSpeed;
-    entity->field_68    = 0;
+    entity->innerRadius = 0;
     entity->outerRadius = entity->dword64 >> 16;
     if (entity->dword64 <= 0)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);

@@ -1674,33 +1674,33 @@ void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane)
         angle += 32;
     }
 }
-Entity *Player_Unknown2(void)
+EntityPlayer *Player_Unknown2(void)
 {
     int pos = 0x7FFFFFFF;
     RSDK_THIS(Player);
-    Entity *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, );
+    EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
         int dif = abs(player->position.x - entity->position.x);
         if (dif < pos) {
             pos          = dif;
-            returnPlayer = (Entity *)player;
+            returnPlayer = player;
         }
     }
     return returnPlayer;
 }
-Entity *Player_Unknown3(void)
+EntityPlayer *Player_Unknown3(void)
 {
     int pos = 0x7FFFFFFF;
     RSDK_THIS(Player);
-    Entity *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, );
+    EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
         int difX = abs(player->position.x - entity->position.x);
         int difY = abs(player->position.y - entity->position.y);
         if (difX + difY < pos) {
             pos          = difX + difY;
-            returnPlayer = (Entity *)player;
+            returnPlayer = player;
         }
     }
     return returnPlayer;
