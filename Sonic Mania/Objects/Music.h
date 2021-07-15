@@ -81,8 +81,8 @@ void Music_SetMusicTrack(const char *path, byte track, uint loopPoint);
 void Music_State_PlayMusic(void);
 void Music_PlayMusicTrack(byte trackID);
 void Music_PlayTrack(byte trackID);
+void Music_PlayTrackPtr(EntityMusic *entity);
 
-void Music_Unknown1(EntityMusic *entity);
 void Music_Unknown2(byte trackID);
 void Music_Unknown3(EntityMusic *entity);
 bool32 Music_CheckMusicStack(void);

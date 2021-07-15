@@ -55,6 +55,7 @@ void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, by
 
 void TimeAttackData_ClearOptions(void)
 {
+#if RETRO_USE_PLUS
     globals->menuParam[22] = 0;
     memset(&globals->menuParam[22] + 2, 0, 0x100);
     globals->menuParam[87]     = 0;
@@ -66,6 +67,19 @@ void TimeAttackData_ClearOptions(void)
     globals->gameMode          = MODE_MANIA;
     globals->suppressTitlecard = false;
     globals->suppressAutoMusic = false;
+#else
+    globals->menuParam[21] &= 0x0000FFFF;
+    memset(&globals->menuParam[22], 0, 0x100);
+    globals->menuParam[86]     = 0;
+    globals->menuParam[87]     = 0;
+    globals->menuParam[88]     = 0;
+    globals->menuParam[90]     = 0;
+    globals->menuParam[91]     = 0;
+    globals->menuParam[92]     = 0;
+    globals->gameMode          = MODE_NOSAVE;
+    globals->suppressAutoMusic = false;
+    globals->suppressTitlecard = false;
+#endif
 }
 int TimeAttackData_GetManiaListPos(int zoneID, int playerID, int act)
 {

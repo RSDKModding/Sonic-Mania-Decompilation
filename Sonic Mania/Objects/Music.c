@@ -206,7 +206,7 @@ void Music_PlayTrack(byte trackID)
     }
 }
 
-void Music_Unknown1(EntityMusic *entity)
+void Music_PlayTrackPtr(EntityMusic *entity)
 {
     RSDK.GetCString(Music->trackNames[0], &entity->trackFile);
     Music->trackLoops[0] = entity->trackLoop;

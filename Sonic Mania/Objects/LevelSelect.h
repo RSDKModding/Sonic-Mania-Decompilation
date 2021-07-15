@@ -6,32 +6,57 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1; //= 240;
-    int value2[4]; //= { 240, 3, 3, 3 };
-    int value3[9]; //= { 1, 9, 7, 9, 0, 8, 1, 1, 255 };
-    int value4[5]; //= { 4, 1, 2, 6, 255 };
-    int value5[9]; //= { 1, 9, 9, 2, 1, 1, 2, 4, 255 };
-    int value6[9]; //= { 2, 0, 1, 8, 0, 6, 2, 3, 255 };
-    int value7[9]; //= { 1, 9, 8, 9, 0, 5, 0, 1, 255 };
-    int value8[9]; //= { 2, 0, 1, 7, 0, 8, 1, 5, 255 };
-    int value9[5]; //= { 9, 0, 0, 1, 255 };
-    int value10[5]; //= { 6, 2, 1, 4, 255 };
-    int value11;
-    int value12;
-    int value13;
-    ushort value14;
-    ushort value15;
-    ushort value16;
-    ushort value17;
-    ushort value18;
-    bool32 value19;
-    int value20;
-    byte value21;
+    int bgScrollPos;                //= 240;
+    int bgScrollPositions[4];       //= { 240, 3, 3, 3 };
+    int cheat_RickyMode[9];         //= { 1, 9, 7, 9, 0, 8, 1, 1, 255 };
+    int cheat_AllEmeralds[5];       //= { 4, 1, 2, 6, 255 };
+    int cheat_MaxContinues[9];      //= { 1, 9, 9, 2, 1, 1, 2, 4, 255 };
+    int cheat_SwapGameMode[9];      //= { 2, 0, 1, 8, 0, 6, 2, 3, 255 };
+    int cheat_UnlockAllMedals[9];   //= { 1, 9, 8, 9, 0, 5, 0, 1, 255 };
+    int cheat_SuperDash[9];         //= { 2, 0, 1, 7, 0, 8, 1, 5, 255 };
+    int cheat_MaxControl[5];        //= { 9, 0, 0, 1, 255 };
+    int cheat_DisableSuperMusic[5]; //= { 6, 2, 1, 4, 255 };
+    int field_108;
+    int field_10C;
+    int field_110;
+    int field_114;
+    int bgScrollPosID;
+    int dword11C;
+    int soundTestMax;
+    ushort sfxFail;
+    ushort sfxRing;
+    ushort sfxEmerald;
+    ushort sfxContinue;
+    ushort sfxMedalGot;
+    int *cheatCodePtrs[8];
+    int cheatUnknown[8];
+    void (*checkCheatActivated[8])(void);
 } ObjectLevelSelect;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    int timer;
+    int labelID;
+    int soundTestID;
+    int playerID;
+    int player2ID;
+    Entity *labelPtrs2[32];
+    Entity *labelPtrs[32];
+    Entity *soundTestLabel;
+    Entity *zoneIcon;
+    Entity *player1Icon;
+    Entity *player2Icon;
+    Entity *storedTextEntity;
+    int labelCount;
+    int field_18C;
+    int field_190;
+    int field_194;
+    int field_198;
+    int field_19C;
+    int field_1A0;
 } EntityLevelSelect;
 
 // Object Struct
@@ -49,6 +74,25 @@ void LevelSelect_EditorLoad(void);
 void LevelSelect_Serialize(void);
 
 // Extra Entity Functions
+void LevelSelect_CheatActivated_AllEmeralds(void);
+void LevelSelect_CheatActivated_ChangeSuperMusicFlag(void);
+void LevelSelect_CheatActivated_MaxContinues(void);
+void LevelSelect_CheatActivated_MaxControl(void);
+void LevelSelect_CheatActivated_RickyMode(void);
+void LevelSelect_CheatActivated_SuperDash(void);
+void LevelSelect_CheatActivated_SwapGameMode(void);
+void LevelSelect_CheatActivated_UnlockAllMedals(void);
 
+void LevelSelect_State_SetupEntities(void);
+void LevelSelect_ManagePlayerIcon(void);
+
+void LevelSelect_StateDraw_Fade(void);
+
+void LevelSelect_Unknown1(void);
+void LevelSelect_Unknown2(void);
+void LevelSelect_Unknown3(void);
+void LevelSelect_Unknown5(bool32 highlight);
+void LevelSelect_Unknown6(void);
+void LevelSelect_Unknown7(void);
 
 #endif //!OBJ_LEVELSELECT_H

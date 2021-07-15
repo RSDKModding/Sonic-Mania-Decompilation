@@ -5876,7 +5876,7 @@ void Player_SonicJumpAbility(void)
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
                 if (entity->invincibleTimer) {
                     if (shield->objectID != Shield->objectID || shield->data.animationID != ANI_JUMP) {
-                        if (!(globals->medalMods & getMod(MEDAL_DROPDASH)))
+                        if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
                             ++entity->jumpAbilityTimer;
                     }
                 }
@@ -5893,12 +5893,12 @@ void Player_SonicJumpAbility(void)
                                 RSDK.SetSpriteAnimation(Shield->spriteIndex, 10, &shield->data, true, 0);
                                 shield->state = Shield_State_Insta;
                             }
-                            if (!(globals->medalMods & getMod(MEDAL_DROPDASH)))
-                                ++entity->jumpAbilityTimer;
-                            break;
                         case SHIELD_BLUE:
-                            if (!(globals->medalMods & getMod(MEDAL_DROPDASH)))
-                                ++entity->jumpAbilityTimer;
+                            // returns 0 if dropdash (bit 4) is disabled
+                            // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
+                            // returns 2 if dropdash AND instashield are enabled
+                            if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
+                                entity->jumpAbilityTimer = ((~(globals->medalMods & 0xFF) >> 3) & 2);
                             break;
                         case SHIELD_BUBBLE:
                             entity->velocity.x >>= 1;
