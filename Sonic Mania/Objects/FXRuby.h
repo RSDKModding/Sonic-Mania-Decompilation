@@ -21,11 +21,11 @@ typedef struct {
     int dword64;
     int field_68;
     int outerRadius;
+    int field_70;
+    int field_74;
     int fadeWhite;
     int fadeBlack;
     bool32 waitForTrigger;
-    int timer;
-    int dword80;
     int field_84;
     int field_88;
     int field_8C;

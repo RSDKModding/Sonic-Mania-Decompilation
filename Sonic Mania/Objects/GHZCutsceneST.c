@@ -82,10 +82,10 @@ void GHZCutsceneST_SetupCutscene(void)
     {
         GHZCutsceneST->fxRuby  = (Entity *)fxRuby;
         fxRuby->state          = 0;
-        fxRuby->timer          = 512;
-        fxRuby->waitForTrigger = 512;
+        fxRuby->fadeBlack      = 512;
+        fxRuby->fadeWhite      = 512;
         fxRuby->outerRadius    = RSDK_screens->width;
-        fxRuby->fadeWhite      = 64;
+        fxRuby->field_70      = 64;
         foreach_break;
     }
 
@@ -101,15 +101,15 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
     if (host->timer) {
         if (host->timer >= 60) {
-            if (fxRuby->timer <= 0) {
-                if (fxRuby->waitForTrigger <= 0) {
+            if (fxRuby->fadeBlack <= 0) {
+                if (fxRuby->fadeWhite <= 0) {
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     return true;
                 }
-                fxRuby->waitForTrigger -= 16;
+                fxRuby->fadeWhite -= 16;
             }
             else {
-                fxRuby->timer -= 16;
+                fxRuby->fadeBlack -= 16;
             }
         }
     }

@@ -573,13 +573,13 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
         if (fxRuby->flag) {
             if (host->field_68) {
                 if (host->timer == host->field_68 + 30) {
-                    fxRuby->fadeBlack = 64;
+                    fxRuby->field_74 = 64;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(4, 0, 4);
                 }
                 else if (host->timer == host->field_68 + 210) {
-                    fxRuby->fadeBlack = 32;
+                    fxRuby->field_74 = 32;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(4, 0, 4);
@@ -613,18 +613,18 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
         }
     }
     else {
-        fxRuby->waitForTrigger;
-        if (fxRuby->waitForTrigger >= 512) {
-            if (fxRuby->timer >= 512) {
+        fxRuby->fadeWhite;
+        if (fxRuby->fadeWhite >= 512) {
+            if (fxRuby->fadeBlack >= 512) {
                 if (host->timer = host->field_68 + 150)
                     return true;
             }
             else {
-                fxRuby->timer += 16;
+                fxRuby->fadeBlack += 16;
             }
         }
         else {
-            fxRuby->waitForTrigger += 16;
+            fxRuby->fadeWhite += 16;
         }
     }
     return false;
@@ -821,9 +821,9 @@ bool32 AIZSetup_Cutscene2_Unknown8(Entity *h)
         player1->velocity.x = 0;
 
     if (host->timer == 180) {
-        fxRuby->fadeBlack = 32;
+        fxRuby->field_74 = 32;
         fxRuby->state     = FXRuby_Unknown6;
-        PhantomRuby_PlaySFX(1);
+        PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
         Camera_ShakeScreen(4, 0, 4);
         Music_FadeOut(0.025);
         host->field_68    = host->timer;
@@ -832,15 +832,15 @@ bool32 AIZSetup_Cutscene2_Unknown8(Entity *h)
 
     AIZSetup_Unknown24();
     if (host->field_6C[0]) {
-        if (fxRuby->waitForTrigger < 512) {
-            fxRuby->waitForTrigger += 16;
+        if (fxRuby->fadeWhite < 512) {
+            fxRuby->fadeWhite += 16;
         }
-        else if (fxRuby->timer >= 512) {
+        else if (fxRuby->fadeBlack >= 512) {
             if (host->timer == host->field_68 + 150)
                 return true;
         }
         else {
-            fxRuby->timer += 16;
+            fxRuby->fadeBlack += 16;
         }
     }
     return false;

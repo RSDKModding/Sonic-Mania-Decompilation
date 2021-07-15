@@ -26,11 +26,11 @@ void FXRuby_Draw(void)
     RSDK_THIS(FXRuby);
     RSDK.SetLookupTable(FXRuby->lookupTable);
 
-    if (entity->waitForTrigger >= 512 || entity->timer >= 512 || RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
-        if (entity->waitForTrigger > 0)
-            RSDK.FillScreen(0xFFF0F0, entity->waitForTrigger, entity->waitForTrigger - 0x100, entity->waitForTrigger - 0x100);
-        if (entity->timer > 0)
-            RSDK.FillScreen(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
+    if (entity->fadeWhite >= 512 || entity->fadeBlack >= 512 || RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+        if (entity->fadeWhite > 0)
+            RSDK.FillScreen(0xFFF0F0, entity->fadeWhite, entity->fadeWhite - 0x100, entity->fadeWhite - 0x100);
+        if (entity->fadeBlack > 0)
+            RSDK.FillScreen(0, entity->fadeBlack, entity->fadeBlack - 0x80, entity->fadeBlack - 0x100);
     }
     else {
         if (entity->outerRadius <= RSDK_screens->width) {
@@ -59,7 +59,7 @@ void FXRuby_Create(void *data)
         if (data) {
             entity->state = (void (*)(void))data;
         }
-        else if (!entity->dword80) {
+        else if (!entity->waitForTrigger) {
             entity->state = FXRuby_Unknown3;
         }
     }
@@ -115,7 +115,7 @@ void FXRuby_Unknown2(void)
                 int cnt = 8 * timer;
                 for (int s = 0; s < 0x200; ++s) {
                     int angle             = RSDK.Sin256(4 * s);
-                    deformData[s]         = ((entity->fadeWhite * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((entity->fadeWhite * angle) >> 7);
+                    deformData[s]         = ((entity->field_70 * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((entity->field_70 * angle) >> 7);
                     deformData[s + 0x200] = deformData[s];
                 }
                 dataPtr = deformData;
@@ -151,17 +151,17 @@ void FXRuby_Unknown6(void)
 {
     RSDK_THIS(FXRuby);
     FXRuby_Unknown2();
-    if (entity->fadeWhite >= entity->fadeBlack)
+    if (entity->field_70 >= entity->field_74)
         entity->state = FXRuby_Unknown7;
     else
-        entity->fadeWhite++;
+        entity->field_70++;
 }
 void FXRuby_Unknown7(void)
 {
     RSDK_THIS(FXRuby);
     FXRuby_Unknown2();
-    if (entity->fadeWhite > 0)
-        entity->fadeWhite--;
+    if (entity->field_70 > 0)
+        entity->field_70--;
 }
 void FXRuby_Unknown9(void)
 {

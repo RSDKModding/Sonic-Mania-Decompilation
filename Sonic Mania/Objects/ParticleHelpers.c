@@ -32,18 +32,19 @@ void ParticleHelpers_StageLoad(void)
 
 }
 
-void ParticleHelpers_Unknown1(int a1, int a2, int a3, int a4, int y) {
-    int pos = a4 - 0x80000;
+void ParticleHelpers_Unknown1(int x, int y)
+{
+    int pos = x - 0x80000;
     for (int i = 0; i < 5; ++i) {
-        int x                = pos + (i << 18);
-        EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, x, y);
+        int spawnX           = pos + (i << 18);
+        EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, spawnX, y);
         debris->drawOrder    = Zone->drawOrderHigh;
         debris->gravity      = 0x3800;
         debris->velocity.y   = 0;
-        debris->velocity.x   = 0x30 * ((x - a4) >> 8);
-        if (debris->position.x < a4)
+        debris->velocity.x   = 0x30 * ((spawnX - x) >> 8);
+        if (debris->position.x < x)
             debris->direction = FLIP_X;
-        CPZ1Intro_Particle_CB((Entity*)debris);
+        CPZ1Intro_Particle_CB((Entity *)debris);
     }
 }
 

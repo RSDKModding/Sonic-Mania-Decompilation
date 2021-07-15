@@ -351,13 +351,13 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
         if (fxRuby->flag) {
             if (host->field_68) {
                 if (host->timer == host->field_68 + 48) {
-                    fxRuby->fadeBlack = 64;
+                    fxRuby->field_74 = 64;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(4, 0, 4);
                 }
                 else if (host->timer == host->field_68 + 180) {
-                    fxRuby->fadeBlack = 32;
+                    fxRuby->field_74 = 32;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(4, 0, 4);
@@ -391,18 +391,17 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
         }
     }
     else {
-        fxRuby->waitForTrigger;
-        if (fxRuby->waitForTrigger >= 512) {
-            if (fxRuby->timer >= 512) {
+        if (fxRuby->fadeWhite >= 512) {
+            if (fxRuby->fadeBlack >= 512) {
                 if (host->timer = host->field_68 + 150)
                     return true;
             }
             else {
-                fxRuby->timer += 16;
+                fxRuby->fadeBlack += 16;
             }
         }
         else {
-            fxRuby->waitForTrigger += 16;
+            fxRuby->fadeWhite += 16;
         }
     }
 
