@@ -15,7 +15,7 @@ void NoSwap_Update(void)
             if (!Player_CheckValidState(player)) {
                 if (entity->noDeathSwap) {
                     if (player->state == Player_State_Die || player->state == Player_State_Drown) {
-                        Player->field_93C = true;
+                        Player->cantSwap = true;
                         ++NoSwap->counter;
                     }
                 }
@@ -27,7 +27,7 @@ void NoSwap_Update(void)
 
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 if (entity->always) {
-                    Player->field_93C = true;
+                    Player->cantSwap = true;
                     ++NoSwap->counter;
                 }
                 else {
@@ -37,7 +37,7 @@ void NoSwap_Update(void)
         }
 
         if (cnt == 1) {
-            Player->field_93C = true;
+            Player->cantSwap = true;
             ++NoSwap->counter;
         }
     }
@@ -50,7 +50,7 @@ void NoSwap_StaticUpdate(void)
     if (NoSwap->counter)
         NoSwap->counter = 0;
     else
-        Player->field_93C = 0;
+        Player->cantSwap = false;
 }
 
 void NoSwap_Draw(void)
