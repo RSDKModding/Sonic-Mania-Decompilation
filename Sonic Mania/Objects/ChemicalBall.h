@@ -65,8 +65,8 @@ void ChemicalBall_EditorLoad(void);
 void ChemicalBall_Serialize(void);
 
 // Extra Entity Functions
-void ChemicalBall_Unknown1(void);
-void ChemicalBall_Unknown2(void);
+void ChemicalBall_CheckHit(void);
+void ChemicalBall_Move(void);
 void ChemicalBall_Unknown3(void);
 
 #endif //!OBJ_CHEMICALBALL_H

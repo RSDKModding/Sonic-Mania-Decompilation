@@ -44,7 +44,7 @@ void ChemicalBall_Create(void *data)
         entity->position.y -= 0x480000;
     RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &entity->animator, true, 0);
     if (!entity->type)
-        entity->state = ChemicalBall_Unknown2;
+        entity->state = ChemicalBall_Move;
     else
         entity->state = ChemicalBall_Unknown3;
 }
@@ -59,7 +59,7 @@ void ChemicalBall_StageLoad(void)
     ChemicalBall->sfxBloop      = RSDK.GetSFX("Stage/Bloop.wav");
 }
 
-void ChemicalBall_Unknown1(void)
+void ChemicalBall_CheckHit(void)
 {
     RSDK_THIS(ChemicalBall);
     foreach_active(Player, player)
@@ -70,7 +70,7 @@ void ChemicalBall_Unknown1(void)
     }
 }
 
-void ChemicalBall_Unknown2(void)
+void ChemicalBall_Move(void)
 {
     RSDK_THIS(ChemicalBall);
 
@@ -104,7 +104,7 @@ void ChemicalBall_Unknown2(void)
     entity->startPos.y += entity->position.y;
     if (!val || val == entity->interval)
         RSDK.PlaySFX(ChemicalBall->sfxBloop, 0, 255);
-    ChemicalBall_Unknown1();
+    ChemicalBall_CheckHit();
 }
 
 void ChemicalBall_Unknown3(void)
@@ -131,7 +131,7 @@ void ChemicalBall_Unknown3(void)
     entity->startPos.y += entity->position.y;
     if (val == 27 || val == 48)
         RSDK.PlaySFX(ChemicalBall->sfxBloop, 0, 255);
-    ChemicalBall_Unknown1();
+    ChemicalBall_CheckHit();
 }
 
 void ChemicalBall_EditorDraw(void) {}
