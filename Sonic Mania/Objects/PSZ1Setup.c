@@ -253,7 +253,7 @@ void PSZ1Setup_TriggerCB3(void)
         int count = 0;
         foreach_all(Crate, crate)
         {
-            if (MathHelpers_Unknown8(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, crate->position.x,
+            if (MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, crate->position.x,
                                      crate->position.y)) {
                 if (crate->frameID == 1)
                     ++count;

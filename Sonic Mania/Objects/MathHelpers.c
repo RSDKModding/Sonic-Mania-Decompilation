@@ -136,7 +136,7 @@ int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
     return val;
 }
 
-bool32 MathHelpers_Unknown8(int direction, int x1, int y1, Hitbox* hitbox, int x2, int y2) {
+bool32 MathHelpers_PointInHitbox(int direction, int x1, int y1, Hitbox* hitbox, int x2, int y2) {
     int left, top, right, bottom;
 
     if ((direction & 1) != 0) {

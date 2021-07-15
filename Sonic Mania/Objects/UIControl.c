@@ -77,7 +77,7 @@ void UIControl_Create(void *data)
                         hitbox.left   = -(entity->size.x >> 17);
                         hitbox.bottom = entity->size.y >> 17;
                         hitbox.top    = -(entity->size.y >> 17);
-                        if (MathHelpers_Unknown8(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x, entity->startPos.y - entity->cameraOffset.y, &hitbox,
+                        if (MathHelpers_PointInHitbox(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x, entity->startPos.y - entity->cameraOffset.y, &hitbox,
                                                  prompt->position.x, prompt->position.y)) {
                             // prompt->parent                            = entity;
                             entity->unknown2[entity->unknownCount2++] = prompt;
@@ -533,7 +533,7 @@ void UIControl_Unknown7(void)
             bounds.left   = -(entity->size.x >> 17);
             bounds.bottom = entity->size.y >> 17;
             bounds.top    = -(entity->size.y >> 17);
-            if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, heading->position.x, heading->position.y))
+            if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, heading->position.x, heading->position.y))
                 entity->heading = (Entity *)heading;
         }
     }
@@ -547,7 +547,7 @@ void UIControl_Unknown7(void)
             bounds.left   = -(entity->size.x >> 17);
             bounds.bottom = (entity->size.y >> 17);
             bounds.top    = -(entity->size.y >> 17);
-            if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, shifter->position.x, shifter->position.y)) {
+            if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, shifter->position.x, shifter->position.y)) {
                 entity->shifter = (Entity *)shifter;
                 shifter->parent = entity;
             }
@@ -563,7 +563,7 @@ void UIControl_Unknown7(void)
             bounds.left   = -(entity->size.x >> 17);
             bounds.bottom = entity->size.y >> 17;
             bounds.top    = -(entity->size.y >> 17);
-            if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, carousel->position.x, carousel->position.y)) {
+            if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, carousel->position.x, carousel->position.y)) {
                 entity->carousel = carousel;
                 // carousel->parent = entity;
             }
@@ -588,7 +588,7 @@ void UIControl_Unknown7(void)
                 bounds.left   = -(entity->size.x >> 17);
                 bounds.bottom = entity->size.y >> 17;
                 bounds.top    = -(entity->size.y >> 17);
-                if (MathHelpers_Unknown8(FLIP_NONE, x, y, &bounds, entPtr->position.x, entPtr->position.y)) {
+                if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, entPtr->position.x, entPtr->position.y)) {
                     if (entity->unknownCount1 < 64) {
                         if (!entPtr->parent)
                             entPtr->parent = (Entity *)entity;

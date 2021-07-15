@@ -102,7 +102,7 @@ void UIButton_Create(void* data)
         entity->failCB   = UIButton_Fail;
         // entity->options5 = UIButton_Unknown12;
         // entity->options6 = UIButton_Unknown13;
-        // entity->options7 = UIButton_Unknown10;
+        // entity->options7 = UIButton_Unknown10;   
         // entity->options8 = UIButton_Unknown11;
         entity->dword14C = 1;
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
@@ -151,15 +151,13 @@ void UIButton_Unknown1(EntityUIButton *button)
 
 Entity *UIButton_Unknown2(EntityUIButton *button, int a2)
 {
+    if (button->choiceCount <= 0) return NULL;
     Entity *entity = RSDK.GetEntityByID(a2 % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button));
-    if (button->choiceCount > 0
-        && (entity->objectID == UIChoice->objectID || entity->objectID == UIVsRoundPicker->objectID || entity->objectID == UIResPicker->objectID
-            || entity->objectID == UIWinSize->objectID)) {
+    if (entity->objectID == UIChoice->objectID || entity->objectID == UIVsRoundPicker->objectID || entity->objectID == UIResPicker->objectID
+            || entity->objectID == UIWinSize->objectID) {
         return entity;
     }
-    else {
-        return NULL;
-    }
+    return NULL;
 }
 
 void UIButton_Fail(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, 0, 255); }

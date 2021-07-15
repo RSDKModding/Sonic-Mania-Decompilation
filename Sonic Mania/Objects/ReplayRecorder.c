@@ -610,7 +610,7 @@ LABEL_17:
     a3.top                 = -v10;
     v11                    = v8 << 16;
     Colour                 = v7 << 16;
-    result                 = MathHelpers_Unknown8(v11, v7 << 16, a3, v6, v5);
+    result                 = MathHelpers_PointInHitbox(v11, v7 << 16, a3, v6, v5);
     if (result)
         return result;
     v12       = abs(v1->position.x - v11);
@@ -1113,7 +1113,7 @@ ReplayRecorder *ReplayRecorder_Pause()
                 a3.left     = -a3.right;
                 a3.bottom   = v11;
                 a3.top      = -v11;
-                if (MathHelpers_Unknown8(entity[1].scale.x, entity[1].scale.y, a3, v10, v9))
+                if (MathHelpers_PointInHitbox(entity[1].scale.x, entity[1].scale.y, a3, v10, v9))
                     break;
                 if (RSDK.GetEntities(FarPlane->objectID, &entity) != 1)
                     goto LABEL_19;
