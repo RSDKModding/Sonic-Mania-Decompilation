@@ -138,11 +138,11 @@ void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int newType, int new
     chemPool->colours[2] = ((chemPool->g + (chemPool->r << 8)) << 8) + chemPool->b;
     chemPool->colours[3] = ((chemPool->g + (chemPool->r << 8)) << 8) + chemPool->b;
 
-    int val = abs(newR - chemPool->r) + abs(newG - chemPool->g) + abs(newB - chemPool->b);
-    if (val < 0x1F && chemPool->state != ChecmicalPool_State_Change) {
+    uint val = abs(newR - chemPool->r) + abs(newG - chemPool->g) + abs(newB - chemPool->b) - 1;
+    if (val <= 0x1E && chemPool->state != ChemicalPool_State_Change) {
         chemPool->type  = newType;
         chemPool->timer = 4;
-        chemPool->state = ChecmicalPool_State_Change;
+        chemPool->state = ChemicalPool_State_Change;
         RSDK.PlaySFX(ChemicalPool->sfxChemChange, 0, 255);
     }
 }
@@ -298,7 +298,7 @@ void ChemicalPool_State_HarmfulBlue(void)
         EntityChemBubble *bubble = (EntityChemBubble *)RSDK.CreateEntity(
             ChemBubble->objectID, NULL, entity->position.x + RSDK.Rand(-entity->updateRange.x, entity->updateRange.x),
             entity->position.y + entity->updateRange.y);
-        bubble->parent = (Entity*)entity;
+        bubble->parent = (Entity *)entity;
     }
 }
 
@@ -355,7 +355,7 @@ void ChemicalPool_State_Blue(void)
     }
 }
 
-void ChecmicalPool_State_Change(void)
+void ChemicalPool_State_Change(void)
 {
     RSDK_THIS(ChemicalPool);
     ChemicalPool_ProcessDeformations();
