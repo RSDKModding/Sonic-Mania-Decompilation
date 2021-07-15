@@ -10,7 +10,33 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateCollide);
+    int type;
+    Vector2 amplitude;
+    int speed;
+    int hasTension;
+    sbyte frameID;
+    byte collision;
+    Vector2 targetPos;
+    Vector2 centerPos;
+    Vector2 drawPos;
+    Vector2 collisionOffset;
+    int stood;
+    int collapseDelay;
+    int stoodAngle;
+    byte stoodPlayers;
+    byte pushPlayersL;
+    byte pushPlayersR;
+    Hitbox hitbox;
+    Animator animator;
+    int childCount;
+    byte interval;
+    byte intervalOffset;
+    byte duration;
+    byte bossID;
+    EntitySyringe *syringe;
 } EntityTippingPlatform;
 
 // Object Struct
@@ -28,6 +54,10 @@ void TippingPlatform_EditorLoad(void);
 void TippingPlatform_Serialize(void);
 
 // Extra Entity Functions
-
+void TippingPlatform_Unknown1(void);
+void TippingPlatform_Unknown2(void);
+void TippingPlatform_Unknown3(void);
+void TippingPlatform_Unknown4(void);
+void TippingPlatform_Unknown5(void);
 
 #endif //!OBJ_TIPPINGPLATFORM_H
