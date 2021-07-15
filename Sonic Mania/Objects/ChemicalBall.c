@@ -44,9 +44,9 @@ void ChemicalBall_Create(void *data)
         entity->position.y -= 0x480000;
     RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &entity->animator, true, 0);
     if (!entity->type)
-        entity->state = ChemicalBall_Move;
+        entity->state = ChemicalBall_MoveType0;
     else
-        entity->state = ChemicalBall_Unknown3;
+        entity->state = ChemicalBall_MoveType1;
 }
 
 void ChemicalBall_StageLoad(void)
@@ -70,7 +70,7 @@ void ChemicalBall_CheckHit(void)
     }
 }
 
-void ChemicalBall_Move(void)
+void ChemicalBall_MoveType0(void)
 {
     RSDK_THIS(ChemicalBall);
 
@@ -107,7 +107,7 @@ void ChemicalBall_Move(void)
     ChemicalBall_CheckHit();
 }
 
-void ChemicalBall_Unknown3(void)
+void ChemicalBall_MoveType1(void)
 {
     RSDK_THIS(ChemicalBall);
     int val = (Zone->timer + entity->intervalOffset) % entity->interval;
