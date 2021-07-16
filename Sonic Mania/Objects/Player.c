@@ -561,7 +561,7 @@ void Player_Create(void *data)
 #if RETRO_USE_PLUS
             if (RSDK_sceneInfo->entitySlot != 1 || globals->gameMode != MODE_TIMEATTACK) {
                 RSDK.AssignControllerID(entity->controllerID, -1);
-                entity->stateInput = Player_ProcessP2Input;
+                entity->stateInput = Player_ProcessP2Input_AI;
                 entity->sidekick   = true;
             }
             else {
@@ -574,7 +574,7 @@ void Player_Create(void *data)
                 else {
                     APICallback->controllerIDs[entity->controllerID] = -1;
                 }
-                entity->stateInput = Player_ProcessP2Input;
+                entity->stateInput = Player_ProcessP2Input_AI;
                 entity->sidekick = true;
 #endif
         }
@@ -636,7 +636,7 @@ void Player_Create(void *data)
 void Player_StageLoad(void)
 {
     if (!globals->playerID) {
-        globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_SONIC;
+        globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
     }
 
     RSDK_sceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
@@ -1771,7 +1771,7 @@ void Player_HandleDeath(EntityPlayer *player)
             player->maxGlideSpeed   = 0;
             player->nextAirState    = 0;
             player->nextGroundState = 0;
-            player->stateInput      = Player_ProcessInputFlyCarry;
+            player->stateInput      = Player_ProcessP2InputLag;
             player->position.x      = -0x400000;
             player->position.y      = -0x400000;
             player->velocity.x      = 0;
@@ -2046,7 +2046,7 @@ void Player_ResetState(EntityPlayer *player)
     if (!player->sidekick)
         player->stateInput = Player_ProcessP1Input;
     else
-        player->stateInput = Player_ProcessP2Input;
+        player->stateInput = Player_ProcessP2Input_AI;
     player->tileCollisions = true;
     player->interaction    = true;
     player->collisionPlane = 0;
@@ -3254,10 +3254,10 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         if (flag && (player1->playerAnimator.animationID != ANI_FAN)) {
             if (abs(dif2) < 0xC0000) {
                 if (abs(dif) < 0xC0000 && !entity->flyCarryTimer && !player1->down && !player1->onGround) {
-                    RSDK.SetSpriteAnimation(player1->spriteIndex, 28, &player1->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_HANG, &player1->playerAnimator, false, 0);
                     player1->state           = Player_State_FlyCarried;
-                    player1->nextAirState    = 0;
-                    player1->nextGroundState = 0;
+                    player1->nextAirState    = StateMachine_None;
+                    player1->nextGroundState = StateMachine_None;
                     RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
                 }
             }
@@ -3279,8 +3279,8 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         RSDK.ProcessTileCollisions(entity, player2OuterBox, player2InnerBox);
         if (entity->onGround && !entity->collisionMode)
             entity->collisionFlagV |= 1;
-        player1->sidekickPos.x = entity->position.x;
-        player1->sidekickPos.y = entity->position.y;
+        player1->sidekickPos.x = entity->position.x & 0xFFFF0000;
+        player1->sidekickPos.y = entity->position.y & 0xFFFF0000;
         entity->velocity.y     = entityYVel;
         entity->position.x     = entityXPos;
         entity->position.y     = entityYPos;
@@ -3335,7 +3335,7 @@ void Player_P2JumpBackIn(void)
             entity->drawFX &= ~FX_SCALE;
             entity->nextAirState    = StateMachine_None;
             entity->nextGroundState = StateMachine_None;
-            entity->stateInput      = Player_ProcessInputFlyCarry;
+            entity->stateInput      = Player_ProcessP2InputLag;
             entity->scale.x         = 0x200;
             entity->scale.y         = 0x200;
             entity->velocity.x      = 0;
@@ -4449,10 +4449,10 @@ void Player_State_TailsFlight(void)
 void Player_State_FlyCarried(void)
 {
     RSDK_THIS(Player);
-    EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (player2->state != Player_State_TailsFlight)
         entity->state = Player_State_Air;
-    if (entity->flyCarryTimer != entity->leaderPos.x)
+    if (entity->sidekickPos.x != entity->leaderPos.x)
         entity->state = Player_State_Air;
     if (entity->onGround && entity->velocity.y >= 0)
         entity->state = Player_State_Ground;
@@ -4603,7 +4603,7 @@ void Player_State_KnuxGlideRight(void)
             entity->state = Player_State_KnuxGlideDrop;
         }
         else {
-            if (entity->timer == 256) {
+            if (!entity->timer) {
                 if (entity->abilitySpeed < 0x180000) {
                     entity->abilitySpeed += 0x400;
                 }
@@ -5650,8 +5650,8 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         thisEntity->stateInput = Player_ProcessP1Input;
     }
     else {
-        thisEntity->stateInput = Player_ProcessP2Input;
-        EntityPlayer *plr1     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        thisEntity->stateInput = Player_ProcessP2Input_AI;
+        EntityPlayer *plr1     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         thisEntity->velocity.x = plr1->velocity.x;
         thisEntity->groundVel  = plr1->groundVel;
         Player->upState        = 0;
@@ -5704,7 +5704,7 @@ void Player_State_Unknown(void)
             entity->maxGlideSpeed   = 0;
             entity->nextAirState    = StateMachine_None;
             entity->nextGroundState = StateMachine_None;
-            entity->stateInput      = Player_ProcessInputFlyCarry;
+            entity->stateInput      = Player_ProcessP2InputLag;
             entity->position.x      = -0x400000;
             entity->position.y      = -0x400000;
             entity->velocity.x      = 0;
@@ -5861,9 +5861,9 @@ void Player_SonicJumpAbility(void)
     bool32 flag = false;
     if (entity->jumpAbilityTimer == 1) {
 #if RETRO_USE_PLUS
-        if (entity->stateInput != Player_ProcessP2Input || (entity->up && globals->gameMode != MODE_ENCORE)) {
+        if (entity->stateInput != Player_ProcessP2Input_AI || (entity->up && globals->gameMode != MODE_ENCORE)) {
 #else
-            if (entity->stateInput != Player_ProcessP2Input) {
+            if (entity->stateInput != Player_ProcessP2Input_AI) {
 #endif
             if (entity->jumpPress) {
                 int id               = RSDK.GetEntityID(entity);
@@ -5958,10 +5958,10 @@ void Player_TailsJumpAbility(void)
 {
     RSDK_THIS(Player);
 #if RETRO_USE_PLUS
-    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)
         && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
-        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)) {
+        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)) {
 #endif
         if (RSDK_controller[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
@@ -5983,10 +5983,10 @@ void Player_KnuxJumpAbility(void)
 {
     RSDK_THIS(Player);
 #if RETRO_USE_PLUS
-    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)
         && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
-        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)) {
+        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)) {
 #endif
         if (RSDK_controller[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
@@ -6017,10 +6017,10 @@ void Player_MightyJumpAbility(void)
     RSDK_THIS(Player);
     if (entity->jumpAbilityTimer <= 1) {
 #if RETRO_USE_PLUS
-        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)
+        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)
             && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
-        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)) {
+        if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)) {
 #endif
             if (RSDK_controller[entity->controllerID].keyY.press)
                 Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
@@ -6057,10 +6057,10 @@ void Player_RayJumpAbility(void)
 {
     RSDK_THIS(Player);
 #if RETRO_USE_PLUS
-    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)
         && (!entity->up || globals->gameMode == MODE_ENCORE)) {
 #else
-    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input)) {
+    if ((!entity->jumpPress || !entity->jumpAbilityTimer || entity->stateInput == Player_ProcessP2Input_AI)) {
 #endif
         if (RSDK_controller[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
@@ -6154,13 +6154,21 @@ void Player_ProcessP1Input(void)
             }
             entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
             entity->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
-            // if (!LottoMachine || !((1 << entity->playerID) & LottoMachine[5].objectID)) {
+            // if (!LottoMachine || !((1 << entity->playerID) & LottoMachine->activePlayers)) {
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_DEV && controller->keyZ.press) {
                 Zone->swapGameMode = true;
                 RSDK.PlaySFX(Player->sfx_Transform2, 0, 0xFE);
                 Zone_StartFadeOut(64, 0xF0F0F0);
             }
+            //TEMP!! I SOULD REMOVE THIS!!!
+            else if (RSDK_sku->platform == PLATFORM_DEV && controller->keySelect.press) {
+                entity->characterID <<= 1;
+                if (entity->characterID > 0x10)
+                    entity->characterID = 1;
+                Player_ChangeCharacter(entity, entity->characterID);
+            }
+
             if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
                 if (!HUD->field_24 && Player_CheckValidState(entity)) {
                     if (Player_SwapMainPlayer(false)) {
@@ -6215,10 +6223,10 @@ void Player_ProcessP1Input(void)
         }
     }
 }
-void Player_ProcessInputFlyCarry(void)
+void Player_ProcessP2InputLag(void)
 {
     RSDK_THIS(Player);
-    EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Player->upState <<= 1;
     Player->upState |= player1->up;
@@ -6264,17 +6272,17 @@ void Player_ProcessInputFlyCarry(void)
     }
     else {
         int pos = (Player->flyCarryPosB - 1) + 16;
-        if (Player->flyCarryPosB - 1 > 0)
+        if (Player->flyCarryPosB - 1 >= 0)
             pos = Player->flyCarryPosB - 1;
         Player->curFlyCarryPos.x = Player->flyCarryPositions[pos].x;
         Player->curFlyCarryPos.y = Player->flyCarryPositions[pos].y;
     }
 }
-void Player_ProcessP2Input(void)
+void Player_ProcessP2Input_AI(void)
 {
     RSDK_THIS(Player);
-    EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-    Player_ProcessInputFlyCarry();
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    Player_ProcessP2InputLag();
     if (entity->state == Player_State_TailsFlight && player1->state == Player_State_FlyCarried) {
         entity->up        = player1->up;
         entity->down      = player1->down;
@@ -6283,8 +6291,7 @@ void Player_ProcessP2Input(void)
         entity->jumpHold  = player1->jumpHold;
         entity->jumpPress = player1->jumpPress;
         if (Player_CheckKeyPress())
-            entity->stateInput = Player_ProcessP2PlayerInput;
-        Player_P2JumpBackIn();
+            entity->stateInput = Player_ProcessP2Input_Player;
     }
     else {
         if (player1->objectID == Player->objectID && player1->state != Player_State_FlyCarried) {
@@ -6372,9 +6379,9 @@ void Player_ProcessP2Input(void)
         }
 
         if (Player_CheckKeyPress())
-            entity->stateInput = Player_ProcessP2PlayerInput;
-        Player_P2JumpBackIn();
+            entity->stateInput = Player_ProcessP2Input_Player;
     }
+    Player_P2JumpBackIn();
 }
 void Player_GetP2NoInput(void)
 {
@@ -6395,7 +6402,7 @@ void Player_GetP2NoInput(void)
         }
     }
     if (Player_CheckKeyPress())
-        entity->stateInput = Player_ProcessP2PlayerInput;
+        entity->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
 void Player_ProcessP2UnknownInput(void)
@@ -6405,7 +6412,7 @@ void Player_ProcessP2UnknownInput(void)
         Player->p2UnknownInputTimer = 0;
         entity->down                = false;
         entity->jumpPress           = false;
-        entity->stateInput          = Player_ProcessP2Input;
+        entity->stateInput          = Player_ProcessP2Input_AI;
     }
     else {
         entity->down      = true;
@@ -6413,10 +6420,10 @@ void Player_ProcessP2UnknownInput(void)
         ++Player->p2UnknownInputTimer;
     }
     if (Player_CheckKeyPress())
-        entity->stateInput = Player_ProcessP2PlayerInput;
+        entity->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
-void Player_ProcessP2PlayerInput(void)
+void Player_ProcessP2Input_Player(void)
 {
     RSDK_THIS(Player);
     if (entity->controllerID <= CONT_P4) {
@@ -6445,7 +6452,7 @@ void Player_ProcessP2PlayerInput(void)
                 Player->p2InputDelay = 0;
             }
             else if (++Player->p2InputDelay >= 600) {
-                entity->stateInput = Player_ProcessP2Input;
+                entity->stateInput = Player_ProcessP2Input_AI;
 #if RETRO_USE_PLUS
                 RSDK.AssignControllerID(entity->controllerID, -1);
 #else
@@ -6463,7 +6470,7 @@ void Player_ProcessP2PlayerInput(void)
             Player_P2JumpBackIn();
         }
         else {
-            entity->stateInput = Player_ProcessP2Input;
+            entity->stateInput = Player_ProcessP2Input_AI;
 #if RETRO_USE_PLUS
             RSDK.AssignControllerID(entity->controllerID, -1);
 #else

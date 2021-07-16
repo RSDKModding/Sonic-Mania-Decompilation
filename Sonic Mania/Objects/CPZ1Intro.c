@@ -359,7 +359,7 @@ bool32 CPZ1Intro_Unknown15(void *h)
         camera->targetPtr       = (Entity *)player1;
         camera->state           = Camera_State_Follow;
         if (player2->objectID == Player->objectID) {
-            player2->stateInput     = Player_ProcessP2Input;
+            player2->stateInput     = Player_ProcessP2Input_AI;
             player2->tileCollisions = true;
             player2->onGround       = true;
             player2->state          = Player_State_Ground;

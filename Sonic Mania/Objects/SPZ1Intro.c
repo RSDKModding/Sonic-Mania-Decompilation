@@ -175,7 +175,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->state      = Player_State_Ground;
         player1->camera     = camera;
         if (player2->objectID == Player->objectID)
-            player2->stateInput = Player_ProcessP2Input;
+            player2->stateInput = Player_ProcessP2Input_AI;
         RSDK_sceneInfo->timeEnabled = true;
         return true;
     }

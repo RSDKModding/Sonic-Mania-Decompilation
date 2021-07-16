@@ -87,7 +87,7 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
         player1->right      = true;
         if (player2->objectID == Player->objectID) {
             player2->state      = Player_State_Ground;
-            player2->stateInput = Player_ProcessP2Input;
+            player2->stateInput = Player_ProcessP2Input_AI;
             player2->groundVel  = 0;
         }
     }

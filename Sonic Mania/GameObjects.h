@@ -966,6 +966,7 @@ extern RSDKFunctionTable RSDK;
 #define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
 #endif
 
+
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 
 #endif //! GAMEOBJECTS_H

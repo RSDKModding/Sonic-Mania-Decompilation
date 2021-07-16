@@ -201,7 +201,7 @@ void AIZSetup_Unknown5(void)
     RSDK_THIS(Player);
     entity->active      = ACTIVE_NORMAL;
     entity->visible     = true;
-    entity->stateInput  = Player_ProcessP2Input;
+    entity->stateInput  = Player_ProcessP2Input_AI;
     Player->jumpInDelay = 240;
     Player_P2JumpBackIn();
 }
