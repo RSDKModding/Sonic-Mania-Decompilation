@@ -80,16 +80,6 @@ void SpeedBooster_StageLoad(void)
     }
 }
 
-void SpeedBooster_EditorDraw(void) {}
-
-void SpeedBooster_EditorLoad(void) {}
-
-void SpeedBooster_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(SpeedBooster, VAR_UINT8, direction);
-    RSDK_EDITABLE_VAR(SpeedBooster, VAR_UINT8, speed);
-}
-
 void SpeedBooster_DebugSpawn(void) { DEBUGMODE_ADD_OBJ(SpeedBooster); }
 
 void SpeedBooster_DebugDraw(void)
@@ -126,7 +116,8 @@ void SpeedBooster_Interact(void)
     {
         int playerID   = RSDK.GetEntityID(player);
         Hitbox *hitbox = &SpeedBooster->hitbox;
-        if (entity->playerCooldown[playerID] || player->playerAnimator.animationID == 18 || !Player_CheckCollisionTouch(player, entity, hitbox) || !player->onGround) {
+        if (entity->playerCooldown[playerID] || player->playerAnimator.animationID == 18 || !Player_CheckCollisionTouch(player, entity, hitbox)
+            || !player->onGround) {
             entity->playerPos[playerID] = player->position.x;
             continue;
         }
@@ -180,7 +171,8 @@ void SpeedBooster_SSZState(void)
     SpeedBooster_Interact();
 }
 
-void SpeedBooster_Wait1(void) {
+void SpeedBooster_Wait1(void)
+{
     RSDK_THIS(SpeedBooster);
     entity->drawPos.x -= entity->velocity.x;
     if (entity->cooldown-- == 1) {
@@ -190,12 +182,23 @@ void SpeedBooster_Wait1(void) {
     SpeedBooster_Interact();
 }
 
-void SpeedBooster_Wait2(void) {
+void SpeedBooster_Wait2(void)
+{
     RSDK_THIS(SpeedBooster);
     entity->drawPos.x += entity->velocity.x;
     if (entity->cooldown-- == 1) {
         entity->active = ACTIVE_BOUNDS;
-        entity->state    = SpeedBooster_BasicState;
+        entity->state  = SpeedBooster_BasicState;
     }
     SpeedBooster_Interact();
+}
+
+void SpeedBooster_EditorDraw(void) {}
+
+void SpeedBooster_EditorLoad(void) {}
+
+void SpeedBooster_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(SpeedBooster, VAR_UINT8, direction);
+    RSDK_EDITABLE_VAR(SpeedBooster, VAR_UINT8, speed);
 }
