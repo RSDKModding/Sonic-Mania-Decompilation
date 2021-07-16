@@ -327,7 +327,7 @@ void SaveGame_SavePlayerState(void)
     globals->restartSlot[1]      = 0;
     globals->restartSlot[2]      = 0;
     globals->restartSlot[3]      = 0;
-    EntityPlayer *player         = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player         = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     globals->restartMilliseconds = RSDK_sceneInfo->milliseconds;
     globals->restartSeconds      = RSDK_sceneInfo->seconds;
     globals->restartMinutes      = RSDK_sceneInfo->minutes;

@@ -603,8 +603,11 @@ typedef enum {
 
 // Macros and other handy things
 
+// used for casts and etc
+#define Type_StateMachine void (*)(void)
+// used for variable decl
 #define StateMachine(name) void (*name)(void)
-#define StateMachine_Run(func)                                                                                                                           \
+#define StateMachine_Run(func)                                                                                                                       \
     if (func)                                                                                                                                        \
         func();
 #define StateMachine_None NULL

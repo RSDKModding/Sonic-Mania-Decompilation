@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort spriteIndex;
+    bool32 openPortal;
 } ObjectRubyPortal;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    Animator animator;
+    Hitbox hitbox;
 } EntityRubyPortal;
 
 // Object Struct
@@ -28,6 +35,14 @@ void RubyPortal_EditorLoad(void);
 void RubyPortal_Serialize(void);
 
 // Extra Entity Functions
-
+void RubyPortal_Unknown1(void);
+void RubyPortal_Unknown2(void);
+void RubyPortal_Unknown3(void);
+void RubyPortal_Unknown4(void);
+void RubyPortal_Unknown5(void);
+void RubyPortal_Unknown6(void);
+void RubyPortal_Unknown7(void);
+void RubyPortal_Unknown8(void);
+void RubyPortal_Unknown9(void);
 
 #endif //!OBJ_RUBYPORTAL_H
