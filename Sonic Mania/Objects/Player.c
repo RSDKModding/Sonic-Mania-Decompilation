@@ -10,7 +10,7 @@ void Player_Update(void)
         Player_ChangeCharacter(entity, ID_SONIC);
 #endif
 
-    StateMachine_Run(entity->stateInput2);
+    StateMachine_Run(entity->stateInputReplay);
     StateMachine_Run(entity->stateInput);
 
     if (entity->objectID == Player->objectID) {
@@ -105,7 +105,7 @@ void Player_Update(void)
         }
 
         if (entity->forceJumpIn)
-            entity->state = Player_State_JumpIn;
+            entity->state = Player_State_StartJumpIn;
         if (entity->forceTransform)
             entity->state = Player_State_Transform;
 
@@ -377,12 +377,13 @@ void Player_StaticUpdate(void)
 
         if (flying) {
             if (!Player->playingFlySFX) {
-                RSDK.PlaySFX(Player->sfx_Flying, 1, 255);
+                RSDK.PlaySFX(Player->sfx_Flying, true, 255);
                 Player->playingFlySFX = true;
             }
         }
     }
-    else if (Player->playingFlySFX) {
+    
+    if (!flying && Player->playingFlySFX) {
         RSDK.StopSFX(Player->sfx_Flying);
         Player->playingFlySFX = false;
     }
@@ -1796,7 +1797,7 @@ void Player_HandleDeath(EntityPlayer *player)
     else {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE && Player_SwapMainPlayer(false)) {
-            EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+            EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
             int id                = -1;
             for (int i = player2->characterID; i > 0; ++id) i >>= 1;
             globals->characterFlags &= ~(1 << id);
@@ -1811,7 +1812,7 @@ void Player_HandleDeath(EntityPlayer *player)
             else {
                 player->blinkTimer   = 120;
                 player->scrollDelay  = 0;
-                EntityCamera *camera = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
+                EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                 player->camera       = camera;
                 camera->targetPtr    = (Entity *)player;
                 camera->state        = Camera_State_Follow;
@@ -3314,7 +3315,7 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
 void Player_P2JumpBackIn(void)
 {
     RSDK_THIS(Player);
-    EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->objectID == Player->objectID && (player1->drawOrder != 2 || entity->drawOrder != 2)) {
         if (abs(((entity->position.x >> 0x10) - RSDK_screens->position.x - RSDK_screens->centerX) >= RSDK_screens->centerX + 96)
             || abs(((entity->position.y >> 0x10) - RSDK_screens->position.y - RSDK_screens->centerY) >= RSDK_screens->centerY + 96)) {
@@ -3326,22 +3327,22 @@ void Player_P2JumpBackIn(void)
 
         if (Player->jumpInDelay >= 240) {
             Player->jumpInDelay   = 0;
-            entity->state         = Player_State_JumpIn;
-            entity->forceJumpIn   = 1;
+            entity->state         = Player_State_StartJumpIn;
+            entity->forceJumpIn   = true;
             entity->position.x    = -0x400000;
             entity->position.y    = -0x400000;
             entity->maxGlideSpeed = 0;
             entity->drawFX &= ~FX_SCALE;
-            entity->nextAirState    = 0;
-            entity->nextGroundState = 0;
+            entity->nextAirState    = StateMachine_None;
+            entity->nextGroundState = StateMachine_None;
             entity->stateInput      = Player_ProcessInputFlyCarry;
-            entity->scale.x         = 512;
-            entity->scale.y         = 512;
+            entity->scale.x         = 0x200;
+            entity->scale.y         = 0x200;
             entity->velocity.x      = 0;
             entity->velocity.y      = 0;
             entity->groundVel       = 0;
-            entity->tileCollisions  = 0;
-            entity->interaction     = 0;
+            entity->tileCollisions  = false;
+            entity->interaction     = false;
             entity->blinkTimer      = 0;
             entity->visible         = true;
             if (player1->underwater && player1->position.y < Water->waterLevel) {
@@ -5490,7 +5491,7 @@ void Player_State_JumpIn(void)
     RSDK_THIS(Player);
     EntityPlayer *player1 = NULL;
     if (entity->playerID)
-        player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
     else
         player1 = (EntityPlayer *)Zone->entityData[1];
@@ -5536,14 +5537,14 @@ void Player_State_StartJumpIn(void)
         EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
 
         if (player1->objectID == Player->objectID) {
-            EntityDust *dust       = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
+            EntityDust *dust       = CREATE_ENTITY(Dust, intToVoid(1), player1->position.x, player1->position.y);
             dust->visible          = false;
             dust->active           = ACTIVE_NEVER;
             dust->isPermanent      = true;
             dust->position.y       = (RSDK_screens->position.y - 128) << 16;
-            entity->tileCollisions = 0;
-            entity->interaction    = 0;
-            entity->forceJumpIn    = 0;
+            entity->tileCollisions = false;
+            entity->interaction    = false;
+            entity->forceJumpIn    = false;
             entity->drawOrder      = Zone->playerDrawHigh + 1;
             entity->angle          = 128;
 
@@ -5555,29 +5556,22 @@ void Player_State_StartJumpIn(void)
             if (flag) {
                 entity->state = Player_State_JumpIn;
                 entity->drawFX |= FX_SCALE;
-                entity->maxGlideSpeed = ((RSDK_screens->height + 16 + RSDK_screens->position.y) << 16) - player1->position.y;
                 entity->scale.x       = 0x400;
                 entity->scale.y       = 0x400;
-                int64 v8              = -715827883LL * entity->maxGlideSpeed;
-                uint v9               = (v8 >> 32) >> 1;
-                int val               = v9 + (v9 >> 31);
-                if (val >= -0x68000 || val > -0xE0000) {
-                    entity->entPtr = dust;
-                    if (val < -0x68000)
-                        entity->velocity.y = val;
-                    else
-                        entity->velocity.y = -0x68000;
+                
+                entity->maxGlideSpeed = 0x100000 - player1->position.y + ((RSDK_screens->height + RSDK_screens->position.y) << 16);
+                if (entity->maxGlideSpeed < 0xA80000) {
+                    int vel = -0x68000;
+                    entity->velocity.y = entity->maxGlideSpeed / -12;
                 }
-                else {
-                    entity->entPtr     = dust;
+                else
                     entity->velocity.y = -0xE0000;
-                }
             }
             else {
-                entity->entPtr        = dust;
                 entity->state         = Player_State_FlyIn;
                 entity->maxGlideSpeed = 0;
             }
+            entity->entPtr = dust;
         }
     }
 }

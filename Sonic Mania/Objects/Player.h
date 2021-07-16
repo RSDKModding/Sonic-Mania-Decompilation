@@ -297,7 +297,7 @@ typedef struct {
     int sensorX[5];
     int sensorY;
     Vector2 moveOffset;
-    StateMachine(stateInput2);
+    StateMachine(stateInputReplay);
     StateMachine(stateInput);
     int controllerID;
     int controlLock;

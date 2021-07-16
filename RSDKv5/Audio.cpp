@@ -636,22 +636,23 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 length >>= 1;
                             }
                             AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
-                            float *buffer      = sfxList[id].buffer;
                             sfxList[id].length = length;
                             
                             if (sampleBits == 8) {
+                                sbyte *buffer = (sbyte*)sfxList[id].buffer;
                                 for (int remaining = length; remaining; --remaining) {
                                     int sample = ReadInt8(&info);
-                                    *buffer    = (float)(sample - 128) * 0.0078125;
+                                    *buffer    = (sample - 128);
                                     buffer++;
                                 }
                             }
                             else {
+                                short *buffer = (short *)sfxList[id].buffer;
                                 for (int remaining = length; remaining; --remaining) {
-                                    uint sample = ReadInt16(&info);
-                                    if ((signed int)sample > 0x7FFF)
+                                    int sample = ReadInt16(&info);
+                                    if (sample > 0x7FFF)
                                         sample = (sample & 0x7FFF) - 0x8000;
-                                    *buffer = (float)sample * 0.0078125;
+                                    *buffer = sample;
                                     buffer++;
                                 }
                             }
@@ -689,6 +690,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                             }
 
                         }
+                        CloseFile(&info);
                     }
                     else {
                         printLog(SEVERITY_ERROR, "Unable to open sfx: %s", fullPath);
