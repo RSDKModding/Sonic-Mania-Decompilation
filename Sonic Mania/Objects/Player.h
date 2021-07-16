@@ -95,7 +95,7 @@ typedef struct {
     colour superPalette_Ray[18];
     colour superPalette_Ray_CPZ[18];
     colour superPalette_Ray_HCZ[18];
-    int field_93C;
+    bool32 cantSwap;
     int playerCount;
     ushort upState;
     ushort downState;

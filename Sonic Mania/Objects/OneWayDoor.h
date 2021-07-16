@@ -6,11 +6,19 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	ushort animID;
+	Hitbox hitbox1;
+	Hitbox hitbox2;
+	Hitbox touchBox;
 } ObjectOneWayDoor;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+	StateMachine(state);
+	StateMachine(drawState);
+	int yChange;
+	Animator animator;
 } EntityOneWayDoor;
 
 // Object Struct
@@ -28,6 +36,12 @@ void OneWayDoor_EditorLoad(void);
 void OneWayDoor_Serialize(void);
 
 // Extra Entity Functions
+void OneWayDoor_Interact(void);
 
+void OneWayDoor_DefaultState(void);
+void OneWayDoor_MoveUp(void);
+
+void OneWayDoor_MMZDraw(void);
+void OneWayDoor_CPZDraw(void);
 
 #endif //!OBJ_ONEWAYDOOR_H

@@ -2983,7 +2983,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         return false;
 
     if (!flag) {
-        if (Player->field_93C == 1 || entity->drawOrder == 2 || !RSDK_sceneInfo->timeEnabled)
+        if (Player->cantSwap || entity->drawOrder == 2 || !RSDK_sceneInfo->timeEnabled)
             return false;
         if (Player->jumpInDelay) {
             Player->jumpInDelay = 240;
