@@ -98,8 +98,8 @@ void StickyPlatform_Create(void *data)
 
         entity->animator.animationSpeed = 0;
 
-        entity->position.x += entity->amplitude.x;
         entity->internalPos.x = entity->position.x;
+        entity->position.x += entity->amplitude.x;
         entity->internalPos.y = entity->position.y;
         entity->position.y += entity->amplitude.y;
         entity->amplitude.x >>= 10;

@@ -6,12 +6,14 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	ushort animID;
+	ushort sfxID;
+	Hitbox hitbox;
 } ObjectTubeSpring;
 
 // Entity Class
-typedef struct {
-	RSDK_ENTITY
-} EntityTubeSpring;
+// rdc's gonna fire me LQWDOJWQ
+typedef EntitySpring EntityTubeSpring;
 
 // Object Struct
 extern ObjectTubeSpring *TubeSpring;
@@ -28,6 +30,10 @@ void TubeSpring_EditorLoad(void);
 void TubeSpring_Serialize(void);
 
 // Extra Entity Functions
+void TubeSpring_Interact(void);
+void TubeSpring_Springing(void);
+void TubeSpring_Pullback(void);
 
+bool32 TubeSpring_Spring(bool32 interact);
 
 #endif //!OBJ_TUBESPRING_H

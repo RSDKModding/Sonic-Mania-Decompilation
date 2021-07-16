@@ -9,9 +9,9 @@ void Spring_Update(void)
     if (entity->timer > 0)
         entity->timer--;
     StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == 8)
-        entity->data.animationSpeed = 0;
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == 8)
+        entity->animator.animationSpeed = 0;
 }
 
 void Spring_LateUpdate(void) {}
@@ -21,7 +21,7 @@ void Spring_StaticUpdate(void) {}
 void Spring_Draw(void)
 {
     RSDK_THIS(Spring);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Spring_Create(void *data)
@@ -35,9 +35,9 @@ void Spring_Create(void *data)
             entity->type     = (*pv >> 0) & 0xFF;
             entity->flipFlag = (*pv >> 8) & 0xFF;
         }
-        RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->animator, true, 0);
         entity->active              = ACTIVE_BOUNDS;
-        entity->data.animationSpeed = 0;
+        entity->animator.animationSpeed = 0;
         entity->updateRange.x       = 0x600000;
         entity->updateRange.y       = 0x600000;
         entity->visible             = true;
@@ -132,9 +132,9 @@ void Spring_State_Vertical(void)
                     player->onGround                        = 0;
                     player->velocity.y                      = entity->velocity.y;
                     player->tileCollisions                  = 1;
-                    entity->data.animationSpeed             = 0x80;
-                    entity->data.animationTimer             = 0;
-                    entity->data.frameID                    = 1;
+                    entity->animator.animationSpeed             = 0x80;
+                    entity->animator.animationTimer             = 0;
+                    entity->animator.frameID                    = 1;
                     if (entity->timer == 0) {
                         RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
@@ -156,9 +156,9 @@ void Spring_State_Vertical(void)
                 player->onGround                        = 0;
                 player->velocity.y                      = entity->velocity.y;
                 player->tileCollisions                  = 1;
-                entity->data.animationSpeed             = 0x80;
-                entity->data.animationTimer             = 0;
-                entity->data.frameID                    = 1;
+                entity->animator.animationSpeed             = 0x80;
+                entity->animator.animationTimer             = 0;
+                entity->animator.frameID                    = 1;
                 if (!entity->timer) {
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
@@ -199,9 +199,9 @@ void Spring_State_Horizontal(void)
                 player->pushing             = 0;
                 player->direction           = 0;
                 player->tileCollisions      = 1;
-                entity->data.animationSpeed = 0x80;
-                entity->data.animationTimer = 0;
-                entity->data.frameID        = 1;
+                entity->animator.animationSpeed = 0x80;
+                entity->animator.animationTimer = 0;
+                entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
@@ -238,9 +238,9 @@ void Spring_State_Horizontal(void)
                 player->pushing             = 0;
                 player->direction           = 1;
                 player->tileCollisions      = 1;
-                entity->data.animationSpeed = 0x80;
-                entity->data.animationTimer = 0;
-                entity->data.frameID        = 1;
+                entity->animator.animationSpeed = 0x80;
+                entity->animator.animationTimer = 0;
+                entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
@@ -298,9 +298,9 @@ void Spring_State_Diagonal(void)
                     player->velocity.x          = entity->velocity.x;
                     player->velocity.y          = entity->velocity.y;
                     player->tileCollisions      = 1;
-                    entity->data.animationSpeed = 0x80;
-                    entity->data.animationTimer = 0;
-                    entity->data.frameID        = 1;
+                    entity->animator.animationSpeed = 0x80;
+                    entity->animator.animationTimer = 0;
+                    entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
                         RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
