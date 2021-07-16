@@ -34,7 +34,7 @@ typedef enum {
     int type;                                                                                                                                        \
     Vector2 amplitude;                                                                                                                               \
     int speed;                                                                                                                                       \
-    int hasTension;                                                                                                                                  \
+    bool32 hasTension;                                                                                                                               \
     sbyte frameID;                                                                                                                                   \
     byte collision;                                                                                                                                  \
     Vector2 targetPos;                                                                                                                               \

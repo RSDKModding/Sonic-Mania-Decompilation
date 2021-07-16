@@ -7,11 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     ushort spriteIndex;
-    ushort field_6;
     bool32 hasEggman;
     bool32 hasPhantomRider;
-    Hitbox hitbox2;
-    Hitbox hitbox1;
+    Hitbox hitboxV;
+    Hitbox hitboxH;
     int field_20;
     int field_24;
     int field_28;
@@ -28,7 +27,7 @@ typedef struct {
     byte tag;
     int field_64;
     int field_68;
-    int stood;
+    bool32 stood;
     int field_70;
     int field_74;
     int field_78;
@@ -55,9 +54,9 @@ void Button_Serialize(void);
 void Button_CheckEggmanCollisions(void);
 void Button_CheckPRiderCollisions(void);
 
-void Button_Type0(void);
-void Button_Type1(void);
-void Button_Type2(void);
-void Button_Type3(void);
+void Button_TypeFloor(void);
+void Button_TypeRoof(void);
+void Button_TypeRWall(void);
+void Button_TypeLWall(void);
 
 #endif //!OBJ_BUTTON_H

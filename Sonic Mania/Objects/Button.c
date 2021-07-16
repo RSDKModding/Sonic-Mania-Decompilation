@@ -10,15 +10,15 @@ void Button_Update(void)
     entity->stood    = false;
     switch (entity->type) {
         case 0:
-            Button_Type0();
+            Button_TypeFloor();
             if (Button->hasEggman)
                 Button_CheckEggmanCollisions();
             if (Button->hasPhantomRider)
                 Button_CheckPRiderCollisions();
             break;
-        case 1: Button_Type1(); break;
-        case 2: Button_Type2(); break;
-        case 3: Button_Type3(); break;
+        case 1: Button_TypeRoof(); break;
+        case 2: Button_TypeRWall(); break;
+        case 3: Button_TypeLWall(); break;
         default: break;
     }
 
@@ -50,44 +50,44 @@ void Button_Create(void *data)
 {
     RSDK_THIS(Button);
 
-    entity->drawFX = FX_NONE;
+    entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->type) {
             case 0:
                 entity->direction = FLIP_NONE;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data2, true, 1);
-                entity->hitbox.left   = Button->hitbox2.left;
-                entity->hitbox.top    = Button->hitbox2.top;
-                entity->hitbox.right  = Button->hitbox2.right;
-                entity->hitbox.bottom = Button->hitbox2.bottom;
+                entity->hitbox.left   = Button->hitboxV.left;
+                entity->hitbox.top    = Button->hitboxV.top;
+                entity->hitbox.right  = Button->hitboxV.right;
+                entity->hitbox.bottom = Button->hitboxV.bottom;
                 break;
             case 1:
                 entity->direction = FLIP_Y;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data2, true, 1);
-                entity->hitbox.left   = Button->hitbox2.left;
-                entity->hitbox.top    = Button->hitbox2.top;
-                entity->hitbox.right  = Button->hitbox2.right;
-                entity->hitbox.bottom = Button->hitbox2.bottom;
+                entity->hitbox.left   = Button->hitboxV.left;
+                entity->hitbox.top    = Button->hitboxV.top;
+                entity->hitbox.right  = Button->hitboxV.right;
+                entity->hitbox.bottom = Button->hitboxV.bottom;
                 break;
             case 2:
                 entity->direction = FLIP_NONE;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data2, true, 1);
-                entity->hitbox.left   = Button->hitbox1.left;
-                entity->hitbox.top    = Button->hitbox1.top;
-                entity->hitbox.right  = Button->hitbox1.right;
-                entity->hitbox.bottom = Button->hitbox1.bottom;
+                entity->hitbox.left   = Button->hitboxH.left;
+                entity->hitbox.top    = Button->hitboxH.top;
+                entity->hitbox.right  = Button->hitboxH.right;
+                entity->hitbox.bottom = Button->hitboxH.bottom;
                 break;
             case 3:
-                entity->direction = FLIP_Y;
+                entity->direction = FLIP_X;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data1, true, 0);
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data2, true, 1);
-                entity->hitbox.left   = Button->hitbox1.left;
-                entity->hitbox.top    = Button->hitbox1.top;
-                entity->hitbox.right  = Button->hitbox1.right;
-                entity->hitbox.bottom = Button->hitbox1.bottom;
+                entity->hitbox.left   = Button->hitboxH.left;
+                entity->hitbox.top    = Button->hitboxH.top;
+                entity->hitbox.right  = Button->hitboxH.right;
+                entity->hitbox.bottom = Button->hitboxH.bottom;
                 break;
             default: break;
         }
@@ -150,14 +150,14 @@ void Button_StageLoad(void)
         Button->field_2C = 5;
     }
 
-    Button->hitbox1.left   = -3;
-    Button->hitbox1.top    = -16;
-    Button->hitbox1.right  = 8;
-    Button->hitbox1.bottom = 16;
-    Button->hitbox2.left   = -16;
-    Button->hitbox2.top    = -8;
-    Button->hitbox2.right  = 16;
-    Button->hitbox2.bottom = 3;
+    Button->hitboxH.left   = -3;
+    Button->hitboxH.top    = -16;
+    Button->hitboxH.right  = 8;
+    Button->hitboxH.bottom = 16;
+    Button->hitboxV.left   = -16;
+    Button->hitboxV.top    = -8;
+    Button->hitboxV.right  = 16;
+    Button->hitboxV.bottom = 3;
     if (RSDK.GetObjectIDByName("Eggman"))
         Button->hasEggman = true;
     if (RSDK.GetObjectIDByName("PhantomRider"))
@@ -206,7 +206,7 @@ void Button_CheckPRiderCollisions(void)
     }
 }
 
-void Button_Type0(void)
+void Button_TypeFloor(void)
 {
     RSDK_THIS(Button);
     int val          = entity->field_78;
@@ -277,7 +277,7 @@ void Button_Type0(void)
             val = entity->field_78;
     }
 }
-void Button_Type1(void)
+void Button_TypeRoof(void)
 {
     RSDK_THIS(Button);
     int val          = entity->field_78;
@@ -330,6 +330,7 @@ void Button_Type1(void)
                 }
                 entity->position.y -= Button->field_20;
             }
+
             if (entity->field_78 == -Button->field_20) {
                 if (!entity->field_74) {
                     RSDK.PlaySFX(Button->sfxButton, 0, 255);
@@ -347,7 +348,7 @@ void Button_Type1(void)
             val = entity->field_78;
     }
 }
-void Button_Type2(void)
+void Button_TypeRWall(void)
 {
     RSDK_THIS(Button);
     int val          = entity->field_78;
@@ -366,6 +367,7 @@ void Button_Type2(void)
         void *nextGState     = player->nextGroundState;
         void *nextAState     = player->nextAirState;
         void *state          = player->state;
+
         if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 3 || entity->walkOnto) {
             player->position.x      = playerX;
             player->position.y      = playerY;
@@ -377,6 +379,7 @@ void Button_Type2(void)
             player->nextGroundState = nextGState;
             player->nextAirState    = nextAState;
             player->state           = state;
+
             entity->hitbox.right += (val >> 16);
             entity->hitbox.right = entity->hitbox.right - (Button->field_20 >> 16) - 1;
             int val2             = entity->field_78;
@@ -399,6 +402,7 @@ void Button_Type2(void)
                 }
                 entity->position.x -= Button->field_20;
             }
+
             if (entity->field_78 == Button->field_20) {
                 if (!entity->field_74) {
                     RSDK.PlaySFX(Button->sfxButton, 0, 255);
@@ -412,11 +416,12 @@ void Button_Type2(void)
             if (val2 > entity->field_78)
                 entity->field_78 = val2;
         }
+        
         if (entity->field_78)
             val = entity->field_78;
     }
 }
-void Button_Type3(void)
+void Button_TypeLWall(void)
 {
     RSDK_THIS(Button);
     int val          = entity->field_78;
@@ -425,7 +430,7 @@ void Button_Type3(void)
     foreach_active(Player, player)
     {
         entity->hitbox.right = (val >> 16) + (Button->field_28 & 0xFFFF);
-        entity->hitbox.left  = entity->hitbox.left - 16;
+        entity->hitbox.left  = entity->hitbox.right - 16;
 
         int playerX          = player->position.x;
         int playerY          = player->position.y;
@@ -449,8 +454,8 @@ void Button_Type3(void)
             player->nextAirState    = nextAState;
             player->state           = state;
             entity->hitbox.right -= (val >> 16);
-            int val2 = entity->field_78;
             entity->hitbox.right -= (Button->field_20 >> 16);
+            int val2 = entity->field_78;
             if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2) {
                 entity->field_78 = -Button->field_20;
             }

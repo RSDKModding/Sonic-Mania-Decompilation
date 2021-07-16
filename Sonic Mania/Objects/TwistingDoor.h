@@ -5,12 +5,37 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxOpen;
 } ObjectTwistingDoor;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateCollide);
+    int type;
+    Vector2 amplitude;
+    int buttonTag;
+    bool32 hasTension;
+    byte autoOpen;
+    byte collision;
+    Vector2 targetPos;
+    Vector2 centerPos;
+    Vector2 drawPos;
+    Vector2 collisionOffset;
+    int stood;
+    int collapseDelay;
+    int stoodAngle;
+    byte stoodPlayers;
+    byte pushPlayersL;
+    byte pushPlayersR;
+    Hitbox hitbox;
+    Animator animator;
+    int childCount;
+    bool32 close;
+    EntityButton *buttonPtr;
 } EntityTwistingDoor;
 
 // Object Struct
@@ -28,6 +53,9 @@ void TwistingDoor_EditorLoad(void);
 void TwistingDoor_Serialize(void);
 
 // Extra Entity Functions
-
+void TwistingDoor_Unknown1(void);
+void TwistingDoor_Unknown2(void);
+void TwistingDoor_Unknown3(void);
+void TwistingDoor_Unknown4(void);
 
 #endif //!OBJ_TWISTINGDOOR_H
