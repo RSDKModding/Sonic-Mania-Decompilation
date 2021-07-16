@@ -19,7 +19,7 @@ typedef struct {
 	int speed;
 	bool32 oscillate;
 	int unused_70;
-	int freeSpots;
+	int playerBits;
 	int cooldowns[4];
 	Vector2 internalPos;
 	Hitbox hitbox;

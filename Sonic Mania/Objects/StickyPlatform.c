@@ -25,7 +25,7 @@ void StickyPlatform_Update(void)
         entity            = entity;
         entity->position  = entity->internalPos;
         entity->angle     = 0;
-        entity->freeSpots = 0;
+        entity->playerBits = 0;
         entity->state     = entity->oscillate ? StickyPlatform_AddSpeed : StickyPlatform_HandleMovement;
     }
 }
@@ -137,7 +137,7 @@ void StickyPlatform_Interact(void)
         for (int i = 0; i < Player->playerCount; i++) {
             EntityPlayer *player = RSDK.GetEntityByID(i);
             if (Player_CheckValidState(player) && player->interaction) {
-                if (((1 << i) & entity->freeSpots)) {
+                if (((1 << i) & entity->playerBits)) {
                     if (player->state == Player_State_None) {
                         if (player->jumpPress) {
                             player->angle     = entity->rotation;
@@ -145,7 +145,7 @@ void StickyPlatform_Interact(void)
                             Player_StartJump(player);
                             player->velocity.x = (320 * player->velocity.x) >> 8;
                             player->velocity.y = (320 * player->velocity.y) >> 8;
-                            entity->freeSpots &= ~(1 << i);
+                            entity->playerBits &= ~(1 << i);
                             entity->cooldowns[i] = 16;
                             RSDK.SetSpriteAnimation(StickyPlatform->animID, 3 * (entity->type >> 1) + 2, &entity->animator, false, 0);
                         }
@@ -181,7 +181,7 @@ void StickyPlatform_Interact(void)
                         }
                     }
                     else
-                        entity->freeSpots &= ~(1 << i);
+                        entity->playerBits &= ~(1 << i);
                 }
                 else {
                     if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox) || entity->cooldowns[i]) {
@@ -190,7 +190,7 @@ void StickyPlatform_Interact(void)
                         continue;
                     }
 
-                    entity->freeSpots |= 1 << i;
+                    entity->playerBits |= 1 << i;
                     RSDK.SetSpriteAnimation(StickyPlatform->animID, 3 * (entity->type >> 1), &entity->animator, true, 0);
                     entity->animator.animationSpeed = 1;
                     player->state                   = Player_State_None;
@@ -209,10 +209,10 @@ void StickyPlatform_HandleMovement(void)
 {
     RSDK_THIS(StickyPlatform);
     if (entity->angle) {
-        if (!entity->freeSpots)
+        if (!entity->playerBits)
             entity->state = StickyPlatform_MoveBackForth;
     }
-    else if (entity->freeSpots > 0) {
+    else if (entity->playerBits > 0) {
         entity->state = StickyPlatform_MoveBack;
     }
 }
