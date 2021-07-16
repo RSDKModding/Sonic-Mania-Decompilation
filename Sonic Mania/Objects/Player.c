@@ -5594,7 +5594,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         thisEntity->state = Player_State_Air;
     }
 #endif
-    else if (!thisEntity->isChibi && (player->isChibi || /*player->state != SizeLaser_Unknown5*/ false)) {
+    else if (!thisEntity->isChibi && (player->isChibi || player->state != SizeLaser_P2JumpInShrink)) {
         thisEntity->drawFX |= FX_SCALE;
         thisEntity->scale.x         = 0x200;
         thisEntity->scale.y         = 0x200;
@@ -5604,12 +5604,12 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         thisEntity->nextAirState    = 0;
         thisEntity->nextGroundState = 0;
         thisEntity->interaction     = 0;
-        // thisEntity->entPtr        = (Vector2 *)SizeLaser_Unknown4;
+        thisEntity->entPtr          = (void *)SizeLaser_P2JumpInResize;
         thisEntity->maxGlideSpeed = entPtr->position.x - thisEntity->position.x;
         thisEntity->field_1F8     = entPtr->position.y - thisEntity->position.y;
-        // thisEntity->state            = SizeLaser_Unknown5;
+        thisEntity->state           = SizeLaser_P2JumpInShrink;
     }
-    else if (!thisEntity->isChibi || (player->isChibi && /*player->state != SizeLaser_Unknown6*/ false)) {
+    else if (!thisEntity->isChibi || (player->isChibi && player->state != SizeLaser_P2JumpInGrow)) {
         thisEntity->state = Player_State_Air;
     }
     else {
@@ -5641,10 +5641,10 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
                 break;
         }
         thisEntity->interaction = false;
-        // thisEntity->entPtr        = (Vector2 *)SizeLaser_Unknown4;
+        thisEntity->entPtr           = (void *)SizeLaser_P2JumpInResize;
         thisEntity->maxGlideSpeed = entPtr->position.x - thisEntity->position.x;
         thisEntity->field_1F8     = entPtr->position.y - thisEntity->position.y;
-        // thisEntity->state            = SizeLaser_Unknown6;
+        thisEntity->state            = SizeLaser_P2JumpInGrow;
     }
     RSDK.SetSpriteAnimation(thisEntity->spriteIndex, ANI_JUMP, &thisEntity->playerAnimator, false, 0);
     thisEntity->onGround       = false;
