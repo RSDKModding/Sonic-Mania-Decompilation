@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectSeltzerWater;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int gravityStrength;
+    int field_64;
+    ushort nodeSlot;
+    Animator animator;
 } EntitySeltzerWater;
 
 // Object Struct
@@ -28,6 +35,8 @@ void SeltzerWater_EditorLoad(void);
 void SeltzerWater_Serialize(void);
 
 // Extra Entity Functions
-
+void SeltzerWater_Unknown1(void);
+void SeltzerWater_Unknown2(void);
+void SeltzerWater_Unknown3(void);
 
 #endif //!OBJ_SELTZERWATER_H
