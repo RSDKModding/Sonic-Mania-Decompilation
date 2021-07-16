@@ -24,10 +24,10 @@ void AIZRockPile_Update(void)
                 if (entity->smashSides || entity->smashTop) {
                     int side = Player_CheckCollisionBox(player, entity, hitbox);
                     if (entity->smashSides && (side == 2 || side == 3)) {
-                        if ((byte)(side - 2) <= 1) {
-                            bool32 flag = jumping && (player->onGround) && (abs(groundVel) >= 0x48000);
+                        if (side == 2 || side == 3) {
+                            bool32 flag = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
-                                EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
+                                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                                 flag |= shield->data.animationID == 2;
                             }
 

@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitbox;
 } ObjectSwitchDoor;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int go;
+    bool32 reversible;
+    bool32 field_60;
+    Animator animator;
 } EntitySwitchDoor;
 
 // Object Struct
@@ -28,6 +34,7 @@ void SwitchDoor_EditorLoad(void);
 void SwitchDoor_Serialize(void);
 
 // Extra Entity Functions
+void SwitchDoor_DrawSprites(void);
 
 
 #endif //!OBJ_SWITCHDOOR_H
