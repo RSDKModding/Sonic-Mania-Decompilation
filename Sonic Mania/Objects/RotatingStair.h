@@ -6,11 +6,15 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	byte val;
 } ObjectRotatingStair;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+	MANIA_PLATFORM_BASE
+	ushort oscOff;
+	int field_D0;
+	int field_D4;
 } EntityRotatingStair;
 
 // Object Struct
