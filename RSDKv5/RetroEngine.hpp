@@ -119,6 +119,11 @@ enum GameRegions {
 
 //Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
 #define RETRO_REV02 (1)
+//Determines if the engine should use EGS features like achievements or not (must be rev02)
+#define RETRO_VER_EGS (RETRO_REV02 && 0)
+
+//enables only EGS's ingame achievements without enabling anything else
+#define RETRO_USE_DUMMY_ACHIEVEMENTS (1)
 
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false

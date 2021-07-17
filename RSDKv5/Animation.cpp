@@ -2,7 +2,7 @@
 
 SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 
-short LoadAnimation(const char *filename, Scopes scope)
+short LoadSpriteAnimation(const char *filename, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);

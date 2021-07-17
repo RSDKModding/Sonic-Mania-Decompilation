@@ -150,7 +150,7 @@ void TestObject_StageLoad()
 {
     TestObject->timer       = 0;
     TestObject->active      = ACTIVE_ALWAYS;
-    TestObject->spriteIndex = LoadAnimation("Players/Sonic.bin", SCOPE_STAGE);
+    TestObject->spriteIndex = LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
     TestObject->sheetIndex  = LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
 
     TestObject->hitboxOuter.left   = -10;

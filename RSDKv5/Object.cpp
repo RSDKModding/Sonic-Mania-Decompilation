@@ -602,6 +602,13 @@ void ProcessObjectDrawLists()
                             if (objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw) {
                                 objectList[stageObjectIDs[sceneInfo.entity->objectID]].draw();
                             }
+
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                            if (i == list->entityCount - 1) {
+                                DrawAchievements();
+                            }
+#endif
+
                             sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
                         }
                     }

@@ -1,7 +1,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#define SPRFILE_COUNT     (0x400)
+#define SPRFILE_COUNT (0x400)
 
 #define FRAMEHITBOX_COUNT (0x8)
 
@@ -60,10 +60,10 @@ struct Animator {
 
 extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 
-short LoadAnimation(const char *filename, Scopes scope);
-short CreateAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope);
+short LoadSpriteAnimation(const char *filename, Scopes scope);
+short CreateSpriteAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope);
 
-inline ushort GetAnimation(ushort sprIndex, const char *name)
+inline ushort GetSpriteAnimation(ushort sprIndex, const char *name)
 {
     if (sprIndex >= SPRFILE_COUNT)
         return NULL;
@@ -138,8 +138,8 @@ inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator 
     data->animationID     = animationID;
 }
 
-inline void EditAnimation(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed, byte loopIndex,
-                   byte rotationFlag)
+inline void EditSpriteAnimation(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed,
+                                byte loopIndex, byte rotationFlag)
 {
     if (spriteIndex < SPRFILE_COUNT) {
         SpriteAnimation *spr = &spriteAnimationList[spriteIndex];

@@ -9,6 +9,7 @@
 #define RETRO_GAMEVER VER_105
 
 #define RETRO_USE_PLUS (RETRO_GAMEVER >= VER_105)
+#define RETRO_USE_EGS (RETRO_GAMEVER == VER_107)
 
 #include "GameLink.h"
 

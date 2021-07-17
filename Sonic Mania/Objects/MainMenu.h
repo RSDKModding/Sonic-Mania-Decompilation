@@ -40,6 +40,10 @@ int MainMenu_ReturnToTitleOption(void);
 int MainMenu_StartExitGame(void);
 void MainMenu_ChangeMenu(void);
 
+#if RETRO_USE_EGS
+int MainMenu_BuyPlusDialogCB(void)
+#endif
+
 void MainMenu_Unknown2(void);
 void MainMenu_Unknown3(void);
 void MainMenu_Unknown4(void);

@@ -294,6 +294,9 @@ void runRetroEngine()
                     engine.dimLimit = (5 * 60) * engine.refreshRate;
                     ProcessInput();
                     ProcessObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                    LoadAchievementAssets();
+#endif
                 }
                 break;
             case ENGINESTATE_REGULAR:
@@ -308,6 +311,9 @@ void runRetroEngine()
                     ProcessObjects();
                     ProcessParallaxAutoScroll();
                 }
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                ProcessAchievements();
+#endif
                 ProcessObjectDrawLists();
                 break;
             case ENGINESTATE_PAUSED:
@@ -318,6 +324,9 @@ void runRetroEngine()
                         break;
                     ProcessPausedObjects();
                 }
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                ProcessAchievements();
+#endif
                 ProcessObjectDrawLists();
                 break;
             case ENGINESTATE_FROZEN:
@@ -328,6 +337,9 @@ void runRetroEngine()
                         break;
                     ProcessFrozenObjects();
                 }
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                ProcessAchievements();
+#endif
                 ProcessObjectDrawLists();
                 break;
             case ENGINESTATE_LOAD | ENGINESTATE_STEPOVER:
@@ -349,6 +361,9 @@ void runRetroEngine()
                 ProcessInput();
                 ProcessObjects();
                 sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                LoadAchievementAssets();
+#endif
                 break;
             case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
                 ProcessInput();
@@ -356,6 +371,9 @@ void runRetroEngine()
                     ProcessSceneTimer();
                     ProcessObjects();
                     ProcessParallaxAutoScroll();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                    ProcessAchievements();
+#endif
                     ProcessObjectDrawLists();
                     engine.frameStep = false;
                 }
@@ -364,6 +382,9 @@ void runRetroEngine()
                 ProcessInput();
                 if (engine.frameStep) {
                     ProcessPausedObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                    ProcessAchievements();
+#endif
                     ProcessObjectDrawLists();
                     engine.frameStep = false;
                 }
@@ -372,6 +393,9 @@ void runRetroEngine()
                 ProcessInput();
                 if (engine.frameStep) {
                     ProcessFrozenObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                    ProcessAchievements();
+#endif
                     ProcessObjectDrawLists();
                     engine.frameStep = false;
                 }

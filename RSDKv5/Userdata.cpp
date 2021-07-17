@@ -18,6 +18,31 @@ DummyUserStorage *userStorage   = NULL;
 UserDBStorage userDBStorage[RETRO_USERDB_MAX];
 #endif
 
+// Start custom achievement code
+//this is added because we don't have access to any store APIs that would otherwise use this feature
+#include <vector>
+struct AchievementInfo {
+    const char *identifier;
+    const char *name;
+    const char *description;
+    bool32 achieved;
+};
+
+std::vector<AchievementInfo> achievementList;
+std::vector<int> achievementStack;
+
+void addAchievement(const char* identifier, const char *name, const char *desc)
+{
+    AchievementInfo info;
+    info.identifier  = identifier;
+    info.name        = name;
+    info.description = desc;
+    info.achieved    = false;
+    achievementList.push_back(info);
+}
+
+//End custom achievement code
+
 GamePadMappings *gamePadMappings = NULL;
 int gamePadCount                 = 0;
 
@@ -76,6 +101,14 @@ void initUserData()
         userCore->unknown15            = UserCoreUnknown15;
         userCore->CheckDLC             = checkDLC;
         userCore->ShowExtensionOverlay = ShowExtensionOverlay;
+#if RETRO_VER_EGS
+        userCore->EpicUnknown1      = nullUserFunc;
+        userCore->Epic_Checkout     = EGS_Checkout;
+        userCore->ShowEncorePage    = ShowEncorePage;
+        userCore->EpicUnknown4      = EGS_Unknown4;
+        userCore->RegisterHIDDevice = nullUserFunc;
+        userCore->EpicUnknown6      = nullUserFunc;
+#endif
 
         userCore->values[0]   = (int *)&engine.hasPlus;
         userCore->values[1]   = &curSKU.platform;
@@ -87,12 +120,24 @@ void initUserData()
         achievements->InitUnknown1      = nullUserFunc;
         achievements->SetDebugValues    = nullUserFunc;
         achievements->InitUnknown2      = nullUserFunc;
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+        achievements->CheckAchievementsEnabled = CheckAchievementsEnabled;
+        achievements->GetAchievementNames      = GetAchievementNames;
+        achievements->GetAchievementText       = GetAchievementText;
+        achievements->GetAchievementName       = GetAchievementName;
+        achievements->Unknown8                 = AchivementsUnknown8;
+        achievements->GetNextAchievementID     = GetNextAchievementID;
+        achievements->RemoveLastAchievementID  = RemoveLastAchievementID;
+#endif
         achievements->UnlockAchievement = TryUnlockAchievement;
 
         leaderboards->SetDebugValues   = nullUserFunc;
         leaderboards->InitUnknown1     = nullUserFunc;
         leaderboards->InitUnknown2     = nullUserFunc;
         leaderboards->unknown4         = (int (*)())nullUserFunc;
+#if RETRO_VER_EGS
+        leaderboards->unknown6 = (int (*)())nullUserFunc;
+#endif
         leaderboards->FetchLeaderboard = (void (*)(int, int))nullUserFunc;
         leaderboards->unknown5         = nullUserFunc;
         leaderboards->TrackScore       = (void (*)(int, int, int))nullUserFunc;
@@ -153,9 +198,45 @@ void initUserData()
         SetFuncPtr("SetRichPresence", SetPresence);
 #endif
     }
+
+    // Add achievements
+    achievementList.clear();
+    achievementStack.clear();
+    addAchievement("ACH_GOLD_MEDAL", "No Way? No Way!", "Collect gold medallions in Blue Spheres Bonus stage");
+    addAchievement("ACH_SILVER_MEDAL", "Full Medal Jacket", "Collect silver medallions in Blue Spheres Bonus stage");
+    addAchievement("ACH_EMERALDS", "Magnificent Seven", "Collect all seven Chaos Emeralds");
+    addAchievement("ACH_GAME_CLEARED", "See You Next Game", "Achieve any ending");
+    addAchievement("ACH_STARPOST", "Superstar", "Spin the Star Post!");
+    addAchievement("ACH_SIGNPOST", "That's a Two-fer", "Find the hidden item boxes at the end of the Zone");
+    addAchievement("ACH_GHZ", "Now It Can't Hurt You Anymore", "What would happen if you cross a bridge with a fire shield?");
+    addAchievement("ACH_CPZ", "Triple Trouble", "Try for a 3 chain combo!");
+    addAchievement("ACH_SPZ", "The Most Famous Hedgehog in the World", "Have your photos taken in Studiopolis Zone");
+    addAchievement("ACH_FBZ", "Window Shopping", "Let the wind take you through");
+    addAchievement("ACH_PGZ", "Crate Expectations", "Wreak havoc at the propaganda factory");
+    addAchievement("ACH_SSZ", "King of Speed", "Get through Stardust Speedway Zone as quickly as possible");
+    addAchievement("ACH_HCZ", "Boat Enthusiast", "Try pushing a barrel to see how far it goes");
+    addAchievement("ACH_MSZ", "The Password is \"Special Stage\"", "ADD THIS");
+    addAchievement("ACH_OOZ", "Secret Sub", "You might have to submerge to find it");
+    addAchievement("ACH_LRZ", "Without a Trace", "Barrel through the lava, don't let anything stop you");
+    addAchievement("ACH_MMZ", "Collect 'Em All", "Gotta gacha 'em all");
+    addAchievement("ACH_TMZ", "Professional Hedgehog", "That elusive perfect run, only a professional can achieve");
+
+    int userData[0x100];
+    memset(userData, 0, 0x100 * sizeof(int));
+    userStorage->LoadUserFile("UData.bin", userData, 0x100 * sizeof(int), NULL);
+    for (int i = 0; i < (int)achievementList.size(); ++i) {
+        achievementList[i].achieved = userData[i];
+    }
 }
 void releaseUserData()
 {
+    int userData[0x100];
+    memset(userData, 0, 0x100 * sizeof(int));
+    for (int i = 0; i < (int)achievementList.size(); ++i) {
+        userData[i] = achievementList[i].achieved;
+    }
+    userStorage->SaveUserFile("UData.bin", userData, 0x100 * sizeof(int), NULL, false);
+
 #if RETRO_REV02
     if (dummmyCore)
         free(dummmyCore);
@@ -221,8 +302,78 @@ int ShowExtensionOverlay(byte overlay)
     printLog(SEVERITY_WARN, "Show Extension Overlay: %d", overlay);
     return 1;
 }
+bool32 EGS_Checkout(int a1)
+{
+    printLog(SEVERITY_WARN, "Checkout(%d)");
+    return true;
+}
+int ShowEncorePage(int a1)
+{
+    printLog(SEVERITY_WARN, "Show EncorePage Overlay: %d", a1);
+    return 1;
+}
+void EGS_Unknown4(int a1)
+{
+    printLog(SEVERITY_WARN, "EGS_Unknown4(%d)", a1);
+}
 
-void TryUnlockAchievement(const char *name) { printLog(SEVERITY_NONE, "DUMMY TryUnlockAchievement(%s)", name); }
+void TryUnlockAchievement(const char *name)
+{
+    printLog(SEVERITY_NONE, "DUMMY TryUnlockAchievement(%s)", name);
+
+    int i = 0;
+    for (; i < (int)achievementList.size(); ++i) {
+        if (strcmp(name, achievementList[i].identifier) == 0) {
+            if (!achievementList[i].achieved) {
+                achievementStack.push_back(i);
+                printLog(SEVERITY_NONE, "Unlocked Achievement: (%s, %d)", name, i);
+                achievementList[i].achieved = true;
+            }
+            break;
+        }
+    }
+
+    if (i == achievementList.size())
+        printLog(SEVERITY_NONE, "Failed to Unlock Achievement: (%s)", name);
+}
+
+void GetAchievementNames(TextInfo *names, int count)
+{
+    int i = 0;
+    for (; i < count && i < (int)achievementStack.size(); ++i) {
+        SetText(&names[i], (char*)achievementList[i].name, 0);
+    }
+    for (; i < count; ++i) {
+        SetText(&names[i], (char *)"Dummy Achievement", 0);
+    }
+}
+
+TextInfo *GetAchievementText(TextInfo *info)
+{
+    SetText(info, (char *)"Achievement!", 0);
+    return info;
+}
+TextInfo *GetAchievementName(TextInfo *info, uint id)
+{
+    id--;
+    if (id <= achievementList.size())
+        SetText(info, (char *)achievementList[id].name, 0);
+    return info;
+}
+
+int GetNextAchievementID(void)
+{
+    if (achievementStack.size() > 0)
+        return achievementStack[0] + 1;
+    else
+        return 0;
+}
+
+void RemoveLastAchievementID(void)
+{
+    if (achievementStack.size() > 0)
+        achievementStack.erase(achievementStack.begin());
+}
 
 void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)", a2, a3); }
 void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)", a2, a3, a4); }
@@ -333,12 +484,14 @@ void *GetFuncPtr(const char *name)
 }
 #endif
 
-bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int))
+bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int))
 {
+    bool32 success = false; 
+    memset(buffer, 0, bufSize);
 #if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
-        LoadUserFile(filename, buffer, bufSize);
+        success = LoadUserFile(filename, buffer, bufSize);
 
         if (callback)
             callback(100);
@@ -353,17 +506,18 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize,
     }
 #endif
 
-    return false;
+    return success;
 }
-bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress)
+bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compress)
 {
+    bool32 success = false;
 #if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
         if (compress) {
             // compress lo
         }
-        SaveUserFile(filename, buffer, bufSize);
+        success = SaveUserFile(filename, buffer, bufSize);
 
         if (callback)
             callback(100);
@@ -379,7 +533,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize,
     }
 #endif
 
-    return false;
+    return success;
 }
 bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
 {
@@ -408,7 +562,7 @@ void (*userFileCallback)();
 void (*userFileCallback2)();
 char userFileDir[0x100];
 
-bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
+bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
 {
     if (userFileCallback)
         userFileCallback();
@@ -440,7 +594,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize)
     }
     return false;
 }
-bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize)
+bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
 {
     if (userFileCallback)
         userFileCallback();
@@ -451,7 +605,7 @@ bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize)
     }
     printLog(SEVERITY_NONE, "Attempting to save user file: %s", userFileDir);
 
-    FileIO *file = fOpen(userFileDir, "rb");
+    FileIO *file = fOpen(userFileDir, "wb");
     if (file) {
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
@@ -1247,3 +1401,132 @@ void writeSettings(bool32 writeToFile)
         fClose(file);
     }
 }
+
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+bool32 achievementsEnabled = true;
+ushort achievementAniFrames[2];
+Animator achievementAnimator[2];
+TextInfo achievementText[2];
+int achievementTextWidth[2];
+int achievementID             = 0;
+int achievementsDelay         = 0;
+int achievementsDrawn         = 0;
+int achievementStrW           = 0;
+int achievementStrX           = 0;
+bool32 achievementsLoaded     = false;
+bool32 achievementDrawFlag    = false;
+bool32 achievementUnknownFlag = false;
+
+void LoadAchievementAssets() {
+    if (achievementsEnabled) {
+        if (achievements) {
+            if (achievements->CheckAchievementsEnabled()) {
+                if (achievements->Unknown8()) {
+                    if (achievementUnknownFlag) {
+                        achievementUnknownFlag = false;
+                        achievementID          = 0;
+                        achievementDrawFlag    = false;
+                        achievementsDelay      = 0;
+                        achievementsDrawn      = 0;
+                    }
+                    else {
+                        if (achievementID)
+                            achievementsDelay = 180;
+                    }
+
+                    achievementsLoaded = !(CheckSceneFolder("Logos") || CheckSceneFolder("Title"));
+
+                    if (achievementsLoaded) {
+                        achievementAniFrames[0] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+                        SetSpriteAnimation(achievementAniFrames[0], 0, &achievementAnimator[0], true, 0);
+
+                        achievementAniFrames[1] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+                        SetSpriteAnimation(achievementAniFrames[1], 0, &achievementAnimator[1], true, 0);
+                    }
+                }
+                else {
+                    achievementsLoaded = false;
+                }
+            }
+        }
+    }
+}
+void ProcessAchievements() {
+    if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
+        if (achievementsLoaded) {
+            if (!achievementID) {
+                achievementID = achievements->GetNextAchievementID();
+                if (achievementID) {
+                    achievementDrawFlag = true;
+                    achievementsDelay   = 180;
+                    achievementsDrawn   = false;
+                    achievements->RemoveLastAchievementID();
+
+                    TextInfo buffer;
+                    CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
+                    CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
+                    if (curSKU.language == LANGUAGE_JP) {
+                        achievementTextWidth[0] = 13 * achievementText[0].textLength;
+                        achievementTextWidth[1] = 13 * achievementText[1].textLength;
+                    }
+                    else {
+                        achievementTextWidth[0] =
+                            GetStringWidth(achievementAniFrames[0], 0, &achievementText[0], 0, achievementText[0].textLength, 0);
+                        achievementTextWidth[1] =
+                            GetStringWidth(achievementAniFrames[1], 0, &achievementText[1], 0, achievementText[1].textLength, 0);
+                    }
+
+                    achievementStrW = maxVal(achievementTextWidth[0], achievementTextWidth[1]) + 16;
+                    achievementStrX = achievementTextWidth[1] > achievementTextWidth[0] ? 20 : 0;
+                }
+            }
+
+            if (achievementsDrawn) {
+                if (!--achievementsDelay) {
+                    achievementID       = 0;
+                    achievementDrawFlag = false;
+                }
+            }
+        }
+    }
+}
+void DrawAchievements()
+{
+    if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
+        if (achievementsLoaded && achievementDrawFlag && achievementID) {
+            Vector2 drawPos;
+
+            TextInfo buffer;
+            CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
+            CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
+
+            int drawX = achievementStrX + currentScreen->width - achievementStrW;
+            DrawRectangle(drawX, currentScreen->height - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
+
+            Vector2 vertices[3];
+            vertices[0].x = (drawX - 40) << 16;
+            vertices[1].y = (currentScreen->height - 40) << 16;
+            vertices[0].y = currentScreen->height << 16;
+            vertices[1].x = drawX << 16;
+            vertices[2].x = drawX << 16;
+            vertices[2].y = currentScreen->height << 16;
+            DrawFace(vertices, 3, 255, 16, 124, 255, INK_NONE);
+
+            drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
+            drawPos.y = vertices[1].y + 0xA0000;
+            SetSpriteString(achievementAniFrames[0], 0, &achievementText[0]);
+            DrawText(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].textLength, ALIGN_CENTER, 0, 0, NULL, true);
+
+            vertices[1].y += 0x1C0000;
+
+            drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
+            drawPos.y = vertices[1].y;
+            SetSpriteString(achievementAniFrames[1], 0, &achievementText[1]);
+            DrawText(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].textLength, ALIGN_CENTER, 0, 0, NULL, true);
+
+            achievementsDrawn = true;
+        }
+    }
+}
+
+#endif

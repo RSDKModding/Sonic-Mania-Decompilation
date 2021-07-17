@@ -22,16 +22,16 @@ typedef struct {
     void (*ShowExtensionOverlay)(byte overlay);
 #if RETRO_GAMEVER == VER_107
     void (*EGS_Checkout)(int a1);
-    void (*EGS_ShowEncorePage)(int a1);
+    void (*ShowEncorePage)(int a1);
     void (*EGS_Unknown4)(int a1);
-    void (*EGS_RegisterHIDDevice)(void);
+    void (*RegisterHIDDevice)(void);
 #endif
     void (*UnlockAchievement)(const char *achName);
     void (*GetAchievementStatus)(void);
     void (*SetAchievementStatus)(int a1);
 #if RETRO_GAMEVER == VER_107
-    void (*EGS_AchievementsUnknown1)(void);
-    void (*EGS_AchievementsUnknown2)(int a1, int a2);
+    bool32 (*CheckAchievementsEnabled)(void);
+    void (*GetAchievementNames)(TextInfo *names, int count);
 #endif
     void (*LeaderboardsUnknown4)(void);
 #if RETRO_GAMEVER == VER_107

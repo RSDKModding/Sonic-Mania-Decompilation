@@ -7,23 +7,31 @@
 #define RETRO_USERDB_ENTRY_MAX (0x400)
 
 struct DummyCore {
-    void (*unknown1)();
-    void (*unknown2)();
-    void (*unknown3)();
-    void (*unknown4)();
-    void (*SetupDebugValues)();
-    void (*UserInitUnknown1)();
-    void (*UserInitUnknown2)();
-    int (*GetUserLanguage)();
-    int (*GetUserRegion)();
-    int (*GetUserPlatform)();
-    int (*GetConfirmButtonFlip)();
-    void (*LaunchManual)();
-    void (*ExitGame)();
-    int (*controllerUnknown)();
+    void (*unknown1)(void);
+    void (*unknown2)(void);
+    void (*unknown3)(void);
+    void (*unknown4)(void);
+    void (*SetupDebugValues)(void);
+    void (*UserInitUnknown1)(void);
+    void (*UserInitUnknown2)(void);
+    int (*GetUserLanguage)(void);
+    int (*GetUserRegion)(void);
+    int (*GetUserPlatform)(void);
+    int (*GetConfirmButtonFlip)(void);
+    void (*LaunchManual)(void);
+    void (*ExitGame)(void);
+    int (*controllerUnknown)(void);
     int (*unknown15)(byte inputID);
     int (*CheckDLC)(byte id);
     int (*ShowExtensionOverlay)(byte overlay);
+#if RETRO_VER_EGS
+    void (*EpicUnknown1)(void);
+    bool32 (*Epic_Checkout)(int a1);
+    int (*ShowEncorePage)(int a1);
+    void (*EpicUnknown4)(int a1);
+    void (*RegisterHIDDevice)(void);
+    void (*EpicUnknown6)(void);
+#endif
 
     int* values[8];
     byte debugValCnt;
@@ -32,19 +40,34 @@ struct DummyCore {
 };
 
 struct DummyAchievements {
-    void (*InitUnknown1)();
-    void (*SetDebugValues)();
-    void (*InitUnknown2)();
+    void (*InitUnknown1)(void);
+    void (*SetDebugValues)(void);
+    void (*InitUnknown2)(void);
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+    bool32 (*CheckAchievementsEnabled)(void);
+    void (*GetAchievementNames)(TextInfo *names, int count);
+    TextInfo *(*GetAchievementText)(TextInfo *info);
+    TextInfo *(*GetAchievementName)(TextInfo *info, uint id);
+    bool32 (*Unknown8)(void);
+    int (*GetNextAchievementID)(void);
+    void (*RemoveLastAchievementID)(void);
+#endif
     void (*UnlockAchievement)(const char* name);
 
     int status;
+#if RETRO_VER_EGS
+
+#endif
 };
 
 struct DummyLeaderboards {
     void (*SetDebugValues)(void);
     void (*InitUnknown1)(void);
     void (*InitUnknown2)(void);
-    int (*unknown4)(void);
+    int (*unknown4)(void);  
+#if RETRO_VER_EGS
+    int (*unknown6)(void);
+#endif
     void (*FetchLeaderboard)(int a2, int a3);
     void (*unknown5)(void);
     void (*TrackScore)(int a2, int a3, int a4);
@@ -185,6 +208,27 @@ struct UserDBStorage {
 extern UserDBStorage userDBStorage[RETRO_USERDB_MAX];
 #endif
 
+
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+extern bool32 achievementsEnabled;
+extern ushort achievementAniFrames[2];
+extern Animator achievementAnimator[2];
+extern TextInfo achievementText[2];
+extern int achievementTextWidth[2];
+extern int achievementID;
+extern int achievementsDelay;
+extern int achievementsDrawn;
+extern int achievementStrW;
+extern int achievementStrX;
+extern bool32 achievementsLoaded;
+extern bool32 achievementDrawFlag;
+extern bool32 achievementUnknownFlag;
+
+void LoadAchievementAssets();
+void ProcessAchievements();
+void DrawAchievements();
+#endif
+
 struct StatInfo {
     byte statID;
     const char *name;
@@ -213,11 +257,21 @@ inline int checkDLC(byte dlcID)
 #endif
 inline int UserCoreUnknown15(byte inputID) { return 0; }
 int ShowExtensionOverlay(byte overlay);
+bool32 EGS_Checkout(int a1);
+int ShowEncorePage(int a1);
+void EGS_Unknown4(int a1);
 
 #if RETRO_REV02
 inline int GetAchievementsStatus() { return achievements->status; }
 inline void SetAchievementsStatus(int status) { achievements->status = status; }
 #endif
+inline bool32 CheckAchievementsEnabled() { return true; }
+inline bool32 AchivementsUnknown8() { return true; }
+void GetAchievementNames(TextInfo *names, int count);
+TextInfo *GetAchievementText(TextInfo *info);
+TextInfo *GetAchievementName(TextInfo *info, uint id);
+int GetNextAchievementID(void);
+void RemoveLastAchievementID(void);
 void TryUnlockAchievement(const char *name);
 
 void FetchLeaderboard(int a2, int a3);
@@ -361,12 +415,12 @@ inline void SetUserFileCallbacks(const char *userDir, void (*callback1)(void), v
     strcpy(userFileDir, userDir);
 }
 
-bool32 TryLoadUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
-bool32 TrySaveUserFile(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
+bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int));
+bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compress);
 bool32 TryDeleteUserFile(const char *filename, int (*callback)(int));
 
-bool32 LoadUserFile(const char *filename, void *buffer, unsigned int bufSize);
-bool32 SaveUserFile(const char *filename, void *buffer, unsigned int bufSize);
+bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize);
+bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize);
 bool32 DeleteUserFile(const char *filename);
 
 #if RETRO_REV02

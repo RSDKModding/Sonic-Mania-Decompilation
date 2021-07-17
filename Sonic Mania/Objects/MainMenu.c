@@ -235,10 +235,37 @@ void MainMenu_ChangeMenu(void)
                 UIControl_MatchMenuTag("Encore Mode");
             }
             break;
-        case 6: API.ShowExtensionOverlay(0); break;
+        case 6: API.ShowExtensionOverlay(0);
+#if RETRO_USE_EGS
+            if (!API.CheckDLC(DLC_PLUS)) {
+                if (API.EGS_Checkout(0)) {
+                    API.ShowEncorePage(0);
+                }
+                else {
+                    TextInfo buffer;
+                    INIT_TEXTINFO(buffer);
+                    Localization_GetString(&buffer, STR_CONNECTINGTOEGS);
+                    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(buffer);
+                    if (dialog) {
+                        UIDialog_Unknown2(2, dialog, MainMenu_BuyPlusDialogCB, 1);
+                        UIDialog_Unknown2(3, dialog, 0, 1);
+                        UIDialog_Unknown3(dialog);
+                    }
+                }
+            }
+#endif
+            break;
         default: break;
     }
 }
+
+#if RETRO_USE_EGS
+int MainMenu_BuyPlusDialogCB(void)
+{
+    API.EGS_Unknown4(0);
+    return 1;
+}
+#endif
 
 void MainMenu_Unknown2(void)
 {

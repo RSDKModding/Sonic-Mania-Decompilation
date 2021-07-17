@@ -74,6 +74,17 @@ void Localization_LoadStrings(void)
     }
     RSDK.SplitStringList(Localization->strings, &Localization->text, 0, 68);
     Localization->loaded = true;
+
+#if RETRO_USE_EGS
+    if (API.CheckAchievementsEnabled()) {
+        TextInfo names[STR_STRING_COUNT - STR_ACHIEVEMENT];
+        for (int i = STR_ACHIEVEMENT; i < STR_STRING_COUNT; ++i) {
+            names[i] = Localization->strings[i];
+        }
+
+        API.GetAchievementNames(names, STR_STRING_COUNT - STR_ACHIEVEMENT);
+    }
+#endif
 }
 
 void Localization_GetString(TextInfo *textInfo, byte id)
