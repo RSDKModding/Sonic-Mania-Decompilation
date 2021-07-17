@@ -312,8 +312,8 @@ void Zone_StageLoad(void)
 
         if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
             globals->characterFlags = saveRAM[66];
-            globals->playerID       = saveRAM[68];
             globals->stock          = saveRAM[67];
+            globals->playerID       = saveRAM[68];
         }
     }
 #endif

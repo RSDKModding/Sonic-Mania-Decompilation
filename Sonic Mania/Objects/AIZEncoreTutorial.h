@@ -43,7 +43,7 @@ void AIZEncoreTutorial_Unknown1(void);
 void AIZEncoreTutorial_Unknown2(void);
 void AIZEncoreTutorial_Unknown3(void);
 void AIZEncoreTutorial_Unknown4(void);
-void *AIZEncoreTutorial_Unknown5(void);
+void AIZEncoreTutorial_Unknown5(void);
 
 #endif
 

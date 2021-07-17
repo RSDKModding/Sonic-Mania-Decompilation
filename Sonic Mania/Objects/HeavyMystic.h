@@ -5,7 +5,32 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    ushort sfxAssemble;
+    ushort sfxMagicBox;
+    ushort sfxClack;
+    ushort sfxPowerDown;
+    ushort sfxImpact;
+    ushort sfxPon;
+    ushort sfxDrop;
+    ushort sfxImpact2;
+    ushort sfxHit;
+    ushort sfxExplosion;
+    ushort sfxPoof;
+    ushort sfxTwinkle;
+    ushort sfxHat;
+    ushort sfxHatNode;
+    ushort sfxBleeps;
+    ushort sfxTransform;
+    ushort sfxAppear1;
+    ushort aniFrames;
+    ushort rouguesFrames;
 } ObjectHeavyMystic;
 
 // Entity Class

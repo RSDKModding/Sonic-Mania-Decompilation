@@ -539,11 +539,11 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SetupMeshAnimation, AddMeshFrameToScene);
     addToRSDKFunctionTable(FunctionTable_Draw3DScene, Draw3DScene);
     addToRSDKFunctionTable(FunctionTable_LoadAnimation, LoadSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_CreateAnimation, CreateAnimation);
+    addToRSDKFunctionTable(FunctionTable_CreateAnimation, CreateSpriteAnimation);
     addToRSDKFunctionTable(FunctionTable_SetSpriteAnimation, SetSpriteAnimation);
-    addToRSDKFunctionTable(FunctionTable_EditAnimation, EditAnimation);
+    addToRSDKFunctionTable(FunctionTable_EditAnimation, EditSpriteAnimation);
     addToRSDKFunctionTable(FunctionTable_SetSpriteString, SetSpriteString);
-    addToRSDKFunctionTable(FunctionTable_GetAnimation, GetAnimation);
+    addToRSDKFunctionTable(FunctionTable_GetAnimation, GetSpriteAnimation);
     addToRSDKFunctionTable(FunctionTable_GetFrame, GetFrame);
     addToRSDKFunctionTable(FunctionTable_GetHitbox, GetHitbox);
     addToRSDKFunctionTable(FunctionTable_GetFrameID, GetFrameID);

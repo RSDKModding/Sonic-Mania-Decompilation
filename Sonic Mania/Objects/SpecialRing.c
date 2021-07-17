@@ -168,7 +168,7 @@ void SpecialRing_State_Warp(void)
     }
 
     if (SaveGame->saveRAM[28] == 0x7F || !entity->id) {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+        destroyEntity(entity);
     }
     else {
         if (entity->warpData.frameID == entity->warpData.frameCount - 1) {

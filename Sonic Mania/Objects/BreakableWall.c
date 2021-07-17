@@ -298,6 +298,7 @@ void BreakableWall_Break1(void)
 
     foreach_active(Player, player)
     {
+        int velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
 #if RETRO_USE_PLUS
             if (!entity->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
@@ -361,7 +362,7 @@ void BreakableWall_Break1(void)
                         BreakableWall_GiveScoreBonus(player);
 #if RETRO_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            player->velocity.y -= 0x10000;
+                            player->velocity.y = velY - 0x10000;
                         else
 #endif
                             player->velocity.y = -0x30000;
@@ -476,7 +477,8 @@ void BreakableWall_Break5(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
+        int velY = player->velocity.y;
+        if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
 #if RETRO_USE_PLUS
             if (!entity->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
 #endif
@@ -501,55 +503,45 @@ void BreakableWall_Break5(void)
                     if (player->groundedStore && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
                         flag = false;
 
-                    if (flag && !player->sidekick) {
-                        player->onGround = false;
-                        int tx           = entity->position.x - (entity->size.x << 19) + 0x80000;
-                        int tw           = entity->position.x - (entity->size.x << 19) + 0x80000;
-                        int ty           = entity->position.y - (entity->size.y << 19) + 0x80000;
-                        int th           = (entity->size.y << 19) + entity->position.y;
-                        int offsetY      = ty - th;
-                        for (int y = 0; y < entity->size.y; ++y) {
-                            int posY        = ty >> 20;
-                            int speed       = 3 * abs(offsetY);
-                            int offsetX     = tx - entity->position.x;
-                            int blockSpeedX = 2 * (tx - entity->position.x);
-                            for (int x = 0; x < entity->size.x; ++x) {
-                                int posX                       = tx >> 20;
-                                EntityBreakableWall *tileChunk =
-                                    (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, intToVoid(1), tx, ty);
-                                tileChunk->tileInfo            = RSDK.GetTileInfo(entity->priority, posX, posY);
-                                tileChunk->drawOrder           = entity->drawOrder;
-                                int angle                      = RSDK.ATan2(blockSpeedX, offsetY);
-                                int spd                        = (speed + abs(offsetX)) >> 18;
-                                tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
-                                tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
-                                RSDK.SetTileInfo(entity->priority, posX, posY, 0xFFFF);
+                    player->onGround = false;
+                    int tx           = entity->position.x - (entity->size.x << 19) + 0x80000;
+                    int tw           = entity->position.x - (entity->size.x << 19) + 0x80000;
+                    int ty           = entity->position.y - (entity->size.y << 19) + 0x80000;
+                    int th           = (entity->size.y << 19) + entity->position.y;
+                    int offsetY      = ty - th;
+                    for (int y = 0; y < entity->size.y; ++y) {
+                        int posY        = ty >> 20;
+                        int speed       = 3 * abs(offsetY);
+                        int offsetX     = tx - entity->position.x;
+                        int blockSpeedX = 2 * (tx - entity->position.x);
+                        for (int x = 0; x < entity->size.x; ++x) {
+                            int posX                       = tx >> 20;
+                            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(1), tx, ty);
+                            tileChunk->tileInfo            = RSDK.GetTileInfo(entity->priority, posX, posY);
+                            tileChunk->drawOrder           = entity->drawOrder;
+                            int angle                      = RSDK.ATan2(blockSpeedX, offsetY);
+                            int spd                        = (speed + abs(offsetX)) >> 18;
+                            tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
+                            tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
+                            RSDK.SetTileInfo(entity->priority, posX, posY, 0xFFFF);
 
-                                if (entity->drawOrder < Zone->drawOrderLow) {
-                                    if (BreakableWall->farPlaneLayer != 0xFFFF)
-                                        RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, 0xFFFF);
-                                }
-
-                                blockSpeedX += 0x200000;
-                                tx += 0x100000;
-                                offsetX += 0x100000;
-                                tx += 0x100000;
+                            if (entity->drawOrder < Zone->drawOrderLow) {
+                                if (BreakableWall->farPlaneLayer != 0xFFFF)
+                                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, 0xFFFF);
                             }
-                            ty += 0x100000;
-                            tx = tw;
-                            offsetY += 0x100000;
-                        }
 
-                        RSDK.PlaySFX(BreakableWall->sfx_Break, 0, 255);
-                        BreakableWall_GiveScoreBonus(player);
-#if RETRO_USE_PLUS
-                        if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            player->velocity.y -= 0x10000;
-                        else
-#endif
-                            player->velocity.y = -0x30000;
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                            blockSpeedX += 0x200000;
+                            tx += 0x100000;
+                            offsetX += 0x100000;
+                        }
+                        ty += 0x100000;
+                        tx = tw;
+                        offsetY += 0x100000;
                     }
+
+                    RSDK.PlaySFX(BreakableWall->sfx_Break, 0, 255);
+                    player->velocity.y = velY;
+                    destroyEntity(entity);
                 }
 #if RETRO_USE_PLUS
             }

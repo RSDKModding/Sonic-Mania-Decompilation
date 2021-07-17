@@ -103,7 +103,7 @@ void GameOver_Create(void *data)
         entity->drawOrder            = Zone->hudDrawOrder + 1;
 
         foreach_all(HUD, hud) {
-            hud->state  = HUD_Unknown6;
+            hud->state  = HUD_State_GoOffScreen;
             hud->active = ACTIVE_ALWAYS;
         }
     }

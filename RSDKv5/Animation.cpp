@@ -100,7 +100,7 @@ short LoadSpriteAnimation(const char *filename, Scopes scope)
     return -1;
 }
 
-short CreateAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope)
+short CreateSpriteAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);

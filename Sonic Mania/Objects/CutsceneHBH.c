@@ -231,11 +231,13 @@ void CutsceneHBH_LoadSprites(void)
                 entity->spriteIndex = RSDK.LoadSpriteAnimation("Cutscene/DamagedKing.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->data, true, 0);
             RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->altData, true, 0);
+            break;
         case HBH_PILE:
             if (!entity->spriteIndex)
                 entity->spriteIndex = RSDK.LoadSpriteAnimation("Cutscene/HBHPile.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->data, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->altData, true, 0);
+            break;
         case HBH_KINGTMZ2:
             if (!entity->spriteIndex)
                 entity->spriteIndex = RSDK.LoadSpriteAnimation("Cutscene/KingTMZ2.bin", SCOPE_STAGE);

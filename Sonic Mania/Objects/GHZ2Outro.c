@@ -25,7 +25,7 @@ void GHZ2Outro_Update(void)
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipState = 1;
 
-        foreach_active(HUD, hud) { hud->state = HUD_Unknown6; }
+        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         entity->active = ACTIVE_NEVER;
     }
 }

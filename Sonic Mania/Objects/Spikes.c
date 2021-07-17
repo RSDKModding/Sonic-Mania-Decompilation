@@ -461,37 +461,35 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
                     }
 
                     player->velocity.x -= player->velocity.x >> 2;
-                    return;
+                    break;
                 case 2:
                     player->velocity.y = -0x40000;
                     player->velocity.x = -0x28000;
                     player->state      = Player_State_Air;
-                    return;
+                    break;
                 case 3:
                     player->velocity.y = -0x40000;
                     player->velocity.x = 0x28000;
                     player->state      = Player_State_Air;
-                    return;
+                    break;
                 case 4:
                     player->velocity.y = 0x20000;
                     player->state      = Player_State_Air;
-                    return;
+                    break;
                 default: break;
             }
-            if (entity->type >= 1 && entity->type <= 4) {
-                player->onGround         = false;
-                player->jumpAbility      = 0;
-                player->jumpAbilityTimer = 0;
-                if (player->state == Player_State_Hit) {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, 18, &player->playerAnimator, 0, 0);
-                    RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
-                }
-                else {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, 0, 0);
-                    RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
-                }
-            }
 
+            player->onGround         = false;
+            player->jumpAbility      = 0;
+            player->jumpAbilityTimer = 0;
+            if (player->state == Player_State_Hit) {
+                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
+            }
+            else {
+                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, false, 0);
+                RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
+            }
             if (player->playerAnimator.animationID != ANI_FLY)
                 RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
             if (player->underwater) {
@@ -502,21 +500,21 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
         else if (entity->type == 1) {
             if (player->playerAnimator.animationID == ANI_DROPDASH) {
                 player->velocity.y = -0x48000;
-                if ((player->direction & FLIP_X) == 0)
+                if (!(player->direction & FLIP_X))
                     player->velocity.x = 0x48000;
                 else
                     player->velocity.x = -0x48000;
                 player->state = Player_State_Air;
                 player->velocity.x -= player->velocity.x >> 2;
-                player->onGround         = 0;
+                player->onGround         = false;
                 player->jumpAbility      = 0;
                 player->jumpAbilityTimer = 0;
                 if (player->state == Player_State_Hit) {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, 18, &player->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
                     RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, false, 0);
                     RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
                 }
                 if (player->playerAnimator.animationID != ANI_FLY)
@@ -526,21 +524,17 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
                     player->velocity.y >>= 1;
                 }
             }
-            else if (playerVelY > 0x28000) {
-                player->velocity.y       = -0x20000;
-                player->state            = Player_State_Air;
-                player->onGround         = 0;
-                player->jumpAbility      = 0;
-                player->jumpAbilityTimer = 0;
-                RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
-
-                player->groundedStore   = 1;
-                player->state           = Player_State_Roll;
-                player->nextGroundState = Player_State_Roll;
-                player->nextAirState    = Player_State_Air;
-            }
             else {
-                player->groundedStore   = 1;
+                if (playerVelY > 0x28000) {
+                    player->velocity.y       = -0x20000;
+                    player->state            = Player_State_Air;
+                    player->onGround         = false;
+                    player->jumpAbility      = 0;
+                    player->jumpAbilityTimer = 0;
+                    RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+                }
+
+                player->groundedStore   = true;
                 player->state           = Player_State_Roll;
                 player->nextGroundState = Player_State_Roll;
                 player->nextAirState    = Player_State_Air;

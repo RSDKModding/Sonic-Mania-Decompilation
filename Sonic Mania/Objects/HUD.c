@@ -79,7 +79,6 @@ void HUD_Draw(void)
     EntityPlayer *player = RSDK_GET_ENTITY(RSDK_sceneInfo->currentScreenID, Player);
 
     Vector2 lifePos;
-
     Vector2 pos[4];
 
     if (globals->gameMode == MODE_COMPETITION) {
@@ -261,7 +260,7 @@ void HUD_Draw(void)
         }
 
         lifePos.x += 0x140000;
-        EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+        EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (sidekick->objectID) {
             int charID = sidekick->characterID;
             int id     = -1;
@@ -275,43 +274,23 @@ void HUD_Draw(void)
             }
             lifePos.x += 0x140000;
             RSDK.SetSpriteAnimation(HUD->hudMappings, 12, &entity->lifeIconsData, true, 0);
-            id        = -1;
-            int stock = globals->stock & 0xFF;
-            if (stock) {
-                do {
-                    stock >>= 1;
-                    ++id;
-                } while (stock > 0);
-            }
-            entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_28[1] & 4))
-                RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
-            id = -1;
-            lifePos.x += 0x100000;
-            stock = (globals->stock >> 8) & 0xFF;
-            if (globals->stock >> 8) {
-                do {
-                    stock >>= 1;
-                    ++id;
-                } while (stock > 0);
-            }
-            entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_28[2] & 4))
-                RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
+            for (int i = 0; i < 3; ++i) {
+                id        = -1;
+                int stock = (globals->stock >> (i * 8)) & 0xFF;
+                if (stock) {
+                    do {
+                        stock >>= 1;
+                        ++id;
+                    } while (stock > 0);
+                }
+                entity->lifeIconsData.frameID = id;
+                if (id >= 0 && !(HUD->field_28[i + 1] & 4))
+                    RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
-            id = -1;
-            lifePos.x += 0x100000;
-            int flags = globals->characterFlags;
-            if (globals->characterFlags) {
-                do {
-                    flags >>= 1;
-                    ++id;
-                } while (flags > 0);
+                lifePos.x += 0x100000;
             }
-            entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_28[3] & 4))
-                RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
+
             RSDK.SetSpriteAnimation(HUD->hudMappings, 2, &entity->lifeIconsData, true, 0);
         }
     }
@@ -559,7 +538,7 @@ void HUD_GetSuperFrames(void)
 }
 #endif
 
-void HUD_Unknown5(void)
+void HUD_State_ComeOnScreen(void)
 {
     RSDK_THIS(HUD);
     Vector2 *ptrs[4];
@@ -596,7 +575,7 @@ void HUD_Unknown5(void)
     }
 }
 
-void HUD_Unknown6(void)
+void HUD_State_GoOffScreen(void)
 {
     RSDK_THIS(HUD);
     Vector2 *ptrs[4];
@@ -636,14 +615,14 @@ void HUD_Unknown6(void)
             //    gameOver->playerID = entity->screenID;
             //}
             // else {
-            RSDK.ResetEntityPtr(gameOver, GameOver->objectID, (void *)1);
+            RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(1));
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK_sceneInfo->timeEnabled = false;
             gameOver->playerID          = entity->screenID;
             //}
         }
         else {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+            destroyEntity(entity);
         }
     }
 }

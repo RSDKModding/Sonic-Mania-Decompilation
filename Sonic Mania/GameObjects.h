@@ -932,7 +932,7 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
 #define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
 #define SPAWN_CHILD(obj, data)      Entity##obj *child = (Entity##obj *)RSDK.CreateEntity(obj->objectID, (void*)(data), entity->position.x, entity->position.y)
-#define CREATE_ENTITY(obj, data, x, y) (Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y);
+#define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
     info.text       = NULL;                                                                                                                          \

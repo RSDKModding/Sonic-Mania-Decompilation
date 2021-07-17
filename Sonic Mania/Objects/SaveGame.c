@@ -43,7 +43,7 @@ void SaveGame_LoadSaveData(void)
         SaveGame->saveRAM = globals->noSaveSlot;
     else
 #if RETRO_USE_PLUS
-        SaveGame->saveRAM = (int *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
+        SaveGame->saveRAM = SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
 #else
         SaveGame->saveRAM = &globals->saveRAM[0x100 * (slot % 8)];
 #endif
@@ -65,7 +65,7 @@ void SaveGame_LoadSaveData(void)
             globals->continues    = saveRAM[29];
 #if RETRO_USE_PLUS
             globals->stock          = saveRAM[67]; // stock
-            globals->characterFlags = saveRAM[68]; // character flags
+            globals->characterFlags = saveRAM[66]; // character flags
 #endif
         }
     }
@@ -295,8 +295,8 @@ void SaveGame_SaveProgress(void)
     saveRAM[27]  = Player->savedScore1UP;
     saveRAM[29]  = globals->continues;
 #if RETRO_USE_PLUS
-    saveRAM[66]  = globals->stock;
-    saveRAM[67]  = globals->characterFlags;
+    saveRAM[66] = globals->characterFlags;
+    saveRAM[67]  = globals->stock;
 #endif
     saveRAM[68]  = globals->playerID;
     if (!ActClear || ActClear->actID <= 0) {
@@ -337,8 +337,8 @@ void SaveGame_SavePlayerState(void)
         saveRAM[27] = player->score1UP;
         saveRAM[29] = globals->continues;
 #if RETRO_USE_PLUS
-        saveRAM[66] = globals->stock;
-        saveRAM[67] = globals->characterFlags;
+        saveRAM[66] = globals->characterFlags;
+        saveRAM[67] = globals->stock;
 #endif
         saveRAM[68] = globals->playerID;
     }

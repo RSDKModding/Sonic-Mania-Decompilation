@@ -362,6 +362,7 @@ void ProcessObjects()
                 objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
             }
         }
+        sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
 }
@@ -423,6 +424,7 @@ void ProcessPausedObjects()
                 objectList[stageObjectIDs[sceneInfo.entity->objectID]].lateUpdate();
             }
         }
+        sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
 }
@@ -553,6 +555,7 @@ void ProcessFrozenObjects()
                 }
             }
         }
+        sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
 }

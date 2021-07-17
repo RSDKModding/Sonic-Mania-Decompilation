@@ -51,8 +51,8 @@ void AIZEncoreTutorial_Create(void *data)
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x80000000;
-        entity->updateRange.y = 0x80000000;
+        entity->updateRange.x = 0x800000;
+        entity->updateRange.y = 0x800000;
         entity->state         = AIZEncoreTutorial_Unknown1;
         RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 7, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 4, &entity->animator2, true, 0);
@@ -100,6 +100,7 @@ void AIZEncoreTutorial_Unknown3(void)
             if (++entity->timer2 == 3)
                 entity->state = AIZEncoreTutorial_Unknown4;
         }
+        entity->angle &= 0xFF;
     }
     else {
         entity->timer++;
@@ -129,23 +130,21 @@ void AIZEncoreTutorial_Unknown4(void)
     }
 }
 
-void *AIZEncoreTutorial_Unknown5(void)
+void AIZEncoreTutorial_Unknown5(void)
 {
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     EntityFXRuby *fxRuby           = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, NULL, 0, 0);
     fxRuby->drawOrder              = Zone->playerDrawHigh + 1;
-    // EncoreIntro->fxRuby = fxRuby;
+    EncoreIntro->fxRuby            = (Entity *)fxRuby;
     PhantomRuby_PlaySFX(RUBYSFX_ATTACK3);
     Music_FadeOut(0.012);
 
     cutsceneSeq->skipState = 0;
     for (int i = 0; i < 64; ++i) {
-        /*if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_Unknown28) {
+        if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_CutsceneState_Unknown24) {
             CutsceneSeq_NewState(i, cutsceneSeq);
-            return cutsceneSeq->cutsceneStates[i];
-        }*/
+        }
     }
-    return NULL;
 }
 
 void AIZEncoreTutorial_EditorDraw(void) {}

@@ -467,8 +467,8 @@ void Player_RayJumpAbility(void);
 
 bool32 Player_CheckRayDiving(void);
 bool32 Player_CheckRaySwooping(void);
-void Player_ChangeRayDiveSFX(int sfxID);
-void Player_ChangeRaySwoopSFX(int sfxID);
+void Player_UpdateRayDiveSFX(int sfxID);
+void Player_UpdateRaySwoopSFX(int sfxID);
 #endif
 
 //Input States

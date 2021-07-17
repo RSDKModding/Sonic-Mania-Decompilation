@@ -60,7 +60,7 @@ void CPZ2Outro_HandleCutsceneSeq(void)
     if (seq->objectID)
         seq->skipState = 1;
 
-    foreach_active(HUD, hud) { hud->state = HUD_Unknown6; }
+    foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
 bool32 CPZ2Outro_CutsceneSeq(void *h)

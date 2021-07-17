@@ -47,10 +47,10 @@ void SchrodingersCapsule_Update(void)
                     }
 
                     if (flag) {
-                        // Entity *entPtr = EncoreIntro->field_1C;
-                        // if (entPtr->velocity.y > 0)
-                        //    entPtr->velocity.y = -entPtr->velocity.y;
-                        // entPtr->state = EncoreIntro_Unknown32;
+                        EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+                        if (ruby->velocity.y > 0)
+                            ruby->velocity.y = -ruby->velocity.y;
+                        ruby->state = EncoreIntro_PhantomRuby_Unknown4;
                     }
                 }
             }

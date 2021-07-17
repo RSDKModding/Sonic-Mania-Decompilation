@@ -10,7 +10,7 @@ typedef struct {
     ushort sfxList[32];
     int sfxLoopPoint[32];
     void *sfxCheckCallback[32];
-    void *sfxChangeCallback[32];
+    void *sfxUpdateCallback[32];
     bool32 sfxUnknown4[32];
     int sfxChannel[32];
     int sfxUnknown6[32];
