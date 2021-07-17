@@ -2,37 +2,22 @@
 
 ObjectSSZ2Setup *SSZ2Setup;
 
-void SSZ2Setup_Update(void)
-{
+void SSZ2Setup_Update(void) {}
 
-}
+void SSZ2Setup_LateUpdate(void) {}
 
-void SSZ2Setup_LateUpdate(void)
-{
+void SSZ2Setup_StaticUpdate(void) {}
 
-}
+void SSZ2Setup_Draw(void) {}
 
-void SSZ2Setup_StaticUpdate(void)
-{
-
-}
-
-void SSZ2Setup_Draw(void)
-{
-
-}
-
-void SSZ2Setup_Create(void* data)
-{
-
-}
+void SSZ2Setup_Create(void *data) {}
 
 void SSZ2Setup_StageLoad(void)
 {
     SSZ2Setup->sfxSpark     = RSDK.GetSFX("SSZ2/Spark.wav");
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
-    SSZ2Setup->towerID = RSDK.GetSceneLayerID("Tower");
+    SSZ2Setup->towerID      = RSDK.GetSceneLayerID("Tower");
     if (SSZ2Setup->towerID < 8) {
         SSZ2Setup->towerLayer                   = RSDK.GetSceneLayer(SSZ2Setup->towerID);
         SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCallback;
@@ -54,7 +39,7 @@ void SSZ2Setup_StageLoad(void)
     GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCallback3;
 }
 
-void SSZ2Setup_StageFinishCallback(void) { RSDK.CreateEntity(SSZ3Cutscene->objectID, intToVoid(1), 0, 0); }
+void SSZ2Setup_StageFinishCallback(void) { RSDK.CreateEntity(SSZ3Cutscene->objectID, intToVoid(true), 0, 0); }
 
 void SSZ2Setup_TowerDrawLayerCallback(void)
 {
@@ -69,8 +54,8 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
     RSDK.SetActivePalette(3, 0, RSDK_screens->height);
 
     ScanlineInfo *scanlinePtr = &scanlines[RSDK_screens->centerX - 64];
-    int x1 = scanlinePtr->position.x;
-    int offset     = 0x10000;
+    int x1                    = scanlinePtr->position.x;
+    int offset                = 0x10000;
     for (int i = 2; i - 2 < 80;) {
         scanlinePtr -= 5;
         scanlinePtr[5].position.x = x1 & 0x1FFFFFF;
@@ -100,25 +85,25 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
     scanlinePtr = &scanlines[RSDK_screens->centerX + 64];
     x1          = scanlinePtr->position.x;
     offset      = 0x10000;
-    
+
     for (int i = 2; i - 2 < 80;) {
         scanlinePtr += 5;
         scanlinePtr[-5].position.x = x1 & 0x1FFFFFF;
 
-        int x2                    = x1 + offset;
-        offset                    = (i - 2) * (i - 2) + offset;
+        int x2                     = x1 + offset;
+        offset                     = (i - 2) * (i - 2) + offset;
         scanlinePtr[-4].position.x = x2 & 0x1FFFFFF;
 
         int x3                     = x2 + offset;
-        offset                    = (i - 1) * (i - 1) + offset;
+        offset                     = (i - 1) * (i - 1) + offset;
         scanlinePtr[-3].position.x = x3 & 0x1FFFFFF;
 
         int x4                     = x3 + offset;
-        offset                    = i * i + offset;
+        offset                     = i * i + offset;
         scanlinePtr[-2].position.x = x4 & 0x1FFFFFF;
 
         int x5                     = x4 + offset;
-        offset                    = (i + 1) * (i + 1) + offset;
+        offset                     = (i + 1) * (i + 1) + offset;
         scanlinePtr[-1].position.x = x5 & 0x1FFFFFF;
 
         x1     = x5 + offset;
@@ -130,7 +115,8 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
 
 void SSZ2Setup_GenericTriggerCallback1(void)
 {
-    foreach_active(HotaruMKII, boss) {
+    foreach_active(HotaruMKII, boss)
+    {
         /*if (!boss->field_A4) {
             RSDK.CreateEntity(Animals->objectID, (Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), boss->position.x,
                               boss->position.y);
@@ -162,13 +148,13 @@ void SSZ2Setup_GenericTriggerCallback3(void)
     if (globals->gameMode <= MODE_ENCORE) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->stateInput) {
-            player->stateInput          = 0;
-            player->left                = false;
-            player->right               = true;
+            player->stateInput      = 0;
+            player->left            = false;
+            player->right           = true;
             Zone->screenBoundsR1[0] = RSDK_screens->centerX + (entity->position.x >> 16);
             Zone->screenBoundsR1[1] = RSDK_screens->centerX + (entity->position.x >> 16);
             Zone->screenBoundsR1[2] = RSDK_screens->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[3]     = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
 
             for (int i = 0; i < Player->playerCount; ++i) {
                 StarPost->postIDs[i] = 0;
@@ -188,18 +174,8 @@ void SSZ2Setup_GenericTriggerCallback3(void)
     }
 }
 
-void SSZ2Setup_EditorDraw(void)
-{
+void SSZ2Setup_EditorDraw(void) {}
 
-}
+void SSZ2Setup_EditorLoad(void) {}
 
-void SSZ2Setup_EditorLoad(void)
-{
-
-}
-
-void SSZ2Setup_Serialize(void)
-{
-
-}
-
+void SSZ2Setup_Serialize(void) {}

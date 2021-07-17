@@ -148,12 +148,8 @@ void PrintMessage(void *msg, int type)
 
 void DevMenu_MainMenu()
 {
-    uint optionColours[5];
-    optionColours[0]              = 0x808090;
-    optionColours[1]              = 0x808090;
-    optionColours[2]              = 0x808090;
-    optionColours[3]              = 0x808090;
-    optionColours[4]              = 0x808090;
+    uint optionColours[]          = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    const char *optionNames[]     = { "Resume", "Restart", "Stage Select", "Options", "Exit" };
     optionColours[devMenu.option] = 0xF0F0F0;
 
     // Info Box
@@ -170,16 +166,12 @@ void DevMenu_MainMenu()
 
     // Options Box
     DrawRectangle(currentScreen->centerX - 128, y - 8, 256, 72, 128, 255, INK_NONE, true);
-    DrawDevText(currentScreen->centerX, "Resume", y, ALIGN_CENTER, optionColours[0]);
-    y += 12;
-    DrawDevText(currentScreen->centerX, "Restart", y, ALIGN_CENTER, optionColours[1]);
-    y += 12;
-    DrawDevText(currentScreen->centerX, "Stage Select", y, ALIGN_CENTER, optionColours[2]);
-    y += 12;
-    DrawDevText(currentScreen->centerX, "Options", y, ALIGN_CENTER, optionColours[3]);
-    y += 12;
-    DrawDevText(currentScreen->centerX, "Exit", y, ALIGN_CENTER, optionColours[4]);
-    y += 32;
+
+    for (int i = 0; i < 5; ++i) {
+        DrawDevText(currentScreen->centerX, optionNames[i], y, ALIGN_CENTER, optionColours[i]);
+        y += 12;
+    }
+    y += 20;
 
     // Storage box
 

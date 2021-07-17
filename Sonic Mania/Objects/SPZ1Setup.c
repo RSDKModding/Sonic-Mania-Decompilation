@@ -2,15 +2,9 @@
 
 ObjectSPZ1Setup *SPZ1Setup;
 
-void SPZ1Setup_Update(void)
-{
+void SPZ1Setup_Update(void) {}
 
-}
-
-void SPZ1Setup_LateUpdate(void)
-{
-
-}
+void SPZ1Setup_LateUpdate(void) {}
 
 void SPZ1Setup_StaticUpdate(void)
 {
@@ -63,21 +57,15 @@ void SPZ1Setup_StaticUpdate(void)
     }
 }
 
-void SPZ1Setup_Draw(void)
-{
+void SPZ1Setup_Draw(void) {}
 
-}
-
-void SPZ1Setup_Create(void* data)
-{
-
-}
+void SPZ1Setup_Create(void *data) {}
 
 void SPZ1Setup_StageLoad(void)
 {
     SPZ1Setup->aniTiles = RSDK.LoadSpriteSheet("SPZ1/AniTiles.gif", SCOPE_STAGE);
-    SPZ1Setup->bgLayer      = RSDK.GetSceneLayer(0);
-    SPZ1Setup->bgLayer2      = RSDK.GetSceneLayer(0);
+    SPZ1Setup->bgLayer  = RSDK.GetSceneLayer(0);
+    SPZ1Setup->bgLayer2 = RSDK.GetSceneLayer(0);
 
     int id = 0;
     for (int i = 0; i < 0x200; ++i) {
@@ -92,7 +80,7 @@ void SPZ1Setup_StageLoad(void)
             off = 0;
         }
 
-        int ang = 0;
+        int ang     = 0;
         int *deform = &SPZ1Setup->bgLayer->deformationData[off];
         for (int d = 0; d < 0x10; ++d) {
             *deform = val * RSDK.Sin1024(ang) >> 10;
@@ -126,7 +114,7 @@ void SPZ1Setup_StageLoad(void)
         memcpy(SPZ1Setup->bgLayer2->deformationData + 0x200, SPZ1Setup->bgLayer2->deformationData, 0x200 * sizeof(int));
         id += 16;
     }
-    
+
     Animals->animalTypes[0] = ANIMAL_PECKY;
     Animals->animalTypes[1] = ANIMAL_MICKY;
     if (isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload())
@@ -153,18 +141,8 @@ void SPZ1Setup_SetupActTransition(void)
     RSDK.InitSceneLoad();
 }
 
-void SPZ1Setup_EditorDraw(void)
-{
+void SPZ1Setup_EditorDraw(void) {}
 
-}
+void SPZ1Setup_EditorLoad(void) {}
 
-void SPZ1Setup_EditorLoad(void)
-{
-
-}
-
-void SPZ1Setup_Serialize(void)
-{
-
-}
-
+void SPZ1Setup_Serialize(void) {}

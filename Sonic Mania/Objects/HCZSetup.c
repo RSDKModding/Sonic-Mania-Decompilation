@@ -220,7 +220,7 @@ void HCZSetup_StageLoad(void)
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
             Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
         }
-        Zone->stageFinishCallback = HCZSetup_HandleCutscene;
+        Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
     }
     else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         Zone->forcePlayerOnScreenFlag = true;
@@ -284,7 +284,7 @@ void HCZSetup_HandleActTransition(void)
     RSDK.InitSceneLoad();
 }
 
-void HCZSetup_HandleCutscene(void)
+void HCZSetup_StageFinishCB_Act2(void)
 {
     if (globals->gameMode == MODE_MANIA && (globals->playerID & 0xFF) == ID_KNUCKLES)
         RSDK.LoadScene("Cutscenes", "Mirage Saloon K Intro");

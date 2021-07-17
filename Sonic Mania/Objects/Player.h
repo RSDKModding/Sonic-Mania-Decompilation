@@ -107,7 +107,7 @@ typedef struct {
     int flyCarryPosB;
     Vector2 flyCarryPositions[0x10];
     Vector2 curFlyCarryPos;
-    int p2UnknownInputTimer;
+    int P2JumpActionDelay;
     int jumpInDelay;
     int p2InputDelay;
     int field_9EC;
@@ -175,7 +175,7 @@ typedef struct {
     int flyCarryPosB;
     Vector2 flyCarryPositions[16];
     Vector2 curFlyCarryPos;
-    int p2UnknownInputTimer;
+    int P2JumpActionDelay;
     int jumpInDelay;
     int p2InputDelay;
     int rings;

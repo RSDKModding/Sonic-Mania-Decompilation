@@ -10,7 +10,11 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    bool32 flag;
+    EntityPhantomRuby *ruby;
+    EntityFXRuby *fxRuby;
 } EntitySSZ3Cutscene;
 
 // Object Struct
@@ -28,6 +32,15 @@ void SSZ3Cutscene_EditorLoad(void);
 void SSZ3Cutscene_Serialize(void);
 
 // Extra Entity Functions
+void SSZ3Cutscene_Unknown(void);
 
+bool32 SSZ3Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown5(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown6(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown7(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneState_Unknown9(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SSZ3CUTSCENE_H

@@ -2,15 +2,9 @@
 
 ObjectSSZ1Setup *SSZ1Setup;
 
-void SSZ1Setup_Update(void)
-{
+void SSZ1Setup_Update(void) {}
 
-}
-
-void SSZ1Setup_LateUpdate(void)
-{
-
-}
+void SSZ1Setup_LateUpdate(void) {}
 
 void SSZ1Setup_StaticUpdate(void)
 {
@@ -18,20 +12,14 @@ void SSZ1Setup_StaticUpdate(void)
         ++SSZ1Setup->layer1Ptr->deformationOffset;
 }
 
-void SSZ1Setup_Draw(void)
-{
+void SSZ1Setup_Draw(void) {}
 
-}
-
-void SSZ1Setup_Create(void* data)
-{
-
-}
+void SSZ1Setup_Create(void *data) {}
 
 void SSZ1Setup_StageLoad(void)
 {
     SSZ1Setup->layer1Ptr = RSDK.GetSceneLayer(1);
-    int id = 0;
+    int id               = 0;
     for (int i = 0; i < 0x200; ++i) {
         SSZ1Setup->layer1Ptr->deformationData[i] = (8 * RSDK.Sin1024(id)) >> 10;
         id += 8;
@@ -40,7 +28,7 @@ void SSZ1Setup_StageLoad(void)
 
     Animals->animalTypes[0]      = ANIMAL_FLICKY;
     Animals->animalTypes[1]      = ANIMAL_RICKY;
-    //GenericTrigger->callbacks[0] = SSZ1Outro_Unknown4;
+    GenericTrigger->callbacks[0] = SSZ1Outro_Unknown4;
 
     if (isMainGameMode()) {
         if (globals->enableIntro) {
@@ -52,7 +40,8 @@ void SSZ1Setup_StageLoad(void)
     }
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-        foreach_all(SSZ1Outro, outro) {
+        foreach_all(SSZ1Outro, outro)
+        {
             SSZ1Setup->outroPtr = outro;
             foreach_break;
         }
@@ -69,18 +58,8 @@ void SSZ1Setup_StageLoad(void)
 
 void SSZ1Setup_StageFinishCB(void) { SSZ1Setup->outroPtr->active = ACTIVE_NORMAL; }
 
-void SSZ1Setup_EditorDraw(void)
-{
+void SSZ1Setup_EditorDraw(void) {}
 
-}
+void SSZ1Setup_EditorLoad(void) {}
 
-void SSZ1Setup_EditorLoad(void)
-{
-
-}
-
-void SSZ1Setup_Serialize(void)
-{
-
-}
-
+void SSZ1Setup_Serialize(void) {}

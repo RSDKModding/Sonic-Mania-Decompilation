@@ -44,6 +44,6 @@ void HCZSetup_Serialize(void);
 // Extra Entity Functions
 void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines);
 void HCZSetup_HandleActTransition(void);
-void HCZSetup_HandleCutscene(void);
+void HCZSetup_StageFinishCB_Act2(void);
 
 #endif //!OBJ_HCZSETUP_H
