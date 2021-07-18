@@ -63,19 +63,19 @@ void DNARiser_EditorLoad(void);
 void DNARiser_Serialize(void);
 
 // Extra Entity Functions
-void DNARiser_State_Unknown1(void);
-void DNARiser_State_Unknown2(void);
-Vector2 DNARiser_Unknown3(Vector2 *vec);
+void DNARiser_State_BubbleBurst(void);
+void DNARiser_State_Burst_Helix(void);
+Vector2 DNARiser_CalculateScale(Vector2 *vec);
 void DNARiser_State_Setup(void);
 void DNARiser_HandleInteractions(void);
 void DNARiser_State_Unknown3(void);
 void DNARiser_State_Unknown4(void);
 void DNARiser_State_Unknown5(void);
 void DNARiser_State_SetupChild(void);
-void DNARiser_State_Unknown7(void);
+void DNARiser_State_None(void);
 void DNARiser_State_Unknown8(void);
 
-void DNARiser_StateDraw_Unknown1(void);
-void DNARiser_StateDraw_Unknown2(void);
+void DNARiser_StateDraw_Main(void);
+void DNARiser_StateDraw_Helix(void);
 
 #endif //!OBJ_DNARISER_H

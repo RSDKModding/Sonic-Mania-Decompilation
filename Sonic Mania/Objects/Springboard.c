@@ -50,17 +50,11 @@ void Springboard_Update(void)
         if (!entity->direction) {
             int hitboxTop = 0;
 
-            if (entity->animator.frameID < 0) {
-                hitboxTop = hitboxTop;
-            }
-            else if (entity->animator.frameID <= 2) {
-                hitboxTop = Springboard->array4[val];
+            if (entity->animator.frameID <= 2) {
+                hitboxTop = -Springboard->array4[val];
             }
             else if (entity->animator.frameID == 3) {
-                hitboxTop = Springboard->array3[val];
-            }
-            else {
-                hitboxTop = hitboxTop;
+                hitboxTop = -Springboard->array3[val];
             }
 
             Hitbox hitbox;
@@ -71,10 +65,10 @@ void Springboard_Update(void)
 
             byte collision = 0;
             if (!((1 << playerID) & entity->playerBits))
-                collision = Player_CheckCollisionBox(player, entity, &hitbox);
+                flag = collision = Player_CheckCollisionBox(player, entity, &hitbox);
             else
-                collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
-            flag = collision;
+                flag = collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
+
             switch (collision) {
                 case 2: player->groundVel = playerVel; player->velocity.x = playerVelX;
                 case 0:
@@ -88,9 +82,8 @@ void Springboard_Update(void)
                     }
                     break;
                 case 1:
-                    if (player->state == Player_State_MightyHammerDrop) {
+                    if (player->state == Player_State_MightyHammerDrop)
                         player->state = Player_State_Air;
-                    }
                     break;
                 default: break;
             }
@@ -100,31 +93,25 @@ void Springboard_Update(void)
             int pos       = abs(val - 27);
             int hitboxTop = 0;
 
-            if (entity->animator.frameID < 0) {
-                hitboxTop = hitboxTop;
-            }
-            else if (entity->animator.frameID <= 2) {
-                hitboxTop = Springboard->array4[pos];
+            if (entity->animator.frameID <= 2) {
+                hitboxTop = -Springboard->array4[pos];
             }
             else if (entity->animator.frameID != 3) {
-                hitboxTop = Springboard->array3[pos];
-            }
-            else {
-                hitboxTop = hitboxTop;
+                hitboxTop = -Springboard->array3[pos];
             }
 
             Hitbox hitbox;
             hitbox.left   = -28;
-            hitbox.top    = -hitboxTop;
+            hitbox.top    = hitboxTop;
             hitbox.right  = 28;
             hitbox.bottom = 8;
 
             byte collision = 0;
             if (!((1 << playerID) & entity->playerBits))
-                collision = Player_CheckCollisionBox(player, entity, &hitbox);
+                flag = collision = Player_CheckCollisionBox(player, entity, &hitbox);
             else
-                collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
-            flag = collision;
+                flag = collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
+
             switch (collision) {
                 case 0:
                 case 2:

@@ -58,7 +58,7 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
 
     uint blendA         = 0xFF - blendAmount;
     ushort *dst         = &fullPalette[destPaletteID][startIndex];
-    for (int l = startIndex; l < endIndex; ++l) {
+    for (int l = startIndex; l <= endIndex; ++l) {
         uint clrA = GetPaletteEntry(srcPaletteA, l);
         uint clrB = GetPaletteEntry(srcPaletteB, l);
         int rA    = (clrA >> 16) & 0xFF;

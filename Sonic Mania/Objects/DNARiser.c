@@ -70,7 +70,7 @@ void DNARiser_StageLoad(void)
     DNARiser->sfxTiny[5]    = RSDK.GetSFX("CPZ/DNATiny5.wav");
 }
 
-void DNARiser_State_Unknown1(void)
+void DNARiser_State_BubbleBurst(void)
 {
     RSDK_THIS(DNARiser);
     RSDK.PlaySFX(DNARiser->sfxBurst, 0, 255);
@@ -79,7 +79,7 @@ void DNARiser_State_Unknown1(void)
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &entity->animator, true, 0);
 }
 
-void DNARiser_State_Unknown2(void)
+void DNARiser_State_Burst_Helix(void)
 {
     RSDK_THIS(DNARiser);
     RSDK.PlaySFX(DNARiser->sfxBurst, 0, 255);
@@ -94,7 +94,7 @@ void DNARiser_State_Unknown2(void)
     entity->timer      = 0;
 }
 
-Vector2 DNARiser_Unknown3(Vector2 *vec)
+Vector2 DNARiser_CalculateScale(Vector2 *vec)
 {
     RSDK_THIS(DNARiser);
 
@@ -106,12 +106,10 @@ Vector2 DNARiser_Unknown3(Vector2 *vec)
         y = vec->y;
     }
 
-    int val1    = (30 - entity->field_A8);
-    int val2    = val1 - 30;
-    int val3    = 30 - val1;
-    int sine    = RSDK.Sin1024(((val1 * (0x40000000 / ((10983 * val1 + 286520) >> 7))) >> 11) & 0x3FF);
-    resultVec.x = ((val2 * (sine << 6) / 100 + 0x10000) * x) >> 16;
-    resultVec.y = ((val3 * (sine << 6) / 100 + 0x10000) * y) >> 16;
+    int val     = (30 - entity->field_A8);
+    int sine    = RSDK.Sin1024(((val * (0x40000000 / ((10983 * val + 286520) >> 7))) >> 11) & 0x3FF);
+    resultVec.x = (((val - 30) * (sine << 6) / 100 + 0x10000) * x) >> 16;
+    resultVec.y = (((30 - val) * (sine << 6) / 100 + 0x10000) * y) >> 16;
     return resultVec;
 }
 
@@ -135,7 +133,7 @@ void DNARiser_State_Setup(void)
     entity->timer2        = 0;
     entity->field_B0      = 0;
     entity->velocity.y    = 0;
-    entity->stateDraw     = DNARiser_StateDraw_Unknown1;
+    entity->stateDraw     = DNARiser_StateDraw_Main;
     entity->state         = DNARiser_HandleInteractions;
     entity->field_70      = 512;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &entity->animator2, true, 0);
@@ -193,7 +191,7 @@ void DNARiser_State_Unknown3(void)
     int curHeight = entity->curHeight;
     int height    = entity->height << 16;
     if (entity->curHeight >= entity->height << 16) {
-        DNARiser_State_Unknown2();
+        DNARiser_State_Burst_Helix();
     }
     else {
         if (entity->velocity.y >= abs(entity->speed.y)) {
@@ -273,14 +271,14 @@ void DNARiser_State_Unknown3(void)
                 if (entity->activePlayers)
                     skipFlag = true;
                 else
-                    DNARiser_State_Unknown2();
+                    DNARiser_State_Burst_Helix();
             }
             if (!skipFlag) {
                 if (player->jumpPress) {
                     player->velocity.y = 0;
                     player->velocity.x = 0;
                     Player_StartJump(player);
-                    DNARiser_State_Unknown2();
+                    DNARiser_State_Burst_Helix();
                 }
 
                 if (entity->state == DNARiser_State_Unknown4) {
@@ -366,7 +364,7 @@ void DNARiser_State_Unknown5(void)
     if (!entity->field_E4) {
         if (entity->timer <= 0) {
             if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-                DNARiser_State_Unknown1();
+                DNARiser_State_BubbleBurst();
                 DNARiser_State_Setup();
                 entity->field_A8 = 30;
             }
@@ -384,11 +382,11 @@ void DNARiser_State_SetupChild(void)
 {
     RSDK_THIS(DNARiser);
     entity->active    = ACTIVE_NORMAL;
-    entity->stateDraw = DNARiser_StateDraw_Unknown2;
-    entity->state     = DNARiser_State_Unknown7;
+    entity->stateDraw = DNARiser_StateDraw_Helix;
+    entity->state     = DNARiser_State_None;
 }
 
-void DNARiser_State_Unknown7(void) {}
+void DNARiser_State_None(void) {}
 
 void DNARiser_State_Unknown8(void)
 {
@@ -444,7 +442,7 @@ void DNARiser_State_Unknown8(void)
     entity->field_CC += 0x20000;
 }
 
-void DNARiser_StateDraw_Unknown1(void)
+void DNARiser_StateDraw_Main(void)
 {
     RSDK_THIS(DNARiser);
 
@@ -487,7 +485,7 @@ void DNARiser_StateDraw_Unknown1(void)
             Vector2 vec;
             vec.x         = entity->field_70;
             vec.y         = entity->field_70;
-            entity->scale = DNARiser_Unknown3(&vec);
+            entity->scale = DNARiser_CalculateScale(&vec);
             RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         }
         if (entity->popped) {
@@ -514,7 +512,7 @@ void DNARiser_StateDraw_Unknown1(void)
     }
 }
 
-void DNARiser_StateDraw_Unknown2(void)
+void DNARiser_StateDraw_Helix(void)
 {
     RSDK_THIS(DNARiser);
 
@@ -552,67 +550,29 @@ void DNARiser_StateDraw_Unknown2(void)
     }
 
     if (!(entity->field_A4 % 5)) {
-        int val = 0;
-        if (parent->field_E0 - entity->field_A4 >= 8)
-            val = 4;
-        else
-            val = (parent->field_E0 - entity->field_A4) / 2;
-        int sine  = (RSDK.Sin1024(entity->angle) << 6) * ((entity->field_CC >> 16) - 12);
-        drawPos.y = entity->position.y;
-        drawPos.x = sine + entity->position.x;
+        int distance = (parent->field_E0 - entity->field_A4 >= 8) ? 4 : ((parent->field_E0 - entity->field_A4) / 2);
+        int sine     = (RSDK.Sin1024(entity->angle) << 6) * ((entity->field_CC >> 16) - 12);
+        drawPos.y    = entity->position.y;
+        drawPos.x    = sine + entity->position.x;
         if (flag)
             drawPos.x = entity->position.x - sine;
         int startX = drawPos.x;
         sine       = 2 * sine / 7;
 
         bool32 flagArray[8];
-        flagArray[0] = val >= 1;
-        flagArray[7] = flagArray[0];
-        flagArray[1] = val >= 2;
-        flagArray[6] = flagArray[1];
-        flagArray[2] = val >= 3;
-        flagArray[5] = flagArray[2];
-        flagArray[3] = val >= 4;
+        flagArray[0] = distance >= 1;
+        flagArray[1] = distance >= 2;
+        flagArray[2] = distance >= 3;
+        flagArray[3] = distance >= 4;
         flagArray[4] = flagArray[3];
+        flagArray[5] = flagArray[2];
+        flagArray[6] = flagArray[1];
+        flagArray[7] = flagArray[0];
 
         for (int i = 0; i < 8; ++i) {
-            bool32 flagA = false;
-            bool32 flagB = false;
-
-            if (flag && i <= 3) {
-                flagA = true;
-            }
-            else if (!flag && i >= 4) {
-                flagA = true;
-            }
-
-            if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
-                if (flag && !flagA) {
-                    flagB = 1;
-                }
-                else if (!flag && flagA) {
-                    flagB = 1;
-                }
-            }
-            else if (flag && flagA) {
-                flagB = 1;
-            }
-            else if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
-                if (flag && !flagA) {
-                    flagB = 1;
-                }
-                else if (!flag && flagA) {
-                    flagB = 1;
-                }
-            }
-            else if (!flag && !flagA) {
-                flagB = 1;
-            }
-            else if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
-                if (!flag && flagA) {
-                    flagB = 1;
-                }
-            }
+            bool32 flagA = (flag && i <= 3) || (!flag && i >= 4);
+            bool32 flagB = RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh ? ((flag && !flagA) || (!flag && flagA))
+                                                                                   : ((flag && flagA) || (!flag && !flagA));
 
             if (flagArray[i] && flagB) {
                 if (!flagA)
