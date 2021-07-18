@@ -8,9 +8,8 @@ typedef struct {
 	RSDK_OBJECT
 	void (*defaultState)(void);
 	Hitbox hitbox;
-	unsigned __int16 animID;
-	unsigned __int16 sfxID;
-
+    ushort animID;
+	ushort sfxID;
 } ObjectSpeedBooster;
 
 // Entity Class

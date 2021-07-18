@@ -99,7 +99,7 @@ void BSS_Setup_StageLoad(void)
     }
     else {
         int max = (playField->width >> 4) * ((playField->height - 32) >> 4);
-        int key = _time32(0);
+        int key = time(0);
 
         BSS_Setup->flags[0] = RSDK.Random(0, max, &key);
         BSS_Setup->flags[1] = RSDK.Random(0, max, &key);
@@ -813,7 +813,7 @@ void BSS_Setup_State_PinkSphereWarp(void)
                 default: break;
             }
             ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
-            if (tile < BSS_SPHERE_RED || tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK) {
+            if (tile < BSS_SPHERE_RED || (tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK)) {
                 flag = true;
                 break;
             }

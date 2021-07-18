@@ -97,7 +97,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (player1->position.x > player2->position.x)
             player2->right = true;
 
-        if (player1->groundVel < player1->groundVel)
+        if (player2->groundVel < player1->groundVel)
             player2->groundVel = player1->groundVel;
 
         if (player1->groundVel < player2->velocity.x)

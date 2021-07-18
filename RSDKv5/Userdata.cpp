@@ -1047,8 +1047,11 @@ void readSettings()
 {
     engine.screenCount = 1;
     engine.gameHeight  = SCREEN_YSIZE;
+    
+    char pathBuffer[0x100];
+    sprintf(pathBuffer, "%sSettings.ini", userFileDir);
 
-    dictionary *ini = iniparser_load("Settings.ini");
+    dictionary *ini = iniparser_load(pathBuffer);
 
     if (ini) {
 #if RETRO_REV02
@@ -1066,7 +1069,7 @@ void readSettings()
 #if !RETRO_USE_ORIGINAL_CODE
         sprintf(gameLogicName, "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
 #else
-    sprintf(gameLogicName, "Game"));
+        sprintf(gameLogicName, "Game"));
 #endif
 
         engine.startFullScreen = !iniparser_getboolean(ini, "Video:windowed", true);
@@ -1291,8 +1294,11 @@ void writeSettings(bool32 writeToFile)
 #endif
 
     if (settingsChanged || writeToFile) {
-        dictionary *ini = iniparser_load("Settings.ini");
-        FileIO *file    = fOpen("Settings.ini", "wb");
+        char pathBuffer[0x100];
+        sprintf(pathBuffer, "%sSettings.ini", userFileDir);
+        
+        dictionary *ini = iniparser_load(pathBuffer);
+        FileIO *file    = fOpen(pathBuffer, "wb");
         writeText(file, "; Retro Engine Config File\n\n");
         writeText(file, "[Game]\n");
         if (ini) {

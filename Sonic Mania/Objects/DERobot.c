@@ -1232,7 +1232,7 @@ void DERobot_Unknown40(void)
 
     if (!(Zone->timer & 7)) {
         EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(
-            Explosion->objectID, intToVoid(3), (RSDK.Rand(-48, 48) << 16) + entity->position.x, RSDK.Rand(-48, 48) << 16 + entity->position.y);
+            Explosion->objectID, intToVoid(3), (RSDK.Rand(-48, 48) << 16) + entity->position.x, (RSDK.Rand(-48, 48) << 16) + entity->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
     }
 

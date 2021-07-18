@@ -249,7 +249,6 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                             size_t remain    = channel->sampleLength - channel->bufferPos;
                             size_t sampleLen = (remain < samples_to_do - samples_done) ? remain : samples_to_do - samples_done;
 
-                            int s           = 0;
                             size_t outPos   = samples_done;
                             float *soundBuf = &channel->samplePtr[channel->bufferPos];
                             for (int s = 0; s < sampleLen && !flag; ++s) {
@@ -295,8 +294,6 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
 
                     size_t samples_gotten = 0;
                     int spdVal            = 0;
-                    size_t sLen = (MIX_BUFFER_SAMPLES < samples_to_do - samples_gotten) ? MIX_BUFFER_SAMPLES : samples_to_do - samples_gotten;
-
                     for (int s = 0; s < samples_to_do; ++s) {
                         spdVal += channel->speed;
                         samples_gotten += spdVal >> 16;

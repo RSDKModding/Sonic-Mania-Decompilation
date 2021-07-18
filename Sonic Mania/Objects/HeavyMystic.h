@@ -53,6 +53,7 @@ void HeavyMystic_EditorLoad(void);
 void HeavyMystic_Serialize(void);
 
 // Extra Entity Functions
-
+void HeavyMystic_Unknown1(int x, int y);
+void HeavyMystic_Unknown2(void);
 
 #endif //!OBJ_HEAVYMYSTIC_H

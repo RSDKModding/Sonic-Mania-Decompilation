@@ -289,7 +289,6 @@ void AppendText(TextInfo *info, char *text)
 
 void AppendString(TextInfo *info, TextInfo *string)
 {
-    uint charID   = 0;
     uint totalLen = string->textLength + info->textLength;
     if (info->length < totalLen || !info->text) {
         AllocateStorage(sizeof(ushort) * totalLen, (void **)&info, DATASET_STR, false);

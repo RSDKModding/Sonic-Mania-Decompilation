@@ -54,7 +54,7 @@ void SkyTeleporter_Unknown1(void)
         int alpha = (RSDK.Sin256(16 * Zone->timer) >> 3) + 127;
         RSDK.DrawRect(x - 0x20000, RSDK_screens->position.y << 16, 0x20000, RSDK_screens->height << 16, 0xF080A0u, alpha, INK_ADD, false);
         RSDK.DrawRect(x, RSDK_screens->position.y << 16, entity->timer << 16, RSDK_screens->height << 16, 0xF0F0F0u, alpha, INK_ADD, false);
-        RSDK.DrawRect(x + entity->timer << 16, RSDK_screens->position.y << 16, 0x20000, RSDK_screens->height << 16, 0xF080A0u, alpha, INK_ADD, false);
+        RSDK.DrawRect(x + (entity->timer << 16), RSDK_screens->position.y << 16, 0x20000, RSDK_screens->height << 16, 0xF080A0u, alpha, INK_ADD, false);
     }
 }
 

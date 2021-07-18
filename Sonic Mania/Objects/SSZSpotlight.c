@@ -8,7 +8,6 @@ void SSZSpotlight_Update(void)
     entity->angle      = (entity->angle + entity->speed) & 0x1FF;
     entity->rotation   = RSDK.Sin512(entity->angle) >> 2;
     Vector2 *vertStore = entity->vertStore;
-    Vector2 *vert      = entity->vertPos;
 
     for (int i = 0; i < 8; ++i) {
         entity->vertPos[i].x = vertStore[i].x;

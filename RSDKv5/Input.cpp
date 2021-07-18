@@ -22,7 +22,7 @@ TouchMouseData touchMouseData;
 #if RETRO_USING_SDL2
 bool32 getControllerButton(InputDevice* device, byte buttonID)
 {
-    if (buttonID == SDL_CONTROLLER_BUTTON_INVALID || !device)
+    if (buttonID == (byte)SDL_CONTROLLER_BUTTON_INVALID || !device)
         return false;
 
     if (SDL_GameControllerGetButton(((InputDeviceSDL *)device)->controllerPtr, (SDL_GameControllerButton)buttonID)) {

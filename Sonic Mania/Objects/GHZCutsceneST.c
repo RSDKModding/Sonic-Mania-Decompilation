@@ -140,7 +140,6 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
 bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
 {
     EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)GHZCutsceneST->fxRuby;
@@ -210,7 +209,6 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
         }
         else {
             claw->velocity.y -= 0x1800;
-            byte hbhChar = 0;
             for (int hbhChar = 0; hbhChar < 5; ++hbhChar) {
                 EntityCutsceneHBH *hbh = (EntityCutsceneHBH *)GHZCutsceneST->cutsceneHBH[hbhChar];
                 switch (hbhChar) {

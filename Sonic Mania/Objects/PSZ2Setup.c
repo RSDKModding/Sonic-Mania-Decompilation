@@ -8,7 +8,6 @@ void PSZ2Setup_LateUpdate(void) {}
 
 void PSZ2Setup_StaticUpdate(void)
 {
-    Entity *entity = RSDK_sceneInfo->entity;
     if (--PSZ2Setup->aniTileDelay < 1) {
         ++PSZ2Setup->aniTileFrame;
         PSZ2Setup->aniTileFrame &= 7;

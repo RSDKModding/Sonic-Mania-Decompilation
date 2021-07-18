@@ -199,7 +199,6 @@ void EncoreIntro_SetupCutscenePart2(void)
 bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)EncoreIntro->fxRuby;
@@ -260,7 +259,6 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     if (host->timer >= 60) {
         player->alpha += 2;
@@ -320,7 +318,6 @@ bool32 EncoreIntro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
 bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     if (host->timer == 60)
         player->up = false;
@@ -348,7 +345,6 @@ bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     RSDK_THIS(EncoreIntro);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
@@ -376,7 +372,6 @@ bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
 bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     RSDK_THIS(EncoreIntro);
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
@@ -414,7 +409,6 @@ bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 bool32 EncoreIntro_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     player->drawOrder      = Zone->playerDrawHigh;
     EntityPlayer *selBuddy = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
@@ -478,7 +472,6 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     RSDK_THIS(EncoreIntro);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
@@ -633,7 +626,6 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     RSDK_THIS(EncoreIntro);
     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
@@ -675,7 +667,6 @@ bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     RSDK_THIS(EncoreIntro);
     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
@@ -873,7 +864,6 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
 
 bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host)
 {
-    EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
     EntityCutsceneHBH *king   = CutsceneHBH_GetEntity(HBH_KINGDAMAGED);
     EntityPhantomRuby *ruby   = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityPlayer *player      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -1039,15 +1029,11 @@ bool32 EncoreIntro_CutsceneState_Unknown21(EntityCutsceneSeq *host)
 
 bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
 {
-    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-
     EntityFXRuby *fxRuby = (EntityFXRuby *)EncoreIntro->fxRuby;
 
     if (fxRuby->fadeBlack >= 512) {
         EntityPlayer *player         = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityCamera *camera         = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        EntityRubyPortal *rubyPortal = (EntityRubyPortal *)EncoreIntro->rubyPortal;
         EntityPhantomRuby *ruby      = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
         destroyEntity(RubyPortal);
 
@@ -1127,9 +1113,6 @@ bool32 EncoreIntro_CutsceneState_Unknown23(EntityCutsceneSeq *host)
 
 bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host)
 {
-    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-
     RSDK_THIS(EncoreIntro);
     EntityFXRuby *fxRuby = (EntityFXRuby *)EncoreIntro->fxRuby;
 

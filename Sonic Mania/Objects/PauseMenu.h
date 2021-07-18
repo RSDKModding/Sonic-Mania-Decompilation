@@ -31,7 +31,7 @@ typedef struct {
     bool32 disableRestart;
     int buttonCount;
     byte buttonIDs[3];
-    void (*buttonActions[3])();
+    void (*buttonActions[3])(void);
     Entity* buttonPtrs[3];
     int field_A4;
     int fillTimer;

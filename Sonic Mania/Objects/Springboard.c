@@ -10,8 +10,8 @@ void Springboard_Update(void)
     foreach_active(Player, playerPtr)
     {
         if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntityID(playerPtr)) & entity->playerBits)) {
-            int val  = min((playerPtr->position.x - entity->position.x + 0x1C0000) >> 17, 28);
-            int val2 = max(val, 0);
+            int val  = minVal((playerPtr->position.x - entity->position.x + 0x1C0000) >> 17, 28);
+            int val2 = maxVal(val, 0);
 
             int val3 = val2;
             if ((entity->direction & 1))
@@ -21,7 +21,7 @@ void Springboard_Update(void)
                     RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &entity->animator, true, 0);
                 if (entity->animator.frameID == 2) {
                     int anim = playerPtr->playerAnimator.animationID;
-                    if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
+                    if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                         playerPtr->storedAnim = playerPtr->playerAnimator.animationID;
                     else
                         playerPtr->storedAnim = ANI_WALK;
@@ -30,7 +30,7 @@ void Springboard_Update(void)
                     playerPtr->tileCollisions = true;
                     RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_SPRINGCS, &playerPtr->playerAnimator, true, 1);
                     playerPtr->groundVel   = playerPtr->velocity.x;
-                    int pos                = min(2 * val3 - 16, 39);
+                    int pos                = minVal(2 * val3 - 16, 39);
                     playerPtr->velocity.y  = Springboard->array2[pos] - playerPtr->gravityStrength - entity->force;
                     playerPtr->jumpAbility = 0;
                     RSDK.PlaySFX(Springboard->sfxSpring, 0, 255);
@@ -200,7 +200,6 @@ void Springboard_DebugSpawn(void)
 }
 void Springboard_DebugDraw(void)
 {
-    RSDK_THIS(Springboard);
     RSDK.SetSpriteAnimation(Springboard->aniFrames, 1, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, false);
 }

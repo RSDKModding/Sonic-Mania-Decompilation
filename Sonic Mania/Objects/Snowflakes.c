@@ -6,7 +6,6 @@ void Snowflakes_Update(void)
 {
     RSDK_THIS(Snowflakes);
     if (Snowflakes->count < 0x40 && !(Zone->timer % 16)) {
-        Vector2 *posPtr = entity->positions;
         for (int i = 0; i < 0x40; ++i) {
             if (!entity->positions[i].x && !entity->positions[i].y) {
                 if ((i & 0x8000) == 0) {

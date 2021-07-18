@@ -109,8 +109,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
         if (player->position.x < robot->position.x - 0x200000)
             player->position.x = robot->position.x - 0x200000;
     }
-
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    
     if (player->position.y > (RSDK_screens->position.y + 0x200) << 16) {
         foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
         RSDK.LoadScene("Cutscenes", "Green Hill Zone 2");
@@ -303,7 +302,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
 
     if (ruby) {
-        if (ruby->state = PhantomRuby_Unknown5) {
+        if (ruby->state == PhantomRuby_Unknown5) {
             if (player2->objectID == Player->objectID && player2->characterID == ID_TAILS) {
                 player2->state = Player_State_None;
                 RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimator, false, 0);
@@ -393,7 +392,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer = host->field_68 + 150)
+                if (host->timer == host->field_68 + 150)
                     return true;
             }
             else {

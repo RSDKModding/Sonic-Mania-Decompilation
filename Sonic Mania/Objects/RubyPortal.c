@@ -45,9 +45,9 @@ void RubyPortal_Create(void *data)
             EntityWarpDoor *door = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
-                door->hitbox.left   = -0x10000;
+                door->hitbox.left   = 0;
                 door->hitbox.left   = -0x800;
-                door->hitbox.right  = -0x10000;
+                door->hitbox.right  = 0;
                 door->hitbox.bottom = -0x800;
             }
             entity->state = RubyPortal_Unknown2;

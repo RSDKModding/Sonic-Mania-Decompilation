@@ -85,7 +85,7 @@ void TryAgain_Unknown2(void)
 void TryAgain_Unknown3(void)
 {
     RSDK_THIS(TryAgain);
-    if (entity->timer > RETRO_USE_PLUS ? 15 : 30)
+    if (entity->timer > (RETRO_USE_PLUS ? 15 : 30))
         RSDK.ProcessAnimation(&entity->animator2);
     if (++entity->timer == 120) {
         entity->timer = 0;
@@ -140,7 +140,7 @@ void TryAgain_Unknown4(void)
         fxFade->wait    = 240;
 #endif
     }
-    if (entity->timer >= RETRO_USE_PLUS ? 740 : 680) {
+    if (entity->timer >= (RETRO_USE_PLUS ? 740 : 680)) {
 #if RETRO_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
             RSDK.LoadScene("Presentation", "Game Summary");

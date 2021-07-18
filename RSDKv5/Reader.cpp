@@ -16,9 +16,12 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
     useDataFile = false;
     FileInfo info;
 
+    char pathBuffer[0x100];
+    sprintf(pathBuffer, "%s%s", userFileDir, filePath);
+    
     InitFileInfo(&info);
     info.externalFile = true;
-    if (LoadFile(&info, filePath, FMODE_RB)) {
+    if (LoadFile(&info, pathBuffer, FMODE_RB)) {
         byte signature[6] = { 'R', 'S', 'D', 'K', 'v', '5' };
         byte buf          = 0;
         for (int i = 0; i < 6; ++i) {
@@ -28,7 +31,7 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
         }
         useDataFile = true;
 
-        strcpy(dataPacks[dataPackCount].name, filePath);
+        strcpy(dataPacks[dataPackCount].name, pathBuffer);
 
         dataPacks[dataPackCount].fileCount = ReadInt16(&info);
         for (int f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
@@ -42,6 +45,8 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
             dataFiles[f].useFileBuffer = useBuffer;
             dataFiles[f].packID        = dataPackCount;
         }
+        dataFileCount += dataPacks[dataPackCount].fileCount;
+        dataPackCount++;
 
         CloseFile(&info);
 
@@ -123,7 +128,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
         printLog(SEVERITY_NONE, "Loaded file '%s'", filename);
         return true;
     }
-    printLog(SEVERITY_NONE, "Couldn't load file '%s'", filename);
+    
     return false;
 }
 

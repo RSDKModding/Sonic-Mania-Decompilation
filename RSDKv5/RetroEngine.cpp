@@ -232,6 +232,13 @@ bool initRetroEngine()
 {
     InitStorage();
     initUserData();
+    
+    SetUserFileCallbacks("", NULL, NULL);
+#if RETRO_PLATFORM == RETRO_OSX
+    char buffer[0xFF];
+    sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
+    SetUserFileCallbacks(buffer, NULL, NULL);
+#endif
 
     readSettings();
     startGameObjects();
@@ -247,8 +254,6 @@ bool initRetroEngine()
     }
 
     InitInputDevice();
-
-    SetUserFileCallbacks("", NULL, NULL);
 
     return true;
 }
@@ -740,9 +745,10 @@ void InitScriptSystem()
     }
 #endif
 #if RETRO_PLATFORM == RETRO_OSX
-    sprintf(gameLogicName, "%s.dylib", gameLogicName);
+    char buffer[0x100];
+    sprintf(buffer, "%s%s.dylib", userFileDir, gameLogicName);
     if (!link_handle)
-        link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
+        link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
 
     if (link_handle) {
         linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");

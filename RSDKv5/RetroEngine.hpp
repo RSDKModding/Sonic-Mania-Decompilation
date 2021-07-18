@@ -115,6 +115,8 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_OSX
 #include <SDL2/SDL.h>
 #include <Vorbis/vorbisfile.h>
+
+#include "cocoaHelpers.hpp"
 #endif
 
 //Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)

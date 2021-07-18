@@ -48,7 +48,7 @@ void ReplayRecorder_StaticUpdate(void)
 
 void ReplayRecorder_Draw(void)
 {
-    RSDK_THIS(ReplayRecorder);
+    // RSDK_THIS(ReplayRecorder);
     //if (entity->playing)
     //    ReplayRecorder_DrawSprites();
 }

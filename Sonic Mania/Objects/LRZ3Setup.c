@@ -35,8 +35,8 @@ void LRZ3Setup_StageLoad(void)
         entZone->drawOrder  = DRAWLAYER_COUNT - 1;
     }
 
-    if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()
-        || !PlayerHelpers_CheckStageReload()) {
+    if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload()
+        || !PlayerHelpers_CheckStageReload())) {
         RSDK.CreateEntity(LRZ3Cutscene->objectID, NULL, 0, 0);
     }
 

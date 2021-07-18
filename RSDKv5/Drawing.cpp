@@ -3686,7 +3686,6 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
         }
         case INK_LOOKUP:
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
-                ushort *palettePtr = fullPalette[*lineBuffer++];
                 int lx             = scanlinePtr->position.x;
                 int ly             = scanlinePtr->position.y;
                 int dx             = scanlinePtr->deform.x;

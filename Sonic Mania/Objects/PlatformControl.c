@@ -175,8 +175,8 @@ void PlatformControl_Create(void *data)
             }
         }
 
-        if (Button && control->objectID == Button->objectID || SDashWheel && control->objectID == SDashWheel->objectID
-            || PullChain && control->objectID == PullChain->objectID) {
+        if ((Button && control->objectID == Button->objectID) || (SDashWheel && control->objectID == SDashWheel->objectID)
+            || (PullChain && control->objectID == PullChain->objectID)) {
             entity->controller = control;
             if (entity->updateRange.y < 0x800000 + abs(entity->position.x - control->position.x)) {
                 entity->updateRange.y = 0x800000 + abs(entity->position.x - control->position.x);

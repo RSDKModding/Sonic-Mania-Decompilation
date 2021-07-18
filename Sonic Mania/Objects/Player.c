@@ -5561,7 +5561,6 @@ void Player_State_StartJumpIn(void)
 
                 entity->maxGlideSpeed = 0x100000 - player1->position.y + ((RSDK_screens->height + RSDK_screens->position.y) << 16);
                 if (entity->maxGlideSpeed < 0xA80000) {
-                    int vel            = -0x68000;
                     entity->velocity.y = entity->maxGlideSpeed / -12;
                 }
                 else

@@ -58,7 +58,7 @@ void Projectile_Unknown1(void)
                 int anim = player->playerAnimator.animationID;
                 if (entity->field_60
 #if RETRO_USE_PLUS
-                    || player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)
+                    || (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))
 #endif
                 ) {
                     if (Player_CheckProjectileHit(player, entity)) {

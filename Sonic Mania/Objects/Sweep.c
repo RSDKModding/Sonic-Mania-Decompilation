@@ -109,7 +109,6 @@ void Sweep_DebugSpawn(void)
 
 void Sweep_DebugDraw(void)
 {
-    RSDK_THIS(Sweep);
     RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &DebugMode->debugData, true, 0);
     RSDK.DrawSprite(&DebugMode->debugData, 0, false);
 }
@@ -145,7 +144,7 @@ void Sweep_HandleInteractions(void)
 
         int side = RSDK.CheckObjectCollisionBox(entity, &Sweep->hitbox1, player, playerHitbox, false);
         if (side) {
-            if (entity->state != Sweep_Unknown10 && (entity->direction == FLIP_NONE && side == 2 || (entity->direction == FLIP_X && side == 3)))
+            if (entity->state != Sweep_Unknown10 && ((entity->direction == FLIP_NONE && side == 2) || (entity->direction == FLIP_X && side == 3)))
                 Player_CheckHit(player, entity);
             else
                 Player_CheckBadnikBreak(entity, player, true);

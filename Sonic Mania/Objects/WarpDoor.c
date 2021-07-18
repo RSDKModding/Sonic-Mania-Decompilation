@@ -312,7 +312,6 @@ bool32 WarpDoor_Unknown5(short a1, Vector2 *posPtr)
 
     int distStore = -1;
     int id        = -1;
-    int pos       = 0;
     for (int i = 0; i < 0x100; ++i) {
         if (!WarpDoor->boundaries[i].left && !WarpDoor->boundaries[i].top && !WarpDoor->boundaries[i].right && !WarpDoor->boundaries[i].bottom)
             break;

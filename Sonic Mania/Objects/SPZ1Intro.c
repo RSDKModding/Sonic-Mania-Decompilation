@@ -120,7 +120,6 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
 bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
-    RSDK_THIS(SPZ1Intro);
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
         player1->velocity.x      = 0;
@@ -166,7 +165,6 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 
 bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
-    RSDK_THIS(SPZ1Intro);
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
         camera->targetPtr   = (Entity *)player1;

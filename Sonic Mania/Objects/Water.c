@@ -273,7 +273,6 @@ void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, RSDK_screens[RS
 void Water_CheckButtonTag(void)
 {
     RSDK_THIS(Water);
-    EntityButton *button = RSDK_GET_ENTITY(RSDK.GetEntityID(entity) - 1, Button);
 
     if (entity->buttonTag <= 0) {
         entity->taggedObject = TYPE_BLANK;
