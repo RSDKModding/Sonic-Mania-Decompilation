@@ -1061,7 +1061,8 @@ void readSettings()
 #endif
 
         // Consoles load the entire file and buffer it, while pc just io's the file when needed
-        if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, RETRO_PLATFORM != RETRO_WIN))
+        bool32 useBuffer = !((RETRO_PLATFORM == RETRO_WIN) || (RETRO_PLATFORM == RETRO_OSX));
+        if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
             engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
         else
             engine.devMenu = true;
