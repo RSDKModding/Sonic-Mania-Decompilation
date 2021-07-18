@@ -127,7 +127,7 @@ unsigned *md5(const char *msg, int mlen)
         free(msg2);
 
     return h;
-} 
+}
 
 char hashBuffer[0x400];
 // Buffer is expected to be at least 16 bytes long

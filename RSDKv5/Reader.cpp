@@ -35,7 +35,11 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 
         dataPacks[dataPackCount].fileCount = ReadInt16(&info);
         for (int f = 0; f < dataPacks[dataPackCount].fileCount; ++f) {
-            ReadHash(&info, dataFiles[f].hash);
+            byte b[4];
+            for (int y = 0; y < 4; y++) {
+                ReadBytes(&info, b, 4);
+                dataFiles[f].hash[y] = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | (b[3] << 0);
+            }
 
             dataFiles[f].offset = ReadInt32(&info, false);
             dataFiles[f].size   = ReadInt32(&info, false);

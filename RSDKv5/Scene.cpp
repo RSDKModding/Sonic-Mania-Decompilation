@@ -366,7 +366,10 @@ void LoadSceneFile()
 #endif
         for (int i = 0; i < objCount; ++i) {
             uint hashBuf[4];
-            ReadHash(&info, hashBuf);
+            hashBuf[0] = ReadInt32(&info, false);
+            hashBuf[1] = ReadInt32(&info, false);
+            hashBuf[2] = ReadInt32(&info, false);
+            hashBuf[3] = ReadInt32(&info, false);
 
             int objID = 0;
             for (int o = 0; o < sceneInfo.classCount; ++o) {
@@ -393,7 +396,10 @@ void LoadSceneFile()
             }
 
             for (int e = 1; e < varCnt; ++e) {
-                ReadHash(&info, hashBuf);
+                hashBuf[0] = ReadInt32(&info, false);
+                hashBuf[1] = ReadInt32(&info, false);
+                hashBuf[2] = ReadInt32(&info, false);
+                hashBuf[3] = ReadInt32(&info, false);
 
                 int varID = 0;
                 MEM_ZERO(varList[e]);

@@ -304,12 +304,4 @@ inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
     return destLen;
 }
 
-inline void ReadHash(FileInfo *info, uint *buffer)
-{
-    buffer[0] = ReadInt32(info, false);
-    buffer[1] = ReadInt32(info, false);
-    buffer[2] = ReadInt32(info, false);
-    buffer[3] = ReadInt32(info, false);
-}
-
 #endif
