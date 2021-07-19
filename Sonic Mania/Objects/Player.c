@@ -3087,7 +3087,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
     int sidekickController           = sidekick->controllerID;
     void (*sidekickInputState)(void) = sidekick->stateInput;
     if (sidekick->state == Ice_State_FrozenPlayer) {
-        Ice_Unknown8(sidekick);
+        Ice_Unknown8((Entity *)sidekick);
         Ice->playerTimers[0] = 30;
         Ice->playerTimers[1] = 0;
         foreach_all(Ice, ice)

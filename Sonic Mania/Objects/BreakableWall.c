@@ -158,7 +158,7 @@ void BreakableWall_State_HandleHWall(void)
 
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                    flag |= shield->data.animationID == 2;
+                    flag |= shield->animator.animationID == 2;
                 }
 
                 switch (player->characterID) {

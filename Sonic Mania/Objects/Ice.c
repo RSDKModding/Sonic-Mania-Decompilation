@@ -186,7 +186,7 @@ void Ice_TimeOverCB(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->state == Ice_State_FrozenPlayer)
-        Ice_Unknown8(player);
+        Ice_Unknown8((Entity *)player);
 }
 
 void Ice_EditorDraw(void)
