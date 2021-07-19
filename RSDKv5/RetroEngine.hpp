@@ -125,7 +125,7 @@ enum GameRegions {
 #define RETRO_VER_EGS (RETRO_REV02 && 0)
 
 //enables only EGS's ingame achievements without enabling anything else
-#define RETRO_USE_DUMMY_ACHIEVEMENTS (1)
+#define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
 
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false

@@ -223,7 +223,11 @@ void initUserData()
 
     int userData[0x100];
     memset(userData, 0, 0x100 * sizeof(int));
+#if RETRO_REV02
     userStorage->LoadUserFile("UData.bin", userData, 0x100 * sizeof(int), NULL);
+#else
+    LoadUserFile("UData.bin", userData, 0x100 * sizeof(int));
+#endif
     for (int i = 0; i < (int)achievementList.size(); ++i) {
         achievementList[i].achieved = userData[i];
     }
@@ -235,7 +239,11 @@ void releaseUserData()
     for (int i = 0; i < (int)achievementList.size(); ++i) {
         userData[i] = achievementList[i].achieved;
     }
+#if RETRO_REV02
     userStorage->SaveUserFile("UData.bin", userData, 0x100 * sizeof(int), NULL, false);
+#else
+    SaveUserFile("UData.bin", userData, 0x100 * sizeof(int));
+#endif
 
 #if RETRO_REV02
     if (dummmyCore)

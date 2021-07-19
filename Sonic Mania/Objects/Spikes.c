@@ -62,7 +62,7 @@ void Spikes_Update(void)
         {
             if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
-                if ((/*(!Ice || player->state != Ice_State_FrozenPlayer) &&*/ shield->data.animationID != 2) || Press) {
+                if (((!Ice || player->state != Ice_State_FrozenPlayer) && shield->data.animationID != 2) || Press) {
                     int playerVelX = player->velocity.x;
                     int playerVelY = player->velocity.y;
 
@@ -135,7 +135,7 @@ void Spikes_Update(void)
                         }
 
                         if (flag) {
-                            // RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
+                            RSDK.PlaySFX(Ice->sfx_WindowShatter, 0, 255);
                             // Ice_Unknown6(16, 0, 0, 0);
                             RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                         }
@@ -146,12 +146,12 @@ void Spikes_Update(void)
                     int posStoreY = player->position.y;
 
                     byte side = 0;
-                    // if (player->state == Ice_State_FrozenPlayer) {
-                    //    side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &Ice->hitbox2, 0);
-                    //}
-                    // else {
-                    side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, Player_GetHitbox(player), 0);
-                    //}
+                    if (player->state == Ice_State_FrozenPlayer) {
+                        side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &Ice->hitbox2, false);
+                    }
+                    else {
+                        side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, Player_GetHitbox(player), false);
+                    }
 
                     switch (side) {
                         case 1:

@@ -88,7 +88,7 @@ void Player_Update(void)
             entity->uncurlTimer--;
 #endif
 
-        Player_HandleSuperPalette();
+        Player_HandleSuperForm();
         if (entity->characterID == ID_TAILS && entity->state != Player_State_TailsFlight && entity->abilitySpeed)
             entity->abilitySpeed = 0;
 
@@ -746,7 +746,7 @@ void Player_LoadSprites(void)
             RSDK.AddCamera(&player1->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
         }
         else {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+            destroyEntity(entity);
         }
     }
 
@@ -1327,7 +1327,7 @@ void Player_BlendSuperRayColours(int bankID)
     RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 113, 119);
 }
 #endif
-void Player_HandleSuperPalette(void)
+void Player_HandleSuperForm(void)
 {
     RSDK_THIS(Player);
     if (entity->superState) {
@@ -2545,8 +2545,8 @@ bool32 Player_CheckBossHit(EntityPlayer *player, void *e)
                 if (player->velocity.y < -0x40000)
                     player->velocity.y = -0x40000;
             }
-            return true;
 #endif
+            return true;
         }
     }
     else {
@@ -3086,16 +3086,16 @@ bool32 Player_SwapMainPlayer(bool32 flag)
     EntityCamera *sidekickCam        = sidekick->camera;
     int sidekickController           = sidekick->controllerID;
     void (*sidekickInputState)(void) = sidekick->stateInput;
-    /*if (sidekick->state == Ice_State_FrozenPlayer) {
+    if (sidekick->state == Ice_State_FrozenPlayer) {
         Ice_Unknown8(sidekick);
         Ice->playerTimers[0] = 30;
         Ice->playerTimers[1] = 0;
-        EntityIce *ice                      = 0;
-        while (RSDK.GetObjects(Ice->objectID, (Entity **)&ice)) {
-            if (ice->State == Ice_Unknown16)
-                RSDK.ResetEntityPtr(&ice, 0, 0);
+        foreach_all(Ice, ice)
+        {
+            //if (ice->state == Ice_Unknown16)
+            //    destroyEntity(ice);
         }
-    }*/
+    }
     RSDK.CopyEntity(Zone->entityData, leader, 0);
     RSDK.CopyEntity(leader, sidekick, 0);
     RSDK.CopyEntity(sidekick, (Entity *)Zone->entityData, 0);
@@ -3573,99 +3573,109 @@ void Player_State_Ground(void)
                         case 2:
                             if (entity->direction == FLIP_X || (entity->characterID == ID_SONIC && entity->superState == 2) || entity->isChibi) {
                                 entity->direction = FLIP_X;
-                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimator, 0, 0);
+                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimator, false, 0);
                             }
                             else {
-                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE2, &entity->playerAnimator, 0, 0);
+                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE2, &entity->playerAnimator, false, 0);
                             }
                             break;
                         case 15:
                         case 23:
-                            if (entity->direction && (entity->characterID != ID_SONIC || entity->superState != 2) && entity->isChibi != 1) {
-                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE2, &entity->playerAnimator, 0, 0);
+                            if (entity->direction && (entity->characterID != ID_SONIC || entity->superState != 2) && !entity->isChibi) {
+                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE2, &entity->playerAnimator, false, 0);
                             }
                             else {
                                 entity->direction = FLIP_NONE;
-                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimator, 0, 0);
+                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimator, false, 0);
                             }
                             break;
                         case 110:
-                        case 115: RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimator, 0, 0); break;
+                        case 115: RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BALANCE1, &entity->playerAnimator, false, 0); break;
                         default:
                             switch (entity->characterID) {
                                 case ID_SONIC:
-                                    if (entity->timer != 720 || entity->isChibi || entity->superState == 2) {
-                                        if (entity->timer < 240) {
-                                            entity->timer++;
-                                            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, 0, 0);
+#if !RETRO_USE_PLUS
+                                    //pre-1.05 super sonic didn't have a "bored" anim
+                                    if (entity->superState != 2) {
+#endif
+                                        if (entity->timer != 720 || entity->isChibi || entity->superState == 2) {
+                                            if (entity->timer < 240) {
+                                                entity->timer++;
+                                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                            }
+                                            else {
+                                                entity->timer++;
+                                                if (entity->playerAnimator.animationID == ANI_BORED1) {
+                                                    if (entity->playerAnimator.frameID == 41)
+                                                        entity->timer = 0;
+                                                }
+                                                else
+                                                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, false, 0);
+                                            }
                                         }
                                         else {
-                                            entity->timer++;
-                                            if (entity->playerAnimator.animationID == ANI_BORED1) {
-                                                if (entity->playerAnimator.frameID == 41)
+                                            if (entity->playerAnimator.animationID == ANI_BORED2) {
+                                                if (entity->playerAnimator.frameID == 67)
                                                     entity->timer = 0;
                                             }
                                             else
-                                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, 0, 0);
+                                                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED2, &entity->playerAnimator, false, 0);
                                         }
+#if !RETRO_USE_PLUS
                                     }
                                     else {
-                                        if (entity->playerAnimator.animationID == ANI_BORED2) {
-                                            if (entity->playerAnimator.frameID == 67)
-                                                entity->timer = 0;
-                                        }
-                                        else
-                                            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED2, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, false, 0);
                                     }
+#endif
                                     break;
                                 case ID_TAILS:
                                     if (entity->timer < 240) {
                                         entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, false, 0);
                                     }
                                     else if (entity->playerAnimator.animationID == ANI_BORED1) {
                                         if (entity->playerAnimator.frameID == 45)
                                             entity->timer = 0;
                                     }
                                     else
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, false, 0);
                                     break;
                                 case ID_KNUCKLES:
                                     if (entity->timer < 240) {
                                         entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, false, 0);
                                     }
                                     else if (entity->playerAnimator.animationID == ANI_BORED1) {
                                         if (entity->playerAnimator.frameID == 69)
                                             entity->timer = 0;
                                     }
                                     else
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, false, 0);
                                     break;
 #if RETRO_USE_PLUS
                                 case ID_MIGHTY:
                                     if (entity->timer < 240) {
                                         entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, false, 0);
                                     }
                                     else if (entity->playerAnimator.animationID == ANI_BORED1) {
                                         if (entity->playerAnimator.frameID == 35)
                                             entity->timer = 0;
                                     }
                                     else
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, false, 0);
                                     break;
                                 case ID_RAY:
                                     if (entity->timer < 240) {
                                         entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, false, 0);
                                     }
                                     else if (entity->playerAnimator.animationID == ANI_BORED1) {
                                         if (entity->playerAnimator.frameID == 55)
                                             entity->timer = 0;
                                     }
                                     else {
-                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, 0, 0);
+                                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_BORED1, &entity->playerAnimator, false, 0);
                                     }
                                     break;
 #endif
@@ -3675,7 +3685,7 @@ void Player_State_Ground(void)
                     }
 
                     if (++entity->outtaHereTimer >= 72000000) {
-                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_OUTTAHERE, &entity->playerAnimator, 0, 0);
+                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_OUTTAHERE, &entity->playerAnimator, false, 0);
                         entity->state           = Player_State_OuttaHere;
                         entity->tileCollisions  = false;
                         entity->interaction     = false;
@@ -5942,7 +5952,11 @@ void Player_SonicJumpAbility(void)
 #else
         if (entity->stateInput != Player_ProcessP2Input_AI) {
 #endif
-            if (entity->jumpPress) {
+            if (entity->jumpPress
+#if RETRO_GAMEVER == VER_100
+                && !Player_CheckGoSuper(entity, SaveGame->saveRAM[28])
+#endif
+                ) {
                 int id               = RSDK.GetEntityID(entity);
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
                 if (entity->invincibleTimer) {
@@ -6011,10 +6025,12 @@ void Player_SonicJumpAbility(void)
                     }
                 }
             }
+#if RETRO_GAMEVER != VER_100
             else {
                 if (RSDK_controller[entity->controllerID].keyY.press)
                     Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
             }
+#endif
             return;
         }
         flag = true;
@@ -6039,7 +6055,11 @@ void Player_TailsJumpAbility(void)
 #if RETRO_USE_PLUS
             && globals->gameMode != MODE_ENCORE
 #endif
-            )) {
+            )
+#if RETRO_GAMEVER == VER_100
+        && !Player_CheckGoSuper(entity, SaveGame->saveRAM[28])
+#endif
+        ) {
         if (!entity->invertGravity) {
             entity->jumpAbilityTimer = 0;
             entity->timer            = 0;
@@ -6053,10 +6073,12 @@ void Player_TailsJumpAbility(void)
             entity->nextAirState    = StateMachine_None;
         }
     }
+#if RETRO_GAMEVER != VER_100
     else {
         if (RSDK_controller[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
     }
+#endif
 }
 void Player_KnuxJumpAbility(void)
 {
@@ -6068,7 +6090,11 @@ void Player_KnuxJumpAbility(void)
 #if RETRO_USE_PLUS
                    && globals->gameMode != MODE_ENCORE
 #endif
-            )) {
+            )
+#if RETRO_GAMEVER == VER_100
+        && !Player_CheckGoSuper(entity, SaveGame->saveRAM[28])
+#endif
+        ) {
         if (!entity->invertGravity) {
             entity->jumpAbilityTimer = 0;
             entity->abilitySpeed     = 0x40000;
@@ -6089,10 +6115,12 @@ void Player_KnuxJumpAbility(void)
             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLY, &entity->playerAnimator, false, 6);
         }
     }
+#if RETRO_GAMEVER != VER_100
     else {
         if (RSDK_controller[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
     }
+#endif
 }
 #if RETRO_USE_PLUS
 void Player_MightyJumpAbility(void)
@@ -6255,7 +6283,7 @@ void Player_ProcessP1Input(void)
             // TEMP!! I SOULD REMOVE THIS!!!
             else if (RSDK_sku->platform == PLATFORM_DEV && controller->keySelect.press) {
                 entity->characterID <<= 1;
-                if (entity->characterID > 0x10)
+                if (entity->characterID > ID_RAY)
                     entity->characterID = 1;
                 Player_ChangeCharacter(entity, entity->characterID);
             }
@@ -6272,6 +6300,14 @@ void Player_ProcessP1Input(void)
                 else {
                     RSDK.PlaySFX(Player->sfx_SwapFail, 0, 0xFF);
                 }
+            }
+#else
+            // TEMP!! I SOULD REMOVE THIS!!!
+            if (RSDK_info->platform == PLATFORM_DEV && controller->keySelect.press) {
+                entity->characterID <<= 1;
+                if (entity->characterID > ID_KNUCKLES)
+                    entity->characterID = 1;
+                Player_ChangeCharacter(entity, entity->characterID);
             }
 #endif
 

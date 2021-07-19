@@ -27,9 +27,15 @@ void ChemBubble_Create(void *data)
         entity->drawOrder  = Zone->drawOrderHigh - 2;
         entity->startPos.x = entity->position.x;
         entity->startPos.y = entity->position.y;
+#if RETRO_USE_PLUS
         entity->velocity.y = RSDK.Random(-0x20000, 0, &Zone->randKey);
         entity->shiftY     = RSDK.Random(12, 16, &Zone->randKey);
         entity->shiftY2    = RSDK.Random(9, 10, &Zone->randKey);
+#else
+        entity->velocity.y = RSDK.Rand(-0x20000, 0);
+        entity->shiftY     = RSDK.Rand(12, 16);
+        entity->shiftY2    = RSDK.Rand(9, 10);
+#endif
         RSDK.SetSpriteAnimation(ChemBubble->aniFrames, RSDK.Rand(1, 3), &entity->animator, true, 0);
         entity->drawFX = FX_SCALE;
         entity->state  = ChemBubble_Unknown1;

@@ -27,7 +27,7 @@ void Spring_Draw(void)
 void Spring_Create(void *data)
 {
     RSDK_THIS(Spring);
-    entity->drawFX       = FX_FLIP;
+    entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
         entity->type %= 6;
         if (data) {
@@ -36,11 +36,11 @@ void Spring_Create(void *data)
             entity->flipFlag = (*pv >> 8) & 0xFF;
         }
         RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->animator, true, 0);
-        entity->active              = ACTIVE_BOUNDS;
+        entity->active                  = ACTIVE_BOUNDS;
         entity->animator.animationSpeed = 0;
-        entity->updateRange.x       = 0x600000;
-        entity->updateRange.y       = 0x600000;
-        entity->visible             = true;
+        entity->updateRange.x           = 0x600000;
+        entity->updateRange.y           = 0x600000;
+        entity->visible                 = true;
         if (entity->planeFilter && ((byte)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
@@ -55,10 +55,10 @@ void Spring_Create(void *data)
                     entity->velocity.x = 0xA0000;
                 if (entity->flipFlag)
                     entity->velocity.x = -entity->velocity.x;
-                entity->hitbox.left   = -0x8;
-                entity->hitbox.top    = -0xF;
-                entity->hitbox.right  = 0x10;
-                entity->hitbox.bottom = 0x8;
+                entity->hitbox.left   = -8;
+                entity->hitbox.top    = -15;
+                entity->hitbox.right  = 16;
+                entity->hitbox.bottom = 8;
                 entity->state         = Spring_State_Horizontal;
             }
             else if (entity->type >> 1 == 2) {
@@ -75,10 +75,10 @@ void Spring_Create(void *data)
                     entity->velocity.y = -entity->velocity.y;
                 if (entity->flipFlag & FLIP_X)
                     entity->velocity.x = -entity->velocity.x;
-                entity->hitbox.left   = -0xC;
-                entity->hitbox.top    = -0xB;
-                entity->hitbox.right  = 0xC;
-                entity->hitbox.bottom = 0xC;
+                entity->hitbox.left   = -12;
+                entity->hitbox.top    = -11;
+                entity->hitbox.right  = 12;
+                entity->hitbox.bottom = 12;
                 entity->state         = Spring_State_Diagonal;
             }
         }
@@ -90,10 +90,10 @@ void Spring_Create(void *data)
                 entity->velocity.y = 0xA0000;
             if (!entity->flipFlag)
                 entity->velocity.y = -entity->velocity.y;
-            entity->hitbox.left   = -0x10;
-            entity->hitbox.top    = -0x7;
-            entity->hitbox.right  = 0x10;
-            entity->hitbox.bottom = 0x8;
+            entity->hitbox.left   = -16;
+            entity->hitbox.top    = -7;
+            entity->hitbox.right  = 16;
+            entity->hitbox.bottom = 8;
             entity->state         = Spring_State_Vertical;
         }
     }
@@ -108,11 +108,12 @@ void Spring_StageLoad(void)
 void Spring_State_Vertical(void)
 {
     RSDK_THIS(Spring);
-    if (RSDK_sceneInfo->entity->direction == FLIP_NONE) {
-        foreach_active(Player, player) {
+    if (entity->direction == FLIP_NONE) {
+        foreach_active(Player, player)
+        {
             if (!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
-                int col = (entity->type != 0xFF || player->velocity.y >= -0x50000) ? Player_CheckCollisionBox(player, entity, &entity->hitbox)
-                                                                                 : Player_CheckCollisionPlatform(player, entity, &entity->hitbox);
+                int col = (entity->type == 0xFF && player->velocity.y < -0x50000) ? Player_CheckCollisionPlatform(player, entity, &entity->hitbox)
+                                                                                  : Player_CheckCollisionBox(player, entity, &entity->hitbox);
                 if (col == 1) {
                     int anim = player->playerAnimator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
@@ -120,7 +121,7 @@ void Spring_State_Vertical(void)
                     else
                         player->storedAnim = ANI_WALK;
 
-                    //if (player->state != Ice_State_FrozenPlayer) {
+                    if (player->state != Ice_State_FrozenPlayer) {
                         if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
                             player->state = Player_State_RollLock;
                         }
@@ -128,13 +129,13 @@ void Spring_State_Vertical(void)
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                             player->state = Player_State_Air;
                         }
-                    //}
-                    player->onGround                        = 0;
-                    player->velocity.y                      = entity->velocity.y;
-                    player->tileCollisions                  = 1;
-                    entity->animator.animationSpeed             = 0x80;
-                    entity->animator.animationTimer             = 0;
-                    entity->animator.frameID                    = 1;
+                    }
+                    player->onGround                = false;
+                    player->velocity.y              = entity->velocity.y;
+                    player->tileCollisions          = true;
+                    entity->animator.animationSpeed = 0x80;
+                    entity->animator.animationTimer = 0;
+                    entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
                         RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
@@ -144,21 +145,22 @@ void Spring_State_Vertical(void)
         }
     }
     else {
-        foreach_active(Player, player) {
+        foreach_active(Player, player)
+        {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
-                //if (player->state != Ice_State_FrozenPlayer) {
+                if (player->state != Ice_State_FrozenPlayer) {
                     if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll)
                         player->state = Player_State_RollLock;
                     else
                         player->state = Player_State_Air;
-                //}
-                player->onGround                        = 0;
-                player->velocity.y                      = entity->velocity.y;
-                player->tileCollisions                  = 1;
-                entity->animator.animationSpeed             = 0x80;
-                entity->animator.animationTimer             = 0;
-                entity->animator.frameID                    = 1;
+                }
+                player->onGround                = false;
+                player->velocity.y              = entity->velocity.y;
+                player->tileCollisions          = true;
+                entity->animator.animationSpeed = 0x80;
+                entity->animator.animationTimer = 0;
+                entity->animator.frameID        = 1;
                 if (!entity->timer) {
                     RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
@@ -171,7 +173,8 @@ void Spring_State_Horizontal(void)
 {
     RSDK_THIS(Spring);
     if (entity->direction == FLIP_NONE) {
-        foreach_active(Player, player) {
+        foreach_active(Player, player)
+        {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 3 && (!entity->onGround || player->onGround)) {
                 if (player->collisionMode == CMODE_ROOF) {
@@ -183,7 +186,7 @@ void Spring_State_Horizontal(void)
                     player->groundVel  = player->velocity.x;
                 }
 
-                //if (player->state != Ice_State_FrozenPlayer) {
+                if (player->state != Ice_State_FrozenPlayer) {
                     if (player->state != Player_State_Roll && player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
                         if (player->onGround == 1)
                             player->state = Player_State_Ground;
@@ -193,12 +196,12 @@ void Spring_State_Horizontal(void)
                     int anim = player->playerAnimator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimator.animationID = ANI_WALK;
-                //}
-                player->controlLock          = 16;
-                player->skidding            = 0;
-                player->pushing             = 0;
-                player->direction           = 0;
-                player->tileCollisions      = 1;
+                }
+                player->controlLock             = 16;
+                player->skidding                = 0;
+                player->pushing                 = false;
+                player->direction               = FLIP_NONE;
+                player->tileCollisions          = true;
                 entity->animator.animationSpeed = 0x80;
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
@@ -210,7 +213,8 @@ void Spring_State_Horizontal(void)
         }
     }
     else {
-        foreach_active(Player, player) {
+        foreach_active(Player, player)
+        {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2 && (entity->onGround == false || player->onGround == 1)) {
                 if (player->collisionMode == CMODE_ROOF) {
@@ -222,7 +226,7 @@ void Spring_State_Horizontal(void)
                     player->groundVel  = player->velocity.x;
                 }
 
-                //if (player->state != Ice_State_FrozenPlayer) {
+                if (player->state != Ice_State_FrozenPlayer) {
                     if (player->state != Player_State_Roll && player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
                         if (player->onGround)
                             player->state = Player_State_Ground;
@@ -232,12 +236,12 @@ void Spring_State_Horizontal(void)
                     int anim = player->playerAnimator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimator.animationID = ANI_WALK;
-                //}
-                player->controlLock          = 16;
-                player->skidding            = 0;
-                player->pushing             = 0;
-                player->direction           = 1;
-                player->tileCollisions      = 1;
+                }
+                player->controlLock             = 16;
+                player->skidding                = 0;
+                player->pushing                 = false;
+                player->direction               = FLIP_X;
+                player->tileCollisions          = true;
                 entity->animator.animationSpeed = 0x80;
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
@@ -252,7 +256,8 @@ void Spring_State_Horizontal(void)
 void Spring_State_Diagonal(void)
 {
     RSDK_THIS(Spring);
-    foreach_active(Player, player) {
+    foreach_active(Player, player)
+    {
         if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 bool32 flag = false;
@@ -272,17 +277,17 @@ void Spring_State_Diagonal(void)
                     }
                 }
                 if (flag) {
-                    // if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
-                        player->state = Player_State_RollLock;
+                    if (player->state != Ice_State_FrozenPlayer) {
+                        if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
+                            player->state = Player_State_RollLock;
+                        }
+                        else {
+                            player->state = Player_State_Air;
+                            int anim      = player->playerAnimator.animationID;
+                            if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
+                                player->playerAnimator.animationID = ANI_WALK;
+                        }
                     }
-                    else {
-                        player->state = Player_State_Air;
-                        int anim      = player->playerAnimator.animationID;
-                        if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                            player->playerAnimator.animationID = ANI_WALK;
-                    }
-                    //}
                     if (entity->direction < FLIP_Y) {
                         if (player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
                             int anim = player->playerAnimator.animationID;
@@ -293,11 +298,11 @@ void Spring_State_Diagonal(void)
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                         }
                     }
-                    player->direction           = entity->direction & 1;
-                    player->onGround            = 0;
-                    player->velocity.x          = entity->velocity.x;
-                    player->velocity.y          = entity->velocity.y;
-                    player->tileCollisions      = 1;
+                    player->direction               = entity->direction & 1;
+                    player->onGround                = false;
+                    player->velocity.x              = entity->velocity.x;
+                    player->velocity.y              = entity->velocity.y;
+                    player->tileCollisions          = true;
                     entity->animator.animationSpeed = 0x80;
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;

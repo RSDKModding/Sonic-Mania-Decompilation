@@ -16,13 +16,18 @@ typedef struct {
     void (*stageFinishCallback)(void);
     bool32 forcePlayerOnScreenFlag;
     void (*callbacks[0x10])(void);
+#if RETRO_USE_PLUS
     int callbackCount;
     int playerFlags[4];
     byte playerID;
     byte playerCount;
     byte playerIDs[4];
     byte playerIDs2[4];
-    ushort field_6E;
+#else
+    int field_94;
+    int callbackCount;
+    int playerFlags;
+#endif
     int listPos;
     int prevListPos;
     int ringFrame;
@@ -66,9 +71,9 @@ typedef struct {
     int screenPosX[PLAYER_MAX];
     int screenPosY[PLAYER_MAX];
     bool32 swapGameMode;
-#endif
     int flag;
     int randKey;
+#endif
 } ObjectZone;
 
 // Entity Class

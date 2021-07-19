@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	ushort animID;
-	ushort sfxID;
+	ushort aniFrames;
+	ushort sfxExit;
 	Hitbox hitbox;
 } ObjectTubeSpring;
 

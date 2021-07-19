@@ -321,8 +321,13 @@ void ZipLine_Unknown1(void)
 {
     foreach_active(ZipLine, zipline)
     {
+#if RETRO_USE_PLUS
         if ((1 << Zone->playerID) & zipline->activePlayers)
             Zone->playerFlags[Zone->playerID] = false;
+#else
+        // if (zipline->activePlayers)
+        //     Zone->playerFlags = false;
+#endif
     }
 }
 

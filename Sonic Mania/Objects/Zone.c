@@ -176,9 +176,9 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad(void)
 {
+#if RETRO_USE_PLUS
     int *saveRAM  = SaveGame->saveRAM;
     Zone->randKey = (uint)time(0);
-#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == 0) {
             globals->characterFlags = 0;
@@ -334,7 +334,9 @@ void Zone_StageLoad(void)
     Zone->fgLow        = RSDK.GetSceneLayerID("FG Low");
     Zone->fgHigh       = RSDK.GetSceneLayerID("FG High");
     Zone->moveLayer    = RSDK.GetSceneLayerID("Move");
+#if RETRO_USE_PLUS
     Zone->scratchLayer = RSDK.GetSceneLayerID("Scratch");
+#endif
 
     if (Zone->fgLowID) {
         Zone->fgLowID = 1 << Zone->fgLowID;
@@ -649,7 +651,9 @@ void Zone_StartTeleportAction(void)
     entity->stateDraw  = Zone_StateDraw_Fadeout;
     entity->visible    = true;
     entity->drawOrder  = DRAWLAYER_COUNT - 1;
+#if RETRO_USE_PLUS
     Zone->flag         = true;
+#endif
 }
 
 void Zone_ApplyWorldBounds(void)
@@ -1051,12 +1055,16 @@ void Zone_Unknown21(void)
 {
     RSDK_THIS(Zone);
     if (entity->timer <= 0) {
+#if RETRO_USE_PLUS
         Zone->flag = false;
-        RSDK.ResetEntityPtr(entity, 0, 0);
+#endif
+        destroyEntity(entity);
     }
     else {
         entity->timer -= entity->fadeSpeed;
+#if RETRO_USE_PLUS
         Zone->flag = true;
+#endif
     }
 }
 

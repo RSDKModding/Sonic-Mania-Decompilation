@@ -5,7 +5,15 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    int playerTimers[PLAYER_MAX];
+    ushort sfx_Freeze;
+    ushort sfx_LedgeBreak;
+    ushort sfx_WindowShatter;
+    ushort sfx_Struggle;
 } ObjectIce;
 
 // Entity Class
@@ -28,6 +36,10 @@ void Ice_EditorLoad(void);
 void Ice_Serialize(void);
 
 // Extra Entity Functions
+void Ice_State_FrozenPlayer(void);
 
+void Ice_ZoneCB(void);
+void Ice_Unknown8(Entity *player);
+void Ice_TimeOverCB(void);
 
 #endif //!OBJ_ICE_H

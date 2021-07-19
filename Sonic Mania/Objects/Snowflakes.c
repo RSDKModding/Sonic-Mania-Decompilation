@@ -10,17 +10,33 @@ void Snowflakes_Update(void)
             if (!entity->positions[i].x && !entity->positions[i].y) {
                 if ((i & 0x8000) == 0) {
                     int screenY            = RSDK_screens->position.y;
-                    int scrX               = RSDK_screens->position.x % RSDK_screens->width;
+                    int scrX    = RSDK_screens->position.x % RSDK_screens->width;
+#if RETRO_USE_PLUS
                     int posX               = (scrX + RSDK.Random(0, RSDK_screens->width, &Zone->randKey)) % RSDK_screens->width;
+#else
+                    int posX             = (scrX + RSDK.Rand(0, RSDK_screens->width)) % RSDK_screens->width;
+#endif
                     entity->positions[i].y = (screenY - 5) << 16;
                     entity->positions[i].x = posX << 16;
                     entity->frameIDs[i]    = 0;
-                    entity->flipFlags[i]   = RSDK.Random(0, 10, &Zone->randKey) > 7;
+#if RETRO_USE_PLUS
+                    entity->flipFlags[i] = RSDK.Random(0, 10, &Zone->randKey) > 7;
+#else
+                    entity->flipFlags[i] = RSDK.Rand(0, 10) > 7;
+#endif
                     if (entity->flipFlags[i]) {
+#if RETRO_USE_PLUS
                         entity->animIDs[i] = 2 * (RSDK.Random(0, 10, &Zone->randKey) > 7) + 2;
+#else
+                        entity->animIDs[i] = 2 * (RSDK.Rand(0, 10) > 7) + 2;
+#endif
                     }
                     else {
+#if RETRO_USE_PLUS
                         int val = RSDK.Random(0, 10, &Zone->randKey);
+#else
+                        int val = RSDK.Rand(0, 10);
+#endif
                         if (val > 8) {
                             entity->animIDs[i] = 3;
                         }
@@ -28,7 +44,11 @@ void Snowflakes_Update(void)
                             entity->animIDs[i] = val > 4;
                         }
                     }
+#if RETRO_USE_PLUS
                     entity->angles[i] = RSDK.Random(0, 256, &Zone->randKey);
+#else
+                    entity->angles[i] = RSDK.Rand(0, 256);
+#endif
                     ++Snowflakes->count;
                     break;
                 }

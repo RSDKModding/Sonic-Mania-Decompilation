@@ -212,8 +212,9 @@ void ChemicalPool_SpawnDebris(int x, int y)
     RSDK_THIS(ChemicalPool);
 
     for (int i = 0; i < 6; ++i) {
-        EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, x + RSDK.Random(-0x80000, 0x80000, &Zone->randKey),
-                                                                 y + RSDK.Random(0x40000, 0x140000, &Zone->randKey));
+#if RETRO_USE_PLUS
+        EntityDebris *debris =
+            CREATE_ENTITY(Debris, NULL, x + RSDK.Random(-0x80000, 0x80000, &Zone->randKey), y + RSDK.Random(0x40000, 0x140000, &Zone->randKey));
         debris->state        = Debris_State_Fall;
         debris->gravity      = 0x3800;
         debris->velocity.x   = RSDK.Random(0, 0x20000, &Zone->randKey);
@@ -222,6 +223,17 @@ void ChemicalPool_SpawnDebris(int x, int y)
         debris->velocity.y = RSDK.Random(-0x40000, -0x10000, &Zone->randKey);
         debris->drawOrder  = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &debris->data, true, RSDK.Random(0, 2, &Zone->randKey));
+#else
+        EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + RSDK.Rand(-0x80000, 0x80000), y + RSDK.Rand(0x40000, 0x140000));
+        debris->state      = Debris_State_Fall;
+        debris->gravity    = 0x3800;
+        debris->velocity.x = RSDK.Rand(0, 0x20000);
+        if (debris->position.x < x)
+            debris->velocity.x = -debris->velocity.x;
+        debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
+        debris->drawOrder  = Zone->drawOrderHigh;
+        RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &debris->data, true, RSDK.Rand(0, 2));
+#endif
     }
 }
 

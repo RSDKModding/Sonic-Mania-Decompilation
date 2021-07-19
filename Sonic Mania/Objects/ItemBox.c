@@ -415,8 +415,8 @@ void ItemBox_CheckHit(void)
             }
             else {
                 int anim    = player->playerAnimator.animationID;
-                bool32 flag = anim == ANI_JUMP
-                              && (player->velocity.y >= 0 || player->onGround || entity->direction); //|| player->state == Ice_State_FrozenPlayer);
+                bool32 flag =
+                    anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || entity->direction || player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
                     case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
                     case ID_KNUCKLES: flag |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;

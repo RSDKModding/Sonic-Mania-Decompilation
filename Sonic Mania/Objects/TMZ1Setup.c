@@ -57,7 +57,11 @@ void TMZ1Setup_StaticUpdate(void)
     }
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
     if (!TMZ1Setup->reloadFlag && actClear->objectID == ActClear->objectID && actClear->state == ActClear_Unknown6 && !Player->gotHit[0]) {
+#if RETRO_USE_PLUS 
         API.UnlockAchievement("ACH_TMZ");
+#else
+        APICallback_UnlockAchievement("ACH_TMZ");
+#endif
         TMZ1Setup->reloadFlag = true;
     }
 }

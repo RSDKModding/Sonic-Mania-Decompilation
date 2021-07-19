@@ -37,7 +37,14 @@ void Animals_Create(void *data)
     if (!(globals->secrets & getMod(SECRET_RICKYMODE)))
 #endif
         type = voidToInt(data);
-    if (!entity->type && RSDK.Random(0, 256, &Zone->randKey) == 21) {
+
+    if (!entity->type &&
+#if RETRO_USE_PLUS
+        RSDK.Random(0, 256, &Zone->randKey) == 21
+#else
+        RSDK.Rand(0, 256) == 21
+#endif
+    ) {
         type                  = 2;
         entity->velocity.y    = -0x40000;
         entity->type          = type - 1;
@@ -117,7 +124,13 @@ void Animals_CheckPlayerPos(void)
             }
             break;
         }
-        case 2: entity->direction = RSDK.Random(0, 2, &Zone->randKey); break;
+        case 2:
+#if RETRO_USE_PLUS
+            entity->direction = RSDK.Random(0, 2, &Zone->randKey); 
+#else
+            entity->direction = RSDK.Rand(0, 2);
+#endif
+            break;
     }
 
     if (!entity->direction)

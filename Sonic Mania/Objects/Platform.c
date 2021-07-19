@@ -5,10 +5,12 @@ ObjectPlatform *Platform;
 void Platform_Update(void)
 {
     RSDK_THIS(Platform);
+#if RETRO_USE_PLUS
     if (Zone->flag) {
-        entity->pushPlayersL = 0;
-        entity->pushPlayersR = 0;
+        entity->pushPlayersL = false;
+        entity->pushPlayersR = false;
     }
+#endif
     entity->position.x = entity->drawPos.x & 0xFFFF0000;
     entity->position.y = entity->drawPos.y & 0xFFFF0000;
 

@@ -104,7 +104,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         else {
                             for (int i = 0; i < dataSize * sizeof(byte); ++i) ReadInt8(&info);
                         }
-                        dataPos += arraySize;
+                        dataPos += dataSize * sizeof(byte);
                         break;
                     case SVAR_UINT16:
                     case SVAR_INT16: {
@@ -116,9 +116,9 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             for (int i = 0; i < dataSize * sizeof(short); i += sizeof(short)) ReadBytes(&info, &obj[dataPos + i], sizeof(short));
                         }
                         else {
-                            for (int i = 0; i < dataSize * sizeof(short); ++i) ReadInt8(&info);
+                            info.readPos += (dataSize * sizeof(short));
                         }
-                        dataPos = tmp + sizeof(short) * arraySize;
+                        dataPos = tmp + sizeof(short) * dataSize;
                         break;
                     }
                     case SVAR_UINT32:
@@ -132,9 +132,9 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             for (int i = 0; i < dataSize * sizeof(int); i += sizeof(int)) ReadBytes(&info, &obj[dataPos + i], sizeof(int));
                         }
                         else {
-                            for (int i = 0; i < dataSize * sizeof(int); ++i) ReadInt8(&info);
+                            info.readPos += (dataSize * sizeof(int));
                         }
-                        dataPos = tmp + sizeof(int) * arraySize;
+                        dataPos = tmp + sizeof(int) * dataSize;
                         break;
                     }
                 }

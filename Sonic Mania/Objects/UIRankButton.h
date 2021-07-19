@@ -3,6 +3,7 @@
 
 #include "../SonicMania.h"
 
+#if RETRO_USE_PLUS
 // Object Class
 typedef struct {
 	RSDK_OBJECT
@@ -28,6 +29,7 @@ void UIRankButton_EditorLoad(void);
 void UIRankButton_Serialize(void);
 
 // Extra Entity Functions
+#endif
 
 
 #endif //!OBJ_UIRANKBUTTON_H

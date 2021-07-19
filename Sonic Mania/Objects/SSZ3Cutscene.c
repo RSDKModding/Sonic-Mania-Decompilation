@@ -130,8 +130,10 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     Zone->playerBoundActiveR[0] = false;
     RSDK.CopyTileLayer(Zone->fgLow, pos, 16, Zone->fgLow, 187, 160, 36, 14);
 
+#if RETRO_USE_PLUS 
     CREATE_ENTITY(MonarchPlans, NULL, (pos2 << 20) + 0xF00000, 0x1A80000);
     CREATE_ENTITY(SSZEggman, intToVoid(1), (pos2 << 20) + 0x2000000, 0x1C50000);
+#endif
 
     foreach_all(PhantomRuby, ruby)
     {

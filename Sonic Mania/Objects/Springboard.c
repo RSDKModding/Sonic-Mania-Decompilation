@@ -51,10 +51,10 @@ void Springboard_Update(void)
             int hitboxTop = 0;
 
             if (entity->animator.frameID <= 2) {
-                hitboxTop = -Springboard->array4[val];
+                hitboxTop = Springboard->array4[val];
             }
             else if (entity->animator.frameID == 3) {
-                hitboxTop = -Springboard->array3[val];
+                hitboxTop = Springboard->array3[val];
             }
 
             Hitbox hitbox;
@@ -69,6 +69,7 @@ void Springboard_Update(void)
             else
                 flag = collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
 
+            flag = collision == 1;
             switch (collision) {
                 case 2: player->groundVel = playerVel; player->velocity.x = playerVelX;
                 case 0:
@@ -82,8 +83,10 @@ void Springboard_Update(void)
                     }
                     break;
                 case 1:
+#if RETRO_USE_PLUS 
                     if (player->state == Player_State_MightyHammerDrop)
                         player->state = Player_State_Air;
+#endif
                     break;
                 default: break;
             }
@@ -94,32 +97,34 @@ void Springboard_Update(void)
             int hitboxTop = 0;
 
             if (entity->animator.frameID <= 2) {
-                hitboxTop = -Springboard->array4[pos];
+                hitboxTop = Springboard->array4[pos];
             }
             else if (entity->animator.frameID != 3) {
-                hitboxTop = -Springboard->array3[pos];
+                hitboxTop = Springboard->array3[pos];
             }
 
             Hitbox hitbox;
             hitbox.left   = -28;
-            hitbox.top    = hitboxTop;
+            hitbox.top    = -hitboxTop;
             hitbox.right  = 28;
             hitbox.bottom = 8;
 
             byte collision = 0;
             if (!((1 << playerID) & entity->playerBits))
-                flag = collision = Player_CheckCollisionBox(player, entity, &hitbox);
+                collision = Player_CheckCollisionBox(player, entity, &hitbox);
             else
-                flag = collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
-
+                 collision = Player_CheckCollisionPlatform(player, entity, &hitbox);
+            flag = collision == 1;
             switch (collision) {
                 case 0:
                 case 2:
                 case 4: break;
                 case 1:
+#if RETRO_USE_PLUS 
                     if (player->state == Player_State_MightyHammerDrop) {
                         player->state = Player_State_Air;
                     }
+#endif
                     break;
                 case 3:
                     player->groundVel  = playerVel;

@@ -143,9 +143,8 @@ void SSZ2Setup_GenericTriggerCallback2(void)
 
 void SSZ2Setup_GenericTriggerCallback3(void)
 {
-
     Entity *entity = RSDK_sceneInfo->entity;
-    if (globals->gameMode <= MODE_ENCORE) {
+    if (isMainGameMode()) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->stateInput) {
             player->stateInput      = 0;
@@ -153,8 +152,10 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             player->right           = true;
             Zone->screenBoundsR1[0] = RSDK_screens->centerX + (entity->position.x >> 16);
             Zone->screenBoundsR1[1] = RSDK_screens->centerX + (entity->position.x >> 16);
+#if RETRO_USE_PLUS 
             Zone->screenBoundsR1[2] = RSDK_screens->centerX + (entity->position.x >> 16);
             Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
+#endif
 
             for (int i = 0; i < Player->playerCount; ++i) {
                 StarPost->postIDs[i] = 0;

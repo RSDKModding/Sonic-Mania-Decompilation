@@ -46,20 +46,24 @@ typedef enum { SCN_FILTER_MANIA = 3, SCN_FILTER_ENCORE = 5 } SceneFilters;
 #endif
 
 typedef enum {
-    SLOT_PLAYER1             = 0,
-    SLOT_PLAYER2             = 1,
-    SLOT_PLAYER3             = 2,
-    SLOT_PLAYER4             = 3,
-    SLOT_BSS_SETUP           = 8,
-    SLOT_PBL_SETUP           = 8,
-    SLOT_UFO_SETUP           = 8,
-    SLOT_MUSIC               = 9,
-    SLOT_BSS_HUD             = 10,
-    SLOT_UFO_CAMERA          = 10,
-    SLOT_PBL_CAMERA          = 10,
-    SLOT_BSS_MESSAGE         = 11,
-    SLOT_UFO_HUD             = 11,
-    SLOT_ZONE                = 12,
+    SLOT_PLAYER1     = 0,
+    SLOT_PLAYER2     = 1,
+    SLOT_PLAYER3     = 2,
+    SLOT_PLAYER4     = 3,
+    SLOT_BSS_SETUP   = 8,
+    SLOT_PBL_SETUP   = 8,
+    SLOT_UFO_SETUP   = 8,
+    SLOT_MUSIC       = 9,
+    SLOT_BSS_HUD     = 10,
+    SLOT_UFO_CAMERA  = 10,
+    SLOT_PBL_CAMERA  = 10,
+    SLOT_BSS_MESSAGE = 11,
+    SLOT_UFO_HUD     = 11,
+#if RETRO_USE_PLUS
+    SLOT_ZONE = 12,
+#else
+    SLOT_ZONE = 8,
+#endif
     SLOT_CUTSCENESEQ         = 15,
     SLOT_PAUSEMENU           = 16,
     SLOT_GAMEOVER            = 16,

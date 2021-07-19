@@ -97,6 +97,7 @@ void LevelSelect_StageLoad(void)
     LevelSelect->cheatUnknown[7]        = 0;
 }
 
+//TODO: were these actually in preplus?
 void LevelSelect_CheatActivated_AllEmeralds(void)
 {
     Music_FadeOut(0.125);
@@ -107,7 +108,9 @@ void LevelSelect_CheatActivated_AllEmeralds(void)
 void LevelSelect_CheatActivated_ChangeSuperMusicFlag(void)
 {
     RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+#if RETRO_USE_PLUS
     globals->superMusicEnabled ^= 1;
+#endif
 }
 
 void LevelSelect_CheatActivated_MaxContinues(void)
@@ -127,17 +130,22 @@ void LevelSelect_CheatActivated_MaxControl(void)
 void LevelSelect_CheatActivated_RickyMode(void)
 {
     RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+#if RETRO_USE_PLUS
     globals->secrets ^= SECRET_RICKYMODE;
+#endif
 }
 
 void LevelSelect_CheatActivated_SuperDash(void)
 {
     RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+#if RETRO_USE_PLUS
     globals->secrets ^= SECRET_SUPERDASH;
+#endif
 }
 
 void LevelSelect_CheatActivated_SwapGameMode(void)
 {
+#if RETRO_USE_PLUS
     if (API.CheckDLC(DLC_PLUS) == 1) {
         RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
         if (globals->gameMode == MODE_ENCORE) {
@@ -150,10 +158,12 @@ void LevelSelect_CheatActivated_SwapGameMode(void)
             }
         }
     }
+#endif
 }
 
 void LevelSelect_CheatActivated_UnlockAllMedals(void)
 {
+#if RETRO_USE_PLUS
     if (globals->superSecret && (globals->secrets & getMod(SECRET_RICKYMODE))) {
         RSDK.PlaySFX(LevelSelect->sfxMedalGot, 0, 255);
         SaveGame_UnlockAllMedals();
@@ -167,6 +177,7 @@ void LevelSelect_CheatActivated_UnlockAllMedals(void)
     else {
         RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
     }
+#endif
 }
 
 void LevelSelect_State_SetupEntities(void)
@@ -354,7 +365,11 @@ void LevelSelect_Unknown2(void)
     RSDK_THIS(LevelSelect);
 
     bool32 confirmPress = false;
+#if RETRO_USE_PLUS
     if (API.GetConfirmButtonFlip())
+#else
+    if (APICallback_GetConfirmButtonFlip())
+#endif
         confirmPress = RSDK_controller->keyB.press;
     else
         confirmPress = RSDK_controller->keyA.press;
@@ -369,7 +384,11 @@ void LevelSelect_Unknown2(void)
             if (label2)
                 label2->highlighted = false;
 
+#if RETRO_USE_PLUS
             if (--entity->labelID == 28 && !API.CheckDLC(DLC_PLUS))
+#else
+            if (--entity->labelID == 28)
+#endif
                 --entity->labelID;
             if (entity->labelID < 0)
                 entity->labelID = entity->labelCount - 1;
@@ -387,7 +406,11 @@ void LevelSelect_Unknown2(void)
             entity->timer = (entity->timer + 1) & 0xF;
             if (entity->timer == 1) {
                 LevelSelect_Unknown5(false);
+#if RETRO_USE_PLUS 
                 if (++entity->labelID == 28 && !API.CheckDLC(DLC_PLUS))
+#else
+                    if (++entity->labelID == 28)
+#endif
                     ++entity->labelID;
                 if (entity->labelID == entity->labelCount)
                     entity->labelID = 0;
@@ -416,7 +439,11 @@ void LevelSelect_Unknown2(void)
             else {
                 if (confirmPress || RSDK_controller->keyStart.press) {
                     if (entity->labelID < entity->labelCount - 1 || RSDK_controller->keyStart.press) {
+#if RETRO_USE_PLUS 
                         if (entity->labelID != 28 || API.CheckDLC(DLC_PLUS))
+#else
+                        if (entity->labelID != 28)
+#endif
                             LevelSelect_Unknown7();
                         else
                             RSDK.PlaySFX(LevelSelect->sfxFail, 0, 255);
@@ -528,7 +555,11 @@ void LevelSelect_Unknown6(void)
             if (label2)
                 label2->highlighted = false;
 
+#if RETRO_USE_PLUS 
             if (--entity->labelID == 28 && !API.CheckDLC(DLC_PLUS))
+#else
+            if (--entity->labelID == 28)
+#endif
                 --entity->labelID;
             if (entity->labelID < 0)
                 entity->labelID = entity->labelCount - 1;
@@ -561,9 +592,11 @@ void LevelSelect_Unknown7(void)
         else if (entity->labelID == entity->labelCount - 3) {
             RSDK_sceneInfo->listPos += entity->field_190;
         }
+#if RETRO_USE_PLUS 
         else if (globals->gameMode == MODE_ENCORE) {
             RSDK_sceneInfo->listPos = Zone_GetEncoreStageID();
         }
+#endif
 
         int p1ID = 0;
         if (entity->playerID > 0)

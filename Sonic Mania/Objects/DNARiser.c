@@ -222,12 +222,20 @@ void DNARiser_State_Unknown3(void)
                     int sfxID = 0;
                     if (!entity->field_B6) {
                         do
+#if RETRO_USE_PLUS
                             sfxID = RSDK.Random(0, 5, &Zone->randKey);
+#else
+                            sfxID = RSDK.Rand(0, 5);
+#endif
                         while (sfxID == entity->field_B6);
                     }
                     RSDK.PlaySFX(DNARiser->sfxTiny[sfxID], 0, 255);
                     entity->field_B6 = sfxID;
+#if RETRO_USE_PLUS
                     entity->timer2   = RSDK.Random(2, 8, &Zone->randKey);
+#else
+                    entity->timer2 = RSDK.Rand(2, 8);
+#endif
                 }
                 EntityDNARiser *child = CREATE_ENTITY(DNARiser, entity, entity->vector_D0.x, entity->vector_D0.y - (entity->field_E0 << 18));
                 child->state          = DNARiser_State_SetupChild;

@@ -170,9 +170,9 @@ void BreakableWall_State_HandleHWall(void)
                     case ID_KNUCKLES: flag = true; break;
                 }
 
-                // if (player->state == Ice_State_FrozenPlayer) {
-                //    flag |= abs(player->groundVel) >= 0x48000;
-                //}
+                if (player->state == Ice_State_FrozenPlayer) {
+                    flag |= abs(player->groundVel) >= 0x48000;
+                }
 
                 if (flag && !player->sidekick) {
                     if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {

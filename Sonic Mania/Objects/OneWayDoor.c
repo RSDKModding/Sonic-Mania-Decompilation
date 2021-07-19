@@ -75,7 +75,7 @@ void OneWayDoor_Interact(void)
     bool32 isMMZ1 = true;
     if (!RSDK.CheckStageFolder("MMZ") || (Zone->actID != 1))
         isMMZ1 = false;
-    EntityPlayer *player1 = RSDK.GetEntityByID(0);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     bool32 playerIsBehind = false;
     if (entity->direction == FLIP_X)
         playerIsBehind = player1->position.x >= entity->position.x;
@@ -102,8 +102,10 @@ void OneWayDoor_Interact(void)
 
         if (Player_CheckCollisionTouch(currentPlayer, entity, &OneWayDoor->touchBox)) {
             if (isMMZ1 && currentPlayer->sidekick && !playerIsBehind) {
+#if RETRO_USE_PLUS 
                 Player->cantSwap = true;
                 NoSwap->counter++;
+#endif
             }
             else {
                 entity->state = OneWayDoor_MoveUp;

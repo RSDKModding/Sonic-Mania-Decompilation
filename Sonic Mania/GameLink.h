@@ -36,13 +36,12 @@ typedef uint color;
 #define DRAWLAYER_COUNT (16)
 
 #if RETRO_USE_PLUS
-#define PLAYER_MAX (4)
 #define SCREEN_MAX (4)
 #else
-#define PLAYER_MAX (2)
 #define SCREEN_MAX (2)
 #endif
 
+#define PLAYER_MAX (4)
 #define CAMERA_MAX (4)
 
 //0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation

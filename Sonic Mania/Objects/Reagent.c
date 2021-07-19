@@ -29,7 +29,11 @@ void Reagent_Create(void *data)
         entity->updateRange.y = 0x2000000;
         entity->inkEffect     = INK_ALPHA;
         entity->alpha         = 0xC0;
-        entity->velocity.x    = RSDK.Random(-0xC000, 0xC000, &Zone->randKey);
+#if RETRO_USE_PLUS
+        entity->velocity.x = RSDK.Random(-0xC000, 0xC000, &Zone->randKey);
+#else
+        entity->velocity.x = RSDK.Rand(-0xC000, 0xC000);
+#endif
         entity->type          = voidToInt(data);
         entity->state         = Reagent_Unknown1;
 
@@ -50,7 +54,11 @@ void Reagent_Create(void *data)
                 entity->b = 176;
                 break;
         }
+#if RETRO_USE_PLUS
         RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &entity->animator, true, RSDK.Random(0, 2, &Zone->randKey));
+#else
+        RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &entity->animator, true, RSDK.Rand(0, 2));
+#endif
     }
 }
 
@@ -84,7 +92,7 @@ void Reagent_Unknown1(void)
     }
 
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
 }
 
 void Reagent_Unknown2(void)
@@ -96,7 +104,7 @@ void Reagent_Unknown2(void)
     entity->position.y += entity->velocity.y;
     entity->position.x = (RSDK.Sin256(entity->timer) << 10) + entity->startX;
     if (entity->timer == 64)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
 }
 
 void Reagent_EditorDraw(void) {}

@@ -538,6 +538,7 @@ void UIControl_Unknown7(void)
         }
     }
 
+#if RETRO_USE_PLUS 
     if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIShifter, shifter)
         {
@@ -569,6 +570,7 @@ void UIControl_Unknown7(void)
             }
         }
     }
+#endif
 
     for (int i = 0; i < SCENEENTITY_COUNT; ++i) {
         EntityUIButton *entPtr = RSDK_GET_ENTITY(i, UIButton);
@@ -576,7 +578,9 @@ void UIControl_Unknown7(void)
             int id = entPtr->objectID;
             if (id != UIButton->objectID && (!UIModeButton || id != UIModeButton->objectID) && (!UISaveSlot || id != UISaveSlot->objectID)
                 && (!UICharButton || id != UICharButton->objectID) && (!UITAZoneModule || id != UITAZoneModule->objectID)
+#if RETRO_USE_PLUS 
                 && (!UIRankButton || id != UIRankButton->objectID) && (!UIReplayCarousel || id != UIReplayCarousel->objectID)
+#endif
                 && (!UILeaderboard || id != UILeaderboard->objectID) && (!UIVsCharSelector || id != UIVsCharSelector->objectID)
                 && (!UIVsZoneButton || id != UIVsZoneButton->objectID) && (!UIVsResults || id != UIVsResults->objectID)
                 && (!UISlider || id != UISlider->objectID) && (!UIKeyBinder || id != UIKeyBinder->objectID)) {

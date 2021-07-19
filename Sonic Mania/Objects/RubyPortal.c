@@ -83,7 +83,9 @@ void RubyPortal_StageLoad(void)
     RubyPortal->hitbox.right  = 24;
     RubyPortal->hitbox.bottom = 24;
     RubyPortal->openPortal    = false;
+#if RETRO_USE_PLUS 
     RSDK.SetDebugValue("Open Portal", &RubyPortal->openPortal, DTYPE_BOOL, false, true);
+#endif
 }
 
 void RubyPortal_Unknown1(void)

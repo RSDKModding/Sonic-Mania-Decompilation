@@ -383,5 +383,5 @@ int GetGamePadType(int inputID)
         }
     }
 
-    return userCore->controllerUnknown();
+    return controllerUnknown();
 }
