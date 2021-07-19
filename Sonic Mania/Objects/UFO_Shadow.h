@@ -16,7 +16,7 @@ typedef struct {
     int shadowScale;
     Entity *parent;
     Matrix matrix;
-    Animator data;
+    Animator animator;
 } EntityUFO_Shadow;
 
 // Object Struct

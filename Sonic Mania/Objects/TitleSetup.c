@@ -23,7 +23,7 @@ void TitleSetup_Create(void *data)
 {
     RSDK_THIS(TitleSetup);
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TitleSetup->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(TitleSetup->spriteIndex, 0, &entity->animator, true, 0);
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
@@ -134,8 +134,8 @@ void TitleSetup_Unknown4(void)
 void TitleSetup_Unknown5(void)
 {
     RSDK_THIS(TitleSetup);
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == 31) {
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == 31) {
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type >= 0) {
@@ -156,8 +156,8 @@ void TitleSetup_Unknown6(void)
 {
     RSDK_THIS(TitleSetup);
 
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == entity->data.frameCount - 1) {
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == entity->animator.frameCount - 1) {
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type == 7) {
@@ -341,9 +341,9 @@ void TitleSetup_Unknown14(void)
 {
     RSDK_THIS(TitleSetup);
     entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->data, &entity->drawPos, 0);
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, 0);
     entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->data, &entity->drawPos, 0);
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, 0);
 }
 
 void TitleSetup_Unknown15(void)

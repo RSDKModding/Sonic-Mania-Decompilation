@@ -37,7 +37,7 @@ typedef struct {
     bool32 right;
     bool32 jumpPress;
     int field_18C;
-    Animator data;
+    Animator animator;
 } EntityPBL_Player;
 
 // Object Struct

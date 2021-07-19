@@ -32,7 +32,7 @@ void Title3DSprite_Draw(void)
         Vector2 drawPos;
         drawPos.x = (RSDK_screens->centerX + Title3DSprite->field_4 * entity->field_5C / depth) << 16;
         drawPos.y = (Title3DSprite->field_4 * Title3DSprite->field_8 / depth + 152) << 16;
-        RSDK.DrawSprite(&entity->data, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
 }
 
@@ -40,7 +40,7 @@ void Title3DSprite_Create(void *data)
 {
     RSDK_THIS(Title3DSprite);
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(Title3DSprite->spriteIndex, 5, &entity->data, true, entity->frame);
+        RSDK.SetSpriteAnimation(Title3DSprite->spriteIndex, 5, &entity->animator, true, entity->frame);
         entity->position.x -= 0x2000000;
         entity->position.y -= 0x2000000;
         entity->active    = ACTIVE_NORMAL;

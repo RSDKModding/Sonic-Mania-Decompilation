@@ -17,7 +17,7 @@ void Animals_StaticUpdate(void) {}
 void Animals_Draw(void)
 {
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Animals_Create(void *data)
@@ -53,7 +53,7 @@ void Animals_Create(void *data)
         entity->hitbox.left   = -4;
         entity->hitbox.right  = 4;
         entity->hitbox.bottom = Animals->hitboxes[entity->type] >> 16;
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->animator, true, 0);
     }
     else if (type) {
         entity->velocity.y    = -0x40000;
@@ -63,7 +63,7 @@ void Animals_Create(void *data)
         entity->hitbox.left   = -4;
         entity->hitbox.right  = 4;
         entity->hitbox.bottom = Animals->hitboxes[entity->type] >> 16;
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->animator, true, 0);
     }
     else if (entity->behaviour == 1) {
         entity->active = ACTIVE_BOUNDS;
@@ -88,7 +88,7 @@ void Animals_Create(void *data)
             entity->velocity.x = -Animals->xVelocity[entity->type];
         else
             entity->velocity.x = Animals->xVelocity[entity->type];
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->animator, true, 0);
     }
     else {
         entity->state = Animals_State_BounceAround;
@@ -223,9 +223,9 @@ void Animals_State_Freed(void)
     EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     if (Animals_CheckGroundCollision()) {
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->animator, true, 0);
         switch (entity->type) {
             case 0:
             case 5:
@@ -256,7 +256,7 @@ void Animals_State_FollowPlayer_Normal(void)
         Animals_CheckPlayerPos();
         entity->velocity.y = Animals->yVelocity[entity->type];
     }
-    entity->data.frameID = entity->velocity.y < 0;
+    entity->animator.frameID = entity->velocity.y < 0;
 }
 
 void Animals_State_FollowPlayer_Bird(void)
@@ -269,7 +269,7 @@ void Animals_State_FollowPlayer_Bird(void)
         Animals_CheckPlayerPos();
         entity->velocity.y = Animals->yVelocity[entity->type];
     }
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 }
 
 void Animals_State_BounceAround(void)

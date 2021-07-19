@@ -32,7 +32,7 @@ typedef struct {
     short timer2;
     byte field_7E;
     Hitbox hitbox;
-    Animator animData;
+    Animator animator;
 } EntitySpikes;
 
 // Object Struct

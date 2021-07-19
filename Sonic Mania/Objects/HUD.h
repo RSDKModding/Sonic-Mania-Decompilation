@@ -70,7 +70,7 @@ void HUD_Serialize(void);
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value);
-void HUD_GetKeyFrame(Animator *data, int buttonID);
+void HUD_GetKeyFrame(Animator *animator, int buttonID);
 void HUD_GetSuperFrames(void);
 void HUD_State_ComeOnScreen(void);
 void HUD_State_GoOffScreen(void);

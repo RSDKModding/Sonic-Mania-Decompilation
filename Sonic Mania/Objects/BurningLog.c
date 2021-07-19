@@ -5,7 +5,7 @@ ObjectBurningLog *BurningLog;
 void BurningLog_Update(void)
 {
     RSDK_THIS(BurningLog);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
         entity->position.y += entity->velocity.y;
         entity->velocity.y += 0x3800;
@@ -37,7 +37,7 @@ void BurningLog_StaticUpdate(void) {}
 void BurningLog_Draw(void)
 {
     RSDK_THIS(BurningLog);
-    RSDK.DrawSprite(&entity->data, 0, 0);
+    RSDK.DrawSprite(&entity->animator, 0, 0);
 }
 
 void BurningLog_Create(void *data)
@@ -50,7 +50,7 @@ void BurningLog_Create(void *data)
     entity->drawOrder     = Zone->drawOrderLow;
     if (data)
         entity->timer = voidToInt(data);
-    RSDK.SetSpriteAnimation(BurningLog->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(BurningLog->spriteIndex, 0, &entity->animator, true, 0);
 }
 
 void BurningLog_StageLoad(void)

@@ -18,7 +18,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
-    Animator data;
+    Animator animator;
 } EntityBloominator;
 
 // Object Struct

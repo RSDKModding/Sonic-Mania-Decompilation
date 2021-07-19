@@ -7,7 +7,7 @@ void DDWrecker_Update(void)
     RSDK_THIS(DDWrecker);
     StateMachine_Run(entity->state);
 
-    RSDK.ProcessAnimation(&entity->animData);
+    RSDK.ProcessAnimation(&entity->animator);
 
     if (entity->type != 4) {
         if (entity->invincible > 0)
@@ -25,7 +25,7 @@ void DDWrecker_Draw(void)
     RSDK_THIS(DDWrecker);
     if (entity->type == 1 || entity->type == 2) {
         RSDK.SetActivePalette(1, 0, RSDK_screens->height);
-        entity->direction = entity->animData.frameID >= 16;
+        entity->direction = entity->animator.frameID >= 16;
         if ((entity->invincible & 2) == 0) {
             RSDK.SetLimitedFade(1, 2, 3, entity->blendAmount, 1, 28);
         }
@@ -35,7 +35,7 @@ void DDWrecker_Draw(void)
             }
         }
     }
-    RSDK.DrawSprite(&entity->animData, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
     RSDK.SetActivePalette(0, 0, RSDK_screens->height);
 }
 
@@ -52,7 +52,7 @@ void DDWrecker_Create(void *data)
             switch (entity->type) {
                 case 1: // main body
                 case 2:
-                    RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animData, true, 0);
+                    RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animator, true, 0);
                     entity->drawFX        = FX_FLIP | FX_ROTATE;
                     entity->hitbox.left   = -20;
                     entity->hitbox.top    = -19;
@@ -61,10 +61,10 @@ void DDWrecker_Create(void *data)
                     entity->health        = 3;
                     break;
                 case 3: // chains
-                    RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 4, &entity->animData, true, 0);
+                    RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 4, &entity->animator, true, 0);
                     break;
                 case 4: // core
-                    RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 5, &entity->animData, true, 0);
+                    RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 5, &entity->animator, true, 0);
                     break;
                 default: break;
             }
@@ -557,13 +557,13 @@ void DDWrecker_State_Unknown9(void)
             entity->rotation = 0;
     }
 
-    if (entity->animData.animationID == 2) {
-        if (entity->animData.frameID == entity->animData.frameCount - 1)
-            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animData, true, 0);
+    if (entity->animator.animationID == 2) {
+        if (entity->animator.frameID == entity->animator.frameCount - 1)
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animator, true, 0);
     }
     else {
-        if (entity->animData.animationID == 3 && !entity->animData.frameID)
-            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 2, &entity->animData, true, 0);
+        if (entity->animator.animationID == 3 && !entity->animator.frameID)
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 2, &entity->animator, true, 0);
     }
 }
 void DDWrecker_State_Unknown10(void)
@@ -573,21 +573,21 @@ void DDWrecker_State_Unknown10(void)
     entity->angle &= 0xFF;
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->startPos.y) & 0xFFFF0000;
 
-    if (entity->animData.animationID) {
-        if (entity->animData.animationID == 1) {
-            if (entity->animData.frameID == entity->animData.frameCount - 1)
-                RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 3, &entity->animData, true, 0);
+    if (entity->animator.animationID) {
+        if (entity->animator.animationID == 1) {
+            if (entity->animator.frameID == entity->animator.frameCount - 1)
+                RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 3, &entity->animator, true, 0);
         }
         else {
-            if (entity->animData.animationID == 3) {
-                if (entity->animData.animationSpeed < 0x100) {
-                    entity->animData.animationSpeed += 2;
+            if (entity->animator.animationID == 3) {
+                if (entity->animator.animationSpeed < 0x100) {
+                    entity->animator.animationSpeed += 2;
                 }
             }
         }
     }
     else {
-        RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 1, &entity->animData, true, 0);
+        RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 1, &entity->animator, true, 0);
         RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
     }
 
@@ -604,7 +604,7 @@ void DDWrecker_State_Unknown11(void)
     entity->position.x += entity->velocity.x;
     entity->velocity.y += 0x3800;
     entity->position.y += entity->velocity.y;
-    entity->animData.animationSpeed = 0x100 - 32 * entity->timer;
+    entity->animator.animationSpeed = 0x100 - 32 * entity->timer;
     if (entity->velocity.y > 0) {
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
             ++entity->timer;
@@ -632,13 +632,13 @@ void DDWrecker_State_Unknown11(void)
 void DDWrecker_State_Unknown12(void)
 {
     RSDK_THIS(DDWrecker);
-    if (entity->animData.animationID == 2) {
-        if (entity->animData.frameID == entity->animData.frameCount - 1)
-            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animData, true, 0);
+    if (entity->animator.animationID == 2) {
+        if (entity->animator.frameID == entity->animator.frameCount - 1)
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animator, true, 0);
     }
     else {
-        if (entity->animData.animationID == 3 && !entity->animData.frameID)
-            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 2, &entity->animData, true, 0);
+        if (entity->animator.animationID == 3 && !entity->animator.frameID)
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 2, &entity->animator, true, 0);
     }
 
     if (++entity->timer == 30) {
@@ -668,12 +668,12 @@ void DDWrecker_LateState_Unknown1(void)
         }
     }
 
-    if (entity->animData.animationID == 2) {
-        if (entity->animData.frameID == entity->animData.frameCount - 1)
-            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animData, true, 0);
+    if (entity->animator.animationID == 2) {
+        if (entity->animator.frameID == entity->animator.frameCount - 1)
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animator, true, 0);
     }
-    else if (entity->animData.animationID == 3 && !entity->animData.frameID) {
-        RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 2, &entity->animData, true, 0);
+    else if (entity->animator.animationID == 3 && !entity->animator.frameID) {
+        RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 2, &entity->animator, true, 0);
     }
 
     if (entity->blendAmount > 0) {
@@ -686,7 +686,7 @@ void DDWrecker_LateState_Unknown2(void)
     foreach_active(Player, player)
     {
         if (!entity->invincible && Player_CheckBadnikHit(player, entity, &entity->hitbox)) {
-            if (player->invincibleTimer || player->blinkTimer > 0 || entity->animData.animationID < 3) {
+            if (player->invincibleTimer || player->blinkTimer > 0 || entity->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, entity)) {
                     DDWrecker_Hit();
                     RSDK.PlaySFX(DDWrecker->sfx_BossHit, 0, 255);
@@ -698,18 +698,18 @@ void DDWrecker_LateState_Unknown2(void)
         }
     }
 
-    if (entity->animData.animationID) {
-        if (entity->animData.animationID == 1) {
-            if (entity->animData.frameID == entity->animData.frameCount - 1)
-                RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 3, &entity->animData, true, 0);
+    if (entity->animator.animationID) {
+        if (entity->animator.animationID == 1) {
+            if (entity->animator.frameID == entity->animator.frameCount - 1)
+                RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 3, &entity->animator, true, 0);
         }
-        else if (entity->animData.animationID == 3) {
-            if (entity->animData.animationSpeed < 0x100)
-                entity->animData.animationSpeed += 2;
+        else if (entity->animator.animationID == 3) {
+            if (entity->animator.animationSpeed < 0x100)
+                entity->animator.animationSpeed += 2;
         }
     }
     else {
-        RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 1, &entity->animData, true, 0);
+        RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 1, &entity->animator, true, 0);
     }
 
     if (entity->timer4 < 48)
@@ -726,7 +726,7 @@ void DDWrecker_LateState_Unknown3(void)
     foreach_active(Player, player)
     {
         if (!entity->invincible && Player_CheckBadnikHit(player, entity, &entity->hitbox)) {
-            if (player->invincibleTimer || player->blinkTimer > 0 || entity->animData.animationID < 3) {
+            if (player->invincibleTimer || player->blinkTimer > 0 || entity->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, entity)) {
                     DDWrecker_Hit();
                     RSDK.PlaySFX(DDWrecker->sfx_BossHit, 0, 255);
@@ -739,7 +739,7 @@ void DDWrecker_LateState_Unknown3(void)
     }
 
     entity->angle2 = (entity->angle2 + entity->timer4) & 0x3FF;
-    if (entity->animData.animationID == 0) {
+    if (entity->animator.animationID == 0) {
         if (entity->blendAmount > 0) {
             entity->blendAmount -= 16;
         }

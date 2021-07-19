@@ -51,7 +51,7 @@ void ParallaxSprite_Draw(void)
         RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 0)->sprX =
             entity->sprX + (((ushort)(entity->field_B4) + ((ushort)(Zone->timer) << entity->field_B0)) & 0x7F);
     }
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 }
 
 void ParallaxSprite_Create(void *data)
@@ -123,7 +123,7 @@ void ParallaxSprite_Create(void *data)
             entity->state   = ParallaxSprite_Unknown1;
             break;
     }
-    RSDK.SetSpriteAnimation(ParallaxSprite->aniFrames, entity->aniID, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(ParallaxSprite->aniFrames, entity->aniID, &entity->animator, true, 0);
 }
 
 void ParallaxSprite_StageLoad(void)
@@ -154,7 +154,7 @@ void ParallaxSprite_StageLoad(void)
 void ParallaxSprite_Unknown1(void)
 {
     RSDK_THIS(ParallaxSprite);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->rotation = (entity->rotation + 2) & 0x1FF;
     entity->scrollPos.x += entity->scrollSpeed.x;
     entity->scrollPos.y += entity->scrollSpeed.y;
@@ -178,7 +178,7 @@ void ParallaxSprite_CreateCopy(void)
 void ParallaxSprite_Unknown3(void)
 {
     RSDK_THIS(ParallaxSprite);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->scrollSpeed.x += entity->unknownPosB.x;
     entity->scrollSpeed.y += entity->unknownPosB.y;
     entity->scrollPos.x += entity->scrollSpeed.x;
@@ -191,7 +191,7 @@ void ParallaxSprite_Unknown3(void)
 void ParallaxSprite_Unknown4(void)
 {
     RSDK_THIS(ParallaxSprite);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->scrollPos.x += entity->scrollSpeed.x;
     entity->scrollPos.y += entity->scrollSpeed.y;
     if (entity->alpha >= 128) {
@@ -208,7 +208,7 @@ void ParallaxSprite_Unknown4(void)
 void ParallaxSprite_Unknown5(void)
 {
     RSDK_THIS(ParallaxSprite);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->scrollPos.x += entity->scrollSpeed.x;
     entity->scrollPos.y += entity->scrollSpeed.y;
     if (entity->alpha <= 0) {

@@ -5,13 +5,13 @@ ObjectUIText *UIText;
 void UIText_Update(void)
 {
     EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
-    if (entity->animData.animationID != entity->highlighted + entity->listID) {
+    if (entity->animator.animationID != entity->highlighted + entity->listID) {
         ushort spr = -1;
         if (!UIWidgets || UIText->spriteIndex)
             spr = UIText->spriteIndex;
         // else
         //    spr = UIWidgets->uiSpriteIndex;
-        RSDK.SetSpriteAnimation(spr, entity->highlighted + entity->listID, &entity->animData, true, 0);
+        RSDK.SetSpriteAnimation(spr, entity->highlighted + entity->listID, &entity->animator, true, 0);
     }
 }
 
@@ -45,16 +45,16 @@ void UIText_Draw(void)
     if (entity->align == ALIGN_CENTER) {
         drawPos.x -= width << 16;
     }
-    RSDK.DrawText(&entity->animData, &drawPos, &entity->text, 0, 0, ALIGN_LEFT, 0, 0, 0, false);
+    RSDK.DrawText(&entity->animator, &drawPos, &entity->text, 0, 0, ALIGN_LEFT, 0, 0, 0, false);
 }
 
 void UIText_Create(void* data)
 {
     EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
     if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->listID, &entity->animData, true, 0);
+        RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->listID, &entity->animator, true, 0);
     //else
-    //    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animData, true, 0);
+    //    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
 
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = 2;

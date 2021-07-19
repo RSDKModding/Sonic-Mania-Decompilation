@@ -62,7 +62,7 @@ void Spikes_Update(void)
         {
             if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
-                if (((!Ice || player->state != Ice_State_FrozenPlayer) && shield->data.animationID != 2) || Press) {
+                if (((!Ice || player->state != Ice_State_FrozenPlayer) && shield->animator.animationID != 2) || Press) {
                     int playerVelX = player->velocity.x;
                     int playerVelY = player->velocity.y;
 
@@ -224,13 +224,13 @@ void Spikes_Update(void)
     entity->position.x += entity->offset.x;
     entity->position.y += entity->offset.y;
     if (Ice && !Press) {
-        RSDK.ProcessAnimation(&entity->animData);
+        RSDK.ProcessAnimation(&entity->animator);
         if (--entity->timer2 <= 0) {
             switch (entity->type) {
                 case 1:
-                case 4: RSDK.SetSpriteAnimation(Spikes->spriteIndex, 2, &entity->animData, true, 0); break;
+                case 4: RSDK.SetSpriteAnimation(Spikes->spriteIndex, 2, &entity->animator, true, 0); break;
                 case 2:
-                case 3: RSDK.SetSpriteAnimation(Spikes->spriteIndex, 3, &entity->animData, true, 0); break;
+                case 3: RSDK.SetSpriteAnimation(Spikes->spriteIndex, 3, &entity->animator, true, 0); break;
                 default: break;
             }
             entity->timer2 = RSDK.Rand(0, 240) + 30;
@@ -377,7 +377,7 @@ void Spikes_StateDraw_Global(void)
         default: break;
     }
     entity->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&entity->animData, 0, 0);
+    RSDK.DrawSprite(&entity->animator, 0, 0);
     entity->inkEffect = INK_NONE;
 }
 

@@ -147,7 +147,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         CutsceneHBH_Unknown10();
         CutsceneHBH_Unknown9();
         EntityEggman *eggman = (EntityEggman *)entity->eggman;
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 9, &eggman->data, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 9, &eggman->animator, true, 0);
         eggman->direction = FLIP_NONE;
         eggman->state     = Eggman_Unknown1;
 
@@ -225,7 +225,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
 
     EntityEggman *eggman = (EntityEggman *)entity->eggman;
     if (host->timer == 90) {
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 5, &eggman->data, true, 2);
+        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 5, &eggman->animator, true, 2);
         eggman->timer      = 30;
         eggman->velocity.x = 0;
         eggman->velocity.y = -0x30000;
@@ -262,7 +262,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         if (rider) {
             if (rider->direction == FLIP_X) {
                 rider->timer = 0;
-                RSDK.SetSpriteAnimation(rider->spriteIndex, 2, &rider->data, true, 0);
+                RSDK.SetSpriteAnimation(rider->spriteIndex, 2, &rider->animator, true, 0);
             }
             rider->state = CutsceneHBH_Unknown17;
         }
@@ -276,7 +276,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
     if (host->timer == 320) {
         EntityCutsceneHBH *gunner = CutsceneHBH_GetEntity(HBH_GUNNER);
         if (gunner) {
-            RSDK.SetSpriteAnimation(gunner->spriteIndex, 4, &gunner->data, true, 0);
+            RSDK.SetSpriteAnimation(gunner->spriteIndex, 4, &gunner->animator, true, 0);
             gunner->state = CutsceneHBH_Unknown12;
         }
 

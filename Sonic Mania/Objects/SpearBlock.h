@@ -9,7 +9,7 @@ typedef struct {
     Hitbox blockHitbox;
     Hitbox spearHitboxes[4];
     ushort spriteIndex;
-    Animator data;
+    Animator animator;
 } ObjectSpearBlock;
 
 // Entity Class
@@ -19,7 +19,7 @@ typedef struct {
     byte spearDir;
     Vector2 spearPos;
     int timer;
-    Animator data;
+    Animator animator;
 } EntitySpearBlock;
 
 // Object Entity

@@ -154,14 +154,14 @@ void SpecialRing_State_Warp(void)
             ring->active    = ACTIVE_NORMAL;
             ring->visible   = 0;
             ring->drawOrder = Zone->drawOrderLow;
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &ring->animData, true, 0);
-            int cnt = ring->animData.frameCount;
-            if (ring->animData.animationID == 2) {
+            RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &ring->animator, true, 0);
+            int cnt = ring->animator.frameCount;
+            if (ring->animator.animationID == 2) {
                 ring->alpha = 224;
                 cnt >>= 1;
             }
             ring->maxFrameCount           = cnt - 1;
-            ring->animData.animationSpeed = RSDK.Rand(6, 8);
+            ring->animator.animationSpeed = RSDK.Rand(6, 8);
             ring->timer                   = 2 * i;
         }
         entity->dword68 -= 0x80000;

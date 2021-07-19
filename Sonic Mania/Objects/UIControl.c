@@ -397,7 +397,7 @@ void UIControl_Unknown2(EntityUIControl *control)
                     else if (UIHeading && entity->objectID == UIHeading->objectID) {
                         EntityUIHeading *heading = (EntityUIHeading *)entity;
                         if (heading->spriteIndex != UIHeading->spriteIndex) {
-                            RSDK.SetSpriteAnimation(UIHeading->spriteIndex, heading->headingID, &heading->data, true, 0);
+                            RSDK.SetSpriteAnimation(UIHeading->spriteIndex, heading->headingID, &heading->animator, true, 0);
                             heading->spriteIndex = UIHeading->spriteIndex;
                         }
                         StateMachine_Run(heading->state);

@@ -47,7 +47,7 @@ void HPZEmerald_Draw(void)
         entity->inkEffect = INK_NONE;
         RSDK.DrawSprite(&entity->data2, 0, 0);
         entity->inkEffect = INK_ADD;
-        RSDK.DrawSprite(&entity->data, 0, 0);
+        RSDK.DrawSprite(&entity->animator, 0, 0);
     }
 }
 
@@ -78,7 +78,7 @@ void HPZEmerald_Create(void *data)
         }
         else {
             RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->data2, true, 0);
-            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->data, true, 1);
+            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator, true, 1);
         }
         entity->hitbox = RSDK.GetHitbox(&entity->data2, 0);
     }

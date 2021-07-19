@@ -74,7 +74,7 @@ void ShopWindow_Create(void *data)
             entity->hitbox2.right  = entity->size.x + 8;
             entity->hitbox2.bottom = entity->size.y + 8;
             entity->hitbox2.left   = -8 - entity->size.x;
-            RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->data, 0, 0);
+            RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->animator, 0, 0);
         }
         
         foreach_all(CircleBumper, bumper) {
@@ -103,7 +103,7 @@ void ShopWindow_State_Shard(void)
     entity->scale.x = RSDK.Cos512(entity->field_90.x);
     entity->scale.y = RSDK.Cos512(entity->field_90.y);
 
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
@@ -111,7 +111,7 @@ void ShopWindow_State_Shard(void)
 void ShopWindow_State_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
-    if (++entity->data.animationTimer == 2) {
+    if (++entity->animator.animationTimer == 2) {
         int cntY = (entity->size.y >> 3) + 1;
         int cntX = (entity->size.x >> 3) + 1;
 
@@ -122,10 +122,10 @@ void ShopWindow_State_Shattered(void)
                 EntityShopWindow *shard = (EntityShopWindow *)RSDK.CreateEntity(ShopWindow->objectID, (void *)1, posX + ((RSDK.Rand(0, 8) - 4) << 16),
                                                                                 posY + ((RSDK.Rand(0, 8) - 4) << 16));
                 if (RSDK.Rand(0, 3) == 1) {
-                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 3, &shard->data, 0, RSDK.Rand(0, 18));
+                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 3, &shard->animator, 0, RSDK.Rand(0, 18));
                 }
                 else {
-                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 2, &shard->data, 0, RSDK.Rand(0, 21));
+                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 2, &shard->animator, 0, RSDK.Rand(0, 21));
                 }
                 shard->field_88.x = RSDK.Rand(1, 16);
                 shard->field_88.y = RSDK.Rand(1, 16);
@@ -181,17 +181,17 @@ void ShopWindow_Draw_Normal(void)
     if (entity->silhouette)
         RSDK.DrawRect(x, y, 2 * entity->size.x, 2 * entity->size.y, 0x100068, 255, INK_UNMASKED, true);
 
-    entity->data.frameID = 0;
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    entity->animator.frameID = 0;
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 
-    entity->data.frameID = 1;
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    entity->animator.frameID = 1;
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 
-    entity->data.frameID = 2;
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    entity->animator.frameID = 2;
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 
-    entity->data.frameID = 3;
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    entity->animator.frameID = 3;
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 
     if (!entity->shatter) {
         RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
@@ -200,8 +200,8 @@ void ShopWindow_Draw_Normal(void)
         drawPos.x            = entity->position.x - (entity->size.x << 16) + 0x180000;
         drawPos.y            = entity->position.y + ((entity->size.y - 24) << 16);
         entity->inkEffect    = INK_NONE;
-        entity->data.frameID = 4;
-        RSDK.DrawSprite(&entity->data, &drawPos, 0);
+        entity->animator.frameID = 4;
+        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
 
         entity->inkEffect = INK_ADD;
         RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
@@ -211,7 +211,7 @@ void ShopWindow_Draw_Normal(void)
 void ShopWindow_State_Draw_Shard(void)
 {
     RSDK_THIS(ShopWindow);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void ShopWindow_State_Draw_Shattered(void)

@@ -25,7 +25,7 @@ void SuperSparkle_Update(void)
             debris->alpha     = 256;
             debris->drawOrder = Zone->drawOrderHigh;
             debris->drawOrder = player->drawOrder;
-            RSDK.SetSpriteAnimation(SuperSparkle->spriteIndex, 0, &debris->data, true, 0);
+            RSDK.SetSpriteAnimation(SuperSparkle->spriteIndex, 0, &debris->animator, true, 0);
         }
     }
     else {
@@ -41,14 +41,14 @@ void SuperSparkle_Update(void)
         ring->visible    = 0;
         ring->velocity.y = -0x10000;
         ring->drawOrder  = player->drawOrder;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, Zone->timer % 3 + 2, &ring->animData, true, 0);
-        int cnt = ring->animData.frameCount;
-        if (ring->animData.animationID == 2) {
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, Zone->timer % 3 + 2, &ring->animator, true, 0);
+        int cnt = ring->animator.frameCount;
+        if (ring->animator.animationID == 2) {
             ring->alpha = 224;
             cnt >>= 1;
         }
         ring->maxFrameCount           = cnt - 1;
-        ring->animData.animationSpeed = RSDK.Rand(6, 8);
+        ring->animator.animationSpeed = RSDK.Rand(6, 8);
     }
     if (player->superState != 2 || !player->active)
         RSDK.ResetEntityPtr(entity, 0, 0);

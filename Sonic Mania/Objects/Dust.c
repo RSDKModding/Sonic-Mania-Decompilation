@@ -15,13 +15,13 @@ void Dust_StaticUpdate(void) {}
 void Dust_Draw(void)
 {
     RSDK_THIS(Dust);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Dust_Create(void *data)
 {
     RSDK_THIS(Dust);
-    RSDK.SetSpriteAnimation(Dust->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(Dust->spriteIndex, 0, &entity->animator, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
@@ -38,8 +38,8 @@ void Dust_State_DropDash(void)
     RSDK_THIS(Dust);
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
     entity->position.y += entity->velocity.y;
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void Dust_State_HammerDrop(void)
@@ -48,8 +48,8 @@ void Dust_State_HammerDrop(void)
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     RSDK.ObjectTileGrip(entity, entity->collisionLayers, entity->collisionMode, entity->collisionPlane, 0, 0, 8);
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void Dust_State_GlideSlide(void)
@@ -113,7 +113,7 @@ void Dust_State_Spindash(void)
         entity->direction = player->direction;
         entity->drawOrder = player->drawOrder;
         entity->rotation  = player->rotation;
-        RSDK.ProcessAnimation(&entity->data);
+        RSDK.ProcessAnimation(&entity->animator);
         if (player->state != Player_State_Spindash)
             RSDK.ResetEntityPtr(entity, 0, 0);
     }
@@ -121,11 +121,11 @@ void Dust_State_Spindash(void)
 void Dust_State_EggLoco(void)
 {
     RSDK_THIS(Dust);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->velocity.x -= 0x2000;
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 

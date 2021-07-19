@@ -47,7 +47,7 @@ typedef struct {
     int field_A8;
     int field_AC;
     int blendAmount;
-    Animator animData;
+    Animator animator;
     Hitbox hitbox;
 } EntityDDWrecker;
 

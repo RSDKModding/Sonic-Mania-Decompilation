@@ -5,10 +5,10 @@ ObjectExplosion *Explosion;
 void Explosion_Update(void)
 {
     RSDK_THIS(Explosion);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         destroyEntity(entity);
 }
 
@@ -25,7 +25,7 @@ void Explosion_StaticUpdate(void)
 void Explosion_Draw(void)
 {
     RSDK_THIS(Explosion);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Explosion_Create(void* data)
@@ -37,7 +37,7 @@ void Explosion_Create(void* data)
         entity->drawOrder = Zone->drawOrderHigh;
     else
         entity->drawOrder = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(Explosion->spriteIndex, voidToInt(data), &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(Explosion->spriteIndex, voidToInt(data), &entity->animator, true, 0);
 }
 
 void Explosion_StageLoad(void)

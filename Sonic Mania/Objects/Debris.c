@@ -6,7 +6,7 @@ void Debris_Update(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
     if (entity->cooldown <= 0) {
-        RSDK.ProcessAnimation(&entity->data);
+        RSDK.ProcessAnimation(&entity->animator);
         StateMachine_Run(entity->state);
 
         if (entity->drawFX & FX_ROTATE)
@@ -41,7 +41,7 @@ void Debris_StaticUpdate(void)
 void Debris_Draw(void)
 {
     EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Debris_Create(void* data)
@@ -128,7 +128,7 @@ void Debris_Unknkown1(int spriteIndex, int *a2, int animationID) {
         //yvel
         for (int *entry = a2 + 1; cnt > 0; entity->drawFX = FX_FLIP) {
             EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x, entity->position.y);
-            RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->data, true, entry[0]);
+            RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->animator, true, entry[0]);
             debris->direction = entry[1];
             debris->velocity.x         = entry[2];
             debris->velocity.y         = entry[3];
@@ -159,7 +159,7 @@ void Debris_Unknkown2(int spriteIndex, int *a2)
         for (int *entry = a2 + 1; cnt > 0; entity->drawFX = FX_FLIP) {
             EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x + entry[4],
                                                                     entity->position.y + entry[5]);
-            RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->data, true, entry[0]);
+            RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];

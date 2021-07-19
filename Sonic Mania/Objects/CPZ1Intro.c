@@ -67,7 +67,7 @@ void CPZ1Intro_Particle_CB(Entity *d)
 {
     EntityDebris *debris = (EntityDebris *)d;
     debris->velocity.y += RSDK.Rand(-0x28000, -0x20000);
-    RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 1, &debris->data, true, 0);
+    RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 1, &debris->animator, true, 0);
 }
 
 void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int val)
@@ -249,7 +249,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
         debris->drawOrder     = Zone->playerDrawHigh;
         debris->state         = Debris_State_Fall;
         debris->gravity       = 0x3800;
-        RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 0, &debris->data, true, 0);
+        RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 0, &debris->animator, true, 0);
         CPZ1Intro->debris = (Entity *)debris;
     }
 

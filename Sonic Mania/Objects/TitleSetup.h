@@ -22,7 +22,7 @@ typedef struct {
     int timer;
     Vector2 drawPos;
     int touched;
-    Animator data;
+    Animator animator;
 } EntityTitleSetup;
 
 // Object Struct

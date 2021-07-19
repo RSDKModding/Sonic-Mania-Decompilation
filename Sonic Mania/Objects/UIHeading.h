@@ -17,7 +17,7 @@ typedef struct {
     Vector2 startPos;
     int headingID;
     Animator data2;
-    Animator data;
+    Animator animator;
     ushort spriteIndex;
 } EntityUIHeading;
 

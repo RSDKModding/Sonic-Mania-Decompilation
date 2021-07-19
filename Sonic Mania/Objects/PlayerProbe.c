@@ -49,11 +49,11 @@ void PlayerProbe_StaticUpdate(void) {}
 void PlayerProbe_Create(void *data)
 {
     RSDK_THIS(PlayerProbe);
-    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator, true, 0);
 
     entity->drawFX |= FX_FLIP;
     entity->active       = ACTIVE_BOUNDS;
-    entity->data.frameID = 4;
+    entity->animator.frameID = 4;
 
     int x = 0;
     if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
@@ -115,7 +115,7 @@ void PlayerProbe_Draw(void)
     drawPos.y -= entity->size << 19;
     Zone_Unknown3((Entity *)entity, &drawPos, entity->angle);
     for (int i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->data, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }

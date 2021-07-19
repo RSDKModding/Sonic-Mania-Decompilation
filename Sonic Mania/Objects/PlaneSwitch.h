@@ -16,7 +16,7 @@ typedef struct {
     int size;
     bool32 onPath;
     int negAngle;
-    Animator data;
+    Animator animator;
 } EntityPlaneSwitch;
 
 // Object Struct

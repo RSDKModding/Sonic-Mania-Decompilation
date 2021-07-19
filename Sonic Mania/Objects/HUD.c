@@ -492,7 +492,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 }
     
 #if RETRO_GAMEVER != VER_100
-void HUD_GetKeyFrame(Animator *data, int buttonID)
+void HUD_GetKeyFrame(Animator *animator, int buttonID)
 {
     int val = 0; // UIButtonPrompt_Unknown1();
 #if RETRO_USE_PLUS
@@ -502,7 +502,7 @@ void HUD_GetKeyFrame(Animator *data, int buttonID)
 #endif
         buttonID ^= 1u;
     if (val != 1 && (val <= 8 || val > 12)) {
-        RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, data, true, buttonID);
+        RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, animator, true, buttonID);
     }
     else {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -526,7 +526,7 @@ void HUD_GetKeyFrame(Animator *data, int buttonID)
         }
 
         int frame = 0; // UIButtonPrompt_Unknown2(map);
-        RSDK.SetSpriteAnimation(HUD->superButtonMappings, 1, data, true, frame);
+        RSDK.SetSpriteAnimation(HUD->superButtonMappings, 1, animator, true, frame);
     }
 }
 void HUD_GetSuperFrames(void)

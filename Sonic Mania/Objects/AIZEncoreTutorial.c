@@ -121,7 +121,7 @@ void AIZEncoreTutorial_Unknown4(void)
             debris->direction    = i & 3;
             debris->scale.x = debris->scale.y = RSDK.Rand(0x200, 0x400);
             debris->drawOrder                 = Zone->drawOrderHigh;
-            RSDK.SetSpriteAnimation(AIZEncoreTutorial->dustFrames, 0, &debris->data, true, RSDK.Rand(0, 4));
+            RSDK.SetSpriteAnimation(AIZEncoreTutorial->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
         }
         destroyEntity(entity);
     }

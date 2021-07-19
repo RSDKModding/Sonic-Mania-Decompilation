@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    Animator data;
+    Animator animator;
     byte aniID;
     byte attribute;
     Vector2 parallaxFactor;

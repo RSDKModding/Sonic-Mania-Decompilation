@@ -726,8 +726,8 @@ void ProcessAirCollision()
 
     if (abs(collisionEntity->velocity.x) > 0x10000 || collisionEntity->velocity.y < 0) {
         movingUp         = 1;
-        sensors[4].pos.y = collisionEntity->position.y + ((collisionOuter_Top - 1) << 16);
-        sensors[5].pos.y = collisionEntity->position.y + ((collisionOuter_Top - 1) << 16);
+        sensors[4].pos.y = (collisionOuter_Top << 16) + collisionEntity->position.y - (1 << 16);
+        sensors[5].pos.y = (collisionOuter_Top << 16) + collisionEntity->position.y - (1 << 16);
     }
 
     int cnt   = (abs(collisionEntity->velocity.x) <= abs(collisionEntity->velocity.y) ? ((abs(collisionEntity->velocity.y) >> collisionMaskAir) + 1)
@@ -925,7 +925,7 @@ void ProcessAirCollision()
         }
         sensorAngle &= 0xFF;
 
-        if (sensorAngle > 0x40 && sensorAngle < 0x62) {
+        if (sensorAngle < 0x62) {
             if (collisionEntity->velocity.y < -abs(collisionEntity->velocity.x)) {
                 collisionEntity->onGround      = true;
                 collisionEntity->angle         = sensorAngle;
@@ -1309,7 +1309,7 @@ void ProcessPathGrip()
             }
             else {
                 if (collisionEntity->groundVel > 0)
-                    collisionEntity->position.y = sensors[3].pos.y - -(collisionOuter_Right << 16) + (1 << 16);
+                    collisionEntity->position.y = sensors[3].pos.y + ((collisionOuter_Right << 16) + (1 << 16));
 
                 if (collisionEntity->groundVel < 0)
                     collisionEntity->position.y = sensors[3].pos.y - (collisionOuter_Left << 16);

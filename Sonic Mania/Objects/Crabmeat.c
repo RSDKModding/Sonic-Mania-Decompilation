@@ -15,7 +15,7 @@ void Crabmeat_StaticUpdate(void) {}
 void Crabmeat_Draw(void)
 {
     RSDK_THIS(Crabmeat);
-    RSDK.DrawSprite(&entity->data, 0, 0);
+    RSDK.DrawSprite(&entity->animator, 0, 0);
 }
 
 void Crabmeat_Create(void *data)
@@ -29,7 +29,7 @@ void Crabmeat_Create(void *data)
         entity->active        = ACTIVE_NORMAL;
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;
-        RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 3, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 3, &entity->animator, true, 0);
         entity->state = Crabmeat_State_Projectile;
     }
     else {
@@ -40,7 +40,7 @@ void Crabmeat_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &entity->animator, true, 0);
         entity->state = Crabmeat_Unknown1;
     }
 }
@@ -81,15 +81,15 @@ void Crabmeat_State_Main(void)
         || (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, ((entity->velocity.x >> 31) & 0xFFE40000) + 0xE0000, 0xF0000, 8))) {
         entity->timer = 0;
         if (entity->dword60 == 0)
-            RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &entity->animator, true, 0);
         else
-            RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 2, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 2, &entity->animator, true, 0);
         entity->state = Crabmeat_State_Shoot;
     }
     else {
         entity->timer++;
     }
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     Crabmeat_CheckPlayerCollisions();
     Crabmeat_CheckOnScreen();
 }
@@ -104,7 +104,7 @@ void Crabmeat_State_Projectile(void)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
-        RSDK.ProcessAnimation(&entity->data);
+        RSDK.ProcessAnimation(&entity->animator);
 
         foreach_active(Player, player)
         {
@@ -121,11 +121,11 @@ void Crabmeat_State_Shoot(void)
     if (entity->timer >= 60) {
         switch (entity->dword60) {
             default:
-                if (entity->data.frameID != entity->data.frameCount - 1)
+                if (entity->animator.frameID != entity->animator.frameCount - 1)
                     break;
             case 0:
                 entity->dword60 = 1;
-                RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 1, &entity->data, true, 0);
+                RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 1, &entity->animator, true, 0);
                 entity->direction ^= 1u;
                 entity->velocity.x = -entity->velocity.x;
                 entity->timer      = 0;
@@ -149,7 +149,7 @@ void Crabmeat_State_Shoot(void)
         entity->timer++;
     }
 
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     Crabmeat_CheckPlayerCollisions();
     Crabmeat_CheckOnScreen();
 }
@@ -160,7 +160,7 @@ void Crabmeat_Unknown1(void)
 
     entity->active     = ACTIVE_NORMAL;
     entity->velocity.x = -0x8000;
-    RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 1, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 1, &entity->animator, true, 0);
     entity->state = Crabmeat_State_Main;
     Crabmeat_State_Main();
 }

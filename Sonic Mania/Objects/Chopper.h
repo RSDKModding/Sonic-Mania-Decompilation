@@ -22,7 +22,7 @@ typedef struct {
     bool32 charge;
     Vector2 startPos;
     byte startDir;
-    Animator data;
+    Animator animator;
 } EntityChopper;
 
 // Object Struct

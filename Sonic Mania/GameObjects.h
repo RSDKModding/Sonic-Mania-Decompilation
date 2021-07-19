@@ -199,9 +199,9 @@ typedef struct {
     void (*DrawCircleOutline)(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawQuad)(Vector2 *verticies, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
     void (*DrawBlendedQuad)(Vector2 *verticies, colour *vertColours, int vertCount, int alpha, InkEffects inkEffect);
-    void (*DrawSprite)(Animator *data, Vector2 *position, bool32 screenRelative);
+    void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(ushort sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, Alignments align, int spacing, int a8,
+    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, Alignments align, int spacing, int a8,
                      Vector2 *charPos, bool32 ScreenRelative);
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
@@ -214,21 +214,21 @@ typedef struct {
     void (*SetDiffuseIntensity)(ushort index, int x, int y, int z);
     void (*SetSpecularIntensity)(ushort index, int x, int y, int z);
     void (*AddModelTo3DScene)(ushort modelIndex, ushort sceneIndex, byte type, Matrix *mat1, Matrix *mat2, colour colour);
-    void (*SetModelAnimation)(ushort modelAnim, Animator *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID);
-    void (*AddMeshFrameTo3DScene)(ushort modelID, ushort sceneID, Animator *data, byte drawMode, Matrix *mat1, Matrix *mat, colour colour);
+    void (*SetModelAnimation)(ushort modelAnim, Animator *animator, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID);
+    void (*AddMeshFrameTo3DScene)(ushort modelID, ushort sceneID, Animator *animator, byte drawMode, Matrix *mat1, Matrix *mat, colour colour);
     void (*Draw3DScene)(ushort index);
     ushort (*LoadSpriteAnimation)(const char *path, Scopes scope);
     ushort (*CreateSpriteAnimation)(const char *filename, uint frameCount, uint animCount, Scopes scope);
-    void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, short frameID);
+    void (*SetSpriteAnimation)(ushort spriteIndex, ushort animationID, Animator *animator, bool32 forceApply, short frameID);
     void (*EditSpriteAnimation)(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed,
                                 byte loopIndex, byte rotationFlag);
     void (*SetSpriteString)(ushort spriteIndex, ushort animID, TextInfo *info);
     void *(*GetSpriteAnimation)(ushort sprIndex, const char *name);
     SpriteFrame *(*GetFrame)(ushort sprIndex, ushort anim, int frame);
-    Hitbox *(*GetHitbox)(Animator *data, byte hitboxID);
-    short (*GetFrameID)(Animator *data);
+    Hitbox *(*GetHitbox)(Animator *animator, byte hitboxID);
+    short (*GetFrameID)(Animator *animator);
     int (*GetStringWidth)(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing);
-    void (*ProcessAnimation)(Animator *data);
+    void (*ProcessAnimation)(Animator *animator);
     int (*GetSceneLayerID)(const char *name);
     TileLayer *(*GetSceneLayer)(int layerID);
     void (*GetLayerSize)(ushort layer, Vector2 *size, bool32 pixelSize);

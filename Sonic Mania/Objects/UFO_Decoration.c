@@ -15,7 +15,7 @@ void UFO_Decoration_Update(void)
     }
 
     if (entity->type > 5)
-        RSDK.ProcessAnimation(&entity->data);
+        RSDK.ProcessAnimation(&entity->animator);
 }
 
 void UFO_Decoration_LateUpdate(void)
@@ -57,7 +57,7 @@ void UFO_Decoration_Draw(void)
             RSDK.AddModelTo3DScene(UFO_Decoration->modelIndices[entity->type], UFO_Decoration->sceneIndex, UFO_Decoration->drawType, &entity->matrix2,
                                    &entity->matrix3, 0xFFFFFF);
         else
-            RSDK.AddMeshFrameTo3DScene(UFO_Decoration->modelIndices[entity->type], UFO_Decoration->sceneIndex, &entity->data,
+            RSDK.AddMeshFrameTo3DScene(UFO_Decoration->modelIndices[entity->type], UFO_Decoration->sceneIndex, &entity->animator,
                                        UFO_Decoration->drawType, &entity->matrix2, &entity->matrix3, 0xFFFFFF);
         RSDK.Draw3DScene(UFO_Decoration->sceneIndex);
     }
@@ -76,7 +76,7 @@ void UFO_Decoration_Create(void *data)
         entity->updateRange.y = 0x4000000;
         if (entity->type == 6)
             entity->height = 0x600000;
-        RSDK.SetModelAnimation(UFO_Decoration->modelIndices[entity->type], &entity->data, 96, 0, true, 0);
+        RSDK.SetModelAnimation(UFO_Decoration->modelIndices[entity->type], &entity->animator, 96, 0, true, 0);
     }
 }
 

@@ -26,10 +26,10 @@ void GameOver_Draw(void)
     }
 
     if (globals->gameMode != MODE_COMPETITION || RSDK_sceneInfo->currentScreenID == entity->playerID) {
-        entity->data.frameID = 0;
-        for (entity->data.frameID = 0; entity->data.frameID < 8; ++entity->data.frameID) {
-            entity->rotation = entity->letterRotations[entity->data.frameID];
-            RSDK.DrawSprite(&entity->data, &entity->letterPositions[entity->data.frameID], true);
+        entity->animator.frameID = 0;
+        for (entity->animator.frameID = 0; entity->animator.frameID < 8; ++entity->animator.frameID) {
+            entity->rotation = entity->letterRotations[entity->animator.frameID];
+            RSDK.DrawSprite(&entity->animator, &entity->letterPositions[entity->animator.frameID], true);
         }
     }
 }
@@ -42,9 +42,9 @@ void GameOver_Create(void *data)
         entity->visible = true;
         entity->drawFX  = FX_ROTATE | FX_SCALE;
         if (data)
-            RSDK.SetSpriteAnimation(GameOver->spriteIndex, 7, &entity->data, true, 1);
+            RSDK.SetSpriteAnimation(GameOver->spriteIndex, 7, &entity->animator, true, 1);
         else
-            RSDK.SetSpriteAnimation(GameOver->spriteIndex, 6, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(GameOver->spriteIndex, 6, &entity->animator, true, 0);
 
         ScreenInfo *screen       = RSDK_screens;
         entity->unknownPos1[0].x = -0x480000;
@@ -327,7 +327,7 @@ void GameOver_Unknown5(void)
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();
         }
-        else if (entity->data.animationID != 6) {
+        else if (entity->animator.animationID != 6) {
             StarPost->storedMS      = 0;
             StarPost->storedSeconds = 0;
             StarPost->storedMinutes = 0;

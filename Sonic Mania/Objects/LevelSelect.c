@@ -278,7 +278,7 @@ void LevelSelect_State_SetupEntities(void)
     foreach_all(UIPicture, picture) {
         if (picture->listID == 1) {
             entity->zoneIcon      = (Entity *)picture;
-            picture->data.frameID   = entity->playerID;
+            picture->animator.frameID   = entity->playerID;
         }
         else if (picture->listID == 3) {
             if (picture->frameID)
@@ -303,22 +303,22 @@ void LevelSelect_ManagePlayerIcon(void)
         case 2:
             if (entity->player2ID == 2)
                 entity->playerID = 3;
-            player1->data.frameID = entity->playerID;
+            player1->animator.frameID = entity->playerID;
             break;
         case 3:
-            player1->data.frameID = entity->playerID;
+            player1->animator.frameID = entity->playerID;
             break;
 #if RETRO_USE_PLUS
         case 4:
         case 5:
             if (!API.CheckDLC(DLC_PLUS))
                 entity->playerID = 1;
-            player1->data.frameID = entity->playerID;
+            player1->animator.frameID = entity->playerID;
             break;
 #endif
         default:
             entity->playerID          = 1;
-            player1->data.frameID = 1;
+            player1->animator.frameID = 1;
             break;
     }
 
@@ -328,13 +328,13 @@ void LevelSelect_ManagePlayerIcon(void)
     else {
         if (entity->player2ID != 2) {
             entity->player2ID     = 0;
-            player2->data.frameID = 0;
+            player2->animator.frameID = 0;
         }
         else {
-            player2->data.frameID = entity->player2ID;
+            player2->animator.frameID = entity->player2ID;
             if (entity->playerID != 1) {
                 entity->player2ID     = 0;
-                player2->data.frameID = 0;
+                player2->animator.frameID = 0;
             }
         }
     }
@@ -486,9 +486,9 @@ void LevelSelect_Unknown2(void)
 
     EntityUIPicture *zoneIcon = (EntityUIPicture*)entity->zoneIcon;
     if (entity->labelID >= entity->labelCount - 1)
-        RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 2, &zoneIcon->data, true, entity->playerID);
+        RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 2, &zoneIcon->animator, true, entity->playerID);
     else
-        RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 1, &zoneIcon->data, true, ((EntityUIText*)entity->labelPtrs[entity->labelID])->data1);
+        RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 1, &zoneIcon->animator, true, ((EntityUIText*)entity->labelPtrs[entity->labelID])->data1);
 }
 
 void LevelSelect_Unknown3(void)

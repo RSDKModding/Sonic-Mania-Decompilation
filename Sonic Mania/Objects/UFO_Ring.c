@@ -29,7 +29,7 @@ void UFO_Ring_Draw(void)
     RSDK_THIS(UFO_Ring);
 
     if (entity->depth >= 256) {
-        entity->direction = entity->data.frameID > 8;
+        entity->direction = entity->animator.frameID > 8;
         Vector2 drawPos;
         drawPos.x = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth) << 16;
         drawPos.y = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth) << 16;
@@ -37,8 +37,8 @@ void UFO_Ring_Draw(void)
         entity->scale.x = 0x1000000 / entity->depth;
         entity->scale.y = 0x1000000 / entity->depth;
         if (entity->state == UFO_Ring_Unknown2)
-            entity->data.frameID = UFO_Setup->ringFrame;
-        RSDK.DrawSprite(&entity->data, &drawPos, true);
+            entity->animator.frameID = UFO_Setup->ringFrame;
+        RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
 }
 
@@ -56,7 +56,7 @@ void UFO_Ring_Create(void *data)
             entity->height = 12;
         entity->height <<= 16;
         entity->state = UFO_Ring_Unknown2;
-        RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 1, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 1, &entity->animator, true, 0);
     }
 }
 
@@ -101,7 +101,7 @@ void UFO_Ring_LoseRings(EntityUFO_Player *player)
         ring->field_64            = RSDK.Rand(0x40000, 0x60000);
         ring->inkEffect           = 2;
         ring->alpha               = 0x200;
-        ring->data.animationSpeed = 0x100;
+        ring->animator.animationSpeed = 0x100;
         ring->state               = UFO_Ring_Unknown4;
     }
 }
@@ -117,7 +117,7 @@ void UFO_Ring_Unknown2(void)
 
         int pr = UFO_Player->maxSpeed >> 9;
         if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + radius < pr) {
-            RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 2, &entity->data, true, 4);
+            RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 2, &entity->animator, true, 4);
             ++entity->drawOrder;
             entity->state = UFO_Ring_Unknown3;
             UFO_Ring_PlayRingSFX();
@@ -128,16 +128,16 @@ void UFO_Ring_Unknown2(void)
 void UFO_Ring_Unknown3(void)
 {
     RSDK_THIS(UFO_Ring);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
 void UFO_Ring_Unknown4(void)
 {
     RSDK_THIS(UFO_Ring);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->field_64 -= 0x3800;
@@ -148,8 +148,8 @@ void UFO_Ring_Unknown4(void)
         entity->field_64 = -(entity->field_64 >> 1);
     }
 
-    if (entity->data.animationSpeed > 0x40)
-        entity->data.animationSpeed--;
+    if (entity->animator.animationSpeed > 0x40)
+        entity->animator.animationSpeed--;
 
     entity->alpha -= 4;
     if (!entity->alpha)

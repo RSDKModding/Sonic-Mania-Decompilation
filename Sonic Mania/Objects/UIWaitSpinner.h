@@ -17,7 +17,7 @@ typedef struct {
     StateMachine(state);
     int timer;
     bool32 flag;
-    Animator data;
+    Animator animator;
 } EntityUIWaitSpinner;
 
 // Object Struct

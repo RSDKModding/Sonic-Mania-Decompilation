@@ -35,10 +35,10 @@ void Ring_Create(void *data)
 
     if (data) {
         entity->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &entity->animData, true, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &entity->animator, true, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->type, &entity->animData, true, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->type, &entity->animator, true, 0);
 
         entity->amplitude.x >>= 10;
         entity->amplitude.y >>= 10;
@@ -104,26 +104,26 @@ void Ring_DebugDraw(void)
 void Ring_StateDraw_Normal(void)
 {
     RSDK_THIS(Ring);
-    entity->direction  = entity->animData.frameID > 8;
-    RSDK.DrawSprite(&entity->animData, NULL, 0);
+    entity->direction  = entity->animator.frameID > 8;
+    RSDK.DrawSprite(&entity->animator, NULL, 0);
 }
 void Ring_StateDraw_Oscillating(void)
 {
     RSDK_THIS(Ring);
-    entity->direction  = entity->animData.frameID > 8;
-    RSDK.DrawSprite(&entity->animData, &entity->offset, 0);
+    entity->direction  = entity->animator.frameID > 8;
+    RSDK.DrawSprite(&entity->animator, &entity->offset, 0);
 }
 void Ring_StateDraw_Sparkle(void)
 {
     RSDK_THIS(Ring);
     if (RSDK_sceneInfo->entity->alpha == 0xE0) {
-        entity->animData.frameID += 16;
+        entity->animator.frameID += 16;
         entity->inkEffect = INK_ADD;
-        RSDK.DrawSprite(&entity->animData, NULL, 0);
+        RSDK.DrawSprite(&entity->animator, NULL, 0);
         entity->inkEffect = INK_NONE;
-        entity->animData.frameID -= 16;
+        entity->animator.frameID -= 16;
     }
-    RSDK.DrawSprite(&entity->animData, NULL, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, 0);
 }
 void Ring_State_Attract(void)
 {
@@ -163,12 +163,12 @@ void Ring_State_Attract(void)
     }
     else {
         entity->state                   = Ring_State_Bounce;
-        entity->animData.animationSpeed = 0x80;
+        entity->animator.animationSpeed = 0x80;
         entity->alpha                   = 0x100;
         entity->inkEffect               = INK_ALPHA;
     }
     Ring_Collect();
-    entity->animData.frameID = Zone->ringFrame;
+    entity->animator.frameID = Zone->ringFrame;
 }
 void Ring_State_Big(void)
 {
@@ -176,7 +176,7 @@ void Ring_State_Big(void)
     entity->position.x += entity->velocity.x;
     entity->velocity.y += 0x1200;
     entity->position.y += entity->velocity.y;
-    entity->angle += entity->animData.animationSpeed >> 6;
+    entity->angle += entity->animator.animationSpeed >> 6;
     if (entity->timer <= 0xF0) {
         entity->scale.x = (-RSDK.Sin256(entity->angle) >> 1) + 0x180;
         entity->scale.y = (RSDK.Sin256(entity->angle) >> 1) + 0x180;
@@ -202,22 +202,22 @@ void Ring_State_Big(void)
         sparkle->stateDraw = Ring_StateDraw_Sparkle;
         sparkle->active  = 2;
         sparkle->visible   = 0;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &sparkle->animData, true, 0);
-        int frameCount = sparkle->animData.frameCount;
-        if (sparkle->animData.animationID == 2) {
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &sparkle->animator, true, 0);
+        int frameCount = sparkle->animator.frameCount;
+        if (sparkle->animator.animationID == 2) {
             sparkle->alpha = 0xE0;
             frameCount >>= 1;
         }
         sparkle->maxFrameCount           = frameCount - 1;
-        sparkle->animData.animationSpeed = 4;
+        sparkle->animator.animationSpeed = 4;
         entity->sparkleType              = (entity->sparkleType + 1) % 3;
     }
 
-    RSDK.ProcessAnimation(&entity->animData);
+    RSDK.ProcessAnimation(&entity->animator);
 
     if (!(++entity->timer & 7)) {
-        if (entity->animData.animationSpeed > 0x80) {
-            entity->animData.animationSpeed -= 8;
+        if (entity->animator.animationSpeed > 0x80) {
+            entity->animator.animationSpeed -= 8;
         }
     }
     if (entity->timer > 71)
@@ -243,11 +243,11 @@ void Ring_State_Bounce(void)
     else {
         Ring_CheckObjectCollisions(0x80000, 0x80000);
     }
-    RSDK.ProcessAnimation(&entity->animData);
+    RSDK.ProcessAnimation(&entity->animator);
 
     if (!(++entity->timer & 7)) {
-        if (entity->animData.animationSpeed > 0x40)
-            entity->animData.animationSpeed -= 0x10;
+        if (entity->animator.animationSpeed > 0x40)
+            entity->animator.animationSpeed -= 0x10;
     }
 
     if (entity->timer > 0x3F)
@@ -265,7 +265,7 @@ void Ring_State_Circular(void)
     entity->offset.y   = entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer + 4 * entity->angle) + entity->position.y;
     Ring_Collect();
 
-    entity->animData.frameID = Zone->ringFrame;
+    entity->animator.frameID = Zone->ringFrame;
 }
 void Ring_State_Grow(void)
 {
@@ -274,7 +274,7 @@ void Ring_State_Grow(void)
     entity->velocity.y += 0x1800;
     entity->position.y += entity->velocity.y;
 
-    RSDK.ProcessAnimation(&entity->animData);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->scale.x += 16;
     entity->scale.y += 16;
     if (++entity->timer > 64)
@@ -287,14 +287,14 @@ void Ring_State_Move(void)
     entity->offset.y   = entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer) + entity->position.y;
     Ring_Collect();
 
-    entity->animData.frameID = Zone->ringFrame;
+    entity->animator.frameID = Zone->ringFrame;
 }
 void Ring_State_Normal(void)
 {
     RSDK_THIS(Ring);
     Ring_Collect();
 
-    entity->animData.frameID = Zone->ringFrame;
+    entity->animator.frameID = Zone->ringFrame;
 }
 void Ring_State_Path(void)
 {
@@ -311,7 +311,7 @@ void Ring_State_Path(void)
     }
     Ring_Collect();
 
-    entity->animData.frameID = Zone->ringFrame;
+    entity->animator.frameID = Zone->ringFrame;
 }
 void Ring_State_Sparkle(void)
 {
@@ -321,9 +321,9 @@ void Ring_State_Sparkle(void)
 
     if (entity->timer <= 0) {
         entity->visible = true;
-        RSDK.ProcessAnimation(&entity->animData);
+        RSDK.ProcessAnimation(&entity->animator);
 
-        if (entity->animData.frameID >= entity->maxFrameCount)
+        if (entity->animator.frameID >= entity->maxFrameCount)
             RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
@@ -357,7 +357,7 @@ void Ring_State_Track(void)
     }
     Ring_Collect();
 
-    entity->animData.frameID = Zone->ringFrame;
+    entity->animator.frameID = Zone->ringFrame;
 }
 void Ring_CheckObjectCollisions(int offsetX, int offsetY)
 {
@@ -523,14 +523,14 @@ void Ring_Collect(void)
                         sparkle->drawOrder = 1;
                     else
                         sparkle->drawOrder = Zone->drawOrderHigh;
-                    RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &sparkle->animData, true, 0);
-                    int frameCount = sparkle->animData.frameCount;
-                    if (sparkle->animData.animationID == 2) {
+                    RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &sparkle->animator, true, 0);
+                    int frameCount = sparkle->animator.frameCount;
+                    if (sparkle->animator.animationID == 2) {
                         sparkle->alpha = 0xE0;
                         frameCount >>= 1;
                     }
                     sparkle->maxFrameCount           = frameCount - 1;
-                    sparkle->animData.animationSpeed = RSDK.Rand(6, 8);
+                    sparkle->animator.animationSpeed = RSDK.Rand(6, 8);
                     sparkle->timer                   = 2 * i++;
                 }
                 RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
@@ -591,9 +591,9 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
             EntityRing *ringGrow = (EntityRing *)RSDK.CreateEntity(Ring->objectID, entity, entity->position.x, entity->position.y);
             ringGrow->velocity.x = radius * RSDK.Cos256(angle);
             ringGrow->velocity.y = radius * RSDK.Sin256(angle);
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animData, true, 0);
+            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
             angle += 16;
-            ringGrow->animData.animationSpeed = 0x200;
+            ringGrow->animator.animationSpeed = 0x200;
             ringGrow->scale.x                 = scale;
             ringGrow->scale.y                 = scale;
             ringGrow->drawFX                  = 5;
@@ -613,9 +613,9 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
             EntityRing *ringGrow = (EntityRing *)RSDK.CreateEntity(Ring->objectID, entity, entity->position.x, entity->position.y);
             ringGrow->velocity.x = (radius + 0x200) * RSDK.Cos256(angle);
             ringGrow->velocity.y = (radius + 0x200) * RSDK.Sin256(angle);
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animData, true, 0);
+            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
             angle += 16;
-            ringGrow->animData.animationSpeed = 0x200;
+            ringGrow->animator.animationSpeed = 0x200;
             ringGrow->scale.x                 = scale + 0x40;
             ringGrow->scale.y                 = scale + 0x40;
             ringGrow->drawFX                  = 5;
@@ -635,9 +635,9 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
             EntityRing *ringGrow = (EntityRing *)RSDK.CreateEntity(Ring->objectID, entity, entity->position.x, entity->position.y);
             ringGrow->velocity.x = (radius + 0x400) * RSDK.Cos256(angle);
             ringGrow->velocity.y = (radius + 0x400) * RSDK.Sin256(angle);
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animData, true, 0);
+            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
             angle += 16;
-            ringGrow->animData.animationSpeed = 0x200;
+            ringGrow->animator.animationSpeed = 0x200;
             ringGrow->scale.x                 = scale + 0x80;
             ringGrow->scale.y                 = scale + 0x80;
             ringGrow->drawFX                  = 5;

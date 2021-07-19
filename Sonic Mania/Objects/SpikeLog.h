@@ -18,7 +18,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     byte frame;
-    Animator data;
+    Animator animator;
 } EntitySpikeLog;
 
 // Object Struct

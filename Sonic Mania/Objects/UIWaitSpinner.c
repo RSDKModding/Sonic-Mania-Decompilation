@@ -25,7 +25,7 @@ void UIWaitSpinner_Update(void)
         entity->alpha = 16 * entity->timer;
     else
         entity->alpha = 255;
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 }
 
 void UIWaitSpinner_LateUpdate(void) {}
@@ -40,7 +40,7 @@ void UIWaitSpinner_Draw(void)
     drawPos.y = 0;
     drawPos.x = (RSDK_screens->width - 24) << 16;
     drawPos.y = (RSDK_screens->height - 24) << 16;
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 }
 
 void UIWaitSpinner_Create(void *data)
@@ -49,7 +49,7 @@ void UIWaitSpinner_Create(void *data)
     entity->active    = ACTIVE_ALWAYS;
     entity->visible   = 1;
     entity->drawOrder = 15;
-    RSDK.SetSpriteAnimation(UIWaitSpinner->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(UIWaitSpinner->spriteIndex, 0, &entity->animator, true, 0);
     entity->state = UIWaitSpinner_State_Wait;
 }
 

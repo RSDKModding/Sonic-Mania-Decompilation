@@ -6,7 +6,7 @@ void UFO_Sphere_Update(void)
 {
     RSDK_THIS(UFO_Sphere);
     StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 }
 
 void UFO_Sphere_LateUpdate(void)
@@ -32,13 +32,13 @@ void UFO_Sphere_Draw(void)
         if (entity->depth < 0x100)
             return;
 
-        entity->direction = entity->data.frameID > 8;
+        entity->direction = entity->animator.frameID > 8;
         entity->drawPos.x = (RSDK_screens->centerX + (entity->worldPos.x << 8) / entity->depth) << 16;
         entity->drawPos.y = (RSDK_screens->centerY - (entity->worldPos.y << 8) / entity->depth) << 16;
         entity->scale.x   = entity->dword9C / entity->depth;
         entity->scale.y   = entity->dword9C / entity->depth;
     }
-    RSDK.DrawSprite(&entity->data, &entity->drawPos, true);
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, true);
 }
 
 void UFO_Sphere_Create(void *data)
@@ -79,7 +79,7 @@ void UFO_Sphere_Create(void *data)
                 RSDK.MatrixMultiply(&entity->matrix, &matrix, &entity->matrix);
                 break;
         }
-        RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, entity->type, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, entity->type, &entity->animator, true, 0);
     }
 }
 
@@ -110,7 +110,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
             }
 
             if (UFO_Setup->machLevel == 2) {
-                entity->data.animationSpeed = 1;
+                entity->animator.animationSpeed = 1;
             }
             break;
         }
@@ -131,7 +131,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
                         if (UFO_Setup->rings > 0)
                             RSDK.PlaySFX(UFO_Player->sfx_LoseRings, 0, 255);
                         UFO_Ring_LoseRings(player);
-                        RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, 4, &entity->data, true, 0);
+                        RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, 4, &entity->animator, true, 0);
                         entity->dword9C = 0x1800000;
                         entity->state   = UFO_Sphere_Unknown5;
                         RSDK.PlaySFX(UFO_Sphere->sfx_LedgeBreak, 0, 255);
@@ -234,7 +234,7 @@ void UFO_Sphere_Unknown5(void)
 {
     RSDK_THIS(UFO_Sphere);
 
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 

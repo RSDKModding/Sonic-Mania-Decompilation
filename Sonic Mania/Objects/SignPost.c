@@ -232,14 +232,14 @@ void SignPost_SpawnSparkle(void)
         ring->stateDraw  = Ring_StateDraw_Sparkle;
         ring->active     = ACTIVE_NORMAL;
         ring->visible    = false;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &ring->animData, true, 0);
-        int cnt = ring->animData.frameCount;
-        if (ring->animData.animationID == 2) {
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &ring->animator, true, 0);
+        int cnt = ring->animator.frameCount;
+        if (ring->animator.animationID == 2) {
             ring->alpha = 224;
             cnt >>= 1;
         }
         ring->maxFrameCount           = cnt - 1;
-        ring->animData.animationSpeed = 6;
+        ring->animator.animationSpeed = 6;
         entity->sparkleType           = (entity->sparkleType + 1) % 3;
     }
 }
@@ -339,7 +339,7 @@ void SignPost_State_Fall(void)
                     EntityScoreBonus *scoreBonus =
                         (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, entity->position.x, entity->position.y);
                     scoreBonus->drawOrder    = Zone->drawOrderHigh;
-                    scoreBonus->data.frameID = 0;
+                    scoreBonus->animator.frameID = 0;
                     Player_GiveScore(player, 100);
                 }
             }

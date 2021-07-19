@@ -1667,7 +1667,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         EntityRing *ring              = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
         ring->velocity.x              = RSDK.Cos256(angle) << 9;
         ring->velocity.y              = RSDK.Sin256(angle) << 9;
-        ring->animData.animationSpeed = 0x200;
+        ring->animator.animationSpeed = 0x200;
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 0x100;
@@ -1688,7 +1688,7 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         EntityRing *ring              = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
         ring->velocity.x              = RSDK.Cos256(angle) << 10;
         ring->velocity.y              = RSDK.Sin256(angle) << 10;
-        ring->animData.animationSpeed = 512;
+        ring->animator.animationSpeed = 512;
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 256;
@@ -1708,9 +1708,9 @@ void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane)
         EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
         ring->velocity.x = RSDK.Cos256(angle) << 11;
         ring->velocity.y = RSDK.Sin256(angle) << 11;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ring->animData, true, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ring->animator, true, 0);
         ring->scale.x                 = 0x100;
-        ring->animData.animationSpeed = 0x200;
+        ring->animator.animationSpeed = 0x200;
         ring->scale.y                 = 0x100;
         ring->drawFX                  = FX_FLIP | FX_ROTATE | FX_SCALE;
         ring->state                   = Ring_State_Grow;
@@ -1737,14 +1737,14 @@ void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane)
 
     for (int i = 0; i < ringCnt; ++i) {
         EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ring->animData, true, 0);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ring->animator, true, 0);
         ring->type                    = 1;
         ring->velocity.x              = 0x300 * RSDK.Cos256(angle);
         ring->isPermanent             = true;
         ring->drawFX                  = 5;
         ring->alpha                   = 0x100;
         ring->velocity.y              = 0x300 * RSDK.Sin256(angle);
-        ring->animData.animationSpeed = 0x180;
+        ring->animator.animationSpeed = 0x180;
         ring->collisionPlane          = cPlane;
         ring->angle                   = i << 6;
         ring->ringAmount              = ringValue;
@@ -2447,7 +2447,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
             player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
         EntityScoreBonus *scoreBonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, entity->position.x, entity->position.y);
         scoreBonus->drawOrder        = Zone->drawOrderHigh;
-        scoreBonus->data.frameID     = player->scoreBonus;
+        scoreBonus->animator.frameID     = player->scoreBonus;
 
         switch (player->scoreBonus) {
             case 0: Player_GiveScore(player, 100); break;
@@ -3993,7 +3993,7 @@ void Player_State_Crouch(void)
 
         if (entity->jumpPress) {
             EntityDust *dust = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
-            RSDK.SetSpriteAnimation(Dust->spriteIndex, 1, &dust->data, true, 0);
+            RSDK.SetSpriteAnimation(Dust->spriteIndex, 1, &dust->animator, true, 0);
             dust->state     = Dust_State_Spindash;
             dust->drawOrder = entity->drawOrder;
             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SPINDASH, &entity->playerAnimator, true, 0);
@@ -4365,7 +4365,7 @@ void Player_State_DropDash(void)
             entity->camera->state = Camera_State_VLock;
         }
         EntityDust *dust = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
-        RSDK.SetSpriteAnimation(Dust->spriteIndex, 2, &dust->data, true, 0);
+        RSDK.SetSpriteAnimation(Dust->spriteIndex, 2, &dust->animator, true, 0);
         dust->state = Dust_State_DropDash;
         dust->position.y += RSDK.GetHitbox(&entity->playerAnimator, 0)->bottom << 16;
         dust->direction = entity->direction;
@@ -4426,7 +4426,7 @@ void Player_State_BubbleBounce(void)
             int id                                = RSDK.GetEntityID(entity);
             EntityShield *shield                  = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &shield->altData, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &shield->data, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &shield->animator, true, 0);
             shield->state = Shield_State_BubbleAlt;
             if (entity->playerAnimator.animationSpeed > 0xF0)
                 entity->playerAnimator.animationSpeed = 0xF0;
@@ -5183,7 +5183,7 @@ void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox)
     dust->collisionMode   = 0;
     dust->collisionLayers = entity->collisionLayers;
     dust->tileCollisions  = 1;
-    dust->data.frameDelay += 4 * (4 - (abs(speed) >> 15));
+    dust->animator.frameDelay += 4 * (4 - (abs(speed) >> 15));
     dust->velocity.x = dust->groundVel = entity->velocity.x * (Zone->field_154 != 0) + (speed >> entity->isChibi);
     if (entity->isChibi) {
         dust->drawFX |= FX_SCALE;
@@ -5960,7 +5960,7 @@ void Player_SonicJumpAbility(void)
                 int id               = RSDK.GetEntityID(entity);
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
                 if (entity->invincibleTimer) {
-                    if (shield->objectID != Shield->objectID || shield->data.animationID != ANI_JUMP) {
+                    if (shield->objectID != Shield->objectID || shield->animator.animationID != ANI_JUMP) {
                         if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
                             ++entity->jumpAbilityTimer;
                     }
@@ -5975,7 +5975,7 @@ void Player_SonicJumpAbility(void)
                                 RSDK.ResetEntityPtr(shield, Shield->objectID, entity);
                                 shield->inkEffect = INK_ADD;
                                 shield->alpha     = 256;
-                                RSDK.SetSpriteAnimation(Shield->spriteIndex, 10, &shield->data, true, 0);
+                                RSDK.SetSpriteAnimation(Shield->spriteIndex, 10, &shield->animator, true, 0);
                                 shield->state = Shield_State_Insta;
                             }
                         case SHIELD_BLUE:
@@ -5992,7 +5992,7 @@ void Player_SonicJumpAbility(void)
                             entity->nextGroundState = StateMachine_None;
                             entity->nextAirState    = StateMachine_None;
                             RSDK.SetSpriteAnimation(Shield->spriteIndex, 7, &shield->altData, true, 0);
-                            RSDK.SetSpriteAnimation(Shield->spriteIndex, 8, &shield->data, true, 0);
+                            RSDK.SetSpriteAnimation(Shield->spriteIndex, 8, &shield->animator, true, 0);
                             shield->state = Shield_State_Bubble;
                             RSDK.PlaySFX(Shield->sfx_BubbleBounce, 0, 255);
                             break;
@@ -6003,7 +6003,7 @@ void Player_SonicJumpAbility(void)
                             else
                                 entity->velocity.x = 0x80000;
                             entity->velocity.y = 0;
-                            RSDK.SetSpriteAnimation(Shield->spriteIndex, 2, &shield->data, true, 0);
+                            RSDK.SetSpriteAnimation(Shield->spriteIndex, 2, &shield->animator, true, 0);
                             shield->state     = Shield_State_Fire;
                             shield->direction = entity->direction;
                             if (entity->camera && !Zone->field_154) {

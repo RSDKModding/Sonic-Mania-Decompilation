@@ -510,7 +510,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
         if (host->timer != 420) {
             if (host->timer == 480) {
                 EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
-                RSDK.SetSpriteAnimation(mystic->spriteIndex, 1, &mystic->data, true, 0);
+                RSDK.SetSpriteAnimation(mystic->spriteIndex, 1, &mystic->animator, true, 0);
             }
             else {
                 if (host->timer == 496) {
@@ -518,8 +518,8 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
                 }
                 else if (host->timer < 570) {
                     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
-                    if (mystic->data.frameID == mystic->data.frameCount - 1)
-                        RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->data, true, 0);
+                    if (mystic->animator.frameID == mystic->animator.frameCount - 1)
+                        RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->animator, true, 0);
                 }
                 else {
                     return true;
@@ -614,7 +614,7 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
             HeavyMystic_Unknown2();
         }
         else {
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 2, &mystic->data, true, 0);
+            RSDK.SetSpriteAnimation(mystic->spriteIndex, 2, &mystic->animator, true, 0);
             return true;
         }
     }
@@ -647,7 +647,7 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
             ruby->visible = false;
         }
         else if (host->timer == 75) {
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->data, true, 0);
+            RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->animator, true, 0);
             Zone->screenBoundsR1[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->screenBoundsR2[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->screenBoundsT1[0] = 784;
@@ -771,7 +771,7 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
         if (buddy->state == Player_State_Ground && buddy->position.x >= player->position.x - 0x200000)
             buddy->velocity.x = player->velocity.x;
         if (entity->velocity.x <= -0x2D000) {
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 2, &mystic->data, true, 0);
+            RSDK.SetSpriteAnimation(mystic->spriteIndex, 2, &mystic->animator, true, 0);
             entity->velocity.x = 0;
             return true;
         }
@@ -841,7 +841,7 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
             HeavyMystic_Unknown2();
             break;
         case 75:
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->data, true, 0);
+            RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->animator, true, 0);
             player->up = false;
             buddy->up  = false;
             HeavyMystic_Unknown2();
@@ -880,7 +880,7 @@ bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host)
             HeavyMystic_Unknown2();
             break;
         case 42:
-            RSDK.SetSpriteAnimation(king->spriteIndex, 2, &king->data, true, 0);
+            RSDK.SetSpriteAnimation(king->spriteIndex, 2, &king->animator, true, 0);
             HeavyMystic_Unknown2();
             break;
         case 58:

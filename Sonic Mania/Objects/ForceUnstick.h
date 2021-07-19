@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     ushort spriteIndex;
-    Animator animData;
+    Animator animator;
 } ObjectForceUnstick;
 
 // Entity Class

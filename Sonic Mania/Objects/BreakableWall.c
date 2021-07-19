@@ -104,7 +104,7 @@ void BreakableWall_Create(void *data)
 void BreakableWall_StageLoad(void)
 {
     BreakableWall->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(BreakableWall->spriteIndex, 0, &BreakableWall->animData, true, 0);
+    RSDK.SetSpriteAnimation(BreakableWall->spriteIndex, 0, &BreakableWall->animator, true, 0);
     if (RSDK.CheckStageFolder("AIZ"))
         BreakableWall->sfx_Break = RSDK.GetSFX("Stage/LedgeBreak3.wav");
     else
@@ -248,16 +248,16 @@ void BreakableWall_StateDraw_BWall(void)
     RSDK.DrawLine(drawPos.x + (entity->size.x << 20), drawPos.y - 0x10000, drawPos.x + (entity->size.x << 20), drawPos.y + (entity->size.y << 20),
                   0xE0E0E0, 0, INK_NONE, 0);
     entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
     drawPos.x += entity->size.x << 20;
     entity->direction = FLIP_X;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
     drawPos.y += entity->size.y << 20;
     entity->direction = FLIP_XY;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
     drawPos.x -= entity->size.x << 20;
     entity->direction = FLIP_Y;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
 }
 void BreakableWall_StateDraw_BWall2(void)
 {
@@ -274,16 +274,16 @@ void BreakableWall_StateDraw_BWall2(void)
     RSDK.DrawLine(drawPos.x + (entity->size.x << 20), drawPos.y - 0x10000, drawPos.x + (entity->size.x << 20), drawPos.y + (entity->size.y << 20),
                   0xE0E0E0, 0, INK_NONE, 0);
     entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
     drawPos.x += entity->size.x << 20;
     entity->direction = FLIP_X;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
     drawPos.y += entity->size.y << 20;
     entity->direction = FLIP_XY;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
     drawPos.x -= entity->size.x << 20;
     entity->direction = FLIP_Y;
-    RSDK.DrawSprite(&BreakableWall->animData, &drawPos, 0);
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, 0);
 }
 void BreakableWall_StateDraw_Tile(void)
 {
@@ -681,7 +681,7 @@ void BreakableWall_GiveScoreBonus(void *plr)
     RSDK_THIS(BreakableWall);
     EntityScoreBonus *scoreBonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, entity->position.x, entity->position.y);
     scoreBonus->drawOrder        = Zone->drawOrderHigh;
-    scoreBonus->data.frameID     = player->scoreBonus;
+    scoreBonus->animator.frameID     = player->scoreBonus;
     switch (player->scoreBonus) {
         case 0: Player_GiveScore(player, 100); break;
         case 1: Player_GiveScore(player, 200); break;

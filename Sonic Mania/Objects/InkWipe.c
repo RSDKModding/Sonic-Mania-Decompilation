@@ -5,7 +5,7 @@ ObjectInkWipe *InkWipe;
 void InkWipe_Update(void)
 {
     EntityInkWipe *entity = (EntityInkWipe *)RSDK_sceneInfo->entity;
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 }
 
 void InkWipe_LateUpdate(void)
@@ -21,7 +21,7 @@ void InkWipe_StaticUpdate(void)
 void InkWipe_Draw(void)
 {
     EntityInkWipe *entity = (EntityInkWipe *)RSDK_sceneInfo->entity;
-    RSDK.DrawSprite(&entity->data, NULL, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, 0);
 }
 
 void InkWipe_Create(void* data)
@@ -33,7 +33,7 @@ void InkWipe_Create(void* data)
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(InkWipe->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(InkWipe->spriteIndex, 0, &entity->animator, true, 0);
     }
 }
 

@@ -21,8 +21,8 @@ void SpearBlock_StaticUpdate(void) {}
 void SpearBlock_Draw(void)
 {
     RSDK_THIS(SpearBlock);
-    RSDK.DrawSprite(&entity->data, &entity->spearPos, false);
-    RSDK.DrawSprite(&SpearBlock->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, &entity->spearPos, false);
+    RSDK.DrawSprite(&SpearBlock->animator, NULL, false);
 }
 
 void SpearBlock_Create(void *data)
@@ -35,8 +35,8 @@ void SpearBlock_Create(void *data)
     entity->active           = ACTIVE_BOUNDS;
     entity->updateRange.x    = 0x400000;
     entity->updateRange.y    = 0x400000;
-    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 1, &entity->data, true, 0);
-    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &SpearBlock->data, true, 0);
+    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &SpearBlock->animator, true, 0);
     entity->state = SpearBlock_State_SetupSpears;
 }
 
@@ -90,7 +90,7 @@ void SpearBlock_CheckPlayerCollisions(void)
         entity->position.x = entity->spearPos.x;
         entity->position.y = entity->spearPos.y;
 
-        if (Player_CheckCollisionTouch(player, entity, &SpearBlock->spearHitboxes[entity->data.frameID])) {
+        if (Player_CheckCollisionTouch(player, entity, &SpearBlock->spearHitboxes[entity->animator.frameID])) {
             if (player->state != Player_State_Hit && player->state != Player_State_Die && player->state != Player_State_Drown
                 && !player->invincibleTimer && player->blinkTimer <= 0) {
                 if (player->position.x > entity->position.x)
@@ -114,7 +114,7 @@ void SpearBlock_State_SetupSpears(void)
         int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
         entity->timer        = 4;
         entity->state        = SpearBlock_State_ExtendSpears;
-        entity->data.frameID = (frameTimer & 3);
+        entity->animator.frameID = (frameTimer & 3);
     }
 }
 
@@ -125,14 +125,14 @@ void SpearBlock_State_CheckSpearExtend(void)
         int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
         entity->timer        = 4;
         entity->state        = SpearBlock_State_ExtendSpears;
-        entity->data.frameID = (frameTimer & 3);
+        entity->animator.frameID = (frameTimer & 3);
     }
 }
 
 void SpearBlock_State_ExtendSpears(void)
 {
     RSDK_THIS(SpearBlock);
-    switch (entity->data.frameID) {
+    switch (entity->animator.frameID) {
         case FLIP_NONE: entity->spearPos.y -= 0x80000; break;
         case FLIP_X: entity->spearPos.x += 0x80000; break;
         case FLIP_Y: entity->spearPos.y += 0x80000; break;
@@ -157,7 +157,7 @@ void SpearBlock_State_CheckSpearRetract(void)
 void SpearBlock_State_RetractSpears(void)
 {
     RSDK_THIS(SpearBlock);
-    switch (entity->data.frameID) {
+    switch (entity->animator.frameID) {
         case FLIP_NONE: entity->spearPos.y += 0x80000; break;
         case FLIP_X: entity->spearPos.x -= 0x80000; break;
         case FLIP_Y: entity->spearPos.y -= 0x80000; break;

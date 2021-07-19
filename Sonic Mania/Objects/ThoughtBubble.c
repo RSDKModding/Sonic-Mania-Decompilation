@@ -120,7 +120,7 @@ void ThoughtBubble_Unknown4(void)
         debris->scale.x      = scale;
         debris->scale.y      = scale;
         debris->drawOrder    = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(ThoughtBubble->dustFrames, 0, &debris->data, true, RSDK.Rand(0, 4));
+        RSDK.SetSpriteAnimation(ThoughtBubble->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
     }
     entity->state = ThoughtBubble_Unknown5;
 }

@@ -65,8 +65,8 @@ void HeavyMystic_Unknown1(int x, int y)
     debris->velocity.y   = velY;
     debris->inkEffect    = INK_SUB;
     debris->alpha        = 0xE0;
-    RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, RSDK.Rand(0, 2) + 5, &debris->data, true, 0);
-    debris->timer = 3 * debris->data.frameCount;
+    RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, RSDK.Rand(0, 2) + 5, &debris->animator, true, 0);
+    debris->timer = 3 * debris->animator.frameCount;
 
     debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
     debris->velocity.x = velX;
@@ -74,8 +74,8 @@ void HeavyMystic_Unknown1(int x, int y)
     debris->drawOrder  = Zone->drawOrderLow;
     debris->inkEffect  = INK_ADD;
     debris->alpha      = 0xFF;
-    RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, RSDK.Rand(0, 2) + 7, &debris->data, true, 0);
-    debris->timer = 3 * debris->data.frameCount;
+    RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, RSDK.Rand(0, 2) + 7, &debris->animator, true, 0);
+    debris->timer = 3 * debris->animator.frameCount;
 }
 
 void HeavyMystic_Unknown2(void)

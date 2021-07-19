@@ -12,7 +12,7 @@ void SummaryEmerald_StaticUpdate(void) {}
 void SummaryEmerald_Draw(void)
 {
     RSDK_THIS(SummaryEmerald);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void SummaryEmerald_Create(void *data)
@@ -25,9 +25,9 @@ void SummaryEmerald_Create(void *data)
     entity->updateRange.y = 0x800000;
     if (!RSDK_sceneInfo->inEditor) {
         if ((1 << entity->emeraldID) & SaveGame->saveRAM[28])
-            RSDK.SetSpriteAnimation(SummaryEmerald->spriteIndex, 0, &entity->data, true, entity->emeraldID % 7);
+            RSDK.SetSpriteAnimation(SummaryEmerald->spriteIndex, 0, &entity->animator, true, entity->emeraldID % 7);
         else
-            RSDK.SetSpriteAnimation(SummaryEmerald->spriteIndex, 0, &entity->data, true, 7);
+            RSDK.SetSpriteAnimation(SummaryEmerald->spriteIndex, 0, &entity->animator, true, 7);
     }
 }
 

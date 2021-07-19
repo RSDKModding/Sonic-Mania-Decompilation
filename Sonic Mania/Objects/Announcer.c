@@ -86,7 +86,7 @@ void Announcer_Unknown2(int screen)
     entity->state           = Announcer_Unknown6;
     entity->stateDraw       = Announcer_Unknown4;
     entity->screen          = screen;
-    RSDK.SetSpriteAnimation(Announcer->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(Announcer->spriteIndex, 0, &entity->animator, true, 0);
     RSDK.PlaySFX(Announcer->sfx_Goal, 0, 255);
 }
 void Announcer_Unknown3(void)
@@ -97,7 +97,7 @@ void Announcer_Unknown3(void)
     drawPos.x = RSDK_screens->centerX << 16;
     drawPos.x += entity->pos.x;
     drawPos.y += entity->pos.y;
-    RSDK.DrawSprite(&entity->data, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator, &drawPos, true);
 
     if (entity->playerID > 0) {
         entity->inkEffect = INK_NONE;
@@ -131,7 +131,7 @@ void Announcer_Unknown4(void)
         drawPos.y = (RSDK_screens->centerY - 32) << 16;
         drawPos.x += entity->pos.x;
         drawPos.y += entity->pos.y;
-        RSDK.DrawSprite(&entity->data, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
 }
 void Announcer_Unknown5(void)
@@ -146,7 +146,7 @@ void Announcer_Unknown5(void)
         else {
             if (!entity->timer) {
                 RSDK.PlaySFX(Announcer->sfx_Go, 0, 255);
-                RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->data, true, 3);
+                RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 3);
             }
 
             int val = 0;
@@ -172,15 +172,15 @@ void Announcer_Unknown5(void)
                     default: break;
                     case 1:
                         RSDK.PlaySFX(Announcer->sfx_One, 0, 255);
-                        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->data, true, 2);
+                        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 2);
                         break;
                     case 2:
                         RSDK.PlaySFX(Announcer->sfx_Two, 0, 255);
-                        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->data, true, 1);
+                        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 1);
                         break;
                     case 3:
                         RSDK.PlaySFX(Announcer->sfx_Three, 0, 255);
-                        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->data, true, 0);
+                        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 0);
                         break;
                 }
             }

@@ -23,7 +23,7 @@ typedef struct {
     Hitbox hitbox2;
     Vector2 field_88;
     Vector2 field_90;
-    Animator data;
+    Animator animator;
 } EntityShopWindow;
 
 // Object Struct

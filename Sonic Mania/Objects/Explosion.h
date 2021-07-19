@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    Animator data;
+    Animator animator;
     int planeFilter;
 } EntityExplosion;
 

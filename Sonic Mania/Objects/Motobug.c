@@ -15,7 +15,7 @@ void Motobug_StaticUpdate(void) {}
 void Motobug_Draw(void)
 {
     RSDK_THIS(Motobug);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Motobug_Create(void *data)
@@ -32,12 +32,12 @@ void Motobug_Create(void *data)
     entity->updateRange.y = 0x800000;
     entity->wasTurning    = true;
     if (data) {
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 3, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 3, &entity->animator, true, 0);
         entity->state = Motobug_State_Smoke;
     }
     else {
         entity->timer = 16;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_Move;
     }
 }
@@ -90,7 +90,7 @@ void Motobug_CheckPlayerCollisions(void)
 void Motobug_State_Fall(void)
 {
     RSDK_THIS(Motobug);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     if (entity->wasTurning)
         entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
@@ -98,7 +98,7 @@ void Motobug_State_Fall(void)
     if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
         entity->wasTurning = true;
         entity->velocity.y = 0;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_HandleMove;
         Motobug_State_HandleMove();
     }
@@ -112,7 +112,7 @@ void Motobug_State_HandleMove(void)
     RSDK_THIS(Motobug);
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
     if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 1, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 1, &entity->animator, true, 0);
         entity->turnTimer = 0;
 
         bool32 collided = false;
@@ -135,14 +135,14 @@ void Motobug_State_HandleMove(void)
         else
             smoke->position.x += 0x140000;
     }
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     Motobug_CheckPlayerCollisions();
     Motobug_CheckOnScreen();
 }
 void Motobug_State_Move2(void)
 {
     RSDK_THIS(Motobug);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 
     bool32 collided = false;
     if (entity->direction)
@@ -152,13 +152,13 @@ void Motobug_State_Move2(void)
     if (collided) {
         ++entity->turnTimer;
         if (entity->turnTimer == 30) {
-            RSDK.SetSpriteAnimation(Motobug->spriteIndex, 2, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(Motobug->spriteIndex, 2, &entity->animator, true, 0);
             entity->state      = Motobug_State_Turn;
         }
     }
     else {
         entity->wasTurning = false;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_Fall;
         entity->direction ^= FLIP_X;
         entity->velocity.x = -entity->velocity.x;
@@ -178,14 +178,14 @@ void Motobug_State_Move(void)
 void Motobug_State_Smoke(void)
 {
     RSDK_THIS(Motobug);
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == entity->data.frameCount - 1)
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void Motobug_State_Turn(void)
 {
     RSDK_THIS(Motobug);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 
     bool32 collided = false;
     if (entity->direction)
@@ -194,8 +194,8 @@ void Motobug_State_Turn(void)
         collided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, 0x10000, 0xF0000, 8);
 
     if (collided) {
-        if (entity->data.frameID == entity->data.frameCount - 1) {
-            RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->data, true, 0);
+        if (entity->animator.frameID == entity->animator.frameCount - 1) {
+            RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
             entity->direction ^= FLIP_X;
             entity->velocity.x = -entity->velocity.x;
             entity->state      = Motobug_State_HandleMove;
@@ -208,7 +208,7 @@ void Motobug_State_Turn(void)
     }
     else {
         entity->wasTurning = false;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_Fall;
         entity->direction ^= FLIP_X;
         entity->velocity.x = -entity->velocity.x;

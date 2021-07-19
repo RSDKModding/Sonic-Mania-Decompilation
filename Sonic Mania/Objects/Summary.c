@@ -102,9 +102,9 @@ void Summary_State_SetupText(void)
     }
 
     picture               = entity->pictureA;
-    picture->data.frameID = entity->player1ID;
+    picture->animator.frameID = entity->player1ID;
     picture               = entity->pictureB;
-    picture->data.frameID = entity->player2ID;
+    picture->animator.frameID = entity->player2ID;
 
     Summary_LoadTimes();
     entity->state = Summary_State_Unknown;
@@ -154,9 +154,9 @@ void Summary_SetTextString(byte anim, void *text, const char *str)
 {
     EntityUIText *uiText = (EntityUIText *)text;
     if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteAnimation(UIText->spriteIndex, anim, &uiText->animData, true, 0);
+        RSDK.SetSpriteAnimation(UIText->spriteIndex, anim, &uiText->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, anim, &uiText->animData, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, anim, &uiText->animator, true, 0);
 
     RSDK.PrependText(&uiText->text, str);
     uiText->listID = anim;

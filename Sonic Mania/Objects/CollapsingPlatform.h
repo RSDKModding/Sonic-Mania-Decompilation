@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     byte shift;
-    Animator animData;
+    Animator animator;
     ushort spriteIndex;
     ushort sfx_Crumble;
 } ObjectCollapsingPlatform;

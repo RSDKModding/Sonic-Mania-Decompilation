@@ -15,7 +15,7 @@ void SpikeLog_StaticUpdate(void) { SpikeLog->timer = Zone->timer / 3 & 0x1F; }
 void SpikeLog_Draw(void)
 {
     RSDK_THIS(SpikeLog);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void SpikeLog_Create(void *data)
@@ -28,7 +28,7 @@ void SpikeLog_Create(void *data)
     entity->updateRange.y = 0x400000;
     entity->frame *= 4;
     entity->drawOrder = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(SpikeLog->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(SpikeLog->spriteIndex, 0, &entity->animator, true, 0);
     entity->state = SpikeLog_State_Main;
 }
 
@@ -49,11 +49,11 @@ void SpikeLog_StageLoad(void)
 void SpikeLog_State_Main(void)
 {
     RSDK_THIS(SpikeLog);
-    entity->data.frameID = (entity->frame + SpikeLog->timer) & 0x1F;
+    entity->animator.frameID = (entity->frame + SpikeLog->timer) & 0x1F;
     foreach_active(Player, player)
     {
         if (player->shield != SHIELD_FIRE || player->invincibleTimer) {
-            if ((entity->data.frameID & 0xFFFFFFFC) != 8)
+            if ((entity->animator.frameID & 0xFFFFFFFC) != 8)
                 continue;
             if (Player_CheckCollisionTouch(player, entity, &SpikeLog->hitbox)) {
 #if RETRO_USE_PLUS

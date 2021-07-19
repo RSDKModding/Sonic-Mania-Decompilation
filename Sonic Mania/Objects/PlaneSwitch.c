@@ -58,9 +58,9 @@ void PlaneSwitch_Draw(void)
     drawPos.y -= entity->size << 19;
     Zone_Unknown3((Entity *)entity, &drawPos, entity->angle);
 
-    entity->data.frameID = entity->flags & 3;
+    entity->animator.frameID = entity->flags & 3;
     for (int i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->data, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }
@@ -73,9 +73,9 @@ void PlaneSwitch_Draw(void)
     drawPos.x = (dy * RSDK.Sin256(entity->angle)) + dx * RSDK.Cos256(entity->angle) + entity->position.x;
     drawPos.y = (dy * RSDK.Cos256(entity->angle)) - dx * RSDK.Sin256(entity->angle) + entity->position.y;
 
-    entity->data.frameID = (entity->flags >> 2) & 3;
+    entity->animator.frameID = (entity->flags >> 2) & 3;
     for (int i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->data, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }
@@ -84,7 +84,7 @@ void PlaneSwitch_Draw(void)
 void PlaneSwitch_Create(void *data)
 {
     RSDK_THIS(PlaneSwitch);
-    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
 

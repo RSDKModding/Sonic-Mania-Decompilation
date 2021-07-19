@@ -38,14 +38,14 @@ void TitleBG_Draw(void)
 {
     RSDK_THIS(TitleBG);
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
-    RSDK.DrawSprite(&entity->data, 0, 0);
+    RSDK.DrawSprite(&entity->animator, 0, 0);
 }
 
 void TitleBG_Create(void *data)
 {
     RSDK_THIS(TitleBG);
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TitleBG->spriteIndex, entity->type, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(TitleBG->spriteIndex, entity->type, &entity->animator, true, 0);
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = 0;
         entity->drawOrder = 1;

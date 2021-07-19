@@ -56,11 +56,11 @@ void DemoMenu_Create(void *data)
 
 void DemoMenu_StageLoad(void) { DemoMenu->spriteIndex = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
 
-void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *data, int zoneID)
+void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int zoneID)
 {
     RSDK_THIS(DemoMenu);
-    data->frameID = 0;
-    RSDK.DrawSprite(data, pos, 0);
+    animator->frameID = 0;
+    RSDK.DrawSprite(animator, pos, 0);
 
     entity->barBlackData.frameID = 0;
     RSDK.DrawSprite(&entity->barBlackData, pos, false);
@@ -72,17 +72,17 @@ void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *data, int zoneID)
     entity->inkEffect = INK_NONE;
     if (zoneID == entity->selectedZone) {
         RSDK.DrawSprite(&entity->barFlashingData, pos, false);
-        data->frameID = 1;
-        RSDK.DrawSprite(data, pos, false);
-        data->frameID = 2;
-        RSDK.DrawSprite(data, pos, false);
+        animator->frameID = 1;
+        RSDK.DrawSprite(animator, pos, false);
+        animator->frameID = 2;
+        RSDK.DrawSprite(animator, pos, false);
     }
     else {
-        data->frameID = 1;
-        RSDK.DrawSprite(data, pos, false);
-        data->frameID     = 2;
+        animator->frameID = 1;
+        RSDK.DrawSprite(animator, pos, false);
+        animator->frameID     = 2;
         entity->inkEffect = INK_BLEND;
-        RSDK.DrawSprite(data, pos, false);
+        RSDK.DrawSprite(animator, pos, false);
         entity->inkEffect = INK_BLEND;
     }
 }

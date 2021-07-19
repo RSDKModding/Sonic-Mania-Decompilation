@@ -38,7 +38,7 @@ typedef struct {
     int delay;
     int type;
     int behaviour;
-    Animator data;
+    Animator animator;
     Hitbox hitbox;
 } EntityAnimals;
 

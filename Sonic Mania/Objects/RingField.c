@@ -18,12 +18,12 @@ void RingField_Update(void)
                 Vector2 pos;
                 RingField_GetPos(&pos);
                 EntityRing *ring          = (EntityRing *)RSDK.CreateEntity(Ring->objectID, &pos, pos.x, pos.y);
-                ring->animData.animationSpeed = 512;
+                ring->animator.animationSpeed = 512;
                 ring->state               = Ring_State_Normal;
                 ring->drawOrder           = Zone->drawOrderLow;
                 ring->stateDraw           = Ring_StateDraw_Normal;
                 ring->moveType            = 0;
-                RSDK.SetSpriteAnimation(RingField->spriteIndex, 0, &ring->animData, true, 0);
+                RSDK.SetSpriteAnimation(RingField->spriteIndex, 0, &ring->animator, true, 0);
 
                 int sx = (RSDK_screens->centerX + RSDK_screens->position.x) << 16;
                 int sy = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;

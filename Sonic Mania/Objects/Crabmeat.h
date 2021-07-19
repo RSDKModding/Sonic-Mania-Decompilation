@@ -19,7 +19,7 @@ typedef struct {
     byte dword60;
     Vector2 startPos;
     int startDir;
-    Animator data;
+    Animator animator;
 } EntityCrabmeat;
 
 // Object Struct

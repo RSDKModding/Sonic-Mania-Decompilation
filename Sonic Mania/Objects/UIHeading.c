@@ -6,7 +6,7 @@ void UIHeading_Update(void)
 {
     RSDK_THIS(UIHeading);
     if (entity->spriteIndex != UIHeading->spriteIndex) {
-        RSDK.SetSpriteAnimation(UIHeading->spriteIndex, entity->headingID, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(UIHeading->spriteIndex, entity->headingID, &entity->animator, true, 0);
         entity->spriteIndex = UIHeading->spriteIndex;
     }
     StateMachine_Run(entity->state);
@@ -20,7 +20,7 @@ void UIHeading_Draw(void)
 {
     RSDK_THIS(UIHeading);
     RSDK.DrawSprite(&entity->data2, NULL, false);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void UIHeading_Create(void *data)
@@ -35,7 +35,7 @@ void UIHeading_Create(void *data)
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x300000;
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &entity->data2, true, 0);
-        RSDK.SetSpriteAnimation(UIHeading->spriteIndex, entity->headingID, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(UIHeading->spriteIndex, entity->headingID, &entity->animator, true, 0);
         entity->spriteIndex = UIHeading->spriteIndex;
     }
 }

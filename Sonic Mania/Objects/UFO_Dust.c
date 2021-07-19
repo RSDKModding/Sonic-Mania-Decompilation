@@ -8,8 +8,8 @@ void UFO_Dust_LateUpdate(void)
 {
     RSDK_THIS(UFO_Dust);
 
-    RSDK.ProcessAnimation(&entity->data);
-    if (entity->data.frameID == entity->data.frameCount - 1) {
+    RSDK.ProcessAnimation(&entity->animator);
+    if (entity->animator.frameID == entity->animator.frameCount - 1) {
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
     else {
@@ -38,7 +38,7 @@ void UFO_Dust_Draw(void)
 
         entity->scale.x = 0x1000000 / entity->depth;
         entity->scale.y = 0x1000000 / entity->depth;
-        RSDK.DrawSprite(&entity->data, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
 }
 
@@ -55,7 +55,7 @@ void UFO_Dust_Create(void *data)
         entity->position.x += RSDK.Rand(-0x80000, 0x80000);
         entity->position.y += RSDK.Rand(-0x80000, 0x80000);
         entity->height = RSDK.Rand(0x40000, 0x100000);
-        RSDK.SetSpriteAnimation(UFO_Dust->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(UFO_Dust->spriteIndex, 0, &entity->animator, true, 0);
     }
 }
 

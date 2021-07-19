@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    Animator data;
+    Animator animator;
     int field_70;
     int field_74;
     Vector2 size;

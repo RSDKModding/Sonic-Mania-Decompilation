@@ -32,7 +32,7 @@ typedef struct {
     int dword9C;
     Matrix matrix;
     Matrix matrix2;
-    Animator data;
+    Animator animator;
 } EntityUFO_Sphere;
 
 // Object Struct

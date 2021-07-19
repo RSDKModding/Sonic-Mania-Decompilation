@@ -52,26 +52,26 @@ void UIMedallionPanel_DrawPanel(void)
         drawPos.x = (entity->position.x - 0x310000) + 0xE0000 * (m % 8);
         drawPos.y = (entity->position.y - 0x150000) + 0xE0000 * (m / 8);
         if (RSDK_sceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->data, true, (m & 1) + 1);
+            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, (m & 1) + 1);
         }
         else if (savePtr) {
             bool32 flag = false;
             if (m >= savePtr[71]) {
                 if (m < savePtr[72])
                     flag = true;
-                RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->data, true, flag);
+                RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, flag);
             }
             else {
-                RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->data, true, 2);
+                RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, 2);
             }
         }
         else {
-            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, 0);
         }
-        if (!RSDK_sceneInfo->inEditor && !entity->data.frameID)
+        if (!RSDK_sceneInfo->inEditor && !entity->animator.frameID)
             RSDK.DrawCircleOutline(drawPos.x, drawPos.y, 5, 6, 0, 255, INK_BLEND, 0);
         drawPos.x += 0x10000;
-        RSDK.DrawSprite(&entity->data, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
     }
 }
 

@@ -18,7 +18,7 @@ typedef struct {
     Vector2 startPos;
     Hitbox *hitbox;
     Animator data2;
-    Animator data;
+    Animator animator;
 } EntityHPZEmerald;
 
 // Object Struct

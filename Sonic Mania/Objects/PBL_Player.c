@@ -12,10 +12,10 @@ void PBL_Player_Update(void)
     entity->angleX   = ((ushort)entity->angleX - (ushort)((abs(entity->velocity.y) + abs(entity->velocity.x)) >> 12)) & 0x3FF;
     entity->rotation = 4 * RSDK.ATan2(-entity->velocity.y, entity->velocity.x);
     if (!(entity->angleX & 0x100))
-        entity->data.animationID = PBL_Player->jumpModel;
+        entity->animator.animationID = PBL_Player->jumpModel;
     else
-        entity->data.animationID = PBL_Player->ballModel;
-    RSDK.ProcessAnimation(&entity->data);
+        entity->animator.animationID = PBL_Player->ballModel;
+    RSDK.ProcessAnimation(&entity->animator);
 }
 
 void PBL_Player_LateUpdate(void)
@@ -42,7 +42,7 @@ void PBL_Player_Draw(void)
         RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix4, &entity->matrix2);
         RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &PBL_Camera->matrix1);
         RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix4, &PBL_Camera->matrix2);
-        RSDK.AddModelTo3DScene(entity->data.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &entity->matrix3,
+        RSDK.AddModelTo3DScene(entity->animator.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &entity->matrix3,
                                &entity->matrix4, 0xFFFFFF);
         RSDK.Draw3DScene(PBL_Player->sceneIndex);
     }
@@ -63,7 +63,7 @@ void PBL_Player_Create(void *data)
         entity->onGround        = false;
         entity->tileCollisions  = true;
         entity->collisionLayers = 1 << PBL_Setup->tableHigh;
-        RSDK.SetModelAnimation(PBL_Player->jumpModel, &entity->data, 128, 0, true, 0);
+        RSDK.SetModelAnimation(PBL_Player->jumpModel, &entity->animator, 128, 0, true, 0);
 
         foreach_all(PBL_Camera, camera) { camera->targetPtr = (Entity *)entity; }
     }

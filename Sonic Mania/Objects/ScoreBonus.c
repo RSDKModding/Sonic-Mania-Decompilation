@@ -24,13 +24,13 @@ void ScoreBonus_StaticUpdate(void)
 void ScoreBonus_Draw(void)
 {
     EntityScoreBonus *entity = (EntityScoreBonus *)RSDK_sceneInfo->entity;
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void ScoreBonus_Create(void* data)
 {
     EntityScoreBonus *entity = (EntityScoreBonus *)RSDK_sceneInfo->entity;
-    RSDK.SetSpriteAnimation(ScoreBonus->spriteIndex, 0, &entity->data, true, 0);
+    RSDK.SetSpriteAnimation(ScoreBonus->spriteIndex, 0, &entity->animator, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;

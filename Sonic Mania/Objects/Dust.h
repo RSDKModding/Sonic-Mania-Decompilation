@@ -15,7 +15,7 @@ typedef struct {
     StateMachine(state);
     int timer;
     Entity *parent;
-    Animator data;
+    Animator animator;
 } EntityDust;
 
 // Object Struct

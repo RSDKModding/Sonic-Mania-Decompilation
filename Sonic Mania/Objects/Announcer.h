@@ -43,7 +43,7 @@ typedef struct {
     int playerID;
     int screen;
     Vector2 pos;
-    Animator data;
+    Animator animator;
     Animator data2;
 } EntityAnnouncer;
 

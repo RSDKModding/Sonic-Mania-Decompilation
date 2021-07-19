@@ -58,7 +58,7 @@ void ThanksSetup_Unknown1(void)
     int angle = entity->angle;
     foreach_active(UIPicture, picture)
     {
-        if (!picture->data.animationID) {
+        if (!picture->animator.animationID) {
             picture->position.x = 0x1000000 + entity->offset * RSDK.Sin512(angle);
             picture->position.y = 0x780000 + entity->offset * RSDK.Cos512(angle);
             angle += 32;
@@ -92,7 +92,7 @@ void ThanksSetup_Unknown3(void)
         picture->drawFX          = FX_SCALE;
         picture->scale.x         = RSDK.Cos512(entity->rotation);
         if (entity->rotation == 128) {
-            RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 2, &picture->data, true, 0);
+            RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 2, &picture->animator, true, 0);
             entity->timer = 0;
             entity->state = ThanksSetup_Unknown4;
         }

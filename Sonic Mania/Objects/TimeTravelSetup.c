@@ -68,7 +68,7 @@ void TimeTravelSetup_StageLoad(void)
 
 void TimeTravelSetup_Particle_CB(EntityDebris *debris)
 {
-    RSDK.SetSpriteAnimation(TimeTravelSetup->aniFrames, 0, &debris->data, true, 0);
+    RSDK.SetSpriteAnimation(TimeTravelSetup->aniFrames, 0, &debris->animator, true, 0);
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
     debris->drawOrder     = Zone->drawOrderHigh;

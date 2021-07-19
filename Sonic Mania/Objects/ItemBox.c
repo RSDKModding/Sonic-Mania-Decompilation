@@ -853,7 +853,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
         debris->drawFX     = 1;
         debris->direction  = d & 3;
         debris->drawOrder  = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->data, true, RSDK.Rand(0, 4));
+        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->animator, true, RSDK.Rand(0, 4));
     }
 
     RSDK.PlaySFX(ItemBox->sfx_Destroy, 0, 255);

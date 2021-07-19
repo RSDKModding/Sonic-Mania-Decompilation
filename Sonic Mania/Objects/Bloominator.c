@@ -16,7 +16,7 @@ void Bloominator_StaticUpdate(void) {}
 void Bloominator_Draw(void)
 {
     RSDK_THIS(Bloominator);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Bloominator_Create(void *data)
@@ -31,11 +31,11 @@ void Bloominator_Create(void *data)
 
     if (data) {
         --entity->drawOrder;
-        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 2, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 2, &entity->animator, true, 0);
         entity->state = Bloominator_State_Spikeball;
     }
     else {
-        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->data, true, 0);
+        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->animator, true, 0);
         entity->state = Bloominator_State_Setup;
     }
 }
@@ -85,11 +85,11 @@ void Bloominator_Idle(void)
     if (entity->activeScreens) {
         if (++entity->timer >= 60) {
             entity->timer = 0;
-            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 1, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 1, &entity->animator, true, 0);
             entity->state = Bloominator_State_Firing;
         }
     }
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     Bloominator_CheckHit();
     if (!RSDK.CheckOnScreen(entity, NULL))
         Bloominator_Create(NULL);
@@ -117,11 +117,11 @@ void Bloominator_State_Firing(void)
             break;
         case 50:
             entity->timer = -60;
-            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->data, true, 0);
+            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->animator, true, 0);
             entity->state = Bloominator_Idle;
             break;
     }
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     Bloominator_CheckHit();
     if (!RSDK.CheckOnScreen(entity, NULL))
         Bloominator_Create(NULL);
@@ -143,7 +143,7 @@ void Bloominator_State_Spikeball(void)
         entity->position.x += entity->velocity.x;
         entity->position.y += entity->velocity.y;
         entity->velocity.y += 0x3800;
-        RSDK.ProcessAnimation(&entity->data);
+        RSDK.ProcessAnimation(&entity->animator);
 
         foreach_active(Player, player)
         {

@@ -6,7 +6,7 @@ ObjectAIZRockPile *AIZRockPile;
 void AIZRockPile_Update(void)
 {
     RSDK_THIS(AIZRockPile);
-    Hitbox *hitbox = RSDK.GetHitbox(&entity->data, 1);
+    Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, 1);
 
     foreach_active(Player, player)
     {
@@ -28,7 +28,7 @@ void AIZRockPile_Update(void)
                             bool32 flag = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
                                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                                flag |= shield->data.animationID == 2;
+                                flag |= shield->animator.animationID == 2;
                             }
 
                             flag |= player->characterID == ID_SONIC && player->superState == 2;
@@ -78,13 +78,13 @@ void AIZRockPile_StaticUpdate(void) {}
 void AIZRockPile_Draw(void)
 {
     RSDK_THIS(AIZRockPile);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void AIZRockPile_Create(void *data)
 {
     RSDK_THIS(AIZRockPile);
-    RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 0, &entity->data, true, entity->size + 3);
+    RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 0, &entity->animator, true, entity->size + 3);
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->size) {
             case 0:
@@ -132,7 +132,7 @@ void AIZRockPile_SpawnRocks(int *speeds)
         EntityDebris *debris =
             (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, entity->position.x + entity->rockPositions[2 * i],
                                               entity->position.y + entity->rockPositions[(2 * i) + 1]);
-        RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 1, &debris->data, true, 0);
+        RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 1, &debris->animator, true, 0);
         debris->velocity.x    = speeds[2 * i];
         debris->velocity.y    = speeds[(2 * i) + 1];
         debris->drawOrder     = Zone->drawOrderHigh;

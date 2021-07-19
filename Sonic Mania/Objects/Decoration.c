@@ -5,7 +5,7 @@ ObjectDecoration *Decoration;
 void Decoration_Update(void)
 {
     EntityDecoration *entity = (EntityDecoration *)RSDK_sceneInfo->entity;
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
     entity->rotation += entity->rotSpeed;
     entity->rotation &= 0x1FF;
 }
@@ -50,8 +50,8 @@ void Decoration_Create(void* data)
 
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, entity->type, &entity->data, true, 0);
-        if (RSDK.GetFrameID(&entity->data))
+        RSDK.SetSpriteAnimation(Decoration->spriteIndex, entity->type, &entity->animator, true, 0);
+        if (RSDK.GetFrameID(&entity->animator))
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = Zone->drawOrderLow;
@@ -110,7 +110,7 @@ void Decoration_DrawSprite(void) {
     for (int y = 0; y < repeat.y + 1; ++y) {
         drawPos.x = entity->position.x - (repeat.x * entity->repeatSpacing.x >> 1);
         for (int x = 0; x < repeat.x + 1; ++x) {
-            RSDK.DrawSprite(&entity->data, &drawPos, 0);
+            RSDK.DrawSprite(&entity->animator, &drawPos, 0);
             drawPos.x += entity->repeatSpacing.x;
         }
         drawPos.y += entity->repeatSpacing.y;

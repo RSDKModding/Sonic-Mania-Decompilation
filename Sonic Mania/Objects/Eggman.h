@@ -19,7 +19,7 @@ typedef struct {
     Entity* parent;
     Vector2 offset;
     Hitbox hitbox;
-    Animator data;
+    Animator animator;
 } EntityEggman;
 
 // Object Struct

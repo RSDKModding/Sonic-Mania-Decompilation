@@ -289,7 +289,7 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
         EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityScoreBonus *bonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, badnik->position.x, badnik->position.y);
         bonus->drawOrder        = Zone->drawOrderHigh;
-        bonus->data.frameID     = player1->scoreBonus;
+        bonus->animator.frameID     = player1->scoreBonus;
         switch (player1->scoreBonus) {
             case 0: Player_GiveScore(player1, 100); break;
             case 1: Player_GiveScore(player1, 200); break;
@@ -657,7 +657,7 @@ void CheckerBall_Unknown5(void)
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
                 debris->drawOrder  = Zone->drawOrderHigh;
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->data, true, RSDK.Rand(0, 4));
+                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
             RSDK.PlaySFX(ItemBox->sfx_Destroy, 0, 255);

@@ -81,7 +81,7 @@ void UFO_Springboard_Draw(void)
         RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix3, &entity->matrix1);
         RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &UFO_Camera->matWorld);
         RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &UFO_Camera->matView);
-        RSDK.AddMeshFrameTo3DScene(UFO_Springboard->modelIndex, UFO_Springboard->sceneIndex, &entity->data, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+        RSDK.AddMeshFrameTo3DScene(UFO_Springboard->modelIndex, UFO_Springboard->sceneIndex, &entity->animator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
                                    &entity->matrix2, &entity->matrix3, 0xFFFFFF);
         RSDK.Draw3DScene(UFO_Springboard->sceneIndex);
     }

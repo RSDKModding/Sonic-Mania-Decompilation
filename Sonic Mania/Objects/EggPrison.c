@@ -268,7 +268,7 @@ void EggPrison_Activated(void)
                     Ring->objectID, entity, (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + entity->position.x, entity->position.y);
                 ring->velocity.x              = RSDK.Cos256(angle) << 9;
                 ring->velocity.y              = RSDK.Sin256(angle) << 9;
-                ring->animData.animationSpeed = 512;
+                ring->animator.animationSpeed = 512;
                 ring->collisionPlane          = 0;
                 ring->inkEffect               = INK_ALPHA;
                 if (angle != 176)
@@ -324,7 +324,7 @@ void EggPrison_Activated(void)
 
     EntityDebris *debris =
         (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Unknkown, entity->position.x - 0x160000, entity->position.y);
-    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->data, true, 2);
+    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 2);
     debris->velocity.x    = -0x20000;
     debris->velocity.y    = -0x20000;
     debris->gravity       = 0x3800;
@@ -335,7 +335,7 @@ void EggPrison_Activated(void)
     debris->updateRange.y = 0x800000;
 
     debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Unknkown, entity->position.x, entity->position.y);
-    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->data, true, 3);
+    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 3);
     debris->velocity.x    = 0;
     debris->velocity.y    = -0x30000;
     debris->gravity       = 0x3800;
@@ -346,7 +346,7 @@ void EggPrison_Activated(void)
     debris->updateRange.y = 0x800000;
 
     debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Unknkown, entity->position.x + 0x160000, entity->position.y);
-    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->data, true, 4);
+    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 4);
     debris->velocity.x    = 0x20000;
     debris->velocity.y    = -0x20000;
     debris->gravity       = 0x3800;

@@ -82,7 +82,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         debris->scale.y       = 0x200;
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 0, &debris->data, true, 0);
+        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 0, &debris->animator, true, 0);
         SPZ1Intro->debris = debris;
     }
 
@@ -139,7 +139,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         debris->scaleInc.x   = 8;
         debris->scaleInc.y   = 8;
         debris->rotSpeed     = -1;
-        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 1, &debris->data, true, 0);
+        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 1, &debris->animator, true, 0);
     }
     if (player1->velocity.y > 0)
         player1->tileCollisions = true;

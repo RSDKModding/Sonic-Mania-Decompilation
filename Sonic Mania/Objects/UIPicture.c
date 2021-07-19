@@ -5,7 +5,7 @@ ObjectUIPicture *UIPicture;
 void UIPicture_Update(void)
 {
     RSDK_THIS(UIPicture);
-    RSDK.ProcessAnimation(&entity->data);
+    RSDK.ProcessAnimation(&entity->animator);
 }
 
 void UIPicture_LateUpdate(void) {}
@@ -17,13 +17,13 @@ void UIPicture_Draw(void)
     RSDK_THIS(UIPicture);
     if (entity->zonePalette)
         RSDK.CopyPalette((entity->zonePalette >> 3) + 1, 32 * entity->zonePalette, 0, 224, 32);
-    RSDK.DrawSprite(&entity->data, NULL, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void UIPicture_Create(void *data)
 {
     RSDK_THIS(UIPicture);
-    RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->data, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->animator, true, entity->frameID);
     if (!RSDK_sceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
             entity->active    = ACTIVE_BOUNDS;

@@ -47,7 +47,7 @@ typedef struct {
     bool32 timerFlag;
     ushort spriteIndex;
     ushort field_296;
-    Animator data;
+    Animator animator;
     Animator altData;
 } EntityCutsceneHBH;
 

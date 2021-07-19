@@ -14,7 +14,7 @@ typedef struct {
     RSDK_ENTITY
     int size;
     int negAngle;
-    Animator data;
+    Animator animator;
 } EntityForceSpin;
 
 // Object Struct

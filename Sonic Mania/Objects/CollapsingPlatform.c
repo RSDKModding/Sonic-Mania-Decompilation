@@ -102,16 +102,16 @@ void CollapsingPlatform_Draw(void)
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
     RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
     entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&CollapsingPlatform->animData, &drawPos, false);
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
     drawPos.x += entity->size.x;
     entity->direction = FLIP_X;
-    RSDK.DrawSprite(&CollapsingPlatform->animData, &drawPos, false);
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
     drawPos.y += entity->size.y;
     entity->direction = FLIP_XY;
-    RSDK.DrawSprite(&CollapsingPlatform->animData, &drawPos, false);
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
     drawPos.x -= entity->size.x;
     entity->direction = FLIP_Y;
-    RSDK.DrawSprite(&CollapsingPlatform->animData, &drawPos, false);
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
 }
 
 void CollapsingPlatform_Create(void *data)
@@ -168,7 +168,7 @@ void CollapsingPlatform_Create(void *data)
 void CollapsingPlatform_StageLoad(void)
 {
     CollapsingPlatform->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animData, true, 0);
+    RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animator, true, 0);
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         CollapsingPlatform->shift = 1;
 

@@ -43,7 +43,7 @@ void DemoMenu_EditorLoad(void);
 void DemoMenu_Serialize(void);
 
 // Extra Entity Functions
-void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *data, int zoneID);
+void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int zoneID);
 
 void DemoMenu_State_Appear(void);
 void DemoMenu_State_Selection(void);

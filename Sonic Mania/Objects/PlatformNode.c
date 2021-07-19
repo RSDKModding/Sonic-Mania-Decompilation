@@ -22,7 +22,7 @@ void PlatformNode_EditorLoad(void)
     // PlatformMode->spriteIndex = RSDK.LoadSpriteAnimation("some path to a bin", SCOPE_STAGE);
 
     //foreach_all(PlatformNode->objectID, entity) {
-    //    RSDK.SetSpriteAnimation(PlatformNode->spriteIndex, 0, &entity->data, true, 0);
+    //    RSDK.SetSpriteAnimation(PlatformNode->spriteIndex, 0, &entity->animator, true, 0);
     //}
 }
 
