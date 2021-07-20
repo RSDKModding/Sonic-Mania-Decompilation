@@ -88,8 +88,8 @@ void CircleBumper_StageLoad(void)
 
 void CircleBumper_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void CircleBumper_DebugSpawn(void)

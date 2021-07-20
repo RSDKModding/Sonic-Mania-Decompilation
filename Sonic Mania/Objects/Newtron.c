@@ -89,8 +89,8 @@ void Newtron_StageLoad(void)
 
 void Newtron_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 
 void Newtron_DebugSpawn(void) { RSDK.CreateEntity(Newtron->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }

@@ -84,8 +84,8 @@ void SpeedBooster_DebugSpawn(void) { DEBUGMODE_ADD_OBJ(SpeedBooster); }
 
 void SpeedBooster_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SpeedBooster->animID, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, false);
+    RSDK.SetSpriteAnimation(SpeedBooster->animID, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
 void SpeedBooster_MovingState(void)

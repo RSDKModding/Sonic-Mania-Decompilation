@@ -38,8 +38,8 @@ void OneWayDoor_Serialize(void);
 // Extra Entity Functions
 void OneWayDoor_Interact(void);
 
-void OneWayDoor_DefaultState(void);
-void OneWayDoor_MoveUp(void);
+void OneWayDoor_State_MoveDown(void);
+void OneWayDoor_State_MoveUp(void);
 
 void OneWayDoor_MMZDraw(void);
 void OneWayDoor_CPZDraw(void);

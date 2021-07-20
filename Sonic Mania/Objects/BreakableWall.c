@@ -299,7 +299,7 @@ void BreakableWall_Break1(void)
     foreach_active(Player, player)
     {
         int velY = player->velocity.y;
-        if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
+        if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 1) {
 #if RETRO_USE_PLUS
             if (!entity->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
 #endif
@@ -336,7 +336,7 @@ void BreakableWall_Break1(void)
                             int blockSpeedX = 2 * (tx - entity->position.x);
                             for (int x = 0; x < entity->size.x; ++x) {
                                 int posX                       = tx >> 20;
-                                EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, tx, ty);
+                                EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(1), tx, ty);
                                 tileChunk->tileInfo            = RSDK.GetTileInfo(entity->priority, posX, posY);
                                 tileChunk->drawOrder           = entity->drawOrder;
                                 int angle                      = RSDK.ATan2(blockSpeedX, th);
@@ -381,7 +381,9 @@ void BreakableWall_Break2AND3(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
+        int velY = player->velocity.y;
+        if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 1 && !player->sidekick
+            && ((player->collisionPlane == 1 && entity->type == 2) || entity->type != 2)) {
 #if RETRO_USE_PLUS
             if (!entity->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
 #endif
@@ -413,7 +415,7 @@ void BreakableWall_Break2AND3(void)
 
 #if RETRO_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
-                            player->velocity.y -= 0x10000;
+                            player->velocity.y = velY - 0x10000;
                         else
 #endif
                             player->velocity.y = 0;
@@ -422,7 +424,7 @@ void BreakableWall_Break2AND3(void)
                         --entity->size.y;
                         entity->position.y += 0x80000;
                         if (entity->size.y <= 0)
-                            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                            destroyEntity(entity);
                     }
                 }
 #if RETRO_USE_PLUS
@@ -461,7 +463,7 @@ void BreakableWall_Break4(void)
                         }
 
                         if (entity->size.y <= 0)
-                            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                            destroyEntity(entity);
                         player->velocity.y = yVel;
                     }
                 }
@@ -581,7 +583,7 @@ void BreakableWall_BreakV()
         int speed  = 3 * abs(distY);
         for (int x = 0; x < entity->size.x; ++x) {
             int tileX                      = tx >> 20;
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, tx, curY);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(1), tx, curY);
             tileChunk->tileInfo            = RSDK.GetTileInfo(entity->priority, tileX, tileY);
             tileChunk->drawOrder           = entity->drawOrder;
 
@@ -630,8 +632,7 @@ void BreakableWall_BreakUnknown(EntityBreakableWall *entity, byte flip)
         int angleX = 2 * (endX - startX);
         for (int x = 0; x < entity->size.x; ++x) {
             int tileX = (curX + startX) >> 20;
-            EntityBreakableWall *tileChunk =
-                (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)1, curX + startX, curY + startY);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(1), curX + startX, curY + startY);
             tileChunk->tileInfo  = RSDK.GetTileInfo(entity->priority, tileX, tileY);
             tileChunk->drawOrder = entity->drawOrder;
 
@@ -679,7 +680,7 @@ void BreakableWall_GiveScoreBonus(void *plr)
 {
     EntityPlayer *player = (EntityPlayer *)plr;
     RSDK_THIS(BreakableWall);
-    EntityScoreBonus *scoreBonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, entity->position.x, entity->position.y);
+    EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
     scoreBonus->drawOrder        = Zone->drawOrderHigh;
     scoreBonus->animator.frameID     = player->scoreBonus;
     switch (player->scoreBonus) {

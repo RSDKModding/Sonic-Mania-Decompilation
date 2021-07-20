@@ -97,8 +97,8 @@ void Ring_StageLoad(void)
 void Ring_DebugSpawn(void) { RSDK.CreateEntity(Ring->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
 void Ring_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(Ring->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Ring_StateDraw_Normal(void)

@@ -75,8 +75,8 @@ void Caterkiller_StageLoad(void)
 
 void Caterkiller_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Caterkiller_DebugSpawn(void)

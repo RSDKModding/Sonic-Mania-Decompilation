@@ -94,8 +94,8 @@ void BuzzBomber_StageLoad(void)
 
 void BuzzBomber_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 
 void BuzzBomber_DebugSpawn(void)

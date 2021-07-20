@@ -578,7 +578,7 @@ void LoadGameConfig()
 
         ReadString(&info, gameVerInfo.gameName);
         if (!useDataFile) {
-            sprintf(gameVerInfo.gameName, "%s (Using Data Folder)", gameVerInfo.gameName);
+            sprintf(gameVerInfo.gameName, "%s (Data Folder)", gameVerInfo.gameName);
         }
         ReadString(&info, gameVerInfo.gameSubName);
         ReadString(&info, gameVerInfo.gameVersion);

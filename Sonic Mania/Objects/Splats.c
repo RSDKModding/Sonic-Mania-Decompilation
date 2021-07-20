@@ -100,10 +100,10 @@ void Splats_StageLoad(void)
 void Splats_DebugDraw(void)
 {
     if (Splats->state == Splats_Unknown3)
-        RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &DebugMode->debugData, true, 0);
+        RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &DebugMode->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+        RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 
 void Splats_DebugSpawn(void) { RSDK.CreateEntity(Splats->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }

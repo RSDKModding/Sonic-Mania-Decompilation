@@ -112,8 +112,8 @@ void SpecialRing_StageLoad(void)
 
 void SpecialRing_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 void SpecialRing_DebugSpawn(void)
 {

@@ -206,13 +206,13 @@ void ItemBox_DebugDraw(void)
 #else
     DebugMode->subtypeCount = 15;
 #endif
-    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
-    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &DebugMode->debugData, true, DebugMode->itemSubType);
+    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
+    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &DebugMode->animator, true, DebugMode->itemSubType);
     Vector2 drawPos;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y - 0x30000;
-    RSDK.DrawSprite(&DebugMode->debugData, &drawPos, false);
+    RSDK.DrawSprite(&DebugMode->animator, &drawPos, false);
 }
 void ItemBox_DebugSpawn(void)
 {

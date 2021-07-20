@@ -63,8 +63,8 @@ void Crabmeat_StageLoad(void)
 
 void Crabmeat_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 void Crabmeat_DebugSpawn(void)
 {

@@ -160,8 +160,8 @@ void SwingRope_StageLoad(void)
 
 void SwingRope_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 void SwingRope_DebugSpawn(void)
 {

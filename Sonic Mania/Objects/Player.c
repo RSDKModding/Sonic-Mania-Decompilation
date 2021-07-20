@@ -3906,7 +3906,7 @@ void Player_State_ForceRoll_Air(void)
     entity->jumpAbility     = 0;
     entity->nextGroundState = Player_State_ForceRoll_Ground;
     if (!entity->onGround) {
-        return Player_HandleAirMovement();
+        Player_HandleAirMovement();
     }
     else {
         entity->state = Player_State_ForceRoll_Ground;

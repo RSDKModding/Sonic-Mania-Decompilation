@@ -107,12 +107,12 @@ void SpinSign_DebugSpawn(void)
 }
 void SpinSign_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
-    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
-    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &DebugMode->debugData, true, 2);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &DebugMode->animator, true, 2);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 
 void SpinSign_Unknown1(void)

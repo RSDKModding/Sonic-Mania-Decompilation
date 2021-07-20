@@ -126,8 +126,8 @@ void CheckerBall_DebugSpawn(void)
 
 void CheckerBall_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(CheckerBall->aniFrames, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(CheckerBall->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void CheckerBall_Unknown1(void)

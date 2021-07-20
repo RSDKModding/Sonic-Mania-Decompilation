@@ -59,8 +59,8 @@ void Bloominator_StageLoad(void)
 
 void Bloominator_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Bloominator_DebugSpawn(void)

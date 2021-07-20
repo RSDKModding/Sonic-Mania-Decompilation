@@ -11,7 +11,7 @@ typedef struct {
     short objectIDs[0x100];
     void (*draw[0x100])(void);
     void (*spawn[0x100])(void);
-    Animator debugData;
+    Animator animator;
     int objID;
     int itemCount;
     bool32 debugActive;

@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	byte val;
+    byte flag;
 } ObjectRotatingStair;
 
 // Entity Class
 typedef struct {
 	MANIA_PLATFORM_BASE
 	ushort oscOff;
-	int field_D0;
-	int field_D4;
+	int duration;
+	int interval;
 } EntityRotatingStair;
 
 // Object Struct
@@ -32,6 +32,7 @@ void RotatingStair_EditorLoad(void);
 void RotatingStair_Serialize(void);
 
 // Extra Entity Functions
-
+void RotatingStair_Unknown1(void);
+void RotatingStair_Unknown2(void);
 
 #endif //!OBJ_ROTATINGSTAIR_H

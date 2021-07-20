@@ -68,8 +68,8 @@ void MagnetSphere_DebugSpawn(void)
 
 void MagnetSphere_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 0, &DebugMode->debugData, true, 1);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 0, &DebugMode->animator, true, 1);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void MagnetSphere_CheckPlayerCollision(void)

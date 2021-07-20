@@ -103,8 +103,8 @@ void Rhinobot_CheckOnScreen(void)
 
 void Rhinobot_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, false);
+    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
 void Rhinobot_DebugSpawn(void)

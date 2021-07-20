@@ -41,9 +41,9 @@ void COverlay_StageLoad(void)
 
 void COverlay_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(COverlay->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    DebugMode->debugData.frameID = 4;
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(COverlay->spriteIndex, 0, &DebugMode->animator, true, 0);
+    DebugMode->animator.frameID = 4;
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 
 void COverlay_DebugSpawn(void)

@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxSpiny;
+    Hitbox hitboxRange;
+    Hitbox hitboxShot;
+    ushort aniFrames;
+    ushort sfxShot;
 } ObjectSpiny;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Animator animator;
+    int field_74;
+    byte type;
+    Vector2 startPos;
+    byte startDir;
+    int shotSpeed;
+    int timer2;
+    int timer;
 } EntitySpiny;
 
 // Object Struct
@@ -28,6 +42,18 @@ void Spiny_EditorLoad(void);
 void Spiny_Serialize(void);
 
 // Extra Entity Functions
+void Spiny_DebugSpawn(void);
+void Spiny_DebugDraw(void);
 
+void Spiny_CheckPlayerCollisions(void);
+void Spiny_CheckOnScreen(void);
+
+void Spiny_State_Setup(void);
+void Spiny_State_Floor(void);
+void Spiny_State_Shoot_Floor(void);
+void Spiny_State_Wall(void);
+void Spiny_State_Shoot_Wall(void);
+void Spiny_State_Shot(void);
+void Spiny_State_ShotDisappear(void);
 
 #endif //!OBJ_SPINY_H

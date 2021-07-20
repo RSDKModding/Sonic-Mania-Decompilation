@@ -173,12 +173,12 @@ void TransportTube_State_Type23(void)
                     TransportTube->field_4[i] = 1;
                 else
                     TransportTube->field_4[i] = -1;
-                Entity *entPtr        = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + TransportTube->field_4[i]);
-                int angle             = RSDK.ATan2((entPtr->position.x - player->position.x) >> 16, (entPtr->position.y - player->position.y) >> 16);
-                player->velocity.x    = 0xC00 * RSDK.Cos256(angle);
-                player->velocity.y    = 0xC00 * RSDK.Sin256(angle);
-                entity->players[i] = player;
-                entity->playerTimers[i]   = 2;
+                EntityTransportTube *entPtr = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
+                int angle          = RSDK.ATan2((entPtr->position.x - player->position.x) >> 16, (entPtr->position.y - player->position.y) >> 16);
+                player->velocity.x = 0xC00 * RSDK.Cos256(angle);
+                player->velocity.y = 0xC00 * RSDK.Sin256(angle);
+                entPtr->players[i]          = player;
+                entity->playerTimers[i] = 2;
             }
         }
     }

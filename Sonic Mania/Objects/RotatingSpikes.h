@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectRotatingSpikes;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Animator animator1;
+    Animator animator2;
+    int pivotRadius;
+    int spikeRadius;
+    int spikeCount;
+    int rotSpeed;
+    int angleOffset;
+    int priority;
 } EntityRotatingSpikes;
 
 // Object Struct

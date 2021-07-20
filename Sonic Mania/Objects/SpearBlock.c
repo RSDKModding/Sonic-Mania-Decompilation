@@ -70,8 +70,8 @@ void SpearBlock_StageLoad(void)
 
 void SpearBlock_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void SpearBlock_DebugSpawn(void)
 {

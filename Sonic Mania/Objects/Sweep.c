@@ -109,8 +109,8 @@ void Sweep_DebugSpawn(void)
 
 void Sweep_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, false);
+    RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
 void Sweep_CheckOnScreen(void)

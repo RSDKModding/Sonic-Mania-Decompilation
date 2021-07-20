@@ -150,8 +150,8 @@ void StarPost_StageLoad(void)
 
 void StarPost_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(StarPost->spriteIndex, 0, &DebugMode->debugData, true, 1);
-    RSDK.DrawSprite(&DebugMode->debugData, NULL, false);
+    RSDK.SetSpriteAnimation(StarPost->spriteIndex, 0, &DebugMode->animator, true, 1);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void StarPost_DebugSpawn(void) { RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
 void StarPost_ResetStarPosts(void)

@@ -58,8 +58,8 @@ void Chopper_StageLoad(void)
 }
 void Chopper_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 
 void Chopper_DebugSpawn(void)

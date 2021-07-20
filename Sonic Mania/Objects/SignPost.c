@@ -195,12 +195,12 @@ void SignPost_DebugSpawn(void)
 }
 void SignPost_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, 5, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &DebugMode->debugData, true, 2);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, 0);
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, 5, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, 6, &DebugMode->animator, true, 2);
+    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 void SignPost_SpinSpeed(void)
 {

@@ -26,7 +26,7 @@ void OneWayDoor_Create(void *data)
     entity->visible       = true;
     entity->updateRange.x = 0x1000000;
     entity->updateRange.y = 0x1000000;
-    entity->state         = OneWayDoor_DefaultState;
+    entity->state         = OneWayDoor_State_MoveDown;
     entity->drawOrder     = Zone->drawOrderHigh - 2;
     if (RSDK.CheckStageFolder("MMZ")) {
         RSDK.SetSpriteAnimation(OneWayDoor->animID, entity->direction ? 4 : 2, &entity->animator, true, 0);
@@ -62,16 +62,10 @@ void OneWayDoor_StageLoad(void)
     OneWayDoor->touchBox.bottom = 32;
 }
 
-void OneWayDoor_EditorDraw(void) {}
-
-void OneWayDoor_EditorLoad(void) {}
-
-void OneWayDoor_Serialize(void) { RSDK_EDITABLE_VAR(OneWayDoor, VAR_UINT8, direction); }
-
 void OneWayDoor_Interact(void)
 {
     RSDK_THIS(OneWayDoor);
-    entity->state = OneWayDoor_DefaultState;
+    entity->state = OneWayDoor_State_MoveDown;
     bool32 isMMZ1 = true;
     if (!RSDK.CheckStageFolder("MMZ") || (Zone->actID != 1))
         isMMZ1 = false;
@@ -85,15 +79,19 @@ void OneWayDoor_Interact(void)
     foreach_active(Player, currentPlayer)
     {
         int yChange = entity->yChange;
-            if (entity->drawState != OneWayDoor_MMZDraw)
-                yChange *= 2;
-        
+        if (entity->drawState != OneWayDoor_MMZDraw)
+            yChange *= 2;
+
         entity->position.y -= yChange;
         Player_CheckCollisionBox(currentPlayer, entity, &OneWayDoor->hitbox1);
         if (entity->drawState == OneWayDoor_MMZDraw)
             entity->position.y += 2 * entity->yChange;
+
         Player_CheckCollisionBox(currentPlayer, entity, &OneWayDoor->hitbox2);
-        entity->position.y -= yChange;
+        if (entity->drawState == OneWayDoor_MMZDraw)
+            entity->position.y -= entity->yChange;
+        else
+            entity->position.y += 2 * entity->yChange;
 
         if (currentPlayer->velocity.x < 0x60000)
             OneWayDoor->touchBox.left = -64;
@@ -102,19 +100,19 @@ void OneWayDoor_Interact(void)
 
         if (Player_CheckCollisionTouch(currentPlayer, entity, &OneWayDoor->touchBox)) {
             if (isMMZ1 && currentPlayer->sidekick && !playerIsBehind) {
-#if RETRO_USE_PLUS 
+#if RETRO_USE_PLUS
                 Player->cantSwap = true;
                 NoSwap->counter++;
 #endif
             }
             else {
-                entity->state = OneWayDoor_MoveUp;
+                entity->state = OneWayDoor_State_MoveUp;
             }
         }
     }
 }
 
-void OneWayDoor_DefaultState(void)
+void OneWayDoor_State_MoveDown(void)
 {
     RSDK_THIS(OneWayDoor);
     if (entity->yChange > 0)
@@ -122,7 +120,7 @@ void OneWayDoor_DefaultState(void)
     OneWayDoor_Interact();
 }
 
-void OneWayDoor_MoveUp(void)
+void OneWayDoor_State_MoveUp(void)
 {
     RSDK_THIS(OneWayDoor);
     if (entity->yChange < 0x200000)
@@ -150,3 +148,9 @@ void OneWayDoor_CPZDraw(void)
     RSDK.DrawSprite(&entity->animator, 0, false);
     entity->position.y += 2 * entity->yChange;
 }
+
+void OneWayDoor_EditorDraw(void) {}
+
+void OneWayDoor_EditorLoad(void) {}
+
+void OneWayDoor_Serialize(void) { RSDK_EDITABLE_VAR(OneWayDoor, VAR_UINT8, direction); }

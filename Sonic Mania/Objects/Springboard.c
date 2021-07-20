@@ -192,8 +192,8 @@ void Springboard_DebugSpawn(void)
 }
 void Springboard_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Springboard->aniFrames, 1, &DebugMode->debugData, true, 0);
-    RSDK.DrawSprite(&DebugMode->debugData, 0, false);
+    RSDK.SetSpriteAnimation(Springboard->aniFrames, 1, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
 void Springboard_EditorDraw(void) {}
