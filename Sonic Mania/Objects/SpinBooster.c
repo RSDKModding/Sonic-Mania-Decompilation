@@ -6,7 +6,7 @@ void SpinBooster_Update(void)
 {
     RSDK_THIS(SpinBooster);
 
-    byte negAngle = -entity->angle;
+    int negAngle = -entity->angle;
 
     foreach_active(Player, player)
     {
@@ -17,31 +17,32 @@ void SpinBooster_Update(void)
         int y     = (distY * RSDK.Cos256(negAngle)) - distX * RSDK.Sin256(negAngle) + entity->position.y;
 
         if (abs(x - entity->position.x) >= 0x180000 || abs(y - entity->position.y) >= entity->size << 19) {
-            if (x > entity->position.x) {
+            if (x < entity->position.x) {
                 entity->activePlayers &= ~(1 << pid);
+            }
+            else {
+                entity->activePlayers |= (1 << pid);
             }
         }
         else {
-            if (x > entity->position.x) {
-                if ((1 << pid) & entity->activePlayers) {
-                    if (!entity->forwardOnly) {
-                        if (player->state == Player_State_ForceRoll || player->state == Player_State_RollLock) {
-                            player->nextAirState    = StateMachine_None;
-                            player->nextGroundState = StateMachine_None;
-                            if (!entity->allowTubeInput)
-                                player->controlLock = 0;
-                            player->tileCollisions = true;
-                            if (player->onGround)
-                                player->state = Player_State_Roll;
-                            else
-                                player->state = Player_State_Air;
-                        }
+            if (x < entity->position.x) {
+                if (((1 << pid) & entity->activePlayers) && !entity->forwardOnly) {
+                    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+                        player->nextAirState    = StateMachine_None;
+                        player->nextGroundState = StateMachine_None;
+                        if (!entity->allowTubeInput)
+                            player->controlLock = 0;
+                        player->tileCollisions = true;
+                        if (player->onGround)
+                            player->state = Player_State_Roll;
+                        else
+                            player->state = Player_State_Air;
                     }
                 }
                 entity->activePlayers &= ~(1 << pid);
             }
             else if (!((1 << pid) & entity->activePlayers)) {
-                SpinBooster_Unknown5(player);
+                SpinBooster_HandleForceRoll(player);
                 entity->activePlayers |= (1 << pid);
             }
         }
@@ -71,7 +72,7 @@ void SpinBooster_Create(void *data)
         switch (entity->direction) {
             case FLIP_NONE: entity->angle = 0; break;
             case FLIP_X: entity->angle = 0x40; break;
-            case FLIP_Y: entity->angle = -0x80; break;
+            case FLIP_Y: entity->angle = 0x80; break;
             case FLIP_XY: entity->angle = 0xC0; break;
         }
         entity->active = ACTIVE_BOUNDS;
@@ -94,7 +95,7 @@ void SpinBooster_Create(void *data)
 
 void SpinBooster_StageLoad(void) { SpinBooster->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-int SpinBooster_Unknown1(EntityPlayer *player)
+int SpinBooster_GetRollDir(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
 
@@ -102,66 +103,67 @@ int SpinBooster_Unknown1(EntityPlayer *player)
         case FLIP_NONE:
             if (entity->autoGrip != 5) {
                 if ((entity->autoGrip == 7 || entity->autoGrip == 8) && player->up)
-                    return 2;
-                return 0;
+                    return CMODE_ROOF;
+                return CMODE_FLOOR;
             }
             if (player->down) {
-                return 0;
+                return CMODE_FLOOR;
             }
             if (player->up) {
-                return 2;
+                return CMODE_ROOF;
             }
 
             if (!entity->bias)
-                return 0;
+                return CMODE_FLOOR;
             else
-                return 2;
+                return CMODE_ROOF;
         case FLIP_X:
             if (entity->autoGrip != 5) {
                 if (entity->autoGrip == 7) {
                     if (!player->left) {
                         return -1;
                     }
-                    return 3;
+                    return CMODE_RWALL;
                 }
 
                 if (entity->autoGrip == 6) {
                     if (!player->right)
                         return -1;
+                    return CMODE_LWALL;
                 }
                 if (entity->autoGrip != 8)
                     return -1;
                 if (!player->left) {
                     if (!player->right)
                         return -1;
-                    return 1;
+                    return CMODE_LWALL;
                 }
                 else {
-                    return 3;
+                    return CMODE_RWALL;
                 }
             }
             else {
                 if (player->left)
-                    return 3;
+                    return CMODE_RWALL;
                 if (player->right)
-                    return 1;
-                return 2 * (entity->bias != 0) + 1;
+                    return CMODE_LWALL;
+                return CMODE_ROOF * (entity->bias != 0) + 1;
             }
         case FLIP_Y:
             if (entity->autoGrip != 5) {
                 if ((entity->autoGrip == 6 || entity->autoGrip == 8) && player->up)
-                    return 2;
-                return 0;
+                    return CMODE_ROOF;
+                return CMODE_FLOOR;
             }
             if (player->down)
-                return 0;
+                return CMODE_FLOOR;
             if (player->up)
-                return 2;
+                return CMODE_ROOF;
 
             if (!entity->bias)
-                return 2;
+                return CMODE_ROOF;
             else
-                return 0;
+                return CMODE_FLOOR;
         case FLIP_XY:
             if (entity->autoGrip == 5) {
                 return 2 * (player->left != 0) + 1;
@@ -169,42 +171,43 @@ int SpinBooster_Unknown1(EntityPlayer *player)
             else if (entity->autoGrip == 6) {
                 if (!player->left)
                     return -1;
-                return 3;
+                return CMODE_RWALL;
             }
             else {
                 if (entity->autoGrip == 7) {
                     if (!player->right)
                         return -1;
+                    return CMODE_LWALL;
                 }
                 if (entity->autoGrip != 8)
                     return -1;
                 if (!player->left) {
                     if (!player->right)
                         return -1;
-                    return 1;
+                    return CMODE_LWALL;
                 }
                 else {
-                    return 3;
+                    return CMODE_RWALL;
                 }
             }
         default: break;
     }
     return -1;
 }
-void SpinBooster_Unknown2(EntityPlayer *player)
+void SpinBooster_HandleRollDir(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
 
     if (entity->autoGrip) {
-        byte cMode = 0;
+        sbyte cMode = 0;
         if (entity->autoGrip < 5) {
             cMode = entity->autoGrip - 1;
         }
         else {
-            cMode = SpinBooster_Unknown1(player);
+            cMode = SpinBooster_GetRollDir(player);
         }
 
-        if ((cMode & 0x80) != 0) {
+        if (cMode < 0) {
             player->onGround = false;
             return;
         }
@@ -213,29 +216,27 @@ void SpinBooster_Unknown2(EntityPlayer *player)
         int plrAngle = 0;
         int angle    = 0;
 
-        if (cMode) {
-            switch (cMode) {
-                case CMODE_FLOOR:
-                    plrAngle = 0x00;
-                    angle    = 0x40;
-                    break;
-                case CMODE_LWALL:
-                    plrAngle = -0x40;
-                    angle    = 0x00;
-                    break;
-                case CMODE_ROOF:
-                    plrAngle = -0x80;
-                    angle    = -0x40;
-                    break;
-                case CMODE_RWALL:
-                    plrAngle = 0x40;
-                    angle    = -0x80;
-                    break;
-                default:
-                    plrAngle = 0x00;
-                    angle    = 0x00;
-                    break;
-            }
+        switch (cMode) {
+            case CMODE_FLOOR:
+                plrAngle = 0x00;
+                angle    = 0x40;
+                break;
+            case CMODE_LWALL:
+                plrAngle = -0x40;
+                angle    = 0x00;
+                break;
+            case CMODE_ROOF:
+                plrAngle = -0x80;
+                angle    = -0x40;
+                break;
+            case CMODE_RWALL:
+                plrAngle = 0x40;
+                angle    = -0x80;
+                break;
+            default:
+                plrAngle = 0x00;
+                angle    = 0x00;
+                break;
         }
 
         Hitbox *playerHitbox = Player_GetHitbox(player);
@@ -265,10 +266,10 @@ void SpinBooster_Unknown2(EntityPlayer *player)
         }
         else {
             switch (cMode) {
-                case FLIP_NONE: player->groundVel = player->velocity.x; break;
-                case FLIP_X: player->groundVel = -player->velocity.y; break;
-                case FLIP_Y: player->groundVel = -player->velocity.x; break;
-                case FLIP_XY: player->groundVel = player->velocity.y; break;
+                case CMODE_FLOOR: player->groundVel = player->velocity.x; break;
+                case CMODE_LWALL: player->groundVel = -player->velocity.y; break;
+                case CMODE_ROOF: player->groundVel = -player->velocity.x; break;
+                case CMODE_RWALL: player->groundVel = player->velocity.y; break;
                 default: break;
             }
         }
@@ -276,12 +277,12 @@ void SpinBooster_Unknown2(EntityPlayer *player)
         player->onGround      = true;
     }
 }
-void SpinBooster_Unknown3(EntityPlayer *player)
+void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
     if (player->onGround) {
         int entAng = RSDK.Sin256(entity->angle) + RSDK.Cos256(entity->angle);
-        int plrAng = RSDK.Sin256(player->angle) + RSDK.Cos256(player->angle);
+        int plrAng = RSDK.Cos256(player->angle) - RSDK.Sin256(player->angle);
         int power  = (entity->boostPower << 15) * ((plrAng > 0) - (plrAng < 0)) * ((entAng > 0) - (entAng < 0));
         if (entity->boostPower >= 0)
             player->groundVel += power;
@@ -289,7 +290,7 @@ void SpinBooster_Unknown3(EntityPlayer *player)
             player->groundVel = power;
     }
     else {
-        int x = (RSDK.Cos256(entity->angle) << 7) * entity->boostPower;
+        int x = ( 0x80 * RSDK.Cos256(entity->angle)) * entity->boostPower;
         int y = (-0x80 * RSDK.Sin256(entity->angle)) * entity->boostPower;
         if (entity->boostPower >= 0) {
             player->velocity.x += x;
@@ -300,8 +301,9 @@ void SpinBooster_Unknown3(EntityPlayer *player)
             player->velocity.y = y;
         }
     }
+
     if (entity->boostPower < 0 && !entity->forwardOnly) {
-        if (player->state == Player_State_ForceRoll || player->state == Player_State_RollLock) {
+        if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
             if (!entity->allowTubeInput)
@@ -403,15 +405,15 @@ void SpinBooster_DrawSprites(void)
         }
     }
 }
-void SpinBooster_Unknown5(EntityPlayer *player)
+void SpinBooster_HandleForceRoll(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
     player->tileCollisions = true;
-    SpinBooster_Unknown2(player);
+    SpinBooster_HandleRollDir(player);
 
-    if (player->state == Player_State_ForceRoll || player->state == Player_State_RollLock) {
+    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
         if (entity->boostAlways)
-            SpinBooster_Unknown3(player);
+            SpinBooster_ApplyRollVelocity(player);
     }
     else {
         if (entity->playSound)
@@ -428,9 +430,9 @@ void SpinBooster_Unknown5(EntityPlayer *player)
             player->controlLock = 0xFFFF;
 
         if (player->onGround)
-            player->state = Player_State_ForceRoll;
+            player->state = Player_State_ForceRoll_Ground;
         else
-            player->state = Player_State_RollLock;
+            player->state = Player_State_ForceRoll_Air;
 
         if (abs(player->groundVel) < 0x10000) {
             if (entity->direction & FLIP_X)
@@ -438,7 +440,7 @@ void SpinBooster_Unknown5(EntityPlayer *player)
             else
                 player->groundVel = 0x40000;
         }
-        SpinBooster_Unknown3(player);
+        SpinBooster_ApplyRollVelocity(player);
     }
 }
 

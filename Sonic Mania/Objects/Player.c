@@ -3180,7 +3180,7 @@ void Player_HandleRollDeceleration(void)
 
     switch (entity->collisionMode) {
         case CMODE_FLOOR:
-            if (entity->state == Player_State_ForceRoll) {
+            if (entity->state == Player_State_ForceRoll_Ground) {
                 if (abs(entity->groundVel) < 0x10000) {
                     if (entity->direction & FLIP_Y)
                         entity->groundVel = -0x40000;
@@ -3854,15 +3854,15 @@ void Player_State_Roll(void)
             Player_StartJump(entity);
     }
 }
-void Player_State_ForceRoll(void)
+void Player_State_ForceRoll_Ground(void)
 {
     RSDK_THIS(Player);
     Player_HandleGroundRotation();
     bool32 left  = entity->left;
     bool32 right = entity->right;
     if (entity->controlLock > 0) {
-        entity->left  = 0;
-        entity->right = 0;
+        entity->left  = false;
+        entity->right = false;
         entity->controlLock--;
     }
     Player_HandleRollDeceleration();
@@ -3870,7 +3870,7 @@ void Player_State_ForceRoll(void)
     entity->right       = right;
     entity->jumpAbility = 0;
     if (!entity->onGround) {
-        entity->state = Player_State_RollLock;
+        entity->state = Player_State_ForceRoll_Air;
         Player_HandleAirMovement();
     }
     else {
@@ -3888,25 +3888,28 @@ void Player_State_ForceRoll(void)
         entity->jumpAbilityTimer = 0;
     }
 }
-void Player_State_RollLock(void)
+void Player_State_ForceRoll_Air(void)
 {
     RSDK_THIS(Player);
     Player_HandleGroundRotation();
-    bool32 left  = entity->left;
-    bool32 right = entity->right;
+    bool32 left     = entity->left;
+    bool32 right    = entity->right;
     if (entity->controlLock > 0) {
-        entity->left  = 0;
-        entity->right = 0;
+        entity->left        = false;
+        entity->right       = false;
         entity->controlLock--;
     }
-    Player_HandleRollDeceleration();
-    entity->left        = left;
-    entity->right       = right;
-    entity->jumpAbility = 0;
+    Player_HandleAirFriction();
+
+    entity->left            = left;
+    entity->right           = right;
+    entity->jumpAbility     = 0;
+    entity->nextGroundState = Player_State_ForceRoll_Ground;
     if (!entity->onGround) {
-        Player_HandleAirMovement();
+        return Player_HandleAirMovement();
     }
     else {
+        entity->state = Player_State_ForceRoll_Ground;
         if (entity->camera) {
             entity->camera->field_94 = 0;
         }
@@ -5534,7 +5537,7 @@ void Player_State_FlyIn(void)
         entPtr->position.y &= 0xFFFF0000;
 
         if (player1->objectID == Player->objectID) {
-            if (player1->state != Player_State_Die && player1->state != Player_State_Drown && player1->state != Player_State_ForceRoll) {
+            if (player1->state != Player_State_Die && player1->state != Player_State_Drown && player1->state != Player_State_ForceRoll_Ground) {
                 if (abs(xDif) <= 0x40000) {
                     if (abs(Player->curFlyCarryPos.y - entPtr->position.y) < 0x20000)
                         Player_EndFlyJumpIn(entity, player1);
@@ -5564,7 +5567,7 @@ void Player_State_FlyIn(void)
             entity->position.x = entPtr->position.x;
 
             if (player1->objectID == Player->objectID) {
-                if (player1->state != Player_State_Die && player1->state != Player_State_Drown && player1->state != Player_State_ForceRoll) {
+                if (player1->state != Player_State_Die && player1->state != Player_State_Drown && player1->state != Player_State_ForceRoll_Ground) {
                     if (abs(0) <= 0x40000) {
                         if (abs(Player->curFlyCarryPos.y - entPtr->position.y) < 0x20000)
                             Player_EndFlyJumpIn(entity, player1);

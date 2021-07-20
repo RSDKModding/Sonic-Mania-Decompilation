@@ -943,8 +943,8 @@ void Zone_Unknown19(void)
         EntityPlayer *player    = (EntityPlayer *)Zone->entityData[p];
         void *state             = player->state;
 
-        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll
-            || state == Player_State_RollLock) {
+        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
+            || state == Player_State_ForceRoll_Air) {
             playerPtr->state           = state;
             playerPtr->nextAirState    = player->nextAirState;
             playerPtr->nextGroundState = player->nextGroundState;

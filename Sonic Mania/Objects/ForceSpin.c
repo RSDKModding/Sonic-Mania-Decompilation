@@ -21,7 +21,7 @@ void ForceSpin_Update(void)
         if (xDif < 0x180000 && yDif < entity->size << 19) {
             if (scanX + pos >= entity->position.x) {
                 if (entity->direction) {
-                    if (player->state == Player_State_ForceRoll || player->state == Player_State_RollLock) {
+                    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
                         if (player->onGround)
                             player->state = Player_State_Roll;
                         else
@@ -36,7 +36,7 @@ void ForceSpin_Update(void)
             }
             else {
                 if (!entity->direction) {
-                    if (player->state == Player_State_ForceRoll || player->state == Player_State_RollLock) {
+                    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
                         if (player->onGround)
                             player->state = Player_State_Roll;
                         else
@@ -110,7 +110,7 @@ void ForceSpin_SetPlayerState(void *plr)
 {
     RSDK_THIS(ForceSpin);
     EntityPlayer *player = (EntityPlayer *)plr;
-    if (player->state != Player_State_ForceRoll && player->state != Player_State_RollLock) {
+    if (player->state != Player_State_ForceRoll_Ground && player->state != Player_State_ForceRoll_Air) {
         if (player->playerAnimator.animationID != ANI_JUMP) {
             RSDK.PlaySFX(Player->sfx_Roll, 0, 255);
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, 0, 0);
@@ -121,9 +121,9 @@ void ForceSpin_SetPlayerState(void *plr)
 
         player->nextAirState = StateMachine_None;
         if (player->onGround)
-            player->state = Player_State_ForceRoll;
+            player->state = Player_State_ForceRoll_Ground;
         else
-            player->state = Player_State_RollLock;
+            player->state = Player_State_ForceRoll_Air;
 
         player->nextGroundState = StateMachine_None;
         if (abs(player->groundVel) < 0x10000) {

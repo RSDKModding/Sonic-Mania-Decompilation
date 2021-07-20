@@ -516,8 +516,8 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[48] = Player_State_None;
     ReplayRecorder->actions[49] = Player_State_Transform;
     ReplayRecorder->actions[50] = Player_Unknown7;
-    ReplayRecorder->actions[51] = Player_State_RollLock;
-    ReplayRecorder->actions[52] = Player_State_ForceRoll;
+    ReplayRecorder->actions[51] = Player_State_ForceRoll_Air;
+    ReplayRecorder->actions[52] = Player_State_ForceRoll_Ground;
     ReplayRecorder->actions[53] = Player_State_Victory;
     ReplayRecorder->actions[54] = StateMachine_None; // SizeLaser_Unknown5;
     ReplayRecorder->actions[55] = StateMachine_None; // SizeLaser_Unknown7;

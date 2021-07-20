@@ -122,8 +122,8 @@ void Spring_State_Vertical(void)
                         player->storedAnim = ANI_WALK;
 
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
-                            player->state = Player_State_RollLock;
+                        if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
+                            player->state = Player_State_ForceRoll_Air;
                         }
                         else {
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
@@ -150,8 +150,8 @@ void Spring_State_Vertical(void)
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
                 if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll)
-                        player->state = Player_State_RollLock;
+                    if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground)
+                        player->state = Player_State_ForceRoll_Air;
                     else
                         player->state = Player_State_Air;
                 }
@@ -187,7 +187,7 @@ void Spring_State_Horizontal(void)
                 }
 
                 if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state != Player_State_Roll && player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
+                    if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
                         if (player->onGround == 1)
                             player->state = Player_State_Ground;
                         else
@@ -227,7 +227,7 @@ void Spring_State_Horizontal(void)
                 }
 
                 if (player->state != Ice_State_FrozenPlayer) {
-                    if (player->state != Player_State_Roll && player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
+                    if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
                         if (player->onGround)
                             player->state = Player_State_Ground;
                         else
@@ -278,8 +278,8 @@ void Spring_State_Diagonal(void)
                 }
                 if (flag) {
                     if (player->state != Ice_State_FrozenPlayer) {
-                        if (player->state == Player_State_RollLock || player->state == Player_State_ForceRoll) {
-                            player->state = Player_State_RollLock;
+                        if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
+                            player->state = Player_State_ForceRoll_Air;
                         }
                         else {
                             player->state = Player_State_Air;
@@ -289,7 +289,7 @@ void Spring_State_Diagonal(void)
                         }
                     }
                     if (entity->direction < FLIP_Y) {
-                        if (player->state != Player_State_RollLock && player->state != Player_State_ForceRoll) {
+                        if (player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
                             int anim = player->playerAnimator.animationID;
                             if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                                 player->storedAnim = player->playerAnimator.animationID;

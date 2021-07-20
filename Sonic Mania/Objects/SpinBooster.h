@@ -40,12 +40,12 @@ void SpinBooster_EditorLoad(void);
 void SpinBooster_Serialize(void);
 
 // Extra Entity Functions
-int SpinBooster_Unknown1(EntityPlayer *player);
-void SpinBooster_Unknown2(EntityPlayer *player);
-void SpinBooster_Unknown3(EntityPlayer *player);
+int SpinBooster_GetRollDir(EntityPlayer *player);
+void SpinBooster_HandleRollDir(EntityPlayer *player);
+void SpinBooster_ApplyRollVelocity(EntityPlayer *player);
 void SpinBooster_Unknown4(uint colour, int X1, int Y1, int X2, int Y2);
 void SpinBooster_DrawSprites(void);
-void SpinBooster_Unknown5(EntityPlayer *player);
+void SpinBooster_HandleForceRoll(EntityPlayer *player);
 
 
 #endif //!OBJ_SPINBOOSTER_H

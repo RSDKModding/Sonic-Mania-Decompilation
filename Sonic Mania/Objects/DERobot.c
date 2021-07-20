@@ -764,7 +764,7 @@ void DERobot_Unknown31(void)
     if (++entity->timer >= 8) {
         entity->timer         = 0;
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (player1->position.y <= entity->position.y + 0x200000 && player1->state != Player_State_ForceRoll) {
+        if (player1->position.y <= entity->position.y + 0x200000 && player1->state != Player_State_ForceRoll_Ground) {
             for (int i = 0; i < Player->playerCount; ++i) {
                 Zone->screenBoundsL1[i]     = (entity->position.x >> 16) - RSDK_screens->centerX + 128;
                 Zone->screenBoundsR1[i]     = RSDK_screens->centerX + 128 + (entity->position.x >> 16);
@@ -866,7 +866,7 @@ void DERobot_Unknown32(void)
 
     foreach_active(Player, player)
     {
-        if (player->state == Player_State_ForceRoll || player->state == Player_State_RollLock)
+        if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air)
             player->state = Player_State_Air;
     }
 }
