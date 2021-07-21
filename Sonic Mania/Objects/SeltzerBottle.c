@@ -12,7 +12,7 @@ void SeltzerBottle_Update(void)
         Player_CheckCollisionBox(player, entity, &SeltzerBottle->hitbox1);
         if (Player_CheckCollisionPlatform(player, entity, &SeltzerBottle->hitbox2) && !entity->animator2.frameID) {
             entity->animator2.frameID = 1;
-            entity->active       = ACTIVE_BOUNDS;
+            entity->active       = ACTIVE_NORMAL;
             entity->state             = SeltzerBottle_Unknown1;
             RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 6, &entity->animator4, false, 0);
             player->groundVel = clampVal(player->groundVel, -0xC0000, 0xC0000);
