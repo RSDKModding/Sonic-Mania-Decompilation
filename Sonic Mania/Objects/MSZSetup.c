@@ -88,7 +88,7 @@ void MSZSetup_StageLoad(void)
             if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
                 foreach_all(MSZ2Cutscene, cutscene)
                 {
-                    MSZSetup->msz2Cutscene = cutscene;
+                    MSZSetup->msz2Cutscene = (Entity*)cutscene;
                     foreach_break;
                 }
                 Zone->stageFinishCallback = MSZSetup_ActivateMSZ2Cutscene;
@@ -204,7 +204,6 @@ void MSZSetup_ManageFadeK(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x < 0x21000000 && player1->position.y < 0x6400000)
         entity->state = MSZSetup_SwitchPalettes;
-    return player1;
 }
 
 #if RETRO_USE_PLUS

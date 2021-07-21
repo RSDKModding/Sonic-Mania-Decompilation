@@ -4,7 +4,7 @@ ObjectCollapsingPlatform *CollapsingPlatform;
 
 void CollapsingPlatform_Update(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
     entity->visible                  = false;
     if (DebugMode)
         entity->visible = DebugMode->debugActive;
@@ -22,7 +22,7 @@ void CollapsingPlatform_Update(void)
                         entity->playerPos.x   = 0;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                        destroyEntity(entity);
                     }
                     foreach_return;
                 }
@@ -37,7 +37,7 @@ void CollapsingPlatform_Update(void)
                 entity->playerPos.x   = 0;
             }
             else {
-                RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                destroyEntity(entity);
             }
         }
     }
@@ -61,13 +61,14 @@ void CollapsingPlatform_Update(void)
                         entity->playerPos.x   = 0;
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                        destroyEntity(entity);
                     }
                     foreach_break;
                 }
 #endif
             }
         }
+
         if (entity->playerPos.x) {
             entity->collapseDelay = entity->delay;
             if (!entity->delay) {
@@ -78,7 +79,7 @@ void CollapsingPlatform_Update(void)
                     entity->playerPos.x   = 0;
                 }
                 else {
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                    destroyEntity(entity);
                 }
             }
         }
@@ -91,7 +92,7 @@ void CollapsingPlatform_StaticUpdate(void) {}
 
 void CollapsingPlatform_Draw(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
     Vector2 drawPos;
     drawPos.x = RSDK_sceneInfo->entity->position.x;
     drawPos.y = entity->position.y;
@@ -116,7 +117,7 @@ void CollapsingPlatform_Draw(void)
 
 void CollapsingPlatform_Create(void *data)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
     entity->visible                  = true;
     entity->position.x &= 0xFFF80000;
     entity->position.y &= 0xFFF80000;
@@ -133,14 +134,12 @@ void CollapsingPlatform_Create(void *data)
 
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
-        bool32 checkA         = (entity->size.y & 0xFFF00000) == 0;
-        bool32 checkB         = (entity->size.y & 0xFFF00000 & 0x80000000) != 0;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
         int xOff              = (entity->position.x >> 20) - (entity->size.x >> 21);
         int yOff              = (entity->position.y >> 20) - (entity->size.y >> 21);
 
-        if (!checkA && !checkB) {
+        if ((entity->size.y & 0xFFF00000) && (entity->size.y & 0xFFF00000 & 0x80000000)) {
             int sx = entity->size.x >> 20;
             int sy = entity->size.y >> 20;
             for (int y = 0; y < sy; ++y) {
@@ -183,7 +182,7 @@ void CollapsingPlatform_StageLoad(void)
 
 void CollapsingPlatform_State_Left(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
 
     ushort *tiles = entity->storedTiles;
     int startTX   = (RSDK_sceneInfo->entity->position.x >> 20) - (entity->size.x >> 21);
@@ -196,7 +195,7 @@ void CollapsingPlatform_State_Left(void)
 
     for (int y = 0; y < sy; ++y) {
         for (int x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)2, tx, ty);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
             tileChunk->layerID  = entity->targetLayer;
             tileChunk->tileInfo = *tiles;
@@ -214,7 +213,7 @@ void CollapsingPlatform_State_Left(void)
 }
 void CollapsingPlatform_State_Right(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
 
     ushort *tiles = entity->storedTiles;
     int startTX   = (RSDK_sceneInfo->entity->position.x >> 20) - (entity->size.x >> 21);
@@ -226,7 +225,7 @@ void CollapsingPlatform_State_Right(void)
     int sy = entity->size.y >> 20;
     for (int y = 0; y < sy; ++y) {
         for (int x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)2, tx, ty);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
             tileChunk->tileInfo  = *tiles;
@@ -245,7 +244,7 @@ void CollapsingPlatform_State_Right(void)
 }
 void CollapsingPlatform_State_Center(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
 
     ushort *tiles = entity->storedTiles;
     int startTX   = (RSDK_sceneInfo->entity->position.x >> 20) - (entity->size.x >> 21);
@@ -259,7 +258,7 @@ void CollapsingPlatform_State_Center(void)
     int sy = entity->size.y >> 20;
     for (int y = 0; y < sy; ++y) {
         for (int x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, (void *)2, tx, ty);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
             tileChunk->tileInfo  = *tiles;
@@ -280,7 +279,7 @@ void CollapsingPlatform_State_Center(void)
 }
 void CollapsingPlatform_State_LeftOrRight(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
     int px                           = entity->playerPos.x;
     int x                            = entity->position.x;
 
@@ -291,7 +290,7 @@ void CollapsingPlatform_State_LeftOrRight(void)
 }
 void CollapsingPlatform_State_PlayerPos(void)
 {
-    EntityCollapsingPlatform *entity = (EntityCollapsingPlatform *)RSDK_sceneInfo->entity;
+    RSDK_THIS(CollapsingPlatform);
     int px = entity->playerPos.x;
     int x = entity->position.x;
 

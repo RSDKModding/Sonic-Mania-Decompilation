@@ -1060,12 +1060,12 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
 #endif
 
             if (HCZSetup) {
-                RSDK.SetPaletteEntry(2, i + 64, Player->superPalette_Sonic_HCZ[i]);
-                RSDK.SetPaletteEntry(2, i + 70, Player->superPalette_Tails_HCZ[i]);
-                RSDK.SetPaletteEntry(2, i + 80, Player->superPalette_Knux_HCZ[i]);
+                RSDK.SetPaletteEntry(1, i + 64, Player->superPalette_Sonic_HCZ[i]);
+                RSDK.SetPaletteEntry(1, i + 70, Player->superPalette_Tails_HCZ[i]);
+                RSDK.SetPaletteEntry(1, i + 80, Player->superPalette_Knux_HCZ[i]);
 #if RETRO_USE_PLUS
-                RSDK.SetPaletteEntry(2, i + 96, Player->superPalette_Mighty_HCZ[i]);
-                RSDK.SetPaletteEntry(2, i + 113, Player->superPalette_Ray_HCZ[i]);
+                RSDK.SetPaletteEntry(1, i + 96, Player->superPalette_Mighty_HCZ[i]);
+                RSDK.SetPaletteEntry(1, i + 113, Player->superPalette_Ray_HCZ[i]);
 #endif
             }
             else if (CPZSetup) {

@@ -2,15 +2,9 @@
 
 ObjectHCZSetup *HCZSetup;
 
-void HCZSetup_Update(void)
-{
+void HCZSetup_Update(void) {}
 
-}
-
-void HCZSetup_LateUpdate(void)
-{
-
-}
+void HCZSetup_LateUpdate(void) {}
 
 void HCZSetup_StaticUpdate(void)
 {
@@ -30,8 +24,8 @@ void HCZSetup_StaticUpdate(void)
     }
 
     int *sizes = HCZSetup->aniTilesDelay;
-    int sizeX         = 0;
-    int sizeY         = 0;
+    int sizeX  = 0;
+    int sizeY  = 0;
 
     for (int i = 0; i < 7; ++i) {
         sizeX += sizes[0];
@@ -53,8 +47,7 @@ void HCZSetup_StaticUpdate(void)
 
     if (!(Zone->timer & 1)) {
         for (int id = Zone->fgLow; id <= Zone->fgHigh; ++id) {
-            TileLayer *layer = RSDK.GetSceneLayer(id);
-            ++layer->deformationOffsetW;
+            ++RSDK.GetSceneLayer(id)->deformationOffsetW;
         }
     }
 
@@ -68,7 +61,7 @@ void HCZSetup_StaticUpdate(void)
         }
         else {
             HCZSetup->waterfallSFXTimer = 0;
-            HCZSetup->playingLoopSFX = true;
+            HCZSetup->playingLoopSFX    = true;
             RSDK.PlaySFX(HCZSetup->sfxWaterfall, 0, 255);
             ++HCZSetup->waterfallSFXTimer;
         }
@@ -78,18 +71,19 @@ void HCZSetup_StaticUpdate(void)
     }
 
     HCZSetup->activePlayerCount = 0;
-    foreach_active(Player, player) {
+    foreach_active(Player, player)
+    {
         RSDK.GetEntityID(player);
         if (player->state != Player_State_None) {
             Hitbox *hitbox = Player_GetHitbox(player);
-            ushort tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20)
-                  & 0x3FF;
-            if ((tile >= 0xE2 && (tile <= 0xF4 || tile - 0x370 <= 8)) && player->collisionPlane == 1) {
+            ushort tile =
+                RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
+            if (((tile >= 226 && tile <= 224) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
+                if (player->state != Player_State_BubbleBounce
 #if RETRO_USE_PLUS
-                if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
-#else
-                if (player->state != Player_State_BubbleBounce) {
+                    && player->state != Player_State_MightyHammerDrop
 #endif
+                ) {
                     if (player->onGround) {
                         if (player->state != Player_State_WaterSlide) {
                             player->interaction    = true;
@@ -114,23 +108,17 @@ void HCZSetup_StaticUpdate(void)
     }
 }
 
-void HCZSetup_Draw(void)
-{
+void HCZSetup_Draw(void) {}
 
-}
-
-void HCZSetup_Create(void* data)
-{
-
-}
+void HCZSetup_Create(void *data) {}
 
 void HCZSetup_StageLoad(void)
 {
-    HCZSetup->aniTiles1     = RSDK.LoadSpriteSheet("HCZ/AniTiles.gif", SCOPE_STAGE);
-    HCZSetup->aniTiles2     = RSDK.LoadSpriteSheet("HCZ/AniTiles2.gif", SCOPE_STAGE);
-    HCZSetup->aniTiles3     = RSDK.LoadSpriteSheet("HCZ/AniTiles3.gif", SCOPE_STAGE);
+    HCZSetup->aniTiles1 = RSDK.LoadSpriteSheet("HCZ/AniTiles.gif", SCOPE_STAGE);
+    HCZSetup->aniTiles2 = RSDK.LoadSpriteSheet("HCZ/AniTiles2.gif", SCOPE_STAGE);
+    HCZSetup->aniTiles3 = RSDK.LoadSpriteSheet("HCZ/AniTiles3.gif", SCOPE_STAGE);
 
-    HCZSetup->bg            = RSDK.GetSceneLayer(1);
+    HCZSetup->bg = RSDK.GetSceneLayer(1);
     for (int i = 0; i < 0x200; i += 0x10) {
         int val = RSDK.Rand(0, 4);
 
@@ -156,19 +144,19 @@ void HCZSetup_StageLoad(void)
     int id = Zone->fgLow;
     while (id <= Zone->fgHigh) {
         TileLayer *layer = RSDK.GetSceneLayer(id);
-        int* deformData              = layer->deformationDataW;
+        int *deformData  = layer->deformationDataW;
 
         for (int i = 0; i < 4; ++i) {
-            deformData[0] = 1;
-            deformData[1] = 1;
-            deformData[2] = 2;
-            deformData[3] = 2;
-            deformData[4] = 3;
-            deformData[5] = 3;
-            deformData[6] = 3;
-            deformData[7] = 3;
-            deformData[8] = 2;
-            deformData[9] = 2;
+            deformData[0]  = 1;
+            deformData[1]  = 1;
+            deformData[2]  = 2;
+            deformData[3]  = 2;
+            deformData[4]  = 3;
+            deformData[5]  = 3;
+            deformData[6]  = 3;
+            deformData[7]  = 3;
+            deformData[8]  = 2;
+            deformData[9]  = 2;
             deformData[10] = 1;
             deformData[11] = 1;
 
@@ -185,18 +173,18 @@ void HCZSetup_StageLoad(void)
             deformData[138] = 1;
             deformData[139] = 1;
 
-            deformData[160]  = -1;
-            deformData[161]  = -1;
-            deformData[162]  = -2;
-            deformData[163]  = -2;
-            deformData[164]  = -3;
-            deformData[165]  = -3;
-            deformData[166]  = -3;
-            deformData[167]  = -3;
-            deformData[168]  = -2;
-            deformData[169]  = -2;
-            deformData[170]  = -1;
-            deformData[171]  = -1;
+            deformData[160] = -1;
+            deformData[161] = -1;
+            deformData[162] = -2;
+            deformData[163] = -2;
+            deformData[164] = -3;
+            deformData[165] = -3;
+            deformData[166] = -3;
+            deformData[167] = -3;
+            deformData[168] = -2;
+            deformData[169] = -2;
+            deformData[170] = -1;
+            deformData[171] = -1;
 
             deformData += 0x100;
         }
@@ -206,16 +194,16 @@ void HCZSetup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_ROCKY;
     RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
     RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
-    
+
     Water->waterPalette = 1;
     if (Zone->actID) {
         if (!PlayerHelpers_CheckStageReload())
             PlayerHelpers_CheckPlayerPos(0x5900000, 0xB00000, 0x2600000, 0x6800000);
-        Zone->screenBoundsL1[0] = 0xA8;
-        Zone->screenBoundsL1[1] = 0xA8;
+        Zone->screenBoundsL1[0] = 168;
+        Zone->screenBoundsL1[1] = 168;
 #if RETRO_USE_PLUS
-        Zone->screenBoundsL1[2] = 0xA8;
-        Zone->screenBoundsL1[3] = 0xA8;
+        Zone->screenBoundsL1[2] = 168;
+        Zone->screenBoundsL1[3] = 168;
 #endif
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
             Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
@@ -238,7 +226,8 @@ void HCZSetup_StageLoad(void)
     HCZSetup->sfxWaterfallLoop = RSDK.GetSFX("Stage/Waterfall2.wav");
 }
 
-void HCZSetup_ScanlineCallback(ScanlineInfo* scanlines) {
+void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
+{
     RSDK.ProcessParallax(HCZSetup->bg);
 
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
@@ -251,7 +240,7 @@ void HCZSetup_ScanlineCallback(ScanlineInfo* scanlines) {
     int div = maxVal(1, abs(height - waterPos));
     int val = maxVal(0x10000, 0x640000 / div);
 
-    height = clampVal(height, 0, scrH);
+    height   = clampVal(height, 0, scrH);
     waterPos = clampVal(waterPos, 0, scrH);
 
     ScanlineInfo *scanlinePtr = &scanlines[height];
@@ -291,18 +280,8 @@ void HCZSetup_StageFinishCB_Act2(void)
     Zone_StartFadeOut(10, 0x000000);
 }
 
-void HCZSetup_EditorDraw(void)
-{
+void HCZSetup_EditorDraw(void) {}
 
-}
+void HCZSetup_EditorLoad(void) {}
 
-void HCZSetup_EditorLoad(void)
-{
-
-}
-
-void HCZSetup_Serialize(void)
-{
-
-}
-
+void HCZSetup_Serialize(void) {}

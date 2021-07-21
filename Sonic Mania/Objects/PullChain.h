@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[18]; //= { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 };
+    int dunkeyCode[18]; //= { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 };
     ushort aniFrames;
     ushort sfxPullChain;
 } ObjectPullChain;
@@ -32,25 +32,8 @@ typedef struct {
     int field_A8;
     int chainOffset;
     int timer[4];
-    int field_C0;
-    int field_C4;
-    int field_C8;
-    int field_CC;
-    int field_D0;
-    int field_D4;
-    int field_D8;
-    int field_DC;
-    int field_E0;
-    int field_E4;
-    int field_E8;
-    int field_EC;
-    int field_F0;
-    int field_F4;
-    int field_F8;
-    int field_FC;
-    int field_100;
-    int field_104;
-    int field_108;
+    byte codeInputFlags;
+    int field_D0[18];
     Hitbox hitbox;
     Animator animator2;
 } EntityPullChain;
@@ -70,6 +53,8 @@ void PullChain_EditorLoad(void);
 void PullChain_Serialize(void);
 
 // Extra Entity Functions
-
+#if RETRO_GAMEVER == VER_100
+bool32 PullChain_HandleDunkeyCode(EntityPlayer *player);
+#endif
 
 #endif //!OBJ_PULLCHAIN_H

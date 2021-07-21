@@ -49,22 +49,15 @@ void PullChain_Update(void)
                             if (!player->sidekick)
                                 RSDK.PlaySFX(PullChain->sfxPullChain, 0, 255);
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 6);
-                            player->nextGroundState = 0;
-                            player->nextAirState    = 0;
+                            player->nextGroundState = StateMachine_None;
+                            player->nextAirState    = StateMachine_None;
                             player->velocity.x      = 0;
                             player->velocity.y      = 0;
                             player->state           = Player_State_None;
                             if (!player->sidekick) {
-                                entity->field_C4  = 0;
-                                entity->field_C8  = 0;
-                                entity->field_D4  = 0;
-                                entity->field_D8  = 0;
-                                entity->field_E4  = 0;
-                                entity->field_E8  = 0;
-                                entity->field_F4  = 0;
-                                entity->field_F8  = 0;
-                                entity->field_104 = 0;
-                                entity->field_108 = 0;
+                                for (int i = 0; i < 18; ++i) {
+                                    entity->field_D0[i] = 0;
+                                }
                             }
                         }
                     }
@@ -75,6 +68,12 @@ void PullChain_Update(void)
                 player->position.x = entity->position.x;
                 player->position.y = entity->position.y;
                 player->position.y += 0x1C0000;
+#if RETRO_GAMEVER == VER_100
+                if (!player->sidekick && PullChain_HandleDunkeyCode(player)) {
+                    HandLauncher->dunkeyMode = true;
+                    RSDK.PlaySFX(Ring->sfx_Ring, false, 0xFF);
+                }
+#endif
                 if (player->jumpPress || player->playerAnimator.animationID != ANI_HANG || player->velocity.x || player->velocity.y) {
                     entity->activePlayers1 &= ~(1 << plrID);
                     if (player->jumpPress) {
@@ -158,6 +157,59 @@ void PullChain_StageLoad(void)
     PullChain->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/PullChain.bin", SCOPE_STAGE);
     PullChain->sfxPullChain = RSDK.GetSFX("HCZ/PullChain.wav");
 }
+
+#if RETRO_GAMEVER == VER_100
+bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
+{
+    RSDK_THIS(PullChain);
+
+    if (HandLauncher->dunkeyMode)
+        return false;
+
+    byte inputFlags = 0;
+
+    if (player->left)
+        inputFlags = 1;
+    if (player->right)
+        inputFlags |= 2;
+
+    if (player->up)
+        inputFlags |= 4;
+    if (player->down)
+        inputFlags |= 8;
+
+    if (inputFlags == entity->codeInputFlags)
+        return false;
+
+    for (int i = 0; i < 17; ++i) {
+        entity->field_D0[i] = entity->field_D0[i + 1];
+    }
+
+    if (player->left) {
+        entity->field_D0[17] = 1;
+    }
+    else if (player->right) {
+        entity->field_D0[17] = 2;
+    }
+    else if (player->up) {
+        entity->field_D0[17] = 3;
+    }
+    else if (player->down) {
+        entity->field_D0[17] = 4;
+    }
+    else {
+        entity->field_D0[17] = 0;
+    }
+    
+    bool32 flag = true;
+    for (int i = 0; i < 18; ++i) {
+        flag &= (entity->field_D0[i] == PullChain->dunkeyCode[i]);
+    }
+    entity->codeInputFlags = inputFlags;
+    return flag;
+
+}
+#endif
 
 void PullChain_EditorDraw(void) {}
 

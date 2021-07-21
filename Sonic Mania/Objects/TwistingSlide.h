@@ -5,12 +5,29 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
 } ObjectTwistingSlide;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte type;
+    int endLen;
+    int activePlayers;
+    int field_64[4];
+    int field_74;
+    int field_78;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    Hitbox hitbox1;
+    int field_94;
+    int field_98;
+    int field_9C;
+    int field_A0;
+    int field_A4;
+    int field_A8;
 } EntityTwistingSlide;
 
 // Object Struct
@@ -28,6 +45,7 @@ void TwistingSlide_EditorLoad(void);
 void TwistingSlide_Serialize(void);
 
 // Extra Entity Functions
+void TwistingSlide_Unknown1(void);
 
 
 #endif //!OBJ_TWISTINGSLIDE_H
