@@ -148,8 +148,15 @@ void PrintMessage(void *msg, int type)
 
 void DevMenu_MainMenu()
 {
+#if !RETRO_USE_MOD_LOADER
+    int optionCount               = 5;
     uint optionColours[]          = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
     const char *optionNames[]     = { "Resume", "Restart", "Stage Select", "Options", "Exit" };
+#else
+    int optionCount           = 6;
+    uint optionColours[]      = { 0x808090, 0x808090, 0x808090, 0x808090, 0x808090, 0x808090 };
+    const char *optionNames[] = { "Resume", "Restart", "Stage Select", "Options", "Mods", "Exit" };
+#endif
     optionColours[devMenu.option] = 0xF0F0F0;
 
     // Info Box
@@ -167,7 +174,10 @@ void DevMenu_MainMenu()
     // Options Box
     DrawRectangle(currentScreen->centerX - 128, y - 8, 256, 72, 128, 255, INK_NONE, true);
 
-    for (int i = 0; i < 5; ++i) {
+#if RETRO_USE_MOD_LOADER
+    y -= 6;
+#endif
+    for (int i = 0; i < optionCount; ++i) {
         DrawDevText(currentScreen->centerX, optionNames[i], y, ALIGN_CENTER, optionColours[i]);
         y += 12;
     }
@@ -218,7 +228,7 @@ void DevMenu_MainMenu()
         devMenu.option--;
         devMenu.timer = 1;
         if (devMenu.option < 0)
-            devMenu.option += 5;
+            devMenu.option += optionCount;
     }
     else if (controller[CONT_P1].keyUp.down) {
         if (devMenu.timer) {
@@ -228,15 +238,15 @@ void DevMenu_MainMenu()
             devMenu.option--;
             devMenu.timer = ++devMenu.timer & 7;
             if (devMenu.option < 0)
-                devMenu.option += 5;
+                devMenu.option += optionCount;
         }
     }
 
     if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
         devMenu.timer = 1;
-        if (devMenu.option > 4)
-            devMenu.option -= 5;
+        if (devMenu.option >= optionCount)
+            devMenu.option -= optionCount;
     }
     else if (controller[CONT_P1].keyDown.down) {
         if (devMenu.timer) {
@@ -245,8 +255,8 @@ void DevMenu_MainMenu()
         else {
             devMenu.option++;
             devMenu.timer = ++devMenu.timer & 7;
-            if (devMenu.option > 4)
-                devMenu.option -= 5;
+            if (devMenu.option >= optionCount)
+                devMenu.option -= optionCount;
         }
     }
 
@@ -264,7 +274,16 @@ void DevMenu_MainMenu()
                 devMenu.option = 0;
                 devMenu.timer  = 1;
                 break;
+#if !RETRO_USE_MOD_LOADER
             case 4: engine.running = false; break;
+#else
+            case 4:
+                devMenu.state  = DevMenu_Mods;
+                devMenu.option = 0;
+                devMenu.timer  = 1;
+                break;
+            case 5: engine.running = false; break;
+#endif
             default: break;
         }
     }
@@ -384,6 +403,14 @@ void DevMenu_ListSel()
             devMenu.option  = 0;
         }
     }
+#if !RETRO_USE_ORIGINAL_CODE
+    else if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_MainMenu;
+        devMenu.listPos = 0;
+        devMenu.scroll  = 0;
+        devMenu.option  = 2;
+    }
+#endif
 }
 void DevMenu_SceneSel()
 {
@@ -490,6 +517,14 @@ void DevMenu_SceneSel()
         sceneInfo.listPos        = devMenu.option;
         sceneInfo.state          = ENGINESTATE_LOAD;
     }
+#if !RETRO_USE_ORIGINAL_CODE
+    else if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_ListSel;
+        devMenu.listPos = 0;
+        devMenu.scroll  = devMenu.listPos;
+        devMenu.option  = 0;
+    }
+#endif
 }
 void DevMenu_Options()
 {
@@ -599,6 +634,14 @@ void DevMenu_Options()
                 break;
         }
     }
+#if !RETRO_USE_ORIGINAL_CODE
+    else if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_MainMenu;
+        devMenu.listPos = 0;
+        devMenu.scroll  = 0;
+        devMenu.option  = 3;
+    }
+#endif
 }
 void DevMenu_VideoOptions()
 {
@@ -779,6 +822,13 @@ void DevMenu_VideoOptions()
             }
             break;
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_Options;
+        devMenu.option  = 0;
+    }
+#endif
 }
 void DevMenu_AudioOptions()
 {
@@ -898,6 +948,13 @@ void DevMenu_AudioOptions()
             }
             break;
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_Options;
+        devMenu.option  = 1;
+    }
+#endif
 }
 void DevMenu_InputOptions()
 {
@@ -974,8 +1031,24 @@ void DevMenu_InputOptions()
             settingsChanged = true;
         }
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_Options;
+        devMenu.option  = 2;
+    }
+#endif
 }
-void DevMenu_MappingsOptions() {}
+void DevMenu_MappingsOptions()
+{
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_Options;
+        devMenu.option  = 3;
+    }
+#endif 
+}
 #if RETRO_REV02
 void DevMenu_DebugOptions()
 {
@@ -1266,6 +1339,125 @@ void DevMenu_DebugOptions()
             devMenu.state  = DevMenu_Options;
             devMenu.option = 4;
         }
+    }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (controller[CONT_P1].keyB.press) {
+        devMenu.state  = DevMenu_Options;
+        devMenu.option = 4;
+    }
+#endif
+}
+#endif
+
+#if RETRO_USE_MOD_LOADER
+void DevMenu_Mods()
+{
+    int dy = currentScreen->centerY;
+    DrawRectangle(currentScreen->centerX - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->centerX, "MANAGE MODS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawRectangle(currentScreen->centerX - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
+
+    uint optionColours[8];
+    optionColours[0]                               = 0x808090;
+    optionColours[1]                               = 0x808090;
+    optionColours[2]                               = 0x808090;
+    optionColours[3]                               = 0x808090;
+    optionColours[4]                               = 0x808090;
+    optionColours[5]                               = 0x808090;
+    optionColours[6]                               = 0x808090;
+    optionColours[7]                               = 0x808090;
+    optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+
+    int y               = dy + 40;
+    SceneListInfo *list = &sceneInfo.listCategory[devMenu.listPos];
+    int off             = list->sceneOffsetStart;
+    for (int i = 0; i < 8; ++i) {
+        if (devMenu.scroll + i < list->sceneCount) {
+            DrawDevText(currentScreen->centerX + 96, sceneInfo.listData[off + (devMenu.scroll + i)].name, y, ALIGN_RIGHT, optionColours[i]);
+            y += 8;
+            devMenu.scroll = devMenu.scroll;
+        }
+    }
+
+    if (controller[CONT_P1].keyUp.press) {
+        devMenu.option--;
+        if (off + devMenu.option < list->sceneOffsetStart) {
+            devMenu.option = list->sceneCount - 1;
+        }
+
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else if (controller[CONT_P1].keyUp.down) {
+        if (!devMenu.timer) {
+            devMenu.option--;
+            if (off + devMenu.option < list->sceneOffsetStart) {
+                devMenu.option = list->sceneCount - 1;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+    }
+
+    if (controller[CONT_P1].keyDown.press) {
+        devMenu.option++;
+        if (devMenu.option >= list->sceneCount) {
+            devMenu.option = 0;
+        }
+
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+        devMenu.timer = 1;
+    }
+    else if (controller[CONT_P1].keyDown.down) {
+        if (!devMenu.timer) {
+            devMenu.option++;
+            if (devMenu.option >= list->sceneCount) {
+                devMenu.option = 0;
+            }
+        }
+
+        devMenu.timer = (devMenu.timer + 1) & 7;
+        if (devMenu.option >= devMenu.scroll) {
+            if (devMenu.option > devMenu.scroll + 7) {
+                devMenu.scroll = devMenu.option - 7;
+            }
+        }
+        else {
+            devMenu.scroll = devMenu.option;
+        }
+    }
+
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+        // Activate/deactivate cur mod
+    }
+    else if (controller[CONT_P1].keyB.press) {
+        devMenu.state   = DevMenu_MainMenu;
+        devMenu.scroll  = 0;
+        devMenu.option  = 4;
     }
 }
 #endif

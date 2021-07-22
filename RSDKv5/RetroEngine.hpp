@@ -47,6 +47,7 @@ enum GameRegions {
 };
 
 #define RETRO_USE_ORIGINAL_CODE (0)
+#define RETRO_USE_MOD_LOADER    (!RETRO_USE_ORIGINAL_CODE && 1)
 
 #define RETRO_WIN     (0)
 #define RETRO_PS4     (1)

@@ -133,6 +133,29 @@ bool32 processEvents()
                             }
                         }
                         break;
+                    case SDLK_F1:
+                        sceneInfo.listPos--;
+                        if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount) {
+                            sceneInfo.activeCategory--;
+                            if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                                sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
+                            }
+                            sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount - 1;
+                        }
+                        InitSceneLoad();
+                        break;
+                    case SDLK_F2:
+                        sceneInfo.listPos++;
+                        if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount) {
+                            sceneInfo.activeCategory++;
+                            if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
+                                sceneInfo.activeCategory = 0;
+                            }
+                            sceneInfo.listPos = 0;
+                        }
+                        InitSceneLoad();
+                        break;
+                    case SDLK_F3: engine.shaderID = (engine.shaderID + 1) % (shaderCount - 4); break;
                     case SDLK_F4:
                         engine.isFullScreen ^= 1;
                         if (engine.isFullScreen) {
@@ -152,7 +175,6 @@ bool32 processEvents()
 #endif
                         }
                         break;
-                    case SDLK_F3: engine.shaderID = (engine.shaderID + 1) % (shaderCount - 4); break;
 #if !RETRO_USE_ORIGINAL_CODE
                     case SDLK_F5:
                         if (engine.devMenu) {

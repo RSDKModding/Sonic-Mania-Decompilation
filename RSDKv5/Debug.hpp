@@ -97,6 +97,9 @@ void DevMenu_InputOptions();
 void DevMenu_MappingsOptions();
 #if RETRO_REV02
 void DevMenu_DebugOptions();
+#endif 
+#if RETRO_USE_MOD_LOADER
+void DevMenu_Mods();
 #endif
 
 #endif

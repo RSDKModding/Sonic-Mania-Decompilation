@@ -1,0 +1,182 @@
+#include "SonicMania.h"
+
+ObjectSSZ2Setup *SSZ2Setup;
+
+void SSZ2Setup_Update(void) {}
+
+void SSZ2Setup_LateUpdate(void) {}
+
+void SSZ2Setup_StaticUpdate(void) {}
+
+void SSZ2Setup_Draw(void) {}
+
+void SSZ2Setup_Create(void *data) {}
+
+void SSZ2Setup_StageLoad(void)
+{
+    SSZ2Setup->sfxSpark     = RSDK.GetSFX("SSZ2/Spark.wav");
+    Animals->animalTypes[0] = ANIMAL_FLICKY;
+    Animals->animalTypes[1] = ANIMAL_PICKY;
+    SSZ2Setup->towerID      = RSDK.GetSceneLayerID("Tower");
+    if (SSZ2Setup->towerID < 8) {
+        SSZ2Setup->towerLayer                   = RSDK.GetSceneLayer(SSZ2Setup->towerID);
+        SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCallback;
+        RSDK.SetDrawLayerProperties(1, false, SSZ2Setup_TowerDrawLayerCallback);
+        RSDK.SetLimitedFade(3, 0, 4, 96, 0, 256);
+        if (globals->suppressTitlecard >= true) {
+            SaveGame_LoadPlayerState();
+            Zone_StartFadeOut(10, 0x000000);
+        }
+        RSDK.CreateEntity(SSZ3Cutscene->objectID, NULL, 0, 0);
+        Zone->stageFinishCallback = SSZ2Setup_StageFinishCallback;
+    }
+#if RETRO_USE_PLUS
+    if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
+        RSDK.LoadPalette(0, "EncoreSSZ2.act", 0xFF);
+#endif
+    GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCallback1;
+    GenericTrigger->callbacks[1] = SSZ2Setup_GenericTriggerCallback2;
+    GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCallback3;
+}
+
+void SSZ2Setup_StageFinishCallback(void) { RSDK.CreateEntity(SSZ3Cutscene->objectID, intToVoid(true), 0, 0); }
+
+void SSZ2Setup_TowerDrawLayerCallback(void)
+{
+    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+}
+
+void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
+{
+    RSDK.SetClipBounds(0, RSDK_screens->centerX - 144, 0, RSDK_screens->centerX + 144, RSDK_screens->height);
+    RSDK.ProcessParallax(SSZ2Setup->towerLayer);
+    RSDK.SetActivePalette(3, 0, RSDK_screens->height);
+
+    ScanlineInfo *scanlinePtr = &scanlines[RSDK_screens->centerX - 64];
+    int x1                    = scanlinePtr->position.x;
+    int offset                = 0x10000;
+    for (int i = 2; i - 2 < 80;) {
+        scanlinePtr -= 5;
+        scanlinePtr[5].position.x = x1 & 0x1FFFFFF;
+
+        int x2                    = x1 - offset;
+        offset                    = (i - 2) * (i - 2) + offset;
+        scanlinePtr[4].position.x = x2 & 0x1FFFFFF;
+
+        int x3                    = x2 - offset;
+        offset                    = (i - 1) * (i - 1) + offset;
+        scanlinePtr[3].position.x = x3 & 0x1FFFFFF;
+
+        int x4                    = x3 - offset;
+        offset                    = i * i + offset;
+        scanlinePtr[2].position.x = x4 & 0x1FFFFFF;
+
+        int x5                    = x4 - offset;
+        offset                    = (i + 1) * (i + 1) + offset;
+        scanlinePtr[1].position.x = x5 & 0x1FFFFFF;
+
+        x1     = x5 - offset;
+        offset = (i + 2) * (i + 2) + offset;
+
+        i += 5;
+    }
+
+    scanlinePtr = &scanlines[RSDK_screens->centerX + 64];
+    x1          = scanlinePtr->position.x;
+    offset      = 0x10000;
+
+    for (int i = 2; i - 2 < 80;) {
+        scanlinePtr += 5;
+        scanlinePtr[-5].position.x = x1 & 0x1FFFFFF;
+
+        int x2                     = x1 + offset;
+        offset                     = (i - 2) * (i - 2) + offset;
+        scanlinePtr[-4].position.x = x2 & 0x1FFFFFF;
+
+        int x3                     = x2 + offset;
+        offset                     = (i - 1) * (i - 1) + offset;
+        scanlinePtr[-3].position.x = x3 & 0x1FFFFFF;
+
+        int x4                     = x3 + offset;
+        offset                     = i * i + offset;
+        scanlinePtr[-2].position.x = x4 & 0x1FFFFFF;
+
+        int x5                     = x4 + offset;
+        offset                     = (i + 1) * (i + 1) + offset;
+        scanlinePtr[-1].position.x = x5 & 0x1FFFFFF;
+
+        x1     = x5 + offset;
+        offset = (i + 2) * (i + 2) + offset;
+
+        i += 5;
+    }
+}
+
+void SSZ2Setup_GenericTriggerCallback1(void)
+{
+    foreach_active(HotaruMKII, boss)
+    {
+        /*if (!boss->field_A4) {
+            RSDK.CreateEntity(Animals->objectID, (Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), boss->position.x,
+                              boss->position.y);
+            RSDK.CreateEntity(Explosion->objectID, intToVoid(1), boss->position.x, boss->position.y)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySFX(Explosion->sfx_Destroy, 0, 255);
+            destroyEntity(boss);
+        }*/
+    }
+}
+
+void SSZ2Setup_GenericTriggerCallback2(void)
+{
+    if (!SSZ2Setup->hasAchievement) {
+        if (!RSDK_sceneInfo->minutes) {
+#if RETRO_USE_PLUS
+            API.UnlockAchievement("ACH_SSZ");
+#else
+            APICallback_UnlockAchievement("ACH_SSZ");
+#endif
+            SSZ2Setup->hasAchievement = true;
+        }
+    }
+}
+
+void SSZ2Setup_GenericTriggerCallback3(void)
+{
+    Entity *entity = RSDK_sceneInfo->entity;
+    if (isMainGameMode()) {
+        EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        if (player->stateInput) {
+            player->stateInput      = 0;
+            player->left            = false;
+            player->right           = true;
+            Zone->screenBoundsR1[0] = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[1] = RSDK_screens->centerX + (entity->position.x >> 16);
+#if RETRO_USE_PLUS 
+            Zone->screenBoundsR1[2] = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
+#endif
+
+            for (int i = 0; i < Player->playerCount; ++i) {
+                StarPost->postIDs[i] = 0;
+            }
+
+            SaveGame_SavePlayerState();
+            globals->suppressAutoMusic = true;
+            globals->suppressTitlecard = true;
+            ++RSDK_sceneInfo->listPos;
+            if (!RSDK.CheckValidScene())
+                RSDK.LoadScene("Presentation", "Title Screen");
+            Zone_StartFadeOut(10, 0x000000);
+        }
+        if (player->superState == 2 || player->state == Player_State_Transform)
+            globals->restartPowerups |= 0x80;
+        globals->restartMusicID = Music->activeTrack;
+    }
+}
+
+void SSZ2Setup_EditorDraw(void) {}
+
+void SSZ2Setup_EditorLoad(void) {}
+
+void SSZ2Setup_Serialize(void) {}
