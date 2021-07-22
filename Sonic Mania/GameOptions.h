@@ -79,6 +79,8 @@ typedef enum {
     SLOT_UFO_PLASMA          = 36,
     SLOT_REPLAYRECORDER_R    = 36,
     SLOT_REPLAYRECORDER_W    = 37,
+    SLOT_MUSICSTACK_START    = 40,
+    SLOT_MUSICSTACK_END      = 48,
     SLOT_CAMERA1             = 60,
     SLOT_CAMERA2             = 61,
     SLOT_CAMERA3             = 62,

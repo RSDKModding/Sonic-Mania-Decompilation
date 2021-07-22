@@ -508,7 +508,7 @@ void LoadStream(ChannelInfo *channel)
     UnlockAudioDevice();
 }
 
-int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loopPoint, bool32 loadASync)
+int PlayStream(const char *filename, unsigned int slot, int startPos, unsigned int loopPoint, bool32 loadASync)
 {
     if (!audioEnabled || !engine.streamsEnabled)
         return -1;
@@ -529,7 +529,7 @@ int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loo
     channel->speed        = 1 << 0x10;
 
     sprintf(streamInfo.filename, "Data/Music/%s", filename);
-    streamInfo.startPos  = a3;
+    streamInfo.startPos  = startPos;
     streamInfo.loopPoint = loopPoint;
 
     if (loadASync) {
@@ -814,4 +814,16 @@ void SetChannelAttributes(byte slot, float volume, float panning, float speed)
             channels[slot].speed = 0x10000;
         }
     }
+}
+
+uint GetChannelPos(byte slot)
+{
+    if (slot >= CHANNEL_COUNT)
+        return 0;
+    if (channels[slot].state == CHANNEL_SFX)
+        return channels[slot].bufferPos;
+    if (channels[slot].state == CHANNEL_STREAMING) {
+        return ov_pcm_tell(&streamInfo.vorbisFile);
+    }
+    return 0;
 }

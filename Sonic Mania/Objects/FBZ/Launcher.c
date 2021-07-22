@@ -39,11 +39,10 @@ void Launcher_Unknown1(void)
     entity->stoodPlayers = 0;
     Hitbox *hitbox       = RSDK.GetHitbox(&entity->animator, 0);
 
-    int id = 1;
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionPlatform(player, entity, hitbox)) {
-            entity->stoodPlayers |= 1 << id;
+            entity->stoodPlayers |= (1 << RSDK.GetEntityID(player));
             if (entity->state == Launcher_Unknown2) {
                 entity->active = ACTIVE_NORMAL;
                 if (entity->direction == FLIP_NONE)
@@ -62,20 +61,18 @@ void Launcher_Unknown1(void)
             else {
                 player->position.x     = entity->drawPos.x;
                 player->direction      = entity->direction;
-                player->velocity.x     = 0;
-                player->groundVel      = entity->velocity.x;
-                player->groundVel      = clampVal(player->groundVel, -0x60000, 0x60000);
-                player->pushing        = 0;
+                //player->velocity.x     = 0;
+                //player->groundVel      = clampVal(entity->velocity.x, -0x60000, 0x60000);
+                player->pushing        = false;
                 player->tileCollisions = true;
                 if (player->state != Player_State_Roll)
                     player->state = Player_State_Ground;
             }
         }
-        else if ((id & entity->stoodPlayers) && entity->state != Launcher_Unknown4) {
+        else if (((1 << RSDK.GetEntityID(player)) & entity->stoodPlayers) && entity->state != Launcher_Unknown4) {
             player->velocity.x = entity->velocity.x;
             player->groundVel  = entity->velocity.x;
         }
-        id <<= 1;
     }
 }
 
@@ -91,14 +88,12 @@ void Launcher_Unknown3(void)
     }
 
     if (--entity->field_CC < 0) {
-        int id = 1;
         foreach_active(Player, player)
         {
-            if ((id & entity->stoodPlayers)) {
+            if (((1 << RSDK.GetEntityID(player)) & entity->stoodPlayers)) {
                 player->groundVel  = entity->velocity.x;
                 player->velocity.x = entity->velocity.x;
             }
-            id <<= 1;
         }
         entity->state = Launcher_Unknown4;
     }

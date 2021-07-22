@@ -253,14 +253,14 @@ typedef struct {
     int (*GetSFX)(const char *path);
     int (*PlaySFX)(ushort sfx, int loop, int pan);
     void (*StopSFX)(ushort sfx);
-    int (*PlayStream)(const char *filename, uint slot, int a3, uint loopPoint, bool32 loadASync);
+    int (*PlayStream)(const char *filename, uint slot, uint startPos, uint loopPoint, bool32 loadASync);
     int (*SetChannelAttributes)(byte slot, float volume, float pan, float speed);
     void (*StopChannel)(byte slot);
     void (*PauseChannel)(byte slot);
     void (*ResumeChannel)(byte slot);
     bool32 (*IsSFXPlaying)(byte slot);
     bool32 (*ChannelActive)(byte slot);
-    int (*GetChannelPos)(byte slot);
+    uint (*GetChannelPos)(byte slot);
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS

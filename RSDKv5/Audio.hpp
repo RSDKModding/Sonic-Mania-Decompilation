@@ -141,19 +141,6 @@ inline bool32 ChannelActive(byte slot)
         return channels[slot].state == CHANNEL_NONE;
 }
 
-inline bool32 GetChannelPos(byte slot)
-{
-    if (slot >= CHANNEL_COUNT)
-        return 0;
-    if (channels[slot].state == CHANNEL_SFX)
-        return channels[slot].bufferPos;
-    if (channels[slot].state == CHANNEL_STREAMING) {
-        // if (!musicFileInfo->field_41C)
-        //    return 0;
-        // if (musicFileInfo->dword418 >= 0)
-        //    return musicFileInfo->dword418;
-    }
-    return 0;
-}
+uint GetChannelPos(byte slot);
 
 #endif

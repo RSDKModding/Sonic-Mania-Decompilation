@@ -31,7 +31,7 @@ typedef struct {
     RSDK_OBJECT
     char trackNames[16][32];
     uint trackLoops[16];
-    int dword244;
+    int trackStartPos;
     int channelID;
     int activeTrack;
     int nextTrack;
@@ -51,7 +51,7 @@ typedef struct {
     int field_78;
     int timer;
     int field_80;
-    int field_84;
+    int trackStartPos;
     float volume;
     float fadeSpeed;
     int field_90;
