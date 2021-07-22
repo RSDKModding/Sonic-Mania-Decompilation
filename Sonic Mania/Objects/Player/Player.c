@@ -565,7 +565,7 @@ void Player_Create(void *data)
                 entity->sidekick   = true;
             }
             else {
-                Player->configureGhost_CB();
+                StateMachine_Run(Player->configureGhost_CB);
             }
 #else
             if (APICallback->AssignControllerID) {

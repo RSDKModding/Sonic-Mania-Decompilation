@@ -351,6 +351,32 @@ void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, 
     TimeAttackData->encore      = encore & 1;
 }
 
+void TimeAttackData_GetLeaderboardRank_CB(int status, int rank)
+{
+    if (status) {
+        LogHelpers_Print("Got back leaderboard rank: %d. Not bad!", rank);
+        TimeAttackData->rank = rank;
+    }
+}
+
+void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int mode, int time)
+{
+    StatInfo stat; 
+    TimeAttackData_TrackTAClear(act, zone, &stat, playerID, mode, time);
+    API.TryTrackStat(&stat);
+
+    const char *leaderboardName = "";
+    if (zone > 11 || act > 1 || playerID > 5) {
+    }
+    else {
+        int id = act + 2 * zone - 1 + playerID + 4 * (act + 2 * zone) + 120;
+        if (!mode)
+            id = act + 2 * zone - 1 + playerID + 4 * (act + 2 * zone);
+        leaderboardName = LeaderboardNames[id];
+    }
+    API.TrackScore(leaderboardName, time, TimeAttackData_GetLeaderboardRank_CB);
+}
+
 #endif
 
 void TimeAttackData_EditorDraw(void) {}

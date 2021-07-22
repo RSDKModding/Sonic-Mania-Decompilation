@@ -526,7 +526,7 @@ void ActClear_State_TAFinish(void)
 
     if (entity->posUnknown6.x >= -0x80000) {
         if (globals->gameMode == MODE_TIMEATTACK) {
-            if (ActClear->field_C) {
+            if (ActClear->isTimeAttack) {
                 if (ActClear->bufferMove_CB)
                     ActClear->bufferMove_CB();
             }

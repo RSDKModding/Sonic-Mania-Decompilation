@@ -139,7 +139,7 @@ void CollapsingPlatform_Create(void *data)
         int xOff              = (entity->position.x >> 20) - (entity->size.x >> 21);
         int yOff              = (entity->position.y >> 20) - (entity->size.y >> 21);
 
-        if ((entity->size.y & 0xFFF00000) && (entity->size.y & 0xFFF00000 & 0x80000000)) {
+        if ((entity->size.y & 0xFFF00000) && !(entity->size.y & 0xFFF00000 & 0x80000000)) {
             int sx = entity->size.x >> 20;
             int sy = entity->size.y >> 20;
             for (int y = 0; y < sy; ++y) {

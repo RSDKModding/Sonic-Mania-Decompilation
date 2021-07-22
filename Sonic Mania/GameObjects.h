@@ -38,7 +38,7 @@ typedef struct {
     void (*EGS_LeaderboardUnknown1)(void);
 #endif
     void (*FetchLeaderboard)(int a1, int a2);
-    void (*TrackScore)(int a1, int a2, int a3);
+    void (*TrackScore)(const char *name, int score, void (*callback)(int status, int rank));
     void (*GetLeaderboardsUnknown)(void);
     void (*LeaderboardEntryCount)(void);
     int (*GetLeaderboardUnknown2)(void);

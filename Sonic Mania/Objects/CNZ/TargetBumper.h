@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectTargetBumper;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int type;
+    int hitCount;
+    Vector2 startPos;
+    Vector2 curPos;
+    int field_74;
+    Animator animator;
 } EntityTargetBumper;
 
 // Object Entity
@@ -28,6 +36,11 @@ void TargetBumper_EditorLoad(void);
 void TargetBumper_Serialize(void);
 
 // Extra Entity Functions
+void TargetBumper_DebugSpawn(void);
+void TargetBumper_DebugDraw(void);
 
+void TargetBumper_Unknown3(void);
+void TargetBumper_Unknown4(void);
+void TargetBumper_Unknown5(void);
 
 #endif //!OBJ_TARGETBUMPER_H

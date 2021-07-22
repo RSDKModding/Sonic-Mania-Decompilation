@@ -10,7 +10,7 @@ typedef struct {
     ushort sfx_ScoreAdd;
     ushort sfx_ScoreTotal;
     ushort sfx_Event;
-    bool32 field_C;
+    bool32 isTimeAttack;
     int field_10;
     int field_14;
     int actID;

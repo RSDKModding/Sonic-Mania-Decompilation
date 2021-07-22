@@ -9,7 +9,7 @@ typedef struct {
     RSDK_OBJECT
     int field_4;
     bool32 flag;
-    int field_C;
+    int isTimeAttack;
     Entity *charSelControl;
     Entity *zoneControl;
 } ObjectE3MenuSetup;

@@ -61,6 +61,9 @@ int TimeAttackData_SaveTimeAttackDB(void (*callback)(int));
 int TimeAttackData_SaveTimeAttackDB_CB(int statusCode);
 int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int dst);
 void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore);
+
+void TimeAttackData_GetLeaderboardRank_CB(int status, int rank);
+void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int mode, int time);
 #endif
 
 #endif //!OBJ_TIMEATTACKDATA_H

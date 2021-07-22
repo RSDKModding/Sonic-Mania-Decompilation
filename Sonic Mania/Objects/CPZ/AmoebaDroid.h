@@ -6,25 +6,43 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[17]; //= { 4, 0, 0, -131072, -163840, 1, 0, 131072, -163840, 2, 0, -163840, -131072, 3, 0, 163840, -131072 };
-    int value2[13]; //= { 3, 4, 0, 0, -131072, 5, 0, -163840, -131072, 5, 1, 163840, -131072 };
-    int value3;
-    int value4;
-    int value5;
-    int value6;
-    int value7;
-    ushort value8;
-    ushort value9;
-    ushort value10;
-    ushort value11;
-    ushort value12;
-    ushort value13;
-    ushort value14;
+    int field_4[17]; //= { 4, 0, 0, -131072, -163840, 1, 0, 131072, -163840, 2, 0, -163840, -131072, 3, 0, 163840, -131072 };
+    int field_48[13]; //= { 3, 4, 0, 0, -131072, 5, 0, -163840, -131072, 5, 1, 163840, -131072 };
+    int field_7C;
+    int field_80;
+    int field_84;
+    int field_88;
+    int field_8C;
+    ushort sfxHit;
+    ushort sfxExplosion;
+    ushort sfxGather;
+    ushort sfxBounce;
+    ushort sfxRelease;
+    ushort aniFrames;
+    ushort waterFrames;
 } ObjectAmoebaDroid;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    int type;
+    int timer;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int field_78;
+    int field_7C;
+    int field_80;
+    int field_84;
+    Entity *field_88[8];
+    int field_A8;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Hitbox hitbox;
 } EntityAmoebaDroid;
 
 // Object Struct
