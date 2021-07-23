@@ -15,7 +15,7 @@ void GHZ2Outro_Update(void)
         CutsceneSeq_StartSequence((Entity *)entity, states_Outro);
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            seq->skipState         = 3;
+            seq->skipType         = SKIPTYPE_CALLBACK;
             seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
         }
         entity->active = ACTIVE_NEVER;
@@ -23,7 +23,7 @@ void GHZ2Outro_Update(void)
     else {
         CutsceneSeq_StartSequence((Entity *)entity, states_GHZ2);
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipState = 1;
+            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         entity->active = ACTIVE_NEVER;

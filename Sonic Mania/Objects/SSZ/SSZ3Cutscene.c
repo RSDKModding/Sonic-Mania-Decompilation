@@ -24,7 +24,7 @@ void SSZ3Cutscene_Update(void)
         CutsceneSeq_StartSequence((Entity *)entity, states2);
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipState = 1;
+            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         entity->active = ACTIVE_NEVER;
     }
 }

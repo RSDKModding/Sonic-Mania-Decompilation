@@ -53,7 +53,7 @@ void TTCutscene_StartCutscene(void)
     CutsceneSeq_StartSequence((Entity *)entity, cutsceneStates);
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (cutsceneSeq->objectID != TYPE_BLANK) {
-        cutsceneSeq->skipState    = 3;
+        cutsceneSeq->skipType    = SKIPTYPE_CALLBACK;
         cutsceneSeq->skipCallback = TTCutscene_SkipCB;
     }
 }

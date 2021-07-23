@@ -15,7 +15,7 @@ void GHZCutsceneST_Update(void)
                 CutsceneSeq_StartSequence((Entity *)entity, states);
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ);
-                    cutsceneSeq->skipState         = 3;
+                    cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
                 entity->timer = 1;

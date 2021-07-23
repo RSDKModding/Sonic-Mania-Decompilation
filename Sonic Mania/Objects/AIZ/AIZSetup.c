@@ -304,7 +304,7 @@ void AIZSetup_CutsceneST_Setup(void)
     CutsceneSeq_StartSequence((Entity *)entity, states);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
-        seq->skipState    = 3;
+        seq->skipType    = SKIPTYPE_CALLBACK;
         seq->skipCallback = AIZSetup_SkipCB;
     }
 }
@@ -642,7 +642,7 @@ void AIZSetup_CutsceneK_Setup(void)
     CutsceneSeq_StartSequence((Entity *)entity, states);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
-        seq->skipState    = 3;
+        seq->skipType    = SKIPTYPE_CALLBACK;
         seq->skipCallback = AIZSetup_SkipCB;
     }
 }

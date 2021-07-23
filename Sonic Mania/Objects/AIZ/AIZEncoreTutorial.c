@@ -139,7 +139,7 @@ void AIZEncoreTutorial_Unknown5(void)
     PhantomRuby_PlaySFX(RUBYSFX_ATTACK3);
     Music_FadeOut(0.012);
 
-    cutsceneSeq->skipState = 0;
+    cutsceneSeq->skipType = SKIPTYPE_DISABLED;
     for (int i = 0; i < 64; ++i) {
         if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_CutsceneState_Unknown24) {
             CutsceneSeq_NewState(i, cutsceneSeq);

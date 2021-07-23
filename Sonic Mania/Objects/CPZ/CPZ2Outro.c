@@ -58,7 +58,7 @@ void CPZ2Outro_HandleCutsceneSeq(void)
 
     CutsceneSeq_StartSequence((Entity *)entity, states);
     if (seq->objectID)
-        seq->skipState = 1;
+        seq->skipType = SKIPTYPE_RELOADSCN;
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }

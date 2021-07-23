@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SKIPTYPE_DISABLED,
+    SKIPTYPE_RELOADSCN,
+    SKIPTYPE_NEXTSCENE,
+    SKIPTYPE_CALLBACK,
+} SkipTypes;
+
 // Object Class
 typedef struct {
 	RSDK_OBJECT
@@ -23,7 +30,7 @@ typedef struct {
     Vector2 points[8];
     int fillTimerA;
     int fillTimerB;
-    int skipState;
+    int skipType;
     void (*skipCallback)(void);
 } EntityCutsceneSeq;
 
@@ -45,7 +52,7 @@ void CutsceneSeq_Serialize(void);
 Entity *CutsceneSeq_GetEntity(int type);
 void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_LockPlayerControl(void *plr);
-void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*skipCallback)(void));
+void CutsceneSeq_CheckSkip(byte skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void));
 void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq);
 void CutsceneSeq_StartSequence(Entity *host, void **states);
 

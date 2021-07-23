@@ -13,7 +13,7 @@ void EncoreIntro_Update(void)
                 EncoreIntro_SetupCutscene();
                 EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                 if (seq->objectID)
-                    seq->skipState = 1;
+                    seq->skipType = SKIPTYPE_RELOADSCN;
                 entity->activated = true;
             }
         }
@@ -204,7 +204,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     EntityFXRuby *fxRuby    = (EntityFXRuby *)EncoreIntro->fxRuby;
     if (RSDK_sceneInfo->minutes || RSDK_sceneInfo->seconds) {
         host->stateID   = 21;
-        host->skipState = 0;
+        host->skipType = SKIPTYPE_DISABLED;
     }
     else {
         if (!host->timer) {
@@ -302,7 +302,7 @@ bool32 EncoreIntro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
             destroyEntity(portal);
             ruby->state = EncoreIntro_PhantomRuby_Unknown2;
             Music_FadeOut(0.012);
-            host->skipState = 0;
+            host->skipType = SKIPTYPE_DISABLED;
             return true;
         }
     }
@@ -726,7 +726,7 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
         camera->targetPtr  = (Entity *)entity;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            cutsceneSeq->skipState         = 3;
+            cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
             cutsceneSeq->skipCallback      = AIZEncoreTutorial_Unknown5;
         }
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }

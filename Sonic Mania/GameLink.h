@@ -607,8 +607,9 @@ typedef enum {
 // used for variable decl
 #define StateMachine(name) void (*name)(void)
 #define StateMachine_Run(func)                                                                                                                       \
-    if (func)                                                                                                                                        \
-        func();
+    if (func) {                                                                                                                                      \
+        func();                                                                                                                                      \
+    }
 #define StateMachine_None NULL
 
 #endif /* GAMELINK_H */

@@ -129,6 +129,10 @@ void Decoration_EditorLoad(void)
 
 void Decoration_Serialize(void)
 {
-
+    RSDK_EDITABLE_VAR(Decoration, VAR_UINT8, type);
+    RSDK_EDITABLE_VAR(Decoration, VAR_UINT8, direction);
+    RSDK_EDITABLE_VAR(Decoration, VAR_ENUM, rotSpeed);
+    RSDK_EDITABLE_VAR(Decoration, VAR_VECTOR2, repeatTimes);
+    RSDK_EDITABLE_VAR(Decoration, VAR_VECTOR2, repeatSpacing);
 }
 

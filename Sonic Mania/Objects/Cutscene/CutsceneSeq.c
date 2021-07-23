@@ -2,7 +2,11 @@
 
 ObjectCutsceneSeq *CutsceneSeq;
 
-void CutsceneSeq_Update(void) {}
+void CutsceneSeq_Update(void)
+{
+    RSDK_THIS(CutsceneSeq);
+    CutsceneSeq_CheckSkip(entity->skipType, entity, entity->skipCallback);
+}
 
 void CutsceneSeq_LateUpdate(void)
 {
@@ -80,7 +84,7 @@ void CutsceneSeq_Create(void *data)
     entity->fillTimerA        = 0;
     entity->drawOrder         = Zone->hudDrawOrder + 1;
     entity->fillTimerB        = 0;
-    CutsceneSeq_CheckSkip(entity->skipState, entity, entity->skipCallback);
+    CutsceneSeq_CheckSkip(entity->skipType, entity, entity->skipCallback);
 }
 
 void CutsceneSeq_StageLoad(void) {}
@@ -117,23 +121,28 @@ void CutsceneSeq_LockPlayerControl(void *plr)
     Player->jumpHoldState  = 0;
 }
 
-void CutsceneSeq_CheckSkip(byte skipState, EntityCutsceneSeq *entity, void (*skipCallback)(void))
+void CutsceneSeq_CheckSkip(byte skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void))
 {
-    if (skipState && RSDK_controller->keyStart.press && RSDK_sceneInfo->state & 1) {
-        if (skipState == 2) {
+    if (skipType && RSDK_controller->keyStart.press && (RSDK_sceneInfo->state & 1)) {
+        bool32 load = false;
+        if (skipType == SKIPTYPE_NEXTSCENE) {
             ++RSDK_sceneInfo->listPos;
+            load = true;
+        }
+        else {
+            if (skipCallback && skipType == SKIPTYPE_CALLBACK)
+                skipCallback();
+            load = entity && (entity->skipType == SKIPTYPE_CALLBACK || entity->skipType == SKIPTYPE_RELOADSCN);
         }
 
-        if (skipCallback && skipState == 3)
-            skipCallback();
-
-        if (skipState == 2 || skipState != 3 || entity->skipState == 3 || entity->skipState)
+        if (load) {
             globals->suppressTitlecard = false;
-        globals->suppressAutoMusic = false;
-        globals->enableIntro       = false;
-        RSDK.SetGameMode(ENGINESTATE_FROZEN);
-        Zone_StartFadeOut(20, 0);
-        Music_FadeOut(0.029999999);
+            globals->suppressAutoMusic = false;
+            globals->enableIntro       = false;
+            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+            Zone_StartFadeOut(20, 0x000000);
+            Music_FadeOut(0.03);
+        }
     }
 }
 void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq)

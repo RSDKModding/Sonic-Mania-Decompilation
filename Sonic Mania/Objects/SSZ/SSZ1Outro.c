@@ -10,7 +10,7 @@ void SSZ1Outro_Update(void)
     if (!entity->activated) {
         entity->activated = true;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipState = 1;
+            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         CutsceneSeq_StartSequence((Entity *)entity, states);
     }
 }

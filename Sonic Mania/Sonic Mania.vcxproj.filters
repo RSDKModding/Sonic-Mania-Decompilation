@@ -72,9 +72,6 @@
     <Filter Include="Sources\Objects\SBZ">
       <UniqueIdentifier>{41d02a7b-c75a-4a89-8f98-fba3c8236ecc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Objects\MPZ">
-      <UniqueIdentifier>{fc470fa0-77e3-420c-9f11-eebed74f7853}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Objects\Continue">
       <UniqueIdentifier>{fa9158d7-957e-4b12-b448-676d56b0816e}</UniqueIdentifier>
     </Filter>
@@ -1055,13 +1052,7 @@
     <ClInclude Include="Objects\SBZ\Caterkiller.h">
       <Filter>Sources\Objects\SBZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\MPZ\SpearBlock.h">
-      <Filter>Sources\Objects\MPZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\HPZ\Batbot.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HPZ\ChaosEmerald.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\HPZ\HeavyKing.h">
@@ -1954,6 +1945,12 @@
     </ClInclude>
     <ClInclude Include="Objects\FBZ\Launcher.h">
       <Filter>Sources\Objects\FBZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Unused\SpearBlock.h">
+      <Filter>Sources\Objects\Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Cutscene\ChaosEmerald.h">
+      <Filter>Sources\Objects\Cutscene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2890,13 +2887,7 @@
     <ClCompile Include="Objects\SBZ\Caterkiller.c">
       <Filter>Sources\Objects\SBZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\MPZ\SpearBlock.c">
-      <Filter>Sources\Objects\MPZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\HPZ\Batbot.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HPZ\ChaosEmerald.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\HPZ\HeavyKing.c">
@@ -3789,6 +3780,12 @@
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Launcher.c">
       <Filter>Sources\Objects\FBZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Unused\SpearBlock.c">
+      <Filter>Sources\Objects\Unused</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Cutscene\ChaosEmerald.c">
+      <Filter>Sources\Objects\Cutscene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

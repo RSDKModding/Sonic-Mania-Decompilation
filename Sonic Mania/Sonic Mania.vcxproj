@@ -100,6 +100,7 @@
     <ClInclude Include="Objects\Credits\EncoreGoodEnd.h" />
     <ClInclude Include="Objects\Credits\TryAgain.h" />
     <ClInclude Include="Objects\Credits\TryAgainE.h" />
+    <ClInclude Include="Objects\Cutscene\ChaosEmerald.h" />
     <ClInclude Include="Objects\Cutscene\CutsceneHBH.h" />
     <ClInclude Include="Objects\Cutscene\CutsceneRules.h" />
     <ClInclude Include="Objects\Cutscene\CutsceneSeq.h" />
@@ -262,7 +263,6 @@
     <ClInclude Include="Objects\Helpers\ReplayDB.h" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.h" />
     <ClInclude Include="Objects\HPZ\Batbot.h" />
-    <ClInclude Include="Objects\HPZ\ChaosEmerald.h" />
     <ClInclude Include="Objects\HPZ\HeavyKing.h" />
     <ClInclude Include="Objects\HPZ\HeavyRider.h" />
     <ClInclude Include="Objects\HPZ\HPZEmerald.h" />
@@ -391,7 +391,6 @@
     <ClInclude Include="Objects\MMZ\SizeLaser.h" />
     <ClInclude Include="Objects\MMZ\SpikeCorridor.h" />
     <ClInclude Include="Objects\MMZ\VanishPlatform.h" />
-    <ClInclude Include="Objects\MPZ\SpearBlock.h" />
     <ClInclude Include="Objects\MSZ\Armadiloid.h" />
     <ClInclude Include="Objects\MSZ\BarStool.h" />
     <ClInclude Include="Objects\MSZ\Bumpalo.h" />
@@ -630,6 +629,7 @@
     <ClInclude Include="Objects\UFO\UFO_Springboard.h" />
     <ClInclude Include="Objects\UFO\UFO_Water.h" />
     <ClInclude Include="Objects\Unused\Pendulum.h" />
+    <ClInclude Include="Objects\Unused\SpearBlock.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
     <ClInclude Include="SonicMania.h" />
   </ItemGroup>
@@ -714,6 +714,7 @@
     <ClCompile Include="Objects\Credits\EncoreGoodEnd.c" />
     <ClCompile Include="Objects\Credits\TryAgain.c" />
     <ClCompile Include="Objects\Credits\TryAgainE.c" />
+    <ClCompile Include="Objects\Cutscene\ChaosEmerald.c" />
     <ClCompile Include="Objects\Cutscene\CutsceneHBH.c" />
     <ClCompile Include="Objects\Cutscene\CutsceneRules.c" />
     <ClCompile Include="Objects\Cutscene\CutsceneSeq.c" />
@@ -876,7 +877,6 @@
     <ClCompile Include="Objects\Helpers\ReplayDB.c" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.c" />
     <ClCompile Include="Objects\HPZ\Batbot.c" />
-    <ClCompile Include="Objects\HPZ\ChaosEmerald.c" />
     <ClCompile Include="Objects\HPZ\HeavyKing.c" />
     <ClCompile Include="Objects\HPZ\HeavyRider.c" />
     <ClCompile Include="Objects\HPZ\HPZEmerald.c" />
@@ -1005,7 +1005,6 @@
     <ClCompile Include="Objects\MMZ\SizeLaser.c" />
     <ClCompile Include="Objects\MMZ\SpikeCorridor.c" />
     <ClCompile Include="Objects\MMZ\VanishPlatform.c" />
-    <ClCompile Include="Objects\MPZ\SpearBlock.c" />
     <ClCompile Include="Objects\MSZ\Armadiloid.c" />
     <ClCompile Include="Objects\MSZ\BarStool.c" />
     <ClCompile Include="Objects\MSZ\Bumpalo.c" />
@@ -1244,6 +1243,7 @@
     <ClCompile Include="Objects\UFO\UFO_Springboard.c" />
     <ClCompile Include="Objects\UFO\UFO_Water.c" />
     <ClCompile Include="Objects\Unused\Pendulum.c" />
+    <ClCompile Include="Objects\Unused\SpearBlock.c" />
     <ClCompile Include="Objects\Unused\WallCrawl.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
