@@ -138,7 +138,7 @@ inline bool32 ChannelActive(byte slot)
     if (slot >= CHANNEL_COUNT)
         return false;
     else
-        return channels[slot].state == CHANNEL_NONE;
+        return (channels[slot].state & 0x3F) != CHANNEL_NONE;
 }
 
 uint GetChannelPos(byte slot);

@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectDAControl;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int field_60;
+    int field_64;
+    TextInfo text;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3[5];
+    Animator animator4;
 } EntityDAControl;
 
 // Object Struct

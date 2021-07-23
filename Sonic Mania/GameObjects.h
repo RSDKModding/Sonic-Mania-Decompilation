@@ -168,7 +168,7 @@ typedef struct {
     void (*AppendString)(TextInfo *info, TextInfo *str);
     void (*AppendText)(TextInfo *info, const char *text);
     void (*LoadStrings)(TextInfo *dst, const char *path, int);
-    void (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
+    bool32 (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
     bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
     void (*GetDisplayInfo)(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);

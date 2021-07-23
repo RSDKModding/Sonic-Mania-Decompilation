@@ -56,10 +56,7 @@ void FXFade_Create(void *data)
 
 void FXFade_StageLoad(void) {}
 
-void FXFade_StopAll(void)
-{
-    foreach_all(FXFade, entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
-}
+void FXFade_StopAll(void) { foreach_all(FXFade, entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL); }
 
 void FXFade_State_FadeIn(void)
 {
@@ -103,7 +100,7 @@ void FXFade_State_FadeOut(void)
         if (entity->oneWay)
             entity->state = StateMachine_None;
         else
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
     }
     else {
         entity->timer -= entity->speedOut;
@@ -112,27 +109,30 @@ void FXFade_State_FadeOut(void)
 void FXFade_State_FadeOutBlack(void)
 {
     RSDK_THIS(FXFade);
-    if (entity->color >> 16) {
-        if (((entity->color >> 16) - entity->speedOut) >= 0)
-            entity->color += ((((entity->color >> 8) & 0xFF) + (((entity->color >> 16) - entity->speedOut) << 8)) << 8);
-        else
-            entity->color = 0;
+
+    int r = (entity->color >> 16) & 0xFF;
+    int g = (entity->color >> 8) & 0xFF;
+    int b = (entity->color >> 0) & 0xFF;
+
+    if (r) {
+        r -= entity->speedOut;
+        if (r - entity->speedOut < 0)
+            r = 0;
     }
-    else if ((entity->color >> 8) & 0xFF) {
-        if ((((entity->color >> 8) & 0xFF) - entity->speedOut) >= 0)
-            entity->color += (((entity->color >> 8) & 0xFF) - entity->speedOut) << 8;
-        else
-            entity->color = 0;
+    else if (g) {
+        g -= entity->speedOut;
+        if (g - entity->speedOut < 0)
+            g = 0;
     }
-    else if (entity->color & 0xFF) {
-        if ((entity->color & 0xFF) - entity->speedOut < 0)
-            entity->color = 0;
-        else
-            entity->color = (entity->color & 0xFF) - entity->speedOut;
+    else if (b) {
+        b -= entity->speedOut;
+        if (b - entity->speedOut < 0)
+            b = 0;
     }
     else {
         entity->state = StateMachine_None;
     }
+    entity->color = (r << 16) | (g << 8) | (b << 0);
 }
 
 void FXFade_EditorDraw(void) {}

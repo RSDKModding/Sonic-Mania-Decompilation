@@ -3,7 +3,11 @@
 #if RETRO_USE_PLUS
 ObjectTryAgainE *TryAgainE;
 
-void TryAgainE_Update(void) {}
+void TryAgainE_Update(void)
+{
+    RSDK_THIS(TryAgainE);
+    StateMachine_Run(entity->state);
+}
 
 void TryAgainE_LateUpdate(void) {}
 

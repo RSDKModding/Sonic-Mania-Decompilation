@@ -130,12 +130,12 @@ void TryAgain_Unknown4(void)
     if (entity->timer == 600) {
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
 #if RETRO_USE_PLUS
-        EntityFXFade *fxFade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;
         fxFade->fadeOutBlack = true;
 #else
-        EntityFXFade *fxFade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0x000000), entity->position.x, entity->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0x000000), entity->position.x, entity->position.y);
         fxFade->speedIn = 12;
         fxFade->wait    = 240;
 #endif

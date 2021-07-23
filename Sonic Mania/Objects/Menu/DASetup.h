@@ -5,7 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    bool32 initialized;
+    int flag;
+    int trackCount;
+    int trackID;
+    int activeTrack;
+    Entity *control;
+    Entity *labelA;
+    Entity *labelB;
+    Entity *fxFade;
+    Entity *trackList[64];
+    ushort sfxEmerald;
+    ushort sfxMedal;
+    ushort sfxSSExit;
+    ushort sfxScoreTotal;
 } ObjectDASetup;
 
 // Entity Class
@@ -28,6 +42,9 @@ void DASetup_EditorLoad(void);
 void DASetup_Serialize(void);
 
 // Extra Entity Functions
-
+void DASetup_DisplayTrack(int trackID);
+bool32 DASetup_HandleMedallionDebug(void);
+void DASetup_SetupUI(void);
+void DASetup_State_ManageControl(void);
 
 #endif //!OBJ_DASETUP_H

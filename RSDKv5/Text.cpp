@@ -291,11 +291,17 @@ void AppendString(TextInfo *info, TextInfo *string)
 {
     uint totalLen = string->textLength + info->textLength;
     if (info->length < totalLen || !info->text) {
-        AllocateStorage(sizeof(ushort) * totalLen, (void **)&info, DATASET_STR, false);
-        for (int charID = 0; charID < info->textLength; ++charID) {
-            info->text[charID] = info->text[charID];
+        if (info->text) {
+            ushort *buffer = info->text;
+            AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, DATASET_STR, false);
+            for (int charID = 0; charID < info->textLength; ++charID) {
+                info->text[charID] = buffer[charID];
+            }
+            buffer = NULL;
         }
-        CopyStorage((int **)info, (int **)&info);
+        else {
+            AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, DATASET_STR, false);
+        }
         info->length = string->textLength + info->textLength;
     }
 
@@ -337,14 +343,15 @@ bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3)
 
 }
 
-void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
+bool32 SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
 {
     if (!strings->length || !strings->text)
-        return;
+        return false;
 
     int lastStrPos = 0;
     int strID      = 0;
 
+    bool32 flag    = false;
     TextInfo *info = list;
     for (int c = 0; c < strings->textLength && count > 0; ++c) {
         if (strings->text[c] == '\n') {
@@ -365,11 +372,13 @@ void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
 
                 ++info;
                 --count;
+                flag = true;
             }
             ++strID;
             ++lastStrPos;
         }
     }
+    return flag;
 }
 
 void InitStringsBuffer(TextInfo *info, int size)

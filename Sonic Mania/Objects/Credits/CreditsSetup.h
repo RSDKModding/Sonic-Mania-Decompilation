@@ -5,7 +5,15 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int creditsTrack;
+    Entity *fxFade;
+    bool32 started;
+    bool32 skipFlag;
+    int unknown;
+    int creditsPos;
+    int creditsSize;
 } ObjectCreditsSetup;
 
 // Entity Class
@@ -28,6 +36,6 @@ void CreditsSetup_EditorLoad(void);
 void CreditsSetup_Serialize(void);
 
 // Extra Entity Functions
-
+void CreditsSetup_LoadCreditsStrings(void);
 
 #endif //!OBJ_CREDITSSETUP_H

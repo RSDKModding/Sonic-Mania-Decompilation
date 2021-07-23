@@ -12,14 +12,14 @@ void UIInfoLabel_Draw(void) { UIInfoLabel_DrawSprites(); }
 
 void UIInfoLabel_Create(void *data)
 {
-    EntityUIInfoLabel *entity = (EntityUIInfoLabel *)RSDK_sceneInfo->entity;
-    entity->active            = ACTIVE_BOUNDS;
-    entity->drawOrder         = 2;
-    entity->visible           = true;
-    entity->drawFX            = FX_FLIP;
-    entity->updateRange.x     = 0x800000;
-    entity->updateRange.y     = 0x300000;
-    entity->width             = entity->size.x >> 0x10;
+    RSDK_THIS(UIInfoLabel);
+    entity->active        = ACTIVE_BOUNDS;
+    entity->drawOrder     = 2;
+    entity->visible       = true;
+    entity->drawFX        = FX_FLIP;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x300000;
+    entity->width         = entity->size.y >> 0x10;
     if (!RSDK_sceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->data2, true, 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
@@ -30,7 +30,7 @@ void UIInfoLabel_StageLoad(void) {}
 
 void UIInfoLabel_EditorDraw(void) {}
 
-void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text)
+void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
 {
     if (!RSDK_sceneInfo->inEditor) {
         RSDK.SetText(&label->text, text, 0);
@@ -40,7 +40,7 @@ void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text)
         }
     }
 }
-void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text)
+void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
 {
     if (!RSDK_sceneInfo->inEditor) {
         RSDK.CopyString(&entity->text, text);
@@ -53,10 +53,10 @@ void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text)
 
 void UIInfoLabel_DrawSprites(void)
 {
+    RSDK_THIS(UIInfoLabel);
     Vector2 drawPos;
 
-    EntityUIInfoLabel *entity = (EntityUIInfoLabel *)RSDK_sceneInfo->entity;
-    int size                  = (entity->size.y + entity->size.x) >> 16;
+    int size = (entity->size.y + entity->size.x) >> 16;
     UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 240, 240, 240, entity->position.x, entity->position.y);
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
@@ -76,4 +76,8 @@ void UIInfoLabel_DrawSprites(void)
 
 void UIInfoLabel_EditorLoad(void) {}
 
-void UIInfoLabel_Serialize(void) {}
+void UIInfoLabel_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(UIInfoLabel, VAR_VECTOR2, size);
+    RSDK_EDITABLE_VAR(UIInfoLabel, VAR_STRING, text);
+}

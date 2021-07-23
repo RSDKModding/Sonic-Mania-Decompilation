@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectUICreditsText;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    TextInfo text;
+    TextInfo tag;
+    int listID;
+    bool32 isHeading;
+    bool32 hasShape;
+    int timer;
+    int scaleTimer;
+    int scaleSpeed;
+    Vector2 charPositions[64];
+    int charOffsets[64];
+    short charTimers[64];
+    int clipY2;
+    Animator animator;
 } EntityUICreditsText;
 
 // Object Struct
@@ -28,6 +43,16 @@ void UICreditsText_EditorLoad(void);
 void UICreditsText_Serialize(void);
 
 // Extra Entity Functions
+void UICreditsText_SetText(int animID, EntityUICreditsText *label, TextInfo *text);
 
+void UICreditsText_State_Setup(void);
+void UICreditsText_State_SetupCharPos(void);
+void UICreditsText_State_MoveChars(void);
+void UICreditsText_State_ScaleIn(void);
+void UICreditsText_State_FadeIn(void);
+void UICreditsText_SetupIdleDelay(void);
+void UICreditsText_State_Idle(void);
+void UICreditsText_State_ScaleOut(void);
+void UICreditsText_State_FadeOut(void);
 
 #endif //!OBJ_UICREDITSTEXT_H

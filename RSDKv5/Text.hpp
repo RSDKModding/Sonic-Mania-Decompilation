@@ -97,6 +97,9 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
 
 inline void CopyString(TextInfo *dst, TextInfo *src)
 {
+    if (dst == src)
+        return;
+
     int textLen = src->textLength;
     dst->text   = NULL;
     if (dst->length >= textLen) {
@@ -138,7 +141,7 @@ void AppendText(TextInfo *info, char *text);
 void PrependText(TextInfo *info, char *text);
 void AppendString(TextInfo *textA, TextInfo *textB);
 bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte flag);
-void SplitStringList(TextInfo *list, TextInfo *strings, int start, int count);
+bool32 SplitStringList(TextInfo *list, TextInfo *strings, int start, int count);
 
 void LoadStrings(TextInfo *buffer, const char *filePath);
 

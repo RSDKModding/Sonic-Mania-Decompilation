@@ -190,7 +190,7 @@ void Music_PlayTrack(byte trackID)
         Music->nextTrack = trackID;
     }
     else {
-        RSDK.ResetEntitySlot(SLOT_MUSIC, 0, NULL);
+        RSDK.ResetEntitySlot(SLOT_MUSIC, TYPE_BLANK, NULL);
         RSDK.StopChannel(Music->channelID);
         Music->activeTrack   = trackID;
         Music->trackStartPos = 0;

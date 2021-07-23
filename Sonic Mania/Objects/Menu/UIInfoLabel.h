@@ -36,8 +36,8 @@ void UIInfoLabel_EditorLoad(void);
 void UIInfoLabel_Serialize(void);
 
 // Extra Entity Functions
-void UIInfoLabel_Unknown1(EntityUIInfoLabel *label, char *text);
-void UIInfoLabel_Unknown2(EntityUIInfoLabel *entity, TextInfo *text);
+void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text);
+void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text);
 void UIInfoLabel_DrawSprites(void);
 
 #endif //!OBJ_UIINFOLABEL_H
