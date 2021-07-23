@@ -5,12 +5,15 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
 } ObjectMagSpikeBall;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Animator animator;
 } EntityMagSpikeBall;
 
 // Object Struct

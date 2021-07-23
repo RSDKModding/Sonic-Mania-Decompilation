@@ -5,12 +5,29 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFranes;
+    Hitbox hitbox;
+    Vector2 onScreenRange;
+    byte field_18;
+    bool32 playingMagnetSFX;
+    ushort sfxMagnet;
 } ObjectElectroMagnet;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Animator animator;
+    ushort interval;
+    ushort intervalOffset;
+    ushort duration;
+    int height;
+    int shieldRange;
+    int timer;
+    bool32 invisible;
+    Hitbox hitbox;
+    Hitbox playerHitbox;
 } EntityElectroMagnet;
 
 // Object Struct
@@ -28,6 +45,7 @@ void ElectroMagnet_EditorLoad(void);
 void ElectroMagnet_Serialize(void);
 
 // Extra Entity Functions
-
+void ElectroMagnet_Unknown1(void);
+void ElectroMagnet_Unknown2(void);
 
 #endif //!OBJ_ELECTROMAGNET_H

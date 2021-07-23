@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Animator animator;
 } ObjectEggTV;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 size;
+    bool32 drawOverTV;
+    int lineAlpha;
+    Hitbox hitbox;
+    int field_74;
+    int field_78;
+    int field_7C;
+    int field_80;
+    int field_84;
+    int field_88;
 } EntityEggTV;
 
 // Object Struct
@@ -28,6 +41,8 @@ void EggTV_EditorLoad(void);
 void EggTV_Serialize(void);
 
 // Extra Entity Functions
+void EggTV_Unknown1(void);
+void EggTV_Unknown2(void);
 
 
 #endif //!OBJ_EGGTV_H

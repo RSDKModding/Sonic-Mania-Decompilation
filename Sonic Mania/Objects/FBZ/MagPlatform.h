@@ -5,12 +5,14 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort sfxChain;
 } ObjectMagPlatform;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_PLATFORM_BASE
+    int length;
 } EntityMagPlatform;
 
 // Object Struct
@@ -28,6 +30,9 @@ void MagPlatform_EditorLoad(void);
 void MagPlatform_Serialize(void);
 
 // Extra Entity Functions
-
+void MagPlatform_Unknown1(void);
+void MagPlatform_Unknown2(void);
+void MagPlatform_Unknown3(void);
+void MagPlatform_Unknown4(void);
 
 #endif //!OBJ_MAGPLATFORM_H

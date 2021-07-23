@@ -5,12 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitbox;
+    ushort sfxExplosion;
 } ObjectMine;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int timer;
+    Animator animator;
 } EntityMine;
 
 // Object Struct
@@ -28,6 +33,8 @@ void Mine_EditorLoad(void);
 void Mine_Serialize(void);
 
 // Extra Entity Functions
-
+#if RETRO_USE_PLUS
+void Mine_CheckMightyHit(void);
+#endif
 
 #endif //!OBJ_MINE_H

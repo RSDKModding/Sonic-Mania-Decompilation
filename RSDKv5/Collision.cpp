@@ -272,7 +272,7 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
 
     if (otherHitbox->bottom + otherIY >= thisIY + thisHitbox->top
         && otherHitbox->bottom + ((otherEntity->position.y - otherEntity->velocity.y) >> 16) <= thisIY + thisHitbox->bottom
-        && (thisIX + thisHitbox->left < otherIX + otherHitbox->right) && thisIX + thisHitbox->right > otherIX + otherHitbox->left
+        && thisIX + thisHitbox->left < otherIX + otherHitbox->right && thisIX + thisHitbox->right > otherIX + otherHitbox->left
         && otherEntity->velocity.y >= 0) {
         otherEntity->position.y = thisEntity->position.y + ((thisHitbox->top - otherHitbox->bottom) << 16);
         if (setValues) {
@@ -676,7 +676,7 @@ void ProcessTileCollisions(Entity *entity, Hitbox *outerBox, Hitbox *innerBox)
 
             if (entity->onGround) {
                 entity->velocity.x = entity->groundVel * cosVal256[entity->angle & 0xFF] >> 8;
-                entity->velocity.y = entity->groundVel * cosVal256[entity->angle & 0xFF] >> 8;
+                entity->velocity.y = entity->groundVel * sinVal256[entity->angle & 0xFF] >> 8;
             }
             else {
                 entity->groundVel = entity->velocity.x;

@@ -60,9 +60,9 @@ void Launcher_Unknown1(void)
             }
             else {
                 player->position.x     = entity->drawPos.x;
-                player->direction      = entity->direction;
-                //player->velocity.x     = 0;
-                //player->groundVel      = clampVal(entity->velocity.x, -0x60000, 0x60000);
+                player->direction  = entity->direction;
+                // player->velocity.x     = 0;
+                // player->groundVel      = clampVal(entity->velocity.x, -0x60000, 0x60000);
                 player->pushing        = false;
                 player->tileCollisions = true;
                 if (player->state != Player_State_Roll)
