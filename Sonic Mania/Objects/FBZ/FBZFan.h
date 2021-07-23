@@ -5,12 +5,23 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int activePlayers;
+    Hitbox fanHitbox;
+    Hitbox solidHitbox;
+    Hitbox playerHitbox;
+    ushort aniFrames;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    ushort sfxFan;
 } ObjectFBZFan;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Hitbox hitbox;
+    byte activePlayers;
 } EntityFBZFan;
 
 // Object Struct

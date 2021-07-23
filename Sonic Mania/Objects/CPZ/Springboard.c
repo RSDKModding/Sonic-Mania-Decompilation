@@ -99,7 +99,7 @@ void Springboard_Update(void)
             if (entity->animator.frameID <= 2) {
                 hitboxTop = Springboard->array4[pos];
             }
-            else if (entity->animator.frameID != 3) {
+            else if (entity->animator.frameID == 3) {
                 hitboxTop = Springboard->array3[pos];
             }
 

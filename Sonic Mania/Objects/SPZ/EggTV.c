@@ -23,7 +23,8 @@ void EggTV_Draw(void)
 void EggTV_Create(void *data)
 {
     RSDK_THIS(EggTV);
-    RSDK_sceneInfo->entity->active = ACTIVE_BOUNDS;
+    
+    entity->active = ACTIVE_BOUNDS;
     if (entity->drawOverTV)
         entity->drawOrder = Zone->drawOrderLow;
     else
@@ -54,8 +55,8 @@ void EggTV_Unknown1(void)
     if (entity->size.y >= 0 && (entity->size.y & 0xFFFF0000)) {
         int size = entity->size.y >> 1;
         for (int i = 0; i < size; i += 2) {
-            RSDK.DrawLine(entity->position.x - (entity->size.x >> 1), y, entity->position.x + (entity->size.x >> 1), y, Shield_Create,
-                          entity->lineAlpha, INK_BLEND, false);
+            //RSDK.DrawLine(entity->position.x - (entity->size.x >> 1), y, entity->position.x + (entity->size.x >> 1), y, 0x404060,
+            //              entity->lineAlpha, INK_BLEND, false);
             y += 0x20000;
         }
     }

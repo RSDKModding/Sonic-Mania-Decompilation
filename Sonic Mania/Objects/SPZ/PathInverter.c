@@ -116,7 +116,7 @@ void PathInverter_State_Horizontal(void)
     {
         if (player->collisionMode == CMODE_FLOOR || player->collisionMode == CMODE_ROOF) {
             if (abs(entity->position.x - player->position.x) >> 16 >= entity->size.x
-                || abs(entity->position.y - player->position.x) >> 16 >= entity->size.y + 32) {
+                || abs(entity->position.y - player->position.y) >> 16 >= entity->size.y + 32) {
                 int pid = player->playerID;
                 if (entity->playerPtrs[pid]) {
                     entity->playerPtrs[pid] = 0;
