@@ -4016,7 +4016,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 
 }
 
-void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
+void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
               Vector2 *charOffsets, bool32 screenRelative)
 {
     if (data && info && data->framePtrs) {
@@ -4031,27 +4031,27 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, i
             y -= currentScreen->position.y;
         }
 
-        if (endFrame >= 0) {
-            if (endFrame >= info->textLength)
-                endFrame = info->textLength - 1;
+        if (startFrame >= 0) {
+            if (startFrame >= info->textLength)
+                startFrame = info->textLength - 1;
         }
         else {
-            endFrame = 0;
+            startFrame = 0;
         }
 
-        if (textLength > 0) {
-            if (textLength > info->textLength)
-                textLength = info->textLength;
+        if (endFrame > 0) {
+            if (endFrame > info->textLength)
+                endFrame = info->textLength;
         }
         else {
-            textLength = info->textLength;
+            endFrame = info->textLength;
         }
 
         switch (align) {
             case ALIGN_LEFT:
                 if (charOffsets) {
-                    for (; endFrame < textLength; ++endFrame) {
-                        ushort curChar = info->text[endFrame];
+                    for (; startFrame < endFrame; ++startFrame) {
+                        ushort curChar = info->text[startFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
                             DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height, frame->sprX,
@@ -4062,8 +4062,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, i
                     }
                 }
                 else {
-                    for (; endFrame < textLength; ++endFrame) {
-                        ushort curChar = info->text[endFrame];
+                    for (; startFrame < endFrame; ++startFrame) {
+                        ushort curChar = info->text[startFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
                             DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
@@ -4075,10 +4075,10 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, i
                 break;
             case ALIGN_RIGHT:
             case ALIGN_CENTER:
-                --textLength;
+                --endFrame;
                 if (charOffsets) {
-                    for (Vector2 *charOffset = &charOffsets[textLength]; textLength >= endFrame; --textLength) {
-                        ushort curChar = info->text[textLength];
+                    for (Vector2 *charOffset = &charOffsets[endFrame]; endFrame >= startFrame; --endFrame) {
+                        ushort curChar = info->text[endFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
                             DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
@@ -4090,8 +4090,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, i
                     }
                 }
                 else {
-                    for (; textLength >= endFrame; --textLength) {
-                        ushort curChar = info->text[textLength];
+                    for (; endFrame >= startFrame; --endFrame) {
+                        ushort curChar = info->text[endFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
                             DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,

@@ -152,9 +152,9 @@ void MainMenu_ExitGameOption(void)
     Localization_GetString(&buffer, STR_QUITWARNING);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
     if (dialog) {
-        UIDialog_Unknown2(1, dialog, 0, 1);
-        UIDialog_Unknown2(0, dialog, MainMenu_StartExitGame, 1);
-        UIDialog_Unknown3(dialog);
+        UIDialog_AddButton(1, dialog, 0, 1);
+        UIDialog_AddButton(0, dialog, MainMenu_StartExitGame, 1);
+        UIDialog_Setup(dialog);
     }
 }
 
@@ -247,9 +247,9 @@ void MainMenu_ChangeMenu(void)
                     Localization_GetString(&buffer, STR_CONNECTINGTOEGS);
                     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(buffer);
                     if (dialog) {
-                        UIDialog_Unknown2(2, dialog, MainMenu_BuyPlusDialogCB, 1);
-                        UIDialog_Unknown2(3, dialog, 0, 1);
-                        UIDialog_Unknown3(dialog);
+                        UIDialog_AddButton(2, dialog, MainMenu_BuyPlusDialogCB, 1);
+                        UIDialog_AddButton(3, dialog, 0, 1);
+                        UIDialog_Setup(dialog);
                     }
                 }
             }

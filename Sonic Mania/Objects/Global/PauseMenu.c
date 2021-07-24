@@ -51,10 +51,10 @@ void PauseMenu_StaticUpdate(void)
 
         bool32 flag = true;
         if (Zone) {
-            flag = Zone->timer <= 1;
+            flag = Zone->timer > 1;
         }
 
-        if (!cnt && !pauseMenu->objectID && flag && !PauseMenu->disableEvents) {
+        if (!cnt && pauseMenu->objectID == TYPE_BLANK && flag && !PauseMenu->disableEvents) {
 #if RETRO_USE_PLUS
             if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
                 PauseMenu->signoutDetected = true;
@@ -213,7 +213,7 @@ void PauseMenu_AddButton(byte id, void *action)
 
         int buttonSlot = entity->buttonCount + 18;
         RSDK.ResetEntitySlot(buttonSlot, UIButton->objectID, NULL);
-        EntityUIButton *button = (EntityUIButton *)RSDK.GetEntityByID(buttonSlot);
+        EntityUIButton *button = RSDK_GET_ENTITY(buttonSlot, UIButton);
 
         button->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
         button->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
@@ -263,14 +263,14 @@ void PauseMenu_Unknown6(void)
 void PauseMenu_ClearButtons(EntityPauseMenu *entity)
 {
     if (entity->manager)
-        RSDK.ResetEntityPtr(entity->manager, TYPE_BLANK, NULL);
+        destroyEntity(entity->manager);
 
     for (int i = 0; i < 3; ++i) {
         if (entity->buttonPtrs[i])
-            RSDK.ResetEntityPtr(entity->buttonPtrs[i], TYPE_BLANK, NULL);
+            destroyEntity(entity->buttonPtrs[i]);
     }
 
-    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+    destroyEntity(entity);
 }
 
 void PauseMenu_Unknown8(void)
@@ -291,9 +291,8 @@ void PauseMenu_Unknown9(void)
     globals->specialRingID = 0;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        // byte *param            = (byte *)&globals->menuParam[22];
+        sprintf((char *)&globals->menuParam[22], "Competition Zone");
         ushort *param2 = (ushort *)&globals->menuParam[26];
-        // param[2]               = "Competition Zone";
         param2[1]              = 115;
         globals->menuParam[87] = globals->competitionSession[24];
     }
@@ -359,9 +358,9 @@ void PauseMenu_Restart_CB(void)
 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
-        UIDialog_Unknown2(1, dialog, 0, 1);
-        UIDialog_Unknown2(0, dialog, PauseMenu_Unknown15, 0);
-        UIDialog_Unknown3(dialog);
+        UIDialog_AddButton(1, dialog, 0, 1);
+        UIDialog_AddButton(0, dialog, PauseMenu_Unknown15, 0);
+        UIDialog_Setup(dialog);
     }
 }
 
@@ -400,9 +399,9 @@ void PauseMenu_Exit_CB(void)
 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
-        UIDialog_Unknown2(1, dialog, 0, 1);
-        UIDialog_Unknown2(0, dialog, PauseMenu_Unknown15, 0);
-        UIDialog_Unknown3(dialog);
+        UIDialog_AddButton(1, dialog, 0, 1);
+        UIDialog_AddButton(0, dialog, PauseMenu_Unknown15, 0);
+        UIDialog_Setup(dialog);
     }
 }
 
@@ -782,8 +781,8 @@ void PauseMenu_Unknown33(void)
             Localization_GetString(&textBuffer, strID);
 
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
-            UIDialog_Unknown2(4, dialog, PauseMenu_Unknown31, 0);
-            UIDialog_Unknown3(dialog);
+            UIDialog_AddButton(4, dialog, PauseMenu_Unknown31, 0);
+            UIDialog_Setup(dialog);
 #if RETRO_USE_PLUS
             if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(2) == CONT_AUTOASSIGN)
                 RSDK.AssignControllerID(CONT_P2, CONT_ANY);
@@ -803,8 +802,8 @@ void PauseMenu_Unknown33(void)
             Localization_GetString(&textBuffer, strID);
 
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
-            UIDialog_Unknown2(2, dialog, PauseMenu_Unknown29, 1);
-            UIDialog_Unknown3(dialog);
+            UIDialog_AddButton(2, dialog, PauseMenu_Unknown29, 1);
+            UIDialog_Setup(dialog);
         }
     }
 

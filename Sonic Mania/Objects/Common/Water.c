@@ -731,7 +731,7 @@ void Water_State_Bubble(void)
                 if (!Player_CheckValidState(player) && player->state != Player_State_FlyIn) {
                 }
                 else {
-                    if (player->shield == SHIELD_BUBBLE || !player->underwater || Water_Unknown7(player)
+                    if (player->shield == SHIELD_BUBBLE || !player->underwater || Water_GetPlayerBubble(player)
                         || player->position.x < entity->position.x - 0x100000 || player->position.x > entity->position.x + 0x100000) {
                     }
                     else {
@@ -836,9 +836,9 @@ void Water_Unknown6(void)
     }
 }
 
-EntityWater *Water_Unknown7(EntityPlayer *entityPtr)
+EntityWater *Water_GetPlayerBubble(EntityPlayer *player)
 {
-    int playerID = RSDK.GetEntityID(entityPtr);
+    int playerID = RSDK.GetEntityID(player);
 
     foreach_active(Water, water)
     {
@@ -887,7 +887,7 @@ void Water_Unknown8(void)
                 if (globals->gameMode == MODE_COMPETITION && entity->activePlayers)
                     continue;
 
-                if (Player_CheckCollisionTouch(player, &entity, &Water->hitbox2) && !Water_Unknown7(player)) {
+                if (Player_CheckCollisionTouch(player, &entity, &Water->hitbox2) && !Water_GetPlayerBubble(player)) {
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BREATHE, &player->playerAnimator, true, 0);
                     player->state        = Player_State_None;
                     EntityShield *shield = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));

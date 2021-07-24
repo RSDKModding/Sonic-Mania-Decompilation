@@ -28,6 +28,7 @@ void UISubHeading_EditorLoad(void);
 void UISubHeading_Serialize(void);
 
 // Extra Entity Functions
-
+void UISubHeading_Initialize(void);
+void UISubHeading_Unknown3(void);
 
 #endif //!OBJ_UISUBHEADING_H

@@ -207,7 +207,6 @@ void UIControl_ProcessInputs(void)
     UIControl_Unknown16();
 
     if (!UIControl->inputLocked) {
-
         for (int i = 1; i <= 4; ++i) {
             UIControl->upPress[i]    = RSDK_controller[i].keyUp.press || RSDK_stickL[i].keyUp.press;
             UIControl->downPress[i]  = RSDK_controller[i].keyDown.press || RSDK_stickL[i].keyDown.press;
@@ -305,6 +304,9 @@ void UIControl_ProcessInputs(void)
                         //    entity->entities[entity->activeEntityID]->field_FC = 0;
                     }
                 }
+
+                if (flag)
+                    return;
             }
             else {
                 LogHelpers_Print("Backout prevented");
@@ -315,24 +317,22 @@ void UIControl_ProcessInputs(void)
             }
         }
 
-        if (flag) {
-            if (entity->unknownCallback2)
-                entity->unknownCallback2();
-            // else
-            //    UIControl_Unknown18();
-            if (entity->userdataInitialized) {
-                if (UIControl->keyY) {
-                    if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
-                        StateMachine_Run(entity->yPressCB);
-                    }
-                    UIControl->keyY = false;
+        if (entity->unknownCallback2)
+            entity->unknownCallback2();
+        // else
+        //    UIControl_Unknown18();
+        if (entity->userdataInitialized) {
+            if (UIControl->keyY) {
+                if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
+                    StateMachine_Run(entity->yPressCB);
                 }
-                if (UIControl->keyX) {
-                    if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
-                        StateMachine_Run(entity->xPressCB);
-                    }
-                    UIControl->keyX = false;
+                UIControl->keyY = false;
+            }
+            if (UIControl->keyX) {
+                if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
+                    StateMachine_Run(entity->xPressCB);
                 }
+                UIControl->keyX = false;
             }
         }
     }

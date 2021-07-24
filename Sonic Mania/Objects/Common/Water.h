@@ -108,7 +108,7 @@ void Water_RemoveWaterEffect(void);
 void Water_CheckButtonTag(void);
 void Water_SpawnBubble(EntityPlayer *player, int id);
 void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID);
-EntityWater *Water_Unknown7(EntityPlayer *entityPtr);
+EntityWater *Water_GetPlayerBubble(EntityPlayer *entityPtr);
 
 void Water_State_Palette(void);
 void Water_State_Tint(void);

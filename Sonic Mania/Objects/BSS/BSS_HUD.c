@@ -28,8 +28,8 @@ void BSS_HUD_Draw(void)
     drawPos.y = 0x110000;
     BSS_HUD_DrawNumbers(BSS_Setup->ringCount, &drawPos);
 
-    // DEBUG
-    if (true) {
+    // DEBUG, TODO: REMOVE
+    if (false) {
         ushort *playFields[3] = { BSS_Setup->playField, BSS_Setup->playField2, BSS_Setup->playField3 };
 
         uint colours[24] = { 0x000000, 0x0000FF, 0xFF0000, 0xFFFFFF, 0xFFFF00, 0x00FF00, 0xFF00FF, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,

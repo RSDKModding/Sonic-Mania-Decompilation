@@ -20,7 +20,7 @@ void DialogRunner_Create(void *data)
     RSDK_THIS(DialogRunner);
     entity->active   = ACTIVE_ALWAYS;
     entity->visible  = false;
-    entity->state    = (void (*)(void))data;
+    entity->state    = (Type_StateMachine)data;
     entity->timer    = 0;
     entity->field_88 = 0;
 }
@@ -63,123 +63,128 @@ void DialogRunner_HandleCallback(void)
         LogHelpers_Print("Callback: %x", entity->callback);
         if (entity->callback)
             entity->callback();
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        destroyEntity(entity);
     }
     else {
         entity->timer--;
     }
 }
 
-void DialogRunner_NotifyAutoSave_CB(void)
+int DialogRunner_NotifyAutoSave_CB(void)
 {
     DialogRunner->field_14    = 0;
     globals->notifiedAutosave = true;
     UIWaitSpinner_Wait2();
+    return 1;
 }
 
 void DialogRunner_NotifyAutoSave(void)
 {
-    //TextInfo info;
+    TextInfo info;
+    INIT_TEXTINFO(info);
 
     RSDK_THIS(DialogRunner);
     if (DialogRunner->field_14) {
-        /*if (!UIDialog->activeDialog) {
+        if (!UIDialog->activeDialog) {
             Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B8       = 1;
-            UIDialog_Unknown2(2, dialog, DialogRunner_NotifyAutoSave_CB, 1);
-            UIDialog_Unknown3(dialog);
-        }*/
+            UIDialog_AddButton(2, dialog, DialogRunner_NotifyAutoSave_CB, 1);
+            UIDialog_Setup(dialog);
+        }
     }
     else {
-        DialogRunner->entityPtr = 0;
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        DialogRunner->entityPtr = NULL;
+        destroyEntity(entity);
     }
 }
 
-void DialogRunner_Unknown4(void)
+int DialogRunner_SetNoSaveEnabled(void)
 {
     API.UserStorageStatusUnknown4();
-    API.SetUserStorageNoSave(0);
+    API.SetUserStorageNoSave(false);
+    return 1;
 }
 
-void DialogRunner_Unknown5(void)
+int DialogRunner_SetNoSaveDisabled(void)
 {
     API.UserStorageStatusUnknown5();
-    API.SetUserStorageNoSave(1);
+    API.SetUserStorageNoSave(true);
+    return 1;
 }
 
-void DialogRunner_Unknown6(void)
+void DialogRunner_State_CheckNoSave(void)
 {
-    //TextInfo info;
+    TextInfo info;
+    INIT_TEXTINFO(info);
 
     RSDK_THIS(DialogRunner);
     if (API.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
-        /*if (!UIDialog->activeDialog) {
-            int stringID = 30;
-            switch (entity->unknownID) {
-                case 500:
+        if (!UIDialog->activeDialog) {
+            int stringID = STR_SAVELOADFAIL;
+            switch (entity->status) {
+                case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
                     if (RSDK_sku->platform != PLATFORM_XB1)
                         stringID = STR_SAVELOADFAIL;
                     break;
-                case 505: stringID = STR_CORRUPTSAVE; break;
-                case 506: stringID = (RSDK_sku->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
+                case STATUS_CORRUPT: stringID = STR_CORRUPTSAVE; break;
+                case STATUS_NOSPACE: stringID = (RSDK_sku->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
             }
             Localization_GetString(&info, stringID);
-            //EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-            //dialog->field_B8       = 1;
-            //UIDialog_Unknown2(1u, dialog, DialogRunner_Unknown4, 1);
-            //UIDialog_Unknown2(0, dialog, DialogRunner_Unknown5, 1);
-            //UIDialog_Unknown3(dialog);
-        }*/
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+            dialog->field_B8       = 1;
+            UIDialog_AddButton(1, dialog, DialogRunner_SetNoSaveEnabled, 1);
+            UIDialog_AddButton(0, dialog, DialogRunner_SetNoSaveDisabled, 1);
+            UIDialog_Setup(dialog);
+        }
     }
     else {
         DialogRunner->entityPtr = NULL;
-        RSDK.ResetEntityPtr(&entity, 0, 0);
+        destroyEntity(entity);
     }
 }
-void DialogRunner_Unknown7(int a1, int a2)
+void DialogRunner_State_CheckUserAuth(int a1, int a2)
 {
     RSDK_THIS(DialogRunner);
     if (entity->timer) {
         if (DialogRunner->field_8) {
-            /*if (!UIDialog->activeDialog) {
+            if (!UIDialog->activeDialog) {
                 if (Zone && Zone_GetZoneID() != -1) {
                     RSDK.LoadScene("Presentation", "Title Screen");
-                    Zone_StartFadeOut(10, 0);
+                    Zone_StartFadeOut(10, 0x000000);
                 }
                 else if (MenuSetup) {
-                    //MenuSetup_Unknown11(a1, a2);
+                    MenuSetup_StartReturnToTitle();
                 }
                 else if (UFO_Setup) {
-                    //UFO_Setup->dword4C = 1;
+                    UFO_Setup->resetToTitle = true;
                     foreach_all(UFO_Setup, setup)
                     {
-                        //setup->dword60 = 0;
-                        //setup->state   = UFO_Setup_Unknown12;
+                        setup->fadeColour = 0;
+                        setup->state   = UFO_Setup_Unknown12;
                         setup->active  = ACTIVE_ALWAYS;
                         setup->visible = true;
                     }
                 }
                 else if (FXFade) {
                     RSDK.LoadScene("Presentation", "Title Screen");
-                    EntityFXFade *fxFade    = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, 0, v2->position.x, v2->position.y);
+                    EntityFXFade *fxFade    = CREATE_ENTITY(FXFade, NULL, entity->position.x, entity->position.y);
                     fxFade->active     = ACTIVE_ALWAYS;
                     fxFade->timer           = 0;
                     fxFade->speedIn         = 16;
                     fxFade->speedOut        = 16;
                     fxFade->state           = FXFade_State_FadeIn;
-                    fxFade->drawOrder  = 15;
-                    fxFade->field_3C   = 1;
+                    fxFade->drawOrder  = DRAWLAYER_COUNT - 1;
+                    fxFade->isPermanent   = true;
                     fxFade->oneWay          = true;
                     fxFade->transitionScene = true;
                 }
                 DialogRunner->entityPtr = NULL;
-                RSDK.ResetEntityPtr(entity, 0, 0);
-            }*/
+                destroyEntity(entity);
+            }
         }
-        /*else if (!UIDialog->activeDialog) {
+        else if (!UIDialog->activeDialog) {
             TextInfo info;
             int id = STR_SIGNOUTDETECTED;
             if (entity->field_88)
@@ -187,45 +192,46 @@ void DialogRunner_Unknown7(int a1, int a2)
             Localization_GetString(&info, id);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B8       = 1;
-            UIDialog_Unknown2(2, dialog, DialogRunner_Unknown14, 1);
-            UIDialog_Unknown3(dialog);
-        }*/
+            UIDialog_AddButton(2, dialog, DialogRunner_Unknown14, 1);
+            UIDialog_Setup(dialog);
+        }
     }
     else {
-        /*EntityUIDialog *dialog = UIDialog->activeDialog;
+        EntityUIDialog *dialog = UIDialog->activeDialog;
         if (dialog) {
-            if (dialog->state != UIDialog_Unknown13) {
-                dialog->uiControl->gapC8 = 1;
+            /*if (dialog->state != UIDialog_Unknown13) {
+                dialog->control->gapC8 = 1;
                 dialog->turnTimer         = 0;
                 dialog->state            = UIDialog_Unknown13;
                 dialog->field_B0         = 0;
-            }
+            }*/
         }
         else {
             if (UIControl) {
-                if (UIControl_Unknown8())
-                    UIControl_Unknown6(UIControl_Unknown8());
+                //if (UIControl_Unknown8())
+                //    UIControl_Unknown6(UIControl_Unknown8());
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
-            dialog->timer = 1;
-        }*/
+            //dialog->timer = 1;
+        }
     }
 }
 void DialogRunner_ManageNotifs(int a1)
 {
     RSDK_THIS(DialogRunner);
     if (SaveGame_CountUnreadNotifs()) {
-        /*TextInfo info;
+        TextInfo info;
+        INIT_TEXTINFO(info);
         if (!UIDialog->activeDialog) {
             int str = SaveGame_GetNotifStringID(SaveGame_GetNextNotif());
             Localization_GetString(&info, str);
             EntityUIDialog *dialog           = UIDialog_CreateActiveDialog(&info);
             dialog->field_B4       = 1;
             dialog->field_B8                 = 1;
-            UIDialog_Unknown2(2, dialog, DialogRunner_GetNextNotif, 1);
-            UIDialog_Unknown3(v4);
-        }*/
+            UIDialog_AddButton(2, dialog, DialogRunner_GetNextNotif, 1);
+            UIDialog_Setup(dialog);
+        }
     }
     else {
         DialogRunner->entityPtr = NULL;
@@ -238,7 +244,7 @@ void DialogRunner_Wait(int success)
 {
     UIWaitSpinner_Wait2();
 }
-void DialogRunner_GetNextNotif(void)
+int DialogRunner_GetNextNotif(void)
 {
     int *saveRAM = NULL;
     if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK)
@@ -247,6 +253,7 @@ void DialogRunner_GetNextNotif(void)
         saveRAM = &globals->saveRAM[0x900];
     int id             = SaveGame_GetNextNotif();
     saveRAM[id + 0x35] = true;
+    return 1;
 }
 bool32 DialogRunner_CheckUnreadNotifs(void)
 {
@@ -278,14 +285,14 @@ void DialogRunner_GetUserAuthStatus(void)
     if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
         if (DialogRunner->field_4)
             return;
-        EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown7, 0, 0);
+        EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_State_CheckUserAuth, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         DialogRunner->entityPtr          = dialogRunner;
         DialogRunner->field_4            = 1;
     }
 
     if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->field_4) {
-        EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown7, 0, 0);
+        EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_State_CheckUserAuth, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         dialogRunner->field_88           = 1;
         DialogRunner->entityPtr          = dialogRunner;
@@ -304,11 +311,15 @@ void DialogRunner_PromptSavePreference(int id)
         LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
     API.SetUserStorageStatus();
-    EntityDialogRunner *dialogRunner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_Unknown6, 0, 0);
-    dialogRunner->unknownID          = id;
+    EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_State_CheckNoSave, 0, 0);
+    dialogRunner->status          = id;
     DialogRunner->entityPtr          = dialogRunner;
 }
-void DialogRunner_Unknown14(void) { DialogRunner->field_8 = 1; }
+int DialogRunner_Unknown14(void)
+{
+    DialogRunner->field_8 = 1;
+    return 1;
+}
 
 void DialogRunner_EditorDraw(void) {}
 

@@ -31,7 +31,7 @@ typedef struct {
     int field_78;
     int field_7C;
     int field_80;
-    int unknownID;
+    int status;
     int field_88;
 } EntityDialogRunner;
 
@@ -43,7 +43,7 @@ void DialogRunner_Update(void);
 void DialogRunner_LateUpdate(void);
 void DialogRunner_StaticUpdate(void);
 void DialogRunner_Draw(void);
-void DialogRunner_Create(void* data);
+void DialogRunner_Create(void *data);
 void DialogRunner_StageLoad(void);
 void DialogRunner_EditorDraw(void);
 void DialogRunner_EditorLoad(void);
@@ -51,20 +51,20 @@ void DialogRunner_Serialize(void);
 
 // Extra Entity Functions
 void DialogRunner_HandleCallback(void);
-void DialogRunner_NotifyAutoSave_CB(void);
+int DialogRunner_NotifyAutoSave_CB(void);
 void DialogRunner_NotifyAutoSave(void);
-void DialogRunner_Unknown4(void);
-void DialogRunner_Unknown5(void);
-void DialogRunner_Unknown6(void);
-void DialogRunner_Unknown7(int a1, int a2);
+int DialogRunner_SetNoSaveEnabled(void);
+int DialogRunner_SetNoSaveDisabled(void);
+void DialogRunner_State_CheckNoSave(void);
+void DialogRunner_State_CheckUserAuth(int a1, int a2);
 void DialogRunner_ManageNotifs(int a1);
 void DialogRunner_Wait(int a1);
-void DialogRunner_GetNextNotif(void);
+int DialogRunner_GetNextNotif(void);
 bool32 DialogRunner_CheckUnreadNotifs(void);
 bool32 DialogRunner_NotifyAutosave(void);
 void DialogRunner_GetUserAuthStatus(void);
 void DialogRunner_PromptSavePreference(int id);
-void DialogRunner_Unknown14(void);
+int DialogRunner_Unknown14(void);
 #endif
 
-#endif //!OBJ_DIALOGRUNNER_H
+#endif //! OBJ_DIALOGRUNNER_H

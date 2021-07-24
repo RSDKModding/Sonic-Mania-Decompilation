@@ -86,8 +86,8 @@ bool32 WaterfallSound_CheckCB(void)
                 if (MathHelpers_Unknown14(&sound->posUnk, worldCenterX, worldCenterY, sound->position, hitbox)) {
                     distX = abs(worldCenterX - sound->posUnk.x) >> 16;
                     distY = abs(worldCenterY - sound->posUnk.y) >> 16;
-                    rx = distX * distX;
-                    ry = distY * distY;
+                    rx    = distX * distX;
+                    ry    = distY * distY;
 
                     if (MathHelpers_Unknown6(ry + rx) << 16 <= 0x2800000) {
                         sound->flag = true;
@@ -111,10 +111,10 @@ bool32 WaterfallSound_CheckCB(void)
 }
 void WaterfallSound_UpdateCB(int sfxID)
 {
-    int worldCenterX   = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int worldCenterY   = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int worldLeft      = worldCenterX - (RSDK_screens->centerX << 16);
-    int worldRight     = worldCenterX + (RSDK_screens->centerX << 16);
+    int worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int worldLeft    = worldCenterX - (RSDK_screens->centerX << 16);
+    int worldRight   = worldCenterX + (RSDK_screens->centerX << 16);
 
     float pan        = 0.0f;
     float volDivisor = 0.0f;

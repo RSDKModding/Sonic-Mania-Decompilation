@@ -430,7 +430,7 @@ void LoadSceneFile()
 #else
                 entity = &objectEntityList[slotID + RESERVE_ENTITY_COUNT];
 #endif
-
+                memset(entity, 0, obj->entitySize);
                 entity->objectID = objID;
 #if RETRO_REV02
                 entity->filter = 0xFF;

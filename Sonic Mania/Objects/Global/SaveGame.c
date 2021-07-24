@@ -164,7 +164,7 @@ void SaveGame_LoadFile(void)
 void SaveGame_SaveFile(void (*callback)(int status))
 {
 #if RETRO_USE_PLUS
-    if (noSave || !SaveGame->saveRAM || globals->saveLoaded != 200) {
+    if (noSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
             callback(0);
     }

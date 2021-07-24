@@ -6,6 +6,8 @@
 #define RETRO_USERDB_VAL_MAX (8)
 #define RETRO_USERDB_ENTRY_MAX (0x400)
 
+enum StatusCodes { STATUS_NONE = 0, STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 };
+
 struct DummyCore {
     void (*unknown1)(void);
     void (*unknown2)(void);
@@ -284,56 +286,56 @@ inline int GetStatsStatus() { return stats->status; }
 inline void SetStatsStatus(int status) { stats->status = status; }
 #endif
 
-inline int GetUserAuthStatus() { return 200; }
+inline int GetUserAuthStatus() { return STATUS_OK; }
 inline int GetUserStorageStatus()
 {
 #if RETRO_REV02
     return userStorage->authStatusCode; 
 #else
-    return 200;
+    return STATUS_OK;
 #endif
 }
 #if RETRO_REV02
 inline int UserStorageStatusUnknown1()
 {
-    if (userStorage->statusCode == 500)
-        return 500;
+    if (userStorage->statusCode == STATUS_ERROR)
+        return STATUS_ERROR;
     else
         return userStorage->statusCode;
 }
 inline int UserStorageStatusUnknown2()
 {
     if (userStorage->noSaveActive)
-        return 200;
+        return STATUS_OK;
     else
         return userStorage->statusCode;
 }
 inline int UserStorageStatusUnknown3()
 {
-    if (userStorage->statusCode == 100)
-        userStorage->statusCode = 200;
+    if (userStorage->statusCode == STATUS_CONTINUE)
+        userStorage->statusCode = STATUS_OK;
     return userStorage->statusCode;
 }
 inline int UserStorageStatusUnknown4()
 {
-    if (userStorage->statusCode == 100)
-        userStorage->statusCode = 403;
+    if (userStorage->statusCode == STATUS_CONTINUE)
+        userStorage->statusCode = STATUS_FORBIDDEN;
     return userStorage->statusCode;
 }
 inline int UserStorageStatusUnknown5()
 {
-    if (userStorage->statusCode == 100)
-        userStorage->statusCode = 500;
+    if (userStorage->statusCode == STATUS_CONTINUE)
+        userStorage->statusCode = STATUS_ERROR;
     return userStorage->statusCode;
 }
 inline int ClearUserStorageStatus()
 {
-    userStorage->statusCode = 0;
+    userStorage->statusCode = STATUS_NONE;
     return userStorage->statusCode;
 }
 inline int SetUserStorageStatus()
 {
-    userStorage->statusCode = 100;
+    userStorage->statusCode = STATUS_CONTINUE;
     return userStorage->statusCode;
 }
 inline int SetUserStorageNoSave(int state)
@@ -347,16 +349,16 @@ inline int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 inline int TryAuth()
 {
 #if RETRO_REV02
-    userStorage->authStatusCode = 200;
+    userStorage->authStatusCode = STATUS_OK;
     return userStorage->authStatusCode;
 #else
-    return 200;
+    return STATUS_OK;
 #endif
 }
 inline int TryInitStorage()
 {
 #if RETRO_REV02
-    userStorage->storageStatusCode = 200;
+    userStorage->storageStatusCode = STATUS_OK;
     return userStorage->storageStatusCode;
 #else
     return 0;
@@ -370,12 +372,12 @@ inline int GetUserName(TextInfo *info)
 #if RETRO_REV02
 inline void UserStorageUnknown8()
 {
-    if (userStorage->authStatusCode != 200)
-        userStorage->authStatusCode = 0;
+    if (userStorage->authStatusCode != STATUS_OK)
+        userStorage->authStatusCode = STATUS_NONE;
 
     userStorage->field_14 = 0;
-    if (userStorage->storageStatusCode != 200)
-        userStorage->storageStatusCode = 0;
+    if (userStorage->storageStatusCode != STATUS_OK)
+        userStorage->storageStatusCode = STATUS_NONE;
 }
 #endif
 

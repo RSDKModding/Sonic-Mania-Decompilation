@@ -61,7 +61,7 @@ void Options_LoadCallback(int success)
 
 void Options_LoadOptionsBin(void)
 {
-    if (RSDK_sku->platform) {
+    if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Localization->loaded = 0;

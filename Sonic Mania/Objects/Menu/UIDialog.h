@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     void *activeDialog;
-    EntityUIControl* field_8;
-    void* field_C;
+    EntityUIControl *controlStore;
+    StateMachine(controlStateStore);
 } ObjectUIDialog;
 
 // Entity Class
@@ -23,11 +23,11 @@ typedef struct {
     Vector2 drawPos;
     EntityUIControl *parent;
     int field_84;
-    byte field_88[3];
-    int (*callbacks[3])(void);
-    int field_98[3];
+    byte buttonFrames[3];
+    void (*callbacks[3])(void);
+    bool32 flags[3];
     EntityUIButton *entPtrs[3];
-    int (*curCallback)(void);
+    void (*curCallback)(void);
     int field_B4;
     int field_B8;
     int lineLength[3];
@@ -53,9 +53,16 @@ void UIDialog_Serialize(void);
 EntityUIDialog *UIDialog_CreateActiveDialog(void *msg);
 void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
 
-void UIDialog_Unknown2(byte a1, EntityUIDialog *dialog, int (*callback)(void), int a4);
-void UIDialog_Unknown3(EntityUIDialog *dialog);
+void UIDialog_AddButton(byte a1, EntityUIDialog *dialog, int (*callback)(void), bool32 flag);
+void UIDialog_Setup(EntityUIDialog *dialog);
+void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void));
+void UIDialog_Unknown6(void);
+void UIDialog_Unknown7(void);
+void UIDialog_Close(void);
 bool32 UIDialog_Unknown9(void);
 int UIDialog_Unknown10(void);
+void UIDialog_Unknown11(void);
+void UIDialog_Unknown12(void);
+void UIDialog_Unknown13(void);
 
 #endif //!OBJ_UIDIALOG_H

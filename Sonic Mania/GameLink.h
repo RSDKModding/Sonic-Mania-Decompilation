@@ -559,7 +559,16 @@ typedef enum {
     GROUP_CUSTOM4,
 } TypeGroups;
 
-typedef enum { STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 } StatusCodes;
+typedef enum {
+    STATUS_NONE      = 0,
+    STATUS_CONTINUE  = 100,
+    STATUS_OK        = 200,
+    STATUS_FORBIDDEN = 403,
+    STATUS_NOTFOUND  = 404,
+    STATUS_ERROR     = 500,
+    STATUS_CORRUPT   = 505,
+    STATUS_NOSPACE   = 506,
+} StatusCodes;
 
 typedef enum {
     REGION_US,

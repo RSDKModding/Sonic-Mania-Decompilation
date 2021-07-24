@@ -144,14 +144,14 @@ void MenuSetup_Initialize(void)
 #if RETRO_USE_PLUS
     LogHelpers_Print("ManiaModeMenu_Initialize()");
     MainMenu_Initialize();
-    //UISubHeading_Initialize();
+    UISubHeading_Initialize();
     //TimeAttackMenu_Initialize();
     //CompetitionMenu_Initialize();
     //OptionsMenu_Initialize();
     //ExtrasMenu_Initialize();
     MenuSetup_Unknown6();
     MainMenu_Unknown3();
-    //UISubHeading_Unknown3();
+    UISubHeading_Unknown3();
     //TimeAttackMenu_Unknown3();
     //CompetitionMenu_Unknown2();
     //OptionsMenu_Unknown3();
@@ -192,7 +192,7 @@ bool32 MenuSetup_InitUserdata(void)
                 UIWaitSpinner_Wait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
-                // ReplayRecorder_LoadReplayDB(NULL);
+                ReplayRecorder_LoadReplayDB(NULL);
                 MenuSetup->gameLoaded = true;
             }
             if (MenuSetup->dword10)

@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxBody;
+    Hitbox hitboxProjectile;
+    ushort aniFrames;
+    ushort sfxShot;
 } ObjectBlastoid;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte timer;
+    Animator animator;
 } EntityBlastoid;
 
 // Object Struct
@@ -28,6 +35,13 @@ void Blastoid_EditorLoad(void);
 void Blastoid_Serialize(void);
 
 // Extra Entity Functions
+void Blastoid_DebugSpawn(void);
+void Blastoid_DebugDraw(void);
 
+void Blastoid_CheckPlayerCollisions(void);
+
+void Blastoid_State_Setup(void);
+void Blastoid_State_Body(void);
+void Blastoid_State_Projectile(void);
 
 #endif //!OBJ_BLASTOID_H

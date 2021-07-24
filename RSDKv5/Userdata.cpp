@@ -163,6 +163,12 @@ void initUserData()
         userStorage->SaveUserFile   = TrySaveUserFile;
         userStorage->DeleteUserFile = TryDeleteUserFile;
         userStorage->unknown8       = UserStorageUnknown8;
+
+        achievements->status           = STATUS_OK;
+        stats->status                  = STATUS_OK;
+        userStorage->authStatusCode    = STATUS_OK;
+        userStorage->storageStatusCode = STATUS_OK;
+        userStorage->statusCode        = STATUS_OK;
 #endif
 
 #if !RETRO_REV02

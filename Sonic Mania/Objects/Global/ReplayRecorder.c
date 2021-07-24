@@ -231,9 +231,9 @@ void ReplayRecorder_Unknown6(void)
     Localization_GetString(&buffer, STR_SAVEREPLAY);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
     if (dialog) {
-        UIDialog_Unknown2(1, dialog, ReplayRecorder_Unknown4, 1);
-        UIDialog_Unknown2(0, dialog, ReplayRecorder_CreateReplayDBEntry, 1);
-        UIDialog_Unknown3(dialog);
+        UIDialog_AddButton(1, dialog, ReplayRecorder_Unknown4, 1);
+        UIDialog_AddButton(0, dialog, ReplayRecorder_CreateReplayDBEntry, 1);
+        UIDialog_Setup(dialog);
     }
 }
 
@@ -272,8 +272,8 @@ void ReplayRecorder_SavedReplay(bool32 status)
         Localization_GetString(&buffer, STR_NOREPLAYSPACE);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
         if (dialog) {
-            UIDialog_Unknown2(2, dialog, 0, 1);
-            UIDialog_Unknown3(dialog);
+            UIDialog_AddButton(2, dialog, 0, 1);
+            UIDialog_Setup(dialog);
         }
         UIWaitSpinner_Wait2();
         ActClear->field_14 = 0;
@@ -309,8 +309,8 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 a1)
         Localization_GetString(&buffer, STR_NOREPLAYSPACE);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
         if (dialog) {
-            UIDialog_Unknown2(2, dialog, 0, 1);
-            UIDialog_Unknown3(dialog);
+            UIDialog_AddButton(2, dialog, 0, 1);
+            UIDialog_Setup(dialog);
         }
         UIWaitSpinner_Wait2();
         ActClear->field_14 = 0;

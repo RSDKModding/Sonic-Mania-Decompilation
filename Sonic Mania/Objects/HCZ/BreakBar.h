@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxBreak;
 } ObjectBreakBar;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte orientation;
+    ushort length;
+    byte activePlayersGrabbed;
+    byte activePlayersReleased;
+    byte playerTimers[4];
+    Vector2 startPos;
+    int releaseTimer;
+    bool32 destroyFlag;
+    Hitbox hitbox;
+    Animator animator;
 } EntityBreakBar;
 
 // Object Struct
@@ -28,6 +41,12 @@ void BreakBar_EditorLoad(void);
 void BreakBar_Serialize(void);
 
 // Extra Entity Functions
+void BreakBar_DrawSprites(void);
 
+void BreakBar_CheckPlayerCollisions(void);
+void BreakBar_HandlePlayerInteractions(void *p);
+
+void BreakBar_State_Setup(void);
+void BreakBar_State_Main(void);
 
 #endif //!OBJ_BREAKBAR_H
