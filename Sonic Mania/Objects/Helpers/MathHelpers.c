@@ -87,17 +87,17 @@ Vector2 MathHelpers_Unknown5(int percent, int x1, int y1, int x2, int y2, int x3
     int v11 = percent * ((uint)(v9 * v9) >> 16) >> 16;
     int v12 = percent * ((uint)(percent * percent) >> 16) >> 16;
     int v13 = (0x10000 - percent) * ((uint)(percent * percent) >> 16) >> 16;
-    
+
     Vector2 result;
     result.x = v12 * (x4 >> 16) + v13 * (x3 >> 16) + v11 * (x2 >> 16) + v10 * (x1 >> 16) + 2 * v11 * (x2 >> 16) + 2 * v13 * (x3 >> 16);
     result.y = v12 * (y4 >> 16) + v13 * (y3 >> 16) + v11 * (y2 >> 16) + v10 * (y1 >> 16) + 2 * v11 * (y2 >> 16) + 2 * v13 * (y3 >> 16);
     return result;
 }
 
-uint MathHelpers_Unknown6(uint a1)
+int MathHelpers_Unknown6(uint a1)
 {
     int val = 0x40000000;
-    int id = 0;
+    int id  = 0;
     while (val > a1) {
         val >>= 2;
     }
@@ -136,17 +136,18 @@ int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
     return val;
 }
 
-bool32 MathHelpers_PointInHitbox(int direction, int x1, int y1, Hitbox* hitbox, int x2, int y2) {
+bool32 MathHelpers_PointInHitbox(int direction, int x1, int y1, Hitbox *hitbox, int x2, int y2)
+{
     int left, top, right, bottom;
 
     if ((direction & 1) != 0) {
-        left           = -*&hitbox->left;
-        right           = -*&hitbox->right;
+        left          = -*&hitbox->left;
+        right         = -*&hitbox->right;
         hitbox->right = -hitbox->right;
     }
     else {
         right = hitbox->right;
-        left       = hitbox->left;
+        left  = hitbox->left;
     }
     if ((direction & 2) != 0) {
         bottom = -hitbox->bottom;
@@ -298,14 +299,117 @@ int MathHelpers_Unknown12(int px1, int py1, int px2, int py2, int tx1, int tx2, 
 }
 int MathHelpers_Unknown13(int a1, int a2)
 {
-    uint absVal1 = abs(a1);
-    uint absVal2 = abs(a2);
-    uint val     = ((absVal1 >> 16) * (absVal2 >> 16) << 16) + (absVal1 >> 16) * (ushort)absVal2 + (ushort)absVal1 * (absVal2 >> 16)
-               + ((ushort)absVal1 * (ushort)absVal2 >> 16);
+    uint val = ((abs(a1) >> 16) * (abs(a2) >> 16) << 16) + (abs(a1) >> 16) * (ushort)abs(a2) + (ushort)abs(a1) * (abs(a2) >> 16)
+               + ((ushort)abs(a1) * (ushort)abs(a2) >> 16);
     if ((a2 ^ ~a1) >= 0)
         return -(int)val;
     else
         return val;
+}
+
+bool32 MathHelpers_Unknown14(Vector2 *pos, int x1, int y1, Vector2 pos2, Hitbox hitbox)
+{
+    int left = hitbox.right;
+    if (hitbox.left < hitbox.right)
+        left = hitbox.left;
+    int right = hitbox.left;
+    if (hitbox.right > hitbox.left)
+        right = hitbox.right;
+
+    int top = hitbox.bottom;
+    if (hitbox.top < hitbox.bottom)
+        top = hitbox.top;
+    int bottom = hitbox.top;
+    if (hitbox.bottom > hitbox.top)
+        bottom = hitbox.bottom;
+
+    if (x1 > pos2.x + (left << 16) && x1 < pos2.x + (right << 16) && y1 > pos2.y + (top << 16) && y1 < pos2.y + (bottom << 16))
+        return false;
+
+    int posX = 0, posY = 0;
+    if ((x1 ^ pos2.x) & 0xFFFF0000) {
+        if (!((y1 ^ pos2.y) & 0xFFFF0000)) {
+            if (pos) {
+                if (x1 <= pos2.x)
+                    pos->x = pos2.x + (left << 16);
+                else
+                    pos->x = pos2.x + (right << 16);
+                pos->y = y1 & 0xFFFF0000;
+            }
+        }
+        else {
+            int val = (((pos2.y - y1) * (1.0f / 65536.0f)) / ((pos2.x - x1) * (1.0f / 65536.0f))) * 65536.0f;
+            if (!val)
+                return false;
+
+            int posVal  = 0;
+            int posVal2 = 0;
+            if (x1 > pos2.x) {
+                posVal = pos2.y + (top << 16);
+            }
+            else {
+                posVal = pos2.y + (top << 16);
+                posY   = y1 + MathHelpers_Unknown13((pos2.x + (left << 16)) - x1, val);
+                if ((pos2.y + (top << 16)) <= posY && posY <= (pos2.y + (bottom << 16))) {
+                    if (pos) {
+                        pos->x = pos2.x + (left << 16);
+                        pos->y = posY;
+                    }
+                    return true;
+                }
+            }
+
+            if (x1 >= pos2.x) {
+                posVal = pos2.y + (top << 16);
+                posY   = y1 + MathHelpers_Unknown13((pos2.x + (right << 16)) - x1, val);
+                if ((pos2.y + (top << 16)) <= posY && posY <= (pos2.y + (bottom << 16))) {
+                    if (pos) {
+                        pos->x = pos2.x + (right << 16);
+                        pos->y = posY;
+                    }
+                    return true;
+                }
+            }
+
+            if (y1 > pos2.y) {
+                posVal2 = pos2.x + (left << 16);
+            }
+            else {
+                val     = (((posVal - y1) * (1.0 / 65536.0)) / (val * (1.0 / 65536.0))) * -65536.0;
+                posVal2 = pos2.x + (left << 16);
+                if (posVal2 <= x1 - val && x1 - val <= (pos2.x + (right << 16))) {
+                    if (pos) {
+                        pos->x = x1 - val;
+                        pos->y = pos2.y + (top << 16);
+                    }
+                    return true;
+                }
+            }
+
+            if (y1 >= pos2.y) {
+                val = x1 - (((((pos2.y + (bottom << 16)) - y1) * (1.0f / 65536.0f)) / (val * (1.0f / 65536.0f))) * -65536.0f);
+                if (posVal2 <= val && val <= (pos2.x + (right << 16))) {
+                    if (pos) {
+                        pos->x = x1 - val;
+                        pos->y = pos2.y + (bottom << 16);
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    else {
+        if (pos) {
+            pos->x = x1 & 0xFFFF0000;
+            if (y1 <= pos2.y)
+                pos->y = pos2.y + (top << 16);
+            else
+                pos->y = pos2.y + (bottom << 16);
+        }
+    }
+    return true;
 }
 
 void MathHelpers_EditorDraw(void) {}

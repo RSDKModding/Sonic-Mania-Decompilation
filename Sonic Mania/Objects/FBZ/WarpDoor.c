@@ -368,8 +368,8 @@ void WarpDoor_DrawDebug(void)
 
         if (entity->destinationTag >= 1 && entity->destinationTag <= 256) {
             if (WarpDoor->tags[entity->destinationTag]) {
-                PlayerProbe_DrawHitboxOutline(colour, FLIP_NONE, entity->position.x, entity->position.y, &entity->hitbox);
-                PlayerProbe_DrawDebug3(0x00FFFF, entity->position.x, WarpDoor->tags[entity->destinationTag]->position.x, entity->position.y,
+                DrawHelpers_DrawHitboxOutline(colour, FLIP_NONE, entity->position.x, entity->position.y, &entity->hitbox);
+                DrawHelpers_DrawDebug3(0x00FFFF, entity->position.x, WarpDoor->tags[entity->destinationTag]->position.x, entity->position.y,
                                        WarpDoor->tags[entity->destinationTag]->position.y);
             }
         }
@@ -380,7 +380,7 @@ void WarpDoor_DrawDebug(void)
             hitbox.top    = entity->yBoundaryPosT;
             hitbox.right  = entity->xBoundaryPosR;
             hitbox.bottom = entity->yBoundaryPosB;
-            PlayerProbe_DrawHitboxOutline(colour, 0, 0, 0, &hitbox);
+            DrawHelpers_DrawHitboxOutline(colour, 0, 0, 0, &hitbox);
             RSDK.DrawLine(entity->xBoundaryPosL << 16, entity->yBoundaryPosT << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);
             RSDK.DrawLine(entity->xBoundaryPosR << 16, entity->yBoundaryPosT << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);
             RSDK.DrawLine(entity->xBoundaryPosR << 16, entity->yBoundaryPosB << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);

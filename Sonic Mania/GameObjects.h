@@ -4,6 +4,7 @@
 #define minVal(a, b)                      ((a) < (b) ? (a) : (b))
 #define maxVal(a, b)                      ((a) > (b) ? (a) : (b))
 #define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
+#define fabs(a)                      ((a) > 0 ? (a) : -(a))
 
 #define intToVoid(x) (void *)(size_t)(x)
 #define voidToInt(x) (int)(size_t)(x)

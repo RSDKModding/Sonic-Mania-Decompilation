@@ -645,7 +645,7 @@ LABEL_17:
     v21            = RSDK.Sin256(v18);
     *(&Colour + 1) = -16160;
     LOBYTE(Colour) = -32;
-    PlayerProbe_DrawDebug4(Colour, v23, entity->field_AC >> 1, *&a3.right, y1, v20, (v21 << 10) + y1);
+    DrawHelpers_DrawDebug4(Colour, v23, entity->field_AC >> 1, *&a3.right, y1, v20, (v21 << 10) + y1);
     RSDK.DrawCircle(drawPos.x, drawPos.y, v27 + 16, Colour, entity->field_AC >> 1, INK_ALPHA, 0);
     entity->alpha    = entity->field_AC;
     *&entity->drawFX = 0x207;

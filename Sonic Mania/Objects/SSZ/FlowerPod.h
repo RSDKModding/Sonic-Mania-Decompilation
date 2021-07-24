@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitbox;
+    int field_10;
+    ushort sfxExplosion;
+    ushort sfxTwinkle;
 } ObjectFlowerPod;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    Vector2 startPos;
+    Animator animator1;
+    Animator animator2;
 } EntityFlowerPod;
 
 // Object Struct
@@ -28,6 +38,14 @@ void FlowerPod_EditorLoad(void);
 void FlowerPod_Serialize(void);
 
 // Extra Entity Functions
+void FlowerPod_SpawnSeeds(void);
 
+void FlowerPod_State_Pod(void);
+void FlowerPod_State_Exploding(void);
+void FlowerPod_State_Destroyed(void);
+void FlowerPod_State_SeedFall(void);
+void FlowerPod_State_SpawnBeanstalk(void);
+void FlowerPod_State_FlowerGrow(void);
+void FlowerPod_State_Flower(void);
 
 #endif //!OBJ_FLOWERPOD_H

@@ -44,7 +44,7 @@ void WaterfallSound_Serialize(void);
 
 // Extra Entity Functions
 bool32 WaterfallSound_CheckCB(void);
-void WaterfallSound_ChangeCB(int sfxID);
+void WaterfallSound_UpdateCB(int sfxID);
 #endif
 
 #endif //!OBJ_WATERFALLSOUND_H
