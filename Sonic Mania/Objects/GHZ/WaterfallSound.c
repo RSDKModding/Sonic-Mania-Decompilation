@@ -126,19 +126,19 @@ void WaterfallSound_UpdateCB(int sfxID)
             int x = abs(worldCenterX - sound->posUnk.x);
             int y = abs(worldCenterY - sound->posUnk.y);
 
-            short val = min(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
-            float volume = (val / -640.0f) + 1.0f;
-            float v29 = -1.0;
+            short val      = min(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
+            float volume   = (val / -640.0f) + 1.0f;
+            float distance = -1.0;
             if (sound->posUnk.x > worldLeft) {
-                v29 = 1.0;
+                distance = 1.0;
                 if (sound->posUnk.x < worldRight) {
-                    v29 = (((sound->posUnk.x - worldCenterX) >> 16) / (float)RSDK_screens->centerX);
+                    distance = (((sound->posUnk.x - worldCenterX) >> 16) / (float)RSDK_screens->centerX);
                 }
             }
             volDivisor += volume;
             if (dist >= (val << 16))
                 dist = (val << 16);
-            pan += volume * v29;
+            pan += volume * distance;
         }
     }
 
