@@ -45,7 +45,6 @@
     <ClInclude Include="Objects\BSS\BSS_Palette.h" />
     <ClInclude Include="Objects\BSS\BSS_Player.h" />
     <ClInclude Include="Objects\BSS\BSS_Setup.h" />
-    <ClInclude Include="Objects\CNZ\TargetBumper.h" />
     <ClInclude Include="Objects\Common\BGSwitch.h" />
     <ClInclude Include="Objects\Common\BreakableWall.h" />
     <ClInclude Include="Objects\Common\Button.h" />
@@ -263,16 +262,9 @@
     <ClInclude Include="Objects\Helpers\ReplayDB.h" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.h" />
     <ClInclude Include="Objects\HPZ\Batbot.h" />
-    <ClInclude Include="Objects\HPZ\HeavyKing.h" />
-    <ClInclude Include="Objects\HPZ\HeavyRider.h" />
-    <ClInclude Include="Objects\HPZ\HPZEmerald.h" />
     <ClInclude Include="Objects\HPZ\Jawz.h" />
-    <ClInclude Include="Objects\HPZ\KingAttack.h" />
-    <ClInclude Include="Objects\HPZ\KingClaw.h" />
     <ClInclude Include="Objects\HPZ\Redz.h" />
-    <ClInclude Include="Objects\HPZ\SkyTeleporter.h" />
     <ClInclude Include="Objects\HPZ\Stegway.h" />
-    <ClInclude Include="Objects\HPZ\ThoughtBubble.h" />
     <ClInclude Include="Objects\LRZ\BuckwildBall.h" />
     <ClInclude Include="Objects\LRZ\ConveyorBelt.h" />
     <ClInclude Include="Objects\LRZ\ConveyorPlatform.h" />
@@ -282,7 +274,12 @@
     <ClInclude Include="Objects\LRZ\DrillerdroidO.h" />
     <ClInclude Include="Objects\LRZ\Fireworm.h" />
     <ClInclude Include="Objects\LRZ\Flamethrower.h" />
+    <ClInclude Include="Objects\LRZ\HeavyKing.h" />
+    <ClInclude Include="Objects\LRZ\HeavyRider.h" />
+    <ClInclude Include="Objects\LRZ\HPZEmerald.h" />
     <ClInclude Include="Objects\LRZ\Iwamodoki.h" />
+    <ClInclude Include="Objects\LRZ\KingAttack.h" />
+    <ClInclude Include="Objects\LRZ\KingClaw.h" />
     <ClInclude Include="Objects\LRZ\LavaFall.h" />
     <ClInclude Include="Objects\LRZ\LavaGeyser.h" />
     <ClInclude Include="Objects\LRZ\LRZ1Intro.h" />
@@ -306,8 +303,10 @@
     <ClInclude Include="Objects\LRZ\Rexon.h" />
     <ClInclude Include="Objects\LRZ\RisingLava.h" />
     <ClInclude Include="Objects\LRZ\RockDrill.h" />
+    <ClInclude Include="Objects\LRZ\SkyTeleporter.h" />
     <ClInclude Include="Objects\LRZ\SpikeCrusher.h" />
     <ClInclude Include="Objects\LRZ\Stalactite.h" />
+    <ClInclude Include="Objects\LRZ\ThoughtBubble.h" />
     <ClInclude Include="Objects\LRZ\Toxomister.h" />
     <ClInclude Include="Objects\LRZ\Turbine.h" />
     <ClInclude Include="Objects\LRZ\TurretSwitch.h" />
@@ -370,7 +369,6 @@
     <ClInclude Include="Objects\Menu\UIWidgets.h" />
     <ClInclude Include="Objects\Menu\UIWinSize.h" />
     <ClInclude Include="Objects\MMZ\BladePole.h" />
-    <ClInclude Include="Objects\MMZ\Bomb.h" />
     <ClInclude Include="Objects\MMZ\BuzzSaw.h" />
     <ClInclude Include="Objects\MMZ\ConveyorWheel.h" />
     <ClInclude Include="Objects\MMZ\EggPistonsMKII.h" />
@@ -382,7 +380,6 @@
     <ClInclude Include="Objects\MMZ\MMZLightning.h" />
     <ClInclude Include="Objects\MMZ\MMZSetup.h" />
     <ClInclude Include="Objects\MMZ\MMZWheel.h" />
-    <ClInclude Include="Objects\MMZ\Orbinaut.h" />
     <ClInclude Include="Objects\MMZ\Piston.h" />
     <ClInclude Include="Objects\MMZ\PlaneSeeSaw.h" />
     <ClInclude Include="Objects\MMZ\PohBee.h" />
@@ -497,7 +494,9 @@
     <ClInclude Include="Objects\Puyo\PuyoLevelSelect.h" />
     <ClInclude Include="Objects\Puyo\PuyoMatch.h" />
     <ClInclude Include="Objects\Puyo\PuyoScore.h" />
+    <ClInclude Include="Objects\SBZ\Bomb.h" />
     <ClInclude Include="Objects\SBZ\Caterkiller.h" />
+    <ClInclude Include="Objects\SBZ\Orbinaut.h" />
     <ClInclude Include="Objects\SPZ\CableWarp.h" />
     <ClInclude Include="Objects\SPZ\Canista.h" />
     <ClInclude Include="Objects\SPZ\CircleBumper.h" />
@@ -630,6 +629,7 @@
     <ClInclude Include="Objects\UFO\UFO_Water.h" />
     <ClInclude Include="Objects\Unused\Pendulum.h" />
     <ClInclude Include="Objects\Unused\SpearBlock.h" />
+    <ClInclude Include="Objects\Unused\TargetBumper.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
     <ClInclude Include="SonicMania.h" />
   </ItemGroup>
@@ -659,7 +659,6 @@
     <ClCompile Include="Objects\BSS\BSS_Palette.c" />
     <ClCompile Include="Objects\BSS\BSS_Player.c" />
     <ClCompile Include="Objects\BSS\BSS_Setup.c" />
-    <ClCompile Include="Objects\CNZ\TargetBumper.c" />
     <ClCompile Include="Objects\Common\BGSwitch.c" />
     <ClCompile Include="Objects\Common\BreakableWall.c" />
     <ClCompile Include="Objects\Common\Button.c" />
@@ -877,16 +876,9 @@
     <ClCompile Include="Objects\Helpers\ReplayDB.c" />
     <ClCompile Include="Objects\Helpers\TimeAttackData.c" />
     <ClCompile Include="Objects\HPZ\Batbot.c" />
-    <ClCompile Include="Objects\HPZ\HeavyKing.c" />
-    <ClCompile Include="Objects\HPZ\HeavyRider.c" />
-    <ClCompile Include="Objects\HPZ\HPZEmerald.c" />
     <ClCompile Include="Objects\HPZ\Jawz.c" />
-    <ClCompile Include="Objects\HPZ\KingAttack.c" />
-    <ClCompile Include="Objects\HPZ\KingClaw.c" />
     <ClCompile Include="Objects\HPZ\Redz.c" />
-    <ClCompile Include="Objects\HPZ\SkyTeleporter.c" />
     <ClCompile Include="Objects\HPZ\Stegway.c" />
-    <ClCompile Include="Objects\HPZ\ThoughtBubble.c" />
     <ClCompile Include="Objects\LRZ\BuckwildBall.c" />
     <ClCompile Include="Objects\LRZ\ConveyorBelt.c" />
     <ClCompile Include="Objects\LRZ\ConveyorPlatform.c" />
@@ -896,7 +888,12 @@
     <ClCompile Include="Objects\LRZ\DrillerdroidO.c" />
     <ClCompile Include="Objects\LRZ\Fireworm.c" />
     <ClCompile Include="Objects\LRZ\Flamethrower.c" />
+    <ClCompile Include="Objects\LRZ\HeavyKing.c" />
+    <ClCompile Include="Objects\LRZ\HeavyRider.c" />
+    <ClCompile Include="Objects\LRZ\HPZEmerald.c" />
     <ClCompile Include="Objects\LRZ\Iwamodoki.c" />
+    <ClCompile Include="Objects\LRZ\KingAttack.c" />
+    <ClCompile Include="Objects\LRZ\KingClaw.c" />
     <ClCompile Include="Objects\LRZ\LavaFall.c" />
     <ClCompile Include="Objects\LRZ\LavaGeyser.c" />
     <ClCompile Include="Objects\LRZ\LRZ1Intro.c" />
@@ -920,8 +917,10 @@
     <ClCompile Include="Objects\LRZ\Rexon.c" />
     <ClCompile Include="Objects\LRZ\RisingLava.c" />
     <ClCompile Include="Objects\LRZ\RockDrill.c" />
+    <ClCompile Include="Objects\LRZ\SkyTeleporter.c" />
     <ClCompile Include="Objects\LRZ\SpikeCrusher.c" />
     <ClCompile Include="Objects\LRZ\Stalactite.c" />
+    <ClCompile Include="Objects\LRZ\ThoughtBubble.c" />
     <ClCompile Include="Objects\LRZ\Toxomister.c" />
     <ClCompile Include="Objects\LRZ\Turbine.c" />
     <ClCompile Include="Objects\LRZ\TurretSwitch.c" />
@@ -984,7 +983,6 @@
     <ClCompile Include="Objects\Menu\UIWidgets.c" />
     <ClCompile Include="Objects\Menu\UIWinSize.c" />
     <ClCompile Include="Objects\MMZ\BladePole.c" />
-    <ClCompile Include="Objects\MMZ\Bomb.c" />
     <ClCompile Include="Objects\MMZ\BuzzSaw.c" />
     <ClCompile Include="Objects\MMZ\ConveyorWheel.c" />
     <ClCompile Include="Objects\MMZ\EggPistonsMKII.c" />
@@ -996,7 +994,6 @@
     <ClCompile Include="Objects\MMZ\MMZLightning.c" />
     <ClCompile Include="Objects\MMZ\MMZSetup.c" />
     <ClCompile Include="Objects\MMZ\MMZWheel.c" />
-    <ClCompile Include="Objects\MMZ\Orbinaut.c" />
     <ClCompile Include="Objects\MMZ\Piston.c" />
     <ClCompile Include="Objects\MMZ\PlaneSeeSaw.c" />
     <ClCompile Include="Objects\MMZ\PohBee.c" />
@@ -1111,7 +1108,9 @@
     <ClCompile Include="Objects\Puyo\PuyoLevelSelect.c" />
     <ClCompile Include="Objects\Puyo\PuyoMatch.c" />
     <ClCompile Include="Objects\Puyo\PuyoScore.c" />
+    <ClCompile Include="Objects\SBZ\Bomb.c" />
     <ClCompile Include="Objects\SBZ\Caterkiller.c" />
+    <ClCompile Include="Objects\SBZ\Orbinaut.c" />
     <ClCompile Include="Objects\SPZ\CableWarp.c" />
     <ClCompile Include="Objects\SPZ\Canista.c" />
     <ClCompile Include="Objects\SPZ\CircleBumper.c" />
@@ -1244,6 +1243,7 @@
     <ClCompile Include="Objects\UFO\UFO_Water.c" />
     <ClCompile Include="Objects\Unused\Pendulum.c" />
     <ClCompile Include="Objects\Unused\SpearBlock.c" />
+    <ClCompile Include="Objects\Unused\TargetBumper.c" />
     <ClCompile Include="Objects\Unused\WallCrawl.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

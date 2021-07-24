@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
+    ushort sfxBouncePlant;
 } ObjectBouncePlant;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    Vector2 drawPos[8];
+    Vector2 drawPos2[8];
+    int unknown[8];
+    Vector2 stoodPos;
+    bool32 stood;
+    bool32 speedFlag;
+    int depression;
+    int centerX;
+    Animator animator;
+    Animator animators[8];
 } EntityBouncePlant;
 
 // Object Struct
@@ -28,6 +43,8 @@ void BouncePlant_EditorLoad(void);
 void BouncePlant_Serialize(void);
 
 // Extra Entity Functions
-
+void BoucePlant_Unknown1(void);
+int BoucePlant_Unknown2(int x);
+int BoucePlant_Unknown3(int x);
 
 #endif //!OBJ_BOUNCEPLANT_H

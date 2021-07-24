@@ -75,9 +75,6 @@
     <Filter Include="Sources\Objects\Continue">
       <UniqueIdentifier>{fa9158d7-957e-4b12-b448-676d56b0816e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Objects\CNZ">
-      <UniqueIdentifier>{cb3cded5-1b7b-475d-b268-0141c3fe94f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Objects\ARZ">
       <UniqueIdentifier>{d2dd72e8-5416-444c-8027-8bc93531be80}</UniqueIdentifier>
     </Filter>
@@ -463,9 +460,6 @@
     </ClInclude>
     <ClInclude Include="Objects\ARZ\Wisp.h">
       <Filter>Sources\Objects\ARZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\CNZ\TargetBumper.h">
-      <Filter>Sources\Objects\CNZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Unused\Pendulum.h">
       <Filter>Sources\Objects\Unused</Filter>
@@ -1055,34 +1049,13 @@
     <ClInclude Include="Objects\HPZ\Batbot.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\HPZ\HeavyKing.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HPZ\HeavyRider.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HPZ\HPZEmerald.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\HPZ\Jawz.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HPZ\KingAttack.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HPZ\KingClaw.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\HPZ\Redz.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\HPZ\SkyTeleporter.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\HPZ\Stegway.h">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\HPZ\ThoughtBubble.h">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\MSZ\Armadiloid.h">
@@ -1466,9 +1439,6 @@
     <ClInclude Include="Objects\MMZ\BladePole.h">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\MMZ\Bomb.h">
-      <Filter>Sources\Objects\MMZ</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\MMZ\BuzzSaw.h">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClInclude>
@@ -1500,9 +1470,6 @@
       <Filter>Sources\Objects\MMZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\MMZ\MMZWheel.h">
-      <Filter>Sources\Objects\MMZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\MMZ\Orbinaut.h">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\MMZ\Piston.h">
@@ -1952,6 +1919,36 @@
     <ClInclude Include="Objects\Cutscene\ChaosEmerald.h">
       <Filter>Sources\Objects\Cutscene</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Unused\TargetBumper.h">
+      <Filter>Sources\Objects\Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SBZ\Bomb.h">
+      <Filter>Sources\Objects\SBZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SBZ\Orbinaut.h">
+      <Filter>Sources\Objects\SBZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\HeavyKing.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\HeavyRider.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\HPZEmerald.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\KingAttack.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\KingClaw.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\SkyTeleporter.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LRZ\ThoughtBubble.h">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.c">
@@ -2298,9 +2295,6 @@
     </ClCompile>
     <ClCompile Include="Objects\ARZ\Wisp.c">
       <Filter>Sources\Objects\ARZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\CNZ\TargetBumper.c">
-      <Filter>Sources\Objects\CNZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Unused\Pendulum.c">
       <Filter>Sources\Objects\Unused</Filter>
@@ -2890,34 +2884,13 @@
     <ClCompile Include="Objects\HPZ\Batbot.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\HPZ\HeavyKing.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HPZ\HeavyRider.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HPZ\HPZEmerald.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\HPZ\Jawz.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HPZ\KingAttack.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HPZ\KingClaw.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Redz.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\HPZ\SkyTeleporter.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\HPZ\Stegway.c">
-      <Filter>Sources\Objects\HPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\HPZ\ThoughtBubble.c">
       <Filter>Sources\Objects\HPZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Armadiloid.c">
@@ -3301,9 +3274,6 @@
     <ClCompile Include="Objects\MMZ\BladePole.c">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\MMZ\Bomb.c">
-      <Filter>Sources\Objects\MMZ</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\MMZ\BuzzSaw.c">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
@@ -3335,9 +3305,6 @@
       <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MMZWheel.c">
-      <Filter>Sources\Objects\MMZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\MMZ\Orbinaut.c">
       <Filter>Sources\Objects\MMZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\MMZ\Piston.c">
@@ -3786,6 +3753,36 @@
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\ChaosEmerald.c">
       <Filter>Sources\Objects\Cutscene</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Unused\TargetBumper.c">
+      <Filter>Sources\Objects\Unused</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SBZ\Bomb.c">
+      <Filter>Sources\Objects\SBZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SBZ\Orbinaut.c">
+      <Filter>Sources\Objects\SBZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\HeavyKing.c">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\HeavyRider.c">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\HPZEmerald.c">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\KingAttack.c">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\KingClaw.c">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\SkyTeleporter.c">
+      <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\LRZ\ThoughtBubble.c">
+      <Filter>Sources\Objects\LRZ</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
