@@ -416,7 +416,6 @@ void UIButton_ProcessButtonInputs(void)
                         while (selection < 0);
                     }
                 } while (UIButton_Unknown2(entity, selection)->disabled && selection != entity->selection);
-
                 flag2 = true;
             }
         }
@@ -427,11 +426,13 @@ void UIButton_ProcessButtonInputs(void)
                     ++columnID;
                     flag = true;
                 }
+                flag2 = false;
             }
             else {
                 do
                     selection = (selection + 1) % entity->choiceCount;
                 while (UIButton_Unknown2(entity, selection)->disabled && selection != entity->selection);
+                flag2 = true;
             }
         }
     }
