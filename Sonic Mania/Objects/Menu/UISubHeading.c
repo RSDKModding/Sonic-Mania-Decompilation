@@ -85,7 +85,7 @@ void UISubHeading_Unknown3(void)
 
 int UISubHeading_GetMedalMods(void)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
+    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
 
     int mods = 0;
     if (control->entities[0]->selection == 1)
@@ -142,7 +142,7 @@ void UISubHeading_Unknown10(void)
             if (entity->field_D8 >= 0) {
                 if (entity->entities[i] == entity->entities[entity->field_D8]) {
                     EntityUISaveSlot *slot = (EntityUISaveSlot *)entity->entities[entity->field_D8];
-                    if (!slot->flagUnknown)
+                    if (!slot->isNewSave)
                         flag = true;
                 }
             }
@@ -165,7 +165,7 @@ void UISubHeading_Unknown11(void)
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
     if (control->active == ACTIVE_ALWAYS) {
         if (!ManiaModeMenu->field_24) {
-            //UISubHeading_Unknown4(control->entities[control->activeEntityID]->stopMusic);
+            // UISubHeading_Unknown4(control->entities[control->activeEntityID]->stopMusic);
             ManiaModeMenu->field_24 = 1;
         }
         RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
@@ -200,7 +200,7 @@ void UISubHeading_StartNewSave(void)
     else {
         globals->saveSlotID = entity->slotID;
         globals->medalMods  = 0;
-        if (entity->flagUnknown == 1) {
+        if (entity->isNewSave) {
             int *saveData = SaveGame_GetDataPtr(entity->slotID % 8, entity->encoreMode);
             memset(saveData, 0, 0x400);
             if (globals->gameMode != MODE_ENCORE)
@@ -252,7 +252,7 @@ void UISubHeading_StartNewSave(void)
         }
     }
 
-    if (entity->type == 1 || entity->flagUnknown) {
+    if (entity->type == 1 || entity->isNewSave) {
         if (entity->encoreMode) {
             globals->playerID          = ID_SONIC;
             globals->stock             = 0;

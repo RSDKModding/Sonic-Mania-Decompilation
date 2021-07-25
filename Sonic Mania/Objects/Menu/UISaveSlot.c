@@ -114,7 +114,7 @@ void UISaveSlot_Draw(void)
         drawPos.y                 = entity->position.y - 0x300000;
         RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
-        if (entity->flagUnknown == 1 || entity->saveZoneID == 255) {
+        if (entity->isNewSave || entity->saveZoneID == 255) {
             RSDK.DrawSprite(&entity->animator10, &drawPos, false);
             RSDK.DrawSprite(&entity->animator11, &drawPos, false);
         }
@@ -142,7 +142,7 @@ void UISaveSlot_Draw(void)
             RSDK.DrawSprite(&entity->animator8, &drawPos, false);
         }
 
-        if (entity->flagUnknown) {
+        if (entity->isNewSave) {
             drawPos.x = entity->position.x;
             drawPos.y = entity->position.y + 0x200000;
             UISaveSlot_Unknown3(drawPos.x, drawPos.y);
@@ -204,7 +204,7 @@ void UISaveSlot_Draw(void)
                     drawPos.y -= 0x60000;
                     UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
                 }
-                else if (entity->flagUnknown == 1) {
+                else if (entity->isNewSave) {
                     drawPos.y += 0x200000;
                     UIWidgets_Unknown8(64, drawPos.x, drawPos.y);
                 }
@@ -349,7 +349,7 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
         entity->animator2.frameID = frames[entity->frameID];
     }
     else if (!RSDK_sceneInfo->inEditor) {
-        if (!entity->flagUnknown && entity->type != 1) {
+        if (!entity->isNewSave && entity->type != 1) {
             playerID = entity->saveEncorePlayer;
             buddyID  = entity->saveEncoreBuddy;
 
@@ -445,7 +445,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
 
     int playerID = 0;
     if (entity->encoreMode) {
-        if (entity->flagUnknown || entity->type == 1)
+        if (entity->isNewSave || entity->type == 1)
             return;
 
         if (entity->debugEncoreDraw && RSDK_sceneInfo->inEditor) {
@@ -468,7 +468,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
         }
     }
     else {
-        int frames[] = { 3, 0, 1, 2, 4, 5 };
+        int frames[] = { 0, 0, 1, 2, 3, 4 };
         playerID     = frames[entity->frameID];
     }
     entity->animator4.frameID = playerID;
@@ -639,7 +639,7 @@ void UISaveSlot_LoadSaveInfo(void)
             entity->saveLives     = 3;
             entity->saveContinues = 0;
             entity->frameID       = entity->encoreMode ? 6 : 0;
-            entity->flagUnknown   = 1;
+            entity->isNewSave   = true;
             entity->listID        = 0;
             break;
         case 1:
@@ -647,7 +647,7 @@ void UISaveSlot_LoadSaveInfo(void)
             entity->saveEmeralds  = saveRAM[28];
             entity->saveLives     = saveRAM[25];
             entity->saveContinues = saveRAM[29];
-            entity->flagUnknown   = 0;
+            entity->isNewSave   = false;
             entity->listID        = 0;
             break;
         case 2:
@@ -656,7 +656,7 @@ void UISaveSlot_LoadSaveInfo(void)
             entity->saveLives     = saveRAM[25];
             entity->saveContinues = saveRAM[29];
             entity->listID        = 1;
-            entity->flagUnknown   = 0;
+            entity->isNewSave   = false;
             break;
     }
     UISaveSlot_Unknown6();
@@ -901,7 +901,7 @@ void UISaveSlot_Unknown19(void)
         UISaveSlot_Unknown8();
         entity->field_148 = 0x4000;
         entity->field_14C = 0x8000;
-        if (!entity->flagUnknown && entity->type != 1) {
+        if (!entity->isNewSave && entity->type != 1) {
             if (entity->listID) {
                 entity->state = UISaveSlot_Unknown27;
             }
@@ -1009,7 +1009,7 @@ void UISaveSlot_Unknown28(void)
     RSDK_THIS(UISaveSlot);
 
     ++entity->timer;
-    if (entity->encoreMode && (entity->flagUnknown || entity->type == 1)) {
+    if (entity->encoreMode && (entity->isNewSave || entity->type == 1)) {
         EntityFXRuby *fxRuby = entity->fxRuby;
         int rubyY            = entity->position.y;
 

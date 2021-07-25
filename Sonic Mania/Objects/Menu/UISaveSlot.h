@@ -35,7 +35,7 @@ typedef struct {
     int touchCountUnknown;  
     bool32 flag;
     bool32 disabled;
-    bool32 flagUnknown;
+    bool32 isNewSave;
     StateMachine(stateUnknown);
     int listID;
     int frameID;

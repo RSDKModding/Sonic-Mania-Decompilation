@@ -321,7 +321,8 @@ void UIControl_ProcessInputs(void)
             entity->processButtonInputCB();
         else
            UIControl_ProcessButtonInput();
-        if (entity->selectionDisabled) {
+
+        if (!entity->selectionDisabled) {
             if (UIControl->keyY) {
                 if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
                     StateMachine_Run(entity->yPressCB);
