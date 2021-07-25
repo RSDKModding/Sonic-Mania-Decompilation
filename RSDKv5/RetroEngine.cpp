@@ -795,6 +795,6 @@ void InitScriptSystem()
 #endif
 
     if (!linked) {
-        printLog(SEVERITY_WARN, "Failed to link game logic!");
+        printLog(PRINT_POPUP, "Failed to link game logic!");
     }
 }

@@ -107,12 +107,12 @@ bool32 InitRenderDevice()
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
     if (!engine.window) {
-        printLog(SEVERITY_NONE, "ERROR: failed to create window!");
+        printLog(PRINT_NORMAL, "ERROR: failed to create window!");
         return 0;
     }
 
     if (!engine.renderer) {
-        printLog(SEVERITY_NONE, "ERROR: failed to create renderer!");
+        printLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
         return 0;
     }
 
@@ -124,7 +124,7 @@ bool32 InitRenderDevice()
             SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].width, screens[s].height);
 
         if (!engine.screenBuffer[s]) {
-            printLog(SEVERITY_NONE, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
+            printLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
             return 0;
         }
     }
@@ -335,13 +335,13 @@ void UpdateWindow()
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
     if (!engine.window) {
-        printLog(SEVERITY_NONE, "ERROR: failed to create window!");
+        printLog(PRINT_NORMAL, "ERROR: failed to create window!");
         engine.running = false;
         return;
     }
 
     if (!engine.renderer) {
-        printLog(SEVERITY_NONE, "ERROR: failed to create renderer!");
+        printLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
         engine.running = false;
         return;
     }
@@ -354,7 +354,7 @@ void UpdateWindow()
             SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].width, screens[s].height);
 
         if (!engine.screenBuffer[s]) {
-            printLog(SEVERITY_NONE, "ERROR: failed to create screen buffer %d!\nerror msg: %s", s, SDL_GetError());
+            printLog(PRINT_NORMAL, "ERROR: failed to create screen buffer %d!\nerror msg: %s", s, SDL_GetError());
             engine.running = false;
             return;
         }

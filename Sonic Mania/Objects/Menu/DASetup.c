@@ -35,7 +35,7 @@ void DASetup_StageLoad(void)
     foreach_all(UIControl, control)
     {
         DASetup->control          = (Entity *)control;
-        control->unknownCallback2 = DASetup_State_ManageControl;
+        control->processButtonInputCB = DASetup_State_ManageControl;
     }
 
     foreach_all(FXFade, fade) { DASetup->fxFade = (Entity *)fade; }
@@ -142,7 +142,7 @@ void DASetup_SetupUI(void)
     DASetup_DisplayTrack(0);
     EntityUIInfoLabel *label = (EntityUIInfoLabel *)DASetup->labelA;
     Localization_GetString(&buffer, STR_SELECTATRACK);
-    RSDK.PrintText(SEVERITY_NONE, &buffer);
+    RSDK.PrintText(PRINT_NORMAL, &buffer);
     UIInfoLabel_SetString(label, &buffer);
 }
 

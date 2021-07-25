@@ -222,7 +222,7 @@ void InitInputDevice()
         //SDL_GameControllerAddMapping()
         int nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
         if (nummaps >= 0)
-            printLog(SEVERITY_NONE, "loaded %d controller mappings from '%s'", buffer, nummaps);
+            printLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
     }
 #endif
 

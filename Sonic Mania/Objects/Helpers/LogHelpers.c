@@ -24,7 +24,7 @@ void LogHelpers_Print(const char *message, ...)
         va_start(args, message);
         vsprintf(buffer, message, args);
 #if RETRO_USE_PLUS
-        RSDK.PrintString(SEVERITY_NONE, buffer);
+        RSDK.PrintString(PRINT_NORMAL, buffer);
 #else
         RSDK.PrintMessage((void *)buffer, 0);
 #endif

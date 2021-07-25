@@ -99,7 +99,7 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
             info->eKeyPosB    = 8;
             info->eNybbleSwap = false;
         }
-        printLog(SEVERITY_NONE, "Loaded File '%s'", filename);
+        printLog(PRINT_NORMAL, "Loaded File '%s'", filename);
         return true;
     }
     return false;
@@ -118,7 +118,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
             info->file = fOpen(filename, openModes[fileMode - 1]);
         }
         if (!info->file) {
-            printLog(SEVERITY_NONE, "Couldn't load file '%s'", filename);
+            printLog(PRINT_NORMAL, "Couldn't load file '%s'", filename);
             return false;
         }
         info->readPos  = 0;
@@ -129,7 +129,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
             info->fileSize = (int)fTell(info->file);
             fSeek(info->file, 0, SEEK_SET);
         }
-        printLog(SEVERITY_NONE, "Loaded file '%s'", filename);
+        printLog(PRINT_NORMAL, "Loaded file '%s'", filename);
         return true;
     }
     

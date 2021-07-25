@@ -2,8 +2,8 @@
 #define USERDATA_H
 
 #if RETRO_REV02
-#define RETRO_USERDB_MAX (8)
-#define RETRO_USERDB_VAL_MAX (8)
+#define RETRO_USERDB_MAX       (8)
+#define RETRO_USERDB_VAL_MAX   (8)
 #define RETRO_USERDB_ENTRY_MAX (0x400)
 
 enum StatusCodes { STATUS_NONE = 0, STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 };
@@ -35,7 +35,7 @@ struct DummyCore {
     void (*EpicUnknown6)(void);
 #endif
 
-    int* values[8];
+    int *values[8];
     byte debugValCnt;
     ushort field_25;
     byte field_27;
@@ -54,7 +54,7 @@ struct DummyAchievements {
     int (*GetNextAchievementID)(void);
     void (*RemoveLastAchievementID)(void);
 #endif
-    void (*UnlockAchievement)(const char* name);
+    void (*UnlockAchievement)(const char *name);
 
     int status;
 #if RETRO_VER_EGS
@@ -66,7 +66,7 @@ struct DummyLeaderboards {
     void (*SetDebugValues)(void);
     void (*InitUnknown1)(void);
     void (*InitUnknown2)(void);
-    int (*unknown4)(void);  
+    int (*unknown4)(void);
 #if RETRO_VER_EGS
     int (*unknown6)(void);
 #endif
@@ -129,19 +129,19 @@ struct DummyUserStorage {
     int (*InitUnknown2)(void);
     int (*TryAuth)(void);
     int (*TryInitStorage)(void);
-    int (*GetUsername)(TextInfo*);
+    bool32 (*GetUsername)(TextInfo *);
     bool32 (*LoadUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
     bool32 (*SaveUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
     bool32 (*DeleteUserFile)(const char *filename, int (*callback)(int));
     void (*unknown8)(void);
 
-    int authStatusCode;
-    int storageStatusCode;
+    int authStatus;
     int statusCode;
+    int storageStatus;
     int noSaveActive;
     int field_14;
     int field_18;
-    char field_1C[12];
+    int field_1C[3];
 };
 
 extern DummyCore *dummmyCore;
@@ -196,20 +196,19 @@ struct UserDB {
 
 struct UserDBStorage {
     UserDB userDB[RETRO_USERDB_MAX];
-    int field_228740;
+    byte field_228740;
     int *writeBuffer[RETRO_USERDB_MAX];
     void *readBuffer[RETRO_USERDB_MAX];
+    int (*loadCallback[RETRO_USERDB_MAX])(int);
     int (*saveCallback[RETRO_USERDB_MAX])(int);
-    int (*field_2287A4[RETRO_USERDB_MAX])(int);
-    int (*loadCallback[RETRO_USERDB_MAX])(ushort table, int status);
-    int field_2287E4[RETRO_USERDB_MAX];
+    int (*userLoadCB[RETRO_USERDB_MAX])(ushort table, int status);
+    int (*userSaveCB[RETRO_USERDB_MAX])(ushort table, int status);
     int (*callbacks[RETRO_USERDB_MAX])(int);
     int field_228824[RETRO_USERDB_MAX];
 };
 
-extern UserDBStorage userDBStorage[RETRO_USERDB_MAX];
+extern UserDBStorage *userDBStorage;
 #endif
-
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 extern bool32 achievementsEnabled;
@@ -236,7 +235,6 @@ struct StatInfo {
     const char *name;
     void *data[64];
 };
-
 
 void initUserData();
 void releaseUserData();
@@ -290,7 +288,7 @@ inline int GetUserAuthStatus() { return STATUS_OK; }
 inline int GetUserStorageStatus()
 {
 #if RETRO_REV02
-    return userStorage->authStatusCode; 
+    return userStorage->authStatus;
 #else
     return STATUS_OK;
 #endif
@@ -298,7 +296,7 @@ inline int GetUserStorageStatus()
 #if RETRO_REV02
 inline int UserStorageStatusUnknown1()
 {
-    if (userStorage->statusCode == STATUS_ERROR)
+    if (userStorage->storageStatus == STATUS_ERROR)
         return STATUS_ERROR;
     else
         return userStorage->statusCode;
@@ -308,35 +306,35 @@ inline int UserStorageStatusUnknown2()
     if (userStorage->noSaveActive)
         return STATUS_OK;
     else
-        return userStorage->statusCode;
+        return userStorage->storageStatus;
 }
 inline int UserStorageStatusUnknown3()
 {
-    if (userStorage->statusCode == STATUS_CONTINUE)
-        userStorage->statusCode = STATUS_OK;
-    return userStorage->statusCode;
+    if (userStorage->storageStatus == STATUS_CONTINUE)
+        userStorage->storageStatus = STATUS_OK;
+    return userStorage->storageStatus;
 }
 inline int UserStorageStatusUnknown4()
 {
-    if (userStorage->statusCode == STATUS_CONTINUE)
-        userStorage->statusCode = STATUS_FORBIDDEN;
-    return userStorage->statusCode;
+    if (userStorage->storageStatus == STATUS_CONTINUE)
+        userStorage->storageStatus = STATUS_FORBIDDEN;
+    return userStorage->storageStatus;
 }
 inline int UserStorageStatusUnknown5()
 {
-    if (userStorage->statusCode == STATUS_CONTINUE)
-        userStorage->statusCode = STATUS_ERROR;
-    return userStorage->statusCode;
+    if (userStorage->storageStatus == STATUS_CONTINUE)
+        userStorage->storageStatus = STATUS_ERROR;
+    return userStorage->storageStatus;
 }
 inline int ClearUserStorageStatus()
 {
-    userStorage->statusCode = STATUS_NONE;
-    return userStorage->statusCode;
+    userStorage->storageStatus = STATUS_OK;
+    return userStorage->storageStatus;
 }
 inline int SetUserStorageStatus()
 {
-    userStorage->statusCode = STATUS_CONTINUE;
-    return userStorage->statusCode;
+    userStorage->storageStatus = STATUS_CONTINUE;
+    return userStorage->storageStatus;
 }
 inline int SetUserStorageNoSave(int state)
 {
@@ -349,8 +347,8 @@ inline int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 inline int TryAuth()
 {
 #if RETRO_REV02
-    userStorage->authStatusCode = STATUS_OK;
-    return userStorage->authStatusCode;
+    userStorage->authStatus = STATUS_OK;
+    return userStorage->authStatus;
 #else
     return STATUS_OK;
 #endif
@@ -358,26 +356,26 @@ inline int TryAuth()
 inline int TryInitStorage()
 {
 #if RETRO_REV02
-    userStorage->storageStatusCode = STATUS_OK;
-    return userStorage->storageStatusCode;
+    userStorage->storageStatus = STATUS_OK;
+    return userStorage->storageStatus;
 #else
-    return 0;
+    return STATUS_OK;
 #endif
 }
-inline int GetUserName(TextInfo *info)
+inline bool32 GetUserName(TextInfo *info)
 {
-    SetText(info, (char*)"IntegerGeorge802", 0);
+    SetText(info, (char *)"IntegerGeorge802", 0);
     return true;
 }
 #if RETRO_REV02
 inline void UserStorageUnknown8()
 {
-    if (userStorage->authStatusCode != STATUS_OK)
-        userStorage->authStatusCode = STATUS_NONE;
+    if (userStorage->authStatus != STATUS_OK)
+        userStorage->authStatus = STATUS_OK;
 
     userStorage->field_14 = 0;
-    if (userStorage->storageStatusCode != STATUS_OK)
-        userStorage->storageStatusCode = STATUS_NONE;
+    if (userStorage->storageStatus != STATUS_OK)
+        userStorage->storageStatus = STATUS_OK;
 }
 #endif
 
@@ -442,7 +440,7 @@ inline void InitUserDBValues(UserDB *userDB, va_list list)
     while ((int *)list) {
         userDB->columnSizes[cnt] = va_arg(list, int);
         memcpy(userDB->columnNames[cnt], 0, 0x10);
-        sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char*));
+        sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char *));
         GenerateCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
         ++cnt;
     }
@@ -460,7 +458,7 @@ inline ushort InitUserDB(const char *name, ...)
     int tableID = -1;
     uint uuid   = 0;
     GenerateCRC(&uuid, (char *)name);
-    //for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
+    // for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
     //    if (uuid == userDBStorage->userDB[i].uuid)
     //        return i;
     //}
@@ -479,7 +477,7 @@ inline ushort InitUserDB(const char *name, ...)
     userDBStorage->userDB[tableID].name   = name;
     GenerateCRC(&userDBStorage->userDB[tableID].uuid, (char *)name);
     InitUserDBValues(&userDBStorage->userDB[tableID], list);
-    //sub_5EC5F0(&userDBStorage->userDB[v6].parent);
+    // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
     va_end(list);
     return tableID;
 }
@@ -551,7 +549,7 @@ inline ushort GetUserDBByID(ushort tableID, uint uuid)
 inline void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
 {
     if (tableID != 0xFFFF && entryID != 0xFFFF) {
-        UserDB* userDB = &userDBStorage->userDB[tableID];
+        UserDB *userDB = &userDBStorage->userDB[tableID];
         if (userDB->active)
             strftime(buf, size, format, &userDB->rows[entryID].createTime);
     }
@@ -586,7 +584,7 @@ inline int GetUserDBRowUnknown(ushort tableID, ushort entryID)
     if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (!userDB->active || userDB->status || entryID >userDB->rowUnknownCount - 1)
+    if (!userDB->active || userDB->status || entryID > userDB->rowUnknownCount - 1)
         return -1;
 
     return userDB->rowUnknown[entryID];
@@ -604,10 +602,10 @@ inline int AddUserDBEntry(ushort tableID)
         return -1;
 
     UserDBEntry *row = &userDB->rows[userDB->entryCount];
-    //row->uuid = sub_5EBDF0(userDB);
+    // row->uuid = sub_5EBDF0(userDB);
     time_t t;
-    tm *tmA                                = localtime(&t);
-    tm *tmB                                = localtime(&t);
+    tm *tmA = localtime(&t);
+    tm *tmB = localtime(&t);
 
     memcpy(&row->createTime, tmA, sizeof(tm));
     memcpy(&row->changeTime, tmB, sizeof(tm));
@@ -669,6 +667,125 @@ inline uint GetDBEntryUUID(ushort tableID, int entry)
 
     return userDB->rows[entry].uuid;
 }
+
+inline int UserDBStorage_LoadCB1(int status)
+{
+    if (userDBStorage->userLoadCB[0])
+        return userDBStorage->userLoadCB[0](0, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB2(int status)
+{
+    if (userDBStorage->userLoadCB[1])
+        return userDBStorage->userLoadCB[1](1, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB3(int status)
+{
+    if (userDBStorage->userLoadCB[2])
+        return userDBStorage->userLoadCB[2](2, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB4(int status)
+{
+    if (userDBStorage->userLoadCB[3])
+        return userDBStorage->userLoadCB[3](3, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB5(int status)
+{
+    if (userDBStorage->userLoadCB[4])
+        return userDBStorage->userLoadCB[4](4, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB6(int status)
+{
+    if (userDBStorage->userLoadCB[5])
+        return userDBStorage->userLoadCB[5](5, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB7(int status)
+{
+    if (userDBStorage->userLoadCB[6])
+        return userDBStorage->userLoadCB[6](6, status);
+    return 0;
+}
+inline int UserDBStorage_LoadCB8(int status)
+{
+    if (userDBStorage->userLoadCB[7])
+        return userDBStorage->userLoadCB[7](7, status);
+    return 0;
+}
+
+inline int UserDBStorage_SaveCB1(int status)
+{
+    if (userDBStorage->userSaveCB[0])
+        return userDBStorage->userSaveCB[0](0, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB2(int status)
+{
+    if (userDBStorage->userSaveCB[1])
+        return userDBStorage->userSaveCB[1](1, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB3(int status)
+{
+    if (userDBStorage->userSaveCB[2])
+        return userDBStorage->userSaveCB[2](2, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB4(int status)
+{
+    if (userDBStorage->userSaveCB[3])
+        return userDBStorage->userSaveCB[3](3, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB5(int status)
+{
+    if (userDBStorage->userSaveCB[4])
+        return userDBStorage->userSaveCB[4](4, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB6(int status)
+{
+    if (userDBStorage->userSaveCB[5])
+        return userDBStorage->userSaveCB[5](5, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB7(int status)
+{
+    if (userDBStorage->userSaveCB[6])
+        return userDBStorage->userSaveCB[6](6, status);
+    return 0;
+}
+inline int UserDBStorage_SaveCB8(int status)
+{
+    if (userDBStorage->userSaveCB[7])
+        return userDBStorage->userSaveCB[7](7, status);
+    return 0;
+}
+
+inline void InitUserStorageDB(UserDBStorage *storage)
+{
+    storage->loadCallback[0] = UserDBStorage_LoadCB1;
+    storage->loadCallback[1] = UserDBStorage_LoadCB2;
+    storage->loadCallback[2] = UserDBStorage_LoadCB3;
+    storage->loadCallback[3] = UserDBStorage_LoadCB4;
+    storage->loadCallback[4] = UserDBStorage_LoadCB5;
+    storage->loadCallback[5] = UserDBStorage_LoadCB6;
+    storage->loadCallback[6] = UserDBStorage_LoadCB7;
+    storage->loadCallback[7] = UserDBStorage_LoadCB8;
+    storage->saveCallback[0] = UserDBStorage_SaveCB1;
+    storage->saveCallback[1] = UserDBStorage_SaveCB2;
+    storage->saveCallback[2] = UserDBStorage_SaveCB3;
+    storage->saveCallback[3] = UserDBStorage_SaveCB4;
+    storage->saveCallback[4] = UserDBStorage_SaveCB5;
+    storage->saveCallback[5] = UserDBStorage_SaveCB6;
+    storage->saveCallback[6] = UserDBStorage_SaveCB7;
+    storage->saveCallback[7] = UserDBStorage_SaveCB8;
+}
+
 #endif
 
 struct SettingsStorage {

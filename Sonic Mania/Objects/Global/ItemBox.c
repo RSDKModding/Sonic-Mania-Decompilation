@@ -21,7 +21,7 @@ void ItemBox_Update(void)
                             entity->contentsData.frameID = 0;
                         if (++id > 5) {
                             RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, false, 0);
-                            RSDK.PrintLog(SEVERITY_NONE, "Bad Change Item State");
+                            RSDK.PrintLog(PRINT_NORMAL, "Bad Change Item State");
                         }
                     }
                 }

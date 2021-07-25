@@ -109,9 +109,9 @@ EntityUIDialog *UIDialog_CreateActiveDialog(void *msg)
         LogHelpers_Print("EXCEPTION: Called CreateDialog when an activeDialog already existed.");
     }
     else {
-        int slot = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog)->objectID;
-        if (slot) {
-            LogHelpers_Print("Can't create UIDialog (%d), entity already exists in slot (class ID: %d)", UIDialog->objectID, slot);
+        int id = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog)->objectID;
+        if (id) {
+            LogHelpers_Print("Can't create UIDialog (%d), entity already exists in slot (class ID: %d)", UIDialog->objectID, id);
         }
         else {
             RSDK.ResetEntitySlot(SLOT_DIALOG, UIDialog->objectID, msg);
@@ -206,7 +206,7 @@ void UIDialog_Setup(EntityUIDialog *dialog)
         control->columnCount         = dialog->id;
         control->activeEntityID      = 0;
         control->backPressCB         = UIDialog_Unknown9;
-        control->userdataInitialized = true;
+        control->selectionDisabled = true;
         dialog->parent               = control;
         if (!flag) {
             UIDialog->controlStore      = NULL;
@@ -230,7 +230,7 @@ void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void))
 {
     if (entity) {
         if (entity->state != UIDialog_Unknown13) {
-            entity->parent->userdataInitialized = true;
+            entity->parent->selectionDisabled = true;
             entity->field_5C                    = 0;
             entity->state                       = UIDialog_Unknown13;
             entity->curCallback                 = callback;
@@ -294,7 +294,7 @@ void UIDialog_Close(void)
     UIDialog->controlStateStore = StateMachine_None;
     StateMachine_Run(entity->curCallback);
     UIDialog->activeDialog = NULL;
-    destroyEntity(control);
+    destroyEntity(entity);
 }
 
 bool32 UIDialog_Unknown9(void)
@@ -307,7 +307,7 @@ bool32 UIDialog_Unknown9(void)
         if (frame == 1 || frame == 3) {
             if (entity->flags[i]) {
                 if (entity->state != UIDialog_Unknown13) {
-                    entity->parent->userdataInitialized = true;
+                    entity->parent->selectionDisabled = true;
                     entity->curCallback                 = entity->callbacks[i];
                     entity->field_5C                    = 0;
                     entity->state                       = UIDialog_Unknown13;
@@ -328,7 +328,7 @@ int UIDialog_Unknown10(void)
     EntityUIDialog *entity = UIDialog->activeDialog;
     if (entity->parent) {
         int id = entity->parent->activeEntityID;
-        if (id > 0 && id < entity->parent->unknownCount1) {
+        if (id >= 0 && id < entity->parent->unknownCount1) {
             if (entity->flags[id]) {
                 UIDialog_Unknown4(entity, entity->callbacks[id]);
             }
@@ -355,7 +355,7 @@ void UIDialog_Unknown11(void)
     if (entity->field_5C >= 8) {
         if (entity->field_5C >= 16) {
             if (entity->field_5C >= 26) {
-                entity->parent->userdataInitialized = true;
+                entity->parent->selectionDisabled = false;
                 entity->field_5C                    = 0;
                 entity->state                       = UIDialog_Unknown12;
             }

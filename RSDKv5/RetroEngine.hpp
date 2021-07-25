@@ -160,10 +160,10 @@ enum EngineStates {
 #include "iniparser/iniparser.h"
 
 enum SeverityModes {
-    SEVERITY_NONE,
-    SEVERITY_WARN,
-    SEVERITY_ERROR,
-    SEVERITY_FATAL,
+    PRINT_NORMAL,
+    PRINT_POPUP,
+    PRINT_ERROR,
+    PRINT_FATAL,
 };
 
 #include "Storage.hpp"

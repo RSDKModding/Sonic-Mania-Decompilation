@@ -28,9 +28,9 @@ typedef unsigned int bool32;
 typedef uint colour;
 typedef uint color;
 
-#define SCREEN_XMAX     (1280)
-#define SCREEN_YSIZE    (240)
-#define SCREEN_YCENTER  (SCREEN_YSIZE / 2)
+#define SCREEN_XMAX    (1280)
+#define SCREEN_YSIZE   (240)
+#define SCREEN_YCENTER (SCREEN_YSIZE / 2)
 
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
@@ -44,15 +44,15 @@ typedef uint color;
 #define PLAYER_MAX (4)
 #define CAMERA_MAX (4)
 
-//0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
+// 0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
 #define RESERVE_ENTITY_COUNT (0x40)
 #define TEMPENTITY_COUNT     (0x100)
 #define SCENEENTITY_COUNT    (0x800)
 #define ENTITY_COUNT         (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT + TEMPENTITY_COUNT)
 #define TEMPENTITY_START     (ENTITY_COUNT - TEMPENTITY_COUNT)
 
-#define TYPE_COUNT        (0x100)
-#define TYPEGROUP_COUNT   (0x104)
+#define TYPE_COUNT      (0x100)
+#define TYPEGROUP_COUNT (0x104)
 
 #define CHANNEL_COUNT (0x10)
 
@@ -163,7 +163,7 @@ typedef struct {
     byte activeScreens;
 #endif
 
-#define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void*)))
+#define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
 
 #if RETRO_USE_PLUS
 typedef struct {
@@ -447,10 +447,10 @@ typedef enum {
 } Alignments;
 
 typedef enum {
-    SEVERITY_NONE,
-    SEVERITY_WARN,
-    SEVERITY_ERROR,
-    SEVERITY_FATAL,
+    PRINT_NORMAL,
+    PRINT_POPUP,
+    PRINT_ERROR,
+    PRINT_FATAL,
 } SeverityModes;
 
 typedef enum {

@@ -719,13 +719,14 @@ void SaveGame_PrintSaveProgress(void)
         case 2: LogHelpers_Print("GOOD ENDING!\n"); break;
     }
 
-    byte *medals = (byte *)&saveRAM[0x15];
+    byte *medals = &saveRAM[0x15];
+    medals       = &medals[2]; // offset by 2 bytes
     for (int m = 0; m < 0x20; ++m) {
         switch (medals[m]) {
             default:
-            case 0: LogHelpers_Print("Medallion %d => GOLD", m); break;
+            case 2: LogHelpers_Print("Medallion %d => GOLD", m); break;
             case 1: LogHelpers_Print("Medallion %d => SILVER", m); break;
-            case 2: LogHelpers_Print("Medallion %d => NULL", m); break;
+            case 0: LogHelpers_Print("Medallion %d => NULL", m); break;
         }
     }
 

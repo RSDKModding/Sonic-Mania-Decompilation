@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Entity *popup;
 } ObjectUIUsernamePopup;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int timeOut;
+    bool32 drawFlag;
+    int field_68;
+    int dword6C;
+    Vector2 posUnknown;
+    TextInfo username;
+    Animator animator;
 } EntityUIUsernamePopup;
 
 // Object Struct
@@ -28,6 +38,13 @@ void UIUsernamePopup_EditorLoad(void);
 void UIUsernamePopup_Serialize(void);
 
 // Extra Entity Functions
+void UIUsernamePopup_ShowPopup(void);
 
+void UIUsernamePopup_DrawSprites(void);
+
+void UIUsernamePopup_State_Setup(void);
+void UIUsernamePopup_Unknown4(void);
+void UIUsernamePopup_Unknown5(void);
+void UIUsernamePopup_Unknown6(void);
 
 #endif //!OBJ_UIUSERNAMEPOPUP_H

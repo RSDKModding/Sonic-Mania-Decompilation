@@ -48,9 +48,9 @@ enum UserdataTableIDs {
     APITable_GetUsername,
     APITable_TryInitStorage,
     APITable_UserStorageStatusUnknown1,
-    APITable_Unknown22,
-    APITable_Unknown23,
-    APITable_Unknown24,
+    APITable_UserStorageStatusUnknown2,
+    APITable_ClearUserStorageStatus,
+    APITable_SetUserStorageStatus,
     APITable_Missing5,
     APITable_Unknown25,
     APITable_Unknown26,
@@ -382,9 +382,9 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_GetUsername, userStorage->GetUsername);
     addToAPIFunctionTable(APITable_TryInitStorage, userStorage->TryInitStorage);
     addToAPIFunctionTable(APITable_UserStorageStatusUnknown1, UserStorageStatusUnknown1);
-    addToAPIFunctionTable(APITable_Unknown22, UserStorageStatusUnknown2);
-    addToAPIFunctionTable(APITable_Unknown23, ClearUserStorageStatus);
-    addToAPIFunctionTable(APITable_Unknown24, SetUserStorageStatus);
+    addToAPIFunctionTable(APITable_UserStorageStatusUnknown2, UserStorageStatusUnknown2);
+    addToAPIFunctionTable(APITable_ClearUserStorageStatus, ClearUserStorageStatus);
+    addToAPIFunctionTable(APITable_SetUserStorageStatus, SetUserStorageStatus);
     addToAPIFunctionTable(APITable_Missing5, UserStorageStatusUnknown3);
     addToAPIFunctionTable(APITable_Unknown25, UserStorageStatusUnknown4);
     addToAPIFunctionTable(APITable_Unknown26, UserStorageStatusUnknown5);
@@ -622,4 +622,4 @@ void setupFunctions()
 #endif
 }
 
-void LinkGameLogic(GameInfo *info) { printLog(SEVERITY_WARN, "Internal LinkGameLogic() function called, no logic will be linked"); }
+void LinkGameLogic(GameInfo *info) { printLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }

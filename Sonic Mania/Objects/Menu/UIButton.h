@@ -29,8 +29,8 @@ typedef struct {
     int dword14C;
     int field_150;
     Vector2 posUnknown;
-    int field_15C;
-    int field_160;
+    int selection;
+    void (*callbackUnknown1)(void);
     Animator animator;
     ushort textSpriteIndex;
     int startListID;
@@ -53,7 +53,21 @@ void UIButton_Serialize(void);
 
 // Extra Entity Functions
 void UIButton_Unknown1(EntityUIButton *button);
-Entity *UIButton_Unknown2(EntityUIButton *button, int a2);
+EntityUIButton *UIButton_Unknown2(EntityUIButton *button, int a2);
 void UIButton_Fail(void);
+void UIButton_Unknown3(EntityUIButton *button, int a2);
+void UIButton_Unknown4(EntityUIButton *button, int a2);
+void *UIButton_GetOptions2(void);
+void UIButton_Fail(void);
+bool32 UIButton_ProcessTouch(void);
+void UIButton_ProcessButtonInputs(void);
+bool32 UIButton_Unknown10(void);
+bool32 UIButton_Unknown11(void);
+void UIButton_Unknown12(void);
+void UIButton_Unknown13(void);
+void UIButton_Unknown15(void);
+void UIButton_Unknown16(void);
+void UIButton_Unknown17(void);
+void UIButton_Unknown18(void);
 
 #endif //!OBJ_UIBUTTON_H

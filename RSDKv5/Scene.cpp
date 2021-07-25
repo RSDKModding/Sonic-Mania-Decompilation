@@ -44,7 +44,7 @@ void LoadScene()
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter;
-        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\" with filter %d", list->name,
+        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
                  sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name,
                  sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter);
         return;
@@ -55,7 +55,7 @@ void LoadScene()
     if (strcmp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        printLog(SEVERITY_NONE, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name);
+        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name);
         return;
     }
 #endif
@@ -134,11 +134,11 @@ void LoadScene()
 #if RETRO_REV02
     hardResetFlag    = false;
     sceneInfo.filter = sceneEntry->filter;
-    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
+    printLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
 #if !RETRO_REV02
-    printLog(SEVERITY_NONE, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
+    printLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
     char buffer[0x40];
@@ -380,7 +380,7 @@ void LoadSceneFile()
             }
 
             if (!objID && i >= TYPE_DEFAULTCOUNT)
-                printLog(SEVERITY_NONE, "Object %d is unimplimented!", i);
+                printLog(PRINT_NORMAL, "Object %d is unimplimented!", i);
 
             ObjectInfo *obj          = &objectList[stageObjectIDs[objID]];
             byte varCnt              = ReadInt8(&info);
@@ -430,7 +430,6 @@ void LoadSceneFile()
 #else
                 entity = &objectEntityList[slotID + RESERVE_ENTITY_COUNT];
 #endif
-                memset(entity, 0, obj->entitySize);
                 entity->objectID = objID;
 #if RETRO_REV02
                 entity->filter = 0xFF;

@@ -31,11 +31,11 @@ void MenuSetup_StaticUpdate(void)
             }
         }
         if (!MenuSetup_InitUserdata()) {
-            control->userdataInitialized = true;
+            control->selectionDisabled = true;
             return;
         }
         else {
-            control->userdataInitialized = false;
+            control->selectionDisabled = false;
             MenuSetup->dword18           = 1;
             TextInfo info;
             Localization_GetString(&info, STR_RPC_MENU);
@@ -359,17 +359,17 @@ void MenuSetup_Unknown7(void)
     char buffer[0x100];
     memset(buffer, 0, 0x100);
     char *str = (char *)&((char *)&globals->menuParam)[90];
-    // if (!str)
-    //    UIUsernamePopup_Unknown1();
+    if (strcmp((const char *)str, "") == 0)
+        UIUsernamePopup_ShowPopup();
     foreach_all(UIControl, control)
     {
-        if (str) {
+        if (strcmp((const char *)str, "") != 0) {
             RSDK.GetCString(buffer, &control->tag);
             if (strcmp((const char *)buffer, (const char *)str) == 0) {
                 UIControl_Unknown6(control);
             }
             else {
-                control->dwordD4 = globals->menuParam[87];
+                control->storedEntityID = globals->menuParam[87];
                 control->dwordC4 = 1;
                 UIControl_Unknown4(control);
                 control->activeEntityID = globals->menuParam[87];

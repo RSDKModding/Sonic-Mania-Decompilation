@@ -15,7 +15,7 @@ DummyRichPresence *richPresence = NULL;
 DummyStats *stats               = NULL;
 DummyUserStorage *userStorage   = NULL;
 
-UserDBStorage userDBStorage[RETRO_USERDB_MAX];
+UserDBStorage *userDBStorage = NULL;
 #endif
 
 // Start custom achievement code
@@ -83,6 +83,12 @@ void initUserData()
             userStorage = (DummyUserStorage *)malloc(sizeof(DummyUserStorage));
         MEM_ZEROP(userStorage);
         // userStorage->active = true;
+
+        if (!userDBStorage)
+            userDBStorage = (UserDBStorage *)malloc(sizeof(UserDBStorage));
+        MEM_ZEROP(userDBStorage);
+
+        InitUserStorageDB(userDBStorage);
 
         userCore->unknown1             = nullUserFunc;
         userCore->unknown2             = nullUserFunc;
@@ -164,11 +170,11 @@ void initUserData()
         userStorage->DeleteUserFile = TryDeleteUserFile;
         userStorage->unknown8       = UserStorageUnknown8;
 
-        achievements->status           = STATUS_OK;
-        stats->status                  = STATUS_OK;
-        userStorage->authStatusCode    = STATUS_OK;
-        userStorage->storageStatusCode = STATUS_OK;
-        userStorage->statusCode        = STATUS_OK;
+        achievements->status       = STATUS_OK;
+        stats->status              = STATUS_OK;
+        userStorage->authStatus    = STATUS_OK;
+        userStorage->storageStatus = STATUS_OK;
+        userStorage->statusCode    = STATUS_OK;
 #endif
 
 #if !RETRO_REV02
@@ -304,43 +310,43 @@ int GetUserPlatform()
 }
 int GetConfirmButtonFlip()
 {
-    printLog(SEVERITY_NONE, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
+    //printLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
     return true;
 }
-void LaunchManual() { printLog(SEVERITY_NONE, "DUMMY LaunchManual()"); }
+void LaunchManual() { printLog(PRINT_NORMAL, "DUMMY LaunchManual()"); }
 void ExitGame() { engine.running = false; }
 int controllerUnknown() { return 0; }
 
 int ShowExtensionOverlay(byte overlay)
 {
-    printLog(SEVERITY_WARN, "Show Extension Overlay: %d", overlay);
+    printLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
     return 1;
 }
 bool32 EGS_Checkout(int a1)
 {
-    printLog(SEVERITY_WARN, "Checkout(%d)");
+    printLog(PRINT_POPUP, "Checkout(%d)");
     return true;
 }
 int ShowEncorePage(int a1)
 {
-    printLog(SEVERITY_WARN, "Show EncorePage Overlay: %d", a1);
+    printLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
 }
 void EGS_Unknown4(int a1)
 {
-    printLog(SEVERITY_WARN, "EGS_Unknown4(%d)", a1);
+    printLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1);
 }
 
 void TryUnlockAchievement(const char *name)
 {
-    printLog(SEVERITY_NONE, "DUMMY TryUnlockAchievement(%s)", name);
+    printLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
     int i = 0;
     for (; i < (int)achievementList.size(); ++i) {
         if (strcmp(name, achievementList[i].identifier) == 0) {
             if (!achievementList[i].achieved) {
                 achievementStack.push_back(i);
-                printLog(SEVERITY_NONE, "Unlocked Achievement: (%s, %d)", name, i);
+                printLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
                 achievementList[i].achieved = true;
             }
             break;
@@ -348,7 +354,7 @@ void TryUnlockAchievement(const char *name)
     }
 
     if (i == achievementList.size())
-        printLog(SEVERITY_NONE, "Failed to Unlock Achievement: (%s)", name);
+        printLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
 }
 
 void GetAchievementNames(TextInfo *names, int count)
@@ -389,8 +395,8 @@ void RemoveLastAchievementID(void)
         achievementStack.erase(achievementStack.begin());
 }
 
-void FetchLeaderboard(int a2, int a3) { printLog(SEVERITY_NONE, "DUMMY FetchLeaderboard(%d, %d)", a2, a3); }
-void TrackScore(int a2, int a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackScore(%d, %d, %d)", a2, a3, a4); }
+void FetchLeaderboard(int a2, int a3) { printLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%d, %d)", a2, a3); }
+void TrackScore(int a2, int a3, int a4) { printLog(PRINT_NORMAL, "DUMMY TrackScore(%d, %d, %d)", a2, a3, a4); }
 
 void SetPresence(byte id, TextInfo *info)
 {
@@ -402,14 +408,14 @@ void SetPresence(byte id, TextInfo *info)
 #else
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
 #endif
-    printLog(SEVERITY_NONE, buffer2);
+    printLog(PRINT_NORMAL, buffer2);
 }
 
 #if !RETRO_REV02
-void TrackActClear() { printLog(SEVERITY_NONE, "DUMMY TrackActClear()"); }
-void TrackTAClear(byte a1, byte a2, byte a3, int a4) { printLog(SEVERITY_NONE, "DUMMY TrackTAClear(%d,%d,%d,%d)", a1, a2, a3, a4); }
-void TrackEnemyDefeat() { printLog(SEVERITY_NONE, "DUMMY TrackEnemyDefeat()"); }
-void ClearPrerollErrors() { printLog(SEVERITY_NONE, "DUMMY ClearPrerollErrors()"); }
+void TrackActClear() { printLog(PRINT_NORMAL, "DUMMY TrackActClear()"); }
+void TrackTAClear(byte a1, byte a2, byte a3, int a4) { printLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d,%d,%d,%d)", a1, a2, a3, a4); }
+void TrackEnemyDefeat() { printLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat()"); }
+void ClearPrerollErrors() { printLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()"); }
 #endif
 
 #if RETRO_REV02
@@ -493,7 +499,7 @@ void *GetFuncPtr(const char *name)
     }
 
     if (engine.printConsole)
-        printLog(SEVERITY_WARN, "API Function not found: %s", name);
+        printLog(PRINT_POPUP, "API Function not found: %s", name);
     return NULL;
 }
 #endif
@@ -508,7 +514,7 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         success = LoadUserFile(filename, buffer, bufSize);
 
         if (callback)
-            callback(100);
+            callback(STATUS_OK);
 #if RETRO_REV02
     }
     else {
@@ -516,7 +522,7 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         sprintf(buffer, "TryLoadUserFile(%s, %p, %u, %p) failing due to noSave", filename, buffer, bufSize, callback);
 
         if (callback)
-            callback(500);
+            callback(STATUS_ERROR);
     }
 #endif
 
@@ -534,7 +540,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         success = SaveUserFile(filename, buffer, bufSize);
 
         if (callback)
-            callback(100);
+            callback(STATUS_OK);
 #if RETRO_REV02
     }
     else {
@@ -543,7 +549,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
                 compress ? "true" : "false");
 
         if (callback)
-            callback(500);
+            callback(STATUS_ERROR);
     }
 #endif
 
@@ -557,7 +563,7 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
         DeleteUserFile(filename);
 
         if (callback)
-            callback(100);
+            callback(STATUS_OK);
 #if RETRO_REV02
     }
     else {
@@ -565,7 +571,7 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
         sprintf(buffer, "TryDeleteUserFile(%s, %p) failing due to noSave", filename, callback);
 
         if (callback)
-            callback(500);
+            callback(STATUS_ERROR);
     }
 #endif
 
@@ -585,7 +591,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
     if (len >= 0x400) {
         // oh shit
     }
-    printLog(SEVERITY_NONE, "Attempting to load user file: %s", userFileDir);
+    printLog(PRINT_NORMAL, "Attempting to load user file: %s", userFileDir);
 
     FileIO *file = fOpen(userFileDir, "rb");
     if (file) {
@@ -604,7 +610,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
     else {
         if (userFileCallback2)
             userFileCallback2();
-        printLog(SEVERITY_NONE, "Nope!");
+        printLog(PRINT_NORMAL, "Nope!");
     }
     return false;
 }
@@ -617,7 +623,7 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
     if (len >= 0x400) {
         // oh shit
     }
-    printLog(SEVERITY_NONE, "Attempting to save user file: %s", userFileDir);
+    printLog(PRINT_NORMAL, "Attempting to save user file: %s", userFileDir);
 
     FileIO *file = fOpen(userFileDir, "wb");
     if (file) {
@@ -633,7 +639,7 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
     else {
         if (userFileCallback2)
             userFileCallback2();
-        printLog(SEVERITY_NONE, "Nope!");
+        printLog(PRINT_NORMAL, "Nope!");
     }
     return false;
 }
@@ -646,7 +652,7 @@ bool32 DeleteUserFile(const char *filename)
     if (len >= 0x400) {
         // oh shit
     }
-    printLog(SEVERITY_NONE, "Attempting to delete user file: %s", userFileDir);
+    printLog(PRINT_NORMAL, "Attempting to delete user file: %s", userFileDir);
     int status = remove(userFileDir);
 
     if (userFileCallback2)
@@ -792,7 +798,7 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
 
 int UserDBLoadCB(ushort tableID, int status)
 {
-    if (status == 200) {
+    if (status == STATUS_OK) {
         int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte*)userDBStorage->readBuffer[tableID]);
         if (result) {
             // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
@@ -814,11 +820,11 @@ int UserDBLoadCB(ushort tableID, int status)
 int UserDBSaveCB(ushort tableID, int status)
 {
     RemoveStorageEntry((void**)&userDBStorage->writeBuffer[tableID]);
-    if (status != 200)
+    if (status != STATUS_OK)
         userDBStorage->userDB[tableID].valid = false;
 
     if (userDBStorage->callbacks[tableID]) {
-        int result = userDBStorage->callbacks[tableID](status);
+        bool32 result = userDBStorage->callbacks[tableID](status);
         userDBStorage->callbacks[tableID]                  = NULL;
         return result;
     }
@@ -844,7 +850,7 @@ ushort LoadUserDB(const char *filename, int (*callback)(int))
 
     if (tableID == -1) {
         if (callback)
-            callback(500);
+            callback(STATUS_ERROR);
         return -1;
     }
 
@@ -853,9 +859,9 @@ ushort LoadUserDB(const char *filename, int (*callback)(int))
     userDB->name   = filename;
     userDB->uuid   = uuid;
     AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
-    userDBStorage->loadCallback[tableID] = UserDBLoadCB;
+    userDBStorage->userLoadCB[tableID] = UserDBLoadCB;
     userDBStorage->callbacks[tableID] = callback;
-    TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->saveCallback[tableID]);
+    TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->loadCallback[tableID]);
     return tableID;
 }
 bool32 SaveUserDB(ushort tableID, int (*callback)(int))
@@ -866,14 +872,14 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
     if (userDB->active) {
         int totalSize = (int)GetUserDBWriteSize(userDB);
         AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
-        SaveDBToBuffer(userDB, totalSize, (byte*)userDBStorage->writeBuffer[tableID]);
+        SaveDBToBuffer(userDB, totalSize, (byte *)userDBStorage->writeBuffer[tableID]);
+        userDBStorage->userSaveCB[tableID] = UserDBSaveCB;
         userDBStorage->callbacks[tableID] = callback;
-        userDBStorage->loadCallback[tableID] = UserDBSaveCB;
         success = TrySaveUserFile(userDB->name, userDBStorage->writeBuffer[tableID], totalSize, userDBStorage->saveCallback[tableID], true);
     }
     else {
         if (callback)
-            success = callback(500);
+            success = callback(STATUS_ERROR);
     }
     return success;
 }

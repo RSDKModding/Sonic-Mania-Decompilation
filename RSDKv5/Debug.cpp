@@ -3,7 +3,7 @@
 #if RETRO_PLATFORM == RETRO_WIN
 #include <Windows.h>
 
-#undef SEVERITY_ERROR //causes conflicts
+#undef PRINT_ERROR //causes conflicts
 #endif
 
 bool32 engineDebugMode = true;
@@ -33,34 +33,25 @@ void printLog(SeverityModes severity, const char *message, ...)
 
 #if RETRO_REV02
         switch (severity) {
-            case SEVERITY_NONE:
+            case PRINT_NORMAL:
             default: break;
                 break;
-            case SEVERITY_WARN:
+            case PRINT_POPUP:
                 if (sceneInfo.state & 3) {
                     CreateEntity(DevOutput->objectID, outputString, 0, 0);
                 }
-#if !RETRO_USE_ORIGINAL_CODE
-                sprintf(outputString, "WARN: %s", outputString);
-#endif
                 break;
-            case SEVERITY_ERROR:
+            case PRINT_ERROR:
                 if (sceneInfo.state & 3) {
                     engine.prevEngineMode = sceneInfo.state;
                     sceneInfo.state       = ENGINESTATE_ERRORMSG;
                 }
-#if !RETRO_USE_ORIGINAL_CODE
-                sprintf(outputString, "ERROR: %s", outputString);
-#endif
                 break;
-            case SEVERITY_FATAL:
+            case PRINT_FATAL:
                 if (sceneInfo.state & 3) {
                     engine.prevEngineMode = sceneInfo.state;
                     sceneInfo.state       = ENGINESTATE_ERRORMSG_FATAL;
                 }
-#if !RETRO_USE_ORIGINAL_CODE
-                sprintf(outputString, "FATAL: %s", outputString);
-#endif
                 break;
         }
 #endif
@@ -136,10 +127,10 @@ void PrintMessage(void *msg, int type)
 {
     if (msg && engine.printConsole) {
         switch (type) {
-            case 0: printLog(SEVERITY_NONE, "%s", (const char *)msg); break;
-            case 1: printLog(SEVERITY_NONE, "%i", *(signed int *)msg); break;
-            case 2: printLog(SEVERITY_NONE, "%i", *(int *)msg, 0); break;
-            case 3: printLog(SEVERITY_NONE, "%f", *(float *)msg); break;
+            case 0: printLog(PRINT_NORMAL, "%s", (const char *)msg); break;
+            case 1: printLog(PRINT_NORMAL, "%i", *(signed int *)msg); break;
+            case 2: printLog(PRINT_NORMAL, "%i", *(int *)msg, 0); break;
+            case 3: printLog(PRINT_NORMAL, "%f", *(float *)msg); break;
             default: break;
         }
     }

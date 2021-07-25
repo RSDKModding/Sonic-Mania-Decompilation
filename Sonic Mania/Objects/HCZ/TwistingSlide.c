@@ -240,10 +240,10 @@ void TwistingSlide_Create(void *data)
         entity->active = ACTIVE_BOUNDS;
         switch (entity->type) {
             case 0:
-                entity->updateRange.y = 0x77FFFC;
+                entity->updateRange.y = 0x780000;
                 entity->updateRange.x = 0x800000;
                 entity->field_74      = entity->position.y - 0x4A0000;
-                entity->field_78      = 0x77FFFC + entity->position.y;
+                entity->field_78      = 0x780000 + entity->position.y;
                 break;
             case 1:
                 entity->updateRange.x = 0xC00000;

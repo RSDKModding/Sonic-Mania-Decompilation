@@ -12,7 +12,7 @@ void PauseMenu_Update(void)
     if (entity->manager) {
         entity->manager->position.x = entity->position.x;
         entity->manager->position.y = entity->position.y;
-        PauseMenu_Unknown4();
+        PauseMenu_HandleButtonPositions();
     }
 }
 
@@ -71,9 +71,9 @@ void PauseMenu_StaticUpdate(void)
                 for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
                     int id = RSDK.ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
-                        PauseMenu->controllerDisconnect = true;
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        pauseMenu->triggerPlayer = i;
+                        //PauseMenu->controllerDisconnect = true;
+                        //RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        //pauseMenu->triggerPlayer = i;
                     }
                 }
             }
@@ -177,7 +177,7 @@ void PauseMenu_Unknown3(void)
                        entity->field_70.y + (RSDK_screens->centerY << 16) + entity->position.y);
 }
 
-void PauseMenu_Unknown4(void)
+void PauseMenu_HandleButtonPositions(void)
 {
     RSDK_THIS(PauseMenu);
 
@@ -230,7 +230,7 @@ void PauseMenu_AddButton(byte id, void *action)
     }
 }
 
-void PauseMenu_Unknown6(void)
+void PauseMenu_SetupMenu(void)
 {
     RSDK_THIS(PauseMenu);
 
@@ -244,8 +244,8 @@ void PauseMenu_Unknown6(void)
     control->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
     control->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
-    control->rowCount       = 1;
-    control->columnCount    = 3;
+    control->rowCount       = 3;
+    control->columnCount    = 1;
     control->activeEntityID = 0;
     entity->manager         = (Entity *)control;
 
@@ -292,7 +292,7 @@ void PauseMenu_Unknown9(void)
 
     if (globals->gameMode == MODE_COMPETITION) {
         sprintf((char *)&globals->menuParam[22], "Competition Zone");
-        ushort *param2 = (ushort *)&globals->menuParam[26];
+        ushort *param2         = (ushort *)&globals->menuParam[26];
         param2[1]              = 115;
         globals->menuParam[87] = globals->competitionSession[24];
     }
@@ -368,7 +368,7 @@ void PauseMenu_Unknown13(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
 
-    ((EntityUIDialog*)UIDialog->activeDialog)->parent->state = NULL;
+    ((EntityUIDialog *)UIDialog->activeDialog)->parent->state = NULL;
     if (StarPost) {
         StarPost->postIDs[0] = 0;
         StarPost->postIDs[1] = 0;
@@ -409,8 +409,8 @@ int PauseMenu_Unknown15(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
     ((EntityUIDialog *)UIDialog->activeDialog)->parent->state = NULL;
-    globals->recallEntities = false;
-    globals->initCoolBonus  = false;
+    globals->recallEntities                                   = false;
+    globals->initCoolBonus                                    = false;
 
     if (StarPost) {
         StarPost->postIDs[0] = 0;
@@ -490,8 +490,8 @@ void PauseMenu_SetupButtons(void)
         if (!entity->disableRestart)
             PauseMenu_AddButton(1, PauseMenu_Restart_CB);
         PauseMenu_AddButton(2, PauseMenu_Exit_CB);
-        PauseMenu_Unknown4();
-        PauseMenu_Unknown6();
+        PauseMenu_HandleButtonPositions();
+        PauseMenu_SetupMenu();
         if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
             entity->state = PauseMenu_Unknown21;
         else
@@ -769,7 +769,7 @@ void PauseMenu_Unknown33(void)
     TextInfo textBuffer;
 
     if (entity->timer == 1) {
-        UIControl->inputLocked = 0;
+        UIControl->inputLocked = false;
         if (PauseMenu->controllerDisconnect) {
             int strID = STR_RECONNECTWIRELESSCONTROLLER;
 #if RETRO_USE_PLUS
@@ -828,12 +828,12 @@ void PauseMenu_Unknown33(void)
 
         EntityUIDialog *dialog = UIDialog->activeDialog;
         if (dialog) {
-            //if (dialog->state != UIDialog_Unknown13) {
-            //    dialog->parent->userdataInitialized = true;
-            //    dialog->field_5C                       = 0;
-            //    dialog->state                          = (int)UIDialog_Unknown13;
-            //    dialog->curCallback                    = 0;
-            //}
+            if (dialog->state != UIDialog_Unknown13) {
+                dialog->parent->selectionDisabled = true;
+                dialog->field_5C                  = 0;
+                dialog->state                     = UIDialog_Unknown13;
+                dialog->curCallback               = NULL;
+            }
         }
         entity->field_B0 = true;
     }

@@ -148,7 +148,7 @@ void UIChoice_Unknown3(void)
 {
     RSDK_THIS(UIChoice);
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
-    int id                 = parent->field_15C;
+    int id                 = parent->selection;
     EntityUIButton *ent    = NULL;
 
     do {
@@ -164,9 +164,9 @@ void UIChoice_Unknown3(void)
                 continue;
         }
         ent = 0;
-    } while ((ent && ent->disabled) && id != parent->field_15C);
+    } while ((ent && ent->disabled) && id != parent->selection);
 
-    if (id != parent->field_15C) {
+    if (id != parent->selection) {
         //UIButton_Unknown3(parent, id);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
     }
@@ -176,7 +176,7 @@ void UIChoice_Unknown4(void)
 {
     RSDK_THIS(UIChoice);
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
-    int id                 = parent->field_15C;
+    int id                 = parent->selection;
     EntityUIButton *ent    = NULL;
     do {
         id = (id + 1) % parent->choiceCount;
@@ -187,9 +187,9 @@ void UIChoice_Unknown4(void)
                 continue;
         }
         ent = NULL;
-    } while ((ent && ent->disabled) && id != parent->field_15C);
+    } while ((ent && ent->disabled) && id != parent->selection);
 
-    if (id != parent->field_15C) {
+    if (id != parent->selection) {
         //UIButton_Unknown3(parent, id);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
     }

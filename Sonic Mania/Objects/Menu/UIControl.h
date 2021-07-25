@@ -65,10 +65,10 @@ typedef struct {
     int dialogHasFocus;
     int popoverHasFocus;
     int dwordC4;
-    int userdataInitialized;
+    int selectionDisabled;
     int dwordCC;
     int backoutTimer;
-    int dwordD4;
+    int storedEntityID;
     int field_D8;
     Entity *heading;
     Entity *shifter;
@@ -130,7 +130,7 @@ typedef struct {
     int field_1F0;
     int field_1F4;
     bool32 (*backPressCB)(void);
-    void (*unknownCallback2)(void);
+    void (*processButtonInputCB)(void);
     void (*unknownCallback3)(void);
     void (*unknownCallback4)(void);
     void (*yPressCB)(void);
@@ -175,5 +175,6 @@ void UIControl_ClearInputs(char id);
 void UIControl_Unknown15(EntityUIControl *entity, int x, int y);
 void UIControl_Unknown16(void);
 void UIControl_ProcessInputs(void);
+bool32 UIControl_ProcessButtonInput(void);
 
 #endif //!OBJ_UICONTROL_H

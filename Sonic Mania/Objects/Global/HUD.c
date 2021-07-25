@@ -494,7 +494,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 #if RETRO_GAMEVER != VER_100
 void HUD_GetKeyFrame(Animator *animator, int buttonID)
 {
-    int val = 0; // UIButtonPrompt_Unknown1();
+    int val = UIButtonPrompt_GetGamepadType();
 #if RETRO_USE_PLUS
     if (API.GetConfirmButtonFlip() && buttonID <= 1)
 #else
@@ -525,7 +525,7 @@ void HUD_GetKeyFrame(Animator *animator, int buttonID)
             case 4: map = RSDK_controller[contID].keyStart.keyMap; break;
         }
 
-        int frame = 0; // UIButtonPrompt_Unknown2(map);
+        int frame = UIButtonPrompt_MappingsToFrame(map);
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, 1, animator, true, frame);
     }
 }

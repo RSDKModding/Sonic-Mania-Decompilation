@@ -55,15 +55,15 @@ typedef enum {
 #define MANIA_UI_ITEM_BASE                                                                                                                           \
     RSDK_ENTITY                                                                                                                                      \
     StateMachine(state);                                                                                                                             \
-    void (*options0)(void);                                                                                                                          \
-    void (*touchCB)(void);                                                                                                                           \
+    bool32 (*processButtonCB)(void);                                                                                                                          \
+    bool32 (*touchCB)(void);                                                                                                                         \
     void (*options2)(void);                                                                                                                          \
     void (*options3)(void);                                                                                                                          \
     void (*failCB)(void);                                                                                                                            \
     void (*options5)(void);                                                                                                                          \
     void (*options6)(void);                                                                                                                          \
-    void (*options7)(void);                                                                                                                          \
-    void (*options8)(void);                                                                                                                          \
+    bool32 (*options7)(void);                                                                                                                        \
+    bool32 (*options8)(void);                                                                                                                        \
     int timer;                                                                                                                                       \
     Vector2 posUnknown2;                                                                                                                             \
     Entity *parent;                                                                                                                                  \

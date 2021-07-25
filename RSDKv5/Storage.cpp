@@ -98,9 +98,9 @@ void RemoveStorageEntry(void **dataPtr)
     if (dataPtr) {
         if (*dataPtr) {
             int **data = (int **)dataPtr;
-            *data      = NULL;
+            int *ptr   = *data;
 
-            int set = *data[-3];
+            int set = *(ptr - 3);
 
             for (int e = 0; e < dataStorage[set].entryCount; ++e) {
                 if (data == dataStorage[set].startPtrs1[e]) {
@@ -126,7 +126,7 @@ void RemoveStorageEntry(void **dataPtr)
                 dataStorage[set].startPtrs1[e] = NULL;
                 dataStorage[set].startPtrs2[e] = NULL;
             }
-            *data[-4] = false;
+            *(ptr - 4) = false;
         }
     }
 }

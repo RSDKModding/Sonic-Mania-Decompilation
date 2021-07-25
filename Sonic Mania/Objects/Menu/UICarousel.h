@@ -6,12 +6,39 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    int field_1C;
 } ObjectUICarousel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 shift;
+    Vector2 clipSize;
+    Vector2 clipOffset;
+    int field_70;
+    int field_74;
+    int field_78;
+    Entity *field_7C;
+    char field_80;
+    char field_81;
+    char field_82;
+    char field_83;
+    int field_84;
+    int field_88;
+    int field_8C;
+    Vector2 startPos;
+    int field_98;
+    int field_9C;
+    int field_A0;
+    Vector2 offset;
+    Entity *parent;
 } EntityUICarousel;
 
 // Object Struct
@@ -29,6 +56,9 @@ void UICarousel_EditorLoad(void);
 void UICarousel_Serialize(void);
 
 // Extra Entity Functions
+void UICarousel_Unknown1(void);
+void UICarousel_Unknown2(void);
+
 #endif
 
 #endif //!OBJ_UICAROUSEL_H

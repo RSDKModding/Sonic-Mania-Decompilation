@@ -53,7 +53,7 @@ typedef struct {
     void (*UserStorageUnknown8)(void);
     void (*TryAuth)(void);
     int (*GetUserAuthStatus)(void);
-    void (*GetUsername)(TextInfo *text);
+    bool32 (*GetUsername)(TextInfo *text);
     void (*TryInitStorage)(void);
     int (*UserStorageStatusUnknown1)(void);
     int (*UserStorageStatusUnknown2)(void);
