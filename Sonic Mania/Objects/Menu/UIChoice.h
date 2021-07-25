@@ -52,7 +52,7 @@ void UIChoice_Unknown1(EntityUIChoice *entity);
 void UIChoice_Unknown2(EntityUIButton *entity);
 void UIChoice_Unknown3(void);
 void UIChoice_Unknown4(void);
-void UIChoice_CheckTouch(void);
+bool32 UIChoice_CheckTouch(void);
 void UIChoice_Unknown6(void);
 void UIChoice_Unknown7(void);
 

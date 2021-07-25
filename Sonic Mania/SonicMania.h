@@ -55,7 +55,7 @@ typedef enum {
 #define MANIA_UI_ITEM_BASE                                                                                                                           \
     RSDK_ENTITY                                                                                                                                      \
     StateMachine(state);                                                                                                                             \
-    bool32 (*processButtonCB)(void);                                                                                                                          \
+    void (*processButtonCB)(void);                                                                                                                          \
     bool32 (*touchCB)(void);                                                                                                                         \
     void (*options2)(void);                                                                                                                          \
     void (*options3)(void);                                                                                                                          \
@@ -70,28 +70,11 @@ typedef enum {
     Vector2 touchPosStart;                                                                                                                           \
     Vector2 touchPosEnd;                                                                                                                             \
     bool32 touchPressed;                                                                                                                             \
-    int field_A4;                                                                                                                                    \
-    int field_A8;                                                                                                                                    \
-    int field_AC;                                                                                                                                    \
-    int field_B0;                                                                                                                                    \
-    int field_B4;                                                                                                                                    \
-    int field_B8;                                                                                                                                    \
-    int field_BC;                                                                                                                                    \
-    int field_C0;                                                                                                                                    \
-    int field_C4;                                                                                                                                    \
-    int field_C8;                                                                                                                                    \
-    int field_CC;                                                                                                                                    \
-    int field_D0;                                                                                                                                    \
-    int field_D4;                                                                                                                                    \
-    int field_D8;                                                                                                                                    \
-    int field_DC;                                                                                                                                    \
-    int field_E0;                                                                                                                                    \
-    int field_E4;                                                                                                                                    \
-    int field_E8;                                                                                                                                    \
-    int field_EC;                                                                                                                                    \
-    int field_F0;                                                                                                                                    \
-    int field_F4;                                                                                                                                    \
-    int field_F8;                                                                                                                                    \
+    Vector2 touchPos1[4];                                                                                                                            \
+    Vector2 touchPos2[4];                                                                                                                            \
+    void (*touchPosCallbacks[4])(void);                                                                                                              \
+    int touchPosCount;                                                                                                                               \
+    int touchCountUnknown;                                                                                                                           \
     bool32 flag;                                                                                                                                     \
     bool32 disabled;                                                                                                                                 \
     Vector2 size;                                                                                                                                    \

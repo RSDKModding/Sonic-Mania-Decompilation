@@ -10,9 +10,9 @@ typedef struct {
     Entity *saveSelectMenu;
     Entity *noSaveMenu;
     Entity *secretsMenu;
-    int field_14;
+    Entity *prompt1;
     Entity *encoreSaveSelect;
-    int field_1C;
+    Entity *prompt2;
     Entity *noSaveMenuEncore;
     int field_24;
     int field_28;

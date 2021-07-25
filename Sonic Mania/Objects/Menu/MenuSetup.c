@@ -83,7 +83,8 @@ void MenuSetup_Create(void *data)
 
 void MenuSetup_StageLoad(void)
 {
-    LogHelpers_Print("Menu recall ctrl: %s", ((char *)&globals->menuParam)[90]);
+    const char *tag = (const char *)(&((char *)&globals->menuParam)[90]);
+    LogHelpers_Print("Menu recall ctrl: %s", tag);
     MenuSetup->dword8      = 0;
     MenuSetup->initialized = 0;
     MenuSetup->dword10     = 0;
@@ -358,14 +359,14 @@ void MenuSetup_Unknown7(void)
 {
     char buffer[0x100];
     memset(buffer, 0, 0x100);
-    char *str = (char *)&((char *)&globals->menuParam)[90];
-    if (strcmp((const char *)str, "") == 0)
+    const char *tag = (const char *)&((char *)&globals->menuParam)[90];
+    if (strcmp(tag, "") == 0)
         UIUsernamePopup_ShowPopup();
     foreach_all(UIControl, control)
     {
-        if (strcmp((const char *)str, "") != 0) {
+        if (strcmp(tag, "") != 0) {
             RSDK.GetCString(buffer, &control->tag);
-            if (strcmp((const char *)buffer, (const char *)str) == 0) {
+            if (strcmp((const char *)buffer, tag) != 0) {
                 UIControl_Unknown6(control);
             }
             else {

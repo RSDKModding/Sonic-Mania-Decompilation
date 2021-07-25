@@ -198,15 +198,15 @@ void MainMenu_ChangeMenu(void)
             break;
         case 1:
             if (API.CheckDLC(DLC_PLUS)) {
-                // v6                 = TimeAttackMenu->menu1;
-                // v6->activeEntityID = 0;
-                // v6->dwordCC        = 0;
+                //EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
+                //control->activeEntityID  = 0;
+                //control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack");
             }
             else {
-                // v7                 = TimeAttackMenu->menu2;
-                // v7->activeEntityID = 0;
-                // v7->dwordCC        = 0;
+                //EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
+                //control->activeEntityID  = 0;
+                //control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
             break;

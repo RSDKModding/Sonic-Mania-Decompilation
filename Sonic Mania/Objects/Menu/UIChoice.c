@@ -26,12 +26,12 @@ void UIChoice_Update(void)
     }
     StateMachine_Run(entity->state);
     if (parent) {
-        //if (parent->state == UIButton_Unknown16) {
-        //    entity->field_134.x = 0;
-        //    entity->field_134.y = 0;
-        //    entity->flag        = false;
-        //    entity->state       = UIChoice_Unknown6;
-        //}
+        if (parent->state == UIButton_Unknown16) {
+            entity->field_134.x = 0;
+            entity->field_134.y = 0;
+            entity->flag        = false;
+            entity->state       = UIChoice_Unknown6;
+        }
     }
 }
 
@@ -167,7 +167,7 @@ void UIChoice_Unknown3(void)
     } while ((ent && ent->disabled) && id != parent->selection);
 
     if (id != parent->selection) {
-        //UIButton_Unknown3(parent, id);
+        UIButton_Unknown3(parent, id);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
     }
 }
@@ -190,12 +190,12 @@ void UIChoice_Unknown4(void)
     } while ((ent && ent->disabled) && id != parent->selection);
 
     if (id != parent->selection) {
-        //UIButton_Unknown3(parent, id);
+        UIButton_Unknown3(parent, id);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
     }
 }
 
-void UIChoice_CheckTouch(void)
+bool32 UIChoice_CheckTouch(void)
 {
     void(*callbacks[2])(void);
     Vector2 posStart[2];
@@ -213,6 +213,7 @@ void UIChoice_CheckTouch(void)
     posStart[0].y = entity->touchPosStart.y;
     posStart[1].y = entity->touchPosStart.y;
 
+    bool32 flag = false;
     for (int i = 0; i < 2; ++i) {
         if (RSDK_touchMouse->count == 0) {
             if (entity->touchPressed && entity->touchID == i && !entity->disabled) {
@@ -225,10 +226,12 @@ void UIChoice_CheckTouch(void)
                 int y = (RSDK_screens->position.y << 16) - ((RSDK_screens->height * RSDK_touchMouse->y[t]) * -65536.0f);
                 if (abs(posEnd[i].x + entity->position.x - x) < posStart[i].x >> 1 && abs(posEnd[i].y + entity->position.y - y) < posStart[i].y >> 1) {
                     entity->touchID = i;
+                    flag            = true;
                 }
             }
         }
     }
+    return flag;
 }
 
 void UIChoice_Unknown6(void)

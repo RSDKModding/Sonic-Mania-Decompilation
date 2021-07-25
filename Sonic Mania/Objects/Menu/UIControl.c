@@ -711,10 +711,9 @@ void UIControl_Unknown16(void)
 {
     RSDK_THIS(UIControl);
     if (entity->position.x < entity->posUnknown.x) {
-        if (entity->position.x = entity->scrollSpeed.x > entity->posUnknown.x)
+        entity->position.x += entity->scrollSpeed.x;
+        if (entity->position.x > entity->posUnknown.x)
             entity->position.x = entity->posUnknown.x;
-        else
-            entity->position.x += entity->scrollSpeed.x;
     }
     if (entity->position.x > entity->posUnknown.x) {
         entity->position.x -= entity->scrollSpeed.x;
@@ -723,10 +722,9 @@ void UIControl_Unknown16(void)
     }
 
     if (entity->position.y < entity->posUnknown.y) {
-        if (entity->position.y = entity->scrollSpeed.y > entity->posUnknown.y)
+        entity->position.y += entity->scrollSpeed.y;
+        if (entity->position.y > entity->posUnknown.y)
             entity->position.y = entity->posUnknown.y;
-        else
-            entity->position.y += entity->scrollSpeed.y;
     }
     if (entity->position.y > entity->posUnknown.y) {
         entity->position.y -= entity->scrollSpeed.y;
@@ -735,7 +733,7 @@ void UIControl_Unknown16(void)
     }
 }
 
-bool32 UIControl_ProcessButtonInput(void)
+void UIControl_ProcessButtonInput(void)
 {
     RSDK_THIS(UIControl);
 
@@ -802,13 +800,12 @@ bool32 UIControl_ProcessButtonInput(void)
                 RSDK_sceneInfo->entity = (Entity *)button;
                 if (button->processButtonCB) {
                     if (!button->options8 || !button->options8())
-                        flag = button->processButtonCB();
+                        button->processButtonCB();
                 }
                 RSDK_sceneInfo->entity = storeEntity;
             }
         }
     }
-    return flag;
 }
 
 void UIControl_EditorDraw(void) {}

@@ -22,7 +22,7 @@ typedef struct {
     Vector2 field_70;
     Vector2 drawPos;
     EntityUIControl *parent;
-    int field_84;
+    Entity* entityPtr;
     byte buttonFrames[3];
     void (*callbacks[3])(void);
     bool32 flags[3];

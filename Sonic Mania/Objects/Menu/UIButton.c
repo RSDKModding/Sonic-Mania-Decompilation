@@ -90,7 +90,7 @@ void UIButton_Create(void *data)
         entity->updateRange.y = 0x400000;
         entity->dword138      = entity->size.y >> 16;
         entity->size.y        = abs(entity->size.y);
-        entity->processButtonCB      = UIButton_ProcessButtonInputs;
+        entity->processButtonCB = UIButton_ProcessButtonInputs;
         entity->touchCB       = UIButton_ProcessTouch;
         entity->options3      = UIButton_Unknown15;
         entity->failCB        = UIButton_Fail;
@@ -241,6 +241,52 @@ void *UIButton_GetOptions2(void)
 
 void UIButton_Fail(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, 0, 255); }
 
+bool32 UIButton_Unknown7(void)
+{
+    RSDK_THIS(UIButton);
+    EntityUIControl *control = (EntityUIControl *)entity->parent;
+
+    bool32 touchFlag = false;
+    int lastTouchID  = -1;
+    int lastTouch    = -1;
+
+    for (int i = 0; i < entity->touchPosCount; ++i) {
+        Vector2 touchPos1 = entity->touchPos1[i];
+        Vector2 touchPos2 = entity->touchPos1[i];
+
+        if (RSDK_touchMouse->count) {
+            int screenX = RSDK_screens->position.x << 16;
+            int screenY = RSDK_screens->position.y << 16;
+            for (int t = 0; t < RSDK_touchMouse->count; ++t) {
+                int x = abs(touchPos1.x + entity->position.x - (screenX - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f)));
+                int y = abs(touchPos1.y + entity->position.y - (screenY - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f)));
+
+                int x2 = touchPos2.x >> 1;
+                int y2 = touchPos2.y >> 1;
+
+                if (x < x2 && y < y2) {
+                    touchFlag = true;
+                    if ((touchPos2.x >> 16) * (touchPos2.y >> 16) < lastTouch) {
+                        lastTouch    = (touchPos2.x >> 16) * (touchPos2.y >> 16);
+                        lastTouchID = i;
+                    }
+                }
+            }
+        }
+        else {
+            if (entity->touchPressed && entity->touchCountUnknown == i && !entity->disabled) {
+                if (!UIControl_Unknown9(control)) {
+                    StateMachine_Run(entity->touchPosCallbacks[i]);
+                }
+            }
+        }
+    }
+
+    entity->touchCountUnknown = lastTouchID;
+    entity->touchPressed      = touchFlag;
+    return entity->touchPressed;
+}
+
 bool32 UIButton_ProcessTouch(void)
 {
     RSDK_THIS(UIButton);
@@ -349,7 +395,7 @@ void UIButton_ProcessButtonInputs(void)
     bool32 flag2  = 0;
     if (entPtr && entity->choiceCount == 1 && entPtr->processButtonCB && !entity->choiceDir && !entity->disabled) {
         Entity *entStore       = RSDK_sceneInfo->entity;
-        RSDK_sceneInfo->entity = entPtr;
+        RSDK_sceneInfo->entity = (Entity*)entPtr;
         entPtr->processButtonCB();
         RSDK_sceneInfo->entity = entStore;
     }

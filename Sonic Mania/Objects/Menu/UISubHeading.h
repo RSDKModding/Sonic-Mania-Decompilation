@@ -30,5 +30,11 @@ void UISubHeading_Serialize(void);
 // Extra Entity Functions
 void UISubHeading_Initialize(void);
 void UISubHeading_Unknown3(void);
+int UISubHeading_GetMedalMods(void);
+void UISubHeading_SaveFileCB(int status);
+void UISubHeading_SecretsTransitionCB(void);
+void UISubHeading_Unknown10(void);
+void UISubHeading_Unknown11(void);
+void UISubHeading_StartNewSave(void);
 
 #endif //!OBJ_UISUBHEADING_H

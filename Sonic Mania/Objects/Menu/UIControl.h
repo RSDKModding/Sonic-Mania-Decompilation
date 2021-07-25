@@ -175,6 +175,6 @@ void UIControl_ClearInputs(char id);
 void UIControl_Unknown15(EntityUIControl *entity, int x, int y);
 void UIControl_Unknown16(void);
 void UIControl_ProcessInputs(void);
-bool32 UIControl_ProcessButtonInput(void);
+void UIControl_ProcessButtonInput(void);
 
 #endif //!OBJ_UICONTROL_H
