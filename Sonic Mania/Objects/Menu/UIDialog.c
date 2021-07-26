@@ -143,7 +143,7 @@ void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text)
     }
 }
 
-void UIDialog_AddButton(byte frame, EntityUIDialog *dialog, int (*callback)(void), bool32 flag)
+void UIDialog_AddButton(byte frame, EntityUIDialog *dialog, void (*callback)(void), bool32 flag)
 {
     int id = dialog->id;
     if (dialog->id < 3) {

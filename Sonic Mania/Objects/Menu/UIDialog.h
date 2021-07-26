@@ -53,7 +53,7 @@ void UIDialog_Serialize(void);
 EntityUIDialog *UIDialog_CreateActiveDialog(void *msg);
 void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
 
-void UIDialog_AddButton(byte a1, EntityUIDialog *dialog, int (*callback)(void), bool32 flag);
+void UIDialog_AddButton(byte a1, EntityUIDialog *dialog, void (*callback)(void), bool32 flag);
 void UIDialog_Setup(EntityUIDialog *dialog);
 void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void));
 void UIDialog_Unknown6(void);

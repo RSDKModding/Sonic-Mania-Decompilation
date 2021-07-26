@@ -25,7 +25,6 @@ void MenuSetup_StaticUpdate(void)
         INIT_TEXTINFO(tag);
         foreach_all(UIControl, control)
         {
-            // unsure about this
             if (!RSDK.StringCompare(&tag, &control->tag, false)) {
                 RSDK.PrependText(&tag, "Main Menu");
             }
@@ -148,14 +147,14 @@ void MenuSetup_Initialize(void)
     UISubHeading_Initialize();
     // TimeAttackMenu_Initialize();
     // CompetitionMenu_Initialize();
-    // OptionsMenu_Initialize();
+    OptionsMenu_Initialize();
     ExtrasMenu_Initialize();
     MenuSetup_Unknown6();
     MainMenu_Unknown3();
     UISubHeading_Unknown3();
     // TimeAttackMenu_Unknown3();
     // CompetitionMenu_Unknown2();
-    // OptionsMenu_Unknown3();
+    OptionsMenu_Unknown3();
     ExtrasMenu_Unknown3();
 #endif
 }
@@ -250,10 +249,13 @@ int MenuSetup_GetActiveMenu(void)
 {
     Entity *control = (Entity *)UIControl_GetUIControl();
 #if RETRO_USE_PLUS
-    if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl /*|| control == OptionsMenu[1] || control == OptionsMenu[3]
-        || control == OptionsMenu[5] || control == OptionsMenu[6] || control == OptionsMenu[7] || control == OptionsMenu[8]
-        || control == OptionsMenu[9] || control == OptionsMenu[10] || control == OptionsMenu[11] || control == OptionsMenu[12]
-        || control == OptionsMenu[13] || control == OptionsMenu[14]*/) {
+    if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl
+        || control == OptionsMenu->optionsControl && control != OptionsMenu->videoControl && control != OptionsMenu->soundControl
+               && control != OptionsMenu->dataOptionsControl && control != OptionsMenu->controlsControl_Windows
+               && control != OptionsMenu->controlsControl_KB && control != OptionsMenu->controlsControl_PS4
+               && control != OptionsMenu->controlsControl_XB1 && control != OptionsMenu->controlsControl_NX
+               && control != OptionsMenu->controlsControl_NXGrip && control != OptionsMenu->controlsControl_NXJoycon
+               && control != OptionsMenu->controlsControl_NXPro) {
         return 0;
     }
     // if (control == TimeAttackMenu->menu1 || control == TimeAttackMenu->menu2 || control == TimeAttackMenu->menu3
@@ -350,7 +352,7 @@ void MenuSetup_Unknown6(void)
             unknown = button->align;
         button->align = unknown;
     }*/
-    // OptionsMenu_Unknown2();
+    OptionsMenu_Unknown2();
     ExtrasMenu_Unknown2();
 #endif
 }
@@ -381,7 +383,7 @@ void MenuSetup_Unknown7(void)
     UISubHeading_Unknown4(0);
     // TimeAttackMenu_Unknown4();
     // CompetitionMenu_Unknown3();
-    // OptionsMenu_Unknown4();
+    OptionsMenu_Unknown4();
     if ((byte)(globals->menuParam[22] >> 8) == 2) {
         EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
         UIButton_Unknown4(extras->entities[1], 1);

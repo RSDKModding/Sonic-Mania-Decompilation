@@ -18,7 +18,7 @@ typedef struct {
     bool32 (*GetConfirmButtonFlip)(void);
     void (*ExitGame)(void);
     void (*LaunchManual)(void);
-    void (*Unknown4)(byte inputID);
+    bool32 (*Unknown4)(byte inputID);
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(byte overlay);
 #if RETRO_GAMEVER == VER_107
@@ -938,7 +938,7 @@ extern RSDKFunctionTable RSDK;
 #define INIT_TEXTINFO(info)                                                                                                                          \
     info.text       = NULL;                                                                                                                          \
     info.textLength = 0;                                                                                                                             \
-    info.length     = 0;
+    info.length     = 0
 
 #define foreach_active(type, entityOut)                                                                                                              \
     Entity##type *entityOut = NULL;                                                                                                                  \
