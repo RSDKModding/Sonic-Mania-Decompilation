@@ -199,21 +199,21 @@ void DialogRunner_State_CheckUserAuth(int a1, int a2)
     else {
         EntityUIDialog *dialog = UIDialog->activeDialog;
         if (dialog) {
-            /*if (dialog->state != UIDialog_Unknown13) {
-                dialog->control->gapC8 = 1;
-                dialog->turnTimer         = 0;
-                dialog->state            = UIDialog_Unknown13;
-                dialog->field_B0         = 0;
-            }*/
+            if (dialog->state != UIDialog_Unknown13) {
+                dialog->parent->selectionDisabled = true;
+                dialog->field_5C                  = 0;
+                dialog->state                     = UIDialog_Unknown13;
+                dialog->curCallback               = 0;
+            }
         }
         else {
             if (UIControl) {
-                // if (UIControl_Unknown8())
-                //    UIControl_Unknown6(UIControl_Unknown8());
+                if (UIControl_GetUIControl())
+                    UIControl_Unknown6(UIControl_GetUIControl());
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
-            // dialog->timer = 1;
+            entity->timer = 1;
         }
     }
 }

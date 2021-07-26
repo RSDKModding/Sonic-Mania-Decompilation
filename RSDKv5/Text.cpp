@@ -367,9 +367,7 @@ bool32 SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
                 info->textLength = len;
 
                 for (int i = 0; i < info->textLength; ++i) {
-                    if (strings->text[lastStrPos] != '\r')
-                        info->text[i] = strings->text[lastStrPos];
-                    lastStrPos++;
+                    info->text[i] = strings->text[lastStrPos++];
                 }
 
                 ++info;
