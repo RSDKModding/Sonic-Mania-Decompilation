@@ -113,7 +113,6 @@ bool32 DASetup_HandleMedallionDebug(void)
                 RSDK.PlaySFX(DASetup->sfxMedal, false, 255);
             }
             return true;
-            break;
         case 46:
             if (saveRAM[30])
                 return false;

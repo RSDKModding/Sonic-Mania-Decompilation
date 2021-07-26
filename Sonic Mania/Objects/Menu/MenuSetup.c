@@ -36,7 +36,7 @@ void MenuSetup_StaticUpdate(void)
         }
         else {
             control->selectionDisabled = false;
-            MenuSetup->dword18           = 1;
+            MenuSetup->dword18         = 1;
             TextInfo info;
             Localization_GetString(&info, STR_RPC_MENU);
 #if RETRO_USE_PLUS
@@ -111,7 +111,7 @@ void MenuSetup_StageLoad(void)
                 LogHelpers_Print("INVALID PLATFORM: %d", RSDK_sku->platform);
 #else
                 LogHelpers_Print("INVALID PLATFORM: %d", RSDK_info->platform);
-#endif 
+#endif
                 break;
         }
 
@@ -146,17 +146,17 @@ void MenuSetup_Initialize(void)
     LogHelpers_Print("ManiaModeMenu_Initialize()");
     MainMenu_Initialize();
     UISubHeading_Initialize();
-    //TimeAttackMenu_Initialize();
-    //CompetitionMenu_Initialize();
-    //OptionsMenu_Initialize();
-    //ExtrasMenu_Initialize();
+    // TimeAttackMenu_Initialize();
+    // CompetitionMenu_Initialize();
+    // OptionsMenu_Initialize();
+    ExtrasMenu_Initialize();
     MenuSetup_Unknown6();
     MainMenu_Unknown3();
     UISubHeading_Unknown3();
-    //TimeAttackMenu_Unknown3();
-    //CompetitionMenu_Unknown2();
-    //OptionsMenu_Unknown3();
-    //ExtrasMenu_Unknown3();
+    // TimeAttackMenu_Unknown3();
+    // CompetitionMenu_Unknown2();
+    // OptionsMenu_Unknown3();
+    ExtrasMenu_Unknown3();
 #endif
 }
 
@@ -250,7 +250,7 @@ int MenuSetup_GetActiveMenu(void)
 {
     Entity *control = (Entity *)UIControl_GetUIControl();
 #if RETRO_USE_PLUS
-    if (control == MainMenu->menuControlPtr /*|| control == ExtrasMenu[1] || control == OptionsMenu[1] || control == OptionsMenu[3]
+    if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl /*|| control == OptionsMenu[1] || control == OptionsMenu[3]
         || control == OptionsMenu[5] || control == OptionsMenu[6] || control == OptionsMenu[7] || control == OptionsMenu[8]
         || control == OptionsMenu[9] || control == OptionsMenu[10] || control == OptionsMenu[11] || control == OptionsMenu[12]
         || control == OptionsMenu[13] || control == OptionsMenu[14]*/) {
@@ -295,7 +295,7 @@ int MenuSetup_StartReturnToTitle(void)
     if (control)
         control->state = StateMachine_None;
     Music_FadeOut(0.05);
-    EntityMenuSetup *menuSetup = (EntityMenuSetup*)RSDK.CreateEntity(MenuSetup->objectID, 0, -0x100000, -0x100000);
+    EntityMenuSetup *menuSetup = (EntityMenuSetup *)RSDK.CreateEntity(MenuSetup->objectID, 0, -0x100000, -0x100000);
     menuSetup->active          = ACTIVE_ALWAYS;
     menuSetup->fadeColour      = 0x000000;
     menuSetup->field_68        = 5;
@@ -340,7 +340,7 @@ void MenuSetup_Unknown6(void)
 {
 #if RETRO_USE_PLUS
     MainMenu_Unknown2();
-    // UISubHeading_Unknown2();
+    UISubHeading_Unknown2();
     // TimeAttackMenu_Unknown2();
     /*int unknown     = CompetitionMenu_Unknown4();
     EntityUIButton *button = UIButton_Unknown2(*(*&CompetitionMenu[3] + 252), *(*(*&CompetitionMenu[3] + 252) + 348));
@@ -351,7 +351,7 @@ void MenuSetup_Unknown6(void)
         button->align = unknown;
     }*/
     // OptionsMenu_Unknown2();
-    // ExtrasMenu_Unknown2();
+    ExtrasMenu_Unknown2();
 #endif
 }
 
@@ -371,18 +371,21 @@ void MenuSetup_Unknown7(void)
             }
             else {
                 control->storedEntityID = globals->menuParam[87];
-                control->dwordC4 = 1;
+                control->dwordC4        = 1;
                 UIControl_Unknown4(control);
                 control->activeEntityID = globals->menuParam[87];
             }
         }
     }
-    // UISubHeading_Unknown4(0);
+
+    UISubHeading_Unknown4(0);
     // TimeAttackMenu_Unknown4();
     // CompetitionMenu_Unknown3();
     // OptionsMenu_Unknown4();
-    // if ((byte)(globals->menuParam[22] >> 8) == 2)
-    //    UIButton_Unknown4(*(*&ExtrasMenu[1] + 252), 1);
+    if ((byte)(globals->menuParam[22] >> 8) == 2) {
+        EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
+        UIButton_Unknown4(extras->entities[1], 1);
+    }
 
     int a, b, c, d;
     if (globals->menuParam[89]) {

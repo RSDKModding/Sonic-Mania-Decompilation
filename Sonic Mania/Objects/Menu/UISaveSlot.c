@@ -233,7 +233,7 @@ void UISaveSlot_Create(void *data)
             UISaveSlot_LoadSaveInfo();
         }
         else {
-            entity->slotID = 255;
+            entity->slotID = NO_SAVE_SLOT;
             UISaveSlot_Unknown6();
         }
         entity->textSpriteIndex = UIWidgets->textSpriteIndex;

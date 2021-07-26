@@ -5,7 +5,9 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Entity *extrasControl;
+    int cheatCode[8];
 } ObjectExtrasMenu;
 
 // Entity Class
@@ -28,6 +30,25 @@ void ExtrasMenu_EditorLoad(void);
 void ExtrasMenu_Serialize(void);
 
 // Extra Entity Functions
+void ExtrasMenu_Initialize(void);
+void ExtrasMenu_Unknown2(void);
+void ExtrasMenu_Unknown3(void);
 
+void ExtrasMenu_ProcessMedallionCheat(void);
+bool32 ExtrasMenu_CheckMedallionCheat(void);
+void ExtrasMenu_ProcessInputs(void);
+
+void ExtrasMenu_Start_Puyo_vsAI(void);
+void ExtrasMenu_Callback_Puyo_vsAI(void);
+void ExtrasMenu_Start_Puyo_vs2P(void);
+void ExtrasMenu_Callback_Puyo_vs2P(void);
+void ExtrasMenu_Start_Credits(void);
+void ExtrasMenu_Callback_Credits(void);
+void ExtrasMenu_Start_DAGarden(void);
+void ExtrasMenu_Callback_DAGarden(void);
+void ExtrasMenu_Start_BSS_3K(void);
+void ExtrasMenu_Callback_BSS_3K(void);
+void ExtrasMenu_Start_BSS_Mania(void);
+void ExtrasMenu_Callback_BSS_Mania(void);
 
 #endif //!OBJ_EXTRASMENU_H

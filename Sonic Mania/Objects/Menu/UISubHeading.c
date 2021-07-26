@@ -2,15 +2,62 @@
 
 ObjectUISubHeading *UISubHeading;
 
-void UISubHeading_Update(void) {}
+void UISubHeading_Update(void)
+{
+    RSDK_THIS(UISubHeading);
+
+    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex || entity->storedListID != entity->listID || entity->storedFrameID != entity->frameID) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
+        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+        entity->storedListID    = entity->listID;
+        entity->storedFrameID   = entity->frameID;
+    }
+
+    StateMachine_Run(entity->state);
+}
 
 void UISubHeading_LateUpdate(void) {}
 
 void UISubHeading_StaticUpdate(void) {}
 
-void UISubHeading_Draw(void) {}
+void UISubHeading_Draw(void)
+{
+    RSDK_THIS(UISubHeading);
+    Vector2 drawPos;
 
-void UISubHeading_Create(void *data) {}
+    int size  = entity->size.y + entity->size.x;
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    UIWidgets_Unknown7(entity->size.y, size >> 16, entity->shiftedY, 0, 0, 0, entity->position.x, entity->position.y);
+
+    drawPos = entity->position;
+    if (!entity->align) {
+        drawPos.x += -0x60000 - (entity->size.x >> 1);
+    }
+    else if (entity->align == 2) {
+        drawPos.x -= 0x60000;
+        drawPos.x += entity->size.x >> 1;
+    }
+    drawPos.x += entity->offset;
+    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+}
+
+void UISubHeading_Create(void *data)
+{
+    RSDK_THIS(UISubHeading);
+    if (!RSDK_sceneInfo->inEditor) {
+        entity->offset <<= 16;
+        entity->visible       = true;
+        entity->drawOrder     = 2;
+        entity->active        = ACTIVE_BOUNDS;
+        entity->updateRange.x = 0x800000;
+        entity->updateRange.y = 0x400000;
+        entity->shiftedY      = entity->size.y >> 16;
+        entity->size.y        = abs(entity->size.y);
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
+        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    }
+}
 
 void UISubHeading_StageLoad(void) {}
 
@@ -41,6 +88,31 @@ void UISubHeading_Initialize(void)
         if (RSDK.StringCompare(&tag, &control->tag, false))
             ManiaModeMenu->secretsMenu = (Entity *)control;
     }
+}
+
+void UISubHeading_Unknown2(void)
+{
+    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
+    EntityUIButton *button   = control->entities[1];
+    button->disabled         = !SaveGame_CheckUnlock(5) && globals->superSecret;
+    if (button->disabled)
+        UIButton_Unknown1(button);
+
+    button                  = control->entities[2];
+    EntityUIButton *option1 = UIButton_Unknown2(button, 1);
+    EntityUIButton *option2 = UIButton_Unknown2(button, 2);
+    int unlock              = SaveGame_CheckUnlock(2);
+    button->disabled        = !unlock;
+    if (button->disabled)
+        UIButton_Unknown1(button);
+    option1->disabled = !SaveGame_CheckUnlock(2);
+    option2->disabled = !SaveGame_CheckUnlock(3);
+
+    button           = control->entities[3];
+    unlock           = SaveGame_CheckUnlock(4);
+    button->disabled = !unlock;
+    if (button->disabled)
+        UIButton_Unknown1(button);
 }
 
 void UISubHeading_Unknown3(void)
@@ -83,6 +155,37 @@ void UISubHeading_Unknown3(void)
     saveSelEncore->unknownCallback4 = UISubHeading_Unknown10;
 }
 
+void UISubHeading_Unknown4(int slot)
+{
+    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
+    int *saveRAM             = NULL;
+
+    if (slot == NO_SAVE_SLOT)
+        saveRAM = globals->noSaveSlot;
+    else
+        saveRAM = &globals->saveRAM[256 * (slot % 8)];
+    UIButton_Unknown4(control->entities[0], (saveRAM[33] & 0x20) != 0);
+    UIButton_Unknown4(control->entities[1], (saveRAM[33] & 1) != 0);
+
+    int medals = saveRAM[33];
+    if (medals & getMod(MEDAL_NODROPDASH)) {
+        if (medals & getMod(MEDAL_PEELOUT)) {
+            UIButton_Unknown4(control->entities[2], 1);
+        }
+        else if (medals & getMod(MEDAL_INSTASHIELD)) {
+            UIButton_Unknown4(control->entities[2], 2);
+        }
+    }
+    else {
+        UIButton_Unknown4(control->entities[2], 3);
+    }
+
+    if ((saveRAM[33] & getMod(MEDAL_ANDKNUCKLES)))
+        UIButton_Unknown4(control->entities[3], 1);
+    else
+        UIButton_Unknown4(control->entities[3], 0);
+}
+
 int UISubHeading_GetMedalMods(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
@@ -122,6 +225,16 @@ void UISubHeading_SecretsTransitionCB(void)
     UIControl_MatchMenuTag("Secrets");
 }
 
+void UISubHeading_Unknown9(void)
+{
+    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
+    if (ManiaModeMenu->field_24) {
+        EntityUISaveSlot *slot = (EntityUISaveSlot *)control->entities[control->field_D8];
+        UISubHeading_Unknown4(slot->slotID);
+        ManiaModeMenu->field_24 = 0;
+    }
+}
+
 void UISubHeading_Unknown10(void)
 {
     RSDK_THIS(UIControl);
@@ -131,7 +244,7 @@ void UISubHeading_Unknown10(void)
             prompt = (EntityUIButtonPrompt *)ManiaModeMenu->prompt2;
         }
         else if (entity->field_D8 != ManiaModeMenu->field_28) {
-            // UISubHeading_Unknown9();
+            UISubHeading_Unknown9();
             ManiaModeMenu->field_28 = entity->field_D8;
         }
 
@@ -165,7 +278,7 @@ void UISubHeading_Unknown11(void)
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
     if (control->active == ACTIVE_ALWAYS) {
         if (!ManiaModeMenu->field_24) {
-            // UISubHeading_Unknown4(control->entities[control->activeEntityID]->stopMusic);
+            UISubHeading_Unknown4(control->entities[control->activeEntityID]->stopMusic);
             ManiaModeMenu->field_24 = 1;
         }
         RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
@@ -192,7 +305,7 @@ void UISubHeading_StartNewSave(void)
     if (entity->type) {
         memset(globals->noSaveSlot, 0, 0x400);
         globals->continues  = 0;
-        globals->saveSlotID = 0xFF;
+        globals->saveSlotID = NO_SAVE_SLOT;
 #if !RETRO_USE_PLUS
         globals->gameMode = MODE_NOSAVE;
 #endif
@@ -291,4 +404,11 @@ void UISubHeading_EditorDraw(void) {}
 
 void UISubHeading_EditorLoad(void) {}
 
-void UISubHeading_Serialize(void) {}
+void UISubHeading_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(UISubHeading, VAR_VECTOR2, size);
+    RSDK_EDITABLE_VAR(UISubHeading, VAR_ENUM, listID);
+    RSDK_EDITABLE_VAR(UISubHeading, VAR_ENUM, frameID);
+    RSDK_EDITABLE_VAR(UISubHeading, VAR_ENUM, align);
+    RSDK_EDITABLE_VAR(UISubHeading, VAR_ENUM, offset);
+}
