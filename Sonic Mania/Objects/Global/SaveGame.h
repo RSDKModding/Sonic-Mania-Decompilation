@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
+#define noSave API.GetUserStorageNoSave()
+#else
+#define noSave globals->noSave
+#endif
+
 // Object Class
 typedef struct {
 #if !RETRO_USE_PLUS
@@ -39,6 +45,8 @@ void SaveGame_Serialize(void);
 //Funcs
 #if RETRO_USE_PLUS
 int *SaveGame_GetDataPtr(int slot, bool32 encore);
+#else
+int *SaveGame_GetDataPtr(int slot);
 #endif
 void SaveGame_LoadSaveData(void);
 void SaveGame_LoadFile(void);

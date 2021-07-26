@@ -185,8 +185,8 @@ void Options_SaveOptionsCallback(int statusCode)
     if (Options->saveCallback) {
         Entity *entStore = RSDK_sceneInfo->entity;
         if (Options->saveEntityPtr)
-            RSDK_sceneInfo->entity = Options->loadEntityPtr;
-        // Options->saveCallback(status);
+            RSDK_sceneInfo->entity = Options->saveEntityPtr;
+        Options->saveCallback(statusCode);
         RSDK_sceneInfo->entity = entStore;
 
         Options->saveCallback  = NULL;

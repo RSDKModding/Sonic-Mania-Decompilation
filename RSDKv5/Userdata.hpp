@@ -328,7 +328,7 @@ inline int UserStorageStatusUnknown5()
 }
 inline int ClearUserStorageStatus()
 {
-    userStorage->storageStatus = STATUS_OK;
+    userStorage->storageStatus = STATUS_NONE;
     return userStorage->storageStatus;
 }
 inline int SetUserStorageStatus()
@@ -364,18 +364,18 @@ inline int TryInitStorage()
 }
 inline bool32 GetUserName(TextInfo *info)
 {
-    SetText(info, (char *)"IntegerGeorge802", 0);
+    SetText(info, (char *)"IntegerGeorge802", false);
     return true;
 }
 #if RETRO_REV02
 inline void UserStorageUnknown8()
 {
     if (userStorage->authStatus != STATUS_OK)
-        userStorage->authStatus = STATUS_OK;
+        userStorage->authStatus = STATUS_NONE;
 
     userStorage->field_14 = 0;
     if (userStorage->storageStatus != STATUS_OK)
-        userStorage->storageStatus = STATUS_OK;
+        userStorage->storageStatus = STATUS_NONE;
 }
 #endif
 
@@ -496,6 +496,7 @@ inline void ClearUserDB(ushort tableID)
         userDB->loaded      = false;
         userDB->active      = false;
         userDB->valid       = false;
+        userDB->uuid        = 0;
         userDB->entryCount  = 0;
         userDB->columnCount = 0;
         memset(&userDB->columnSizes, 0, sizeof(int) * RETRO_USERDB_VAL_MAX);

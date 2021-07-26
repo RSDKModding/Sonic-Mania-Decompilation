@@ -16,19 +16,19 @@ void MainMenu_StaticUpdate(void)
         EntityUIButton *button       = control->entities[control->field_D8];
         if (button) {
             switch (button->frameID) {
-                case 0: /*diorama->dioramaID = 0;*/ break;
-                case 1: /*diorama->dioramaID = 3;*/ break;
-                case 2: /*diorama->dioramaID = 4;*/ break;
-                case 3: /*diorama->dioramaID = 5;*/ break;
-                case 4: /*diorama->dioramaID = 6;*/ break;
-                case 5: /*diorama->dioramaID = 2;*/ break;
-                case 6: /*diorama->dioramaID = 1;*/ break;
-                case 7: /*diorama->dioramaID = 7;*/ break;
+                case 0: diorama->dioramaID = 0; break;
+                case 1: diorama->dioramaID = 3; break;
+                case 2: diorama->dioramaID = 4; break;
+                case 3: diorama->dioramaID = 5; break;
+                case 4: diorama->dioramaID = 6; break;
+                case 5: diorama->dioramaID = 2; break;
+                case 6: diorama->dioramaID = 1; break;
+                case 7: diorama->dioramaID = 7; break;
                 default: break;
             }
         }
-        // if (entity->entities[entity->field_D8]->disabled)
-        //    diorama->timer = 12;
+        if (button->disabled)
+           diorama->timer = 12;
     }
 }
 
@@ -77,10 +77,11 @@ void MainMenu_Initialize(void)
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, diorama->position.x, diorama->position.y)) {
             MainMenu->dioramaPtr = (Entity *)diorama;
-            // diorama->parent = MainMenu->menuControlPtr;
+            diorama->parent = MainMenu->menuControlPtr;
         }
     }
 
+#if RETRO_USE_PLUS
     int button1Frame         = 1;
     int button2Frame         = 2;
     int button3Frame         = 3;
@@ -132,6 +133,7 @@ void MainMenu_Initialize(void)
     button->frameID    = 7;
     button->transition = false;
     button->stopMusic  = false;
+#endif
 }
 
 int MainMenu_ReturnToTitleOption(void)
@@ -179,44 +181,55 @@ void MainMenu_ChangeMenu(void)
     EntityUIButton *button = (EntityUIButton *)RSDK_sceneInfo->entity;
     switch (button->frameID) {
         case 0:
-            if (API.GetUserStorageNoSave()) {
+            if (noSave) {
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
                 EntityUIControl *saveSelect = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
                 saveSelect->activeEntityID  = 7;
-                saveSelect->dwordCC         = 0;
-                ManiaModeMenu->field_28     = -1;
+#if RETRO_USE_PLUS
+                saveSelect->dwordCC     = 0;
+                ManiaModeMenu->field_28 = -1;
                 for (int i = 0; i < saveSelect->unknownCount1; ++i) {
                     Entity *store          = RSDK_sceneInfo->entity;
                     RSDK_sceneInfo->entity = (Entity *)saveSelect->entities[i];
-                    // UISaveSlot_Unknown21();
+                    UISaveSlot_Unknown21();
                     RSDK_sceneInfo->entity = store;
                 }
+#endif
                 UIControl_MatchMenuTag("Save Select");
             }
             break;
         case 1:
+#if RETRO_USE_PLUS
             if (API.CheckDLC(DLC_PLUS)) {
-                //EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
-                //control->activeEntityID  = 0;
-                //control->dwordCC         = 0;
+                // EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
+                // control->activeEntityID  = 0;
+                // control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack");
             }
             else {
-                //EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
-                //control->activeEntityID  = 0;
-                //control->dwordCC         = 0;
+                // EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
+                // control->activeEntityID  = 0;
+                // control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
+#else
+            UIControl_MatchMenuTag("Time Attack");
+#endif
             break;
         case 2:
+#if RETRO_USE_PLUS
             if (API.CheckDLC(DLC_PLUS))
                 UIControl_MatchMenuTag("Competition");
             else
                 UIControl_MatchMenuTag("Competition Legacy");
+#else
+            UIControl_MatchMenuTag("Competition");
+#endif
             break;
         case 3: UIControl_MatchMenuTag("Options"); break;
+#if RETRO_USE_PLUS
         case 4: UIControl_MatchMenuTag("Extras"); break;
         case 5:
             if (API.GetUserStorageNoSave()) {
@@ -229,7 +242,7 @@ void MainMenu_ChangeMenu(void)
                 for (int i = 0; i < encoreSaveSel->unknownCount1; ++i) {
                     Entity *store          = RSDK_sceneInfo->entity;
                     RSDK_sceneInfo->entity = (Entity *)encoreSaveSel->entities[i];
-                    // UISaveSlot_Unknown21();
+                    UISaveSlot_Unknown21();
                     RSDK_sceneInfo->entity = store;
                 }
                 UIControl_MatchMenuTag("Encore Mode");
@@ -247,14 +260,15 @@ void MainMenu_ChangeMenu(void)
                     Localization_GetString(&buffer, STR_CONNECTINGTOEGS);
                     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(buffer);
                     if (dialog) {
-                        UIDialog_AddButton(2, dialog, MainMenu_BuyPlusDialogCB, 1);
-                        UIDialog_AddButton(3, dialog, 0, 1);
+                        UIDialog_AddButton(2, dialog, MainMenu_BuyPlusDialogCB, true);
+                        UIDialog_AddButton(3, dialog, 0, true);
                         UIDialog_Setup(dialog);
                     }
                 }
             }
 #endif
             break;
+#endif
         default: break;
     }
 }
@@ -308,7 +322,7 @@ void MainMenu_Unknown3(void)
 
 void MainMenu_Unknown4()
 {
-    //((EntityUIDiorama *)MainMenu->dioramaPtr)->field_5C = -1;
+    ((EntityUIDiorama *)MainMenu->dioramaPtr)->dioramaSubID = -1;
 }
 
 void MainMenu_EditorDraw(void) {}

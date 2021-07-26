@@ -35,21 +35,29 @@ typedef struct {
     int touchCountUnknown;  
     bool32 flag;
     bool32 disabled;
+    // Split
     bool32 isNewSave;
+#if RETRO_USE_PLUS
     StateMachine(stateUnknown);
+#endif
     int listID;
     int frameID;
-    // Split
     int saveZoneID;
     int saveLives;
+#if RETRO_USE_PLUS
     int saveContinues;
+#endif
     int saveEmeralds;
+#if RETRO_USE_PLUS
     byte saveEncorePlayer;
     byte saveEncoreBuddy;
     byte saveEncoreFriends[3];
+#endif
     int type;
     int slotID;
+#if RETRO_USE_PLUS
     bool32 encoreMode;
+#endif
     int zoneID;
     int field_13C;
     int field_140;
@@ -57,6 +65,7 @@ typedef struct {
     int field_148;
     int field_14C;
     int radius;
+    #if RETRO_USE_PLUS
     EntityFXRuby *fxRuby;
     bool32 debugEncoreDraw;
     byte dCharPoint;
@@ -64,6 +73,7 @@ typedef struct {
     byte dCharStock1;
     byte dCharStock2;
     byte dCharStock3;
+    #endif
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -95,10 +105,12 @@ void UISaveSlot_Serialize(void);
 
 // Extra Entity Functions
 byte UISaveSlot_Unknown1(byte id);
+#if RETRO_USE_PLUS
 void UISaveSlot_Unknown2(byte playerID, bool32 isSilhouette, byte buddyID, byte *friendIDs, byte friendCount, int drawX, int drawY);
+#endif
 void UISaveSlot_Unknown3(int drawX, int drawY);
 void UISaveSlot_DrawPlayerInfo(int drawX, int drawY);
-void UISaveSlot_SetupButtonElement(void);
+void UISaveSlot_SetupButtonElements(void);
 void UISaveSlot_Unknown6(void);
 void UISaveSlot_LoadSaveInfo(void);
 void UISaveSlot_Unknown8(void);

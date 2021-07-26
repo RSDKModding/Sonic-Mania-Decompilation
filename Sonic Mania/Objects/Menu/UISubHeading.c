@@ -293,13 +293,21 @@ void UISubHeading_StartNewSave(void)
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
+#if RETRO_USE_PLUS
     int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+#endif
     TimeAttackData_ClearOptions();
     char *tag = (char *)&((char *)&globals->menuParam)[90];
     RSDK.GetCString(tag, &control->tag);
     globals->menuParam[87] = control->field_D8;
     globals->menuParam[90] = 0;
+#if RETRO_USE_PLUS
     globals->gameMode      = entity->encoreMode != false;
+#else
+    globals->gameMode = MODE_MANIA;
+#endif
 
     bool32 loadingSave = false;
     if (entity->type) {
@@ -307,22 +315,30 @@ void UISubHeading_StartNewSave(void)
         globals->continues  = 0;
         globals->saveSlotID = NO_SAVE_SLOT;
 #if !RETRO_USE_PLUS
-        globals->gameMode = MODE_NOSAVE;
+        globals->gameMode  = MODE_NOSAVE;
+        globals->medalMods = UISubHeading_GetMedalMods();
 #endif
     }
     else {
         globals->saveSlotID = entity->slotID;
         globals->medalMods  = 0;
         if (entity->isNewSave) {
+#if RETRO_USE_PLUS
             int *saveData = SaveGame_GetDataPtr(entity->slotID % 8, entity->encoreMode);
+#else
+            int *saveData = SaveGame_GetDataPtr(entity->slotID % 8);
+#endif
+
             memset(saveData, 0, 0x400);
+#if RETRO_USE_PLUS
             if (globals->gameMode != MODE_ENCORE)
+#endif
                 saveRAM[22] = 1;
-            saveRAM[0x17] = entity->frameID;
-            saveRAM[0x18] = 0;
-            saveRAM[0x19] = 3;
-            saveRAM[0x1C] = entity->saveEmeralds;
-            saveRAM[0x1D] = 0;
+            saveRAM[23] = entity->frameID;
+            saveRAM[24] = 0;
+            saveRAM[25] = 3;
+            saveRAM[28] = entity->saveEmeralds;
+            saveRAM[29] = 0;
             UIWaitSpinner_Wait();
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
@@ -338,6 +354,7 @@ void UISubHeading_StartNewSave(void)
         }
     }
 
+#if RETRO_USE_PLUS
     if (entity->encoreMode) {
         globals->medalMods = getMod(MEDAL_NOTIMEOVER);
         saveRAM[33]        = globals->medalMods;
@@ -345,6 +362,7 @@ void UISubHeading_StartNewSave(void)
     else {
         globals->medalMods = UISubHeading_GetMedalMods();
         saveRAM[33]        = globals->medalMods;
+#endif
         switch (entity->frameID) {
             case 0:
             case 1: globals->playerID = ID_SONIC; break;
@@ -363,9 +381,12 @@ void UISubHeading_StartNewSave(void)
         else if (!entity->frameID) {
             globals->playerID |= ID_TAILS_ASSIST;
         }
+#if RETRO_USE_PLUS
     }
+#endif
 
     if (entity->type == 1 || entity->isNewSave) {
+#if RETRO_USE_PLUS
         if (entity->encoreMode) {
             globals->playerID          = ID_SONIC;
             globals->stock             = 0;
@@ -374,14 +395,16 @@ void UISubHeading_StartNewSave(void)
             globals->suppressTitlecard = true;
             RSDK.LoadScene("Cutscenes", "Angel Island Zone Encore");
         }
-        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down))
-                 && entity->type == 1) {
+        else
+#endif
+            if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
             RSDK.LoadScene("Presentation", "Level Select");
         }
         else {
             RSDK.LoadScene("Cutscenes", "Angel Island Zone");
         }
     }
+#if RETRO_USE_PLUS
     else if (entity->encoreMode) {
         globals->playerID       = saveRAM[68];
         globals->stock          = saveRAM[67];
@@ -389,6 +412,7 @@ void UISubHeading_StartNewSave(void)
         RSDK.LoadScene("Encore Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
     }
+#endif
     else {
         RSDK.LoadScene("Mania Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);

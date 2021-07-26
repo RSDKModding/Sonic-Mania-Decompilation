@@ -2,12 +2,6 @@
 
 ObjectSaveGame *SaveGame;
 
-#if RETRO_USE_PLUS
-#define noSave API.GetUserStorageNoSave()
-#else
-#define noSave globals->noSave
-#endif
-
 void SaveGame_Update(void) {}
 void SaveGame_LateUpdate(void) {}
 void SaveGame_StaticUpdate(void) {}
@@ -31,6 +25,14 @@ int *SaveGame_GetDataPtr(int slot, bool32 encore)
 
     if (encore)
         return &globals->saveRAM[0x100 * (slot % 3 + 10)];
+    else
+        return &globals->saveRAM[0x100 * (slot % 8)];
+}
+#else
+int *SaveGame_GetDataPtr(int slot)
+{
+    if (slot == NO_SAVE_SLOT)
+        return globals->noSaveSlot;
     else
         return &globals->saveRAM[0x100 * (slot % 8)];
 }
@@ -192,13 +194,13 @@ void SaveGame_SaveLoadedCB(int status)
     if (status) {
         foreach_all(UISaveSlot, entity)
         {
-            /*if (!*(_DWORD *)(entity + 300)) {
+            if (!entity->type) {
                 Entity* store                     = RSDK_sceneInfo->entity;
-                RSDK_sceneInfo->entity = (RSDK_ENTITY *)entity;
-                UISaveSlot_Unknown7();
+                RSDK_sceneInfo->entity = (Entity *)entity;
+                UISaveSlot_LoadSaveInfo();
                 UISaveSlot_Unknown8();
                 RSDK_sceneInfo->entity = store;
-            }*/
+            }
         }
         SaveGame_ShuffleBSSID();
         SaveGame_PrintSaveProgress();
@@ -210,8 +212,7 @@ void SaveGame_SaveLoadedCB(int status)
         globals->taTableLoaded        = STATUS_CONTINUE;
         TimeAttackData->loadEntityPtr = RSDK_sceneInfo->entity;
         TimeAttackData->loadCallback  = NULL;
-        ushort table                  = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
-        globals->taTableID            = table;
+        globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
         if (globals->taTableID == 0xFFFF) {
             LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
             globals->taTableLoaded = STATUS_ERROR;
@@ -719,7 +720,7 @@ void SaveGame_PrintSaveProgress(void)
         case 2: LogHelpers_Print("GOOD ENDING!\n"); break;
     }
 
-    byte *medals = &saveRAM[0x15];
+    byte *medals = (byte *)&saveRAM[0x15];
     medals       = &medals[2]; // offset by 2 bytes
     for (int m = 0; m < 0x20; ++m) {
         switch (medals[m]) {

@@ -50,22 +50,26 @@ typedef struct {
     bool32 noWidgets;
     bool32 resetSelection;
     byte unknownCount1;
+#if RETRO_USE_PLUS
     byte unknownCount2;
+#endif
     byte rowCount;
     byte columnCount;
     byte startingID;
     Vector2 size;
     Vector2 cameraOffset;
     Vector2 scrollSpeed;
-    int noClamp;
-    int noWrap;
+#if RETRO_USE_PLUS
+    bool32 noClamp;
+    bool32 noWrap;
+#endif
     Vector2 startPos;
     Vector2 posUnknown;
     int childHasFocus;
     int dialogHasFocus;
     int popoverHasFocus;
     int dwordC4;
-    int selectionDisabled;
+    bool32 selectionDisabled;
     int dwordCC;
     int backoutTimer;
     int storedEntityID;

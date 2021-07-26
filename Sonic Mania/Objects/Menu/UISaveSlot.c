@@ -5,7 +5,7 @@ ObjectUISaveSlot *UISaveSlot;
 void UISaveSlot_Update(void)
 {
     RSDK_THIS(UISaveSlot);
-    UISaveSlot_SetupButtonElement();
+    UISaveSlot_SetupButtonElements();
     if (entity->textSpriteIndex != UIWidgets->textSpriteIndex) {
         UISaveSlot_Unknown6();
         UISaveSlot_Unknown8();
@@ -160,10 +160,18 @@ void UISaveSlot_Draw(void)
 
             drawPos.x = entity->position.x;
             drawPos.y = entity->position.y + 0x100000;
-            if (!entity->encoreMode || entity->type) {
+            if (
+#if RETRO_USE_PLUS
+                !entity->encoreMode ||
+#endif
+                entity->type) {
+#if RETRO_USE_PLUS
                 if (!entity->saveContinues) {
                     drawPos.y += 0x20000;
                 }
+#else
+                drawPos.y += 0x20000;
+#endif
             }
             else {
                 drawPos.y += 0x80000;
@@ -199,7 +207,9 @@ void UISaveSlot_Draw(void)
         if (entity->flag && !(entity->field_13C & 8)) {
             drawPos.x = entity->position.x;
             drawPos.y = entity->position.y;
+#if RETRO_USE_PLUS
             if (!entity->encoreMode) {
+#endif
                 if (entity->type == 1) {
                     drawPos.y -= 0x60000;
                     UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
@@ -208,11 +218,13 @@ void UISaveSlot_Draw(void)
                     drawPos.y += 0x200000;
                     UIWidgets_Unknown8(64, drawPos.x, drawPos.y);
                 }
+#if RETRO_USE_PLUS
             }
             else if (entity->listID == 1) {
                 drawPos.y -= 0x300000;
                 UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
             }
+#endif
         }
     }
     RSDK.DrawCircle(RSDK_screens->centerX, RSDK_screens->centerY, entity->radius, 0, entity->alpha, INK_ALPHA, true);
@@ -256,6 +268,7 @@ byte UISaveSlot_Unknown1(byte id)
     return ID_NONE;
 }
 
+#if RETRO_USE_PLUS
 void UISaveSlot_Unknown2(byte playerID, bool32 isSilhouette, byte buddyID, byte *friendIDs, byte friendCount, int drawX, int drawY)
 {
     RSDK_THIS(UISaveSlot);
@@ -329,6 +342,7 @@ void UISaveSlot_Unknown2(byte playerID, bool32 isSilhouette, byte buddyID, byte 
         }
     }
 }
+#endif
 
 void UISaveSlot_Unknown3(int drawX, int drawY)
 {
@@ -343,11 +357,14 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
     int buddyID     = 0;
     int friendCount = 0;
 
+#if RETRO_USE_PLUS
     if (!entity->encoreMode) {
+#endif
         int frames[]              = { 3, 0, 1, 2, 4, 5 };
         entity->animator3.frameID = frames[entity->frameID];
         entity->animator2.frameID = frames[entity->frameID];
     }
+#if RETRO_USE_PLUS
     else if (!RSDK_sceneInfo->inEditor) {
         if (!entity->isNewSave && entity->type != 1) {
             playerID = entity->saveEncorePlayer;
@@ -423,6 +440,7 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
         entity->animator2.frameID = 6;
         entity->animator3.frameID = 6;
     }
+#endif
 
     drawX += 4 * entity->field_144;
     drawY += 4 * entity->field_144;
@@ -444,6 +462,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 21, &entity->animator5, true, 0);
 
     int playerID = 0;
+#if RETRO_USE_PLUS
     if (entity->encoreMode) {
         if (entity->isNewSave || entity->type == 1)
             return;
@@ -468,9 +487,12 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
         }
     }
     else {
+#endif
         int frames[] = { 0, 0, 1, 2, 3, 4 };
         playerID     = frames[entity->frameID];
+#if RETRO_USE_PLUS
     }
+#endif
     entity->animator4.frameID = playerID;
     entity->animator5.frameID = playerID;
 
@@ -480,7 +502,11 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
 
     int retries[2];
     retries[0] = min(entity->saveLives, 99);
+#if RETRO_USE_PLUS
     retries[1] = min(entity->saveContinues, 99);
+#else
+    retries[1] = 0;
+#endif
 
     Vector2 positions[2];
     positions[0].x = drawX;
@@ -488,7 +514,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     positions[1].y = drawY;
     positions[1].x = drawX;
 
-    int count = 0;
+    int count = 1;
     if (retries[1] <= 0) {
         positions[0].x = drawX - 0x20000;
     }
@@ -497,12 +523,17 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
         positions[1].x = drawX + 0x170000;
         count          = 2;
     }
+
     for (int i = 0; i < count; ++i) {
         Vector2 drawPos;
 
         drawPos.x = positions[i].x;
         drawPos.y = positions[i].y;
-        if (i || !entity->encoreMode) {
+        if (i
+#if RETRO_USE_PLUS
+            || !entity->encoreMode
+#endif
+        ) {
             entity->animator1.frameID = 3;
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
@@ -520,7 +551,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     }
 }
 
-void UISaveSlot_SetupButtonElement(void)
+void UISaveSlot_SetupButtonElements(void)
 {
     RSDK_THIS(UISaveSlot);
     entity->touchCB  = UIButton_Unknown7;
@@ -531,7 +562,11 @@ void UISaveSlot_SetupButtonElement(void)
     entity->options7 = UISaveSlot_Unknown17;
     entity->options8 = UISaveSlot_Unknown18;
 
+#if RETRO_USE_PLUS
     int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+#endif
     if (entity->type == 1) {
         entity->touchPos1[0].x       = 0x600000;
         entity->touchPos1[0].y       = 0x440000;
@@ -592,12 +627,21 @@ void UISaveSlot_SetupButtonElement(void)
 void UISaveSlot_Unknown6(void)
 {
     RSDK_THIS(UISaveSlot);
+#if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 0, &entity->animator1, true, 0);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 0, &entity->animator10, true, 2);
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 2, &entity->animator11, true, 0);
+#else
+    RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 1, &entity->animator2, true, 3);
+    RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 2, &entity->animator3, true, 3);
+    RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 3, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 0, &entity->animator9, true, 2);
+#endif
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 7, &entity->animator9, true, 0);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 4, &entity->animator6, true, 0);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 5, &entity->animator7, true, 0);
+
     if (entity->type)
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 2, &entity->animator8, true, 2);
     else
@@ -608,9 +652,14 @@ void UISaveSlot_Unknown6(void)
 void UISaveSlot_LoadSaveInfo(void)
 {
     RSDK_THIS(UISaveSlot);
-    int *saveRAM  = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#if RETRO_USE_PLUS
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+#endif
     int saveState = saveRAM[22];
     if (saveState == 1 || saveState == 2) {
+#if RETRO_USE_PLUS
         if (entity->encoreMode) {
             entity->saveEncorePlayer = saveRAM[68] & 0xFF;
             entity->saveEncoreBuddy  = (saveRAM[68] >> 8) & 0xFF;
@@ -627,36 +676,47 @@ void UISaveSlot_LoadSaveInfo(void)
             entity->frameID = entity->saveEncorePlayer;
         }
         else {
+#endif
             entity->frameID = saveRAM[23];
+#if RETRO_USE_PLUS
         }
+#endif
     }
 
     switch (saveState) {
         default: break;
         case 0:
-            entity->saveZoneID    = 0;
-            entity->saveEmeralds  = 0;
-            entity->saveLives     = 3;
+            entity->saveZoneID   = 0;
+            entity->saveEmeralds = 0;
+            entity->saveLives    = 3;
+#if RETRO_USE_PLUS
             entity->saveContinues = 0;
             entity->frameID       = entity->encoreMode ? 6 : 0;
-            entity->isNewSave   = true;
-            entity->listID        = 0;
+#else
+            entity->frameID = 0;
+#endif
+            entity->isNewSave = true;
+            entity->listID    = 0;
             break;
         case 1:
-            entity->saveZoneID    = saveRAM[24];
-            entity->saveEmeralds  = saveRAM[28];
-            entity->saveLives     = saveRAM[25];
+            entity->saveZoneID   = saveRAM[24];
+            entity->saveEmeralds = saveRAM[28];
+            entity->saveLives    = saveRAM[25];
+#if RETRO_USE_PLUS
             entity->saveContinues = saveRAM[29];
-            entity->isNewSave   = false;
-            entity->listID        = 0;
+#endif
+            entity->isNewSave = false;
+            entity->listID    = 0;
             break;
         case 2:
-            entity->saveZoneID    = 255;
-            entity->saveEmeralds  = saveRAM[28];
-            entity->saveLives     = saveRAM[25];
+            entity->saveZoneID   = 255;
+            entity->saveEmeralds = saveRAM[28];
+            entity->saveLives    = saveRAM[25];
+#if RETRO_USE_PLUS
             entity->saveContinues = saveRAM[29];
-            entity->listID        = 1;
-            entity->isNewSave   = false;
+#endif
+            entity->listID    = 1;
+            entity->isNewSave = false;
             break;
     }
     UISaveSlot_Unknown6();
@@ -671,9 +731,11 @@ void UISaveSlot_Unknown8(void)
     if (entity->type == 0) {
         entity->animator8.frameID = entity->saveZoneID;
         if (entity->zoneID) {
+#if RETRO_USE_PLUS
             if (entity->encoreMode)
                 RSDK.CopyPalette(((entity->saveZoneID >> 3) + 4), 32 * entity->saveZoneID, 0, 224, 32);
             else
+#endif
                 RSDK.CopyPalette(((entity->saveZoneID >> 3) + 1), 32 * entity->saveZoneID, 0, 224, 32);
         }
     }
@@ -685,7 +747,11 @@ int UISaveSlot_DeleteDLG_CB(void)
     EntityUISaveSlot *saveSlot = (EntityUISaveSlot *)dialog->entityPtr;
     dialog->parent->state      = 0;
     UIWaitSpinner_Wait();
+#if RETRO_USE_PLUS
     int *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8, saveSlot->encoreMode);
+#else
+    int *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8);
+#endif
     memset(saveRAM, 0, 0x400);
     SaveGame_SaveFile(UISaveSlot_DeleteSaveCB);
     return 1;
@@ -714,7 +780,11 @@ void UISaveSlot_Unknown9(void)
 {
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
-    int *saveRAM             = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#if RETRO_USE_PLUS
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+#endif
 
     entity->active = ACTIVE_NORMAL;
     UIControl_Unknown15(control, entity->position.x, 0);
@@ -901,22 +971,27 @@ void UISaveSlot_Unknown19(void)
         UISaveSlot_Unknown8();
         entity->field_148 = 0x4000;
         entity->field_14C = 0x8000;
+#if RETRO_USE_PLUS
+        entity->stateUnknown = StateMachine_None;
+#endif
         if (!entity->isNewSave && entity->type != 1) {
             if (entity->listID) {
                 entity->state = UISaveSlot_Unknown27;
             }
             else {
-                entity->state        = UISaveSlot_Unknown25;
-                entity->stateUnknown = StateMachine_None;
+                entity->state = UISaveSlot_Unknown25;
             }
         }
+#if RETRO_USE_PLUS
         else if (entity->encoreMode) {
-            entity->state        = UISaveSlot_Unknown25;
-            entity->stateUnknown = StateMachine_None;
+            entity->state = UISaveSlot_Unknown25;
         }
+#endif
         else {
-            entity->state        = UISaveSlot_Unknown24;
+            entity->state = UISaveSlot_Unknown24;
+#if RETRO_USE_PLUS
             entity->stateUnknown = UISaveSlot_Unknown26;
+#endif
         }
     }
 }
@@ -933,10 +1008,18 @@ void UISaveSlot_Unknown20(void)
 void UISaveSlot_Unknown21(void)
 {
     RSDK_THIS(UISaveSlot);
+#if RETRO_USE_PLUS
     int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else
+    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+#endif
 
     if (!saveRAM[22]) {
+#if RETRO_USE_PLUS
         int frame = entity->encoreMode ? 6 : 0;
+#else
+        int frame = 0;
+#endif
         if (entity->frameID != frame) {
             entity->frameID = frame;
             UISaveSlot_Unknown8();
@@ -1009,6 +1092,7 @@ void UISaveSlot_Unknown28(void)
     RSDK_THIS(UISaveSlot);
 
     ++entity->timer;
+#if RETRO_USE_PLUS
     if (entity->encoreMode && (entity->isNewSave || entity->type == 1)) {
         EntityFXRuby *fxRuby = entity->fxRuby;
         int rubyY            = entity->position.y;
@@ -1046,6 +1130,7 @@ void UISaveSlot_Unknown28(void)
         }
     }
     else {
+#endif
         if (entity->timer == 32)
             RSDK.PlaySFX(UIWidgets->sfx_Warp, false, 255);
         if (entity->timer > 32) {
@@ -1056,7 +1141,9 @@ void UISaveSlot_Unknown28(void)
             StateMachine_Run(entity->options2);
             entity->state = StateMachine_None;
         }
+#if RETRO_USE_PLUS
     }
+#endif
 }
 
 void UISaveSlot_EditorDraw(void) {}

@@ -62,7 +62,27 @@ void MenuSetup_StaticUpdate(void)
 #if RETRO_USE_PLUS
     DialogRunner_GetUserAuthStatus();
 #else
-    APICallback_GetUserAuthStatus();
+    int status = APICallback_GetUserAuthStatus();
+
+    bool32 flag = false;
+    if (status == STATUS_ERROR)
+        flag = APICallback->promptPreferenceStatus == STATUS_NONE;
+
+    if (flag) {
+        APICallback->promptPreferenceStatus = STATUS_ERROR;
+    }
+    else {
+        flag = false;
+        if (status == STATUS_FORBIDDEN)
+            flag = APICallback->promptPreferenceStatus == STATUS_NONE;
+
+        if (flag) {
+            EntityAPICallback* callback = CREATE_ENTITY(APICallback, APICallback_Unknown10, 0, 0);
+            callback->active = ACTIVE_ALWAYS;
+            APICallback->field_168 = callback;
+            APICallback->field_104 = 1;
+        }
+    }
 #endif
 }
 
@@ -224,7 +244,7 @@ bool32 MenuSetup_InitUserdata(void)
                             RSDK.InitSceneLoad();
                         }
                         else {
-                            DialogRunner_PromptSavePreference(505);
+                            DialogRunner_PromptSavePreference(STATUS_CORRUPT);
                         }
                     }
                 }
@@ -271,6 +291,21 @@ int MenuSetup_GetActiveMenu(void)
     }
     if (control == ManiaModeMenu->encoreSaveSelect || control == ManiaModeMenu->noSaveMenuEncore)
         return 4;
+#else
+    if (control == MenuSetup->mainMenu || control == MenuSetup->extras || control == MenuSetup->options || control == MenuSetup->video
+        || control == MenuSetup->sound || control == MenuSetup->controls_win || control == MenuSetup->controls_KB
+        || control == MenuSetup->controls_PS4 || control == MenuSetup->controls_XB1 || control == MenuSetup->controls_NX
+        || control == MenuSetup->controls_NX_Grip || control == MenuSetup->controls_NX_JoyCon || control == MenuSetup->controls_NX_Pro) {
+        return 0;
+    }
+    if (control == MenuSetup->timeAttack || control == MenuSetup->timeAttackZones || control == MenuSetup->leaderboards
+        || control == MenuSetup->competition || control == MenuSetup->competitionRules || control == MenuSetup->competitionZones) {
+        return 1;
+    }
+    if (control == MenuSetup->competitionRound || control == MenuSetup->competitionTotal)
+        return 2;
+    if (control == MenuSetup->saveSelect || control == MenuSetup->noSaveMode || control == MenuSetup->secrets)
+        return 3;
 #endif
     return 0;
 }

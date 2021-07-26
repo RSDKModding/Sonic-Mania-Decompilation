@@ -97,7 +97,7 @@ void OptionsMenu_Initialize(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
                                       &hitbox, diorama->position.x, diorama->position.y)) {
             OptionsMenu->diorama = (Entity *)diorama;
-            // diorama->parent      = (Entity *)OptionsMenu->videoControl;
+            diorama->parent      = (Entity *)OptionsMenu->videoControl;
         }
     }
 
@@ -626,7 +626,7 @@ void OptionsMenu_Unknown29(int status)
 
     TimeAttackData_ClearOptions();
     char *tag = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
+    strcpy(tag, "Options");
     EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
     menuSetup->active          = ACTIVE_ALWAYS;
     menuSetup->fadeColour      = 0x000000;

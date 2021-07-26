@@ -61,11 +61,11 @@ void TitleSetup_StageLoad(void)
     memset(globals->optionsRAM, 0, 0x200);
 #if RETRO_USE_PLUS
     API.ClearUserDB(globals->replayTableID);
-    globals->replayTableID     = -1;
-    globals->replayTableLoaded = false;
     API.ClearUserDB(globals->taTableID);
-    globals->taTableID     = -1;
-    globals->taTableLoaded = false;
+    globals->replayTableID     = -1;
+    globals->replayTableLoaded = STATUS_NONE;
+    globals->taTableID         = -1;
+    globals->taTableLoaded     = STATUS_NONE;
 #endif
     TitleSetup->spriteIndex    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
     TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
