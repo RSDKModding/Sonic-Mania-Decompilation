@@ -187,15 +187,14 @@ void ReplayRecorder_Buffer_Move(void)
     }
 }
 
-int ReplayRecorder_Unknown4(void)
+void ReplayRecorder_Unknown4(void)
 {
-    HUD->replaySaveEnabled = 1;
+    HUD->replaySaveEnabled = true;
     ActClear->field_2C     = 0;
     ActClear->field_14 = 0;
-    return 1;
 }
 
-int ReplayRecorder_CreateReplayDBEntry(void)
+void ReplayRecorder_CreateReplayDBEntry(void)
 {
     ReplayRecorder->lastUUID  = 0;
     ReplayRecorder->lastRowID = -1;
@@ -221,7 +220,6 @@ int ReplayRecorder_CreateReplayDBEntry(void)
         ReplayRecorder_Buffer_SaveFile(fileName, globals->replayTempWBuffer);
         HUD->replaySaveEnabled = 0;
     }
-    return 1;
 }
 
 void ReplayRecorder_Unknown6(void)
@@ -1474,14 +1472,13 @@ void ReplayRecorder_DeleteReplayCB(int status)
     API.SaveUserDB(globals->replayTableID, ReplayRecorder_DeleteReplaySaveCB);
 }
 
-int ReplayRecorder_DeleteReplaySaveCB(int status)
+void ReplayRecorder_DeleteReplaySaveCB(int status)
 {
     LogHelpers_Print("DeleteReplaySave_CB(%d)", status);
     API.SaveUserDB(globals->taTableID, ReplayRecorder_DeleteReplaySave2CB);
-    return 1;
 }
 
-int ReplayRecorder_DeleteReplaySave2CB(int status)
+void ReplayRecorder_DeleteReplaySave2CB(int status)
 {
     LogHelpers_Print("DeleteReplaySave2_CB(%d)", status);
     if (ReplayDB->deleteCallback) {
@@ -1493,7 +1490,6 @@ int ReplayRecorder_DeleteReplaySave2CB(int status)
         ReplayDB->deleteCallback = NULL;
         ReplayDB->deleteEntity   = NULL;
     }
-    return 1;
 }
 
 int ReplayRecorder_SetStatus(int status)

@@ -51,20 +51,20 @@ void DialogRunner_Serialize(void);
 
 // Extra Entity Functions
 void DialogRunner_HandleCallback(void);
-int DialogRunner_NotifyAutoSave_CB(void);
+void DialogRunner_NotifyAutoSave_CB(void);
 void DialogRunner_NotifyAutoSave(void);
-int DialogRunner_SetNoSaveEnabled(void);
-int DialogRunner_SetNoSaveDisabled(void);
+void DialogRunner_SetNoSaveEnabled(void);
+void DialogRunner_SetNoSaveDisabled(void);
 void DialogRunner_State_CheckNoSave(void);
 void DialogRunner_State_CheckUserAuth(int a1, int a2);
 void DialogRunner_ManageNotifs(int a1);
 void DialogRunner_Wait(int a1);
-int DialogRunner_GetNextNotif(void);
+void DialogRunner_GetNextNotif(void);
 bool32 DialogRunner_CheckUnreadNotifs(void);
 bool32 DialogRunner_NotifyAutosave(void);
 void DialogRunner_GetUserAuthStatus(void);
 void DialogRunner_PromptSavePreference(int id);
-int DialogRunner_Unknown14(void);
+void DialogRunner_Unknown14(void);
 #endif
 
 #endif //! OBJ_DIALOGRUNNER_H

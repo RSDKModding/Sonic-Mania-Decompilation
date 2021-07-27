@@ -60,7 +60,7 @@ void UIDialog_Unknown6(void);
 void UIDialog_Unknown7(void);
 void UIDialog_Close(void);
 bool32 UIDialog_Unknown9(void);
-int UIDialog_Unknown10(void);
+void UIDialog_Unknown10(void);
 void UIDialog_Unknown11(void);
 void UIDialog_Unknown12(void);
 void UIDialog_Unknown13(void);

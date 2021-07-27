@@ -82,7 +82,6 @@ void Spiny_DebugSpawn(void)
 
 void Spiny_DebugDraw(void)
 {
-    RSDK_THIS(Spiny);
     RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }

@@ -24,11 +24,12 @@ void FBZFan_Update(void)
             player->state    = Player_State_Air;
             player->onGround = false;
             int vel          = (entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;
-            if (player->velocity.y <= vel
-                || (player->velocity.y += ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 6)
-                                          + ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 5),
-                    player->velocity.y < vel)) {
-                player->velocity.y = vel;
+            if (player->velocity.y <= vel) {
+                player->velocity.y += ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 6)
+                + ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 5);
+                if (player->velocity.y < vel) {
+                    player->velocity.y = vel;
+                }
             }
 
             if (!((1 << playerID) & FBZFan->activePlayers)) {

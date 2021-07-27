@@ -913,7 +913,7 @@ extern RSDKFunctionTable RSDK;
 #include "SPZ/WeatherMobile.h"
 #include "SPZ/WeatherTV.h"
 #include "HCZ/Whirlpool.h"
-#include "ARZ/Wisp.h"
+#include "Unused/Wisp.h"
 #include "PGZ/WoodChipper.h"
 #include "PGZ/Woodrow.h"
 #include "SSZ/YoyoPulley.h"

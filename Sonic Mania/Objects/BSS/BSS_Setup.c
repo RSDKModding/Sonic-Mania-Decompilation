@@ -99,7 +99,7 @@ void BSS_Setup_StageLoad(void)
     }
     else {
         int max = (playField->width >> 4) * ((playField->height - 32) >> 4);
-        int key = time(0);
+        int key = (int)time(0);
 
         BSS_Setup->flags[0] = RSDK.Random(0, max, &key);
         BSS_Setup->flags[1] = RSDK.Random(0, max, &key);
@@ -1126,10 +1126,13 @@ void BSS_Setup_Unknown12(void)
 
     int i                              = RESERVE_ENTITY_COUNT;
     EntityBSS_Collectable *collectable = NULL;
-    while (collectable = RSDK_GET_ENTITY(i++, BSS_Collectable), collectable->objectID) {
+    
+    collectable = RSDK_GET_ENTITY(i++, BSS_Collectable);
+    while (collectable->objectID != TYPE_BLANK) {
         int ix                  = (collectable->position.x >> 16);
         collectable->position.x = ((x * (ix - screen->centerX) >> 8) + screen->centerX) << 16;
         collectable->position.y -= y;
+        collectable = RSDK_GET_ENTITY(i++, BSS_Collectable);
     }
 }
 

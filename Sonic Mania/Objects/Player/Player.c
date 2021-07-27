@@ -6054,11 +6054,11 @@ void Player_TailsJumpAbility(void)
 {
     RSDK_THIS(Player);
     if (entity->jumpPress && entity->jumpAbilityTimer == 1
-        && (entity->stateInput != Player_ProcessP2Input_AI || entity->up
+        && (entity->stateInput != Player_ProcessP2Input_AI || (entity->up
 #if RETRO_USE_PLUS
             && globals->gameMode != MODE_ENCORE
 #endif
-            )
+            ))
 #if RETRO_GAMEVER == VER_100
         && !Player_CheckGoSuper(entity, SaveGame->saveRAM[28])
 #endif
@@ -6089,11 +6089,11 @@ void Player_KnuxJumpAbility(void)
 
     if (entity->jumpPress && entity->jumpAbilityTimer == 1
         && (entity->stateInput != Player_ProcessP2Input_AI
-            || entity->up
+            || (entity->up
 #if RETRO_USE_PLUS
                    && globals->gameMode != MODE_ENCORE
 #endif
-            )
+            ))
 #if RETRO_GAMEVER == VER_100
         && !Player_CheckGoSuper(entity, SaveGame->saveRAM[28])
 #endif
@@ -6132,11 +6132,11 @@ void Player_MightyJumpAbility(void)
     if (entity->jumpAbilityTimer <= 1) {
         if (entity->jumpPress && entity->jumpAbilityTimer == 1
             && (entity->stateInput != Player_ProcessP2Input_AI
-                || entity->up
+                || (entity->up
 #if RETRO_USE_PLUS
                        && globals->gameMode != MODE_ENCORE
 #endif
-                )) {
+                ))) {
             if (!entity->invertGravity) {
                 entity->velocity.x >>= 1;
                 if (entity->underwater)
@@ -6177,11 +6177,11 @@ void Player_RayJumpAbility(void)
     
     if (entity->jumpPress && entity->jumpAbilityTimer == 1
         && (entity->stateInput != Player_ProcessP2Input_AI
-            || entity->up
+            || (entity->up
 #if RETRO_USE_PLUS
                    && globals->gameMode != MODE_ENCORE
 #endif
-            )) {
+            ))) {
         if (!entity->invertGravity) {
             int xDif                 = entity->velocity.x - (entity->velocity.x >> 3);
             entity->jumpAbilityTimer = 0;

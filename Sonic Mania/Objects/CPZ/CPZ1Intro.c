@@ -95,12 +95,18 @@ void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int va
 bool32 CPZ1Intro_CheckSonicAnimFinish(void)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
+
     return player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1 && player1->playerAnimator.animationTimer == 30;
 }
 
 bool32 CPZ1Intro_CheckTailsAnimFinish(int timer)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
+
 #if RETRO_USE_PLUS
     if (player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1 && player1->playerAnimator.animationTimer == 4) {
         RSDK.SetSpriteAnimation(player1->tailSpriteIndex, ANI_IDLE, &player1->tailAnimator, true, 0);
@@ -121,6 +127,9 @@ bool32 CPZ1Intro_CheckTailsAnimFinish(int timer)
 bool32 CPZ1Intro_CheckKnuxAnimFinish(void)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
+
     return player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1 && player1->playerAnimator.animationTimer == 4;
 }
 
@@ -128,12 +137,18 @@ bool32 CPZ1Intro_CheckKnuxAnimFinish(void)
 bool32 CPZ1Intro_CheckMightyAnimFinish(void)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
+
     return player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1 && player1->playerAnimator.animationTimer == 4;
 }
 
 bool32 CPZ1Intro_CheckRayAnimFinish(void)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
+
     return player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1 && player1->playerAnimator.animationTimer == 4;
 }
 #endif
@@ -200,6 +215,9 @@ bool32 CPZ1Intro_Unknown6(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(host);
+    unused(camera);
+
 
     if (player2->objectID == Player->objectID) {
         if (player1->onGround && player2->onGround)
@@ -216,6 +234,7 @@ bool32 CPZ1Intro_Unknown7(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     if (!host->timer) {
         player1->state = Player_State_None;
@@ -238,6 +257,8 @@ bool32 CPZ1Intro_Unknown8(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+
 
     if (!host->timer) {
         RSDK.PlaySFX(CPZ1Intro->sfxChemDrop, 0, 255);
@@ -273,6 +294,8 @@ bool32 CPZ1Intro_Unknown9(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+
     if (!host->timer) {
         switch (globals->playerID & 0xFF) {
             case ID_SONIC:

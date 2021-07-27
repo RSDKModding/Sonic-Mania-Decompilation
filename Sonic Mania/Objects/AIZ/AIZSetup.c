@@ -475,7 +475,6 @@ bool32 AIZSetup_Cutscene1_Unknown7(Entity *h)
 
     EntityAIZKingClaw *claw  = (EntityAIZKingClaw *)AIZSetup->claw;
     EntityPlatform *platform = (EntityPlatform *)AIZSetup->platform;
-    EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2    = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     EntityPhantomRuby *ruby  = (EntityPhantomRuby *)AIZSetup->phantomRuby;
 
@@ -613,10 +612,9 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
         }
     }
     else {
-        fxRuby->fadeWhite;
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer = host->field_68 + 150)
+                if (host->timer == host->field_68 + 150)
                     return true;
             }
             else {
@@ -849,6 +847,8 @@ bool32 AIZSetup_Cutscene2_Unknown8(Entity *h)
 bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    unused(host);
+    
     RSDK.LoadScene("Cutscenes", "Green Hill Zone");
     RSDK.InitSceneLoad();
     return true;

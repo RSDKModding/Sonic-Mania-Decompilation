@@ -141,7 +141,6 @@ void ContinuePlayer_Unknown3(void)
 void ContinuePlayer_Unknown4(void)
 {
     RSDK_THIS(ContinuePlayer);
-    entity->groundVel;
     entity->position.x += entity->groundVel;
 }
 

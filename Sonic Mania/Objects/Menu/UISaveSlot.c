@@ -501,9 +501,9 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     animators[1] = &entity->animator5;
 
     int retries[2];
-    retries[0] = min(entity->saveLives, 99);
+    retries[0] = minVal(entity->saveLives, 99);
 #if RETRO_USE_PLUS
-    retries[1] = min(entity->saveContinues, 99);
+    retries[1] = minVal(entity->saveContinues, 99);
 #else
     retries[1] = 0;
 #endif
@@ -741,7 +741,7 @@ void UISaveSlot_Unknown8(void)
     }
 }
 
-int UISaveSlot_DeleteDLG_CB(void)
+void UISaveSlot_DeleteDLG_CB(void)
 {
     EntityUIDialog *dialog     = (EntityUIDialog *)UIDialog->activeDialog;
     EntityUISaveSlot *saveSlot = (EntityUISaveSlot *)dialog->entityPtr;
@@ -754,7 +754,6 @@ int UISaveSlot_DeleteDLG_CB(void)
 #endif
     memset(saveRAM, 0, 0x400);
     SaveGame_SaveFile(UISaveSlot_DeleteSaveCB);
-    return 1;
 }
 
 void UISaveSlot_DeleteSaveCB(int status)

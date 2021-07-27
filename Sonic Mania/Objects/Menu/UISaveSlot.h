@@ -114,7 +114,7 @@ void UISaveSlot_SetupButtonElements(void);
 void UISaveSlot_Unknown6(void);
 void UISaveSlot_LoadSaveInfo(void);
 void UISaveSlot_Unknown8(void);
-int UISaveSlot_DeleteDLG_CB(void);
+void UISaveSlot_DeleteDLG_CB(void);
 void UISaveSlot_DeleteSaveCB(int status);
 void UISaveSlot_Unknown9(void);
 void UISaveSlot_Unknown12(void);

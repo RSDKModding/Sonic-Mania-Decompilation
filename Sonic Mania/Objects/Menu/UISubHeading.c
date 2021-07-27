@@ -262,8 +262,8 @@ void UISubHeading_Unknown10(void)
         }
 
         if (!flag2) {
-            if (entity == (EntityUIControl *)ManiaModeMenu->saveSelectMenu && entity->field_D8 == 8
-                || entity == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect && !entity->field_D8) {
+            if ((entity == (EntityUIControl *)ManiaModeMenu->saveSelectMenu && entity->field_D8 == 8)
+                || (entity == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect && !entity->field_D8)) {
                 prompt->visible = false;
             }
             else {

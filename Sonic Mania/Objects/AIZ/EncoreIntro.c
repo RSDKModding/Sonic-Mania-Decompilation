@@ -558,6 +558,7 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    unused(camera);
 
     RSDK_THIS(EncoreIntro);
     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
@@ -1113,7 +1114,6 @@ bool32 EncoreIntro_CutsceneState_Unknown23(EntityCutsceneSeq *host)
 
 bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host)
 {
-    RSDK_THIS(EncoreIntro);
     EntityFXRuby *fxRuby = (EntityFXRuby *)EncoreIntro->fxRuby;
 
     if (fxRuby->fadeWhite < 512) {

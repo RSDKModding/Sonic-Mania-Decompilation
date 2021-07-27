@@ -68,6 +68,7 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
 
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);

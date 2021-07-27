@@ -270,12 +270,12 @@ int MenuSetup_GetActiveMenu(void)
     Entity *control = (Entity *)UIControl_GetUIControl();
 #if RETRO_USE_PLUS
     if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl
-        || control == OptionsMenu->optionsControl && control != OptionsMenu->videoControl && control != OptionsMenu->soundControl
-               && control != OptionsMenu->dataOptionsControl && control != OptionsMenu->controlsControl_Windows
-               && control != OptionsMenu->controlsControl_KB && control != OptionsMenu->controlsControl_PS4
-               && control != OptionsMenu->controlsControl_XB1 && control != OptionsMenu->controlsControl_NX
-               && control != OptionsMenu->controlsControl_NXGrip && control != OptionsMenu->controlsControl_NXJoycon
-               && control != OptionsMenu->controlsControl_NXPro) {
+        || control == OptionsMenu->optionsControl || control == OptionsMenu->videoControl || control == OptionsMenu->soundControl
+        || control == OptionsMenu->dataOptionsControl || control == OptionsMenu->controlsControl_Windows
+        || control == OptionsMenu->controlsControl_KB || control == OptionsMenu->controlsControl_PS4
+        || control == OptionsMenu->controlsControl_XB1 || control == OptionsMenu->controlsControl_NX
+        || control == OptionsMenu->controlsControl_NXGrip || control == OptionsMenu->controlsControl_NXJoycon
+        || control == OptionsMenu->controlsControl_NXPro) {
         return 0;
     }
     // if (control == TimeAttackMenu->menu1 || control == TimeAttackMenu->menu2 || control == TimeAttackMenu->menu3

@@ -188,8 +188,6 @@ void DNARiser_HandleInteractions(void)
 void DNARiser_State_Unknown3(void)
 {
     RSDK_THIS(DNARiser);
-    int curHeight = entity->curHeight;
-    int height    = entity->height << 16;
     if (entity->curHeight >= entity->height << 16) {
         DNARiser_State_Burst_Helix();
     }

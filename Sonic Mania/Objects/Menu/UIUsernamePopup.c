@@ -124,7 +124,7 @@ void UIUsernamePopup_Unknown6(void)
     else {
         entity->drawFlag = true;
 
-        int val = 32 * max(entity->timer, 0);
+        int val = 32 * maxVal(entity->timer, 0);
         if (val > 0) {
             if (val < 256) {
                 entity->posUnknown.x = val * (-entity->dword6C >> 8);

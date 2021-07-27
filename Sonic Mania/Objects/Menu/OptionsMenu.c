@@ -798,7 +798,6 @@ void OptionsMenu_EraseSaveDataCB(int status)
 
 void OptionsMenu_EraseAllSaveData(void)
 {
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
     for (int i = 0; i < 8; ++i) {
         int *saveRAM = SaveGame_GetDataPtr(i, false);
         memset(saveRAM, 0, 0x400);
@@ -823,8 +822,6 @@ void OptionsMenu_EraseAllSaveData(void)
 
 void OptionsMenu_EraseAllData(void)
 {
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
-
     for (int i = 0; i < 8; ++i) {
         int *saveRAM = SaveGame_GetDataPtr(i, false);
         memset(saveRAM, 0, 0x400);

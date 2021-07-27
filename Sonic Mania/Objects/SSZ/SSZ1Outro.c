@@ -50,6 +50,8 @@ void SSZ1Outro_StageLoad(void)
 bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+    
     RSDK_THIS(SSZ1Outro);
 
     if (!host->timer) {

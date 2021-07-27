@@ -33,11 +33,10 @@ void MainMenu_Serialize(void);
 
 // Extra Entity Functions
 void MainMenu_Initialize(void);
-int MainMenu_ReturnToTitleOption(void);
-int MainMenu_ExitGame(void);
+bool32 MainMenu_ReturnToTitleOption(void);
+void MainMenu_ExitGame(void);
 void MainMenu_ExitGameOption(void);
-int MainMenu_ReturnToTitleOption(void);
-int MainMenu_StartExitGame(void);
+void MainMenu_StartExitGame(void);
 void MainMenu_ChangeMenu(void);
 
 #if RETRO_USE_EGS

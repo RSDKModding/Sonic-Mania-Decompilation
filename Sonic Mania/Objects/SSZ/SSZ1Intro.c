@@ -124,6 +124,7 @@ bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 bool32 SSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     if (player2->objectID == Player->objectID) {
         if (player1 && player2->onGround)

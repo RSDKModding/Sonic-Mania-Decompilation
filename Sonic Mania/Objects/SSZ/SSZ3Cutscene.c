@@ -46,8 +46,6 @@ void SSZ3Cutscene_StageLoad(void) {}
 
 void SSZ3Cutscene_Unknown(void)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
-
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
@@ -149,8 +147,6 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 }
 bool32 SSZ3Cutscene_CutsceneState_Unknown5(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
-
     RSDK_THIS(SSZ3Cutscene);
     EntityPhantomRuby *ruby = entity->ruby;
     EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -237,6 +233,10 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown7(EntityCutsceneSeq *host)
 bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player1);
+    unused(player2);
+    unused(camera);
+    
     RSDK_THIS(SSZ3Cutscene);
     EntityPhantomRuby *ruby = entity->ruby;
 
@@ -319,8 +319,6 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 }
 bool32 SSZ3Cutscene_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 {
-    RSDK_GET_PLAYER(player1, player2, camera);
-
     if (host->timer == 16) {
         RSDK.InitSceneLoad();
         return true;

@@ -49,7 +49,7 @@ void DAControl_Draw(void)
 
     drawPos.x = entity->position.x - 0x700000;
     drawPos.y = entity->position.y + 0x1E0000;
-    for (int i = 0; i < 5; i) {
+    for (int i = 0; i < 5; ++i) {
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         RSDK.DrawSprite(&entity->animator3[i], &drawPos, false);
         drawPos.x += 0x380000;

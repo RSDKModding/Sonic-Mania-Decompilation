@@ -209,7 +209,6 @@ void ActClear_Draw(void)
     drawPos.x = entity->posUnknown6.x;
     drawPos.y = entity->posUnknown6.y;
 
-    int val = 0;
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x             = offset + entity->posUnknown6.x - 0x5C0000;
         entity->data1.frameID = 19;
@@ -300,7 +299,7 @@ void ActClear_Create(void *data)
                 case 4: entity->scoreBonus = 500; break;
                 case 5: entity->scoreBonus = 100; break;
                 case 9:
-                    if (!getMod(MEDAL_NOTIMEOVER) && !RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK
+                    if (!(globals->medalMods & getMod(MEDAL_NOTIMEOVER)) && !RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK
                         && RSDK_sceneInfo->seconds == 59) {
 #if RETRO_USE_PLUS
                         if (globals->gameMode != MODE_ENCORE)

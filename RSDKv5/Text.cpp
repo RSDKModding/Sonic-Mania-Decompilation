@@ -222,15 +222,15 @@ void PrependText(TextInfo *info, char *text)
                 ++text;
                 break;
             case 2:
-                c = text[1] & 0x3F | ((text[0] & 0x1F) << 6);
+                c = (text[1] & 0x3F) | ((text[0] & 0x1F) << 6);
                 text += 2;
                 break;
             case 3:
-                c = text[2] & 0x3F | ((text[1] & 0x3F) << 6) | (text[0] << 12);
+                c = (text[2] & 0x3F) | ((text[1] & 0x3F) << 6) | (text[0] << 12);
                 text += 3;
                 break;
             case 4:
-                c = text[3] & 0x3F | ((text[2] & 0x3F) << 6) | (text[1] << 12);
+                c = (text[3] & 0x3F) | ((text[2] & 0x3F) << 6) | (text[1] << 12);
                 text += 4;
                 break;
             case 5: text += 5; break;
@@ -267,15 +267,15 @@ void AppendText(TextInfo *info, char *text)
                 ++text;
                 break;
             case 2:
-                c = text[1] & 0x3F | ((text[0] & 0x1F) << 6);
+                c = (text[1] & 0x3F) | ((text[0] & 0x1F) << 6);
                 text += 2;
                 break;
             case 3:
-                c = text[2] & 0x3F | ((text[1] & 0x3F) << 6) | (text[0] << 12);
+                c = (text[2] & 0x3F) | ((text[1] & 0x3F) << 6) | (text[0] << 12);
                 text += 3;
                 break;
             case 4:
-                c = text[3] & 0x3F | ((text[2] & 0x3F) << 6) | (text[1] << 12);
+                c = (text[3] & 0x3F) | ((text[2] & 0x3F) << 6) | (text[1] << 12);
                 text += 4;
                 break;
             case 5: text += 5; break;

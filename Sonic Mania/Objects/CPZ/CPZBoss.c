@@ -1,4 +1,5 @@
 #include "SonicMania.h"
+#include <time.h>
 
 ObjectCPZBoss *CPZBoss;
 
@@ -203,7 +204,7 @@ void CPZBoss_State_SetupMatch(void)
 
     if (!CPZBoss_Unknown1() && ++entity->timer == 60) {
         foreach_active(CPZShutter, shutter) { shutter->state = CPZShutter_State_Open; }
-        uint key = time(0);
+        int key = (int)time(0);
         int rand = RSDK.Random(0, 512, &key);
 
         int id = 0;

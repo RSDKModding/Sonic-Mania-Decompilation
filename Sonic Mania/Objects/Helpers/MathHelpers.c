@@ -326,7 +326,7 @@ bool32 MathHelpers_Unknown14(Vector2 *pos, int x1, int y1, Vector2 pos2, Hitbox 
     if (x1 > pos2.x + (left << 16) && x1 < pos2.x + (right << 16) && y1 > pos2.y + (top << 16) && y1 < pos2.y + (bottom << 16))
         return false;
 
-    int posX = 0, posY = 0;
+    int posY = 0;
     if ((x1 ^ pos2.x) & 0xFFFF0000) {
         if (!((y1 ^ pos2.y) & 0xFFFF0000)) {
             if (pos) {

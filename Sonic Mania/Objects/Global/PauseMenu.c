@@ -405,7 +405,7 @@ void PauseMenu_Exit_CB(void)
     }
 }
 
-int PauseMenu_Unknown15(void)
+void PauseMenu_Unknown15(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
     ((EntityUIDialog *)UIDialog->activeDialog)->parent->state = NULL;
@@ -425,7 +425,6 @@ int PauseMenu_Unknown15(void)
                                              (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
     entity->funcPtrUnknown = PauseMenu_Unknown9;
     entity->state          = PauseMenu_Unknown27;
-    return 1;
 }
 
 void PauseMenu_Unknown16(void)
@@ -712,16 +711,15 @@ void PauseMenu_Unknown28(void)
     }
 }
 
-int PauseMenu_Unknown29(void)
+void PauseMenu_Unknown29(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     pauseMenu->timer           = 0;
     pauseMenu->fillTimer       = 0;
     pauseMenu->state           = PauseMenu_Unknown28;
-    return 1;
 }
 
-int PauseMenu_Unknown31(void)
+void PauseMenu_Unknown31(void)
 {
     EntityPauseMenu *entity = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
@@ -748,7 +746,6 @@ int PauseMenu_Unknown31(void)
 #endif
 
     PauseMenu->dword10 = true;
-    return 1;
 }
 
 bool32 PauseMenu_Unknown32(void)

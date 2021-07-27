@@ -491,7 +491,7 @@ void ProcessFrozenObjects()
                     sceneInfo.entity->inBounds = false;
                     for (int s = 0; s < cameraCount; ++s) {
                         int sy = abs(sceneInfo.entity->position.y - cameras[s].position.y);
-                        if (sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
+                        if (sy <= sceneInfo.entity->updateRange.y + cameras[s].offset.y) {
                             sceneInfo.entity->inBounds = true;
                             break;
                         }

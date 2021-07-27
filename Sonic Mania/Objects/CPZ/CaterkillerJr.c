@@ -91,7 +91,6 @@ void CaterkillerJr_StageLoad(void)
 
 void CaterkillerJr_DebugDraw(void)
 {
-    RSDK_THIS(CaterkillerJr);
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }

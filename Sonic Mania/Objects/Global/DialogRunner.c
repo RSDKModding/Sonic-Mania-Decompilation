@@ -70,12 +70,11 @@ void DialogRunner_HandleCallback(void)
     }
 }
 
-int DialogRunner_NotifyAutoSave_CB(void)
+void DialogRunner_NotifyAutoSave_CB(void)
 {
     DialogRunner->field_14    = 0;
     globals->notifiedAutosave = true;
     UIWaitSpinner_Wait2();
-    return 1;
 }
 
 void DialogRunner_NotifyAutoSave(void)
@@ -99,18 +98,16 @@ void DialogRunner_NotifyAutoSave(void)
     }
 }
 
-int DialogRunner_SetNoSaveEnabled(void)
+void DialogRunner_SetNoSaveEnabled(void)
 {
     API.UserStorageStatusUnknown4();
     API.SetUserStorageNoSave(false);
-    return 1;
 }
 
-int DialogRunner_SetNoSaveDisabled(void)
+void DialogRunner_SetNoSaveDisabled(void)
 {
     API.UserStorageStatusUnknown5();
     API.SetUserStorageNoSave(true);
-    return 1;
 }
 
 void DialogRunner_State_CheckNoSave(void)
@@ -241,18 +238,17 @@ void DialogRunner_ManageNotifs(int a1)
     }
 }
 void DialogRunner_Wait(int success) { UIWaitSpinner_Wait2(); }
-int DialogRunner_GetNextNotif(void)
+void DialogRunner_GetNextNotif(void)
 {
     int *saveRAM = NULL;
     if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
-        return 0;
+        return;
     }
     else
         saveRAM = &globals->saveRAM[0x900];
     int id             = SaveGame_GetNextNotif();
     saveRAM[id + 0x35] = true;
-    return 1;
 }
 bool32 DialogRunner_CheckUnreadNotifs(void)
 {
@@ -314,10 +310,9 @@ void DialogRunner_PromptSavePreference(int id)
     dialogRunner->status             = id;
     DialogRunner->entityPtr          = dialogRunner;
 }
-int DialogRunner_Unknown14(void)
+void DialogRunner_Unknown14(void)
 {
     DialogRunner->field_8 = 1;
-    return 1;
 }
 
 void DialogRunner_EditorDraw(void) {}

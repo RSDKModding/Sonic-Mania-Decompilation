@@ -170,8 +170,6 @@ void AIZTornadoPath_Unknown4(void)
 
 void AIZTornadoPath_Unknown5(void)
 {
-    RSDK_THIS(AIZTornadoPath);
-
     foreach_active(AIZTornado, tornado) { tornado->drawOrder = Zone->drawOrderLow; }
 
     if (!tornado->field_94) {

@@ -160,7 +160,7 @@ void BreakBar_HandlePlayerInteractions(void *p)
                     if (debris->position.x < player->position.x)
                         debris->velocity.x = -(abs(debris->position.x - player->position.x) >> 6);
                     if (len > abs(debris->position.x - player->position.x)) {
-                        debris->velocity.y += (2 * (player->velocity.y > 0) - 1) * (max(len - abs(debris->position.x - player->position.x), 0) >> 5);
+                        debris->velocity.y += (2 * (player->velocity.y > 0) - 1) * (maxVal(len - abs(debris->position.x - player->position.x), 0) >> 5);
                     }
                     debris->velocity.y = (3 * ((RSDK.Rand(-12, 12) << 10) + debris->velocity.y)) >> 3;
                     spawnX += 0x80000;
@@ -172,7 +172,7 @@ void BreakBar_HandlePlayerInteractions(void *p)
                         debris->velocity.y = -(abs(debris->position.y - player->position.y) >> 6);
 
                     if (len > abs(debris->position.y - player->position.y)) {
-                        debris->velocity.x += (2 * (player->velocity.x > 0) - 1) * (max(len - abs(debris->position.y - player->position.y), 0) >> 5);
+                        debris->velocity.x += (2 * (player->velocity.x > 0) - 1) * (maxVal(len - abs(debris->position.y - player->position.y), 0) >> 5);
                     }
 
                     debris->velocity.x = (3 * ((RSDK.Rand(-12, 12) << 10) + debris->velocity.x)) >> 3;

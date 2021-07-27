@@ -240,7 +240,6 @@ void ChemicalPool_SpawnDebris(int x, int y)
 void ChemicalPool_SetupColours(void)
 {
     RSDK_THIS(ChemicalPool);
-    entity->type;
 
     switch (entity->type) {
         case 0:

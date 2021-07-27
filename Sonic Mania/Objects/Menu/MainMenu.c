@@ -136,16 +136,15 @@ void MainMenu_Initialize(void)
 #endif
 }
 
-int MainMenu_ReturnToTitleOption(void)
+bool32 MainMenu_ReturnToTitleOption(void)
 {
     MenuSetup_StartReturnToTitle();
-    return 1;
+    return true;
 }
 
-int MainMenu_ExitGame(void)
+void MainMenu_ExitGame(void)
 {
     API.ExitGame();
-    return 1;
 }
 
 void MainMenu_ExitGameOption(void)
@@ -160,7 +159,7 @@ void MainMenu_ExitGameOption(void)
     }
 }
 
-int MainMenu_StartExitGame(void)
+void MainMenu_StartExitGame(void)
 {
     if (UIControl_GetUIControl())
         UIControl_GetUIControl()->state = StateMachine_None;
@@ -173,7 +172,6 @@ int MainMenu_StartExitGame(void)
     menuSetup->timeOut         = 64;
     menuSetup->state           = MenuSetup_Unknown13;
     menuSetup->timedState      = MainMenu_ExitGame;
-    return 1;
 }
 
 void MainMenu_ChangeMenu(void)

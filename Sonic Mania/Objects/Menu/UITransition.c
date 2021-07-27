@@ -207,7 +207,7 @@ void UITransition_State_TransitionOut(void)
 
             offsets[0] = clampVal(entity->timer - 1, 0, 8);
             offsets[1] = clampVal(entity->timer - 5, 0, 8);
-            offsets[2] = min(entity->timer - 1, 8);
+            offsets[2] = minVal(entity->timer - 1, 8);
 
             int val = 32 * offsets[0];
             if (val > 0) {

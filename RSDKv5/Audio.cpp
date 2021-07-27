@@ -326,12 +326,12 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                             }
                         }
 
-                        if (SDL_AudioStreamPut(streamInfo.musicStream, streamInfo.buffer, bytes_read) == -1)
+                        if (SDL_AudioStreamPut(streamInfo.musicStream, streamInfo.buffer, (int)bytes_read) == -1)
                             return;
                     }
 
                     // Now that we know there are enough samples, read them and mix them
-                    int bytes_done = SDL_AudioStreamGet(streamInfo.musicStream, streamInfo.buffer, bytes_wanted);
+                    int bytes_done = SDL_AudioStreamGet(streamInfo.musicStream, streamInfo.buffer, (int)bytes_wanted);
                     if (bytes_done == -1)
                         return;
                     if (bytes_done == 0)
@@ -478,7 +478,7 @@ void LoadStream(ChannelInfo *channel)
             streamInfo.vorbisFile.vi = ov_info(&streamInfo.vorbisFile, -1);
 
 #if RETRO_USING_SDL2
-            streamInfo.musicStream = SDL_NewAudioStream(AUDIO_S16, streamInfo.vorbisFile.vi->channels, streamInfo.vorbisFile.vi->rate,
+            streamInfo.musicStream = SDL_NewAudioStream(AUDIO_S16, streamInfo.vorbisFile.vi->channels, (int)streamInfo.vorbisFile.vi->rate,
                                                         audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq);
             if (!streamInfo.musicStream) {
                 printLog(PRINT_NORMAL, "Failed to create stream: %s", SDL_GetError());
@@ -771,7 +771,7 @@ int PlaySfx(ushort sfx, uint loopPoint, int unknown)
                 if (channels[c].state != CHANNEL_STREAM_LOAD)
                     slot = c;
                 if (channels[c].state != CHANNEL_STREAM_LOAD)
-                    len = channels[c].sampleLength;
+                    len = (uint)channels[c].sampleLength;
             }
         }
     }
@@ -823,7 +823,7 @@ uint GetChannelPos(byte slot)
     if (channels[slot].state == CHANNEL_SFX)
         return channels[slot].bufferPos;
     if (channels[slot].state == CHANNEL_STREAMING) {
-        return ov_pcm_tell(&streamInfo.vorbisFile);
+        return (uint)ov_pcm_tell(&streamInfo.vorbisFile);
     }
     return 0;
 }

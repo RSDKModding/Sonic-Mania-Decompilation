@@ -126,7 +126,7 @@ void WaterfallSound_UpdateCB(int sfxID)
             int x = abs(worldCenterX - sound->posUnk.x);
             int y = abs(worldCenterY - sound->posUnk.y);
 
-            short val      = min(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
+            short val      = minVal(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
             float volume   = (val / -640.0f) + 1.0f;
             float distance = -1.0;
             if (sound->posUnk.x > worldLeft) {
@@ -146,7 +146,7 @@ void WaterfallSound_UpdateCB(int sfxID)
     if (div > 0)
         pan /= volDivisor;
 
-    float volume = min(dist >> 16, 640);
+    float volume = minVal(dist >> 16, 640);
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (volume / -640.0f) + 1.0, clampVal(pan, -1.0, 1.0), 1.0f);
 }
 

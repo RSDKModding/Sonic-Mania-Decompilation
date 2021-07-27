@@ -182,7 +182,7 @@ void HandLauncher_Unknown6(void)
 {
     RSDK_THIS(HandLauncher);
     entity->position = entity->field_74;
-    entity->position.y -= ((entity->field_74.y - entity->playerPos.y) >> 3) * min(entity->field_7C, 8);
+    entity->position.y -= ((entity->field_74.y - entity->playerPos.y) >> 3) * minVal(entity->field_7C, 8);
     if (entity->field_7C > 0)
         entity->field_7C--;
     if (entity->field_7C < 0)
@@ -196,7 +196,7 @@ void HandLauncher_Unknown7(void)
 {
     RSDK_THIS(HandLauncher);
     entity->position = entity->field_74;
-    entity->position.y -= ((entity->field_74.y - entity->playerPos.y) >> 3) * min(entity->field_7C, 8);
+    entity->position.y -= ((entity->field_74.y - entity->playerPos.y) >> 3) * minVal(entity->field_7C, 8);
     if (entity->field_7C < 8)
         entity->field_7C++;
     if (entity->field_7C > 8)
@@ -245,7 +245,7 @@ void HandLauncher_Unknown8(void)
         else if (entity->field_7C < 66) {
             entity->position = entity->playerPos;
             int dist          = (entity->playerPos.y - entity->startPos.y) / 3;
-            entity->position.y -= dist * min(66 - entity->field_7C, 3);
+            entity->position.y -= dist * minVal(66 - entity->field_7C, 3);
             entity->field_7C++;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();
