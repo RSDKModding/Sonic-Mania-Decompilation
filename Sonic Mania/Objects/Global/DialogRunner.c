@@ -245,10 +245,11 @@ void DialogRunner_GetNextNotif(void)
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }
-    else
+    else {
         saveRAM = &globals->saveRAM[0x900];
-    int id             = SaveGame_GetNextNotif();
-    saveRAM[id + 0x35] = true;
+        int id             = SaveGame_GetNextNotif();
+        saveRAM[id + 0x35] = true;
+    }
 }
 bool32 DialogRunner_CheckUnreadNotifs(void)
 {
