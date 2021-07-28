@@ -5,7 +5,8 @@ ObjectTimeAttackMenu *TimeAttackMenu;
 
 void TimeAttackMenu_Update(void)
 {
-
+    RSDK_THIS(TimeAttackMenu);
+    StateMachine_Run(entity->state);
 }
 
 void TimeAttackMenu_LateUpdate(void)

@@ -166,22 +166,22 @@ void SaveGame_LoadFile(void)
 void SaveGame_SaveFile(void (*callback)(int status))
 {
 #if RETRO_USE_PLUS
-    if (noSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
+    if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
-            callback(0);
+            callback(false);
     }
     else {
-        SaveGame->saveEntityPtr = (Entity *)RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
         SaveGame->saveCallback  = callback;
         API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
     }
 #else
-    if (noSave || !SaveGame->saveRAM || globals->saveLoaded != 200) {
+    if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
-            callback(0);
+            callback(false);
     }
     else {
-        SaveGame->saveEntityPtr = (Entity *)RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
         SaveGame->saveCallback = callback;
         APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
     }
@@ -429,7 +429,7 @@ void SaveGame_ShuffleBSSID(void)
         saveRAM = NULL;
     }
     else {
-        if (!noSave) {
+        if (!checkNoSave) {
             if (globals->saveLoaded == STATUS_OK)
                 saveRAM = &globals->saveRAM[0x900];
             else
@@ -481,37 +481,65 @@ void SaveGame_ShuffleBSSID(void)
 }
 int *SaveGame_GetGlobalData(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK)
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK)
         return NULL;
     else
         return &globals->saveRAM[0x900];
 }
+
+float SaveGame_GetCompletionPercent(int *saveRAM)
+{
+    int completeZones    = 0;
+    int medalsGotten     = 0;
+    int unlocksGotten = 0;
+
+    int ending        = saveRAM[0x46];          // 0x946
+    int *zoneComplete = &saveRAM[0x20];         // 0x920
+    int *unlocks      = &saveRAM[0x35];         // 0x933
+    byte *medals      = (byte *)&saveRAM[0x15]; // 0x915
+
+    for (int i = 0; i < 32; ++i) {
+        if (i < 7)
+            unlocksGotten += unlocks[i] == 1;
+        if (i < 12)
+            completeZones += zoneComplete[i] == 1;
+        medalsGotten += medals[i];
+    }
+
+    float zonePercent    = (minVal(completeZones, 12) * 0.55) / 12.0;
+    float medalPercent   = (minVal(medalsGotten, 64) * 0.35) / 64.0;
+    float specialPercent = (minVal(unlocksGotten, 7) * 0.05) / 7.0;
+    float endingPercent  = (minVal(ending, 2) * 0.5) / 2.0;
+    return zonePercent + medalPercent + specialPercent + endingPercent;
+}
+
 void SaveGame_TrackGameProgress(void (*callback)(int))
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+#if RETRO_USE_PLUS
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
-        if (callback)
-            callback(0);
     }
     else if (!globals->saveRAM[0x945]) {
+        float percent = SaveGame_GetCompletionPercent(&globals->saveRAM[0x900]);
         StatInfo stat;
         memset(&stat, 0, sizeof(StatInfo));
-        stat.statID = 3;
-        stat.name   = "GAME_PROGRESS";
-        // stat.data[0]   = SaveGame_Unknown15(&globals->saveRAM[0x900]);
-#if RETRO_USE_PLUS
+        stat.statID   = 3;
+        stat.name     = "GAME_PROGRESS";
+        stat.data[0]  = floatToVoid(percent);
         API.TryTrackStat(&stat);
-#else
-        APICallback_TrackGameProgress(callback, voidToInt(stat.data[0]));
-#endif
         SaveGame_SaveFile(callback);
     }
+    if (callback)
+        callback(0);
+#else
+    APICallback_TrackGameProgress(callback, percent);
+#endif
 }
 void SaveGame_Unknown14(void)
 {
     int *saveRAM = NULL;
 
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK)
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK)
         saveRAM = NULL;
     else
         saveRAM = &globals->saveRAM[0x900];
@@ -526,7 +554,7 @@ void SaveGame_Unknown14(void)
 }
 void SaveGame_UnlockAllMedals(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
         return;
     }
@@ -553,7 +581,7 @@ void SaveGame_UnlockAllMedals(void)
 }
 void SaveGame_ClearProgress(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to clear all before loading SaveGame file");
         return;
     }
@@ -583,7 +611,7 @@ void SaveGame_ClearProgress(void)
 }
 void SaveGame_MarkZoneCompleted(int zoneID)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to mark completed zone before loading SaveGame file");
         return;
     }
@@ -601,7 +629,7 @@ void SaveGame_MarkZoneCompleted(int zoneID)
 }
 bool32 SaveGame_CheckZoneClear(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
     }
@@ -616,7 +644,7 @@ bool32 SaveGame_CheckZoneClear(void)
 }
 void SaveGame_GetEmerald(int emeraldID)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get emerald before loading SaveGame file");
         return;
     }
@@ -649,7 +677,7 @@ void SaveGame_GetEmerald(int emeraldID)
 }
 void SaveGame_GetMedal(byte medalID, byte type)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get medallion before loading SaveGame file");
         return;
     }
@@ -659,11 +687,12 @@ void SaveGame_GetMedal(byte medalID, byte type)
     int goldCount   = 0;
     int silverCount = 0;
     for (int m = 0; m < 0x20; ++m) {
-        if (saveRAM[m] == medalID && type > *saveRAM)
-            *saveRAM = type;
-        ++goldCount;
-        ++silverCount;
-        ++saveRAM;
+        if (m == medalID && type > saveRAM[m])
+            saveRAM[m] = type;
+        if (saveRAM[m] >= 2)
+            ++goldCount;
+        if (saveRAM[m] >= 1)
+            ++silverCount;
     }
 
     globals->saveRAM[0x947] = goldCount;
@@ -671,13 +700,13 @@ void SaveGame_GetMedal(byte medalID, byte type)
     LogHelpers_Print("Get %d medallion #%d", type, medalID);
     LogHelpers_Print("Gold: %d %d, Silver: %d %d", goldCount, goldCount >= 32, silverCount, silverCount >= 32);
     if (goldCount >= 32)
-        globals->saveRAM[0x91E] = 1;
+        globals->saveRAM[0x91E] = true;
     if (silverCount >= 32)
-        globals->saveRAM[0x91F] = 1;
+        globals->saveRAM[0x91F] = true;
 }
 void SaveGame_GetEnding(byte ending)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get game ending before loading SaveGame file");
     }
 
@@ -686,7 +715,7 @@ void SaveGame_GetEnding(byte ending)
 }
 void SaveGame_PrintSaveProgress(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to dump before loading SaveGame file");
         return;
     }
@@ -741,7 +770,7 @@ void SaveGame_PrintSaveProgress(void)
 }
 int SaveGame_CountUnreadNotifs(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to count unread notifs before loading SaveGame file");
         return 0;
     }
@@ -760,7 +789,7 @@ int SaveGame_CountUnreadNotifs(void)
 }
 int SaveGame_GetNextNotif(void)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != STATUS_OK) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get next unread notif before loading SaveGame file");
         return -1;
     }
@@ -770,7 +799,7 @@ int SaveGame_GetNextNotif(void)
             bool32 unlocked = saveRAM[i];
             bool32 notif    = SaveGame_CheckUnlock(i);
             if (!unlocked && notif) {
-                break;
+                return i;
             }
         }
     }
@@ -778,7 +807,7 @@ int SaveGame_GetNextNotif(void)
 }
 bool32 SaveGame_CheckUnlock(char type)
 {
-    if (RSDK_sceneInfo->inEditor || noSave || globals->saveLoaded != 200) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to check unlock before loading SaveGame file");
         return false;
     }

@@ -11,7 +11,10 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(callback);
+    int timeOut;
 } EntityTimeAttackMenu;
 
 // Object Struct

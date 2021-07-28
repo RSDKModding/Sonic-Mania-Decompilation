@@ -64,6 +64,8 @@ void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, 
 
 void TimeAttackData_GetLeaderboardRank_CB(int status, int rank);
 void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int mode, int time);
+#else
+void TimeAttackData_SaveTATime(byte zone, byte act, byte player, byte rank, ushort time);
 #endif
 
 #endif //!OBJ_TIMEATTACKDATA_H

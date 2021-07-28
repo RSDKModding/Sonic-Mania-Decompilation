@@ -75,9 +75,6 @@
     <Filter Include="Sources\Objects\Continue">
       <UniqueIdentifier>{fa9158d7-957e-4b12-b448-676d56b0816e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Objects\ARZ">
-      <UniqueIdentifier>{d2dd72e8-5416-444c-8027-8bc93531be80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Objects\Unused">
       <UniqueIdentifier>{f488448a-c0eb-429e-b5bd-7cc579152cfc}</UniqueIdentifier>
     </Filter>
@@ -457,9 +454,6 @@
     </ClInclude>
     <ClInclude Include="Objects\CPZ\TwistedTubes.h">
       <Filter>Sources\Objects\CPZ</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\ARZ\Wisp.h">
-      <Filter>Sources\Objects\ARZ</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Unused\Pendulum.h">
       <Filter>Sources\Objects\Unused</Filter>
@@ -1949,6 +1943,9 @@
     <ClInclude Include="Objects\LRZ\ThoughtBubble.h">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Unused\Wisp.h">
+      <Filter>Sources\Objects\Unused</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.c">
@@ -2292,9 +2289,6 @@
     </ClCompile>
     <ClCompile Include="Objects\CPZ\TwistedTubes.c">
       <Filter>Sources\Objects\CPZ</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\ARZ\Wisp.c">
-      <Filter>Sources\Objects\ARZ</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Unused\Pendulum.c">
       <Filter>Sources\Objects\Unused</Filter>
@@ -3783,6 +3777,9 @@
     </ClCompile>
     <ClCompile Include="Objects\LRZ\ThoughtBubble.c">
       <Filter>Sources\Objects\LRZ</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Unused\Wisp.c">
+      <Filter>Sources\Objects\Unused</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

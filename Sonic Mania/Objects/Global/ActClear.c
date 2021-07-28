@@ -312,7 +312,7 @@ void ActClear_Create(void *data)
         }
         entity->ringBonus      = 100 * player1->rings;
         entity->coolBonus      = globals->coolBonus[0];
-        globals->initCoolBonus = 0;
+        globals->initCoolBonus = false;
         if (globals->gameMode == MODE_TIMEATTACK) {
 #if RETRO_USE_PLUS
             entity->time = TimeAttackData_SetScore(globals->menuParam[92], globals->menuParam[91], globals->menuParam[93],
@@ -526,14 +526,46 @@ void ActClear_State_TAFinish(void)
     if (entity->posUnknown6.x >= -0x80000) {
         if (globals->gameMode == MODE_TIMEATTACK) {
             if (ActClear->isTimeAttack) {
+#if RETRO_USE_PLUS
                 if (ActClear->bufferMove_CB)
                     ActClear->bufferMove_CB();
+                HUD->dwordC        = 1;
+                ActClear->field_2C = 0;
+                entity->dword78    = 240;
+                entity->state      = ActClear_Unknown9;
+#else
+                ActClear->field_10 = true;
+                byte playerID           = globals->menuParam[89];
+                byte zoneID             = globals->menuParam[90];
+                byte actID              = globals->menuParam[91];
+
+                int *recordsRAM = NULL;
+                if (globals->saveLoaded == STATUS_OK)
+                    recordsRAM = &globals->saveRAM[0x800];
+
+                if (recordsRAM) {
+                    int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+
+                    ushort *record = (ushort *)&recordsRAM[36 * playerID - 15 + 3 * zoneID] + 3 * actID;
+                    int rank       = 0;
+                    for (; rank < 3; ++rank) {
+                        if (!record[rank] || time < record[rank])
+                            break;
+                    }
+
+                    if (rank < 3) {
+                        rank++;
+                        TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
+                        TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
+                        globals->menuParam[92] = rank;
+                    }
+                    else {
+                        ActClear->field_10 = false;
+                    }
+                }
+                RSDK.LoadScene("Presentation", "Menu");
+#endif
             }
-            RSDK.LoadScene("Presentation", "Menu");
-            HUD->dwordC        = 1;
-            ActClear->field_2C = 0;
-            entity->dword78    = 240;
-            entity->state      = ActClear_Unknown9;
         }
         else {
             entity->state = ActClear_Unknown8;
@@ -705,9 +737,7 @@ void ActClear_Unknown9(void)
         }
     }
 
-    if (ActClear->field_10 || ActClear->field_14) {
-    }
-    else {
+    if (!ActClear->field_10 && !ActClear->field_14) {
 #if RETRO_USE_PLUS
         if (RSDK_controller->keyY.press) {
             if (!ActClear->field_2C) {

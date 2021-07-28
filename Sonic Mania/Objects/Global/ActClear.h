@@ -9,7 +9,9 @@ typedef struct {
     ushort spriteIndex;
     ushort sfx_ScoreAdd;
     ushort sfx_ScoreTotal;
+#if RETRO_USE_PLUS
     ushort sfx_Event;
+#endif
     bool32 isTimeAttack;
     int field_10;
     int field_14;

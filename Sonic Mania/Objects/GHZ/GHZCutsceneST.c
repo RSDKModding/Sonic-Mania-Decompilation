@@ -221,7 +221,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
                     case HBH_SHINOBI:
                         if (host->timer == 60) {
                             RSDK.SetSpriteAnimation(hbh->spriteIndex, 3, &hbh->animator, true, 0);
-                            RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->altData, true, 0);
+                            RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->animator2, true, 0);
                         }
                         hbh->position.x -= 0x4000;
                         hbh->position.y -= 0x40000;

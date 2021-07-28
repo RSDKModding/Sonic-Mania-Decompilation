@@ -394,6 +394,18 @@ typedef struct {
 } TileLayer;
 
 typedef struct {
+    TextInfo username;
+#if RETRO_USE_PLUS
+    int field_8;
+    int field_C;
+#endif
+    int globalRank;
+    int score;
+    bool32 isUser;
+    int status;
+} LeaderboardEntry;
+
+typedef struct {
     byte statID;
     const char *name;
     void *data[64];

@@ -10,9 +10,9 @@ typedef struct {
     RSDK_OBJECT
     int(*LaunchManual)(void *);
     int (*ExitGame)(void);
-    void *ClearAchievements;
+    void (*ClearAchievements)(void);
     int(*UnlockAchievement)(const char *);
-    int(*SetRichPresence)(int, char *);
+    int(*SetRichPresence)(int, TextInfo *);
     int (*LoadUserFile)(const char *, void *, size_t, void(*)(int));
     int (*SaveUserFile)(const char *, void *, size_t, void(*)(int));
     void *GetUserLanguage;
@@ -40,9 +40,9 @@ typedef struct {
     int(*GetControllerType)(EngineInfo *, int);
     int(*ShowSteamControllerOverlay)(int);
     int saveStatus;
-    int authFlag;
-    int flag;
-    int globeSpeedInc;
+    bool32 authFlag;
+    bool32 signoutFlag;
+    int field_11C;
     int playerFlipFlags;
     int notifyAutoSaveFlag;
     int unknown;
@@ -51,15 +51,12 @@ typedef struct {
     int rankScore;
     int prevIsUser;
     int prevRank;
-    TextInfo entryName;
-    int globalRank;
-    int score;
-    int isUser;
+    LeaderboardEntry leaderboardEntry;
     int controllerIDs[4];
     int controllerCount;
-    Entity *entityPtr;
-    int userStorageStatus;
-    int storageStatusCode;
+    Entity *curCallback;
+    int authStatus;
+    int storageStatus;
     bool32 achievementsDisabled;
 } ObjectAPICallback;
 
@@ -77,7 +74,7 @@ typedef struct {
     int field_78;
     int field_7C;
     int field_80;
-    int field_84;
+    int status;
 } EntityAPICallback;
 
 // Object Struct
@@ -96,12 +93,17 @@ void APICallback_Serialize(void);
 
 // Extra Entity Functions
 void APICallback_SetRichPresence(int id, TextInfo *msg);
-bool32 APICallback_GetConfirmButtonFlip();
-void APICallback_SetNoSave(void);
+int APICallback_GetUserLanguage(void);
+bool32 APICallback_GetConfirmButtonFlip(void);
+void APICallback_SetNoSaveEnabled(void);
+void APICallback_SetNoSaveDisabled(void);
 void APICallback_SaveUserFile(void *buffer, const char *name, int size, void (*callback)(int));
-int APICallback_SaveCB(int status);
+void APICallback_SaveCB(int status);
 int APICallback_ReadLeaderboardEntry(int rankID);
-void APICallback_PrompSavePreference(void *this);
+void APICallback_NotifyAutoSave_OK(void);
+void APICallback_NotifyAutoSave_CB(void);
+void APICallback_PromptSavePreference_CB(void);
+void APICallback_PromptSavePreference(int status);
 void APICallback_LoadUserFile(void *buffer, const char *name, int size, void (*callback)(int));
 int APICallback_LoadCB(int status);
 int APICallback_LeaderboardStatus(void);
@@ -110,19 +112,30 @@ void APICallback_LaunchManual(void *this);
 void APICallback_HandleCallback(void);
 void APICallback_GetUserAuthStatus(void);
 int APICallback_GetStorageStatus(void);
-void APICallback_GetStatusUnkown3(void);
 int APICallback_GetSaveStatus(void);
 int APICallback_GetControllerType(void *this);
-int APICallback_FetchLeaderboardData(byte a1, byte a2, int a3, int a4, int a5, int isUser);
+int APICallback_FetchLeaderboardData(byte a1, byte a2, int a3, int a4, int a5, bool32 isUser);
 void APICallback_ExitGame(void);
 void APICallback_ClearPrerollErrors(void);
-void APICallback_CheckNoSave(void);
-bool32 APICallback_CheckInputDisconnected();
-void APICallback_TrackGameProgress(void (*callback)(int), float a2);
+bool32 APICallback_CheckInputDisconnected(void);
+void APICallback_TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time);
+void APICallback_TrackTAClear(byte zoneID, byte actID, byte playerID, int time);
+void APICallback_TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY);
+void APICallback_TrackGameProgress(void (*callback)(int), float percent);
+void APICallback_TryAuth_No(void);
+void APICallback_TryAuth_Yes(void);
+void APICallback_TryAuth_CB(void);
 int APICallback_TryAuth(void);
 void APICallback_TryInitStorage(void);
+void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
-
+void APICallback_CheckUserAuth_OK(void);
+void APICallback_CheckUserAuth_CB(void);
+void APICallback_Wait(int success);
+void APICallback_GetNextNotif(void);
+void APICallback_ManageNotifs(void);
+bool32 APICallback_CheckUnreadNotifs(void);
+bool32 APICallback_NotifyAutosave(void);
 #endif
 
 #endif //!OBJ_APICALLBACK_H

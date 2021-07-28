@@ -12,6 +12,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
+    Vector2 size;
+    int listID;
+    int frameID;
     bool32 noText;
     bool32 auxIcon;
     int auxListID;

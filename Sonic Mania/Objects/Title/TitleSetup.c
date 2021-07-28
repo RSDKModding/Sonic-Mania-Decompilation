@@ -50,7 +50,7 @@ void TitleSetup_StageLoad(void)
     globals->blueSpheresInit = false;
     TimeAttackData_ClearOptions();
 #if RETRO_USE_PLUS
-    API.UserStorageUnknown8();
+    API.ClearPrerollErrors();
     API.ClearUserStorageStatus();
 #else
     APICallback_ClearPrerollErrors();
@@ -71,7 +71,7 @@ void TitleSetup_StageLoad(void)
     TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
     TitleSetup->sfx_MenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
     TitleSetup->sfx_Ring       = RSDK.GetSFX("Global/Ring.wav");
-    RSDK.ResetEntitySlot(0, TitleSetup->objectID, 0);
+    RSDK.ResetEntitySlot(0, TitleSetup->objectID, NULL);
 }
 
 void TitleSetup_HandleCheatInputs(void)

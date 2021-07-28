@@ -36,7 +36,6 @@
     <ClInclude Include="Objects\AIZ\Rhinobot.h" />
     <ClInclude Include="Objects\AIZ\SchrodingersCapsule.h" />
     <ClInclude Include="Objects\AIZ\Sweep.h" />
-    <ClInclude Include="Objects\ARZ\Wisp.h" />
     <ClInclude Include="Objects\BSS\BSS_Collectable.h" />
     <ClInclude Include="Objects\BSS\BSS_Collected.h" />
     <ClInclude Include="Objects\BSS\BSS_Horizon.h" />
@@ -631,6 +630,7 @@
     <ClInclude Include="Objects\Unused\SpearBlock.h" />
     <ClInclude Include="Objects\Unused\TargetBumper.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
+    <ClInclude Include="Objects\Unused\Wisp.h" />
     <ClInclude Include="SonicMania.h" />
   </ItemGroup>
   <ItemGroup>
@@ -650,7 +650,6 @@
     <ClCompile Include="Objects\AIZ\Rhinobot.c" />
     <ClCompile Include="Objects\AIZ\SchrodingersCapsule.c" />
     <ClCompile Include="Objects\AIZ\Sweep.c" />
-    <ClCompile Include="Objects\ARZ\Wisp.c" />
     <ClCompile Include="Objects\BSS\BSS_Collectable.c" />
     <ClCompile Include="Objects\BSS\BSS_Collected.c" />
     <ClCompile Include="Objects\BSS\BSS_Horizon.c" />
@@ -1245,6 +1244,7 @@
     <ClCompile Include="Objects\Unused\SpearBlock.c" />
     <ClCompile Include="Objects\Unused\TargetBumper.c" />
     <ClCompile Include="Objects\Unused\WallCrawl.c" />
+    <ClCompile Include="Objects\Unused\Wisp.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

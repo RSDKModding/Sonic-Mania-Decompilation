@@ -70,7 +70,7 @@ void UIWaitSpinner_Wait(void)
     }
     else {
         if (!activeSpinner) {
-            activeSpinner                = (EntityUIWaitSpinner *)RSDK.CreateEntity(UIWaitSpinner->objectID, NULL, 0, 0);
+            activeSpinner                = CREATE_ENTITY(UIWaitSpinner, NULL, 0, 0);
             activeSpinner->isPermanent   = true;
             UIWaitSpinner->activeSpinner = (Entity *)activeSpinner;
         }
@@ -90,7 +90,7 @@ void UIWaitSpinner_Wait2(void)
     }
     else {
         if (!activeSpinner) {
-            activeSpinner                = (EntityUIWaitSpinner *)RSDK.CreateEntity(UIWaitSpinner->objectID, NULL, 0, 0);
+            activeSpinner                = CREATE_ENTITY(UIWaitSpinner, NULL, 0, 0);
             activeSpinner->isPermanent   = true;
             UIWaitSpinner->activeSpinner = (Entity *)activeSpinner;
         }
@@ -112,8 +112,8 @@ void UIWaitSpinner_State_Wait2(void)
 {
     RSDK_THIS(UIWaitSpinner);
     if (entity->timer <= 0) {
-        UIWaitSpinner->activeSpinner = 0;
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        UIWaitSpinner->activeSpinner = NULL;
+        destroyEntity(entity);
     }
     else if (entity->flag) {
         entity->timer -= 3;

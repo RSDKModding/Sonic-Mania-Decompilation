@@ -5,7 +5,7 @@ ObjectBSS_Collected *BSS_Collected;
 void BSS_Collected_Update(void)
 {
     RSDK_THIS(BSS_Collected);
-    EntityBSS_Setup *setup = (EntityBSS_Setup *)RSDK.GetEntityByID(SLOT_BSS_SETUP);
+    EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
     int fieldPos           = entity->position.y + (BSS_PLAYFIELD_W * entity->position.x);
     switch (entity->type) {
         case 0:
@@ -19,11 +19,11 @@ void BSS_Collected_Update(void)
         case 1:
             if (BSS_Setup->sphereCount <= 0) {
                 if (BSS_Setup->playField[fieldPos] != 130) {
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                    destroyEntity(entity);
                 }
                 else {
                     BSS_Setup->playField[fieldPos] = 2;
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                    destroyEntity(entity);
                 }
             }
             else {
@@ -35,11 +35,11 @@ void BSS_Collected_Update(void)
             if (setup->state == BSS_Setup_State_HandleStage) {
                 if (setup->globeTimer > 32 && setup->globeTimer < 224) {
                     if (BSS_Setup->playField[fieldPos] != BSS_BLUE_STOOD) {
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        destroyEntity(entity);
                     }
                     else {
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_RED;
-                        RSDK.ResetEntityPtr(entity, 0, 0);
+                        destroyEntity(entity);
                     }
                 }
             }
@@ -53,11 +53,11 @@ void BSS_Collected_Update(void)
         case 4:
             if (setup->state == BSS_Setup_State_HandleStage && --entity->timer <= 0) {
                 if (BSS_Setup->playField[fieldPos] != BSS_SPHERE_GREEN_STOOD) {
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                    destroyEntity(entity);
                 }
                 else {
                     BSS_Setup->playField[fieldPos] = BSS_SPHERE_BLUE;
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                    destroyEntity(entity);
                 }
             }
             break;
@@ -66,10 +66,10 @@ void BSS_Collected_Update(void)
                 if (setup->playerPos.x != entity->position.x || setup->playerPos.y != entity->position.y) {
                     if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_PINK_STOOD) {
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_PINK;
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                        destroyEntity(entity);
                     }
                     else {
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+                        destroyEntity(entity);
                     }
                 }
             }

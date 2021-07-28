@@ -6,11 +6,20 @@
 #define APITABLE_COUNT (59)
 #else
 #define FUNCTABLE_COUNT (155)
+#define APITABLE_COUNT  (32)
 #endif
 
 extern void *RSDKFunctionTable[FUNCTABLE_COUNT];
 #if RETRO_REV02
 extern void *APIFunctionTable[APITABLE_COUNT];
+#else
+struct APITableEntry {
+    void *ptr;
+    uint hash[4];
+};
+
+extern APITableEntry APIFunctionTable[APITABLE_COUNT];
+extern int APIFunctionTableCount;
 #endif
 
 #if RETRO_REV02

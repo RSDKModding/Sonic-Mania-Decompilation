@@ -19,7 +19,7 @@ struct DummyCore {
     int (*GetUserLanguage)(void);
     int (*GetUserRegion)(void);
     int (*GetUserPlatform)(void);
-    int (*GetConfirmButtonFlip)(void);
+    bool32 (*GetConfirmButtonFlip)(void);
     void (*LaunchManual)(void);
     void (*ExitGame)(void);
     int (*controllerUnknown)(void);
@@ -73,7 +73,7 @@ struct DummyLeaderboards {
     void (*FetchLeaderboard)(int a2, int a3);
     void (*unknown5)(void);
     void (*TrackScore)(int a2, int a3, int a4);
-    int (*unknown7)(void);
+    int (*GetStatus)(void);
 
     byte field_4;
     byte field_5;
@@ -103,6 +103,7 @@ struct DummyLeaderboards {
     byte field_1E;
     byte field_1F;
     byte field_20[848];
+    int status;
 };
 
 struct DummyRichPresence {
@@ -114,11 +115,17 @@ struct DummyRichPresence {
     int curID;
 };
 
+struct StatInfo {
+    byte statID;
+    const char *name;
+    void *data[64];
+};
+
 struct DummyStats {
     void (*SetDebugValues)(void);
     void (*InitUnknown1)(void);
     void (*InitUnknown2)(void);
-    void (*TryTrackStat)(void);
+    void (*TryTrackStat)(StatInfo *stat);
 
     int status;
 };
@@ -137,7 +144,7 @@ struct DummyUserStorage {
 
     int authStatus;
     int statusCode;
-    int storageStatus;
+    int saveStatus;
     int noSaveActive;
     int field_14;
     int field_18;
@@ -154,18 +161,15 @@ extern DummyStats *stats;
 extern DummyUserStorage *userStorage;
 
 struct UserDB;
-struct UserDBEntry;
+struct UserDBRow;
 
 struct UserDBValue {
-    UserDBEntry *parent;
-    int type;
-    int size;
-    int value;
-    int field_10;
-    int field_14;
+    UserDBRow *parent;
+    byte size;
+    byte data[0x10];
 };
 
-struct UserDBEntry {
+struct UserDBRow {
     UserDB *parent;
     uint uuid;
     tm createTime;
@@ -187,11 +191,11 @@ struct UserDB {
     int rowUnknown[RETRO_USERDB_ENTRY_MAX];
     int rowUnknownCount;
     int columnCount;
-    int columnSizes[RETRO_USERDB_VAL_MAX];
+    int columnTypes[RETRO_USERDB_VAL_MAX];
     char columnNames[RETRO_USERDB_VAL_MAX][0x10];
     uint columnUUIDs[RETRO_USERDB_VAL_MAX];
     ushort entryCount;
-    UserDBEntry rows[RETRO_USERDB_ENTRY_MAX];
+    UserDBRow rows[RETRO_USERDB_ENTRY_MAX];
 };
 
 struct UserDBStorage {
@@ -203,7 +207,7 @@ struct UserDBStorage {
     int (*saveCallback[RETRO_USERDB_MAX])(int);
     int (*userLoadCB[RETRO_USERDB_MAX])(ushort table, int status);
     int (*userSaveCB[RETRO_USERDB_MAX])(ushort table, int status);
-    int (*callbacks[RETRO_USERDB_MAX])(int);
+    void (*callbacks[RETRO_USERDB_MAX])(int);
     int field_228824[RETRO_USERDB_MAX];
 };
 
@@ -230,19 +234,14 @@ void ProcessAchievements();
 void DrawAchievements();
 #endif
 
-struct StatInfo {
-    byte statID;
-    const char *name;
-    void *data[64];
-};
-
 void initUserData();
 void releaseUserData();
 
 int GetUserLanguage();
 int GetUserRegion();
 int GetUserPlatform();
-int GetConfirmButtonFlip();
+bool32 GetConfirmButtonFlip();
+bool32 GetXYButtonFlip();
 void LaunchManual();
 void ExitGame();
 int controllerUnknown();
@@ -272,12 +271,16 @@ TextInfo *GetAchievementText(TextInfo *info);
 TextInfo *GetAchievementName(TextInfo *info, uint id);
 int GetNextAchievementID(void);
 void RemoveLastAchievementID(void);
+void ClearAchievements();
 void TryUnlockAchievement(const char *name);
 
 void FetchLeaderboard(int a2, int a3);
 void TrackScore(int a2, int a3, int a4);
+inline int GetLeaderboardStatus() { return leaderboards->status; }
 
-void SetPresence(byte a2, TextInfo *info);
+void SetPresence(byte id, TextInfo *info);
+
+void TryTrackStat(StatInfo *stat);
 
 #if RETRO_REV02
 inline int GetStatsStatus() { return stats->status; }
@@ -296,51 +299,36 @@ inline int GetUserStorageStatus()
 #if RETRO_REV02
 inline int UserStorageStatusUnknown1()
 {
-    if (userStorage->storageStatus == STATUS_ERROR)
+    if (userStorage->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;
     else
         return userStorage->statusCode;
 }
-inline int UserStorageStatusUnknown2()
+inline int GetSaveStatus()
 {
     if (userStorage->noSaveActive)
         return STATUS_OK;
     else
-        return userStorage->storageStatus;
+        return userStorage->saveStatus;
 }
-inline int UserStorageStatusUnknown3()
+inline void SetSaveStatusOK()
 {
-    if (userStorage->storageStatus == STATUS_CONTINUE)
-        userStorage->storageStatus = STATUS_OK;
-    return userStorage->storageStatus;
+    if (userStorage->saveStatus == STATUS_CONTINUE)
+        userStorage->saveStatus = STATUS_OK;
 }
-inline int UserStorageStatusUnknown4()
+inline void SetSaveStatusForbidden()
 {
-    if (userStorage->storageStatus == STATUS_CONTINUE)
-        userStorage->storageStatus = STATUS_FORBIDDEN;
-    return userStorage->storageStatus;
+    if (userStorage->saveStatus == STATUS_CONTINUE)
+        userStorage->saveStatus = STATUS_FORBIDDEN;
 }
-inline int UserStorageStatusUnknown5()
+inline void SetSaveStatusError()
 {
-    if (userStorage->storageStatus == STATUS_CONTINUE)
-        userStorage->storageStatus = STATUS_ERROR;
-    return userStorage->storageStatus;
+    if (userStorage->saveStatus == STATUS_CONTINUE)
+        userStorage->saveStatus = STATUS_ERROR;
 }
-inline int ClearUserStorageStatus()
-{
-    userStorage->storageStatus = STATUS_NONE;
-    return userStorage->storageStatus;
-}
-inline int SetUserStorageStatus()
-{
-    userStorage->storageStatus = STATUS_CONTINUE;
-    return userStorage->storageStatus;
-}
-inline int SetUserStorageNoSave(int state)
-{
-    userStorage->noSaveActive = state;
-    return userStorage->noSaveActive;
-}
+inline void ClearUserStorageStatus() { userStorage->saveStatus = STATUS_NONE; }
+inline void SetUserStorageStatus() { userStorage->saveStatus = STATUS_CONTINUE; }
+inline void SetUserStorageNoSave(int state) { userStorage->noSaveActive = state; }
 inline int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 #endif
 
@@ -356,8 +344,8 @@ inline int TryAuth()
 inline int TryInitStorage()
 {
 #if RETRO_REV02
-    userStorage->storageStatus = STATUS_OK;
-    return userStorage->storageStatus;
+    userStorage->saveStatus = STATUS_OK;
+    return userStorage->saveStatus;
 #else
     return STATUS_OK;
 #endif
@@ -368,14 +356,14 @@ inline bool32 GetUserName(TextInfo *info)
     return true;
 }
 #if RETRO_REV02
-inline void UserStorageUnknown8()
+inline void ClearPrerollErrors()
 {
     if (userStorage->authStatus != STATUS_OK)
         userStorage->authStatus = STATUS_NONE;
 
     userStorage->field_14 = 0;
-    if (userStorage->storageStatus != STATUS_OK)
-        userStorage->storageStatus = STATUS_NONE;
+    if (userStorage->saveStatus != STATUS_OK)
+        userStorage->saveStatus = STATUS_NONE;
 }
 #endif
 
@@ -389,20 +377,6 @@ void ClearPrerollErrors();
 void setupUserDebugValues();
 void userInitUnknown1();
 void userInitUnknown2();
-
-#if !RETRO_REV02
-#define FUNCLIST_COUNT (0x30)
-struct FunctionListEntry {
-    void *ptr;
-    uint hash[4];
-};
-
-extern FunctionListEntry functionList[FUNCLIST_COUNT];
-extern int functionListCount;
-
-void SetFuncPtr(const char *name, void *ptr);
-void *GetFuncPtr(const char *name);
-#endif
 
 extern void (*userFileCallback)();
 extern void (*userFileCallback2)();
@@ -438,7 +412,7 @@ inline void InitUserDBValues(UserDB *userDB, va_list list)
 {
     int cnt = 0;
     while ((int *)list) {
-        userDB->columnSizes[cnt] = va_arg(list, int);
+        userDB->columnTypes[cnt] = va_arg(list, int);
         memcpy(userDB->columnNames[cnt], 0, 0x10);
         sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char *));
         GenerateCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
@@ -447,7 +421,7 @@ inline void InitUserDBValues(UserDB *userDB, va_list list)
 
     userDB->columnCount = cnt;
     userDB->entryCount  = 0;
-    memset(userDB->rows, 0, sizeof(UserDBEntry) * RETRO_USERDB_ENTRY_MAX);
+    memset(userDB->rows, 0, sizeof(UserDBRow) * RETRO_USERDB_ENTRY_MAX);
     UpdateUserDBParents(userDB);
     userDB->active = true;
     userDB->valid  = true;
@@ -482,8 +456,8 @@ inline ushort InitUserDB(const char *name, ...)
     return tableID;
 }
 
-ushort LoadUserDB(const char *filename, int (*callback)(int));
-bool32 SaveUserDB(ushort tableID, int (*callback)(int));
+ushort LoadUserDB(const char *filename, void (*callback)(int));
+bool32 SaveUserDB(ushort tableID, void (*callback)(int));
 
 inline void ClearUserDB(ushort tableID)
 {
@@ -499,10 +473,10 @@ inline void ClearUserDB(ushort tableID)
         userDB->uuid        = 0;
         userDB->entryCount  = 0;
         userDB->columnCount = 0;
-        memset(&userDB->columnSizes, 0, sizeof(int) * RETRO_USERDB_VAL_MAX);
-        memset(&userDB->columnNames, 0, (0x10 * sizeof(char)) * RETRO_USERDB_VAL_MAX);
-        memset(&userDB->columnUUIDs, 0, sizeof(uint) * RETRO_USERDB_VAL_MAX);
-        memset(userDB->rows, 0, 0x44000u);
+        memset(userDB->columnTypes, 0, sizeof(userDB->columnTypes));
+        memset(userDB->columnNames, 0, sizeof(userDB->columnNames));
+        memset(userDB->columnUUIDs, 0, sizeof(userDB->columnUUIDs));
+        memset(userDB->rows, 0, sizeof(userDB->rows));
         userDB->status = true;
     }
 }
@@ -510,22 +484,11 @@ inline void ClearUserDB(ushort tableID)
 inline void ClearAllUserDBs()
 {
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
-        UserDB *userDB = &userDBStorage->userDB[i];
-        if (userDB->loaded) {
-            /// sub_5EB5D0((_DWORD **)&userDB->field_14);
-            userDB->loaded      = false;
-            userDB->active      = false;
-            userDB->valid       = false;
-            userDB->entryCount  = 0;
-            userDB->columnCount = 0;
-            memset(&userDB->columnSizes, 0, sizeof(int) * RETRO_USERDB_VAL_MAX);
-            memset(&userDB->columnNames, 0, (0x10 * sizeof(char)) * RETRO_USERDB_VAL_MAX);
-            memset(&userDB->columnUUIDs, 0, sizeof(uint) * RETRO_USERDB_VAL_MAX);
-            memset(userDB->rows, 0, sizeof(UserDBEntry) * RETRO_USERDB_ENTRY_MAX);
-            userDB->status = true;
-        }
+        ClearUserDB(i);
     }
 }
+
+
 
 inline ushort GetUserDBByID(ushort tableID, uint uuid)
 {
@@ -547,6 +510,8 @@ inline ushort GetUserDBByID(ushort tableID, uint uuid)
     return -1;
 }
 
+inline int GetUserDBStatus(ushort tableID) { return userDBStorage->userDB[tableID].status; }
+
 inline void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
 {
     if (tableID != 0xFFFF && entryID != 0xFFFF) {
@@ -562,7 +527,7 @@ inline int GetUserDBRowUnknownCount(ushort tableID)
         return 0;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (userDB->active)
+    if (!userDB->active)
         return 0;
 
     return userDB->rowUnknownCount;
@@ -574,7 +539,7 @@ inline uint GetUserDBRowUUID(ushort tableID, ushort entry)
         return 0;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (userDB->active)
+    if (!userDB->active)
         return 0;
 
     return userDB->rows[entry].uuid;
@@ -596,13 +561,13 @@ inline int AddUserDBEntry(ushort tableID)
     if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (userDB->active)
+    if (!userDB->active)
         return -1;
 
     if (userDB->entryCount >= RETRO_USERDB_ENTRY_MAX)
         return -1;
 
-    UserDBEntry *row = &userDB->rows[userDB->entryCount];
+    UserDBRow *row = &userDB->rows[userDB->entryCount];
     // row->uuid = sub_5EBDF0(userDB);
     time_t t;
     tm *tmA = localtime(&t);
@@ -619,21 +584,144 @@ inline int AddUserDBEntry(ushort tableID)
     return userDB->entryCount - 1;
 }
 
+inline void StoreUserDBValue(UserDBValue *value, int type, void *data)
+{
+    value->size  = 0;
+    memset(value->data, 0, sizeof(value->data));
+    switch (type) {
+        case 1:
+        case 2:
+        case 6:
+            value->size = sizeof(byte);
+            memcpy(value->data, data, sizeof(byte));
+            break;
+        case 3:
+        case 7:
+            value->size    =  sizeof(ushort);
+            memcpy(value->data, data, sizeof(ushort));
+            break;
+        case 4:
+        case 8:
+        case 10:
+        case 15:
+            value->size = sizeof(int);
+            memcpy(value->data, data, sizeof(int));
+            break;
+        case 16: {
+            char *string = (char *)data;
+            int len      = strlen(string);
+            if (len < 15) {
+                value->size = len + 1;
+                int id      = 0;
+                while (string[id]) {
+                    value->data[id] = string[id];
+                }
+            }
+            break;
+        }
+        default: break;
+    }
+}
+
+inline bool32 AddUserDBColumn(UserDBRow *userDB, int type, char *name, void *value)
+{
+    UserDB *db = userDB->parent;
+    uint uuid  = 0;
+    GenerateCRC(&uuid, name);
+
+    for (int c = 0; c < db->columnCount; ++c) {
+        if (db->columnUUIDs[c] == uuid) {
+            if (c < 0 || type != db->columnTypes[c])
+                return 0;
+            StoreUserDBValue(&userDB->values[c], type, value);
+
+            time_t time;
+            _time64(&time);
+            userDB->changeTime = *localtime(&time);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+inline bool32 SetUserDBValue(ushort tableID, int rowID, int type, char *name, void *value)
+{
+    if (tableID == 0xFFFF || rowID == -1 || !userDBStorage->userDB[tableID].active)
+        return false;
+    
+    return AddUserDBColumn(&userDBStorage->userDB[tableID].rows[rowID], type, name, value);
+}
+
+inline void RetrieveUserDBValue(UserDBValue *value, int type, void *data)
+{
+    byte *valData = (byte *)data;
+    switch (type) {
+        case 1:
+        case 2:
+        case 6:
+            memcpy(valData, value->data, sizeof(byte));
+            break;
+        case 3:
+        case 7: memcpy(valData, value->data, sizeof(ushort));
+            break;
+        case 4:
+        case 8:
+        case 10:
+        case 15: memcpy(valData, value->data, sizeof(int));
+            break;
+        case 16: {
+            memset(valData, 0, value->size + 1);
+            char *string = (char *)data;
+            for (int c = 0; c < value->size; ++c) {
+                valData[c] = string[c];
+            }
+            break;
+        }
+        default: break;
+    }
+}
+
+inline bool32 GetUserDBColumn(UserDBRow *userDB, int type, char *name, void *value)
+{
+    UserDB *db = userDB->parent;
+    uint uuid  = 0;
+    GenerateCRC(&uuid, name);
+
+    for (int c = 0; c < db->columnCount; ++c) {
+        if (db->columnUUIDs[c] == uuid) {
+            if (c < 0 || type != db->columnTypes[c])
+                return 0;
+            RetrieveUserDBValue(&userDB->values[c], type, value);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+inline bool32 GetUserDBValue(ushort tableID, int rowID, int type, char *name, void *value)
+{
+    if (tableID == 0xFFFF || rowID == -1 || !userDBStorage->userDB[tableID].active)
+        return false;
+    return GetUserDBColumn(&userDBStorage->userDB[tableID].rows[rowID], type, name, value);
+}
+
 inline uint RemoveDBEntry(ushort tableID, uint entryID)
 {
     if (tableID == 0xFFFF || entryID == 0xFFFF)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (userDB->active)
+    if (!userDB->active)
         return 0;
 
     if (entryID < userDB->entryCount) {
-        UserDBEntry *entry = &userDB->rows[entryID];
-        memset(entry, 0, sizeof(UserDBEntry));
+        UserDBRow *entry = &userDB->rows[entryID];
+        memset(entry, 0, sizeof(UserDBRow));
 
         int id = (ushort)(userDB->entryCount - entryID - 1);
-        memcpy(entry, &entry[1], id * sizeof(UserDBEntry));
-        memset(&entry[id + 1], 0, sizeof(UserDBEntry));
+        memcpy(entry, &entry[1], id * sizeof(UserDBRow));
+        memset(&entry[id + 1], 0, sizeof(UserDBRow));
 
         --userDB->entryCount;
         userDB->valid = true;
@@ -651,19 +739,17 @@ inline bool32 RemoveAllDBEntries(ushort tableID)
     if (!userDB->active)
         return 0;
     userDB->entryCount = 0;
-    memset(userDB->rows, 0, sizeof(UserDBEntry) * RETRO_USERDB_ENTRY_MAX);
+    memset(userDB->rows, 0, sizeof(UserDBRow) * RETRO_USERDB_ENTRY_MAX);
     UpdateUserDBParents(userDB);
     return true;
 }
-
-inline int GetUserDBStatus(ushort tableID) { return userDBStorage->userDB[tableID].status; }
 
 inline uint GetDBEntryUUID(ushort tableID, int entry)
 {
     if (tableID == 0xFFFF || entry == 0xFFFF)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (userDB->active)
+    if (!userDB->active)
         return 0;
 
     return userDB->rows[entry].uuid;

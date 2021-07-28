@@ -21,44 +21,44 @@ void APICallback_Create(void *data)
 
     entity->active  = ACTIVE_ALWAYS;
     entity->visible = false;
-    entity->state   = (void (*)(void))data;
+    entity->state   = (Type_StateMachine)data;
 }
 
 void APICallback_StageLoad(void)
 {
     APICallback->achievementsDisabled         = false;
     APICallback->active                       = ACTIVE_ALWAYS;
-    APICallback->LaunchManual                 = (int (*)(void *))RSDK.GetFuncPtr("LaunchManual");
-    APICallback->ExitGame                     = (int (*)(void))RSDK.GetFuncPtr("ExitGame");
-    APICallback->ClearAchievements            = RSDK.GetFuncPtr("ClearAchievements");
-    APICallback->UnlockAchievement            = (int (*)(const char *))RSDK.GetFuncPtr("UnlockAchievement");
-    APICallback->SetRichPresence              = (int (*)(int, char *))RSDK.GetFuncPtr("SetRichPresence");
-    APICallback->FetchLeaderboard             = (int (*)(byte, byte, int, int, int, int))RSDK.GetFuncPtr("FetchLeaderboard");
-    APICallback->LeaderboardStatus            = (int (*)(void))RSDK.GetFuncPtr("LeaderboardStatus");
-    APICallback->LeaderboardEntryCount        = RSDK.GetFuncPtr("LeaderboardEntryCount");
-    APICallback->LeaderboardReadEntry         = (int (*)(int))RSDK.GetFuncPtr("LeaderboardReadEntry");
-    APICallback->TrackActClear                = (void (*)(byte, byte, byte, int, int, int))RSDK.GetFuncPtr("TrackActClear");
-    APICallback->TrackTAClear                 = (void (*)(int, int, int, int))RSDK.GetFuncPtr("TrackTAClear");
-    APICallback->TrackEnemyDefeat             = RSDK.GetFuncPtr("TrackEnemyDefeat");
-    APICallback->TrackGameProgress            = (void (*)(int))RSDK.GetFuncPtr("TrackGameProgress");
-    APICallback->ClearPrerollErrors           = (int (*)(void))RSDK.GetFuncPtr("ClearPrerollErrors");
-    APICallback->TryAuth                      = (int (*)(void))RSDK.GetFuncPtr("TryAuth");
-    APICallback->GetUserAuthStatus            = (int (*)(void))RSDK.GetFuncPtr("GetUserAuthStatus");
-    APICallback->GetUsername                  = (int (*)(int))RSDK.GetFuncPtr("GetUsername");
-    APICallback->TryInitStorage               = (int (*)(void))RSDK.GetFuncPtr("TryInitStorage");
-    APICallback->GetStorageStatus             = (int (*)(int))RSDK.GetFuncPtr("GetStorageStatus");
-    APICallback->LoadUserFile                 = (int (*)(const char *, void *, size_t, void(*)(int)))RSDK.GetFuncPtr("LoadUserFile");
-    APICallback->SaveUserFile                 = (int (*)(const char *, void *, size_t, void(*)(int)))RSDK.GetFuncPtr("SaveUserFile");
-    APICallback->GetUserLanguage              = RSDK.GetFuncPtr("GetUserLanguage");
-    APICallback->GetConfirmButtonFlip         = (int (*)(void))RSDK.GetFuncPtr("GetConfirmButtonFlip");
-    APICallback->ControllerIDForInputID       = (int (*)(int))RSDK.GetFuncPtr("ControllerIDForInputID");
-    APICallback->MostRecentActiveControllerID = (int (*)(int))RSDK.GetFuncPtr("MostRecentActiveControllerID");
-    APICallback->AssignControllerID           = (void (*)(int, int))RSDK.GetFuncPtr("AssignControllerID");
-    APICallback->ResetControllerAssignments   = (void (*)(void))RSDK.GetFuncPtr("ResetControllerAssignments");
-    APICallback->InputIDIsDisconnected        = (int (*)(int))RSDK.GetFuncPtr("InputIDIsDisconnected");
-    APICallback->GetInputType                 = RSDK.GetFuncPtr("GetInputType");
-    APICallback->GetControllerType            = (int (*)(EngineInfo *, int))RSDK.GetFuncPtr("GetControllerType");
-    APICallback->ShowSteamControllerOverlay   = (int (*)(int))RSDK.GetFuncPtr("ShowSteamControllerOverlay");
+    APICallback->LaunchManual                 = (int (*)(void *))RSDK.GetAPIFunction("LaunchManual");
+    APICallback->ExitGame                     = (int (*)(void))RSDK.GetAPIFunction("ExitGame");
+    APICallback->ClearAchievements            = (void(*)(void))RSDK.GetAPIFunction("ClearAchievements");
+    APICallback->UnlockAchievement            = (int (*)(const char *))RSDK.GetAPIFunction("UnlockAchievement");
+    APICallback->SetRichPresence              = (int (*)(int, char *))RSDK.GetAPIFunction("SetRichPresence");
+    APICallback->FetchLeaderboard             = (int (*)(byte, byte, int, int, int, int))RSDK.GetAPIFunction("FetchLeaderboard");
+    APICallback->LeaderboardStatus            = (int (*)(void))RSDK.GetAPIFunction("LeaderboardStatus");
+    APICallback->LeaderboardEntryCount        = RSDK.GetAPIFunction("LeaderboardEntryCount");
+    APICallback->LeaderboardReadEntry         = (int (*)(int))RSDK.GetAPIFunction("LeaderboardReadEntry");
+    APICallback->TrackActClear                = (void (*)(byte, byte, byte, int, int, int))RSDK.GetAPIFunction("TrackActClear");
+    APICallback->TrackTAClear                 = (void (*)(int, int, int, int))RSDK.GetAPIFunction("TrackTAClear");
+    APICallback->TrackEnemyDefeat             = RSDK.GetAPIFunction("TrackEnemyDefeat");
+    APICallback->TrackGameProgress            = (void (*)(int))RSDK.GetAPIFunction("TrackGameProgress");
+    APICallback->ClearPrerollErrors           = (int (*)(void))RSDK.GetAPIFunction("ClearPrerollErrors");
+    APICallback->TryAuth                      = (int (*)(void))RSDK.GetAPIFunction("TryAuth");
+    APICallback->GetUserAuthStatus            = (int (*)(void))RSDK.GetAPIFunction("GetUserAuthStatus");
+    APICallback->GetUsername                  = (int (*)(int))RSDK.GetAPIFunction("GetUsername");
+    APICallback->TryInitStorage               = (int (*)(void))RSDK.GetAPIFunction("TryInitStorage");
+    APICallback->GetStorageStatus             = (int (*)(int))RSDK.GetAPIFunction("GetStorageStatus");
+    APICallback->LoadUserFile                 = (int (*)(const char *, void *, size_t, void(*)(int)))RSDK.GetAPIFunction("LoadUserFile");
+    APICallback->SaveUserFile                 = (int (*)(const char *, void *, size_t, void(*)(int)))RSDK.GetAPIFunction("SaveUserFile");
+    APICallback->GetUserLanguage              = RSDK.GetAPIFunction("GetUserLanguage");
+    APICallback->GetConfirmButtonFlip         = (int (*)(void))RSDK.GetAPIFunction("GetConfirmButtonFlip");
+    APICallback->ControllerIDForInputID       = (int (*)(int))RSDK.GetAPIFunction("ControllerIDForInputID");
+    APICallback->MostRecentActiveControllerID = (int (*)(int))RSDK.GetAPIFunction("MostRecentActiveControllerID");
+    APICallback->AssignControllerID           = (void (*)(int, int))RSDK.GetAPIFunction("AssignControllerID");
+    APICallback->ResetControllerAssignments   = (void (*)(void))RSDK.GetAPIFunction("ResetControllerAssignments");
+    APICallback->InputIDIsDisconnected        = (int (*)(int))RSDK.GetAPIFunction("InputIDIsDisconnected");
+    APICallback->GetInputType                 = RSDK.GetAPIFunction("GetInputType");
+    APICallback->GetControllerType            = (int (*)(EngineInfo *, int))RSDK.GetAPIFunction("GetControllerType");
+    APICallback->ShowSteamControllerOverlay   = (int (*)(int))RSDK.GetAPIFunction("ShowSteamControllerOverlay");
     APICallback->controllerIDs[0]             = CONT_P1;
     APICallback->controllerIDs[1]             = CONT_P2;
     APICallback->controllerIDs[2]             = CONT_P3;
@@ -82,6 +82,12 @@ void APICallback_SetRichPresence(int id, TextInfo *msg)
     }
 }
 
+int APICallback_GetUserLanguage(void)
+{
+    LogHelpers_Print("EMPTY GetUserLanguage() -> GameInfo->language (%d)", RSDK_info->language);
+    return RSDK_info->language;
+}
+
 bool32 APICallback_GetConfirmButtonFlip(void)
 {
     if (APICallback->GetConfirmButtonFlip)
@@ -91,10 +97,16 @@ bool32 APICallback_GetConfirmButtonFlip(void)
     return false;
 }
 
-void APICallback_SetNoSave(void)
+void APICallback_SetNoSaveEnabled(void)
 {
     APICallback->saveStatus = STATUS_ERROR;
     globals->noSave         = true;
+}
+
+void APICallback_SetNoSaveDisabled(void)
+{
+    APICallback->saveStatus = STATUS_FORBIDDEN;
+    globals->noSave         = false;
 }
 
 void APICallback_SaveUserFile(void *buffer, const char *name, int size, void (*callback)(int))
@@ -109,7 +121,7 @@ void APICallback_SaveUserFile(void *buffer, const char *name, int size, void (*c
     }
     else {
         LogHelpers_Print("DUMMY SaveUserFile(%s, %X, %d)", name, buffer, size);
-        EntityAPICallback *entity = (EntityAPICallback *)RSDK.CreateEntity(APICallback->objectID, APICallback_HandleCallback, 0, 0);
+        EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_HandleCallback, 0, 0);
         entity->callback          = APICallback_SaveCB;
         entity->timer             = 30;
         entity->fileSize          = size;
@@ -119,15 +131,14 @@ void APICallback_SaveUserFile(void *buffer, const char *name, int size, void (*c
     }
 }
 
-int APICallback_SaveCB(int status)
+void APICallback_SaveCB(int status)
 {
     RSDK_THIS(APICallback);
     int saveResult = RSDK.SaveUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
     LogHelpers_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, saveResult);
 
     if (entity->fileCallback)
-        entity->fileCallback(1);
-    return 1;
+        entity->fileCallback(true);
 }
 
 int APICallback_ReadLeaderboardEntry(int rankID)
@@ -144,124 +155,101 @@ int APICallback_ReadLeaderboardEntry(int rankID)
         return 0;
     }
 
-    const char *dummyNames[100];
-    dummyNames[0]  = "ORCIHILLARY124";
-    dummyNames[1]  = "AUCTORJOLIE521";
-    dummyNames[2]  = "SENECTUSFLORENCE789";
-    dummyNames[3]  = "MAGNAAVRAM503";
-    dummyNames[4]  = "SITVERNON320";
-    dummyNames[5]  = "DUICHRISTEN429";
-    dummyNames[6]  = "NULLAKERMIT649";
-    dummyNames[7]  = "INTEGERGEORGE708";
-    dummyNames[8]  = "HENDRERITDREW443";
-    dummyNames[9]  = "UTULYSSES507";
-    dummyNames[10] = "ACCUMSANBRUCE276";
-    dummyNames[11] = "BANANAARON804";
-    dummyNames[12] = "MAURISSILAS372";
-    dummyNames[13] = "ETCALVIN641";
-    dummyNames[14] = "UTGALENA780";
-    dummyNames[15] = "FEUGIATSHAY665";
-    dummyNames[16] = "ORCIJULIET388";
-    dummyNames[17] = "ETJENNA318";
-    dummyNames[18] = "LIBEROIDOLA420";
-    dummyNames[19] = "ATVIELKA576";
-    dummyNames[20] = "PHASELLUSJENETTE627";
-    dummyNames[21] = "CONSECTETUERCALEB550";
-    dummyNames[22] = "SITVICTOR359";
-    dummyNames[23] = "PURUSDARRYL50";
-    dummyNames[24] = "DONECAVRAM56";
-    dummyNames[25] = "PENATIBUSSYBILL30";
-    dummyNames[26] = "MAURISBARCLAY563";
-    dummyNames[27] = "CONGUECOLLEEN811";
-    dummyNames[28] = "MORBIDESTINY655";
-    dummyNames[29] = "SEMPERIONA579";
-    dummyNames[30] = "RISUSKEANE807";
-    dummyNames[31] = "QUISQUEMARYAM927";
-    dummyNames[32] = "COMMODOSTEPHANIE54";
-    dummyNames[33] = "MALESUADABURTON350";
-    dummyNames[34] = "VIVAMUSROBIN330";
-    dummyNames[35] = "QUISQUEWHILEMINA413";
-    dummyNames[36] = "VESTIBULUMRYDER890";
-    dummyNames[37] = "LACUSINDIRA112";
-    dummyNames[38] = "NEQUEJESCIE446";
-    dummyNames[39] = "EGESTASMORGAN390";
-    dummyNames[40] = "ETODYSSEUS95";
-    dummyNames[41] = "EGETHERMIONE127";
-    dummyNames[42] = "ENIMPASCALE599";
-    dummyNames[43] = "ODIOWHOOPI328";
-    dummyNames[44] = "DOLORANGELICA718";
-    dummyNames[45] = "ODIOSLOANE426";
-    dummyNames[46] = "DUIZELDA319";
-    dummyNames[47] = "METUSPORTER906";
-    dummyNames[48] = "NONUMMYSHANNON166";
-    dummyNames[49] = "IPSUMANTHONY906";
-    dummyNames[50] = "ACCUMSANRAPHAEL296";
-    dummyNames[51] = "ORNAREHU604";
-    dummyNames[52] = "MOLESTIERYDER304";
-    dummyNames[53] = "FACILISILAITH900";
-    dummyNames[54] = "MIYVONNE287";
-    dummyNames[55] = "CRASHEDY110";
-    dummyNames[56] = "TEMPUSRAE486";
-    dummyNames[57] = "ORCICOLBY173";
-    dummyNames[58] = "ULTRICESJADEN480";
-    dummyNames[59] = "LECTUSBEAU552";
-    dummyNames[60] = "LIGULAJESSAMINE824";
-    dummyNames[61] = "ORCISOLOMON19";
-    dummyNames[62] = "VARIUSDARRYL437";
-    dummyNames[63] = "EUISMODKATELL668";
-    dummyNames[64] = "LACUSSTEVEN302";
-    dummyNames[65] = "ALIQUETRICHARD807";
-    dummyNames[66] = "PEDEKAI692";
-    dummyNames[67] = "VIVAMUSCHARLOTTE167";
-    dummyNames[68] = "MAURISLEWIS101";
-    dummyNames[69] = "NULLANELLE11";
-    dummyNames[70] = "MAECENASKAMEKO602";
-    dummyNames[71] = "LOREMHALEY545";
-    dummyNames[72] = "PHASELLUSPAUL954";
-    dummyNames[73] = "ERATGLORIA527";
-    dummyNames[74] = "DIAMBURKE290";
-    dummyNames[75] = "SEMYOKO792";
-    dummyNames[76] = "ANTEMICHELLE769";
-    dummyNames[77] = "SEMPERDOMINIC873";
-    dummyNames[78] = "CONDIMENTUMNYSSA826";
-    dummyNames[79] = "PEDEDYLAN675";
-    dummyNames[80] = "ETCRUZ380";
-    dummyNames[81] = "VELJAQUELYN95";
-    dummyNames[82] = "NONDACEY190";
-    dummyNames[83] = "UTCAIN386";
-    dummyNames[84] = "NULLANOMLANGA941";
-    dummyNames[85] = "QUISQUESIERRA659";
-    dummyNames[86] = "MATTISABDUL346";
-    dummyNames[87] = "PHASELLUSKNOX183";
-    dummyNames[88] = "NEQUEXYLA92";
-    dummyNames[89] = "ORNAREGAY372";
-    dummyNames[90] = "FACILISISIVY303";
-    dummyNames[91] = "TELLUSHARLAN339";
-    dummyNames[92] = "METUSSOPOLINE75";
-    dummyNames[93] = "NUNCKYLYNN927";
-    dummyNames[94] = "PROINHERMIONE775";
-    dummyNames[95] = "TEMPORFITZGERALD656";
-    dummyNames[96] = "VELVELMA504";
-    dummyNames[97] = "FAUCIBUSTAMEKAH272";
-    dummyNames[98] = "PORTTITORWHOOPI881";
-    dummyNames[99] = "EUPETER41";
+    const char *dummyNames[] = { "ORCIHILLARY124",      "AUCTORJOLIE521",       "SENECTUSFLORENCE789", "MAGNAAVRAM503",       "SITVERNON320",
+                                 "DUICHRISTEN429",      "NULLAKERMIT649",       "INTEGERGEORGE708",    "HENDRERITDREW443",    "UTULYSSES507",
+                                 "ACCUMSANBRUCE276",    "BANANAARON804",        "MAURISSILAS372",      "ETCALVIN641",         "UTGALENA780",
+                                 "FEUGIATSHAY665",      "ORCIJULIET388",        "ETJENNA318",          "LIBEROIDOLA420",      "ATVIELKA576",
+                                 "PHASELLUSJENETTE627", "CONSECTETUERCALEB550", "SITVICTOR359",        "PURUSDARRYL50",       "DONECAVRAM56",
+                                 "PENATIBUSSYBILL30",   "MAURISBARCLAY563",     "CONGUECOLLEEN811",    "MORBIDESTINY655",     "SEMPERIONA579",
+                                 "RISUSKEANE807",       "QUISQUEMARYAM927",     "COMMODOSTEPHANIE54",  "MALESUADABURTON350",  "VIVAMUSROBIN330",
+                                 "QUISQUEWHILEMINA413", "VESTIBULUMRYDER890",   "LACUSINDIRA112",      "NEQUEJESCIE446",      "EGESTASMORGAN390",
+                                 "ETODYSSEUS95",        "EGETHERMIONE127",      "ENIMPASCALE599",      "ODIOWHOOPI328",       "DOLORANGELICA718",
+                                 "ODIOSLOANE426",       "DUIZELDA319",          "METUSPORTER906",      "NONUMMYSHANNON166",   "IPSUMANTHONY906",
+                                 "ACCUMSANRAPHAEL296",  "ORNAREHU604",          "MOLESTIERYDER304",    "FACILISILAITH900",    "MIYVONNE287",
+                                 "CRASHEDY110",         "TEMPUSRAE486",         "ORCICOLBY173",        "ULTRICESJADEN480",    "LECTUSBEAU552",
+                                 "LIGULAJESSAMINE824",  "ORCISOLOMON19",        "VARIUSDARRYL437",     "EUISMODKATELL668",    "LACUSSTEVEN302",
+                                 "ALIQUETRICHARD807",   "PEDEKAI692",           "VIVAMUSCHARLOTTE167", "MAURISLEWIS101",      "NULLANELLE11",
+                                 "MAECENASKAMEKO602",   "LOREMHALEY545",        "PHASELLUSPAUL954",    "ERATGLORIA527",       "DIAMBURKE290",
+                                 "SEMYOKO792",          "ANTEMICHELLE769",      "SEMPERDOMINIC873",    "CONDIMENTUMNYSSA826", "PEDEDYLAN675",
+                                 "ETCRUZ380",           "VELJAQUELYN95",        "NONDACEY190",         "UTCAIN386",           "NULLANOMLANGA941",
+                                 "QUISQUESIERRA659",    "MATTISABDUL346",       "PHASELLUSKNOX183",    "NEQUEXYLA92",         "ORNAREGAY372",
+                                 "FACILISISIVY303",     "TELLUSHARLAN339",      "METUSSOPOLINE75",     "NUNCKYLYNN927",       "PROINHERMIONE775",
+                                 "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
     APICallback->globalRank = rankID + (APICallback->rankScore + 1);
     APICallback->score      = (4 * APICallback->globalRank + 2400) % 59999;
     APICallback->isUser     = APICallback->prevIsUser && rankID == APICallback->prevRank;
     if (APICallback->isUser) {
-        RSDK.SetText(&APICallback->entryName, "ллллллллллллллллллллллллллллллллллллллл", 0);
+        RSDK.SetText(&APICallback->leaderboardEntry.username, "YOU", 0);
     }
     else {
-        RSDK.SetText(&APICallback->entryName, "", 0);
-        RSDK.PrependText(&APICallback->entryName, dummyNames[rankID]);
+        RSDK.SetText(&APICallback->leaderboardEntry.username, "", 0);
+        RSDK.PrependText(&APICallback->leaderboardEntry.username, dummyNames[rankID]);
     }
-    LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->globalRank, APICallback->score,
-                     APICallback->entryName.text, APICallback->isUser);
+    LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
+                     APICallback->leaderboardEntry.score, APICallback->leaderboardEntry.username.text, APICallback->leaderboardEntry.isUser);
     return 1;
 }
 
-void APICallback_PrompSavePreference(void *this)
+void APICallback_NotifyAutoSave_OK(void)
+{
+    APICallback->notifyAutoSaveFlag = false;
+    globals->notifiedAutosave       = true;
+    UIWaitSpinner_Wait2();
+}
+
+void APICallback_NotifyAutoSave_CB(void)
+{
+    RSDK_THIS(APICallback);
+    if (APICallback->notifyAutoSaveFlag) {
+        if (!UIDialog->activeDialog) {
+            TextInfo info;
+            Localization_GetString(&info, STR_SIGNOUTDETECTED);
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+            dialog->field_B8       = true;
+            UIDialog_AddButton(DIALOG_OK, dialog, APICallback_NotifyAutoSave_OK, true);
+            UIDialog_Setup(dialog);
+        }
+    }
+    else {
+        APICallback->curCallback = NULL;
+        destroyEntity(entity);
+    }
+}
+
+void APICallback_PromptSavePreference_CB(void)
+{
+    RSDK_THIS(APICallback);
+    if (APICallback->saveStatus == STATUS_CONTINUE) {
+        if (!UIDialog->activeDialog) {
+            TextInfo info;
+
+            int stringID = STR_SAVELOADFAIL;
+            switch (entity->status) {
+                case STATUS_ERROR:
+                    stringID = STR_NOXBOXPROFILE;
+                    if (RSDK_info->platform != PLATFORM_XB1)
+                        stringID = STR_SAVELOADFAIL;
+                    break;
+                case STATUS_CORRUPT: stringID = STR_CORRUPTSAVE; break;
+                case STATUS_NOSPACE: stringID = (RSDK_info->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
+            }
+            Localization_GetString(&info, stringID);
+
+            EntityUIDialog *dialog = (EntityUIDialog *)UIDialog_CreateActiveDialog(&info);
+            dialog->field_B8       = true;
+            UIDialog_AddButton(DIALOG_NO, dialog, APICallback_SetNoSaveDisabled, true);
+            UIDialog_AddButton(DIALOG_YES, dialog, APICallback_SetNoSaveEnabled, true);
+            UIDialog_Setup(dialog);
+        }
+    }
+    else {
+        APICallback->curCallback = NULL;
+        destroyEntity(entity);
+    }
+}
+
+void APICallback_PromptSavePreference(int status)
 {
     if (globals->noSave) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
@@ -274,9 +262,9 @@ void APICallback_PrompSavePreference(void *this)
     }
     APICallback->saveStatus = STATUS_CONTINUE;
 
-    // EntityAPICallback *entity   = (EntityAPICallback *)RSDK.CreateEntity(APICallback->objectID, APICallback_Unknown3, 0, 0);
-    // entity->field_84            = (int)this;
-    // APICallback->entityPtr      = (Entity*)entity;
+    EntityAPICallback *entity   = CREATE_ENTITY(APICallback, APICallback_PromptSavePreference_CB, 0, 0);
+    entity->status            = status;
+    APICallback->curCallback      = (Entity*)entity;
 }
 
 void APICallback_LoadUserFile(void *buffer, const char *name, int size, void (*callback)(int))
@@ -292,8 +280,8 @@ void APICallback_LoadUserFile(void *buffer, const char *name, int size, void (*c
     }
     else {
         LogHelpers_Print("DUMMY LoadUserFile(%s, %X, %d)", name, buffer, size);
-        EntityAPICallback *entity = (EntityAPICallback *)RSDK.CreateEntity(APICallback->objectID, APICallback_HandleCallback, 0, 0);
-        entity->callback          = (void (*)(void))APICallback_LoadCB;
+        EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_HandleCallback, 0, 0);
+        entity->callback          = APICallback_LoadCB;
         entity->timer             = 60;
         entity->fileSize          = size;
         entity->fileName          = name;
@@ -325,7 +313,7 @@ int APICallback_LeaderboardStatus(void)
     }
     else {
         LogHelpers_Print("DUMMY LeaderboardStatus()");
-        if (APICallback->leaderboardsStatus == 100) {
+        if (APICallback->leaderboardsStatus == STATUS_OK) {
             if (APICallback->unknown < 60) {
                 APICallback->unknown++;
                 return APICallback->leaderboardsStatus;
@@ -377,9 +365,8 @@ void APICallback_HandleCallback(void)
 
     if (entity->timer <= 0) {
         LogHelpers_Print("Callback: %x", entity->callback);
-        if (entity->callback)
-            entity->callback();
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        StateMachine_Run(entity->callback);
+        destroyEntity(entity);
     }
     else {
         entity->timer--;
@@ -398,10 +385,10 @@ void APICallback_GetUserAuthStatus(void)
 
     if (APICallback->saveStatus || status != STATUS_ERROR) {
         if (status == STATUS_FORBIDDEN && !APICallback->authFlag) {
-            // EntityAPICallback *entity  = (EntityAPICallback *)RSDK.CreateEntity(APICallback->objectID, APICallback_Unknown4, 0, 0);
-            // entity->active             = ACTIVE_ALWAYS;
-            // APICallback->entityPtr     = entity;
-            APICallback->authFlag = true;
+            EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_CheckUserAuth_CB, 0, 0);
+            entity->active            = ACTIVE_ALWAYS;
+            APICallback->curCallback  = entity;
+            APICallback->authFlag     = true;
         }
     }
     else {
@@ -419,22 +406,22 @@ signed int APICallback_GetStorageStatus(void)
         status = APICallback->GetStorageStatus(0);
     }
     else if (RSDK_info->platform >= PLATFORM_PS4) {
-        if (APICallback->entityPtr) {
+        if (APICallback->curCallback) {
             status = STATUS_CONTINUE;
         }
         else {
-            if (APICallback->storageStatusCode == STATUS_CONTINUE) {
+            if (APICallback->storageStatus == STATUS_CONTINUE) {
                 if (APICallback->unknown >= 0) {
                     if (RSDK.Rand(0, 100) % 10 > 10)
-                        APICallback->storageStatusCode = STATUS_ERROR;
+                        APICallback->storageStatus = STATUS_ERROR;
                     else
-                        APICallback->storageStatusCode = STATUS_OK;
+                        APICallback->storageStatus = STATUS_OK;
                 }
                 else {
                     APICallback->unknown++;
                 }
             }
-            status = APICallback->storageStatusCode;
+            status = APICallback->storageStatus;
         }
     }
     if (!APICallback->saveStatus) {
@@ -448,18 +435,12 @@ signed int APICallback_GetStorageStatus(void)
     return status;
 }
 
-void APICallback_GetStatusUnkown3(void)
-{
-    APICallback->userStorageStatus = STATUS_ERROR;
-    APICallback->saveStatus        = STATUS_ERROR;
-}
-
 int APICallback_GetSaveStatus(void)
 {
     if (globals->noSave)
         return STATUS_OK;
 
-    if (APICallback->entityPtr)
+    if (APICallback->curCallback)
         return STATUS_CONTINUE;
     else
         return APICallback->saveStatus;
@@ -473,23 +454,23 @@ int APICallback_GetControllerType(void *this)
         return RSDK_info->platform == PLATFORM_DEV;
 }
 
-int APICallback_FetchLeaderboardData(byte a1, byte a2, int a3, int a4, int a5, int isUser)
+int APICallback_FetchLeaderboardData(byte zoneID, byte actID, int playerID, int start, int end, bool32 isUser)
 {
     if (APICallback->FetchLeaderboard)
-        return APICallback->FetchLeaderboard(a2, a1, a3, 0, 100, isUser);
+        return APICallback->FetchLeaderboard(zoneID, actID, playerID, start, end, isUser);
     if (RSDK_info->platform < PLATFORM_PS4) {
-        LogHelpers_Print("EMPTY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", a2, a1, (byte)a3, 0, 100, isUser);
+        LogHelpers_Print("EMPTY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, start, end, isUser);
         return 0;
     }
 
-    LogHelpers_Print("DUMMY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", a2, a1, (byte)a3, 0, 100, isUser);
+    LogHelpers_Print("DUMMY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, start, end, isUser);
     if (APICallback->leaderboardsStatus == STATUS_CONTINUE) {
         LogHelpers_Print("WARNING Called FetchLeaderboard() while loading");
         return 0;
     }
 
     APICallback->rankScore             = 0;
-    APICallback->leaderboardEntryCount = RSDK.Rand(0, 100);
+    APICallback->leaderboardEntryCount = RSDK.Rand(start, end);
     APICallback->prevIsUser            = isUser;
     if (isUser) {
         APICallback->rankScore = RSDK.Rand(1000, 9999);
@@ -520,18 +501,12 @@ void APICallback_ClearPrerollErrors(void)
     }
     else {
         LogHelpers_Print("DUMMY ClearPrerollErrors()");
-        if (APICallback->userStorageStatus != STATUS_OK) {
-            APICallback->userStorageStatus = 0;
+        if (APICallback->authStatus != STATUS_OK) {
+            APICallback->authStatus = STATUS_NONE;
         }
-        if (APICallback->storageStatusCode != STATUS_OK)
-            APICallback->storageStatusCode = 0;
+        if (APICallback->storageStatus != STATUS_OK)
+            APICallback->storageStatus = STATUS_NONE;
     }
-}
-
-void APICallback_CheckNoSave(void)
-{
-    APICallback->saveStatus = STATUS_FORBIDDEN;
-    globals->noSave         = false;
 }
 
 bool32 APICallback_CheckInputDisconnected(void)
@@ -543,22 +518,70 @@ bool32 APICallback_CheckInputDisconnected(void)
     return false;
 }
 
-void APICallback_TrackGameProgress(void (*callback)(int), float a2)
+void APICallback_TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time)
+{
+    if (APICallback->TrackActClear)
+        APICallback->TrackActClear(zoneID, actID, playerID, score, rings, time);
+    else
+        LogHelpers_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
+}
+void APICallback_TrackTAClear(byte zoneID, byte actID, byte playerID, int time)
+{
+    if (APICallback->TrackTAClear)
+        APICallback->TrackTAClear(zoneID, actID, playerID, time);
+    else
+        LogHelpers_Print("EMPTY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
+}
+void APICallback_TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY)
+{
+    if (APICallback->TrackEnemyDefeat)
+        APICallback->TrackEnemyDefeat(zoneID, actID, playerID, entityX, entityY);
+    else
+        LogHelpers_Print("EMPTY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
+}
+
+void APICallback_TrackGameProgress(void (*callback)(int), float percent)
 {
     if (globals->noSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
     }
     else if (!globals->saveRAM[0x900]) {
-        // sub_420250();
-
         if (APICallback->TrackGameProgress)
-            APICallback->TrackGameProgress(a2);
+            APICallback->TrackGameProgress(percent);
         else
-            LogHelpers_Print("EMPTY TrackGameProgress(%f)", a2);
+            LogHelpers_Print("EMPTY TrackGameProgress(%f)", percent);
         SaveGame_SaveFile(callback);
     }
     if (callback)
         callback(0);
+}
+
+void APICallback_TryAuth_No(void)
+{
+    APICallback->authStatus             = STATUS_ERROR;
+    APICallback->saveStatus = STATUS_ERROR;
+}
+
+void APICallback_TryAuth_Yes(void) { APICallback->authStatus = STATUS_OK; }
+
+void APICallback_TryAuth_CB(void)
+{
+    RSDK_THIS(APICallback);
+    if (APICallback->authStatus == 100) {
+        if (!UIDialog->activeDialog) {
+            TextInfo info;
+            Localization_GetString(&info, STR_LOADNINTENDO);
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+            dialog->field_B8       = true;
+            UIDialog_AddButton(DIALOG_NO, dialog, APICallback_TryAuth_No, true);
+            UIDialog_AddButton(DIALOG_YES, dialog, APICallback_TryAuth_Yes, true);
+            UIDialog_Setup(dialog);
+        }
+    }
+    else {
+        APICallback->curCallback = NULL;
+        destroyEntity(entity);
+    }
 }
 
 int APICallback_TryAuth(void)
@@ -569,12 +592,12 @@ int APICallback_TryAuth(void)
     }
     else {
         LogHelpers_Print("DUMMY TryAuth()");
-        if (APICallback->userStorageStatus == STATUS_CONTINUE) {
+        if (APICallback->authStatus == STATUS_CONTINUE) {
             LogHelpers_Print("WARNING TryAuth() when auth already in progress.");
         }
         APICallback->unknown           = 0;
-        APICallback->userStorageStatus = STATUS_CONTINUE;
-        // RSDK.CreateEntity(APICallback->objectID, APICallback_Unknown1, 0, 0);
+        APICallback->authStatus = STATUS_CONTINUE;
+        CREATE_ENTITY(APICallback, APICallback_TryAuth_CB, 0, 0);
         return STATUS_CONTINUE;
     }
 }
@@ -587,11 +610,24 @@ void APICallback_TryInitStorage(void)
     }
     else {
         LogHelpers_Print("DUMMY TryInitStorage()");
-        if (APICallback->storageStatusCode == STATUS_CONTINUE) {
+        if (APICallback->storageStatus == STATUS_CONTINUE) {
             LogHelpers_Print("WARNING TryInitStorage() when init already in progress.");
         }
         APICallback->unknown           = 0;
-        APICallback->storageStatusCode = STATUS_CONTINUE;
+        APICallback->storageStatus = STATUS_CONTINUE;
+    }
+}
+
+void APICallback_ClearAchievements(void)
+{
+    if (APICallback->ClearAchievements) {
+        APICallback->ClearAchievements();
+    }
+    else if (RSDK_info->platform == PLATFORM_DEV) {
+        LogHelpers_Print("DUMMY ClearAchievements()");
+    }
+    else {
+        LogHelpers_Print("EMPTY ClearAchievements()");
     }
 }
 
@@ -599,19 +635,134 @@ void APICallback_UnlockAchievement(const char *name)
 {
     if (APICallback->achievementsDisabled) {
         LogHelpers_Print("SKIP UnlockAchievement(%s)", name);
-        return;
     }
-
-    if (APICallback->UnlockAchievement) {
+    else if (APICallback->UnlockAchievement) {
         APICallback->UnlockAchievement(name);
+    }
+    else if (RSDK_info->platform == PLATFORM_DEV) {
+        LogHelpers_Print("DUMMY UnlockAchievement(%s)", name);
+    }
+    else {
+        LogHelpers_Print("EMPTY UnlockAchievement(%s)", name);
+    }
+}
+
+void APICallback_CheckUserAuth_OK(void) { APICallback->signoutFlag = true; }
+
+void APICallback_CheckUserAuth_CB(void)
+{
+    RSDK_THIS(APICallback);
+    EntityUIDialog *dialog = UIDialog->activeDialog;
+    if (entity->timer) {
+        if (APICallback->signoutFlag) {
+            if (!dialog) {
+                if (Zone) {
+                    RSDK.LoadScene("Presentation", "Title Screen");
+                    Zone_StartFadeOut(10, 0x000000);
+                }
+                else if (MenuSetup) {
+                    MenuSetup_StartReturnToTitle();
+                }
+                APICallback->curCallback = NULL;
+                destroyEntity(entity);
+            }
+        }
+        else if (!dialog) {
+            TextInfo info;
+            Localization_GetString(&info, STR_SIGNOUTDETECTED);
+            dialog           = UIDialog_CreateActiveDialog(&info);
+            dialog->field_B8 = true;
+            UIDialog_AddButton(DIALOG_OK, dialog, APICallback_CheckUserAuth_OK, true);
+            UIDialog_Setup(dialog);
+        }
+    }
+    else {
+        if (dialog) {
+            if (dialog->state != UIDialog_Unknown13) {
+                dialog->parent->selectionDisabled = true;
+                dialog->field_5C                  = 0;
+                dialog->state                     = UIDialog_Unknown13;
+                dialog->curCallback               = NULL;
+            }
+        }
+        else {
+            if (UIControl) {
+                if (UIControl_GetUIControl())
+                    UIControl_Unknown6(UIControl_GetUIControl());
+            }
+            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+            RSDK.StopChannel(Music->channelID);
+            entity->timer = 1;
+        }
+    }
+}
+
+
+void APICallback_Wait(int success) { UIWaitSpinner_Wait2(); }
+
+void APICallback_GetNextNotif(void)
+{
+    int *saveRAM = NULL;
+    if (RSDK_sceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
+        LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }
-    if (RSDK_info->platform == PLATFORM_DEV) {
-        LogHelpers_Print("DUMMY UnlockAchievement(%s)", name);
-        return;
+    else {
+        saveRAM            = &globals->saveRAM[0x900];
+        int id             = SaveGame_GetNextNotif();
+        saveRAM[id + 0x35] = true;
+    }
+}
+
+void APICallback_ManageNotifs(void)
+{
+    RSDK_THIS(APICallback);
+    if (SaveGame_CountUnreadNotifs()) {
+        TextInfo info;
+        INIT_TEXTINFO(info);
+        if (!UIDialog->activeDialog) {
+            int str = SaveGame_GetNotifStringID(SaveGame_GetNextNotif());
+            Localization_GetString(&info, str);
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+            dialog->field_B4       = true;
+            dialog->field_B8       = true;
+            UIDialog_AddButton(DIALOG_OK, dialog, APICallback_GetNextNotif, true);
+            UIDialog_Setup(dialog);
+        }
+    }
+    else {
+        APICallback->curCallback = NULL;
+        UIWaitSpinner_Wait();
+        SaveGame_TrackGameProgress(APICallback_Wait);
+        destroyEntity(entity);
+    }
+}
+
+bool32 APICallback_CheckUnreadNotifs(void)
+{
+    if (!SaveGame_CountUnreadNotifs())
+        return false;
+    if (!APICallback->curCallback)
+        APICallback->curCallback = CREATE_ENTITY(APICallback, APICallback_ManageNotifs, 0, 0);
+    return true;
+}
+
+bool32 APICallback_NotifyAutosave(void)
+{
+    if (!APICallback->notifyAutoSaveFlag && !APICallback->curCallback) {
+        return false;
     }
 
-    LogHelpers_Print("EMPTY UnlockAchievement(%s)", name);
+    if (!APICallback->curCallback || (!globals->notifiedAutosave && !APICallback->notifyAutoSaveFlag)) {
+        UIWaitSpinner_Wait();
+        APICallback->notifyAutoSaveFlag = true;
+        globals->notifiedAutosave       = false;
+        LogHelpers_Print("DUMMY NotifyAutosave()");
+        EntityAPICallback *dialogRunner = CREATE_ENTITY(APICallback, APICallback_NotifyAutoSave_CB, 0, 0);
+        dialogRunner->active            = ACTIVE_ALWAYS;
+        APICallback->curCallback        = dialogRunner;
+    }
+    return true;
 }
 
 void APICallback_EditorDraw(void) {}

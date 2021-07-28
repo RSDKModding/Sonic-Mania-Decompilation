@@ -11,9 +11,10 @@ void TimeAttackData_StageLoad(void) {}
 
 void TimeAttackData_TrackActClear(byte act, byte zone, StatInfo * stat, byte charID, int time, int rings, int score)
 {
+#if RETRO_USE_PLUS
     stat->statID = 0;
     stat->name   = "ACT_CLEAR";
-    memset(stat->data, 0, 0x40 * sizeof(void *));
+    memset(stat->data, 0, sizeof(stat->data));
     stat->data[0] = (void *)ZoneNames[zone];
     stat->data[1] = (void *)ActNames[act];
     stat->data[2] = (void *)PlayerNames[charID];
@@ -21,36 +22,40 @@ void TimeAttackData_TrackActClear(byte act, byte zone, StatInfo * stat, byte cha
     stat->data[4] = intToVoid(time);
     stat->data[5] = intToVoid(rings);
     stat->data[6] = intToVoid(score);
-
-#if !RETRO_USE_PLUS
-    if (APICallback->TrackActClear)
-        APICallback->TrackActClear(Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
-    else
-        LogHelpers_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", Zone_GetZoneID(), Zone->actID, charID, score, rings, time);
+#else
+    APICallback_TrackActClear(zoneID, act, charID, score, rings, time);
 #endif
 }
 void TimeAttackData_TrackTAClear(byte actID, byte zone, StatInfo *stat, byte charID, int gameMode, int time)
 {
+#if RETRO_USE_PLUS
     stat->statID = 1;
     stat->name   = "TA_CLEAR";
-    memset(stat->data, 0, 0x40 * sizeof(void *));
+    memset(stat->data, 0, sizeof(stat->data));
     stat->data[0] = (void *)ZoneNames[zone];
     stat->data[1] = (void *)ActNames[actID];
     stat->data[2] = (void *)PlayerNames[charID];
     stat->data[3] = (void *)ModeNames[gameMode];
     stat->data[4] = intToVoid(time);
+#else
+    APICallback_TrackTAClear(zoneID, act, charID, time);
+#endif
 }
 void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, byte charID, bool32 encore, int x, int y)
 {
+#if RETRO_USE_PLUS
     stat->statID   = 2;
     stat->name   = "ENEMY_DEFEAT";
-    memset(stat->data, 0, 0x40 * sizeof(void *));
+    memset(stat->data, 0, sizeof(stat->data));
     stat->data[0]     = (void *)ZoneNames[zoneID];
+    stat->data[1]     = (void *)ActNames[actID];
     stat->data[2]     = (void *)PlayerNames[charID];
     stat->data[3]     = intToVoid(encore);
     stat->data[4]     = intToVoid(x);
-    stat->data[1]     = (void *)ActNames[actID];
     stat->data[5]     = intToVoid(y);
+#else
+    APICallback_TrackEnemyDefeat(zoneID, act, charID, x, y);
+#endif
 }
 
 void TimeAttackData_ClearOptions(void)
@@ -204,7 +209,7 @@ void TimeAttackData_MigrateLegacyTADB(void)
                     int off = 12;
                     for (int rank = 0; rank < 3; ++rank) {
                         ushort *saveRAM = NULL;
-                        if (globals->saveLoaded == 200)
+                        if (globals->saveLoaded == STATUS_OK)
                             saveRAM = (ushort *)&globals->saveRAM[0x800];
                         else
                             saveRAM = NULL;
@@ -366,15 +371,33 @@ void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int 
     API.TryTrackStat(&stat);
 
     const char *leaderboardName = "";
-    if (zone > 11 || act > 1 || playerID > 5) {
-    }
-    else {
+    if (zone <= 11 && act <= 1 && playerID <= 5) {
         int id = act + 2 * zone - 1 + playerID + 4 * (act + 2 * zone) + 120;
         if (!mode)
             id = act + 2 * zone - 1 + playerID + 4 * (act + 2 * zone);
         leaderboardName = LeaderboardNames[id];
     }
     API.TrackScore(leaderboardName, time, TimeAttackData_GetLeaderboardRank_CB);
+}
+
+#else
+void TimeAttackData_SaveTATime(byte zone, byte act, byte player, byte rank, ushort time)
+{
+    int *recordsRAM = NULL;
+    if (globals->saveLoaded == STATUS_OK)
+        recordsRAM = &globals->saveRAM[0x800];
+    if (!recordsRAM)
+        return;
+
+    // playerID * (1 zones)
+    // zone * (1 acts)
+    // act * (3 ranks)
+    ushort *times = (ushort *)&recordsRAM[(36 * player) - 15 + (3 * zone)] + 3 * act;
+    for (int r = rank - 1; r < 2; ++r) {
+        times[r] = times[r + 1];
+    }
+
+    times[rank - 1] = time;
 }
 
 #endif

@@ -3,6 +3,14 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DIALOG_YES,
+    DIALOG_NO,
+    DIALOG_OK,
+    DIALOG_CANCEL,
+    DIALOG_CONTINUE,
+} DialogOptions;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

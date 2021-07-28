@@ -21,7 +21,7 @@ typedef unsigned long long uint64;
 typedef unsigned int bool32;
 
 enum GamePlatforms {
-    PLATFORM_WIN    = 0,
+    PLATFORM_PC    = 0,
     PLATFORM_PS4    = 1,
     PLATFORM_XB1    = 2,
     PLATFORM_SWITCH = 3,
@@ -202,6 +202,7 @@ struct RetroEngine {
 
     bool32 hasPlus     = true;  // are sonic mania plus features enabled?
     bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
+    bool32 XYFlip = false; // swaps X/Y, used for nintendo and etc controllers
 
     int prevEngineMode      = ENGINESTATE_LOAD;
     bool32 running          = false;

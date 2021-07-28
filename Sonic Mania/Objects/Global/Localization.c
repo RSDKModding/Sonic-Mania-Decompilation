@@ -72,7 +72,7 @@ void Localization_LoadStrings(void)
 #endif
         default: break;
     }
-    RSDK.SplitStringList(Localization->strings, &Localization->text, 0, 68);
+    RSDK.SplitStringList(Localization->strings, &Localization->text, 0, STR_STRING_COUNT);
     Localization->loaded = true;
 
 #if RETRO_USE_EGS

@@ -24,7 +24,9 @@ void UIChoice_Update(void)
         entity->spriteIndex = UIWidgets->textSpriteIndex;
         entity->isDisabled  = disabled;
     }
+
     StateMachine_Run(entity->state);
+
     if (parent) {
         if (parent->state == UIButton_Unknown16) {
             entity->field_134.x = 0;
@@ -52,11 +54,13 @@ void UIChoice_Draw(void)
     size >>= 16;
     UIWidgets_Unknown7(entity->size.y >> 16, size, entity->sizeIY, (UIWidgets->value >> 16) & 0xFF, (UIWidgets->value >> 8) & 0xFF,
                        (UIWidgets->value) & 0xFF, drawPos.x, drawPos.y);
+
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x += entity->field_134.y;
     drawPos.y += entity->field_134.y;
     UIWidgets_Unknown7(entity->size.y >> 16, size, entity->sizeIY, 0, 0, 0, drawPos.x, drawPos.y);
+
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
     if (entity->arrowWidth > 0 && entity->flag && !(entity->disabled || parent->disabled)) {
         drawPos.x = entity->position.x;
@@ -66,6 +70,7 @@ void UIChoice_Draw(void)
         drawPos.x += entity->field_134.y;
         drawPos.y += entity->field_134.y;
         RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y;
         drawPos.y += entity->field_134.x;
@@ -90,6 +95,7 @@ void UIChoice_Draw(void)
         }
         if (entity->auxIcon)
             RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+
         if (!entity->noText)
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
     }
@@ -122,15 +128,15 @@ void UIChoice_Unknown1(EntityUIChoice *entity)
 {
     if (entity) {
         EntityUIButton *parent = (EntityUIButton *)entity->parent;
-        entity->active = ACTIVE_BOUNDS;
+        entity->active         = ACTIVE_BOUNDS;
         if (!parent->disabled)
             entity->visible = true;
         entity->field_134.x = 0;
         entity->field_134.y = 0;
         entity->field_13C   = -0x20000;
         entity->field_140   = -0x20000;
-        entity->flag   = true;
-        entity->state  = UIChoice_Unknown7;
+        entity->flag        = true;
+        entity->state       = UIChoice_Unknown7;
     }
 }
 
@@ -139,8 +145,8 @@ void UIChoice_Unknown2(EntityUIButton *entity)
     if (entity) {
         entity->isDisabled = false;
         entity->dword138   = 0;
-        entity->flag  = false;
-        entity->state = UIChoice_Unknown6;
+        entity->flag       = false;
+        entity->state      = UIChoice_Unknown6;
     }
 }
 
@@ -197,12 +203,12 @@ void UIChoice_Unknown4(void)
 
 bool32 UIChoice_CheckTouch(void)
 {
-    void(*callbacks[2])(void);
+    void (*callbacks[2])(void);
     Vector2 posStart[2];
-    Vector2 posEnd[2];               
+    Vector2 posEnd[2];
 
     RSDK_THIS(UIChoice);
-    callbacks[0] = UIChoice_Unknown3;
+    callbacks[0]  = UIChoice_Unknown3;
     callbacks[1]  = UIChoice_Unknown4;
     posEnd[0].x   = entity->touchPosEnd.x;
     posEnd[1].x   = entity->touchPosStart.x;
@@ -224,7 +230,8 @@ bool32 UIChoice_CheckTouch(void)
             for (int t = 0; t < RSDK_touchMouse->count; ++t) {
                 int x = (RSDK_screens->position.x << 16) - ((RSDK_screens->width * RSDK_touchMouse->x[t]) * -65536.0f);
                 int y = (RSDK_screens->position.y << 16) - ((RSDK_screens->height * RSDK_touchMouse->y[t]) * -65536.0f);
-                if (abs(posEnd[i].x + entity->position.x - x) < posStart[i].x >> 1 && abs(posEnd[i].y + entity->position.y - y) < posStart[i].y >> 1) {
+                if (abs(posEnd[i].x + entity->position.x - x) < posStart[i].x >> 1
+                    && abs(posEnd[i].y + entity->position.y - y) < posStart[i].y >> 1) {
                     entity->touchID = i;
                     flag            = true;
                 }

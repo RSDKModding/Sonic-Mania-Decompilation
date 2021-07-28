@@ -48,7 +48,7 @@ typedef struct {
     ushort spriteIndex;
     ushort field_296;
     Animator animator;
-    Animator altData;
+    Animator animator2;
 } EntityCutsceneHBH;
 
 // Object Struct

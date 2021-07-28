@@ -62,27 +62,7 @@ void MenuSetup_StaticUpdate(void)
 #if RETRO_USE_PLUS
     DialogRunner_GetUserAuthStatus();
 #else
-    int status = APICallback_GetUserAuthStatus();
-
-    bool32 flag = false;
-    if (status == STATUS_ERROR)
-        flag = APICallback->promptPreferenceStatus == STATUS_NONE;
-
-    if (flag) {
-        APICallback->promptPreferenceStatus = STATUS_ERROR;
-    }
-    else {
-        flag = false;
-        if (status == STATUS_FORBIDDEN)
-            flag = APICallback->promptPreferenceStatus == STATUS_NONE;
-
-        if (flag) {
-            EntityAPICallback* callback = CREATE_ENTITY(APICallback, APICallback_Unknown10, 0, 0);
-            callback->active = ACTIVE_ALWAYS;
-            APICallback->field_168 = callback;
-            APICallback->field_104 = 1;
-        }
-    }
+    APICallback_GetUserAuthStatus();
 #endif
 }
 
@@ -194,7 +174,7 @@ bool32 MenuSetup_InitUserdata(void)
             API.TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
-            int statusUnknown2 = API.UserStorageStatusUnknown2();
+            int statusUnknown2 = API.GetSaveStatus();
             if (!API.GetUserStorageNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
                 if (statusUnknown2 != STATUS_CONTINUE) {
                     if (statusUnknown2 != STATUS_FORBIDDEN) {
@@ -237,7 +217,7 @@ bool32 MenuSetup_InitUserdata(void)
                     && globals->taTableLoaded != STATUS_ERROR) {
                 }
                 else {
-                    int status = API.UserStorageStatusUnknown2();
+                    int status = API.GetSaveStatus();
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {
                             RSDK.LoadScene("Presentation", "Title Screen");
@@ -245,6 +225,72 @@ bool32 MenuSetup_InitUserdata(void)
                         }
                         else {
                             DialogRunner_PromptSavePreference(STATUS_CORRUPT);
+                        }
+                    }
+                }
+            }
+        }
+    }
+#else
+    if (!MenuSetup->dword10)
+        MenuSetup->fxFade->timer = 512;
+    
+    APICallback_GetUserAuthStatus();
+    if (!APICallback->authStatus) {
+        APICallback_TryAuth();
+    }
+    else if (APICallback->authStatus != STATUS_CONTINUE) {
+        int storageStatus = APICallback_GetStorageStatus();
+        if (!storageStatus) {
+            APICallback_TryInitStorage();
+        }
+        else if (storageStatus != STATUS_CONTINUE) {
+            if (!globals->noSave && (APICallback->authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
+                if (APICallback->saveStatus != STATUS_CONTINUE) {
+                    if (APICallback->saveStatus != STATUS_FORBIDDEN) {
+                        APICallback_PromptSavePreference(storageStatus);
+                    }
+                    else {
+                        RSDK.LoadScene("Presentation", "Title Screen");
+                        RSDK.InitSceneLoad();
+                    }
+                }
+                return false;
+            }
+
+            if (!MenuSetup->gameLoaded) {
+                UIWaitSpinner_Wait();
+                Options_LoadOptionsBin();
+                SaveGame_LoadFile();
+                MenuSetup->gameLoaded = true;
+            }
+            if (MenuSetup->dword10)
+                return true;
+            if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK) {
+                if (!globals->noSave && APICallback_NotifyAutosave())
+                    return false;
+                UIWaitSpinner_Wait2();
+                if (APICallback_CheckUnreadNotifs())
+                    return false;
+                MenuSetup->dword10 = 1;
+                return true;
+            }
+
+            if (globals->noSave) {
+                UIWaitSpinner_Wait2();
+                return true;
+            }
+            else {
+                if (globals->optionsLoaded != STATUS_ERROR && globals->saveLoaded != STATUS_ERROR) {
+                }
+                else {
+                    if (APICallback->saveStatus != STATUS_CONTINUE) {
+                        if (APICallback->saveStatus == STATUS_FORBIDDEN) {
+                            RSDK.LoadScene("Presentation", "Title Screen");
+                            RSDK.InitSceneLoad();
+                        }
+                        else {
+                            APICallback_PromptSavePreference(STATUS_CORRUPT);
                         }
                     }
                 }
@@ -445,6 +491,11 @@ void MenuSetup_Unknown7(void)
         globals->menuParam[95] = d;
     }
 }
+
+//START PRE-PLUS AREA
+#if !RETRO_USE_PLUS
+
+#endif
 
 void MenuSetup_EditorDraw(void) {}
 

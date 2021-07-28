@@ -76,10 +76,7 @@ typedef enum {
     int touchPosCount;                                                                                                                               \
     int touchCountUnknown;                                                                                                                           \
     bool32 flag;                                                                                                                                     \
-    bool32 disabled;                                                                                                                                 \
-    Vector2 size;                                                                                                                                    \
-    int listID;                                                                                                                                      \
-    int frameID;
+    bool32 disabled;
 
 #include "GameOptions.h"
 #include "GameObjects.h"
@@ -102,9 +99,9 @@ extern UnknownInfo *RSDK_unknown;
 #endif
 extern ScreenInfo *RSDK_screens;
 
-static const char *PlayerNames[] = { "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };
+static const char *PlayerNames[] = { "Invalid", "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };
 static const char *ActNames[]    = { "Act 1", "Act 2", "Act 3" };
-static const char *ZoneNames[]   = { "Act 1", "Act 2", "Act 3" };
+static const char *ZoneNames[]   = { "GHZ", "CPZ", "SPZ", "FBZ", "PGZ", "SSZ", "HCZ", "MSZ", "OOZ", "LRZ", "MMZ", "TMZ", "ERZ", "AIZ" };
 static const char *ModeNames[]   = { "Mania", "Encore" };
 static const char *AchNames[]    = { "ACH_GOLD_MEDAL", "ACH_SILVER_MEDAL", "ACH_EMERALDS", "ACH_GAME_CLEARED", "ACH_STARPOST", "ACH_SIGNPOST",
                                   "ACH_GHZ",        "ACH_CPZ",          "ACH_SPZ",      "ACH_FBZ",          "ACH_PGZ",      "ACH_SSZ",

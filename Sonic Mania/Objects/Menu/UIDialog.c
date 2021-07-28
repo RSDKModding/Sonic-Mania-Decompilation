@@ -157,7 +157,7 @@ void UIDialog_AddButton(byte frame, EntityUIDialog *dialog, void (*callback)(voi
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 9, &button->animator, true, frame);
         button->textSpriteIndex = UIWidgets->textSpriteIndex;
 
-        if (frame == 4)
+        if (frame == DIALOG_CONTINUE)
             button->size.x = 0x640000;
         else
             button->size.x = 0x320000;

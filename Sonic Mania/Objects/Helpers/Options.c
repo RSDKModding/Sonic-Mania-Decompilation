@@ -1,7 +1,30 @@
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
 ObjectOptions *Options;
+
+void Options_Update(void) {}
+void Options_LateUpdate(void) {}
+void Options_StaticUpdate(void) {}
+void Options_Draw(void) {}
+void Options_Create(void *data) {}
+void Options_StageLoad(void)
+{
+#if !RETRO_USE_PLUS
+    Options->state = 0;
+    if (RSDK_info->platform == PLATFORM_DEV || RSDK_info->platform == PLATFORM_PC) {
+        Options_Reload();
+    }
+    else {
+        globals->optionsRAM[29] = 0;
+        globals->optionsRAM[32] = 0;
+        globals->optionsRAM[31] = 0;
+        globals->optionsRAM[33] = 0;
+    }
+#endif
+}
+void Options_EditorDraw(void) {}
+void Options_EditorLoad(void) {}
+void Options_Serialize(void) {}
 
 void Options_Reload(void)
 {
@@ -61,7 +84,11 @@ void Options_LoadCallback(int success)
 
 void Options_LoadOptionsBin(void)
 {
+#if RETRO_USE_PLUS
     if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
+#else
+    if (RSDK_info->platform && RSDK_info->platform != PLATFORM_DEV) {
+#endif
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Localization->loaded = 0;
@@ -73,7 +100,11 @@ void Options_LoadOptionsBin(void)
                 globals->optionsLoaded = STATUS_CONTINUE;
                 Options->loadEntityPtr = RSDK_sceneInfo->entity;
                 Options->loadCallback  = Options_LoadCallback;
-                API.LoadUserFile("Options.bin", globals->optionsRAM, 512, Options_LoadOptionsCallback);
+#if RETRO_USE_PLUS
+                API.LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options_LoadOptionsCallback);
+#else
+                APICallback_LoadUserFile(globals->optionsRAM, "Options.bin", 0x200, Options_LoadOptionsCallback);
+#endif
             }
         }
     }
@@ -89,11 +120,19 @@ void Options_LoadOptionsBin(void)
 void Options_SaveOptionsBin(void (*callback)(int))
 {
     if (Options->state) {
+#if RETRO_USE_PLUS
         if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
+#else
+        if (RSDK_info->platform && RSDK_info->platform != PLATFORM_DEV) {
+#endif
             if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = RSDK_sceneInfo->entity;
                 Options->saveCallback  = callback;
-                API.SaveUserFile("Options.bin", globals->optionsRAM, 512, Options_SaveOptionsCallback, 0);
+#if RETRO_USE_PLUS
+                API.SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, 0);
+#else
+                APICallback_SaveUserFile(globals->optionsRAM, "Options.bin", 0x200, Options_SaveOptionsCallback);
+#endif
             }
             else {
                 Options->state = 0;
@@ -108,7 +147,7 @@ void Options_SaveOptionsBin(void (*callback)(int))
         }
     }
     if (callback)
-        callback(1);
+        callback(true);
 }
 
 void Options_SetLanguage(int language)
@@ -122,7 +161,11 @@ void Options_SetLanguage(int language)
         optionsRAM[2]           = -1;
         globals->optionsRAM[22] = 0;
     }
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV)
+#if RETRO_USE_PLUS
+    if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV)
+#else
+    if (RSDK_info->platform && RSDK_info->platform != PLATFORM_DEV)
+#endif
         RSDK.SetSettingsValue(SETTINGS_LANGUAGE, language);
     Options->state = 1;
 }
@@ -134,7 +177,11 @@ void Options_Unknown1(int *optionsRAM)
         Localization->language = langauagePtr[2];
     }
     else {
+#if RETRO_USE_PLUS
         langauagePtr[2] = RSDK_sku->language;
+#else
+        langauagePtr[2] = RSDK_info->language;
+#endif
     }
 
     if (!optionsRAM[24]) {
@@ -193,5 +240,3 @@ void Options_SaveOptionsCallback(int statusCode)
         Options->saveEntityPtr = NULL;
     }
 }
-
-#endif

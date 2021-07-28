@@ -4428,7 +4428,7 @@ void Player_State_BubbleBounce(void)
             entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12) + 48;
             int id                                = RSDK.GetEntityID(entity);
             EntityShield *shield                  = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
-            RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &shield->altData, true, 0);
+            RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &shield->animator2, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &shield->animator, true, 0);
             shield->state = Shield_State_BubbleAlt;
             if (entity->playerAnimator.animationSpeed > 0xF0)
@@ -5994,7 +5994,7 @@ void Player_SonicJumpAbility(void)
                             entity->state           = Player_State_BubbleBounce;
                             entity->nextGroundState = StateMachine_None;
                             entity->nextAirState    = StateMachine_None;
-                            RSDK.SetSpriteAnimation(Shield->spriteIndex, 7, &shield->altData, true, 0);
+                            RSDK.SetSpriteAnimation(Shield->spriteIndex, 7, &shield->animator2, true, 0);
                             RSDK.SetSpriteAnimation(Shield->spriteIndex, 8, &shield->animator, true, 0);
                             shield->state = Shield_State_Bubble;
                             RSDK.PlaySFX(Shield->sfx_BubbleBounce, 0, 255);

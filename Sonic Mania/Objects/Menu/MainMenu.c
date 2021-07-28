@@ -179,7 +179,7 @@ void MainMenu_ChangeMenu(void)
     EntityUIButton *button = (EntityUIButton *)RSDK_sceneInfo->entity;
     switch (button->frameID) {
         case 0:
-            if (noSave) {
+            if (checkNoSave) {
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {

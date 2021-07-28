@@ -98,25 +98,25 @@ void DialogRunner_NotifyAutoSave(void)
     }
 }
 
-void DialogRunner_SetNoSaveEnabled(void)
+void DialogRunner_SetNoSaveDisabled(void)
 {
-    API.UserStorageStatusUnknown4();
+    API.SetSaveStatusForbidden();
     API.SetUserStorageNoSave(false);
 }
 
-void DialogRunner_SetNoSaveDisabled(void)
+void DialogRunner_SetNoSaveEnabled(void)
 {
-    API.UserStorageStatusUnknown5();
+    API.SetSaveStatusError();
     API.SetUserStorageNoSave(true);
 }
 
-void DialogRunner_State_CheckNoSave(void)
+void DialogRunner_PromptSavePreference_CB(void)
 {
     TextInfo info;
     INIT_TEXTINFO(info);
 
     RSDK_THIS(DialogRunner);
-    if (API.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
+    if (API.GetSaveStatus() == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
             int stringID = STR_SAVELOADFAIL;
             switch (entity->status) {
@@ -131,8 +131,8 @@ void DialogRunner_State_CheckNoSave(void)
             Localization_GetString(&info, stringID);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B8       = 1;
-            UIDialog_AddButton(1, dialog, DialogRunner_SetNoSaveEnabled, 1);
-            UIDialog_AddButton(0, dialog, DialogRunner_SetNoSaveDisabled, 1);
+            UIDialog_AddButton(1, dialog, DialogRunner_SetNoSaveDisabled, 1);
+            UIDialog_AddButton(0, dialog, DialogRunner_SetNoSaveEnabled, 1);
             UIDialog_Setup(dialog);
         }
     }
@@ -141,7 +141,7 @@ void DialogRunner_State_CheckNoSave(void)
         destroyEntity(entity);
     }
 }
-void DialogRunner_State_CheckUserAuth(int a1, int a2)
+void DialogRunner_CheckUserAuth_CB(int a1, int a2)
 {
     RSDK_THIS(DialogRunner);
     if (entity->timer) {
@@ -246,9 +246,9 @@ void DialogRunner_GetNextNotif(void)
         return;
     }
     else {
-        saveRAM = &globals->saveRAM[0x900];
         int id             = SaveGame_GetNextNotif();
-        saveRAM[id + 0x35] = true;
+        if (id >= 0)
+            globals->saveRAM[0x935 + id] = true;
     }
 }
 bool32 DialogRunner_CheckUnreadNotifs(void)
@@ -281,18 +281,18 @@ void DialogRunner_GetUserAuthStatus(void)
     if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
         if (DialogRunner->field_4)
             return;
-        EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_State_CheckUserAuth, 0, 0);
+        EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_CheckUserAuth_CB, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         DialogRunner->entityPtr          = dialogRunner;
-        DialogRunner->field_4            = 1;
+        DialogRunner->field_4            = true;
     }
 
     if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->field_4) {
-        EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_State_CheckUserAuth, 0, 0);
+        EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_CheckUserAuth_CB, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         dialogRunner->field_88           = 1;
         DialogRunner->entityPtr          = dialogRunner;
-        DialogRunner->field_4            = 1;
+        DialogRunner->field_4            = true;
         globals->lastHasPlus             = API.CheckDLC(DLC_PLUS);
     }
 }
@@ -303,11 +303,11 @@ void DialogRunner_PromptSavePreference(int id)
         return;
     }
     LogHelpers_Print("PromptSavePreference()");
-    if (API.UserStorageStatusUnknown2() == STATUS_CONTINUE) {
+    if (API.GetSaveStatus() == STATUS_CONTINUE) {
         LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
     API.SetUserStorageStatus();
-    EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_State_CheckNoSave, 0, 0);
+    EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_PromptSavePreference_CB, 0, 0);
     dialogRunner->status             = id;
     DialogRunner->entityPtr          = dialogRunner;
 }

@@ -4,9 +4,9 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
-#define noSave API.GetUserStorageNoSave()
+#define checkNoSave API.GetUserStorageNoSave()
 #else
-#define noSave globals->noSave
+#define checkNoSave globals->noSave
 #endif
 
 // Object Class
@@ -62,6 +62,7 @@ void SaveGame_SaveFile_CB(int status);
 int SaveGame_GetNotifStringID(int type);
 void SaveGame_ShuffleBSSID(void);
 int *SaveGame_GetGlobalData(void);
+float SaveGame_GetCompletionPercent(int *saveRAM);
 void SaveGame_TrackGameProgress(void (*callback)(int));
 void SaveGame_Unknown14(void);
 void SaveGame_UnlockAllMedals(void);

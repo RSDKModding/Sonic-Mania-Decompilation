@@ -4,10 +4,12 @@
 #define minVal(a, b)                      ((a) < (b) ? (a) : (b))
 #define maxVal(a, b)                      ((a) > (b) ? (a) : (b))
 #define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
-#define fabs(a)                      ((a) > 0 ? (a) : -(a))
+#define fabs(a)                           ((a) > 0 ? (a) : -(a))
 
-#define intToVoid(x) (void *)(size_t)(x)
-#define voidToInt(x) (int)(size_t)(x)
+#define intToVoid(x)   (void *)(size_t)(x)
+#define floatToVoid(x) intToVoid(*(int *)&(x))
+#define voidToInt(x)   (int)(size_t)(x)
+#define voidToFloat(x) *(float *)&(x)
 
 #define unused(x) (void)x
 
@@ -45,31 +47,31 @@ typedef struct {
     int (*GetLeaderboardUnknown2)(void);
     void (*Unknown12)(int a2, uint a3, int a4);
     void (*LeaderboardsUnknown8)(void);
-    void (*ReadLeaderboardEntry)(uint a1);
+    LeaderboardEntry *(*ReadLeaderboardEntry)(uint a1);
     void (*SetRichPresence)(int, TextInfo *text);
     void (*TryTrackStat)(StatInfo *stat);
     int (*GetStatsStatus)(void);
     void (*SetStatsStatus)(int a1);
-    void (*UserStorageUnknown8)(void);
+    void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int (*GetUserAuthStatus)(void);
     bool32 (*GetUsername)(TextInfo *text);
     void (*TryInitStorage)(void);
     int (*UserStorageStatusUnknown1)(void);
-    int (*UserStorageStatusUnknown2)(void);
+    int (*GetSaveStatus)(void);
     void (*ClearUserStorageStatus)(void);
     void (*SetUserStorageStatus)(void);
-    int (*UserStorageStatusUnknown3)(void);
-    int (*UserStorageStatusUnknown4)(void);
-    int (*UserStorageStatusUnknown5)(void);
+    void (*SetSaveStatusOK)(void);
+    void (*SetSaveStatusForbidden)(void);
+    void (*SetSaveStatusError)(void);
     void (*SetUserStorageNoSave)(bool32 state);
     bool32 (*GetUserStorageNoSave)(void);
     void (*LoadUserFile)(const char *name, int *data, int size, void (*callback)(int status));                  // load user file from game dir
     void (*SaveUserFile)(const char *name, int *data, int size, void (*callback)(int status), bool32 compress); // save user file to game dir
     void (*DeleteUserFile)(const char *filename, void (*callback)(int status));                                 // delete user file from game dir
     ushort (*InitUserDB)(const char *name, ...);
-    ushort (*LoadUserDB)(const char *filename, int (*callback)(int status));
-    void (*SaveUserDB)(ushort tableID, int (*callback)(int status));
+    ushort (*LoadUserDB)(const char *filename, void (*callback)(int status));
+    void (*SaveUserDB)(ushort tableID, void (*callback)(int status));
     void (*ClearUserDB)(ushort tableID);
     void (*ClearAllUserDBs)(void);
     void (*Unknown31)(ushort tableID);
@@ -129,7 +131,7 @@ typedef struct {
     void (*ClearCameras)(void);
     void (*AddCamera)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);
 #if !RETRO_USE_PLUS
-    void *(*GetFuncPtr)(const char *funcName);
+    void *(*GetAPIFunction)(const char *funcName);
 #endif
     int (*GetSettingsValue)(int id);
     void (*SetSettingsValue)(int id, int val);

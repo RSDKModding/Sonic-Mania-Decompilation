@@ -80,6 +80,9 @@ enum UserdataTableIDs {
     APITable_RemoveAllDBEntries,
     APITable_Count,
 };
+#else
+APITableEntry APIFunctionTable[APITABLE_COUNT];
+int APIFunctionTableCount;
 #endif
 
 enum FunctionTableIDs {
@@ -301,7 +304,42 @@ GameVersionInfo gameVerInfo;
 void NullFunc() {}
 
 #define addToRSDKFunctionTable(id, func) RSDKFunctionTable[id] = (void *)func;
+#if RETRO_REV02
 #define addToAPIFunctionTable(id, func) APIFunctionTable[id] = (void *)func;
+#else
+void addToAPIFunctionTable(const char *name, void *ptr)
+{
+    if (APIFunctionTableCount < APITABLE_COUNT) {
+        uint hash[4];
+        GEN_HASH(name, hash);
+        for (int f = 0; f < APIFunctionTableCount; ++f) {
+            if (HASH_MATCH(hash, APIFunctionTable[f].hash))
+                return; // already exists, ignore this call
+        }
+
+        HASH_COPY(APIFunctionTable[APIFunctionTableCount].hash, hash);
+        APIFunctionTable[APIFunctionTableCount].ptr = ptr;
+        APIFunctionTableCount++;
+    }
+}
+
+void *GetAPIFunction(const char *name)
+{
+    if (!name)
+        return NULL;
+
+    uint hash[4];
+    GEN_HASH(name, hash);
+    for (int f = 0; f < APIFunctionTableCount; ++f) {
+        if (HASH_MATCH(hash, APIFunctionTable[f].hash))
+            return APIFunctionTable[f].ptr;
+    }
+
+    if (engine.printConsole)
+        printLog(PRINT_POPUP, "API Function not found: %s", name);
+    return NULL;
+}
+#endif
 
 void setupFunctions()
 {
@@ -309,7 +347,7 @@ void setupFunctions()
     int region = REGION_US;
     int platform = PLATFORM_DEV;
 #if RETRO_PLATFORM == RETRO_WIN
-    //platform = PLATFORM_WIN;
+    //platform = PLATFORM_PC;
 #elif RETRO_PLATFORM == RETRO_PS4
     platform = PLATFORM_PS4;
 #elif RETRO_PLATFORM == RETRO_XB1
@@ -360,18 +398,18 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_CheckAchievementsEnabled, achievements->CheckAchievementsEnabled);
     addToAPIFunctionTable(APITable_GetAchievementNames, achievements->GetAchievementNames);
 #endif
-    addToAPIFunctionTable(APITable_LeaderboardsUnknown4, NullFunc);
+    addToAPIFunctionTable(APITable_LeaderboardsUnknown4, NullFunc); // LeaderboardsUnknown4);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_EGS_LeaderboardsUnknown4, NullFunc);
+    addToAPIFunctionTable(APITable_EGS_LeaderboardsUnknown4, NullFunc); // EGS_LeaderboardsUnknown4);
 #endif
     addToAPIFunctionTable(APITable_FetchLeaderboard, leaderboards->FetchLeaderboard);
     addToAPIFunctionTable(APITable_TrackScore, leaderboards->TrackScore);
-    addToAPIFunctionTable(APITable_LeaderboardsUnknown7, leaderboards->unknown7);
-    addToAPIFunctionTable(APITable_LeaderboardEntryCount, NullFunc);
-    addToAPIFunctionTable(APITable_Missing2, NullFunc);
-    addToAPIFunctionTable(APITable_Unknown12, NullFunc);
-    addToAPIFunctionTable(APITable_Missing3, NullFunc);
-    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, NullFunc);
+    addToAPIFunctionTable(APITable_LeaderboardsUnknown7, leaderboards->GetStatus);
+    addToAPIFunctionTable(APITable_LeaderboardEntryCount, NullFunc); // LeaderboardEntryCount);
+    addToAPIFunctionTable(APITable_Missing2, NullFunc);             // Missing2);
+    addToAPIFunctionTable(APITable_Unknown12, NullFunc);            // Unknown12);
+    addToAPIFunctionTable(APITable_Missing3, NullFunc);             // Missing3);
+    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, NullFunc); // ReadLeaderboardEntry);
     addToAPIFunctionTable(APITable_SetPresence, richPresence->SetPresence);
     addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
     addToAPIFunctionTable(APITable_GetStatsStatus, GetStatsStatus);
@@ -382,12 +420,12 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_GetUsername, userStorage->GetUsername);
     addToAPIFunctionTable(APITable_TryInitStorage, userStorage->TryInitStorage);
     addToAPIFunctionTable(APITable_UserStorageStatusUnknown1, UserStorageStatusUnknown1);
-    addToAPIFunctionTable(APITable_UserStorageStatusUnknown2, UserStorageStatusUnknown2);
+    addToAPIFunctionTable(APITable_UserStorageStatusUnknown2, GetSaveStatus);
     addToAPIFunctionTable(APITable_ClearUserStorageStatus, ClearUserStorageStatus);
     addToAPIFunctionTable(APITable_SetUserStorageStatus, SetUserStorageStatus);
-    addToAPIFunctionTable(APITable_Missing5, UserStorageStatusUnknown3);
-    addToAPIFunctionTable(APITable_Unknown25, UserStorageStatusUnknown4);
-    addToAPIFunctionTable(APITable_Unknown26, UserStorageStatusUnknown5);
+    addToAPIFunctionTable(APITable_Missing5, SetSaveStatusOK);
+    addToAPIFunctionTable(APITable_Unknown25, SetSaveStatusForbidden);
+    addToAPIFunctionTable(APITable_Unknown26, SetSaveStatusError);
     addToAPIFunctionTable(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
     addToAPIFunctionTable(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
     addToAPIFunctionTable(APITable_LoadUserFile, userStorage->LoadUserFile);
@@ -405,13 +443,46 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
     addToAPIFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
     addToAPIFunctionTable(APITable_Unknown37, AddUserDBEntry);
-    addToAPIFunctionTable(APITable_SetUserDBValue, NullFunc); // SetUserDBValue);
-    addToAPIFunctionTable(APITable_Unknown39, NullFunc);      // Unknown39);
+    addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
+    addToAPIFunctionTable(APITable_Unknown39, GetUserDBValue);
     addToAPIFunctionTable(APITable_GetEntryUUID, GetUserDBRowUUID);
     addToAPIFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
     addToAPIFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);
     addToAPIFunctionTable(APITable_RemoveDBEntry, RemoveDBEntry);
     addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBEntries);
+#else
+    addToAPIFunctionTable("GetConfirmButtonFlip", GetConfirmButtonFlip);
+    addToAPIFunctionTable("GetXYButtonFlip", GetXYButtonFlip);
+    addToAPIFunctionTable("LaunchManual", LaunchManual);
+    addToAPIFunctionTable("ExitGame", ExitGame);
+    addToAPIFunctionTable("ClearAchievements", ClearAchievements);
+    addToAPIFunctionTable("UnlockAchievement", TryUnlockAchievement);
+    addToAPIFunctionTable("FetchLeaderboard", FetchLeaderboard);
+    // addToAPIFunctionTable("LeaderboardStatus", GetLeaderboardStatus);
+    // addToAPIFunctionTable("LeaderboardEntryCount", LeaderboardEntryCount);
+    // addToAPIFunctionTable("LeaderboardReadEntry", LeaderboardReadEntry);
+    addToAPIFunctionTable("TrackActClear", TrackActClear);
+    addToAPIFunctionTable("TrackTAClear", TrackTAClear);
+    addToAPIFunctionTable("TrackEnemyDefeat", TrackEnemyDefeat);
+    addToAPIFunctionTable("ClearPrerollErrors", ClearPrerollErrors);
+    addToAPIFunctionTable("TryAuth", TryAuth);
+    addToAPIFunctionTable("GetUserAuthStatus", GetUserAuthStatus);
+    addToAPIFunctionTable("TryInitStorage", TryInitStorage);
+    addToAPIFunctionTable("GetStorageStatus", GetUserStorageStatus);
+    addToAPIFunctionTable("GetUsername", GetUserName);
+    addToAPIFunctionTable("LoadUserFile", TryLoadUserFile);
+    addToAPIFunctionTable("SaveUserFile", TrySaveUserFile);
+    addToAPIFunctionTable("SaveSettingsINI", writeSettings);
+    addToAPIFunctionTable("GetUserLanguage", GetUserLanguage);
+    // addToAPIFunctionTable("ControllerIDForInputID", ControllerIDForInputID);
+    // addToAPIFunctionTable("MostRecentActiveControllerID", MostRecentActiveControllerID);
+    // addToAPIFunctionTable("AssignControllerID", AssignControllerID);
+    // addToAPIFunctionTable("ResetControllerAssignments", ResetControllerAssignments);
+    // addToAPIFunctionTable("InputIDIsDisconnected", InputIDIsDisconnected);
+    // addToAPIFunctionTable("GetControllerType", GetControllerType);
+    addToAPIFunctionTable("ShowSteamControllerOverlay", ShowExtensionOverlay);
+    addToAPIFunctionTable("SetInputLEDColor", SetInputLEDColor);
+    addToAPIFunctionTable("SetRichPresence", SetPresence);
 #endif
 
     // Function Table
@@ -450,7 +521,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ClearScreens, ClearCameras);
     addToRSDKFunctionTable(FunctionTable_AddScreen, AddCamera);
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetFuncPtr);
+    addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetAPIFunction);
 #endif
     addToRSDKFunctionTable(FunctionTable_GetSettingsValue, GetSettingsValue);
     addToRSDKFunctionTable(FunctionTable_SetSettingsValue, SetSettingsValue);

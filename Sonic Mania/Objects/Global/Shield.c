@@ -13,7 +13,7 @@ void Shield_Update(void)
             --drawOrder;
         entity->drawOrder = drawOrder;
         entity->visible   = entity->flag & player->visible;
-        entity->flag  = true;
+        entity->flag      = true;
     }
 }
 
@@ -47,7 +47,7 @@ void Shield_Draw(void)
                 entity->position.x += (playerHitbox->left << 15) - (playerHitbox->right << 15) - (playerHitbox->left << 16);
             else
                 entity->position.x += ((playerHitbox->right + 2 * playerHitbox->left) << 15) - (playerHitbox->left << 15);
-            if (player->direction & FLIP_Y || player->invertGravity)
+            if ((player->direction & FLIP_Y) || player->invertGravity)
                 entity->position.y += (playerHitbox->top << 15) - (playerHitbox->bottom << 15) - (playerHitbox->top << 16);
             else
                 entity->position.y += ((playerHitbox->bottom + 2 * playerHitbox->top) << 15) - (playerHitbox->top << 15);
@@ -56,7 +56,7 @@ void Shield_Draw(void)
 
     if (entity->type == SHIELD_BUBBLE) {
         entity->inkEffect = INK_ADD;
-        RSDK.DrawSprite(&entity->altData, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->inkEffect = INK_BLEND;
     }
 
@@ -66,8 +66,8 @@ void Shield_Draw(void)
 void Shield_Create(void *data)
 {
     RSDK_THIS(Shield);
-    entity->active       = ACTIVE_NORMAL;
-    entity->visible      = true;
+    entity->active  = ACTIVE_NORMAL;
+    entity->visible = true;
     if (data) {
         EntityPlayer *player = (EntityPlayer *)data;
         if (player->objectID == Player->objectID)
@@ -84,7 +84,7 @@ void Shield_Create(void *data)
             entity->alpha     = 0x80;
             break;
         case SHIELD_BUBBLE:
-            RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->altData, true, 0);
+            RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->animator2, true, 0);
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 6, &entity->animator, true, 0);
             entity->alpha = 0x100;
             break;
@@ -111,22 +111,20 @@ void Shield_State_Generic(void)
 {
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->animator);
-    RSDK.ProcessAnimation(&entity->altData);
-    int id            = RSDK.GetFrameID(&entity->animator) & 7;
-    entity->frameID   = id;
-    entity->direction = id & 3;
+    RSDK.ProcessAnimation(&entity->animator2);
+    entity->frameID   = RSDK.GetFrameID(&entity->animator) & 7;
+    entity->direction = entity->frameID & 3;
 }
 
 void Shield_State_Bubble(void)
 {
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->animator);
-    RSDK.ProcessAnimation(&entity->altData);
-    int id            = RSDK.GetFrameID(&entity->animator) & 7;
-    entity->frameID   = id;
-    entity->direction = id & 3;
-    if (entity->altData.frameID == entity->altData.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &entity->altData, true, 0);
+    RSDK.ProcessAnimation(&entity->animator2);
+    entity->frameID   = RSDK.GetFrameID(&entity->animator) & 7;
+    entity->direction = entity->frameID & 3;
+    if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
+        RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator, true, 0);
         entity->state = Shield_State_BubbleAlt;
     }
@@ -136,12 +134,11 @@ void Shield_State_BubbleAlt(void)
 {
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&entity->animator);
-    RSDK.ProcessAnimation(&entity->altData);
-    int id            = RSDK.GetFrameID(&entity->animator) & 7;
-    entity->frameID   = id;
-    entity->direction = id & 3;
-    if (entity->altData.frameID == entity->altData.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->altData, true, 0);
+    RSDK.ProcessAnimation(&entity->animator2);
+    entity->frameID   = RSDK.GetFrameID(&entity->animator) & 7;
+    entity->direction = entity->frameID & 3;
+    if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
+        RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(Shield->spriteIndex, 6, &entity->animator, true, 0);
         entity->state = Shield_State_Generic;
     }
@@ -163,21 +160,19 @@ void Shield_State_Fire(void)
 void Shield_State_Lightning(void)
 {
     RSDK_THIS(Shield);
-    RSDK.ProcessAnimation(&entity->altData);
-    int id            = RSDK.GetFrameID(&entity->altData);
-    entity->frameID   = id & 7;
+    RSDK.ProcessAnimation(&entity->animator2);
+    entity->frameID   = RSDK.GetFrameID(&entity->animator) & 7;
     entity->direction = entity->frameID & 3;
     if (entity->player) {
         entity->position.x = entity->player->position.x;
         entity->position.y = entity->player->position.y;
     }
 
-    EntityDebris *debris =
-        (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void *)Debris_State_LightningSpark, entity->position.x, entity->position.y);
-    debris->timer      = 22;
-    debris->velocity.x = -0x20000;
-    debris->velocity.y = -0x20000;
-    debris->drawOrder  = Zone->playerDrawHigh;
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris->timer        = 22;
+    debris->velocity.x   = -0x20000;
+    debris->velocity.y   = -0x20000;
+    debris->drawOrder    = Zone->playerDrawHigh;
     RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->animator, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
@@ -185,8 +180,8 @@ void Shield_State_Lightning(void)
         debris->scale.y = entity->scale.y;
     }
 
-    debris        = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void *)Debris_State_LightningSpark, entity->position.x, entity->position.y);
-    debris->timer = 22;
+    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = -0x20000;
     debris->drawOrder  = Zone->playerDrawHigh;
@@ -197,8 +192,8 @@ void Shield_State_Lightning(void)
         debris->scale.y = entity->scale.y;
     }
 
-    debris        = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void *)Debris_State_LightningSpark, entity->position.x, entity->position.y);
-    debris->timer = 22;
+    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris->timer      = 22;
     debris->velocity.x = -0x20000;
     debris->velocity.y = 0x20000;
     debris->drawOrder  = Zone->playerDrawHigh;
@@ -209,8 +204,8 @@ void Shield_State_Lightning(void)
         debris->scale.y = entity->scale.y;
     }
 
-    debris        = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void *)Debris_State_LightningSpark, entity->position.x, entity->position.y);
-    debris->timer = 22;
+    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = 0x20000;
     debris->drawOrder  = Zone->playerDrawHigh;
@@ -232,7 +227,7 @@ void Shield_State_Insta(void)
         player->invincibleTimer = 1;
 
     if (entity->animator.frameID == entity->animator.frameCount - 1)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
 }
 
 void Shield_EditorDraw(void) {}

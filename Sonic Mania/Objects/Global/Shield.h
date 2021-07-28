@@ -27,7 +27,7 @@ typedef struct {
     int frameID;
     int flag;
     Animator animator;
-    Animator altData;
+    Animator animator2;
 } EntityShield;
 
 // Object Struct

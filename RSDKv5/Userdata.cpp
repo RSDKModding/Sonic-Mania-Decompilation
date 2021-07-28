@@ -1,9 +1,5 @@
 #include "RetroEngine.hpp"
-
-#if !RETRO_REV02
-FunctionListEntry functionList[FUNCLIST_COUNT];
-int functionListCount;
-#endif
+#include "zlib/zlib.h"
 
 #if RETRO_REV02
 DummyCore *dummmyCore = NULL;
@@ -19,7 +15,7 @@ UserDBStorage *userDBStorage = NULL;
 #endif
 
 // Start custom achievement code
-//this is added because we don't have access to any store APIs that would otherwise use this feature
+// this is added because we don't have access to any store APIs that would otherwise use this feature
 #include <vector>
 struct AchievementInfo {
     const char *identifier;
@@ -31,7 +27,7 @@ struct AchievementInfo {
 std::vector<AchievementInfo> achievementList;
 std::vector<int> achievementStack;
 
-void addAchievement(const char* identifier, const char *name, const char *desc)
+void addAchievement(const char *identifier, const char *name, const char *desc)
 {
     AchievementInfo info;
     info.identifier  = identifier;
@@ -41,7 +37,18 @@ void addAchievement(const char* identifier, const char *name, const char *desc)
     achievementList.push_back(info);
 }
 
-//End custom achievement code
+// End custom achievement code
+
+// Start custom leaderboard code
+// this is added because we don't have access to any store APIs that would otherwise use this feature
+struct LeaderboardInfo {
+    const char *name;
+    int id;
+};
+
+std::vector<LeaderboardInfo> leaderboardList;
+
+// End custom leaderboard code
 
 GamePadMappings *gamePadMappings = NULL;
 int gamePadCount                 = 0;
@@ -123,9 +130,9 @@ void initUserData()
         userCore->values[4]   = (int *)&engine.confirmFlip;
         userCore->debugValCnt = 5;
 
-        achievements->InitUnknown1      = nullUserFunc;
-        achievements->SetDebugValues    = nullUserFunc;
-        achievements->InitUnknown2      = nullUserFunc;
+        achievements->InitUnknown1   = nullUserFunc;
+        achievements->SetDebugValues = nullUserFunc;
+        achievements->InitUnknown2   = nullUserFunc;
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
         achievements->CheckAchievementsEnabled = CheckAchievementsEnabled;
         achievements->GetAchievementNames      = GetAchievementNames;
@@ -137,17 +144,17 @@ void initUserData()
 #endif
         achievements->UnlockAchievement = TryUnlockAchievement;
 
-        leaderboards->SetDebugValues   = nullUserFunc;
-        leaderboards->InitUnknown1     = nullUserFunc;
-        leaderboards->InitUnknown2     = nullUserFunc;
-        leaderboards->unknown4         = (int (*)())nullUserFunc;
+        leaderboards->SetDebugValues = nullUserFunc;
+        leaderboards->InitUnknown1   = nullUserFunc;
+        leaderboards->InitUnknown2   = nullUserFunc;
+        leaderboards->unknown4       = (int (*)())nullUserFunc;
 #if RETRO_VER_EGS
         leaderboards->unknown6 = (int (*)())nullUserFunc;
 #endif
         leaderboards->FetchLeaderboard = (void (*)(int, int))nullUserFunc;
         leaderboards->unknown5         = nullUserFunc;
         leaderboards->TrackScore       = (void (*)(int, int, int))nullUserFunc;
-        leaderboards->unknown7         = (int (*)())nullUserFunc;
+        leaderboards->GetStatus        = GetLeaderboardStatus;
 
         richPresence->SetDebugValues = nullUserFunc;
         richPresence->InitUnknown1   = nullUserFunc;
@@ -157,7 +164,7 @@ void initUserData()
         stats->SetDebugValues = nullUserFunc;
         stats->InitUnknown1   = nullUserFunc;
         stats->InitUnknown2   = nullUserFunc;
-        stats->TryTrackStat   = nullUserFunc; // TODO
+        stats->TryTrackStat   = TryTrackStat;
 
         userStorage->InitUnknown1   = (int (*)())nullUserFunc;
         userStorage->SetDebugValues = (int (*)())nullUserFunc;
@@ -168,46 +175,13 @@ void initUserData()
         userStorage->LoadUserFile   = TryLoadUserFile;
         userStorage->SaveUserFile   = TrySaveUserFile;
         userStorage->DeleteUserFile = TryDeleteUserFile;
-        userStorage->unknown8       = UserStorageUnknown8;
+        userStorage->unknown8       = ClearPrerollErrors;
 
-        achievements->status       = STATUS_OK;
-        stats->status              = STATUS_OK;
-        userStorage->authStatus    = STATUS_OK;
-        userStorage->storageStatus = STATUS_OK;
-        userStorage->statusCode    = STATUS_OK;
-#endif
-
-#if !RETRO_REV02
-        SetFuncPtr("GetConfirmButtonFlip", GetConfirmButtonFlip);
-        SetFuncPtr("LaunchManual", LaunchManual);
-        SetFuncPtr("ExitGame", ExitGame);
-        // SetFuncPtr("ClearAchievements", ClearAchievements);
-        SetFuncPtr("UnlockAchievement", TryUnlockAchievement);
-        SetFuncPtr("FetchLeaderboard", FetchLeaderboard);
-        // SetFuncPtr("LeaderboardStatus", GetLeaderboardStatus);
-        // SetFuncPtr("LeaderboardEntryCount", LeaderboardEntryCount);
-        // SetFuncPtr("LeaderboardReadEntry", LeaderboardReadEntry);
-        SetFuncPtr("TrackActClear", TrackActClear);
-        SetFuncPtr("TrackTAClear", TrackTAClear);
-        SetFuncPtr("TrackEnemyDefeat", TrackEnemyDefeat);
-        SetFuncPtr("ClearPrerollErrors", ClearPrerollErrors);
-        SetFuncPtr("TryAuth", TryAuth);
-        SetFuncPtr("GetUserAuthStatus", GetUserAuthStatus);
-        SetFuncPtr("TryInitStorage", TryInitStorage);
-        SetFuncPtr("GetStorageStatus", GetUserStorageStatus);
-        SetFuncPtr("GetUsername", GetUserName);
-        SetFuncPtr("LoadUserFile", TryLoadUserFile);
-        SetFuncPtr("SaveUserFile", TrySaveUserFile);
-        SetFuncPtr("SaveSettingsINI", writeSettings);
-        SetFuncPtr("GetUserLanguage", GetUserLanguage);
-        // SetFuncPtr("ControllerIDForInputID", ControllerIDForInputID);
-        // SetFuncPtr("MostRecentActiveControllerID", MostRecentActiveControllerID);
-        // SetFuncPtr("AssignControllerID", AssignControllerID);
-        // SetFuncPtr("ResetControllerAssignments", ResetControllerAssignments);
-        // SetFuncPtr("InputIDIsDisconnected", InputIDIsDisconnected);
-        // SetFuncPtr("GetControllerType", GetControllerType);
-        SetFuncPtr("ShowSteamControllerOverlay", ShowExtensionOverlay);
-        SetFuncPtr("SetRichPresence", SetPresence);
+        achievements->status    = STATUS_OK;
+        stats->status           = STATUS_OK;
+        userStorage->authStatus = STATUS_OK;
+        userStorage->saveStatus = STATUS_OK;
+        userStorage->statusCode = STATUS_OK;
 #endif
     }
 
@@ -227,34 +201,34 @@ void initUserData()
     addAchievement("ACH_PGZ", "Crate Expectations", "Wreak havoc at the propaganda factory");
     addAchievement("ACH_SSZ", "King of Speed", "Get through Stardust Speedway Zone as quickly as possible");
     addAchievement("ACH_HCZ", "Boat Enthusiast", "Try pushing a barrel to see how far it goes");
-    addAchievement("ACH_MSZ", "The Password is \"Special Stage\"", "ADD THIS");
+    addAchievement("ACH_MSZ", "The Password is \"Special Stage\"", "Try pushing a barrel to see how far it goes");
     addAchievement("ACH_OOZ", "Secret Sub", "You might have to submerge to find it");
     addAchievement("ACH_LRZ", "Without a Trace", "Barrel through the lava, don't let anything stop you");
     addAchievement("ACH_MMZ", "Collect 'Em All", "Gotta gacha 'em all");
     addAchievement("ACH_TMZ", "Professional Hedgehog", "That elusive perfect run, only a professional can achieve");
 
-    int userData[0x100];
-    memset(userData, 0, 0x100 * sizeof(int));
+    int achievementsRAM[0x100];
+    memset(achievementsRAM, 0, 0x100 * sizeof(int));
 #if RETRO_REV02
-    userStorage->LoadUserFile("UData.bin", userData, 0x100 * sizeof(int), NULL);
+    userStorage->LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL);
 #else
-    LoadUserFile("UData.bin", userData, 0x100 * sizeof(int));
+    LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
 #endif
     for (int i = 0; i < (int)achievementList.size(); ++i) {
-        achievementList[i].achieved = userData[i];
+        achievementList[i].achieved = achievementsRAM[i];
     }
 }
 void releaseUserData()
 {
-    int userData[0x100];
-    memset(userData, 0, 0x100 * sizeof(int));
+    int achievementsRAM[0x100];
+    memset(achievementsRAM, 0, 0x100 * sizeof(int));
     for (int i = 0; i < (int)achievementList.size(); ++i) {
-        userData[i] = achievementList[i].achieved;
+        achievementsRAM[i] = achievementList[i].achieved;
     }
 #if RETRO_REV02
-    userStorage->SaveUserFile("UData.bin", userData, 0x100 * sizeof(int), NULL, false);
+    userStorage->SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL, false);
 #else
-    SaveUserFile("UData.bin", userData, 0x100 * sizeof(int));
+    SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
 #endif
 
 #if RETRO_REV02
@@ -303,17 +277,26 @@ int GetUserRegion()
 int GetUserPlatform()
 {
 #if RETRO_REV02
-    return curSKU.platform; 
-#else 
+    return curSKU.platform;
+#else
     return gameVerInfo.platform;
 #endif
 }
-int GetConfirmButtonFlip()
+bool32 GetConfirmButtonFlip()
 {
-    //printLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
-    return true;
+    // printLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
+    return engine.confirmFlip;
 }
-void LaunchManual() { printLog(PRINT_NORMAL, "DUMMY LaunchManual()"); }
+bool32 GetXYButtonFlip()
+{
+    // printLog(PRINT_NORMAL, "DUMMY GetXYButtonFlip() -> %d", engine.XYFlip);
+    return engine.XYFlip;
+}
+void LaunchManual()
+{
+    printLog(PRINT_NORMAL, "DUMMY LaunchManual()");
+    // TODO(?): open this url: http://www.sonicthehedgehog.com/mania/manual
+}
 void ExitGame() { engine.running = false; }
 int controllerUnknown() { return 0; }
 
@@ -332,10 +315,9 @@ int ShowEncorePage(int a1)
     printLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
 }
-void EGS_Unknown4(int a1)
-{
-    printLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1);
-}
+void EGS_Unknown4(int a1) { printLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1); }
+
+void ClearAchievements() { printLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
 
 void TryUnlockAchievement(const char *name)
 {
@@ -361,7 +343,7 @@ void GetAchievementNames(TextInfo *names, int count)
 {
     int i = 0;
     for (; i < count && i < (int)achievementStack.size(); ++i) {
-        SetText(&names[i], (char*)achievementList[i].name, 0);
+        SetText(&names[i], (char *)achievementList[i].name, 0);
     }
     for (; i < count; ++i) {
         SetText(&names[i], (char *)"Dummy Achievement", 0);
@@ -395,8 +377,11 @@ void RemoveLastAchievementID(void)
         achievementStack.erase(achievementStack.begin());
 }
 
-void FetchLeaderboard(int a2, int a3) { printLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%d, %d)", a2, a3); }
-void TrackScore(int a2, int a3, int a4) { printLog(PRINT_NORMAL, "DUMMY TrackScore(%d, %d, %d)", a2, a3, a4); }
+void FetchLeaderboard(const char* name, int id) { printLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %d)", name, id); }
+void TrackScore(const char *name, int score, void (*callback)(int status, int rank))
+{
+    printLog(PRINT_NORMAL, "DUMMY TrackScore(%s, %d, %p)", name, score, callback);
+}
 
 void SetPresence(byte id, TextInfo *info)
 {
@@ -409,13 +394,75 @@ void SetPresence(byte id, TextInfo *info)
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
 #endif
     printLog(PRINT_NORMAL, buffer2);
+    richPresence->curID = id;
 }
 
 #if !RETRO_REV02
-void TrackActClear() { printLog(PRINT_NORMAL, "DUMMY TrackActClear()"); }
-void TrackTAClear(byte a1, byte a2, byte a3, int a4) { printLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d,%d,%d,%d)", a1, a2, a3, a4); }
-void TrackEnemyDefeat() { printLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat()"); }
+void TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time)
+{
+    printLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
+}
+void TrackTAClear(byte zoneID, byte actID, byte playerID, int time)
+{
+    printLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
+}
+void TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY)
+{
+    printLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
+}
+void TrackGameProgress(float percent)
+{
+    printLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100);
+}
 void ClearPrerollErrors() { printLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()"); }
+#else
+#define voidToInt(x)   (int)(size_t)(x)
+#define voidToFloat(x) *(float *)&(x)
+
+void TryTrackStat(StatInfo *stat)
+{
+    if (stats->status) {
+        printLog(PRINT_NORMAL, "Tracking Stat: %s (%d)", stat->name, stat->statID);
+
+        switch (stat->statID) {
+            case 0: {
+                char *zoneName = (char *)stat->data[0];
+                char *actName = (char *)stat->data[1];
+                char *playerName = (char *)stat->data[2];
+                int val = voidToInt(stat->data[3]);
+                int time = voidToInt(stat->data[4]);
+                int rings = voidToInt(stat->data[5]);
+                int score = voidToInt(stat->data[6]);
+                printLog(PRINT_NORMAL, "DUMMY TrackActClear(%s, %s, %s, %d, %d, %d, %d)", zoneName, actName, playerName, val, score, rings, time);
+                break;
+            }
+            case 1: {
+                char *zoneName = (char *)stat->data[0];
+                char *actName = (char *)stat->data[1];
+                char *playerName = (char *)stat->data[2];
+                char *mode = (char *)stat->data[3];
+                int time = voidToInt(stat->data[4]);
+                printLog(PRINT_NORMAL, "DUMMY TrackTAClear(%s, %s, %s, %s, %d)", zoneName, actName, playerName, mode, time);
+                break;
+            }
+            case 2: {
+                char *zoneName = (char *)stat->data[0];
+                char *actName = (char *)stat->data[1];
+                char *playerName = (char *)stat->data[2];
+                bool32 encore = voidToInt(stat->data[3]);
+                int enemyX = voidToInt(stat->data[4]);
+                int enemyY = voidToInt(stat->data[5]);
+                printLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%s, %s, %s, %s, %d, %d)", zoneName, actName, playerName, encore ? "true" : "false",
+                         enemyX, enemyY);
+                break;
+            }
+            case 3: printLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", voidToFloat(stat->data[0]) * 100); break;
+        }
+    }
+    else {
+        printLog(PRINT_NORMAL, "Track stat SKIPPED. Stats are disabled.");
+    }
+}
 #endif
 
 #if RETRO_REV02
@@ -431,23 +478,23 @@ void setupUserDebugValues()
     for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
         DebugValueInfo *val = &debugValues[debugValCnt++];
         strcpy(val->name, userDebugValNames[i]);
-        val->value      = userCore->values[i];
-        val->min        = 0;
+        val->value = userCore->values[i];
+        val->min   = 0;
 
         if (i == 2) {
             val->type       = 2;
             val->valByteCnt = 1;
-            val->max = REGION_EU;
+            val->max        = REGION_EU;
         }
         else if (i == 3) {
             val->type       = 2;
             val->valByteCnt = 1;
-            val->max = LANGUAGE_TC;
+            val->max        = LANGUAGE_TC;
         }
         else {
             val->type       = 0;
             val->valByteCnt = 4;
-            val->max = 1;
+            val->max        = 1;
         }
     }
 }
@@ -469,49 +516,30 @@ void userInitUnknown2()
 }
 #endif
 
-#if !RETRO_REV02
-void SetFuncPtr(const char *name, void *ptr)
-{
-    if (functionListCount < FUNCLIST_COUNT) {
-        uint hash[4];
-        GEN_HASH(name, hash);
-        for (int f = 0; f < functionListCount; ++f) {
-            if (HASH_MATCH(hash, functionList[f].hash))
-                return; // already exists, ignore this call
-        }
-
-        HASH_COPY(functionList[functionListCount].hash, hash);
-        functionList[functionListCount].ptr = ptr;
-        functionListCount++;
-    }
-}
-
-void *GetFuncPtr(const char *name)
-{
-    if (!name)
-        return NULL;
-
-    uint hash[4];
-    GEN_HASH(name, hash);
-    for (int f = 0; f < functionListCount; ++f) {
-        if (HASH_MATCH(hash, functionList[f].hash))
-            return functionList[f].ptr;
-    }
-
-    if (engine.printConsole)
-        printLog(PRINT_POPUP, "API Function not found: %s", name);
-    return NULL;
-}
-#endif
-
 bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int))
 {
-    bool32 success = false; 
+    bool32 success = false;
     memset(buffer, 0, bufSize);
 #if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
         success = LoadUserFile(filename, buffer, bufSize);
+
+        if (bufSize >= 4) {
+            byte *bufTest       = (byte *)buffer;
+            //quick and dirty zlib check
+            if (bufTest[0] == 0x78 && bufTest[1] == 0x01 && bufTest[2] == 0xED) {
+                uint destLen = bufSize;
+
+                byte *compData = NULL;
+                AllocateStorage(bufSize, (void **)&compData, DATASET_TMP, false);
+                memcpy(compData, buffer, bufSize);
+
+                uncompress((Bytef *)buffer, (uLongf *)&destLen, compData, bufSize);
+
+                RemoveStorageEntry((void **)&compData);
+            }
+        }
 
         if (callback)
             callback(STATUS_OK);
@@ -528,16 +556,26 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
 
     return success;
 }
-bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compress)
+bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compressData)
 {
     bool32 success = false;
 #if RETRO_REV02
     if (!userStorage->noSaveActive) {
 #endif
-        if (compress) {
-            // compress lo
+        if (compressData) {
+            int *cbuf = NULL; 
+            AllocateStorage(bufSize, (void **)&cbuf, DATASET_TMP, false);
+
+            long long clen = bufSize;
+            compress((Bytef *)cbuf, (uLongf *)&clen, (Bytef *)buffer, (uLong)bufSize);
+
+            success = SaveUserFile(filename, cbuf, clen);
+
+            RemoveStorageEntry((void **)&cbuf);
         }
-        success = SaveUserFile(filename, buffer, bufSize);
+        else {
+            success = SaveUserFile(filename, buffer, bufSize);
+        }
 
         if (callback)
             callback(STATUS_OK);
@@ -546,7 +584,7 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
     else {
         char buffer[0x100];
         sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback,
-                compress ? "true" : "false");
+                compressData ? "true" : "false");
 
         if (callback)
             callback(STATUS_ERROR);
@@ -630,8 +668,6 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
 
-        // encryption?
-
         if (userFileCallback2)
             userFileCallback2();
         return true;
@@ -661,44 +697,45 @@ bool32 DeleteUserFile(const char *filename)
 }
 
 #if RETRO_REV02
-int LoadDBFromBuffer(UserDB *userDB, byte *writeBuffer)
+int LoadDBFromBuffer(UserDB *userDB, byte *buffer)
 {
-    if (*(int *)writeBuffer != 0x80074B1E)
+    uint signature = *(uint *)buffer;
+    if (signature != 0x80074B1E)
         return 0;
-    writeBuffer += sizeof(int);
-    writeBuffer += sizeof(int); // used size
+    buffer += sizeof(int);
+    buffer += sizeof(int); // used size
 
-    userDB->entryCount = *(ushort *)writeBuffer;
-    writeBuffer += sizeof(ushort);
+    userDB->entryCount = *(ushort *)buffer;
+    buffer += sizeof(ushort);
 
-    userDB->columnCount = *writeBuffer;
-    writeBuffer++;
+    userDB->columnCount = *buffer;
+    buffer++;
 
     for (int c = 0; c < userDB->columnCount; ++c) {
-        userDB->columnSizes[c] = *writeBuffer;
-        writeBuffer++;
+        userDB->columnTypes[c] = *buffer;
+        buffer++;
 
-        sprintf(userDB->columnNames[c], "%s", (char *)writeBuffer);
-        writeBuffer += 0x10;
+        sprintf(userDB->columnNames[c], "%s", (char *)buffer);
+        buffer += 0x10;
 
         GenerateCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
     }
 
     for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
-        userDB->rows[r].uuid = *(uint *)writeBuffer;
-        writeBuffer += sizeof(uint);
+        userDB->rows[r].uuid = *(uint *)buffer;
+        buffer += sizeof(uint);
 
-        memcpy(&userDB->rows[r].createTime, writeBuffer, sizeof(tm));
-        writeBuffer += sizeof(tm);
-        memcpy(&userDB->rows[r].changeTime, writeBuffer, sizeof(tm));
-        writeBuffer += sizeof(tm);
+        memcpy(&userDB->rows[r].createTime, buffer, sizeof(tm));
+        buffer += sizeof(tm);
+        memcpy(&userDB->rows[r].changeTime, buffer, sizeof(tm));
+        buffer += sizeof(tm);
 
         for (int c = 0; c < userDB->columnCount; ++c) {
-            userDB->rows[r].values[c].size = *writeBuffer;
-            writeBuffer++;
+            userDB->rows[r].values[c].size = *buffer;
+            buffer++;
 
-            memcpy(&userDB->rows[r].values[c].value, writeBuffer, userDB->rows[r].values[c].size);
-            writeBuffer += userDB->rows[r].values[c].size;
+            memcpy(&userDB->rows[r].values[c].data, buffer, userDB->rows[r].values[c].size);
+            buffer += userDB->rows[r].values[c].size;
         }
     }
 
@@ -726,80 +763,80 @@ size_t GetUserDBWriteSize(UserDB *userDB)
     return size;
 }
 
-void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *writeBuffer)
+void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
 {
     int size = 0;
     if (totalSize >= sizeof(int)) {
-        size                = sizeof(int);
-        *(int *)writeBuffer = 0x80074B1E; // signature
-        writeBuffer += sizeof(int);
+        size           = sizeof(int);
+        *(int *)buffer = 0x80074B1E; // signature
+        buffer += sizeof(int);
     }
     if (size + sizeof(int) <= totalSize) {
         size += sizeof(int);
-        *(int *)writeBuffer = (int)GetUserDBWriteSize(userDB); // used size
-        writeBuffer += sizeof(int);
+        *(int *)buffer = (int)GetUserDBWriteSize(userDB); // used size
+        buffer += sizeof(int);
     }
     if (size + sizeof(ushort) <= totalSize) {
         size += sizeof(ushort);
-        *(ushort *)writeBuffer = userDB->entryCount;
-        writeBuffer += sizeof(ushort);
+        *(ushort *)buffer = userDB->entryCount;
+        buffer += sizeof(ushort);
     }
     if (size + sizeof(byte) <= totalSize) {
         ++size;
-        *writeBuffer++ = userDB->columnCount;
+        *buffer++ = userDB->columnCount;
     }
 
     for (int c = 0; c < userDB->columnCount; ++c) {
         if (size + sizeof(byte) <= totalSize) {
             ++size;
-            *writeBuffer++ = (byte)userDB->columnSizes[c];
+            *buffer++ = (byte)userDB->columnTypes[c];
         }
         if (size + 0x10 <= totalSize) {
-            memset(writeBuffer, 0, 0x10 * sizeof(byte));
-            sprintf((char *)writeBuffer, "%s", userDB->columnNames[c]);
+            memset(buffer, 0, 0x10 * sizeof(byte));
+            sprintf((char *)buffer, "%s", userDB->columnNames[c]);
             size += 0x10;
-            writeBuffer += 0x10;
+            buffer += 0x10;
         }
     }
 
     for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
         if (size + sizeof(uint) <= totalSize) {
             size += sizeof(uint);
-            *(uint *)writeBuffer = userDB->rows[r].uuid;
-            writeBuffer += sizeof(uint);
+            *(uint *)buffer = userDB->rows[r].uuid;
+            buffer += sizeof(uint);
         }
         if (size + sizeof(tm) <= totalSize) {
-            memcpy(writeBuffer, &userDB->rows[r].createTime, sizeof(tm));
+            memcpy(buffer, &userDB->rows[r].createTime, sizeof(tm));
             size += sizeof(tm);
-            writeBuffer += sizeof(tm);
+            buffer += sizeof(tm);
         }
         if (size + sizeof(tm) <= totalSize) {
-            memcpy(writeBuffer, &userDB->rows[r].changeTime, sizeof(tm));
+            memcpy(buffer, &userDB->rows[r].changeTime, sizeof(tm));
             size += sizeof(tm);
-            writeBuffer += sizeof(tm);
+            buffer += sizeof(tm);
         }
 
         for (int c = 0; c < userDB->columnCount; ++c) {
             if (size + sizeof(byte) <= totalSize) {
                 ++size;
-                *writeBuffer++ = (byte)userDB->rows[r].values[c].size;
+                *buffer++ = (byte)userDB->rows[r].values[c].size;
             }
             if (userDB->rows[r].values[c].size + size <= totalSize) {
-                memcpy(writeBuffer, (byte *)&userDB->rows[r].values[c].value, userDB->rows[r].values[c].size);
+                memcpy(buffer, userDB->rows[r].values[c].data, userDB->rows[r].values[c].size);
                 size += userDB->rows[r].values[c].size;
-                writeBuffer += userDB->rows[r].values[c].size;
+                buffer += userDB->rows[r].values[c].size;
             }
         }
     }
 
     if (size < totalSize)
-        memset(writeBuffer, 0, totalSize - size);
+        memset(buffer, 0, totalSize - size);
 }
 
 int UserDBLoadCB(ushort tableID, int status)
 {
     if (status == STATUS_OK) {
-        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte*)userDBStorage->readBuffer[tableID]);
+        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte *)userDBStorage->readBuffer[tableID]);
         if (result) {
             // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
         }
@@ -810,28 +847,28 @@ int UserDBLoadCB(ushort tableID, int status)
     RemoveStorageEntry((void **)&userDBStorage->readBuffer[tableID]);
 
     if (userDBStorage->callbacks[tableID]) {
-        int result                        = userDBStorage->callbacks[tableID](status);
+        userDBStorage->callbacks[tableID](status);
         userDBStorage->callbacks[tableID] = NULL;
-        return result;
+        return 1;
     }
     return 0;
 }
 
 int UserDBSaveCB(ushort tableID, int status)
 {
-    RemoveStorageEntry((void**)&userDBStorage->writeBuffer[tableID]);
+    RemoveStorageEntry((void **)&userDBStorage->writeBuffer[tableID]);
     if (status != STATUS_OK)
         userDBStorage->userDB[tableID].valid = false;
 
     if (userDBStorage->callbacks[tableID]) {
-        bool32 result = userDBStorage->callbacks[tableID](status);
-        userDBStorage->callbacks[tableID]                  = NULL;
-        return result;
+        userDBStorage->callbacks[tableID](status);
+        userDBStorage->callbacks[tableID] = NULL;
+        return 1;
     }
     return 0;
 }
 
-ushort LoadUserDB(const char *filename, int (*callback)(int))
+ushort LoadUserDB(const char *filename, void (*callback)(int))
 {
     int tableID = -1;
     uint uuid   = 0;
@@ -860,11 +897,11 @@ ushort LoadUserDB(const char *filename, int (*callback)(int))
     userDB->uuid   = uuid;
     AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
     userDBStorage->userLoadCB[tableID] = UserDBLoadCB;
-    userDBStorage->callbacks[tableID] = callback;
+    userDBStorage->callbacks[tableID]  = callback;
     TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->loadCallback[tableID]);
     return tableID;
 }
-bool32 SaveUserDB(ushort tableID, int (*callback)(int))
+bool32 SaveUserDB(ushort tableID, void (*callback)(int))
 {
     UserDB *userDB = &userDBStorage->userDB[tableID];
 
@@ -874,12 +911,12 @@ bool32 SaveUserDB(ushort tableID, int (*callback)(int))
         AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
         SaveDBToBuffer(userDB, totalSize, (byte *)userDBStorage->writeBuffer[tableID]);
         userDBStorage->userSaveCB[tableID] = UserDBSaveCB;
-        userDBStorage->callbacks[tableID] = callback;
+        userDBStorage->callbacks[tableID]  = callback;
         success = TrySaveUserFile(userDB->name, userDBStorage->writeBuffer[tableID], totalSize, userDBStorage->saveCallback[tableID], true);
     }
     else {
         if (callback)
-            success = callback(STATUS_ERROR);
+            callback(STATUS_ERROR);
     }
     return success;
 }
@@ -905,11 +942,11 @@ int GetSettingsValue(int id)
         case SETTINGS_DIMTIMER: return engine.dimTimer;
 #endif
         case SETTINGS_STREAMSENABLED: return engine.streamsEnabled;
-        case SETTINGS_STREAM_VOL: return (int)(engine.streamVolume * 1024.0); 
-        case SETTINGS_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0); 
+        case SETTINGS_STREAM_VOL: return (int)(engine.streamVolume * 1024.0);
+        case SETTINGS_SFX_VOL: return (int)(engine.soundFXVolume * 1024.0);
         case SETTINGS_LANGUAGE:
 #if RETRO_REV02
-            return curSKU.language; 
+            return curSKU.language;
 #else
             return gameVerInfo.language;
 #endif
@@ -972,7 +1009,7 @@ void SetSettingsValue(int id, int val)
         case SETTINGS_SHADERID:
             if (engine.shaderID != val) {
                 engine.shaderID = val;
-                settingsChanged     = true;
+                settingsChanged = true;
             }
             break;
         case SETTINGS_SCREENCOUNT: engine.screenCount = val; break;
@@ -998,7 +1035,7 @@ void SetSettingsValue(int id, int val)
             break;
         case SETTINGS_LANGUAGE:
 #if RETRO_REV02
-            curSKU.language = val; 
+            curSKU.language = val;
 #else
             gameVerInfo.language = val;
 #endif
@@ -1023,13 +1060,13 @@ void SetSettingsValue(int id, int val)
             settingsStorage.windowWidth   = engine.windowWidth;
             settingsStorage.windowHeight  = engine.windowHeight;
             settingsStorage.pixWidth      = pixWidth;
-            //settingsStorage.mouseX        = 0;
-            //settingsStorage.mouseY        = 0;
-            //settingsStorage.field_8       = 0;
-            //settingsStorage.field_C       = 0;
+            // settingsStorage.mouseX        = 0;
+            // settingsStorage.mouseY        = 0;
+            // settingsStorage.field_8       = 0;
+            // settingsStorage.field_C       = 0;
             break;
         case SETTINGS_RELOAD:
-            settingsChanged               = true;
+            settingsChanged = true;
 
             engine.isFullScreen  = settingsStorage.windowed;
             engine.borderless    = settingsStorage.bordered;
@@ -1050,10 +1087,10 @@ void SetSettingsValue(int id, int val)
             engine.windowWidth   = settingsStorage.windowWidth;
             engine.windowHeight  = settingsStorage.windowHeight;
             pixWidth             = settingsStorage.pixWidth;
-            //0                    = settingsStorage.mouseX;
-            //0                    = settingsStorage.mouseY;
-            //0                    = settingsStorage.field_8;
-            //0                    = settingsStorage.field_C;
+            // 0                    = settingsStorage.mouseX;
+            // 0                    = settingsStorage.mouseY;
+            // 0                    = settingsStorage.field_8;
+            // 0                    = settingsStorage.field_C;
             break;
         case SETTINGS_CHANGED: settingsChanged = val; break;
         case SETTINGS_WRITE: writeSettings(val); break;
@@ -1067,7 +1104,7 @@ void readSettings()
 {
     engine.screenCount = 1;
     engine.gameHeight  = SCREEN_YSIZE;
-    
+
     char pathBuffer[0x100];
     sprintf(pathBuffer, "%sSettings.ini", userFileDir);
 
@@ -1089,8 +1126,13 @@ void readSettings()
 
 #if !RETRO_USE_ORIGINAL_CODE
         sprintf(gameLogicName, "%s", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+
+        engine.confirmFlip = iniparser_getboolean(ini, "Game:confirmButtonFlip", false);
+        engine.XYFlip      = iniparser_getboolean(ini, "Game:xyButtonFlip", false);
 #else
         sprintf(gameLogicName, "Game"));
+        engine.confirmFlip = false;
+        engine.XYFlip = false;
 #endif
 
         engine.startFullScreen = !iniparser_getboolean(ini, "Video:windowed", true);
@@ -1127,11 +1169,11 @@ void readSettings()
               SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN }
         };
 #else
-    int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+        int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 #endif
 
         for (int i = 1; i <= PLAYER_COUNT; ++i) {
@@ -1270,7 +1312,7 @@ void readSettings()
                                              { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 #endif
 
-       for (int i = 1; i <= PLAYER_COUNT; ++i) {
+        for (int i = 1; i <= PLAYER_COUNT; ++i) {
             controller[i].keyUp.keyMap     = defKeyMaps[i][0];
             controller[i].keyDown.keyMap   = defKeyMaps[i][1];
             controller[i].keyLeft.keyMap   = defKeyMaps[i][2];
@@ -1305,19 +1347,19 @@ inline void writeText(FileIO *file, const char *string, ...)
 
 void writeSettings(bool32 writeToFile)
 {
-    //only done on windows and "dev", consoles use "options.bin"
+    // only done on windows and "dev", consoles use "options.bin"
 #if RETRO_REV02
-    if (curSKU.platform != PLATFORM_WIN && curSKU.platform != PLATFORM_DEV)
+    if (curSKU.platform != PLATFORM_PC && curSKU.platform != PLATFORM_DEV)
         return;
 #else
-    if (gameVerInfo.platform != PLATFORM_WIN && gameVerInfo.platform != PLATFORM_DEV)
+    if (gameVerInfo.platform != PLATFORM_PC && gameVerInfo.platform != PLATFORM_DEV)
         return;
 #endif
 
     if (settingsChanged || writeToFile) {
         char pathBuffer[0x100];
         sprintf(pathBuffer, "%sSettings.ini", userFileDir);
-        
+
         dictionary *ini = iniparser_load(pathBuffer);
         FileIO *file    = fOpen(pathBuffer, "wb");
         writeText(file, "; Retro Engine Config File\n\n");
@@ -1327,14 +1369,18 @@ void writeSettings(bool32 writeToFile)
                 writeText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
             }
 
-#if !RETRO_USE_ORIGINAL_CODE
-            if (strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") != 0) {
-                writeText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
-            }
-#endif
-
             if (strcmp(iniparser_getstring(ini, "Game:devMenu", "optionNotFound"), "optionNotFound") != 0)
                 writeText(file, "devMenu=%s\n", (engine.devMenu ? "y" : "n"));
+
+#if !RETRO_USE_ORIGINAL_CODE
+            if (strcmp(iniparser_getstring(ini, "Game:gameLogic", "optionNotFound"), "optionNotFound") != 0)
+                writeText(file, "gameLogic=%s\n", iniparser_getstring(ini, "Game:gameLogic", "Game"));
+
+            if (strcmp(iniparser_getstring(ini, "Game:confirmButtonFlip", "optionNotFound"), "optionNotFound") != 0)
+                writeText(file, "confirmButtonFlip=%s\n", (engine.confirmFlip ? "y" : "n"));
+            if (strcmp(iniparser_getstring(ini, "Game:xyButtonFlip", "optionNotFound"), "optionNotFound") != 0)
+                writeText(file, "xyButtonFlip=%s\n", (engine.XYFlip ? "y" : "n"));
+#endif
         }
 
 #if RETRO_REV02
@@ -1444,7 +1490,8 @@ bool32 achievementsLoaded     = false;
 bool32 achievementDrawFlag    = false;
 bool32 achievementUnknownFlag = false;
 
-void LoadAchievementAssets() {
+void LoadAchievementAssets()
+{
     if (achievementsEnabled) {
         if (achievements) {
             if (achievements->CheckAchievementsEnabled()) {
@@ -1478,7 +1525,8 @@ void LoadAchievementAssets() {
         }
     }
 }
-void ProcessAchievements() {
+void ProcessAchievements()
+{
     if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
         if (achievementsLoaded) {
             if (!achievementID) {

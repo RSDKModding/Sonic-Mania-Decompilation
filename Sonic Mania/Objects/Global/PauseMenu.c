@@ -793,9 +793,11 @@ void PauseMenu_Unknown33(void)
             if (PauseMenu->signoutDetected) {
                 strID = STR_SIGNOUTDETECTED;
             }
+#if RETRO_USE_PLUS
             else if (PauseMenu->plusChanged) {
                 strID = STR_RETRURNINGTOTITLE;
             }
+#endif
             Localization_GetString(&textBuffer, strID);
 
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);

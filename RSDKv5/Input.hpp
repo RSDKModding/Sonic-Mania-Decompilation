@@ -369,4 +369,8 @@ inline void ResetControllerAssignments()
     }
 }
 
+inline void SetInputLEDColor() {
+    //empty
+}
+
 #endif

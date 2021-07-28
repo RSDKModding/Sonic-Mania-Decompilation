@@ -283,7 +283,8 @@ inline int ReadZLibRSDK(FileInfo *info, byte **buffer)
     ReadBytes(info, compData, complen);
 
     uncompress(*buffer, (uLongf *)&destLen, compData, complen);
-    compData = NULL;
+    RemoveStorageEntry((void**)&compData);
+
     return destLen;
 }
 

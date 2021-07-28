@@ -431,6 +431,8 @@ void LinkGameLogicDLL(GameInfo *info)
 #if RETRO_USE_PLUS
     RSDK_ADD_OBJECT_CONTAINER(Options);
     RSDK_ADD_OBJECT(OptionsMenu);
+#else
+    RSDK_ADD_OBJECT(Options);
 #endif
     RSDK_ADD_OBJECT(Orbinaut);
     RSDK_ADD_OBJECT(OrbitSpike);

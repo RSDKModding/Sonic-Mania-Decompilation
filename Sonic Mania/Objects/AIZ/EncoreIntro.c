@@ -855,7 +855,7 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
                 ruby->position.y = king->position.y + 0x60000;
                 ruby->state      = StateMachine_None;
                 RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
-                RSDK.SetSpriteAnimation(king->spriteIndex, 3, &king->altData, true, 0);
+                RSDK.SetSpriteAnimation(king->spriteIndex, 3, &king->animator2, true, 0);
                 return true;
             }
             break;

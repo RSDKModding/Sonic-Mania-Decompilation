@@ -11,31 +11,7 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-    RSDK_ENTITY
-    StateMachine(state);
-    void (*processButtonCB)(void);
-    bool32 (*touchCB)(void);
-    void (*options2)(void);
-    void (*options3)(void);
-    void (*failCB)(void);
-    void (*options5)(void);
-    void (*options6)(void);
-    bool32 (*options7)(void);
-    bool32 (*options8)(void);
-    int timer;
-    Vector2 posUnknown2;
-    Entity *parent;
-    Vector2 touchPosStart;
-    Vector2 touchPosEnd;
-    bool32 touchPressed;
-    Vector2 touchPos1[4];
-    Vector2 touchPos2[4];
-    void (*touchPosCallbacks[4])(void);
-    int touchPosCount;
-    int touchCountUnknown;  
-    bool32 flag;
-    bool32 disabled;
-    // Split
+    MANIA_UI_ITEM_BASE
     bool32 isNewSave;
 #if RETRO_USE_PLUS
     StateMachine(stateUnknown);

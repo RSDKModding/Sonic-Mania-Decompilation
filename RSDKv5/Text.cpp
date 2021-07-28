@@ -170,19 +170,19 @@ uint crc32_t[256] = {
     0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-void GenerateCRC(uint *id, char *fileName)
+void GenerateCRC(uint *id, char *str)
 {
     *id     = -1;
-    if (!fileName)
+    if (!str)
         return;
     int len       = 0;
     do
         ++len;
-    while (fileName[len]);
+    while (str[len]);
 
     for (uint i = 0; i < len; i++) {
-        *id = crc32_t[(byte)(*id ^ *fileName)] ^ (*id >> 8);
-        fileName++;
+        *id = crc32_t[(byte)(*id ^ *str)] ^ (*id >> 8);
+        str++;
     }
     *id = ~*id;
     return;

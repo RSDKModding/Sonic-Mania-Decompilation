@@ -5,12 +5,14 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
 } ObjectLRZ3Cutscene;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
 } EntityLRZ3Cutscene;
 
 // Object Struct
@@ -28,6 +30,7 @@ void LRZ3Cutscene_EditorLoad(void);
 void LRZ3Cutscene_Serialize(void);
 
 // Extra Entity Functions
-
+bool32 LRZ3Cutscene_Unknown1(EntityCutsceneSeq *host);
+bool32 LRZ3Cutscene_Unknown2(EntityCutsceneSeq *host);
 
 #endif //!OBJ_LRZ3CUTSCENE_H
