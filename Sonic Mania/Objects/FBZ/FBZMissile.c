@@ -89,7 +89,7 @@ void FBZMissile_Unknown1(void)
     RSDK_THIS(FBZMissile);
 
     if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
-        entity->timer = 41;
+        entity->timer = 42;
         entity->state = FBZMissile_Unknown2;
     }
     if (!(Zone->timer & 1)) {
@@ -211,7 +211,6 @@ void FBZMissile_Unknown6(void)
         }
 
         if (!RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
-
             foreach_active(FBZMissile, missile)
             {
                 if (missile->type == 2 && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, entity, &FBZMissile->hitbox1)) {
@@ -221,6 +220,11 @@ void FBZMissile_Unknown6(void)
                     }
                 }
             }
+        }
+        else {
+            CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
+            destroyEntity(entity);
         }
     }
     else {

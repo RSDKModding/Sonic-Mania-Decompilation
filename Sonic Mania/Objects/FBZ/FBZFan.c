@@ -17,7 +17,7 @@ void FBZFan_Update(void)
         bool32 flag  = false;
         Player_CheckCollisionBox(player, entity, &FBZFan->solidHitbox);
 
-        if (Player_CheckValidState(player) && player->playerAnimator.animationID != ANI_HURT
+        if (player->state != Player_State_None && Player_CheckValidState(player) && player->playerAnimator.animationID != ANI_HURT
             && RSDK.CheckObjectCollisionTouchBox(entity, &FBZFan->fanHitbox, player, &FBZFan->playerHitbox)) {
             flag = true;
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
@@ -25,8 +25,11 @@ void FBZFan_Update(void)
             player->onGround = false;
             int vel          = (entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;
             if (player->velocity.y <= vel) {
+                player->velocity.y = vel;
+            }
+            else {
                 player->velocity.y += ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 6)
-                + ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 5);
+                                      + ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 5);
                 if (player->velocity.y < vel) {
                     player->velocity.y = vel;
                 }

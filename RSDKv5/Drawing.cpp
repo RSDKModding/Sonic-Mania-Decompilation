@@ -4043,13 +4043,16 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
         //FLIP_Y
         srcTileGFXData = &tilesetGFXData[tileIndex << 8];
         if (cnt * TILE_SIZE > 0) {
-            tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE) + (TILE_DATASIZE - TILE_SIZE)];
-
-            for (int i = 0; i < cnt * TILE_SIZE; ++i) {
-                for (int p = 0; p < TILE_SIZE; ++p) {
-                    *tileGFXData++ = *srcTileGFXData++;
+            int index = tileIndex;
+            for (int i = 0; i < cnt; ++i) {
+                tileGFXData = &tilesetGFXData[(index << 8) + (FLIP_Y * TILESET_SIZE) + (TILE_DATASIZE - TILE_SIZE)];
+                for (int y = 0; y < TILE_SIZE; ++y) {
+                    for (int x = 0; x < TILE_SIZE; ++x) {
+                        *tileGFXData++ = *srcTileGFXData++;
+                    }
+                    tileGFXData -= (TILE_SIZE * 2);
                 }
-                tileGFXData -= (TILE_SIZE * 2);
+                ++index;
             }
         }
 

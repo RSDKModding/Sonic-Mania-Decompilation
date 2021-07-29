@@ -6,14 +6,25 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[24]; //= { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 };
-    Animator value2;
-    ushort value3;
+    int frameArray[24]; //= { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 };
+    Animator animator;
+    ushort aniFrames;
 } ObjectCylinder;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte type;
+    int length;
+    int radius;
+    int field_68;
+    int playerFrameIDs[4];
+    int playerAngles[4];
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    Hitbox hitbox4;
 } EntityCylinder;
 
 // Object Struct
@@ -31,6 +42,15 @@ void Cylinder_EditorLoad(void);
 void Cylinder_Serialize(void);
 
 // Extra Entity Functions
+void Cylinder_State_Unknown1(void);
+void Cylinder_State_Unknown2(void);
+void Cylinder_State_Unknown3(void);
+void Cylinder_State_Unknown4(void);
+void Cylinder_State_Unknown5(void);
 
+void Cylinder_Player_State_Unknown2(void);
+void Cylinder_Player_State_Unknown3(void);
+void Cylinder_Player_State_Unknown4(void);
+void Cylinder_Player_State_Unknown1(void);
 
 #endif //!OBJ_CYLINDER_H

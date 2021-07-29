@@ -14,7 +14,7 @@ void FBZSetup_LateUpdate(void)
 
 void FBZSetup_StaticUpdate(void)
 {
-    if ((Zone->timer & 1) == 0) {
+    if (!(Zone->timer & 1)) {
         ++FBZSetup->frameA;
         FBZSetup->frameA &= 7;
         if (Zone->actID == 1)
@@ -22,7 +22,7 @@ void FBZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(FBZSetup->aniTiles, 401, 16 * (FBZSetup->frameA + 16), 0, 16, 126);
     }
 
-    if ((Zone->timer & 3) == 0) {
+    if (!(Zone->timer & 3)) {
         ++FBZSetup->frameB;
         FBZSetup->frameB &= 3;
         ++FBZSetup->frameC;
@@ -56,11 +56,11 @@ void FBZSetup_StageLoad(void)
     BGSwitch->switchCallback[0] = FBZSetup_BGSwitchCB_A;
     BGSwitch->switchCallback[1] = FBZSetup_BGSwitchCB_B;
     BGSwitch->switchCallback[2] = FBZSetup_BGSwitchCB_C;
-    TileLayer *bgLayer                         = RSDK.GetSceneLayer(0);
-    bgLayer->drawLayer[0]             = 0;
-    bgLayer->drawLayer[1]             = 0;
-    bgLayer->drawLayer[2]             = 0;
-    bgLayer->drawLayer[3]             = 0;
+    TileLayer *bgLayer          = RSDK.GetSceneLayer(0);
+    bgLayer->drawLayer[0]       = 0;
+    bgLayer->drawLayer[1]       = 0;
+    bgLayer->drawLayer[2]       = 0;
+    bgLayer->drawLayer[3]       = 0;
     if (!Zone->actID)
         bgLayer->scanlineCallback = FBZSetup_ScanlineCallback;
     
@@ -89,7 +89,7 @@ void FBZSetup_StageLoad(void)
     GenericTrigger->callbacks[0] = FBZSetup_GenericTriggerCB_A;
     GenericTrigger->callbacks[1] = FBZSetup_GenericTriggerCB_B;
     if (globals->gameMode == MODE_COMPETITION) {
-        foreach_all(ParallaxSprite, parallaxSprite) { RSDK.ResetEntityPtr(parallaxSprite, TYPE_BLANK, NULL); }
+        foreach_all(ParallaxSprite, parallaxSprite) { destroyEntity(parallaxSprite); }
     }
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {

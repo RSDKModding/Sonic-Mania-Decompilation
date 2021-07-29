@@ -441,7 +441,7 @@ void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*c
 void ReplayRecorder_Load_CB(int status)
 {
     if (ReplayRecorder->loadCallback)
-        ReplayRecorder->loadCallback((status == STATUS_OK));
+        ReplayRecorder->loadCallback(status == STATUS_OK);
     ReplayRecorder->loadCallback = NULL;
     ReplayRecorder->buffer = NULL;
     memset(ReplayRecorder->filename, 0, 0x100);
@@ -479,7 +479,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[13] = StateMachine_None; // GymBar_Unknown6;
     ReplayRecorder->actions[14] = StateMachine_None; // GymBar_Unknown5;
     ReplayRecorder->actions[15] = StateMachine_None; // GymBar_Unknown7;
-    ReplayRecorder->actions[16] = StateMachine_None; // Ice_StateFrozenPlayer;
+    ReplayRecorder->actions[16] = Ice_State_FrozenPlayer;
     ReplayRecorder->actions[17] = StateMachine_None; // OOZSetup_Unknown11;
     ReplayRecorder->actions[18] = StateMachine_None; // OOZSetup_Unknown8;
     ReplayRecorder->actions[19] = StateMachine_None; // OOZSetup_Unknown10;
@@ -517,9 +517,9 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[51] = Player_State_ForceRoll_Air;
     ReplayRecorder->actions[52] = Player_State_ForceRoll_Ground;
     ReplayRecorder->actions[53] = Player_State_Victory;
-    ReplayRecorder->actions[54] = StateMachine_None; // SizeLaser_Unknown5;
-    ReplayRecorder->actions[55] = StateMachine_None; // SizeLaser_Unknown7;
-    ReplayRecorder->actions[56] = StateMachine_None; // SizeLaser_Unknown6;
+    ReplayRecorder->actions[54] = SizeLaser_P2JumpInShrink;
+    ReplayRecorder->actions[55] = SizeLaser_PlayerState_Grow;
+    ReplayRecorder->actions[56] = SizeLaser_P2JumpInGrow;
 }
 
 void ReplayRecorder_SetupWriteBuffer(void)
