@@ -654,9 +654,13 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         flags2 |= 4;
     }
 
+    int id = 0;
     while (flags1 || flags2) {
         if (flags1 & flags2)
             return;
+        ++id;
+
+
         int curFlags = flags2;
         if (flags1)
             curFlags = flags1;
@@ -664,20 +668,32 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         int x = 0;
         int y   = 0;
         if (curFlags & 8) {
-            x = drawX1 + ((drawX2 - drawX1) * (((currentScreen->clipBound_Y2 - drawY1) << 8) / (drawY2 - drawY1)) >> 8);
+            int div = (drawY2 - drawY1);
+            if (!div)
+                div = 1;
+            x = drawX1 + ((drawX2 - drawX1) * (((currentScreen->clipBound_Y2 - drawY1) << 8) / div) >> 8);
             y = currentScreen->clipBound_Y2;
         }
         else if (curFlags & 4) {
-            x = drawX1 + ((drawX2 - drawX1) * (((currentScreen->clipBound_Y1 - drawY1) << 8) / (drawY2 - drawY1)) >> 8);
+            int div = (drawY2 - drawY1);
+            if (!div)
+                div = 1;
+            x = drawX1 + ((drawX2 - drawX1) * (((currentScreen->clipBound_Y1 - drawY1) << 8) / div) >> 8);
             y = currentScreen->clipBound_Y1;
         }
         else if (curFlags & 2) {
+            int div = (drawX2 - drawX1);
+            if (!div)
+                div = 1;
             x = currentScreen->clipBound_X2;
-            y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X2 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
+            y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X2 - drawX1) << 8) / div) >> 8);
         }
         else if (curFlags & 1) {
+            int div = (drawX2 - drawX1);
+            if (!div)
+                div = 1;
             x = currentScreen->clipBound_X1;
-            y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X1 - drawX1) << 8) / (drawX2 - drawX1)) >> 8);
+            y = drawY1 + ((drawY2 - drawY1) * (((currentScreen->clipBound_X1 - drawX1) << 8) / div) >> 8);
         }
 
         if (curFlags == flags1) {
@@ -716,6 +732,11 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 flags2 |= 8;
             }
         }
+
+        if ((drawX1 == drawX2) && ((curFlags & 1) || (curFlags & 2)))
+            printf("");
+        if ((drawY1 == drawY2) && ((curFlags & 4) || (curFlags & 8)))
+            printf("");
     }
 
     if (drawX1 > currentScreen->clipBound_X2) {
@@ -785,18 +806,22 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     *frameBufferPtr = colour16;
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -819,18 +844,22 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     setPixelBlend(colour16, *frameBufferPtr);
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -853,18 +882,22 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     setPixelAlpha(colour16, *frameBufferPtr, alpha);
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -889,18 +922,22 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     setPixelAdditive(colour16, *frameBufferPtr);
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -925,18 +962,22 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     setPixelSubtractive(colour16, *frameBufferPtr);
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -959,18 +1000,22 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     *frameBufferPtr = lookupTable[*frameBufferPtr];
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -994,19 +1039,23 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     if (*frameBufferPtr == maskColour)
                         *frameBufferPtr = colour16;
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }
@@ -1030,19 +1079,23 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                while (drawX1 < drawX2 || drawY1 < drawY2) {
+                while (true) {
                     if (*frameBufferPtr != maskColour)
                         *frameBufferPtr = colour16;
-
-                    if (hSize > -sizeX) {
-                        hSize -= max;
-                        ++drawX1;
-                        ++frameBufferPtr;
+                    if (drawX1 < drawX2 || drawY1 < drawY2) {
+                        if (hSize > -sizeX) {
+                            hSize -= max;
+                            ++drawX1;
+                            ++frameBufferPtr;
+                        }
+                        if (hSize < max) {
+                            hSize += sizeX;
+                            ++drawY1;
+                            frameBufferPtr += currentScreen->pitch;
+                        }
                     }
-                    if (hSize < max) {
-                        hSize += sizeX;
-                        ++drawY1;
-                        frameBufferPtr += currentScreen->pitch;
+                    else {
+                        break;
                     }
                 }
             }

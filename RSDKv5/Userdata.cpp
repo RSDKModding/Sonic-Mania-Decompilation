@@ -528,7 +528,7 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         if (bufSize >= 4) {
             byte *bufTest       = (byte *)buffer;
             //quick and dirty zlib check
-            if (bufTest[0] == 0x78 && bufTest[1] == 0x01 && bufTest[2] == 0xED) {
+            if (bufTest[0] == 0x78 && ((bufTest[1] == 0x01 && bufTest[2] == 0xED) || bufTest[1] == 0x9C)) {
                 uint destLen = bufSize;
 
                 byte *compData = NULL;
