@@ -5,12 +5,29 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxGush;
 } ObjectWaterGush;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte orientation;
+    int length;
+    int speed;
+    byte activePlayers;
+    Vector2 posUnknown1;
+    int field_74;
+    int field_78;
+    int field_7C;
+    bool32 flag;
+    int field_84;
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Animator animator1;
+    Animator animator2;
 } EntityWaterGush;
 
 // Object Struct
@@ -28,6 +45,8 @@ void WaterGush_EditorLoad(void);
 void WaterGush_Serialize(void);
 
 // Extra Entity Functions
-
+void WaterGush_SetupHitboxes(void);
+void WaterGush_DrawSprites(void);
+void WaterGush_Unknown3(void);
 
 #endif //!OBJ_WATERGUSH_H

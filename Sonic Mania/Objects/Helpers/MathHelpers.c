@@ -140,16 +140,16 @@ bool32 MathHelpers_PointInHitbox(int direction, int x1, int y1, Hitbox *hitbox, 
 {
     int left, top, right, bottom;
 
-    if ((direction & 1) != 0) {
-        left          = -*&hitbox->left;
-        right         = -*&hitbox->right;
-        hitbox->right = -hitbox->right;
+    if ((direction & FLIP_X)) {
+        left          = -hitbox->left;
+        right         = -hitbox->right;
     }
     else {
         right = hitbox->right;
         left  = hitbox->left;
     }
-    if ((direction & 2) != 0) {
+
+    if ((direction & FLIP_Y)) {
         bottom = -hitbox->bottom;
         top    = -hitbox->top;
     }

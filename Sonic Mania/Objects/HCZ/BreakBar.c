@@ -169,14 +169,14 @@ void BreakBar_HandlePlayerInteractions(void *p)
                     RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &debris->animator, true, frame);
                     debris->velocity.y = abs(debris->position.y - player->position.y) >> 6;
                     if (debris->position.y < player->position.y)
-                        debris->velocity.y = -(abs(debris->position.y - player->position.y) >> 6);
+                        debris->velocity.y = -debris->velocity.y;
 
                     if (len > abs(debris->position.y - player->position.y)) {
                         debris->velocity.x += (2 * (player->velocity.x > 0) - 1) * (maxVal(len - abs(debris->position.y - player->position.y), 0) >> 5);
                     }
 
                     debris->velocity.x = (3 * ((RSDK.Rand(-12, 12) << 10) + debris->velocity.x)) >> 3;
-                    spawnX += 0x80000;
+                    spawnY += 0x80000;
                 }
             }
         }

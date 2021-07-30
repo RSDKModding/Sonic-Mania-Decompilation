@@ -5,12 +5,28 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxWhirlpool;
+    bool32 playingSFX;
+    int sfxChannel;
+    int timer;
 } ObjectWhirlpool;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int angVel;
+    int yVel;
+    Vector2 size;
+    byte activePlayers;
+    Vector2 posUnknown2;
+    int field_74;
+    int field_78[128];
+    int field_278[4];
+    int field_288[4];
+    Hitbox hitbox;
+    Animator animator;
 } EntityWhirlpool;
 
 // Object Struct
@@ -28,6 +44,7 @@ void Whirlpool_EditorLoad(void);
 void Whirlpool_Serialize(void);
 
 // Extra Entity Functions
-
+void WhirlPool_DrawSprites(void);
+void Whirlpool_SetupBubbles(void);
 
 #endif //!OBJ_WHIRLPOOL_H

@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
 } ObjectHangGlider;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int field_60;
+    int field_64;
+    int field_68;
+    Entity *playerPtr;
+    Animator animator1;
+    Animator animator2;
+    Animator animator4;
+    Animator animator3;
 } EntityHangGlider;
 
 // Object Struct
@@ -28,6 +40,8 @@ void HangGlider_EditorLoad(void);
 void HangGlider_Serialize(void);
 
 // Extra Entity Functions
+void HangGlider_Unknown1(void);
+void HangGlider_Unknown2(void);
 
 
 #endif //!OBJ_HANGGLIDER_H

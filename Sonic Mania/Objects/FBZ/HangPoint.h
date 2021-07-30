@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Animator animator;
+    ushort aniFrames;
+    Hitbox hitbox;
 } ObjectHangPoint;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte activePlayers;
+    int field_5C[4];
+    int playerTimer[4];
+    int field_7C;
+    int field_80;
+    int length;
+    byte speed;
 } EntityHangPoint;
 
 // Object Struct
@@ -28,6 +38,6 @@ void HangPoint_EditorLoad(void);
 void HangPoint_Serialize(void);
 
 // Extra Entity Functions
-
+void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int playerID);
 
 #endif //!OBJ_HANGPOINT_H
