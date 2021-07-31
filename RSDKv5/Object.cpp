@@ -571,7 +571,7 @@ void ProcessObjectDrawLists()
 
             for (int t = 0; t < LAYER_COUNT; ++t) {
                 byte drawOrder = tileLayers[t].drawLayer[s];
-                if (drawOrder < LAYER_COUNT)
+                if (drawOrder < DRAWLAYER_COUNT)
                     drawLayers[drawOrder].layerDrawList[drawLayers[drawOrder].layerCount++] = t;
             }
 

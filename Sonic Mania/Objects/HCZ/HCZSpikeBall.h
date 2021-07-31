@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectHCZSpikeBall;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    Vector2 field_5C;
+    int field_64;
+    int field_68;
+    EntityHangConveyor *conveyor;
+    Hitbox hitbox;
+    Animator animator;
 } EntityHCZSpikeBall;
 
 // Object Struct
@@ -28,6 +36,9 @@ void HCZSpikeBall_EditorLoad(void);
 void HCZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
-
+void HCZSpikeBall_HandleConveyorSetup(void);
+void HCZSpikeBall_Unknown2(void);
+void HCZSpikeBall_HandlePlayerInteractions(void);
+void HCZSpikeBall_Unknown4(void);
 
 #endif //!OBJ_HCZSPIKEBALL_H

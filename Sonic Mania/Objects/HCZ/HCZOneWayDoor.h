@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxClack;
 } ObjectHCZOneWayDoor;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 posUnknown1;
+    Vector2 posUnknown2;
+    Vector2 posUnknown3;
+    int field_74;
+    int length;
+    int duration;
+    byte orientation;
+    byte detectDirection;
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Animator animator;
 } EntityHCZOneWayDoor;
 
 // Object Struct
@@ -28,6 +42,7 @@ void HCZOneWayDoor_EditorLoad(void);
 void HCZOneWayDoor_Serialize(void);
 
 // Extra Entity Functions
-
+void HCZOneWayDoor_Unknown1(void);
+void HCZOneWayDoor_DrawSprites(void);
 
 #endif //!OBJ_HCZONEWAYDOOR_H
