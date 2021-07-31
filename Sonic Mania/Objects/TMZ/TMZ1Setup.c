@@ -125,22 +125,22 @@ void TMZ1Setup_StageLoad(void)
 
 void TMZ1Setup_BGCallback_A(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 16;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = 16;
-    RSDK.GetSceneLayer(4)->drawLayer[BGSwitch->layerID] = 16;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(4)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
     foreach_active(MonarchBG, monarch) { monarch->visible = true; }
     TMZ1Setup->stageState = 0;
 }
 
 void TMZ1Setup_BGCallback_B(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 16;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 16;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 16;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = 16;
-    RSDK.GetSceneLayer(4)->drawLayer[BGSwitch->layerID] = 0;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(4)->drawLayer[BGSwitch->screenID] = 0;
     foreach_active(MonarchBG, monarch) { monarch->visible = false; }
     TMZ1Setup->stageState = 2;
 }

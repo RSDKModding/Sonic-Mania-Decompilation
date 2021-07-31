@@ -106,18 +106,18 @@ void GHZSetup_SetupStartingBG(void)
         BGSwitch->layerIDs[1] = 1;
         BGSwitch->layerIDs[2] = 1;
         BGSwitch->layerIDs[3] = 1;
-        for (BGSwitch->layerID = 0; BGSwitch->layerID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->layerID) {
-            RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-            RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-            RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
-            RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = 0;
+        for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
+            RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+            RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+            RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
+            RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = 0;
         }
         Zone_ReloadStoredEntities(0x6BC0000, 0xD40000, true);
     }
     else {
         Zone_ReloadStoredEntities(0x3EC0000, 0xD40000, true);
         TileLayer *outsideLayer = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("BG Outside"));
-        EntityPlayer *player    = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         player->onGround = true;
         player->state    = Player_State_Ground;
@@ -149,39 +149,39 @@ void GHZSetup_HandleActTransition(void)
         layer3->scrollInfo[s].scrollPos += 0x3CB000 * layer3->scrollInfo[s].parallaxFactor;
     }
 
-    BGSwitch->layerID = 0;
-    for (int s = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->layerID < s;) {
-        RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID]   = DRAWLAYER_COUNT;
-        RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID]   = DRAWLAYER_COUNT;
-        RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID]   = 0;
-        RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID++] = 0;
+    BGSwitch->screenID = 0;
+    for (int s = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID < s;) {
+        RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
+        RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
+        RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID]   = 0;
+        RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID++] = 0;
     }
 }
 void GHZSetup_SetupBGSwitchA1(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
 }
 void GHZSetup_SetupBGSwitchA2(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->layerID] = 0;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = 0;
 }
 void GHZSetup_SetupBGSwitchB1(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
 }
 void GHZSetup_SetupBGSwitchB2(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
 }
 void GHZSetup_SpawnGHZ2Outro(void) { RSDK.CreateEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
 

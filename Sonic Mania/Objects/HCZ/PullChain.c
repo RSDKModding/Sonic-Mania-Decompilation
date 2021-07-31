@@ -6,8 +6,8 @@ void PullChain_Update(void)
 {
     RSDK_THIS(PullChain);
     if (!entity->decorMode) {
-        if (entity->flag)
-            entity->flag = false;
+        if (entity->activated)
+            entity->activated = false;
         foreach_active(Player, player)
         {
             int plrID = RSDK.GetEntityID(player);
@@ -25,9 +25,9 @@ void PullChain_Update(void)
 
                     if (flag) {
                         if (!entity->field_64) {
-                            entity->flag     = true;
+                            entity->activated = true;
                             entity->field_70 = 1;
-                            entity->field_68 = entity->field_68 == 0;
+                            entity->field_68 = !entity->field_68;
                         }
                         entity->field_64 = 1;
                     }

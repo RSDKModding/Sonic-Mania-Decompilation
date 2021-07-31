@@ -1478,7 +1478,7 @@ void FindFloorPosition(CollisionSensor *sensor)
             int colY         = posY - layer->position.y;
             int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->height) {
                         ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
                         if (tile < 0xFFFF && tile & solid) {
@@ -1494,6 +1494,7 @@ void FindFloorPosition(CollisionSensor *sensor)
                                             sensor->angle    = tileAngle;
                                             sensor->pos.y    = (ty + layer->position.y) << 0x10;
                                             startY           = ty;
+                                            i                = 3;
                                         }
                                     }
                                 }
@@ -1524,7 +1525,7 @@ void FindLWallPosition(CollisionSensor *sensor)
             int colY         = posY - layer->position.y;
             int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
                         ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
                         if (tile < 0xFFFF && tile & solid) {
@@ -1539,6 +1540,7 @@ void FindLWallPosition(CollisionSensor *sensor)
                                             sensor->angle    = tileAngle;
                                             sensor->pos.x    = (tx + layer->position.x) << 0x10;
                                             startX           = tx;
+                                            i                = 3;
                                         }
                                     }
                                 }
@@ -1569,7 +1571,7 @@ void FindRoofPosition(CollisionSensor *sensor)
             int colY         = posY - layer->position.y;
             int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->height) {
                         ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
                         if (tile < 0xFFFF && tile & solid) {
@@ -1615,7 +1617,7 @@ void FindRWallPosition(CollisionSensor *sensor)
             int colY         = posY - layer->position.y;
             int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
                         ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
                         if (tile < 0xFFFF && tile & solid) {

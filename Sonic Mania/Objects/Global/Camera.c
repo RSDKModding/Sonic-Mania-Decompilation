@@ -58,7 +58,7 @@ void Camera_Create(void *data)
     entity->boundsOffset.x = 3;
     entity->boundsOffset.y = 2;
     entity->active         = ACTIVE_NORMAL;
-    if (!Zone->field_158) {
+    if (!Zone->atlReloadFlag) {
         entity->boundsL = Zone->screenBoundsL1[entity->screenID];
         entity->boundsR = Zone->screenBoundsR1[entity->screenID];
         entity->boundsT = Zone->screenBoundsT1[entity->screenID];
@@ -310,7 +310,7 @@ void Camera_State_Follow(void)
                 int pos = target->position.x + entity->field_8C - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
-                entity->position.x = entity->position.x + pos;
+                entity->position.x += pos;
             }
             target->position.x -= entity->field_6C.x;
         }
@@ -318,7 +318,7 @@ void Camera_State_Follow(void)
             int pos = target->position.x - entity->position.x - entity->field_8C;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
-            entity->position.x = entity->position.x + pos;
+            entity->position.x += pos;
             target->position.x -= entity->field_6C.x;
         }
 
@@ -329,7 +329,7 @@ void Camera_State_Follow(void)
                 int pos = target->position.y + entity->field_90 - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
-                entity->position.y = entity->position.y + pos;
+                entity->position.y += pos;
             }
             target->position.y -= entity->field_6C.y;
         }
@@ -337,7 +337,7 @@ void Camera_State_Follow(void)
             int pos = adjust - entity->position.y - entity->field_90;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
-            entity->position.y = entity->position.y + pos;
+            entity->position.y += pos;
             target->position.y -= entity->field_6C.y;
         }
     }

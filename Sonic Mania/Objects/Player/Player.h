@@ -327,7 +327,7 @@ typedef struct {
     int field_20C;
     int field_210;
     void *entPtr;
-    int field_218;
+    void* field_218;
     int field_21C;
 #if RETRO_USE_PLUS
     int field_220;

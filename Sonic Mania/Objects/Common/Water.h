@@ -52,9 +52,9 @@ typedef struct {
     int type;
     void *childPtr;
     int field_68;
-    char bubbleType1;
-    char field_6D;
-    char field_6E;
+    byte bubbleType1;
+    byte field_6D;
+    byte field_6E;
     byte bubbleType2;
     int numDuds;
     int countdownID;
@@ -72,16 +72,14 @@ typedef struct {
     int gapA4;
     int field_A8;
     int timer;
-    char activePlayers;
-    char activePlayers2;
-    char field_B2;
-    char field_B3;
+    byte activePlayers;
+    byte activePlayers2;
     int field_B4;
     int field_B8;
     int field_BC;
     int field_C0;
-    int taggedObject;
-    Animator waterData;
+    EntityButton* taggedObject;
+    Animator animator;
 } EntityWater;
 
 // Object Struct
@@ -114,10 +112,10 @@ void Water_State_Palette(void);
 void Water_State_Tint(void);
 void Water_State_Splash(void);
 void Water_Unknown4(void);
-void Water_Unknown5(EntityWater *entity, int a2);
+void Water_HCZBubbleBurst(EntityWater *entity, bool32 jumpedOut);
 void Water_State_Bubble(void);
 void Water_Unknown6(void);
-void Water_Unknown8(void);
+void Water_State_HCZBubble(void);
 void Water_Unknown9(void);
 void Water_State_Bubbler(void);
 void Water_State_CountDownBubble(void);

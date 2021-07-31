@@ -47,14 +47,14 @@ void PSZ2Setup_StaticUpdate(void)
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
                         EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, RSDK_sceneInfo->entity, player->position.x,
                                                                                      player->position.y + (playerHitbox->bottom << 16));
-                        // pile->field_62   = 4;
-                        // pile->field_63   = lowFlag;
-                        // pile->field_64 = 0x40000;
-                        // pile->field_68 = 0x40000;
-                        // pile->field_A0 = 1;
-                        // pile->field_98      = 0xB5555;
-                        // pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
-                        // pile->field_8C = player->groundVel >> 1;
+                        pile->leafPattern     = 4;
+                        pile->tileLayer       = lowFlag;
+                        pile->pileSize.x      = 0x40000;
+                        pile->pileSize.y      = 0x40000;
+                        pile->flag            = 1;
+                        pile->field_98        = 0xB5555;
+                        pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
+                        pile->field_8C        = player->groundVel >> 1;
                         PSZ2Setup->petalTimer = 3;
                     }
                 }

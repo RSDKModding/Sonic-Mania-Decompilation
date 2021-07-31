@@ -469,13 +469,12 @@ void TitleCard_Unknown9(void)
         entity->state     = TitleCard_Unknown10;
         entity->stateDraw = TitleCard_Unknown14;
         RSDK.SetGameMode(ENGINESTATE_REGULAR);
-        if (TitleCard->funcA)
-            TitleCard->funcA();
+        StateMachine_Run(TitleCard->funcA);
     }
     else {
         entity->field_60++;
         if (entity->field_60 == 16) {
-            if (Zone->field_158) {
+            if (Zone->atlReloadFlag) {
                 EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                 camera->state          = Camera_State_Follow;
                 EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -484,7 +483,7 @@ void TitleCard_Unknown9(void)
                 Camera->centerBounds.x = 0x20000;
                 Camera->centerBounds.y = 0x20000;
             }
-            Zone->field_158 = false;
+            Zone->atlReloadFlag = false;
         }
     }
 }

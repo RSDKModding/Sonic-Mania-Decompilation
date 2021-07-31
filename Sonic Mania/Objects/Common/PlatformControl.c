@@ -78,7 +78,7 @@ void PlatformControl_Update(void)
     }
     else {
         EntityButton *control = (EntityButton *)entity->controller;
-        if (control && control->stood)
+        if (control && control->activated)
             entity->setActive = true;
         if (entity->setActive) {
             for (int c = 0; c < entity->childCount; ++c) {

@@ -59,7 +59,7 @@ void Chopper_StageLoad(void)
 void Chopper_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Chopper_DebugSpawn(void)
@@ -71,7 +71,7 @@ void Chopper_DebugSpawn(void)
 void Chopper_CheckOnScreen(void)
 {
     RSDK_THIS(Chopper);
-    if (!RSDK.CheckOnScreen(entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->direction  = entity->startDir;
@@ -158,7 +158,7 @@ void Chopper_Unknown5(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &Chopper->hitbox3)) {
                 entity->state = Chopper_Unknown6;
-                RSDK.SetSpriteAnimation(Chopper->spriteIndex, 2, &entity->animator, 0, 0);
+                RSDK.SetSpriteAnimation(Chopper->spriteIndex, 2, &entity->animator, false, 0);
                 entity->timer = 16;
                 if (!entity->direction)
                     entity->velocity.x = -0x20000;
@@ -184,6 +184,8 @@ void Chopper_Unknown6(void)
 
     if (!entity->timer)
         entity->state = Chopper_Unknown7;
+    else
+        --entity->timer;
     RSDK.ProcessAnimation(&entity->animator);
     Chopper_CheckPlayerCollisions2();
     Chopper_CheckOnScreen();

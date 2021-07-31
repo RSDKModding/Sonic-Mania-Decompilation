@@ -176,14 +176,14 @@ void AIZSetup_StageLoad(void)
 
 void AIZSetup_bgSwitch1_CB(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
 }
 
 void AIZSetup_bgSwitch2_CB(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
 }
 
 void AIZSetup_Unknown4(void)

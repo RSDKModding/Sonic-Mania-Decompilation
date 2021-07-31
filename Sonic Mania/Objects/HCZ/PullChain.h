@@ -19,7 +19,7 @@ typedef struct {
     byte tag;
     int field_64;
     int field_68;
-    bool32 flag;
+    bool32 activated;
     int field_70;
     int field_74;
     int field_78;

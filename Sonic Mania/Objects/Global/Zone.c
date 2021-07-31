@@ -537,7 +537,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
         Entity *entityData = (Entity *)&globals->atlEntityData[e << 9];
         Entity *entity;
         if (globals->atlEntitySlot[e] >= 12)
-            entity = (Entity *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+            entity = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         else
             entity = RSDK_GET_ENTITY(globals->atlEntitySlot[e], );
         if (entityData->objectID == Player->objectID) {
@@ -551,20 +551,20 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
             }
         }
         else {
-            RSDK.CopyEntity(entity, entityData, 0);
+            RSDK.CopyEntity(entity, entityData, false);
         }
         entity->position.x = xOffset + entityData->position.x;
         entity->position.y = yOffset + entityData->position.y;
     }
 
     memset(globals->atlEntityData, 0, globals->atlEntityCount << 9);
-    Zone->field_158 = flag;
+    Zone->atlReloadFlag = flag;
     if (flag) {
         EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->camera         = NULL;
         EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->position.x     = yOffset;
-        camera->position.y     = xOffset;
+        camera->position.x     = xOffset;
+        camera->position.y     = yOffset;
         camera->state          = 0;
         camera->targetPtr      = NULL;
         camera->boundsL        = (xOffset >> 16) - RSDK_screens->centerX;
@@ -658,7 +658,7 @@ void Zone_StartTeleportAction(void)
 
 void Zone_ApplyWorldBounds(void)
 {
-    if (Zone->field_158) {
+    if (Zone->atlReloadFlag) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         foreach_active(Player, player)
         {

@@ -4,8 +4,8 @@
 #include "SonicMania.h"
 
 #define Zone_AddCallback(callback)                                                                                                                   \
-    if (Zone->callbackCount < 0x10) {                                                                                                                  \
-        Zone->callbacks[Zone->callbackCount] = ZipLine_Unknown1;                                                                                     \
+    if (Zone->callbackCount < 0x10) {                                                                                                                \
+        Zone->callbacks[Zone->callbackCount] = callback;                                                                                             \
         ++Zone->callbackCount;                                                                                                                       \
     }
 
@@ -47,7 +47,7 @@ typedef struct {
     int playerBoundActiveT[PLAYER_MAX];
     int playerBoundActiveB[PLAYER_MAX];
     int field_154;
-    bool32 field_158;
+    bool32 atlReloadFlag;
     int field_15C;
     void (*timeOverState)(void);
     ushort fgLayers;
@@ -95,7 +95,7 @@ void Zone_Update(void);
 void Zone_LateUpdate(void);
 void Zone_StaticUpdate(void);
 void Zone_Draw(void);
-void Zone_Create(void* data);
+void Zone_Create(void *data);
 void Zone_StageLoad(void);
 void Zone_EditorDraw(void);
 void Zone_EditorLoad(void);
@@ -125,4 +125,4 @@ void Zone_Unknown19(void);
 void Zone_Unknown20(void);
 void Zone_Unknown21(void);
 
-#endif //!OBJ_ZONE_H
+#endif //! OBJ_ZONE_H

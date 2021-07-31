@@ -57,8 +57,8 @@ void Spring_Create(void *data)
                     entity->velocity.x = -entity->velocity.x;
                 entity->hitbox.left   = -8;
                 entity->hitbox.top    = -15;
-                entity->hitbox.right  = 16;
-                entity->hitbox.bottom = 8;
+                entity->hitbox.right  = 8;
+                entity->hitbox.bottom = 16;
                 entity->state         = Spring_State_Horizontal;
             }
             else if (entity->type >> 1 == 2) {
@@ -91,7 +91,7 @@ void Spring_Create(void *data)
             if (!entity->flipFlag)
                 entity->velocity.y = -entity->velocity.y;
             entity->hitbox.left   = -16;
-            entity->hitbox.top    = -7;
+            entity->hitbox.top    = -8;
             entity->hitbox.right  = 16;
             entity->hitbox.bottom = 8;
             entity->state         = Spring_State_Vertical;
@@ -188,7 +188,7 @@ void Spring_State_Horizontal(void)
 
                 if (player->state != Ice_State_FrozenPlayer) {
                     if (player->state != Player_State_Roll && player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
-                        if (player->onGround == 1)
+                        if (player->onGround)
                             player->state = Player_State_Ground;
                         else
                             player->state = Player_State_Air;

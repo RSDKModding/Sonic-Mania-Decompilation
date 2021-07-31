@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int layerID;
+    int screenID;
     int layerIDs[8];
     void (*switchCallback[8])(void);
     int field_48;

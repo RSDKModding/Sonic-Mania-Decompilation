@@ -157,14 +157,14 @@ void PSZ1Setup_StaticUpdate(void)
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
                         EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, RSDK_sceneInfo->entity, player->position.x,
                                                                                      player->position.y + (playerHitbox->bottom << 16));
-                        //pile->field_62   = 4;
-                        //pile->field_63   = lowFlag;
-                        //pile->field_64 = 0x40000;
-                        //pile->field_68 = 0x40000;
-                        //pile->field_A0 = 1;
-                        //pile->field_98      = 0xB5555;
-                        //pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
-                        //pile->field_8C = player->groundVel >> 1;
+                        pile->leafPattern     = 4;
+                        pile->tileLayer       = lowFlag;
+                        pile->pileSize.x      = 0x40000;
+                        pile->pileSize.y      = 0x40000;
+                        pile->flag            = 1;
+                        pile->field_98        = 0xB5555;
+                        pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
+                        pile->field_8C        = player->groundVel >> 1;
                         PSZ1Setup->petalTimer = 3;
                     }
                 }
@@ -229,16 +229,16 @@ void PSZ1Setup_StageLoad(void)
 
 void PSZ1Setup_BGSwitchCB1(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = 0;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
 }
 
 void PSZ1Setup_BGSwitchCB2(void)
 {
-    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->layerID] = 0;
-    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
-    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->layerID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+    RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
 }
 
 void PSZ1Setup_TriggerCB1(void) { PSZ1Setup->flag = true; }
