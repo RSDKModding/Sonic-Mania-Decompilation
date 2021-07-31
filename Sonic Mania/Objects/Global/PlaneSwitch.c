@@ -109,9 +109,9 @@ void PlaneSwitch_Create(void *data)
 
 void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-void PlaneSwitch_EditorDraw(void) {}
+void PlaneSwitch_EditorDraw(void) { PlaneSwitch_Draw(); }
 
-void PlaneSwitch_EditorLoad(void) {}
+void PlaneSwitch_EditorLoad(void) { PlaneSwitch_StageLoad(); }
 
 void PlaneSwitch_Serialize(void)
 {

@@ -365,9 +365,9 @@ void StarPost_State_BallSpin(void)
     RSDK.ProcessAnimation(&entity->ballData);
 }
 
-void StarPost_EditorDraw(void) {}
+void StarPost_EditorDraw(void) { StarPost_DebugDraw(); }
 
-void StarPost_EditorLoad(void) {}
+void StarPost_EditorLoad(void) { StarPost->spriteIndex = RSDK.LoadSpriteAnimation("Global/StarPost.bin", SCOPE_STAGE); }
 
 void StarPost_Serialize(void)
 {

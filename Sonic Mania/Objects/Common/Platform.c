@@ -2109,9 +2109,9 @@ void Platform_CollisionState_15(void)
     }
 }
 
-void Platform_EditorDraw(void) {}
+void Platform_EditorDraw(void) { Platform_Draw(); }
 
-void Platform_EditorLoad(void) {}
+void Platform_EditorLoad(void) { Platform_StageLoad(); }
 
 void Platform_Serialize(void)
 {

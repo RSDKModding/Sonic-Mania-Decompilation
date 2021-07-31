@@ -559,9 +559,20 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
     }
 }
 
-void Spikes_EditorDraw(void) {}
+void Spikes_EditorDraw(void) { 
+    RSDK_THIS(Spikes);
+    switch ((entity->type >> 1) & 1) {
+        case 0: 
+            entity->direction = FLIP_Y * (entity->type & 1);
+            break;
+        case 1:
+            entity->direction = entity->type & 1;
+            break;
+    }
+    Spikes_Draw(); 
+}
 
-void Spikes_EditorLoad(void) {}
+void Spikes_EditorLoad(void) { Spikes_StageLoad(); }
 
 void Spikes_Serialize(void)
 {

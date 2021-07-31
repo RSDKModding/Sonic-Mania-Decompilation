@@ -648,10 +648,14 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
     }
 }
 
-void Ring_EditorDraw(void) {}
+void Ring_EditorDraw(void)
+{
+    RSDK_THIS(Ring);
+    RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->type, &entity->animator, true, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, 0);
+}
 
-void Ring_EditorLoad(void) {}
-
+void Ring_EditorLoad(void) { Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
 void Ring_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Ring, VAR_ENUM, type);

@@ -1158,9 +1158,19 @@ void ItemBox_HandleObjectCollisions(void)
     }
 }
 
-void ItemBox_EditorDraw(void) {}
+void ItemBox_EditorDraw(void) {
+    RSDK_THIS(ItemBox);
+    Animator used;
+    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &used, true, 0);
+    RSDK.DrawSprite(&used, NULL, false);
+    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &used, true, entity->type);
+    Vector2 drawPos;
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y - 0x30000;
+    RSDK.DrawSprite(&used, &drawPos, false);
+}
 
-void ItemBox_EditorLoad(void) {}
+void ItemBox_EditorLoad(void) { ItemBox->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE); }
 
 void ItemBox_Serialize(void)
 {

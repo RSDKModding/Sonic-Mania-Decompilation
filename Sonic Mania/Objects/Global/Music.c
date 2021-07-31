@@ -549,9 +549,16 @@ void Music_State_TransitionTrack(void)
     }
 }
 
-void Music_EditorDraw(void) {}
+void Music_EditorDraw(void)
+{
+    RSDK_THIS(Music);
+    //field 254 doesnt get used so /shrug
+    Animator animator;
+    RSDK.SetSpriteAnimation(Music->field_254, 0, &animator, true, 1);
+    RSDK.DrawSprite(&animator, NULL, 0);
+}
 
-void Music_EditorLoad(void) {}
+void Music_EditorLoad(void) { Music->field_254 = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 
 void Music_Serialize(void)
 {

@@ -627,8 +627,12 @@ void HUD_State_GoOffScreen(void)
     }
 }
 
-void HUD_EditorDraw(void) {}
+void HUD_EditorDraw(void) {
+    RSDK_THIS(HUD);
+    RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->taData1, true, 0);
+    RSDK.DrawSprite(&entity->taData1, NULL, 0);
+}
 
-void HUD_EditorLoad(void) {}
+void HUD_EditorLoad(void) { HUD->hudMappings = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 
 void HUD_Serialize(void) {}
