@@ -6610,8 +6610,13 @@ void Player_ProcessP2Input_Player(void)
     }
 }
 
-void Player_EditorDraw(void) {}
+void Player_EditorDraw(void)
+{
+    RSDK_THIS(Player);
+    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, 0, &entity->playerAnimator, true, entity->characterID);
+    RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+}
 
-void Player_EditorLoad(void) {}
+void Player_EditorLoad(void) { Player->sonicSpriteIndex = RSDK.LoadSpriteAnimation("Editor/PlayerIcons.bin", SCOPE_STAGE); }
 
 void Player_Serialize(void) { RSDK_EDITABLE_VAR(Player, VAR_ENUM, characterID); }
