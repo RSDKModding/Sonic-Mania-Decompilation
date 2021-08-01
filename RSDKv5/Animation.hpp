@@ -24,10 +24,10 @@ struct Hitbox {
 };
 
 struct SpriteFrame {
-    ushort sprX;
-    ushort sprY;
-    ushort width;
-    ushort height;
+    short sprX;
+    short sprY;
+    short width;
+    short height;
     short pivotX;
     short pivotY;
     ushort delay;

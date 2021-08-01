@@ -282,31 +282,31 @@ void EggPrison_Activated(void)
             break;
         }
         case 4: {
-            Entity *technoSqueak     = (Entity *)RSDK.CreateEntity(Technosqueek->objectID, 0, entity->position.x - 0x80000, entity->position.y);
+            EntityTechnosqueek *technoSqueak = CREATE_ENTITY(Technosqueek, NULL, entity->position.x - 0x80000, entity->position.y);
             technoSqueak->velocity.x = -0x30000;
             technoSqueak->velocity.y = -0x40000;
             technoSqueak->active     = ACTIVE_NORMAL;
             // technoSqueak[1].position.x = (int)TechnoSqueak_Unknown7;
 
-            technoSqueak             = (Entity *)RSDK.CreateEntity(Technosqueek->objectID, 0, entity->position.x + 0x80000, entity->position.y);
+            technoSqueak             = CREATE_ENTITY(Technosqueek, NULL, entity->position.x + 0x80000, entity->position.y);
             technoSqueak->velocity.x = 0x30000;
             technoSqueak->velocity.y = -0x40000;
             technoSqueak->active     = ACTIVE_NORMAL;
             technoSqueak->direction  = 1;
             // technoSqueak[1].position.x = (int)TechnoSqueak_Unknown7;
 
-            Entity *blaster     = (Entity *)RSDK.CreateEntity(Blaster->objectID, 0, entity->position.x - 0x180000, entity->position.y);
+            EntityBlaster *blaster = CREATE_ENTITY(Blaster, NULL, entity->position.x - 0x180000, entity->position.y);
             blaster->velocity.x = -0x30000;
             blaster->velocity.y = -0x30000;
             blaster->active     = ACTIVE_NORMAL;
-            // blaster[1].position.x = (int)Blaster_Unknown11;
+            blaster->state         = Blaster_State_Unknown7;
 
-            blaster             = (Entity *)RSDK.CreateEntity(Blaster->objectID, 0, entity->position.x + 0x180000, entity->position.y);
+            blaster             = CREATE_ENTITY(Blaster, NULL, entity->position.x + 0x180000, entity->position.y);
             blaster->velocity.x = 0x30000;
             blaster->velocity.y = -0x30000;
             blaster->active     = ACTIVE_NORMAL;
             blaster->direction  = 1;
-            // blaster[1].position.x = (int)Blaster_Unknown11;
+            blaster->state      = Blaster_State_Unknown7;
             break;
         }
         case 5:

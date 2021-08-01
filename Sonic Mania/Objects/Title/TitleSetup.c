@@ -144,7 +144,7 @@ void TitleSetup_Unknown5(void)
                     titleLogo->visible = true;
                 }
                 else if (titleLogo->type == 3) {
-                    RSDK.ResetEntityPtr(titleLogo, TYPE_BLANK, NULL);
+                    destroyEntity(titleLogo);
                 }
             }
         }
@@ -160,10 +160,14 @@ void TitleSetup_Unknown6(void)
     if (entity->animator.frameID == entity->animator.frameCount - 1) {
         foreach_all(TitleLogo, titleLogo)
         {
+#if RETRO_USE_PLUS
             if (titleLogo->type == 7) {
                 titleLogo->position.y -= 0x200000;
             }
             else if (titleLogo->type != 6) {
+#else
+            if (titleLogo->type != 6) {
+#endif
                 titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
             }
@@ -207,18 +211,22 @@ void TitleSetup_Unknown7(void)
 void TitleSetup_SetupLogo_NoPlus(void)
 {
     RSDK_THIS(TitleSetup);
+#if RETRO_USE_PLUS
     if (entity->timer < 120)
         TitleSetup_CheckCheatCode();
+#endif
     if (++entity->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type == 6) {
                 titleLogo->active      = ACTIVE_NORMAL;
-                titleLogo->visible     = true;
+                titleLogo->visible = true;
+#if RETRO_USE_PLUS
                 Entity *store          = RSDK_sceneInfo->entity;
                 RSDK_sceneInfo->entity = (Entity *)titleLogo;
                 TitleLogo_Unknown1();
                 RSDK_sceneInfo->entity = store;
+#endif
             }
         }
         entity->timer = 0;
@@ -228,8 +236,10 @@ void TitleSetup_SetupLogo_NoPlus(void)
 void TitleSetup_SetupLogo_Plus(void)
 {
     RSDK_THIS(TitleSetup);
+#if RETRO_USE_PLUS
     if (entity->timer < 120)
         TitleSetup_CheckCheatCode();
+#endif
     if (++entity->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
@@ -268,24 +278,31 @@ void TitleSetup_Unknown10(void)
 {
     RSDK_THIS(TitleSetup);
     bool32 skipped = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
-                     || RSDK_controller->keyY.press || RSDK_controller->keyZ.press | RSDK_controller->keyStart.press
-                     || RSDK_controller->keyStart.press || RSDK_controller->keySelect.press;
+                     || RSDK_controller->keyY.press || RSDK_controller->keyZ.press || RSDK_controller->keyStart.press
+                     || RSDK_controller->keySelect.press;
     bool32 skipped2 = (!RSDK_touchMouse->count && entity->touched)
 #if RETRO_USE_PLUS
                       || RSDK_unknown->field_28;
 #else
-        ;
+                      || RSDK_touchMouseData->field_CC;
 #endif
     entity->touched = RSDK_touchMouse->count > 0;
     if (skipped2 || skipped) {
         RSDK.PlaySFX(TitleSetup->sfx_MenuAccept, 0, 255);
         entity->timer = 0;
-        RSDK.LoadScene("Presentation", "Menu");
+        const char *nextScene = "Menu";
+#if RETRO_GAMEVER == VER_100
+        if (RSDK_controller->keyA.down && (RSDK_controller->keyX.down || RSDK_controller->keyC.down))
+            nextScene = "Level Select";
+#endif
+        RSDK.LoadScene("Presentation", nextScene);
 #if RETRO_USE_PLUS
         RSDK.ResetControllerAssignments();
         RSDK.AssignControllerID(CONT_P1, RSDK.MostRecentActiveControllerID(0, 0, 5));
 #else
-
+        int id = MostRecentActiveControllerID(0);
+        APICallback_ResetControllerAssignments();
+        APICallback_AssignControllerID(id);
 #endif
         RSDK.StopChannel(Music->channelID);
         entity->state     = TitleSetup_Unknown11;

@@ -3,6 +3,61 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
+typedef enum {
+    ICEANI_ICEBLOCK,
+    ICEANI_PLAYERBLOCK,
+    ICEANI_PLAYERGLINT,
+    ICEANI_PILLARBLOCK,
+    ICEANI_PILLARGLINT,
+    ICEANI_SHARD,
+    ICEANI_LARGEGLINT,
+    ICEANI_SMALLGLINT,
+    ICEANI_PIECE,
+    ICEANI_RINGS,
+    ICEANI_SONICIDLE,
+    ICEANI_SONICLEFT,
+    ICEANI_SONICRIGHT,
+    ICEANI_SONICSHAKE,
+    ICEANI_SUPERSONICIDLE,
+    ICEANI_SUPERSONICLEFT,
+    ICEANI_SUPERSONICRIGHT,
+    ICEANI_SUPERSONICSHAKE,
+    ICEANI_TAILSIDLE,
+    ICEANI_TAILSLEFT,
+    ICEANI_TAILSRIGHT,
+    ICEANI_TAILSSHAKE,
+    ICEANI_KNUXIDLE,
+    ICEANI_KNUXLEFT,
+    ICEANI_KNUXRIGHT,
+    ICEANI_KNUXSHAKE,
+    ICEANI_MIGHTYIDLE,
+    ICEANI_MIGHTYLEFT,
+    ICEANI_MIGHTYRIGHT,
+    ICEANI_MIGHTYSHAKE,
+    ICEANI_RAYIDLE,
+    ICEANI_RAYLEFT,
+    ICEANI_RAYRIGHT,
+    ICEANI_RAYSHAKE
+}IceAni;
+#else
+typedef enum {
+    ICEANI_ICEBLOCK,
+    ICEANI_PLAYERBLOCK,
+    ICEANI_RINGS,
+    ICEANI_SONIC,
+    ICEANI_TAILS,
+    ICEANI_KNUX,
+    ICEANI_PILLARBLOCK,
+    ICEANI_PLAYERGLINT,
+    ICEANI_PILLARGLINT,
+    ICEANI_SHARD,
+    ICEANI_LARGEGLINT,
+    ICEANI_SMALLGLINT,
+    ICEANI_PIECE
+} IceAni;
+#endif
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -25,10 +80,10 @@ typedef struct {
     byte type;
     byte subType;
     byte subFlip;
-    int bottomSmash;
-    int knuxSmash;
+    bool32 bottomSmash;
+    bool32 knuxSmash;
     byte timer;
-    byte animaionID;
+    byte animationID;
     Animator animator1;
     Animator animator2;
     Animator animator3;

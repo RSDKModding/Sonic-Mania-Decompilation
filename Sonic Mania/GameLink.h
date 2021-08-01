@@ -330,10 +330,10 @@ typedef struct {
 } Hitbox;
 
 typedef struct {
-    ushort sprX;
-    ushort sprY;
-    ushort width;
-    ushort height;
+    short sprX;
+    short sprY;
+    short width;
+    short height;
     short pivotX;
     short pivotY;
     ushort delay;

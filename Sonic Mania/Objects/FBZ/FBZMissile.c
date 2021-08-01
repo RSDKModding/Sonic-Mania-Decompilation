@@ -218,6 +218,9 @@ void FBZMissile_Unknown6(void)
                         destroyEntity(missile);
                         RSDK.PlaySFX(Player->sfx_Release, false, 255);
                     }
+                    CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                    RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
+                    destroyEntity(entity);
                 }
             }
         }

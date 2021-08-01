@@ -10,7 +10,13 @@ void Ice_Update(void)
 
 void Ice_LateUpdate(void) {}
 
-void Ice_StaticUpdate(void) {}
+void Ice_StaticUpdate(void)
+{
+    for (int i = 0; i < Player->playerCount; ++i) {
+        if (Ice->playerTimers[i] > 0)
+            Ice->playerTimers[i]--;
+    }
+}
 
 void Ice_Draw(void)
 {
@@ -41,15 +47,15 @@ void Ice_Create(void *data)
                 entity->hitbox3.bottom = 0;
                 entity->dwordE4        = 240;
                 entity->alpha          = 128;
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 3, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 4, &entity->animator4, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARBLOCK, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &entity->animator4, true, 0);
                 entity->state     = Ice_Unknown12;
                 entity->stateDraw = Ice_StateDraw_Unknown3;
             }
             else if (data == intToVoid(3)) {
                 entity->updateRange.x = 0x400000;
                 entity->updateRange.y = 0x400000;
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 5, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_SHARD, &entity->animator1, true, 0);
                 entity->state     = Ice_Unknown17;
                 entity->stateDraw = Ice_StateDraw_Unknown4;
             }
@@ -58,7 +64,7 @@ void Ice_Create(void *data)
                 entity->hitbox1.top    = -23;
                 entity->hitbox1.right  = 24;
                 entity->hitbox1.bottom = 24;
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 1, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERBLOCK, &entity->animator1, true, 0);
                 entity->isPermanent = true;
                 entity->state       = Ice_Unknown16;
                 entity->stateDraw   = Ice_StateDraw_Unknown2;
@@ -68,15 +74,15 @@ void Ice_Create(void *data)
             entity->active        = ACTIVE_BOUNDS;
             entity->updateRange.x = 0x800000;
             entity->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(Ice->aniFrames, 0, &entity->animator1, true, entity->size);
+            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_ICEBLOCK, &entity->animator1, true, entity->size);
             switch (entity->type) {
-                case 0: RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0); break;
-                case 1: RSDK.SetSpriteAnimation(Ice->aniFrames, 9, &entity->animator2, true, 0); break;
-                case 2: RSDK.SetSpriteAnimation(Ice->aniFrames, 9, &entity->animator2, true, 1); break;
-                case 3: RSDK.SetSpriteAnimation(Ice->aniFrames, 9, &entity->animator2, true, 2); break;
+                case 0: RSDK.SetSpriteAnimation(0xFFFF, ICEANI_ICEBLOCK, &entity->animator2, true, 0); break;
+                case 1: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &entity->animator2, true, 0); break;
+                case 2: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &entity->animator2, true, 1); break;
+                case 3: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &entity->animator2, true, 2); break;
                 case 4:
                     entity->subType = entity->subType & 3;
-                    RSDK.SetSpriteAnimation(Spikes->spriteIndex, (entity->subType & 3) >> 1, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(Spikes->spriteIndex, entity->subType >> 1, &entity->animator2, true, 0);
                     if (!entity->size) {
                         switch (entity->subType) {
                             case 0:
@@ -173,9 +179,10 @@ void Ice_Create(void *data)
                     }
                     break;
                 default:
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &entity->animator3, true, (entity->type > 12 ? 2 : 0) + entity->type - 5);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, ICEANI_ICEBLOCK, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, ICEANI_ICEBLOCK, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, ICEANI_PLAYERGLINT, &entity->animator3, true,
+                                            (entity->type > 12 ? 2 : 0) + entity->type - 5);
                     if (entity->type != 12) {
                         if (globals->gameMode == MODE_COMPETITION) {
                             if (globals->itemMode == 1) {
@@ -278,9 +285,18 @@ void Ice_StageLoad(void)
 
 void Ice_ZoneCB(void)
 {
+#if RETRO_USE_PLUS
     EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerID, Player);
+#else
+    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+#endif
+
     if (player->state == Ice_State_FrozenPlayer) {
+#if RETRO_USE_PLUS
         Zone->playerFlags[Zone->playerID] = false;
+#else
+        Ice_Unknown8((Entity *)player);
+#endif
     }
 }
 
@@ -291,18 +307,25 @@ void Ice_Unknown2(Entity *p)
     if (!Zone->field_15C && player->state != Ice_State_FrozenPlayer && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
         EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(1), player->position.x, player->position.y);
         ice->playerPtr = (Entity *)player;
-        switch (player->characterID) {
-            case ID_SONIC: ice->animaionID = 4 * (player->superState == 2) + 10; break;
-            case ID_TAILS: ice->animaionID = 18; break;
-            case ID_KNUCKLES: ice->animaionID = 22; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: ice->animaionID = 26; break;
-            case ID_RAY: ice->animaionID = 30; break;
-#endif
+        switch (player->characterID) {
+            case ID_SONIC: ice->animationID = 4 * (player->superState == 2) + ICEANI_SONICIDLE; break;
+            case ID_TAILS: ice->animationID = ICEANI_TAILSIDLE; break;
+            case ID_KNUCKLES: ice->animationID = ICEANI_KNUXIDLE; break;
+            case ID_MIGHTY: ice->animationID = ICEANI_MIGHTYIDLE; break;
+            case ID_RAY: ice->animationID = ICEANI_RAYIDLE; break;
             default: break;
         }
-        RSDK.SetSpriteAnimation(Ice->aniFrames, ice->animaionID, &ice->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Ice->aniFrames, 2, &ice->animator3, true, 0);
+#else
+        switch (player->characterID) {
+            case ID_SONIC: ice->animationID = ICEANI_SONIC; break;
+            case ID_TAILS: ice->animationID = ICEANI_TAILS; break;
+            case ID_KNUCKLES: ice->animationID = ICEANI_KNUX; break;
+            default: break;
+        }
+#endif
+        RSDK.SetSpriteAnimation(Ice->aniFrames, ice->animationID, &ice->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &ice->animator3, true, 0);
         ice->alpha       = 128;
         ice->isPermanent = true;
         player->velocity.x >>= 1;
@@ -472,7 +495,7 @@ void Ice_Unknown6(int a1, int a2, int a3, int velX, int velY, int a6)
         ice->animator1.animationSpeed = RSDK.Rand(1, 4);
         if (a6) {
             if (RSDK.Rand(0, 2)) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 8, &ice->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PIECE, &ice->animator1, true, 0);
                 ice->velocity.x = (ice->velocity.x >> 1) + (ice->velocity.x >> 2);
                 ice->velocity.y = (ice->velocity.y >> 1) + (ice->velocity.y >> 2);
             }
@@ -529,7 +552,7 @@ Entity *Ice_Shatter(EntityIce *ice, int velX, int velY)
     EntityItemBox *itemBox = NULL;
 
     RSDK.PlaySFX(Ice->sfxWindowShatter, false, 255);
-    if (entity->animator1.animationID == 3) {
+    if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
         entity->position.y -= 0x370000;
         Ice_Unknown6(19, 96, 55, velX, velY, 2);
     }
@@ -766,7 +789,7 @@ void Ice_Unknown12(void)
             side        = Player_CheckCollisionBox(player, entity, &entity->hitbox1);
             if (side) {
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !entity->dwordE4) {
-                    if (entity->animator1.animationID == 3) {
+                    if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
                         entity->position.y -= 0x370000;
                         Ice_Unknown6(19, 36, 55, 0, 0, 0);
                     }
@@ -779,7 +802,7 @@ void Ice_Unknown12(void)
 
                     entity->animator1.frameID += 2;
                     entity->dwordE4 = 15;
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, (entity->size + 6), &entity->animator4, true, 0);
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_LARGEGLINT + entity->size, &entity->animator4, true, 0);
                 }
 
                 if (side == 4) {
@@ -794,7 +817,7 @@ void Ice_Unknown12(void)
                     }
                 }
                 else if (side == 1 && player->velocity.y >= 0) {
-                    if (entity->animator1.animationID == 3) {
+                    if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
                         Player_CheckHit(player, entity);
                     }
                     else {
@@ -821,7 +844,7 @@ void Ice_Unknown12(void)
     }
 
     RSDK.ProcessAnimation(&entity->animator4);
-    if (entity->animator1.animationID == 3) {
+    if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
         if (!RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, entity->hitbox1.bottom << 16, true)
             && entity->state == Ice_Unknown12) {
             entity->state = Ice_Unknown13;
@@ -829,7 +852,7 @@ void Ice_Unknown12(void)
         RSDK.ProcessAnimation(&entity->animator1);
         entity->dwordE4--;
         if (entity->dwordE4 == 54) {
-            RSDK.SetSpriteAnimation(Ice->aniFrames, 4, &entity->animator4, true, 1);
+            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &entity->animator4, true, 1);
         }
         else if (!entity->dwordE4)
             Ice_Shatter(entity, 0, 0);
@@ -908,7 +931,7 @@ void Ice_Unknown15(void)
         foreach_all(ItemBox, itemBox)
         {
             if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
-                && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitbox, entity, &entity->hitbox1, true) == true) {
+                && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitbox, entity, &entity->hitbox1, true)) {
                 entity->velocity.y = 0;
                 if (itemBox->onGround) {
                     entity->active = ACTIVE_BOUNDS;
@@ -949,13 +972,14 @@ void Ice_Unknown16(void)
 
     if (playerPtr->state == Ice_State_FrozenPlayer) {
         RSDK.ProcessAnimation(&entity->animator3);
-        if (entity->animator2.animationID == entity->animaionID + 3) {
+#if RETRO_USE_PLUS
+        if (entity->animator2.animationID == entity->animationID + 3) {
             if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animaionID, &entity->animator2, false, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animationID, &entity->animator2, false, 0);
             }
 
             if (--entity->dwordE4 <= 0) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 2, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &entity->animator3, true, 0);
                 entity->dwordE4 = 30 * RSDK.Rand(1, 9);
             }
             entity->animator1.frameID = playerPtr->timer;
@@ -976,24 +1000,24 @@ void Ice_Unknown16(void)
         }
         else {
             if (playerPtr->jumpPress) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animaionID + 3, &entity->animator2, false, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animationID + 3, &entity->animator2, false, 0);
             }
             else {
                 if (playerPtr->velocity.x >= -0x60000) {
                     if (playerPtr->velocity.x <= 0x60000) {
                         if (playerPtr->left) {
-                            RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animaionID + 1, &entity->animator2, false, 0);
+                            RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animationID + 1, &entity->animator2, false, 0);
                         }
                         else if (playerPtr->right) {
-                            RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animaionID + 2, &entity->animator2, false, 0);
+                            RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animationID + 2, &entity->animator2, false, 0);
                         }
                     }
                     else {
-                        RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animaionID + 2, &entity->animator2, false, 0);
+                        RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animationID + 2, &entity->animator2, false, 0);
                     }
                 }
                 else {
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animaionID + 1, &entity->animator2, false, 0);
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, entity->animationID + 1, &entity->animator2, false, 0);
                 }
             }
 
@@ -1032,6 +1056,34 @@ void Ice_Unknown16(void)
     else {
         destroyEntity(entity);
     }
+#else
+        if (--entity->dwordE4 <= 0) {
+            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &entity->animator3, true, 0);
+            entity->dwordE4 = 30 * RSDK.Rand(1, 9);
+        }
+        entity->animator1.frameID = playerPtr->timer;
+        if (playerPtr->spindashCharge) {
+            entity->dwordDC.x = RSDK.Rand(-1, 2) << 16;
+            entity->dwordDC.y = RSDK.Rand(-1, 2) << 16;
+        }
+        else {
+            entity->dwordDC.x = 0;
+            entity->dwordDC.y = 0;
+        }
+        entity->playerPos.x = (playerPtr->position.x & 0xFFFF0000) - (entity->position.x & 0xFFFF0000);
+        entity->playerPos.y = (playerPtr->position.y & 0xFFFF0000) - (entity->position.y & 0xFFFF0000);
+
+        entity->position.x = playerPtr->position.x;
+        entity->position.y = playerPtr->position.y;
+        entity->drawOrder  = playerPtr->drawOrder + 1;
+    }
+    else {
+        playerPtr->outerbox = NULL;
+        playerPtr->innerbox = NULL;
+        playerPtr->visible  = true;
+        destroyEntity(entity);
+    }
+#endif
 
     foreach_active(Player, player)
     {
@@ -1081,6 +1133,7 @@ void Ice_StateDraw_Unknown1(void)
     drawPos.y -= 0x30000;
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
+#if RETRO_USE_PLUS
     if (!RSDK_sceneInfo->inEditor) {
         entity->inkEffect = INK_ADD;
         if (!entity->dwordE4)
@@ -1094,6 +1147,7 @@ void Ice_StateDraw_Unknown1(void)
             entity->animator1.frameID -= 4;
         entity->inkEffect = INK_NONE;
     }
+#endif
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     entity->inkEffect = INK_ADD;
@@ -1112,13 +1166,15 @@ void Ice_StateDraw_Unknown2(void)
     drawPos.x += entity->dwordDC.x;
     drawPos.y += entity->dwordDC.y;
 
+#if RETRO_USE_PLUS
     int frame                 = entity->animator1.frameID;
     entity->inkEffect         = INK_SUB;
     entity->animator1.frameID = 5;
-    RSDK.DrawSprite(&entity->animator1, 0, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     entity->animator1.frameID = frame;
     entity->inkEffect         = INK_NONE;
+#endif
     RSDK.DrawSprite(&entity->animator2, &drawPos, false);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -1131,10 +1187,10 @@ void Ice_StateDraw_Unknown2(void)
 void Ice_StateDraw_Unknown3(void)
 {
     RSDK_THIS(Ice);
-    RSDK.DrawSprite(&entity->animator1, 0, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     entity->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&entity->animator4, 0, false);
+    RSDK.DrawSprite(&entity->animator4, NULL, false);
 
     entity->inkEffect = INK_NONE;
 }

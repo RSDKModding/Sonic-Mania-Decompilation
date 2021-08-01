@@ -107,11 +107,11 @@ void ElectroMagnet_Unknown2(void)
 
         foreach_all(Blaster, blaster)
         {
-            // if (RSDK.CheckObjectCollisionTouchBox(blaster, &ElectroMagnet->hitbox, entity, &entity->hitbox)
-            //    && blaster->field_78 < 2 && blaster->state != Blaster_Unknown3) {
-            //    blaster->state  = Blaster_Unknown7;
-            //    blaster->active     = ACTIVE_NORMAL;
-            //}
+            if (RSDK.CheckObjectCollisionTouchBox(blaster, &ElectroMagnet->hitbox, entity, &entity->hitbox) && blaster->animator.animationID < 2
+                && blaster->state != Blaster_State_Setup) {
+                blaster->state  = Blaster_State_MagnetAttract;
+                blaster->active = ACTIVE_NORMAL;
+            }
         }
 
         foreach_all(MagSpikeBall, spikeBall)

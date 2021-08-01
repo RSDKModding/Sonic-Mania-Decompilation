@@ -100,7 +100,7 @@ void HangPoint_Update(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(&player);
+        int playerID = RSDK.GetEntityID(player);
 
         if (entity->playerTimer[playerID] > 0)
             entity->playerTimer[playerID]--;
@@ -138,8 +138,8 @@ void HangPoint_Update(void)
                     }
                     entity->activePlayers |= (1 << playerID);
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
-                    player->nextAirState    = 0;
-                    player->nextGroundState = 0;
+                    player->nextAirState    = StateMachine_None;
+                    player->nextGroundState = StateMachine_None;
                     player->state           = Player_State_None;
                     player->maxGlideSpeed   = RSDK.Rand(0, 2);
                     RSDK.PlaySFX(Player->sfx_Grab, false, 255);
@@ -207,6 +207,7 @@ void HangPoint_Update(void)
                                      && (entity->direction != FLIP_NONE || entity->field_7C >= entity->length)
                                      && (entity->direction != FLIP_X || entity->field_7C <= 0)
                                  || player->sidekick) {
+                            bool32 flag = false;
                             if (player->left) {
                                 foreach_active(HangPoint, point)
                                 {
@@ -233,6 +234,7 @@ void HangPoint_Update(void)
                                                 if (RSDK.GetEntityID(point) < RSDK_sceneInfo->entitySlot)
                                                     HangPoint_Unknown1(point, player, playerID);
                                                 HangPoint_Unknown1(entity, player, playerID);
+                                                flag = true;
                                                 foreach_break;
                                             }
                                         }
@@ -267,13 +269,14 @@ void HangPoint_Update(void)
                                                 if (RSDK.GetEntityID(point) < RSDK_sceneInfo->entitySlot)
                                                     HangPoint_Unknown1(point, player, playerID);
                                                 HangPoint_Unknown1(entity, player, playerID);
+                                                flag = true;
                                                 foreach_break;
                                             }
                                         }
                                     }
                                 }
                             }
-                            else {
+                            if (!flag) {
                                 if (player->characterID == ID_RAY && player->maxGlideSpeed == 1)
                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_DROPDASH, &player->playerAnimator, false, 0);
                                 else
@@ -318,10 +321,13 @@ void HangPoint_Draw(void)
         int length                  = (entity->field_7C >> 16) & 0xFF00;
 
         SpriteFrame *frame = RSDK.GetFrame(HangPoint->aniFrames, 0, HangPoint->animator.frameID);
-        frame->pivotY      = -(entity->field_7C >> 16);
-        frame->height      = (entity->field_7C >> 16);
-        frame->sprY        = 257 - (entity->field_7C >> 16);
+
+        int extraLength = (entity->field_7C >> 16) & 0x00FF;
+        frame->pivotY   = -(entity->field_7C >> 16);
+        frame->height   = extraLength;
+        frame->sprY     = 257 - extraLength;
         RSDK.DrawSprite(&HangPoint->animator, &drawPos, false);
+
         frame->height = 256;
         frame->sprY   = 1;
         while (length >= 256) {
@@ -348,7 +354,7 @@ void HangPoint_Create(void *data)
         entity->length   = entity->length << 16;
         entity->field_80 = entity->speed << 15;
         if (entity->direction == FLIP_X)
-            entity->field_7C = entity->length << 16;
+            entity->field_7C = entity->length;
     }
 }
 

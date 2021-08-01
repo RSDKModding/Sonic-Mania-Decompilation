@@ -78,7 +78,7 @@ void ShopWindow_Create(void *data)
         }
         
         foreach_all(CircleBumper, bumper) {
-        //    if (RSDK.CheckObjectCollisionTouchBox(bumper, (Hitbox *)&CircleBumper[1], entity, &entity->hitbox2))
+        //    if (RSDK.CheckObjectCollisionTouchBox(bumper, (Hitbox *)&CircleBumper[1], entity, &entity->hitboxRange))
         //        bumper->drawOrder = Zone->drawOrderLow;
         }
     }
