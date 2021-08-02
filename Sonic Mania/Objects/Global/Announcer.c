@@ -82,7 +82,7 @@ void Announcer_Unknown1(void)
 }
 void Announcer_Unknown2(int screen)
 {
-    EntityAnnouncer *entity = (EntityAnnouncer *)RSDK.CreateEntity(Announcer->objectID, 0, 0, 0);
+    EntityAnnouncer *entity = CREATE_ENTITY(Announcer, NULL, 0, 0);
     entity->state           = Announcer_Unknown6;
     entity->stateDraw       = Announcer_Unknown4;
     entity->screen          = screen;

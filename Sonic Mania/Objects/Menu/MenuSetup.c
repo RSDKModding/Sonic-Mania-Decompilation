@@ -8,7 +8,7 @@ void MenuSetup_Update(void)
     StateMachine_Run(entity->state);
     if (entity->timer >= entity->timeOut) {
         StateMachine_Run(entity->timedState);
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
     else {
         entity->timer++;
@@ -453,10 +453,10 @@ void MenuSetup_Unknown7(void)
                 UIControl_Unknown6(control);
             }
             else {
-                control->storedEntityID = globals->menuParam[87];
+                control->storedEntityID = globals->menuParam[MP_MenuSelection];
                 control->dwordC4        = 1;
                 UIControl_Unknown4(control);
-                control->activeEntityID = globals->menuParam[87];
+                control->activeEntityID = globals->menuParam[MP_MenuSelection];
             }
         }
     }
@@ -471,10 +471,10 @@ void MenuSetup_Unknown7(void)
     }
 
     int a, b, c, d;
-    if (globals->menuParam[89]) {
-        a = globals->menuParam[91];
-        b = globals->menuParam[92];
-        c = globals->menuParam[93];
+    if (globals->menuParam[MP_ClearFlag]) {
+        a = globals->menuParam[MP_PlayerID];
+        b = globals->menuParam[MP_ZoneID];
+        c = globals->menuParam[MP_ActID];
         d = globals->menuParam[95];
     }
     else {
@@ -484,10 +484,10 @@ void MenuSetup_Unknown7(void)
         d = 0;
     }
     TimeAttackData_ClearOptions();
-    if (globals->menuParam[89]) {
-        globals->menuParam[91] = a;
-        globals->menuParam[92] = b;
-        globals->menuParam[93] = c;
+    if (globals->menuParam[MP_ClearFlag]) {
+        globals->menuParam[MP_PlayerID]       = a;
+        globals->menuParam[MP_ZoneID]      = b;
+        globals->menuParam[MP_ActID] = c;
         globals->menuParam[95] = d;
     }
 }

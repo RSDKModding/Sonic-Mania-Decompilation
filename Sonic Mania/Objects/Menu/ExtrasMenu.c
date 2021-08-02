@@ -143,7 +143,7 @@ void ExtrasMenu_Start_Puyo_vsAI(void)
     ((byte *)&globals->menuParam)[89] = 1;
     char *tag                         = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Extras");
-    globals->menuParam[87] = 1;
+    globals->menuParam[MP_MenuSelection] = 1;
     RSDK.LoadScene("Extras", "Puyo Puyo");
     RSDK.InitSceneLoad();
 }
@@ -165,7 +165,7 @@ void ExtrasMenu_Start_Puyo_vs2P(void)
     ((byte *)&globals->menuParam)[89] = 2;
     char *tag                         = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Extras");
-    globals->menuParam[87] = 1;
+    globals->menuParam[MP_MenuSelection] = 1;
     RSDK.LoadScene("Extras", "Puyo Puyo");
     RSDK.InitSceneLoad();
 }
@@ -187,7 +187,7 @@ void ExtrasMenu_Start_Credits(void)
     ((byte *)&globals->menuParam)[89] = 1;
     char *tag                         = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Extras");
-    globals->menuParam[87]  = 3;
+    globals->menuParam[MP_MenuSelection] = 3;
     globals->menuParam[106] = 1;
     RSDK.LoadScene("Presentation", "Credits");
     RSDK.InitSceneLoad();
@@ -209,7 +209,7 @@ void ExtrasMenu_Start_DAGarden(void)
     TimeAttackData_ClearOptions();
     char *tag = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Extras");
-    globals->menuParam[87] = 2;
+    globals->menuParam[MP_MenuSelection] = 2;
 #if RETRO_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
         RSDK.LoadScene("Extras", "D.A. Garden Plus");
@@ -236,7 +236,7 @@ void ExtrasMenu_Start_BSS_3K(void)
     ((byte *)&globals->menuParam)[89] = 1;
     char *tag                         = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Extras");
-    globals->menuParam[87] = 0;
+    globals->menuParam[MP_MenuSelection] = 0;
     RSDK.LoadScene("Blue Spheres", "Random");
     RSDK.InitSceneLoad();
 }
@@ -258,7 +258,7 @@ void ExtrasMenu_Start_BSS_Mania(void)
     ((byte *)&globals->menuParam)[89] = 1;
     char *tag                         = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Extras");
-    globals->menuParam[87] = 0;
+    globals->menuParam[MP_MenuSelection] = 0;
     RSDK.LoadScene("Blue Spheres", "Random 2");
     RSDK.InitSceneLoad();
 }

@@ -414,12 +414,8 @@ void SignPost_State_Finish(void)
 void SignPost_CheckTouch(void)
 {
     RSDK_THIS(SignPost);
-    int ty1                = RSDK_sceneInfo->entity->position.y - (entity->vsExtendTop << 16);
-    int ty2                = (entity->vsExtendBottom << 16) + RSDK_sceneInfo->entity->position.y;
-    int tx                 = entity->position.x;
 
-    int p = 0;
-    for (; p < Player->playerCount; ++p) {
+    for (int p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!entity->activePlayers || RSDK_GET_ENTITY(p + Player->playerCount, Player)->objectID != GameOver->objectID) {
             if (!p || globals->gameMode == MODE_COMPETITION) {
@@ -429,8 +425,9 @@ void SignPost_CheckTouch(void)
                         flag = player->position.x > entity->position.x;
                     }
                     else if (entity->playerPosStore[p].x && entity->playerPosStore[p].y) {
-                        flag = MathHelpers_Unknown12(player->position.x, player->position.y, entity->playerPosStore[p].x, entity->playerPosStore[p].y, tx,
-                                              ty1, tx, ty2);
+                        flag = MathHelpers_Unknown12(player->position.x, player->position.y, entity->playerPosStore[p].x, entity->playerPosStore[p].y,
+                                                     entity->position.x, entity->position.y - (entity->vsExtendTop << 16), entity->position.x,
+                                                     (entity->vsExtendBottom << 16) + entity->position.y);
                         entity->activePlayers |= 1 << p;
                     }
 
@@ -465,10 +462,12 @@ void SignPost_CheckTouch(void)
                                 RSDK.PlaySFX(SignPost->sfx_SignPost2P, 0, 255);
                             }
 
-                            // if (!Competition->activeEntity) {
-                            //    Competition->activeEntity = CREATE_ENTITY(Competition, NULL, entity->position.x, entity->position.y);
-                            //}
-                            // v12->playerFlags[player->playerID]    = 1;
+                            EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
+                            if (!manager) {
+                                Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, entity->position.x, entity->position.y);
+                                manager                   = (EntityCompetition *)Competition->activeEntity;
+                            }
+                            manager->playerFlags[player->playerID]                     = true;
                             int pos                                                    = 3 * player->playerID;
                             globals->competitionSession[player->playerID + CS_RingsP1] = player->rings;
                             globals->competitionSession[pos + CS_TimeMinutesP1]        = RSDK_sceneInfo->minutes;
@@ -476,7 +475,7 @@ void SignPost_CheckTouch(void)
                             globals->competitionSession[pos + CS_TimeMillisecondsP1]   = RSDK_sceneInfo->milliseconds;
                             globals->competitionSession[player->playerID + CS_ScoreP1] = player->score;
                             globals->competitionSession[player->playerID + CS_LivesP1] = player->lives;
-                            // Competition_Unknown4(v13, 2);
+                            Competition_CalculateScore(player->playerID, 2);
 
                             entity->activePlayers = entity->activePlayers | (1 << p);
                             if (entity->activePlayers == SignPost->maxPlayerCount)

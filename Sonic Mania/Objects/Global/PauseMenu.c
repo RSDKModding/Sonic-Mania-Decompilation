@@ -294,7 +294,7 @@ void PauseMenu_Unknown9(void)
         sprintf((char *)&globals->menuParam[22], "Competition Zone");
         ushort *param2         = (ushort *)&globals->menuParam[26];
         param2[1]              = 115;
-        globals->menuParam[87] = globals->competitionSession[24];
+        globals->menuParam[MP_MenuSelection] = globals->competitionSession[CS_LevelIndex];
     }
     RSDK.LoadScene("Presentation", "Menu");
     PauseMenu_StopSound();

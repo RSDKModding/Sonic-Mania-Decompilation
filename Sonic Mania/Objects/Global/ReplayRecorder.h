@@ -62,7 +62,7 @@ typedef struct {
     byte storedAnim;
     byte field_A9;
     ushort storedFrame;
-    int field_AC;
+    int alphaStore;
 } EntityReplayRecorder;
 
 // Object Struct
@@ -81,7 +81,8 @@ void ReplayRecorder_Serialize(void);
 
 // Extra Entity Functions
 void ReplayRecorder_Unknown1(void);
-void ReplayRecorder_Resume(void);
+void ReplayRecorder_Resume(EntityReplayRecorder *recorder);
+void ReplayRecorder_ResumeFunc(void);
 void ReplayRecorder_Unknown2(void);
 void ReplayRecorder_Buffer_Move(void);
 void ReplayRecorder_Unknown4(void);
@@ -101,17 +102,21 @@ void ReplayRecorder_ConfigureGhost_CB(void);
 void ReplayRecorder_SetupActions(void);
 void ReplayRecorder_SetupWriteBuffer(void);
 void ReplayRecorder_DrawSprites(void);
+void ReplayRecorder_Record(EntityReplayRecorder *recorder, EntityPlayer *player);
 void ReplayRecorder_StartRecording(EntityPlayer *player);
 void ReplayRecorder_Play(EntityPlayer *player);
-void ReplayRecorder_Rewind(EntityReplayRecorder *RecorderPtr);
-void ReplayRecorder_Seek(EntityReplayRecorder *recorder);
-void ReplayRecorder_Stop(EntityReplayRecorder *this);
-void ReplayRecorder_SetChibiForms(EntityReplayRecorder *ReplayRecorder, bool32 flags);
-void ReplayRecorder_Unknown19(EntityReplayRecorder *ReplayRecorder, byte *buffer);
-bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *this);
+void ReplayRecorder_Rewind(EntityReplayRecorder *recorder);
+void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint frame);
+void ReplayRecorder_SeekFunc(EntityReplayRecorder *recorder);
+void ReplayRecorder_Stop(EntityReplayRecorder *recorder);
+void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag);
+void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, byte *buffer);
+void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, byte *buffer);
+bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder);
 void ReplayRecorder_PackFrame(byte *recording);
 void ReplayRecorder_PlayBackInput(void);
-void ReplayRecorder_Pause(void);
+void ReplayRecorder_Pause(EntityReplayRecorder *recorder);
+void ReplayRecorder_PlayerState(void);
 void ReplayRecorder_StatePlay(void);
 void ReplayRecorder_Unknown24(void);
 void ReplayRecorder_Unknown25(void);

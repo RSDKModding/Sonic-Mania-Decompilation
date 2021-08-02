@@ -94,14 +94,14 @@ void E3MenuSetup_Unknown2(void)
 
 void E3MenuSetup_Unknown3(void)
 {
-    //globals->gameMode  = MODE_NOSAVE;
+    globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.LoadScene("Mania Mode", "");
     // EntityUIButton *button      = (EntityUIButton*) * ((_QWORD *)&Obj_E3MenuSetup->zoneControl[2].inBounds +
-    // Obj_E3MenuSetup->zoneControl[1].scale.y); globals->menuParam[90] = *(unsigned __int8 *)(button + 332); globals->menuParam[91] = *(unsigned
+    // Obj_E3MenuSetup->zoneControl[1].scale.y); globals->menuParam[MP_ZoneID] = *(unsigned __int8 *)(button + 332); globals->menuParam[MP_ActID] = *(unsigned
     // __int8 *)(button + 438);
-    int playerID = globals->menuParam[89];
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(globals->menuParam[90], playerID, globals->menuParam[91]);
+    int playerID = globals->menuParam[MP_PlayerID];
+    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(globals->menuParam[MP_ZoneID], playerID, globals->menuParam[MP_ActID]);
     switch (playerID) {
         default: break;
         case 1: globals->playerID = ID_SONIC; break;
@@ -113,7 +113,7 @@ void E3MenuSetup_Unknown3(void)
 
 void E3MenuSetup_Unknown4(void)
 {
-    EntityE3MenuSetup *entity = (EntityE3MenuSetup *)RSDK.CreateEntity(E3MenuSetup->objectID, NULL, 0xFFF00000, 0xFFF00000);
+    EntityE3MenuSetup *entity = CREATE_ENTITY(E3MenuSetup, NULL, 0xFFF00000, 0xFFF00000);
     entity->fadeColour        = 0x000000;
     entity->timeOut           = 32;
     entity->field_70          = 5;
@@ -125,7 +125,7 @@ void E3MenuSetup_Unknown4(void)
 void E3MenuSetup_Unknown5(void)
 {
     TimeAttackData_ClearOptions();
-    globals->menuParam[89]   = 1;
+    globals->menuParam[MP_PlayerID]  = 1;
     EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
     // for (int i = 0; i < LOBYTE(v3[1].isPermanent); ++i) {
     //    *(_BYTE *)(*((_QWORD *)&v3[2].inBounds + v4++) + 437) = 1;
@@ -137,7 +137,7 @@ void E3MenuSetup_Unknown5(void)
 void E3MenuSetup_Unknown6(void)
 {
     TimeAttackData_ClearOptions();
-    globals->menuParam[89]   = 2;
+    globals->menuParam[MP_PlayerID]  = 2;
     EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
     // for (int i = 0; i < LOBYTE(v3[1].isPermanent); ++i) {
     //    *(_BYTE *)(*((_QWORD *)&v3[2].inBounds + v4++) + 437) = 2;
@@ -149,7 +149,7 @@ void E3MenuSetup_Unknown6(void)
 void E3MenuSetup_Unknown7(void)
 {
     TimeAttackData_ClearOptions();
-    globals->menuParam[89]   = 3;
+    globals->menuParam[MP_PlayerID]  = 3;
     EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
     // for (int i = 0; i < LOBYTE(v3[1].isPermanent); ++i) {
     //    *(_BYTE *)(*((_QWORD *)&v3[2].inBounds + v4++) + 437) = 3;

@@ -48,7 +48,7 @@ typedef struct {
     int playerBoundActiveB[PLAYER_MAX];
     int field_154;
     bool32 atlReloadFlag;
-    int field_15C;
+    bool32 field_15C;
     void (*timeOverState)(void);
     ushort fgLayers;
     ushort fgLow;

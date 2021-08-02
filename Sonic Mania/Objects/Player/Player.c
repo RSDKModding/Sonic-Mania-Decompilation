@@ -1928,10 +1928,10 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->objectID = TYPE_BLANK;
                         int *saveRAM     = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
-                            // int playerID      = RSDK.GetEntityID(player);
-                            // byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
-                            // if (!finishFlags[playerID])
-                            //    Competition_Unknown4(playerID, 1);
+                            int playerID      = RSDK.GetEntityID(player);
+                            byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
+                            if (!finishFlags[playerID])
+                                Competition_CalculateScore(playerID, 1);
                             foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                         }
                         else if (saveRAM) {
@@ -2015,7 +2015,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         Player_ResetState(player);
 #if RETRO_USE_PLUS
                         if (!player->playerID && globals->gameMode == MODE_ENCORE) {
-                            Player_ResetState((EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2));
+                            Player_ResetState(RSDK_GET_ENTITY(SLOT_PLAYER2, Player));
                         }
 #endif
                     }
@@ -2028,7 +2028,10 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->camera->targetPtr = (Entity *)player->camera;
                     }
                     if (globals->gameMode == MODE_COMPETITION) {
-                        // Competition_Unknown4(RSDK.GetEntityID(player), 1);
+                        int playerID      = RSDK.GetEntityID(player);
+                        byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
+                        if (!finishFlags[playerID])
+                            Competition_CalculateScore(playerID, 1);
                         foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                     }
                     else {
@@ -2061,7 +2064,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->camera->targetPtr = (Entity *)player->camera;
                     }
                     if (globals->gameMode == MODE_COMPETITION) {
-                        // Competition_Unknown4(RSDK.GetEntityID(player), 1);
+                        // Competition_CalculateScore(RSDK.GetEntityID(player), 1);
                         foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                     }
                     else {

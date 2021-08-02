@@ -20,7 +20,7 @@ void GameOver_Draw(void)
             return;
         }
     }
-    EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(RSDK_sceneInfo->currentScreenID + Player->playerCount);
+    EntityPlayer *player = RSDK_GET_ENTITY(RSDK_sceneInfo->currentScreenID + Player->playerCount, Player);
     if (RSDK_sceneInfo->currentScreenID == entity->playerID || player->objectID != GameOver->objectID) {
         RSDK.DrawQuad(entity->verts, 4, 0, 0, 0, 255, INK_NONE);
     }
@@ -102,7 +102,8 @@ void GameOver_Create(void *data)
         entity->state                = GameOver_Unknown2;
         entity->drawOrder            = Zone->hudDrawOrder + 1;
 
-        foreach_all(HUD, hud) {
+        foreach_all(HUD, hud)
+        {
             hud->state  = HUD_State_GoOffScreen;
             hud->active = ACTIVE_ALWAYS;
         }
@@ -161,7 +162,7 @@ void GameOver_Unknown2(void)
         if (globals->gameMode != MODE_COMPETITION) {
             Music_ClearMusicStack();
             if (Music_CheckMusicStack()) {
-                Music->nextTrack = 9;
+                Music->nextTrack = TRACK_GAMEOVER;
             }
             else {
                 Music_FadeOut(0.025);
@@ -186,37 +187,31 @@ void GameOver_Unknown2(void)
                 }
             }
             else {
-                void *ptr    = NULL; // Competition->field_28 + 92;
-                int field_28 = 0;    // Competition->field_28;
-                int id       = 0;
-                int id2      = 0;
-                int id3      = 0;
+                EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
+                int id                     = 0;
+                int deadPlayers            = 0;
                 for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i) {
                     Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
-                    id2         = id;
+
                     if (ent->objectID == GameOver->objectID) {
-                        id2 = ++id;
-                        ++id3;
+                        ++id;
+                        ++deadPlayers;
                     }
-                    else if (!field_28 || /*!*ptr*/ true) {
-                        //++ptr;
-                    }
-                    else {
-                        ++id3;
-                        //++ptr;
+                    else if (manager && manager->playerFlags[i]) {
+                        ++deadPlayers;
                     }
                 }
 
                 bool32 flag = false;
-                if (0 < globals->competitionSession[CS_PlayerCount] - 1 && 0 != globals->competitionSession[CS_PlayerCount]) {
-                    if (Zone->field_15C != 1)
+                if (id < globals->competitionSession[CS_PlayerCount] - 1 && deadPlayers != globals->competitionSession[CS_PlayerCount]) {
+                    if (!Zone->field_15C)
                         flag = true;
                 }
 
                 if (!flag) {
                     Music_ClearMusicStack();
                     if (Music_CheckMusicStack()) {
-                        Music->nextTrack = 9;
+                        Music->nextTrack = TRACK_GAMEOVER;
                     }
                     else {
                         Music_FadeOut(0.025);
@@ -239,28 +234,22 @@ void GameOver_Unknown3(void)
 {
     RSDK_THIS(GameOver);
 
-    void *ptr    = NULL; // Competition->field_28 + 92;
-    int field_28 = 0;    // Competition->field_28;
-    int id       = 0;
-    int id2      = 0;
-    int id3      = 0;
+    EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
+    int id                     = 0;
+    int deadPlayers            = 0;
     for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i) {
         Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
-        id2         = id;
+
         if (ent->objectID == GameOver->objectID) {
-            id2 = ++id;
-            ++id3;
+            ++id;
+            ++deadPlayers;
         }
-        else if (!field_28 || /*!*ptr*/ true) {
-            //++ptr;
-        }
-        else {
-            ++id3;
-            //++ptr;
+        else if (manager && manager->playerFlags[i]) {
+            ++deadPlayers;
         }
     }
 
-    if (id2 >= globals->competitionSession[CS_PlayerCount] - 1 || id3 == globals->competitionSession[CS_PlayerCount] || Zone->field_15C)
+    if (id >= globals->competitionSession[CS_PlayerCount] - 1 || deadPlayers == globals->competitionSession[CS_PlayerCount] || Zone->field_15C)
         entity->state = GameOver_Unknown4;
 }
 

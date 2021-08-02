@@ -535,9 +535,9 @@ void ActClear_State_TAFinish(void)
                 entity->state      = ActClear_Unknown9;
 #else
                 ActClear->field_10 = true;
-                byte playerID           = globals->menuParam[89];
-                byte zoneID             = globals->menuParam[90];
-                byte actID              = globals->menuParam[91];
+                byte playerID           = globals->menuParam[MP_PlayerID];
+                byte zoneID        = globals->menuParam[MP_ZoneID];
+                byte actID              = globals->menuParam[MP_ActID];
 
                 int *recordsRAM = NULL;
                 if (globals->saveLoaded == STATUS_OK)
@@ -557,7 +557,7 @@ void ActClear_State_TAFinish(void)
                         rank++;
                         TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
                         TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
-                        globals->menuParam[92] = rank;
+                        globals->menuParam[MP_Rank] = rank;
                     }
                     else {
                         ActClear->field_10 = false;

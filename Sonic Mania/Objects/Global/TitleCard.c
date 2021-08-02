@@ -583,15 +583,15 @@ void TitleCard_Unknown10(void)
         globals->enableIntro = false;
         if (globals->gameMode >= MODE_TIMEATTACK) {
             if (globals->gameMode == MODE_COMPETITION) {
-                // Competition_Unknown3();
+                Competition_ClearMatchData();
                 Announcer_Unknown1();
             }
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+            destroyEntity(entity);
         }
         else {
             globals->suppressTitlecard = false;
             globals->suppressAutoMusic = false;
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+            destroyEntity(entity);
         }
     }
 }
@@ -607,12 +607,11 @@ void TitleCard_Unknown11(void)
 
     entity->active = ACTIVE_NEVER;
     if ((globals->suppressTitlecard && !entity->enableIntro) || globals->gameMode == MODE_TIMEATTACK) {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
         globals->suppressTitlecard = false;
     }
 
-    if (TitleCard->funcA)
-        TitleCard->funcA();
+    StateMachine_Run(TitleCard->funcA);
 }
 
 void TitleCard_Unknown12(void)

@@ -607,19 +607,19 @@ void HUD_State_GoOffScreen(void)
     if (ptrs[3]->x < -0x500000) {
         if (globals->gameMode == MODE_COMPETITION) {
             *statePtr = NULL;
-            // Competition_Unknown4(entity->screenID, 1);
-            EntityGameOver *gameOver = (EntityGameOver *)RSDK.GetEntityByID(entity->screenID + Player->playerCount);
-            // v9       = Competition->field_28;
-            // if (!v9 || *(_DWORD *)(v9 + 108)) {
-            //    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, NULL);
-            //    gameOver->playerID = entity->screenID;
-            //}
-            // else {
-            RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(1));
-            RSDK.SetGameMode(ENGINESTATE_FROZEN);
-            RSDK_sceneInfo->timeEnabled = false;
-            gameOver->playerID          = entity->screenID;
-            //}
+            Competition_CalculateScore(entity->screenID, 1);
+            EntityGameOver *gameOver   = RSDK_GET_ENTITY(entity->screenID + Player->playerCount, GameOver);
+            EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
+            if (!manager || manager->timer) {
+                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, NULL);
+                gameOver->playerID = entity->screenID;
+            }
+            else {
+                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(1));
+                RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                RSDK_sceneInfo->timeEnabled = false;
+                gameOver->playerID          = entity->screenID;
+            }
         }
         else {
             destroyEntity(entity);
