@@ -282,18 +282,18 @@ void EggPrison_Activated(void)
             break;
         }
         case 4: {
-            EntityTechnosqueek *technoSqueak = CREATE_ENTITY(Technosqueek, NULL, entity->position.x - 0x80000, entity->position.y);
-            technoSqueak->velocity.x = -0x30000;
-            technoSqueak->velocity.y = -0x40000;
-            technoSqueak->active     = ACTIVE_NORMAL;
-            // technoSqueak[1].position.x = (int)TechnoSqueak_Unknown7;
+            EntityTechnosqueek *technosqueek = CREATE_ENTITY(Technosqueek, NULL, entity->position.x - 0x80000, entity->position.y);
+            technosqueek->velocity.x         = -0x30000;
+            technosqueek->velocity.y         = -0x40000;
+            technosqueek->active             = ACTIVE_NORMAL;
+            technosqueek->state              = Technosqueek_State_Unknown6;
 
-            technoSqueak             = CREATE_ENTITY(Technosqueek, NULL, entity->position.x + 0x80000, entity->position.y);
-            technoSqueak->velocity.x = 0x30000;
-            technoSqueak->velocity.y = -0x40000;
-            technoSqueak->active     = ACTIVE_NORMAL;
-            technoSqueak->direction  = 1;
-            // technoSqueak[1].position.x = (int)TechnoSqueak_Unknown7;
+            technosqueek             = CREATE_ENTITY(Technosqueek, NULL, entity->position.x + 0x80000, entity->position.y);
+            technosqueek->velocity.x = 0x30000;
+            technosqueek->velocity.y = -0x40000;
+            technosqueek->active     = ACTIVE_NORMAL;
+            technosqueek->direction  = 1;
+            technosqueek->state      = Technosqueek_State_Unknown6;
 
             EntityBlaster *blaster = CREATE_ENTITY(Blaster, NULL, entity->position.x - 0x180000, entity->position.y);
             blaster->velocity.x = -0x30000;

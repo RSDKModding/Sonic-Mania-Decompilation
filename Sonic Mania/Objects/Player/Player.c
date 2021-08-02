@@ -2388,8 +2388,8 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
     }
 
     if (badnikHit) {
-        RSDK.CreateEntity(Animals->objectID, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), entity->position.x, entity->position.y);
-        EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, intToVoid(1), entity->position.x, entity->position.y);
+        CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), entity->position.x, entity->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y);
         explosion->drawOrder       = Zone->drawOrderHigh;
         RSDK.PlaySFX(Explosion->sfx_Destroy, 0, 255);
 
@@ -2439,8 +2439,8 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
         }
         player->velocity.y = yVel;
         if (globals->gameMode != MODE_COMPETITION)
-            player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-        EntityScoreBonus *scoreBonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, entity->position.x, entity->position.y);
+            player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
         scoreBonus->drawOrder        = Zone->drawOrderHigh;
         scoreBonus->animator.frameID = player->scoreBonus;
 
@@ -2467,7 +2467,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
         if (player->scoreBonus < 15)
             player->scoreBonus++;
         if (destroy) {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
             entity->active = ACTIVE_NEVER2;
         }
         return true;
