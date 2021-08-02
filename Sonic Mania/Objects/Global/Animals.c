@@ -153,8 +153,8 @@ bool32 Animals_CheckPlatformCollision(void *plat)
         else if (platform->collision == 2 && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, entity, &entity->hitbox)) {
             if (entity->collisionLayers & Zone->moveID) {
                 TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
-                move->position.x = -(platform->drawPos.x + platform->targetPos.x) >> 16;
-                move->position.y = -(platform->drawPos.y + platform->targetPos.y) >> 16;
+                move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
+                move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
             }
             if (entity->velocity.y >= 0x3800)
                 flag = true;

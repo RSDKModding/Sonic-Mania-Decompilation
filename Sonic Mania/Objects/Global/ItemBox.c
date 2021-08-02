@@ -965,8 +965,8 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
                 }
                 if (entity->collisionLayers & Zone->moveID) {
                     TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
-                    move->position.x = -(platform->drawPos.x + platform->targetPos.x) >> 16;
-                    move->position.y = -(platform->drawPos.y + platform->targetPos.y) >> 16;
+                    move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
+                    move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                 }
                 if (entity->state == ItemBox_State_Normal || entity->velocity.y > 0x3800) {
                     platform->position.x = platform->centerPos.x;
