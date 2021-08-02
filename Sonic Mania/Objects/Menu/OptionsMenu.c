@@ -616,6 +616,7 @@ void OptionsMenu_Unknown28(void)
 {
     globals->suppressAutoMusic = true;
     RSDK.SetHardResetFlag(true);
+    RSDK.InitSceneLoad();
 }
 
 void OptionsMenu_Unknown29(int status)

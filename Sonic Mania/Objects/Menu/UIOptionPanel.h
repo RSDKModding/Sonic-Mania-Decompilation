@@ -5,12 +5,30 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectUIOptionPanel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int panelSize;
+    int topListID;
+    int topFrameID;
+    int botListID;
+    int botFrameID;
+    bool32 botAlignRight;
+    bool32 botHidden;
+    int field_74;
+    int field_78;
+    Vector2 field_7C;
+    Vector2 drawPosTop;
+    Vector2 drawPosBottom;
+    int field_94;
+    int field_98;
+    Animator animator;
+    Animator animator2;
+    ushort textSpriteIndex;
 } EntityUIOptionPanel;
 
 // Object Struct
@@ -28,6 +46,6 @@ void UIOptionPanel_EditorLoad(void);
 void UIOptionPanel_Serialize(void);
 
 // Extra Entity Functions
-
+void UIOptionPanel_Unknown1(void);
 
 #endif //!OBJ_UIOPTIONPANEL_H

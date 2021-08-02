@@ -241,6 +241,122 @@ void *UIButton_GetOptions2(void)
 
 void UIButton_Fail(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, 0, 255); }
 
+void UIButton_Unknown6(void)
+{
+    RSDK_THIS(UIButton);
+    EntityUIControl *control = (EntityUIControl*)entity->parent;
+
+    UIControl_Unknown15(control, entity->position.x, entity->position.y);
+    if (!UIControl_Unknown9(control)) {
+        int rowID = 0;
+        int colID = 0;
+        if (control->rowCount && control->columnCount) {
+            rowID = control->activeEntityID / control->columnCount;
+        }
+        else {
+            rowID = 0;
+        }
+
+        if (control->columnCount) {
+            colID = control->activeEntityID % control->columnCount;
+        }
+        else {
+            colID = 0;
+        }
+
+        bool32 flag          = false;
+        if (control->rowCount > 1) {
+            if (UIControl->keyUp) {
+                --rowID;
+                flag = true;
+            }
+            if (UIControl->keyDown) {
+                ++rowID;
+                flag = true;
+            }
+            if (UIControl->keyLeft) {
+                --colID;
+                flag = true;
+            }
+            if (UIControl->keyRight) {
+                ++colID;
+                flag = true;
+            }
+        }
+
+        if (flag) {
+            if (control->noWrap) {
+                int rowCount = control->rowCount;
+                if (rowID < control->rowCount)
+                    rowCount = rowID;
+                if (rowCount >= 0) {
+                    if (rowID >= control->rowCount)
+                        rowID = control->rowCount;
+                }
+                else {
+                    rowID = 0;
+                }
+                
+                int colCount = control->columnCount;
+                if (colID < control->columnCount)
+                    colCount = colID;
+                if (colCount >= 0) {
+                    if (colID >= control->columnCount)
+                        colID = control->columnCount;
+                }
+                else {
+                    colID = 0;
+                }
+            }
+            else {
+                if (rowID < 0)
+                    rowID += control->rowCount;
+                if (rowID >= control->rowCount)
+                    rowID -= control->rowCount;
+                if (colID < 0)
+                    colID += control->columnCount;
+                if (colID >= control->columnCount)
+                    colID -= control->columnCount;
+            }
+
+            int id = control->unknownCount1 - 1;
+            if (colID + rowID * control->columnCount < id)
+                id = colID + rowID * control->columnCount;
+            if (control->activeEntityID != id) {
+                control->activeEntityID = id;
+                StateMachine_Run(entity->options6);
+                RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+            }
+        }
+        else {
+            bool32 flag = true;
+            if (UIControl->keyBack) {
+                if (entity->disabled) {
+                    StateMachine_Run(entity->failCB);
+                }
+                else {
+                    flag = !entity->options2;
+                }
+            }
+
+            if (flag) {
+                if (!entity->flag) {
+                    if (control->activeEntityID == UIControl_Unknown1(control, entity) && control->state == UIControl_ProcessInputs
+                        && !control->dialogHasFocus) {
+                        StateMachine_Run(entity->options5);
+                    }
+                    else {
+                        StateMachine_Run(entity->options3);
+                    }
+                }
+            }
+            else {
+                StateMachine_Run(entity->options3);
+            }
+        }
+    }
+}
+
 bool32 UIButton_Unknown7(void)
 {
     RSDK_THIS(UIButton);

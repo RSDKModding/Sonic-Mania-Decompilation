@@ -31,7 +31,7 @@ void Options_Reload(void)
     globals->optionsRAM[23] = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
     globals->optionsRAM[25] = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
     globals->optionsRAM[27] = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
-    globals->optionsRAM[21] = RSDK.GetSettingsValue(SETTINGS_LANGUAGE);
+    globals->optionsRAM[21] = RSDK.GetSettingsValue(SETTINGS_LANGUAGE) << 16;
     globals->optionsRAM[22] = true;
     globals->optionsRAM[29] = RSDK.GetSettingsValue(SETTINGS_VSYNC);
     globals->optionsRAM[31] = RSDK.GetSettingsValue(SETTINGS_BORDERED);
@@ -41,13 +41,13 @@ void Options_Reload(void)
     LogHelpers_Print("optionsPtr->screenShader = %d", globals->optionsRAM[23]);
     LogHelpers_Print("optionsPtr->volMusic = %d", globals->optionsRAM[25]);
     LogHelpers_Print("optionsPtr->volSfx = %d", globals->optionsRAM[27]);
-    LogHelpers_Print("optionsPtr->language = %d", globals->optionsRAM[21]);
+    LogHelpers_Print("optionsPtr->language = %d", (globals->optionsRAM[21] >> 16) & 0xFF);
     LogHelpers_Print("optionsPtr->overrideLanguage = %d", globals->optionsRAM[22]);
     LogHelpers_Print("optionsPtr->vsync = %d", globals->optionsRAM[29]);
     LogHelpers_Print("optionsPtr->tripleBuffering = %d", globals->optionsRAM[33]);
     LogHelpers_Print("optionsPtr->windowBorder = %d", globals->optionsRAM[31]);
     LogHelpers_Print("optionsPtr->windowed = %d", globals->optionsRAM[32]);
-    LogHelpers_Print("optionsPtr->windowSize = %d", globals->optionsRAM[30]);
+    LogHelpers_Print("optionsPtr->windowSize = %d", globals->optionsRAM[30] & 0xFF);
 }
 
 void Options_GetWinSize(void)
@@ -162,9 +162,9 @@ void Options_SetLanguage(int language)
         globals->optionsRAM[22] = 0;
     }
 #if RETRO_USE_PLUS
-    if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV)
+    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV)
 #else
-    if (RSDK_info->platform && RSDK_info->platform != PLATFORM_DEV)
+    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV)
 #endif
         RSDK.SetSettingsValue(SETTINGS_LANGUAGE, language);
     Options->state = 1;

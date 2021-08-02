@@ -63,18 +63,13 @@ void E3MenuSetup_Unknown2(void)
 {
     foreach_all(UICharButton, button)
     {
-        /*if (button->parent == E3MenuSetup->charSelControl) {
-            int id = button->id;
-            if (id == 2) {
-                button->selectCB = E3MenuSetup_Unknown7;
+        if (button->parent == E3MenuSetup->charSelControl) {
+            switch (button->characterID) {
+                case 0: button->options2 = E3MenuSetup_Unknown5; break;
+                case 1: button->options2 = E3MenuSetup_Unknown6; break;
+                case 2: button->options2 = E3MenuSetup_Unknown7; break;
             }
-            else if (id == 1) {
-                button->selectCB = E3MenuSetup_Unknown6;
-            }
-            else if (!id) {
-                button->selectCB = E3MenuSetup_Unknown5;
-            }
-        }*/
+        }
     }
 
     int id = 0;
@@ -97,8 +92,9 @@ void E3MenuSetup_Unknown3(void)
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.LoadScene("Mania Mode", "");
-    // EntityUIButton *button      = (EntityUIButton*) * ((_QWORD *)&Obj_E3MenuSetup->zoneControl[2].inBounds +
-    // Obj_E3MenuSetup->zoneControl[1].scale.y); globals->menuParam[MP_ZoneID] = *(unsigned __int8 *)(button + 332); globals->menuParam[MP_ActID] = *(unsigned
+    // EntityTAZoneModule *button      = (EntityTAZoneModule*) * ((_QWORD *)&Obj_E3MenuSetup->zoneControl[2].inBounds +
+    // Obj_E3MenuSetup->zoneControl[1].scale.y); globals->menuParam[MP_ZoneID] = *(unsigned __int8 *)(button + 332); globals->menuParam[MP_ActID] =
+    // *(unsigned
     // __int8 *)(button + 438);
     int playerID = globals->menuParam[MP_PlayerID];
     RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(globals->menuParam[MP_ZoneID], playerID, globals->menuParam[MP_ActID]);
@@ -106,7 +102,7 @@ void E3MenuSetup_Unknown3(void)
         default: break;
         case 1: globals->playerID = ID_SONIC; break;
         case 2: globals->playerID = ID_TAILS; break;
-        case 3: globals->playerID = ID_SONIC; break;
+        case 3: globals->playerID = ID_KNUCKLES; break;
     }
     RSDK.InitSceneLoad();
 }
@@ -125,11 +121,11 @@ void E3MenuSetup_Unknown4(void)
 void E3MenuSetup_Unknown5(void)
 {
     TimeAttackData_ClearOptions();
-    globals->menuParam[MP_PlayerID]  = 1;
-    EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
-    // for (int i = 0; i < LOBYTE(v3[1].isPermanent); ++i) {
-    //    *(_BYTE *)(*((_QWORD *)&v3[2].inBounds + v4++) + 437) = 1;
-    //}
+    globals->menuParam[MP_PlayerID] = 1;
+    EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
+    for (int i = 0; i < control->unknownCount1; ++i) {
+        control->entities[i]->animator.animationID = 1;
+    }
     UIControl_MatchMenuTag("Zones");
 }
 
@@ -137,11 +133,11 @@ void E3MenuSetup_Unknown5(void)
 void E3MenuSetup_Unknown6(void)
 {
     TimeAttackData_ClearOptions();
-    globals->menuParam[MP_PlayerID]  = 2;
-    EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
-    // for (int i = 0; i < LOBYTE(v3[1].isPermanent); ++i) {
-    //    *(_BYTE *)(*((_QWORD *)&v3[2].inBounds + v4++) + 437) = 2;
-    //}
+    globals->menuParam[MP_PlayerID] = 2;
+    EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
+    for (int i = 0; i < control->unknownCount1; ++i) {
+        control->entities[i]->animator.animationID = 2;
+    }
     UIControl_MatchMenuTag("Zones");
 }
 
@@ -149,11 +145,11 @@ void E3MenuSetup_Unknown6(void)
 void E3MenuSetup_Unknown7(void)
 {
     TimeAttackData_ClearOptions();
-    globals->menuParam[MP_PlayerID]  = 3;
-    EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
-    // for (int i = 0; i < LOBYTE(v3[1].isPermanent); ++i) {
-    //    *(_BYTE *)(*((_QWORD *)&v3[2].inBounds + v4++) + 437) = 3;
-    //}
+    globals->menuParam[MP_PlayerID] = 3;
+    EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
+    for (int i = 0; i < control->unknownCount1; ++i) {
+        control->entities[i]->animator.animationID = 3;
+    }
     UIControl_MatchMenuTag("Zones");
 }
 

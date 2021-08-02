@@ -14,8 +14,8 @@ void Localization_Create(void *data) {}
 
 void Localization_StageLoad(void)
 {
-    if (globals->optionsLoaded >= 200 && globals->optionsRAM[22]) {
-        Localization->language = (globals->optionsRAM[21] >> 8) & 0xFF;
+     if (globals->optionsLoaded >= 200 && globals->optionsRAM[22]) {
+        Localization->language = (globals->optionsRAM[21] >> 16) & 0xFF;
         Localization_LoadStrings();
     }
     else {

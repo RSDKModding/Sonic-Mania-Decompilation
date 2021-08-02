@@ -5,12 +5,31 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectUIModeButton;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_UI_ITEM_BASE
+    int buttonID;
+    bool32 stopMusic;
+    int field_10C;
+    int field_110;
+    int field_114;
+    int field_118;
+    int field_11C;
+    int field_120;
+    int field_124;
+    int field_128;
+    int field_12C;
+    bool32 field_130;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
+    ushort textSpriteIndex;
 } EntityUIModeButton;
 
 // Object Struct
@@ -28,6 +47,15 @@ void UIModeButton_EditorLoad(void);
 void UIModeButton_Serialize(void);
 
 // Extra Entity Functions
-
+void UIModeButton_Unknown1(void);
+bool32 UIModeButton_Unknown2(void);
+bool32 UIModeButton_Unknown3(void);
+void UIModeButton_Unknown4(void);
+void UIModeButton_Unknown5(void);
+void UIModeButton_Unknown6(void);
+void UIModeButton_Unknown7(void);
+void UIModeButton_Unknown8(void);
+void UIModeButton_Unknown9(void);
+void UIModeButton_Unknown10(void);
 
 #endif //!OBJ_UIMODEBUTTON_H
