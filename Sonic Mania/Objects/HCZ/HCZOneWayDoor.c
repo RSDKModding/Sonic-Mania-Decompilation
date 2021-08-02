@@ -155,7 +155,7 @@ void HCZOneWayDoor_Unknown1(void)
             entity->hitbox2.left   = -(entity->posUnknown2.x >> 17);
             entity->hitbox2.bottom = entity->posUnknown2.y >> 17;
             if (entity->detectDirection == 1) {
-                entity->hitbox2.top = -(entity->posUnknown2.y >> 17) - entity->posUnknown3.x >> 14;
+                entity->hitbox2.top = -(entity->posUnknown2.y >> 17) - (entity->posUnknown3.x >> 14);
             }
             else if (!entity->detectDirection) {
                 entity->hitbox2.bottom = (entity->posUnknown2.y >> 17) + (entity->posUnknown3.x >> 14);

@@ -570,7 +570,7 @@ void Cylinder_State_Unknown5(void)
                     }
                     player->position.y += player->velocity.y;
 
-                    int len   = min(abs(player->position.y - top) >> 16, entity->length);
+                    int len   = minVal(abs(player->position.y - top) >> 16, entity->length);
                     int frame = 0;
 
                     int angle = ((len << 10) / 192 + (((uint)player->groundVel >> 22) & 0x200)) & 0x3FF;

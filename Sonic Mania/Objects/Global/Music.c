@@ -551,7 +551,6 @@ void Music_State_TransitionTrack(void)
 
 void Music_EditorDraw(void)
 {
-    RSDK_THIS(Music);
     //field 254 doesnt get used so /shrug
     Animator animator;
     RSDK.SetSpriteAnimation(Music->field_254, 0, &animator, true, 1);

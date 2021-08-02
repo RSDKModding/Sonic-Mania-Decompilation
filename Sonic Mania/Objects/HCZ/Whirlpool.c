@@ -109,7 +109,7 @@ void Whirlpool_StaticUpdate(void)
         Whirlpool->timer = 0;
 
     if (Whirlpool->playingSFX) {
-        RSDK.SetChannelAttributes(Whirlpool->sfxChannel, min(Whirlpool->timer, 30) / 30.0, 0.0, 1.0);
+        RSDK.SetChannelAttributes(Whirlpool->sfxChannel, minVal(Whirlpool->timer, 30) / 30.0, 0.0, 1.0);
     }
 
     bool32 stopFlag = !Whirlpool->timer;

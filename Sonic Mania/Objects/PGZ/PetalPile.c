@@ -74,8 +74,8 @@ int PetalPile_GetLeafPattern(int *patternPtr)
         default: return 0;
     }
 
-    int sizeX = max(entity->pileSize.x, 0x20000);
-    int sizeY = max(entity->pileSize.y, 0x20000);
+    int sizeX = maxVal(entity->pileSize.x, 0x20000);
+    int sizeY = maxVal(entity->pileSize.y, 0x20000);
     for (int i = 0; i < count * 2; i += 2) {
         patternPtr[i + 0] = pattern[i + 0] * (sizeX >> 17);
         patternPtr[i + 1] = pattern[i + 1] * (sizeY >> 17);
@@ -308,9 +308,9 @@ void PetalPile_State_Unknown6(void)
 
     entity->velocity.y += 0x4000;
     if (entity->velocity.x <= 0)
-        entity->velocity.x += min(abs(entity->velocity.x), 0x8000);
+        entity->velocity.x += minVal(abs(entity->velocity.x), 0x8000);
     else
-        entity->velocity.x -= min(abs(entity->velocity.x), 0x8000);
+        entity->velocity.x -= minVal(abs(entity->velocity.x), 0x8000);
     if (entity->velocity.y > 0)
         entity->velocity.y = 0;
 

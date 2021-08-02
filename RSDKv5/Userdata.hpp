@@ -635,9 +635,9 @@ inline bool32 AddUserDBColumn(UserDBRow *userDB, int type, char *name, void *val
                 return 0;
             StoreUserDBValue(&userDB->values[c], type, value);
 
-            time_t time;
-            _time64(&time);
-            userDB->changeTime = *localtime(&time);
+            time_t t;
+            time(&t);
+            userDB->changeTime = *localtime(&t);
             return true;
         }
     }

@@ -485,7 +485,7 @@ void Ice_State_FrozenPlayer(void)
 void Ice_Unknown6(int a1, int a2, int a3, int velX, int velY, int a6)
 {
     RSDK_THIS(Ice);
-    for (int i = 0; i < max(0, a2); ++i) {
+    for (int i = 0; i < maxVal(0, a2); ++i) {
         int randY                     = RSDK.Rand(-a3, a3 + 1) << 16;
         int randX                     = RSDK.Rand(-a1, a1 + 1) << 16;
         EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(3), randX + entity->position.x, randY + entity->position.y);
@@ -507,7 +507,7 @@ void Ice_Unknown7(int velX, Entity *p, int velY)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
-    if (entity->type == 4 || entity->type == 18 && entity->subType < 3)
+    if (entity->type == 4 || (entity->type == 18 && entity->subType < 3))
         entity->type = 0;
     EntityItemBox *itemBox = (EntityItemBox *)Ice_Shatter(entity, velX, velY);
     if (player && itemBox) {
@@ -861,7 +861,7 @@ void Ice_Unknown12(void)
         if (entity->dwordE4 > 0) {
             entity->dwordE4--;
             if (!entity->dwordE4) {
-                if (entity->type == 4 || entity->type == 18 && entity->subType < 3)
+                if (entity->type == 4 || (entity->type == 18 && entity->subType < 3))
                     entity->type = 0;
                 Ice_Shatter(entity, 0, 0);
             }
@@ -948,14 +948,14 @@ void Ice_Unknown15(void)
                 else {
                     Entity *storeEntity    = RSDK_sceneInfo->entity;
                     RSDK_sceneInfo->entity = (Entity *)ice;
-                    if (ice->type == 4 || ice->type == 18 && ice->subType < 3)
+                    if (ice->type == 4 || (ice->type == 18 && ice->subType < 3))
                         ice->type = 0;
                     Ice_Shatter(ice, 0, 0);
                     RSDK_sceneInfo->entity = storeEntity;
                 }
             }
 
-            if (entity->type == 4 || entity->type == 18 && entity->subType < 3)
+            if (entity->type == 4 || (entity->type == 18 && entity->subType < 3))
                 entity->type = 0;
             Ice_Shatter(entity, 0, 0);
         }

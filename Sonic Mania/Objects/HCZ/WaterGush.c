@@ -82,7 +82,7 @@ void WaterGush_Update(void)
                 if (entity->field_78 > 0)
                     entity->field_78 -= entity->field_7C;
 
-                entity->field_78 = max(entity->field_78, 0);
+                entity->field_78 = maxVal(entity->field_78, 0);
                 if (!entity->field_78) {
                     entity->flag     = false;
                     entity->field_84 = 0;
@@ -94,7 +94,7 @@ void WaterGush_Update(void)
             if (entity->field_78 < entity->length << 22) {
                 entity->field_78 += (abs(entity->speed) << 15);
             }
-            entity->field_78 = min(entity->length << 22, entity->field_78);
+            entity->field_78 = minVal(entity->length << 22, entity->field_78);
             if (entity->field_78 == entity->length << 22)
                 entity->field_84 = 1;
         }

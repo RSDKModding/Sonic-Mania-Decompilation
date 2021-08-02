@@ -14,7 +14,6 @@ void Crane_LateUpdate(void) {}
 
 void Crane_StaticUpdate(void)
 {
-    RSDK_THIS(Crane);
     foreach_active(Crane, crane) { RSDK.AddDrawListRef(Zone->playerDrawLow + 1, RSDK.GetEntityID(crane)); }
 }
 

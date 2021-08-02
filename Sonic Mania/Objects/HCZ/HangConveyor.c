@@ -293,7 +293,7 @@ void HangConveyor_Unknown2(void)
                         flag = false;
 
                     int anim = player->playerAnimator.animationID;
-                    if (player->jumpPress || anim != ANI_POLESWINGH && anim != ANI_SHIMMYMOVE || player->velocity.x || player->velocity.y || flag
+                    if (player->jumpPress || (anim != ANI_POLESWINGH && anim != ANI_SHIMMYMOVE) || player->velocity.x || player->velocity.y || flag
                         || (((1 << playerID) & entity->activePlayers3) && !collided2)) {
                         entity->activePlayers1 &= ~(1 << playerID);
                         player->position.y += 0x180000;
