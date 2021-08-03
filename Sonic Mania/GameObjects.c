@@ -23,7 +23,11 @@ RSDKFunctionTable RSDK;
 APIFunctionTable API;
 #endif
 
+#if RETRO_STANDALONE
 void LinkGameLogicDLL(GameInfo *info)
+#else
+void LinkGameLogic(GameInfo *info)
+#endif
 {
 #if RETRO_USE_PLUS
     memset(&API, 0, sizeof(APIFunctionTable));

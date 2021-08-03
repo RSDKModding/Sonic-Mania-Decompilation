@@ -37,6 +37,7 @@ cmake/
 [Dd]ependencies/mac/libtheora/*
 [Dd]ependencies/mac/SDL2.framework/*
 [Dd]ependencies/all/*
+[Dd]ependencies/android/*
 ![Dd]ependencies/all/dependencies.txt
 
 # UWP

@@ -191,7 +191,7 @@ size_t readVorbis(void *mem, size_t size, size_t nmemb, void *ptr)
     info->bufferPos += bytes;
     return bytes;
 }
-int seekVorbis(void *ptr, int64 offset, int whence)
+int seekVorbis(void *ptr, ogg_int64_t offset, int whence)
 {
     StreamInfo *info = (StreamInfo *)ptr;
     switch (whence) {

@@ -209,7 +209,7 @@ void Whirlpool_EditorLoad(void) {}
 
 void Whirlpool_Serialize(void)
 {
-    RSDK.SetEditableVar(VAR_ENUM, "angVel", Whirlpool->objectID, 0x58);
-    RSDK.SetEditableVar(VAR_ENUM, "yVel", Whirlpool->objectID, 0x5C);
-    RSDK.SetEditableVar(VAR_VECTOR2, "size", Whirlpool->objectID, 0x60);
+    RSDK_EDITABLE_VAR(Whirlpool, VAR_ENUM, angVel);
+    RSDK_EDITABLE_VAR(Whirlpool, VAR_ENUM, yVel);
+    RSDK_EDITABLE_VAR(Whirlpool, VAR_VECTOR2, size);
 }

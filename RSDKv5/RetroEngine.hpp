@@ -48,6 +48,7 @@ enum GameRegions {
 
 #define RETRO_USE_ORIGINAL_CODE (0)
 #define RETRO_USE_MOD_LOADER    (!RETRO_USE_ORIGINAL_CODE && 1)
+#define RETRO_STANDALONE
 
 #define RETRO_WIN     (0)
 #define RETRO_PS4     (1)
@@ -77,6 +78,8 @@ enum GameRegions {
 #else
 #define RETRO_PLATFORM   (RETRO_OSX)
 #endif
+#elif defined __ANDROID__
+#define RETRO_PLATFORM   (RETRO_ANDROID)
 #else
 #define RETRO_PLATFORM   (RETRO_WIN)
 #endif
@@ -90,7 +93,7 @@ enum GameRegions {
 #define RETRO_USING_DIRECTX9  (0) // windows
 #define RETRO_USING_DIRECTX11 (0) // xbox one
 
-#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX
+#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
 #undef RETRO_USING_SDL2
 #define RETRO_USING_SDL2 (1)
 
@@ -118,6 +121,12 @@ enum GameRegions {
 #include <Vorbis/vorbisfile.h>
 
 #include "cocoaHelpers.hpp"
+#endif
+
+#if RETRO_PLATFORM == RETRO_ANDROID
+#include <SDL.h>
+#include <vorbis/vorbisfile.h>
+#undef RETRO_STANDALONE
 #endif
 
 //Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
@@ -195,7 +204,11 @@ enum SeverityModes {
 struct RetroEngine {
     RetroEngine() {}
 
+#if RETRO_STANDALONE
     bool32 useExternalCode = true;
+#else
+    bool32 useExternalCode = false;
+#endif  
 
     bool32 devMenu    = false;
     bool32 printConsole = false;

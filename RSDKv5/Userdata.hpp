@@ -410,6 +410,7 @@ inline void UpdateUserDBParents(UserDB *userDB)
 
 inline void InitUserDBValues(UserDB *userDB, va_list list)
 {
+    #if !(RETRO_PLATFORM == RETRO_ANDROID)
     int cnt = 0;
     while ((int *)list) {
         userDB->columnTypes[cnt] = va_arg(list, int);
@@ -425,6 +426,7 @@ inline void InitUserDBValues(UserDB *userDB, va_list list)
     UpdateUserDBParents(userDB);
     userDB->active = true;
     userDB->valid  = true;
+    #endif
 }
 
 inline ushort InitUserDB(const char *name, ...)

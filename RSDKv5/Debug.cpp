@@ -5,6 +5,9 @@
 
 #undef PRINT_ERROR //causes conflicts
 #endif
+#if RETRO_PLATFORM == RETRO_ANDROID
+#include <android/log.h>
+#endif
 
 bool32 engineDebugMode = true;
 bool32 useEndLine = true;
@@ -61,6 +64,15 @@ void printLog(SeverityModes severity, const char *message, ...)
         else {
 #if RETRO_PLATFORM == RETRO_WIN
             OutputDebugStringA(outputString);
+#endif
+#if RETRO_PLATFORM == RETRO_ANDROID
+            int as = ANDROID_LOG_INFO;
+            switch (severity) {
+                case PRINT_ERROR: as = ANDROID_LOG_ERROR; break;
+                case PRINT_FATAL: as = ANDROID_LOG_FATAL; break;
+                default: break;
+            }
+            __android_log_print(as, "RSDKv5", "%s", outputString);
 #endif
         }
 
