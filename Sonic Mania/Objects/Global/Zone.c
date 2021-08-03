@@ -97,10 +97,11 @@ void Zone_LateUpdate(void)
             RSDK_sceneInfo->milliseconds = 99;
             RSDK_sceneInfo->timeEnabled  = false;
             RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
+            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             foreach_active(Player, playerLoop)
             {
                 bool32 flag = false;
-                if (globals->gameMode == MODE_COMPETITION && (globals->competitionSession[CS_FinishFlags + playerLoop->playerID]) == 2) {
+                if (globals->gameMode == MODE_COMPETITION && (session->finishFlags[playerLoop->playerID]) == 2) {
                     flag = true;
                 }
                 if (!playerLoop->sidekick && !flag)
@@ -108,8 +109,7 @@ void Zone_LateUpdate(void)
             }
             Zone->field_15C = 1;
 
-            if (Zone->timeOverState)
-                Zone->timeOverState();
+            StateMachine_Run(Zone->timeOverState);
         }
 
         if (RSDK_sceneInfo->minutes == 59 && RSDK_sceneInfo->seconds == 59)
@@ -385,33 +385,27 @@ void Zone_StageLoad(void)
         globals->initCoolBonus = true;
     }
 
-    foreach_all(Zone, entity) { RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL); }
+    foreach_all(Zone, entity) { destroyEntity(entity); }
 
     RSDK.ResetEntitySlot(SLOT_ZONE, Zone->objectID, NULL);
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
         if (RSDK.CheckStageFolder("Puyo")) {
             if (globals->gameMode == MODE_COMPETITION) {
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
             else {
-                /// Competition_Unknown2();
+                Competition_ResetOptions();
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
         }
         else {
-            if (globals->competitionSession[CS_PlayerCount] >= 2) {
-                if (globals->competitionSession[CS_PlayerCount] > PLAYER_MAX)
-                    globals->competitionSession[CS_PlayerCount] = PLAYER_MAX;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[CS_PlayerCount]);
-            }
-            else {
-                globals->competitionSession[CS_PlayerCount] = 2;
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[CS_PlayerCount]);
-            }
+            session->playerCount = clampVal(session->playerCount, 2, PLAYER_MAX);
+            RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
         }
     }
     else {
-        // Competition_Unknown2();
+        Competition_ResetOptions();
         RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
     }
 
@@ -607,17 +601,17 @@ void Zone_Unknown2(void)
     Music_FadeOut(0.025);
 }
 
-void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle)
+void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int angle)
 {
-    int x  = (pos->x - entity->position.x) >> 8;
-    int y  = (pos->y - entity->position.y) >> 8;
-    pos->x = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + entity->position.x;
-    pos->y = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + entity->position.y;
+    int x  = (pos->x - posPtr->x) >> 8;
+    int y  = (pos->y - posPtr->y) >> 8;
+    pos->x = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + posPtr->x;
+    pos->y = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + posPtr->y;
 }
 
 void Zone_Unknown4(int screen)
 {
-    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, NULL, 0, 0);
+    EntityZone *entity = CREATE_ENTITY(Zone, NULL, 0, 0);
     entity->screenID   = screen;
     entity->timer      = 640;
     entity->fadeSpeed  = 16;
@@ -642,7 +636,7 @@ void Zone_Unknown4(int screen)
 
 void Zone_StartTeleportAction(void)
 {
-    EntityZone *entity = (EntityZone *)RSDK.CreateEntity(Zone->objectID, NULL, 0, 0);
+    EntityZone *entity = CREATE_ENTITY(Zone, NULL, 0, 0);
     entity->screenID   = PLAYER_MAX;
     entity->timer      = 640;
     entity->fadeSpeed  = 16;
@@ -830,9 +824,10 @@ void Zone_State_Fadeout_Unknown(void)
 {
     RSDK_THIS(Zone);
     entity->timer += entity->fadeSpeed;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (entity->timer > 1024) {
-        globals->competitionSession[globals->competitionSession[CS_LevelIndex] + CS_ZoneUnknown30] = 1;
-        globals->competitionSession[CS_MatchID]                                                    = globals->competitionSession[CS_Unknown93] + 1;
+        session->zoneFlags[session->levelIndex] = 1;
+        session->matchID                        = session->unknown93 + 1;
         RSDK.LoadScene("Presentation", "Menu");
         RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
         RSDK.InitSceneLoad();

@@ -150,13 +150,7 @@ void ExtrasMenu_Start_Puyo_vsAI(void)
 
 void ExtrasMenu_Callback_Puyo_vsAI(void)
 {
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = ExtrasMenu_Start_Puyo_vsAI;
+    MenuSetup_StartTransition(ExtrasMenu_Start_Puyo_vsAI, 32);
 }
 
 void ExtrasMenu_Start_Puyo_vs2P(void)
@@ -170,16 +164,7 @@ void ExtrasMenu_Start_Puyo_vs2P(void)
     RSDK.InitSceneLoad();
 }
 
-void ExtrasMenu_Callback_Puyo_vs2P(void)
-{
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = ExtrasMenu_Start_Puyo_vs2P;
-}
+void ExtrasMenu_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(ExtrasMenu_Start_Puyo_vs2P, 32); }
 
 void ExtrasMenu_Start_Credits(void)
 {
@@ -195,13 +180,7 @@ void ExtrasMenu_Start_Credits(void)
 
 void ExtrasMenu_Callback_Credits(void)
 {
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = ExtrasMenu_Start_Credits;
+    MenuSetup_StartTransition(ExtrasMenu_Start_Credits, 32);
 }
 
 void ExtrasMenu_Start_DAGarden(void)
@@ -219,16 +198,7 @@ void ExtrasMenu_Start_DAGarden(void)
     RSDK.InitSceneLoad();
 }
 
-void ExtrasMenu_Callback_DAGarden(void)
-{
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = ExtrasMenu_Start_DAGarden;
-}
+void ExtrasMenu_Callback_DAGarden(void) { MenuSetup_StartTransition(ExtrasMenu_Start_DAGarden, 32); }
 
 void ExtrasMenu_Start_BSS_3K(void)
 {
@@ -241,16 +211,7 @@ void ExtrasMenu_Start_BSS_3K(void)
     RSDK.InitSceneLoad();
 }
 
-void ExtrasMenu_Callback_BSS_3K(void)
-{
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = ExtrasMenu_Start_BSS_3K;
-}
+void ExtrasMenu_Callback_BSS_3K(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_3K, 32); }
 
 void ExtrasMenu_Start_BSS_Mania(void)
 {
@@ -263,16 +224,7 @@ void ExtrasMenu_Start_BSS_Mania(void)
     RSDK.InitSceneLoad();
 }
 
-void ExtrasMenu_Callback_BSS_Mania(void)
-{
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = ExtrasMenu_Start_BSS_Mania;
-}
+void ExtrasMenu_Callback_BSS_Mania(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_Mania, 32); }
 
 void ExtrasMenu_EditorDraw(void) {}
 

@@ -56,7 +56,7 @@ void PlaneSwitch_Draw(void)
     drawPos.y = entity->position.y;
     drawPos.x -= 0x80000;
     drawPos.y -= entity->size << 19;
-    Zone_Unknown3((Entity *)entity, &drawPos, entity->angle);
+    Zone_Unknown3(&entity->position, &drawPos, entity->angle);
 
     entity->animator.frameID = entity->flags & 3;
     for (int i = 0; i < entity->size; ++i) {

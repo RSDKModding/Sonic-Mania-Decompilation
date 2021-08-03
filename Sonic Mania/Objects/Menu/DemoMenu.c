@@ -72,17 +72,21 @@ void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int zoneID)
     entity->inkEffect = INK_NONE;
     if (zoneID == entity->selectedZone) {
         RSDK.DrawSprite(&entity->barFlashingData, pos, false);
+
         animator->frameID = 1;
         RSDK.DrawSprite(animator, pos, false);
+
         animator->frameID = 2;
         RSDK.DrawSprite(animator, pos, false);
     }
     else {
         animator->frameID = 1;
         RSDK.DrawSprite(animator, pos, false);
+
         animator->frameID     = 2;
         entity->inkEffect = INK_BLEND;
         RSDK.DrawSprite(animator, pos, false);
+
         entity->inkEffect = INK_BLEND;
     }
 }

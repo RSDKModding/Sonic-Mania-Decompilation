@@ -38,6 +38,17 @@ void ManiaModeMenu_EditorLoad(void);
 void ManiaModeMenu_Serialize(void);
 
 // Extra Entity Functions
+void ManiaModeMenu_Initialize(void);
+bool32 ManiaModeMenu_InitUserdata(void);
+void ManiaModeMenu_InitLocalization(int a1);
+int ManiaModeMenu_GetActiveMenu(void);
+void ManiaModeMenu_ChangeMenuTrack(void);
+int ManiaModeMenu_StartReturnToTitle(void);
+void ManiaModeMenu_SetBGColours(void);
+void ManiaModeMenu_ReturnToTitle(void);
+void ManiaModeMenu_Unknown13(void);
+void ManiaModeMenu_Unknown3(void);
+void ManiaModeMenu_Unknown7(void);
 
 
 #endif //!OBJ_MANIAMODEMENU_H

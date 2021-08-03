@@ -100,85 +100,80 @@ void Competition_State_Manager(void)
 
 void Competition_ResetOptions(void)
 {
-    globals->competitionSession[CS_inMatch]    = 0;
-    globals->competitionSession[CS_MatchID]    = 0;
-    globals->competitionSession[CS_MatchCount] = 0;
-    globals->competitionSession[CS_LevelIndex] = 0;
+    EntityCompetitionSession *session          = (EntityCompetitionSession *)globals->competitionSession;
+    session->inMatch    = false;
+    session->matchID    = 0;
+    session->matchCount = 0;
+    session->levelIndex = 0;
 
-    byte *zoneFlags   = (byte *)&globals->competitionSession[CS_ZoneUnknown30];
-    byte *winnerFlags = (byte *)&globals->competitionSession[CS_WinnerFlag1];
     for (int i = 0; i < 12; ++i) {
-        zoneFlags[i]   = 0;
-        winnerFlags[i] = 0;
+        session->zoneFlags[i]   = 0;
+        session->winnerFlags[i] = 0;
     }
 
-    byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
-    byte *charFlags   = (byte *)&globals->competitionSession[CS_CharacterFlags];
-
+    RSDK_sceneInfo->milliseconds;
     for (int i = 0; i < 4; ++i) {
-        finishFlags[i]                                               = 0;
-        charFlags[i]                                                 = 0;
-        globals->competitionSession[CS_TimeMinutesP1 + (i * 3)]      = 0;
-        globals->competitionSession[CS_TimeSecondsP1 + (i * 3)]      = 0;
-        globals->competitionSession[CS_TimeMillisecondsP1 + (i * 3)] = 0;
-        globals->competitionSession[CS_RingsP1 + i]                  = 0;
-        globals->competitionSession[CS_ScoreP1 + i]                  = 0;
-        globals->competitionSession[CS_ItemsP1 + i]                  = 0;
-        globals->competitionSession[CS_TotalRingsP1 + i]             = 0;
-        globals->competitionSession[CS_WinsP1 + i]                   = 0;
-        globals->competitionSession[CS_LivesP1 + i]                  = 0;
+        session->finishFlags[i]       = 0;
+        session->characterFlags[i]    = 0;
+        session->time[i].minutes      = 0;
+        session->time[i].seconds      = 0;
+        session->time[i].milliseconds = 0;
+        session->rings[i]             = 0;
+        session->score[i]             = 0;
+        session->items[i]             = 0;
+        session->totalRings[i]        = 0;
+        session->wins[i]              = 0;
+        session->lives[i]             = 0;
     }
 }
 
 void Competition_ClearMatchData(void)
 {
-    byte *winnerFlags = (byte *)&globals->competitionSession[CS_WinnerFlag1];
-    byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
-    winnerFlags[globals->competitionSession[CS_MatchID]] = 0;
+    session->winnerFlags[session->matchID] = 0;
     for (int i = 0; i < 4; ++i) {
-        finishFlags[i]                                               = 0;
-        globals->competitionSession[CS_TimeMinutesP1 + (i * 3)]      = 0;
-        globals->competitionSession[CS_TimeSecondsP1 + (i * 3)]      = 0;
-        globals->competitionSession[CS_TimeMillisecondsP1 + (i * 3)] = 0;
-        globals->competitionSession[CS_RingsP1 + i]                  = 0;
-        globals->competitionSession[CS_ScoreP1 + i]                  = 0;
-        globals->competitionSession[CS_ItemsP1 + i]                  = 0;
-        globals->competitionSession[CS_TotalRingsP1 + i]             = 0;
+        session->finishFlags[i]                = 0;
+        session->time[i].minutes               = 0;
+        session->time[i].seconds               = 0;
+        session->time[i].milliseconds          = 0;
+        session->rings[i]                      = 0;
+        session->score[i]                      = 0;
+        session->items[i]                      = 0;
+        session->totalRings[i]                 = 0;
     }
 }
 
 void Competition_CalculateScore(int playerID, byte flags)
 {
-    byte *finishFlags     = (byte *)&globals->competitionSession[CS_FinishFlags];
-    byte *winnerFlags     = (byte *)&globals->competitionSession[CS_WinnerFlag1];
-    finishFlags[playerID] = flags;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    session->finishFlags[playerID] = flags;
 
     if (flags == 1) {
-        globals->competitionSession[playerID + CS_TotalRingsP1]             = 0;
-        globals->competitionSession[playerID + CS_ItemsP1]                  = 0;
-        globals->competitionSession[playerID + CS_RingsP1]                  = 0;
-        globals->competitionSession[playerID + CS_ScoreP1]                  = 0;
-        globals->competitionSession[CS_TimeMinutesP1 + (3 * playerID)]      = 9;
-        globals->competitionSession[CS_TimeSecondsP1 + (3 * playerID)]      = 59;
-        globals->competitionSession[CS_TimeMillisecondsP1 + (3 * playerID)] = 99;
+        session->totalRings[playerID]                 = 0;
+        session->items[playerID]                      = 0;
+        session->rings[playerID]                      = 0;
+        session->score[playerID]                      = 0;
+        session->time[playerID].minutes               = 9;
+        session->time[playerID].seconds               = 59;
+        session->time[playerID].milliseconds          = 59;
     }
 
     int deathCount = 0;
     bool32 flag    = true;
-    for (int p = 0; p < globals->competitionSession[CS_PlayerCount]; ++p) {
-        if (!globals->competitionSession[CS_LivesP1 + p] || finishFlags[p] == 1)
+    for (int p = 0; p < session->playerCount; ++p) {
+        if (!session->lives[p] || session->finishFlags[p] == 1)
             ++deathCount;
     }
 
-    if (deathCount < globals->competitionSession[CS_PlayerCount] - 1) {
-        for (int p = 0; p < globals->competitionSession[CS_PlayerCount]; ++p) {
-            flag = flag && (!globals->competitionSession[CS_LivesP1 + p] || finishFlags[p] == 1);
+    if (deathCount < session->playerCount - 1) {
+        for (int p = 0; p < session->playerCount; ++p) {
+            flag = flag && (!session->lives[p] || session->finishFlags[p] == 1);
         }
     }
 
     if (flag) {
-        if (!finishFlags[globals->competitionSession[CS_MatchID]]) {
+        if (!session->finishFlags[session->matchID]) {
             int winnerTime       = 0;
             int winnerRings      = 0;
             int winnerScore      = 0;
@@ -186,39 +181,40 @@ void Competition_CalculateScore(int playerID, byte flags)
             int winnerTotalRings = 0;
 
             int times[4];
-            for (int p = 0; p < globals->competitionSession[CS_PlayerCount]; ++p) {
-                int mins = 0;
-                int secs = 0;
-                int ms   = 0;
+            for (int p = 0; p < session->playerCount; ++p) {
+                int mins = session->time[p].minutes;
+                int secs = session->time[p].seconds;
+                int ms   = session->time[p].milliseconds;
                 int time = ms + 100 * (secs + 60 * mins);
                 times[p] = time;
 
-                if (globals->competitionSession[CS_RingsP1 + p] > winnerRings)
-                    winnerRings = globals->competitionSession[CS_RingsP1 + p];
-                if (globals->competitionSession[CS_TotalRingsP1 + p] > winnerTotalRings)
-                    winnerTotalRings = globals->competitionSession[CS_TotalRingsP1 + p];
-                if (globals->competitionSession[CS_ScoreP1 + p] > winnerScore)
-                    winnerScore = globals->competitionSession[CS_ScoreP1 + p];
-                if (globals->competitionSession[CS_ItemsP1 + p] > winnerItems)
-                    winnerItems = globals->competitionSession[CS_ItemsP1 + p];
+                if (session->rings[p] > winnerRings)
+                    winnerRings = session->rings[p];
+                if (session->totalRings[p] > winnerTotalRings)
+                    winnerTotalRings = session->totalRings[p];
+                if (session->score[p] > winnerScore)
+                    winnerScore = session->score[p];
+                if (session->items[p] > winnerItems)
+                    winnerItems = session->items[p];
                 if (time < winnerTime)
                     winnerTime = time;
             }
 
             int scores[4];
+            memset(scores, 0, 4 * sizeof(int));
             int winner = 0;
-            for (int p = 0; p < globals->competitionSession[CS_PlayerCount]; ++p) {
-                if (finishFlags[p] == 2) {
+            for (int p = 0; p < session->playerCount; ++p) {
+                if (session->finishFlags[p] == 2) {
                     int score = 0;
-                    if (globals->competitionSession[CS_RingsP1 + p] == winnerRings)
+                    if (session->rings[p] == winnerRings)
                         score++;
-                    if (globals->competitionSession[CS_TotalRingsP1 + p] == winnerTotalRings)
+                    if (session->totalRings[p] == winnerTotalRings)
                         ++score;
-                    if (globals->competitionSession[CS_ScoreP1 + p] == winnerScore)
+                    if (session->score[p] == winnerScore)
                         ++score;
                     if (times[p] == winnerTime)
                         ++score;
-                    if (globals->competitionSession[CS_ItemsP1 + p] == winnerItems)
+                    if (session->items[p] == winnerItems)
                         ++score;
                     LogHelpers_Print("player %d => score %d", p, score);
                     scores[p] = score;
@@ -227,11 +223,11 @@ void Competition_CalculateScore(int playerID, byte flags)
                 }
             }
 
-            for (int p = 0; p < globals->competitionSession[CS_PlayerCount]; ++p) {
-                bool32 flag = globals->competitionSession[CS_LivesP1 + p] > 0 && finishFlags[p] != 1 && scores[p] == winner;
+            for (int p = 0; p < session->playerCount; ++p) {
+                bool32 flag = session->lives[p] > 0 && session->finishFlags[p] != 1 && scores[p] == winner;
                 if (flag) {
-                    ++globals->competitionSession[CS_LivesP1 + p];
-                    winnerFlags[globals->competitionSession[CS_MatchID]] |= (1 << p);
+                    ++session->lives[p];
+                    session->winnerFlags[session->matchID] |= (1 << p);
                 }
             }
         }

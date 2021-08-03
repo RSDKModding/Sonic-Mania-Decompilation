@@ -138,7 +138,7 @@ void MainMenu_Initialize(void)
 
 bool32 MainMenu_ReturnToTitleOption(void)
 {
-    MenuSetup_StartReturnToTitle();
+    ManiaModeMenu_StartReturnToTitle();
     return true;
 }
 
@@ -165,13 +165,7 @@ void MainMenu_StartExitGame(void)
         UIControl_GetUIControl()->state = StateMachine_None;
     Music_FadeOut(0.02);
 
-    EntityMenuSetup *menuSetup = (EntityMenuSetup*)RSDK.CreateEntity(MenuSetup->objectID, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 4;
-    menuSetup->timeOut         = 64;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = MainMenu_ExitGame;
+    MenuSetup_StartTransition(MainMenu_ExitGame, 64);
 }
 
 void MainMenu_ChangeMenu(void)

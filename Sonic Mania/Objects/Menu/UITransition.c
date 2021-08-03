@@ -271,8 +271,8 @@ void UITransition_State_TransitionOut(void)
             RSDK_sceneInfo->entity = storeEntity;
         }
         if (MenuSetup) {
-            MenuSetup_ChangeMenuTrack();
-            MenuSetup_SetBGColours();
+            ManiaModeMenu_ChangeMenuTrack();
+            ManiaModeMenu_SetBGColours();
         }
         EntityUIControl *control   = UIControl_GetUIControl();
         control->selectionDisabled = true;

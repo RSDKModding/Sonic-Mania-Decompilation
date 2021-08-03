@@ -934,8 +934,8 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
 
 #if RETRO_REV02
     if (LoadPNG(&image, buffer, false)) {
-        //if (image.width == 1024 && image.height == 512)
-        //   SetImageTexture(512, 1024, image.dataPtr);
+        if (image.width == 1024 && image.height == 512)
+           SetImageTexture(512, 1024, image.dataPtr);
 
         engine.displayTime    = displayTime;
         engine.prevShaderID   = engine.shaderID;
@@ -959,6 +959,9 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
     }
 #elif !RETRO_REV02
     if (LoadTGA(buffer)) {
+        if (image.width == 1024 && image.height == 512)
+            SetImageTexture(512, 1024, image.dataPtr);
+
         engine.displayTime    = displayTime;
         engine.prevShaderID   = engine.shaderID;
         engine.prevEngineMode = sceneInfo.state;

@@ -54,7 +54,7 @@ void Tuesday_EditorLoad(void);
 void Tuesday_Serialize(void);
 
 // Extra Entity Functions
-void Tuesday_DrawSprites(void);
+void Tuesday_DrawElectricity(void);
 void Tuesday_Unknown2(void);
 void Tuesday_Unknown3(void);
 void Tuesday_State_Destroyed(void);

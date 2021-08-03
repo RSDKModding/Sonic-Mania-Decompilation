@@ -28,7 +28,7 @@ void Tuesday_Draw(void)
             RSDK.DrawSprite(&entity->animator2, &entity->drawPos, false);
     }
     else {
-        Tuesday_DrawSprites();
+        Tuesday_DrawElectricity();
     }
 }
 
@@ -245,7 +245,7 @@ void Tuesday_StageLoad(void)
     Tuesday->sfxDrop       = RSDK.GetSFX("Stage/Drop.wav");
 }
 
-void Tuesday_DrawSprites(void)
+void Tuesday_DrawElectricity(void)
 {
     RSDK_THIS(Tuesday);
     Vector2 drawPos;

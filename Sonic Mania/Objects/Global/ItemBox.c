@@ -816,7 +816,8 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     if (globals->gameMode == MODE_COMPETITION) {
-        ++globals->competitionSession[RSDK.GetEntityID(player) + CS_ItemsP1];
+        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        ++session->items[RSDK.GetEntityID(player)];
     }
     RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS

@@ -592,9 +592,10 @@ void Player_Create(void *data)
             Player_ApplyShieldEffect(entity);
         }
 
-        Player->powerups = 0;
+        Player->powerups                  = 0;
+        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
-            entity->lives    = globals->competitionSession[entity->playerID + (RETRO_USE_PLUS ? CS_LivesP1 : 78)];
+            entity->lives    = session->lives[entity->playerID];
             entity->score    = 0;
             entity->score1UP = 50000;
         }
@@ -781,15 +782,12 @@ void Player_LoadSprites(void)
 }
 void Player_LoadSpritesVS(void)
 {
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     foreach_all(Player, entity)
     {
         if (entity->characterID & 1) {
             int slotID = 0;
-#if RETRO_USE_PLUS
-            for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i, ++slotID) {
-#else
-            for (int i = 0; i < PLAYER_MAX; ++i, ++slotID) {
-#endif
+            for (int i = 0; i < session->playerCount; ++i, ++slotID) {
                 EntityPlayer *player = RSDK_GET_ENTITY(slotID, Player);
                 RSDK.CopyEntity(player, entity, false);
                 player->characterID = globals->playerID >> 8 * i;
@@ -813,7 +811,7 @@ void Player_LoadSpritesVS(void)
                 player->camera       = Camera_SetTargetEntity(i, (Entity *)player);
             }
         }
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
     }
 }
 void Player_SaveValues(void)
@@ -850,8 +848,9 @@ void Player_GiveScore(EntityPlayer *player, int score)
 }
 void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX)
 {
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION)
-        globals->competitionSession[player->playerID + CS_TotalRingsP1] += amount;
+        session->totalRings[player->playerID] += amount;
     player->rings += amount;
 
     if (player->rings < 0) {
@@ -1915,8 +1914,9 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
             globals->coolBonus[player->playerID] = 0;
 
+            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             if (globals->gameMode == MODE_COMPETITION) {
-                globals->competitionSession[player->playerID + CS_LivesP1] = player->lives;
+                session->lives[player->playerID] = player->lives;
             }
 
 #if RETRO_USE_PLUS
@@ -1927,9 +1927,9 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->objectID = TYPE_BLANK;
                         int *saveRAM     = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
-                            int playerID      = RSDK.GetEntityID(player);
-                            byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
-                            if (!finishFlags[playerID])
+                            int playerID                      = RSDK.GetEntityID(player);
+                            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                            if (!session->finishFlags[playerID])
                                 Competition_CalculateScore(playerID, 1);
                             foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                         }
@@ -2027,9 +2027,9 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->camera->targetPtr = (Entity *)player->camera;
                     }
                     if (globals->gameMode == MODE_COMPETITION) {
-                        int playerID      = RSDK.GetEntityID(player);
-                        byte *finishFlags = (byte *)&globals->competitionSession[CS_FinishFlags];
-                        if (!finishFlags[playerID])
+                        int playerID                      = RSDK.GetEntityID(player);
+                        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                        if (!session->finishFlags[playerID])
                             Competition_CalculateScore(playerID, 1);
                         foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                     }

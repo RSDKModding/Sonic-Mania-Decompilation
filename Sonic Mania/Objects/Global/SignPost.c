@@ -462,19 +462,20 @@ void SignPost_CheckTouch(void)
                                 RSDK.PlaySFX(SignPost->sfx_SignPost2P, 0, 255);
                             }
 
-                            EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
+                            EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
+                            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!manager) {
                                 Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, entity->position.x, entity->position.y);
                                 manager                   = (EntityCompetition *)Competition->activeEntity;
                             }
                             manager->playerFlags[player->playerID]                     = true;
                             int pos                                                    = 3 * player->playerID;
-                            globals->competitionSession[player->playerID + CS_RingsP1] = player->rings;
-                            globals->competitionSession[pos + CS_TimeMinutesP1]        = RSDK_sceneInfo->minutes;
-                            globals->competitionSession[pos + CS_TimeSecondsP1]        = RSDK_sceneInfo->seconds;
-                            globals->competitionSession[pos + CS_TimeMillisecondsP1]   = RSDK_sceneInfo->milliseconds;
-                            globals->competitionSession[player->playerID + CS_ScoreP1] = player->score;
-                            globals->competitionSession[player->playerID + CS_LivesP1] = player->lives;
+                            session->rings[player->playerID] = player->rings;
+                            session->time[player->playerID].minutes        = RSDK_sceneInfo->minutes;
+                            session->time[player->playerID].seconds        = RSDK_sceneInfo->seconds;
+                            session->time[player->playerID].milliseconds   = RSDK_sceneInfo->milliseconds;
+                            session->score[player->playerID] = player->score;
+                            session->lives[player->playerID] = player->lives;
                             Competition_CalculateScore(player->playerID, 2);
 
                             entity->activePlayers = entity->activePlayers | (1 << p);
