@@ -4,13 +4,13 @@ ObjectUIText *UIText;
 
 void UIText_Update(void)
 {
-    EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIText);
     if (entity->animator.animationID != entity->highlighted + entity->listID) {
         ushort spr = -1;
         if (!UIWidgets || UIText->spriteIndex)
             spr = UIText->spriteIndex;
-        // else
-        //    spr = UIWidgets->uiSpriteIndex;
+        else
+            spr = UIWidgets->uiSpriteIndex;
         RSDK.SetSpriteAnimation(spr, entity->highlighted + entity->listID, &entity->animator, true, 0);
     }
 }
@@ -27,8 +27,7 @@ void UIText_StaticUpdate(void)
 
 void UIText_Draw(void)
 {
-    EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
-
+    RSDK_THIS(UIText);
     Vector2 drawPos;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
@@ -36,8 +35,8 @@ void UIText_Draw(void)
     ushort spr = -1;
     if (!UIWidgets || UIText->spriteIndex)
         spr = UIText->spriteIndex;
-    //else
-    //    spr = UIWidgets->uiSpriteIndex;
+    else
+        spr = UIWidgets->uiSpriteIndex;
     int width = RSDK.GetStringWidth(spr, entity->listID, &entity->text, 0, entity->text.textLength, 0);
     if (entity->align == ALIGN_RIGHT) {
         drawPos.x -= width << 15;
@@ -50,11 +49,11 @@ void UIText_Draw(void)
 
 void UIText_Create(void* data)
 {
-    EntityUIText *entity = (EntityUIText *)RSDK_sceneInfo->entity;
+    RSDK_THIS(UIText);
     if (!UIWidgets || UIText->spriteIndex)
         RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->listID, &entity->animator, true, 0);
-    //else
-    //    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
+    else
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
 
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = 2;
@@ -64,8 +63,8 @@ void UIText_Create(void* data)
             RSDK.SetText(&entity->text, "UNTITLED", 0);
         if (!UIWidgets || UIText->spriteIndex)
             RSDK.SetSpriteString(UIText->spriteIndex, entity->listID, &entity->text);
-        //else
-        //    RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, entity->listID, &entity->text);
+        else
+            RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, entity->listID, &entity->text);
     }
 }
 

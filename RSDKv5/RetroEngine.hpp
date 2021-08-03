@@ -73,10 +73,18 @@ enum GameRegions {
 #endif
 
 #elif defined __APPLE__
-#if __IPHONEOS__
-#define RETRO_PLATFORM   (RETRO_iOS)
+#define RETRO_USING_MOUSE
+#define RETRO_USING_TOUCH
+#include <TargetConditionals.h>
+
+#if TARGET_IPHONE_SIMULATOR
+#define RETRO_PLATFORM (RETRO_iOS)
+#elif TARGET_OS_IPHONE
+#define RETRO_PLATFORM (RETRO_iOS)
+#elif TARGET_OS_MAC
+#define RETRO_PLATFORM (RETRO_OSX)
 #else
-#define RETRO_PLATFORM   (RETRO_OSX)
+#error "Unknown Apple platform"
 #endif
 #elif defined __ANDROID__
 #define RETRO_PLATFORM   (RETRO_ANDROID)
@@ -93,7 +101,7 @@ enum GameRegions {
 #define RETRO_USING_DIRECTX9  (0) // windows
 #define RETRO_USING_DIRECTX11 (0) // xbox one
 
-#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
 #undef RETRO_USING_SDL2
 #define RETRO_USING_SDL2 (1)
 
@@ -119,6 +127,11 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_OSX
 #include <SDL2/SDL.h>
 #include <Vorbis/vorbisfile.h>
+
+#include "cocoaHelpers.hpp"
+#elif RETRO_PLATFORM == RETRO_iOS
+#include <SDL2/SDL.h>
+#include <vorbis/vorbisfile.h>
 
 #include "cocoaHelpers.hpp"
 #endif
