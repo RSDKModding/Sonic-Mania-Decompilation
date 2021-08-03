@@ -90,7 +90,7 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
         Vector2 pos2;
         pos2.x = 0;
         pos2.y = 0;
-        foreach_active(Player, player)
+        foreach_active(PBL_Player, player)
         {
             int distanceX = (player->position.x - entity->position.x) >> 8;
             int distanceY = (player->position.y - entity->position.y) >> 8;

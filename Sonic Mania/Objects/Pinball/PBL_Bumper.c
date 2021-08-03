@@ -78,7 +78,7 @@ void PBL_Bumper_HandlePlayerInteractions(void)
 {
     RSDK_THIS(PBL_Bumper);
 
-    foreach_active(Player, player)
+    foreach_active(PBL_Player, player)
     {
         if (RSDK.CheckObjectCollisionTouchBox(entity, &PBL_Bumper->hitbox, player, &PBL_Player->outerBox)) {
             if (entity->state == PBL_Bumper_Unknown2) {
