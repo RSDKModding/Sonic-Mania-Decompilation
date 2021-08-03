@@ -474,8 +474,8 @@ void Player_UpdateRaySwoopSFX(int sfxID);
 void Player_ProcessP1Input(void);
 void Player_ProcessP2InputLag(void);
 void Player_ProcessP2Input_AI(void);
-void Player_GetP2NoInput(void);
-void Player_ProcessP2UnknownInput(void);
+void Player_ProcessP2Input_None(void);
+void Player_ProcessP2Input_Unknown(void);
 void Player_ProcessP2Input_Player(void);
 
 #endif //!OBJ_PLAYER_H

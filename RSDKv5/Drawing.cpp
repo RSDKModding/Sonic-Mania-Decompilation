@@ -515,37 +515,33 @@ void GetWindowSize(int *width, int *height) {
 #endif
 }
 
-void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count)
+void SwapDrawListEntries(byte layer, ushort indexA, ushort indexB, int count)
 {
     if (layer < DRAWLAYER_COUNT) {
         DrawList *list = &drawLayers[layer];
-        if (count > 0) {
-            if (count > list->entityCount)
-                count = list->entityCount;
+        if (count > list->entityCount) {
+            count = list->entityCount;
         }
-        else {
+        else if (count < 0) {
             count = list->entityCount;
         }
 
         if (count) {
-            int a = -1;
-            int b = -1;
+            int slotA = -1;
+            int slotB = -1;
             if (count > 0) {
                 int cnt = 0;
-                do {
-                    if (list->entries[cnt] == indexA)
-                        a = list->entries[cnt] >> 1;
-                    if (list->entries[cnt] == indexB)
-                        b = list->entries[cnt] >> 1;
-                    --count;
-                    ++cnt;
-                } while (count > 0);
+                for (int i = 0; i < count; ++i) {
+                    if (list->entries[i] == indexA)
+                        slotA = i;
+                    if (list->entries[i] == indexB)
+                        slotB = i;
+                }
 
-                if (a > -1 && b > -1 && a < b) {
-                    int e1           = list->entries[b];
-                    int e2           = list->entries[a];
-                    list->entries[a] = e1;
-                    list->entries[b] = e2;
+                if (slotA > -1 && slotB > -1 && slotA < slotB) {
+                    int temp             = list->entries[slotB];
+                    list->entries[slotB] = list->entries[slotA];
+                    list->entries[slotA] = temp;
                 }
             }
         }

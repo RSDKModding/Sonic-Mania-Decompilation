@@ -120,7 +120,7 @@ void Zone_LateUpdate(void)
             if ((sidekick->state != Player_State_FlyIn && sidekick->state != Player_State_JumpIn) || sidekick->characterID == ID_TAILS
                 || sidekick->scale.x == 0x200) {
                 player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-                RSDK.SwapDrawListEntries(player->drawOrder, 0, 1, Player->playerCount);
+                RSDK.SwapDrawListEntries(player->drawOrder, SLOT_PLAYER1, SLOT_PLAYER2, Player->playerCount);
             }
         }
     }

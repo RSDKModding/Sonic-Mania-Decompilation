@@ -351,15 +351,9 @@ void Platform_Create(void *data)
             EntityPlatform *ent = (EntityPlatform *)RSDK.GetEntityByID((i + RSDK.GetEntityID(entity) + 1));
             ent->tileCollisions = false;
             if (HangPoint && ent->objectID == HangPoint->objectID) {
-                //EntityHangPoint *hang = (EntityHangPoint *)ent;
-                // v53 = hang[1].groundVel;
-                // int posY = hang->position.y;
-                // if (ent->position.y - (v53 << 16) - posY >= 0)
-                //    v54 = ent->position.y - (v53 << 16) - posY;
-                // else
-                //    v54 = posY + (v53 << 16) - ent->position.y;
-                if (entity->updateRange.y < 0x800000 + abs(entity->position.y - ent->position.y))
-                    entity->updateRange.y = 0x800000 + abs(entity->position.y - ent->position.y);
+                EntityHangPoint *hang = (EntityHangPoint *)ent;
+                if (entity->updateRange.y < 0x800000 + abs(entity->position.y - (hang->length << 16) - hang->position.y))
+                    entity->updateRange.y = 0x800000 + abs(entity->position.y - (hang->length << 16) - hang->position.y);
             }
             else {
                 if (entity->updateRange.y < 0x800000 + abs(entity->position.y - ent->position.y))
@@ -1088,18 +1082,18 @@ void Platform_Unknown8(void)
     }
     else {
         int slot                          = RSDK_sceneInfo->entitySlot - 1;
-        EntityPlatformControl *controller = (EntityPlatformControl *)RSDK.GetEntityByID(slot);
+        EntityPlatformControl *controller = RSDK_GET_ENTITY(slot, PlatformControl);
         if (controller->objectID == PlatformControl->objectID) {
-            // controller->gap64 = 1;
+            controller->setActive = true;
             entity->state      = Platform_Unknown4;
             entity->velocity.x = 0;
             entity->velocity.y = 0;
         }
         else {
             while (controller->objectID == Platform->objectID || controller->objectID == PlatformNode->objectID) {
-                controller = (EntityPlatformControl *)RSDK.GetEntityByID(slot--);
+                controller = RSDK_GET_ENTITY(slot--, PlatformControl);
                 if (controller->objectID == PlatformControl->objectID) {
-                    // controller->gap64 = 1;
+                    controller->setActive = true;
                     entity->state      = Platform_Unknown4;
                     entity->velocity.x = 0;
                     entity->velocity.y = 0;
@@ -1299,7 +1293,7 @@ void Platform_CollisionState_AllSolid(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
@@ -1391,7 +1385,7 @@ void Platform_CollisionState_BottomHazard(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
@@ -1467,7 +1461,7 @@ void Platform_CollisionState_LRHazard(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
                 if (entity->velocity.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
@@ -1612,7 +1606,7 @@ void Platform_CollisionState_None(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
             }
         }
     }
@@ -1679,7 +1673,7 @@ void Platform_CollisionState_Sticky(void)
                     }
                     player->position.x += entity->collisionOffset.x;
                     player->position.y += entity->collisionOffset.y;
-                    // player->position.y &= 0xFFFF0000;
+                    player->position.y &= 0xFFFF0000;
                     if (player->jumpPress) {
                         player->tileCollisions = true;
                         Player_StartJump(player);
@@ -1700,7 +1694,7 @@ void Platform_CollisionState_Sticky(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
             }
         }
     }
@@ -1738,7 +1732,7 @@ void Platform_CollisionState_TopHazard(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
 
 #if RETRO_USE_PLUS
                 if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
@@ -1878,7 +1872,7 @@ void Platform_CollisionState_TurnTable(void)
                     }
                     player->position.x += entity->collisionOffset.x;
                     player->position.y += entity->collisionOffset.y;
-                    // player->position.y &= 0xFFFF0000;
+                    player->position.y &= 0xFFFF0000;
                     if (player->jumpPress) {
                         Player_StartJump(player);
                     }
@@ -1992,7 +1986,7 @@ void Platform_CollisionState_Twister(void)
                     }
                     player->position.x += entity->collisionOffset.x;
                     player->position.y += entity->collisionOffset.y;
-                    // player->position.y &= 0xFFFF0000;
+                    player->position.y &= 0xFFFF0000;
                     if (player->jumpPress) {
                         Player_StartJump(player);
                     }
@@ -2077,7 +2071,7 @@ void Platform_CollisionState_15(void)
                 }
                 player->position.x += entity->collisionOffset.x;
                 player->position.y += entity->collisionOffset.y;
-                // player->position.y &= 0xFFFF0000;
+                player->position.y &= 0xFFFF0000;
                 break;
             case 2:
                 if (player->onGround && player->right) {

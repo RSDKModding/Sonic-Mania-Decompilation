@@ -507,7 +507,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_CheckOnScreen, CheckOnScreen);
     addToRSDKFunctionTable(FunctionTable_CheckPosOnScreen, CheckPosOnScreen);
     addToRSDKFunctionTable(FunctionTable_AddDrawListRef, AddDrawListRef);
-    addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawLayers);
+    addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawListEntries);
     addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
     addToRSDKFunctionTable(FunctionTable_LoadScene, SetScene);
     addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
