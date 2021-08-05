@@ -12,7 +12,9 @@
 #define RETRO_USE_EGS (RETRO_GAMEVER == VER_107)
 
 //used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
+#ifndef RETRO_STANDALONE
 #define RETRO_STANDALONE (1)
+#endif
 
 #include "GameLink.h"
 

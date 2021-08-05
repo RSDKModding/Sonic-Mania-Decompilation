@@ -282,6 +282,8 @@ void runRetroEngine()
     uint frameStart, frameEnd = SDL_GetTicks();
     int frameDelta = 0;
 
+    engine.refreshRate = 60;
+
     while (engine.running) {
         frameStart = SDL_GetTicks();
         frameDelta = frameStart - frameEnd;
