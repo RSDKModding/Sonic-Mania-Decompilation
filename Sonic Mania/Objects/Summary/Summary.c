@@ -223,7 +223,7 @@ void Summary_LoadTimes(void)
         Summary_SetTextString(0, entity->saveText, "SAVE SLOT ");
     }
 
-    int *saveRAM = SaveGame->saveRAM;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
     char textBuf[0x100];
     memset(textBuf, 0, 0x100);
     int totalTime = 0;
@@ -232,9 +232,9 @@ void Summary_LoadTimes(void)
         if (entity->textEntities[i]) {
             EntityUIText *text = (EntityUIText *)entity->textEntities[i];
 
-            Summary_SetStageTime(textBuf, saveRAM[text->data0 + 34]);
-            int time = saveRAM[text->data0 + 34] + totalTime;
-            if (saveRAM[text->data0 + 34] + totalTime < totalTime)
+            Summary_SetStageTime(textBuf, saveRAM->zoneTimes[text->data0]);
+            int time = saveRAM->zoneTimes[text->data0] + totalTime;
+            if (saveRAM->zoneTimes[text->data0] + totalTime < totalTime)
                 time = -1;
             totalTime = time;
             Summary_SetTextString(0, text, textBuf);

@@ -9,6 +9,33 @@
 #define checkNoSave globals->noSave
 #endif
 
+// Entity Class
+typedef struct {
+    RSDK_ENTITY
+    int saveState;
+    int characterID;
+    int zoneID;
+    int lives;
+    int score;
+    int score1UP;
+    int chaosEmeralds;
+    int continues;
+    int storedStageID;
+    int nextSpecialStage;
+    int collectedSpecialRings;
+    int medalMods;
+#if RETRO_USE_PLUS
+    //(AIZ if encore) + GHZ-TMZ + ERZ
+    // Bonus stage is [28]
+    // Special stage is [29]
+    // the rest are unused
+    int zoneTimes[32];
+    int characterFlags;
+    int stock;
+    int playerID; // encore playerID
+#endif
+} EntitySaveGame;
+
 // Object Class
 typedef struct {
 #if !RETRO_USE_PLUS
@@ -18,16 +45,9 @@ typedef struct {
     void (*loadCallback)(int);
     Entity *saveEntityPtr;
     void (*saveCallback)(int);
-    int *saveRAM;
+    EntitySaveGame *saveRAM;
     int field_14;
 } ObjectSaveGame;
-
-#if !RETRO_USE_PLUS
-// Entity Class
-typedef struct {
-    RSDK_ENTITY
-} EntitySaveGame;
-#endif
 
 extern ObjectSaveGame *SaveGame;
 

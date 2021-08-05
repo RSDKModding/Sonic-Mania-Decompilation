@@ -263,7 +263,7 @@ void FlipScreen()
 #endif
             break;
         }
-        case ENGINESTATE_SHOWPNG: 
+        case ENGINESTATE_SHOWPNG: {
 #if RETRO_USING_SDL2
             SDL_Rect destScreenPos;
             destScreenPos.x = 0;
@@ -285,14 +285,37 @@ void FlipScreen()
             SDL_RenderPresent(engine.renderer);
 #endif
             break;
-        case ENGINESTATE_VIDEOPLAYBACK: break;
+        }
+        case ENGINESTATE_VIDEOPLAYBACK: {
+#if RETRO_USING_SDL2
+            SDL_Rect destScreenPos;
+            destScreenPos.x = 0;
+            destScreenPos.y = 0;
+            destScreenPos.w = pixWidth;
+            destScreenPos.h = SCREEN_YSIZE;
+
+            // Clear the screen. This is needed to keep the
+            // pillarboxes in fullscreen from displaying garbage data.
+            SDL_RenderClear(engine.renderer);
+
+            SDL_RenderCopy(engine.renderer, engine.videoBuffer, NULL, &destScreenPos);
+
+            SDL_SetRenderTarget(engine.renderer, NULL);
+            SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
+            if (dimAmount < 1.0)
+                SDL_RenderFillRect(engine.renderer, NULL);
+            // no change here
+            SDL_RenderPresent(engine.renderer);
+#endif
+        }
+            break;
     }
 }
 void ReleaseRenderDevice()
 {
     for (int s = 0; s < SCREEN_MAX; ++s) {
         //if (screens[s].frameBuffer)
-            //delete[] screens[s].frameBuffer;
+        //  delete[] screens[s].frameBuffer;
 #if RETRO_USING_SDL2
         SDL_DestroyTexture(engine.screenBuffer[s]);
         engine.screenBuffer[s] = NULL;
@@ -380,9 +403,7 @@ void UpdateWindow()
     engine.displayCount = SDL_GetNumVideoDisplays();
     engine.displays = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
     for (int d = 0; d < engine.displayCount; ++d) {
-        if (SDL_GetDisplayMode(d, 0, &engine.displays[d]) == 0) {
-        }
-        else {
+        if (SDL_GetDisplayMode(d, 0, &engine.displays[d])) {
             // what the
         }
     }

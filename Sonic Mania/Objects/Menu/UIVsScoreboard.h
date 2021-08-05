@@ -5,12 +5,34 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectUIVsScoreboard;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int field_5C;
+    int field_60;
+    int field_64;
+    int field_68;
+    int field_6C;
+    Vector2 *posPtr;
+    int field_74;
+    Vector2 offset;
+    Vector2 size;
+    byte p1Score;
+    byte p2Score;
+    bool32 showWinner;
+    byte winnerID;
+    int sizeY;
+    TextInfo scoreText;
+    Animator animator1;
+    Animator textAnimator;
+    Animator animator2;
+    Animator animator3;
+    ushort textSpriteIndex;
 } EntityUIVsScoreboard;
 
 // Object Struct
@@ -28,6 +50,8 @@ void UIVsScoreboard_EditorLoad(void);
 void UIVsScoreboard_Serialize(void);
 
 // Extra Entity Functions
-
+void UIVsScoreboard_SetupSprites(void);
+void UIVsScoreboard_SetText(EntityUIVsScoreboard *entity, const char *text);
+void UIVsScoreboard_DrawSprites(void);
 
 #endif //!OBJ_UIVSSCOREBOARD_H

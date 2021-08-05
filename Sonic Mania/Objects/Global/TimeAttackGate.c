@@ -218,13 +218,14 @@ void TimeAttackGate_Unknown1(void)
         if (UIWaitSpinner)
             UIWaitSpinner_Wait();
 
-        int playerID = globals->menuParam[MP_PlayerID];
-        int zone     = globals->menuParam[MP_ZoneID];
+        EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+        int playerID = param->characterID;
+        int zone     = param->zoneID;
         int time     = (RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes));
-        int act      = globals->menuParam[MP_ActID];
+        int act      = param->actID;
         int mode     = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
 
-        globals->menuParam[MP_TAScore] = TimeAttackData_AddTADBEntry(playerID, zone, act, mode, time, TimeAttackGate_LeaderboardCB);
+        param->timeScore = TimeAttackData_AddTADBEntry(playerID, zone, act, mode, time, TimeAttackGate_LeaderboardCB);
         TimeAttackData_AddLeaderboardEntry(playerID, zone, act, mode, time);
     }
 }

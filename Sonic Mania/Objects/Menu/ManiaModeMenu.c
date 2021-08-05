@@ -309,23 +309,23 @@ void ManiaModeMenu_Unknown3(void)
 
 void ManiaModeMenu_Unknown7(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     char buffer[0x100];
     memset(buffer, 0, 0x100);
-    const char *tag = (const char *)&((char *)&globals->menuParam)[90];
-    if (strcmp(tag, "") == 0)
+    if (strcmp(param->menuTag, "") == 0)
         UIUsernamePopup_ShowPopup();
     foreach_all(UIControl, control)
     {
-        if (strcmp(tag, "") != 0) {
+        if (strcmp(param->menuTag, "") != 0) {
             RSDK.GetCString(buffer, &control->tag);
-            if (strcmp((const char *)buffer, tag) != 0) {
+            if (strcmp((const char *)buffer, param->menuTag) != 0) {
                 UIControl_Unknown6(control);
             }
             else {
-                control->storedEntityID = globals->menuParam[MP_MenuSelection];
+                control->storedEntityID = param->selectionID;
                 control->dwordC4        = 1;
                 UIControl_Unknown4(control);
-                control->activeEntityID = globals->menuParam[MP_MenuSelection];
+                control->activeEntityID = param->selectionID;
             }
         }
     }
@@ -334,17 +334,17 @@ void ManiaModeMenu_Unknown7(void)
     // TimeAttackMenu_Unknown4();
     // CompetitionMenu_Unknown3();
     OptionsMenu_Unknown4();
-    if ((byte)(globals->menuParam[22] >> 8) == 2) {
+    if (param->selectionFlag == 2) {
         EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
         UIButton_Unknown4(extras->entities[1], 1);
     }
 
     int a, b, c, d;
-    if (globals->menuParam[MP_ClearFlag]) {
-        a = globals->menuParam[MP_PlayerID];
-        b = globals->menuParam[MP_ZoneID];
-        c = globals->menuParam[MP_ActID];
-        d = globals->menuParam[95];
+    if (param->clearFlag) {
+        a = param->characterID;
+        b = param->zoneID;
+        c = param->actID;
+        d = param->field_17C;
     }
     else {
         a = 0;
@@ -353,11 +353,11 @@ void ManiaModeMenu_Unknown7(void)
         d = 0;
     }
     TimeAttackData_ClearOptions();
-    if (globals->menuParam[MP_ClearFlag]) {
-        globals->menuParam[MP_PlayerID] = a;
-        globals->menuParam[MP_ZoneID]   = b;
-        globals->menuParam[MP_ActID]    = c;
-        globals->menuParam[95]          = d;
+    if (param->clearFlag) {
+        param->characterID = a;
+        param->zoneID      = b;
+        param->actID       = c;
+        param->field_17C   = d;
     }
 }
 

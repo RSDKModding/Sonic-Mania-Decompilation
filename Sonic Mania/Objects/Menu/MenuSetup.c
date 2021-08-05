@@ -82,8 +82,8 @@ void MenuSetup_Create(void *data)
 
 void MenuSetup_StageLoad(void)
 {
-    const char *tag = (const char *)(&((char *)&globals->menuParam)[90]);
-    LogHelpers_Print("Menu recall ctrl: %s", tag);
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    LogHelpers_Print("Menu recall ctrl: %s", param->menuTag);
     MenuSetup->dword8      = 0;
     MenuSetup->initialized = 0;
     MenuSetup->dword10     = 0;

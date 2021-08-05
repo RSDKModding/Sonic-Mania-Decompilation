@@ -8,7 +8,7 @@ void PBL_Setup_Update(void)
     RSDK_THIS(PBL_Setup);
     StateMachine_Run(entity->state);
     if (entity->state != PBL_Setup_SaveAndChangeScene && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM[62];
+        ++SaveGame->saveRAM->zoneTimes[28];
 }
 
 void PBL_Setup_LateUpdate(void) {}
@@ -200,9 +200,9 @@ void PBL_Setup_GiveScore(int score)
     if (PBL_Setup->score > PBL_Setup->score1UP) {
         RSDK.PlaySFX(PBL_Setup->sfxContinue, 0, 255);
 
-        int *saveRAM = SaveGame->saveRAM;
-        if (saveRAM[29] < 20)
-            saveRAM[29]++;
+        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        if (saveRAM->continues < 20)
+            saveRAM->continues++;
         while (PBL_Setup->score1UP < PBL_Setup->score) {
             PBL_Setup->score1UP += 10000;
         }
@@ -213,10 +213,10 @@ void PBL_Setup_GiveScore(int score)
 
 void PBL_Setup_GiveLife(void)
 {
-    int *saveRAM = SaveGame->saveRAM;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
     if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
-        if (saveRAM[25] < 99)
-            saveRAM[25]++;
+        if (saveRAM->lives < 99)
+            saveRAM->lives++;
         Music_PlayMusicTrack(TRACK_1UP);
     }
 }
@@ -251,16 +251,16 @@ void PBL_Setup_SaveAndChangeScene(void)
 {
     RSDK_THIS(PBL_Setup);
     if (entity->timer >= 1024) {
-        int *saveRAM = SaveGame->saveRAM;
+        EntitySaveGame *saveRAM = SaveGame->saveRAM;
         if (saveRAM) {
-            saveRAM[66] = globals->characterFlags;
-            saveRAM[67] = globals->stock;
-            saveRAM[68] = globals->playerID;
+            saveRAM->characterFlags = globals->characterFlags;
+            saveRAM->stock = globals->stock;
+            saveRAM->playerID= globals->playerID;
             if (globals->gameMode == MODE_ENCORE)
                 RSDK.LoadScene("Encore Mode", "");
             else
                 RSDK.LoadScene("Mania Mode", "");
-            RSDK_sceneInfo->listPos = saveRAM[30];
+            RSDK_sceneInfo->listPos = saveRAM->storedStageID;
         }
         else {
             RSDK.LoadScene("Presentation", "Title Screen");

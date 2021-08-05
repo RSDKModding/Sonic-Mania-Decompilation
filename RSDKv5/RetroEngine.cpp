@@ -19,7 +19,6 @@ RetroEngine engine  = RetroEngine();
 
 bool32 processEvents()
 {
-    touchMouseData.count = 0;
 #if RETRO_USING_SDL2
     while (SDL_PollEvent(&engine.sdlEvents)) {
         // Main Events
@@ -434,10 +433,12 @@ void runRetroEngine()
                     devMenu.state();
                 break;
             case ENGINESTATE_VIDEOPLAYBACK:
-                if (ProcessVideo())
+                ProcessInput();
+                if (ProcessVideo() == 1)
                     sceneInfo.state = engine.prevEngineMode;
                 break;
-            case ENGINESTATE_SHOWPNG: 
+            case ENGINESTATE_SHOWPNG:
+                ProcessInput();
                 if (engine.imageDelta <= 0.0 || engine.dimMax >= 1.0) {
                     if (engine.displayTime <= 0.0) {
                         engine.dimMax += engine.imageDelta;
@@ -708,20 +709,16 @@ void LoadGameConfig()
 
 void InitScriptSystem()
 {
-    RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update, NULL,
-                 NULL, NULL, DefaultObject_Create, NULL, NULL, NULL, NULL);
+    RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update,
+                   DefaultObject_LateUpdate, DefaultObject_StaticUpdate, DefaultObject_Draw, DefaultObject_Create, DefaultObject_StageLoad,
+                   DefaultObject_EditorDraw, DefaultObject_EditorLoad, DefaultObject_Serialize);
 #if RETRO_REV02
-    RegisterObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, NULL, NULL, DevOutput_Draw,
-                 DevOutput_Create, NULL, NULL, NULL, NULL);
+    RegisterObject((Object **)&DevOutput, ":DevOutput:", sizeof(EntityDevOutput), sizeof(ObjectDevOutput), DevOutput_Update, DevOutput_LateUpdate,
+                   DevOutput_StaticUpdate, DevOutput_Draw, DevOutput_Create, DevOutput_StageLoad, DevOutput_EditorDraw, DevOutput_EditorLoad,
+                   DevOutput_Serialize);
 #endif
-    RegisterObject((Object **)&TestObject, ":TestObject:", sizeof(EntityTestObject), sizeof(ObjectTestObject), TestObject_Update,
-                 TestObject_LateUpdate, TestObject_StaticUpdate, TestObject_Draw, TestObject_Create, TestObject_StageLoad, TestObject_EditorDraw,
-                 TestObject_EditorLoad, TestObject_Serialize);
     globalObjectIDs[0] = 0;
 #if RETRO_REV02
-    globalObjectIDs[1] = 1;
-    globalObjectIDs[2] = 2;
-#else
     globalObjectIDs[1] = 1;
 #endif
 

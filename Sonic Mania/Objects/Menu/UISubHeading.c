@@ -290,23 +290,23 @@ void UISubHeading_Unknown11(void)
 
 void UISubHeading_StartNewSave(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
 #if RETRO_USE_PLUS
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
 #else
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID);
 #endif
     TimeAttackData_ClearOptions();
-    char *tag = (char *)&((char *)&globals->menuParam)[90];
-    RSDK.GetCString(tag, &control->tag);
-    globals->menuParam[87] = control->field_D8;
-    globals->menuParam[90] = 0;
+    RSDK.GetCString(param->menuTag, &control->tag);
+    param->selectionID = control->field_D8;
+    param->field_168 = 0;
 #if RETRO_USE_PLUS
-    globals->gameMode      = entity->encoreMode != false;
+    globals->gameMode = entity->encoreMode != false;
 #else
-    globals->gameMode = MODE_MANIA;
+    globals->gameMode       = MODE_MANIA;
 #endif
 
     bool32 loadingSave = false;
@@ -333,21 +333,21 @@ void UISubHeading_StartNewSave(void)
 #if RETRO_USE_PLUS
             if (globals->gameMode != MODE_ENCORE)
 #endif
-                saveRAM[22] = 1;
-            saveRAM[23] = entity->frameID;
-            saveRAM[24] = 0;
-            saveRAM[25] = 3;
-            saveRAM[28] = entity->saveEmeralds;
-            saveRAM[29] = 0;
+                saveRAM->saveState = 1;
+            saveRAM->characterID   = entity->frameID;
+            saveRAM->zoneID        = 0;
+            saveRAM->lives         = 3;
+            saveRAM->chaosEmeralds = entity->saveEmeralds;
+            saveRAM->continues     = 0;
             UIWaitSpinner_Wait();
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
         }
         else {
-            if (saveRAM[22] == 2) {
-                saveRAM[32] = 0;
-                saveRAM[26] = 0;
-                saveRAM[27] = 500000;
+            if (saveRAM->saveState == 2) {
+                saveRAM->collectedSpecialRings = 0;
+                saveRAM->score                 = 0;
+                saveRAM->score1UP              = 500000;
             }
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
@@ -357,11 +357,11 @@ void UISubHeading_StartNewSave(void)
 #if RETRO_USE_PLUS
     if (entity->encoreMode) {
         globals->medalMods = getMod(MEDAL_NOTIMEOVER);
-        saveRAM[33]        = globals->medalMods;
+        saveRAM->medalMods = globals->medalMods;
     }
     else {
         globals->medalMods = UISubHeading_GetMedalMods();
-        saveRAM[33]        = globals->medalMods;
+        saveRAM->medalMods = globals->medalMods;
 #endif
         switch (entity->frameID) {
             case 0:
@@ -406,9 +406,9 @@ void UISubHeading_StartNewSave(void)
     }
 #if RETRO_USE_PLUS
     else if (entity->encoreMode) {
-        globals->playerID       = saveRAM[68];
-        globals->stock          = saveRAM[67];
-        globals->characterFlags = saveRAM[66];
+        globals->playerID       = saveRAM->playerID;
+        globals->stock          = saveRAM->stock;
+        globals->characterFlags = saveRAM->characterFlags;
         RSDK.LoadScene("Encore Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
     }

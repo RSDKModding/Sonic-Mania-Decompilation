@@ -71,7 +71,6 @@ enum DefaultObjects {
 #if RETRO_REV02
     TYPE_DEVOUTPUT,
 #endif
-    TYPE_TESTOBJECT,
     TYPE_DEFAULTCOUNT, //max
 };
 

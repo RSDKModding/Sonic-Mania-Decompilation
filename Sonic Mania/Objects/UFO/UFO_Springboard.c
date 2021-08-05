@@ -25,7 +25,7 @@ void UFO_Springboard_Update(void)
                             player->gravityStrength = 0xC0000;
                             player->onGround        = 0;
                             player->state           = UFO_Player_HandleTilt;
-                            RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerData, 128, 0, true, 0);
+                            RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerAnimator, 128, 0, true, 0);
                             RSDK.PlaySFX(UFO_Player->sfx_Spring, 0, 255);
                         }
                         else {

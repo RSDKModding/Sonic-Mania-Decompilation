@@ -315,8 +315,8 @@ void ActClear_Create(void *data)
         globals->initCoolBonus = false;
         if (globals->gameMode == MODE_TIMEATTACK) {
 #if RETRO_USE_PLUS
-            entity->time = TimeAttackData_SetScore(globals->menuParam[92], globals->menuParam[91], globals->menuParam[93],
-                                                   RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
+            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+            entity->time = TimeAttackData_SetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
 #else
 
 #endif
@@ -534,10 +534,11 @@ void ActClear_State_TAFinish(void)
                 entity->dword78    = 240;
                 entity->state      = ActClear_Unknown9;
 #else
+                EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
                 ActClear->field_10 = true;
-                byte playerID           = globals->menuParam[MP_PlayerID];
-                byte zoneID        = globals->menuParam[MP_ZoneID];
-                byte actID              = globals->menuParam[MP_ActID];
+                byte playerID           = param->characterID;
+                byte zoneID        = param->zoneID;
+                byte actID              = param->actID;
 
                 int *recordsRAM = NULL;
                 if (globals->saveLoaded == STATUS_OK)
@@ -557,7 +558,7 @@ void ActClear_State_TAFinish(void)
                         rank++;
                         TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
                         TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
-                        globals->menuParam[MP_Rank] = rank;
+                        param->timeScore = rank;
                     }
                     else {
                         ActClear->field_10 = false;
@@ -647,7 +648,7 @@ void ActClear_LoadNextScene(void)
                 SaveGame_ClearRestartData();
                 StarPost_ResetStarPosts();
                 if (Zone->actID > 0)
-                    SaveGame->saveRAM[32] = 0;
+                    SaveGame->saveRAM->collectedSpecialRings = 0;
                 SaveGame_SaveProgress();
                 if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
                     if (Zone_IsAct2())

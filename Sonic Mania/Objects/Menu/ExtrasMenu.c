@@ -139,11 +139,11 @@ void ExtrasMenu_ProcessInputs(void)
 
 void ExtrasMenu_Start_Puyo_vsAI(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    ((byte *)&globals->menuParam)[89] = 1;
-    char *tag                         = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
-    globals->menuParam[MP_MenuSelection] = 1;
+    param->field_59 = 1;
+    strcpy(param->menuTag, "Extras");
+    param->selectionID = 1;
     RSDK.LoadScene("Extras", "Puyo Puyo");
     RSDK.InitSceneLoad();
 }
@@ -155,11 +155,11 @@ void ExtrasMenu_Callback_Puyo_vsAI(void)
 
 void ExtrasMenu_Start_Puyo_vs2P(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    ((byte *)&globals->menuParam)[89] = 2;
-    char *tag                         = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
-    globals->menuParam[MP_MenuSelection] = 1;
+    param->field_59 = 2;
+    strcpy(param->menuTag, "Extras");
+    param->selectionID = 1;
     RSDK.LoadScene("Extras", "Puyo Puyo");
     RSDK.InitSceneLoad();
 }
@@ -168,12 +168,12 @@ void ExtrasMenu_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(ExtrasMenu_
 
 void ExtrasMenu_Start_Credits(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    ((byte *)&globals->menuParam)[89] = 1;
-    char *tag                         = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
-    globals->menuParam[MP_MenuSelection] = 3;
-    globals->menuParam[106] = 1;
+    param->field_59 = 1;
+    strcpy(param->menuTag, "Extras");
+    param->selectionID = 3;
+    param->field_1A8 = 1;
     RSDK.LoadScene("Presentation", "Credits");
     RSDK.InitSceneLoad();
 }
@@ -185,10 +185,10 @@ void ExtrasMenu_Callback_Credits(void)
 
 void ExtrasMenu_Start_DAGarden(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    char *tag = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
-    globals->menuParam[MP_MenuSelection] = 2;
+    strcpy(param->menuTag, "Extras");
+    param->selectionID = 2;
 #if RETRO_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
         RSDK.LoadScene("Extras", "D.A. Garden Plus");
@@ -202,11 +202,11 @@ void ExtrasMenu_Callback_DAGarden(void) { MenuSetup_StartTransition(ExtrasMenu_S
 
 void ExtrasMenu_Start_BSS_3K(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    ((byte *)&globals->menuParam)[89] = 1;
-    char *tag                         = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
-    globals->menuParam[MP_MenuSelection] = 0;
+    param->field_59 = 1;
+    strcpy(param->menuTag, "Extras");
+    param->selectionID = 0;
     RSDK.LoadScene("Blue Spheres", "Random");
     RSDK.InitSceneLoad();
 }
@@ -215,11 +215,11 @@ void ExtrasMenu_Callback_BSS_3K(void) { MenuSetup_StartTransition(ExtrasMenu_Sta
 
 void ExtrasMenu_Start_BSS_Mania(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    ((byte *)&globals->menuParam)[89] = 1;
-    char *tag                         = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Extras");
-    globals->menuParam[MP_MenuSelection] = 0;
+    param->field_59 = 1;
+    strcpy(param->menuTag, "Extras");
+    param->selectionID = 0;
     RSDK.LoadScene("Blue Spheres", "Random 2");
     RSDK.InitSceneLoad();
 }

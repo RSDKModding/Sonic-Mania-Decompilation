@@ -115,7 +115,7 @@ void UFO_ItemBox_Unknown1(void)
                     player->gravityStrength = 0x60000;
                     player->onGround        = false;
                     player->state           = UFO_Player_StateJump;
-                    RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerData, 128, 0, true, 0);
+                    RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerAnimator, 128, 0, true, 0);
                     if (entity->type >= 3) {
                         RSDK.PlaySFX(UFO_ItemBox->sfx_Bumper, 0, 255);
                         entity->timer = 16;

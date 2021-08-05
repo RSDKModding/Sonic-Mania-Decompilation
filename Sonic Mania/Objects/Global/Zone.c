@@ -152,7 +152,7 @@ void Zone_StaticUpdate(void)
         act = 0;
     int pos = act + 2 * zone;
     if (pos >= 0 && RSDK_sceneInfo->timeEnabled && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM[pos + 34];
+        ++SaveGame->saveRAM->zoneTimes[pos];
 #endif
 }
 
@@ -177,12 +177,12 @@ void Zone_Create(void *data)
 void Zone_StageLoad(void)
 {
 #if RETRO_USE_PLUS
-    int *saveRAM  = SaveGame->saveRAM;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
     Zone->randKey = (uint)time(0);
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == 0) {
             globals->characterFlags = 0;
-            saveRAM[66]             = 0;
+            saveRAM->characterFlags             = 0;
             byte id                 = globals->playerID & 0xFF;
             if (globals->playerID & 0xFF) {
                 int charID = -1;
@@ -193,7 +193,7 @@ void Zone_StageLoad(void)
                     } while (id > 0);
                 }
                 globals->characterFlags |= (1 << charID);
-                saveRAM[66] = globals->characterFlags;
+                saveRAM->characterFlags = globals->characterFlags;
             }
 
             if (globals->playerID & 0xFF00) {
@@ -221,7 +221,7 @@ void Zone_StageLoad(void)
                         }
 
                         globals->characterFlags |= (1 << charID);
-                        saveRAM[66] = globals->characterFlags;
+                        saveRAM->characterFlags = globals->characterFlags;
                     }
 
                     if (globals->stock & 0xFF00) {
@@ -234,7 +234,7 @@ void Zone_StageLoad(void)
                             } while (id > 0);
                         }
                         globals->characterFlags |= (1 << charID);
-                        saveRAM[66] = globals->characterFlags;
+                        saveRAM->characterFlags = globals->characterFlags;
                     }
 
                     if (globals->stock & 0xFF0000) {
@@ -247,14 +247,14 @@ void Zone_StageLoad(void)
                             } while (id > 0);
                         }
                         globals->characterFlags |= (1 << charID);
-                        saveRAM[66] = globals->characterFlags;
+                        saveRAM->characterFlags = globals->characterFlags;
                     }
-                    saveRAM[68] = globals->playerID;
+                    saveRAM->playerID = globals->playerID;
                 }
                 else {
                     globals->playerID |= (globals->stock & 0xFF);
                     globals->stock >>= 8;
-                    saveRAM[67] = globals->stock;
+                    saveRAM->stock = globals->stock;
                     byte id     = globals->playerID >> 8;
                     int charID  = -1;
                     if (id) {
@@ -264,7 +264,7 @@ void Zone_StageLoad(void)
                         } while (id > 0);
                     }
                     globals->characterFlags |= (1 << charID);
-                    saveRAM[66] = globals->characterFlags;
+                    saveRAM->characterFlags = globals->characterFlags;
 
                     if (globals->stock & 0xFF) {
                         int charID = -1;
@@ -277,7 +277,7 @@ void Zone_StageLoad(void)
                         }
 
                         globals->characterFlags |= (1 << charID);
-                        saveRAM[66] = globals->characterFlags;
+                        saveRAM->characterFlags = globals->characterFlags;
                     }
 
                     if (globals->stock & 0xFF00) {
@@ -290,7 +290,7 @@ void Zone_StageLoad(void)
                             } while (id > 0);
                         }
                         globals->characterFlags |= (1 << charID);
-                        saveRAM[66] = globals->characterFlags;
+                        saveRAM->characterFlags = globals->characterFlags;
                     }
 
                     if (globals->stock & 0xFF0000) {
@@ -303,17 +303,17 @@ void Zone_StageLoad(void)
                             } while (id > 0);
                         }
                         globals->characterFlags |= (1 << charID);
-                        saveRAM[66] = globals->characterFlags;
+                        saveRAM->characterFlags = globals->characterFlags;
                     }
-                    saveRAM[68] = globals->playerID;
+                    saveRAM->playerID = globals->playerID;
                 }
             }
         }
 
         if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
-            globals->characterFlags = saveRAM[66];
-            globals->stock          = saveRAM[67];
-            globals->playerID       = saveRAM[68];
+            globals->characterFlags = saveRAM->characterFlags;
+            globals->stock          = saveRAM->stock;
+            globals->playerID       = saveRAM->playerID;
         }
     }
 #endif

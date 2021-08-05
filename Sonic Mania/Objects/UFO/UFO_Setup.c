@@ -10,7 +10,7 @@ void UFO_Setup_Update(void)
 
 #if RETRO_USE_PLUS
     if (entity->state != UFO_Setup_Unknown12 && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM[63];
+        ++SaveGame->saveRAM->zoneTimes[29];
 #endif
 }
 
@@ -291,10 +291,10 @@ void UFO_Setup_Unknown6(void) // success
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
-    int *saveRAM = SaveGame->saveRAM;
-    saveRAM[28] |= 1 << UFO_Setup->specialStageID;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    saveRAM->chaosEmeralds |= 1 << UFO_Setup->specialStageID;
     if (globals->saveSlotID != NO_SAVE_SLOT)
-        SaveGame_GetEmerald(saveRAM[31]);
+        SaveGame_GetEmerald(saveRAM->nextSpecialStage);
 
     foreach_all(UFO_Player, player)
     {
@@ -302,12 +302,12 @@ void UFO_Setup_Unknown6(void) // success
         player->interaction = false;
     }
 
-    saveRAM[31]    = (saveRAM[31] + 1) % 7;
+    saveRAM->nextSpecialStage = (saveRAM->nextSpecialStage + 1) % 7;
     setup->visible = true;
     setup->state   = UFO_Setup_Unknown12;
     RSDK.PlaySFX(UFO_Setup->sfx_SSExit, 0, 255);
     Music_FadeOut(0.025);
-    // PauseMenu->disableEvents = true;
+    PauseMenu->disableEvents = true;
 }
 void UFO_Setup_Unknown7(void) // fail
 {
@@ -323,7 +323,7 @@ void UFO_Setup_Unknown7(void) // fail
     setup->state   = UFO_Setup_Unknown12;
     RSDK.PlaySFX(UFO_Setup->sfx_SSExit, 0, 255);
     Music_FadeOut(0.025);
-    // PauseMenu->disableEvents = true;
+    PauseMenu->disableEvents = true;
 }
 
 void UFO_Setup_Unknown8(void)

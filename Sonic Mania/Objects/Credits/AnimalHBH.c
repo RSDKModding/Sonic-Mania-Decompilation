@@ -4,7 +4,7 @@ ObjectAnimalHBH *AnimalHBH;
 
 void AnimalHBH_Update(void)
 {
-    EntityAnimalHBH *entity = (EntityAnimalHBH *)RSDK_sceneInfo->entity;
+    RSDK_THIS(AnimalHBH);
     entity->position.x -= 0x10000;
     int pos = entity->position.x - (RSDK_screens->position.x << 16) - (RSDK_screens->centerX << 16);
     if (pos < 0)
@@ -16,9 +16,9 @@ void AnimalHBH_Update(void)
         if ((RSDK_controller->keyA.press || RSDK_controller->keyStart.press))
             entity->timer = 1400;
         if (entity->timer == 1400) {
-            EntityFXFade *fxFade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, entity->position.x, entity->position.y);
-            fxFade->speedIn = 12;
-            fxFade->wait    = 240;
+            EntityFXFade *fxFade = CREATE_ENTITY(FXFade, NULL, entity->position.x, entity->position.y);
+            fxFade->speedIn      = 12;
+            fxFade->wait         = 240;
         }
         if (entity->timer == 1536) {
             RSDK.LoadScene("Presentation", "Menu");
@@ -33,19 +33,13 @@ void AnimalHBH_Update(void)
     }
 }
 
-void AnimalHBH_LateUpdate(void)
-{
+void AnimalHBH_LateUpdate(void) {}
 
-}
-
-void AnimalHBH_StaticUpdate(void)
-{
-
-}
+void AnimalHBH_StaticUpdate(void) {}
 
 void AnimalHBH_Draw(void)
 {
-    EntityAnimalHBH *entity = (EntityAnimalHBH *)RSDK_sceneInfo->entity;
+    RSDK_THIS(AnimalHBH);
     Vector2 drawPos;
 
     drawPos.x = 2 * (entity->position.x - ((RSDK_screens->position.x + RSDK_screens->centerX) << 15));
@@ -60,9 +54,9 @@ void AnimalHBH_Draw(void)
     RSDK.SetActivePalette(1, 0, RSDK_screens->height);
 }
 
-void AnimalHBH_Create(void* data)
+void AnimalHBH_Create(void *data)
 {
-    EntityAnimalHBH *entity = (EntityAnimalHBH *)RSDK_sceneInfo->entity;
+    RSDK_THIS(AnimalHBH);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 2;
@@ -82,15 +76,8 @@ void AnimalHBH_StageLoad(void)
     AnimalHBH->palCnt           = 0;
 }
 
-void AnimalHBH_EditorDraw(void)
-{
+void AnimalHBH_EditorDraw(void) {}
 
-}
-
-void AnimalHBH_EditorLoad(void)
-{
-
-}
+void AnimalHBH_EditorLoad(void) {}
 
 void AnimalHBH_Serialize(void) { RSDK_EDITABLE_VAR(AnimalHBH, VAR_UINT8, type); }
-

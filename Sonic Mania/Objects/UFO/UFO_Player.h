@@ -57,7 +57,7 @@ typedef struct {
     bool32 right;
     bool32 jumpPress;
     bool32 jumpHold;
-    Animator playerData;
+    Animator playerAnimator;
 } EntityUFO_Player;
 
 // Object Struct

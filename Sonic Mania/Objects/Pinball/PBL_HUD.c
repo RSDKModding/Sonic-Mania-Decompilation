@@ -34,8 +34,8 @@ void PBL_HUD_Create(void *data)
         entity->drawOrder  = 12;
         entity->active     = ACTIVE_NORMAL;
         entity->position.y = 0;
-        entity->scale.x    = 0x100;
-        entity->scale.y    = 0x100;
+        entity->scale.x    = 0x200;
+        entity->scale.y    = 0x200;
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->data1, true, 0);
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->data2, true, 1);
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &entity->data3, true, 0);
@@ -205,9 +205,7 @@ void PBL_HUD_State_Message7(void)
         entity->stateDraw = PBL_HUD_StateDraw_Unknown1;
         entity->drawFX    = FX_SCALE;
 
-        foreach_active(PBL_Crane, crane)
-        { /*crane->state = PBL_Crane_Unknown5;*/
-        }
+        foreach_active(PBL_Crane, crane) { crane->state = PBL_Crane_State_CreatePrizes; }
     }
     else {
         entity->timer--;
@@ -286,7 +284,7 @@ void PBL_HUD_Unknown13(void)
     RSDK_THIS(PBL_HUD);
     entity->scale.x -= 4;
     entity->position.y += 0x40000;
-    if (entity->position.y < -0x480000) {
+    if (entity->position.y >= 0) {
         entity->position.y = 0;
         entity->scale.x    = 0x200;
         entity->scale.y    = 0x200;

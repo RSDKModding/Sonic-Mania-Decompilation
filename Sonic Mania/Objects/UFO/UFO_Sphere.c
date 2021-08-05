@@ -126,7 +126,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
                     int rx = (entity->position.y - player->position.y) >> 16;
                     if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + rx * rx + ry * ry
                         < 384) {
-                        RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerData, 80, 0, false, 0);
+                        RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
                         player->state = UFO_Player_Unknown8;
                         if (UFO_Setup->rings > 0)
                             RSDK.PlaySFX(UFO_Player->sfx_LoseRings, 0, 255);
@@ -149,7 +149,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
                     int rx = (entity->position.y - player->position.y) >> 16;
                     if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + rx * rx + ry * ry
                         < 384) {
-                        RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerData, 80, 0, false, 0);
+                        RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
                         player->state = UFO_Player_Unknown8;
                         if (UFO_Setup->rings > 0)
                             RSDK.PlaySFX(UFO_Player->sfx_LoseRings, 0, 255);

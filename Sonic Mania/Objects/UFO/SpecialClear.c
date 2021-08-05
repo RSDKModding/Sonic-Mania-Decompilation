@@ -19,15 +19,15 @@ void SpecialClear_Draw(void)
 
     RSDK_THIS(SpecialClear);
 
-    int centerX  = RSDK_screens->centerX << 16;
-    drawPos.x    = centerX - 0x600000;
-    int *saveRAM = SaveGame->saveRAM;
+    int centerX             = RSDK_screens->centerX << 16;
+    drawPos.x               = centerX - 0x600000;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
 
     // Draw Emeralds
     int id = 1;
     for (int i = 0; i < 7; ++i) {
         int frame = 7;
-        if ((id & saveRAM[28]) > 0)
+        if ((id & saveRAM->chaosEmeralds) > 0)
             frame = i;
         entity->data4.frameID = frame;
         drawPos.y             = entity->emeraldPositions[i];
@@ -232,14 +232,14 @@ void SpecialClear_Create(void *data)
             entity->machBonus = 1000 * (UFO_Setup->machLevel + 10 * UFO_Setup->scoreBonus);
             if (globals->gameMode < MODE_TIMEATTACK && entity->machBonus + entity->ringBonus >= 10000)
                 entity->continuesFlag = true;
-            int *saveRAM     = SaveGame->saveRAM;
-            entity->score    = saveRAM[26];
-            entity->score1UP = saveRAM[27];
-            entity->lives    = saveRAM[25];
-            if (saveRAM[28] == 0x7F)
+            EntitySaveGame *saveRAM = SaveGame->saveRAM;
+            entity->score           = saveRAM->score;
+            entity->score1UP        = saveRAM->score1UP;
+            entity->lives           = saveRAM->lives;
+            if (saveRAM->chaosEmeralds == 0x7F)
                 entity->finishType = 2;
             else
-                entity->finishType = UFO_Setup->timedOut == 0;
+                entity->finishType = !UFO_Setup->timedOut;
         }
         entity->positions[0].x = 0x1400000;
         entity->positions[0].y = 0x580000;
@@ -375,19 +375,20 @@ void SpecialClear_LoadScene(void)
         entity->fillColour -= 0x80808;
     }
     else if (!entity->field_120) {
-        if (((globals->menuParam[22] >> 8) & 0xFF) == 1) {
+        EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+        if (param->field_59 == 1) {
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();
         }
         else {
-            int *saveRAM = SaveGame->saveRAM;
+            EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
                 RSDK.LoadScene("Encore Mode", "");
             else
 #endif
                 RSDK.LoadScene("Mania Mode", "");
-            RSDK_sceneInfo->listPos = saveRAM[30];
+            RSDK_sceneInfo->listPos = saveRAM->storedStageID;
             RSDK.InitSceneLoad();
         }
     }
@@ -550,20 +551,20 @@ void SpecialClear_Unknown9(void)
     }
 
     if (entity->timer == 360) {
-        entity->timer         = 0;
-        int *saveRAM          = SaveGame->saveRAM;
-        saveRAM[26]           = entity->score;
-        globals->restartScore = entity->score;
-        saveRAM[27]           = entity->score1UP;
-        saveRAM[25]           = entity->lives;
-        saveRAM[29]           = globals->continues;
+        entity->timer           = 0;
+        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        saveRAM->score          = entity->score;
+        globals->restartScore   = entity->score;
+        saveRAM->score1UP       = entity->score1UP;
+        saveRAM->lives          = entity->lives;
 #if RETRO_USE_PLUS
-        saveRAM[66]           = globals->characterFlags;
-        saveRAM[67]           = globals->stock;
-        saveRAM[68]           = globals->playerID;
+        saveRAM->continues      = globals->continues;
+        saveRAM->characterFlags = globals->characterFlags;
+        saveRAM->stock          = globals->stock;
+        saveRAM->playerID       = globals->playerID;
 #endif
 
-        if (saveRAM[28] == 0x7F) {
+        if (saveRAM->chaosEmeralds == 0x7F) {
             entity->state = SpecialClear_Unknown11;
         }
         else {
@@ -579,11 +580,11 @@ void SpecialClear_Unknown10(void)
 {
     RSDK_THIS(SpecialClear);
     if (++entity->timer == 120) {
-        entity->timer         = 0;
-        int *saveRAM          = SaveGame->saveRAM;
-        saveRAM[26]           = entity->score;
-        globals->restartScore = entity->score;
-        if (saveRAM[28] == 127) {
+        entity->timer           = 0;
+        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        saveRAM->score          = entity->score;
+        globals->restartScore   = entity->score;
+        if (saveRAM->chaosEmeralds == 127) {
             entity->state = SpecialClear_Unknown11;
         }
         else {

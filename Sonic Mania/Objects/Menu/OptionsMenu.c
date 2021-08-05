@@ -621,13 +621,13 @@ void OptionsMenu_Unknown28(void)
 
 void OptionsMenu_Unknown29(int status)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     UIWaitSpinner_Wait2();
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->languageControl;
     control->startingID      = control->activeEntityID;
 
     TimeAttackData_ClearOptions();
-    char *tag = (char *)&((char *)&globals->menuParam)[90];
-    strcpy(tag, "Options");
+    strcpy(param->menuTag, "Options");
     MenuSetup_StartTransition(OptionsMenu_Unknown28, 32);
 }
 

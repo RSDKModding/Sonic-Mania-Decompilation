@@ -89,16 +89,16 @@ void E3MenuSetup_Unknown2(void)
 
 void E3MenuSetup_Unknown3(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.LoadScene("Mania Mode", "");
     // EntityTAZoneModule *button      = (EntityTAZoneModule*) * ((_QWORD *)&Obj_E3MenuSetup->zoneControl[2].inBounds +
-    // Obj_E3MenuSetup->zoneControl[1].scale.y); globals->menuParam[MP_ZoneID] = *(unsigned __int8 *)(button + 332); globals->menuParam[MP_ActID] =
+    // Obj_E3MenuSetup->zoneControl[1].scale.y); param->zoneID = *(unsigned __int8 *)(button + 332);param->actID =
     // *(unsigned
     // __int8 *)(button + 438);
-    int playerID = globals->menuParam[MP_PlayerID];
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(globals->menuParam[MP_ZoneID], playerID, globals->menuParam[MP_ActID]);
-    switch (playerID) {
+    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->playerID, param->actID);
+    switch (param->characterID) {
         default: break;
         case 1: globals->playerID = ID_SONIC; break;
         case 2: globals->playerID = ID_TAILS; break;
@@ -120,8 +120,9 @@ void E3MenuSetup_Unknown4(void)
 // Sonic Sel
 void E3MenuSetup_Unknown5(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    globals->menuParam[MP_PlayerID] = 1;
+    param->characterID = 1;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int i = 0; i < control->unknownCount1; ++i) {
         control->entities[i]->animator.animationID = 1;
@@ -132,8 +133,9 @@ void E3MenuSetup_Unknown5(void)
 // Tails Sel
 void E3MenuSetup_Unknown6(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    globals->menuParam[MP_PlayerID] = 2;
+    param->characterID = 2;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int i = 0; i < control->unknownCount1; ++i) {
         control->entities[i]->animator.animationID = 2;
@@ -144,8 +146,9 @@ void E3MenuSetup_Unknown6(void)
 // Knux Sel
 void E3MenuSetup_Unknown7(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    globals->menuParam[MP_PlayerID] = 3;
+    param->characterID = 3;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int i = 0; i < control->unknownCount1; ++i) {
         control->entities[i]->animator.animationID = 3;

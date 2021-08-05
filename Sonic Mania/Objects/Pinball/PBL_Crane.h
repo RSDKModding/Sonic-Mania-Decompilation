@@ -6,12 +6,35 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int prizeID;
+    ushort aniFrames;
+    ushort sfxBackGlass;
+    ushort sfxCraneMove;
+    ushort sfxCraneDrop;
+    ushort sfxCraneGrab;
+    ushort sfxCraneRise;
+    ushort sfxPrizeGood;
+    ushort sfxPrizeBad;
 } ObjectPBL_Crane;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    int type;
+    int field_64;
+    int timer;
+    int field_6C;
+    int field_70;
+    Entity *parent;
+    Entity *field_78;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
 } EntityPBL_Crane;
 
 // Object Struct
@@ -29,6 +52,27 @@ void PBL_Crane_EditorLoad(void);
 void PBL_Crane_Serialize(void);
 
 // Extra Entity Functions
+void PBL_Crane_HandlePrizes(void);
+
+void PBL_Crane_StateDraw_Unknown1(void);
+void PBL_Crane_StateDraw_Unknown3(void);
+void PBL_Crane_StateDraw_Unknown2(void);
+
+void PBL_Crane_State_CreatePrizes(void);
+void PBL_Crane_Unknown6(void);
+void PBL_Crane_Unknown7(void);
+
+void PBL_Crane_State_Unknown1(void);
+void PBL_Crane_State_Unknown2(void);
+void PBL_Crane_State_Unknown3(void);
+void PBL_Crane_State_Unknown4(void);
+void PBL_Crane_State_Unknown5(void);
+void PBL_Crane_State_Unknown6(void);
+
+void PBL_Crane_State2_Unknown1(void);
+void PBL_Crane_State2_Unknown2(void);
+void PBL_Crane_State2_Unknown3(void);
+
 #endif
 
 #endif //!OBJ_PBL_CRANE_H

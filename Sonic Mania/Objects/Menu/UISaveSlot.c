@@ -563,9 +563,9 @@ void UISaveSlot_SetupButtonElements(void)
     entity->options8 = UISaveSlot_Unknown18;
 
 #if RETRO_USE_PLUS
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
-#else
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else                        
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID);
 #endif
     if (entity->type == 1) {
         entity->touchPos1[0].x       = 0x600000;
@@ -592,7 +592,7 @@ void UISaveSlot_SetupButtonElements(void)
         entity->touchPos2[0].y       = 0;
         entity->touchPosCallbacks[0] = UISaveSlot_Unknown12;
 
-        switch (saveRAM[22]) {
+        switch (saveRAM->saveState) {
             default:
             case 0:
                 entity->touchPos1[1].x       = 0x200000;
@@ -653,18 +653,18 @@ void UISaveSlot_LoadSaveInfo(void)
 {
     RSDK_THIS(UISaveSlot);
 #if RETRO_USE_PLUS
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
-#else
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else                         
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID);
 #endif
-    int saveState = saveRAM[22];
+    int saveState = saveRAM->saveState;
     if (saveState == 1 || saveState == 2) {
 #if RETRO_USE_PLUS
         if (entity->encoreMode) {
-            entity->saveEncorePlayer = saveRAM[68] & 0xFF;
-            entity->saveEncoreBuddy  = (saveRAM[68] >> 8) & 0xFF;
+            entity->saveEncorePlayer = saveRAM->playerID & 0xFF;
+            entity->saveEncoreBuddy  = (saveRAM->playerID >> 8) & 0xFF;
 
-            int friends = saveRAM[67];
+            int friends = saveRAM->stock;
             for (int i = 0; i < 3; ++i) {
                 entity->saveEncoreFriends[i] = ID_NONE;
                 if (!friends)
@@ -677,7 +677,7 @@ void UISaveSlot_LoadSaveInfo(void)
         }
         else {
 #endif
-            entity->frameID = saveRAM[23];
+            entity->frameID = saveRAM->characterID;
 #if RETRO_USE_PLUS
         }
 #endif
@@ -699,21 +699,21 @@ void UISaveSlot_LoadSaveInfo(void)
             entity->listID    = 0;
             break;
         case 1:
-            entity->saveZoneID   = saveRAM[24];
-            entity->saveEmeralds = saveRAM[28];
-            entity->saveLives    = saveRAM[25];
+            entity->saveZoneID   = saveRAM->zoneID;
+            entity->saveEmeralds = saveRAM->chaosEmeralds;
+            entity->saveLives    = saveRAM->lives;
 #if RETRO_USE_PLUS
-            entity->saveContinues = saveRAM[29];
+            entity->saveContinues = saveRAM->continues;
 #endif
             entity->isNewSave = false;
             entity->listID    = 0;
             break;
         case 2:
             entity->saveZoneID   = 255;
-            entity->saveEmeralds = saveRAM[28];
-            entity->saveLives    = saveRAM[25];
+            entity->saveEmeralds = saveRAM->chaosEmeralds;
+            entity->saveLives    = saveRAM->lives;
 #if RETRO_USE_PLUS
-            entity->saveContinues = saveRAM[29];
+            entity->saveContinues = saveRAM->continues;
 #endif
             entity->listID    = 1;
             entity->isNewSave = false;
@@ -780,9 +780,9 @@ void UISaveSlot_Unknown9(void)
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 #if RETRO_USE_PLUS
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
-#else
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else                         
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID);
 #endif
 
     entity->active = ACTIVE_NORMAL;
@@ -825,7 +825,7 @@ void UISaveSlot_Unknown9(void)
                 }
             }
         }
-        else if (UIControl->keyX && saveRAM[22] && !entity->type) {
+        else if (UIControl->keyX && saveRAM->saveState && !entity->type) {
             Localization_GetString(&strBuffer, STR_DELETEPOPUP);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&strBuffer);
             if (dialog) {
@@ -1008,12 +1008,12 @@ void UISaveSlot_Unknown21(void)
 {
     RSDK_THIS(UISaveSlot);
 #if RETRO_USE_PLUS
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
 #else
-    int *saveRAM = SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID);
 #endif
 
-    if (!saveRAM[22]) {
+    if (!saveRAM->saveState) {
 #if RETRO_USE_PLUS
         int frame = entity->encoreMode ? 6 : 0;
 #else
@@ -1024,7 +1024,7 @@ void UISaveSlot_Unknown21(void)
             UISaveSlot_Unknown8();
         }
     }
-    if (!entity->type && saveRAM[22] == 2) {
+    if (!entity->type && saveRAM->saveState == 2) {
         entity->saveZoneID = 255;
         UISaveSlot_Unknown8();
     }

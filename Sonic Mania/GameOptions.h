@@ -88,22 +88,6 @@ typedef enum {
 } ReservedEntities;
 
 typedef enum {
-    MP_MenuSelection = 87,
-#if RETRO_USE_PLUS
-    MP_ClearFlag = 91,
-    MP_PlayerID = 91,
-    MP_ZoneID   = 92,
-    MP_ActID    = 93,
-    MP_TAScore     = 94,
-#else
-    MP_PlayerID = 89,
-    MP_ZoneID   = 90,
-    MP_ActID    = 91,
-    MP_Rank     = 92,
-#endif
-}MenuParamIDs;
-
-typedef enum {
     PRESENCE_GENERIC,
     PRESENCE_MENU,
     PRESENCE_MANIA,

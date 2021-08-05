@@ -20,8 +20,9 @@ void BSS_Setup_Update(void)
     }
 
 #if RETRO_USE_PLUS
-    if ((byte)(globals->menuParam[22] >> 8) != 1 && !entity->pauseFlag && globals->gameMode < MODE_TIMEATTACK)
-        ++SaveGame->saveRAM[62];
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    if (!param->field_59 && !entity->pauseFlag && globals->gameMode < MODE_TIMEATTACK)
+        ++SaveGame->saveRAM->zoneTimes[28];
 #endif
 }
 
@@ -206,7 +207,10 @@ void BSS_Setup_StageLoad(void)
     BSS_Setup->sfxMedal       = RSDK.GetSFX("Special/Medal.wav");
     BSS_Setup->sfxMedalCaught = RSDK.GetSFX("Special/MedalCaught.wav");
     BSS_Setup->sfxTeleport    = RSDK.GetSFX("Global/Teleport.wav");
-    if ((byte)(globals->menuParam[22] >> 8) == 1) {
+
+    
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    if (param->field_59 == 1) {
         TextInfo info;
         Localization_GetString(&info, STR_RPC_PLAYING);
 #if RETRO_USE_PLUS
@@ -487,7 +491,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerData, 0, 0);
+                RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerAnimator, 0, 0);
                 BSS_Player->field_6 = 4;
                 entity->globeSpeed *= 2;
                 entity->spinState     = 0;
@@ -593,7 +597,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerData, 0, 0);
+                RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerAnimator, 0, 0);
                 BSS_Player->field_6 = 4;
                 entity->globeSpeed *= 2;
                 entity->spinState     = 0;
@@ -620,7 +624,8 @@ void BSS_Setup_HandleSteppedObjects(void)
         case BSS_MEDAL_SILVER:
         case BSS_MEDAL_GOLD:
             if (entity->globeTimer > 240) {
-                if ((byte)(globals->menuParam[22] >> 8) != 1 && globals->gameMode < MODE_TIMEATTACK) {
+                EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                if (!param->field_59 && globals->gameMode < MODE_TIMEATTACK) {
                     int pos = BSS_Setup_ReloadScene();
                     if (pos >= 0) {
                         int *saveRAM = SaveGame_GetGlobalData();
@@ -778,8 +783,8 @@ void BSS_Setup_State_PinkSphereWarp(void)
     if (entity->alpha == 320) {
         EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         EntityBSS_Player *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, BSS_Player);
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerData, true, 0);
-        RSDK.SetSpriteAnimation(player2->spriteIndex, 0, &player2->playerData, true, 0);
+        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player2->spriteIndex, 0, &player2->playerAnimator, true, 0);
 
         int count   = BSS_Setup->pinkSphereCount;
         int val     = RSDK.Rand(0, count - 1);
@@ -1084,11 +1089,11 @@ void BSS_Setup_State_Unknown23(void)
 
         EntityBSS_Player *player1 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
         if (player1->onGround)
-            RSDK.SetSpriteAnimation(player1->spriteIndex, 1, &player1->playerData, 0, 0);
+            RSDK.SetSpriteAnimation(player1->spriteIndex, 1, &player1->playerAnimator, 0, 0);
 
         EntityBSS_Player *player2 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER2);
         if (player2->onGround)
-            RSDK.SetSpriteAnimation(player2->spriteIndex, 1, &player2->playerData, 0, 0);
+            RSDK.SetSpriteAnimation(player2->spriteIndex, 1, &player2->playerAnimator, 0, 0);
     }
     BSS_Setup_HandleCollectableMovement();
 }

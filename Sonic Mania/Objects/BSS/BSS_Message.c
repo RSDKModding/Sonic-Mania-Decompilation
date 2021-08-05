@@ -92,7 +92,7 @@ void BSS_Message_State_GetBSWait(void)
             setup->globeSpeed    = 16;
             setup->globeSpeedInc = 2;
             if (player->onGround)
-                RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerData, 0, 0);
+                RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerAnimator, 0, 0);
             entity->state = BSS_Message_State_Idle;
         }
         if (!setup->globeTimer && setup->state == BSS_Setup_State_HandleStage) {
@@ -109,7 +109,7 @@ void BSS_Message_State_GetBSWait(void)
         setup->globeSpeed    = 16;
         setup->globeSpeedInc = 2;
         if (player->onGround)
-            RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerData, 0, 0);
+            RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerAnimator, 0, 0);
         entity->state = BSS_Message_State_Finish;
     }
 }
@@ -164,7 +164,8 @@ void BSS_Message_LoadPrevScene(void)
         entity->colour -= 0x80808;
     }
     else {
-        if ((byte)(globals->menuParam[22] >> 8) == 1) {
+        EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+        if (param->field_59 == 1) {
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();
         }
@@ -172,14 +173,14 @@ void BSS_Message_LoadPrevScene(void)
             if (globals->saveSlotID == NO_SAVE_SLOT) {
                 globals->blueSpheresInit = true;
                 SaveGame_ShuffleBSSID();
-                int *saveRAM = SaveGame->saveRAM;
+                EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE)
                     RSDK.LoadScene("Encore Mode", "");
                 else
 #endif
                     RSDK.LoadScene("Mania Mode", "");
-                RSDK_sceneInfo->listPos = saveRAM[30];
+                RSDK_sceneInfo->listPos = saveRAM->storedStageID;
                 RSDK.InitSceneLoad();
                 entity->state = StateMachine_None;
             }
@@ -199,14 +200,14 @@ void BSS_Message_LoadGameState(void)
     if (!entity->field_6C) {
         globals->blueSpheresInit = true;
         SaveGame_ShuffleBSSID();
-        int *saveRAM = SaveGame->saveRAM;
+        EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.LoadScene("Encore Mode", "");
         else
 #endif
             RSDK.LoadScene("Mania Mode", "");
-        RSDK_sceneInfo->listPos = saveRAM[30];
+        RSDK_sceneInfo->listPos = saveRAM->storedStageID;
         RSDK.InitSceneLoad();
         entity->state = StateMachine_None;
     }

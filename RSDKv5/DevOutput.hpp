@@ -20,8 +20,14 @@ extern ObjectDevOutput *DevOutput;
 
 // Standard Entity Events
 void DevOutput_Update();
+void DevOutput_LateUpdate();
+void DevOutput_StaticUpdate();
 void DevOutput_Draw();
-void DevOutput_Create(void* data);
+void DevOutput_Create(void *data);
+void DevOutput_StageLoad();
+void DevOutput_EditorDraw();
+void DevOutput_EditorLoad();
+void DevOutput_Serialize();
 
 // Extra Entity Functions
 int DevOutput_GetStringYOffset(char *string);

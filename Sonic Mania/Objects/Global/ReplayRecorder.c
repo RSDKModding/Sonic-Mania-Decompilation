@@ -108,9 +108,10 @@ void ReplayRecorder_StageLoad(void)
             else
                 buffer = ReplayRecorder->readBuffer;
 
-            if (globals->menuParam[97] && buffer[3]) {
-                if (globals->menuParam[98]) {
-                    globals->playerID         = globals->playerID | (globals->playerID << 8);
+            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+            if (param->field_184 && buffer[3]) {
+                if (param->field_188) {
+                    globals->playerID         = (globals->playerID & 0xFF) | ((globals->playerID & 0xFF) << 8);
                     Player->configureGhost_CB = ReplayRecorder_ConfigureGhost_CB;
                 }
                 else {
@@ -204,8 +205,9 @@ void ReplayRecorder_CreateReplayDBEntry(void)
     int secs                  = RSDK_sceneInfo->seconds;
     int millisecds            = RSDK_sceneInfo->milliseconds;
     LogHelpers_Print("Bout to create ReplayDB entry...");
-    int entry = ReplayRecorder_AddReplayID(globals->menuParam[93], globals->menuParam[92], (globals->menuParam[91] & 0xFF),
-                                           (millisecds + 100 * (secs + 60 * mins)), RSDK_sceneInfo->filter == SCN_FILTER_ENCORE);
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    int entry              = ReplayRecorder_AddReplayID(param->actID, param->zoneID, param->characterID, (millisecds + 100 * (secs + 60 * mins)),
+                                           RSDK_sceneInfo->filter == SCN_FILTER_ENCORE);
     if (entry == -1) {
         LogHelpers_Print("Table row ID invalid! %d", -1);
         ReplayRecorder_SavedReplay(false);
@@ -521,13 +523,14 @@ void ReplayRecorder_SetupActions(void)
 
 void ReplayRecorder_SetupWriteBuffer(void)
 {
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     int *buffer = ReplayRecorder->writeBuffer;
     *buffer     = 0xF6057BED;
     buffer[1]   = 6;
     buffer[2]   = 0;
-    buffer[8]   = globals->menuParam[MP_PlayerID];
-    buffer[6]   = globals->menuParam[MP_ZoneID];
-    buffer[7]   = globals->menuParam[MP_ActID];
+    buffer[8]   = param->characterID;
+    buffer[6]   = param->zoneID;
+    buffer[7]   = param->actID;
     buffer[9]   = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
     buffer[10]  = Zone->timer;
     buffer[11]  = 56;

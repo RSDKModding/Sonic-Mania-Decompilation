@@ -118,7 +118,7 @@ void TryAgainE_Unknown1(void)
         emerald->timer = timer;
         timer += 8;
         if (SaveGame->saveRAM) {
-            if ((id & SaveGame->saveRAM[28]) > 0)
+            if ((id & SaveGame->saveRAM->chaosEmeralds) > 0)
                 timer = store;
         }
         id <<= 1;

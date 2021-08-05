@@ -117,6 +117,8 @@ enum GameRegions {
 #include <SDL.h>
 #endif
 #include <vorbis/vorbisfile.h>
+#include <theora/theora.h>
+#include <theoraPlay/theoraplay.h>
 #endif
 
 #if RETRO_PLATFORM == RETRO_XB1
@@ -278,6 +280,7 @@ struct RetroEngine {
     SDL_Texture *screenBuffer[SCREEN_MAX];
 
     SDL_Texture *imageTexture = nullptr;
+    SDL_Texture *videoBuffer  = nullptr;
 
     SDL_DisplayMode *displays = nullptr;
     int displayCount          = 0;

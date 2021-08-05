@@ -10,7 +10,32 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte selectionFlag;
+    byte field_59;
+    byte menuTag[0x100];
+    byte field_15A;
+    byte field_15B;
+    int selectionID;
+    int field_160;
+    int clearFlag;
+    int field_168;
+    int characterID;
+    int zoneID;
+    int actID;
+    int timeScore;
+    int field_17C;
+    int field_180;
+    int field_184;
+    int field_188;
+    int field_18C;
+    int field_190;
+    int field_194;
+    int field_198;
+    int field_19C;
+    int field_1A0;
+    int field_1A4;
+    int field_1A8;
 } EntityMenuParam;
 
 // Object Struct

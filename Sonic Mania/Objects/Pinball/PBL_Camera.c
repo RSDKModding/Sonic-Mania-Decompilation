@@ -10,8 +10,7 @@ void PBL_Camera_LateUpdate(void)
     RSDK_THIS(PBL_Camera);
     StateMachine_Run(entity->state);
     PBL_Camera_Unknown1();
-    entity->targetPos.x = entity->position.x;
-    entity->targetPos.y = entity->position.y;
+    entity->targetPos = entity->position;
     entity->targetPos.y -= (0x100 << 16);
 }
 
@@ -50,29 +49,23 @@ void PBL_Camera_Unknown1(void)
     int angle = RSDK.Cos1024(-entity->rotationY) << 12;
     if (angle < 0x3C0000)
         angle = 0x3C0000;
-    if (!angle)
-        angle = 1;
+    //if (!angle)
+    //    angle = 1;
 
     int ang  = entity->angle - entity->field_7C;
-    int ang2 = ang - 1024;
+    int ang2 = ang - 0x400;
     if (entity->angle <= 512)
-        ang2 = ang + 1024;
-    ScreenInfo *screen = RSDK_screens;
+        ang2 = ang + 0x400;
+
     if (abs(ang) >= abs(ang2))
-        screen->position.x -= 2 * ang2;
+        RSDK_screens->position.x -= 2 * ang2;
     else
-        screen->position.x -= 2 * ang;
-    int height         = ((RSDK.Sin1024(-entity->rotationY) << 12) << 8) / angle;
-    screen->position.y = height - screen->centerY + 512;
-    entity->field_7C   = entity->angle;
-    entity->field_80   = screen->centerY - height + 8;
-    if (entity->field_80 >= -64) {
-        if (entity->field_80 > screen->height)
-            entity->field_80 = screen->height;
-    }
-    else {
-        entity->field_80 = -64;
-    }
+        RSDK_screens->position.x -= 2 * ang;
+
+    int height               = ((RSDK.Sin1024(-entity->rotationY) << 12) << 8) / angle;
+    RSDK_screens->position.y = height - RSDK_screens->centerY + 512;
+    entity->field_7C         = entity->angle;
+    entity->field_80         = clampVal(RSDK_screens->centerY - height + 8, -64, RSDK_screens->height);
 }
 
 void PBL_Camera_Unknown2(void)
@@ -81,16 +74,10 @@ void PBL_Camera_Unknown2(void)
     Entity *target = entity->targetPtr;
     if (target) {
         if (target->position.y < entity->position.y - 0x1500000) {
-            int val = target->position.y - entity->position.y + 0x1500000;
-            if (val < -0x100000)
-                val = 0x100000;
-            entity->position.y += val;
+            entity->position.y += maxVal(target->position.y - entity->position.y + 0x1500000, -0x100000);
         }
         else if (target->position.y > entity->position.y - 0xF00000) {
-            int val = target->position.y - entity->position.y + 0xF00000;
-            if (val > 0x100000)
-                val = 0x100000;
-            entity->position.y += val;
+            entity->position.y += minVal(target->position.y - entity->position.y + 0xF00000, 0x100000);
         }
 
         if (entity->position.y < entity->dword6C + 0x2000000)

@@ -21,10 +21,18 @@ void DefaultObject_Update()
     }
 }
 
-void DefaultObject_Create(void* data)
+void DefaultObject_LateUpdate() {}
+void DefaultObject_StaticUpdate() {}
+void DefaultObject_Draw() {}
+
+void DefaultObject_Create(void *data)
 {
     EntityDefaultObject *entity = (EntityDefaultObject *)sceneInfo.entity;
-    entity->active         = ACTIVE_ALWAYS;
-    DefaultObject->active  = ACTIVE_ALWAYS;
+    entity->active              = ACTIVE_ALWAYS;
+    DefaultObject->active       = ACTIVE_ALWAYS;
 }
 
+void DefaultObject_StageLoad() {}
+void DefaultObject_EditorDraw() {}
+void DefaultObject_EditorLoad() {}
+void DefaultObject_Serialize() {}

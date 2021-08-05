@@ -326,45 +326,45 @@ void GameOver_Unknown5(void)
             RSDK.InitSceneLoad();
         }
         else {
-            int *saveRAM = SaveGame->saveRAM;
+            EntitySaveGame *saveRAM = SaveGame->saveRAM;
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 RSDK.LoadScene("Presentation", "Menu");
                 RSDK.InitSceneLoad();
             }
             else if (globals->continues > 0) {
-                saveRAM[30] = RSDK_sceneInfo->listPos;
-                saveRAM[25] = 3;
-                saveRAM[26] = 0;
-                saveRAM[27] = 0;
+                saveRAM->storedStageID = RSDK_sceneInfo->listPos;
+                saveRAM->lives = 3;
+                saveRAM->score = 0;
+                saveRAM->score1UP = 0;
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
                     int id      = -1;
-                    saveRAM[66] = -1;
+                    saveRAM->characterFlags = -1;
                     for (int i = globals->playerID; i > 0; ++id, i >>= 1)
                         ;
                     globals->characterFlags = 1 << id;
-                    saveRAM[66]             = globals->characterFlags;
-                    saveRAM[67]             = globals->stock;
+                    saveRAM->characterFlags             = globals->characterFlags;
+                    saveRAM->stock             = globals->stock;
                 }
 #endif
                 RSDK.LoadScene("Presentation", "Continue");
                 RSDK.InitSceneLoad();
             }
             else {
-                saveRAM[25] = 3;
-                saveRAM[26] = 0;
-                saveRAM[27] = 0;
+                saveRAM->lives = 3;
+                saveRAM->score = 0;
+                saveRAM->score1UP = 0;
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
                     int id      = -1;
-                    saveRAM[66] = -1;
+                    saveRAM->characterFlags = -1;
                     for (int i = globals->playerID; i > 0; ++id, i >>= 1)
                         ;
                     globals->characterFlags = 1 << id;
-                    saveRAM[66]             = globals->characterFlags;
-                    saveRAM[67]             = globals->stock;
+                    saveRAM->characterFlags             = globals->characterFlags;
+                    saveRAM->stock             = globals->stock;
                 }
 #endif
                 UIWaitSpinner_Wait();

@@ -152,8 +152,8 @@ void ContinueSetup_Unknown3(void)
         else
 #endif
             RSDK.LoadScene("Mania Mode", "");
-        SaveGame->saveRAM[29]   = globals->continues;
-        RSDK_sceneInfo->listPos = SaveGame->saveRAM[30];
+        SaveGame->saveRAM->continues   = globals->continues;
+        RSDK_sceneInfo->listPos = SaveGame->saveRAM->storedStageID;
         RSDK.InitSceneLoad();
     }
 

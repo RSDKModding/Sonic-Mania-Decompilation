@@ -29,10 +29,11 @@ void CreditsSetup_StaticUpdate(void)
         }
         else {
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {
-                if (globals->menuParam[106]) {
+                EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                if (param->field_1A8) {
                     RSDK.LoadScene("Presentation", "Menu");
                 }
-                else if (SaveGame->saveRAM[28] < 127) {
+                else if (SaveGame->saveRAM->chaosEmeralds < 0x7F) {
 #if RETRO_USE_PLUS
                     if (globals->gameMode == MODE_ENCORE)
                         RSDK.LoadScene("Cutscenes", "Try Again Encore");

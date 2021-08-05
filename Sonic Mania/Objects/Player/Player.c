@@ -1925,7 +1925,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 if (player->lives) {
                     if (Zone->field_15C) {
                         player->objectID = TYPE_BLANK;
-                        int *saveRAM     = SaveGame->saveRAM;
+                        EntitySaveGame *saveRAM     = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int playerID                      = RSDK.GetEntityID(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -1934,20 +1934,20 @@ void Player_HandleDeath(EntityPlayer *player)
                             foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                         }
                         else if (saveRAM) {
-                            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, (void *)1);
-                            saveRAM[25] = player->lives;
-                            saveRAM[26] = player->score;
-                            saveRAM[27] = player->score1UP;
-                            saveRAM[29] = globals->continues;
+                            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(1));
+                            saveRAM->lives = player->lives;
+                            saveRAM->score = player->score;
+                            saveRAM->score1UP = player->score1UP;
 #if RETRO_USE_PLUS
+                            saveRAM->continues = globals->continues;
                             if (globals->gameMode == MODE_ENCORE) {
                                 globals->playerID &= 0xFF;
-                                saveRAM[68] = globals->playerID;
+                                saveRAM->playerID = globals->playerID;
                                 int id      = -1;
                                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
                                 globals->characterFlags &= ~(1 << id);
-                                saveRAM[66] = globals->characterFlags;
-                                saveRAM[67] = globals->stock;
+                                saveRAM->characterFlags = globals->characterFlags;
+                                saveRAM->stock = globals->stock;
                             }
 #endif
 
@@ -1973,21 +1973,21 @@ void Player_HandleDeath(EntityPlayer *player)
                         }
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
-                        int *saveRAM = SaveGame->saveRAM;
+                        EntitySaveGame *saveRAM = SaveGame->saveRAM;
                         if (saveRAM) {
-                            saveRAM[25] = player->lives;
-                            saveRAM[26] = player->score;
-                            saveRAM[27] = player->score1UP;
-                            saveRAM[29] = globals->continues;
+                            saveRAM->lives    = player->lives;
+                            saveRAM->score    = player->score;
+                            saveRAM->score1UP = player->score1UP;
 #if RETRO_USE_PLUS
+                            saveRAM->continues = globals->continues;
                             if (globals->gameMode == MODE_ENCORE) {
                                 globals->playerID &= 0xFF;
-                                saveRAM[68] = globals->playerID;
+                                saveRAM->playerID = globals->playerID;
                                 int id      = -1;
                                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
                                 globals->characterFlags &= ~(1 << id);
-                                saveRAM[66] = globals->characterFlags;
-                                saveRAM[67] = globals->stock;
+                                saveRAM->characterFlags = globals->characterFlags;
+                                saveRAM->stock = globals->stock;
                             }
 #endif
 
@@ -4133,8 +4133,8 @@ void Player_State_OuttaHere(void)
     else {
         Player_HandleAirMovement();
         if (entity->velocity.y > 0x100000) {
-            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, GameOver->objectID, 0);
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, NULL);
+            destroyEntity(entity);
         }
     }
 }
@@ -5989,7 +5989,7 @@ void Player_SonicJumpAbility(void)
 #if RETRO_GAMEVER != VER_100
             else {
                 if (RSDK_controller[entity->controllerID].keyY.press)
-                    Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
+                    Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
             }
 #endif
             return;
@@ -6038,7 +6038,7 @@ void Player_TailsJumpAbility(void)
 #if RETRO_GAMEVER != VER_100
     else {
         if (RSDK_controller[entity->controllerID].keyY.press)
-            Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
+            Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
     }
 #endif
 }
@@ -6080,7 +6080,7 @@ void Player_KnuxJumpAbility(void)
 #if RETRO_GAMEVER != VER_100
     else {
         if (RSDK_controller[entity->controllerID].keyY.press)
-            Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
+            Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
     }
 #endif
 }
@@ -6120,7 +6120,7 @@ void Player_MightyJumpAbility(void)
         }
         else {
             if (RSDK_controller[entity->controllerID].keyY.press)
-                Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
+                Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
         }
     }
     else {
@@ -6192,7 +6192,7 @@ void Player_RayJumpAbility(void)
     }
     else {
         if (RSDK_controller[entity->controllerID].keyY.press)
-            Player_CheckGoSuper(entity, SaveGame->saveRAM[28]);
+            Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
     }
 }
 

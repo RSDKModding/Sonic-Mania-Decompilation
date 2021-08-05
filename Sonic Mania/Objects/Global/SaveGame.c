@@ -42,32 +42,34 @@ void SaveGame_LoadSaveData(void)
 {
     int slot = globals->saveSlotID;
     if (slot == NO_SAVE_SLOT)
-        SaveGame->saveRAM = globals->noSaveSlot;
+        SaveGame->saveRAM = (EntitySaveGame*)globals->noSaveSlot;
     else
 #if RETRO_USE_PLUS
-        SaveGame->saveRAM = SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
+        SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
 #else
-        SaveGame->saveRAM = &globals->saveRAM[0x100 * (slot % 8)];
+        SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot);
 #endif
     LogHelpers_Print("dataPtr: %X", SaveGame->saveRAM);
-    int *saveRAM = SaveGame->saveRAM;
-    if (!saveRAM[25])
-        saveRAM[25] = 3;
-    if (saveRAM[27] <= saveRAM[26]) {
+    sizeof(EntitySaveGame);
+    sizeof(int[28]);
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    if (!saveRAM->lives)
+        saveRAM->lives = 3;
+    if (saveRAM->score1UP <= saveRAM->score) {
         do
-            saveRAM[27] += 50000;
-        while (saveRAM[27] <= saveRAM[26]);
+            saveRAM->score1UP += 50000;
+        while (saveRAM->score1UP <= saveRAM->score);
     }
 
     if (Player) {
         if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
-            Player->savedLives    = saveRAM[25];
-            Player->savedScore    = saveRAM[26];
-            Player->savedScore1UP = saveRAM[27];
-            globals->continues    = saveRAM[29];
+            Player->savedLives    = saveRAM->lives;
+            Player->savedScore    = saveRAM->score;
+            Player->savedScore1UP = saveRAM->score1UP;
 #if RETRO_USE_PLUS
-            globals->stock          = saveRAM[67]; // stock
-            globals->characterFlags = saveRAM[66]; // character flags
+            globals->continues      = saveRAM->continues;
+            globals->stock          = saveRAM->stock;
+            globals->characterFlags = saveRAM->characterFlags;
 #endif
         }
     }
@@ -223,7 +225,7 @@ void SaveGame_SaveLoadedCB(int status)
 
 void SaveGame_SaveGameState(void)
 {
-    int *saveRAM            = SaveGame->saveRAM;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
     globals->recallEntities = true;
 
     globals->restartPos[0]  = StarPost->playerPositions[0].x;
@@ -248,7 +250,7 @@ void SaveGame_SaveGameState(void)
     globals->restartSlot[3] = StarPost->postIDs[3];
 #endif
 
-    EntityPlayer *player1        = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player1        = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     globals->restartMilliseconds = StarPost->storedMS;
     globals->restartSeconds      = StarPost->storedSeconds;
     globals->restartMinutes      = StarPost->storedMinutes;
@@ -256,17 +258,17 @@ void SaveGame_SaveGameState(void)
     globals->tempSeconds         = RSDK_sceneInfo->seconds;
     globals->tempMinutes         = RSDK_sceneInfo->minutes;
 
-    saveRAM[25]              = player1->lives;
+    saveRAM->lives           = player1->lives;
     globals->restartLives[0] = player1->lives;
-    saveRAM[29]              = globals->continues;
-    saveRAM[68]              = globals->playerID;
+    saveRAM->continues       = globals->continues;
 #if RETRO_USE_PLUS
-    saveRAM[66]              = globals->characterFlags;
-    saveRAM[67]              = globals->stock;
+    saveRAM->playerID       = globals->playerID;
+    saveRAM->characterFlags = globals->characterFlags;
+    saveRAM->stock          = globals->stock;
 #endif
-    saveRAM[26]              = player1->score;
+    saveRAM->score           = player1->score;
     globals->restartScore    = player1->score;
-    saveRAM[27]              = player1->score1UP;
+    saveRAM->score1UP        = player1->score1UP;
     globals->restartScore1UP = player1->score1UP;
     globals->restartRings    = player1->rings;
     globals->restart1UP      = player1->ringExtraLife;
@@ -290,24 +292,24 @@ void SaveGame_SaveGameState(void)
 }
 void SaveGame_SaveProgress(void)
 {
-    int *saveRAM = SaveGame->saveRAM;
-    saveRAM[25]  = Player->savedLives;
-    saveRAM[26]  = Player->savedScore;
-    saveRAM[27]  = Player->savedScore1UP;
-    saveRAM[29]  = globals->continues;
+    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+    saveRAM->lives  = Player->savedLives;
+    saveRAM->score  = Player->savedScore;
+    saveRAM->score1UP  = Player->savedScore1UP;
 #if RETRO_USE_PLUS
-    saveRAM[66] = globals->characterFlags;
-    saveRAM[67]  = globals->stock;
+    saveRAM->continues      = globals->continues;
+    saveRAM->characterFlags = globals->characterFlags;
+    saveRAM->stock          = globals->stock;
+    saveRAM->playerID       = globals->playerID;
 #endif
-    saveRAM[68]  = globals->playerID;
     if (!ActClear || ActClear->actID <= 0) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
             if (Zone_IsAct2()) {
-                if (saveRAM[24] < Zone_GetZoneID() + 1)
-                    saveRAM[24] = Zone_GetZoneID() + 1;
-                if (saveRAM[24] > 11) {
-                    saveRAM[22] = 2;
-                    saveRAM[24] = 12;
+                if (saveRAM->zoneID < Zone_GetZoneID() + 1)
+                    saveRAM->zoneID = Zone_GetZoneID() + 1;
+                if (saveRAM->zoneID > 11) {
+                    saveRAM->zoneID = 2;
+                    saveRAM->zoneID = 12;
                 }
             }
         }
@@ -323,7 +325,7 @@ void SaveGame_ClearRestartData(void)
 }
 void SaveGame_SavePlayerState(void)
 {
-    int *saveRAM                 = SaveGame->saveRAM;
+    EntitySaveGame *saveRAM      = SaveGame->saveRAM;
     globals->restartSlot[0]      = 0;
     globals->restartSlot[1]      = 0;
     globals->restartSlot[2]      = 0;
@@ -333,15 +335,15 @@ void SaveGame_SavePlayerState(void)
     globals->restartSeconds      = RSDK_sceneInfo->seconds;
     globals->restartMinutes      = RSDK_sceneInfo->minutes;
     if (saveRAM && TitleCard->suppressCallback != Zone_Unknown16) {
-        saveRAM[25] = player->lives;
-        saveRAM[26] = player->score;
-        saveRAM[27] = player->score1UP;
-        saveRAM[29] = globals->continues;
+        saveRAM->lives = player->lives;
+        saveRAM->score = player->score;
+        saveRAM->score1UP = player->score1UP;
 #if RETRO_USE_PLUS
-        saveRAM[66] = globals->characterFlags;
-        saveRAM[67] = globals->stock;
+        saveRAM->continues = globals->continues;
+        saveRAM->characterFlags = globals->characterFlags;
+        saveRAM->stock = globals->stock;
+        saveRAM->playerID = globals->playerID;
 #endif
-        saveRAM[68] = globals->playerID;
     }
     globals->restartRings    = player->rings;
     globals->restart1UP      = player->ringExtraLife;

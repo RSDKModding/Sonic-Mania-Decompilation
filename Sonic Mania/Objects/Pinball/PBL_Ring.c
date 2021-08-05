@@ -23,10 +23,7 @@ void PBL_Ring_LateUpdate(void)
     entity->depth  = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 }
 
-void PBL_Ring_StaticUpdate(void)
-{
-
-}
+void PBL_Ring_StaticUpdate(void) {}
 
 void PBL_Ring_Draw(void)
 {
@@ -45,7 +42,7 @@ void PBL_Ring_Draw(void)
     }
 }
 
-void PBL_Ring_Create(void* data)
+void PBL_Ring_Create(void *data)
 {
     RSDK_THIS(PBL_Ring);
     if (!RSDK_sceneInfo->inEditor) {
@@ -115,15 +112,9 @@ void PBL_Ring_State_RingSparkle(void)
     }
 }
 
-void PBL_Ring_EditorDraw(void)
-{
+void PBL_Ring_EditorDraw(void) {}
 
-}
-
-void PBL_Ring_EditorLoad(void)
-{
-
-}
+void PBL_Ring_EditorLoad(void) {}
 
 void PBL_Ring_Serialize(void) { RSDK_EDITABLE_VAR(PBL_Ring, VAR_ENUM, height); }
 #endif

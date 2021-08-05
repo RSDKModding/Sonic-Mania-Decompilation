@@ -35,6 +35,99 @@ void DevOutput_Update()
     }
 }
 
+#if !RETRO_USE_ORIGINAL_CODE
+int DevOutput_CheckTouchRect(int x1, int y1, int x2, int y2)
+{
+    for (int t = 0; t < touchMouseData.count; ++t) {
+        int tx = (touchMouseData.x[t] * screens->width);
+        int ty = (touchMouseData.y[t] * screens->height);
+
+        if (touchMouseData.down[t]) {
+            if (tx >= x1 && ty >= y1 && tx <= x2 && ty <= y2)
+                return t;
+        }
+    }
+    return -1;
+}
+
+int DevOutput_UpCount    = 0;
+int DevOutput_DownCount  = 0;
+int DevOutput_LeftCount  = 0;
+int DevOutput_RightCount = 0;
+int DevOutput_JumpCount  = 0;
+#endif
+
+void DevOutput_LateUpdate() {}
+void DevOutput_StaticUpdate() {
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (!CheckSceneFolder("Menu")) {
+        int touchID = DevOutput_CheckTouchRect(0, 96, screens->centerX, screens->height);
+        if (touchID >= 0) {
+            int tx = (touchMouseData.x[touchID] * screens->width);
+            int ty = (touchMouseData.y[touchID] * screens->height);
+            tx -= 64;
+            ty -= 192;
+
+            switch (((ArcTanLookup(tx, ty) + 32) & 0xFF) >> 6) {
+                case 0:
+                    DevOutput_UpCount   = 0;
+                    DevOutput_DownCount = 0;
+                    DevOutput_LeftCount = 0;
+                    ++DevOutput_RightCount;
+                    controller->keyRight.press   = DevOutput_RightCount == 1;
+                    controller[1].keyRight.press = DevOutput_RightCount == 1;
+                    controller->keyRight.down    = DevOutput_RightCount != 0;
+                    controller[1].keyRight.down  = DevOutput_RightCount != 0;
+                    break;
+                case 1:
+                    DevOutput_UpCount = 0;
+                    ++DevOutput_DownCount;
+                    DevOutput_LeftCount         = 0;
+                    DevOutput_RightCount        = 0;
+                    controller->keyDown.press   = DevOutput_DownCount == 1;
+                    controller[1].keyDown.press = DevOutput_DownCount == 1;
+                    controller->keyDown.down    = DevOutput_DownCount != 0;
+                    controller[1].keyDown.down  = DevOutput_DownCount != 0;
+                    break;
+                case 2:
+                    DevOutput_UpCount   = 0;
+                    DevOutput_DownCount = 0;
+                    ++DevOutput_LeftCount;
+                    DevOutput_RightCount        = 0;
+                    controller->keyLeft.press   = DevOutput_LeftCount == 1;
+                    controller[1].keyLeft.press = DevOutput_LeftCount == 1;
+                    controller->keyLeft.down    = DevOutput_LeftCount != 0;
+                    controller[1].keyLeft.down  = DevOutput_LeftCount != 0;
+                    break;
+                case 3:
+                    ++DevOutput_UpCount;
+                    DevOutput_DownCount       = 0;
+                    DevOutput_LeftCount       = 0;
+                    DevOutput_RightCount      = 0;
+                    controller->keyUp.press   = DevOutput_UpCount == 1;
+                    controller[1].keyUp.press = DevOutput_UpCount == 1;
+                    controller->keyUp.down    = DevOutput_UpCount != 0;
+                    controller[1].keyUp.down  = DevOutput_UpCount != 0;
+                    break;
+            }
+        }
+
+        touchID = DevOutput_CheckTouchRect(screens->centerX, 96, screens->width, screens->height);
+        if (touchID >= 0) {
+            DevOutput_JumpCount++;
+            controller->keyA.press   = DevOutput_JumpCount == 1;
+            controller[1].keyA.press = DevOutput_JumpCount == 1;
+            controller->keyA.down    = DevOutput_JumpCount != 0;
+            controller[1].keyA.down  = DevOutput_JumpCount != 0;
+        }
+        else {
+            DevOutput_JumpCount = 0;
+        }
+    }
+#endif
+}
+
 void DevOutput_Draw()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
@@ -53,6 +146,13 @@ void DevOutput_Create(void *source)
     entity->id         = 180 * GetEntityCount(DevOutput->objectID, 0);
     entity->yOffset    = DevOutput_GetStringYOffset(entity->message);
     entity->position.y = -entity->yOffset;
+}
+
+void DevOutput_StageLoad()
+{
+#if !RETRO_USE_ORIGINAL_CODE
+    DevOutput->active = ACTIVE_ALWAYS;
+#endif 
 }
 
 int DevOutput_GetStringYOffset(char *string)
@@ -77,4 +177,8 @@ int DevOutput_GetStringYOffset(char *string)
     else
         return 24;
 }
+
+void DevOutput_EditorDraw() {}
+void DevOutput_EditorLoad() {}
+void DevOutput_Serialize() {}
 #endif

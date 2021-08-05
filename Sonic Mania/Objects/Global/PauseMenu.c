@@ -26,7 +26,7 @@ void PauseMenu_LateUpdate(void)
     else {
         void *state = RSDK_GET_ENTITY(entity->triggerPlayer, Player)->state;
         if (state == Player_State_Die || state == Player_State_Drown) {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
         }
         else {
             entity->visible   = true;
@@ -50,34 +50,33 @@ void PauseMenu_StaticUpdate(void)
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
         bool32 flag = true;
-        if (Zone) {
+        if (Zone)
             flag = Zone->timer > 1;
-        }
 
         if (!cnt && pauseMenu->objectID == TYPE_BLANK && flag && !PauseMenu->disableEvents) {
-#if RETRO_USE_PLUS
             if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
                 PauseMenu->signoutDetected = true;
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                 pauseMenu->triggerPlayer = 0;
             }
+#if RETRO_USE_PLUS
             else if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus) {
                 PauseMenu->plusChanged = true;
                 globals->lastHasPlus   = API.CheckDLC(DLC_PLUS);
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                 pauseMenu->triggerPlayer = 0;
             }
+#endif
             else {
                 for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
                     int id = RSDK.ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
-                        //PauseMenu->controllerDisconnect = true;
-                        //RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        //pauseMenu->triggerPlayer = i;
+                        PauseMenu->controllerDisconnect = true;
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        pauseMenu->triggerPlayer = i;
                     }
                 }
             }
-#endif
         }
     }
 }
@@ -134,13 +133,14 @@ void PauseMenu_StageLoad(void)
 
 byte PauseMenu_GetPlayerCount(void)
 {
+    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (RSDK.CheckStageFolder("Puyo")) {
-        int param = globals->menuParam[22];
-        if (param != 1 && param)
+        if (param->selectionFlag != 1 && param->selectionFlag)
             return 2;
     }
     else if (globals->gameMode == MODE_COMPETITION) {
-        return globals->competitionSession[23];
+        return session->playerCount;
     }
     return 1;
 }
@@ -292,10 +292,9 @@ void PauseMenu_Unknown9(void)
 
     if (globals->gameMode == MODE_COMPETITION) {
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-        sprintf((char *)&globals->menuParam[22], "Competition Zone");
-        ushort *param2         = (ushort *)&globals->menuParam[26];
-        param2[1]              = 115;
-        globals->menuParam[MP_MenuSelection] = session->levelIndex;
+        EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+        sprintf(param->menuTag, "Competition Zones");
+        param->selectionID = session->levelIndex;
     }
     RSDK.LoadScene("Presentation", "Menu");
     PauseMenu_StopSound();
@@ -530,11 +529,11 @@ void PauseMenu_Unknown21(void)
         Vector2 pos;
 
         int val = 32 * entity->timer;
-        MathHelpers_Unknown3(&pos, minVal(0, val), -0xF00000, 0, 0, 0);
+        MathHelpers_Unknown3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
 
         entity->field_68.x = pos.x;
         entity->field_68.y = pos.y;
-        MathHelpers_Unknown3(&pos, minVal(0, val), 0xE80000, 0, 0, 0);
+        MathHelpers_Unknown3(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
 
         ++entity->timer;
         entity->field_70.x = pos.x;
@@ -591,11 +590,11 @@ void PauseMenu_Unknown23(void)
         Vector2 pos;
 
         int val = 32 * entity->timer;
-        MathHelpers_Unknown3(&pos, minVal(0, val), 0, 0, -0xF00000, 0);
+        MathHelpers_Unknown3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
 
         entity->field_68.x = pos.x;
         entity->field_68.y = pos.y;
-        MathHelpers_Unknown3(&pos, minVal(0, val), 0, 0, 0xE80000, 0);
+        MathHelpers_Unknown3(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
 
         entity->field_70.x = pos.x;
         entity->field_70.y = pos.y;
@@ -660,7 +659,8 @@ void PauseMenu_Unknown26(void)
         else {
             int t = entity->timer - 8;
             if (entity->timer == 8) {
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[23]);
+                EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }
             ++entity->timer;
@@ -887,7 +887,8 @@ void PauseMenu_Unknown35(void)
             int t            = entity->timer - 8;
             entity->field_A4 = 1;
             if (entity->timer == 8) {
-                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, globals->competitionSession[23]);
+                EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+                RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }
             ++entity->timer;

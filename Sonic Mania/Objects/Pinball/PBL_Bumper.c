@@ -16,14 +16,12 @@ void PBL_Bumper_LateUpdate(void)
     int y = entity->height;
     int z = entity->position.y;
 
-    Matrix *matrix = &PBL_Camera->matrix1;
-    int depth      = matrix->values[2][1] * (y >> 16) + matrix->values[2][2] * (z >> 16) + matrix->values[2][0] * (x >> 16) + matrix->values[2][3];
-    entity->depth  = depth;
-    if (depth >= 0x4000) {
-        int posZ = ((matrix->values[0][3] << 8) + ((matrix->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((matrix->values[0][0] * (x >> 8)) & 0xFFFFFF00)
-                    + ((matrix->values[0][1] * (y >> 8)) & 0xFFFFFF00))
-                   / depth;
-        entity->visible = abs(posZ) < 256;
+    Matrix *mat   = &PBL_Camera->matrix1;
+    entity->depth = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (entity->depth >= 0x4000) {
+        int depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
+                     + ((mat->values[0][1] * (entity->height >> 8)) & 0xFFFFFF00));
+        depth /= entity->depth;
     }
 }
 

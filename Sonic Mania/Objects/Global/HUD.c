@@ -53,7 +53,7 @@ void HUD_LateUpdate(void)
     else {
 #if RETRO_GAMEVER != VER_100
         EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-        if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM[28] == 0x7F) {
+        if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM->chaosEmeralds == 0x7F) {
 #if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV)
 #else

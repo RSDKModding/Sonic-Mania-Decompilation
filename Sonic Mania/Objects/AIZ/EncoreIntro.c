@@ -1003,7 +1003,7 @@ bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
     RSDK_THIS(EncoreIntro);
     Player->playerCount = 2;
     SaveGame_SavePlayerState();
-    SaveGame->saveRAM[22] = true; // save file is active
+    SaveGame->saveRAM->saveState = 1; // save file is active
     RSDK.LoadScene("Cutscenes", "Green Hill Zone");
     EncoreIntro->field_28 = true;
     SaveGame_SaveFile(EncoreIntro_SaveGameCB);

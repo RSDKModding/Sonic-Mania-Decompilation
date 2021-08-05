@@ -28,8 +28,8 @@ typedef struct {
     bool32 left;
     bool32 right;
     bool32 jumpPress;
-    Animator playerData;
-    Animator tailData;
+    Animator playerAnimator;
+    Animator tailAnimator;
     ushort spriteIndex;
     ushort field_AE;
 } EntityBSS_Player;
@@ -49,7 +49,7 @@ void BSS_Player_EditorLoad(void);
 void BSS_Player_Serialize(void);
 
 // Extra Entity Functions
-void BSS_Player_HandleP1Inputs(void);
-void BSS_Player_HandleP2Inputs(void);
+void BSS_Player_ProcessP1Input(void);
+void BSS_Player_ProcessP2Input(void);
 
 #endif //!OBJ_BSS_PLAYER_H

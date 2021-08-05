@@ -75,7 +75,7 @@ void SpecialRing_StageLoad(void)
             entity->enabled = false;
         }
         else {
-            entity->enabled = (SaveGame->saveRAM[32] & (1 << ((16 * Zone->actID) + entity->id - 1))) == 0;
+            entity->enabled = !(SaveGame->saveRAM->collectedSpecialRings & (1 << ((16 * Zone->actID) + entity->id - 1)));
             if (globals->specialRingID == entity->id) {
                 for (int p = 0; p < Player->playerCount; ++p) {
                     EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
@@ -128,10 +128,10 @@ void SpecialRing_StartWarp(void)
         SaveGame_SaveGameState();
         RSDK.PlaySFX(SpecialRing->sfx_SpecialWarp, 0, 254);
         RSDK.ResetEntityPtr(entity, 0, 0);
-        int *saveRAM = SaveGame->saveRAM;
-        saveRAM[30]  = RSDK_sceneInfo->listPos;
+        EntitySaveGame *saveRAM = SaveGame->saveRAM;
+        saveRAM->storedStageID  = RSDK_sceneInfo->listPos;
         RSDK.LoadScene("Special Stage", "");
-        RSDK_sceneInfo->listPos += saveRAM[31];
+        RSDK_sceneInfo->listPos += saveRAM->nextSpecialStage;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK_sceneInfo->listPos += 7;
@@ -167,7 +167,7 @@ void SpecialRing_State_Warp(void)
         entity->dword68 -= 0x80000;
     }
 
-    if (SaveGame->saveRAM[28] == 0x7F || !entity->id) {
+    if (SaveGame->saveRAM->chaosEmeralds == 0x7F || !entity->id) {
         destroyEntity(entity);
     }
     else {
@@ -211,8 +211,8 @@ void SpecialRing_State_Normal(void)
                 if (Player_CheckCollisionTouch(player, entity, &SpecialRing->hitbox) && RSDK_sceneInfo->timeEnabled) {
                     entity->dword68 = 0x100000;
                     entity->state   = SpecialRing_State_Warp;
-                    int *saveRAM    = SaveGame->saveRAM;
-                    if (saveRAM[28] != 0x7F && entity->id) {
+                    EntitySaveGame *saveRAM = SaveGame->saveRAM;
+                    if (saveRAM->chaosEmeralds != 0x7F && entity->id) {
                         player->visible             = false;
                         player->active              = ACTIVE_NEVER;
                         RSDK_sceneInfo->timeEnabled = false;
@@ -222,9 +222,9 @@ void SpecialRing_State_Normal(void)
                     }
 
                     if (entity->id > 0) {
-                        if (saveRAM[28] != 0x7F)
+                        if (saveRAM->chaosEmeralds != 0x7F)
                             globals->specialRingID = entity->id;
-                        saveRAM[32] |= 1 << (16 * Zone->actID - 1 + entity->id);
+                        saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + entity->id);
                     }
                     RSDK.PlaySFX(SpecialRing->sfx_SpecialRing, 0, 254);
                 }

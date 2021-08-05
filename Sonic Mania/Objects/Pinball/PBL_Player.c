@@ -163,7 +163,7 @@ void PBL_Player_ProcessPlayerControl(void)
 #endif
 
             if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-                EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
+                EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                     pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
