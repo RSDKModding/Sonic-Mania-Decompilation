@@ -48,26 +48,12 @@ LOCAL_SRC_FILES := \
 include $(BUILD_STATIC_LIBRARY)
 
 ######################################################################
-#GAME DLL
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := game
-
-WILDCARD_SETUP := \
-  $(wildcard $(LOCAL_PATH)/Sonic Mania/*.c) \
-  $(wildcard $(LOCAL_PATH)/Sonic Mania/Objects/*/*.c)
-
-LOCAL_SRC_FILES := $(subst jni/src/, , $(WILDCARD_SETUP))
-
-include $(BUILD_SHARED_LIBRARY)
-
-######################################################################
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := main
-
+LOCAL_MODULE := RSDK
 SDL_PATH := ../SDL
+
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/$(SDL_PATH)/include \
@@ -81,10 +67,37 @@ WILDCARD_SETUP := \
   $(wildcard $(LOCAL_PATH)/dependencies/all/zlib/*.c) \
   $(wildcard $(LOCAL_PATH)/RSDKv5/*.cpp)
 
+LOCAL_SHARED_LIBRARIES := SDL2 libogg libvorbis
+LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
 LOCAL_SRC_FILES := $(subst jni/src/, , $(WILDCARD_SETUP))
 
-LOCAL_SHARED_LIBRARIES := SDL2 libogg libvorbis
+include $(BUILD_STATIC_LIBRARY)
 
-LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog
+#GAME DLL
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := main
+LOCAL_CFLAGS   := -DRETRO_STANDALONE=0
+
+LOCAL_C_INCLUDES := \
+    $(LOCAL_PATH)/Game \
+    $(LOCAL_PATH)/Game/Objects
+
+
+WILDCARD_SETUP := \
+  $(wildcard $(LOCAL_PATH)/Game/*.c) \
+  $(wildcard $(LOCAL_PATH)/Game/Objects/All.c)
+
+
+LOCAL_SRC_FILES := \
+	$(subst jni/src/, , $(WILDCARD_SETUP))
+
+LOCAL_SHARED_LIBRARIES := SDL2 libvorbis libogg RSDK
+LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
+
+
 
 include $(BUILD_SHARED_LIBRARY)
+
+######################################################################
+

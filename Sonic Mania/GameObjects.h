@@ -972,10 +972,6 @@ extern RSDKFunctionTable RSDK;
 #define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
 #endif
 
-#if RETRO_STANDALONE
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
-#else
-void LinkGameLogic(GameInfo* gameInfo);
-#endif
 
 #endif //! GAMEOBJECTS_H

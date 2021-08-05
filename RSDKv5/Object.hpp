@@ -222,7 +222,7 @@ int GetEntityCount(ushort type, bool32 isActive);
 
 void ResetEntityPtr(Entity *entity, ushort type, void *data);
 void ResetEntitySlot(ushort slotID, ushort type, void *data);
-void CreateEntity(ushort type, void *data, int x, int y);
+Entity* CreateEntity(ushort type, void *data, int x, int y);
 
 inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
 {

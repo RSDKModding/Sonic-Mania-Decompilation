@@ -529,13 +529,13 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
             byte *bufTest       = (byte *)buffer;
             //quick and dirty zlib check
             if (bufTest[0] == 0x78 && ((bufTest[1] == 0x01 && bufTest[2] == 0xED) || bufTest[1] == 0x9C)) {
-                uint destLen = bufSize;
+                uLongf destLen = bufSize;
 
                 byte *compData = NULL;
                 AllocateStorage(bufSize, (void **)&compData, DATASET_TMP, false);
                 memcpy(compData, buffer, bufSize);
 
-                uncompress((Bytef *)buffer, (uLongf *)&destLen, compData, bufSize);
+                uncompress((Bytef *)buffer, &destLen, compData, bufSize);
 
                 RemoveStorageEntry((void **)&compData);
             }
@@ -566,8 +566,8 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
             int *cbuf = NULL; 
             AllocateStorage(bufSize, (void **)&cbuf, DATASET_TMP, false);
 
-            long long clen = bufSize;
-            compress((Bytef *)cbuf, (uLongf *)&clen, (Bytef *)buffer, (uLong)bufSize);
+            uLongf clen = bufSize;
+            compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)bufSize);
 
             success = SaveUserFile(filename, cbuf, clen);
 

@@ -744,7 +744,7 @@ void ResetEntitySlot(ushort slotID, ushort type, void *data)
     }
 }
 
-void CreateEntity(ushort type, void *data, int x, int y)
+Entity* CreateEntity(ushort type, void *data, int x, int y)
 {
     ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
     Entity *entityPtr   = &objectEntityList[sceneInfo.createSlot];
@@ -786,6 +786,7 @@ void CreateEntity(ushort type, void *data, int x, int y)
         entityPtr->active   = ACTIVE_NORMAL;
         entityPtr->visible  = true;
     }
+    return entityPtr;
 }
 
 bool32 GetActiveEntities(ushort group, Entity **entity)

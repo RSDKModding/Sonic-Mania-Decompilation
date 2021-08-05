@@ -19,7 +19,11 @@
 #define fWrite(buffer, elementSize, elementCount, file) fwrite(buffer, elementSize, elementCount, file)
 #endif
 
+#if RETRO_PLATFORM == RETRO_ANDROID
+#include <zlib.h>
+#else
 #include <zlib/zlib.h>
+#endif
 
 enum Scopes {
     SCOPE_NONE,
@@ -273,16 +277,17 @@ inline int ReadZLibRSDK(FileInfo *info, byte **buffer)
 {
     if (!buffer)
         return 0;
-    uint complen  = ReadInt32(info, false) - 4;
+    uLongf complen      = ReadInt32(info, false) - 4;
     uint decompLE = ReadInt32(info, false);
-    uint destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+    uLongf destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    AllocateStorage(complen, (void**)&compData, DATASET_TMP, false);
+    AllocateStorage(complen, (void **)&compData, DATASET_TMP, false);
     AllocateStorage(destLen, (void **)buffer, DATASET_TMP, false);
     ReadBytes(info, compData, complen);
 
-    uncompress(*buffer, (uLongf *)&destLen, compData, complen);
+    uncompress(*buffer, &destLen, compData, complen);
+
     RemoveStorageEntry((void**)&compData);
 
     return destLen;
@@ -292,15 +297,15 @@ inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
 {
     if (!buffer)
         return 0;
-    uint complen  = cSize;
+    uLongf complen  = cSize;
     uint decompLE = size;
-    uint destLen  = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
+    uLongf destLen  = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
     AllocateStorage(complen, (void **)&compData, DATASET_TMP, false);
     ReadBytes(info, compData, complen);
 
-    uncompress(*buffer, (uLongf *)&destLen, compData, complen);
+    uncompress(*buffer, &destLen, compData, complen);
     compData = NULL;
     return destLen;
 }

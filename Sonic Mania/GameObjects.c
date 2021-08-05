@@ -23,11 +23,7 @@ RSDKFunctionTable RSDK;
 APIFunctionTable API;
 #endif
 
-#if RETRO_STANDALONE
 void LinkGameLogicDLL(GameInfo *info)
-#else
-void LinkGameLogic(GameInfo *info)
-#endif
 {
 #if RETRO_USE_PLUS
     memset(&API, 0, sizeof(APIFunctionTable));
@@ -771,3 +767,9 @@ void LinkGameLogic(GameInfo *info)
     RSDK_ADD_OBJECT(ZipLine);
     RSDK_ADD_OBJECT(Zone);
 }
+
+#if !RETRO_STANDALONE 
+int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void* info));
+
+int SDL_main(int argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
+#endif

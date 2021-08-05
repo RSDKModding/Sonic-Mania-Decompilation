@@ -48,7 +48,7 @@ enum GameRegions {
 
 #define RETRO_USE_ORIGINAL_CODE (0)
 #define RETRO_USE_MOD_LOADER    (!RETRO_USE_ORIGINAL_CODE && 1)
-#define RETRO_STANDALONE
+#define RETRO_STANDALONE (1)
 
 #define RETRO_WIN     (0)
 #define RETRO_PS4     (1)
@@ -127,6 +127,7 @@ enum GameRegions {
 #include <SDL.h>
 #include <vorbis/vorbisfile.h>
 #undef RETRO_STANDALONE
+#define RETRO_STANDALONE (0)
 #endif
 
 //Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
@@ -273,6 +274,9 @@ struct RetroEngine {
 };
 
 extern RetroEngine engine;
+
+typedef void (*linkPtr)(GameInfo *);
+extern linkPtr linkGameLogic;
 
 bool initRetroEngine();
 void runRetroEngine();

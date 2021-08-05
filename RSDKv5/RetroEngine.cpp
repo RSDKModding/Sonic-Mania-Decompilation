@@ -1,19 +1,17 @@
 #include "RetroEngine.hpp"
 
+linkPtr linkGameLogic = NULL;
+
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
 
 HMODULE hLibModule = NULL;
-
-typedef void(*linkPtr)(GameInfo *);
 #endif
 
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
 #include <dlfcn.h>
 
 void* link_handle = NULL;
-
-typedef void(*linkPtr)(GameInfo *);
 #endif
 
 byte *gameOptionsPtr = NULL;
@@ -274,7 +272,7 @@ bool initRetroEngine()
         engine.running = false;
         return false;
     }
-
+    
     InitInputDevice();
 
     return true;
@@ -750,7 +748,7 @@ void InitScriptSystem()
     info.screenInfo   = screens;
 
     if (!engine.useExternalCode) {
-        return LinkGameLogic(&info);
+        return linkGameLogic(&info);
     }
 
     bool32 linked = false;
@@ -794,9 +792,9 @@ void InitScriptSystem()
     }
 #endif
 #if RETRO_PLATFORM == RETRO_ANDROID
-    sprintf(gameLogicName, "/data/data/Game.so", gameLogicName);
+    sprintf(gameLogicName, "/data/data/org.libsdl.app/files/Game.so", gameLogicName);
     //sprintf(gameLogicName, "%s", SDL_GetBasePath());
-    printLog(PRINT_NORMAL, "Loading from %s", gameLogicName);
+    printLog(PRINT_NORMAL, "Loading from %s", SDL_AndroidGetExternalStoragePath());
     if (!link_handle)
         link_handle = SDL_LoadObject(gameLogicName);
     printLog(PRINT_NORMAL, "Link handle? %s", SDL_GetError());
