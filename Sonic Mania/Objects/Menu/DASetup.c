@@ -171,7 +171,7 @@ void DASetup_State_ManageControl(void)
         DASetup_DisplayTrack(DASetup->trackID);
     }
 
-    if (UIControl->keyBack) {
+    if (UIControl->keyConfirm) {
         if (DASetup->activeTrack == DASetup->trackID) {
             RSDK.StopChannel(Music->channelID);
             DASetup->activeTrack = -1;
@@ -192,7 +192,7 @@ void DASetup_State_ManageControl(void)
     }
 
     if (!DASetup->flag) {
-        if (UIControl->keyConfirm) {
+        if (UIControl->keyBack) {
             DASetup->flag      = true;
             EntityFXFade *fade = (EntityFXFade *)DASetup->fxFade;
             fade->state        = FXFade_State_FadeIn;

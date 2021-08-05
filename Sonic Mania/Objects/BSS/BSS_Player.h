@@ -32,6 +32,13 @@ typedef struct {
     Animator tailAnimator;
     ushort spriteIndex;
     ushort field_AE;
+#if RETRO_USE_TOUCH_CONTROLS
+    int upState;
+    int downState;
+    int leftState;
+    int rightState;
+    int jumpState;
+#endif
 } EntityBSS_Player;
 
 // Object Struct

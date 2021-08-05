@@ -24,8 +24,8 @@ typedef struct {
     bool32 keyDown;
     bool32 keyLeft;
     bool32 keyRight;
-    bool32 keyBack;
     bool32 keyConfirm;
+    bool32 keyBack;
     bool32 keyY;
     bool32 keyX;
 #if RETRO_USE_PLUS

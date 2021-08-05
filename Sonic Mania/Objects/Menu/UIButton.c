@@ -330,7 +330,7 @@ void UIButton_Unknown6(void)
         }
         else {
             bool32 flag = true;
-            if (UIControl->keyBack) {
+            if (UIControl->keyConfirm) {
                 if (entity->disabled) {
                     StateMachine_Run(entity->failCB);
                 }
@@ -611,7 +611,7 @@ void UIButton_ProcessButtonInputs(void)
     else {
         void *options2 = UIButton_GetOptions2();
 
-        if (UIControl->keyBack && (!UIChoice || options2)) {
+        if (UIControl->keyConfirm && (!UIChoice || options2)) {
             if (entity->disabled || (entity->choiceCount > 0 && entPtr->disabled))
                 RSDK.PlaySFX(UIWidgets->sfx_Fail, false, 255);
             else

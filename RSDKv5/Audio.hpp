@@ -95,18 +95,16 @@ inline void StopChannel(byte slot)
 inline void PauseChannel(byte slot)
 {
     if (slot < CHANNEL_COUNT) {
-        if (channels[slot].state != CHANNEL_STREAM_LOAD) {
+        if (channels[slot].state != CHANNEL_STREAM_LOAD)
             channels[slot].state |= CHANNEL_PAUSED;
-        }
     }
 }
 
 inline void ResumeChannel(byte slot)
 {
     if (slot < CHANNEL_COUNT) {
-        if (channels[slot].state != CHANNEL_STREAM_LOAD) {
+        if (channels[slot].state != CHANNEL_STREAM_LOAD)
             channels[slot].state &= ~CHANNEL_PAUSED;
-        }
     }
 }
 

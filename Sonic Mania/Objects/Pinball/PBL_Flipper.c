@@ -6,7 +6,8 @@ ObjectPBL_Flipper *PBL_Flipper;
 void PBL_Flipper_Update(void)
 {
     RSDK_THIS(PBL_Flipper);
-    if (RSDK_sceneInfo->entity->direction) {
+
+    if (entity->direction) {
         entity->buttonPress =
             RSDK_triggerL[1].key1.press || RSDK_controller[1].keyA.press || RSDK_controller[1].keyC.press || RSDK_controller[1].keyX.press;
         entity->buttonDown =

@@ -598,7 +598,7 @@ void UISaveSlot_SetupButtonElements(void)
                 entity->touchPos1[1].x       = 0x200000;
                 entity->touchPos1[1].y       = 0x200000;
                 entity->touchPos2[1].x       = 0;
-                entity->touchPos2[1].y       = -0x440000;
+                entity->touchPos2[1].y       = 0;
                 entity->touchPosCallbacks[1] = UISaveSlot_NextCharacter;
                 entity->touchPos1[2].x       = 0x200000;
                 entity->touchPos1[2].y       = 0x200000;
@@ -813,7 +813,7 @@ void UISaveSlot_ProcessButtonCB(void)
         TextInfo strBuffer;
         INIT_TEXTINFO(strBuffer);
 
-        if (UIControl->keyBack) {
+        if (UIControl->keyConfirm) {
             if (API.CheckDLC(DLC_PLUS) || entity->frameID < 4) {
                 UISaveSlot_SelectedSave();
             }

@@ -441,7 +441,7 @@ void PauseMenu_Unknown16(void)
 void PauseMenu_PauseSound(void)
 {
     for (int i = 0; i < 0x10; ++i) {
-        if (PauseMenu->channelFlags[i]) {
+        if (RSDK.ChannelActive(i)) {
             RSDK.PauseChannel(i);
             PauseMenu->channelFlags[i] = true;
         }

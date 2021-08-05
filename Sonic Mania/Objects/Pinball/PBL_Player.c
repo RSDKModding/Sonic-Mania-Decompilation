@@ -135,6 +135,51 @@ void PBL_Player_ProcessPlayerControl(void)
 {
     RSDK_THIS(PBL_Player);
     if (entity->controllerID < PLAYER_MAX) {
+#if RETRO_USE_TOUCH_CONTROLS
+        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
+            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+
+            if (RSDK_touchMouse->down[t]) {
+                if (tx >= RSDK_screens->centerX && ty >= RSDK_screens->centerY && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
+                    RSDK_controller[1].keyX.down = true;
+                    break;
+                }
+            }
+        }
+
+        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
+            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+
+            if (RSDK_touchMouse->down[t]) {
+                if (tx >= 0 && ty >= RSDK_screens->centerY && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
+                    RSDK_controller[1].keyB.down = true;
+                    break;
+                }
+            }
+        }
+
+        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
+            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+
+            if (RSDK_touchMouse->down[t]) {
+                if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
+                    if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+                        EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
+                        if (!pauseMenu->objectID) {
+                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
+                            pauseMenu->disableRestart = true;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+#endif
+
         ControllerState *controller = &RSDK_controller[entity->controllerID];
         entity->up                  = controller->keyUp.down;
         entity->down                = controller->keyDown.down;

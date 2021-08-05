@@ -188,13 +188,13 @@ void UIControl_ClearInputs(char id)
 #else
     if (APICallback_GetConfirmButtonFlip()) {
 #endif
-        UIControl->keyBack    = id == 1;
-        UIControl->keyConfirm = id == 0;
+        UIControl->keyConfirm    = id == 1;
+        UIControl->keyBack = id == 0;
         UIControl->flagA      = id == 0;
     }
     else {
-        UIControl->keyBack    = id == 0;
-        UIControl->keyConfirm = id == 1;
+        UIControl->keyConfirm    = id == 0;
+        UIControl->keyBack = id == 1;
         UIControl->flagA      = id == 1;
     }
     UIControl->field_C     = true;
@@ -253,25 +253,25 @@ void UIControl_ProcessInputs(void)
 #else
         if (APICallback_GetConfirmButtonFlip()) {
 #endif
-            UIControl->keyBack    = RSDK_controller->keyStart.press || RSDK_controller->keyB.press;
-            UIControl->keyConfirm = RSDK_controller->keyA.press;
+            UIControl->keyConfirm    = RSDK_controller->keyStart.press || RSDK_controller->keyB.press;
+            UIControl->keyBack = RSDK_controller->keyA.press;
         }
         else {
-            UIControl->keyBack    = RSDK_controller->keyStart.press || RSDK_controller->keyA.press;
-            UIControl->keyConfirm = RSDK_controller->keyB.press;
+            UIControl->keyConfirm    = RSDK_controller->keyStart.press || RSDK_controller->keyA.press;
+            UIControl->keyBack = RSDK_controller->keyB.press;
         }
 #if RETRO_USE_PLUS
-        UIControl->keyConfirm |= RSDK_unknown->field_10;
+        UIControl->keyBack |= RSDK_unknown->field_10;
 #else
 
 #endif
-        UIControl->keyConfirm |= UIControl->flagA;
+        UIControl->keyBack |= UIControl->flagA;
 
-        if (UIControl->keyConfirm) {
-            UIControl->keyBack = false;
+        if (UIControl->keyBack) {
+            UIControl->keyConfirm = false;
             UIControl->keyY    = false;
         }
-        if (UIControl->keyBack) {
+        if (UIControl->keyConfirm) {
             UIControl->keyY = false;
         }
         UIControl->inputLocked = true;
@@ -279,12 +279,12 @@ void UIControl_ProcessInputs(void)
 
     if (!entity->selectionDisabled) {
         bool32 flag = false;
-        if (UIControl->keyConfirm) {
+        if (UIControl->keyBack) {
             if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
                 if (entity->backPressCB) {
                     flag = entity->backPressCB();
                     if (!flag) {
-                        UIControl->keyConfirm = false;
+                        UIControl->keyBack = false;
                     }
                     else {
                         if (entity->buttons[entity->activeEntityID])
@@ -293,7 +293,7 @@ void UIControl_ProcessInputs(void)
                 }
                 else {
                     if (entity->parentTag.textLength <= 0) {
-                        UIControl->keyConfirm = false;
+                        UIControl->keyBack = false;
                     }
                     else {
                         entity->selectionDisabled = true;

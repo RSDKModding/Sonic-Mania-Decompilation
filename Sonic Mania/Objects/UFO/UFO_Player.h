@@ -58,6 +58,13 @@ typedef struct {
     bool32 jumpPress;
     bool32 jumpHold;
     Animator playerAnimator;
+#if RETRO_USE_TOUCH_CONTROLS
+    int upState;
+    int downState;
+    int leftState;
+    int rightState;
+    int jumpState;
+#endif
 } EntityUFO_Player;
 
 // Object Struct
