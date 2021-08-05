@@ -432,8 +432,8 @@ void runRetroEngine()
                     devMenu.state();
                 break;
             case ENGINESTATE_VIDEOPLAYBACK:
-                //if (ProcessVideo() == 1)
-                //    sceneInfo.state = engine.prevEngineMode;
+                if (ProcessVideo())
+                    sceneInfo.state = engine.prevEngineMode;
                 break;
             case ENGINESTATE_SHOWPNG: 
                 if (engine.imageDelta <= 0.0 || engine.dimMax >= 1.0) {

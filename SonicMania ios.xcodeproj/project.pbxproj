@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C972C54726B8FD4900CB2F1E /* GameOptions.c in Sources */ = {isa = PBXBuildFile; fileRef = C972C54326B8FD4900CB2F1E /* GameOptions.c */; };
+		C972C54826B8FD4900CB2F1E /* GameObjects.c in Sources */ = {isa = PBXBuildFile; fileRef = C972C54426B8FD4900CB2F1E /* GameObjects.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C968092C26B8FCD10083FF3D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		C968092E26B8FCD10083FF3D /* libGame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGame.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C972C54126B8FD4900CB2F1E /* GameObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameObjects.h; path = "Sonic Mania/GameObjects.h"; sourceTree = SOURCE_ROOT; };
+		C972C54226B8FD4900CB2F1E /* GameOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameOptions.h; path = "Sonic Mania/GameOptions.h"; sourceTree = SOURCE_ROOT; };
+		C972C54326B8FD4900CB2F1E /* GameOptions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GameOptions.c; path = "Sonic Mania/GameOptions.c"; sourceTree = SOURCE_ROOT; };
+		C972C54426B8FD4900CB2F1E /* GameObjects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GameObjects.c; path = "Sonic Mania/GameObjects.c"; sourceTree = SOURCE_ROOT; };
+		C972C54526B8FD4900CB2F1E /* GameLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameLink.h; path = "Sonic Mania/GameLink.h"; sourceTree = SOURCE_ROOT; };
+		C972C54626B8FD4900CB2F1E /* SonicMania.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SonicMania.h; path = "Sonic Mania/SonicMania.h"; sourceTree = SOURCE_ROOT; };
+		C972C54A26B8FD6000CB2F1E /* Pinball */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Pinball; path = "Sonic Mania/Objects/Pinball"; sourceTree = SOURCE_ROOT; };
+		C972C54B26B8FD6000CB2F1E /* HCZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HCZ; path = "Sonic Mania/Objects/HCZ"; sourceTree = SOURCE_ROOT; };
+		C972C54C26B8FD6000CB2F1E /* MSZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MSZ; path = "Sonic Mania/Objects/MSZ"; sourceTree = SOURCE_ROOT; };
+		C972C54D26B8FD6000CB2F1E /* SSZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SSZ; path = "Sonic Mania/Objects/SSZ"; sourceTree = SOURCE_ROOT; };
+		C972C54E26B8FD6000CB2F1E /* Title */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Title; path = "Sonic Mania/Objects/Title"; sourceTree = SOURCE_ROOT; };
+		C972C54F26B8FD6000CB2F1E /* TMZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TMZ; path = "Sonic Mania/Objects/TMZ"; sourceTree = SOURCE_ROOT; };
+		C972C55026B8FD6000CB2F1E /* Global */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Global; path = "Sonic Mania/Objects/Global"; sourceTree = SOURCE_ROOT; };
+		C972C55126B8FD6000CB2F1E /* Credits */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Credits; path = "Sonic Mania/Objects/Credits"; sourceTree = SOURCE_ROOT; };
+		C972C55226B8FD6000CB2F1E /* ERZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ERZ; path = "Sonic Mania/Objects/ERZ"; sourceTree = SOURCE_ROOT; };
+		C972C55326B8FD6000CB2F1E /* Common */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Common; path = "Sonic Mania/Objects/Common"; sourceTree = SOURCE_ROOT; };
+		C972C55426B8FD6000CB2F1E /* BSS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BSS; path = "Sonic Mania/Objects/BSS"; sourceTree = SOURCE_ROOT; };
+		C972C55526B8FD6100CB2F1E /* LRZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LRZ; path = "Sonic Mania/Objects/LRZ"; sourceTree = SOURCE_ROOT; };
+		C972C55626B8FD6100CB2F1E /* Continue */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Continue; path = "Sonic Mania/Objects/Continue"; sourceTree = SOURCE_ROOT; };
+		C972C55726B8FD6100CB2F1E /* AIZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AIZ; path = "Sonic Mania/Objects/AIZ"; sourceTree = SOURCE_ROOT; };
+		C972C55826B8FD6100CB2F1E /* GHZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GHZ; path = "Sonic Mania/Objects/GHZ"; sourceTree = SOURCE_ROOT; };
+		C972C55926B8FD6100CB2F1E /* Unused */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Unused; path = "Sonic Mania/Objects/Unused"; sourceTree = SOURCE_ROOT; };
+		C972C55A26B8FD6100CB2F1E /* HPZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HPZ; path = "Sonic Mania/Objects/HPZ"; sourceTree = SOURCE_ROOT; };
+		C972C55B26B8FD6100CB2F1E /* Cutscene */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cutscene; path = "Sonic Mania/Objects/Cutscene"; sourceTree = SOURCE_ROOT; };
+		C972C55C26B8FD6100CB2F1E /* FBZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FBZ; path = "Sonic Mania/Objects/FBZ"; sourceTree = SOURCE_ROOT; };
+		C972C55D26B8FD6100CB2F1E /* PGZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PGZ; path = "Sonic Mania/Objects/PGZ"; sourceTree = SOURCE_ROOT; };
+		C972C55E26B8FD6100CB2F1E /* SPZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SPZ; path = "Sonic Mania/Objects/SPZ"; sourceTree = SOURCE_ROOT; };
+		C972C55F26B8FD6100CB2F1E /* Summary */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Summary; path = "Sonic Mania/Objects/Summary"; sourceTree = SOURCE_ROOT; };
+		C972C56026B8FD6100CB2F1E /* Helpers */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Helpers; path = "Sonic Mania/Objects/Helpers"; sourceTree = SOURCE_ROOT; };
+		C972C56126B8FD6100CB2F1E /* UFO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = UFO; path = "Sonic Mania/Objects/UFO"; sourceTree = SOURCE_ROOT; };
+		C972C56226B8FD6200CB2F1E /* Puyo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Puyo; path = "Sonic Mania/Objects/Puyo"; sourceTree = SOURCE_ROOT; };
+		C972C56326B8FD6200CB2F1E /* MMZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MMZ; path = "Sonic Mania/Objects/MMZ"; sourceTree = SOURCE_ROOT; };
+		C972C56426B8FD6200CB2F1E /* SBZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SBZ; path = "Sonic Mania/Objects/SBZ"; sourceTree = SOURCE_ROOT; };
+		C972C56526B8FD6200CB2F1E /* OOZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = OOZ; path = "Sonic Mania/Objects/OOZ"; sourceTree = SOURCE_ROOT; };
+		C972C56626B8FD6200CB2F1E /* CPZ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CPZ; path = "Sonic Mania/Objects/CPZ"; sourceTree = SOURCE_ROOT; };
+		C972C56726B8FD6200CB2F1E /* Menu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Menu; path = "Sonic Mania/Objects/Menu"; sourceTree = SOURCE_ROOT; };
+		C972C56826B8FD6200CB2F1E /* Player */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Player; path = "Sonic Mania/Objects/Player"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C968092B26B8FCD10083FF3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C968092526B8FCD10083FF3D = {
+			isa = PBXGroup;
+			children = (
+				C968093026B8FCD10083FF3D /* Game */,
+				C968092F26B8FCD10083FF3D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C968092F26B8FCD10083FF3D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C968092E26B8FCD10083FF3D /* libGame.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C968093026B8FCD10083FF3D /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				C972C54526B8FD4900CB2F1E /* GameLink.h */,
+				C972C54426B8FD4900CB2F1E /* GameObjects.c */,
+				C972C54126B8FD4900CB2F1E /* GameObjects.h */,
+				C972C54326B8FD4900CB2F1E /* GameOptions.c */,
+				C972C54226B8FD4900CB2F1E /* GameOptions.h */,
+				C972C54626B8FD4900CB2F1E /* SonicMania.h */,
+				C972C54026B8FD3D00CB2F1E /* Objects */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		C972C54026B8FD3D00CB2F1E /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				C972C55726B8FD6100CB2F1E /* AIZ */,
+				C972C55426B8FD6000CB2F1E /* BSS */,
+				C972C55326B8FD6000CB2F1E /* Common */,
+				C972C55626B8FD6100CB2F1E /* Continue */,
+				C972C56626B8FD6200CB2F1E /* CPZ */,
+				C972C55126B8FD6000CB2F1E /* Credits */,
+				C972C55B26B8FD6100CB2F1E /* Cutscene */,
+				C972C55226B8FD6000CB2F1E /* ERZ */,
+				C972C55C26B8FD6100CB2F1E /* FBZ */,
+				C972C55826B8FD6100CB2F1E /* GHZ */,
+				C972C55026B8FD6000CB2F1E /* Global */,
+				C972C54B26B8FD6000CB2F1E /* HCZ */,
+				C972C56026B8FD6100CB2F1E /* Helpers */,
+				C972C55A26B8FD6100CB2F1E /* HPZ */,
+				C972C55526B8FD6100CB2F1E /* LRZ */,
+				C972C56726B8FD6200CB2F1E /* Menu */,
+				C972C56326B8FD6200CB2F1E /* MMZ */,
+				C972C54C26B8FD6000CB2F1E /* MSZ */,
+				C972C56526B8FD6200CB2F1E /* OOZ */,
+				C972C55D26B8FD6100CB2F1E /* PGZ */,
+				C972C54A26B8FD6000CB2F1E /* Pinball */,
+				C972C56826B8FD6200CB2F1E /* Player */,
+				C972C56226B8FD6200CB2F1E /* Puyo */,
+				C972C56426B8FD6200CB2F1E /* SBZ */,
+				C972C55E26B8FD6100CB2F1E /* SPZ */,
+				C972C54D26B8FD6000CB2F1E /* SSZ */,
+				C972C55F26B8FD6100CB2F1E /* Summary */,
+				C972C54E26B8FD6000CB2F1E /* Title */,
+				C972C54F26B8FD6000CB2F1E /* TMZ */,
+				C972C56126B8FD6100CB2F1E /* UFO */,
+				C972C55926B8FD6100CB2F1E /* Unused */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C968092D26B8FCD10083FF3D /* Game */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C968093726B8FCD10083FF3D /* Build configuration list for PBXNativeTarget "Game" */;
+			buildPhases = (
+				C968092A26B8FCD10083FF3D /* Sources */,
+				C968092B26B8FCD10083FF3D /* Frameworks */,
+				C968092C26B8FCD10083FF3D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Game;
+			productName = Game;
+			productReference = C968092E26B8FCD10083FF3D /* libGame.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C968092626B8FCD10083FF3D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					C968092D26B8FCD10083FF3D = {
+						CreatedOnToolsVersion = 12.3;
+					};
+				};
+			};
+			buildConfigurationList = C968092926B8FCD10083FF3D /* Build configuration list for PBXProject "SonicMania ios" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C968092526B8FCD10083FF3D;
+			productRefGroup = C968092F26B8FCD10083FF3D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C968092D26B8FCD10083FF3D /* Game */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C968092A26B8FCD10083FF3D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C972C54826B8FD4900CB2F1E /* GameObjects.c in Sources */,
+				C972C54726B8FD4900CB2F1E /* GameOptions.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C968093526B8FCD10083FF3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C968093626B8FCD10083FF3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C968093826B8FCD10083FF3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"\"$(PROJECT_DIR)/Sonic Mania/Objects/\"",
+					"\"$(PROJECT_DIR)/Sonic Mania/\"",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C968093926B8FCD10083FF3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"\"$(PROJECT_DIR)/Sonic Mania/Objects/\"",
+					"\"$(PROJECT_DIR)/Sonic Mania/\"",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C968092926B8FCD10083FF3D /* Build configuration list for PBXProject "SonicMania ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C968093526B8FCD10083FF3D /* Debug */,
+				C968093626B8FCD10083FF3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C968093726B8FCD10083FF3D /* Build configuration list for PBXNativeTarget "Game" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C968093826B8FCD10083FF3D /* Debug */,
+				C968093926B8FCD10083FF3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C968092626B8FCD10083FF3D /* Project object */;
+}

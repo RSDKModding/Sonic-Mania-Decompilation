@@ -348,7 +348,7 @@ void ReplayRecorder_Buffer_PackInPlace(int *tempWriteBuffer)
             byte *compressedData = (byte *)&tempWriteBuffer[14];
             for (int f = 0; f < tempWriteBuffer[4]; ++f) {
                 byte uncompressedData[28];
-                memcpy(uncompressedData, framePtr, 0x28 * sizeof(byte));
+                memcpy(uncompressedData, framePtr, 28 * sizeof(byte));
                 int *dataPtr = (int *)uncompressedData;
 
                 // set velocity to zero
@@ -828,7 +828,7 @@ void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, byte *buffer)
 bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder)
 {
     EntityPlayer *player = recorder->player;
-    if (!player || !RSDK.CheckStageFolder("MMZ") && !RSDK.CheckStageFolder("PSZ2"))
+    if (!player || (!RSDK.CheckStageFolder("MMZ") && !RSDK.CheckStageFolder("PSZ2")))
         return false;
     if (RSDK.CheckStageFolder("MMZ"))
         return player->isChibi;
@@ -1222,7 +1222,7 @@ void ReplayRecorder_RecordFrameData(void)
 
 void ReplayRecorder_LoadReplayDB(void (*callback)(bool32))
 {
-    if (globals->replayTableID != 0xFFFF && globals->replayTableLoaded == STATUS_OK || globals->replayTableLoaded == STATUS_CONTINUE)
+    if ((globals->replayTableID != 0xFFFF && globals->replayTableLoaded == STATUS_OK) || globals->replayTableLoaded == STATUS_CONTINUE)
         return;
     LogHelpers_Print("Loading Replay DB");
     globals->replayTableLoaded = STATUS_CONTINUE;

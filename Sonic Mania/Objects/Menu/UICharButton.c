@@ -43,7 +43,7 @@ void UICharButton_Update(void)
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
     int id                  = -1;
     for (int i = 0; i < parent->unknownCount1; ++i) {
-        if (entity = (EntityUICharButton *)parent->entities[i]) {
+        if (entity == (EntityUICharButton *)parent->entities[i]) {
             id = i;
             break;
         }

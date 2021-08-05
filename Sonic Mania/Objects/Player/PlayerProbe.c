@@ -113,7 +113,7 @@ void PlayerProbe_Draw(void)
     drawPos.x = RSDK_sceneInfo->entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.y -= entity->size << 19;
-    Zone_Unknown3((Entity *)entity, &drawPos, entity->angle);
+    Zone_Unknown3(&entity->position, &drawPos, entity->angle);
     for (int i = 0; i < entity->size; ++i) {
         RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;

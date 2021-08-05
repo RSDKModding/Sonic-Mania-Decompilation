@@ -413,12 +413,14 @@ void HUD_StageLoad(void)
     HUD->superButtonMappings = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
     HUD->sfx_Click           = RSDK.GetSFX("Stage/Click.wav");
     HUD->sfx_Starpost        = RSDK.GetSFX("Global/StarPost.wav");
-    HUD->dwordC              = 0;
+    HUD->dwordC                       = 0;
+
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
-        HUD->compSession[0] = globals->competitionSession[CS_Unknown84];
-        HUD->compSession[1] = globals->competitionSession[CS_Unknown85];
-        HUD->compSession[2] = globals->competitionSession[CS_Unknown86];
-        HUD->compSession[3] = globals->competitionSession[CS_Unknown87];
+        HUD->compSession[0] = session->unknown84;
+        HUD->compSession[1] = session->unknown85;
+        HUD->compSession[2] = session->unknown86;
+        HUD->compSession[3] = session->unknown87;
     }
 }
 

@@ -21,7 +21,7 @@ void UIVideo_Create(void *data)
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
         entity->drawOrder = 0;
-        UIVideo->playing  = 0;
+        UIVideo->playing  = false;
         entity->state     = UIVideo_State_PlayVid1;
     }
 }
@@ -50,7 +50,11 @@ void UIVideo_State_PlayVid1(void)
         RSDK.GetCString(audioFile, &entity->audioFile);
         RSDK.GetCString(videoFile1, &entity->videoFile1);
         int len = entity->videoFile1.textLength;
+#if RETRO_USE_PLUS
         if (videoFile1[len - 3] == 'p' && videoFile1[len - 2] == 'n' && videoFile1[len - 1] == 'g')
+#else
+        if (videoFile1[len - 3] == 't' && videoFile1[len - 2] == 'g' && videoFile1[len - 1] == 'a')
+#endif
             RSDK.LoadImage(videoFile1, 1.0, 32.0, UIVideo_SkipCallback);
         else
             RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCallback);
@@ -85,7 +89,7 @@ void UIVideo_State_FinishPlayback(void)
                 RSDK.LoadScene("Presentation", "Title Screen");
             RSDK.InitSceneLoad();
         }
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 

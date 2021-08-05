@@ -152,7 +152,7 @@ void DialogRunner_CheckUserAuth_CB(int a1, int a2)
                     Zone_StartFadeOut(10, 0x000000);
                 }
                 else if (MenuSetup) {
-                    MenuSetup_StartReturnToTitle();
+                    ManiaModeMenu_StartReturnToTitle();
                 }
                 else if (UFO_Setup) {
                     UFO_Setup->resetToTitle = true;

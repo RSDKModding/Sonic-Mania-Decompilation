@@ -628,13 +628,7 @@ void OptionsMenu_Unknown29(int status)
     TimeAttackData_ClearOptions();
     char *tag = (char *)&((char *)&globals->menuParam)[90];
     strcpy(tag, "Options");
-    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
-    menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
-    menuSetup->timeOut         = 32;
-    menuSetup->state           = MenuSetup_Unknown13;
-    menuSetup->timedState      = OptionsMenu_Unknown28;
+    MenuSetup_StartTransition(OptionsMenu_Unknown28, 32);
 }
 
 void OptionsMenu_Unknown30(void)
@@ -784,7 +778,7 @@ void OptionsMenu_EraseSaveDataCB(int status)
 
     UIWaitSpinner_Wait2();
     if (status) {
-        MenuSetup_StartReturnToTitle();
+        ManiaModeMenu_StartReturnToTitle();
     }
     else {
         control->selectionDisabled = false;

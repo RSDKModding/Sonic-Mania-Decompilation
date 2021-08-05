@@ -42,16 +42,6 @@ void MenuSetup_EditorLoad(void);
 void MenuSetup_Serialize(void);
 
 // Extra Entity Functions
-void MenuSetup_Initialize(void);
-bool32 MenuSetup_InitUserdata(void);
-void MenuSetup_InitLocalization(int a1);
-int MenuSetup_GetActiveMenu(void);
-void MenuSetup_ChangeMenuTrack(void);
-int MenuSetup_StartReturnToTitle(void);
-void MenuSetup_SetBGColours(void);
-void MenuSetup_ReturnToTitle(void);
-void MenuSetup_Unknown13(void);
-void MenuSetup_Unknown6(void);
-void MenuSetup_Unknown7(void);
+void MenuSetup_StartTransition(void (*callback)(void), int time);
 
 #endif //!OBJ_MENUSETUP_H

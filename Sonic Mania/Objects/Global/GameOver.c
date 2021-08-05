@@ -158,6 +158,7 @@ void GameOver_Unknown2(void)
         entity->scale.x = entity->scale.x - entity->scale.x / 40;
     entity->scale.y = entity->scale.x;
 
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (entity->timer == 0) {
         if (globals->gameMode != MODE_COMPETITION) {
             Music_ClearMusicStack();
@@ -169,9 +170,9 @@ void GameOver_Unknown2(void)
             }
         }
         else {
-            if (globals->competitionSession[CS_PlayerCount] <= 0) {
+            if (session->playerCount <= 0) {
                 bool32 flag = false;
-                if (0 < globals->competitionSession[CS_PlayerCount] - 1 && 0 != globals->competitionSession[CS_PlayerCount]) {
+                if (0 < session->playerCount - 1 && 0 != session->playerCount) {
                     if (Zone->field_15C != 1)
                         flag = true;
                 }
@@ -190,7 +191,7 @@ void GameOver_Unknown2(void)
                 EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
                 int id                     = 0;
                 int deadPlayers            = 0;
-                for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i) {
+                for (int i = 0; i < session->playerCount; ++i) {
                     Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
 
                     if (ent->objectID == GameOver->objectID) {
@@ -203,7 +204,7 @@ void GameOver_Unknown2(void)
                 }
 
                 bool32 flag = false;
-                if (id < globals->competitionSession[CS_PlayerCount] - 1 && deadPlayers != globals->competitionSession[CS_PlayerCount]) {
+                if (id < session->playerCount - 1 && deadPlayers != session->playerCount) {
                     if (!Zone->field_15C)
                         flag = true;
                 }
@@ -234,10 +235,11 @@ void GameOver_Unknown3(void)
 {
     RSDK_THIS(GameOver);
 
-    EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
+    EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     int id                     = 0;
     int deadPlayers            = 0;
-    for (int i = 0; i < globals->competitionSession[CS_PlayerCount]; ++i) {
+    for (int i = 0; i < session->playerCount; ++i) {
         Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
 
         if (ent->objectID == GameOver->objectID) {
@@ -249,7 +251,7 @@ void GameOver_Unknown3(void)
         }
     }
 
-    if (id >= globals->competitionSession[CS_PlayerCount] - 1 || deadPlayers == globals->competitionSession[CS_PlayerCount] || Zone->field_15C)
+    if (id >= session->playerCount - 1 || deadPlayers == session->playerCount || Zone->field_15C)
         entity->state = GameOver_Unknown4;
 }
 
@@ -309,9 +311,10 @@ void GameOver_Unknown5(void)
     if (entity->timer == 90) {
         entity->timer = 0;
 
+        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
-            globals->competitionSession[globals->competitionSession[CS_LevelIndex] + CS_ZoneUnknown31] = 1;
-            globals->competitionSession[CS_MatchID] = globals->competitionSession[CS_Unknown93] + 1;
+            session->zoneFlags[session->levelIndex] = 1;
+            session->matchID = session->unknown93 + 1;
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             RSDK.LoadScene("Presentation", "Menu");
             RSDK.InitSceneLoad();

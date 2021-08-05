@@ -219,7 +219,7 @@ inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(v
     }
 }
 
-void SwapDrawLayers(byte layer, ushort indexA, ushort indexB, int count);
+void SwapDrawListEntries(byte layer, ushort indexA, ushort indexB, int count);
 
 void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha);
 

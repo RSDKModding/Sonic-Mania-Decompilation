@@ -107,7 +107,7 @@ void Zone_StoreEntities(int xOffset, int yOffset);
 void Zone_ReloadStoredEntities(int xOffset, int yOffset, bool32 flag);
 void Zone_StartFadeOut(int fadeSpeed, int fadeColour);
 void Zone_Unknown2(void);
-void Zone_Unknown3(Entity *entity, Vector2 *pos, int angle);
+void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int angle);
 void Zone_Unknown4(int screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);

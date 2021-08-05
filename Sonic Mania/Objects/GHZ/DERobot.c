@@ -409,7 +409,7 @@ void DERobot_Unknown10(void)
     pos.x = entity->position.x;
     pos.y = entity->position.y;
     entity->position.x += (entity->field_CC + 35) << 16;
-    Zone_Unknown3((Entity *)&pos, &entity->position, -(entity->angle >> 3));
+    Zone_Unknown3(&pos, &entity->position, -(entity->angle >> 3));
 
     foreach_active(Player, player)
     {
@@ -437,7 +437,7 @@ bool32 DERobot_Unknown11(void)
     pos.x = entity->position.x;
     pos.y = entity->position.y;
     entity->position.x += (entity->field_CC + 48) << 16;
-    Zone_Unknown3((Entity *)&pos, &entity->position, -(entity->angle >> 3));
+    Zone_Unknown3(&pos, &entity->position, -(entity->angle >> 3));
 
     foreach_active(PhantomRuby, ruby)
     {

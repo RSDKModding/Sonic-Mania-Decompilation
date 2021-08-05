@@ -291,10 +291,11 @@ void PauseMenu_Unknown9(void)
     globals->specialRingID = 0;
 
     if (globals->gameMode == MODE_COMPETITION) {
+        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         sprintf((char *)&globals->menuParam[22], "Competition Zone");
         ushort *param2         = (ushort *)&globals->menuParam[26];
         param2[1]              = 115;
-        globals->menuParam[MP_MenuSelection] = globals->competitionSession[CS_LevelIndex];
+        globals->menuParam[MP_MenuSelection] = session->levelIndex;
     }
     RSDK.LoadScene("Presentation", "Menu");
     PauseMenu_StopSound();

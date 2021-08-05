@@ -207,7 +207,7 @@ typedef struct {
     void (*DrawBlendedQuad)(Vector2 *verticies, colour *vertColours, int vertCount, int alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(ushort sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, Alignments align, int spacing, int a8,
+    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int startCharID, int endCharID, Alignments align, int spacing, int a8,
                      Vector2 *charPos, bool32 ScreenRelative);
     void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
     void (*CopyTile)(void);
