@@ -309,14 +309,14 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
 {
     Vector2 drawPos;
     Animator animator;
-    Animator data2;
+    Animator animator2;
     char strBuf[16];
 
     memset(&animator, 0, sizeof(Animator));
-    memset(&data2, 0, sizeof(Animator));
+    memset(&animator2, 0, sizeof(Animator));
 
-    RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &data2, true, 9);
-    RSDK.DrawSprite(&data2, &drawPos, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &animator2, true, 9);
+    RSDK.DrawSprite(&animator2, &drawPos, 0);
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
     if (minutes) {

@@ -494,8 +494,8 @@ void ItemBox_GivePowerup(void)
                 return;
             case 5:
                 if (!player->superState) {
-                    Entity *shield = (Entity *)RSDK.GetEntityByID((ushort)(Player->playerCount + RSDK.GetEntityID(player)));
-                    RSDK.ResetEntityPtr(shield, InvincibleStars->objectID, player);
+                    EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
+                    RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->objectID, player);
                     player->invincibleTimer = 1260;
                     Music_PlayMusicTrack(TRACK_INVINCIBLE);
                 }
@@ -505,7 +505,7 @@ void ItemBox_GivePowerup(void)
                 Player_ChangePhysicsState(player);
                 if (!player->superState) {
                     Music_PlayMusicTrack(TRACK_SNEAKERS);
-                    Entity *powerup = (Entity *)RSDK.GetEntityByID((ushort)(2 * Player->playerCount + RSDK.GetEntityID(player)));
+                    EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail);
                     RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
                 }
                 return;
@@ -536,144 +536,105 @@ void ItemBox_GivePowerup(void)
                             charID <<= 8;
                     }
                     globals->stock |= charID;
-                    EntityExplosion *explosion =
-                        (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
+                    EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
                     explosion->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
-                    return;
                 }
-#endif
-#if RETRO_USE_PLUS
-                if (globals->gameMode != MODE_COMPETITION) {
+                else if (globals->gameMode != MODE_COMPETITION) {
                     RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
-                    return;
+                }
+                else {
+#endif
+                    Zone_StartTeleportAction();
+                    RSDK.PlaySFX(ItemBox->sfx_Teleport, 0, 255);
+#if RETRO_USE_PLUS
                 }
 #endif
-                Zone_StartTeleportAction();
-                RSDK.PlaySFX(ItemBox->sfx_Teleport, 0, 255);
                 return;
             case 13: {
-                /*v23         = 0;
-                int arr1[5] = { 0xFF, 0xFF, 0xFF, 0xFF };
-                arr1[4]     = 0xFF;
+                byte playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+                byte newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 if (player->playerAnimator.animationID == ANI_TRANSFORM) {
-                    RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
-                    return;
+                    RSDK.PlaySFX(Player->sfx_SwapFail, false, 255);
                 }
-                EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-                int id                = -1;
-                for (int i = player1->characterID; i > 0; ++id) i >>= 1;
-                arr1[0]               = id;
-                EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                id                    = -1;
-                for (int i = player2->characterID; i > 0; ++id) i >>= 1;
-                arr1[1] = id;
-                if (id == -1) {
-                    RSDK.PlaySFX(Player->sfx_SwapFail, 0, 255);
-                    return;
-                }
-                v31   = 2;
-                if (globals->stock & 0xFF0000) {
-                    id = -1;
-                    int cnt = BYTE2(stock);
-                    if (cnt) {
-                        do {
-                            cnt >>= 1;
-                            ++id;
-                        } while (cnt > 0);
-                    }
-                    LOWORD(stock) = globals->stock;
-                    v31           = 3;
-                    arr1[2]       = id;
-                }
-                if (globals->stock & 0xFF00) {
-                    id = -1;
-                    int cnt = BYTE1(stock);
-                    if (cnt) {
-                        do {
-                            cnt >>= 1;
-                            ++id;
-                        } while (cnt > 0);
-                    }
-                    LOBYTE(stock) = v52;
-                    arr1[v31++]   = id;
-                }
+                else {
+                    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+                    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+                    playerIDs[0]          = 0xFF;
+                    for (int i = player1->characterID; i > 0; ++playerIDs[0]) i >>= 1;
 
-                stock = (unsigned __int8)stock;
-                if ((_BYTE)stock) {
-                    v37 = -1;
-                    if (stock) {
-                        do {
-                            stock >>= 1;
-                            ++v37;
-                        } while (stock > 0);
+                    playerIDs[1] = 0xFF;
+                    for (int i = player2->characterID; i > 0; ++playerIDs[1]) i >>= 1;
+
+                    if (playerIDs[1] == 0xFF) {
+                        RSDK.PlaySFX(Player->sfx_SwapFail, false, 255);
                     }
-                    arr1[v31] = v37;
-                }
-                globals->stock = 0;
-                v38            = 0;
-                do {
-                    if (arr1[v38] == 255)
-                        break;
-                    v39      = RSDK.Rand(0, 5);
-                    v53[v38] = v39;
-                    if ((1 << v39) & globals->characterFlags) // charFlags
-                    {
-                        while (1) {
-                            v40 = v53[v38];
-                            if (!((1 << v40) & v23)) {
-                                if (v40 != arr1[v38])
-                                    goto LABEL_94;
-                                if (v38 == 4 || arr1[v38 + 1] == 255)
+                    else {
+                        for (int i = 0; i < 3; ++i) {
+                            if (globals->stock & (1 << (8 * i))) {
+
+                                int characterID = globals->stock & (1 << (8 * i));
+
+                                playerIDs[i + 2] = 0xFF;
+                                for (int i = characterID; i > 0; ++playerIDs[i + 2]) i >>= 1;
+                            }
+                        }
+
+                        globals->stock = 0;
+
+                        int tempStock = 0;
+                        int p     = 0;
+                        for (; p < 3; ++p) {
+                            if (playerIDs[p] == 0xFF)
+                                break;
+
+                            newPlayerIDs[p] = RSDK.Rand(0, 5);
+                            if ((1 << newPlayerIDs[p]) & globals->characterFlags) {
+                                if (newPlayerIDs[p] != playerIDs[p]) {
+                                    tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
+                                }
+                                else if (p == 4 || playerIDs[p + 1] == 0xFF) {
+                                    int slot           = RSDK.Rand(0, p);
+                                    int id             = newPlayerIDs[slot];
+                                    newPlayerIDs[slot] = newPlayerIDs[p];
+                                    newPlayerIDs[p]    = id;
+                                    tempStock |= 1 << newPlayerIDs[p];
+                                    tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
+                                }
+                                else {
+                                    newPlayerIDs[p] = RSDK.Rand(0, 5);
+                                    if (((1 << newPlayerIDs[p]) & globals->characterFlags)) {
+                                        int slot           = RSDK.Rand(0, p);
+                                        int id             = newPlayerIDs[slot];
+                                        newPlayerIDs[slot] = newPlayerIDs[p];
+                                        newPlayerIDs[p]    = id;
+                                        tempStock |= 1 << newPlayerIDs[p];
+                                        tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
+                                    }
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < p; ++i) {
+                            switch (p) {
+                                case 0: Player_ChangeCharacter(player1, 1 << newPlayerIDs[0]); break;
+                                case 1: Player_ChangeCharacter(player2, 1 << newPlayerIDs[1]); break;
+                                default:
+                                    globals->stock <<= 8;
+                                    globals->stock |= 1 << newPlayerIDs[i];
                                     break;
                             }
-                            v41      = RSDK_Rand(0, 5);
-                            v53[v38] = v41;
-                            if (!((1 << v41) & globals->characterFlags))
-                                goto LABEL_95;
                         }
-                        v42      = RSDK_Rand(0, v38);
-                        v43      = v53[v42];
-                        v44      = &v53[v42];
-                        *v44     = v53[v38];
-                        v53[v38] = v43;
-                        v23 |= 1 << *(_BYTE *)v44;
-                    LABEL_94:
-                        v23 |= 1 << LOBYTE(v53[v38++]);
+
+                        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player1->position.x, player1->position.y);
+                        explosion->drawOrder       = Zone->drawOrderHigh;
+
+                        explosion            = CREATE_ENTITY(Explosion, intToVoid(1), player2->position.x, player2->position.y);
+                        explosion->drawOrder = Zone->drawOrderHigh;
+
+                        RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
                     }
-                LABEL_95:;
-                } while (v38 < 5);
-                v45 = 0;
-                if (v38 > 0) {
-                    while (v45) {
-                        if (v45 == 1) {
-                            v46 = (EntityPlayer *)RSDK_GetEntityByID(1);
-                            v47 = v53[1];
-                        LABEL_102:
-                            Player_ChangeCharacter(v46, 1 << v47);
-                            goto LABEL_103;
-                        }
-                        globals->stock <<= 8;
-                        globals->stock |= 1 << LOBYTE(v53[v45]);
-                    LABEL_103:
-                        if (++v45 >= v38)
-                            goto LABEL_104;
-                    }
-                    v46 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-                    v47 = v53[0];
-                    goto LABEL_102;
                 }
-            LABEL_104:*/
-                EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
-                EntityExplosion *explosion =
-                    (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player1->position.x, player1->position.y);
-                explosion->drawOrder = Zone->drawOrderHigh;
-
-                EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
-                explosion             = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player2->position.x, player2->position.y);
-                explosion->drawOrder  = Zone->drawOrderHigh;
-
-                RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
                 return;
             }
             case 14:
@@ -687,7 +648,7 @@ void ItemBox_GivePowerup(void)
                         if (!((1 << entity->contentsData.frameID) & globals->characterFlags) && globals->characterFlags != 31
                             && !(globals->stock & 0xFF0000)) {
                             globals->characterFlags |= (1 << entity->contentsData.frameID);
-                            EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+                            EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                             if (player2->objectID) {
                                 int id = 0;
                                 if (globals->stock) {
@@ -701,15 +662,14 @@ void ItemBox_GivePowerup(void)
                             else {
                                 player2->objectID = Player->objectID;
                                 Player->jumpInDelay = 0;
-                                EntityDust *dust =
-                                    (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player2->position.x, player2->position.y);
+                                EntityDust *dust = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
                                 dust->visible         = 0;
                                 dust->active          = ACTIVE_NEVER;
                                 dust->isPermanent     = true;
                                 dust->position.y      = (RSDK_screens->position.y - 128) << 16;
                                 player2->playerID     = 1;
-                                EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+                                EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                                 if (player1->state == Player_State_Die || player1->state == Player_State_Drown) {
                                     player2->state      = Player_State_Unknown;
                                     player2->velocity.x = 0;
@@ -781,8 +741,7 @@ void ItemBox_GivePowerup(void)
 #endif
                             default: break;
                         }
-                        EntityExplosion *explosion =
-                            (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, (void *)1, player->position.x, player->position.y);
+                        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
                         explosion->drawOrder = Zone->drawOrderHigh;
                         RSDK.PlaySFX(ItemBox->sfx_PowerDown, 0, 255);
 #if RETRO_USE_PLUS
@@ -800,8 +759,6 @@ void ItemBox_GivePowerup(void)
                         case 7: entity->type = 13; break;
                         default: entity->type = 0; break;
                     }
-                    entity = (EntityItemBox *)RSDK_sceneInfo->entity;
-                    entity = (EntityItemBox *)RSDK_sceneInfo->entity;
                     player = (EntityPlayer *)entity->parent;
                     if ((uint)entity->type <= 0x11)
                         continue;

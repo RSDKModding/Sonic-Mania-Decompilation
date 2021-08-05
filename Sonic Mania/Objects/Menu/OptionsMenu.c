@@ -119,17 +119,17 @@ void OptionsMenu_Unknown2(void)
 {
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
 
-    control->entities[5]   = control->entities[4];
-    control->unknownCount1 = 6;
+    control->buttons[5]   = control->buttons[4];
+    control->buttonCount = 6;
     if (!API.CheckDLC(DLC_PLUS)) {
-        EntityUIButton *button = control->entities[2];
+        EntityUIButton *button = control->buttons[2];
         button->invisible      = true;
         button->visible        = false;
 
-        button               = control->entities[3];
-        control->entities[2] = button;
-        button->position.x   = control->entities[4]->position.x;
-        button->size.x       = control->entities[4]->size.x;
+        button               = control->buttons[3];
+        control->buttons[2] = button;
+        button->position.x   = control->buttons[4]->position.x;
+        button->size.x       = control->buttons[4]->size.x;
     }
 }
 
@@ -331,12 +331,12 @@ void OptionsMenu_Unknown4(void)
     if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV)
         OptionsMenu_Unknown5();
 
-    EntityUIButton *button = videoControl->entities[0];
+    EntityUIButton *button = videoControl->buttons[0];
     UIButton_Unknown4(button, RSDK.GetSettingsValue(SETTINGS_SHADERID));
 
-    // button                 = soundControl->entities[0];
+    // button                 = soundControl->buttons[0];
     // button->freeBindP2     = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
-    // button                 = soundControl->entities[1];
+    // button                 = soundControl->buttons[1];
     // button->freeBindP2     = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
 
     languageControl->startingID     = Localization->language;
@@ -364,8 +364,8 @@ void OptionsMenu_Unknown5(void)
         vals[4] = RSDK.GetSettingsValue(SETTINGS_VSYNC);
         vals[5] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
 
-        for (int i = 0; i < videoControl_Win->unknownCount1; ++i) {
-            EntityUIButton *button = videoControl_Win->entities[i];
+        for (int i = 0; i < videoControl_Win->buttonCount; ++i) {
+            EntityUIButton *button = videoControl_Win->buttons[i];
 
             if (i == 4) {
                 EntityUIButton *child = UIButton_Unknown2(button, button->selection);
@@ -576,8 +576,8 @@ void OptionsMenu_Unknown23(int id)
         }
     }
 
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->entities[i];
+    for (int i = 0; i < control->buttonCount; ++i) {
+        EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
         // if (binder->objectID == UIKeyBinder->objectID)
         //    binder->field_105 = id;
     }
@@ -588,8 +588,8 @@ void OptionsMenu_Unknown24(void)
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_Windows;
 
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        if (entity == control->entities[i]) {
+    for (int i = 0; i < control->buttonCount; ++i) {
+        if (entity == control->buttons[i]) {
             OptionsMenu_Unknown23(i);
             UIControl_MatchMenuTag("Controls KB");
         }
@@ -604,7 +604,7 @@ void OptionsMenu_Unknown25(void)
     }
 
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->optionsControl;
-    EntityUIButton *button   = control->entities[4];
+    EntityUIButton *button   = control->buttons[4];
     if (button) {
         button->disabled = API.GetUserStorageNoSave();
     }

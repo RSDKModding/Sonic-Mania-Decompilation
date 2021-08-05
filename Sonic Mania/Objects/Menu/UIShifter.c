@@ -54,9 +54,9 @@ void UIShifter_Unknown(void)
     int shiftY = -entity->shift.y;
     int x      = entity->startPos.x + (entity->field_68 & 0xFFFF0000);
     int y      = entity->startPos.y + (entity->field_6C & 0xFFFF0000);
-    for (int i = 0; i < entity->parent->unknownCount1; ++i) {
-        entity->parent->entities[i]->position.x = x;
-        entity->parent->entities[i]->position.y = y;
+    for (int i = 0; i < entity->parent->buttonCount; ++i) {
+        entity->parent->buttons[i]->position.x = x;
+        entity->parent->buttons[i]->position.y = y;
         x += shiftX;
         y += shiftY;
     }

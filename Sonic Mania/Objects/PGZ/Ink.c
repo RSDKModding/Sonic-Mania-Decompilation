@@ -40,7 +40,7 @@ void Ink_Draw(void)
 
     RSDK_sceneInfo->entity->inkEffect = INK_SUB;
     RSDK.DrawSprite(&entity->data3, NULL, false);
-    RSDK.DrawSprite(&entity->data2, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
     entity->inkEffect = INK_NONE;
     RSDK.DrawSprite(&entity->data1, NULL, false);
 }
@@ -56,7 +56,7 @@ void Ink_Create(void *data)
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 3, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 3, &entity->animator2, true, 0);
     }
 }
 

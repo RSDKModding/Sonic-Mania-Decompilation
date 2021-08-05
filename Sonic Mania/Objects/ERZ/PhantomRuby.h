@@ -33,7 +33,7 @@ typedef struct {
     int field_74;
     int field_78;
     Animator data1;
-    Animator data2;
+    Animator animator2;
 } EntityPhantomRuby;
 
 // Object Struct

@@ -16,7 +16,7 @@ typedef struct {
     int timer;
     byte palID;
     Animator data1;
-    Animator data2;
+    Animator animator2;
     Animator data3;
     Animator data4;
 } EntityUFO_HUD;

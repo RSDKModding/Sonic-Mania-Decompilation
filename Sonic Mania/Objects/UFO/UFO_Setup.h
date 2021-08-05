@@ -56,8 +56,8 @@ void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines);
 void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines);
 
 void UFO_Setup_PlaySphereSFX(void);
-void UFO_Setup_Unknown6(void);
-void UFO_Setup_Unknown7(void);
+void UFO_Setup_Finish_Win(void);
+void UFO_Setup_Finish_Fail(void);
 void UFO_Setup_Unknown8(void);
 void UFO_Setup_Unknown9(void);
 void UFO_Setup_Unknown10(void);

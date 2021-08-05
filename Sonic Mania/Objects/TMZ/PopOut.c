@@ -27,8 +27,8 @@ void PopOut_Update(void)
     else if (PopOut->hasButton) {
         foreach_active(Button, button)
         {
-            // if (button->tag == entity->tag && button->field_70 == 1)
-            //    entity->flag = true;
+            if (button->tag == entity->tag && button->field_70 == 1)
+                entity->flag = true;
         }
     }
 

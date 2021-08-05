@@ -17,7 +17,7 @@ typedef struct {
     int field_60;
     Vector2 startPos;
     Hitbox *hitbox;
-    Animator data2;
+    Animator animator2;
     Animator animator;
 } EntityHPZEmerald;
 

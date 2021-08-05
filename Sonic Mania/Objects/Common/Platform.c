@@ -93,8 +93,9 @@ void Platform_StaticUpdate(void)
 
 void Platform_Draw(void)
 {
-    Vector2 drawPos;
     RSDK_THIS(Platform);
+    Vector2 drawPos;
+
     if (entity->frameID >= 0) {
         if ((entity->state != Platform_State_Circular || !entity->hasTension)
             && (entity->state != Platform_State_Swing && entity->state != Platform_State_14 && entity->type != 12)) {
@@ -120,7 +121,7 @@ void Platform_Draw(void)
             for (int i = 0; i < cnt; ++i) {
                 drawPos.x = angle * RSDK.Cos1024(ang) + entity->centerPos.x;
                 drawPos.y = angle * RSDK.Sin1024(ang) + entity->centerPos.y;
-                RSDK.DrawSprite(&entity->animator, &drawPos, 0);
+                RSDK.DrawSprite(&entity->animator, &drawPos, false);
                 angle += 0x400;
                 entity->direction ^= FLIP_X;
                 entity->rotation = rot;

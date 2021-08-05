@@ -36,7 +36,7 @@ void TitleEggman_Draw(void)
         RSDK.DrawSprite(&entity->data4, &drawPos, false);
 
         entity->drawFX = FX_FLIP;
-        RSDK.DrawSprite(&entity->data2, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
     }
 }
 
@@ -52,7 +52,7 @@ void TitleEggman_Create(void *data)
             entity->state = TitleEggman_Unknown1;
         }
         else {
-            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 2, &entity->data2, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 2, &entity->animator2, true, 0);
             RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 3, &entity->data3, true, 0);
             RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 4, &entity->data4, true, 0);
             entity->startPos.x = entity->position.x;
@@ -93,7 +93,7 @@ void TitleEggman_Unknown3(void)
     ++entity->timer;
     if ((entity->timer & 0xF) == 0)
         RSDK.CreateEntity(TitleEggman->objectID, (void *)1, entity->position.x - 0xE0000, entity->position.y + 0x80000);
-    RSDK.ProcessAnimation(&entity->data2);
+    RSDK.ProcessAnimation(&entity->animator2);
     RSDK.ProcessAnimation(&entity->data4);
 }
 

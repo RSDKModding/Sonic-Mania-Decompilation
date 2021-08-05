@@ -336,7 +336,7 @@ void ManiaModeMenu_Unknown7(void)
     OptionsMenu_Unknown4();
     if (param->selectionFlag == 2) {
         EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
-        UIButton_Unknown4(extras->entities[1], 1);
+        UIButton_Unknown4(extras->buttons[1], 1);
     }
 
     int a, b, c, d;

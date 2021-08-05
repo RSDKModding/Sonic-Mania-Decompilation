@@ -287,7 +287,7 @@ void UFO_Setup_PlaySphereSFX(void)
         UFO_Setup->spherePan = 1;
     }
 }
-void UFO_Setup_Unknown6(void) // success
+void UFO_Setup_Finish_Win(void)
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
@@ -309,7 +309,7 @@ void UFO_Setup_Unknown6(void) // success
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }
-void UFO_Setup_Unknown7(void) // fail
+void UFO_Setup_Finish_Fail(void)
 {
     EntityUFO_Setup *setup = RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup);
 
@@ -423,7 +423,7 @@ void UFO_Setup_Unknown14(void)
 {
     RSDK_THIS(UFO_Setup);
     if (++entity->timer >= 90)
-        UFO_Setup_Unknown7();
+        UFO_Setup_Finish_Fail();
 }
 
 void UFO_Setup_EditorDraw(void) {}

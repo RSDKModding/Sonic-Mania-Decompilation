@@ -15,7 +15,7 @@ typedef struct {
     byte pathMovement;
     Vector2 posUnknown;
     Animator data1;
-    Animator data2;
+    Animator animator2;
     Animator data3;
     Animator data4;
     Animator data5;

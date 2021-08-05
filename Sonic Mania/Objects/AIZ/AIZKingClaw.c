@@ -43,7 +43,7 @@ void AIZKingClaw_Draw(void)
         for (int i = 0; i < 12; ++i) {
             RSDK.DrawSprite(&entity->data1, &entity->ballPos[i], false);
         }
-        RSDK.DrawSprite(&entity->data2, &entity->clawPos, 0);
+        RSDK.DrawSprite(&entity->animator2, &entity->clawPos, 0);
         RSDK.DrawSprite(&entity->data4, &entity->clawPos, 0);
     }
 }
@@ -70,7 +70,7 @@ void AIZKingClaw_Create(void *data)
             RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &entity->data4, true, 3);
         }
         RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &entity->animator2, true, 0);
     }
 }
 

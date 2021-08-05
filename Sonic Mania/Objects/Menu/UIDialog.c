@@ -172,8 +172,8 @@ void UIDialog_AddButton(byte frame, EntityUIDialog *dialog, void (*callback)(voi
         EntityUIControl *parent = dialog->parent;
         if (parent) {
             button->parent        = (Entity *)parent;
-            parent->entities[id]  = button;
-            parent->unknownCount1 = dialog->id;
+            parent->buttons[id]  = button;
+            parent->buttonCount = dialog->id;
         }
     }
 }
@@ -218,9 +218,9 @@ void UIDialog_Setup(EntityUIDialog *dialog)
             if (!dialog->entPtrs[i])
                 break;
             dialog->entPtrs[i]->parent = (Entity *)control;
-            control->entities[i]       = dialog->entPtrs[i];
+            control->buttons[i]       = dialog->entPtrs[i];
         }
-        control->unknownCount1 = i;
+        control->buttonCount = i;
         dialog->field_5C       = 0;
         dialog->state          = UIDialog_Unknown11;
     }
@@ -302,7 +302,7 @@ bool32 UIDialog_Unknown9(void)
     EntityUIDialog *entity   = UIDialog->activeDialog;
     EntityUIControl *control = entity->parent;
 
-    for (int i = 0; i < control->unknownCount1; ++i) {
+    for (int i = 0; i < control->buttonCount; ++i) {
         int frame = entity->buttonFrames[i];
         if (frame == 1 || frame == 3) {
             if (entity->flags[i]) {
@@ -328,7 +328,7 @@ void UIDialog_Unknown10(void)
     EntityUIDialog *entity = UIDialog->activeDialog;
     if (entity->parent) {
         int id = entity->parent->activeEntityID;
-        if (id >= 0 && id < entity->parent->unknownCount1) {
+        if (id >= 0 && id < entity->parent->buttonCount) {
             if (entity->flags[id]) {
                 UIDialog_Unknown4(entity, entity->callbacks[id]);
             }

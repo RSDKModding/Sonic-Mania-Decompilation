@@ -22,7 +22,7 @@ void UFO_Message_Draw(void)
     RSDK.DrawSprite(&entity->data1, &drawPos, true);
 
     drawPos.x = (entity->timer + RSDK_screens->centerX) << 16;
-    RSDK.DrawSprite(&entity->data2, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 }
 
 void UFO_Message_Create(void *data)
@@ -36,7 +36,7 @@ void UFO_Message_Create(void *data)
 
         int type = voidToInt(data);
         RSDK.SetSpriteAnimation(UFO_Message->spriteIndex, 4, &entity->data1, true, 2 * type);
-        RSDK.SetSpriteAnimation(UFO_Message->spriteIndex, 4, &entity->data2, true, 2 * type + 1);
+        RSDK.SetSpriteAnimation(UFO_Message->spriteIndex, 4, &entity->animator2, true, 2 * type + 1);
         entity->timer = 320;
 
         foreach_active(UFO_Message, message)

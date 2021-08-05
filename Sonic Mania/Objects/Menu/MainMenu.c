@@ -13,7 +13,7 @@ void MainMenu_StaticUpdate(void)
     if (control && control->active) {
         EntityUIDiorama *diorama     = (EntityUIDiorama *)MainMenu->dioramaPtr;
         MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->field_6C & 0xFFFF0000) > -0x700000;
-        EntityUIButton *button       = control->entities[control->field_D8];
+        EntityUIButton *button       = control->buttons[control->field_D8];
         if (button) {
             switch (button->frameID) {
                 case 0: diorama->dioramaID = 0; break;
@@ -99,37 +99,37 @@ void MainMenu_Initialize(void)
         button5Transition = true;
     }
 
-    EntityUIButton *button = menuControl->entities[0];
+    EntityUIButton *button = menuControl->buttons[0];
     button->frameID        = 0;
     button->transition     = true;
     button->stopMusic      = true;
 
-    button             = menuControl->entities[1];
+    button             = menuControl->buttons[1];
     button->frameID    = button1Frame;
     button->transition = true;
     button->stopMusic  = true;
 
-    button             = menuControl->entities[2];
+    button             = menuControl->buttons[2];
     button->frameID    = button2Frame;
     button->transition = true;
     button->stopMusic  = true;
 
-    button             = menuControl->entities[3];
+    button             = menuControl->buttons[3];
     button->frameID    = button3Frame;
     button->transition = true;
     button->stopMusic  = button3StopMus;
 
-    button             = menuControl->entities[4];
+    button             = menuControl->buttons[4];
     button->frameID    = button4Frame;
     button->transition = true;
     button->stopMusic  = false;
 
-    button             = menuControl->entities[5];
+    button             = menuControl->buttons[5];
     button->frameID    = button5Frame;
     button->transition = button5Transition;
     button->stopMusic  = false;
 
-    button             = menuControl->entities[6];
+    button             = menuControl->buttons[6];
     button->frameID    = 7;
     button->transition = false;
     button->stopMusic  = false;
@@ -182,9 +182,9 @@ void MainMenu_ChangeMenu(void)
 #if RETRO_USE_PLUS
                 saveSelect->dwordCC     = 0;
                 ManiaModeMenu->field_28 = -1;
-                for (int i = 0; i < saveSelect->unknownCount1; ++i) {
+                for (int i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store          = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)saveSelect->entities[i];
+                    RSDK_sceneInfo->entity = (Entity *)saveSelect->buttons[i];
                     UISaveSlot_Unknown21();
                     RSDK_sceneInfo->entity = store;
                 }
@@ -231,9 +231,9 @@ void MainMenu_ChangeMenu(void)
                 EntityUIControl *encoreSaveSel = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
                 encoreSaveSel->activeEntityID  = 1;
                 encoreSaveSel->dwordCC         = 0;
-                for (int i = 0; i < encoreSaveSel->unknownCount1; ++i) {
+                for (int i = 0; i < encoreSaveSel->buttonCount; ++i) {
                     Entity *store          = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)encoreSaveSel->entities[i];
+                    RSDK_sceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
                     UISaveSlot_Unknown21();
                     RSDK_sceneInfo->entity = store;
                 }
@@ -276,14 +276,14 @@ int MainMenu_BuyPlusDialogCB(void)
 void MainMenu_Unknown2(void)
 {
     EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
-    EntityUIButton *taButton = control->entities[1];
+    EntityUIButton *taButton = control->buttons[1];
     if (API.CheckDLC(DLC_PLUS))
-        taButton = control->entities[2];
+        taButton = control->buttons[2];
     taButton->disabled = !SaveGame_CheckUnlock(0);
 
-    EntityUIButton *compButton = control->entities[2];
+    EntityUIButton *compButton = control->buttons[2];
     if (API.CheckDLC(DLC_PLUS))
-        compButton = control->entities[3];
+        compButton = control->buttons[3];
     compButton->disabled = !SaveGame_CheckUnlock(1);
 }
 
@@ -296,9 +296,9 @@ void MainMenu_Unknown3(void)
                 if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
                     EntityUIControl *mainMenu = (EntityUIControl *)MainMenu->menuControlPtr;
                     RSDK.ResetEntityPtr(button, TYPE_BLANK, NULL);
-                    --mainMenu->unknownCount1;
+                    --mainMenu->buttonCount;
                     --mainMenu->rowCount;
-                    mainMenu->entities[6] = NULL;
+                    mainMenu->buttons[6] = NULL;
                 }
                 else {
                     button->options2 = MainMenu_ExitGameOption;

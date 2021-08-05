@@ -83,7 +83,7 @@ void UFO_HUD_Create(void *data)
         entity->scale.y       = 0x200;
         entity->palID         = 2;
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 0, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 1, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 2, &entity->data3, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 3, &entity->data4, true, 0);
     }
@@ -148,8 +148,8 @@ void UFO_HUD_DrawNumbers(Vector2 *drawPos, int value)
 
     int mult = 1;
     for (int i = 0; i < 3; ++i) {
-        entity->data2.frameID = value / mult % 10;
-        RSDK.DrawSprite(&entity->data2, drawPos, true);
+        entity->animator2.frameID = value / mult % 10;
+        RSDK.DrawSprite(&entity->animator2, drawPos, true);
         drawPos->x -= 0x100000;
         mult *= 10;
     }

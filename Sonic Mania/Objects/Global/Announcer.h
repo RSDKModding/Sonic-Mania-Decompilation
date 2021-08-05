@@ -44,7 +44,7 @@ typedef struct {
     int screen;
     Vector2 pos;
     Animator animator;
-    Animator data2;
+    Animator animator2;
 } EntityAnnouncer;
 
 // Object Struct

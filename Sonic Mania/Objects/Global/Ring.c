@@ -415,7 +415,7 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
     }
 
     if (Ice) {
-        // TODO
+        foreach_active(Ice, ice) { flags |= 1 << RSDK.CheckObjectCollisionBox(ice, &ice->hitbox1, entity, &Ring->hitbox, true); }
     }
 
     if (BigSqueeze) {

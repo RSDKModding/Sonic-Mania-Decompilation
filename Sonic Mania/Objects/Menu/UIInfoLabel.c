@@ -21,7 +21,7 @@ void UIInfoLabel_Create(void *data)
     entity->updateRange.y = 0x300000;
     entity->width         = entity->size.y >> 0x10;
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
     }
 }
@@ -35,7 +35,7 @@ void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
     if (!RSDK_sceneInfo->inEditor) {
         RSDK.SetText(&label->text, text, 0);
         if (!RSDK_sceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &label->data2, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &label->animator2, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &label->text);
         }
     }
@@ -45,7 +45,7 @@ void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
     if (!RSDK_sceneInfo->inEditor) {
         RSDK.CopyString(&entity->text, text);
         if (!RSDK_sceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->data2, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
         }
     }
@@ -63,14 +63,14 @@ void UIInfoLabel_DrawSprites(void)
     UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 0, 0, 0, entity->position.x, entity->position.y);
 
     if (RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIInfoLabel->spriteIndex, 12, &entity->data2, true, 2);
+        RSDK.SetSpriteAnimation(UIInfoLabel->spriteIndex, 12, &entity->animator2, true, 2);
         drawPos.y -= 0x40000;
-        RSDK.DrawSprite(&entity->data2, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator2, &drawPos, 0);
     }
     else {
         drawPos.y -= 0x10000;
         drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->text, 0, entity->text.textLength, 0) << 15;
-        RSDK.DrawText(&entity->data2, &drawPos, &entity->text, 0, entity->text.textLength, 0, 0, 0, 0, 0);
+        RSDK.DrawText(&entity->animator2, &drawPos, &entity->text, 0, entity->text.textLength, 0, 0, 0, 0, 0);
     }
 }
 

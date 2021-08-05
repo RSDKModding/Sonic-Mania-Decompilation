@@ -22,7 +22,7 @@ void PBL_HUD_Draw(void)
     }
     else {
         RSDK.DrawSprite(&entity->data1, NULL, true);
-        RSDK.DrawSprite(&entity->data2, NULL, true);
+        RSDK.DrawSprite(&entity->animator2, NULL, true);
     }
 }
 
@@ -37,7 +37,7 @@ void PBL_HUD_Create(void *data)
         entity->scale.x    = 0x200;
         entity->scale.y    = 0x200;
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->data2, true, 1);
+        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->animator2, true, 1);
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &entity->data3, true, 0);
         RSDK.SetText(&entity->text, "", 64);
 
@@ -226,7 +226,7 @@ void PBL_HUD_StateDraw_Unknown2(void)
 {
     RSDK_THIS(PBL_HUD);
     RSDK.DrawSprite(&entity->data1, 0, true);
-    RSDK.DrawSprite(&entity->data2, 0, true);
+    RSDK.DrawSprite(&entity->animator2, 0, true);
 
     Vector2 position;
     position.x = entity->position.x;
@@ -255,7 +255,7 @@ void PBL_HUD_StateDraw_Unknown3(void)
     drawPos.y = entity->position.y;
     drawPos.x += 0x320000;
     RSDK.DrawSprite(&entity->data1, NULL, true);
-    RSDK.DrawSprite(&entity->data2, NULL, true);
+    RSDK.DrawSprite(&entity->animator2, NULL, true);
 
     int div = 10;
     while (count > 0) {

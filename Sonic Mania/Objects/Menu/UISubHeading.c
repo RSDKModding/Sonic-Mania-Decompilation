@@ -93,12 +93,12 @@ void UISubHeading_Initialize(void)
 void UISubHeading_Unknown2(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
-    EntityUIButton *button   = control->entities[1];
+    EntityUIButton *button   = control->buttons[1];
     button->disabled         = !SaveGame_CheckUnlock(5) && globals->superSecret;
     if (button->disabled)
         UIButton_Unknown1(button);
 
-    button                  = control->entities[2];
+    button                  = control->buttons[2];
     EntityUIButton *option1 = UIButton_Unknown2(button, 1);
     EntityUIButton *option2 = UIButton_Unknown2(button, 2);
     int unlock              = SaveGame_CheckUnlock(2);
@@ -108,7 +108,7 @@ void UISubHeading_Unknown2(void)
     option1->disabled = !SaveGame_CheckUnlock(2);
     option2->disabled = !SaveGame_CheckUnlock(3);
 
-    button           = control->entities[3];
+    button           = control->buttons[3];
     unlock           = SaveGame_CheckUnlock(4);
     button->disabled = !unlock;
     if (button->disabled)
@@ -164,26 +164,26 @@ void UISubHeading_Unknown4(int slot)
         saveRAM = globals->noSaveSlot;
     else
         saveRAM = &globals->saveRAM[256 * (slot % 8)];
-    UIButton_Unknown4(control->entities[0], (saveRAM[33] & 0x20) != 0);
-    UIButton_Unknown4(control->entities[1], (saveRAM[33] & 1) != 0);
+    UIButton_Unknown4(control->buttons[0], (saveRAM[33] & 0x20) != 0);
+    UIButton_Unknown4(control->buttons[1], (saveRAM[33] & 1) != 0);
 
     int medals = saveRAM[33];
     if (medals & getMod(MEDAL_NODROPDASH)) {
         if (medals & getMod(MEDAL_PEELOUT)) {
-            UIButton_Unknown4(control->entities[2], 1);
+            UIButton_Unknown4(control->buttons[2], 1);
         }
         else if (medals & getMod(MEDAL_INSTASHIELD)) {
-            UIButton_Unknown4(control->entities[2], 2);
+            UIButton_Unknown4(control->buttons[2], 2);
         }
     }
     else {
-        UIButton_Unknown4(control->entities[2], 3);
+        UIButton_Unknown4(control->buttons[2], 3);
     }
 
     if ((saveRAM[33] & getMod(MEDAL_ANDKNUCKLES)))
-        UIButton_Unknown4(control->entities[3], 1);
+        UIButton_Unknown4(control->buttons[3], 1);
     else
-        UIButton_Unknown4(control->entities[3], 0);
+        UIButton_Unknown4(control->buttons[3], 0);
 }
 
 int UISubHeading_GetMedalMods(void)
@@ -191,22 +191,22 @@ int UISubHeading_GetMedalMods(void)
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
 
     int mods = 0;
-    if (control->entities[0]->selection == 1)
+    if (control->buttons[0]->selection == 1)
         mods |= getMod(MEDAL_NOTIMEOVER);
 
-    if (control->entities[1]->selection == 1)
+    if (control->buttons[1]->selection == 1)
         mods |= getMod(MEDAL_DEBUGMODE);
 
-    if (control->entities[2]->selection == 1) {
+    if (control->buttons[2]->selection == 1) {
         mods |= getMod(MEDAL_NODROPDASH);
         mods |= getMod(MEDAL_PEELOUT);
     }
-    else if (control->entities[2]->selection == 2) {
+    else if (control->buttons[2]->selection == 2) {
         mods |= getMod(MEDAL_NODROPDASH);
         mods |= getMod(MEDAL_INSTASHIELD);
     }
 
-    if (control->entities[3]->selection == 1)
+    if (control->buttons[3]->selection == 1)
         mods |= getMod(MEDAL_ANDKNUCKLES);
 
     return mods;
@@ -229,7 +229,7 @@ void UISubHeading_Unknown9(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
     if (ManiaModeMenu->field_24) {
-        EntityUISaveSlot *slot = (EntityUISaveSlot *)control->entities[control->field_D8];
+        EntityUISaveSlot *slot = (EntityUISaveSlot *)control->buttons[control->field_D8];
         UISubHeading_Unknown4(slot->slotID);
         ManiaModeMenu->field_24 = 0;
     }
@@ -250,11 +250,11 @@ void UISubHeading_Unknown10(void)
 
         bool32 flag  = false;
         bool32 flag2 = false;
-        for (int i = 0; i < entity->unknownCount1; ++i) {
-            flag2 |= entity->entities[i]->state == UISaveSlot_Unknown28;
+        for (int i = 0; i < entity->buttonCount; ++i) {
+            flag2 |= entity->buttons[i]->state == UISaveSlot_Unknown28;
             if (entity->field_D8 >= 0) {
-                if (entity->entities[i] == entity->entities[entity->field_D8]) {
-                    EntityUISaveSlot *slot = (EntityUISaveSlot *)entity->entities[entity->field_D8];
+                if (entity->buttons[i] == entity->buttons[entity->field_D8]) {
+                    EntityUISaveSlot *slot = (EntityUISaveSlot *)entity->buttons[entity->field_D8];
                     if (!slot->isNewSave)
                         flag = true;
                 }
@@ -278,7 +278,7 @@ void UISubHeading_Unknown11(void)
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
     if (control->active == ACTIVE_ALWAYS) {
         if (!ManiaModeMenu->field_24) {
-            UISubHeading_Unknown4(control->entities[control->activeEntityID]->stopMusic);
+            UISubHeading_Unknown4(control->buttons[control->activeEntityID]->stopMusic);
             ManiaModeMenu->field_24 = 1;
         }
         RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);

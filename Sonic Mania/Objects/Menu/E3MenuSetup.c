@@ -124,8 +124,8 @@ void E3MenuSetup_Unknown5(void)
     TimeAttackData_ClearOptions();
     param->characterID = 1;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        control->entities[i]->animator.animationID = 1;
+    for (int i = 0; i < control->buttonCount; ++i) {
+        control->buttons[i]->animator.animationID = 1;
     }
     UIControl_MatchMenuTag("Zones");
 }
@@ -137,8 +137,8 @@ void E3MenuSetup_Unknown6(void)
     TimeAttackData_ClearOptions();
     param->characterID = 2;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        control->entities[i]->animator.animationID = 2;
+    for (int i = 0; i < control->buttonCount; ++i) {
+        control->buttons[i]->animator.animationID = 2;
     }
     UIControl_MatchMenuTag("Zones");
 }
@@ -150,8 +150,8 @@ void E3MenuSetup_Unknown7(void)
     TimeAttackData_ClearOptions();
     param->characterID = 3;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        control->entities[i]->animator.animationID = 3;
+    for (int i = 0; i < control->buttonCount; ++i) {
+        control->buttons[i]->animator.animationID = 3;
     }
     UIControl_MatchMenuTag("Zones");
 }

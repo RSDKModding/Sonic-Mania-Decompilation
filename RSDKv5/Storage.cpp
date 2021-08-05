@@ -29,6 +29,12 @@ void ReleaseStorage()
         dataStorage[s].entryCount  = 0;
         dataStorage[s].unknown     = 0;
     }
+
+    for (int p = 0; p < dataPackCount; ++p) {
+        if (dataPacks[p].dataPtr != NULL)
+            free(dataPacks[p].dataPtr);
+        dataPacks[p].dataPtr = NULL;
+    }
 }
 
 // MemPtr format:

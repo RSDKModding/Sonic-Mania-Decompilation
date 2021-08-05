@@ -94,6 +94,7 @@ void MenuSetup_StageLoad(void)
         RSDK.StopChannel(Music->channelID);
         Music->activeTrack = -1;
     }
+
     if (!RSDK_sceneInfo->inEditor) {
 #if RETRO_USE_PLUS
         switch (RSDK_sku->platform) {

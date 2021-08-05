@@ -72,9 +72,6 @@ void Soundboard_StageLoad(void)
         Soundboard->sfxUnknown4[i]       = 0;
         Soundboard->sfxUnknown6[i]       = 0;
         Soundboard->sfxUnknown8[i]       = 0;
-
-        // Soundboard->sfxChannel[i]     = 0;
-        // Soundboard->sfxUnknown7[i]       = 0;
     }
 }
 

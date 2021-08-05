@@ -32,7 +32,6 @@ void UIVsScoreboard_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x300000;
     UIVsScoreboard_SetupSprites();
-    entity = RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         char buffer[0x40];
         memset(buffer, 0, sizeof(buffer));

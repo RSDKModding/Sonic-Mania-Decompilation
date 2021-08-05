@@ -37,8 +37,8 @@ void ERZSetup_StageLoad(void)
 {
     ERZSetup->skySheet        = RSDK.LoadSpriteSheet("Phantom/Sky.gif", SCOPE_STAGE);
     RSDK.GetSceneLayer(1)->scanlineCallback = ERZSetup_ScanlineCallback;
-    Animals->animalTypes[0]             = ANIMAL_POCKY; // Ricky
-    Animals->animalTypes[1]             = ANIMAL_ROCKY; // Cucky
+    Animals->animalTypes[0]             = ANIMAL_POCKY;
+    Animals->animalTypes[1]             = ANIMAL_ROCKY;
     for (int p = 1; p < Player->playerCount; ++p) {
         RSDK.ResetEntitySlot(p, 0, NULL);
     }

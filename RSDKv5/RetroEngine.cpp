@@ -271,7 +271,6 @@ bool initRetroEngine()
         engine.running = false;
         return false;
     }
-    
     InitInputDevice();
 
     return true;
@@ -280,8 +279,6 @@ void runRetroEngine()
 {
     uint frameStart, frameEnd = SDL_GetTicks();
     int frameDelta = 0;
-
-    engine.refreshRate = 60;
 
     while (engine.running) {
         frameStart = SDL_GetTicks();

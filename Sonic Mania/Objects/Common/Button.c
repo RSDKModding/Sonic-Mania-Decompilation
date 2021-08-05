@@ -24,7 +24,7 @@ void Button_Update(void)
 
     if (!entity->field_64)
         entity->field_74 = 0;
-    entity->data2.frameID = entity->field_64 + 1;
+    entity->animator2.frameID = entity->field_64 + 1;
 }
 
 void Button_LateUpdate(void) {}
@@ -43,7 +43,7 @@ void Button_Draw(void)
     else
         drawPos.y += entity->field_78;
     RSDK.DrawSprite(&entity->data1, &drawPos, false);
-    RSDK.DrawSprite(&entity->data2, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
 
 void Button_Create(void *data)
@@ -56,7 +56,7 @@ void Button_Create(void *data)
             case 0:
                 entity->direction = FLIP_NONE;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data2, true, 1);
+                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxV.left;
                 entity->hitbox.top    = Button->hitboxV.top;
                 entity->hitbox.right  = Button->hitboxV.right;
@@ -65,7 +65,7 @@ void Button_Create(void *data)
             case 1:
                 entity->direction = FLIP_Y;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->data2, true, 1);
+                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxV.left;
                 entity->hitbox.top    = Button->hitboxV.top;
                 entity->hitbox.right  = Button->hitboxV.right;
@@ -74,7 +74,7 @@ void Button_Create(void *data)
             case 2:
                 entity->direction = FLIP_NONE;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data2, true, 1);
+                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxH.left;
                 entity->hitbox.top    = Button->hitboxH.top;
                 entity->hitbox.right  = Button->hitboxH.right;
@@ -83,7 +83,7 @@ void Button_Create(void *data)
             case 3:
                 entity->direction = FLIP_X;
                 RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->data2, true, 1);
+                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxH.left;
                 entity->hitbox.top    = Button->hitboxH.top;
                 entity->hitbox.right  = Button->hitboxH.right;

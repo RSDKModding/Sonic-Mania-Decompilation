@@ -19,10 +19,10 @@ void UISaveSlot_Update(void)
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
     // ???
-    // for (int i = 0; i < control->unknownCount1; ++i) {
-    //     if (entity == (EntityUISaveSlot *)control->entities[i])
-    //         break;
-    // }
+    for (int i = 0; i < control->buttonCount; ++i) {
+        if (entity == (EntityUISaveSlot *)control->buttons[i])
+            break;
+    }
 
     if (entity->flag) {
         entity->field_148 -= 0x600;
@@ -59,7 +59,7 @@ void UISaveSlot_Update(void)
         }
     }
 
-    if (entity->zoneID && (control->entities[control->field_D8] != (EntityUIButton *)entity || control->activeEntityID == -1)) {
+    if (entity->zoneID && (control->buttons[control->field_D8] != (EntityUIButton *)entity || control->activeEntityID == -1)) {
         entity->flag         = false;
         entity->zoneID       = 0;
         entity->state        = UISaveSlot_Unknown22;
@@ -239,7 +239,7 @@ void UISaveSlot_Create(void *data)
         entity->active          = ACTIVE_BOUNDS;
         entity->updateRange.x   = 0x800000;
         entity->updateRange.y   = 0x300000;
-        entity->processButtonCB = UISaveSlot_Unknown9;
+        entity->processButtonCB = UISaveSlot_ProcessButtonCB;
         entity->state           = UISaveSlot_Unknown22;
         if (!entity->type) {
             UISaveSlot_LoadSaveInfo();
@@ -554,8 +554,8 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
 void UISaveSlot_SetupButtonElements(void)
 {
     RSDK_THIS(UISaveSlot);
-    entity->touchCB  = UIButton_Unknown7;
-    entity->options3 = UISaveSlot_Unknown12;
+    entity->touchCB  = UIButton_TouchCB_Alt;
+    entity->options3 = UISaveSlot_SelectedSave;
     entity->failCB   = NULL;
     entity->options5 = UISaveSlot_Unknown19;
     entity->options6 = UISaveSlot_Unknown20;
@@ -563,20 +563,20 @@ void UISaveSlot_SetupButtonElements(void)
     entity->options8 = UISaveSlot_Unknown18;
 
 #if RETRO_USE_PLUS
-    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
-#else                        
-    EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+#else
+    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID);
 #endif
     if (entity->type == 1) {
         entity->touchPos1[0].x       = 0x600000;
         entity->touchPos1[0].y       = 0x440000;
-        entity->touchPos2[1].y       = -0x1A0000;
         entity->touchPos2[0].x       = 0;
         entity->touchPos2[0].y       = 0;
-        entity->touchPosCallbacks[0] = UISaveSlot_Unknown12;
+        entity->touchPosCallbacks[0] = UISaveSlot_SelectedSave;
         entity->touchPos1[1].x       = 0x200000;
         entity->touchPos1[1].y       = 0x200000;
         entity->touchPos2[1].x       = 0;
+        entity->touchPos2[1].y       = -0x1A0000;
         entity->touchPosCallbacks[1] = UISaveSlot_NextCharacter;
         entity->touchPos1[2].x       = 0x200000;
         entity->touchPos1[2].y       = 0x200000;
@@ -590,7 +590,7 @@ void UISaveSlot_SetupButtonElements(void)
         entity->touchPos1[0].y       = 0xA40000;
         entity->touchPos2[0].x       = 0;
         entity->touchPos2[0].y       = 0;
-        entity->touchPosCallbacks[0] = UISaveSlot_Unknown12;
+        entity->touchPosCallbacks[0] = UISaveSlot_SelectedSave;
 
         switch (saveRAM->saveState) {
             default:
@@ -598,6 +598,7 @@ void UISaveSlot_SetupButtonElements(void)
                 entity->touchPos1[1].x       = 0x200000;
                 entity->touchPos1[1].y       = 0x200000;
                 entity->touchPos2[1].x       = 0;
+                entity->touchPos2[1].y       = -0x440000;
                 entity->touchPosCallbacks[1] = UISaveSlot_NextCharacter;
                 entity->touchPos1[2].x       = 0x200000;
                 entity->touchPos1[2].y       = 0x200000;
@@ -775,7 +776,7 @@ void UISaveSlot_DeleteSaveCB(int status)
     RSDK_sceneInfo->entity = storeEntity;
 }
 
-void UISaveSlot_Unknown9(void)
+void UISaveSlot_ProcessButtonCB(void)
 {
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
@@ -798,7 +799,7 @@ void UISaveSlot_Unknown9(void)
                 }
             }
             else if (UIControl->keyRight) {
-                if (control->activeEntityID < control->unknownCount1 - 1) {
+                if (control->activeEntityID < control->buttonCount - 1) {
                     control->activeEntityID++;
                     RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
                     UISaveSlot_Unknown21();
@@ -814,7 +815,7 @@ void UISaveSlot_Unknown9(void)
 
         if (UIControl->keyBack) {
             if (API.CheckDLC(DLC_PLUS) || entity->frameID < 4) {
-                UISaveSlot_Unknown12();
+                UISaveSlot_SelectedSave();
             }
             else {
                 Localization_GetString(&strBuffer, STR_ENCOREREQUIRED);
@@ -835,13 +836,13 @@ void UISaveSlot_Unknown9(void)
                 UIDialog_Setup(dialog);
             }
         }
-        else if (!entity->zoneID && control->entities[control->field_D8] == (EntityUIButton *)entity && control->state == UIControl_ProcessInputs) {
+        else if (!entity->zoneID && control->buttons[control->field_D8] == (EntityUIButton *)entity && control->state == UIControl_ProcessInputs) {
             UISaveSlot_Unknown19();
         }
     }
 }
 
-void UISaveSlot_Unknown12(void)
+void UISaveSlot_SelectedSave(void)
 {
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;

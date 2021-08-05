@@ -23,7 +23,7 @@ typedef struct {
     int count;
     int field_F0;
     Animator data1;
-    Animator data2;
+    Animator animator2;
     Animator data3;
     Animator data4;
 } EntityAIZKingClaw;

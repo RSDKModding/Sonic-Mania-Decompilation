@@ -197,8 +197,6 @@ void TimeAttackData_ResetTimeAttackDB(void)
 void TimeAttackData_MigrateLegacyTADB(void)
 {
     if (globals->saveLoaded == STATUS_OK) {
-        // result = (GlobalVariables *)((char *)globals + 73892); //saveRAM[0x800]
-        // if (globals != (GlobalVariables *)-73892) {
         TimeAttackData->dword1C = 1;
         LogHelpers_Print("===========================");
         LogHelpers_Print("Migrating Legacy TA Data...");

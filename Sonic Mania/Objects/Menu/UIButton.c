@@ -29,7 +29,7 @@ void UIButton_Update(void)
 
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
     if (parent && entity->state == UIButton_Unknown17
-        && (parent->state != UIControl_ProcessInputs || parent->entities[parent->activeEntityID] != entity)) {
+        && (parent->state != UIControl_ProcessInputs || parent->buttons[parent->activeEntityID] != entity)) {
         entity->flag = false;
         UIButton_Unknown13();
     }
@@ -319,7 +319,7 @@ void UIButton_Unknown6(void)
                     colID -= control->columnCount;
             }
 
-            int id = control->unknownCount1 - 1;
+            int id = control->buttonCount - 1;
             if (colID + rowID * control->columnCount < id)
                 id = colID + rowID * control->columnCount;
             if (control->activeEntityID != id) {
@@ -357,33 +357,33 @@ void UIButton_Unknown6(void)
     }
 }
 
-bool32 UIButton_Unknown7(void)
+bool32 UIButton_TouchCB_Alt(void)
 {
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
     bool32 touchFlag = false;
     int lastTouchID  = -1;
-    int lastTouch    = -1;
+    uint lastTouch    = 0xFFFFFFFF;
 
     for (int i = 0; i < entity->touchPosCount; ++i) {
         Vector2 touchPos1 = entity->touchPos1[i];
-        Vector2 touchPos2 = entity->touchPos1[i];
+        Vector2 touchPos2 = entity->touchPos2[i];
 
         if (RSDK_touchMouse->count) {
             int screenX = RSDK_screens->position.x << 16;
             int screenY = RSDK_screens->position.y << 16;
             for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = abs(touchPos1.x + entity->position.x - (screenX - (int)((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f)));
-                int y = abs(touchPos1.y + entity->position.y - (screenY - (int)((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f)));
+                int x = abs(touchPos2.x + entity->position.x - (screenX - (int)((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f)));
+                int y = abs(touchPos2.y + entity->position.y - (screenY - (int)((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f)));
 
-                int x2 = touchPos2.x >> 1;
-                int y2 = touchPos2.y >> 1;
+                int x2 = touchPos1.x >> 1;
+                int y2 = touchPos1.y >> 1;
 
                 if (x < x2 && y < y2) {
                     touchFlag = true;
-                    if ((touchPos2.x >> 16) * (touchPos2.y >> 16) < lastTouch) {
-                        lastTouch    = (touchPos2.x >> 16) * (touchPos2.y >> 16);
+                    if ((touchPos1.x >> 16) * (touchPos1.y >> 16) < lastTouch) {
+                        lastTouch    = (touchPos1.x >> 16) * (touchPos1.y >> 16);
                         lastTouchID = i;
                     }
                 }
@@ -450,8 +450,8 @@ bool32 UIButton_ProcessTouch(void)
 
     if (!touchFlag) {
         if (!entity->touchPressed && entity->options7()) {
-            for (int i = 0; i < control->unknownCount1; ++i) {
-                if (entity == control->entities[i] && control->activeEntityID != i) {
+            for (int i = 0; i < control->buttonCount; ++i) {
+                if (entity == control->buttons[i] && control->activeEntityID != i) {
                     entity->flag = false;
                     StateMachine_Run(entity->options6);
                     break;
@@ -600,9 +600,9 @@ void UIButton_ProcessButtonInputs(void)
         }
 
         int id = columnID + control->columnCount * rowID;
-        if (id >= control->unknownCount1 - 1)
-            id = control->unknownCount1 - 1;
-        if (control->activeEntityID != id && entity != control->entities[id]) {
+        if (id >= control->buttonCount - 1)
+            id = control->buttonCount - 1;
+        if (control->activeEntityID != id && entity != control->buttons[id]) {
             control->activeEntityID = id;
             UIButton_Unknown13();
             RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);

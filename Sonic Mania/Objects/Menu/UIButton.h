@@ -62,7 +62,7 @@ void UIButton_Unknown4(EntityUIButton *button, int a2);
 void *UIButton_GetOptions2(void);
 void UIButton_Fail(void);
 void UIButton_Unknown6(void);
-bool32 UIButton_Unknown7(void);
+bool32 UIButton_TouchCB_Alt(void);
 bool32 UIButton_ProcessTouch(void);
 void UIButton_ProcessButtonInputs(void);
 bool32 UIButton_Unknown10(void);

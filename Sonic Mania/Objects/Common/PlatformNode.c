@@ -19,10 +19,10 @@ void PlatformNode_EditorDraw(void) {}
 void PlatformNode_EditorLoad(void)
 {
     // Dont have any code to prove this is what it was like, but its a 50/50 chance
-    // PlatformMode->spriteIndex = RSDK.LoadSpriteAnimation("some path to a bin", SCOPE_STAGE);
+    // PlatformMode->textSpriteIndex = RSDK.LoadSpriteAnimation("some path to a bin", SCOPE_STAGE);
 
     //foreach_all(PlatformNode->objectID, entity) {
-    //    RSDK.SetSpriteAnimation(PlatformNode->spriteIndex, 0, &entity->animator, true, 0);
+    //    RSDK.SetSpriteAnimation(PlatformNode->textSpriteIndex, 0, &entity->animator, true, 0);
     //}
 }
 

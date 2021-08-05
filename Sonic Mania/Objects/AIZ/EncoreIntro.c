@@ -84,8 +84,8 @@ void EncoreIntro_Create(void *data)
             ruby->alpha             = 0;
             ruby->inkEffect         = INK_ALPHA;
             ruby->state             = EncoreIntro_PhantomRuby_Unknown1;
-            RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &ruby->data2, true, 0);
-            ruby->data2.animationID = -1;
+            RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &ruby->animator2, true, 0);
+            ruby->animator2.animationID = -1;
         }
         else {
             int id = RSDK.GetEntityID(entity);

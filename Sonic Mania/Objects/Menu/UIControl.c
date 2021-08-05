@@ -77,9 +77,9 @@ void UIControl_Create(void *data)
                         hitbox.left   = -(entity->size.x >> 17);
                         hitbox.bottom = entity->size.y >> 17;
                         hitbox.top    = -(entity->size.y >> 17);
-                        if (MathHelpers_PointInHitbox(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x, entity->startPos.y - entity->cameraOffset.y, &hitbox,
-                                                 prompt->position.x, prompt->position.y)) {
-                            prompt->parent                            = (Entity*)entity;
+                        if (MathHelpers_PointInHitbox(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x,
+                                                      entity->startPos.y - entity->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)) {
+                            prompt->parent                            = (Entity *)entity;
                             entity->unknown2[entity->unknownCount2++] = prompt;
                         }
                     }
@@ -287,8 +287,8 @@ void UIControl_ProcessInputs(void)
                         UIControl->keyConfirm = false;
                     }
                     else {
-                        if (entity->entities[entity->activeEntityID])
-                           entity->entities[entity->activeEntityID]->flag = false;
+                        if (entity->buttons[entity->activeEntityID])
+                            entity->buttons[entity->activeEntityID]->flag = false;
                     }
                 }
                 else {
@@ -300,8 +300,8 @@ void UIControl_ProcessInputs(void)
                         UITransition_StartTransition(UIControl_Unknown13, 0);
                         flag = false;
 
-                        if (entity->entities[entity->activeEntityID])
-                            entity->entities[entity->activeEntityID]->flag = false;
+                        if (entity->buttons[entity->activeEntityID])
+                            entity->buttons[entity->activeEntityID]->flag = false;
                     }
                 }
 
@@ -320,7 +320,7 @@ void UIControl_ProcessInputs(void)
         if (entity->processButtonInputCB)
             entity->processButtonInputCB();
         else
-           UIControl_ProcessButtonInput();
+            UIControl_ProcessButtonInput();
 
         if (!entity->selectionDisabled) {
             if (UIControl->keyY) {
@@ -341,8 +341,8 @@ void UIControl_ProcessInputs(void)
 
 int UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity)
 {
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        if (entity == control->entities[i])
+    for (int i = 0; i < control->buttonCount; ++i) {
+        if (entity == control->buttons[i])
             return i;
     }
     return -1;
@@ -397,9 +397,9 @@ void UIControl_Unknown2(EntityUIControl *control)
                     }
                     else if (UIHeading && entity->objectID == UIHeading->objectID) {
                         EntityUIHeading *heading = (EntityUIHeading *)entity;
-                        if (heading->spriteIndex != UIHeading->spriteIndex) {
-                            RSDK.SetSpriteAnimation(UIHeading->spriteIndex, heading->headingID, &heading->animator, true, 0);
-                            heading->spriteIndex = UIHeading->spriteIndex;
+                        if (heading->textSpriteIndex != UIHeading->textSpriteIndex) {
+                            RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, heading->headingID, &heading->animator, true, 0);
+                            heading->textSpriteIndex = UIHeading->textSpriteIndex;
                         }
                         StateMachine_Run(heading->state);
                     }
@@ -428,7 +428,7 @@ void UIControl_Unknown4(EntityUIControl *entity)
     entity->visible = true;
     if (entity->dwordC4) {
         entity->activeEntityID = entity->storedEntityID;
-        entity->storedEntityID        = 0;
+        entity->storedEntityID = 0;
         entity->dwordC4        = 0;
     }
     else if (entity->resetSelection) {
@@ -466,7 +466,7 @@ void UIControl_Unknown5(EntityUIControl *entity)
     if (!entity->dialogHasFocus && !entity->popoverHasFocus && !entity->childHasFocus) {
         if (entity->dwordC4) {
             entity->activeEntityID = entity->storedEntityID;
-            entity->storedEntityID        = 0;
+            entity->storedEntityID = 0;
             entity->dwordC4        = 0;
         }
         else if (entity->resetSelection) {
@@ -535,7 +535,7 @@ void UIControl_Unknown7(void)
         }
     }
 
-#if RETRO_USE_PLUS 
+#if RETRO_USE_PLUS
     if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIShifter, shifter)
         {
@@ -563,7 +563,7 @@ void UIControl_Unknown7(void)
             bounds.top    = -(entity->size.y >> 17);
             if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, carousel->position.x, carousel->position.y)) {
                 entity->carousel = carousel;
-                carousel->parent = (Entity*)entity;
+                carousel->parent = (Entity *)entity;
             }
         }
     }
@@ -575,7 +575,7 @@ void UIControl_Unknown7(void)
             int id = entPtr->objectID;
             if (id != UIButton->objectID && (!UIModeButton || id != UIModeButton->objectID) && (!UISaveSlot || id != UISaveSlot->objectID)
                 && (!UICharButton || id != UICharButton->objectID) && (!UITAZoneModule || id != UITAZoneModule->objectID)
-#if RETRO_USE_PLUS 
+#if RETRO_USE_PLUS
                 && (!UIRankButton || id != UIRankButton->objectID) && (!UIReplayCarousel || id != UIReplayCarousel->objectID)
 #endif
                 && (!UILeaderboard || id != UILeaderboard->objectID) && (!UIVsCharSelector || id != UIVsCharSelector->objectID)
@@ -590,10 +590,10 @@ void UIControl_Unknown7(void)
                 bounds.bottom = entity->size.y >> 17;
                 bounds.top    = -(entity->size.y >> 17);
                 if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, entPtr->position.x, entPtr->position.y)) {
-                    if (entity->unknownCount1 < 64) {
+                    if (entity->buttonCount < 64) {
                         if (!entPtr->parent)
                             entPtr->parent = (Entity *)entity;
-                        entity->entities[entity->unknownCount1++] = entPtr;
+                        entity->buttons[entity->buttonCount++] = entPtr;
                     }
                 }
             }
@@ -667,7 +667,7 @@ void UIControl_Unknown12(Entity *control)
 
 void UIControl_Unknown13(void)
 {
-    EntityUIControl *entity     = UIControl_GetUIControl();
+    EntityUIControl *entity   = UIControl_GetUIControl();
     entity->selectionDisabled = false;
     UIControl_Unknown11(&entity->parentTag);
 }
@@ -738,15 +738,15 @@ void UIControl_ProcessButtonInput(void)
 {
     RSDK_THIS(UIControl);
 
-    bool32 flag        = false;
+    bool32 flag = false;
     if (RSDK_touchMouse->count || UIControl->field_C8) {
         EntityUIButton *activeButton = 0;
         UIControl->field_C8          = RSDK_touchMouse->count != 0;
         UIControl->field_4           = 1;
 
-        for (int i = 0; i < entity->unknownCount1; ++i) {
-            if (entity->entities[i]) {
-                EntityUIButton *button = entity->entities[i];
+        for (int i = 0; i < entity->buttonCount; ++i) {
+            if (entity->buttons[i]) {
+                EntityUIButton *button = entity->buttons[i];
 
                 Entity *storeEntity    = RSDK_sceneInfo->entity;
                 RSDK_sceneInfo->entity = (Entity *)button;
@@ -769,8 +769,8 @@ void UIControl_ProcessButtonInput(void)
         if (RSDK_touchMouse->count) {
             if (flag) {
                 int id = -1;
-                for (int i = 0; i < entity->unknownCount1; ++i) {
-                    if (activeButton == entity->entities[i]) {
+                for (int i = 0; i < entity->buttonCount; ++i) {
+                    if (activeButton == entity->buttons[i]) {
                         id = i;
                         break;
                     }
@@ -794,8 +794,8 @@ void UIControl_ProcessButtonInput(void)
     }
 
     if (entity->activeEntityID >= 0) {
-        if (entity->activeEntityID < entity->unknownCount1) {
-            EntityUIButton *button = entity->entities[entity->activeEntityID];
+        if (entity->activeEntityID < entity->buttonCount) {
+            EntityUIButton *button = entity->buttons[entity->activeEntityID];
             if (button) {
                 Entity *storeEntity    = RSDK_sceneInfo->entity;
                 RSDK_sceneInfo->entity = (Entity *)button;

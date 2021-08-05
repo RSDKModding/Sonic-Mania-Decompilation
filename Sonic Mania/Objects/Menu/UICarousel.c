@@ -52,7 +52,7 @@ void UICarousel_Unknown1(void)
     int entityID             = entity->field_98;
 
     if (control->activeEntityID != entityID) {
-        int max      = control->unknownCount1 - 1;
+        int max      = control->buttonCount - 1;
         bool32 flag  = 0;
         bool32 flag2 = 0;
         if (entityID != -1) {
@@ -75,16 +75,16 @@ void UICarousel_Unknown1(void)
         int val = entity->field_84;
         if (flag) {
             --entity->field_88;
-            entity->field_84 = entity->field_88 - (control->unknownCount1 >> 1);
+            entity->field_84 = entity->field_88 - (control->buttonCount >> 1);
         }
         else if (flag2) {
             ++entity->field_88;
-            entity->field_84 = entity->field_88 - (control->unknownCount1 >> 1);
+            entity->field_84 = entity->field_88 - (control->buttonCount >> 1);
         }
 
         if (entity->field_A0 != -1) {
-            if (control->unknownCount1 + entity->field_84 > entity->field_A0 + 1)
-                entity->field_84 = entity->field_A0 - control->unknownCount1 + 1;
+            if (control->buttonCount + entity->field_84 > entity->field_A0 + 1)
+                entity->field_84 = entity->field_A0 - control->buttonCount + 1;
 
             if (entity->field_88 > entity->field_A0 - 1) {
                 entity->field_88        = entity->field_A0 - 1;
@@ -120,23 +120,23 @@ void UICarousel_Unknown2(void)
     Vector2 vecs[0x10];
     memset(vecs, 0, sizeof(vecs));
 
-    for (int i = 0; i < control->unknownCount1; ++i) {
+    for (int i = 0; i < control->buttonCount; ++i) {
         vecs[i].x = entity->position.x;
         vecs[i].y = entity->position.y - (entity->shift.y * i);
     }
 
-    for (int i = 0; i < control->unknownCount1; ++i) {
-        EntityUIButton *entPtr = control->entities[i];
+    for (int i = 0; i < control->buttonCount; ++i) {
+        EntityUIButton *entPtr = control->buttons[i];
 
-        int pos = (i - entity->field_84) % control->unknownCount1;
+        int pos = (i - entity->field_84) % control->buttonCount;
         if (pos < 0)
-            pos += control->unknownCount1;
+            pos += control->buttonCount;
 
         entPtr->position.x = vecs[pos].x;
         entPtr->position.y = vecs[pos].y;
         entPtr->position.x += entity->offset.x;
         entPtr->position.y += entity->offset.y;
-        entPtr->drawOrder = pos - control->unknownCount1 + 12;
+        entPtr->drawOrder = pos - control->buttonCount + 12;
     }
 }
 

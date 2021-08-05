@@ -5,7 +5,7 @@ ObjectHPZEmerald *HPZEmerald;
 void HPZEmerald_Update(void)
 {
     RSDK_THIS(HPZEmerald);
-    RSDK.ProcessAnimation(&entity->data2);
+    RSDK.ProcessAnimation(&entity->animator2);
     if (entity->field_60 == 1) {
         if (entity->type) {
             foreach_active(Player, player) { Player_CheckCollisionPlatform(player, entity, entity->hitbox); }
@@ -41,11 +41,11 @@ void HPZEmerald_Draw(void)
 {
     RSDK_THIS(HPZEmerald);
     if (entity->field_60) {
-        RSDK.DrawSprite(&entity->data2, 0, 0);
+        RSDK.DrawSprite(&entity->animator2, 0, 0);
     }
     else {
         entity->inkEffect = INK_NONE;
-        RSDK.DrawSprite(&entity->data2, 0, 0);
+        RSDK.DrawSprite(&entity->animator2, 0, 0);
         entity->inkEffect = INK_ADD;
         RSDK.DrawSprite(&entity->animator, 0, 0);
     }
@@ -74,13 +74,13 @@ void HPZEmerald_Create(void *data)
         entity->updateRange.y = 0x800000;
         entity->onGround      = true;
         if (entity->type) {
-            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 1, &entity->data2, true, 0);
+            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 1, &entity->animator2, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->data2, true, 0);
+            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator2, true, 0);
             RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator, true, 1);
         }
-        entity->hitbox = RSDK.GetHitbox(&entity->data2, 0);
+        entity->hitbox = RSDK.GetHitbox(&entity->animator2, 0);
     }
 }
 

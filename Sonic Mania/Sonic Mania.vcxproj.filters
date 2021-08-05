@@ -3781,8 +3781,5 @@
     <ClCompile Include="Objects\Unused\Wisp.c">
       <Filter>Sources\Objects\Unused</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\All.c">
-      <Filter>Sources\Objects</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

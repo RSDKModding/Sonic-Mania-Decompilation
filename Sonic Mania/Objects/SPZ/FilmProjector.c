@@ -72,7 +72,7 @@ void FilmProjector_Draw(void)
         entity->inkEffect = INK_NONE;
     }
     else {
-        RSDK.DrawSprite(&entity->data2, &entity->posUnknown, false);
+        RSDK.DrawSprite(&entity->animator2, &entity->posUnknown, false);
         RSDK.DrawSprite(&entity->data6, &entity->posUnknown, false);
         RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
     }
@@ -82,7 +82,7 @@ void FilmProjector_Create(void* data)
 {
     RSDK_THIS(FilmProjector);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->data1, true, 0);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->data2, true, 1);
+    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator2, true, 1);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->data3, true, 0);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->data4, true, 1);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 2, &entity->data5, true, 0);

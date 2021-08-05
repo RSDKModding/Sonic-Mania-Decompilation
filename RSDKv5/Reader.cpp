@@ -49,6 +49,14 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
             dataFiles[f].useFileBuffer = useBuffer;
             dataFiles[f].packID        = dataPackCount;
         }
+
+        dataPacks[dataPackCount].dataPtr = NULL;
+        if (useBuffer) {
+            dataPacks[dataPackCount].dataPtr = (byte *)malloc(info.fileSize);
+            Seek_Set(&info, 0);
+            ReadBytes(&info, dataPacks[dataPackCount].dataPtr, info.fileSize);
+        }
+
         dataFileCount += dataPacks[dataPackCount].fileCount;
         dataPackCount++;
 
@@ -74,6 +82,7 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
         if (!HASH_MATCH(hash, file->hash))
             continue;
 
+        info->usingFileBuffer = file->useFileBuffer;
         if (!file->useFileBuffer) {
             info->file = fOpen(dataPacks[file->packID].name, "rb");
             if (!info->file) {

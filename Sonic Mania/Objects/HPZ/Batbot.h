@@ -5,12 +5,34 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    Hitbox hitboxPlayer;
+    ushort aniFrames;
+    byte dirFlag[5];
 } ObjectBatbot;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 startPos;
+    byte startDir;
+    ushort timer;
+    int field_68;
+    int field_6C;
+    Vector2 posUnknown;
+    int field_78;
+    int field_7C;
+    int swoopAngle;
+    Entity *playerPtr;
+    byte field_88;
+    bool32 flag;
+    ushort field_90;
+    Animator animator1;
+    Animator animator2;
 } EntityBatbot;
 
 // Object Entity
@@ -28,6 +50,15 @@ void Batbot_EditorLoad(void);
 void Batbot_Serialize(void);
 
 // Extra Entity Functions
+void Batbot_DebugSpawn(void);
+void Batbot_DebugDraw(void);
 
+void Batbot_HandlePlayerInteractions(void);
+
+void Batbot_State_Setup(void);
+void Batbot_State_Idle(void);
+void Batbot_State_Attack(void);
+void Batbot_State_SwoopRight(void);
+void Batbot_State_SwoopLeft(void);
 
 #endif //!OBJ_BATBOT_H

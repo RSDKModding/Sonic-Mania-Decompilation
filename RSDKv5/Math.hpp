@@ -77,7 +77,7 @@ inline int aCos512(int angle)
 
 inline int sin256(int angle) { return sinVal256[angle & 0xFF]; }
 inline int cos256(int angle) { return cosVal256[angle & 0xFF]; }
-inline int tan256(byte angle) { return tanVal256[angle & 0xFF]; }
+inline int tan256(int angle) { return tanVal256[angle & 0xFF]; }
 inline int aSin256(int angle)
 {
     if (angle > 0xFF)

@@ -339,7 +339,7 @@ void Player_LateUpdate(void)
                 else
                     entity->tailRotation = entity->rotation - 32;
                 break;
-            default: RSDK.SetSpriteAnimation(-1, 0, &entity->tailAnimator, 0, 0); break;
+            default: RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->tailAnimator, 0, 0); break;
         }
         RSDK.ProcessAnimation(&entity->tailAnimator);
     }
@@ -940,6 +940,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
             if (SizeLaser) {
                 SizeLaser->knuxIndex = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE);
             }
+
             if (entity->isChibi) {
                 entity->spriteIndex  = SizeLaser->knuxIndex;
                 entity->cameraOffset = 0x40000;
@@ -958,6 +959,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
             if (SizeLaser) {
                 SizeLaser->mightyIndex = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE);
             }
+
             if (entity->isChibi) {
                 entity->spriteIndex  = SizeLaser->mightyIndex;
                 entity->cameraOffset = 0x40000;
@@ -1587,7 +1589,7 @@ void Player_HandleSuperForm(void)
             entity->shield   = SHIELD_NONE;
             entity->rotation = 0;
             // if (entity->state == Player_State_ERZDash || entity->state == ERZStart_Unknown18)
-            //     RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_HURT, &entity->playerAnimator, false, 0);
+            //     RSDK.SetSpriteAnimation(entity->textSpriteIndex, ANI_HURT, &entity->playerAnimator, false, 0);
         }
         else {
             bool32 superActive = false;
@@ -2063,7 +2065,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->camera->targetPtr = (Entity *)player->camera;
                     }
                     if (globals->gameMode == MODE_COMPETITION) {
-                        // Competition_CalculateScore(RSDK.GetEntityID(player), 1);
+                        Competition_CalculateScore(RSDK.GetEntityID(player), 1);
                         foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                     }
                     else {
@@ -2083,7 +2085,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                 }
                 else {
-                    EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+                    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                     Player->jumpInDelay   = 0;
                     Player_SwapMainPlayer(true);
 

@@ -113,11 +113,11 @@ void Announcer_Unknown3(void)
 #endif
             default: frame = 0; break;
         }
-        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 2, &entity->data2, true, frame);
+        RSDK.SetSpriteAnimation(Announcer->spriteIndex, 2, &entity->animator2, true, frame);
 
         drawPos.x = RSDK_screens->centerX << 16;
         drawPos.y = (RSDK_screens->centerY + 48) << 16;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
         entity->inkEffect = INK_ALPHA;
     }
 }
@@ -203,7 +203,7 @@ void Announcer_Unknown6(void)
             }
             else {
                 entity->visible = true;
-                // Camera_Unknown12(((entity->timer - 76) << 8) / 16, &entity->pos, 0, 0, RSDK_screens->width << 16, 0);
+                MathHelpers_Unknown1(&entity->pos, ((entity->timer - 76) << 8) / 16, 0, 0, RSDK_screens->width << 16, 0);
                 ++entity->timer;
             }
         }

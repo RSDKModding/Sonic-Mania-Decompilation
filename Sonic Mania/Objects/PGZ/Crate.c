@@ -66,22 +66,22 @@ void Crate_Unknown1(void *e)
 {
     EntityPlatform *entity = (EntityPlatform *)e;
     for (int i = 0; i < 64; ++i) {
-        EntityIce *ice  = (EntityIce *)RSDK.CreateEntity(Ice->objectID, intToVoid(3), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
+        EntityIce *ice  = CREATE_ENTITY(Ice, intToVoid(3), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
                                                         (RSDK.Rand(-24, 25) << 16) + entity->position.y);
         ice->velocity.x = RSDK.Rand(-6, 8) << 15;
         ice->velocity.y = RSDK.Rand(-10, 2) << 15;
-        ice->direction  = RSDK.Rand(0, 4);
-        // LOWORD(ice[1].alpha) = RSDK.Rand(1, 4);
+        ice->direction                = RSDK.Rand(0, 4);
+        ice->animator1.animationSpeed = RSDK.Rand(1, 4);
         ice->drawOrder = Zone->drawOrderLow + 1;
         switch (entity->animator.frameID) {
             case 0:
-            case 3: /*RSDK.SetSpriteAnimation(Crate->aniFrames, 1, &ice[1].updateRange, true, 0);*/ break;
+            case 3: RSDK.SetSpriteAnimation(Crate->aniFrames, 1, &ice->animator1, true, 0); break;
             case 1:
             case 2:
-                // if (RSDK.Rand(0, 6) >= 2)
-                //    RSDK.SetSpriteAnimation(Crate->aniFrames, 2, &ice[1].updateRange, true, 0);
-                // else
-                //    RSDK.SetSpriteAnimation(Crate->aniFrames, 3, &ice[1].updateRange, true, 0);
+                if (RSDK.Rand(0, 6) >= 2)
+                    RSDK.SetSpriteAnimation(Crate->aniFrames, 2, &ice->animator1, true, 0);
+                else
+                    RSDK.SetSpriteAnimation(Crate->aniFrames, 3, &ice->animator1, true, 0);
                 break;
             default: break;
         }
@@ -91,12 +91,12 @@ void Crate_Unknown1(void *e)
 
     foreach_active(Crate, crate)
     {
-        if ((void *)crate != (void *)entity && crate->state == Crate_Unknown4
+        if (crate != (EntityCrate *)entity && crate->state == Crate_Unknown4
             && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, crate, &crate->hitbox) == 1) {
             crate->state = Crate_Unknown5;
         }
     }
-    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+    destroyEntity(entity);
 }
 void Crate_Unknown2(void *e, int offset)
 {

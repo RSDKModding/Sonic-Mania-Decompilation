@@ -544,7 +544,7 @@ void UFO_Player_Unknown9(void)
     if (RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup)->state == UFO_Setup_Unknown13) {
         ++entity->timer;
         if (entity->timer == 120) {
-            UFO_Setup_Unknown7();
+            UFO_Setup_Finish_Fail();
         }
         else if (entity->timer == 16) {
             if (!UFO_Setup->timedOut) {
@@ -593,7 +593,7 @@ void UFO_Player_Unknown11(void)
 
     entity->field_74 = (entity->field_74 - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
     if (entity->timer == 16)
-        UFO_Setup_Unknown6();
+        UFO_Setup_Finish_Win();
 }
 
 void UFO_Player_Serialize(void)

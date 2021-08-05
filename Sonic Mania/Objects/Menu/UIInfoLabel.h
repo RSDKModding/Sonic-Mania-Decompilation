@@ -18,7 +18,7 @@ typedef struct {
     Vector2 size;
     TextInfo text;
     int width;
-    Animator data2;
+    Animator animator2;
 } EntityUIInfoLabel;
 
 // Object Struct

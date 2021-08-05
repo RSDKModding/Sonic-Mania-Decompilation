@@ -8,10 +8,10 @@ void PhantomRuby_Update(void)
     StateMachine_Run(entity->state);
     if (entity->data1.animationID == 1 && entity->data1.frameID == entity->data1.frameCount - 1)
         RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->data1, true, 0);
-    if (entity->data2.animationID == 2 && entity->data2.frameID == entity->data2.frameCount - 1)
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &entity->data2, true, 0);
+    if (entity->animator2.animationID == 2 && entity->animator2.frameID == entity->animator2.frameCount - 1)
+        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &entity->animator2, true, 0);
     RSDK.ProcessAnimation(&entity->data1);
-    RSDK.ProcessAnimation(&entity->data2);
+    RSDK.ProcessAnimation(&entity->animator2);
 }
 
 void PhantomRuby_LateUpdate(void) {}
@@ -22,10 +22,10 @@ void PhantomRuby_Draw(void)
 {
     RSDK_THIS(PhantomRuby);
     RSDK.DrawSprite(&entity->data1, 0, 0);
-    if (entity->data2.animationID != -1) {
+    if (entity->animator2.animationID != -1) {
         entity->inkEffect = INK_ADD;
         entity->alpha     = 0xFF;
-        RSDK.DrawSprite(&entity->data2, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->inkEffect = INK_NONE;
     }
 }
@@ -81,7 +81,7 @@ void PhantomRuby_Unknown2(EntityPhantomRuby *ruby)
     ruby->field_6C = 0;
     ruby->timer    = 0;
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->data1, true, 0);
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->data2, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->animator2, true, 0);
     ruby->state = PhantomRuby_Unknown4;
 }
 

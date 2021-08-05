@@ -196,8 +196,8 @@ void ActClear_Draw(void)
         else {
             if (!TimeAttackData->field_14) {
                 entity                = (EntityActClear *)RSDK_sceneInfo->entity;
-                entity->data2.frameID = 16;
-                RSDK.DrawSprite(&entity->data2, &drawPos, true);
+                entity->animator2.frameID = 16;
+                RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
                 drawPos.x -= 0x90000;
             }
@@ -225,8 +225,8 @@ void ActClear_Draw(void)
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
         if (!TimeAttackData->rank) {
-            entity->data2.frameID = 16;
-            RSDK.DrawSprite(&entity->data2, &drawPos, true);
+            entity->animator2.frameID = 16;
+            RSDK.DrawSprite(&entity->animator2, &drawPos, true);
         }
         else {
             ActClear_DrawNumbers(&drawPos, TimeAttackData->rank, 0);
@@ -337,7 +337,7 @@ void ActClear_Create(void *data)
         entity->posUnknown6.x = -0x5480000;
         entity->posUnknown6.y = 0xC00000;
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 1, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->data3, true, 12);
         switch (globals->playerID & 0xFF) {
             case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 1); break;
@@ -414,8 +414,8 @@ void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
         if (maxVals > 0) {
             int digit = 1;
             do {
-                entity->data2.frameID = value / mult % 10;
-                RSDK.DrawSprite(&entity->data2, pos, true);
+                entity->animator2.frameID = value / mult % 10;
+                RSDK.DrawSprite(&entity->animator2, pos, true);
                 pos->x -= 0x90000;
                 mult = 10 * digit;
                 digit *= 10;
@@ -424,8 +424,8 @@ void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
     }
     else if (maxVals > 0) {
         do {
-            entity->data2.frameID = 16;
-            RSDK.DrawSprite(&entity->data2, pos, true);
+            entity->animator2.frameID = 16;
+            RSDK.DrawSprite(&entity->animator2, pos, true);
             pos->x -= 0x90000;
         } while (--maxVals);
     }

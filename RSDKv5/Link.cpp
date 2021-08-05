@@ -344,18 +344,20 @@ void *GetAPIFunction(const char *name)
 void setupFunctions()
 {
     int language = LANGUAGE_EN;
-    int region = REGION_US;
+    int region   = REGION_US;
     int platform = PLATFORM_DEV;
-#if RETRO_PLATFORM == RETRO_WIN
-    //platform = PLATFORM_PC;
+
+#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
+    || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
+    // platform = PLATFORM_PC;
 #elif RETRO_PLATFORM == RETRO_PS4
-    platform = PLATFORM_PS4;
+    platform             = PLATFORM_PS4;
 #elif RETRO_PLATFORM == RETRO_XB1
     platform = PLATFORM_XB1;
 #elif RETRO_PLATFORM == RETRO_SWITCH
     platform = PLATFORM_SWITCH;
 #endif
-    
+
 #if RETRO_REV02
     curSKU.platform = platform;
     curSKU.language = language;
@@ -374,7 +376,6 @@ void setupFunctions()
 #if RETRO_REV02
     memset(APIFunctionTable, NULL, APITABLE_COUNT * sizeof(void *));
 #endif
-
 
 #if RETRO_REV02
     // API functions
@@ -406,10 +407,10 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_TrackScore, leaderboards->TrackScore);
     addToAPIFunctionTable(APITable_LeaderboardsUnknown7, leaderboards->GetStatus);
     addToAPIFunctionTable(APITable_LeaderboardEntryCount, NullFunc); // LeaderboardEntryCount);
-    addToAPIFunctionTable(APITable_Missing2, NullFunc);             // Missing2);
-    addToAPIFunctionTable(APITable_Unknown12, NullFunc);            // Unknown12);
-    addToAPIFunctionTable(APITable_Missing3, NullFunc);             // Missing3);
-    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, NullFunc); // ReadLeaderboardEntry);
+    addToAPIFunctionTable(APITable_Missing2, NullFunc);              // Missing2);
+    addToAPIFunctionTable(APITable_Unknown12, NullFunc);             // Unknown12);
+    addToAPIFunctionTable(APITable_Missing3, NullFunc);              // Missing3);
+    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, NullFunc);  // ReadLeaderboardEntry);
     addToAPIFunctionTable(APITable_SetPresence, richPresence->SetPresence);
     addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
     addToAPIFunctionTable(APITable_GetStatsStatus, GetStatsStatus);
@@ -565,7 +566,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_GetCString, GetCString);
     addToRSDKFunctionTable(FunctionTable_StringCompare, StringCompare);
     addToRSDKFunctionTable(FunctionTable_GetDisplayInfo, GetDisplayInfo);
-    addToRSDKFunctionTable(FunctionTable_GetWindowSize, GetWindowSize);   
+    addToRSDKFunctionTable(FunctionTable_GetWindowSize, GetWindowSize);
     addToRSDKFunctionTable(FunctionTable_SetScreenSize, SetScreenSize);
     addToRSDKFunctionTable(FunctionTable_SetClipBounds, SetClipBounds);
 #if RETRO_REV02

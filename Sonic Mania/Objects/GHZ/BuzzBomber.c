@@ -22,7 +22,7 @@ void BuzzBomber_Draw(void)
     else {
         RSDK.DrawSprite(&entity->data1, NULL, false);
         entity->inkEffect = INK_ALPHA;
-        RSDK.DrawSprite(&entity->data2, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->inkEffect = INK_NONE;
         RSDK.DrawSprite(&entity->data3, NULL, false);
     }
@@ -55,7 +55,7 @@ void BuzzBomber_Create(void *data)
         entity->updateRange.x = 0x200000;
         entity->updateRange.y = 0x200000;
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 4, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data3, true, 0);
         entity->state = BuzzBomber_Unknown6;
     }
@@ -64,7 +64,7 @@ void BuzzBomber_Create(void *data)
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &entity->data1, true, 0);
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 2, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 2, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->data3, true, 0);
         entity->state = BuzzBomber_Unknown2;
         entity->alpha = 0xC0;
@@ -170,7 +170,7 @@ void BuzzBomber_Unknown3(void)
     }
 
     RSDK.ProcessAnimation(&entity->data1);
-    RSDK.ProcessAnimation(&entity->data2);
+    RSDK.ProcessAnimation(&entity->animator2);
     RSDK.ProcessAnimation(&entity->data3);
     BuzzBomber_Unknown1();
     BuzzBomber_CheckOnScreen();
@@ -186,7 +186,7 @@ void BuzzBomber_Unknown4(void)
         entity->state = BuzzBomber_Unknown3;
     }
     RSDK.ProcessAnimation(&entity->data1);
-    RSDK.ProcessAnimation(&entity->data2);
+    RSDK.ProcessAnimation(&entity->animator2);
     BuzzBomber_Unknown1();
     BuzzBomber_CheckOnScreen();
 }
@@ -196,7 +196,7 @@ void BuzzBomber_Unknown5(void)
     RSDK_THIS(BuzzBomber);
 
     RSDK.ProcessAnimation(&entity->data1);
-    RSDK.ProcessAnimation(&entity->data2);
+    RSDK.ProcessAnimation(&entity->animator2);
     BuzzBomber_Unknown1();
     BuzzBomber_CheckOnScreen();
 

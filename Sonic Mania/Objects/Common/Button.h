@@ -33,7 +33,7 @@ typedef struct {
     int field_78;
     Hitbox hitbox;
     Animator data1;
-    Animator data2;
+    Animator animator2;
 } EntityButton;
 
 // Object Struct

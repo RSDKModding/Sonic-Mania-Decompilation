@@ -125,12 +125,12 @@ void SpecialClear_Draw(void)
     drawPos.x = entity->positions[2].x;
     drawPos.y = entity->positions[2].y;
     drawPos.x += centerX - 0x560000;
-    entity->data2.frameID = 4;
-    RSDK.DrawSprite(&entity->data2, &drawPos, true);
+    entity->animator2.frameID = 4;
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
-    entity->data2.frameID = 6;
+    entity->animator2.frameID = 6;
     drawPos.x += 0x660000;
-    RSDK.DrawSprite(&entity->data2, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
     drawPos.x += 0x430000;
     SpecialClear_DrawNumbers(&drawPos, entity->score);
@@ -138,16 +138,16 @@ void SpecialClear_Draw(void)
     drawPos.x = entity->positions[3].x;
     drawPos.y = entity->positions[3].y;
     drawPos.x += centerX - 0x560000;
-    entity->data2.frameID = 0;
-    RSDK.DrawSprite(&entity->data2, &drawPos, true);
+    entity->animator2.frameID = 0;
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
     drawPos.x += 3276800;
-    entity->data2.frameID = 3;
-    RSDK.DrawSprite(&entity->data2, &drawPos, true);
+    entity->animator2.frameID = 3;
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
-    entity->data2.frameID = 6;
+    entity->animator2.frameID = 6;
     drawPos.x += 3407872;
-    RSDK.DrawSprite(&entity->data2, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
     drawPos.x += 0x430000;
     SpecialClear_DrawNumbers(&drawPos, entity->ringBonus);
@@ -156,16 +156,16 @@ void SpecialClear_Draw(void)
         drawPos.x = entity->positions[4].x;
         drawPos.y = entity->positions[4].y;
         drawPos.x += centerX - 0x560000;
-        entity->data2.frameID = 1;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        entity->animator2.frameID = 1;
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
         drawPos.x += 0x320000;
-        entity->data2.frameID = 3;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        entity->animator2.frameID = 3;
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
-        entity->data2.frameID = 6;
+        entity->animator2.frameID = 6;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
         drawPos.x += 0x430000;
         SpecialClear_DrawNumbers(&drawPos, entity->perfectBonus);
@@ -174,16 +174,16 @@ void SpecialClear_Draw(void)
         drawPos.x = entity->positions[5].x;
         drawPos.y = entity->positions[5].y;
         drawPos.x += centerX - 0x560000;
-        entity->data2.frameID = 2;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        entity->animator2.frameID = 2;
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
         drawPos.x += 0x320000;
-        entity->data2.frameID = 3;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        entity->animator2.frameID = 3;
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
-        entity->data2.frameID = 6;
+        entity->animator2.frameID = 6;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
         drawPos.x += 0x430000;
         SpecialClear_DrawNumbers(&drawPos, entity->machBonus);
@@ -193,8 +193,8 @@ void SpecialClear_Draw(void)
         drawPos.x = entity->positions[6].x;
         drawPos.y = entity->positions[6].y;
         drawPos.x += centerX - 0x560000;
-        entity->data2.frameID = 5;
-        RSDK.DrawSprite(&entity->data2, &drawPos, true);
+        entity->animator2.frameID = 5;
+        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
         if (entity->field_6C == 1) {
             drawPos.x += 0xB00000;
@@ -270,7 +270,7 @@ void SpecialClear_Create(void *data)
         entity->emeraldSpeeds[5]    = -0xD2000;
         entity->emeraldPositions[6] = 0x1D00000;
         entity->emeraldSpeeds[6]    = -0xDC000;
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 5, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 5, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 6, &entity->data3, true, 0);
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 7, &entity->data4, true, 0);
         switch (globals->playerID & 0xFF) {

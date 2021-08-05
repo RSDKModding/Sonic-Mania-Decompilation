@@ -16,7 +16,7 @@ typedef struct {
     int timer2;
     int timer;
     Animator data1;
-    Animator data2;
+    Animator animator2;
     int field_94;
     int field_98;
 } EntityUFO_Message;

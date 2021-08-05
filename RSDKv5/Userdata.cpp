@@ -1105,10 +1105,29 @@ void readSettings()
     engine.screenCount = 1;
     engine.gameHeight  = SCREEN_YSIZE;
 
+    int platform = PLATFORM_DEV;
+#if RETRO_REV02
+    platform = curSKU.platform;
+#else
+    platform = gameVerInfo.platform;
+#endif
+
+    // Consoles load the entire file and buffer it, while pc just io's the file when needed
+    bool32 useBuffer = !(platform == PLATFORM_PC || platform == PLATFORM_DEV);
     char pathBuffer[0x100];
     sprintf(pathBuffer, "%sSettings.ini", userFileDir);
 
     dictionary *ini = iniparser_load(pathBuffer);
+
+    int defKeyMaps[PLAYER_COUNT + 1][12] = { { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,
+                                               VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN },
+                                             { VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_A, VK_S, VK_D, VK_Q, VK_W, VK_E, VK_RETURN, VK_LSHIFT },
+                                             { VK_NUMPAD8, VK_NUMPAD5, VK_NUMPAD4, VK_NUMPAD6, VK_J, VK_J, VK_UNKNOWN, VK_U, VK_I, VK_UNKNOWN,
+                                               VK_OEM_4, VK_OEM_6 },
+                                             { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,
+                                               VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN },
+                                             { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,
+                                               VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN } };
 
     if (ini) {
 #if RETRO_REV02
@@ -1117,8 +1136,6 @@ void readSettings()
         gameVerInfo.language = (int)strtol(iniparser_getstring(ini, "Game:language", "0"), NULL, 0);
 #endif
 
-        // Consoles load the entire file and buffer it, while pc just io's the file when needed
-        bool32 useBuffer = !((RETRO_PLATFORM == RETRO_WIN) || (RETRO_PLATFORM == RETRO_OSX));
         if (CheckDataFile(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
             engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
         else
@@ -1155,33 +1172,12 @@ void readSettings()
         engine.streamVolume   = iniparser_getdouble(ini, "Audio:streamVolume", 0.8);
         engine.soundFXVolume  = iniparser_getdouble(ini, "Audio:sfxVolume", 1.0);
 
-#if RETRO_USING_SDL2
-        int defKeyMaps[PLAYER_COUNT + 1][12] = {
-            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
-            { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
-              SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_RETURN, SDL_SCANCODE_LSHIFT },
-            { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_U, SDL_SCANCODE_I, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_LEFTBRACKET, SDL_SCANCODE_RIGHTBRACKET },
-            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
-            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN }
-        };
-#else
-        int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-#endif
-
         for (int i = 1; i <= PLAYER_COUNT; ++i) {
             char buffer[0x30];
 
             sprintf(buffer, "Keyboard Map %d:up", i);
             controller[i].keyUp.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][0]);
-            sprintf(buffer, "Keyboard Map %d:dpwn", i);
+            sprintf(buffer, "Keyboard Map %d:down", i);
             controller[i].keyDown.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][1]);
             sprintf(buffer, "Keyboard Map %d:left", i);
             controller[i].keyLeft.keyMap = iniparser_getint(ini, buffer, defKeyMaps[i][2]);
@@ -1291,27 +1287,6 @@ void readSettings()
         engine.soundFXVolume                            = 1.0f;
         engine.devMenu                                  = false;
 
-#if RETRO_USING_SDL2
-        int defKeyMaps[PLAYER_COUNT + 1][12] = {
-            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
-            { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
-              SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_RETURN, SDL_SCANCODE_TAB },
-            { SDL_SCANCODE_KP_8, SDL_SCANCODE_KP_5, SDL_SCANCODE_KP_4, SDL_SCANCODE_KP_6, SDL_SCANCODE_J, SDL_SCANCODE_J, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_U, SDL_SCANCODE_I, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_LEFTBRACKET, SDL_SCANCODE_RIGHTBRACKET },
-            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN },
-            { SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN,
-              SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN, SDL_SCANCODE_UNKNOWN }
-        };
-#else
-        int defKeyMaps[PLAYER_COUNT][12] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-#endif
-
         for (int i = 1; i <= PLAYER_COUNT; ++i) {
             controller[i].keyUp.keyMap     = defKeyMaps[i][0];
             controller[i].keyDown.keyMap   = defKeyMaps[i][1];
@@ -1328,7 +1303,7 @@ void readSettings()
         }
 
         writeSettings(true);
-        engine.devMenu = CheckDataFile("Data.rsdk", 0, RETRO_PLATFORM != RETRO_WIN);
+        engine.devMenu = CheckDataFile("Data.rsdk", 0, useBuffer);
     }
 }
 

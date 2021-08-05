@@ -19,7 +19,7 @@ typedef struct {
     byte type;
     byte inkedPlayers;
     Animator data1;
-    Animator data2;
+    Animator animator2;
     Animator data3;
 } EntityInk;
 

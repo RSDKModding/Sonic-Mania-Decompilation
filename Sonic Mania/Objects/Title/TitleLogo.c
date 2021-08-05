@@ -37,7 +37,7 @@ void TitleLogo_Draw(void)
             break;
         case 7:
             RSDK.DrawSprite(&entity->data1, NULL, false);
-            RSDK.DrawSprite(&entity->data2, NULL, false);
+            RSDK.DrawSprite(&entity->animator2, NULL, false);
             break;
         default: RSDK.DrawSprite(&entity->data1, NULL, false); break;
     }
@@ -199,7 +199,7 @@ void TitleLogo_Unknown5(void)
     if (entity->timer <= 0) {
         entity->timer = RSDK.Rand(120, 240);
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(TitleLogo->plusIndex, 1, &entity->data2, true, 0);
+        RSDK.SetSpriteAnimation(TitleLogo->plusIndex, 1, &entity->animator2, true, 0);
 #endif
         entity->state = TitleLogo_Unknown6;
     }
@@ -210,9 +210,9 @@ void TitleLogo_Unknown5(void)
 void TitleLogo_Unknown6(void)
 {
     RSDK_THIS(TitleLogo);
-    RSDK.ProcessAnimation(&entity->data2);
-    if (entity->data2.frameID == entity->data2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data2, true, 0);
+    RSDK.ProcessAnimation(&entity->animator2);
+    if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
         entity->state = TitleLogo_Unknown5;
     }
 }

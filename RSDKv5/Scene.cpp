@@ -15,7 +15,6 @@ SceneInfo sceneInfo;
 
 void LoadScene()
 {
-    printLog(PRINT_NORMAL, "loadscene called");
     sceneInfo.timeCounter  = 0;
     sceneInfo.minutes      = 0;
     sceneInfo.seconds      = 0;

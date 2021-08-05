@@ -8,7 +8,7 @@ void EggPrison_Update(void)
     StateMachine_Run(entity->state);
 
     if (entity->type == 1) {
-        RSDK.ProcessAnimation(&entity->data2);
+        RSDK.ProcessAnimation(&entity->animator2);
         EggPrison_HandleTileCollisions();
         if (!entity->activated) {
             foreach_active(Player, player)
@@ -120,9 +120,9 @@ void EggPrison_Draw(void)
         entity->direction = FLIP_NONE;
         RSDK.DrawSprite(&entity->data1, NULL, false);
         RSDK.DrawSprite(&entity->data3, NULL, false);
-        RSDK.DrawSprite(&entity->data2, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->direction = FLIP_X;
-        RSDK.DrawSprite(&entity->data2, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->direction = FLIP_NONE;
     }
     else {
@@ -147,7 +147,7 @@ void EggPrison_Create(void *data)
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->data1, true, 1);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->data4, true, 0);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->data3, true, 1);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->data2, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->animator2, true, 0);
                 entity->hitbox2.left   = -16;
                 entity->hitbox2.top    = 24;
                 entity->hitbox2.right  = 16;

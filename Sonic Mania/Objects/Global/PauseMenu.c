@@ -255,9 +255,9 @@ void PauseMenu_SetupMenu(void)
             break;
         EntityUIButton *button = (EntityUIButton *)entity->buttonPtrs[i];
         button->parent         = (Entity *)control;
-        control->entities[i]   = button;
+        control->buttons[i]   = button;
     }
-    control->unknownCount1 = i;
+    control->buttonCount = i;
 }
 
 void PauseMenu_ClearButtons(EntityPauseMenu *entity)
@@ -432,7 +432,7 @@ void PauseMenu_Unknown16(void)
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     EntityUIControl *manager   = (EntityUIControl *)pauseMenu->manager;
 
-    if (manager->activeEntityID >= 0 && manager->activeEntityID < manager->unknownCount1) {
+    if (manager->activeEntityID >= 0 && manager->activeEntityID < manager->buttonCount) {
         if (pauseMenu->buttonActions[manager->activeEntityID])
             pauseMenu->buttonActions[manager->activeEntityID]();
     }
@@ -823,19 +823,21 @@ void PauseMenu_Unknown33(void)
     }
 
     if (!entity->field_B0 && entity->field_AC) {
-        if (PauseMenu->controllerDisconnect)
-            PauseMenu->controllerDisconnect = false;
+        if (entity->field_AC()) {
+            if (PauseMenu->controllerDisconnect)
+                PauseMenu->controllerDisconnect = false;
 
-        EntityUIDialog *dialog = UIDialog->activeDialog;
-        if (dialog) {
-            if (dialog->state != UIDialog_Unknown13) {
-                dialog->parent->selectionDisabled = true;
-                dialog->field_5C                  = 0;
-                dialog->state                     = UIDialog_Unknown13;
-                dialog->curCallback               = NULL;
+            EntityUIDialog *dialog = UIDialog->activeDialog;
+            if (dialog) {
+                if (dialog->state != UIDialog_Unknown13) {
+                    dialog->parent->selectionDisabled = true;
+                    dialog->field_5C                  = 0;
+                    dialog->state                     = UIDialog_Unknown13;
+                    dialog->curCallback               = NULL;
+                }
             }
+            entity->field_B0 = true;
         }
-        entity->field_B0 = true;
     }
 }
 

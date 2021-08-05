@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Animator data1;
-    Animator data2;
+    Animator animator2;
 } EntityTitleSonic;
 
 // Object Struct
