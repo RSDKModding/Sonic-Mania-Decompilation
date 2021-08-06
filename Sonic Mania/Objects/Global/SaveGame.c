@@ -50,8 +50,6 @@ void SaveGame_LoadSaveData(void)
         SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot);
 #endif
     LogHelpers_Print("dataPtr: %X", SaveGame->saveRAM);
-    sizeof(EntitySaveGame);
-    sizeof(int[28]);
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     if (!saveRAM->lives)
         saveRAM->lives = 3;

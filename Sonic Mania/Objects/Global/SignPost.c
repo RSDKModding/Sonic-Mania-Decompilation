@@ -469,7 +469,6 @@ void SignPost_CheckTouch(void)
                                 manager                   = (EntityCompetition *)Competition->activeEntity;
                             }
                             manager->playerFlags[player->playerID]                     = true;
-                            int pos                                                    = 3 * player->playerID;
                             session->rings[player->playerID] = player->rings;
                             session->time[player->playerID].minutes        = RSDK_sceneInfo->minutes;
                             session->time[player->playerID].seconds        = RSDK_sceneInfo->seconds;

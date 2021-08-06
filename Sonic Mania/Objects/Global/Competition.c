@@ -111,7 +111,6 @@ void Competition_ResetOptions(void)
         session->winnerFlags[i] = 0;
     }
 
-    RSDK_sceneInfo->milliseconds;
     for (int i = 0; i < 4; ++i) {
         session->finishFlags[i]       = 0;
         session->characterFlags[i]    = 0;

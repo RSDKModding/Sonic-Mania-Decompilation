@@ -13,7 +13,7 @@ typedef struct {
     RSDK_ENTITY
     byte selectionFlag;
     byte field_59;
-    byte menuTag[0x100];
+    char menuTag[0x100];
     byte field_15A;
     byte field_15B;
     int selectionID;

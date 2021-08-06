@@ -137,7 +137,7 @@ void WarpDoor_StaticUpdate(void)
     if (!WarpDoor->field_1408) {
         foreach_all(WarpDoor, warpDoor)
         {
-            if (warpDoor->tag >= 1 && warpDoor->tag <= 0x100) {
+            if (warpDoor->tag >= 1) {
                 WarpDoor->tags[warpDoor->tag] = (Entity *)warpDoor;
             }
             if (warpDoor->definesBounds) {

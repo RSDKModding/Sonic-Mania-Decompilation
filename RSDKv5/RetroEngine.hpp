@@ -129,6 +129,8 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_OSX
 #include <SDL2/SDL.h>
 #include <Vorbis/vorbisfile.h>
+#include <Theora/Theora.h>
+#include <theoraplay/theoraplay.h>
 
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_iOS
