@@ -307,8 +307,7 @@ void FlipScreen()
             // no change here
             SDL_RenderPresent(engine.renderer);
 #endif
-        }
-            break;
+        } break;
     }
 }
 void ReleaseRenderDevice()

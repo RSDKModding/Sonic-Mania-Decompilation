@@ -73,7 +73,7 @@ bool32 processEvents()
 #endif
 
 #if defined(RETRO_USING_TOUCH) && RETRO_USING_SDL2
-            case SDL_FINGERMOTION:
+            case SDL_FINGERMOTION: {
                 touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
                 for (int i = 0; i < touchMouseData.count; i++) {
                     SDL_Finger *finger     = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
@@ -82,16 +82,18 @@ bool32 processEvents()
                     touchMouseData.y[i]    = finger->y;
                 }
                 break;
-            case SDL_FINGERDOWN:
-                touchMouseData.count = SDL_GetNumTouchFingers(SDL_GetTouchDevice(engine.sdlEvents.tfinger.touchId));
+            }
+            case SDL_FINGERDOWN: {
+                touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
                 for (int i = 0; i < touchMouseData.count; i++) {
-                    SDL_Finger *finger     = SDL_GetTouchFinger(SDL_GetTouchDevice(engine.sdlEvents.tfinger.touchId), i);
+                    SDL_Finger *finger     = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
                     touchMouseData.down[i] = true;
                     touchMouseData.x[i]    = finger->x;
                     touchMouseData.y[i]    = finger->y;
                 }
                 break;
-            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(SDL_GetTouchDevice(engine.sdlEvents.tfinger.touchId)); break;
+            }
+            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId); break;
 #endif //! RETRO_USING_SDL2
 
             case SDL_KEYDOWN:

@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    Hitbox hitboxProjectile;
+    ushort aniFrames;
 } ObjectWallCrawl;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int timer;
+    EntityPlayer *playerPtr;
+    Vector2 startPos;
+    byte startDir;
+    Animator animator;
 } EntityWallCrawl;
 
 // Object Entity
@@ -28,6 +40,16 @@ void WallCrawl_EditorLoad(void);
 void WallCrawl_Serialize(void);
 
 // Extra Entity Functions
+void WallCrawl_DebugSpawn(void);
+void WallCrawl_DebugDraw(void);
 
+void WallCrawl_HandlePlayerInteractions(void);
+void WallCrawl_CheckOnScreen(void);
+
+void WallCrawl_State_Setup(void);
+void WallCrawl_State_Main(void);
+void WallCrawl_State_Idle(void);
+
+void WallCrawl_State_Projectile(void);
 
 #endif //!OBJ_WALLCRAWL_H

@@ -420,6 +420,8 @@ bool32 UIButton_ProcessTouch(void)
                 int x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
                 int y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
 
+                LogHelpers_Print("x: %f, y: %f", RSDK_touchMouse->x[i] * RSDK_screens->width, RSDK_touchMouse->y[i] * RSDK_screens->height);
+
                 int touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
                 int touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
