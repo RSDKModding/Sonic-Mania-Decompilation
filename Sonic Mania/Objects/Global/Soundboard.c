@@ -8,13 +8,10 @@ void Soundboard_LateUpdate(void) {}
 
 void Soundboard_StaticUpdate(void)
 {
-    for (int s = 0; s < maxVal(Soundboard->sfxCount, 0x20); ++s) {
-        int (*checkCallback)(void)  = (int (*)(void))Soundboard->sfxCheckCallback[s];
-        void (*updateCallback)(int) = (void (*)(int))Soundboard->sfxUpdateCallback[s];
-
+    for (int s = 0; s < maxVal(Soundboard->sfxCount, Soundboard_SFXLimit); ++s) {
         bool32 checkFlag = true;
-        if (checkCallback && RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-            if (checkCallback()) {
+        if (Soundboard->sfxCheckCallback[s] && RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+            if (Soundboard->sfxCheckCallback[s]()) {
                 checkFlag                  = false;
                 Soundboard->sfxUnknown7[s] = 0;
                 if (!Soundboard->sfxUnknown4[s]) {
@@ -27,8 +24,8 @@ void Soundboard_StaticUpdate(void)
                     RSDK.SetChannelAttributes(Soundboard->sfxUnknown8[s], 1.0, 0.0, 1.0);
                 }
 
-                if (updateCallback) {
-                    updateCallback(s);
+                if (Soundboard->sfxUpdateCallback[s]) {
+                    Soundboard->sfxUpdateCallback[s](s);
                     ++Soundboard->sfxUnknown6[s];
                 }
             }
@@ -47,8 +44,8 @@ void Soundboard_StaticUpdate(void)
                     RSDK.StopSFX(Soundboard->sfxList[s]);
                 }
                 else {
-                    RSDK.SetChannelAttributes(Soundboard->sfxChannel[s],
-                                              1.0 - (float)((float)Soundboard->sfxUnknown7[s] / (float)Soundboard->sfxUnknown8[s]), 0.0, 1.0);
+                    RSDK.SetChannelAttributes(Soundboard->sfxChannel[s], 1.0 - (Soundboard->sfxUnknown7[s] / (float)Soundboard->sfxUnknown8[s]), 0.0,
+                                              1.0);
                     ++Soundboard->sfxUnknown7[s];
                 }
             }
@@ -64,7 +61,7 @@ void Soundboard_StageLoad(void)
 {
     Soundboard->active   = ACTIVE_ALWAYS;
     Soundboard->sfxCount = 0;
-    for (int i = 0; i < 0x20; ++i) {
+    for (int i = 0; i < Soundboard_SFXLimit; ++i) {
         Soundboard->sfxList[i]           = 0;
         Soundboard->sfxLoopPoint[i]      = 0;
         Soundboard->sfxCheckCallback[i]  = NULL;
@@ -75,11 +72,11 @@ void Soundboard_StageLoad(void)
     }
 }
 
-byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, void *checkCallback, void *updateCallback)
+byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int))
 {
     if (!Soundboard)
         return -1;
-    if (Soundboard->sfxCount >= 32)
+    if (Soundboard->sfxCount >= Soundboard_SFXLimit)
         return -1;
     int sfxID = Soundboard->sfxCount;
 

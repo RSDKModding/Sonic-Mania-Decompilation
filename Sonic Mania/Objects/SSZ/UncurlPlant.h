@@ -6,16 +6,28 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    colour value1;
-    int value2[8]; //= { 0, 16, 64, 96, 112, 144, 160, 192 };
-    int value3[8]; //= { 0, -8, 32, 64, 64, 64, 64, 64 };
-    int value4[8]; //= { 0, -24, 8, 8, 8, 8, 8, 8 };
-    ushort value5;
+    Hitbox hitbox;
+    int array1[8]; //= { 0, 16, 64, 96, 112, 144, 160, 192 };
+    int array2[8]; //= { 0, -8, 32, 64, 64, 64, 64, 64 };
+    int array3[8]; //= { 0, -24, 8, 8, 8, 8, 8, 8 };
+    ushort aniFrames;
 } ObjectUncurlPlant;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
+    int field_5C;
+    Vector2 drawPositions[8];
+    Vector2 positions[8];
+    int segments[8];
+    int field_100[8];
+    int field_120;
+    int field_124;
+    int field_128;
+    int field_12C;
+    Animator animator;
+    Animator animators[8];
 } EntityUncurlPlant;
 
 // Object Struct
@@ -33,6 +45,7 @@ void UncurlPlant_EditorLoad(void);
 void UncurlPlant_Serialize(void);
 
 // Extra Entity Functions
-
+void UncurlPlant_CalculateDrawPositions(void);
+void UncurlPlant_CalculatePositions(void);
 
 #endif //!OBJ_UNCURLPLANT_H

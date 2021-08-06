@@ -6,16 +6,37 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[5]; //= { -131072, -65536, 0, 65536, 131072 };
-    ushort value2;
-    ushort value3;
-    ushort value4;
-    ushort value5;
+    int offsets[5]; //= { -131072, -65536, 0, 65536, 131072 };
+    ushort aniFrames;
+    ushort knuxFrames;
+    ushort sfxExplosion;
+    ushort sfxImpact;
 } ObjectTornado;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int timer;
+    int field_64;
+    int field_68;
+    int field_6C;
+    bool32 field_70;
+    int field_74;
+    int field_78;
+    int field_7C;
+    int field_80;
+    Vector2 field_84;
+    Vector2 field_8C;
+    int field_94;
+    int field_98;
+    int field_9C;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animatorKnux;
 } EntityTornado;
 
 // Object Struct
@@ -33,6 +54,14 @@ void Tornado_EditorLoad(void);
 void Tornado_Serialize(void);
 
 // Extra Entity Functions
-
+void Tornado_State_Setup(void);
+void Tornado_State_SetupPlayers(void);
+void Tornado_Unknown3(void);
+void Tornado_Unknown4(void);
+void Tornado_Unknown5(void);
+void Tornado_Unknown6(void);
+void Tornado_Unknown7(void);
+void Tornado_Unknown8(void);
+void Tornado_Unknown9(void);
 
 #endif //!OBJ_TORNADO_H

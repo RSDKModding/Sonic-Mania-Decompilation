@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxBouncer;
 } ObjectWallBumper;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int type;
+    int size;
+    bool32 reverse;
+    bool32 destructible;
+    Animator animator;
+    Hitbox hitbox;
 } EntityWallBumper;
 
 // Object Struct
@@ -28,6 +36,9 @@ void WallBumper_EditorLoad(void);
 void WallBumper_Serialize(void);
 
 // Extra Entity Functions
+void WallBumper_DebugSpawn(void);
+void WallBumper_DebugDraw(void);
 
+void WallBumper_HandleInteractions(void);
 
 #endif //!OBJ_WALLBUMPER_H

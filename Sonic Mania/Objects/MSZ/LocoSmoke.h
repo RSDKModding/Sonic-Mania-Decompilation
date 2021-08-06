@@ -5,12 +5,16 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort field_6;
 } ObjectLocoSmoke;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int timer;
+    Animator animator;
 } EntityLocoSmoke;
 
 // Object Struct

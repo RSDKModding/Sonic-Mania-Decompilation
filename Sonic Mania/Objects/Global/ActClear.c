@@ -535,7 +535,7 @@ void ActClear_State_TAFinish(void)
                 entity->state      = ActClear_Unknown9;
 #else
                 EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
-                ActClear->field_10 = true;
+                ActClear->hitboxID = true;
                 byte playerID           = param->characterID;
                 byte zoneID        = param->zoneID;
                 byte actID              = param->actID;
@@ -561,7 +561,7 @@ void ActClear_State_TAFinish(void)
                         param->timeScore = rank;
                     }
                     else {
-                        ActClear->field_10 = false;
+                        ActClear->hitboxID = false;
                     }
                 }
                 RSDK.LoadScene("Presentation", "Menu");

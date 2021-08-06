@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    ushort aniFrames;
+    ushort sfxSplash;
 } ObjectBall;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    byte type;
+    Entity *playerPtr;
+    Vector2 startPos;
+    Animator animator;
 } EntityBall;
 
 // Object Entity
@@ -28,6 +37,20 @@ void Ball_EditorLoad(void);
 void Ball_Serialize(void);
 
 // Extra Entity Functions
+void Ball_DebugSpawn(void);
+void Ball_DebugDraw(void);
 
+void Ball_HandleInteractions(void);
+void Ball_CheckOnScreen(void);
+void Ball_SpawnChildren(void);
+
+void Ball_State_Setup(void);
+void Ball_State_Unknown1(void);
+void Ball_State_Unknown2(void);
+void Ball_State_Unknown3(void);
+
+void Ball_State2_Unknown1(void);
+void Ball_State3_Unknown1(void);
+void Ball_State4_Unknown1(void);
 
 #endif //!OBJ_BALL_H

@@ -2,35 +2,20 @@
 
 ObjectMSZSetup *MSZSetup;
 
-void MSZSetup_Update(void)
-{
+void MSZSetup_Update(void) {}
 
-}
+void MSZSetup_LateUpdate(void) {}
 
-void MSZSetup_LateUpdate(void)
-{
+void MSZSetup_StaticUpdate(void) {}
 
-}
+void MSZSetup_Draw(void) {}
 
-void MSZSetup_StaticUpdate(void)
-{
-
-}
-
-void MSZSetup_Draw(void)
-{
-
-}
-
-void MSZSetup_Create(void* data)
-{
-
-}
+void MSZSetup_Create(void *data) {}
 
 void MSZSetup_StageLoad(void)
 {
     MSZSetup->aniTiles = RSDK.LoadSpriteSheet("MSZ/AniTiles.gif", SCOPE_STAGE);
-    MSZSetup->bg = RSDK.GetSceneLayer(0);
+    MSZSetup->bg       = RSDK.GetSceneLayer(0);
     if (RSDK.CheckStageFolder("MSZCutscene")) {
         RSDK.CopyPalette(0, 204, 4, 204, 4);
         RSDK.CopyPalette(3, 128, 0, 128, 128);
@@ -43,6 +28,7 @@ void MSZSetup_StageLoad(void)
         if (Zone->actID) {
             MSZSetup->flag = true;
             RSDK.CopyPalette(4, 128, 0, 128, 128);
+#if RETRO_USE_PLUS
             if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
                 RSDK.CopyPalette(0, 128, 5, 128, 128);
                 RSDK.LoadPalette(0, "EncoreMSZ2.act", 255);
@@ -51,10 +37,13 @@ void MSZSetup_StageLoad(void)
                 RSDK.RotatePalette(2, 204, 207, false);
             }
             else {
+#endif
                 for (int i = 0; i < 0x400; ++i) {
                     MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
                 }
+#if RETRO_USE_PLUS
             }
+#endif
 
             if (!(RSDK_sceneInfo->filter & FILTER_ENCORE) && (globals->playerID & ID_KNUCKLES)) {
                 Zone->screenBoundsL1[0] = 0;
@@ -88,7 +77,7 @@ void MSZSetup_StageLoad(void)
             if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
                 foreach_all(MSZ2Cutscene, cutscene)
                 {
-                    MSZSetup->msz2Cutscene = (Entity*)cutscene;
+                    MSZSetup->msz2Cutscene = (Entity *)cutscene;
                     foreach_break;
                 }
                 Zone->stageFinishCallback = MSZSetup_ActivateMSZ2Cutscene;
@@ -128,7 +117,7 @@ void MSZSetup_StageLoad(void)
 #endif
         }
     }
-    
+
     MSZSetup->sfxLocoChugga = RSDK.GetSFX("MSZ/LocoChugga.wav");
     Animals->animalTypes[0] = ANIMAL_LOCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
@@ -165,29 +154,29 @@ void MSZSetup_Unknown2(void)
     }
 }
 
-void MSZSetup_Unknown4(int a1)
+void MSZSetup_Unknown4(int parallaxMultiplier)
 {
     int id         = 0;
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
     for (int i = 0; i < bg1->scrollInfoCount; ++i) {
-        bg1->scrollInfo[i].parallaxFactor = a1 * MSZSetup->field_138[id++];
+        bg1->scrollInfo[i].scrollSpeed = parallaxMultiplier * MSZSetup->field_138[id++];
     }
 
     TileLayer *bg2 = RSDK.GetSceneLayer(1);
     for (int i = 0; i < bg2->scrollInfoCount; ++i) {
-        bg2->scrollInfo[i].parallaxFactor = a1 * MSZSetup->field_138[id++];
+        bg2->scrollInfo[i].scrollSpeed = parallaxMultiplier * MSZSetup->field_138[id++];
     }
 
     foreach_all(ParallaxSprite, parallaxSprite)
     {
-        parallaxSprite->parallaxFactor.x = a1 * MSZSetup->field_138[id++];
+        parallaxSprite->scrollSpeed.x = parallaxMultiplier * MSZSetup->field_138[id++];
 #if RETRO_USE_PLUS
         if (!(RSDK_sceneInfo->filter & FILTER_ENCORE))
 #endif
             parallaxSprite->scrollSpeed.x >>= 8;
     }
 
-    MSZSetup->field_938 = a1 << 8;
+    MSZSetup->parallaxMult = parallaxMultiplier << 8;
 }
 
 void MSZSetup_ManageFadeST(void)
@@ -211,7 +200,8 @@ void MSZSetup_ManageFadeE(void)
 {
     RSDK_THIS(MSZSetup);
 
-    foreach_all(Decoration, decoration) {
+    foreach_all(Decoration, decoration)
+    {
         if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
             decoration->animator.animationSpeed = 0;
     }
@@ -221,7 +211,7 @@ void MSZSetup_ManageFadeE(void)
 
 void MSZSetup_StageFinishCB_ST(void)
 {
-    //MSZCutsceneST->actFinishFlag = true;
+    // MSZCutsceneST->actFinishFlag = true;
 }
 
 void MSZSetup_StageFinishCB_K(void)
@@ -234,10 +224,7 @@ void MSZSetup_StageFinishCB_K(void)
 void MSZSetup_StageFinishCB_E(void) {}
 #endif
 
-void MSZSetup_ActivateMSZ2Cutscene(void)
-{
-    MSZSetup->msz2Cutscene->active = ACTIVE_NORMAL;
-}
+void MSZSetup_ActivateMSZ2Cutscene(void) { MSZSetup->msz2Cutscene->active = ACTIVE_NORMAL; }
 
 void MSZSetup_GetAchievement(void)
 {
@@ -253,7 +240,7 @@ void MSZSetup_SwitchPalettes(void)
     entity->timer += 4;
     RSDK.SetLimitedFade(0, 3, 4, entity->timer, 128, 255);
     if (entity->timer >= 256) {
-        #if RETRO_USE_PLUS
+#if RETRO_USE_PLUS
         if (!(RSDK_sceneInfo->filter & FILTER_ENCORE)) {
 #endif
             for (int i = 0; i < 0x400; ++i) {
@@ -291,10 +278,7 @@ void MSZSetup_HandleRestart(void)
         bg2->scrollInfo[i].scrollPos = globals->parallaxOffset[id++];
     }
 
-    foreach_all(ParallaxSprite, parallaxSprite)
-    {
-        parallaxSprite->parallaxFactor.x = globals->parallaxOffset[id++];
-    }
+    foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->parallaxFactor.x = globals->parallaxOffset[id++]; }
 }
 
 void MSZSetup_Unknown9(void)
@@ -345,29 +329,32 @@ void MSZSetup_Unknown11(void)
 void MSZSetup_Unknown12(void)
 {
     RSDK_THIS(MSZSetup);
-    EntityPlayer *player1                             = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    TileLayer *layer                                  = RSDK.GetSceneLayer(3);
-    //HIBYTE(layer->scrollInfo[1].scrollPos)            = 0;
-    layer->scrollInfo[1].scrollSpeed         = 0x600 * MSZSetup->chuggaVolume;
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    TileLayer *layer      = RSDK.GetSceneLayer(3);
+    // HIBYTE(layer->scrollInfo[1].scrollPos)            = 0;
+    layer->scrollInfo[1].scrollSpeed = 0x600 * MSZSetup->chuggaVolume;
 
     if (player1->position.x > 0x360C0000) {
-        //GiantPistol->field_4 = true;
-        //entity->state            = MSZSetup_Unknown13;
+        // GiantPistol->field_4 = true;
+        // entity->state            = MSZSetup_Unknown13;
     }
 }
 
-void MSZSetup_EditorDraw(void)
+void MSZSetup_PlayerState_Pilot(void)
 {
-
+    RSDK_THIS(Player);
+    entity->position.x  = 0;
+    entity->position.y  = 0;
+    entity->active      = ACTIVE_NEVER;
+    entity->visible     = false;
+    entity->stateInput  = StateMachine_None;
+    entity->position.x  = RSDK_screens->position.x << 16;
+    entity->position.y  = RSDK_screens->position.y << 16;
+    Player->jumpInDelay = 0;
 }
 
-void MSZSetup_EditorLoad(void)
-{
+void MSZSetup_EditorDraw(void) {}
 
-}
+void MSZSetup_EditorLoad(void) {}
 
-void MSZSetup_Serialize(void)
-{
-
-}
-
+void MSZSetup_Serialize(void) {}

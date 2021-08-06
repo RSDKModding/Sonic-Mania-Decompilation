@@ -349,16 +349,16 @@ void Platform_Create(void *data)
             case 0xF: entity->stateCollide = Platform_CollisionState_15; break;
         }
         for (int i = 0; i < entity->childCount; ++i) {
-            EntityPlatform *ent = (EntityPlatform *)RSDK.GetEntityByID((i + RSDK.GetEntityID(entity) + 1));
-            ent->tileCollisions = false;
-            if (HangPoint && ent->objectID == HangPoint->objectID) {
-                EntityHangPoint *hang = (EntityHangPoint *)ent;
+            EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntityID(entity) + 1), Platform);
+            child->tileCollisions = false;
+            if (HangPoint && child->objectID == HangPoint->objectID) {
+                EntityHangPoint *hang = (EntityHangPoint *)child;
                 if (entity->updateRange.y < 0x800000 + abs(entity->position.y - (hang->length << 16) - hang->position.y))
                     entity->updateRange.y = 0x800000 + abs(entity->position.y - (hang->length << 16) - hang->position.y);
             }
             else {
-                if (entity->updateRange.y < 0x800000 + abs(entity->position.y - ent->position.y))
-                    entity->updateRange.y = 0x800000 + abs(entity->position.y - ent->position.y);
+                if (entity->updateRange.y < 0x800000 + abs(entity->position.y - child->position.y))
+                    entity->updateRange.y = 0x800000 + abs(entity->position.y - child->position.y);
             }
         }
     }

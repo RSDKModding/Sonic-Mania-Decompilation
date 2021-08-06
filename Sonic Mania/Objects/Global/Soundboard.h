@@ -3,19 +3,21 @@
 
 #include "SonicMania.h"
 
+#define Soundboard_SFXLimit 32
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     int sfxCount;
-    ushort sfxList[32];
-    int sfxLoopPoint[32];
-    void *sfxCheckCallback[32];
-    void *sfxUpdateCallback[32];
-    bool32 sfxUnknown4[32];
-    int sfxChannel[32];
-    int sfxUnknown6[32];
-    int sfxUnknown7[32];
-    int sfxUnknown8[32];
+    ushort sfxList[Soundboard_SFXLimit];
+    int sfxLoopPoint[Soundboard_SFXLimit];
+    bool32 (*sfxCheckCallback[Soundboard_SFXLimit])(void);
+    void (*sfxUpdateCallback[Soundboard_SFXLimit])(int);
+    bool32 sfxUnknown4[Soundboard_SFXLimit];
+    int sfxChannel[Soundboard_SFXLimit];
+    int sfxUnknown6[Soundboard_SFXLimit];
+    int sfxUnknown7[Soundboard_SFXLimit];
+    int sfxUnknown8[Soundboard_SFXLimit];
 } ObjectSoundboard;
 
 // Entity Class
@@ -38,6 +40,6 @@ void Soundboard_EditorLoad(void);
 void Soundboard_Serialize(void);
 
 // Extra Entity Functions
-byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, void *checkCallback, void *changeCallback);
+byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int));
 
 #endif //!OBJ_SOUNDBOARD_H

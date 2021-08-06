@@ -205,8 +205,8 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
     }
 }
 
-void SetActiveVariable(int objectID, const char *name) { printLog(PRINT_NORMAL, "SetActiveVariable(%d, %s) called", objectID, name); }
-void AddEnumVar(const char* name) { printLog(PRINT_NORMAL, "AddEnumVar(%s) called", name); }
+void SetActiveVariable(int objectID, const char *name) { printLog(PRINT_NORMAL, "SetActiveVariable(%d, \"%s\") called", objectID, name); }
+void AddEnumVar(const char* name) { printLog(PRINT_NORMAL, "AddEnumVar(\"%s\") called", name); }
 
 void InitObjects()
 {

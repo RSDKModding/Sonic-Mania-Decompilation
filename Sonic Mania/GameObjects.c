@@ -37,11 +37,11 @@ void LinkGameLogicDLL(GameInfo *info)
         memcpy(&API, info->APIPtrs, sizeof(APIFunctionTable));
 #endif
 
-    RSDK_info = info->engineInfo;
+    RSDK_info = info->engineInfo; //GameInfo
 #if RETRO_USE_PLUS
     RSDK_sku  = info->currentSKU;
 #endif
-    RSDK_sceneInfo  = info->sceneInfo;
+    RSDK_sceneInfo  = info->sceneInfo; //StageInfo
     RSDK_controller = info->controller;
     RSDK_stickL     = info->stickL;
 #if RETRO_USE_PLUS

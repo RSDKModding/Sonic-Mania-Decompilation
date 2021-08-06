@@ -20,7 +20,7 @@ typedef struct {
     int aniTilesDelayA[14]; //= { 16, 2, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 3 };
     int aniTilesDelayB[8];  //= { 16, 2, 4, 5, 16, 2, 4, 5 };
     int field_138[512];
-    int field_938;
+    int parallaxMult;
     int field_93C;
     bool32 hasAchievement;
     Entity *msz2Cutscene;
@@ -76,5 +76,7 @@ void MSZSetup_Unknown9(void);
 void MSZSetup_Unknown10(void);
 void MSZSetup_Unknown11(void);
 void MSZSetup_Unknown12(void);
+
+void MSZSetup_PlayerState_Pilot(void);
 
 #endif //!OBJ_MSZSETUP_H
