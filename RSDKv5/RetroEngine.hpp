@@ -314,12 +314,12 @@ inline void SetEngineState(byte state)
         sceneInfo.state |= ENGINESTATE_STEPOVER;
 }
 
-extern byte *gameOptionsPtr;
+extern int *gameOptionsPtr;
 
 inline void InitGameOptions(void **options, int size)
 {
     AllocateStorage(size, options, DATASET_STG, true);
-    gameOptionsPtr = (byte *)*options;
+    gameOptionsPtr = (int *)*options;
 }
 
 #if RETRO_USING_DIRECTX9

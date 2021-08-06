@@ -14,7 +14,7 @@ HMODULE hLibModule = NULL;
 void* link_handle = NULL;
 #endif
 
-byte *gameOptionsPtr = NULL;
+int *gameOptionsPtr = NULL;
 RetroEngine engine  = RetroEngine();
 
 bool32 processEvents()
@@ -686,7 +686,7 @@ void LoadGameConfig()
             int offset = ReadInt32(&info, false);
             int count  = ReadInt32(&info, false);
             for (int v = 0; v < count; ++v) {
-                ReadBytes(&info, &gameOptionsPtr[offset + v], sizeof(int));
+                gameOptionsPtr[offset + v] = ReadInt32(&info, false);
             }
         }
 

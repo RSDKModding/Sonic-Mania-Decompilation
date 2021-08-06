@@ -108,7 +108,7 @@ typedef struct {
     int blueSpheresInit;
     int atlEnabled;
     int atlEntityCount;
-    int atlEntitySlot[32];
+    int atlEntitySlot[0x20];
     int atlEntityData[0x4000];
     int saveLoaded;
     int saveRAM[0x4000];
@@ -120,10 +120,10 @@ typedef struct {
     int suppressAutoMusic;
     int competitionSession[0x4000];
     int medalMods;
-    int parallaxOffset[256];
+    int parallaxOffset[0x100];
     int enableIntro;
     int optionsLoaded;
-    int optionsRAM[128];
+    int optionsRAM[0x80];
     int presenceID;
     int medallionDebug;
     int noSave;

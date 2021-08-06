@@ -334,7 +334,7 @@ void SignPost_State_Fall(void)
             if (player->velocity.y < 0 && player->playerAnimator.animationID == ANI_JUMP && !player->onGround) {
                 if (Player_CheckCollisionTouch(player, entity, &SignPost->hitbox)) {
                     entity->velocity.x = (entity->position.x - player->position.x) >> 4;
-                    entity->velocity.y = -131072;
+                    entity->velocity.y = -0x20000;
                     RSDK.PlaySFX(SignPost->sfx_Twinkle, 0, 255);
                     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
                     scoreBonus->drawOrder    = Zone->drawOrderHigh;

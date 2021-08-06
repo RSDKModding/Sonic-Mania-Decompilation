@@ -44,7 +44,7 @@ void DDWrecker_Create(void *data)
     RSDK_THIS(DDWrecker);
     if (!RSDK_sceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode >= MODE_TIMEATTACK) {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
         }
         else if (data) {
             entity->type   = voidToInt(data);
@@ -131,31 +131,31 @@ void DDWrecker_State_InitChildren(void)
         entity->timer++;
         if (entity->timer == 60) {
             EntityDDWrecker *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, DDWrecker);
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)3);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(3));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
             child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, DDWrecker);
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)3);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(3));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
             child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, DDWrecker);
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)3);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(3));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
             child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 5, DDWrecker);
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)3);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(3));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
             child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 3, DDWrecker); // main
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)4);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(4));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x200000;
@@ -174,7 +174,7 @@ void DDWrecker_State_InitChildren(void)
             child->state      = DDWrecker_State_Assemble;
 
             child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 6, DDWrecker); // bodyA
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)1);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(1));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
@@ -189,7 +189,7 @@ void DDWrecker_State_InitChildren(void)
             child->arcOffset = 64;
 
             child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 7, DDWrecker); // bodyB
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, (void *)2);
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(2));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
@@ -203,7 +203,7 @@ void DDWrecker_State_InitChildren(void)
             child->bodyA     = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 6, DDWrecker);
             child->arcOffset = 64;
 
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
         }
     }
     else {
@@ -840,7 +840,7 @@ void DDWrecker_State_Debris(void)
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, 0, NULL);
+        destroyEntity(entity);
 }
 void DDWrecker_State_Die(void)
 {
@@ -859,7 +859,7 @@ void DDWrecker_State_Die(void)
         int cnt = 0;
         foreach_active(DDWrecker, child) { ++cnt; }
         if (cnt != 1) {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
         }
         else {
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
@@ -881,7 +881,7 @@ void DDWrecker_State_SpawnSignpost(void)
             signPost->state      = SignPost_State_Fall;
             RSDK.PlaySFX(SignPost->sfx_Twinkle, 0, 255);
         }
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 
