@@ -26,8 +26,8 @@ void UIWidgets_StageLoad(void)
     UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
     UIWidgets->labelSpriteIndex      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animData1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animData2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
     UIWidgets->sfx_Bleep  = RSDK.GetSFX("Global/MenuBleep.wav");
     UIWidgets->sfx_Accept = RSDK.GetSFX("Global/MenuAccept.wav");
     UIWidgets->sfx_Warp   = RSDK.GetSFX("Global/SpecialWarp.wav");
@@ -279,12 +279,12 @@ void UIWidgets_Unknown8(int a1, int x, int y)
 
     drawPos.x                    = x;
     drawPos.y                    = y;
-    UIWidgets->animData2.frameID = 2;
+    UIWidgets->animator2.frameID = 2;
     drawPos.y -= a1 << 15;
-    RSDK.DrawSprite(&UIWidgets->animData2, &drawPos, 0);
-    UIWidgets->animData2.frameID = 3;
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
+    UIWidgets->animator2.frameID = 3;
     drawPos.y += a1 << 16;
-    RSDK.DrawSprite(&UIWidgets->animData2, &drawPos, 0);
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
 }
 void UIWidgets_Unknown9(int a1, int x, int y)
 {
@@ -292,18 +292,22 @@ void UIWidgets_Unknown9(int a1, int x, int y)
 
     drawPos.x                    = x;
     drawPos.y                    = y;
-    UIWidgets->animData2.frameID = 0;
+    UIWidgets->animator2.frameID = 0;
     drawPos.x -= a1 >> 1;
-    RSDK.DrawSprite(&UIWidgets->animData2, &drawPos, 0);
-    UIWidgets->animData2.frameID = 1;
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
+    UIWidgets->animator2.frameID = 1;
     drawPos.x += a1;
-    RSDK.DrawSprite(&UIWidgets->animData2, &drawPos, 0);
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
 }
-int UIWidgets_Unknown10(int a1, int a2, int a3, int a4)
+Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int drawX, int drawY)
 {
-    UIWidgets_Unknown5((a1 >> 16) & 0xFF, 13, (a1 >> 8) & 0xFF, a1 & 0xFF, a3, a4);
-    UIWidgets_Unknown5((a1 >> 16) & 0xFF, -13, (a2)&0xFF, a1 & 0xFF, a3 + 0xE0000, a4 + 0xC0000);
-    return a3 + 0xE0000;
+    UIWidgets_Unknown5((colour1 >> 16) & 0xFF,  13, (colour1 >> 8) & 0xFF, colour1 & 0xFF, drawX, drawY);
+    UIWidgets_Unknown5((colour2 >> 16) & 0xFF, -13, (colour2 >> 8) & 0xFF, colour2 & 0xFF, drawX + 0xE0000, drawY + 0xC0000);
+
+    Vector2 result;
+    result.x = drawX + 0xE00000;
+    result.y = drawX + 0xE00000;
+    return result;
 }
 void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int y)
 {

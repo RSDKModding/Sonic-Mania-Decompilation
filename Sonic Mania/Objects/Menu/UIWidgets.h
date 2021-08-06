@@ -11,11 +11,13 @@ typedef struct {
 #endif
     int arrayIndex;
     int field_48[12];
-    Animator animData1;
-    Animator animData2;
+    Animator animator1;
+    Animator animator2;
     ushort uiSpriteIndex;
+#if RETRO_USE_PLUS
     ushort saveSelectSpriteIndex;
     ushort textSpriteIndex;
+#endif
     ushort labelSpriteIndex;
     ushort sfx_Bleep;
     ushort sfx_Accept;
@@ -23,7 +25,9 @@ typedef struct {
     ushort sfx_Event;
     ushort sfx_Woosh;
     ushort sfx_Fail;
+#if RETRO_USE_PLUS
     int value;
+#endif
 } ObjectUIWidgets;
 
 // Entity Class
@@ -57,7 +61,7 @@ void UIWidgets_Unknown6(char a1, int red, int green, int blue, InkEffects ink, i
 void UIWidgets_Unknown7(int a1, int a2, int a3, int red, int green, int blue, int a7, int a8);
 void UIWidgets_Unknown8(int a1, int x, int y);
 void UIWidgets_Unknown9(int a1, int x, int y);
-int UIWidgets_Unknown10(int a1, int a2, int a3, int a4);
+Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int drawX, int drawY);
 void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int y);
 
 #endif //!OBJ_UIWIDGETS_H

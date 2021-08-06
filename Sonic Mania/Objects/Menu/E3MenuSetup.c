@@ -73,16 +73,16 @@ void E3MenuSetup_Unknown2(void)
     }
 
     int id = 0;
-    foreach_all(UITAZoneModule, zone)
+    foreach_all(UITAZoneModule, module)
     {
-        // zone->selectCB = E3MenuSetup_ZoneModule_Unknown;
+        module->options2 = E3MenuSetup_ZoneModule_Unknown;
         if (!id) { // GHZ
-            // zone->zoneID = 0;
-            // zone->actID = 1;
+            module->zoneID = 0;
+            zone->actID = 1;
         }
         else if (id == 1) { // MSZ
-            // zone->zoneID = 7;
-            // zone->actID = 1;
+            module->zoneID = 7;
+            zone->actID = 1;
         }
     }
 }
@@ -90,13 +90,13 @@ void E3MenuSetup_Unknown2(void)
 void E3MenuSetup_Unknown3(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.LoadScene("Mania Mode", "");
-    // EntityTAZoneModule *button      = (EntityTAZoneModule*) * ((_QWORD *)&Obj_E3MenuSetup->zoneControl[2].inBounds +
-    // Obj_E3MenuSetup->zoneControl[1].scale.y); param->zoneID = *(unsigned __int8 *)(button + 332);param->actID =
-    // *(unsigned
-    // __int8 *)(button + 438);
+    EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->selectionID];
+    param->zoneID                = module->zoneID;
+    param->actID                 = module->actID;
     RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->playerID, param->actID);
     switch (param->characterID) {
         default: break;
