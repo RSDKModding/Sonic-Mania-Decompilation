@@ -71,9 +71,9 @@ void PauseMenu_StaticUpdate(void)
                 for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
                     int id = RSDK.ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
-                        PauseMenu->controllerDisconnect = true;
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        pauseMenu->triggerPlayer = i;
+                        //PauseMenu->controllerDisconnect = true;
+                        //RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        //pauseMenu->triggerPlayer = i;
                     }
                 }
             }

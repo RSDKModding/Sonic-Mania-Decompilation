@@ -53,12 +53,17 @@ void UIDiorama_Draw(void)
     if (entity->timer <= 0) {
         if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
             RSDK.DrawSprite(&entity->animator1, NULL, false);
+            RSDK.DrawRect(entity->position.x, entity->dioramaPos.y, RSDK_screens->width, entity->dioramaSize.y, entity->maskColour, 255, INK_NONE,
+                          false);
+                          
             entity->dioramaPos.x  = entity->position.x;
             entity->dioramaPos.y  = entity->position.y - 0x510000;
             entity->dioramaSize.x = 0x1260000;
             entity->dioramaSize.y = 0xA20000;
             RSDK.DrawRect(entity->dioramaPos.x, entity->dioramaPos.y, entity->dioramaSize.x, entity->dioramaSize.y, entity->maskColour, 255,
                           INK_MASKED, false);
+
+
         }
 
         entity->inkEffect = INK_MASKED;

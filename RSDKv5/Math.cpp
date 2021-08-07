@@ -37,6 +37,7 @@ void CalculateTrigAngles()
         tanVal1024[i]  = (int)(tanf((i / 512.0) * M_PI) * 1024.0);
         aSinVal1024[i] = (int)((asin(i / 1023.0) * 512.0) / M_PI);
         aCosVal1024[i] = (int)((acos(i / 1023.0) * 512.0) / M_PI);
+        printLog(PRINT_NORMAL, "sin %d", sinVal1024[i]);
     }
 
     cosVal1024[0x000] = 0x400;

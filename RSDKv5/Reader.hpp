@@ -3,7 +3,11 @@
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
 #define FileIO                                          SDL_RWops
+#if RETRO_PLATFORM != RETRO_ANDROID
 #define fOpen(path, mode)                               SDL_RWFromFile(path, mode)
+#else
+SDL_RWops *fOpen(const char *path, const char *mode);
+#endif
 #define fRead(buffer, elementSize, elementCount, file)  SDL_RWread(file, buffer, elementSize, elementCount)
 #define fSeek(file, offset, whence)                     SDL_RWseek(file, offset, whence)
 #define fTell(file)                                     SDL_RWtell(file)

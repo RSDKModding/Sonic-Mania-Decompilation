@@ -99,7 +99,7 @@ enum GameRegions {
 
 #define RETRO_USING_SDL2      (0) // general
 #define RETRO_USING_DIRECTX9  (0) // windows
-#define RETRO_USING_DIRECTX11 (0) // xbox one
+#define RETRO_USING_DIRECTX1    1 (0) // xbox one
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
 #undef RETRO_USING_SDL2
@@ -143,6 +143,10 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
 #include <vorbis/vorbisfile.h>
+#include <theora/theora.h>
+#include <theoraplay/theoraplay.h>
+
+//#include "androidHelpers.hpp"
 #undef RETRO_STANDALONE
 #define RETRO_STANDALONE (0)
 #endif

@@ -348,13 +348,13 @@ void setupFunctions()
     int platform = PLATFORM_DEV;
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
-    || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
+    || RETRO_PLATFORM == RETRO_iOS 
     // platform = PLATFORM_PC;
 #elif RETRO_PLATFORM == RETRO_PS4
     platform             = PLATFORM_PS4;
 #elif RETRO_PLATFORM == RETRO_XB1
     platform = PLATFORM_XB1;
-#elif RETRO_PLATFORM == RETRO_SWITCH
+#elif RETRO_PLATFORM == RETRO_SWITCH　|| RETRO_PLATFORM == RETRO_ANDROID
     platform = PLATFORM_SWITCH;
 #endif
 

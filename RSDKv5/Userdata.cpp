@@ -1279,7 +1279,7 @@ void readSettings()
         engine.fsWidth                                  = 0;
         engine.windowWidth                              = pixWidth * 1;
         engine.fsHeight                                 = 0;
-        engine.refreshRate                              = 0;
+        engine.refreshRate                              = 60;
         engine.shaderID                                 = SHADER_NONE;
         engine.streamsEnabled                           = 1;
         engine.windowHeight                             = SCREEN_YSIZE * 1;

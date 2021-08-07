@@ -10,6 +10,30 @@ char gameLogicName[0x400];
 
 bool32 useDataFile = false;
 
+#if RETRO_PLATFORM == RETRO_ANDROID
+#include <jni.h>
+//TODO: have rdc look over this and make it use nice and shiny RSDK strings
+SDL_RWops *fOpen(const char *path, const char *mode) {
+    char buffer[0x200];
+
+    JNIEnv* env = (JNIEnv*)SDL_AndroidGetJNIEnv();
+    jobject activity = (jobject)SDL_AndroidGetActivity();
+    jclass cls(env->GetObjectClass(activity));
+    jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
+    auto ret = env->CallObjectMethod(activity, method);
+
+    strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
+    strcat(buffer, path);
+
+    SDL_RWops *file = SDL_RWFromFile(buffer, mode);
+
+    env->DeleteLocalRef(activity);
+    env->DeleteLocalRef(cls);
+
+    return file;
+}
+#endif
+
 bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 {
     MEM_ZERO(dataPacks[dataPackCount]);

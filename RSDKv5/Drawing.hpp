@@ -88,6 +88,7 @@ extern ushort subtractLookupTable[BLENDTABLE_SIZE];
 extern GFXSurface gfxSurface[SURFACE_MAX];
 
 extern int pixWidth;
+extern float dpi;
 extern int cameraCount;
 extern ScreenInfo screens[SCREEN_MAX];
 extern CameraInfo cameras[CAMERA_MAX];

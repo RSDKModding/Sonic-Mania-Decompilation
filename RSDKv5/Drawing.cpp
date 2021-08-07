@@ -8,6 +8,7 @@ ushort subtractLookupTable[BLENDTABLE_SIZE];
 GFXSurface gfxSurface[SURFACE_MAX];
 
 int pixWidth = 424;
+float dpi = 1;
 int cameraCount  = 0;
 ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[CAMERA_MAX];
@@ -81,32 +82,45 @@ char drawGroupNames[0x10][0x10]{
 
 bool32 InitRenderDevice()
 {
-    for (int s = 0; s < SCREEN_MAX; ++s) {
-        SetScreenSize(s, pixWidth, SCREEN_YSIZE);
 
-        //screens[s].frameBuffer = new ushort[screens[s].width * screens[s].height];
-        memset(screens[s].frameBuffer, 0, (screens[s].width * screens[s].height) * sizeof(ushort));
-    }
-
-    int size = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
-    scanlines = (ScanlineInfo*)malloc(size * sizeof(ScanlineInfo));
-    memset(scanlines, 0, size * sizeof(ScanlineInfo));
-    memset(drawLayers, 0, DRAWLAYER_COUNT * sizeof(DrawList));
 
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
 
     SDL_DisableScreenSaver();
 
+#if RETRO_PLATFORM == RETRO_ANDROID
+    engine.startFullScreen = true;
+    SDL_DisplayMode dm;
+    SDL_GetDesktopDisplayMode(0, &dm);
+    float hdp = 0, vdp = 0;
+    SDL_GetDisplayDPI(0, &dpi, &hdp, &vdp);
+    printLog(PRINT_NORMAL, "dpi: %f %f %f", dpi, hdp, vdp);
+    engine.windowWidth = pixWidth = SCREEN_YSIZE * dm.h / dm.w;
+#endif
+
+    for (int s = 0; s < SCREEN_MAX; ++s) {
+        SetScreenSize(s, pixWidth, SCREEN_YSIZE);
+
+        // screens[s].frameBuffer = new ushort[screens[s].width * screens[s].height];
+        memset(screens[s].frameBuffer, 0, (screens[s].width * screens[s].height) * sizeof(ushort));
+    }
+
+    int size  = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
+    scanlines = (ScanlineInfo *)malloc(size * sizeof(ScanlineInfo));
+    memset(scanlines, 0, size * sizeof(ScanlineInfo));
+    memset(drawLayers, 0, DRAWLAYER_COUNT * sizeof(DrawList));
+
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
     engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI);
+                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
-    if (!engine.window) {
+    if (!engine.window)
+    {
         printLog(PRINT_NORMAL, "ERROR: failed to create window!");
         return 0;
     }
@@ -310,6 +324,9 @@ void FlipScreen()
             break;
         } 
     }
+#if RETRO_USING_SDL2
+    SDL_ShowWindow(engine.window);
+#endif
 }
 void ReleaseRenderDevice()
 {
@@ -353,7 +370,7 @@ void UpdateWindow()
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
     engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI);
+                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
