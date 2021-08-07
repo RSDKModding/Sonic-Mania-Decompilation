@@ -12,13 +12,12 @@ void TMZ1Setup_LateUpdate(void) {}
 
 void TMZ1Setup_StaticUpdate(void)
 {
-    if (!(Zone->timer & 1)) {
+    if (!(Zone->timer & 1))
         ++TMZ1Setup->bgPtr->deformationOffset;
-    }
 
     if (!(Zone->timer & 3)) {
         TMZ1Setup->aniTileFrame += 32;
-        TMZ1Setup->aniTileFrame = TMZ1Setup->aniTileFrame;
+        TMZ1Setup->aniTileFrame = TMZ1Setup->aniTileFrame & 0xFF;
         RSDK.DrawAniTiles(TMZ1Setup->aniTiles, 34, TMZ1Setup->aniTileFrame, 0, 32, 112);
     }
 

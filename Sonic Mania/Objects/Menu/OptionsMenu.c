@@ -349,31 +349,33 @@ void OptionsMenu_Unknown5(void)
 {
     if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = (EntityUIControl *)OptionsMenu->videoControl_Windows;
+        EntityOptions *options            = (EntityOptions *)globals->optionsRAM;
         Options_GetWinSize();
 
-        int vals[6];
+        int vals[7];
 
         vals[0] = RSDK.GetSettingsValue(SETTINGS_SHADERID);
-        vals[1] = globals->optionsRAM[30] & 0xFF;
+        vals[1] = options->windowSize;
         vals[2] = RSDK.GetSettingsValue(SETTINGS_BORDERED);
 
         vals[3] = 0;
-        if (!RSDK.GetSettingsValue(SETTINGS_WINDOWED) || (globals->optionsRAM[30] & 0xFF) == 4)
+        if (!RSDK.GetSettingsValue(SETTINGS_WINDOWED) || options->windowSize)
             vals[3] = 1;
 
-        vals[4] = RSDK.GetSettingsValue(SETTINGS_VSYNC);
-        vals[5] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
+        vals[4] = 0;
+        vals[5] = RSDK.GetSettingsValue(SETTINGS_VSYNC);
+        vals[6] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
 
         for (int i = 0; i < videoControl_Win->buttonCount; ++i) {
             EntityUIButton *button = videoControl_Win->buttons[i];
 
             if (i == 4) {
-                EntityUIButton *child = UIButton_Unknown2(button, button->selection);
-                // UIResPicker_Unknown1(child);
+                EntityUIResPicker *child = (EntityUIResPicker*)UIButton_Unknown2(button, button->selection);
+                UIResPicker_GetDisplayInfo(child);
             }
-            else if (i == PLATFORM_PS4) {
-                EntityUIButton *child = UIButton_Unknown2(button, button->selection);
-                child->align          = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT) / SCREEN_YSIZE;
+            else if (i == 1) {
+                EntityUIWinSize *child = (EntityUIWinSize *)UIButton_Unknown2(button, button->selection);
+                child->selection       = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT) / SCREEN_YSIZE;
             }
             else if (button->selection != vals[i]) {
                 UIButton_Unknown4(button, vals[i]);
@@ -645,8 +647,9 @@ void OptionsMenu_Unknown30(void)
 void OptionsMenu_Unknown31(void)
 {
     RSDK_THIS(UIButton);
-    globals->optionsRAM[23] = entity->selection;
-    globals->optionsRAM[24] = 1;
+    EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
+    options->screenShader = entity->selection;
+    options->field_60 = true;
     RSDK.SetSettingsValue(SETTINGS_SHADERID, entity->selection);
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
     Options->state = 1;
@@ -656,6 +659,7 @@ void OptionsMenu_Unknown32(void)
 {
     RSDK_THIS(UIButton);
 
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     if (entity->selection != 4) {
         switch (entity->selection) {
             case 0:
@@ -676,8 +680,7 @@ void OptionsMenu_Unknown32(void)
                 break;
         }
 
-        byte *optionsRAM = (byte *)&globals->optionsRAM[30];
-        *optionsRAM      = entity->selection;
+        options->windowSize = entity->selection;
         Options->state   = 1;
     }
 }
@@ -685,7 +688,9 @@ void OptionsMenu_Unknown32(void)
 void OptionsMenu_Unknown33(void)
 {
     RSDK_THIS(UIButton);
-    globals->optionsRAM[31] = entity->selection;
+    EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
+
+    options->windowBorder = entity->selection;
     RSDK.SetSettingsValue(SETTINGS_BORDERED, entity->selection);
     Options->state = 1;
 }
@@ -693,8 +698,9 @@ void OptionsMenu_Unknown33(void)
 void OptionsMenu_Unknown34(void)
 {
     RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    globals->optionsRAM[32] = entity->selection ^ 1;
+    options->windowed = entity->selection ^ 1;
     RSDK.SetSettingsValue(SETTINGS_WINDOWED, entity->selection ^ 1);
     Options->state = 1;
 }
@@ -702,8 +708,9 @@ void OptionsMenu_Unknown34(void)
 void OptionsMenu_Unknown35(void)
 {
     RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    globals->optionsRAM[29] = entity->selection;
+    options->vSync = entity->selection;
     RSDK.SetSettingsValue(SETTINGS_VSYNC, entity->selection);
     Options->state = 1;
 }
@@ -711,8 +718,9 @@ void OptionsMenu_Unknown35(void)
 void OptionsMenu_Unknown36(void)
 {
     RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    globals->optionsRAM[33] = entity->selection;
+    options->tripleBuffering = entity->selection;
     RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, entity->selection);
     Options->state = 1;
 }
@@ -720,44 +728,46 @@ void OptionsMenu_Unknown36(void)
 void OptionsMenu_Unknown37(void)
 {
     RSDK_THIS(UISlider);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
     /*v2 = RSDK_sceneInfo->entity->field_128;
     switch (RSDK_sceneInfo->entity->size.y != 1) {
         case 0xF1:
-            globals->optionsRAM[32] = v2;
+            options->windowed = v2;
             RSDK.SetSettingsValue(SETTINGS_WINDOWED, v2);
             Options->state = 1;
             break;
         case 0xF2:
-            globals->optionsRAM[31] = v2;
+            options->bordered = v2;
             RSDK.SetSettingsValue(SETTINGS_BORDERED, v2);
             Options->state = 1;
             break;
         case 0xF4:
-            globals->optionsRAM[29] = v2;
+            options->vSync = v2;
             RSDK.SetSettingsValue(SETTINGS_VSYNC, v2);
             Options->state = 1;
             break;
         case 0xF5:
-            globals->optionsRAM[33] = v2;
+            options->tripleBuffered = v2;
             RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, v2);
             Options->state = 1;
             break;
         case 0xFC:
-            globals->optionsRAM[23] = v2;
-            globals->optionsRAM[24]   = 1;
+            options->screenShader = v2;
+            options->field_60   = true;
             RSDK.SetSettingsValue(SETTINGS_SHADERID, v2);
             RSDK.SetSettingsValue(SETTINGS_CHANGED, 0);
             Options->state = 1;
             break;
         case 0:
-            globals->optionsRAM[25] = v2;
-            globals->optionsRAM[26]   = 1;
+            options->volMusic = v2;
+            options->field_68   = 1;
             RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, v2);
             Options->state = 1;
             break;
         case 1:
-            globals->optionsRAM[27] = v2;
-            globals->optionsRAM[28]   = 1;
+            options->volSfx = v2;
+            options->field_70   = true;
             RSDK.SetSettingsValue(SETTINGS_SFX_VOL, v2);
             Options->state = 1;
             break;

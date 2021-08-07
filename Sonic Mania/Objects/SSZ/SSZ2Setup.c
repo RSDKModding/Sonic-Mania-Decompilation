@@ -6,7 +6,35 @@ void SSZ2Setup_Update(void) {}
 
 void SSZ2Setup_LateUpdate(void) {}
 
-void SSZ2Setup_StaticUpdate(void) {}
+void SSZ2Setup_StaticUpdate(void)
+{
+    if (SSZ2Setup->sparkTimer <= 0) {
+        foreach_active(Player, player)
+        {
+            Hitbox *hitbox = Player_GetHitbox(player);
+            ushort tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+            if (tile == 0xFFFF)
+                tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+
+            if (RSDK.GetTileBehaviour(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
+                EntityDebris *debris =
+                    CREATE_ENTITY(Debris, Debris_State_LightningSpark, player->position.x, player->position.y + (hitbox->bottom << 16));
+                RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
+                debris->drawFX     = FX_FLIP;
+                debris->direction  = player->velocity.x < 0;
+                debris->drawOrder  = Zone->drawOrderLow;
+                debris->position.x = player->position.x;
+                debris->position.y = player->position.y + (hitbox->bottom << 16);
+                debris->timer      = 30;
+                RSDK.PlaySFX(SSZ2Setup->sfxSpark, false, 255);
+                SSZ2Setup->sparkTimer = 3;
+            }
+        }
+    }
+    else {
+        SSZ2Setup->sparkTimer--;
+    }
+}
 
 void SSZ2Setup_Draw(void) {}
 
@@ -152,7 +180,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             player->right           = true;
             Zone->screenBoundsR1[0] = RSDK_screens->centerX + (entity->position.x >> 16);
             Zone->screenBoundsR1[1] = RSDK_screens->centerX + (entity->position.x >> 16);
-#if RETRO_USE_PLUS 
+#if RETRO_USE_PLUS
             Zone->screenBoundsR1[2] = RSDK_screens->centerX + (entity->position.x >> 16);
             Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
 #endif

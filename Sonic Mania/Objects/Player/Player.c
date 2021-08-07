@@ -2363,6 +2363,7 @@ bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox
     }
     return RSDK.CheckObjectCollisionTouchBox(entity, entityHitbox, player, otherHitbox);
 }
+
 bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 {
     Entity *entity   = (Entity *)e;

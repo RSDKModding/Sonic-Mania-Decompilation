@@ -169,9 +169,9 @@ void JacobsLadder_Create(void *data)
         entity->duration = 60;
     RSDK.SetSpriteAnimation(JacobsLadder->aniFrames, 3, &entity->animator, true, 0);
     entity->hitbox.left   = -35;
-    entity->hitbox.top    = -48;
+    entity->hitbox.top    = -3;
     entity->hitbox.right  = 35;
-    entity->hitbox.bottom = 64;
+    entity->hitbox.bottom = 4;
 }
 
 void JacobsLadder_StageLoad(void)

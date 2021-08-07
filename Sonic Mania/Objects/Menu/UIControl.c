@@ -570,9 +570,9 @@ void UIControl_Unknown7(void)
 #endif
 
     for (int i = 0; i < SCENEENTITY_COUNT; ++i) {
-        EntityUIButton *entPtr = RSDK_GET_ENTITY(i, UIButton);
-        if (entPtr) {
-            int id = entPtr->objectID;
+        EntityUIButton *button = RSDK_GET_ENTITY(i, UIButton);
+        if (button) {
+            int id = button->objectID;
             if (id != UIButton->objectID && (!UIModeButton || id != UIModeButton->objectID) && (!UISaveSlot || id != UISaveSlot->objectID)
                 && (!UICharButton || id != UICharButton->objectID) && (!UITAZoneModule || id != UITAZoneModule->objectID)
 #if RETRO_USE_PLUS
@@ -589,11 +589,11 @@ void UIControl_Unknown7(void)
                 bounds.left   = -(entity->size.x >> 17);
                 bounds.bottom = entity->size.y >> 17;
                 bounds.top    = -(entity->size.y >> 17);
-                if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, entPtr->position.x, entPtr->position.y)) {
+                if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, button->position.x, button->position.y)) {
                     if (entity->buttonCount < 64) {
-                        if (!entPtr->parent)
-                            entPtr->parent = (Entity *)entity;
-                        entity->buttons[entity->buttonCount++] = entPtr;
+                        if (!button->parent)
+                            button->parent = (Entity *)entity;
+                        entity->buttons[entity->buttonCount++] = button;
                     }
                 }
             }

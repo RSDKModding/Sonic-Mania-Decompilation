@@ -18,6 +18,19 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
+    byte language;
+    int overrideLanguage;
+    int screenShader;
+    int field_60;
+    int volMusic;
+    int field_68;
+    int volSfx;
+    int field_70;
+    int vSync;
+    byte windowSize;
+    int windowBorder;
+    int windowed;
+    int tripleBuffering;
 } EntityOptions;
 
 // Object Struct
@@ -41,7 +54,7 @@ void Options_LoadCallback(int success);
 void Options_LoadOptionsBin(void);
 void Options_SaveOptionsBin(void (*callback)(int));
 void Options_SetLanguage(int language);
-void Options_Unknown1(int *optionsRAM);
+void Options_Unknown1(EntityOptions *options);
 void Options_LoadOptionsCallback(int statusCode);
 void Options_SaveOptionsCallback(int statusCode);
 

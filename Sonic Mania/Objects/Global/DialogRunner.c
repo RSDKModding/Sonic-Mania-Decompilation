@@ -46,10 +46,11 @@ void DialogRunner_StageLoad(void)
     TimeAttackData->dword1C  = 0;
     Options->state           = 0;
     if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
-        globals->optionsRAM[29] = 0;
-        globals->optionsRAM[32] = 0;
-        globals->optionsRAM[31] = 0;
-        globals->optionsRAM[33] = 0;
+        EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
+        options->vSync           = false;
+        options->windowed        = false;
+        options->windowBorder    = false;
+        options->tripleBuffering = false;
     }
     else {
         Options_Reload();

@@ -10,15 +10,14 @@ void TMZ3Setup_StaticUpdate(void)
 {
     if (!(Zone->timer & 3)) {
         TMZ3Setup->aniTileFrame += 32;
-        TMZ3Setup->aniTileFrame = TMZ3Setup->aniTileFrame;
+        TMZ3Setup->aniTileFrame = TMZ3Setup->aniTileFrame & 0xFF;
         RSDK.DrawAniTiles(TMZ3Setup->aniTiles, 34u, TMZ3Setup->aniTileFrame, 0, 32, 112);
     }
-    if (!(Zone->timer & 1)) {
+
+    if (!(Zone->timer & 1))
         RSDK.RotatePalette(0, 204, 207, false);
-    }
-    if (!(Zone->timer & 7)) {
+    if (!(Zone->timer & 7))
         RSDK.RotatePalette(0, 250, 252, true);
-    }
 
     RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(Zone->timer) >> 1) + 128, 192, 197);
     RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(Zone->timer + 128) >> 1) + 128, 198, 203);

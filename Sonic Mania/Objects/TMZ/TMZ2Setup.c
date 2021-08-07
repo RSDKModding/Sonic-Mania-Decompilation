@@ -8,12 +8,10 @@ void TMZ2Setup_LateUpdate(void) {}
 
 void TMZ2Setup_StaticUpdate(void)
 {
-    if (!(Zone->timer & 1)) {
+    if (!(Zone->timer & 1))
         RSDK.RotatePalette(0, 204, 207, false);
-    }
-    if (!(Zone->timer & 7)) {
+    if (!(Zone->timer & 7))
         RSDK.RotatePalette(0, 250, 252, true);
-    }
 
     RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(2 * Zone->timer) >> 1) + 128, 192, 197);
     RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(2 * Zone->timer + 128) >> 1) + 128, 198, 203);
@@ -22,7 +20,7 @@ void TMZ2Setup_StaticUpdate(void)
 
     if (TMZ2Setup->aniTileDelay <= 0) {
         TMZ2Setup->aniTileFrame += 32;
-        TMZ2Setup->aniTileFrame = TMZ2Setup->aniTileFrame;
+        TMZ2Setup->aniTileFrame = TMZ2Setup->aniTileFrame & 0xFF;
         RSDK.SetLimitedFade(0, 1, 2, (RSDK.Sin256(TMZ2Setup->aniTileFrame) >> 1) + 128, 184, 190);
         if (TMZ2Setup->aniTileFrame == 160)
             TMZ2Setup->aniTileDelay = RSDK.Rand(2, 60);

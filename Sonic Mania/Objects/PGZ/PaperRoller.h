@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxPaper;
+    uint colours[64];
 } ObjectPaperRoller;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int length;
+    Vector2 startPos;
+    int field_64;
+    int angleVal;
+    int playerTimer[4];
+    int playerUnknown[4];
+    Vector2 field_8C;
+    Vector2 field_94;
+    Hitbox hitbox;
+    Animator animator1;
+    Animator animator2;
 } EntityPaperRoller;
 
 // Object Struct
@@ -28,6 +42,10 @@ void PaperRoller_EditorLoad(void);
 void PaperRoller_Serialize(void);
 
 // Extra Entity Functions
-
+void PaperRoller_Unknown1(uint colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4);
+void PaperRoller_Unknown2(void);
+void PaperRoller_Unknown3(void);
+void PaperRoller_Unknown4(void);
+void PaperRoller_Unknown5(void);
 
 #endif //!OBJ_PAPERROLLER_H

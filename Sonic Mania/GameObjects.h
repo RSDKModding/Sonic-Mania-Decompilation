@@ -209,7 +209,7 @@ typedef struct {
     void (*DrawDeformedSprite)(ushort sheet, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int startCharID, int endCharID, Alignments align, int spacing, int a8,
                      Vector2 *charPos, bool32 ScreenRelative);
-    void (*DrawTile)(ushort *tileInfo, int countX, int countY, void *entityPtr, Vector2 *position, bool32 screenRelative);
+    void (*DrawTile)(ushort *tileInfo, int countX, int countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
     void (*FillScreen)(uint colour, int alphaR, int alphaG, int alphaB);

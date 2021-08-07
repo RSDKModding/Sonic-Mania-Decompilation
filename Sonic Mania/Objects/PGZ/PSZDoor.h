@@ -5,12 +5,28 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxes[2];
+    ushort aniFrames;
+    ushort sfxOpen;
 } ObjectPSZDoor;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte orientation;
+    bool32 open;
+    int speed;
+    byte id;
+    int automatic;
+    EntityDoorTrigger *trigger;
+    int field_70;
+    Vector2 startPos;
+    Vector2 offset;
+    Vector2 field_84;
+    Vector2 field_8C;
+    Animator animator1;
+    Animator animator2;
 } EntityPSZDoor;
 
 // Object Struct
@@ -28,6 +44,6 @@ void PSZDoor_EditorLoad(void);
 void PSZDoor_Serialize(void);
 
 // Extra Entity Functions
-
+int PSZDoor_Unknown1(void);
 
 #endif //!OBJ_PSZDOOR_H

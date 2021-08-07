@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxes[2];
+    ushort aniFrames;
+    ushort sfxShatter;
 } ObjectDoorTrigger;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte orientation;
+    byte id;
+    Animator animator1;
+    Animator animator2;
 } EntityDoorTrigger;
 
 // Object Struct

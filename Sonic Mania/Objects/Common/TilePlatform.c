@@ -39,8 +39,8 @@ void TilePlatform_Create(void *data)
             for (int y = 0; y < h; ++y) {
                 if ((entity->size.x & 0xFFF00000) > 0) {
                     for (int x = 0; x < w; ++x) {
-                        entity->tiles[id] = RSDK.GetTileInfo(Zone->moveLayer, x + originX, y + originY);
                         id                = x + y * (entity->size.x >> 20);
+                        entity->tiles[id] = RSDK.GetTileInfo(Zone->moveLayer, originX + x, originY + y);
                     }
                 }
             }

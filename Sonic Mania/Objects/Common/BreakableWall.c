@@ -23,7 +23,7 @@ void BreakableWall_Create(void *data)
     RSDK_THIS(BreakableWall);
     entity->gravityStrength = 0x3800;
     if (data) {
-        int subtype           = (int)(size_t)data;
+        int subtype           = voidToInt(data);
         entity->visible       = true;
         entity->updateRange.x = 0x100000;
         entity->updateRange.y = 0x100000;
@@ -36,7 +36,7 @@ void BreakableWall_Create(void *data)
         }
         else {
             entity->state     = BreakableWall_State_FallingTile;
-            entity->stateDraw = 0;
+            entity->stateDraw = StateMachine_None;
         }
     }
     else {
@@ -213,11 +213,11 @@ void BreakableWall_State_Tile(void)
         entity->rotation += entity->dword88;
     if (entity->drawOrder >= Zone->drawOrderLow) {
         if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
     }
     else {
         if (++entity->timer == 120)
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
     }
 }
 void BreakableWall_State_Top(void)
@@ -366,7 +366,7 @@ void BreakableWall_Break1(void)
                         else
 #endif
                             player->velocity.y = -0x30000;
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                        destroyEntity(entity);
                     }
                 }
 #if RETRO_USE_PLUS
@@ -383,7 +383,7 @@ void BreakableWall_Break2AND3(void)
     {
         int velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 1 && !player->sidekick
-            && ((player->collisionPlane == 1 && entity->type == 2) || entity->type != 2)) {
+            && ((player->collisionPlane == 1 && entity->type != 2) || entity->type == 2)) {
 #if RETRO_USE_PLUS
             if (!entity->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
 #endif

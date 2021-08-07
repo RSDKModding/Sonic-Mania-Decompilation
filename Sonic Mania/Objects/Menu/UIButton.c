@@ -671,26 +671,28 @@ void UIButton_Unknown12(void)
                         // entPtr->state      = UIVsRoundPicker_Unknown9;
                     }
                     else {
-                        if (entPtr->objectID == UIResPicker->objectID) {
-                            entPtr->active  = ACTIVE_BOUNDS;
-                            entPtr->visible = true;
-                            // entPtr->invisible  = 0;
-                            // entPtr->assignsP1  = 0;
-                            // entPtr->freeBindP2 = -0x20000;
-                            // entPtr->transition = -0x20000;
-                            // entPtr->flag       = true;
-                            // entPtr->state      = UIResPicker_Unknown8;
+                        EntityUIResPicker *resPicker = (EntityUIResPicker *)entPtr;
+                        if (resPicker->objectID == UIResPicker->objectID) {
+                            resPicker->active    = ACTIVE_BOUNDS;
+                            resPicker->visible   = true;
+                            resPicker->field_120 = 0;
+                            resPicker->offset    = 0;
+                            resPicker->field_128 = -0x20000;
+                            resPicker->field_12C = -0x20000;
+                            resPicker->flag      = true;
+                            resPicker->state     = UIResPicker_Unknown8;
                         }
                         else {
-                            if (entPtr->objectID == UIWinSize->objectID) {
-                                entPtr->active  = ACTIVE_BOUNDS;
-                                entPtr->visible = true;
-                                // entPtr->invisible  = 0;
-                                // entPtr->assignsP1  = 0;
-                                // entPtr->freeBindP2 = -0x20000;
-                                // entPtr->transition = -0x20000;
-                                // entPtr->flag       = true;
-                                // entPtr->state      = UIWinSize_Unknown8;
+                            EntityUIWinSize *winSize = (EntityUIWinSize *)entPtr;
+                            if (winSize->objectID == UIWinSize->objectID) {
+                                winSize->active    = ACTIVE_BOUNDS;
+                                winSize->visible   = true;
+                                winSize->field_120 = 0;
+                                winSize->offset    = 0;
+                                winSize->field_128 = -0x20000;
+                                winSize->field_12C = -0x20000;
+                                winSize->flag      = true;
+                                winSize->state     = UIWinSize_Unknown8;
                             }
                         }
                     }

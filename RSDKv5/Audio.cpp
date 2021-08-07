@@ -170,6 +170,7 @@ void ReleaseAudioDevice()
 #if RETRO_USING_SDL2
         if (streamInfo.musicStream)
             SDL_FreeAudioStream(streamInfo.musicStream);
+        streamInfo.musicStream = NULL;
 #endif
 
         ov_clear(&streamInfo.vorbisFile);
@@ -442,6 +443,7 @@ void LoadStream(ChannelInfo *channel)
 #if RETRO_USING_SDL2
         if (streamInfo.musicStream)
             SDL_FreeAudioStream(streamInfo.musicStream);
+        streamInfo.musicStream = NULL;
 #endif
 
         ov_clear(&streamInfo.vorbisFile);
@@ -491,20 +493,16 @@ void LoadStream(ChannelInfo *channel)
             musInfo.spec.freq     = (int)musInfo.vorbisFile.vi->rate;
 #endif
 
-            if (streamInfo.startPos) {
+            if (streamInfo.startPos)
                 ov_pcm_seek(&streamInfo.vorbisFile, streamInfo.startPos);
-            }
             streamInfo.startPos = 0;
             streamInfo.loaded   = true;
-
-            // musicFileInfo = Unknown118(streamFileBuffer, streamFileSize);
-            if (/*musicFileInfo*/ true) {
-                // if (streamStartPos)
-                //    Unknown114(v8, musicStartPos[0]);
-                channel->state = CHANNEL_STREAMING;
-            }
+            channel->state      = CHANNEL_STREAMING;
         }
     }
+    if (channel->state == CHANNEL_STREAM_LOAD)
+        channel->state = CHANNEL_NONE;
+
     UnlockAudioDevice();
 }
 
@@ -517,6 +515,9 @@ int PlayStream(const char *filename, unsigned int slot, int startPos, unsigned i
     }
 
     ChannelInfo *channel  = &channels[slot];
+    if (channel->state == CHANNEL_STREAM_LOAD)
+        printf("");
+
     channel->soundID      = 0xFF;
     channel->loop         = loopPoint;
     channel->unknown3     = 0xFF;

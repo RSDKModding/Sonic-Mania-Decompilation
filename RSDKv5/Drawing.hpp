@@ -239,7 +239,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
 void DrawDeformedSprite(ushort spriteIndex, InkEffects inkEffect, int alpha);
 
-void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative);
+void DrawTile(ushort *tileInfo, int countX, int countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
 
 void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,

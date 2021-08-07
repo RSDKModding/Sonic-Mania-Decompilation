@@ -7,9 +7,9 @@ ushort subtractLookupTable[BLENDTABLE_SIZE];
 
 GFXSurface gfxSurface[SURFACE_MAX];
 
-int pixWidth = 424;
-float dpi = 1;
-int cameraCount  = 0;
+int pixWidth    = 424;
+float dpi       = 1;
+int cameraCount = 0;
 ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[CAMERA_MAX];
 ScreenInfo *currentScreen = NULL;
@@ -78,11 +78,10 @@ char drawGroupNames[0x10][0x10]{
 // Only draw if framebuffer clr is NOT maskColour
 #define setPixelUnmasked(colour, frameBufferClr)                                                                                                     \
     if (frameBufferClr != maskColour)                                                                                                                \
-        frameBufferClr = colour; 
+        frameBufferClr = colour;
 
 bool32 InitRenderDevice()
 {
-
 
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -119,8 +118,7 @@ bool32 InitRenderDevice()
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
-    if (!engine.window)
-    {
+    if (!engine.window) {
         printLog(PRINT_NORMAL, "ERROR: failed to create window!");
         return 0;
     }
@@ -322,7 +320,7 @@ void FlipScreen()
             SDL_RenderPresent(engine.renderer);
 #endif
             break;
-        } 
+        }
     }
 #if RETRO_USING_SDL2
     SDL_ShowWindow(engine.window);
@@ -331,7 +329,7 @@ void FlipScreen()
 void ReleaseRenderDevice()
 {
     for (int s = 0; s < SCREEN_MAX; ++s) {
-        //if (screens[s].frameBuffer)
+        // if (screens[s].frameBuffer)
         //  delete[] screens[s].frameBuffer;
 #if RETRO_USING_SDL2
         SDL_DestroyTexture(engine.screenBuffer[s]);
@@ -418,7 +416,7 @@ void UpdateWindow()
         free(engine.displays);
 
     engine.displayCount = SDL_GetNumVideoDisplays();
-    engine.displays = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
+    engine.displays     = (SDL_DisplayMode *)malloc(engine.displayCount * sizeof(SDL_DisplayMode));
     for (int d = 0; d < engine.displayCount; ++d) {
         if (SDL_GetDisplayMode(d, 0, &engine.displays[d])) {
             // what the
@@ -483,11 +481,12 @@ void InitGFXSystem()
 #endif
 }
 
-void GetDisplayInfo(int* displayID, int* width, int* height, int* refreshRate, TextInfo* text) {
+void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text)
+{
     if (!displayID)
         return;
 
-    int id = *displayID;
+    uint id    = *displayID;
     int dispID = 0;
 
     if (*displayID == -2) {
@@ -506,9 +505,9 @@ void GetDisplayInfo(int* displayID, int* width, int* height, int* refreshRate, T
         }
     }
     else {
-        dispID = engine.displayCount;
-        if (id <= engine.displayCount + 1) {
-            if (id == engine.displayCount + 1)
+        dispID = engine.displayCount - 1;
+        if (id < engine.displayCount) {
+            if (id == engine.displayCount)
                 dispID = 0;
             else
                 dispID = *displayID;
@@ -542,14 +541,25 @@ void GetDisplayInfo(int* displayID, int* width, int* height, int* refreshRate, T
         if (refreshRate)
             *refreshRate = 0;
         if (text) {
-            SetText(text, (char*)"DEFAULT", 0);
+            SetText(text, (char *)"DEFAULT", 0);
         }
     }
 }
 
-void GetWindowSize(int *width, int *height) { 
+void GetWindowSize(int *width, int *height)
+{
 #if RETRO_USING_SDL2
-    SDL_GetRendererOutputSize(engine.renderer, width, height); 
+    if (engine.isFullScreen) {
+        SDL_GetRendererOutputSize(engine.renderer, width, height);
+    }
+    else {
+        SDL_DisplayMode display;
+        SDL_GetCurrentDisplayMode(0, &display);
+        if (width)
+            *width = display.w;
+        if (height)
+            *height = display.h;
+    }
 #endif
 }
 
@@ -606,7 +616,6 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
         ushort *redPtr   = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - redAlpha)];
         ushort *greenPtr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - greenAlpha)];
         ushort *bluePtr  = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - blueAlpha)];
-
 
         int cnt = currentScreen->height * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
@@ -694,13 +703,12 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             return;
         ++id;
 
-
         int curFlags = flags2;
         if (flags1)
             curFlags = flags1;
 
         int x = 0;
-        int y   = 0;
+        int y = 0;
         if (curFlags & 8) {
             int div = (drawY2 - drawY1);
             if (!div)
@@ -2159,7 +2167,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             default: break;
             case INK_NONE:
                 for (int s = topScreen; s <= bottomScreen; ++s) {
-                    int count    = edge->end - edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2168,9 +2176,9 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         deltaG = (edge->endG - edge->startG) / count;
                         deltaB = (edge->endB - edge->startB) / count;
                     }
-                    int startR   = edge->startR;
-                    int startG   = edge->startG;
-                    int startB   = edge->startB;
+                    int startR = edge->startR;
+                    int startG = edge->startG;
+                    int startB = edge->startB;
 
                     if (edge->start > currentScreen->clipBound_X2) {
                         edge->start = currentScreen->clipBound_X2;
@@ -2206,8 +2214,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             case INK_BLEND:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2252,8 +2260,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             case INK_ALPHA:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2289,7 +2297,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour                      = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
                         setPixelAlpha(colour, frameBufferPtr[edge->start + x], alpha);
                     }
                     ++edge;
@@ -2299,8 +2307,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             case INK_ADD: {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2347,8 +2355,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             case INK_SUB: {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2394,8 +2402,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             }
             case INK_LOOKUP:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2439,8 +2447,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             case INK_MASKED:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2483,8 +2491,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             case INK_UNMASKED:
                 for (int s = topScreen; s < bottomScreen; ++s) {
-                    int start        = edge->start;
-                    int count        = edge->end - edge->start;
+                    int start  = edge->start;
+                    int count  = edge->end - edge->start;
                     int deltaR = 0;
                     int deltaG = 0;
                     int deltaB = 0;
@@ -2649,9 +2657,8 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                                           frame->sprY, FLIP_X, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                         break;
                     case FLIP_Y:
-                        DrawSpriteFlipped(pos.x + frame->pivotX, pos.y - frame->height - frame->pivotY, frame->width, frame->height,
-                                          frame->sprX, frame->sprY, FLIP_Y, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
-                                          frame->sheetID);
+                        DrawSpriteFlipped(pos.x + frame->pivotX, pos.y - frame->height - frame->pivotY, frame->width, frame->height, frame->sprX,
+                                          frame->sprY, FLIP_Y, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, frame->sheetID);
                         break;
                     case FLIP_XY:
                         DrawSpriteFlipped(pos.x - frame->width - frame->pivotX, pos.y - frame->height - frame->pivotY, frame->width, frame->height,
@@ -3362,8 +3369,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             scaledY1 = fullScaleYS * (pivotY - 2);
             scaledY2 = fullScaleYC * (pivotY - 2);
             xMax     = pivotX + 2 + width;
-            posX[0]           = x + ((scaledX2 + scaledY1) >> 9);
-            posY[0]           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
+            posX[0]  = x + ((scaledX2 + scaledY1) >> 9);
+            posY[0]  = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
             break;
         }
         case FLIP_X: {
@@ -3372,25 +3379,24 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             scaledY1 = fullScaleYS * (pivotY - 2);
             scaledY2 = fullScaleYC * (pivotY - 2);
             xMax     = -2 - pivotX - width;
-            posX[0]       = x + ((scaledX2 + scaledY1) >> 9);
-            posY[0]           = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
+            posX[0]  = x + ((scaledX2 + scaledY1) >> 9);
+            posY[0]  = y + ((fullScaleYC * (pivotY - 2) - scaledX1) >> 9);
             break;
         }
         case FLIP_Y:
-        case FLIP_XY:
-            break;
+        case FLIP_XY: break;
     }
 
     int scaledXMaxS = fullScaleXS * xMax;
     int scaledXMaxC = fullScaleXC * xMax;
     int scaledYMaxC = fullScaleYC * (pivotY + 2 + height);
     int scaledYMaxS = fullScaleYS * (pivotY + 2 + height);
-    posX[1]              = x + ((scaledXMaxC + scaledY1) >> 9);
-    posY[1]              = y + ((scaledY2 - scaledXMaxS) >> 9);
-    posX[2]              = x + ((scaledYMaxS + scaledX2) >> 9);
-    posY[2]              = y + ((scaledYMaxC - scaledX1) >> 9);
-    posX[3]              = x + ((scaledXMaxC + scaledYMaxS) >> 9);
-    posY[3]              = y + ((scaledYMaxC - scaledXMaxS) >> 9);
+    posX[1]         = x + ((scaledXMaxC + scaledY1) >> 9);
+    posY[1]         = y + ((scaledY2 - scaledXMaxS) >> 9);
+    posX[2]         = x + ((scaledYMaxS + scaledX2) >> 9);
+    posY[2]         = y + ((scaledYMaxC - scaledX1) >> 9);
+    posX[3]         = x + ((scaledXMaxC + scaledYMaxS) >> 9);
+    posY[3]         = y + ((scaledYMaxC - scaledXMaxS) >> 9);
 
     int left = currentScreen->pitch;
     for (int i = 0; i < 4; ++i) {
@@ -3406,7 +3412,6 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     }
     if (right > currentScreen->clipBound_X2)
         right = currentScreen->clipBound_X2;
-
 
     int top = currentScreen->height;
     for (int i = 0; i < 4; ++i) {
@@ -3429,31 +3434,31 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     if (xDif >= 1 && yDif >= 1) {
         GFXSurface *surface = &gfxSurface[sheetID];
 
-        int fullX           = (sprX + width) << 16;
-        int fullY           = (sprY + height) << 16;
-        validDraw           = true;
-        int fullScaleX      = (float)((512.0 / (float)scaleX) * 512.0);
-        int fullScaleY      = (float)((512.0 / (float)scaleY) * 512.0);
-        int deltaXLen       = fullScaleX * sine >> 2;
-        int deltaX          = fullScaleX * cosine >> 2;
-        int fbPitch         = currentScreen->pitch - xDif;
-        int deltaYLen       = fullScaleY * cosine >> 2;
-        int deltaY          = fullScaleY * sine >> 2;
-        int lineSize        = surface->lineSize;
-        byte *lineBuffer    = &gfxLineBuffer[top];
-        int xLen            = left - x;
-        int yLen            = top - y;
-        byte *gfxData       = surface->dataPtr;
+        int fullX              = (sprX + width) << 16;
+        int fullY              = (sprY + height) << 16;
+        validDraw              = true;
+        int fullScaleX         = (float)((512.0 / (float)scaleX) * 512.0);
+        int fullScaleY         = (float)((512.0 / (float)scaleY) * 512.0);
+        int deltaXLen          = fullScaleX * sine >> 2;
+        int deltaX             = fullScaleX * cosine >> 2;
+        int fbPitch            = currentScreen->pitch - xDif;
+        int deltaYLen          = fullScaleY * cosine >> 2;
+        int deltaY             = fullScaleY * sine >> 2;
+        int lineSize           = surface->lineSize;
+        byte *lineBuffer       = &gfxLineBuffer[top];
+        int xLen               = left - x;
+        int yLen               = top - y;
+        byte *gfxData          = surface->dataPtr;
         ushort *frameBufferPtr = &currentScreen->frameBuffer[left + (top * currentScreen->pitch)];
-        int fullSprY        = (sprY << 16) - 1;
-        int fullSprX        = (sprX << 16) - 1;
+        int fullSprY           = (sprY << 16) - 1;
+        int fullSprX           = (sprX << 16) - 1;
 
         int drawX = 0, drawY = 0;
         if (direction == FLIP_X) {
-            drawX        = sprXPos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
-            drawY        = sprYPos + deltaYLen * yLen + deltaY * xLen;
-            deltaX       = -deltaX;
-            deltaXLen    = -deltaXLen;
+            drawX     = sprXPos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
+            drawY     = sprYPos + deltaYLen * yLen + deltaY * xLen;
+            deltaX    = -deltaX;
+            deltaXLen = -deltaXLen;
         }
         else if (!direction) {
             drawX = sprXPos + deltaX * xLen - deltaXLen * yLen;
@@ -3573,8 +3578,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             }
             case INK_LOOKUP:
                 for (int y = 0; y < yDif; ++y) {
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawXPos = drawX;
+                    int drawYPos = drawY;
                     for (int x = 0; x < xDif; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
@@ -3773,10 +3778,10 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
         }
         case INK_LOOKUP:
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
-                int lx             = scanlinePtr->position.x;
-                int ly             = scanlinePtr->position.y;
-                int dx             = scanlinePtr->deform.x;
-                int dy             = scanlinePtr->deform.y;
+                int lx = scanlinePtr->position.x;
+                int ly = scanlinePtr->position.y;
+                int dx = scanlinePtr->deform.x;
+                int dy = scanlinePtr->deform.y;
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex)
@@ -3827,27 +3832,26 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
     }
 }
 
-void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vector2 *position, bool32 screenRelative)
+void DrawTile(ushort *tiles, int countX, int countY, Vector2 *position, Vector2 *offset, bool32 screenRelative)
 {
-    if (tileInfo) {
-
-        if (!entityPtr)
-            entityPtr = sceneInfo.entity;
-        int x = entityPtr->position.x >> 0x10;
-        int y = entityPtr->position.y >> 0x10;
+    if (tiles) {
+        if (!position)
+            position = &sceneInfo.entity->position;
+        int x = position->x >> 0x10;
+        int y = position->y >> 0x10;
         if (!screenRelative) {
             x -= currentScreen->position.x;
             y -= currentScreen->position.y;
         }
 
-        switch (entityPtr->inkEffect) {
-            case INK_NONE: // Default
-            case INK_BLEND: {
+        switch (sceneInfo.entity->drawFX) {
+            case FX_NONE:
+            case FX_FLIP: {
                 int drawX = 0;
                 int drawY = 0;
-                if (position) {
-                    drawX = x - (position->x >> 17);
-                    drawY = y - (position->y >> 17);
+                if (offset) {
+                    drawX = x - (offset->x >> 17);
+                    drawY = y - (offset->y >> 17);
                 }
                 else {
                     drawX = x - 8 * countX;
@@ -3856,25 +3860,22 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
 
                 for (int ty = 0; ty < countY; ++ty) {
                     for (int tx = 0; tx < countX; ++tx) {
-                        if (*tileInfo < 0xFFFF) {
-                            DrawSpriteFlipped(drawX, drawY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0xFFF), FLIP_NONE,
-                                              (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
+                        ushort tile = tiles[tx + (ty * countX)];
+                        if (tile < 0xFFFF) {
+                            DrawSpriteFlipped(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (tile & 0xFFF),
+                                              FLIP_NONE, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                         }
-                        drawX += TILE_SIZE;
-                        ++tileInfo;
                     }
-                    drawX -= TILE_SIZE * countX;
-                    drawY += TILE_SIZE;
                 }
                 break;
             }
-            case INK_ALPHA: // Flip
-            case INK_ADD: {
+            case FX_ROTATE: // Flip
+            case FX_ROTATE | FX_FLIP: {
                 int drawX = 0;
                 int drawY = 0;
-                if (position) {
-                    drawX = x - (position->x >> 17);
-                    drawY = y - (position->y >> 17);
+                if (offset) {
+                    drawX = x - (offset->x >> 17);
+                    drawY = y - (offset->y >> 17);
                 }
                 else {
                     drawX = x - 8 * countX;
@@ -3883,54 +3884,44 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
                 int pivotX = -drawX;
                 int pivotY = -drawY;
 
-                if (countY > 0) {
-                    int cx = countX;
-                    do {
-                        if (cx > 0) {
-                            do {
-                                if (*tileInfo < 0xFFFF) {
-                                    switch (*tileInfo >> 10) {
-                                        case FLIP_NONE:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF), 0x200,
-                                                               0x200, FLIP_NONE, entityPtr->rotation, (InkEffects)entityPtr->inkEffect,
-                                                               entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_X:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF), 0x200,
-                                                               0x200, FLIP_X, entityPtr->rotation, (InkEffects)entityPtr->inkEffect, entityPtr->alpha,
-                                                               0);
-                                            break;
-                                        case FLIP_Y:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF), 0x200,
-                                                               0x200, FLIP_X, entityPtr->rotation + 0x100, (InkEffects)entityPtr->inkEffect,
-                                                               entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_XY:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF), 0x200,
-                                                               0x200, FLIP_NONE, entityPtr->rotation + 0x100, (InkEffects)entityPtr->inkEffect,
-                                                               entityPtr->alpha, 0);
-                                            break;
-                                    }
-                                }
-                                drawX += 16;
-                                ++tileInfo;
-                            } while (--cx);
-                            countY = countX;
-                            cx     = countX;
+                for (int ty = 0; ty < countY; ++ty) {
+                    for (int tx = 0; tx < countX; ++tx) {
+                        ushort tile = tiles[tx + (ty * countX)];
+                        if (tile < 0xFFFF) {
+                            switch (tile >> 10) {
+                                case FLIP_NONE:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_NONE, sceneInfo.entity->rotation,
+                                                       (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_X:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_X, sceneInfo.entity->rotation,
+                                                       (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_Y:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_X, sceneInfo.entity->rotation + 0x100,
+                                                       (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_XY:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_NONE, sceneInfo.entity->rotation + 0x100,
+                                                       (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                            }
                         }
-                        drawX -= 16 * countX;
-                        drawY += 16;
-                    } while (--countY);
+                    }
                 }
                 break;
             }
-            case INK_SUB: // Flip + Scale
-            case INK_LOOKUP: {
+            case FX_SCALE: // Scale
+            case FX_SCALE | FX_FLIP: {
                 int drawX = 0;
                 int drawY = 0;
-                if (position) {
-                    drawX = x - (position->x >> 17);
-                    drawY = y - (position->y >> 17);
+                if (offset) {
+                    drawX = x - (offset->x >> 17);
+                    drawY = y - (offset->y >> 17);
                 }
                 else {
                     drawX = x - 8 * countX;
@@ -3939,54 +3930,44 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
                 int pivotX = -drawX;
                 int pivotY = -drawY;
 
-                if (countY > 0) {
-                    int cx = countX;
-                    do {
-                        if (cx > 0) {
-                            do {
-                                if (*tileInfo < 0xFFFF) {
-                                    switch (*tileInfo >> 10) {
-                                        case FLIP_NONE:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_X, 0, (InkEffects)entityPtr->inkEffect,
-                                                               entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_X:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_X, 0, (InkEffects)entityPtr->inkEffect,
-                                                               entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_Y:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_X, 0x100,
-                                                               (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_XY:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_NONE, 0x100,
-                                                               (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                            break;
-                                    }
-                                }
-                                drawX += 16;
-                                ++tileInfo;
-                            } while (--cx);
-                            countY = countX;
-                            cx     = countX;
+                for (int ty = 0; ty < countY; ++ty) {
+                    for (int tx = 0; tx < countX; ++tx) {
+                        ushort tile = tiles[tx + (ty * countX)];
+                        if (tile < 0xFFFF) {
+                            switch (tile >> 10) {
+                                case FLIP_NONE:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X, 0,
+                                                       (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_X:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X, 0,
+                                                       (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_Y:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
+                                                       0x100, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_XY:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_NONE,
+                                                       0x100, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
+                                    break;
+                            }
                         }
-                        drawX -= 16 * countX;
-                        drawY += 16;
-                    } while (--countY);
+                    }
                 }
                 break;
             }
-            case INK_MASKED: // Flip + Scale + Rotation
-            case INK_UNMASKED: {
+            case FX_SCALE | FX_ROTATE: // Flip + Scale + Rotation
+            case FX_SCALE | FX_ROTATE | FX_FLIP: {
                 int drawX = 0;
                 int drawY = 0;
-                if (position) {
-                    drawX = x - (position->x >> 17);
-                    drawY = y - (position->y >> 17);
+                if (offset) {
+                    drawX = x - (offset->x >> 17);
+                    drawY = y - (offset->y >> 17);
                 }
                 else {
                     drawX = x - 8 * countX;
@@ -3995,56 +3976,51 @@ void DrawTile(ushort *tileInfo, int countX, int countY, Entity *entityPtr, Vecto
                 int pivotX = -drawX;
                 int pivotY = -drawY;
 
-                if (countY > 0) {
-                    int cx = countX;
-                    do {
-                        if (cx > 0) {
-                            do {
-                                if (*tileInfo < 0xFFFF) {
-                                    switch (*tileInfo >> 10) {
-                                        case FLIP_NONE:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_X, entityPtr->rotation,
-                                                               (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_X:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_X, entityPtr->rotation,
-                                                               (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_Y:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_X, entityPtr->rotation + 0x100,
-                                                               (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                            break;
-                                        case FLIP_XY:
-                                            DrawSpriteRotozoom(x, y, pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0, TILE_SIZE * (*tileInfo & 0x3FF),
-                                                               entityPtr->scale.x, entityPtr->scale.y, FLIP_NONE, entityPtr->rotation + 0x100,
-                                                               (InkEffects)entityPtr->inkEffect, entityPtr->alpha, 0);
-                                            break;
-                                    }
-                                }
-                                drawX += 16;
-                                ++tileInfo;
-                            } while (--cx);
-                            countY = countX;
-                            cx     = countX;
+                for (int ty = 0; ty < countY; ++ty) {
+                    for (int tx = 0; tx < countX; ++tx) {
+                        ushort tile = tiles[tx + (ty * countX)];
+                        if (tile < 0xFFFF) {
+                            switch (tile >> 10) {
+                                case FLIP_NONE:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
+                                                       sceneInfo.entity->rotation, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
+                                                       0);
+                                    break;
+                                case FLIP_X:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
+                                                       sceneInfo.entity->rotation, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
+                                                       0);
+                                    break;
+                                case FLIP_Y:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
+                                                       sceneInfo.entity->rotation + 0x100, (InkEffects)sceneInfo.entity->inkEffect,
+                                                       sceneInfo.entity->alpha, 0);
+                                    break;
+                                case FLIP_XY:
+                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                                       TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_NONE,
+                                                       sceneInfo.entity->rotation + 0x100, (InkEffects)sceneInfo.entity->inkEffect,
+                                                       sceneInfo.entity->alpha, 0);
+                                    break;
+                            }
                         }
-                        drawX -= 16 * countX;
-                        drawY += 16;
-                    } while (--countY);
+                    }
                 }
                 break;
             }
         }
     }
 }
-void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height) {
+void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height)
+{
 
-   if (sheetID < SURFACE_MAX && tileIndex < TILE_COUNT) {
-        GFXSurface *surface       = &gfxSurface[sheetID];
+    if (sheetID < SURFACE_MAX && tileIndex < TILE_COUNT) {
+        GFXSurface *surface = &gfxSurface[sheetID];
 
-        //FLIP_NONE
+        // FLIP_NONE
         byte *tileGFXData = &tilesetGFXData[tileIndex << 8];
         int cnt           = 0;
         for (int fy = 0; fy < height; fy += TILE_SIZE) {
@@ -4061,7 +4037,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
             }
         }
 
-        //FLIP_X
+        // FLIP_X
         byte *srcTileGFXData = &tilesetGFXData[tileIndex << 8];
         if (cnt * TILE_SIZE > 0) {
             tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_X * TILESET_SIZE) + (TILE_SIZE - 1)];
@@ -4074,7 +4050,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
             }
         }
 
-        //FLIP_Y
+        // FLIP_Y
         srcTileGFXData = &tilesetGFXData[tileIndex << 8];
         if (cnt * TILE_SIZE > 0) {
             int index = tileIndex;
@@ -4090,7 +4066,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
             }
         }
 
-        //FLIP_XY
+        // FLIP_XY
         srcTileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_Y * TILESET_SIZE)];
         if (cnt * TILE_SIZE > 0) {
             tileGFXData = &tilesetGFXData[(tileIndex << 8) + (FLIP_XY * TILESET_SIZE) + (TILE_SIZE - 1)];
@@ -4102,20 +4078,19 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
                 tileGFXData += (TILE_SIZE * 2);
             }
         }
-   }
-
+    }
 }
 
-void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
-              Vector2 *charOffsets, bool32 screenRelative)
+void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8, Vector2 *charOffsets,
+              bool32 screenRelative)
 {
     if (data && info && data->framePtrs) {
         if (!position)
             position = &sceneInfo.entity->position;
-        Entity* entity = sceneInfo.entity;
+        Entity *entity = sceneInfo.entity;
 
-        int x      = position->x >> 0x10;
-        int y      = position->y >> 0x10;
+        int x = position->x >> 0x10;
+        int y = position->y >> 0x10;
         if (!screenRelative) {
             x -= currentScreen->position.x;
             y -= currentScreen->position.y;
@@ -4144,8 +4119,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame,
                         ushort curChar = info->text[startFrame];
                         if (curChar < data->frameCount) {
                             SpriteFrame *frame = &data->framePtrs[curChar];
-                            DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height, frame->sprX,
-                                              frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
+                            DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height,
+                                              frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
                             ++charOffsets;
                         }
