@@ -92,7 +92,7 @@ void GHZCutsceneST_SetupCutscene(void)
     foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = (Entity *)cutsceneHBH; }
 }
 
-bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
+bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -132,12 +132,12 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
             break;
         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
-        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->timer2)) + ruby->position.y - player->position.y) >> 3;
+        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
     }
     return false;
 }
-bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
+bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -155,7 +155,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
                 break;
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
             int x              = (player->position.x - player->position.x) >> 3;
-            int y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->timer2)) + ruby->position.y - player->position.y) >> 3;
+            int y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -163,7 +163,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
             player->camera     = NULL;
             ++curPlayer;
         }
-        host->field_6C = 1;
+        host->field_6C[0] = 1;
         Camera_Unknown3(0, 0, camera->position.x, camera->position.y, 0);
         return true;
     }
@@ -175,7 +175,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
                 break;
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
-            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->timer2)) + ruby->position.y - player->position.y) >> 3;
+            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;
             ++curPlayer;
         }
@@ -183,7 +183,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host)
     }
     return false;
 }
-bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
+bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -256,7 +256,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host)
     return false;
 }
 
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityGHZCutsceneST *host)
+bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZCutsceneST);
 #if RETRO_USE_PLUS

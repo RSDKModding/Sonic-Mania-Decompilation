@@ -45,10 +45,10 @@ void GHZCutsceneST_Serialize(void);
 
 // Extra Entity Functions
 void GHZCutsceneST_SetupCutscene(void);
-bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host);
-bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityGHZCutsceneST *host);
-bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityGHZCutsceneST *host);
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityGHZCutsceneST *host);
+bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host);
 void GHZCutsceneST_SkipCB(void);
 
 #endif //!OBJ_GHZCUTSCENEST_H
