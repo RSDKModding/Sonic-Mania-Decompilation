@@ -12,7 +12,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         if (buildAsApplication) {
-            applicationId "com.decomp.rsdkv3"
+            applicationId "com.decomp.rsdkv5"
         }
         minSdkVersion 23
         targetSdkVersion 29
@@ -59,7 +59,7 @@ android {
             variant.outputs.each { output ->
                 def outputFile = output.outputFile
                 if (outputFile != null && outputFile.name.endsWith(".aar")) {
-                    def fileName = "com.decomp.rsdkv3.aar"
+                    def fileName = "com.decomp.rsdkv5.aar"
                     output.outputFile = new File(outputFile.parent, fileName)
                 }
             }

@@ -1,4 +1,4 @@
-package com.decomp.rsdkv3;
+package com.decomp.rsdkv5;
 
 import android.Manifest;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 
 import org.libsdl.app.SDLActivity;
 
-public class RSDKv3 extends SDLActivity {
+public class RSDKv5 extends SDLActivity {
     private static Boolean asked = false;
 
     @Override
