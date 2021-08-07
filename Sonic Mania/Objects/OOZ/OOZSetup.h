@@ -6,33 +6,35 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1;
-    ushort value2;
-    bool32 value3;
-    int value4[64]; //= { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
-    int value5;
-    int value6;
-    int value7; //= 60;
-    int value8[9]; //= { 60, 60, 3, 3, 3, 3, 3, 3, 4 };
+    int palTimer;
+    ushort aniTiles;
+    TileLayer* bgPtr;
+    int deformData[64]; //= { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1,
+                        //2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
+    int aniTilesTimer;
+    int aniTilesFrame;
+    int aniTilesDelay; //= 60;
+    int aniTileDelays[9]; //= { 60, 60, 3, 3, 3, 3, 3, 3, 4 };
     int value9;
-    int value10;
-    byte flags;
-    byte value12;
-    bool32 value13;
-    TextInfo value14;
+    int fadeTimer;
+    int flags;
+    byte unknown[0x20000];
+    int value13[400];
+    Vector2 value14[400];
     ushort value15;
-    byte value16;
+    byte activePlayers;
     Animator value17;
-    Animator value18;
-    ushort value19;
-    ushort value20;
-    byte value21;
-    bool32 value22;
+    Animator animator;
+    ushort solFrames;
+    ushort splashFrames;
+    bool32 hasAchievement;
+    Entity *cutscenePtr;
 } ObjectOOZSetup;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte type;
 } EntityOOZSetup;
 
 // Object Struct
@@ -50,6 +52,19 @@ void OOZSetup_EditorLoad(void);
 void OOZSetup_Serialize(void);
 
 // Extra Entity Functions
+bool32 OOZSetup_CheckCB_Flame(void);
+bool32 OOZSetup_CheckCB_Slide(void);
+bool32 OOZSetup_CheckCB_Swim(void);
 
+void OOZSetup_Unknown4(void);
+void OOZSetup_Unknown5(void);
+bool32 OOZSetup_Unknown6(int posY, int posX, int angle);
+
+void OOZSetup_GenericTriggerCB(void);
+
+void OOZSetup_PlayerState_OilPool(void);
+void OOZSetup_PlayerState_OilStrip(void);
+void OOZSetup_PlayerState_OilSlide(void);
+void OOZSetup_PlayerState_OilFall(void);
 
 #endif //!OBJ_OOZSETUP_H

@@ -29,6 +29,7 @@ void OOZ2Outro_EditorLoad(void);
 void OOZ2Outro_Serialize(void);
 
 // Extra Entity Functions
+void OOZ2Outro_StageFinishCB_Act2(void);
 #endif
 
 #endif //!OBJ_OOZ2OUTRO_H

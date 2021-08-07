@@ -5,12 +5,16 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxPon;
 } ObjectSparkRail;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    Hitbox hitbox;
 } EntitySparkRail;
 
 // Object Struct

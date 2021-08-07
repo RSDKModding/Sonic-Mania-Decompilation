@@ -17,10 +17,10 @@ void PullSwitch_Update(void)
         entity->field_5C += 0x20000;
     }
     else {
-        if (OOZSetup->value10 > 16 || Smog->field_4 == 1) {
+        if (OOZSetup->fadeTimer > 16 || Smog->field_4) {
             RSDK.PlaySFX(PullSwitch->sfxSmogClear, 0, 255);
         }
-        OOZSetup->value10 = 0;
+        OOZSetup->fadeTimer = 0;
         Smog->field_4     = 0;
     }
 
