@@ -578,7 +578,6 @@ void SwapDrawListEntries(byte layer, ushort indexA, ushort indexB, int count)
             int slotA = -1;
             int slotB = -1;
             if (count > 0) {
-                int cnt = 0;
                 for (int i = 0; i < count; ++i) {
                     if (list->entries[i] == indexA)
                         slotA = i;

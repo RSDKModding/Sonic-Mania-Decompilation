@@ -93,7 +93,7 @@ void PSZDoor_Update(void)
     }
 
     EntityDoorTrigger *trigger = entity->trigger;
-    if (trigger && (trigger->objectID == DoorTrigger->objectID && trigger->animator2.frameID == 1 || flag)) {
+    if (trigger && ((trigger->objectID == DoorTrigger->objectID && trigger->animator2.frameID == 1) || flag)) {
         if (entity->activeScreens)
             RSDK.PlaySFX(PSZDoor->sfxOpen, false, 255);
         entity->field_84   = entity->startPos;

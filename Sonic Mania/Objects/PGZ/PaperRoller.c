@@ -429,7 +429,7 @@ void PaperRoller_Unknown5(void)
 
                     vel.x = force * (RSDK.Cos256(angle) << 8);
                     vel.y = force * (RSDK.Sin256(angle) << 8);
-                    if (entity->direction == FLIP_NONE && vel.x > -0x10000 || entity->direction == FLIP_X && vel.x < 0x10000)
+                    if ((entity->direction == FLIP_NONE && vel.x > -0x10000) || (entity->direction == FLIP_X && vel.x < 0x10000))
                         vel.x += ((2 * (entity->direction != FLIP_NONE) - 1) << 18);
                     Zone_Unknown3(&pos2, &vel, negAngle);
                     player->velocity = vel;

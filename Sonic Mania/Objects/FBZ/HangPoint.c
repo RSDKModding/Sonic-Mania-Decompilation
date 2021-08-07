@@ -203,9 +203,9 @@ void HangPoint_Update(void)
                                 HangPoint_Unknown1(entity, player, playerID);
                             }
                         }
-                        else if (!((1 << (playerID + 4)) & entity->activePlayers)
+                        else if ((!((1 << (playerID + 4)) & entity->activePlayers)
                                      && (entity->direction != FLIP_NONE || entity->field_7C >= entity->length)
-                                     && (entity->direction != FLIP_X || entity->field_7C <= 0)
+                                     && (entity->direction != FLIP_X || entity->field_7C <= 0))
                                  || player->sidekick) {
                             bool32 flag = false;
                             if (player->left) {

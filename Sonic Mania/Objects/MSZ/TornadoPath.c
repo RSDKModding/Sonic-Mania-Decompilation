@@ -392,7 +392,6 @@ void TornadoPath_Unknown12(void)
 
 void TornadoPath_Unknown13(void)
 {
-    RSDK_THIS(TornadoPath);
     TornadoPath->field_8.x = 0;
     TornadoPath->field_8.y = 0;
     TornadoPath->field_30  = 1;
