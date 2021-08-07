@@ -108,6 +108,9 @@
   <ItemGroup>
     <ResourceCompile Include="RSDKv5.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\dependencies\windows\RSDKv5 Decomp Icon.ico" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}</ProjectGuid>

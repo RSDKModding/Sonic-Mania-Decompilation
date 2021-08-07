@@ -631,3665 +631,1233 @@
     <ClInclude Include="Objects\Unused\TargetBumper.h" />
     <ClInclude Include="Objects\Unused\WallCrawl.h" />
     <ClInclude Include="Objects\Unused\Wisp.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SonicMania.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.c" />
     <ClCompile Include="GameOptions.c" />
     <ClCompile Include="Objects\AIZ\AIZEggRobo.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZEncoreTutorial.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZKingClaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZRockPile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZTornado.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\AIZTornadoPath.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\Bloominator.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\EncoreIntro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\FernParallax.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\MonkeyDude.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\Rhinobot.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\SchrodingersCapsule.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\AIZ\Sweep.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Collectable.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Collected.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Horizon.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_HUD.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Message.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Palette.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Player.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\BSS\BSS_Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\BGSwitch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\BreakableWall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Button.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\CollapsingPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\CompetitionSession.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Decoration.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Eggman.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\FlingRamp.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\ForceSpin.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\ForceUnstick.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\GenericTrigger.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Palette.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\ParallaxSprite.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Platform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\PlatformControl.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\PlatformNode.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Projectile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\SpinBooster.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\TilePlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Common\Water.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Continue\ContinuePlayer.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Continue\ContinueSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\AmoebaDroid.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Ball.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Bubbler.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\CaterkillerJr.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\ChemBubble.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\ChemicalBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\ChemicalPool.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\CPZ1Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\CPZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\CPZBoss.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\CPZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\CPZShutter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\DNARiser.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Grabber.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\OneWayDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Reagent.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\RotatingStair.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\SpeedBooster.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Spiny.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Springboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Staircase.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\StickyPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\Syringe.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\TippingPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\TransportTube.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\TubeSpring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\CPZ\TwistedTubes.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Credits\AnimalHBH.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Credits\CreditsSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Credits\EncoreGoodEnd.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Credits\TryAgain.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Credits\TryAgainE.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\ChaosEmerald.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\CutsceneHBH.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\CutsceneRules.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\CutsceneSeq.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\FXExpandRing.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\FXFade.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\FXRuby.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\FXSpinRay.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\FXTrail.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\FXWaveRing.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Cutscene\RubyPortal.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZGunner.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZKing.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZMystic.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZOutro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZRider.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZShinobi.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\ERZStart.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\KleptoMobile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomEgg.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomGunner.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomHand.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomKing.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomMissile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomMystic.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomRider.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomRuby.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomShield.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PhantomShinobi.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\PKingAttack.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\ERZ\RingField.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\BigSqueeze.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Blaster.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Clucker.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Crane.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Cylinder.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\ElectroMagnet.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Fan.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZ1Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZFan.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZMissile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZSinkTrash.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZStorm.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZTrash.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FlameSpring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FoldingPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\HangGlider.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\HangPoint.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Launcher.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\LightBarrier.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\MagPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\MagSpikeBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Mine.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Propeller.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\PropellerShaft.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\SpiderMobile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\SpiralPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Technosqueek.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\TetherBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\Tuesday.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\TwistingDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\FBZ\WarpDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Batbrain.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Bridge.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\BurningLog.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\BuzzBomber.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\CheckerBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Chopper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\CorkscrewPath.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Crabmeat.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\DDWrecker.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\DERobot.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Fireball.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\GHZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\GHZCutsceneK.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\GHZCutsceneST.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\GHZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Motobug.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Newtron.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\SpikeLog.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\Splats.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\WaterfallSound.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\GHZ\ZipLine.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\ActClear.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Animals.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Announcer.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\APICallback.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\BoundsMarker.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Camera.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Competition.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\COverlay.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Debris.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\DebugMode.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\DialogRunner.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Dust.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\EggPrison.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\EncoreRoute.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Explosion.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\GameOver.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\HUD.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\ImageTrail.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\InvincibleStars.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\InvisibleBlock.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\ItemBox.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Localization.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Music.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\NoSwap.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\PauseMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\PlaneSwitch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\ReplayRecorder.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Ring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\SaveGame.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\ScoreBonus.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Shield.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\SignPost.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Soundboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\SpecialRing.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\SpeedGate.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Spikes.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Spring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\StarPost.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\SuperSparkle.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\TimeAttackGate.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\TitleCard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Global\Zone.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Blastoid.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\BreakBar.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Buggernaut.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\ButtonDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\DCEvent.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\DiveEggman.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Gondola.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HandLauncher.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HangConveyor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZ1Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZOneWayDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZSpikeBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Jellygnite.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\LaundroMobile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\MegaChopper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Pointdexter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\PullChain.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\ScrewMobile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Spear.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\TurboSpiker.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\TwistingSlide.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\WaterGush.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Whirlpool.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\BadnikHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ColorHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\DrawHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\GameProgress.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\LogHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\MathHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\Options.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ParticleHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ReplayDB.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Helpers\TimeAttackData.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Batbot.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Jawz.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Redz.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Stegway.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\BuckwildBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\ConveyorBelt.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\ConveyorPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Current.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\DashLift.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Drillerdroid.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\DrillerdroidO.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Fireworm.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Flamethrower.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\HeavyKing.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\HeavyRider.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\HPZEmerald.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Iwamodoki.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\KingAttack.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\KingClaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LavaFall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LavaGeyser.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ1Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ1Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ1Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ2Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ3Cutscene.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ3Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ3OutroK.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZ3Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZConvControl.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZConvDropper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZConveyor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZConvItem.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZConvSwitch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZFireball.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZRockPile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZSpikeBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\LRZSpiral.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\OrbitSpike.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Rexon.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\RisingLava.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\RockDrill.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\SkyTeleporter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\SpikeCrusher.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Stalactite.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\ThoughtBubble.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Toxomister.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\Turbine.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\TurretSwitch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\LRZ\WalkerLegs.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\CompetitionMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\DAControl.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\DASetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\DemoMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\E3MenuSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\ExtrasMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\LevelSelect.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\LogoSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\MainMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\ManiaModeMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\MenuParam.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\MenuSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\OptionsMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\TAEmerald.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\ThanksSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\TimeAttackMenu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIBackground.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIButton.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIButtonLabel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIButtonPrompt.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UICarousel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UICharButton.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIChoice.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIControl.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UICreditsText.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIDialog.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIDiorama.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIHeading.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIInfoLabel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIKeyBinder.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UILeaderboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIMedallionPanel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIModeButton.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIOptionPanel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIPicture.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIPopover.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIRankButton.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIReplayCarousel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIResPicker.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UISaveSlot.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIShifter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UISlider.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UISubHeading.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UITABanner.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UITAZoneModule.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIText.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UITransition.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIUsernamePopup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIVideo.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIVsCharSelector.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIVsResults.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIVsRoundPicker.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIVsScoreboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIVsZoneButton.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIWaitSpinner.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIWidgets.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Menu\UIWinSize.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\BladePole.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\BuzzSaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\ConveyorWheel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\EggPistonsMKII.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\FarPlane.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\Gachapandora.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MatryoshkaBom.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MechaBu.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MMZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MMZLightning.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MMZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\MMZWheel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\Piston.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\PlaneSeeSaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\PohBee.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\RPlaneShifter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\Scarab.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\SizeLaser.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\SpikeCorridor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MMZ\VanishPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Armadiloid.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\BarStool.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Bumpalo.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Cactula.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\CollapsingSand.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\DBTower.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\EggLoco.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Flipper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\GiantPistol.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Hatterkiller.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\HeavyMystic.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Honkytonk.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\LightBulb.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\LocoSmoke.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\MSZ1KIntro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\MSZ2Cutscene.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\MSZCutsceneK.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\MSZCutsceneST.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\MSZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\MSZSpotlight.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\PaintingEyes.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Pinata.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Rattlekiller.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\RollerMKII.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\RotatingSpikes.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\SeeSaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\SeltzerBottle.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\SeltzerWater.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\SideBarrel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\SwingRope.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Tornado.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\TornadoPath.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\UberCaterkiller.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\MSZ\Vultron.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Aquis.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\BallCannon.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\GasPlatform.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Hatch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\MegaOctus.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\MeterDroid.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Octus.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\OOZ1Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\OOZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\OOZFlames.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\OOZSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\PullSwitch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\PushSpring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Smog.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Sol.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\SwitchDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\OOZ\Valve.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Acetone.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Crate.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\DoorTrigger.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Dragonfly.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\FrostThrower.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\HeavyShinobi.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Ice.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\IceBomba.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\IceSpring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Ink.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\InkWipe.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\JuggleSaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Newspaper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PaperRoller.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PetalPile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Press.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PrintBlock.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZ1Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZ1Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZ2Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZ2Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZDoor.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZEggman.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\PSZLauncher.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Shiversaw.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Shuriken.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Snowflakes.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\SP500.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\SP500MkII.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Turntable.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\WoodChipper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\PGZ\Woodrow.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Bumper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Camera.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Crane.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Flipper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_HUD.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Player.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Ring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Sector.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Pinball\PBL_TargetBumper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Player\Player.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Player\PlayerHelpers.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Player\PlayerProbe.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoAI.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoAttack.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoBean.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoGame.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoIndicator.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoLabel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoLevelSelect.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoMatch.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Puyo\PuyoScore.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SBZ\Bomb.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SBZ\Caterkiller.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SBZ\Orbinaut.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\CableWarp.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\Canista.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\CircleBumper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\Clapperboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\DirectorChair.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\EggJanken.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\EggJankenPart.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\EggTV.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\FilmProjector.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\FilmReel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\Funnel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\GreenScreen.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\HeavyGunner.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\LEDPanel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\Letterboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\LottoBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\LottoMachine.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\LoveTester.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\MicDrop.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\PathInverter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\PimPom.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\PopcornKernel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\PopcornMachine.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\RockemSockem.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\ShopWindow.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\Shutterbug.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\SpinSign.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\SPZ1Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\SPZ1Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\SPZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\SPZ2Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\Tubinaut.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\TVFlyingBattery.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\TVPole.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\TVVan.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\WeatherMobile.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SPZ\WeatherTV.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Beanstalk.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\BouncePlant.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Bungee.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Constellation.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Dango.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\EggTower.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Fireflies.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Firework.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\FlowerPod.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\GigaMetal.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\HiLoSign.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Hotaru.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\HotaruHiWatt.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\HotaruMKII.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\JunctionWheel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Kabasira.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\Kanabun.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MetalSonic.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MonarchPlans.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MSBomb.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MSFactory.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MSHologram.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MSOrb.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\MSPanel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\RTeleporter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SDashWheel.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SilverSonic.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SparkRail.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SpikeFlail.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZ1Intro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZ1Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZ1Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZ2Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZ3Cutscene.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZEggman.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZSpikeBall.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\SSZSpotlight.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\TimePost.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\TimeTravelSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\TTCutscene.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\UncurlPlant.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\SSZ\YoyoPulley.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Summary\Summary.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Summary\SummaryEmerald.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Title\Title3DSprite.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Title\TitleBG.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Title\TitleEggman.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Title\TitleLogo.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Title\TitleSetup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Title\TitleSonic.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\BallHog.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\CrashTest.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\CrimsonEye.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\EscapeCar.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\FlasherMKII.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\GymBar.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\JacobsLadder.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\LargeGear.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\LaunchSpring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\MagnetSphere.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\MetalArm.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\MonarchBG.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\PopOut.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\SentryBug.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TeeterTotter.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZ1Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZ1Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZ2Outro.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZ2Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZ3Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZAlert.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZBarrier.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZCable.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TMZFlames.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\TurboTurtle.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\TMZ\WallBumper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\SpecialClear.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Camera.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Circuit.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Decoration.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Dust.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_HUD.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_ItemBox.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Message.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Plasma.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Player.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Ring.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Setup.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Shadow.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_SpeedLines.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Sphere.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Springboard.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\UFO\UFO_Water.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Unused\Pendulum.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Unused\SpearBlock.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Unused\TargetBumper.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Unused\WallCrawl.c">
-      
-      
-      
-      
     </ClCompile>
     <ClCompile Include="Objects\Unused\Wisp.c">
-      
-      
-      
-      
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Sonic Mania.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

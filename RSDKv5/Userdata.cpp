@@ -624,14 +624,12 @@ bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = (int)strlen(userFileDir);
-    sprintf(userFileDir, "%s", filename);
-    if (len >= 0x400) {
-        // oh shit
-    }
-    printLog(PRINT_NORMAL, "Attempting to load user file: %s", userFileDir);
 
-    FileIO *file = fOpen(userFileDir, "rb");
+    char pathBuffer[0x400];
+    sprintf(pathBuffer, "%s%s", userFileDir, filename);
+    printLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
+
+    FileIO *file = fOpen(pathBuffer, "rb");
     if (file) {
         fSeek(file, 0, SEEK_END);
         int fSize = (int)fTell(file);
@@ -656,14 +654,12 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = (int)strlen(userFileDir);
-    sprintf(userFileDir, "%s", filename);
-    if (len >= 0x400) {
-        // oh shit
-    }
-    printLog(PRINT_NORMAL, "Attempting to save user file: %s", userFileDir);
 
-    FileIO *file = fOpen(userFileDir, "wb");
+    char pathBuffer[0x400];
+    sprintf(pathBuffer, "%s%s", userFileDir, filename);
+    printLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
+
+    FileIO *file = fOpen(pathBuffer, "wb");
     if (file) {
         fWrite(buffer, 1, bufSize, file);
         fClose(file);
@@ -683,13 +679,11 @@ bool32 DeleteUserFile(const char *filename)
 {
     if (userFileCallback)
         userFileCallback();
-    int len = (int)strlen(userFileDir);
-    sprintf(userFileDir, "%s", filename);
-    if (len >= 0x400) {
-        // oh shit
-    }
-    printLog(PRINT_NORMAL, "Attempting to delete user file: %s", userFileDir);
-    int status = remove(userFileDir);
+
+    char pathBuffer[0x400];
+    sprintf(pathBuffer, "%s%s", userFileDir, filename);
+    printLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
+    int status = remove(pathBuffer);
 
     if (userFileCallback2)
         userFileCallback2();

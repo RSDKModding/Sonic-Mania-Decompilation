@@ -70,20 +70,20 @@ VS_VERSION_INFO VERSIONINFO
  FILEFLAGS 0x0L
 #endif
  FILEOS 0x40004L
- FILETYPE 0x1L
+ FILETYPE 0x2L
  FILESUBTYPE 0x0L
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
         BLOCK "0c0904b0"
         BEGIN
-            VALUE "CompanyName", "RSDKv5 By Christian 'The Taxman' Whitehead, Decompilation By Rubberduckycooly/RMGRich"
-            VALUE "FileDescription", "RSDKv5"
-            VALUE "FileVersion", "1.0.0"
-            VALUE "InternalName", "RSDKv5.exe"
-            VALUE "OriginalFilename", "RSDKv5.exe"
-            VALUE "ProductName", "RSDKv5"
-            VALUE "ProductVersion", "1.0.0"
+            VALUE "CompanyName", "Sonic Mania By Sega, Decompilation By Rubberduckycooly/RMGRich"
+            VALUE "FileDescription", "Sonic Mania"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "Game.dll"
+            VALUE "OriginalFilename", "Game.dll"
+            VALUE "ProductName", "Sonic Mania"
+            VALUE "ProductVersion", "1.0.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -91,16 +91,6 @@ BEGIN
         VALUE "Translation", 0xc09, 1200
     END
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_ICON1               ICON                    "RSDKv5 Decomp Icon.ico"
 
 #endif    // English (Australia) resources
 /////////////////////////////////////////////////////////////////////////////

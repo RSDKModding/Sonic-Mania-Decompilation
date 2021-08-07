@@ -280,4 +280,9 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\dependencies\windows\RSDKv5 Decomp Icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
