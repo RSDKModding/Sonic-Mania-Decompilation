@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    Vector2 range;
+    ushort sfxGasPop;
+    ushort sfxSpring;
 } ObjectGasPlatform;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_PLATFORM_BASE
+    ushort interval;
+    ushort intervalOffset;
+    Animator animator2;
 } EntityGasPlatform;
 
 // Object Struct
@@ -28,6 +35,10 @@ void GasPlatform_EditorLoad(void);
 void GasPlatform_Serialize(void);
 
 // Extra Entity Functions
+void GasPlatform_Unknown1(void);
+void GasPlatform_Unknown2(void);
+void GasPlatform_Unknown3(void);
+void GasPlatform_Unknown4(void);
 
 
 #endif //!OBJ_GASPLATFORM_H

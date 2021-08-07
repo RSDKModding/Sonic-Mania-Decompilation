@@ -479,10 +479,10 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[14] = StateMachine_None; // GymBar_Unknown5;
     ReplayRecorder->actions[15] = StateMachine_None; // GymBar_Unknown7;
     ReplayRecorder->actions[16] = Ice_State_FrozenPlayer;
-    ReplayRecorder->actions[17] = StateMachine_None; // OOZSetup_Unknown11;
-    ReplayRecorder->actions[18] = StateMachine_None; // OOZSetup_Unknown8;
-    ReplayRecorder->actions[19] = StateMachine_None; // OOZSetup_Unknown10;
-    ReplayRecorder->actions[20] = StateMachine_None; // OOZSetup_Player_State_Slide;
+    ReplayRecorder->actions[17] = OOZSetup_PlayerState_OilFall;
+    ReplayRecorder->actions[18] = OOZSetup_PlayerState_OilPool;
+    ReplayRecorder->actions[19] = OOZSetup_PlayerState_OilSlide;
+    ReplayRecorder->actions[20] = OOZSetup_PlayerState_OilStrip;
     ReplayRecorder->actions[21] = StateMachine_None; // PlaneSeeSaw_Unknown4;
     ReplayRecorder->actions[22] = StateMachine_None; // PlaneSeeSaw_Unknown5;
     ReplayRecorder->actions[23] = Player_State_Air;

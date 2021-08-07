@@ -11,7 +11,7 @@ void Valve_Update(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &Valve->hitbox))
-            OOZSetup->value10 = 0;
+            OOZSetup->fadeTimer = 0;
     }
 
     if (entity->animator2.animationID == 2 && entity->animator2.frameID == 5 && entity->animator2.animationTimer == 1)

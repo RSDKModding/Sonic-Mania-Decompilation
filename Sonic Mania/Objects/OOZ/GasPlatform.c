@@ -4,46 +4,200 @@ ObjectGasPlatform *GasPlatform;
 
 void GasPlatform_Update(void)
 {
-
+    RSDK_THIS(GasPlatform);
+    if (entity->state == Platform_State_Normal) {
+        switch (entity->type) {
+            case 0:
+                if (!((Zone->timer + entity->intervalOffset) % entity->interval))
+                    GasPlatform_Unknown1();
+                break;
+            case 1: {
+                int id = 0;
+                foreach_active(Player, player)
+                {
+                    if ((1 << id) & entity->stoodPlayers && !player->sidekick) {
+                        if (abs(player->position.x - entity->position.x) < 0x40000) {
+                            player->position.x = entity->position.x;
+                            player->state      = Player_State_None;
+                            player->velocity.x = 0;
+                            player->groundVel  = 0;
+                            GasPlatform_Unknown1();
+                        }
+                    }
+                    ++id;
+                }
+                break;
+            }
+        }
+    }
+    Platform_Update();
 }
 
-void GasPlatform_LateUpdate(void)
-{
+void GasPlatform_LateUpdate(void) {}
 
-}
-
-void GasPlatform_StaticUpdate(void)
-{
-
-}
+void GasPlatform_StaticUpdate(void) {}
 
 void GasPlatform_Draw(void)
 {
-
+    RSDK_THIS(GasPlatform);
+    if (entity->centerPos.y - entity->drawPos.y > 0x180000)
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
 }
 
-void GasPlatform_Create(void* data)
+void GasPlatform_Create(void *data)
 {
-
+    RSDK_THIS(GasPlatform);
+    if (!entity->interval)
+        entity->interval = 1;
+    entity->frameID   = 2;
+    entity->collision = 0;
+    Platform_Create(NULL);
+    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator2, true, 0);
+    entity->stateCollide = Platform_CollisionState_AllSolid;
+    entity->state        = Platform_State_Normal;
 }
 
 void GasPlatform_StageLoad(void)
 {
-
+    GasPlatform->hitbox.top    = -16;
+    GasPlatform->hitbox.left   = -16;
+    GasPlatform->hitbox.right  = 16;
+    GasPlatform->hitbox.bottom = 0;
+    GasPlatform->range.x       = 0x800000;
+    GasPlatform->range.y       = 0x180000;
+    GasPlatform->sfxGasPop     = RSDK.GetSFX("OOZ/GasPop.wav");
+    GasPlatform->sfxSpring     = RSDK.GetSFX("Global/Spring.wav");
 }
 
-void GasPlatform_EditorDraw(void)
+void GasPlatform_Unknown1(void)
 {
+    RSDK_THIS(GasPlatform);
 
+    if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &GasPlatform->range))
+        RSDK.PlaySFX(GasPlatform->sfxGasPop, false, 255);
+    entity->active     = ACTIVE_NORMAL;
+    entity->velocity.y = -0x96800;
+    entity->state      = GasPlatform_Unknown2;
 }
 
-void GasPlatform_EditorLoad(void)
+void GasPlatform_Unknown2(void)
 {
+    RSDK_THIS(GasPlatform);
 
+    entity->drawPos.y += entity->velocity.y;
+    if (entity->drawPos.y >= entity->centerPos.y) {
+        entity->drawPos.y = entity->centerPos.y;
+        if (entity->velocity.y <= 0x10000) {
+            entity->active = ACTIVE_BOUNDS;
+            entity->state  = Platform_State_Normal;
+            return;
+        }
+        entity->velocity.y = -(entity->velocity.y >> 2);
+    }
+    else {
+        entity->velocity.y += 0x3800;
+    }
+
+    int dist = entity->centerPos.y - entity->drawPos.y;
+    if (dist > 0x180000) {
+        RSDK.ProcessAnimation(&entity->animator2);
+        int storeX         = entity->position.x;
+        int storeY         = entity->position.y;
+        entity->position.x = entity->centerPos.x;
+        entity->position.y = entity->centerPos.y;
+
+        foreach_active(Player, player)
+        {
+            if (Player_CheckCollisionTouch(player, entity, &GasPlatform->hitbox)) {
+                if (player->shield != SHIELD_FIRE)
+                    Player_CheckHit(player, entity);
+            }
+        }
+
+        entity->position.x = storeX;
+        entity->position.y = storeY;
+    }
+
+    if (entity->type == 1) {
+        int id = 0;
+        foreach_active(Player, player)
+        {
+            int posY = entity->centerPos.y - 0x780000;
+            if (entity->position.y <= posY) {
+                entity->position.y = posY;
+                if ((1 << id) & entity->stoodPlayers) {
+                    player->velocity.y = -0x100000;
+                    player->state      = Player_State_Air;
+                    player->onGround   = false;
+                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                    RSDK.PlaySFX(GasPlatform->sfxSpring, false, 255);
+                    entity->collapseDelay = 240;
+                    entity->state         = GasPlatform_Unknown3;
+                }
+            }
+            else if ((1 << id) & entity->stoodPlayers) {
+                if (abs(player->position.x - entity->position.x) < 0x40000) {
+                    player->position.x = entity->position.x;
+                    player->state      = Player_State_None;
+                    player->velocity.x = 0;
+                    player->groundVel  = 0;
+                }
+            }
+            ++id;
+        }
+    }
 }
+
+void GasPlatform_Unknown3(void)
+{
+    RSDK_THIS(GasPlatform);
+    RSDK.ProcessAnimation(&entity->animator2);
+    int storeX         = entity->position.x;
+    int storeY         = entity->position.y;
+    entity->position.x = entity->centerPos.x;
+    entity->position.y = entity->centerPos.y;
+
+    foreach_active(Player, player)
+    {
+        if (Player_CheckCollisionTouch(player, entity, &GasPlatform->hitbox)) {
+            if (player->shield != SHIELD_FIRE)
+                Player_CheckHit(player, entity);
+        }
+    }
+
+    entity->position.x = storeX;
+    entity->position.y = storeY;
+    if (!--entity->collapseDelay) {
+        entity->velocity.y = 0;
+        entity->state      = GasPlatform_Unknown2;
+    }
+}
+
+void GasPlatform_Unknown4(void)
+{
+    RSDK_THIS(GasPlatform);
+    entity->drawPos.x = (RSDK.Rand(-1, 1) << 16) + entity->centerPos.x;
+    entity->drawPos.y = (RSDK.Rand(-2, 2) << 16) + entity->centerPos.y;
+    if (entity->collapseDelay <= 0) {
+        RSDK.PlaySFX(GasPlatform->sfxGasPop, false, 255);
+        entity->active     = ACTIVE_NORMAL;
+        entity->velocity.y = -0x8C000;
+        entity->state      = GasPlatform_Unknown2;
+    }
+    else {
+        entity->collapseDelay--;
+    }
+}
+
+void GasPlatform_EditorDraw(void) {}
+
+void GasPlatform_EditorLoad(void) {}
 
 void GasPlatform_Serialize(void)
 {
-
+    RSDK_EDITABLE_VAR(GasPlatform, VAR_ENUM, type);
+    RSDK_EDITABLE_VAR(GasPlatform, VAR_ENUM, childCount);
+    RSDK_EDITABLE_VAR(GasPlatform, VAR_UINT16, interval);
+    RSDK_EDITABLE_VAR(GasPlatform, VAR_UINT16, intervalOffset);
 }
-
