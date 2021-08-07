@@ -116,7 +116,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityGHZCutsceneST *host)
     else {
         player1->position.y = ruby->position.y;
         player1->state      = Player_State_None;
-        player1->stateInput = 0;
+        player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         if (player2->objectID == Player->objectID) {
             player2->position.y = ruby->position.y;
