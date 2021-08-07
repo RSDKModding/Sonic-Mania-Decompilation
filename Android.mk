@@ -70,6 +70,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 ######################################################################
+#RSDK
 
 include $(CLEAR_VARS)
 
@@ -88,7 +89,6 @@ LOCAL_C_INCLUDES := \
 
 WILDCARD_SETUP := \
   $(wildcard $(LOCAL_PATH)/dependencies/all/iniparser/*.cpp) \
-  $(wildcard $(LOCAL_PATH)/dependencies/all/zlib/*.c) \
   $(wildcard $(LOCAL_PATH)/dependencies/all/theoraplay/*.c) \
   $(wildcard $(LOCAL_PATH)/RSDKv5/*.cpp)
 
@@ -98,7 +98,8 @@ LOCAL_SRC_FILES := $(subst jni/src/, , $(WILDCARD_SETUP))
 
 include $(BUILD_STATIC_LIBRARY)
 
-#GAME DLL
+######################################################################
+#GAME
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := main
