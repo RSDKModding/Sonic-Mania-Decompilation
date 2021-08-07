@@ -30,20 +30,28 @@ bin/
 cmake/
 
 #dependencies
-[Dd]ependencies/windows-uwp/**
+[Dd]ependencies/win-uwp/**
 [Dd]ependencies/windows/*
-[Dd]ependencies/mac/libogg/*
-[Dd]ependencies/mac/libvorbis/*
-[Dd]ependencies/mac/libtheora/*
-[Dd]ependencies/mac/SDL2.framework/*
-[Dd]ependencies/ios/Ogg.framework/
+#[Dd]ependencies/android/*
+[Dd]ependencies/mac/libogg/
+[Dd]ependencies/mac/libtheora/
+[Dd]ependencies/mac/libvorbis/
+[Dd]ependencies/mac/SDL2.framework/
+![Dd]ependencies/mac/[Ii]nfo.plist
+[Dd]ependencies/ios/Ogg.Framework/
+[Dd]ependencies/ios/Theora.framework/
 [Dd]ependencies/ios/Vorbis.framework/
 [Dd]ependencies/ios/SDL2.framework/
 [Dd]ependencies/ios/libSDLMain.a
 ![Dd]ependencies/ios/[Ii]nfo.plist
 [Dd]ependencies/all/*
-[Dd]ependencies/android/*
 ![Dd]ependencies/all/dependencies.txt
+![Dd]ependencies/windows/dependencies.txt
+![Dd]ependencies/ios/dependencies.txt
+![Dd]ependencies/mac/dependencies.txt
+![Dd]ependencies/windows-uwp/dependencies.txt
+![Dd]ependencies/android/dependencies.txt
+![Dd]ependencies/android/libogg/include/ogg/config_types.h
 
 # UWP
 **/Generated Files
@@ -258,3 +266,9 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 Ignored/
+
+# Android specific
+.gradle/
+.idea/
+android/key/
+android/local.properties
