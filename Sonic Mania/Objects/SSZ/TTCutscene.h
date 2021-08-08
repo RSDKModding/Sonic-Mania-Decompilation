@@ -14,7 +14,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Vector2 size;
-    bool32 timer;
+    bool32 activated;
     int field_64;
     int field_68;
     int field_6C;
@@ -42,10 +42,10 @@ void TTCutscene_Serialize(void);
 void TTCutscene_StartCutscene(void);
 void TTCutscene_SkipCB(void);
 
-bool32 TTCutscene_CutsceneState_Setup(EntityTTCutscene *host);
-bool32 TTCutscene_CutsceneState_FlyIn(EntityTTCutscene *host);
-bool32 TTCutscene_CutsceneState_Wait(EntityTTCutscene *host);
-bool32 TTCutscene_CutsceneState_FlyOut(EntityTTCutscene *host);
-bool32 TTCutscene_CutsceneState_NextScene(EntityTTCutscene *host);
+bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host);
+bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host);
+bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host);
+bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host);
+bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host);
 
 #endif //!OBJ_TTCUTSCENE_H

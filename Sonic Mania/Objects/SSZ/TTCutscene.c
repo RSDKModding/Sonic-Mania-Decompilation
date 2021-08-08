@@ -5,9 +5,9 @@ ObjectTTCutscene *TTCutscene;
 void TTCutscene_Update(void)
 {
     RSDK_THIS(TTCutscene);
-    if (!entity->timer) {
+    if (!entity->activated) {
         TTCutscene_StartCutscene();
-        entity->timer = 1;
+        entity->activated = true;
     }
 }
 
@@ -69,7 +69,7 @@ void TTCutscene_SkipCB(void)
     ++RSDK_sceneInfo->listPos;
 }
 
-bool32 TTCutscene_CutsceneState_Setup(EntityTTCutscene *host)
+bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
@@ -102,7 +102,7 @@ bool32 TTCutscene_CutsceneState_Setup(EntityTTCutscene *host)
     return host->timer == 64;
 }
 
-bool32 TTCutscene_CutsceneState_FlyIn(EntityTTCutscene *host)
+bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -146,7 +146,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityTTCutscene *host)
     return host->timer == 75;
 }
 
-bool32 TTCutscene_CutsceneState_Wait(EntityTTCutscene *host)
+bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -158,7 +158,7 @@ bool32 TTCutscene_CutsceneState_Wait(EntityTTCutscene *host)
     return host->timer == 100;
 }
 
-bool32 TTCutscene_CutsceneState_FlyOut(EntityTTCutscene *host)
+bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -205,7 +205,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityTTCutscene *host)
     return host->timer == 75;
 }
 
-bool32 TTCutscene_CutsceneState_NextScene(EntityTTCutscene *host)
+bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player1);
