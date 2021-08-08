@@ -95,7 +95,12 @@ bool32 InitRenderDevice()
     float hdp = 0, vdp = 0;
     SDL_GetDisplayDPI(0, &dpi, &hdp, &vdp);
     printLog(PRINT_NORMAL, "dpi: %f %f %f", dpi, hdp, vdp);
-    engine.windowWidth = pixWidth = SCREEN_YSIZE * dm.h / dm.w;
+
+    bool landscape = dm.h < dm.w;
+    int h          = landscape ? dm.w : dm.h;
+    int w          = landscape ? dm.h : dm.w;
+
+    engine.windowWidth = pixWidth = ((float)SCREEN_YSIZE * h / w);
 #endif
 
     for (int s = 0; s < SCREEN_MAX; ++s) {

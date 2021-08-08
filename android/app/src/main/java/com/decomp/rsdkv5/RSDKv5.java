@@ -4,7 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-import org.libsdl.app.SDLActivity;
+import org.libsdl.app.*;
 
 public class RSDKv5 extends SDLActivity {
     private static Boolean asked = false;
