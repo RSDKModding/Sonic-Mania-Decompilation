@@ -18,15 +18,20 @@ typedef struct {
     int value9;
     int fadeTimer;
     int flags;
-    byte unknown[0x20000];
-    int value13[400];
-    Vector2 value14[400];
-    ushort value15;
+    byte flameTimers[0x20000];
+    byte *flameTimerPtrs[400];
+    Vector2 flamePositions[400];
+    ushort flameCount;
     byte activePlayers;
-    Animator value17;
+#if RETRO_USE_PLUS
+    Animator flameAnimator;
     Animator animator;
     ushort solFrames;
     ushort splashFrames;
+#else
+    Animator flameAnimator;
+    ushort solFrames;
+#endif
     bool32 hasAchievement;
     Entity *cutscenePtr;
 } ObjectOOZSetup;

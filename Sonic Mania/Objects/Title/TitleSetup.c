@@ -280,11 +280,10 @@ void TitleSetup_Unknown10(void)
     bool32 skipped = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
                      || RSDK_controller->keyY.press || RSDK_controller->keyZ.press || RSDK_controller->keyStart.press
                      || RSDK_controller->keySelect.press;
-    bool32 skipped2 = (!RSDK_touchMouse->count && entity->touched)
 #if RETRO_USE_PLUS
-                      || RSDK_unknown->field_28;
+    bool32 skipped2 = (!RSDK_touchMouse->count && entity->touched) || RSDK_unknown->field_28;
 #else
-                      || RSDK_touchMouseData->field_CC;
+    bool32 skipped2 = !RSDK_touchMouse->count && entity->touched;
 #endif
     entity->touched = RSDK_touchMouse->count > 0;
     if (skipped2 || skipped) {

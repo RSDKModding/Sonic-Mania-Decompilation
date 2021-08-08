@@ -3,6 +3,22 @@
 
 #include "SonicMania.h"
 
+// (Old) Object Class
+// NOTE: this struct is not used anywhere in the game, it was recreated from the data inside the "static object" file and is here only for preservation purposes
+// This struct is a remnamt from a time when SPZ1 & SPZ2 likely shared a setup object much earlier in dev, the proper SPZ2Setup (which is the final version) can be found below
+typedef struct {
+    RSDK_OBJECT
+    int palTimer;
+    int angle;
+    int timerC; //= 12;
+    int aniTilesFrameC;
+    int aniTileDelaysC[8]; //= { 11, 2, 2, 2, 2, 2, 2, 2 };
+    int delayD;            //= 30;
+    int frameD;
+    ushort aniTiles;
+    ushort aniTiles2;
+} ObjectSPZSetup;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -13,11 +29,11 @@ typedef struct {
     int aniTileDelaysC[8]; //= { 11, 2, 2, 2, 2, 2, 2, 2 };
     int delayD;            //= 30;
     int frameD;
-    int aniTilesSrcYD[12]; //= { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
+    int aniTilesSrcYD[12];   //= { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
     int aniTilesDelaysD[12]; //= { 30, 9, 6, 6, 6, 9, 30, 9, 6, 6, 6, 9 };
-    int layerDeform[32]; //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    int layerDeform[32];     //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     int aniTileSrcXB[16];    //= { 96, 96, 112, 96, 112, 112, 112, 112, 112, 112, 112, 112, 112, 96, 112, 96 };
-    int aniTileSrcYB[16]; //= { 0, 0, 0, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 0 };
+    int aniTileSrcYB[16];    //= { 0, 0, 0, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 0 };
     int aniTileSrcXA[16];    //= { 0, 0, 0, 16, 32, 48, 32, 32, 48, 32, 32, 16, 0, 0, 0, 0 };
     int aniTilesFrameB;
     int aniTilesFrameA;

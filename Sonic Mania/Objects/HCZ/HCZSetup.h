@@ -15,11 +15,13 @@ typedef struct {
     ushort aniTiles2;
     ushort aniTiles3;
     TileLayer *bg;
+#if RETRO_USE_PLUS
     int activePlayerCount;
     bool32 playingLoopSFX;
     int waterfallSFXTimer;
     ushort sfxWaterfall;
     ushort sfxWaterfallLoop;
+#endif
 } ObjectHCZSetup;
 
 // Entity Class

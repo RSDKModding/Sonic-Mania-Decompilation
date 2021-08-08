@@ -8,8 +8,10 @@ typedef struct {
     RSDK_OBJECT
     colour coloursManiaA[8];  //= { 32, 32, 4247680, 4247680, 4247680, 4247680, 32, 32 };
     colour coloursManiaB[8];  //= { 32, 32, 15225048, 15225048, 15225048, 15225048, 32, 32 };
+#if RETRO_USE_PLUS
     colour coloursEncoreA[8]; //= { 32, 32, 13637704, 13637704, 13637704, 13637704, 32, 32 };
     colour coloursEncoreB[8]; //= { 32, 32, 13676568, 13676568, 13676568, 13676568, 32, 32 };
+#endif
     ushort spriteIndex;
 } ObjectSSZSpotlight;
 

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int frameTable[24]; //= { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 };
-    ushort spriteIndex; // probably editor-only
+    ushort aniFrames; // probably editor-only
 } ObjectCorkscrewPath;
 
 // Entity Class

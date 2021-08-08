@@ -25,9 +25,11 @@ typedef struct {
     bool32 hasAchievement;
     Entity *msz2Cutscene;
     int field_948;
+#if RETRO_USE_PLUS
     int chuggaVolume;
     int chuggaChannel;
     ushort sfxLocoChugga;
+#endif
 } ObjectMSZSetup;
 
 // Entity Class

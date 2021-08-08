@@ -34,22 +34,20 @@ bool32 processEvents()
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: return false;
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+                        // TODO: I know v5 does stuff here
+                        break;
                 }
                 break;
             case SDL_CONTROLLERDEVICEADDED: controllerInit(engine.sdlEvents.cdevice.which); break;
             case SDL_CONTROLLERDEVICEREMOVED: controllerClose(engine.sdlEvents.cdevice.which); break;
-            case SDL_WINDOWEVENT_CLOSE:
-                if (engine.window) {
-                    SDL_DestroyWindow(engine.window);
-                    engine.window = NULL;
-                }
-                return false;
+            case SDL_APP_WILLENTERBACKGROUND:
+                // TODO: I know v5 does stuff here
+                break;
+            case SDL_APP_TERMINATING: return false;
 #endif
 
 #ifdef RETRO_USING_MOUSE
-            /*case SDL_MOUSEMOTION:
-
-                break;*/
             case SDL_MOUSEBUTTONDOWN:
 #if RETRO_USING_SDL2
                 switch (engine.sdlEvents.button.button) {

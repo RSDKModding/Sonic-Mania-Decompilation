@@ -114,15 +114,16 @@ void SSZSpotlight_Create(void *data)
                 entity->vertClrPtrs = SSZSpotlight->coloursEncoreA;
         }
         else {
-#endif
-            if (entity->color) {
+            if (entity->color)
                 entity->vertClrPtrs = SSZSpotlight->coloursManiaB;
-            }
-            else {
+            else
                 entity->vertClrPtrs = SSZSpotlight->coloursManiaA;
-            }
-#if RETRO_USE_PLUS
         }
+#else
+        if (entity->color)
+            entity->vertClrPtrs = SSZSpotlight->coloursManiaB;
+        else
+            entity->vertClrPtrs = SSZSpotlight->coloursManiaA;
 #endif
 
         entity->active        = ACTIVE_XBOUNDS;
