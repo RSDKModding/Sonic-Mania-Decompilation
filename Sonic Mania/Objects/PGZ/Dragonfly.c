@@ -193,6 +193,6 @@ void Dragonfly_DrawDead(void)
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
     if (!RSDK.CheckOnScreen(entity, NULL))
-        return RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     entity->visible ^= true;
 }

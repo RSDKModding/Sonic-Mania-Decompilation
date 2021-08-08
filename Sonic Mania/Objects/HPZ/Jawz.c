@@ -62,7 +62,7 @@ void Jawz_CheckPlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikHit(player, entity, &Jawz->hitbox) && !Player_CheckBadnikBreak(entity, player, true)) {
-            RSDK.CreateEntity(Explosion->objectID, 1, entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySFX(Explosion->sfx_Destroy, false, 255);
             destroyEntity(entity);
         }

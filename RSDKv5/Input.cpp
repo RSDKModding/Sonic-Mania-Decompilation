@@ -578,7 +578,7 @@ void ProcessInput()
 #if RETRO_USING_SDL2
 #ifdef RETRO_USING_MOUSE
 #if RETRO_USING_SDL2
-    if (SDL_GetNumTouchFingers(SDL_GetTouchDevice(RETRO_TOUCH_DEVICE)) <= 0) { // Touch always takes priority over mouse
+    if (touchMouseData.count <= 0) { // Touch always takes priority over mouse
 #endif                    
                                                              //! RETRO_USING_SDL2
         int mx = 0, my = 0;
