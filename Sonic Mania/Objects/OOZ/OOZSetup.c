@@ -58,26 +58,26 @@ void OOZSetup_StaticUpdate(void)
                         if (OOZSetup_Unknown6((ty & 0xFFF00000) - 0xC0000, tx, player->angle)) {
                             EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(1), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
                             sol->velocity.x = -0x40000;
-                            // RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator, true, 0);
-                            // sol->state           = Sol_Unknown12;
+                            RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
+                            sol->state = Sol_Unknown12;
 
                             sol             = CREATE_ENTITY(Sol, intToVoid(1), tx + 0x10000, (ty & 0xFFF00000) - 0xC0000);
                             sol->velocity.x = 0x40000;
-                            // RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator, true, 0);
-                            // sol->state = Sol_Unknown12;
+                            RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
+                            sol->state = Sol_Unknown12;
                         }
                     }
                     else if (player->onGround) {
                         if (OOZSetup_Unknown6(ty & 0xFFFF0000, tx, player->angle)) {
                             EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(1), tx - 0x10000, (ty & 0xFFFF0000) - 0x80000);
                             sol->velocity.x = -0x40000;
-                            // RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator, true, 0);
-                            // sol->state           = Sol_Unknown11;
+                            RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
+                            sol->state = Sol_Unknown11;
 
                             sol             = CREATE_ENTITY(Sol, intToVoid(1), tx + 0x10000, (ty & 0xFFFF0000) - 0x80000);
                             sol->velocity.x = 0x40000;
-                            // RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator, true, 0);
-                            // sol->state = Sol_Unknown11;
+                            RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
+                            sol->state = Sol_Unknown11;
                         }
                     }
                 }
@@ -168,12 +168,15 @@ void OOZSetup_StaticUpdate(void)
     }
 #endif
     OOZSetup_Unknown5();
+#if RETRO_USE_PLUS
     RSDK.ProcessAnimation(&OOZSetup->animator);
+#endif
 }
 
 void OOZSetup_Draw(void)
 {
     RSDK_THIS(OOZSetup);
+#if RETRO_USE_PLUS
     if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
         foreach_active(Player, player)
         {
@@ -181,6 +184,7 @@ void OOZSetup_Draw(void)
                 RSDK.DrawSprite(&OOZSetup->animator, &player->position, false);
         }
     }
+#endif
     if (entity->type)
         RSDK.FillScreen(0xC0C0E8, OOZSetup->fadeTimer >> 5, OOZSetup->fadeTimer >> 5, OOZSetup->fadeTimer >> 4);
     else
@@ -213,13 +217,15 @@ void OOZSetup_StageLoad(void)
     OOZSetup->value9        = 0;
     Animals->animalTypes[0] = ANIMAL_ROCKY;
     Animals->animalTypes[1] = ANIMAL_PECKY;
-    memset(OOZSetup->unknown, 0, sizeof(OOZSetup->unknown));
-    memset(OOZSetup->value13, 0, sizeof(OOZSetup->value13));
-    OOZSetup->value15   = 0;
-    OOZSetup->solFrames = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(OOZSetup->solFrames, 3, &OOZSetup->value17, true, 0);
+    memset(OOZSetup->flameTimers, 0, sizeof(OOZSetup->flameTimers));
+    memset(OOZSetup->flameTimerPtrs, 0, sizeof(OOZSetup->flameTimerPtrs));
+    OOZSetup->flameCount = 0;
+    OOZSetup->solFrames  = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(OOZSetup->solFrames, 3, &OOZSetup->flameAnimator, true, 0);
+#if RETRO_USE_PLUS
     OOZSetup->splashFrames = RSDK.LoadSpriteAnimation("OOZ/Splash.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(OOZSetup->splashFrames, 0, &OOZSetup->animator, true, 0);
+#endif
     if (RSDK.CheckStageFolder("OOZ2")) {
         foreach_all(OOZ1Outro, cutscene)
         {
@@ -282,12 +288,12 @@ bool32 OOZSetup_CheckCB_Flame(void)
     int count = 0;
     foreach_active(Sol, sol)
     {
-        // if (sol->field_8C)
-        //    count++;
+        if (sol->isFlameFX)
+            count++;
     }
 
-    for (int i = 0; i < OOZSetup->value15; ++i) {
-        if (OOZSetup->value13[i])
+    for (int i = 0; i < OOZSetup->flameCount; ++i) {
+        if (OOZSetup->flameTimerPtrs[i])
             count++;
     }
     return count > 0;
@@ -311,11 +317,11 @@ bool32 OOZSetup_CheckCB_Swim(void) { return OOZSetup->value9 > 0; }
 void OOZSetup_Unknown4(void)
 {
     RSDK_THIS(OOZSetup);
-    for (int i = 0; i < OOZSetup->value15; ++i) {
-        if (OOZSetup->value13[i]) {
-            entity->rotation          = 2 * (OOZSetup->value14[i].x & 0xFF);
-            OOZSetup->value17.frameID = OOZSetup->value14[i].y & 0xFF;
-            RSDK.DrawSprite(&OOZSetup->value17, &OOZSetup->value14[i], false);
+    for (int i = 0; i < OOZSetup->flameCount; ++i) {
+        if (OOZSetup->flameTimerPtrs[i]) {
+            entity->rotation                = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
+            OOZSetup->flameAnimator.frameID = OOZSetup->flamePositions[i].y & 0xFF;
+            RSDK.DrawSprite(&OOZSetup->flameAnimator, &OOZSetup->flamePositions[i], false);
         }
     }
 }
@@ -323,37 +329,38 @@ void OOZSetup_Unknown4(void)
 void OOZSetup_Unknown5(void)
 {
     RSDK_THIS(OOZSetup);
-    for (int i = 0; i < OOZSetup->value15; ++i) {
-        if (OOZSetup->value13[i]) {
-            if (!--OOZSetup->value13[i]) {
-                OOZSetup->value13[i] = 0;
-                EntitySol *sol       = CREATE_ENTITY(Sol, intToVoid(1), OOZSetup->value14[i].x, OOZSetup->value14[i].y);
-                // sol->field_8C           = 1;
-                sol->rotation = 2 * (OOZSetup->value14[i].x & 0xFF);
-                // RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &sol->animator, true, 0);
-                // sol->state = Sol_Unknown10;
+    for (int i = 0; i < OOZSetup->flameCount; ++i) {
+        if (OOZSetup->flameTimerPtrs[i]) {
+            --(*OOZSetup->flameTimerPtrs[i]);
+            if (!*OOZSetup->flameTimerPtrs[i]) {
+                OOZSetup->flameTimerPtrs[i] = NULL;
+                EntitySol *sol              = CREATE_ENTITY(Sol, intToVoid(1), OOZSetup->flamePositions[i].x, OOZSetup->flamePositions[i].y);
+                sol->isFlameFX              = true;
+                sol->rotation               = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
+                RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &sol->animator1, true, 0);
+                sol->state = Sol_Unknown10;
             }
             else {
-                int val  = OOZSetup->value14[i].y & 0xFF;
-                int val2 = (OOZSetup->value14[i].y >> 8) & 0xFF;
-                if (val2 >= 3) {
-                    val++;
-                    val2 = 0;
-                    if (val > 0xA)
-                        val = 1;
+                int frame      = OOZSetup->flamePositions[i].y & 0xFF;
+                int frameTimer = (OOZSetup->flamePositions[i].y >> 8) & 0xFF;
+                if (frameTimer >= 3) {
+                    frame++;
+                    frameTimer = 0;
+                    if (frame > 10)
+                        frame = 1;
                 }
                 else {
-                    ++val2;
+                    ++frameTimer;
                 }
-                OOZSetup->value14[i].y = val2 | (val2 << 8) | (OOZSetup->value14[i].y & 0xFFFF0000);
+                OOZSetup->flamePositions[i].y = frame | (frameTimer << 8) | (OOZSetup->flamePositions[i].y & 0xFFFF0000);
             }
 
             foreach_active(Player, player)
             {
-                // if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox)) {
-                //    if (player->shield != SHIELD_FIRE)
-                //        Player_CheckHit(player, entity);
-                //}
+                if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox1)) {
+                    if (player->shield != SHIELD_FIRE)
+                        Player_CheckHit(player, entity);
+                }
             }
         }
     }
@@ -364,24 +371,24 @@ bool32 OOZSetup_Unknown6(int posY, int posX, int angle)
     RSDK_THIS(OOZSetup);
     int pos = (posX >> 20) + (posY >> 20 << 10);
     if (pos <= 0x1FFFF) {
-        if (!OOZSetup->unknown[pos]) {
+        if (!OOZSetup->flameTimers[pos]) {
             int i = 0;
             for (; i < 399; ++i) {
-                if (!OOZSetup->value13[i])
+                if (!OOZSetup->flameTimerPtrs[i])
                     break;
             }
 
-            OOZSetup->value13[i]   = OOZSetup->unknown[pos];
-            OOZSetup->value14[i].x = posX;
-            OOZSetup->value14[i].y = posY;
-            OOZSetup->value14[i].x &= 0xFFFF0000;
-            OOZSetup->value14[i].y &= 0xFFFF0000;
-            OOZSetup->value14[i].x |= angle;
+            OOZSetup->flameTimerPtrs[i]   = &OOZSetup->flameTimers[pos];
+            OOZSetup->flamePositions[i].x = posX;
+            OOZSetup->flamePositions[i].y = posY;
+            OOZSetup->flamePositions[i].x &= 0xFFFF0000;
+            OOZSetup->flamePositions[i].y &= 0xFFFF0000;
+            OOZSetup->flamePositions[i].x |= angle;
 
-            if (i + 1 > OOZSetup->value15) {
-                OOZSetup->value15 = i + 1;
+            if (i + 1 > OOZSetup->flameCount) {
+                OOZSetup->flameCount = i + 1;
             }
-            OOZSetup->unknown[pos]                                                                              = -16;
+            OOZSetup->flameTimers[pos]                                                                          = 0xF0;
             CREATE_ENTITY(Explosion, intToVoid(2), entity->position.x, entity->position.y - 0x60000)->drawOrder = entity->drawOrder;
             return true;
         }

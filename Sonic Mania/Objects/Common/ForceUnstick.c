@@ -42,8 +42,8 @@ void ForceUnstick_Create(void *data)
 
 void ForceUnstick_StageLoad(void)
 {
-    ForceUnstick->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(ForceUnstick->spriteIndex, 2, &ForceUnstick->animator, true, 6);
+    ForceUnstick->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(ForceUnstick->aniFrames, 2, &ForceUnstick->animator, true, 6);
 }
 
 void ForceUnstick_DrawSprites(void)

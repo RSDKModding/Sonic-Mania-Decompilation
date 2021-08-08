@@ -164,13 +164,6 @@ enum GameRegions {
 #define RETRO_USING_MOUSE
 #define RETRO_USING_TOUCH
 
-// this macro defines the touch device read by the game (UWP requires DIRECT)
-#if RETRO_PLATFORM == RETRO_UWP
-#define RETRO_TOUCH_DEVICE 0
-#else
-#define RETRO_TOUCH_DEVICE 1
-#endif
-
 enum EngineStates {
     ENGINESTATE_LOAD,
     ENGINESTATE_REGULAR,

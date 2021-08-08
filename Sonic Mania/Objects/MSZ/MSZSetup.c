@@ -319,7 +319,7 @@ void MSZSetup_Unknown10(void)
 void MSZSetup_Unknown11(void)
 {
     RSDK_THIS(MSZSetup);
-    RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, ++MSZSetup->chuggaVolume * 0.00390625, 0.0, 1.0);
+    RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, ++MSZSetup->chuggaVolume * (1 / 256.0f), 0.0, 1.0);
     MSZSetup_Unknown4(8 * MSZSetup->chuggaVolume);
     if (MSZSetup->chuggaVolume >= 256)
         entity->state = MSZSetup_Unknown12;

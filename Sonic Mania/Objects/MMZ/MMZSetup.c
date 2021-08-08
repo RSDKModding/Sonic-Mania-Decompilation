@@ -78,10 +78,8 @@ void MMZSetup_StageLoad(void)
         if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x73C0000, 0x2C0000, 0x1040000, 0x82C0000)) {
             Zone->screenBoundsB1[0] = 2092;
             Zone->screenBoundsB1[1] = 2092;
-#if RETRO_USE_PLUS
             Zone->screenBoundsB1[2] = 2092;
             Zone->screenBoundsB1[3] = 2092;
-#endif
         }
 
         if (isMainGameMode() && globals->atlEnabled) {
@@ -101,14 +99,12 @@ void MMZSetup_StageLoad(void)
         }
         Zone->screenBoundsB1[0] = 5120;
         Zone->screenBoundsB1[1] = 5120;
-#if RETRO_USE_PLUS
         Zone->screenBoundsB1[2] = 5120;
         Zone->screenBoundsB1[3] = 5120;
-#endif
     }
 
 #if RETRO_USE_PLUS
-    if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
+    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreMMZ.act", 0xFF);
         RSDK.LoadPalette(3, "EncoreMMZfp.act", 0xFF);
         RSDK.LoadPalette(4, "EncoreMMZf.act", 0xFF);

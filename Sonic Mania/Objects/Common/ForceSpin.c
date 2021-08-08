@@ -63,7 +63,7 @@ void ForceSpin_Draw(void) { ForceSpin_DrawSprites(); }
 void ForceSpin_Create(void *data)
 {
     RSDK_THIS(ForceSpin);
-    RSDK.SetSpriteAnimation(ForceSpin->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(ForceSpin->aniFrames, 0, &entity->animator, true, 0);
     entity->drawFX |= FX_FLIP;
     entity->animator.frameID = 4;
     if (!RSDK_sceneInfo->inEditor) {
@@ -88,7 +88,7 @@ void ForceSpin_Create(void *data)
     }
 }
 
-void ForceSpin_StageLoad(void) { ForceSpin->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void ForceSpin_StageLoad(void) { ForceSpin->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void ForceSpin_DrawSprites(void)
 {

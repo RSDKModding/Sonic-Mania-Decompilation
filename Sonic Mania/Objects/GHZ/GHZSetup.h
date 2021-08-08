@@ -7,10 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     int waterFadeAmount;
-    int delayA;
+    int delayA; //= 30
     int frameA;
     int delayListA[8];
-    int delayB;
+    int delayB; //= 60
     int frameB;
     int delayListB[16];
     ushort aniTiles;

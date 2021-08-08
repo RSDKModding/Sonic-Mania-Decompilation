@@ -6,6 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
+#if RETRO_USE_PLUS
     int bgScrollPos;                //= 240;
     int bgScrollPositions[4];       //= { 240, 3, 3, 3 };
     int cheat_RickyMode[9];         //= { 1, 9, 7, 9, 0, 8, 1, 1, 255 };
@@ -21,7 +22,7 @@ typedef struct {
     int field_110;
     int field_114;
     int bgScrollPosID;
-    int dword11C;
+    int startMusicID;
     int soundTestMax;
     ushort sfxFail;
     ushort sfxRing;
@@ -31,6 +32,14 @@ typedef struct {
     int *cheatCodePtrs[8];
     int cheatUnknown[8];
     void (*checkCheatActivated[8])(void);
+#else
+    int bgScrollPos;          //= 240;
+    int bgScrollPosID;
+    int bgScrollPositions[4]; //= { 240, 3, 3, 3 };
+    int startMusicID;
+    int soundTestMax;
+    ushort sfxFail;
+#endif
 } ObjectLevelSelect;
 
 // Entity Class
@@ -49,14 +58,18 @@ typedef struct {
     Entity *zoneIcon;
     Entity *player1Icon;
     Entity *player2Icon;
+#if RETRO_USE_PLUS
     Entity *storedTextEntity;
+#endif
     int labelCount;
+#if RETRO_USE_PLUS
     int field_18C;
     int field_190;
     int field_194;
     int field_198;
     int field_19C;
     int field_1A0;
+#endif
 } EntityLevelSelect;
 
 // Object Struct
@@ -74,6 +87,7 @@ void LevelSelect_EditorLoad(void);
 void LevelSelect_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void LevelSelect_CheatActivated_AllEmeralds(void);
 void LevelSelect_CheatActivated_ChangeSuperMusicFlag(void);
 void LevelSelect_CheatActivated_MaxContinues(void);
@@ -82,6 +96,7 @@ void LevelSelect_CheatActivated_RickyMode(void);
 void LevelSelect_CheatActivated_SuperDash(void);
 void LevelSelect_CheatActivated_SwapGameMode(void);
 void LevelSelect_CheatActivated_UnlockAllMedals(void);
+#endif
 
 void LevelSelect_State_SetupEntities(void);
 void LevelSelect_ManagePlayerIcon(void);
@@ -91,7 +106,7 @@ void LevelSelect_StateDraw_Fade(void);
 void LevelSelect_Unknown1(void);
 void LevelSelect_Unknown2(void);
 void LevelSelect_Unknown3(void);
-void LevelSelect_Unknown5(bool32 highlight);
+void LevelSelect_SetLabelHighlighted(bool32 highlight);
 void LevelSelect_Unknown6(void);
 void LevelSelect_Unknown7(void);
 

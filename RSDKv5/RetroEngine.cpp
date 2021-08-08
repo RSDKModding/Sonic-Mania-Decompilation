@@ -34,22 +34,20 @@ bool32 processEvents()
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: return false;
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+                        // TODO: I know v5 does stuff here
+                        break;
                 }
                 break;
             case SDL_CONTROLLERDEVICEADDED: controllerInit(engine.sdlEvents.cdevice.which); break;
             case SDL_CONTROLLERDEVICEREMOVED: controllerClose(engine.sdlEvents.cdevice.which); break;
-            case SDL_WINDOWEVENT_CLOSE:
-                if (engine.window) {
-                    SDL_DestroyWindow(engine.window);
-                    engine.window = NULL;
-                }
-                return false;
+            case SDL_APP_WILLENTERBACKGROUND:
+                // TODO: I know v5 does stuff here
+                break;
+            case SDL_APP_TERMINATING: return false;
 #endif
 
 #ifdef RETRO_USING_MOUSE
-            /*case SDL_MOUSEMOTION:
-
-                break;*/
             case SDL_MOUSEBUTTONDOWN:
 #if RETRO_USING_SDL2
                 switch (engine.sdlEvents.button.button) {
@@ -75,24 +73,24 @@ bool32 processEvents()
 #if defined(RETRO_USING_TOUCH) && RETRO_USING_SDL2
             case SDL_FINGERMOTION: {
                 touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
-                //printLog(PRINT_NORMAL, "TOUCH MOTION %d", touchMouseData.count);
                 for (int i = 0; i < touchMouseData.count; i++) {
                     SDL_Finger *finger     = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
-                    touchMouseData.down[i] = true;
-                    touchMouseData.x[i]    = finger->x;
-                    touchMouseData.y[i]    = finger->y;
-                    //printLog(PRINT_NORMAL, "- [%f, %f]", finger->x, finger->y);
+                    if (finger) {
+                        touchMouseData.down[i] = true;
+                        touchMouseData.x[i]    = finger->x;
+                        touchMouseData.y[i]    = finger->y;
+                    }
                 }
                 break;
             case SDL_FINGERDOWN:
                 touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
-                //printLog(PRINT_NORMAL, "TOUCH DOWN %d", touchMouseData.count);
                 for (int i = 0; i < touchMouseData.count; i++) {
                     SDL_Finger *finger     = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
-                    touchMouseData.down[i] = true;
-                    touchMouseData.x[i]    = finger->x;
-                    touchMouseData.y[i]    = finger->y;
-                    //printLog(PRINT_NORMAL, "- [%f, %f]", finger->x, finger->y);
+                    if (finger) {
+                        touchMouseData.down[i] = true;
+                        touchMouseData.x[i]    = finger->x;
+                        touchMouseData.y[i]    = finger->y;
+                    }
                 }
                 break;
             }

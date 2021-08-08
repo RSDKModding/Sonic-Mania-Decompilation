@@ -3,14 +3,29 @@
 
 #include "SonicMania.h"
 
+#define Sol_MaxFlameOrbs 4
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    ushort aniFrames;
 } ObjectSol;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 startPos;
+    byte startDir;
+    byte activeOrbs;
+    Vector2 positions[Sol_MaxFlameOrbs];
+    int field_88;
+    bool32 isFlameFX;
+    bool32 fireOrbs;
+    Animator animator1;
+    Animator animator2;
 } EntitySol;
 
 // Object Struct
@@ -28,6 +43,23 @@ void Sol_EditorLoad(void);
 void Sol_Serialize(void);
 
 // Extra Entity Functions
+void Sol_DebugSpawn(void);
+void Sol_DebugDraw(void);
 
+void Sol_HandlePlayerInteractions(void);
+void Sol_HandlePlayerHurt(void);
+void Sol_HandleRotation(void);
+void Sol_CheckOnScreen(void);
+
+void Sol_State_Setup(void);
+void Sol_Unknown5(void);
+void Sol_Unknown6(void);
+void Sol_Unknown7(void);
+void Sol_Unknown8(void);
+void Sol_Unknown9(void);
+
+void Sol_Unknown10(void);
+void Sol_Unknown11(void);
+void Sol_Unknown12(void);
 
 #endif //!OBJ_SOL_H

@@ -51,6 +51,7 @@ void HCZSetup_StaticUpdate(void)
         }
     }
 
+#if RETRO_USE_PLUS
     if (HCZSetup->activePlayerCount) {
         if (HCZSetup->playingLoopSFX) {
             if (!(HCZSetup->waterfallSFXTimer & 0x1F)) {
@@ -106,6 +107,7 @@ void HCZSetup_StaticUpdate(void)
             }
         }
     }
+#endif
 }
 
 void HCZSetup_Draw(void) {}
@@ -220,10 +222,10 @@ void HCZSetup_StageLoad(void)
         RSDK.LoadPalette(0, "EncoreHCZ.act", 255);
         RSDK.LoadPalette(1, "EncoreHCZw.act", 255);
     }
-#endif
 
     HCZSetup->sfxWaterfall     = RSDK.GetSFX("Stage/Waterfall.wav");
     HCZSetup->sfxWaterfallLoop = RSDK.GetSFX("Stage/Waterfall2.wav");
+#endif
 }
 
 void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)

@@ -558,10 +558,12 @@ typedef enum {
     SETTINGS_WRITE,
 } SettingsValues;
 
+#if RETRO_USE_PLUS
 typedef enum {
     SECRET_RICKYMODE = 0,
     SECRET_SUPERDASH = 1,
 } GameCheats;
+#endif
 
 typedef enum {
     GROUP_ALL     = 0,
