@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    ushort aniFrames;
 } ObjectJawz;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    byte triggerDir;
+    StateMachine(state);
+    Vector2 startPos;
+    Animator animator;
 } EntityJawz;
 
 // Object Struct
@@ -28,6 +34,10 @@ void Jawz_EditorLoad(void);
 void Jawz_Serialize(void);
 
 // Extra Entity Functions
-
+void Jawz_DebugSpawn(void);
+void Jawz_DebugDraw(void);
+void Jawz_CheckPlayerInteractions(void);
+void Jawz_CheckPlayerTrigger(void);
+void Jawz_State_Main(void);
 
 #endif //!OBJ_JAWZ_H
