@@ -238,7 +238,7 @@ bool32 UISlider_TouchCB(void)
             }
 
             entity->touchPressed = touchFlag;
-            return true;
+            return touchFlag;
         }
     }
     else {

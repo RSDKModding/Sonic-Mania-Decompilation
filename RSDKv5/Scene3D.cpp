@@ -3,7 +3,7 @@
 Model modelList[MODEL_MAX];
 Scene3D scene3DList[SCENE3D_MAX];
 
-ScanEdge scanEdgeBuffer[SCREEN_YSIZE];
+ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
 
 enum ModelFlags {
     MODEL_NOFLAGS     = 0,

@@ -107,7 +107,7 @@ struct Scene3D {
 extern Model modelList[MODEL_MAX];
 extern Scene3D scene3DList[SCENE3D_MAX];
 
-extern ScanEdge scanEdgeBuffer[SCREEN_YSIZE];
+extern ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
 
 void ProcessScanEdge(int x1, int y1, int x2, int y2);
 void ProcessScanEdgeClr(uint c1, uint c2, int x1, int y1, int x2, int y2);

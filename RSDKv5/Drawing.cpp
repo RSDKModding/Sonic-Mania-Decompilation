@@ -1364,7 +1364,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
             int r                    = 3 - 2 * radius;
             int xRad                 = x - radius;
-            int curY                 = y + 1;
+            int curY                 = y;
             int curX                 = x;
             int startY               = yRadiusTop + 1;
             ScanEdge *scanEdgeTop    = &scanEdgeBuffer[yRadiusTop];

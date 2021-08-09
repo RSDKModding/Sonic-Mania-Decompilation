@@ -730,7 +730,11 @@ void OptionsMenu_UISlider_ChangedCB(void)
     RSDK_THIS(UISlider);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    switch (entity->frameID != 1) {
+    // what the hell is up with thsi???????
+    // it'd only ever be 1 or 2 why are F1,F2,F4,F5 & FC options?????
+    // this is a CB for the slider why are the boolean values here???
+    bool32 value = entity->frameID != 1;
+    switch (value) {
         case 0xF1:
             options->windowed = entity->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
