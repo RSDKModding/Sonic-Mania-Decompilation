@@ -229,7 +229,7 @@ bool32 UISlider_TouchCB(void)
                     if (entity->touchPosStart.x - 0x70000 < entity->field_134)
                         entity->field_134 = entity->touchPosStart.x - 0x70000;
 
-                    int val = 16 * (min(((entity->field_134 - 0x70000) >> 4 << 10) / (entity->touchPosStart.x - 0xE0000) + 2, UISlider_MaxVal) & -(UISlider_Increment / 0x10));
+                    int val = 16 * (minVal(((entity->field_134 - 0x70000) >> 4 << 10) / (entity->touchPosStart.x - 0xE0000) + 2, UISlider_MaxVal) & -(UISlider_Increment / 0x10));
                     if (val != entity->sliderPos) {
                         entity->sliderPos = val;
                         StateMachine_Run(entity->sliderChangedCB);

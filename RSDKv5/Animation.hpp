@@ -66,7 +66,7 @@ short CreateSpriteAnimation(const char *filename, uint frameCount, uint animCoun
 inline ushort GetSpriteAnimation(ushort sprIndex, const char *name)
 {
     if (sprIndex >= SPRFILE_COUNT)
-        return NULL;
+        return 0;
     SpriteAnimation *spr = &spriteAnimationList[sprIndex];
 
     uint hash[4];

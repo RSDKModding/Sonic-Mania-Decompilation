@@ -252,7 +252,7 @@ int winAPIToSDLMappings(int mapping)
     }
 }
 
-bool32 getControllerButton(InputDevice* device, byte buttonID)
+bool32 getControllerButton(InputDevice *device, byte buttonID)
 {
     if (buttonID == (byte)SDL_CONTROLLER_BUTTON_INVALID || !device)
         return false;
@@ -338,7 +338,7 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
         }
     }
 
-    InputDeviceSDL *sdlDevice    = (InputDeviceSDL *)device;
+    InputDeviceSDL *sdlDevice = (InputDeviceSDL *)device;
     int delta                 = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTX);
     if (delta < 0)
         stickL[controllerID].hDelta = -normalize(-delta, 1, 32768);
@@ -351,7 +351,7 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
     else
         stickL[controllerID].vDelta = normalize(delta, 0, 32767);
     stickL[controllerID].vDelta = -stickL[controllerID].vDelta;
-    
+
     delta = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTX);
     if (delta < 0)
         stickR[controllerID].hDelta = -normalize(-delta, 1, 32768);
@@ -388,7 +388,6 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
     else
         stickL[controllerID].keyRight.setReleased();
 
-
     if (stickR[controllerID].vDelta > stickR[controllerID].deadzone)
         stickR[controllerID].keyUp.setHeld();
     else
@@ -409,7 +408,6 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
     else
         stickR[controllerID].keyRight.setReleased();
 
-
     if (triggerL[controllerID].delta < -triggerL[controllerID].deadzone)
         triggerL[controllerID].keyL.setHeld();
     else
@@ -419,7 +417,6 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
         triggerL[controllerID].keyR.setHeld();
     else
         triggerL[controllerID].keyR.setReleased();
-
 
     if (triggerR[controllerID].delta < -triggerR[controllerID].deadzone)
         triggerR[controllerID].keyL.setHeld();
@@ -439,9 +436,9 @@ void InitInputDevice()
 #if RETRO_USING_SDL2
     // Support for extra controller types SDL doesn't recognise
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_UWP
-    //if (!usingCWD)
+    // if (!usingCWD)
     //    sprintf(buffer, "%s/controllerdb.txt", getResourcesPath());
-    //else
+    // else
     //    sprintf(buffer, "%scontrollerdb.txt", gamePath);
     sprintf(buffer, BASE_PATH "controllerdb.txt");
 #else
@@ -451,7 +448,7 @@ void InitInputDevice()
     if (file) {
         fClose(file);
 
-        //SDL_GameControllerAddMapping()
+        // SDL_GameControllerAddMapping()
         int nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
         if (nummaps >= 0)
             printLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
@@ -463,7 +460,7 @@ void InitInputDevice()
         activeInputDevices[i] = NULL;
 
         sprintf(buffer, "SDLDevice%d", i);
-        //GenerateCRC(&device->inputID, buffer);
+        // GenerateCRC(&device->inputID, buffer);
     }
 }
 
@@ -477,7 +474,7 @@ void ProcessInput()
         int assign = activeControllers[i];
         if (assign && assign != CONT_UNASSIGNED) {
             if (assign == CONT_AUTOASSIGN) {
-                uint id               = GetControllerInputID();
+                uint id              = GetControllerInputID();
                 activeControllers[i] = id;
                 if (id < -1)
                     AssignControllerID(i + 1, id);
@@ -499,7 +496,6 @@ void ProcessInput()
                 buttons[c]->setReleased();
         }
     }
-
 
     InputState *anyController[] = {
         &controller[0].keyUp, &controller[0].keyDown, &controller[0].keyLeft,  &controller[0].keyRight,
@@ -532,7 +528,6 @@ void ProcessInput()
         anyRTrigger[i]->press = false;
         anyRTrigger[i]->down  = false;
     }
-
 
     for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
         InputState *cont[] = {
@@ -579,8 +574,8 @@ void ProcessInput()
 #ifdef RETRO_USING_MOUSE
 #if RETRO_USING_SDL2
     if (touchMouseData.count <= 1) { // Touch always takes priority over mouse
-#endif                    
-                                                             //! RETRO_USING_SDL2
+#endif
+                                     //! RETRO_USING_SDL2
         int mx = 0, my = 0;
         SDL_GetMouseState(&mx, &my);
 

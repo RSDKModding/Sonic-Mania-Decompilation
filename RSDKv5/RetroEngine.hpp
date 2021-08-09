@@ -101,6 +101,11 @@ enum GameRegions {
 #define RETRO_USING_DIRECTX9  (0) // windows
 #define RETRO_USING_DIRECTX1    1 (0) // xbox one
 
+#define DEFAULT_SCREEN_XSIZE (424)
+#define DEFAULT_FULLSCREEN   false
+#define RETRO_USING_MOUSE
+#define RETRO_USING_TOUCH
+
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
 #undef RETRO_USING_SDL2
 #define RETRO_USING_SDL2 (1)
@@ -149,6 +154,7 @@ enum GameRegions {
 //#include "androidHelpers.hpp"
 #undef RETRO_STANDALONE
 #define RETRO_STANDALONE (0)
+#undef RETRO_USING_MOUSE
 #endif
 
 //Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
@@ -158,11 +164,6 @@ enum GameRegions {
 
 //enables only EGS's ingame achievements without enabling anything else
 #define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
-
-#define DEFAULT_SCREEN_XSIZE (424)
-#define DEFAULT_FULLSCREEN   false
-#define RETRO_USING_MOUSE
-#define RETRO_USING_TOUCH
 
 enum EngineStates {
     ENGINESTATE_LOAD,
@@ -254,13 +255,6 @@ struct RetroEngine {
     int fsHeight           = 0;
     int gameHeight         = SCREEN_YSIZE;
     int refreshRate        = 60;
-
-#if !RETRO_USE_ORIGINAL_CODE
-    float refreshRatio      = 0.0f;  // ratio between current refresh rate and the target refresh rate
-    float frameInter        = 0.0f;  // alpha between the last and next logic update
-    unsigned int logicUpCnt = 0;     // how many times to update game logic based on the two preceding variables
-    bool drawLock           = false; // if set, prevents entity draw calls from going through
-#endif
 
     //Image/Video support
     float displayTime;
