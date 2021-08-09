@@ -268,19 +268,30 @@ bool initRetroEngine()
 }
 void runRetroEngine()
 {
-    uint frameStart, frameEnd = SDL_GetTicks();
-    int frameDelta = 0;
+    const Uint64 frequency = SDL_GetPerformanceFrequency();
+    Uint64 frameStart = SDL_GetPerformanceCounter(), frameEnd = SDL_GetPerformanceCounter();
+    float frameDelta = 0.0f;
 
     while (engine.running) {
-        frameStart = SDL_GetTicks();
-        frameDelta = frameStart - frameEnd;
-
-        if (frameDelta < 1000.0f / (float)engine.refreshRate)
-            SDL_Delay((1000.0f / engine.refreshRate) - frameDelta);
-
-        frameEnd = SDL_GetTicks();
-
         engine.running = processEvents();
+
+#if !RETRO_USE_ORIGINAL_CODE
+        frameStart = SDL_GetPerformanceCounter();
+        frameDelta = frameStart - frameEnd;
+        if (frameDelta < frequency / (float)engine.refreshRate) {
+            continue;
+        }
+        frameEnd = SDL_GetPerformanceCounter();
+
+        engine.refreshRatio = (float)engine.refreshRate / (frequency / frameDelta);
+
+        engine.frameInter += engine.refreshRatio;
+        if (engine.frameInter >= 1.0f) {
+            engine.logicUpCnt = (int)floorf(engine.frameInter); // get logic update count
+            engine.frameInter -= engine.logicUpCnt;             // shave off the whole
+        }
+#endif
+
         foreachStackPtr = foreachStackList;
         switch (sceneInfo.state) {
             default: break;
@@ -292,6 +303,7 @@ void runRetroEngine()
                     LoadScene();
                     LoadSceneFile();
                     InitObjects();
+
 #if RETRO_REV02
                     userCore->SetupDebugValues();
                     for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
@@ -307,7 +319,12 @@ void runRetroEngine()
                     // dim after 5 mins
                     engine.dimLimit = (5 * 60) * engine.refreshRate;
                     ProcessInput();
-                    ProcessObjects();
+                    // Update
+                    for (int i = 0; i < engine.logicUpCnt; ++i) {
+                        // do entity update events
+                        ProcessObjects();
+                    }
+
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
                     LoadAchievementAssets();
 #endif
@@ -316,15 +333,25 @@ void runRetroEngine()
             case ENGINESTATE_REGULAR:
                 ProcessInput();
                 ProcessSceneTimer();
-                ProcessObjects();
+                // Update
+                for (int i = 0; i < engine.logicUpCnt; ++i) {
+                    // do entity update events
+                    ProcessObjects();
+                }
+
                 ProcessParallaxAutoScroll();
                 for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_REGULAR)
                         break;
                     ProcessSceneTimer();
-                    ProcessObjects();
+                    // Update
+                    for (int i = 0; i < engine.logicUpCnt; ++i) {
+                        // do entity update events
+                        ProcessObjects();
+                    }
                     ProcessParallaxAutoScroll();
                 }
+
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
                 ProcessAchievements();
 #endif
@@ -332,12 +359,22 @@ void runRetroEngine()
                 break;
             case ENGINESTATE_PAUSED:
                 ProcessInput();
-                ProcessPausedObjects();
+                // Update
+                for (int i = 0; i < engine.logicUpCnt; ++i) {
+                    // do entity update events
+                    ProcessPausedObjects();
+                }
+
                 for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_PAUSED)
                         break;
-                    ProcessPausedObjects();
+                    // Update
+                    for (int i = 0; i < engine.logicUpCnt; ++i) {
+                        // do entity update events
+                        ProcessPausedObjects();
+                    }
                 }
+
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
                 ProcessAchievements();
 #endif
@@ -345,12 +382,22 @@ void runRetroEngine()
                 break;
             case ENGINESTATE_FROZEN:
                 ProcessInput();
-                ProcessFrozenObjects();
+                // Update
+                for (int i = 0; i < engine.logicUpCnt; ++i) {
+                    // do entity update events
+                    ProcessFrozenObjects();
+                }
+
                 for (int i = 1; i < engine.gameSpeed; ++i) {
                     if (sceneInfo.state != ENGINESTATE_FROZEN)
                         break;
-                    ProcessFrozenObjects();
+                    // Update
+                    for (int i = 0; i < engine.logicUpCnt; ++i) {
+                        // do entity update events
+                        ProcessFrozenObjects();
+                    }
                 }
+
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
                 ProcessAchievements();
 #endif
@@ -478,6 +525,7 @@ void runRetroEngine()
         }
 
         FlipScreen();
+        engine.logicUpCnt = 0;
     }
 
     // Shutdown
