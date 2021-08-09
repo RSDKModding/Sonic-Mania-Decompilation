@@ -323,7 +323,7 @@ void EggPrison_Activated(void)
     }
 
     EntityDebris *debris =
-        (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Unknkown, entity->position.x - 0x160000, entity->position.y);
+        (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_FallAndFlicker, entity->position.x - 0x160000, entity->position.y);
     RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 2);
     debris->velocity.x    = -0x20000;
     debris->velocity.y    = -0x20000;
@@ -334,7 +334,7 @@ void EggPrison_Activated(void)
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
 
-    debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Unknkown, entity->position.x, entity->position.y);
+    debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
     RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 3);
     debris->velocity.x    = 0;
     debris->velocity.y    = -0x30000;
@@ -345,7 +345,7 @@ void EggPrison_Activated(void)
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
 
-    debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Unknkown, entity->position.x + 0x160000, entity->position.y);
+    debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_FallAndFlicker, entity->position.x + 0x160000, entity->position.y);
     RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 4);
     debris->velocity.x    = 0x20000;
     debris->velocity.y    = -0x20000;

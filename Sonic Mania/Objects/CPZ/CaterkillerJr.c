@@ -203,7 +203,7 @@ void CaterkillerJr_State2(void)
         entity->position = entity->bodyStartPos[0];
         if (Player_CheckBadnikHit(player, entity, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
             for (int i = 0; i < 6; ++i) {
-                EntityDebris *debris  = CREATE_ENTITY(Debris, Debris_State_Unknkown, entity->bodyStartPos[i + 1].x, entity->bodyStartPos[i + 1].y);
+                EntityDebris *debris  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->bodyStartPos[i + 1].x, entity->bodyStartPos[i + 1].y);
                 debris->animator       = entity->bodyAnimators[i + 1];
                 debris->velocity.x = RSDK.Rand(-16, 16) << 14;
                 debris->velocity.y = RSDK.Rand(-8, 8) << 14;
