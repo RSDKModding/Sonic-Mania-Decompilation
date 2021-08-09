@@ -255,6 +255,13 @@ struct RetroEngine {
     int gameHeight         = SCREEN_YSIZE;
     int refreshRate        = 60;
 
+#if !RETRO_USE_ORIGINAL_CODE
+    float refreshRatio      = 0.0f;  // ratio between current refresh rate and the target refresh rate
+    float frameInter        = 0.0f;  // alpha between the last and next logic update
+    unsigned int logicUpCnt = 0;     // how many times to update game logic based on the two preceding variables
+    bool drawLock           = false; // if set, prevents entity draw calls from going through
+#endif
+
     //Image/Video support
     float displayTime;
     float imageDelta;
