@@ -4,7 +4,8 @@ ObjectDebris *Debris;
 
 void Debris_Update(void)
 {
-    EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Debris);
+
     if (entity->cooldown <= 0) {
         RSDK.ProcessAnimation(&entity->animator);
         StateMachine_Run(entity->state);
@@ -23,130 +24,107 @@ void Debris_Update(void)
             }
         }
     }
-    else {
+    else
         entity->cooldown--;
-    }
 }
 
-void Debris_LateUpdate(void)
-{
+void Debris_LateUpdate(void) {}
 
-}
-
-void Debris_StaticUpdate(void)
-{
-
-}
+void Debris_StaticUpdate(void) {}
 
 void Debris_Draw(void)
 {
-    EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Debris);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void Debris_Create(void* data)
+void Debris_Create(void *data)
 {
-    EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Debris);
+
     entity->active  = ACTIVE_NORMAL;
     entity->visible = true;
-    entity->state        = (void (*)(void))data;
+    entity->state   = (void (*)(void))data;
 }
 
-void Debris_StageLoad(void)
-{
-
-}
+void Debris_StageLoad(void) {}
 
 void Debris_State_Fall(void)
 {
-    EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    RSDK_THIS(Debris);
 
+    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += entity->gravity;
-    
+
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            destroyEntity(entity);
     }
     else {
         entity->timer--;
         if (!entity->timer)
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            destroyEntity(entity);
     }
 }
 
 void Debris_State_LightningSpark(void)
 {
-    EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Debris);
 
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
 
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            destroyEntity(entity);
     }
     else {
         entity->timer--;
         if (!entity->timer)
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            destroyEntity(entity);
     }
 }
 
-void Debris_State_Unknkown(void)
+void Debris_State_FallAndFlicker(void)
 {
-    EntityDebris *entity = (EntityDebris *)RSDK_sceneInfo->entity;
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    Debris_State_Fall(); // is this cheating
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += entity->gravity;
-
-    if (entity->timer <= 0) {
-        if (!RSDK.CheckOnScreen(entity, NULL))
-            RSDK.ResetEntityPtr(entity, 0, 0);
-    }
-    else {
-        entity->timer--;
-        if (!entity->timer)
-            RSDK.ResetEntityPtr(entity, 0, 0);
-    }
-
-    entity->visible = Zone->timer & 1;
+    RSDK_sceneInfo->entity->visible = Zone->timer & 1;
 }
 
-void Debris_Unknkown1(int spriteIndex, int *a2, int animationID) {
+void Debris_FallFlickerAnimSetup(int spriteIndex, int *entryPtr, int animationID)
+{
     Entity *entity = RSDK_sceneInfo->entity;
-    if (a2) {
-        int cnt = *a2;
-        //format:
-        //cnt
+    if (entryPtr) {
+        int cnt = *entryPtr;
+        // format:
+        // cnt
         //[for cnt entries]
-        //frame
-        //dir
-        //xvel
-        //yvel
-        for (int *entry = a2 + 1; cnt > 0; entity->drawFX = FX_FLIP) {
-            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x, entity->position.y);
+        // frame
+        // dir
+        // xvel
+        // yvel
+        entity->drawFX = FX_FLIP;
+        for (int *entry = entryPtr + 1; cnt > 0; entry += 4, --cnt) {
+            EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
             RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->animator, true, entry[0]);
-            debris->direction = entry[1];
-            debris->velocity.x         = entry[2];
-            debris->velocity.y         = entry[3];
-            debris->gravity            = 0x3800;
-            debris->drawOrder          = Zone->drawOrderHigh;
-            debris->updateRange.x      = 0x800000;
-            debris->updateRange.y      = 0x800000;
-            entry += 4;
-            --cnt;
+            debris->direction     = entry[1];
+            debris->velocity.x    = entry[2];
+            debris->velocity.y    = entry[3];
+            debris->gravity       = 0x3800;
+            debris->drawOrder     = Zone->drawOrderHigh;
+            debris->updateRange.x = 0x800000;
+            debris->updateRange.y = 0x800000;
         }
     }
 }
 
-void Debris_Unknkown2(int spriteIndex, int *a2)
+void Debris_FallFlickerSetup(int spriteIndex, int *entryPtr)
 {
     Entity *entity = RSDK_sceneInfo->entity;
-    if (a2) {
-        int cnt = *a2;
+    if (entryPtr) {
+        int cnt = *entryPtr;
         // format:
         // cnt
         //[for cnt entries]
@@ -156,9 +134,10 @@ void Debris_Unknkown2(int spriteIndex, int *a2)
         // yvel
         // xoffset
         // yoffset
-        for (int *entry = a2 + 1; cnt > 0; entity->drawFX = FX_FLIP) {
-            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, (void*)Debris_State_Unknkown, entity->position.x + entry[4],
-                                                                    entity->position.y + entry[5]);
+        entity->drawFX = FX_FLIP;
+        for (int *entry = entryPtr + 1; cnt > 0; entry += 6, --cnt) {
+            EntityDebris *debris =
+                CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x + entry[4], entity->position.y + entry[5]);
             RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
             debris->velocity.x    = entry[2];
@@ -167,24 +146,12 @@ void Debris_Unknkown2(int spriteIndex, int *a2)
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
-            entry += 6;
-            --cnt;
         }
     }
 }
 
-void Debris_EditorDraw(void)
-{
+void Debris_EditorDraw(void) {}
 
-}
+void Debris_EditorLoad(void) {}
 
-void Debris_EditorLoad(void)
-{
-
-}
-
-void Debris_Serialize(void)
-{
-
-}
-
+void Debris_Serialize(void) {}

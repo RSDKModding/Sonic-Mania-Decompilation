@@ -80,6 +80,20 @@ void CalculateTrigAngles()
             arcTan += 0x100;
         }
     }
+    /*int result = 0;
+    byte *v30  = atanVal256;
+    int v34    = 0;
+    do {
+        int v31   = 0;
+        float v32 = (float)result;
+        do {
+            long double v33 = atan2((float)v31, v32);
+            v32             = (float)result;
+            v30[v31++]      = (int)(float)((float)v33 * 40.743664);
+        } while (v31 < 256);
+        v30 += 256;
+        result = ++v34;
+    } while ((int)v30 < (int)&randKey);//*/
 }
 
 byte ArcTanLookup(int X, int Y)
@@ -101,9 +115,9 @@ byte ArcTanLookup(int X, int Y)
     }
     if (X <= 0) {
         if (Y <= 0)
-            return atanVal256[(x << 8) + y] + -0x80;
+            return atanVal256[(x << 8) + y] + 0x80;
         else
-            return -0x80 - atanVal256[(x << 8) + y];
+            return 0x80 - atanVal256[(x << 8) + y];
     }
     else if (Y <= 0)
         return -atanVal256[(x << 8) + y];
