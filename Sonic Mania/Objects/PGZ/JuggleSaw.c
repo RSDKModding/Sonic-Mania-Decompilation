@@ -291,7 +291,10 @@ void JuggleSaw_Crab_ThrowSaw(void)
                 sx = 0xE0000;
                 sy = 0x2C0000;
             }
-            if (entity->spawnDir >= 2u) {
+            saw->position.x += sx * ((entity->direction & FLIP_X) ? -1 : 1);
+            saw->position.y += sy * ((entity->direction & FLIP_Y) ? -1 : 1);
+
+            /*if (entity->spawnDir >= 2u) {
                 if ((entity->direction & FLIP_X) != 0)
                     saw->position.x -= 0xE0000;
                 else
@@ -310,11 +313,21 @@ void JuggleSaw_Crab_ThrowSaw(void)
                     saw->position.x -= 0x2C0000;
                 else
                     saw->position.x += 0x2C0000;
-            }
+            }//*/
             int recieverX   = reciever->position.x, targetX;
             int recieverY   = reciever->position.y, targetY;
             int recieverDir = reciever->direction, sawDir = 0;
-            if (reciever->spawnDir >= 2u) {
+            if (reciever->spawnDir >= FLIP_Y) {
+                targetX = recieverX + 0x220000 * ((recieverDir & FLIP_X) ? -1 : 1);
+                targetY = recieverY + 0x140000 * (reciever->spawnPos.y >= entity->spawnPos.y ? 1 : -1);
+                sawDir  = (recieverDir & FLIP_X) | (reciever->spawnPos.y >= entity->spawnPos.y ? FLIP_Y : 0);
+            }
+            else {
+                targetY = recieverY + 0x220000 * ((recieverDir & FLIP_Y) ? 1 : -1);
+                targetX = recieverX + 0x140000 * (reciever->spawnPos.x >= entity->spawnPos.x ? 1 : -1);
+                sawDir  = (recieverDir & FLIP_Y) | (reciever->spawnPos.x >= entity->spawnPos.x ? FLIP_X : 0);
+            }
+            /*if (reciever->spawnDir >= 2u) {
                 int v15 = recieverDir & FLIP_X;
                 if ((recieverDir & FLIP_X) != 0)
                     targetX = recieverX - 0x220000;
@@ -343,7 +356,8 @@ void JuggleSaw_Crab_ThrowSaw(void)
                 else {
                     targetX = recieverX - 0x140000;
                 }
-            }
+            }//*/
+
             saw->direction   = sawDir;
             int targetAngle  = RSDK.ATan2(targetX - saw->position.x, targetY - saw->position.y);
             saw->velocity.x  = entity->sawSpeed * RSDK.Cos256(targetAngle);
