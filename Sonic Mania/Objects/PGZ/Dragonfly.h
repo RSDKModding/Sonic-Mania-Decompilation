@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define Dragonfly_BodyCount (6)
+
 // Object Class
 typedef struct {
 	RSDK_OBJECT
@@ -13,17 +15,17 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
-	StateMachine(state);
-	byte dir;
-	byte dist;
-	byte speed;
-	Vector2 positions[6];
-	byte directions[6];
-	Vector2 spawnPos;
-	Animator animator;
-	Animator wingAnimator;
-	Animator bodyAnimator;
+    RSDK_ENTITY
+    StateMachine(state);
+    byte dir;
+    byte dist;
+    byte speed;
+    Vector2 positions[Dragonfly_BodyCount];
+    byte directions[Dragonfly_BodyCount];
+    Vector2 spawnPos;
+    Animator animator;
+    Animator wingAnimator;
+    Animator bodyAnimator;
 } EntityDragonfly;
 
 // Object Struct

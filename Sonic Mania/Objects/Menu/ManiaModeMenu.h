@@ -3,6 +3,7 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -49,6 +50,6 @@ void ManiaModeMenu_ReturnToTitle(void);
 void ManiaModeMenu_Unknown13(void);
 void ManiaModeMenu_Unknown3(void);
 void ManiaModeMenu_Unknown7(void);
-
+#endif
 
 #endif //!OBJ_MANIAMODEMENU_H

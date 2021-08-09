@@ -40,11 +40,11 @@ void InvincibleStars_Update(void)
         if (player->invincibleTimer < 32)
             entity->alpha = 8 * player->invincibleTimer;
         entity->drawOrder  = player->drawOrder;
-        entity->visible    = player->visible /*|| (player->state == Ice_StateFrozenPlayer)*/;
+        entity->visible    = player->visible || (player->state == Ice_State_FrozenPlayer);
         entity->starOffset = 11;
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 
@@ -73,13 +73,13 @@ void InvincibleStars_Draw(void)
     }
 
     Vector2 drawPos;
-    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1] + 116) << entity->starOffset) + entity->starPos[7].x;
-    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1] + 116) << entity->starOffset) + entity->starPos[7].y;
+    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].x;
+    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].y;
     entity->starsData[3].frameID = entity->starAngle[2];
     RSDK.DrawSprite(&entity->starsData[3], &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 372) << entity->starOffset) + entity->starPos[7].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 372) << entity->starOffset) + entity->starPos[7].y;
+    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].x;
+    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].y;
     entity->starsData[3].frameID += 6;
     RSDK.DrawSprite(&entity->starsData[3], &drawPos, 0);
 
@@ -88,18 +88,18 @@ void InvincibleStars_Draw(void)
     entity->starsData[2].frameID = entity->starAngle[2];
     RSDK.DrawSprite(&entity->starsData[2], &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 256) << entity->starOffset) + entity->starPos[5].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 256) << entity->starOffset) + entity->starPos[5].y;
+    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 0x100) << entity->starOffset) + entity->starPos[5].x;
+    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 0x100) << entity->starOffset) + entity->starPos[5].y;
     entity->starsData[2].frameID += 6;
     RSDK.DrawSprite(&entity->starsData[2], &drawPos, 0);
 
-    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1] + 168) << entity->starOffset) + entity->starPos[3].x;
-    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1] + 168) << entity->starOffset) + entity->starPos[3].y;
+    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1] + 0xA8) << entity->starOffset) + entity->starPos[3].x;
+    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1] + 0xA8) << entity->starOffset) + entity->starPos[3].y;
     entity->starsData[1].frameID = entity->starAngle[3];
     RSDK.DrawSprite(&entity->starsData[1], &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 424) << entity->starOffset) + entity->starPos[3].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 424) << entity->starOffset) + entity->starPos[3].y;
+    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 0x1A8) << entity->starOffset) + entity->starPos[3].x;
+    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 0x1A8) << entity->starOffset) + entity->starPos[3].y;
     entity->starsData[1].frameID += 5;
     RSDK.DrawSprite(&entity->starsData[1], &drawPos, 0);
 
@@ -108,8 +108,8 @@ void InvincibleStars_Draw(void)
     entity->starsData[0].frameID = entity->starAngle[2];
     RSDK.DrawSprite(entity->starsData, &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[0] + 256) << entity->starOffset) + entity->starPos[0].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[0] + 256) << entity->starOffset) + entity->starPos[0].y;
+    drawPos.x = (RSDK.Cos512(entity->starAngle[0] + 0x100) << entity->starOffset) + entity->starPos[0].x;
+    drawPos.y = (RSDK.Sin512(entity->starAngle[0] + 0x100) << entity->starOffset) + entity->starPos[0].y;
     RSDK.DrawSprite(entity->starsData, &drawPos, 0);
 }
 

@@ -190,7 +190,6 @@ void ManiaModeMenu_InitLocalization(int a1)
 int ManiaModeMenu_GetActiveMenu(void)
 {
     Entity *control = (Entity *)UIControl_GetUIControl();
-#if RETRO_USE_PLUS
     if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl || control == OptionsMenu->optionsControl
         || control == OptionsMenu->videoControl || control == OptionsMenu->soundControl || control == OptionsMenu->dataOptionsControl
         || control == OptionsMenu->controlsControl_Windows || control == OptionsMenu->controlsControl_KB
@@ -212,22 +211,6 @@ int ManiaModeMenu_GetActiveMenu(void)
     }
     if (control == ManiaModeMenu->encoreSaveSelect || control == ManiaModeMenu->noSaveMenuEncore)
         return 4;
-#else
-    if (control == MenuSetup->mainMenu || control == MenuSetup->extras || control == MenuSetup->options || control == MenuSetup->video
-        || control == MenuSetup->sound || control == MenuSetup->controls_win || control == MenuSetup->controls_KB
-        || control == MenuSetup->controls_PS4 || control == MenuSetup->controls_XB1 || control == MenuSetup->controls_NX
-        || control == MenuSetup->controls_NX_Grip || control == MenuSetup->controls_NX_JoyCon || control == MenuSetup->controls_NX_Pro) {
-        return 0;
-    }
-    if (control == MenuSetup->timeAttack || control == MenuSetup->timeAttackZones || control == MenuSetup->leaderboards
-        || control == MenuSetup->competition || control == MenuSetup->competitionRules || control == MenuSetup->competitionZones) {
-        return 1;
-    }
-    if (control == MenuSetup->competitionRound || control == MenuSetup->competitionTotal)
-        return 2;
-    if (control == MenuSetup->saveSelect || control == MenuSetup->noSaveMode || control == MenuSetup->secrets)
-        return 3;
-#endif
     return 0;
 }
 
@@ -264,9 +247,7 @@ void ManiaModeMenu_SetBGColours(void)
         case 1:
         case 2: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
         case 3: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
-#if RETRO_USE_PLUS
         case 4: UIBackground->activeColours = &UIBackground->bgColours[15]; break;
-#endif
         default: break;
     }
 }

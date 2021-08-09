@@ -6,6 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
+#if RETRO_USE_PLUS
     int field_4;
     int dword8;
     bool32 initialized;
@@ -13,6 +14,9 @@ typedef struct {
     bool32 gameLoaded;
     int dword18;
     EntityFXFade *fxFade;
+#else
+
+#endif
 } ObjectMenuSetup;
 
 // Entity Class

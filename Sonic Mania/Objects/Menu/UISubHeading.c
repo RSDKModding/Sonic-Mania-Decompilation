@@ -294,45 +294,27 @@ void UISubHeading_StartNewSave(void)
     RSDK_THIS(UISaveSlot);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
-#if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
-#else
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID);
-#endif
     TimeAttackData_ClearOptions();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->field_D8;
     param->field_168 = 0;
-#if RETRO_USE_PLUS
     globals->gameMode = entity->encoreMode != false;
-#else
-    globals->gameMode       = MODE_MANIA;
-#endif
 
     bool32 loadingSave = false;
     if (entity->type) {
         memset(globals->noSaveSlot, 0, 0x400);
         globals->continues  = 0;
         globals->saveSlotID = NO_SAVE_SLOT;
-#if !RETRO_USE_PLUS
-        globals->gameMode  = MODE_NOSAVE;
-        globals->medalMods = UISubHeading_GetMedalMods();
-#endif
     }
     else {
         globals->saveSlotID = entity->slotID;
         globals->medalMods  = 0;
         if (entity->isNewSave) {
-#if RETRO_USE_PLUS
             int *saveData = SaveGame_GetDataPtr(entity->slotID % 8, entity->encoreMode);
-#else
-            int *saveData = SaveGame_GetDataPtr(entity->slotID % 8);
-#endif
 
             memset(saveData, 0, 0x400);
-#if RETRO_USE_PLUS
             if (globals->gameMode != MODE_ENCORE)
-#endif
                 saveRAM->saveState = 1;
             saveRAM->characterID   = entity->frameID;
             saveRAM->zoneID        = 0;
@@ -354,7 +336,6 @@ void UISubHeading_StartNewSave(void)
         }
     }
 
-#if RETRO_USE_PLUS
     if (entity->encoreMode) {
         globals->medalMods = getMod(MEDAL_NOTIMEOVER);
         saveRAM->medalMods = globals->medalMods;
@@ -362,16 +343,13 @@ void UISubHeading_StartNewSave(void)
     else {
         globals->medalMods = UISubHeading_GetMedalMods();
         saveRAM->medalMods = globals->medalMods;
-#endif
         switch (entity->frameID) {
             case 0:
             case 1: globals->playerID = ID_SONIC; break;
             case 2: globals->playerID = ID_TAILS; break;
             case 3: globals->playerID = ID_KNUCKLES; break;
-#if RETRO_USE_PLUS
             case 4: globals->playerID = ID_MIGHTY; break;
             case 5: globals->playerID = ID_RAY; break;
-#endif
             default: break;
         }
 
@@ -381,12 +359,9 @@ void UISubHeading_StartNewSave(void)
         else if (!entity->frameID) {
             globals->playerID |= ID_TAILS_ASSIST;
         }
-#if RETRO_USE_PLUS
     }
-#endif
 
     if (entity->type == 1 || entity->isNewSave) {
-#if RETRO_USE_PLUS
         if (entity->encoreMode) {
             globals->playerID          = ID_SONIC;
             globals->stock             = 0;
@@ -395,16 +370,13 @@ void UISubHeading_StartNewSave(void)
             globals->suppressTitlecard = true;
             RSDK.LoadScene("Cutscenes", "Angel Island Zone Encore");
         }
-        else
-#endif
-            if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
+        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
             RSDK.LoadScene("Presentation", "Level Select");
         }
         else {
             RSDK.LoadScene("Cutscenes", "Angel Island Zone");
         }
     }
-#if RETRO_USE_PLUS
     else if (entity->encoreMode) {
         globals->playerID       = saveRAM->playerID;
         globals->stock          = saveRAM->stock;
@@ -412,7 +384,6 @@ void UISubHeading_StartNewSave(void)
         RSDK.LoadScene("Encore Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
     }
-#endif
     else {
         RSDK.LoadScene("Mania Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);

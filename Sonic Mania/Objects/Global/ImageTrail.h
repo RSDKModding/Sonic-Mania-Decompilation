@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 //Extras lol
-#define ImageTrail_trackCount 7
+#define ImageTrail_TrackCount (7)
 
 // Object Class
 typedef struct {
@@ -17,17 +17,17 @@ typedef struct {
     Entity *player;
     int playerObjID;
     Vector2 currentPos;
-    Vector2 statePos[ImageTrail_trackCount];
+    Vector2 statePos[ImageTrail_TrackCount];
     int currentRotation;
-    int stateRotation[ImageTrail_trackCount];
+    int stateRotation[ImageTrail_TrackCount];
     byte currentDirection;
-    byte stateDirection[ImageTrail_trackCount];
+    byte stateDirection[ImageTrail_TrackCount];
     byte currentVisible;
-    byte stateVisible[ImageTrail_trackCount];
+    byte stateVisible[ImageTrail_TrackCount];
     int currentScale;
-    int stateScale[ImageTrail_trackCount];
+    int stateScale[ImageTrail_TrackCount];
     Animator currentAnimData;
-    Animator stateAnim[ImageTrail_trackCount];
+    Animator stateAnim[ImageTrail_TrackCount];
     int baseAlpha;
     int fadeoutTimer;
 } EntityImageTrail;

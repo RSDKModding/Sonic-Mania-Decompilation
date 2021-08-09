@@ -24,18 +24,16 @@ void ImageTrail_LateUpdate(void)
                 if (player->speedShoesTimer < 32) {
                     entity->baseAlpha = player->speedShoesTimer;
                     entity->baseAlpha *= 8;
-                    if (entity->baseAlpha == 0) {
-                        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
-                    }
+                    if (entity->baseAlpha == 0)
+                        destroyEntity(entity);
                 }
             }
             else {
                 entity->fadeoutTimer--;
                 entity->baseAlpha = 0x10;
                 entity->baseAlpha *= entity->fadeoutTimer;
-                if (entity->baseAlpha == 0) {
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
-                }
+                if (entity->baseAlpha == 0)
+                    destroyEntity(entity);
             }
 #if RETRO_USE_PLUS
         }
@@ -43,7 +41,7 @@ void ImageTrail_LateUpdate(void)
     }
 
     // Update recordings
-    for (int i = ImageTrail_trackCount - 1; i > 0; --i) {
+    for (int i = ImageTrail_TrackCount - 1; i > 0; --i) {
         entity->statePos[i].x     = entity->statePos[i - 1].x;
         entity->statePos[i].y     = entity->statePos[i - 1].y;
         entity->stateRotation[i]  = entity->stateRotation[i - 1];
@@ -87,8 +85,11 @@ void ImageTrail_StaticUpdate(void) {}
 void ImageTrail_Draw(void)
 {
     RSDK_THIS(ImageTrail);
-    int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
-    for (int i = 2; i >= 0; --i) {
+    //int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
+    int alpha = 0x60 * entity->baseAlpha >> 8;
+    int inc      = 0x40 / (ImageTrail_TrackCount / 3);
+
+    for (int i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
         int id = (i * 3) - (i - 1);
         if (entity->stateVisible[id]) {
             if (entity->stateScale[id] != 0x200) {
@@ -96,7 +97,8 @@ void ImageTrail_Draw(void)
                 entity->scale.x = entity->stateScale[id];
                 entity->scale.y = entity->stateScale[id];
             }
-            entity->alpha     = alpha[i];
+            entity->alpha     = alpha;
+            alpha += inc;
             entity->rotation  = entity->stateRotation[id];
             entity->direction = entity->stateDirection[id];
             RSDK.DrawSprite(&entity->stateAnim[id], &entity->statePos[id], 0);
@@ -118,7 +120,7 @@ void ImageTrail_Create(void *data)
         entity->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;
         entity->inkEffect    = INK_ALPHA;
 
-        for (int i = ImageTrail_trackCount - 1; i >= 0; --i) {
+        for (int i = ImageTrail_TrackCount - 1; i >= 0; --i) {
             entity->statePos[i].x     = player->position.x;
             entity->statePos[i].y     = player->position.y;
             entity->stateRotation[i]  = player->rotation;

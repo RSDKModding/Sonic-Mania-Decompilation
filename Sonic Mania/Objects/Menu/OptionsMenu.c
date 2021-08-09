@@ -296,10 +296,10 @@ void OptionsMenu_Unknown3(void)
         hitbox.left   = -(soundControl->size.x >> 17);
         hitbox.bottom = soundControl->size.y >> 17;
         hitbox.top    = -(soundControl->size.y >> 17);
-        // if (MathHelpers_PointInHitbox(FLIP_NONE, soundControl->startPos.x - soundControl->cameraOffset.x,
-        //                              soundControl->startPos.y - soundControl->cameraOffset.y, &hitbox, slider->position.x, slider->position.y)
-        //    && slider->listID == 5)
-        //    slider->field_138 = OptionsMenu_Unknown37;
+        if (MathHelpers_PointInHitbox(FLIP_NONE, soundControl->startPos.x - soundControl->cameraOffset.x,
+                                      soundControl->startPos.y - soundControl->cameraOffset.y, &hitbox, slider->position.x, slider->position.y)
+            && slider->listID == 5)
+            slider->sliderChangedCB = OptionsMenu_UISlider_ChangedCB;
     }
 
     optionsControl->unknownCallback3 = OptionsMenu_Unknown25;
@@ -725,54 +725,53 @@ void OptionsMenu_Unknown36(void)
     Options->state = 1;
 }
 
-void OptionsMenu_Unknown37(void)
+void OptionsMenu_UISlider_ChangedCB(void)
 {
     RSDK_THIS(UISlider);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    /*v2 = RSDK_sceneInfo->entity->field_128;
-    switch (RSDK_sceneInfo->entity->size.y != 1) {
+    switch (entity->frameID != 1) {
         case 0xF1:
-            options->windowed = v2;
-            RSDK.SetSettingsValue(SETTINGS_WINDOWED, v2);
+            options->windowed = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
             Options->state = 1;
             break;
         case 0xF2:
-            options->bordered = v2;
-            RSDK.SetSettingsValue(SETTINGS_BORDERED, v2);
+            options->windowBorder = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
             Options->state = 1;
             break;
         case 0xF4:
-            options->vSync = v2;
-            RSDK.SetSettingsValue(SETTINGS_VSYNC, v2);
+            options->vSync = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
             Options->state = 1;
             break;
         case 0xF5:
-            options->tripleBuffered = v2;
-            RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, v2);
+            options->tripleBuffering = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
             Options->state = 1;
             break;
         case 0xFC:
-            options->screenShader = v2;
+            options->screenShader = entity->sliderPos;
             options->field_60   = true;
-            RSDK.SetSettingsValue(SETTINGS_SHADERID, v2);
+            RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
             RSDK.SetSettingsValue(SETTINGS_CHANGED, 0);
             Options->state = 1;
             break;
         case 0:
-            options->volMusic = v2;
+            options->volMusic = entity->sliderPos;
             options->field_68   = 1;
-            RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, v2);
+            RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
             Options->state = 1;
             break;
         case 1:
-            options->volSfx = v2;
+            options->volSfx   = entity->sliderPos;
             options->field_70   = true;
-            RSDK.SetSettingsValue(SETTINGS_SFX_VOL, v2);
+            RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
             Options->state = 1;
             break;
         default: Options->state = 1; break;
-    }*/
+    }
 }
 
 void OptionsMenu_ShowManual(void)

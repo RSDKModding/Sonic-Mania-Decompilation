@@ -82,7 +82,7 @@ void OptionsMenu_Unknown33(void);
 void OptionsMenu_Unknown34(void);
 void OptionsMenu_Unknown35(void);
 void OptionsMenu_Unknown36(void);
-void OptionsMenu_Unknown37(void);
+void OptionsMenu_UISlider_ChangedCB(void);
 void OptionsMenu_ShowManual(void);
 void OptionsMenu_EraseSaveDataCB(int status);
 void OptionsMenu_EraseAllSaveData(void);

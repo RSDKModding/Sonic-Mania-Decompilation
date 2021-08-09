@@ -19,7 +19,7 @@ void Dragonfly_Draw(void)
         RSDK.DrawSprite(&entity->animator, 0, false);
     }
     else {
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < Dragonfly_BodyCount; ++i) {
             entity->bodyAnimator.frameID = i == 0;
             entity->direction         = entity->directions[i];
             RSDK.DrawSprite(&entity->bodyAnimator, &entity->positions[i], false);
@@ -35,7 +35,7 @@ void Dragonfly_Draw(void)
 void Dragonfly_Create(void *data)
 {
     RSDK_THIS(Dragonfly);
-    entity->visible   = 1;
+    entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
 
     if (RSDK_sceneInfo->inEditor)
@@ -44,7 +44,7 @@ void Dragonfly_Create(void *data)
         entity->dist  = 0x40;
         entity->speed = 0x04;
     }
-    entity->drawFX |= INK_BLEND;
+    entity->drawFX |= FX_FLIP;
     if (data) {
         entity->active        = ACTIVE_NORMAL;
         entity->updateRange.x = 0x100000;
@@ -119,18 +119,18 @@ void Dragonfly_Collide(void)
     foreach_active(Player, player) {
         if (Player_CheckBadnikHit(player, entity, &Dragonfly->hurtbox)) {
             if (Player_CheckBadnikBreak(entity, player, false)) {
-                for (int i = 0; i < 6; ++i) {
+                for (int i = 0; i < Dragonfly_BodyCount; ++i) {
                     EntityDragonfly *child = CREATE_ENTITY(Dragonfly, intToVoid(1), entity->positions[i].x, entity->positions[i].y); 
                     child->animator.frameID = i == 0;
                     child->velocity.x        = RSDK.Rand(-4, 4) << 15;
                     child->velocity.y        = RSDK.Rand(-5, 1) << 15;
                 }
-                RSDK.ResetEntityPtr(entity, 0, 0);
+                destroyEntity(entity);
             }
         }
         else {
             Vector2 oldpos = entity->position;
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < Dragonfly_BodyCount; ++i) {
                 entity->position = entity->positions[i];
                 if (Player_CheckCollisionTouch(player, entity, &Dragonfly->hitbox))
                     Player_CheckHit(player, entity);
@@ -162,13 +162,14 @@ void Dragonfly_DefaultState(void)
     entity->angle += entity->speed;
     entity->position.x = 0xC00 * RSDK.Cos256(entity->angle + 0x40) + entity->spawnPos.x;
     entity->position.y = (entity->dist << 6) * RSDK.Sin1024(entity->angle) + entity->spawnPos.y;
-    int currentAngle   = entity->angle - 90;
+    int currentAngle   = entity->angle - (((Dragonfly_BodyCount * 13) + 13) - 1);
 
-    for (int i = 0; i < 6; ++i, currentAngle += 13) {
-        entity->directions[i] = ((currentAngle + 0x100) & 0x3FFu) < 0x200 ? 2 : 0;
+    for (int i = 0; i < Dragonfly_BodyCount; ++i) {
+        entity->directions[i] = ((currentAngle + 0x100) & 0x3FF) < 0x200 ? 2 : 0;
 
         entity->positions[i].x = 0xC00 * RSDK.Cos256(currentAngle + 0x40) + entity->spawnPos.x;
         entity->positions[i].y = (entity->dist << 6) * RSDK.Sin1024(currentAngle) + entity->spawnPos.y;
+        currentAngle += 13;
     }
 
     bool32 dir = ((entity->angle + 0x100) & 0x3FF) < 0x200;
