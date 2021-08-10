@@ -115,7 +115,6 @@ void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
 
 void BoundsMarker_EditorDraw(void)
 {
-    RSDK_THIS(BoundsMarker);
     Animator animator;
     RSDK.SetSpriteAnimation(BoundsMarker->spriteIndex, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, 0);

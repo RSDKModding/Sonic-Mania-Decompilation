@@ -290,7 +290,7 @@ void BSS_Player_ProcessP1Input(void)
 void BSS_Player_ProcessP2Input(void)
 {
     RSDK_THIS(BSS_Player);
-    EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
+    //EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     BSS_Player->jumpPressState <<= 1;
     BSS_Player->jumpPressState |= entity->jumpPress;
     BSS_Player->jumpPressState &= 0xFFFF;

@@ -22,7 +22,7 @@ void UFO_Plasma_Draw(void)
         scanlinePtr->deform.x   = scanline->deform.x;
         scanlinePtr->deform.y   = 0;
 
-        ScanlineInfo *data = (ScanlineInfo *)&Smog->scanlineData[defPos * sizeof(ScanlineInfo)];
+        ScanlineInfo *data = (ScanlineInfo *)&UFO_Plasma->scanlineData[defPos * sizeof(ScanlineInfo)];
         y += data->deform.y;
         ++scanlinePtr;
     }

@@ -55,7 +55,6 @@ void LinkGameLogicDLL(GameInfo *info)
 #endif
     RSDK_screens = info->screenInfo;
     RSDK.InitGlobalVariables((void **)&globals, sizeof(GlobalVariables));
-    int offset = offsetof(GlobalVariables, superMusicEnabled) / sizeof(int);
 
     defaultHitbox.left   = -10;
     defaultHitbox.top    = -20;

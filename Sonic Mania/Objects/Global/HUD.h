@@ -8,13 +8,13 @@ typedef struct {
     RSDK_OBJECT
     ushort hudMappings;
     ushort superButtonMappings;
-    ushort sfx_Click;
-    ushort sfx_Starpost;
+    ushort sfxClick;
+    ushort sfxStarpost;
     int dwordC;
     int replaySaveEnabled;
     int compSession[4];
-    int field_24;
-    int field_28[PLAYER_MAX];
+    int swapCooldown;
+    int stockFlashTimers[PLAYER_MAX];
 } ObjectHUD;
 
 // Entity Class

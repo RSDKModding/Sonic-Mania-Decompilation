@@ -21,7 +21,7 @@ void CorkscrewPath_Update(void)
                     entity->activePlayers &= ~RSDK.GetEntityID(player);
                 }
                 else {
-                    if (abs(player->groundVel) <= 0x40000 || player->velocity.y <= -0x40000) {
+                    if (abs(player->groundVel) <= 0x40000 || player->velocity.y <= -0x40000 || !player->groundedStore) {
                         entity->activePlayers &= ~RSDK.GetEntityID(player);
                     }
                     else {

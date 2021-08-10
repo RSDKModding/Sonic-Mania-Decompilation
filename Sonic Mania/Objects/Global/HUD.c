@@ -107,10 +107,10 @@ void HUD_Draw(void)
         pos[2].y = entity->dword5C[2].y;
         pos[3].x = entity->dword5C[3].x;
         pos[3].y = entity->dword5C[3].y;
-        if (HUD->field_24 > 0) {
+        if (HUD->swapCooldown > 0) {
             RSDK.ProcessAnimation(&entity->playerIDData);
             RSDK.DrawSprite(&entity->playerIDData, &player->position, 0);
-            --HUD->field_24;
+            --HUD->swapCooldown;
         }
     }
 
@@ -255,8 +255,8 @@ void HUD_Draw(void)
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
         for (int p = 0; p < PLAYER_MAX; ++p) {
-            if (HUD->field_28[0] > 0)
-                HUD->field_28[0]--;
+            if (HUD->stockFlashTimers[0] > 0)
+                HUD->stockFlashTimers[0]--;
         }
 
         lifePos.x += 0x140000;
@@ -266,7 +266,7 @@ void HUD_Draw(void)
             int id     = -1;
             for (id = -1; charID > 0; ++id) charID >>= 1;
             entity->lifeIconsData.frameID = id;
-            if (id >= 0 && !(HUD->field_28[0] & 4)) {
+            if (id >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
                 if (sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown
                     && (sidekick->state != Player_State_Unknown || !sidekick->maxGlideSpeed)) {
                     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
@@ -285,7 +285,7 @@ void HUD_Draw(void)
                     } while (stock > 0);
                 }
                 entity->lifeIconsData.frameID = id;
-                if (id >= 0 && !(HUD->field_28[i + 1] & 4))
+                if (id >= 0 && !(HUD->stockFlashTimers[i + 1] & 4))
                     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
 
                 lifePos.x += 0x100000;
@@ -411,8 +411,8 @@ void HUD_StageLoad(void)
 {
     HUD->hudMappings         = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
     HUD->superButtonMappings = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
-    HUD->sfx_Click           = RSDK.GetSFX("Stage/Click.wav");
-    HUD->sfx_Starpost        = RSDK.GetSFX("Global/StarPost.wav");
+    HUD->sfxClick            = RSDK.GetSFX("Stage/Click.wav");
+    HUD->sfxStarpost         = RSDK.GetSFX("Global/StarPost.wav");
     HUD->dwordC                       = 0;
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

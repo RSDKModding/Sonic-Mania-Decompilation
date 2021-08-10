@@ -560,11 +560,14 @@ void ItemBox_GivePowerup(void)
                 else {
                     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                    playerIDs[0]          = 0xFF;
-                    for (int i = player1->characterID; i > 0; ++playerIDs[0]) i >>= 1;
+                    
+                    int charID = 0x00;
+                    for (int i = player1->characterID; i > 0; ++charID) i >>= 1;
+                    playerIDs[0]          = charID;
 
-                    playerIDs[1] = 0xFF;
-                    for (int i = player2->characterID; i > 0; ++playerIDs[1]) i >>= 1;
+                    charID = 0x00;
+                    for (int i = player2->characterID; i > 0; ++charID) i >>= 1;
+                    playerIDs[1] = charID;
 
                     if (playerIDs[1] == 0xFF) {
                         RSDK.PlaySFX(Player->sfx_SwapFail, false, 255);
@@ -584,11 +587,11 @@ void ItemBox_GivePowerup(void)
 
                         int tempStock = 0;
                         int p     = 0;
-                        for (; p < 3; ++p) {
+                        for (; p < 5; ++p) {
                             if (playerIDs[p] == 0xFF)
                                 break;
 
-                            newPlayerIDs[p] = RSDK.Rand(0, 5);
+                            newPlayerIDs[p] = RSDK.Rand(1, 5);
                             if ((1 << newPlayerIDs[p]) & globals->characterFlags) {
                                 if (newPlayerIDs[p] != playerIDs[p]) {
                                     tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
@@ -602,9 +605,9 @@ void ItemBox_GivePowerup(void)
                                     tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
                                 }
                                 else {
-                                    newPlayerIDs[p] = RSDK.Rand(0, 5);
+                                    newPlayerIDs[p] = RSDK.Rand(1, 5);
                                     if (((1 << newPlayerIDs[p]) & globals->characterFlags)) {
-                                        int slot           = RSDK.Rand(0, p);
+                                        int slot           = RSDK.Rand(1, p);
                                         int id             = newPlayerIDs[slot];
                                         newPlayerIDs[slot] = newPlayerIDs[p];
                                         newPlayerIDs[p]    = id;
@@ -616,7 +619,7 @@ void ItemBox_GivePowerup(void)
                         }
 
                         for (int i = 0; i < p; ++i) {
-                            switch (p) {
+                            switch (i) {
                                 case 0: Player_ChangeCharacter(player1, 1 << newPlayerIDs[0]); break;
                                 case 1: Player_ChangeCharacter(player2, 1 << newPlayerIDs[1]); break;
                                 default:
@@ -651,13 +654,10 @@ void ItemBox_GivePowerup(void)
                             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                             if (player2->objectID) {
                                 int id = 0;
-                                if (globals->stock) {
-                                    do
-                                        id += 8;
-                                    while (globals->stock >> id);
-                                }
+                                while ((globals->stock >> id) & 0xFF)
+                                    id += 8;
                                 globals->stock |= (1 << entity->contentsData.frameID << id);
-                                HUD->field_28[id >> 3] = 120;
+                                HUD->stockFlashTimers[id >> 3] = 120;
                             }
                             else {
                                 player2->objectID = Player->objectID;
@@ -723,7 +723,7 @@ void ItemBox_GivePowerup(void)
                                     player2->sidekick        = true;
                                     player2->drawFX          = FX_FLIP | FX_ROTATE;
                                     player2->visible          = true;
-                                    HUD->field_28[0]          = 120;
+                                    HUD->stockFlashTimers[0]  = 120;
                                 }
                             }
                         }

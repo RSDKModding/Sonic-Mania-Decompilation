@@ -3100,7 +3100,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         Player_CheckGoSuper(entity, 255);
     globals->playerID = entity->characterID + (sidekick->characterID << 8);
     RSDK.PlaySFX(Player->sfx_Swap, 0, 255);
-    HUD->field_24 = 60;
+    HUD->swapCooldown = 60;
     return true;
 }
 #endif
@@ -6326,7 +6326,7 @@ void Player_ProcessP1Input(void)
                 if (RSDK_touchMouse->down[t]) {
                     if (tx >= RSDK_screens->width - 0x100 && ty >= 0 && tx <= RSDK_screens->width - 0x80 && ty <= 0x40) {
                         if (globals->gameMode == MODE_ENCORE) {
-                            if (!HUD->field_24 && Player_CheckValidState(entity)) {
+                            if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
                                 if (Player_SwapMainPlayer(false)) {
                                     return;
                                 }
@@ -6382,7 +6382,7 @@ void Player_ProcessP1Input(void)
             }
 
             if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
-                if (!HUD->field_24 && Player_CheckValidState(entity)) {
+                if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
                     if (Player_SwapMainPlayer(false)) {
                         return;
                     }
