@@ -194,8 +194,8 @@ void HUD_Draw(void)
             lifePos.x -= 0x140000;
             bool32 flag = true;
 #if RETRO_USE_PLUS
-            if (Player->field_A6C)
-                flag = Player->field_A6C(1);
+            if (Player->canSuper)
+                flag = Player->canSuper(1);
 #endif
             if (player->state == Player_State_Air && player->jumpAbilityTimer == 1 && flag) {
                 RSDK.DrawSprite(&entity->superButtonData1, &lifePos, true);

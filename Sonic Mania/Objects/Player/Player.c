@@ -1105,8 +1105,8 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
     //}
 
 #if RETRO_USE_PLUS
-    if (Player->field_A6C) {
-        if (!Player->field_A6C(0))
+    if (Player->canSuper) {
+        if (!Player->canSuper(0))
             return 0;
     }
 #endif

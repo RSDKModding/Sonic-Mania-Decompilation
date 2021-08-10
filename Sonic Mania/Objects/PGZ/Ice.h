@@ -130,11 +130,11 @@ void Ice_Unknown13(void);
 void Ice_Unknown14(void);
 void Ice_Unknown15(void);
 void Ice_Unknown16(void);
-void Ice_Unknown17(void);
+void Ice_ShatterState(void);
 
 void Ice_StateDraw_Unknown1(void);
 void Ice_StateDraw_Unknown2(void);
 void Ice_StateDraw_Unknown3(void);
-void Ice_StateDraw_Unknown4(void);
+void Ice_StateDraw_Shatter(void);
 
 #endif //! OBJ_ICE_H

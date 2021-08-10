@@ -31,12 +31,12 @@ void Crate_EditorLoad(void);
 void Crate_Serialize(void);
 
 // Extra Entity Functions
-void Crate_Unknown1(void *e);
-void Crate_Unknown2(void *e, int offset);
-bool32 Crate_Unknown3(void);
-void Crate_Unknown4(void);
-void Crate_Unknown5(void);
-void Crate_Unknown6(void);
-void Crate_Unknown7(void);
+void Crate_Break(EntityCrate *entity);
+void Crate_MoveY(EntityCrate *entity, int offset);
+bool32 Crate_Collide(void);
+void Crate_Null1(void);
+void Crate_Null2(void);
+void Crate_WaitToFall(void);
+void Crate_Fall(void);
 
 #endif //!OBJ_CRATE_H

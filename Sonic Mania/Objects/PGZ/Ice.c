@@ -56,8 +56,8 @@ void Ice_Create(void *data)
                 entity->updateRange.x = 0x400000;
                 entity->updateRange.y = 0x400000;
                 RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_SHARD, &entity->animator1, true, 0);
-                entity->state     = Ice_Unknown17;
-                entity->stateDraw = Ice_StateDraw_Unknown4;
+                entity->state     = Ice_ShatterState;
+                entity->stateDraw = Ice_StateDraw_Shatter;
             }
             else {
                 entity->hitbox1.left   = -24;
@@ -1103,7 +1103,7 @@ void Ice_Unknown16(void)
         entity->timer--;
 }
 
-void Ice_Unknown17(void)
+void Ice_ShatterState(void)
 {
     RSDK_THIS(Ice);
     RSDK.ProcessAnimation(&entity->animator1);
@@ -1195,7 +1195,7 @@ void Ice_StateDraw_Unknown3(void)
     entity->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_Unknown4(void)
+void Ice_StateDraw_Shatter(void)
 {
     RSDK_THIS(Ice);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
