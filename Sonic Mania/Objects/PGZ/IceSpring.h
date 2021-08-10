@@ -6,11 +6,25 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	ushort animID;
+	ushort bounceSFX;
+	ushort shatterSFX;
+	Animator animators[4];
 } ObjectIceSpring;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int type;
+    int flipFlag;
+    byte planeFilter;
+    int basetimer;
+    Animator animator;
+    Hitbox hitbox;
+	//END SPRING INHERITANCE
+    int timer;
+    byte playerBits;
 } EntityIceSpring;
 
 // Object Struct
@@ -28,6 +42,6 @@ void IceSpring_EditorLoad(void);
 void IceSpring_Serialize(void);
 
 // Extra Entity Functions
-
+void IceSpring_Shatter(int velX, int velY);
 
 #endif //!OBJ_ICESPRING_H

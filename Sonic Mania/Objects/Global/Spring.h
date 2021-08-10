@@ -17,9 +17,6 @@ typedef struct {
     int type;
     int flipFlag;
     byte planeFilter;
-    char gap65;
-    char field_66;
-    char field_67;
     int timer;
     Animator animator;
     Hitbox hitbox;
