@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4[17]; //= { 4, 0, 0, -131072, -163840, 1, 0, 131072, -163840, 2, 0, -163840, -131072, 3, 0, 163840, -131072 };
-    int field_48[13]; //= { 3, 4, 0, 0, -131072, 5, 0, -163840, -131072, 5, 1, 163840, -131072 };
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
-    int field_8C;
+    int debrisInfo1[17]; //= { 4, 0, 0, -131072, -163840, 1, 0, 131072, -163840, 2, 0, -163840, -131072, 3, 0, 163840, -131072 };
+    int debrisInfo2[13]; //= { 3, 4, 0, 0, -131072, 5, 0, -163840, -131072, 5, 1, 163840, -131072 };
+    int arenaLeft;
+    int arenaRight;
+    int startX;
+    int arenaTop;
+    int arenaBottom;
     ushort sfxHit;
     ushort sfxExplosion;
     ushort sfxGather;
@@ -29,16 +29,15 @@ typedef struct {
     StateMachine(stateDraw);
     int type;
     int timer;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
-    Entity *field_88[8];
-    int field_A8;
+    int invincibleTimer;
+    int health;
+    int partAngle2;
+    int partAngle;
+    int partOffset;
+    int partPos;
+    Vector2 offsetPos;
+    Entity *parts[8];
+    Entity *parent;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -60,6 +59,33 @@ void AmoebaDroid_EditorLoad(void);
 void AmoebaDroid_Serialize(void);
 
 // Extra Entity Functions
+void AmoebaDroid_HandleDropletMovement(void);
+void AmoebaDroid_HandleDropletRelease(bool32 interact);
 
+void AmoebaDroid_CheckHit(void);
+void AmoebaDroid_CheckPlayerHit(void);
+
+void AmoebaDroid_StateDrawMain_Unknown1(void);
+void AmoebaDroid_StateDraw1_Unknown1(void);
+
+void AmoebaDroid_StateMain_Setup(void);
+void AmoebaDroid_StateMain_SetupWaterLevel(void);
+void AmoebaDroid_StateMain_Unknown1(void);
+void AmoebaDroid_StateMain_Unknown2(void);
+void AmoebaDroid_StateMain_Unknown3(void);
+void AmoebaDroid_StateMain_Unknown4(void);
+void AmoebaDroid_StateMain_Unknown5(void);
+void AmoebaDroid_StateMain_Unknown6(void);
+void AmoebaDroid_StateMain_Unknown7(void);
+void AmoebaDroid_StateMain_Unknown8(void);
+void AmoebaDroid_StateMain_Unknown9(void);
+void AmoebaDroid_StateMain_Unknown10(void);
+void AmoebaDroid_State1_Unknown1(void);
+void AmoebaDroid_State2_Unknown1(void);
+void AmoebaDroid_State2_Unknown2(void);
+void AmoebaDroid_State4_Unknown1(void);
+void AmoebaDroid_State3_Unknown1(void);
+void AmoebaDroid_StateMain_Death(void);
+void AmoebaDroid_StateMain_SpawnSignpost(void);
 
 #endif //!OBJ_AMOEBADROID_H

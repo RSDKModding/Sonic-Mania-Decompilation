@@ -38,10 +38,10 @@ void Crate_Create(void *data)
     entity->frameID = frameID;
 
     if (!RSDK_sceneInfo->inEditor) {
-        entity->hitbox.left   = -0x18;
-        entity->hitbox.top    = -0x17;
-        entity->hitbox.right  = 0x18;
-        entity->hitbox.bottom = 0x18;
+        entity->hitbox.left   = -24;
+        entity->hitbox.top    = -24;
+        entity->hitbox.right  = 24;
+        entity->hitbox.bottom = 24;
         entity->active        = ACTIVE_XBOUNDS;
         entity->drawFX        = FX_SCALE | FX_FLIP;
         entity->scale.x       = 0x200;
