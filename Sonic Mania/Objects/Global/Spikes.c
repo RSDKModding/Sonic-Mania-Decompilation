@@ -69,7 +69,7 @@ void Spikes_Update(void)
                     byte side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     if (side) {
                         if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !entity->field_7E) {
-                            Ice_Unknown6(16, 8, 16, 0, 0, 0);
+                            Ice_ShatterGenerator(16,  16,  8,  0,  0,  0);
                             entity->field_7E = 15;
                         }
 
@@ -136,7 +136,7 @@ void Spikes_Update(void)
 
                         if (flag) {
                             RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
-                            Ice_Unknown6(16, 16, 16, 0, 0, 0);
+                            Ice_ShatterGenerator(16,  16,  16,  0,  0,  0);
                             destroyEntity(entity);
                         }
                     }
@@ -422,7 +422,7 @@ void Spikes_Unknown1(int velX, int velY)
 {
     RSDK_THIS(Spikes);
     RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
-    Ice_Unknown6(16, 16, 16, velX, velY, 0);
+    Ice_ShatterGenerator(16,  16,  16,  velX,  velY,  0);
     destroyEntity(entity);
 }
 void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
