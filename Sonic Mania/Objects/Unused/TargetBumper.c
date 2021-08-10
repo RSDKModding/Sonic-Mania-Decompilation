@@ -58,20 +58,20 @@ void TargetBumper_Unknown3(void)
     Hitbox hitbox;
     switch (entity->type) {
         case 0:
-            hitbox.left   = -14;
-            hitbox.top    = -48;
-            hitbox.right  = 14;
-            hitbox.bottom = 64;
-            break;
-        case 1:
             hitbox.left   = -4;
-            hitbox.top    = -208;
+            hitbox.top    = -14;
             hitbox.right  = 4;
             hitbox.bottom = 14;
             break;
+        case 1:
+            hitbox.left   = -14;
+            hitbox.top    = -4;
+            hitbox.right  = 14;
+            hitbox.bottom = 4;
+            break;
         case 2:
             hitbox.left   = -8;
-            hitbox.top    = -7;
+            hitbox.top    = -8;
             hitbox.right  = 8;
             hitbox.bottom = 8;
             break;
@@ -79,7 +79,7 @@ void TargetBumper_Unknown3(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
+        if (Player_CheckCollisionTouch(player, entity, &hitbox) && player->playerAnimator.animationID != ANI_HURT) {
             entity->curPos = entity->startPos;
             entity->state  = TargetBumper_Unknown5;
             entity->active = ACTIVE_NORMAL;

@@ -40,9 +40,9 @@ void LRZSpiral_Create(void *data)
                 entity->direction     = FLIP_NONE;
                 entity->updateRange.y = (entity->height + 64) << 16;
                 entity->hitbox.left   = -112;
-                entity->hitbox.top    = -179;
+                entity->hitbox.top    = -180;
                 entity->hitbox.right  = -104;
-                entity->hitbox.bottom = -171;
+                entity->hitbox.bottom = -172;
                 entity->state         = LRZSpiral_Unknown3;
                 entity->updateRange.x = 0x800000;
                 break;
@@ -50,9 +50,9 @@ void LRZSpiral_Create(void *data)
                 entity->direction     = FLIP_X;
                 entity->updateRange.y = (entity->height + 64) << 16;
                 entity->hitbox.left   = -146;
-                entity->hitbox.top    = -179;
+                entity->hitbox.top    = -180;
                 entity->hitbox.right  = -138;
-                entity->hitbox.bottom = -171;
+                entity->hitbox.bottom = -172;
                 entity->state         = LRZSpiral_Unknown4;
                 entity->updateRange.x = 0x800000;
                 break;

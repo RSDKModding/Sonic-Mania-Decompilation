@@ -61,7 +61,7 @@ void Ice_Create(void *data)
             }
             else {
                 entity->hitbox1.left   = -24;
-                entity->hitbox1.top    = -23;
+                entity->hitbox1.top    = -24;
                 entity->hitbox1.right  = 24;
                 entity->hitbox1.bottom = 24;
                 RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERBLOCK, &entity->animator1, true, 0);
@@ -227,14 +227,14 @@ void Ice_Create(void *data)
             if (entity->size) {
                 if (entity->size == 1) {
                     entity->hitbox1.left   = -16;
-                    entity->hitbox1.top    = -15;
+                    entity->hitbox1.top    = -16;
                     entity->hitbox1.right  = 16;
                     entity->hitbox1.bottom = 16;
                 }
             }
             else {
                 entity->hitbox1.left   = -24;
-                entity->hitbox1.top    = -19;
+                entity->hitbox1.top    = -20;
                 entity->hitbox1.right  = 24;
                 entity->hitbox1.bottom = 20;
             }

@@ -71,9 +71,9 @@ void PBL_TargetBumper_StageLoad(void)
     RSDK.SetSpecularIntensity(PBL_TargetBumper->sceneIndex, 15, 15, 15);
     PBL_TargetBumper->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
     PBL_TargetBumper->hitbox.left     = -16;
-    PBL_TargetBumper->hitbox.top      = -5;
+    PBL_TargetBumper->hitbox.top      = -6;
     PBL_TargetBumper->hitbox.right    = 12;
-    PBL_TargetBumper->hitbox.bottom   = 7;
+    PBL_TargetBumper->hitbox.bottom   = 6;
     PBL_TargetBumper->sfxTargetBumper = RSDK.GetSFX("Pinball/TargetBumper.wav");
     PBL_TargetBumper->sfxFlipper      = RSDK.GetSFX("Pinball/Flipper.wav");
 }

@@ -185,18 +185,18 @@ void WaterGush_SetupHitboxes(void)
             break;
         case 1:
             entity->hitbox1.left   = 0;
-            entity->hitbox1.top    = -0x20;
+            entity->hitbox1.top    = -32;
             entity->hitbox1.right  = (entity->field_78 >> 16) + 20;
-            entity->hitbox1.bottom = 0x20;
+            entity->hitbox1.bottom = 32;
 
             if (Music->activeTrack == TRACK_EGGMAN1) {
                 entity->hitbox2.left   = -192;
-                entity->hitbox2.top    = -15;
+                entity->hitbox2.top    = -16;
                 entity->hitbox2.bottom = 16;
             }
             else {
                 entity->hitbox2.left   = -16;
-                entity->hitbox2.top    = -31;
+                entity->hitbox2.top    = -32;
                 entity->hitbox2.bottom = 32;
             }
             entity->hitbox2.right = 0;

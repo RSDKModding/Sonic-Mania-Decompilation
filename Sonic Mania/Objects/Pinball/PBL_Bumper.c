@@ -66,7 +66,7 @@ void PBL_Bumper_StageLoad(void)
     PBL_Bumper->modelFrames   = RSDK.LoadMesh("Pinball/Bumper.bin", SCOPE_STAGE);
     PBL_Bumper->sceneIndex    = RSDK.Create3DScene("View:Pinball", 0x1000, SCOPE_STAGE);
     PBL_Bumper->hitbox.left   = -14;
-    PBL_Bumper->hitbox.top    = -13;
+    PBL_Bumper->hitbox.top    = -14;
     PBL_Bumper->hitbox.right  = 14;
     PBL_Bumper->hitbox.bottom = 14;
     PBL_Bumper->sfxBumper     = RSDK.GetSFX("Stage/Bumper.wav");

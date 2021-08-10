@@ -88,7 +88,7 @@ void TwistedTubes_StageLoad(void)
     TwistedTubes->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TwistedTubes.bin", SCOPE_STAGE);
 
     TwistedTubes->hitbox1.left   = -32;
-    TwistedTubes->hitbox1.top    = -15;
+    TwistedTubes->hitbox1.top    = -16;
     TwistedTubes->hitbox1.right  = 32;
     TwistedTubes->hitbox1.bottom = 16;
 

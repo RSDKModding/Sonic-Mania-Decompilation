@@ -145,9 +145,9 @@ void PullChain_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
     entity->hitbox.left   = -10;
-    entity->hitbox.top    = 63;
+    entity->hitbox.top    = 3;
     entity->hitbox.right  = 10;
-    entity->hitbox.bottom = 176;
+    entity->hitbox.bottom = 12;
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 0, &entity->animator, true, entity->decorMode);
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 1, &entity->animator2, true, entity->decorMode);
 }

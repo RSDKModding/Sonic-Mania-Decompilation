@@ -176,7 +176,7 @@ void BouncePlant_StageLoad(void)
 {
     BouncePlant->aniFrames      = RSDK.LoadSpriteAnimation("SSZ1/Plants.bin", SCOPE_STAGE);
     BouncePlant->hitbox.left    = -50;
-    BouncePlant->hitbox.left    = -11;
+    BouncePlant->hitbox.left    = -12;
     BouncePlant->hitbox.right   = 50;
     BouncePlant->hitbox.right   = 8;
     BouncePlant->sfxBouncePlant = RSDK.GetSFX("SSZ1/BouncePlant.wav");

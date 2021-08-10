@@ -55,7 +55,7 @@ void DDWrecker_Create(void *data)
                     RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animator, true, 0);
                     entity->drawFX        = FX_FLIP | FX_ROTATE;
                     entity->hitbox.left   = -20;
-                    entity->hitbox.top    = -19;
+                    entity->hitbox.top    = -20;
                     entity->hitbox.right  = 20;
                     entity->hitbox.bottom = 20;
                     entity->health        = 3;

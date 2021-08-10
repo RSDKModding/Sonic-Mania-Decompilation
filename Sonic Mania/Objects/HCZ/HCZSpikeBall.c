@@ -31,7 +31,7 @@ void HCZSpikeBall_Create(void *data)
     entity->updateRange.y = 0x800000;
 
     entity->hitbox.left   = -10;
-    entity->hitbox.top    = -9;
+    entity->hitbox.top    = -10;
     entity->hitbox.right  = 10;
     entity->hitbox.bottom = 10;
     HCZSpikeBall_HandleConveyorSetup();

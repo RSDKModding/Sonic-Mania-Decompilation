@@ -52,10 +52,10 @@ void AmoebaDroid_Create(void *data)
                 case 1:
                     entity->visible       = true;
                     entity->drawOrder     = Zone->drawOrderHigh;
-                    entity->hitbox.left   = -0x28;
-                    entity->hitbox.top    = -0x28;
-                    entity->hitbox.right  = 0x28;
-                    entity->hitbox.bottom = 0x28;
+                    entity->hitbox.left   = -40;
+                    entity->hitbox.top    = -40;
+                    entity->hitbox.right  = 40;
+                    entity->hitbox.bottom = 40;
                     entity->drawFX        = FX_SCALE;
                     entity->inkEffect     = INK_ALPHA;
                     entity->scale.y       = 0x200;

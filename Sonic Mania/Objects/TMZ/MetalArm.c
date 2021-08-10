@@ -90,9 +90,9 @@ void MetalArm_Create(void *data)
     if (!entity->holdDuration)
         entity->holdDuration = 60;
     entity->hitbox.left   = -56;
-    entity->hitbox.top    = -26;
+    entity->hitbox.top    = -27;
     entity->hitbox.right  = 35;
-    entity->hitbox.bottom = -6;
+    entity->hitbox.bottom = -7;
     RSDK.SetSpriteAnimation(MetalArm->aniFrames, 0, &entity->animator1, true, 0);
     RSDK.SetSpriteAnimation(MetalArm->aniFrames, 1, &entity->animator2, true, 0);
     RSDK.SetSpriteAnimation(MetalArm->aniFrames, 2, &entity->animator3, true, 0);

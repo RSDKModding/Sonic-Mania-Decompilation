@@ -48,7 +48,7 @@ void Newspaper_Create(void *data)
         }
 
         entity->hitbox.left   = -16;
-        entity->hitbox.top    = -15;
+        entity->hitbox.top    = -16;
         entity->hitbox.right  = 16;
         entity->hitbox.bottom = 16;
     }

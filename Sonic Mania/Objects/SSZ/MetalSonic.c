@@ -4,7 +4,7 @@ ObjectMetalSonic *MetalSonic;
 
 void MetalSonic_Update(void)
 {
-    RSDK_THIS(MetalSonic);\
+    RSDK_THIS(MetalSonic);
     if (entity->field_94)
         entity->field_94--;
     RSDK.ProcessAnimation(&entity->animator);
@@ -37,7 +37,7 @@ void MetalSonic_Draw(void)
     else
         drawPos.x -= 0xE000000;
 
-    if ((entity->field_94 & 1)) {
+    if (entity->field_94 & 1) {
         RSDK.CopyPalette(2, 240, 0, 240, 8);
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         RSDK.DrawSprite(&entity->animator, &drawPos, false);

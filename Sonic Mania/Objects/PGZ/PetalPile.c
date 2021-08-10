@@ -138,7 +138,7 @@ void PetalPile_State_HandleInteractions(void)
     if (entity->state != PetalPile_State_Unknown3) {
         Hitbox hitbox;
         hitbox.left   = -8;
-        hitbox.left   = -7;
+        hitbox.left   = -8;
         hitbox.right  = 8;
         hitbox.bottom = 8;
         foreach_active(Explosion, explosion)

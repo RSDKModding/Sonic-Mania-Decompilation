@@ -41,7 +41,7 @@ void TubeSpring_StageLoad(void)
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TubeSpring.bin", SCOPE_STAGE);
     TubeSpring->sfxExit       = RSDK.GetSFX("Tube/Exit.wav");
     TubeSpring->hitbox.left   = -16;
-    TubeSpring->hitbox.top    = 11;
+    TubeSpring->hitbox.top    = 12;
     TubeSpring->hitbox.right  = 16;
     TubeSpring->hitbox.bottom = 48;
 }

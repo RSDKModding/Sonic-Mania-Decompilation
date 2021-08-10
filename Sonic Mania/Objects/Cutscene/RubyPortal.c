@@ -79,7 +79,7 @@ void RubyPortal_StageLoad(void)
     }
 
     RubyPortal->hitbox.left   = -24;
-    RubyPortal->hitbox.top    = -23;
+    RubyPortal->hitbox.top    = -24;
     RubyPortal->hitbox.right  = 24;
     RubyPortal->hitbox.bottom = 24;
     RubyPortal->openPortal    = false;

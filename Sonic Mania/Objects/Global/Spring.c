@@ -46,8 +46,22 @@ void Spring_Create(void *data)
         else
             entity->drawOrder = Zone->drawOrderLow;
 
-        if (entity->type >> 1) {
-            if (entity->type >> 1 == 1) {
+        switch (entity->type >> 1) {
+            case 0:
+                entity->direction = entity->flipFlag;
+                if (entity->type & 1)
+                    entity->velocity.y = 0x100000;
+                else
+                    entity->velocity.y = 0xA0000;
+                if (!entity->flipFlag)
+                    entity->velocity.y = -entity->velocity.y;
+                entity->hitbox.left   = -16;
+                entity->hitbox.top    = -8;
+                entity->hitbox.right  = 16;
+                entity->hitbox.bottom = 8;
+                entity->state         = Spring_State_Vertical;
+                break;
+            case 1:
                 entity->direction = entity->flipFlag;
                 if (entity->type & 1)
                     entity->velocity.x = 0x100000;
@@ -56,12 +70,12 @@ void Spring_Create(void *data)
                 if (entity->flipFlag)
                     entity->velocity.x = -entity->velocity.x;
                 entity->hitbox.left   = -8;
-                entity->hitbox.top    = -15;
+                entity->hitbox.top    = -16;
                 entity->hitbox.right  = 8;
                 entity->hitbox.bottom = 16;
                 entity->state         = Spring_State_Horizontal;
-            }
-            else if (entity->type >> 1 == 2) {
+                break;
+            case 2:
                 entity->direction = entity->flipFlag;
                 if (entity->type & 1) {
                     entity->velocity.x = 0xB4000;
@@ -76,25 +90,11 @@ void Spring_Create(void *data)
                 if (entity->flipFlag & FLIP_X)
                     entity->velocity.x = -entity->velocity.x;
                 entity->hitbox.left   = -12;
-                entity->hitbox.top    = -11;
+                entity->hitbox.top    = -12;
                 entity->hitbox.right  = 12;
                 entity->hitbox.bottom = 12;
                 entity->state         = Spring_State_Diagonal;
-            }
-        }
-        else {
-            entity->direction = entity->flipFlag;
-            if (entity->type & 1)
-                entity->velocity.y = 0x100000;
-            else
-                entity->velocity.y = 0xA0000;
-            if (!entity->flipFlag)
-                entity->velocity.y = -entity->velocity.y;
-            entity->hitbox.left   = -16;
-            entity->hitbox.top    = -8;
-            entity->hitbox.right  = 16;
-            entity->hitbox.bottom = 8;
-            entity->state         = Spring_State_Vertical;
+                break;
         }
     }
 }

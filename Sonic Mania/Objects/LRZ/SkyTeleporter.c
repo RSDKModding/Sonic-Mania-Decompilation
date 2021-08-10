@@ -37,7 +37,7 @@ void SkyTeleporter_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
     entity->hitbox.left   = -24;
-    entity->hitbox.top    = -7;
+    entity->hitbox.top    = -8;
     entity->hitbox.right  = 24;
     entity->hitbox.bottom = 20;
     RSDK.SetSpriteAnimation(SkyTeleporter->aniFrames, 0, &entity->animator, true, 0);

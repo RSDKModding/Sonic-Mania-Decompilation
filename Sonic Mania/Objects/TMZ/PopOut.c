@@ -201,7 +201,7 @@ void PopOut_Unknown(void)
             entity->hitbox.top    = -64;
             entity->hitbox.bottom = 32;
             entity->hitbox2.left  = -20;
-            entity->hitbox2.top   = -31;
+            entity->hitbox2.top   = -32;
             break;
         case 1:
             entity->hitbox.right  = 80;
@@ -212,14 +212,14 @@ void PopOut_Unknown(void)
             break;
         case 2:
             entity->hitbox.left    = -80;
-            entity->hitbox.top     = -31;
+            entity->hitbox.top     = -32;
             entity->hitbox.bottom  = 64;
             entity->hitbox2.right  = 32;
             entity->hitbox2.bottom = 32;
             break;
         case 3:
             entity->hitbox.left    = -64;
-            entity->hitbox.top     = -79;
+            entity->hitbox.top     = -80;
             entity->hitbox.right   = 32;
             entity->hitbox2.left   = -32;
             entity->hitbox2.bottom = 32;
@@ -250,7 +250,7 @@ void PopOut_Unknown(void)
             entity->hitbox.bottom = 32;
             entity->hitbox.left   = -64;
             entity->hitbox2.left  = -20;
-            entity->hitbox2.top   = -31;
+            entity->hitbox2.top   = -32;
             break;
     }
 }

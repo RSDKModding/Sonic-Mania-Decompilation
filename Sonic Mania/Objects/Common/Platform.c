@@ -320,10 +320,10 @@ void Platform_Create(void *data)
                 entity->hitbox.bottom = hitbox->bottom;
             }
             else {
-                entity->hitbox.left   = -0x20;
-                entity->hitbox.top    = -0xF0;
-                entity->hitbox.right  = 0x7FF;
-                entity->hitbox.bottom = 0xE0;
+                entity->hitbox.left   = -32;
+                entity->hitbox.top    = -16;
+                entity->hitbox.right  = -8;
+                entity->hitbox.bottom = 32;
             }
         }
         switch (entity->collision) {

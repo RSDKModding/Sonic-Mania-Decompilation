@@ -120,13 +120,13 @@ void SizeLaser_StageLoad(void)
     }
 
     SizeLaser->hitbox.left   = -4;
-    SizeLaser->hitbox.top    = -3;
+    SizeLaser->hitbox.top    = -4;
     SizeLaser->hitbox.right  = 4;
     SizeLaser->hitbox.bottom = 4;
     SizeLaser->sfxShrink2   = RSDK.GetSFX("MMZ/Shrink2.wav");
     SizeLaser->sfxGrow2     = RSDK.GetSFX("MMZ/Grow2.wav");
 
-    Soundboard_LoadSFX("MMZ/SizeLaser.wav", 1, (void*)SizeLaser_SizeChangeSFXCheck, NULL);
+    Soundboard_LoadSFX("MMZ/SizeLaser.wav", true, SizeLaser_SizeChangeSFXCheck, NULL);
 }
 
 bool32 SizeLaser_SizeChangeSFXCheck(void)

@@ -76,7 +76,7 @@ void PaperRoller_Create(void *data)
     entity->playerUnknown[2] = 0x7FFF;
     entity->playerUnknown[3] = 0x7FFF;
     entity->hitbox.left     = -24;
-    entity->hitbox.top      = -23;
+    entity->hitbox.top      = -24;
     entity->hitbox.right    = 24;
     entity->hitbox.bottom   = 24;
     RSDK.SetSpriteAnimation(PaperRoller->aniFrames, 0, &entity->animator1, true, 0);
@@ -87,9 +87,7 @@ void PaperRoller_StageLoad(void)
 {
     uint colours[]         = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
     PaperRoller->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PaperRoller.bin", SCOPE_STAGE);
-    for (int i = 0; i < 0x40; ++i) {
-        PaperRoller->colours[i] = colours[i & 3];
-    }
+    for (int i = 0; i < 0x40; ++i) PaperRoller->colours[i] = colours[i & 3];
     PaperRoller->sfxPaper = RSDK.GetSFX("PSZ/Paper.wav");
 }
 

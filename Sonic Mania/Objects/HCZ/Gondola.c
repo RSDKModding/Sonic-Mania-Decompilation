@@ -73,7 +73,7 @@ void Gondola_Create(void *data)
     entity->drawOrder     = Zone->playerDrawLow;
 
     entity->hitbox.left   = -76;
-    entity->hitbox.top    = -11;
+    entity->hitbox.top    = -12;
     entity->hitbox.right  = 76;
     entity->hitbox.bottom = 4;
     RSDK.SetSpriteAnimation(Gondola->aniFrames, 0, &entity->animator, true, 0);

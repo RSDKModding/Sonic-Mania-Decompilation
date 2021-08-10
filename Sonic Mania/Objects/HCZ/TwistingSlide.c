@@ -272,7 +272,7 @@ void TwistingSlide_Create(void *data)
 void TwistingSlide_StageLoad(void)
 {
     TwistingSlide->hitbox.left   = -1;
-    TwistingSlide->hitbox.top    = 0;
+    TwistingSlide->hitbox.top    = 1;
     TwistingSlide->hitbox.right  = 1;
     TwistingSlide->hitbox.bottom = 1;
 }
@@ -283,7 +283,7 @@ void TwistingSlide_Unknown1(void)
     switch (entity->type) {
         case 0:
             entity->hitbox1.left   = -56;
-            entity->hitbox1.top    = -119;
+            entity->hitbox1.top    = -120;
             entity->hitbox1.right  = 52;
             entity->hitbox1.bottom = 120;
             entity->hitbox2.top    = -46;
@@ -294,7 +294,7 @@ void TwistingSlide_Unknown1(void)
         case 1:
         case 2:
             entity->hitbox1.left   = -132;
-            entity->hitbox1.top    = -195;
+            entity->hitbox1.top    = -196;
             entity->hitbox1.right  = 132;
             entity->hitbox1.bottom = 196;
             break;

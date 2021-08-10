@@ -48,14 +48,14 @@ void ElectroMagnet_Create(void *data)
     entity->updateRange.y       = (entity->height + 64) << 16;
     entity->drawOrder           = Zone->drawOrderHigh;
     entity->hitbox.left         = -64;
-    entity->hitbox.top          = -1;
+    entity->hitbox.top          = 0;
     entity->hitbox.right        = 64;
     entity->hitbox.bottom       = entity->height;
     entity->playerHitbox.left   = -64;
-    entity->playerHitbox.top    = -1;
+    entity->playerHitbox.top    = 0;
     entity->playerHitbox.right  = 64;
     entity->playerHitbox.bottom = entity->shieldRange;
-    RSDK.SetSpriteAnimation(ElectroMagnet->aniFranes, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(ElectroMagnet->aniFrames, 0, &entity->animator, true, 0);
     entity->state = ElectroMagnet_Unknown1;
 }
 
@@ -63,7 +63,7 @@ void ElectroMagnet_StageLoad(void)
 {
     ElectroMagnet->active = ACTIVE_ALWAYS;
     if (RSDK.CheckStageFolder("FBZ"))
-        ElectroMagnet->aniFranes = RSDK.LoadSpriteAnimation("FBZ/ElectroMagnet.bin", SCOPE_STAGE);
+        ElectroMagnet->aniFrames = RSDK.LoadSpriteAnimation("FBZ/ElectroMagnet.bin", SCOPE_STAGE);
     ElectroMagnet->hitbox.left     = -1;
     ElectroMagnet->hitbox.top      = -1;
     ElectroMagnet->hitbox.right    = 1;

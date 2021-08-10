@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFranes;
+    ushort aniFrames;
     Hitbox hitbox;
     Vector2 onScreenRange;
     byte field_18;

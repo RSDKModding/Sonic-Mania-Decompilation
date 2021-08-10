@@ -67,16 +67,16 @@ void FBZMissile_Create(void *data)
 void FBZMissile_StageLoad(void)
 {
     FBZMissile->aniFrames      = RSDK.LoadSpriteAnimation("FBZ/Missile.bin", SCOPE_STAGE);
-    FBZMissile->hitbox2.top    = -3;
     FBZMissile->hitbox2.left   = -16;
+    FBZMissile->hitbox2.top    = -3;
     FBZMissile->hitbox2.right  = 16;
     FBZMissile->hitbox2.bottom = 3;
-    FBZMissile->hitbox1.top    = -8;
     FBZMissile->hitbox1.left   = -5;
+    FBZMissile->hitbox1.top    = -8;
     FBZMissile->hitbox1.right  = 5;
     FBZMissile->hitbox1.bottom = 8;
-    FBZMissile->hitbox3.top    = -8;
     FBZMissile->hitbox3.left   = -32;
+    FBZMissile->hitbox3.top    = -8;
     FBZMissile->hitbox3.right  = 32;
     FBZMissile->hitbox3.bottom = 8;
     FBZMissile->sfxPush        = RSDK.GetSFX("Stage/Push.wav");

@@ -83,10 +83,10 @@ void OrbitSpike_StageLoad(void)
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
     }
 
-    OrbitSpike->hitbox.left   = -0xC;
-    OrbitSpike->hitbox.top    = -0xB;
-    OrbitSpike->hitbox.right  = 0xC;
-    OrbitSpike->hitbox.bottom = 0xC;
+    OrbitSpike->hitbox.left   = -12;
+    OrbitSpike->hitbox.top    = -12;
+    OrbitSpike->hitbox.right  = 12;
+    OrbitSpike->hitbox.bottom = 12;
 }
 
 void OrbitSpike_EditorDraw(void) {}

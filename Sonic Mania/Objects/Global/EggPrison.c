@@ -165,17 +165,17 @@ void EggPrison_Create(void *data)
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->data4, true, 0);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->data3, true, 0);
                 entity->hitbox2.left   = -16;
-                entity->hitbox2.top    = -37;
+                entity->hitbox2.top    = -38;
                 entity->hitbox2.right  = 16;
-                entity->hitbox2.bottom = -23;
+                entity->hitbox2.bottom = -24;
 
                 entity->hitbox3.left  = -15;
                 entity->hitbox3.top   = -47;
-                entity->hitbox3.right = -15;
-                entity->hitbox3.top   = -23;
+                entity->hitbox3.right = 15;
+                entity->hitbox3.top   = -24;
             }
             entity->hitbox1.left   = -32;
-            entity->hitbox1.top    = -23;
+            entity->hitbox1.top    = -24;
             entity->hitbox1.right  = 32;
             entity->hitbox1.bottom = 32;
             entity->state          = EggPrison_Unknown1;
@@ -187,7 +187,7 @@ void EggPrison_Create(void *data)
         }
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 

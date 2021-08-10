@@ -67,7 +67,7 @@ void ERZShinobi_StageLoad(void)
     ERZShinobi->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomShinobi.bin", SCOPE_STAGE);
 
     ERZShinobi->hitbox.left   = -24;
-    ERZShinobi->hitbox.top    = -23;
+    ERZShinobi->hitbox.top    = -24;
     ERZShinobi->hitbox.right  = 24;
     ERZShinobi->hitbox.bottom = 24;
 }

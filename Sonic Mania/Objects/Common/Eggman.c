@@ -35,13 +35,13 @@ void Eggman_Create(void *data)
             entity->parent        = (Entity *)data;
             entity->updateRange.x = 0x400000;
             entity->updateRange.y = 0x800000;
-            entity->hitbox.left   = -0x0A;
-            entity->hitbox.top    = -0x17;
-            entity->hitbox.right  = 0x0A;
-            entity->hitbox.bottom = 0x1B;
+            entity->hitbox.left   = -10;
+            entity->hitbox.top    = -24;
+            entity->hitbox.right  = 10;
+            entity->hitbox.bottom = 27;
         }
         else {
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
         }
     }
 }

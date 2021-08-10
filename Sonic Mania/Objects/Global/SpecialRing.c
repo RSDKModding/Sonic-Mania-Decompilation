@@ -55,7 +55,7 @@ void SpecialRing_StageLoad(void)
     SpecialRing->sceneIndex  = RSDK.Create3DScene("View:SpecialRing", 512, SCOPE_STAGE);
 
     SpecialRing->hitbox.left   = -18;
-    SpecialRing->hitbox.top    = -17;
+    SpecialRing->hitbox.top    = -18;
     SpecialRing->hitbox.right  = 18;
     SpecialRing->hitbox.bottom = 18;
 

@@ -65,10 +65,10 @@ void Reagent_Create(void *data)
 void Reagent_StageLoad(void)
 {
     Reagent->aniFrames     = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE);
-    Reagent->hitbox.left   = -0x10;
-    Reagent->hitbox.top    = -0x02;
-    Reagent->hitbox.right  = 0x20;
-    Reagent->hitbox.bottom = 0x02;
+    Reagent->hitbox.left   = -2;
+    Reagent->hitbox.top    = -2;
+    Reagent->hitbox.right  = 2;
+    Reagent->hitbox.bottom = 2;
     Reagent->sfxLand       = RSDK.GetSFX("Puyo/Land.wav");
 }
 

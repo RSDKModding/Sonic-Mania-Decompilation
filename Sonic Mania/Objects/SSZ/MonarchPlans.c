@@ -52,10 +52,10 @@ void MonarchPlans_StageLoad(void)
     MonarchPlans->meshIndex  = RSDK.LoadMesh("SSZ/MonarchPlans.bin", SCOPE_STAGE);
     MonarchPlans->sceneIndex = RSDK.Create3DScene("View:MonarchPlans", 0x2000, SCOPE_STAGE);
 
-    MonarchPlans->hitbox.left   = -0x18;
-    MonarchPlans->hitbox.top    = -0x17;
-    MonarchPlans->hitbox.right  = 0x18;
-    MonarchPlans->hitbox.bottom = 0x18;
+    MonarchPlans->hitbox.left   = -24;
+    MonarchPlans->hitbox.top    = -24;
+    MonarchPlans->hitbox.right  = 24;
+    MonarchPlans->hitbox.bottom = 24;
     RSDK.SetDiffuseColour(MonarchPlans->sceneIndex, 160, 160, 160);
     RSDK.SetDiffuseIntensity(MonarchPlans->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(MonarchPlans->sceneIndex, 14, 14, 14);

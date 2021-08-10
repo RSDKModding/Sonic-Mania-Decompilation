@@ -1012,7 +1012,7 @@ void Water_Unknown9(void)
         if (entity->timer <= 0) {
             Hitbox hitbox;
             hitbox.left   = -32;
-            hitbox.top    = -31;
+            hitbox.top    = -32;
             hitbox.right  = 32;
             hitbox.bottom = 32;
 

@@ -156,7 +156,7 @@ void FlowerPod_State_SpawnBeanstalk(void)
     if (entity->timer <= 15) {
         Hitbox hitbox;
         hitbox.left   = -4;
-        hitbox.top    = -3;
+        hitbox.top    = -4;
         hitbox.right  = 4;
         hitbox.bottom = 4;
         foreach_active(Beanstalk, beanStalk)

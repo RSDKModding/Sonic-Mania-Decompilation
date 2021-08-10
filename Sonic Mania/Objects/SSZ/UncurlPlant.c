@@ -134,7 +134,7 @@ void UncurlPlant_StageLoad(void)
 {
     UncurlPlant->aniFrames     = RSDK.LoadSpriteAnimation("SSZ1/Plants.bin", SCOPE_STAGE);
     UncurlPlant->hitbox.left   = -8;
-    UncurlPlant->hitbox.top    = -11;
+    UncurlPlant->hitbox.top    = -12;
     UncurlPlant->hitbox.right  = 8;
     UncurlPlant->hitbox.bottom = 8;
 }

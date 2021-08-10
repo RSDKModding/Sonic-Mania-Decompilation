@@ -53,7 +53,7 @@ void MagnetSphere_StageLoad(void)
     if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
         MagnetSphere->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MagnetSphere.bin", SCOPE_STAGE);
     MagnetSphere->hitbox.left   = -56;
-    MagnetSphere->hitbox.top    = -55;
+    MagnetSphere->hitbox.top    = -56;
     MagnetSphere->hitbox.right  = 56;
     MagnetSphere->hitbox.bottom = 56;
     MagnetSphere->sfxBumper     = RSDK.GetSFX("Stage/Bumper3.wav");

@@ -52,8 +52,8 @@ void HangGlider_StageLoad(void)
     else
         HangGlider->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/HangGlider.bin", SCOPE_STAGE);
 
-    HangGlider->hitbox.left   = 0xC;
-    HangGlider->hitbox.top    = -2047;
+    HangGlider->hitbox.left   = 12;
+    HangGlider->hitbox.top    = 8;
     HangGlider->hitbox.right  = 24;
     HangGlider->hitbox.bottom = 128;
 }

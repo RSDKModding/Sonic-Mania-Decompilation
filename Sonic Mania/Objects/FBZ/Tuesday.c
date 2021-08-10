@@ -230,11 +230,11 @@ void Tuesday_StageLoad(void)
         Tuesday->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Tuesday.bin", SCOPE_STAGE);
 
     Tuesday->hitbox1.left   = -16;
-    Tuesday->hitbox1.top    = -15;
+    Tuesday->hitbox1.top    = -16;
     Tuesday->hitbox1.right  = 16;
     Tuesday->hitbox1.bottom = 16;
     Tuesday->hitbox2.left   = -40;
-    Tuesday->hitbox2.top    = -112;
+    Tuesday->hitbox2.top    = -8;
     Tuesday->hitbox2.right  = 40;
     Tuesday->hitbox2.bottom = 80;
 

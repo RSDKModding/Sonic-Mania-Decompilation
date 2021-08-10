@@ -109,11 +109,11 @@ void PBL_Flipper_StageLoad(void)
     PBL_Flipper->sceneIndex      = RSDK.Create3DScene("View:Pinball", 0x1000, SCOPE_STAGE);
     PBL_Flipper->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
     PBL_Flipper->hitbox.left     = -52;
-    PBL_Flipper->hitbox.top      = -7;
+    PBL_Flipper->hitbox.top      = -8;
     PBL_Flipper->hitbox.right    = 12;
     PBL_Flipper->hitbox.bottom   = 8;
     PBL_Flipper->hitbox2.left    = -52;
-    PBL_Flipper->hitbox2.top     = -23;
+    PBL_Flipper->hitbox2.top     = -24;
     PBL_Flipper->hitbox2.right   = 12;
     PBL_Flipper->hitbox2.bottom  = 8;
     PBL_Flipper->sfxFlipperStage = RSDK.GetSFX("Stage/Flipper.wav");
