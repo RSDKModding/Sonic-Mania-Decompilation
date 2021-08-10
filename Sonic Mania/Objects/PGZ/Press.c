@@ -270,7 +270,7 @@ void Press_HandleMovement(void)
                 waitTime += 30;
             if (frame == 2) // colored (racism)
                 waitTime += 90;
-            if (frame == 3) // dark blue only (reverse?
+            if (frame == 3) // dark blue only (she got the momma jeans
                 waitTime += 60;
         }
         entity->offTop = entity->position.y - actualPos;
