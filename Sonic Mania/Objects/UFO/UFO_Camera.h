@@ -21,7 +21,7 @@ typedef struct {
     int field_64;
     int angleX;
     int dword6C;
-    int dword70;
+    int clipY;
     Entity *target;
     Matrix matWorld;
     Matrix matView;

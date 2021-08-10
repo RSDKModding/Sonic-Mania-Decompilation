@@ -623,7 +623,7 @@ void ProcessObjectDrawLists()
                             layer->scanlineCallback(scanlines);
                         else
                             ProcessParallax(layer);
-                        switch (layer->behaviour) {
+                        switch (layer->type) {
                             case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
                             case LAYER_VSCROLL: DrawLayerVScroll(layer); break;
                             case LAYER_ROTOZOOM: DrawLayerRotozoom(layer); break;

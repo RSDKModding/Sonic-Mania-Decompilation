@@ -53,7 +53,7 @@ void UFO_HUD_Draw(void)
     }
 
     drawPos.x = RSDK_screens->centerX << 16;
-    if (!(entity->timer & 4)) {
+    if (!(entity->timer & 4) && entity->timer) {
         entity->data3.frameID = 3;
         RSDK.DrawSprite(&entity->data3, &drawPos, true);
     }

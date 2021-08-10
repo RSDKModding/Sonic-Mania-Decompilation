@@ -340,11 +340,7 @@ typedef struct {
     int uncurlTimer;
 #endif
 #if RETRO_USE_TOUCH_CONTROLS
-    int upState;
-    int downState;
-    int leftState;
-    int rightState;
-    int jumpState;
+    int touchJump;
 #endif
 } EntityPlayer;
 

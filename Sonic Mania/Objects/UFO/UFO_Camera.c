@@ -60,14 +60,7 @@ void UFO_Camera_Unknown1(void)
     RSDK_screens->position.y = offset - RSDK_screens->centerY + 512;
     entity->dword6C          = entity->angle;
 
-    entity->dword70 = RSDK_screens->centerY - offset + 8;
-    if (entity->dword70 >= -0x40) {
-        if (entity->dword70 > RSDK_screens->height)
-            entity->dword70 = RSDK_screens->height;
-    }
-    else {
-        entity->dword70 = -0x40;
-    }
+    entity->clipY = clampVal(RSDK_screens->centerY - offset + 8, -0x40, RSDK_screens->height);
 }
 
 void UFO_Camera_Unknown2(void)

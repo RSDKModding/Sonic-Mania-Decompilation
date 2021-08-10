@@ -139,10 +139,9 @@ void ProcessAnimation(Animator *data)
         if (data->framePtrs) {
             data->animationTimer += data->animationSpeed;
             if (data->framePtrs == (SpriteFrame *)1) {
-                int delay = data->frameDelay;
-                while (data->animationTimer < delay) {
+                while (data->animationTimer > data->frameDelay) {
                     ++data->frameID;
-                    data->animationTimer = data->animationTimer - delay;
+                    data->animationTimer = data->animationTimer - data->frameDelay;
                     if (data->frameID >= data->frameCount)
                         data->frameID = data->loopIndex;
                 }

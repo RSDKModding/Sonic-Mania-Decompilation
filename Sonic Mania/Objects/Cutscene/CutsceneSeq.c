@@ -123,7 +123,12 @@ void CutsceneSeq_LockPlayerControl(void *plr)
 
 void CutsceneSeq_CheckSkip(byte skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void))
 {
-    if (skipType && RSDK_controller->keyStart.press && (RSDK_sceneInfo->state & 1)) {
+    bool32 skipPress = RSDK_controller->keyStart.press;
+#if RETRO_USE_TOUCH_CONTROLS
+    skipPress |= RSDK_touchMouse->count;
+#endif
+
+    if (skipType && skipPress && (RSDK_sceneInfo->state & 1)) {
         bool32 load = false;
         if (skipType == SKIPTYPE_NEXTSCENE) {
             ++RSDK_sceneInfo->listPos;

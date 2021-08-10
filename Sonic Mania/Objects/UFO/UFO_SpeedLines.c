@@ -24,7 +24,6 @@ void UFO_SpeedLines_LateUpdate(void)
                 entity->lineX[i] += 0x1000000;
                 entity->lineAlpha[i] = 0;
             }
-            entity->lineAlpha[i] = 0;
 
             if (entity->lineZ[i] < player->position.y - 0x800000) {
                 entity->lineZ[i] += 0x1000000;
@@ -36,12 +35,13 @@ void UFO_SpeedLines_LateUpdate(void)
             }
         }
     }
-
-    for (int i = 0; i < 0x20; ++i) {
-        if (entity->lineAlpha[i] <= 0)
-            entity->visible = false;
-        else
-            entity->lineAlpha[i] -= 8;
+    else {
+        for (int i = 0; i < 0x20; ++i) {
+            if (entity->lineAlpha[i] <= 0)
+                entity->visible = false;
+            else
+                entity->lineAlpha[i] -= 8;
+        }
     }
 }
 
@@ -53,13 +53,15 @@ void UFO_SpeedLines_Draw(void)
 
     Matrix *mat = &UFO_Camera->matWorld;
     for (int i = 0; i < 0x20; ++i) {
-        int z     = entity->lineZ[i] >> 8;
         int x     = entity->lineX[i] >> 8;
         int y     = entity->lineY[i] >> 8;
+        int z     = entity->lineZ[i] >> 8;
+
         int depth = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
         if (depth >= 0x400) {
             int drawY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
             int drawX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
+
             RSDK.DrawLine(RSDK_screens->centerX + (drawX << 8) / depth, RSDK_screens->centerY - (drawY << 8) / depth,
                           RSDK_screens->centerX + (drawX << 8) / (depth + 0x2000), RSDK_screens->centerY - (drawY << 8) / (depth + 0x2000), 0xD0E0F0,
                           entity->lineAlpha[i], INK_ALPHA, true);
@@ -85,7 +87,7 @@ void UFO_SpeedLines_Create(void *data)
     }
 }
 
-void UFO_SpeedLines_StageLoad(void) { RSDK.ResetEntitySlot(SLOT_UFO_SPEEDLINES, UFO_SpeedLines->objectID, 0); }
+void UFO_SpeedLines_StageLoad(void) { RSDK.ResetEntitySlot(SLOT_UFO_SPEEDLINES, UFO_SpeedLines->objectID, NULL); }
 
 void UFO_SpeedLines_EditorDraw(void) {}
 

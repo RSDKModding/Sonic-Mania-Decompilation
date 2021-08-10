@@ -68,7 +68,7 @@ void WallCrawl_StageLoad(void)
 void WallCrawl_DebugSpawn(void)
 {
     RSDK_THIS(WallCrawl);
-    EntityWallCrawl *wallCrawl = CREATE_ENTITY(WallCrawl, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    EntityWallCrawl *wallCrawl = CREATE_ENTITY(WallCrawl, NULL, entity->position.x, entity->position.y);
     wallCrawl->direction       = entity->direction;
     wallCrawl->startDir        = entity->direction;
 }

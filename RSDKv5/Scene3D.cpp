@@ -625,13 +625,15 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                 scn->drawMode = drawMode;
                 scn->faceCount += indCnt / mdl->faceVertCount;
 
-                int frame = data->frameID + 1;
-                if (data->frameID + 1 >= data->frameCount)
-                    frame = data->loopIndex;
-                int frameOffset = frame * mdl->vertCount;
+                int nextFrame = data->frameID + 1;
+                if (nextFrame >= data->frameCount)
+                    nextFrame = data->loopIndex;
+                int frameOffset     = data->frameID * mdl->vertCount;
+                int nextFrameOffset = nextFrame * mdl->vertCount;
 
-                int i = 0;
-                int f = 0;
+                int i           = 0;
+                int f           = 0;
+                int interpolate = data->animationTimer;
                 switch (mdl->flags) {
                     default:
                     case MODEL_NOFLAGS:
@@ -639,14 +641,19 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                         for (; i < mdl->indexCount;) {
                             faceVertCounts[f++] = mdl->faceVertCount;
                             for (int c = 0; c < mdl->faceVertCount; ++c) {
-                                ModelVertex *modelVert = &mdl->vertices[frameOffset + indices[i++]];
-                                Scene3DVertex *vertex  = &scn->vertices[vertID++];
-                                vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
-                                            + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
-                                vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
-                                            + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
-                                vertex->z = matWorld->values[2][3] + ((modelVert->x * matWorld->values[2][0]) >> 8)
-                                            + ((matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+                                ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
+                                ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
+                                int x                      = frameVert->x + ((interpolate * (nextFrameVert->x - frameVert->x)) >> 8);
+                                int y                      = frameVert->y + ((interpolate * (nextFrameVert->y - frameVert->y)) >> 8);
+                                int z                      = frameVert->z + ((interpolate * (nextFrameVert->z - frameVert->z)) >> 8);
+                                i++;
+                                Scene3DVertex *vertex = &scn->vertices[vertID++];
+                                vertex->x             = matWorld->values[0][3] + (z * matWorld->values[0][2] >> 8) + (matWorld->values[0][0] * x >> 8)
+                                            + (matWorld->values[0][1] * y >> 8);
+                                vertex->y = matWorld->values[1][3] + (y * matWorld->values[1][1] >> 8) + (z * matWorld->values[1][2] >> 8)
+                                            + (matWorld->values[1][0] * x >> 8);
+                                vertex->z = matWorld->values[2][3] + ((x * matWorld->values[2][0]) >> 8)
+                                            + ((matWorld->values[2][2] * z >> 8) + (matWorld->values[2][1] * y >> 8));
                                 vertex->colour = colour;
                             }
                         }
@@ -656,20 +663,29 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
-                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + indices[i++]];
-                                    Scene3DVertex *vertex  = &scn->vertices[vertID++];
-                                    vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
-                                                + (modelVert->x * matWorld->values[0][0] >> 8) + (modelVert->y * matWorld->values[0][1] >> 8);
-                                    vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
-                                                + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->z * matWorld->values[1][2] >> 8);
-                                    vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
-                                                + (matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8);
-                                    vertex->nx = (modelVert->nz * matView->values[0][2] >> 8) + (modelVert->nx * matView->values[0][0] >> 8)
-                                                 + (matView->values[0][1] * modelVert->ny >> 8);
-                                    vertex->ny = (modelVert->ny * matView->values[1][1] >> 8) + (modelVert->nz * matView->values[1][2] >> 8)
-                                                 + (modelVert->nx * matView->values[1][0] >> 8);
-                                    vertex->nz = ((modelVert->ny * matView->values[2][1]) >> 8)
-                                                 + ((matView->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matView->values[2][2] >> 8));
+                                    ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
+                                    ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
+                                    int x                      = frameVert->x + ((interpolate * (nextFrameVert->x - frameVert->x)) >> 8);
+                                    int y                      = frameVert->y + ((interpolate * (nextFrameVert->y - frameVert->y)) >> 8);
+                                    int z                      = frameVert->z + ((interpolate * (nextFrameVert->z - frameVert->z)) >> 8);
+                                    int nx                     = frameVert->nx + ((interpolate * (nextFrameVert->nx - frameVert->nx)) >> 8);
+                                    int ny                     = frameVert->ny + ((interpolate * (nextFrameVert->ny - frameVert->ny)) >> 8);
+                                    int nz                     = frameVert->nz + ((interpolate * (nextFrameVert->nz - frameVert->nz)) >> 8);
+                                    i++;
+
+                                    Scene3DVertex *vertex = &scn->vertices[vertID++];
+                                    vertex->x = matWorld->values[0][3] + (z * matWorld->values[0][2] >> 8) + (x * matWorld->values[0][0] >> 8)
+                                                + (y * matWorld->values[0][1] >> 8);
+                                    vertex->y = matWorld->values[1][3] + (y * matWorld->values[1][1] >> 8) + (matWorld->values[1][0] * x >> 8)
+                                                + (z * matWorld->values[1][2] >> 8);
+                                    vertex->z = matWorld->values[2][3] + (x * matWorld->values[2][0] >> 8) + (matWorld->values[2][2] * z >> 8)
+                                                + (matWorld->values[2][1] * y >> 8);
+                                    vertex->nx =
+                                        (nz * matView->values[0][2] >> 8) + (nx * matView->values[0][0] >> 8) + (matView->values[0][1] * ny >> 8);
+                                    vertex->ny =
+                                        (ny * matView->values[1][1] >> 8) + (nz * matView->values[1][2] >> 8) + (nx * matView->values[1][0] >> 8);
+                                    vertex->nz =
+                                        ((ny * matView->values[2][1]) >> 8) + ((matView->values[2][0] * nx >> 8) + (nz * matView->values[2][2] >> 8));
                                     vertex->colour = colour;
                                 }
                             }
@@ -678,14 +694,19 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
-                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + indices[i++]];
-                                    Scene3DVertex *vertex  = &scn->vertices[vertID++];
-                                    vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
-                                                + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
-                                    vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
-                                                + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
-                                    vertex->z = matWorld->values[2][3] + ((matWorld->values[2][2] * modelVert->z) >> 8)
-                                                + ((matWorld->values[2][0] * modelVert->x >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+                                    ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
+                                    ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
+                                    int x                      = frameVert->x + ((interpolate * (nextFrameVert->x - frameVert->x)) >> 8);
+                                    int y                      = frameVert->y + ((interpolate * (nextFrameVert->y - frameVert->y)) >> 8);
+                                    int z                      = frameVert->z + ((interpolate * (nextFrameVert->z - frameVert->z)) >> 8);
+                                    i++;
+                                    Scene3DVertex *vertex = &scn->vertices[vertID++];
+                                    vertex->x = matWorld->values[0][3] + (z * matWorld->values[0][2] >> 8) + (matWorld->values[0][0] * x >> 8)
+                                                + (matWorld->values[0][1] * y >> 8);
+                                    vertex->y = matWorld->values[1][3] + (y * matWorld->values[1][1] >> 8) + (z * matWorld->values[1][2] >> 8)
+                                                + (matWorld->values[1][0] * x >> 8);
+                                    vertex->z = matWorld->values[2][3] + ((matWorld->values[2][2] * z) >> 8)
+                                                + ((matWorld->values[2][0] * x >> 8) + (matWorld->values[2][1] * y >> 8));
                                     vertex->colour = colour;
                                 }
                             }
@@ -696,21 +717,29 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
-                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + indices[i]];
-                                    Colour *modelColour    = &mdl->colours[indices[i++]];
-                                    Scene3DVertex *vertex  = &scn->vertices[vertID++];
-                                    vertex->x              = matWorld->values[0][3] + (matWorld->values[0][2] * modelVert->z >> 8)
-                                                + (modelVert->y * matWorld->values[0][1] >> 8) + (matWorld->values[0][0] * modelVert->x >> 8);
-                                    vertex->y = matWorld->values[1][3] + (matWorld->values[1][2] * modelVert->z >> 8)
-                                                + (modelVert->y * matWorld->values[1][1] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
-                                    vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
-                                                + (modelVert->y * matWorld->values[2][1] >> 8) + (matWorld->values[2][2] * modelVert->z >> 8);
-                                    vertex->nx = (matView->values[0][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[0][1] >> 8)
-                                                 + (matView->values[0][2] * modelVert->nz >> 8);
-                                    vertex->ny = (matView->values[1][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[1][1] >> 8)
-                                                 + (matView->values[1][2] * modelVert->nz >> 8);
-                                    vertex->nz = ((matView->values[2][2] * modelVert->nz) >> 8)
-                                                 + ((modelVert->ny * matView->values[2][1] >> 8) + (matView->values[2][0] * modelVert->nx >> 8));
+                                    ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
+                                    ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
+                                    int x                      = frameVert->x + ((interpolate * (nextFrameVert->x - frameVert->x)) >> 8);
+                                    int y                      = frameVert->y + ((interpolate * (nextFrameVert->y - frameVert->y)) >> 8);
+                                    int z                      = frameVert->z + ((interpolate * (nextFrameVert->z - frameVert->z)) >> 8);
+                                    int nx                     = frameVert->nx + ((interpolate * (nextFrameVert->nx - frameVert->nx)) >> 8);
+                                    int ny                     = frameVert->ny + ((interpolate * (nextFrameVert->ny - frameVert->ny)) >> 8);
+                                    int nz                     = frameVert->nz + ((interpolate * (nextFrameVert->nz - frameVert->nz)) >> 8);
+
+                                    Colour *modelColour   = &mdl->colours[indices[i++]];
+                                    Scene3DVertex *vertex = &scn->vertices[vertID++];
+                                    vertex->x = matWorld->values[0][3] + (matWorld->values[0][2] * z >> 8) + (y * matWorld->values[0][1] >> 8)
+                                                + (matWorld->values[0][0] * x >> 8);
+                                    vertex->y = matWorld->values[1][3] + (matWorld->values[1][2] * z >> 8) + (y * matWorld->values[1][1] >> 8)
+                                                + (matWorld->values[1][0] * x >> 8);
+                                    vertex->z = matWorld->values[2][3] + (x * matWorld->values[2][0] >> 8) + (y * matWorld->values[2][1] >> 8)
+                                                + (matWorld->values[2][2] * z >> 8);
+                                    vertex->nx =
+                                        (matView->values[0][0] * nx >> 8) + (ny * matView->values[0][1] >> 8) + (matView->values[0][2] * nz >> 8);
+                                    vertex->ny =
+                                        (matView->values[1][0] * nx >> 8) + (ny * matView->values[1][1] >> 8) + (matView->values[1][2] * nz >> 8);
+                                    vertex->nz =
+                                        ((matView->values[2][2] * nz) >> 8) + ((ny * matView->values[2][1] >> 8) + (matView->values[2][0] * nx >> 8));
                                     vertex->colour = modelColour->colour;
                                 }
                             }
@@ -719,15 +748,19 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
-                                    ModelVertex *modelVert = &mdl->vertices[frameOffset + indices[i]];
-                                    Colour *modelColour    = &mdl->colours[indices[i++]];
-                                    Scene3DVertex *vertex  = &scn->vertices[vertID++];
-                                    vertex->x              = matWorld->values[0][3] + (matWorld->values[0][0] * modelVert->x >> 8)
-                                                + (modelVert->y * matWorld->values[0][1] >> 8) + (modelVert->z * matWorld->values[0][2] >> 8);
-                                    vertex->y = matWorld->values[1][3] + (modelVert->z * matWorld->values[1][2] >> 8)
-                                                + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->y * matWorld->values[1][1] >> 8);
-                                    vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * modelVert->z >> 8)
-                                                + (modelVert->y * matWorld->values[2][1] >> 8) + (modelVert->x * matWorld->values[2][0] >> 8);
+                                    ModelVertex *frameVert     = &mdl->vertices[frameOffset + indices[i]];
+                                    ModelVertex *nextFrameVert = &mdl->vertices[nextFrameOffset + indices[i]];
+                                    int x                      = frameVert->x + ((interpolate * (nextFrameVert->x - frameVert->x)) >> 8);
+                                    int y                      = frameVert->y + ((interpolate * (nextFrameVert->y - frameVert->y)) >> 8);
+                                    int z                      = frameVert->z + ((interpolate * (nextFrameVert->z - frameVert->z)) >> 8);
+                                    Colour *modelColour   = &mdl->colours[indices[i++]];
+                                    Scene3DVertex *vertex = &scn->vertices[vertID++];
+                                    vertex->x = matWorld->values[0][3] + (matWorld->values[0][0] * x >> 8) + (y * matWorld->values[0][1] >> 8)
+                                                + (z * matWorld->values[0][2] >> 8);
+                                    vertex->y = matWorld->values[1][3] + (z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * x >> 8)
+                                                + (y * matWorld->values[1][1] >> 8);
+                                    vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * z >> 8) + (y * matWorld->values[2][1] >> 8)
+                                                + (x * matWorld->values[2][0] >> 8);
                                     vertex->colour = modelColour->colour;
                                 }
                             }

@@ -28,7 +28,7 @@ void UFO_Shadow_LateUpdate(void)
         }
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
     }
 }
 
@@ -70,7 +70,7 @@ void UFO_Shadow_StageLoad(void)
     int slot = TEMPENTITY_START;
     foreach_all(UFO_Player, player)
     {
-        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
+        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot--);
         RSDK.ResetEntityPtr(shadow, UFO_Shadow->objectID, 0);
         shadow->position.x  = player->position.x;
         shadow->position.y  = player->position.y;
@@ -81,7 +81,7 @@ void UFO_Shadow_StageLoad(void)
     foreach_all(UFO_Circuit, ufo)
     {
         if (ufo->startNode) {
-            EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
+            EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot--);
             RSDK.ResetEntityPtr(shadow, UFO_Shadow->objectID, 0);
             shadow->position.x  = ufo->position.x;
             shadow->position.y  = ufo->position.y;
@@ -92,7 +92,7 @@ void UFO_Shadow_StageLoad(void)
 
     foreach_all(UFO_Ring, ring)
     {
-        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
+        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot--);
         RSDK.ResetEntityPtr(shadow, UFO_Shadow->objectID, 0);
         shadow->position.x  = ring->position.x;
         shadow->position.y  = ring->position.y;
@@ -102,7 +102,7 @@ void UFO_Shadow_StageLoad(void)
 
     foreach_all(UFO_Sphere, sphere)
     {
-        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot++);
+        EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot--);
         RSDK.ResetEntityPtr(shadow, UFO_Shadow->objectID, 0);
         shadow->position.x  = sphere->position.x;
         shadow->position.y  = sphere->position.y;
@@ -110,7 +110,7 @@ void UFO_Shadow_StageLoad(void)
         shadow->shadowScale = 0x100;
     }
 
-    LogHelpers_Print("%d shadow entities spawned", slot - TEMPENTITY_START);
+    LogHelpers_Print("%d shadow entities spawned", TEMPENTITY_START - slot);
 }
 
 void UFO_Shadow_EditorDraw(void) {}

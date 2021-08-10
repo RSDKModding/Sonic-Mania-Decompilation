@@ -31,8 +31,8 @@ typedef struct {
     bool32 startNode;
     bool32 reverse;
     void *curNode;
-    void *prevNode;
     void *nextNode;
+    void *prevNode;
     int angleY;
     int height;
     int field_7C;
@@ -56,7 +56,7 @@ typedef struct {
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;
-    Animator ufoData;
+    Animator animatorUFO;
 } EntityUFO_Circuit;
 
 // Object Struct

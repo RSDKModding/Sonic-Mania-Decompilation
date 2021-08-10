@@ -77,7 +77,7 @@ struct ScanlineInfo {
 };
 
 struct TileLayer {
-    byte behaviour;
+    byte type;
     byte drawLayer[4];
     byte widthShift;
     byte heightShift;
@@ -202,7 +202,7 @@ inline ushort GetTileInfo(ushort layerID, int tileX, int tileY)
     if (layerID < LAYER_COUNT) {
         TileLayer *layer = &tileLayers[layerID];
         if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
-            return layer->layout[tileX + (tileY * layer->width)];
+            return layer->layout[tileX + (tileY << layer->widthShift)];
         }
     }
     return 0xFFFF;
@@ -213,7 +213,7 @@ inline void SetTileInfo(ushort layerID, int tileX, int tileY, ushort tile)
     if (layerID < LAYER_COUNT) {
         TileLayer* layer = &tileLayers[layerID];
         if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
-            layer->layout[tileX + (tileY * layer->width)] = tile;
+            layer->layout[tileX + (tileY << layer->widthShift)] = tile;
         }
     }
 }

@@ -327,10 +327,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                     int colY         = posY - layer->position.y;
                     int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                        ushort *layout = &layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int ty = cy + collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                                     if (colY >= ty && abs(colY - ty) <= 14) {
@@ -340,7 +339,6 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                                     }
                                 }
                             }
-                            layout += layer->width;
                             cy += TILE_SIZE;
                         }
                     }
@@ -364,10 +362,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                     int colY         = posY - layer->position.y;
                     int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int tx = cx + collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
                                     if (colX >= tx && abs(colX - tx) <= 14) {
@@ -377,7 +374,6 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                                     }
                                 }
                             }
-                            layout++;
                             cx += TILE_SIZE;
                         }
                     }
@@ -401,10 +397,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                     int colY         = posY - layer->position.y;
                     int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int ty = cy + collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                                     if (colY <= ty && abs(colY - ty) <= 14) {
@@ -414,7 +409,6 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                                     }
                                 }
                             }
-                            layout -= layer->width;
                             cy -= TILE_SIZE;
                         }
                     }
@@ -438,10 +432,9 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                     int colY         = posY - layer->position.y;
                     int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                                     if (colX <= tx && abs(colX - tx) <= 14) {
@@ -451,7 +444,6 @@ bool32 ObjectTileCollision(Entity *entity, ushort cLayers, char cMode, char cPla
                                     }
                                 }
                             }
-                            layout--;
                             cx -= TILE_SIZE;
                         }
                     }
@@ -485,10 +477,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                     int colY         = posY - layer->position.y;
                     int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                        ushort *layout = &layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int mask = collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                                     int ty   = cy + mask;
@@ -501,7 +492,6 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                                     }
                                 }
                             }
-                            layout += layer->width;
                             cy += TILE_SIZE;
                         }
                     }
@@ -525,10 +515,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                     int colY         = posY - layer->position.y;
                     int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int mask = collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
                                     int tx   = cx + mask;
@@ -541,7 +530,6 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                                     }
                                 }
                             }
-                            layout++;
                             cx += TILE_SIZE;
                         }
                     }
@@ -565,10 +553,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                     int colY         = posY - layer->position.y;
                     int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->width) {
-                        ushort *layout = &layer->layout[(colX >> 4) + ((cy / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                                ushort tile = *layout;
+                                ushort tile    = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int mask = collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                                     int ty   = cy + mask;
@@ -581,7 +568,6 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                                     }
                                 }
                             }
-                            layout -= layer->width;
                             cy -= TILE_SIZE;
                         }
                     }
@@ -605,10 +591,9 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                     int colY         = posY - layer->position.y;
                     int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->height) {
-                        ushort *layout = &layer->layout[(cx >> 4) + ((colY / TILE_SIZE) * layer->width)];
                         for (int i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                                ushort tile = *layout;
+                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
                                     int mask = collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                                     int tx   = cx + mask;
@@ -621,7 +606,6 @@ bool32 ObjectTileGrip(Entity *entity, ushort cLayers, char cMode, char cPlane, i
                                     }
                                 }
                             }
-                            layout--;
                             cx -= TILE_SIZE;
                         }
                     }
@@ -1480,7 +1464,7 @@ void FindFloorPosition(CollisionSensor *sensor)
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 for (int i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                        ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                             int ty        = cy + mask;
@@ -1527,7 +1511,7 @@ void FindLWallPosition(CollisionSensor *sensor)
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
                 for (int i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
                             int tx        = cx + mask;
@@ -1573,7 +1557,7 @@ void FindRoofPosition(CollisionSensor *sensor)
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 for (int i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                        ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                             int ty        = cy + mask;
@@ -1619,7 +1603,7 @@ void FindRWallPosition(CollisionSensor *sensor)
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
                 for (int i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int tx        = cx + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                             int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;
@@ -1663,7 +1647,7 @@ void FloorCollision(CollisionSensor *sensor)
             if (colX >= 0 && colX < TILE_SIZE * layer->width) {
                 for (int i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->height) {
-                        ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                             int ty   = cy + mask;
@@ -1698,7 +1682,7 @@ void LWallCollision(CollisionSensor *sensor)
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
                 for (int i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
                             int tx   = cx + mask;
@@ -1735,7 +1719,7 @@ void RoofCollision(CollisionSensor *sensor)
                     if (cy >= 0 && cy < TILE_SIZE * layer->height) {
                         int tileX   = (colX / TILE_SIZE);
                         int tileY   = (cy / TILE_SIZE);
-                        ushort tile = layer->layout[tileX + (tileY * layer->width)];
+                        ushort tile = layer->layout[tileX + (tileY << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                             int ty   = cy + mask;
@@ -1770,7 +1754,7 @@ void RWallCollision(CollisionSensor *sensor)
             if (colY >= 0 && colY < TILE_SIZE * layer->height) {
                 for (int i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->width) {
-                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) * layer->width)];
+                        ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
                             int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                             int tx   = cx + mask;

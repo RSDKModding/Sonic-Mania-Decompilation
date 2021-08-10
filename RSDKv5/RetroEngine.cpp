@@ -94,7 +94,8 @@ bool32 processEvents()
                     }
                     break;
             }
-            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId); break;
+            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId); 
+                break;
 #endif //! RETRO_USING_SDL2
 
             case SDL_KEYDOWN:
