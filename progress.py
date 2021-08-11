@@ -20,6 +20,7 @@ for x in d:
     for n, b in d[x]:
         print(f"- [{'x' if b else ' '}] `{n}`")
     
+print(f"\n{completed}/{count}")
 print(completed / count * 100)
 
 

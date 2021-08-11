@@ -203,6 +203,6 @@ void IceSpring_Shatter(int velX, int velY)
     RSDK.PlaySFX(IceSpring->shatterSFX, 0, 255);
     Ice_ShatterGenerator(8, 8, 16, velX, velY, 0);
     if (entity->type < 2)
-        return destroyEntity(entity);
-    entity->animator.frameID = 7;
+        destroyEntity(entity);
+    else entity->animator.frameID = 7;
 }
