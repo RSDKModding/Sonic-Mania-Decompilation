@@ -245,7 +245,7 @@ bool32 CPZ1Intro_Unknown7(void *h)
     }
 
     if (host->timer == 30) {
-        if ((globals->playerID & 0xFF) == ID_TAILS)
+        if ((globals->playerID & 0xFF) == ID_SONIC)
             RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_BORED2, &player1->playerAnimator, false, 0);
         else
             RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_BORED1, &player1->playerAnimator, false, 0);
@@ -304,7 +304,8 @@ bool32 CPZ1Intro_Unknown9(void *h)
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->playerAnimator, true, 0);
                 break;
-            case ID_TAILS: CPZ1Intro->playerAnimID = 1;
+            case ID_TAILS: 
+                CPZ1Intro->playerAnimID = 1;
 #if RETRO_USE_PLUS
                 player1->state          = Player_State_None;
                 player1->tileCollisions = false;

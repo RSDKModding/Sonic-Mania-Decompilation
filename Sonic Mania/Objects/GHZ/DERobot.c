@@ -239,8 +239,7 @@ void DERobot_Unknown5(void)
             ushort tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
-                EntityBreakableWall *wall =
-                    (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, intToVoid(1), (tx << 20) + 0x80000, spawnY);
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), (tx << 20) + 0x80000, spawnY);
                 wall->drawOrder  = Zone->drawOrderHigh;
                 wall->visible    = true;
                 wall->tileInfo   = tile;
@@ -271,7 +270,7 @@ void DERobot_Unknown6(void)
             ushort tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
-                EntityBreakableWall *wall = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, intToVoid(1), spawnX, spawnY);
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
@@ -296,7 +295,7 @@ void DERobot_Unknown6(void)
             ushort tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
-                EntityBreakableWall *wall = (EntityBreakableWall *)RSDK.CreateEntity(BreakableWall->objectID, intToVoid(1), spawnX, spawnY);
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;

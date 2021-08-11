@@ -18,53 +18,41 @@ void ZipLine_Update(void)
             entity->grabDelay[pid]--;
 
         if ((1 << pid) & entity->activePlayers) {
-            if (player->objectID == Player->objectID && !player->hurtFlag) {
-                if (player->state != Player_State_Unknown && player->state != Player_State_Die && player->state != Player_State_Drown
-                    && player->state != Player_State_StartJumpIn && player->state != Player_State_FlyIn && player->state != Player_State_JumpIn
-                    && player->state != Player_State_Transform) {
-                    Hitbox *playerHitbox = Player_GetHitbox(player);
-                    if (player->state != Player_State_Hit) {
-                        if (player->velocity.x) {
-                            if ((byte)(entity->angle - 0x40) < 0x80)
-                                entity->groundVel = -player->groundVel;
-                            else
-                                entity->groundVel = player->groundVel;
+            if (player->objectID == Player->objectID && Player_CheckValidState(player)) {
+                Hitbox *playerHitbox = Player_GetHitbox(player);
+                if (player->state != Player_State_Hit) {
+                    if (player->velocity.x) {
+                        if ((byte)(entity->angle - 0x40) < 0x80)
+                            entity->groundVel = -player->groundVel;
+                        else
+                            entity->groundVel = player->groundVel;
 
-                            if (entity->groundVel > 0xA0000)
-                                entity->groundVel = 0xA0000;
-                            else if (entity->groundVel < -0xA0000)
-                                entity->groundVel = -0xA0000;
+                        if (entity->groundVel > 0xA0000)
+                            entity->groundVel = 0xA0000;
+                        else if (entity->groundVel < -0xA0000)
+                            entity->groundVel = -0xA0000;
 
-                            entity->velocity.x = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                            entity->velocity.y = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
-                            player->velocity.x = 0;
-                            player->velocity.y = 0;
-                            player->groundVel  = 0;
-                            player->angle      = 0;
-                            player->rotation   = 0;
-                        }
-                        int prevX          = player->position.x;
-                        player->position.x = entity->position.x;
-                        player->position.y = entity->position.y;
-                        player->position.y +=
-                            (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000) + ((ZipLine->hitbox.top - playerHitbox->top) << 16);
-                        if (abs(prevX - entity->position.x) <= 0x100000) {
-                            if (!entity->grabDelay[pid] && player->jumpPress) {
-                                player->velocity.y       = -0x40000;
-                                player->jumpAbilityTimer = 1;
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, 0, 0);
-                                player->playerAnimator.animationSpeed = 48;
-                                player->state                         = Player_State_Air;
-                                entity->grabDelay[pid]                = 60;
-                                entity->activePlayers &= ~(1 << pid);
-                                player->onGround       = false;
-                                player->groundedStore  = false;
-                                player->tileCollisions = true;
-                            }
-                        }
-                        else {
-                            player->state          = Player_State_Air;
-                            entity->grabDelay[pid] = 60;
+                        entity->velocity.x = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
+                        entity->velocity.y = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
+                        player->velocity.x = 0;
+                        player->velocity.y = 0;
+                        player->groundVel  = 0;
+                        player->angle      = 0;
+                        player->rotation   = 0;
+                    }
+                    int prevX          = player->position.x;
+                    player->position.x = entity->position.x;
+                    player->position.y = entity->position.y;
+                    player->position.y +=
+                        (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000) + ((ZipLine->hitbox.top - playerHitbox->top) << 16);
+                    if (abs(prevX - entity->position.x) <= 0x100000) {
+                        if (!entity->grabDelay[pid] && player->jumpPress) {
+                            player->velocity.y       = -0x40000;
+                            player->jumpAbilityTimer = 1;
+                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, 0, 0);
+                            player->playerAnimator.animationSpeed = 48;
+                            player->state                         = Player_State_Air;
+                            entity->grabDelay[pid]                = 60;
                             entity->activePlayers &= ~(1 << pid);
                             player->onGround       = false;
                             player->groundedStore  = false;
@@ -72,12 +60,20 @@ void ZipLine_Update(void)
                         }
                     }
                     else {
+                        player->state          = Player_State_Air;
                         entity->grabDelay[pid] = 60;
                         entity->activePlayers &= ~(1 << pid);
                         player->onGround       = false;
-                        player->groundedStore  = 0;
+                        player->groundedStore  = false;
                         player->tileCollisions = true;
                     }
+                }
+                else {
+                    entity->grabDelay[pid] = 60;
+                    entity->activePlayers &= ~(1 << pid);
+                    player->onGround       = false;
+                    player->groundedStore  = 0;
+                    player->tileCollisions = true;
                 }
             }
             else {

@@ -16,8 +16,7 @@ typedef struct {
     StateMachine(state);
     int timer;
     int playerID;
-    int dword64;
-    int dword68;
+    Vector2 dword64;
     Vector2 verts[4];
     Vector2 letterPositions[8];
     Vector2 unknownPos1[8];

@@ -218,6 +218,10 @@ void UISaveSlot_Draw(void)
                     drawPos.y += 0x200000;
                     UIWidgets_Unknown8(64, drawPos.x, drawPos.y);
                 }
+                else if (entity->listID == 1) {
+                    drawPos.y -= 0x300000;
+                    UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
+                }
 #if RETRO_USE_PLUS
             }
             else if (entity->listID == 1) {

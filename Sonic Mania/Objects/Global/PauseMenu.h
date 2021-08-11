@@ -8,11 +8,13 @@ typedef struct {
     RSDK_OBJECT
     ushort sfxBleep;
     ushort sfxAccept;
-    int disableEvents;
+    bool32 disableEvents;
     bool32 controllerDisconnect;
-    int dword10;
+    bool32 dword10;
     bool32 signoutDetected;
+#if RETRO_USE_PLUS
     bool32 plusChanged;
+#endif
     bool32 channelFlags[0x10];
     ushort lookupTable[0x10000];
 } ObjectPauseMenu;
@@ -71,9 +73,9 @@ void PauseMenu_FocusCamera(void);
 void PauseMenu_UpdateCameras(void);
 void PauseMenu_Resume_CB(void);
 void PauseMenu_Restart_CB(void);
-void PauseMenu_Unknown13(void);
+void PauseMenu_RestartDialog_YesCB(void);
 void PauseMenu_Exit_CB(void);
-void PauseMenu_Unknown15(void);
+void PauseMenu_ExitDialog_YesCB(void);
 void PauseMenu_Unknown16(void);
 void PauseMenu_PauseSound(void);
 void PauseMenu_ResumeSound(void);

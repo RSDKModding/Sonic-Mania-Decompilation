@@ -3875,41 +3875,39 @@ void DrawTile(ushort *tiles, int countX, int countY, Vector2 *position, Vector2 
             }
             case FX_ROTATE: // Flip
             case FX_ROTATE | FX_FLIP: {
-                int drawX = 0;
-                int drawY = 0;
+                int pivotX = 0;
+                int pivotY = 0;
                 if (offset) {
-                    drawX = x - (offset->x >> 17);
-                    drawY = y - (offset->y >> 17);
+                    pivotX = -(offset->x >> 17);
+                    pivotY = -(offset->y >> 17);
                 }
                 else {
-                    drawX = x - 8 * countX;
-                    drawY = y - 8 * countY;
+                    pivotX = -(8 * countX);
+                    pivotY = -(8 * countY);
                 }
-                int pivotX = -drawX;
-                int pivotY = -drawY;
 
                 for (int ty = 0; ty < countY; ++ty) {
                     for (int tx = 0; tx < countX; ++tx) {
                         ushort tile = tiles[tx + (ty * countX)];
                         if (tile < 0xFFFF) {
-                            switch (tile >> 10) {
+                            switch ((tile >> 10) & 3) {
                                 case FLIP_NONE:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_NONE, sceneInfo.entity->rotation,
                                                        (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_X:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_X, sceneInfo.entity->rotation,
                                                        (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_Y:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_X, sceneInfo.entity->rotation + 0x100,
                                                        (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_XY:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), 0x200, 0x200, FLIP_NONE, sceneInfo.entity->rotation + 0x100,
                                                        (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
@@ -3921,41 +3919,39 @@ void DrawTile(ushort *tiles, int countX, int countY, Vector2 *position, Vector2 
             }
             case FX_SCALE: // Scale
             case FX_SCALE | FX_FLIP: {
-                int drawX = 0;
-                int drawY = 0;
+                int pivotX = 0;
+                int pivotY = 0;
                 if (offset) {
-                    drawX = x - (offset->x >> 17);
-                    drawY = y - (offset->y >> 17);
+                    pivotX = -(offset->x >> 17);
+                    pivotY = -(offset->y >> 17);
                 }
                 else {
-                    drawX = x - 8 * countX;
-                    drawY = y - 8 * countY;
+                    pivotX = -(8 * countX);
+                    pivotY = -(8 * countY);
                 }
-                int pivotX = -drawX;
-                int pivotY = -drawY;
 
                 for (int ty = 0; ty < countY; ++ty) {
                     for (int tx = 0; tx < countX; ++tx) {
                         ushort tile = tiles[tx + (ty * countX)];
                         if (tile < 0xFFFF) {
-                            switch (tile >> 10) {
+                            switch ((tile >> 10) & 3) {
                                 case FLIP_NONE:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X, 0,
                                                        (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_X:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X, 0,
                                                        (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_Y:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
                                                        0x100, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_XY:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_NONE,
                                                        0x100, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha, 0);
                                     break;
@@ -3967,44 +3963,42 @@ void DrawTile(ushort *tiles, int countX, int countY, Vector2 *position, Vector2 
             }
             case FX_SCALE | FX_ROTATE: // Flip + Scale + Rotation
             case FX_SCALE | FX_ROTATE | FX_FLIP: {
-                int drawX = 0;
-                int drawY = 0;
+                int pivotX = 0;
+                int pivotY = 0;
                 if (offset) {
-                    drawX = x - (offset->x >> 17);
-                    drawY = y - (offset->y >> 17);
+                    pivotX = -(offset->x >> 17);
+                    pivotY = -(offset->y >> 17);
                 }
                 else {
-                    drawX = x - 8 * countX;
-                    drawY = y - 8 * countY;
+                    pivotX = -(8 * countX);
+                    pivotY = -(8 * countY);
                 }
-                int pivotX = -drawX;
-                int pivotY = -drawY;
 
                 for (int ty = 0; ty < countY; ++ty) {
                     for (int tx = 0; tx < countX; ++tx) {
                         ushort tile = tiles[tx + (ty * countX)];
                         if (tile < 0xFFFF) {
-                            switch (tile >> 10) {
+                            switch ((tile >> 10) & 3) {
                                 case FLIP_NONE:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
                                                        sceneInfo.entity->rotation, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
                                                        0);
                                     break;
                                 case FLIP_X:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
                                                        sceneInfo.entity->rotation, (InkEffects)sceneInfo.entity->inkEffect, sceneInfo.entity->alpha,
                                                        0);
                                     break;
                                 case FLIP_Y:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_X,
                                                        sceneInfo.entity->rotation + 0x100, (InkEffects)sceneInfo.entity->inkEffect,
                                                        sceneInfo.entity->alpha, 0);
                                     break;
                                 case FLIP_XY:
-                                    DrawSpriteRotozoom(drawX + (tx * TILE_SIZE), drawY + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
+                                    DrawSpriteRotozoom(x + (tx * TILE_SIZE), y + (ty * TILE_SIZE), pivotX, pivotY, TILE_SIZE, TILE_SIZE, 0,
                                                        TILE_SIZE * (tile & 0x3FF), sceneInfo.entity->scale.x, sceneInfo.entity->scale.y, FLIP_NONE,
                                                        sceneInfo.entity->rotation + 0x100, (InkEffects)sceneInfo.entity->inkEffect,
                                                        sceneInfo.entity->alpha, 0);

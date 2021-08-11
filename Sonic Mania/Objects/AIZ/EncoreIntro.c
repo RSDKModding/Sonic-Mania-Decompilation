@@ -721,7 +721,7 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
 
         player->right = true;
-        if (player->velocity.x < 0x20000)
+        if (player->velocity.x >= 0x20000)
             player->velocity.x = 0x20000;
         entity->velocity.x = player->velocity.x;
         camera->targetPtr  = (Entity *)entity;

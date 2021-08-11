@@ -456,7 +456,7 @@ void Player_State_FlyIn(void);
 void Player_State_JumpIn(void);
 void Player_State_StartJumpIn(void);
 void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player);
-void Player_State_Unknown(void);
+void Player_State_EncoreRespawn(void);
 void Player_State_Victory(void);
 void Player_State_Bubble(void);
 void Player_State_WaterSlide(void);

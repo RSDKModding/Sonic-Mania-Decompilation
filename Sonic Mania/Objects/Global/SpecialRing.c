@@ -113,13 +113,13 @@ void SpecialRing_StageLoad(void)
 void SpecialRing_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void SpecialRing_DebugSpawn(void)
 {
-    EntitySpecialRing *entity =
-        (EntitySpecialRing *)RSDK.CreateEntity(SpecialRing->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
-    entity->enabled = true;
+    RSDK_THIS(SpecialRing);
+    EntitySpecialRing *specialRing = CREATE_ENTITY(SpecialRing, NULL, entity->position.x, entity->position.y);
+    specialRing->enabled           = true;
 }
 void SpecialRing_StartWarp(void)
 {
@@ -127,7 +127,7 @@ void SpecialRing_StartWarp(void)
     if (++entity->warpTimer == 30) {
         SaveGame_SaveGameState();
         RSDK.PlaySFX(SpecialRing->sfx_SpecialWarp, 0, 254);
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        destroyEntity(entity);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         saveRAM->storedStageID  = RSDK_sceneInfo->listPos;
         RSDK.LoadScene("Special Stage", "");
@@ -146,9 +146,8 @@ void SpecialRing_State_Warp(void)
     RSDK.ProcessAnimation(&entity->warpData);
     if (!(Zone->timer & 3)) {
         for (int i = 0; i < 3; ++i) {
-            EntityRing *ring =
-                (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, (RSDK.Rand(-0x200000, 0x20000) + entity->dword68) + entity->position.x,
-                                                entity->position.y + RSDK.Rand(-0x200000, 0x200000));
+            EntityRing *ring = CREATE_ENTITY(Ring, NULL, (RSDK.Rand(-0x200000, 0x20000) + entity->dword68) + entity->position.x,
+                                             entity->position.y + RSDK.Rand(-0x200000, 0x200000));
             ring->state     = Ring_State_Sparkle;
             ring->stateDraw = Ring_StateDraw_Sparkle;
             ring->active    = ACTIVE_NORMAL;

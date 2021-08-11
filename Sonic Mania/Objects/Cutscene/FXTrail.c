@@ -34,7 +34,7 @@ void FXTrail_LateUpdate(void)
         memcpy(&entity->currentAnim, entity->dataPtr, sizeof(Animator));
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 
@@ -43,15 +43,19 @@ void FXTrail_StaticUpdate(void) {}
 void FXTrail_Draw(void)
 {
     RSDK_THIS(FXTrail);
-    int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
+    // int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
+    int alpha = 0x60 * entity->baseAlpha >> 8;
+    int inc   = 0x40 / (ImageTrail_TrackCount / 3);
+
     for (int i = 2; i >= 0; --i) {
         int id = (i * 3) - (i - 1);
         if (entity->stateVisible[id]) {
-            entity->alpha     = alpha[i];
+            entity->alpha     = alpha;
             entity->rotation  = entity->stateRotation[id];
             entity->direction = entity->stateDirection[id];
             RSDK.DrawSprite(&entity->stateAnim[id], &entity->statePos[id], 0);
             entity->drawFX &= ~FX_SCALE;
+            alpha += inc;
         }
     }
 }

@@ -7,14 +7,18 @@
 typedef struct {
     RSDK_OBJECT
     ushort hudMappings;
+#if RETRO_GAMEVER != VER_100
     ushort superButtonMappings;
+#endif
+#if RETRO_USE_PLUS
     ushort sfxClick;
     ushort sfxStarpost;
-    int dwordC;
+    bool32 dwordC;
     int replaySaveEnabled;
     int compSession[4];
     int swapCooldown;
     int stockFlashTimers[PLAYER_MAX];
+#endif
 } ObjectHUD;
 
 // Entity Class
@@ -22,10 +26,15 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 dword5C[4];
-    int field_7C[4];
-    int playerLives[PLAYER_MAX];
+#if RETRO_USE_PLUS
+    int lifeFrameIDs[4];
+    int lives[PLAYER_MAX];
+#endif
     int field_9C;
+#if RETRO_GAMEVER != VER_100
     int superButtonPos;
+#endif
+#if RETRO_USE_PLUS
     void (*competitionStates[PLAYER_MAX])(void);
     Vector2 dwordB4[4];
     Vector2 dwordD4[4];
@@ -33,7 +42,10 @@ typedef struct {
     Vector2 dword114[4];
     int field_134[4];
     int screenID;
+#endif
+#if RETRO_GAMEVER != VER_100
     int timeFlashFrame;
+#endif
     int ringFlashFrame;
     int field_150;
     int field_154;
@@ -46,10 +58,12 @@ typedef struct {
     Animator superButtonsData;
     Animator superButtonData1;
 #endif
+#if RETRO_USE_PLUS
     Animator taData1;
     Animator taData4;
     Animator taData2;
     Animator taData3;
+#endif
 } EntityHUD;
 
 // Object Struct

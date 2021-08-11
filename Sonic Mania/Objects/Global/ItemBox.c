@@ -7,13 +7,14 @@ void ItemBox_Update(void)
     RSDK_THIS(ItemBox);
     StateMachine_Run(entity->state);
 
+#if RETRO_USE_PLUS
     if (entity->type == 17) {
-        if (entity->contentsData.animationID == 2 || (uint)(entity->contentsData.animationID - 7) <= 1) {
-#if RETRO_USE_PLUS
-            if (globals->characterFlags != 0x1F || globals->gameMode != MODE_ENCORE) {
-#endif
+        if (entity->contentsData.animationID == 2 || entity->contentsData.animationID == 7 || entity->contentsData.animationID == 8) {
+            if (globals->characterFlags == 0x1F && globals->gameMode == MODE_ENCORE) {
+                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, false, 0);
+            }
+            else {
                 RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 7, &entity->contentsData, false, 0);
-#if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     int id = 0;
                     while ((1 << entity->contentsData.frameID) & globals->characterFlags) {
@@ -25,15 +26,10 @@ void ItemBox_Update(void)
                         }
                     }
                 }
-#endif
-#if RETRO_USE_PLUS
             }
-            else {
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, false, 0);
-            }
-#endif
         }
     }
+#endif
 }
 
 void ItemBox_LateUpdate(void) {}
@@ -87,11 +83,13 @@ void ItemBox_Create(void *data)
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         switch (entity->type) {
-            case 7:
-            case 8:
-            case 9:
-            case 0xF:
-            case 0x10:
+            case 7: // Sonic
+            case 8: // Tails
+            case 9: // Knuckles
+#if RETRO_USE_PLUS
+            case 15: // Mighty
+            case 16: // Ray
+#endif
                 if (globals->gameMode == MODE_TIMEATTACK) {
                     entity->type = 0;
                 }
@@ -114,17 +112,15 @@ void ItemBox_Create(void *data)
                 }
                 entity->contentsData.frameID = entity->type;
                 break;
-            case 0xC:
-            case 0xD:
 #if RETRO_USE_PLUS
+            case 12: // Swap
+            case 13: // Random
                 if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
-#else
-                if (globals->gameMode == MODE_COMPETITION)
-#endif
                     entity->contentsData.frameID = entity->type;
                 else
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
-                return;
+                    destroyEntity(entity);
+#endif
+                break;
             default: entity->contentsData.frameID = entity->type; break;
         }
     }
@@ -561,11 +557,11 @@ void ItemBox_GivePowerup(void)
                     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                     
-                    int charID = 0x00;
+                    int charID = -1;
                     for (int i = player1->characterID; i > 0; ++charID) i >>= 1;
                     playerIDs[0]          = charID;
 
-                    charID = 0x00;
+                    charID = -1;
                     for (int i = player2->characterID; i > 0; ++charID) i >>= 1;
                     playerIDs[1] = charID;
 
@@ -574,47 +570,58 @@ void ItemBox_GivePowerup(void)
                     }
                     else {
                         for (int i = 0; i < 3; ++i) {
-                            if (globals->stock & (1 << (8 * i))) {
+                            if (globals->stock & (0xFF << (8 * i))) {
+                                int characterID = (globals->stock >> (8 * i)) & 0xFF;
 
-                                int characterID = globals->stock & (1 << (8 * i));
-
-                                playerIDs[i + 2] = 0xFF;
-                                for (int i = characterID; i > 0; ++playerIDs[i + 2]) i >>= 1;
+                                playerIDs[i + 2] = -1;
+                                for (int c = characterID; c > 0; ++playerIDs[i + 2]) c >>= 1;
                             }
                         }
 
                         globals->stock = 0;
 
                         int tempStock = 0;
-                        int p     = 0;
-                        for (; p < 5; ++p) {
+                        int p         = 0;
+                        for (; p < 5;) {
+                            bool32 inc = true;
                             if (playerIDs[p] == 0xFF)
                                 break;
 
-                            newPlayerIDs[p] = RSDK.Rand(1, 5);
+                            newPlayerIDs[p] = RSDK.Rand(0, 5);
                             if ((1 << newPlayerIDs[p]) & globals->characterFlags) {
-                                if (newPlayerIDs[p] != playerIDs[p]) {
-                                    tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
-                                }
-                                else if (p == 4 || playerIDs[p + 1] == 0xFF) {
-                                    int slot           = RSDK.Rand(0, p);
-                                    int id             = newPlayerIDs[slot];
-                                    newPlayerIDs[slot] = newPlayerIDs[p];
-                                    newPlayerIDs[p]    = id;
-                                    tempStock |= 1 << newPlayerIDs[p];
-                                    tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
-                                }
-                                else {
-                                    newPlayerIDs[p] = RSDK.Rand(1, 5);
-                                    if (((1 << newPlayerIDs[p]) & globals->characterFlags)) {
-                                        int slot           = RSDK.Rand(1, p);
-                                        int id             = newPlayerIDs[slot];
-                                        newPlayerIDs[slot] = newPlayerIDs[p];
-                                        newPlayerIDs[p]    = id;
-                                        tempStock |= 1 << newPlayerIDs[p];
-                                        tempStock |= 1 << (newPlayerIDs[p] & 0xFF);
+                                while (true) {
+                                    if (!((1 << newPlayerIDs[p]) & tempStock)) {
+                                        if (newPlayerIDs[p] != playerIDs[p]) {
+                                            tempStock |= 1 << newPlayerIDs[p];
+                                            break;
+                                        }
+                                        else if (p == 4 || playerIDs[p + 1] == 0xFF) {
+                                            int slot           = RSDK.Rand(0, p);
+                                            int id             = newPlayerIDs[slot];
+                                            newPlayerIDs[slot] = newPlayerIDs[p];
+                                            newPlayerIDs[p]    = id;
+                                            tempStock |= 1 << newPlayerIDs[slot];
+                                            tempStock |= 1 << newPlayerIDs[p];
+                                            break;
+                                        }
+                                        else {
+                                            newPlayerIDs[p] = RSDK.Rand(0, 5);
+                                            if (!((1 << newPlayerIDs[p]) & globals->characterFlags)) {
+                                                inc = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        newPlayerIDs[p] = RSDK.Rand(0, 5);
+                                        if (!((1 << newPlayerIDs[p]) & globals->characterFlags)) {
+                                            inc = false;
+                                            break;
+                                        }
                                     }
                                 }
+                                if (inc)
+                                    ++p;
                             }
                         }
 
@@ -657,7 +664,7 @@ void ItemBox_GivePowerup(void)
                                 while ((globals->stock >> id) & 0xFF)
                                     id += 8;
                                 globals->stock |= (1 << entity->contentsData.frameID << id);
-                                HUD->stockFlashTimers[id >> 3] = 120;
+                                HUD->stockFlashTimers[(id >> 3) + 1] = 120;
                             }
                             else {
                                 player2->objectID = Player->objectID;
@@ -671,7 +678,7 @@ void ItemBox_GivePowerup(void)
                                 player2->playerID     = 1;
                                 EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                                 if (player1->state == Player_State_Die || player1->state == Player_State_Drown) {
-                                    player2->state      = Player_State_Unknown;
+                                    player2->state      = Player_State_EncoreRespawn;
                                     player2->velocity.x = 0;
                                     player2->velocity.y = 0;
                                     player2->position.x = -0x200000;
@@ -998,15 +1005,15 @@ void ItemBox_HandleObjectCollisions(void)
         if (entity->parent) {
             EntityTilePlatform *tilePlatform = (EntityTilePlatform *)entity->parent;
             if (tilePlatform->objectID == TilePlatform->objectID) {
-                /*flag                           = true;
-                tilePlatform[1].tileCollisions = 1;
-                entity->position.x        = entity->scale.x + tilePlatform[1].depth;
-                entity->position.y        = (entity->scale.y + *(_DWORD *)&tilePlatform[1].group) & 0xFFFF0000;
-                entity->unknownPos.x           = tilePlatform[1].inBounds & 0xFFFF0000;
-                entity->unknownPos.y           = tilePlatform[1].field_3C & 0xFFFF0000;
-                entity->contentsPos.x += tilePlatform[1].inBounds;
-                entity->contentsPos.y += tilePlatform[1].field_3C;
-                entity->velocity.y = 0;*/
+                flag                 = true;
+                tilePlatform->stood  = true;
+                entity->position.x   = entity->scale.x + tilePlatform->drawPos.x;
+                entity->position.y   = (entity->scale.y + tilePlatform->drawPos.y) & 0xFFFF0000;
+                entity->unknownPos.x = tilePlatform->collisionOffset.x & 0xFFFF0000;
+                entity->unknownPos.y = tilePlatform->collisionOffset.y & 0xFFFF0000;
+                entity->contentsPos.x += tilePlatform->collisionOffset.x;
+                entity->contentsPos.y += tilePlatform->collisionOffset.y;
+                entity->velocity.y = 0;
             }
         }
     }
@@ -1015,74 +1022,73 @@ void ItemBox_HandleObjectCollisions(void)
         if (entity->parent) {
             EntityCrate *crate = (EntityCrate *)entity->parent;
             if (crate->objectID == Crate->objectID) {
-                /*crate[1].tileCollisions = 1;
-                entity->position.x      = entity->scale.x + crate[1].depth;
-                entity->position.y      = (entity->scale.y + *(_DWORD *)&crate[1].group) & 0xFFFF0000;
-                v12                     = crate[1].inBounds;
-                entity->unknownPos.x    = v12;
-                v13                     = crate[1].field_3C & 0xFFFF0000;
-                entity->unknownPos.x    = v12 & 0xFFFF0000;
-                entity->unknownPos.y    = v13;
-                entity->contentsPos.x += crate[1].inBounds;
-                entity->contentsPos.y += crate[1].field_3C;
-                entity->velocity.y = 0;*/
+                crate->stood         = true;
+                entity->position.x   = entity->scale.x + crate->drawPos.x;
+                entity->position.y   = (entity->scale.y + crate->drawPos.x) & 0xFFFF0000;
+                entity->unknownPos.x = crate->collisionOffset.x & 0xFFFF0000;
+                entity->unknownPos.y = crate->collisionOffset.y & 0xFFFF0000;
+                entity->contentsPos.x += crate->collisionOffset.x;
+                entity->contentsPos.y += crate->collisionOffset.y;
+                entity->velocity.y = 0;
             }
             else {
                 entity->parent = NULL;
             }
         }
         else {
-            //EntityCrate *crate = 0;
-            /*while (RSDK.GetActiveObjects(Crate->objectID, (Entity**)&crate)) {
-                if (crate[2].updateRange.y != 1 && ItemBox_HandlePlatformCollision((EntityPlatform *)crate))
+            foreach_active(Crate, crate)
+            {
+                if (!crate->ignoreItemBox && ItemBox_HandlePlatformCollision((EntityPlatform *)crate))
                     flag = true;
-            }*/
+            }
         }
     }
     if (!flag)
         entity->parent = NULL;
     if (Ice) {
-        //EntityIce *ice = 0;
-        /*while (RSDK.GetActiveObjects(Ice->objectID, (Entity**)&ice)) {
-            if (ice[1].position.y == Ice_Unknown18) {
+        foreach_active(Ice, ice)
+        {
+            if (ice->stateDraw == Ice_StateDraw_Unknown1) {
                 int storeX = ice->position.x;
                 int storeY = ice->position.y;
                 ice->position.x -= ice[2].alpha;
                 ice->position.y -= ice[2].rotation;
 
-                if (RSDK.CheckObjectCollisionBox(ice, &ice[2].inBounds, entity, &ItemBox->hitbox, 1) == 1) {
-                    entity->position.x += ice[2].alpha;
-                    entity->position.y += ice[2].rotation;
+                if (RSDK.CheckObjectCollisionBox(ice, &ice->hitbox1, entity, &ItemBox->hitbox, true)) {
+                    entity->position.x += ice->playerPos.x;
+                    entity->position.y += ice->playerPos.y;
                     entity->position.y = entity->position.y >> 0x10 << 0x10;
-                    entity->contentsPos.x += ice[2].alpha;
-                    entity->contentsPos.y += ice[2].rotation;
-                    entity->contentsPos.y         = entity->contentsPos.y >> 0x10 << 0x10;
-                    entity->unknownPos.x     = ice[2].alpha;
-                    entity->unknownPos.y          = ice[2].rotation;
-                    entity->velocity.y       = 0;
+                    entity->contentsPos.x += ice->playerPos.x;
+                    entity->contentsPos.y += ice->playerPos.y;
+                    entity->contentsPos.y = entity->contentsPos.y >> 0x10 << 0x10;
+                    entity->unknownPos.x  = ice->playerPos.x;
+                    entity->unknownPos.y  = ice->playerPos.y;
+                    entity->velocity.y    = 0;
                 }
                 ice->position.x = storeX;
-                ice->position.y    = storeY;
+                ice->position.y = storeY;
             }
-        }*/
+        }
     }
     foreach_active(Spikes, spikes)
     {
         int storeX = spikes->position.x;
         int storeY = spikes->position.y;
-        /*spikes->position.x -= spikes->unknownPos.x;
-        spikes->position.y -= spikes->unknownPos.y;
-        if (RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, entity, &ItemBox->hitbox, 1) == 1) {
-            entity->position.x += spikes->unknownPos.x;
-            entity->position.y += spikes->unknownPos.y;
-            LOWORD(entity->position.y) = 0;
-            entity->contentsPos.x += spikes->unknownPos.x;
-            entity->contentsPos.y += spikes->unknownPos.y;
-            LOWORD(entity->contentsPos.y) = 0;
-            entity->unknownPos.x          = spikes->unknownPos.x;
-            entity->unknownPos.y          = spikes->unknownPos.y;
-            entity->velocity.y       = 0;
-        }*/
+        spikes->position.x -= spikes->offset.x;
+        spikes->position.y -= spikes->offset.y;
+        if (RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, entity, &ItemBox->hitbox, true)) {
+            entity->position.x += spikes->offset.x;
+            entity->position.y += spikes->offset.y;
+            entity->position.y &= 0xFFFF0000;
+
+            entity->contentsPos.x += spikes->offset.x;
+            entity->contentsPos.y += spikes->offset.y;
+            entity->contentsPos.y &= 0xFFFF0000;
+
+            entity->unknownPos.x = spikes->offset.x;
+            entity->unknownPos.y = spikes->offset.y;
+            entity->velocity.y   = 0;
+        }
         spikes->position.x = storeX;
         spikes->position.y = storeY;
     }

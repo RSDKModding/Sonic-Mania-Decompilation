@@ -103,27 +103,30 @@ extern uint randKey;
 inline void setRandKey(int key) { randKey = key; }
 inline int RSDK_random(int min, int max)
 {
-    uint v2       = 1103515245 * randKey + 12345;
-    uint v3       = 1103515245 * v2 + 12345;
-    randKey       = 1103515245 * v3 + 12345;
-    signed int v4 = ((randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
-    if (min >= max)
-        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
-    else
-        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + min);
+    int val = 1103515245 * randKey + 12345;
+    randKey = 1103515245 * (1103515245 * val + 12345) + 12345;
+
+    if (min > max)
+        return max + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (randKey >> 16) & 0x7FF) % (min - max);
+    else if (min < max)
+        return min + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (randKey >> 16) & 0x7FF) % (max - min);
+    else 
+        return max;
 }
 inline int RSDK_random2(int min, int max, int *randKey)
 {
     if (!randKey)
         return 0;
-    uint v2       = 1103515245 * *randKey + 12345;
-    uint v3       = 1103515245 * v2 + 12345;
-    *randKey      = 1103515245 * v3 + 12345;
-    signed int v4 = ((*randKey >> 16) & 0x7FF) ^ ((((v3 >> 16) & 0x7FF) ^ ((v2 >> 6) & 0x1FFC00)) << 10);
-    if (min >= max)
-        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + max);
+
+    int val = 1103515245 * *randKey + 12345;
+    *randKey = 1103515245 * (1103515245 * val + 12345) + 12345;
+
+    if (min > max)
+        return max + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (*randKey >> 16) & 0x7FF) % (min - max);
+    else if (min < max)
+        return min + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (*randKey >> 16) & 0x7FF) % (max - min);
     else
-        return (uint)(v4 - v4 / abs(max - min) * abs(max - min) + min);
+        return max;
 }
 
 #endif // !MATH_H

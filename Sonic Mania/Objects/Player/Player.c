@@ -146,7 +146,7 @@ void Player_LateUpdate(void)
         entity->maxGlideSpeed = 0;
 #if RETRO_USE_PLUS
         if (!entity->sidekick)
-            RSDK.CopyEntity(Zone->entityData[1], entity, 0);
+            RSDK.CopyEntity(Zone->entityData[1], entity, false);
 #endif
 
         bool32 flag = entity->sidekick || globals->gameMode == MODE_COMPETITION;
@@ -184,7 +184,7 @@ void Player_LateUpdate(void)
         entity->underwater     = false;
         Player_ChangePhysicsState(entity);
         Entity *powerup = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(entity));
-        RSDK.ResetEntityPtr(powerup, TYPE_BLANK, NULL);
+        destroyEntity(powerup);
 
         switch (entity->hurtFlag) {
             default: break;
@@ -193,7 +193,7 @@ void Player_LateUpdate(void)
                 entity->hurtFlag   = 0;
                 entity->velocity.y = -0x68000;
                 entity->state      = Player_State_Die;
-                if ((entity->drawFX & FX_SCALE) == 0 || entity->scale.x == 0x200)
+                if (!(entity->drawFX & FX_SCALE) || entity->scale.x == 0x200)
                     entity->drawOrder = Zone->playerDrawHigh;
                 if (entity->sidekick || globals->gameMode == MODE_COMPETITION) {
                     if (entity->camera) {
@@ -204,12 +204,14 @@ void Player_LateUpdate(void)
 #if RETRO_USE_PLUS
                 else if (globals->gameMode == MODE_ENCORE) {
                     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                    if (globals->stock == 0 && !sidekick->objectID) {
+                    if (!globals->stock && !sidekick->objectID) {
+                        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                        RSDK_sceneInfo->timeEnabled = false;
+                    }
 
-                        if (entity->camera) {
-                            entity->scrollDelay   = 2;
-                            entity->camera->state = StateMachine_None;
-                        }
+                    if (entity->camera) {
+                        entity->scrollDelay   = 2;
+                        entity->camera->state = StateMachine_None;
                     }
                 }
 #endif
@@ -656,13 +658,13 @@ void Player_StageLoad(void)
     if (globals->gameMode == MODE_ENCORE) {
         Player->playerCount    = 2;
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-        sidekick->characterID  = ID_SONIC;
+        sidekick->playerID     = 1;
     }
     else {
-#endif
         Player->playerCount = RSDK.GetEntityCount(Player->objectID, 0);
-#if RETRO_USE_PLUS
     }
+#else
+    Player->playerCount = RSDK.GetEntityCount(Player->objectID, 0);
 #endif
     Player->flyCarryPosA = 1;
     Player->flyCarryPosB = 0;
@@ -748,7 +750,7 @@ void Player_LoadSprites(void)
         }
     }
 
-    if ((globals->playerID & -0x100) > 0) {
+    if (((globals->playerID >> 8) & 0xFF) > 0) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
@@ -819,7 +821,7 @@ void Player_LoadSpritesVS(void)
 }
 void Player_SaveValues(void)
 {
-    EntityPlayer *entity     = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *entity     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     Player->savedLives       = entity->lives;
     globals->restartLives[0] = Player->savedLives;
     Player->savedScore       = entity->score;
@@ -830,7 +832,7 @@ void Player_SaveValues(void)
 void Player_GiveScore(EntityPlayer *player, int score)
 {
     if (player->sidekick)
-        player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->score += score;
     if (player->score > 9999999)
         player->score = 9999999;
@@ -1029,10 +1031,9 @@ void Player_ChangeCharacter(EntityPlayer *entity, int character)
     entity->sensorX[3] = -0x50000;
     entity->sensorX[4] = -0xA0000;
 
-    if (entity->state == Player_State_KnuxWallClimb
-        || entity->state == Player_State_DropDash || entity->state == Player_State_TailsFlight || entity->state == Player_State_KnuxGlideDrop
-        || entity->state == Player_State_KnuxGlideLeft || entity->state == Player_State_KnuxGlideRight || entity->state == Player_State_GlideSlide
-        || entity->state == Player_State_KnuxLedgePullUp
+    if (entity->state == Player_State_KnuxWallClimb || entity->state == Player_State_DropDash || entity->state == Player_State_TailsFlight
+        || entity->state == Player_State_KnuxGlideDrop || entity->state == Player_State_KnuxGlideLeft || entity->state == Player_State_KnuxGlideRight
+        || entity->state == Player_State_GlideSlide || entity->state == Player_State_KnuxLedgePullUp
 #if RETRO_USE_PLUS
         || entity->state == Player_State_MightyHammerDrop || entity->state == Player_State_RayGlide || entity->state == Player_State_MightyUnspin
 #endif
@@ -1830,41 +1831,57 @@ void Player_HandleDeath(EntityPlayer *player)
 {
     if (player->sidekick) {
         Player->jumpInDelay = 0;
-        EntityDust *dust    = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player->position.x, player->position.y);
-        ScreenInfo *screen  = RSDK_screens;
+        EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player->position.x, player->position.y);
         dust->visible       = false;
         dust->active        = ACTIVE_NEVER;
         dust->isPermanent   = true;
-        dust->position.y    = (screen->position.y - 128) << 16;
+        dust->position.y    = (RSDK_screens->position.y - 128) << 16;
 #if RETRO_USE_PLUS
-        if (globals->gameMode != MODE_ENCORE || (player->state != Player_State_Die && player->state != Player_State_Drown)) {
+        EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        if (globals->gameMode != MODE_ENCORE || (leader->state != Player_State_Die && leader->state != Player_State_Drown)) {
             player->angle           = 0x80;
             player->state           = Player_State_StartJumpIn;
             player->entPtr          = (Entity *)dust;
             player->maxGlideSpeed   = 0;
-            player->nextAirState    = 0;
-            player->nextGroundState = 0;
+            player->nextAirState    = StateMachine_None;
+            player->nextGroundState = StateMachine_None;
             player->stateInput      = Player_ProcessP2InputLag;
             player->position.x      = -0x400000;
             player->position.y      = -0x400000;
             player->velocity.x      = 0;
             player->velocity.y      = 0;
             player->groundVel       = 0;
-            player->tileCollisions  = 0;
-            player->interaction     = 0;
+            player->tileCollisions  = false;
+            player->interaction     = false;
             player->drawOrder       = Zone->playerDrawHigh;
             player->airTimer        = 0;
             player->active          = ACTIVE_NORMAL;
         }
         else {
-#endif
-            player->state      = Player_State_Unknown;
+            player->state      = Player_State_EncoreRespawn;
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->position.x = -0x200000;
             player->position.y = -0x200000;
-#if RETRO_USE_PLUS
         }
+#else
+        player->angle = 0x80;
+        player->state = Player_State_StartJumpIn;
+        player->entPtr = (Entity *)dust;
+        player->maxGlideSpeed = 0;
+        player->nextAirState = StateMachine_None;
+        player->nextGroundState = StateMachine_None;
+        player->stateInput = Player_ProcessP2InputLag;
+        player->position.x = -0x400000;
+        player->position.y = -0x400000;
+        player->velocity.x = 0;
+        player->velocity.y = 0;
+        player->groundVel = 0;
+        player->tileCollisions = false;
+        player->interaction = false;
+        player->drawOrder = Zone->playerDrawHigh;
+        player->airTimer = 0;
+        player->active = ACTIVE_NORMAL;
 #endif
     }
     else {
@@ -1926,8 +1943,8 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
                 if (player->lives) {
                     if (Zone->field_15C) {
-                        player->objectID = TYPE_BLANK;
-                        EntitySaveGame *saveRAM     = SaveGame->saveRAM;
+                        player->objectID        = TYPE_BLANK;
+                        EntitySaveGame *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
                             int playerID                      = RSDK.GetEntityID(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -1937,19 +1954,19 @@ void Player_HandleDeath(EntityPlayer *player)
                         }
                         else if (saveRAM) {
                             RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(1));
-                            saveRAM->lives = player->lives;
-                            saveRAM->score = player->score;
+                            saveRAM->lives    = player->lives;
+                            saveRAM->score    = player->score;
                             saveRAM->score1UP = player->score1UP;
 #if RETRO_USE_PLUS
                             saveRAM->continues = globals->continues;
                             if (globals->gameMode == MODE_ENCORE) {
                                 globals->playerID &= 0xFF;
                                 saveRAM->playerID = globals->playerID;
-                                int id      = -1;
+                                int id            = -1;
                                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
                                 globals->characterFlags &= ~(1 << id);
                                 saveRAM->characterFlags = globals->characterFlags;
-                                saveRAM->stock = globals->stock;
+                                saveRAM->stock          = globals->stock;
                             }
 #endif
 
@@ -1985,11 +2002,11 @@ void Player_HandleDeath(EntityPlayer *player)
                             if (globals->gameMode == MODE_ENCORE) {
                                 globals->playerID &= 0xFF;
                                 saveRAM->playerID = globals->playerID;
-                                int id      = -1;
+                                int id            = -1;
                                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
                                 globals->characterFlags &= ~(1 << id);
                                 saveRAM->characterFlags = globals->characterFlags;
-                                saveRAM->stock = globals->stock;
+                                saveRAM->stock          = globals->stock;
                             }
 #endif
 
@@ -2057,7 +2074,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 int id = -1;
                 for (int i = player->characterID; i > 0; ++id) i >>= 1;
                 globals->characterFlags &= ~(1 << id);
-                if (globals->characterFlags == 1) {
+                if (!globals->characterFlags) {
                     int screenID     = 0;
                     player->objectID = TYPE_BLANK;
                     if (player->camera) {
@@ -2069,7 +2086,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
                     }
                     else {
-                        EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
+                        EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                         RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
@@ -3038,7 +3055,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         }
 
         if (entity->state == Player_State_Die || entity->state == Player_State_Drown) {
-            if (sidekick->state == Player_State_Die || sidekick->state == Player_State_Drown || sidekick->state == Player_State_Unknown
+            if (sidekick->state == Player_State_Die || sidekick->state == Player_State_Drown || sidekick->state == Player_State_EncoreRespawn
                 || sidekick->state == Player_State_None) {
                 return false;
             }
@@ -3050,7 +3067,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
                 return false;
         }
     }
-    EntityPlayer *leader             = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *leader             = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *sidekickCam        = sidekick->camera;
     int sidekickController           = sidekick->controllerID;
     void (*sidekickInputState)(void) = sidekick->stateInput;
@@ -3060,8 +3077,8 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         Ice->playerTimers[1] = 0;
         foreach_all(Ice, ice)
         {
-            // if (ice->state == Ice_Unknown16)
-            //    destroyEntity(ice);
+            if (ice->state == Ice_Unknown16)
+               destroyEntity(ice);
         }
     }
     RSDK.CopyEntity(Zone->entityData, leader, 0);
@@ -3267,7 +3284,7 @@ void Player_Hit(EntityPlayer *player)
 bool32 Player_CheckValidState(EntityPlayer *player)
 {
     if (player->objectID == Player->objectID && !player->hurtFlag) {
-        if (player->state != Player_State_Unknown && player->state != Player_State_Die && player->state != Player_State_Drown
+        if (player->state != Player_State_EncoreRespawn && player->state != Player_State_Die && player->state != Player_State_Drown
             && player->state != Player_State_StartJumpIn && player->state != Player_State_FlyIn && player->state != Player_State_JumpIn
             && player->state != Player_State_Transform) {
             return true;
@@ -3696,7 +3713,7 @@ void Player_State_Ground(void)
                         entity->skidding -= 8;
                     }
                     RSDK.PlaySFX(Player->sfx_Skidding, 0, 255);
-                    EntityDust *dust = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
+                    EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
                     dust->state      = Dust_State_Skid;
                     --entity->skidding;
                 }
@@ -3964,7 +3981,7 @@ void Player_State_Crouch(void)
         }
 
         if (entity->jumpPress) {
-            EntityDust *dust = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
+            EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
             RSDK.SetSpriteAnimation(Dust->spriteIndex, 1, &dust->animator, true, 0);
             dust->state     = Dust_State_Spindash;
             dust->drawOrder = entity->drawOrder;
@@ -4239,11 +4256,11 @@ void Player_State_Die(void)
 
     if (entity->blinkTimer) {
         entity->blinkTimer = 0;
-        entity->visible    = 1;
+        entity->visible    = true;
     }
     entity->velocity.y += entity->gravityStrength;
     entity->velocity.x = 0;
-    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_DIE, &entity->playerAnimator, 0, 0);
+    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_DIE, &entity->playerAnimator, false, 0);
 
     if (!entity->sidekick) {
         if (entity->camera) {
@@ -4336,7 +4353,7 @@ void Player_State_DropDash(void)
             entity->scrollDelay   = 8;
             entity->camera->state = Camera_State_VLock;
         }
-        EntityDust *dust = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
+        EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
         RSDK.SetSpriteAnimation(Dust->spriteIndex, 2, &dust->animator, true, 0);
         dust->state = Dust_State_DropDash;
         dust->position.y += RSDK.GetHitbox(&entity->playerAnimator, 0)->bottom << 16;
@@ -4443,7 +4460,7 @@ void Player_State_TailsFlight(void)
         if (entity->position.y < Zone->screenBoundsT2[slot] + 0x100000 && entity->velocity.y < 0)
             entity->velocity.y = 0;
 
-        EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (globals->gameMode != MODE_COMPETITION && !entity->isChibi && !player1->isChibi)
             Player_CheckStartFlyCarry(player1);
 
@@ -4574,10 +4591,10 @@ void Player_State_KnuxGlideLeft(void)
             int oldPos = 0, newPos = 0;
             if (entity->timer >= 128) {
                 entity->position.x += entity->velocity.x;
-                collidedA = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, -0xC0000, y1, 1);
+                collidedA = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, -0xC0000, y1, true);
                 oldPos    = entity->position.x;
                 entity->position.x += entity->velocity.x;
-                collidedB = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, -0xC0000, y2, 1);
+                collidedB = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, -0xC0000, y2, true);
                 newPos    = entity->position.x;
             }
             else {
@@ -4614,7 +4631,7 @@ void Player_State_KnuxGlideLeft(void)
                     }
                     else {
                         entity->velocity.x >>= 2;
-                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, 0, 0);
+                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
                         entity->state = Player_State_KnuxGlideDrop;
                     }
                 }
@@ -4622,7 +4639,7 @@ void Player_State_KnuxGlideLeft(void)
                     entity->timer        = 0;
                     entity->abilitySpeed = 0;
                     entity->velocity.x >>= 2;
-                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
                     entity->state = Player_State_KnuxGlideDrop;
                 }
             }
@@ -4639,9 +4656,9 @@ void Player_State_KnuxGlideLeft(void)
         else {
             entity->timer = 0;
             entity->state = Player_State_GlideSlide;
-            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYLIFTTIRED, &entity->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYLIFTTIRED, &entity->playerAnimator, false, 0);
             entity->groundVel = entity->velocity.x;
-            EntityDust *dust  = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
+            EntityDust *dust  = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
             dust->state       = Dust_State_GlideSlide;
         }
     }
@@ -4659,7 +4676,7 @@ void Player_State_KnuxGlideRight(void)
             entity->timer        = 0;
             entity->abilitySpeed = 0;
             entity->velocity.x >>= 2;
-            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
             entity->state = Player_State_KnuxGlideDrop;
         }
         else {
@@ -4695,10 +4712,10 @@ void Player_State_KnuxGlideRight(void)
             int oldPos = 0, newPos = 0;
             if (entity->timer < 128) {
                 entity->position.x += entity->velocity.x;
-                collidedA = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, 0xC0000, y1, 1);
+                collidedA = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, 0xC0000, y1, true);
                 oldPos    = entity->position.x;
                 entity->position.x += entity->velocity.x;
-                collidedB = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, 0xC0000, y2, 1);
+                collidedB = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, 0xC0000, y2, true);
                 newPos    = entity->position.x;
             }
             else {
@@ -4735,7 +4752,7 @@ void Player_State_KnuxGlideRight(void)
                     }
                     else {
                         entity->velocity.x >>= 2;
-                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, 0, 0);
+                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
                         entity->state = Player_State_KnuxGlideDrop;
                     }
                 }
@@ -4743,7 +4760,7 @@ void Player_State_KnuxGlideRight(void)
                     entity->timer        = 0;
                     entity->abilitySpeed = 0;
                     entity->velocity.x >>= 2;
-                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
                     entity->state = Player_State_KnuxGlideDrop;
                 }
             }
@@ -4760,9 +4777,9 @@ void Player_State_KnuxGlideRight(void)
         else {
             entity->timer = 0;
             entity->state = Player_State_GlideSlide;
-            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYLIFTTIRED, &entity->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLYLIFTTIRED, &entity->playerAnimator, false, 0);
             entity->groundVel = entity->velocity.x;
-            EntityDust *dust  = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
+            EntityDust *dust  = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
             dust->state       = Dust_State_GlideSlide;
         }
     }
@@ -5147,7 +5164,7 @@ void Player_State_MightyUnspin(void)
 void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox)
 {
     RSDK_THIS(Player);
-    EntityDust *dust = (EntityDust *)RSDK.CreateEntity(Dust->objectID, entity, entity->position.x, entity->position.y);
+    EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
     dust->state      = Dust_State_HammerDrop;
     dust->position.y += hitbox->bottom << 16;
     dust->drawOrder       = entity->drawOrder;
@@ -5450,7 +5467,7 @@ void Player_State_FlyIn(void)
     if (entity->maxGlideSpeed || entity->characterID == ID_TAILS || entity->characterID == ID_KNUCKLES) {
         int xDif3 = Player->curFlyCarryPos.x - entPtr->position.x;
         int xDif2 = (Player->curFlyCarryPos.x - entPtr->position.x) >> 4;
-        xDif  = Player->curFlyCarryPos.x - entPtr->position.x;
+        xDif      = Player->curFlyCarryPos.x - entPtr->position.x;
 
         if (entity->characterID != ID_TAILS && entity->characterID != ID_KNUCKLES) {
             xDif2 = ((Player->curFlyCarryPos.x - entPtr->position.x) >> 5) + ((Player->curFlyCarryPos.x - entPtr->position.x) >> 4);
@@ -5586,14 +5603,14 @@ void Player_State_StartJumpIn(void)
 {
     RSDK_THIS(Player);
     if (++entity->maxGlideSpeed == 2) {
-        EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (player1->objectID == Player->objectID) {
-            EntityDust *dust       = CREATE_ENTITY(Dust, intToVoid(1), player1->position.x, player1->position.y);
-            dust->visible          = false;
-            dust->active           = ACTIVE_NEVER;
-            dust->isPermanent      = true;
-            dust->position.y       = (RSDK_screens->position.y - 128) << 16;
+            EntityDust *dust  = CREATE_ENTITY(Dust, intToVoid(1), player1->position.x, player1->position.y);
+            dust->visible     = false;
+            dust->active      = ACTIVE_NEVER;
+            dust->isPermanent = true;
+            dust->position.y  = (RSDK_screens->position.y - 128) << 16;
 #if RETRO_USE_PLUS
             entity->tileCollisions = false;
             entity->interaction    = false;
@@ -5725,7 +5742,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         Camera_SetTargetEntity(thisEntity->camera->screenID, (Entity *)thisEntity);
         thisEntity->camera->state = Camera_State_Follow;
     }
-    RSDK.ResetEntityPtr(entPtr, TYPE_BLANK, NULL);
+    destroyEntity(entPtr);
     Player->upState        = false;
     Player->downState      = false;
     Player->leftState      = false;
@@ -5735,16 +5752,16 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
     if (BoundsMarker)
         BoundsMarker_CheckAllBounds(thisEntity, false);
 }
-void Player_State_Unknown(void)
+void Player_State_EncoreRespawn(void)
 {
     RSDK_THIS(Player);
-    EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->state != Player_State_Die && player1->state != Player_State_Drown) {
 #if RETRO_USE_PLUS
         if (globals->stock) {
-            Player_ChangeCharacter(entity, globals->stock);
+            Player_ChangeCharacter(entity, globals->stock & 0xFF);
             globals->stock >>= 8;
-            EntityDust *dust        = (EntityDust *)RSDK.CreateEntity(Dust->objectID, (void *)1, player1->position.x, player1->position.y);
+            EntityDust *dust        = CREATE_ENTITY(Dust, intToVoid(1), player1->position.x, player1->position.y);
             dust->visible           = false;
             dust->active            = ACTIVE_NEVER;
             dust->isPermanent       = true;
@@ -5761,8 +5778,8 @@ void Player_State_Unknown(void)
             entity->velocity.x      = 0;
             entity->velocity.y      = 0;
             entity->groundVel       = 0;
-            entity->tileCollisions  = 0;
-            entity->interaction     = 0;
+            entity->tileCollisions  = false;
+            entity->interaction     = false;
             entity->drawOrder       = Zone->playerDrawHigh;
             entity->airTimer        = 0;
             entity->active          = ACTIVE_NORMAL;
@@ -6231,7 +6248,7 @@ void Player_ProcessP1Input(void)
 
                         switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                             case 0:
-                                RSDK_controller->keyRight.down   |= true;
+                                RSDK_controller->keyRight.down |= true;
                                 RSDK_controller[entity->controllerID].keyRight.down = true;
                                 break;
                             case 1:
@@ -6258,7 +6275,7 @@ void Player_ProcessP1Input(void)
 
                 if (RSDK_touchMouse->down[t]) {
                     if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
-                        RSDK_controller->keyA.down    |= true;
+                        RSDK_controller->keyA.down |= true;
                         RSDK_controller[entity->controllerID].keyA.down = true;
                         break;
                     }

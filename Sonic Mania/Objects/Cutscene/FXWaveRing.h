@@ -11,7 +11,22 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int angleOffset;
+    int angle2Offset;
+    int angle2;
+    int field_6C;
+    int field_70;
+    char r;
+    char g;
+    char b;
+    int field_78;
+    Entity *parent;
+    Vector2 field_80;
+    int field_88;
+    int field_8C;
 } EntityFXWaveRing;
 
 // Object Struct
@@ -29,6 +44,9 @@ void FXWaveRing_EditorLoad(void);
 void FXWaveRing_Serialize(void);
 
 // Extra Entity Functions
+void FXWaveRing_State_FadeIn(void);
+void FXWaveRing_State_Wait(void);
+void FXWaveRing_State_FadeOut(void);
 #endif
 
 #endif //!OBJ_FXWAVERING_H

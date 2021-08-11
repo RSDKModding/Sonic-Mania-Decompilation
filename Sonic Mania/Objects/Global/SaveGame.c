@@ -226,27 +226,12 @@ void SaveGame_SaveGameState(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     globals->recallEntities = true;
 
-    globals->restartPos[0]  = StarPost->playerPositions[0].x;
-    globals->restartPos[1]  = StarPost->playerPositions[0].y;
-    globals->restartDir[0]  = StarPost->playerDirections[0];
-    globals->restartSlot[0] = StarPost->postIDs[0];
-
-    globals->restartPos[2]  = StarPost->playerPositions[1].x;
-    globals->restartPos[3]  = StarPost->playerPositions[1].y;
-    globals->restartDir[1]  = StarPost->playerDirections[1];
-    globals->restartSlot[1] = StarPost->postIDs[1];
-
-#if RETRO_USE_PLUS
-    globals->restartPos[4]  = StarPost->playerPositions[2].x;
-    globals->restartPos[5]  = StarPost->playerPositions[2].y;
-    globals->restartDir[2]  = StarPost->playerDirections[2];
-    globals->restartSlot[2] = StarPost->postIDs[2];
-
-    globals->restartPos[6]  = StarPost->playerPositions[3].x;
-    globals->restartPos[7]  = StarPost->playerPositions[3].y;
-    globals->restartDir[3]  = StarPost->playerDirections[3];
-    globals->restartSlot[3] = StarPost->postIDs[3];
-#endif
+    for (int p = 0; p < PLAYER_MAX; ++p) {
+        globals->restartPos[(p * 2) + 0] = StarPost->playerPositions[p].x;
+        globals->restartPos[(p * 2) + 1] = StarPost->playerPositions[p].y;
+        globals->restartDir[p]           = StarPost->playerDirections[p];
+        globals->restartSlot[p]          = StarPost->postIDs[p];
+    }
 
     EntityPlayer *player1        = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     globals->restartMilliseconds = StarPost->storedMS;
@@ -270,6 +255,7 @@ void SaveGame_SaveGameState(void)
     globals->restartScore1UP = player1->score1UP;
     globals->restartRings    = player1->rings;
     globals->restart1UP      = player1->ringExtraLife;
+    globals->restartPowerups = player1->shield | (player1->hyperRing << 6);
 
     for (int i = 0x40; i < 0x40 + 0x800; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);

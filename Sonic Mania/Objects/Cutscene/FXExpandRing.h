@@ -10,7 +10,16 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int expandSpeed;
+    int colour;
+    int expandMax;
+    int innerRadius;
+    int outerRadius;
+    Entity *parent;
+    Vector2 posOffset;
 } EntityFXExpandRing;
 
 // Object Struct
@@ -28,6 +37,9 @@ void FXExpandRing_EditorLoad(void);
 void FXExpandRing_Serialize(void);
 
 // Extra Entity Functions
+void FXExpandRing_State_FadeIn(void);
+void FXExpandRing_State_Expand(void);
+void FXExpandRing_State_FadeOut(void);
 
 
 #endif //!OBJ_FXEXPANDRING_H

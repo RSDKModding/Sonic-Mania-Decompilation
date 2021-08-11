@@ -289,7 +289,7 @@ void BreakableWall_StateDraw_Tile(void)
 {
     RSDK_THIS(BreakableWall);
     entity->angle = entity->rotation;
-    RSDK.DrawTile(&entity->tileInfo, 1, 1, 0, 0, 0);
+    RSDK.DrawTile(&entity->tileInfo, 1, 1, NULL, NULL, false);
 }
 // Break
 void BreakableWall_Break1(void)

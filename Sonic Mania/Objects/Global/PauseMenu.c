@@ -69,12 +69,20 @@ void PauseMenu_StaticUpdate(void)
 #endif
             else {
                 for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
+#if RETRO_USE_PLUS
                     int id = RSDK.ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
                         //PauseMenu->controllerDisconnect = true;
                         //RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                         //pauseMenu->triggerPlayer = i;
                     }
+#else
+                    if (APICallback_InputIDIsDisconnected(i + 1)) {
+                        PauseMenu->controllerDisconnect = true;
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        pauseMenu->triggerPlayer = i;
+                    }
+#endif
                 }
             }
         }
@@ -358,13 +366,13 @@ void PauseMenu_Restart_CB(void)
 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, 0, 1);
-        UIDialog_AddButton(0, dialog, PauseMenu_Unknown15, 0);
+        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
+        UIDialog_AddButton(DIALOG_YES, dialog, PauseMenu_RestartDialog_YesCB, 0);
         UIDialog_Setup(dialog);
     }
 }
 
-void PauseMenu_Unknown13(void)
+void PauseMenu_RestartDialog_YesCB(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
 
@@ -378,8 +386,7 @@ void PauseMenu_Unknown13(void)
 #endif
     }
     RSDK.StopChannel(Music->channelID);
-    EntityPauseMenu *entity =
-        (EntityPauseMenu *)RSDK.CreateEntity(PauseMenu->objectID, intToVoid(1), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
+    EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
                                              (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
     entity->funcPtrUnknown = PauseMenu_Unknown8;
     entity->state          = PauseMenu_Unknown27;
@@ -399,13 +406,13 @@ void PauseMenu_Exit_CB(void)
 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, 0, 1);
-        UIDialog_AddButton(0, dialog, PauseMenu_Unknown15, 0);
+        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
+        UIDialog_AddButton(DIALOG_YES, dialog, PauseMenu_ExitDialog_YesCB, 0);
         UIDialog_Setup(dialog);
     }
 }
 
-void PauseMenu_Unknown15(void)
+void PauseMenu_ExitDialog_YesCB(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
     ((EntityUIDialog *)UIDialog->activeDialog)->parent->state = NULL;
@@ -420,9 +427,8 @@ void PauseMenu_Unknown15(void)
     }
 
     RSDK.StopChannel(Music->channelID);
-    EntityPauseMenu *entity =
-        (EntityPauseMenu *)RSDK.CreateEntity(PauseMenu->objectID, (void *)1, (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
-                                             (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
+    EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
+                                            (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
     entity->funcPtrUnknown = PauseMenu_Unknown9;
     entity->state          = PauseMenu_Unknown27;
 }
@@ -433,8 +439,7 @@ void PauseMenu_Unknown16(void)
     EntityUIControl *manager   = (EntityUIControl *)pauseMenu->manager;
 
     if (manager->activeEntityID >= 0 && manager->activeEntityID < manager->buttonCount) {
-        if (pauseMenu->buttonActions[manager->activeEntityID])
-            pauseMenu->buttonActions[manager->activeEntityID]();
+        StateMachine_Run(pauseMenu->buttonActions[manager->activeEntityID]);
     }
 }
 
@@ -499,9 +504,6 @@ void PauseMenu_SetupButtons(void)
 #if RETRO_USE_PLUS
         if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(CONT_P2) == CONT_AUTOASSIGN)
             RSDK.AssignControllerID(CONT_P2, CONT_ANY);
-#else
-        if (globals->gameMode < MODE_TIMEATTACK && APICallback->ControllerIDForInputID(CONT_P2) == CONT_AUTOASSIGN)
-            APICallback->AssignControllerID(CONT_P2, CONT_ANY);
 #endif
     }
 
