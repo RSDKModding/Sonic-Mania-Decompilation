@@ -36,10 +36,10 @@ void UICarousel_Create(void *data)
         entity->visible       = false;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        entity->field_84      = -1;
+        entity->scrollOffset      = -1;
         entity->field_98      = -1;
-        entity->field_9C      = 0;
-        entity->field_A0      = 20;
+        entity->minOffset      = 0;
+        entity->maxOffset      = 20;
     }
 }
 
@@ -72,37 +72,37 @@ void UICarousel_Unknown1(void)
             }
         }
 
-        int val = entity->field_84;
+        int val = entity->scrollOffset;
         if (flag) {
-            --entity->field_88;
-            entity->field_84 = entity->field_88 - (control->buttonCount >> 1);
+            --entity->virtualIndex;
+            entity->scrollOffset = entity->virtualIndex - (control->buttonCount >> 1);
         }
         else if (flag2) {
-            ++entity->field_88;
-            entity->field_84 = entity->field_88 - (control->buttonCount >> 1);
+            ++entity->virtualIndex;
+            entity->scrollOffset = entity->virtualIndex - (control->buttonCount >> 1);
         }
 
-        if (entity->field_A0 != -1) {
-            if (control->buttonCount + entity->field_84 > entity->field_A0 + 1)
-                entity->field_84 = entity->field_A0 - control->buttonCount + 1;
+        if (entity->maxOffset != -1) {
+            if (control->buttonCount + entity->scrollOffset > entity->maxOffset + 1)
+                entity->scrollOffset = entity->maxOffset - control->buttonCount + 1;
 
-            if (entity->field_88 > entity->field_A0 - 1) {
-                entity->field_88        = entity->field_A0 - 1;
+            if (entity->virtualIndex > entity->maxOffset - 1) {
+                entity->virtualIndex        = entity->maxOffset - 1;
                 control->activeEntityID = entityID;
             }
         }
 
-        if (entity->field_9C != -1) {
-            if (entity->field_84 < entity->field_9C - 1)
-                entity->field_84 = entity->field_9C - 1;
-            if (entity->field_88 < entity->field_9C) {
-                entity->field_88        = entity->field_9C;
+        if (entity->minOffset != -1) {
+            if (entity->scrollOffset < entity->minOffset - 1)
+                entity->scrollOffset = entity->minOffset - 1;
+            if (entity->virtualIndex < entity->minOffset) {
+                entity->virtualIndex        = entity->minOffset;
                 control->activeEntityID = entityID;
             }
         }
 
-        if (entity->field_84 >= val) {
-            if (entity->field_84 > val)
+        if (entity->scrollOffset >= val) {
+            if (entity->scrollOffset > val)
                 entity->offset.y += abs(entity->shift.y);
             entity->field_98 = control->activeEntityID;
         }
@@ -128,7 +128,7 @@ void UICarousel_Unknown2(void)
     for (int i = 0; i < control->buttonCount; ++i) {
         EntityUIButton *entPtr = control->buttons[i];
 
-        int pos = (i - entity->field_84) % control->buttonCount;
+        int pos = (i - entity->scrollOffset) % control->buttonCount;
         if (pos < 0)
             pos += control->buttonCount;
 

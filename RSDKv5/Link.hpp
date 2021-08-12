@@ -82,6 +82,9 @@ struct GameInfo {
     UnknownInfo *unknown;
 #endif
     ScreenInfo *screenInfo;
+#if RETRO_USE_MOD_LOADER
+    void *modPtrs;
+#endif
 };
 
 void setupFunctions();

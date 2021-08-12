@@ -480,6 +480,30 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 0x50, colourStore[c]);
                 }
                 break;
+            case ID_MIGHTY:
+                for (int c = 0; c < 6; ++c) {
+                    colourStore[c] = RSDK.GetPaletteEntry(0, c + 96);
+                    RSDK.SetPaletteEntry(0, c + 96, Player->superPalette_Mighty[c]);
+                }
+
+                RSDK.DrawSprite(&entity->playerAnimator, NULL, 0);
+
+                for (int c = 0; c < 6; ++c) {
+                    RSDK.SetPaletteEntry(0, c + 96, colourStore[c]);
+                }
+                break;
+            case ID_RAY:
+                for (int c = 0; c < 6; ++c) {
+                    colourStore[c] = RSDK.GetPaletteEntry(0, c + 113);
+                    RSDK.SetPaletteEntry(0, c + 113, Player->superPalette_Ray[c]);
+                }
+
+                RSDK.DrawSprite(&entity->playerAnimator, NULL, 0);
+
+                for (int c = 0; c < 6; ++c) {
+                    RSDK.SetPaletteEntry(0, c + 113, colourStore[c]);
+                }
+                break;
         }
     }
 

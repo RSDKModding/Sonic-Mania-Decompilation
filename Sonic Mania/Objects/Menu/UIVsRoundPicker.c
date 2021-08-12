@@ -179,11 +179,11 @@ bool32 UIVsRoundPicker_ProcessTouchCB(void)
     bool32 pressed = false;
     for (int i = 0; i < 2; ++i) {
         if (RSDK_touchMouse->count) {
-            int sizeX = entity->touchPosStart.x >> 1;
-            int sizeY = entity->touchPosStart.y >> 1;
+            int sizeX = touchStart[i].x >> 1;
+            int sizeY = touchStart[i].y >> 1;
             for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
+                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
 
                 int touchX = abs(touchEnd[i].x + entity->position.x - x);
                 int touchY = abs(touchEnd[i].y + entity->position.y - y);

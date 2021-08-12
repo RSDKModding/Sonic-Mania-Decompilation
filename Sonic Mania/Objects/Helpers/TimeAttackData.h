@@ -59,7 +59,8 @@ int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mo
 int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int time, void (*callback)(int));
 int TimeAttackData_SaveTimeAttackDB(void (*callback)(int));
 int TimeAttackData_SaveTimeAttackDB_CB(int statusCode);
-int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int dst);
+int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int val);
+int TimeAttackData_SetReplayID(byte zone, byte charID, byte act, int encore, int val);
 void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore);
 
 void TimeAttackData_GetLeaderboardRank_CB(int status, int rank);

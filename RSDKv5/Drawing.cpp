@@ -1919,7 +1919,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
     if (topScreen != bottomScreen) {
         ScanEdge *edge = &scanEdgeBuffer[topScreen];
-        for (int s = topScreen; s < bottomScreen; ++s) {
+        for (int s = topScreen; s <= bottomScreen; ++s) {
             edge->start = 0x7FFF;
             edge->end   = -1;
             ++edge;
@@ -1937,7 +1937,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
         switch (inkEffect) {
             default: break;
             case INK_NONE:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -1957,7 +1957,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 }
                 break;
             case INK_BLEND:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -1977,7 +1977,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 }
                 break;
             case INK_ALPHA:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -1998,7 +1998,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             case INK_ADD: {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -2020,7 +2020,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             }
             case INK_SUB: {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -2041,7 +2041,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             }
             case INK_LOOKUP:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -2061,7 +2061,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 }
                 break;
             case INK_MASKED:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -2082,7 +2082,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 }
                 break;
             case INK_UNMASKED:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
                     if (edge->start > currentScreen->clipBound_X2)
@@ -2217,7 +2217,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 }
                 break;
             case INK_BLEND:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;
@@ -2263,7 +2263,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 }
                 break;
             case INK_ALPHA:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;
@@ -2310,7 +2310,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             case INK_ADD: {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;
@@ -2358,7 +2358,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             }
             case INK_SUB: {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;
@@ -2405,7 +2405,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             }
             case INK_LOOKUP:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;
@@ -2450,7 +2450,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 }
                 break;
             case INK_MASKED:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;
@@ -2494,7 +2494,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 }
                 break;
             case INK_UNMASKED:
-                for (int s = topScreen; s < bottomScreen; ++s) {
+                for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
                     int deltaR = 0;

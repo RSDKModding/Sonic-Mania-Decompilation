@@ -310,6 +310,9 @@ typedef struct {
     UnknownInfo *unknown;
 #endif
     ScreenInfo *screenInfo;
+#if RETRO_USE_MOD_LOADER
+    void *modPtrs;
+#endif
 } GameInfo;
 
 typedef struct {
@@ -396,8 +399,7 @@ typedef struct {
 typedef struct {
     TextInfo username;
 #if RETRO_USE_PLUS
-    int field_8;
-    int field_C;
+    TextInfo userID;
 #endif
     int globalRank;
     int score;
@@ -580,6 +582,7 @@ typedef enum {
     STATUS_FORBIDDEN = 403,
     STATUS_NOTFOUND  = 404,
     STATUS_ERROR     = 500,
+    STATUS_NOWIFI    = 503,
     STATUS_CORRUPT   = 505,
     STATUS_NOSPACE   = 506,
 } StatusCodes;

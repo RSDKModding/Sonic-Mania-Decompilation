@@ -15,9 +15,9 @@ void EggTV_StaticUpdate(void) { RSDK.ProcessAnimation(&EggTV->animator); }
 
 void EggTV_Draw(void)
 {
-    EggTV_Unknown2();
+    EggTV_DrawTV();
     if (globals->gameMode != MODE_COMPETITION)
-        EggTV_Unknown1();
+        EggTV_DrawScanlines();
 }
 
 void EggTV_Create(void *data)
@@ -47,21 +47,20 @@ void EggTV_StageLoad(void)
     RSDK.SetSpriteAnimation(EggTV->aniFrames, 0, &EggTV->animator, true, 0);
 }
 
-void EggTV_Unknown1(void)
+void EggTV_DrawScanlines(void)
 {
     RSDK_THIS(EggTV);
 
     int y = (((Zone->timer >> 1) & 1) << 16) - (entity->size.y >> 1) + entity->position.y;
     if (entity->size.y >= 0 && (entity->size.y & 0xFFFF0000)) {
-        int size = entity->size.y >> 1;
-        for (int i = 0; i < size; i += 2) {
-            //RSDK.DrawLine(entity->position.x - (entity->size.x >> 1), y, entity->position.x + (entity->size.x >> 1), y, 0x404060,
-            //              entity->lineAlpha, INK_BLEND, false);
+        for (int i = 0; i < (entity->size.y >> 16); i += 2) {
+            RSDK.DrawLine(entity->position.x - (entity->size.x >> 1), y, entity->position.x + (entity->size.x >> 1), y, 0x404060,
+                          entity->lineAlpha, INK_BLEND, false);
             y += 0x20000;
         }
     }
 }
-void EggTV_Unknown2(void)
+void EggTV_DrawTV(void)
 {
     RSDK_THIS(EggTV);
     entity->alpha     = 255;

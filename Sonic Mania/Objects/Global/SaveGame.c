@@ -473,6 +473,17 @@ int *SaveGame_GetGlobalData(void)
         return &globals->saveRAM[0x900];
 }
 
+bool32 SaveGame_GetZoneUnlocked(int zoneID)
+{
+    if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
+        LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
+        return false;
+    }
+    else {
+        return globals->saveRAM[0x920 + zoneID];
+    }
+}
+
 float SaveGame_GetCompletionPercent(int *saveRAM)
 {
     int completeZones    = 0;
@@ -607,7 +618,7 @@ void SaveGame_MarkZoneCompleted(int zoneID)
         for (int z = 0; z <= zoneID; ++z) {
             if (!*saveRAM) {
                 LogHelpers_Print("PROGRESS Cleared zone %d", z);
-                *saveRAM = 1;
+                *saveRAM = true;
             }
             ++saveRAM;
         }

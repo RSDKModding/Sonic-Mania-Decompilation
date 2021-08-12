@@ -9,6 +9,8 @@ void UIHeading_Update(void)
         RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, entity->headingID, &entity->animator, true, 0);
         entity->textSpriteIndex = UIHeading->textSpriteIndex;
     }
+    if (entity->state)
+        printf("");
     StateMachine_Run(entity->state);
 }
 

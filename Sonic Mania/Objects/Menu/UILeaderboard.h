@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
     MANIA_UI_ITEM_BASE
     int field_104;
-    int field_108;
+    LeaderboardEntry *leaderboardEntry;
     TextInfo text1[5];
     TextInfo rankText[5];
     TextInfo nameText[5];

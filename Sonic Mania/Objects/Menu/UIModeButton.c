@@ -12,10 +12,10 @@ void UIModeButton_Update(void)
     entity->touchPosStart.y += 0x60000;
     entity->touchPosEnd.x = 0;
     entity->touchPosEnd.y = -0x120000;
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex || entity->field_10C != entity->disabled) {
+    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex || entity->wasDisabled != entity->disabled) {
         UIModeButton_Unknown1();
         entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-        entity->field_10C       = entity->disabled;
+        entity->wasDisabled     = entity->disabled;
     }
     StateMachine_Run(entity->state);
 }

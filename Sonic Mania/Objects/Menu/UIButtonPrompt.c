@@ -147,8 +147,8 @@ int UIButtonPrompt_GetButtonMappings(int input, int button)
 
 int UIButtonPrompt_GetGamepadType(void)
 {
-    int v0          = RSDK.MostRecentActiveControllerID(0, 0, 0);
-    int gamepadType = RSDK.GetControllerType(v0);
+    int id          = RSDK.MostRecentActiveControllerID(0, 0, 0);
+    int gamepadType = RSDK.GetControllerType(id);
 
     if ((gamepadType & 0xFF00) == 256) {
         switch (Localization->language) {

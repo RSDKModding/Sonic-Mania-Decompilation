@@ -292,8 +292,8 @@ void UIDialog_Close(void)
     }
     UIDialog->controlStore      = NULL;
     UIDialog->controlStateStore = StateMachine_None;
+    UIDialog->activeDialog      = NULL;
     StateMachine_Run(entity->curCallback);
-    UIDialog->activeDialog = NULL;
     destroyEntity(entity);
 }
 

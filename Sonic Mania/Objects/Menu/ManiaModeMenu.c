@@ -21,14 +21,14 @@ void ManiaModeMenu_Initialize(void)
     LogHelpers_Print("ManiaModeMenu_Initialize()");
     MainMenu_Initialize();
     UISubHeading_Initialize();
-    // TimeAttackMenu_Initialize();
+    TimeAttackMenu_Initialize();
     // CompetitionMenu_Initialize();
     OptionsMenu_Initialize();
     ExtrasMenu_Initialize();
     ManiaModeMenu_Unknown3();
     MainMenu_Unknown3();
     UISubHeading_Unknown3();
-    // TimeAttackMenu_Unknown3();
+    TimeAttackMenu_Unknown3();
     // CompetitionMenu_Unknown2();
     OptionsMenu_Unknown3();
     ExtrasMenu_Unknown3();
@@ -198,13 +198,14 @@ int ManiaModeMenu_GetActiveMenu(void)
         || control == OptionsMenu->controlsControl_NXPro) {
         return 0;
     }
-    // if (control == TimeAttackMenu->menu1 || control == TimeAttackMenu->menu2 || control == TimeAttackMenu->menu3
-    //    || control == TimeAttackMenu->menu4 || control == TimeAttackMenu->menu5 || control == TimeAttackMenu->menu6
-    //    || control == CompetitionMenu[1] || control == CompetitionMenu[2] || control == CompetitionMenu[3]
-    //    || control == CompetitionMenu[4]) {
-    //    return 1;
-    //}
-    // if (control == CompetitionMenu[8] || control == CompetitionMenu[10])
+    if (control == TimeAttackMenu->timeAttackControl || control == TimeAttackMenu->timeAttackControl_Legacy
+        || control == TimeAttackMenu->taZoneSelControl || control == TimeAttackMenu->taDetailsControl
+        || control == TimeAttackMenu->leaderboardsControl || control == TimeAttackMenu->replaysControl
+        /*|| control == CompetitionMenu->competitionControl || control == CompetitionMenu->competitionControl_Legacy
+        || control == CompetitionMenu->compRulesControl || control == CompetitionMenu->compZoneControl*/) {
+        return 1;
+    }
+    // if (control == CompetitionMenu->compRoundControl || control == CompetitionMenu->compTotalControl)
     //    return 2;
     if (control == ManiaModeMenu->saveSelectMenu || control == ManiaModeMenu->noSaveMenu || control == ManiaModeMenu->secretsMenu) {
         return 3;
@@ -274,7 +275,7 @@ void ManiaModeMenu_Unknown3(void)
 #if RETRO_USE_PLUS
     MainMenu_Unknown2();
     UISubHeading_Unknown2();
-    // TimeAttackMenu_Unknown2();
+    TimeAttackMenu_Unknown2();
     /*int unknown     = CompetitionMenu_Unknown4();
     EntityUIButton *button = UIButton_Unknown2(*(*&CompetitionMenu[3] + 252), *(*(*&CompetitionMenu[3] + 252) + 348));
     if (button) {
@@ -312,12 +313,12 @@ void ManiaModeMenu_Unknown7(void)
     }
 
     UISubHeading_Unknown4(0);
-    // TimeAttackMenu_Unknown4();
+    TimeAttackMenu_Unknown4();
     // CompetitionMenu_Unknown3();
     OptionsMenu_Unknown4();
     if (param->selectionFlag == 2) {
         EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
-        UIButton_Unknown4(extras->buttons[1], 1);
+        UIButton_SetChoiceSelection(extras->buttons[1], 1);
     }
 
     int a, b, c, d;
@@ -325,7 +326,7 @@ void ManiaModeMenu_Unknown7(void)
         a = param->characterID;
         b = param->zoneID;
         c = param->actID;
-        d = param->field_17C;
+        d = param->isEncoreMode;
     }
     else {
         a = 0;
@@ -338,7 +339,7 @@ void ManiaModeMenu_Unknown7(void)
         param->characterID = a;
         param->zoneID      = b;
         param->actID       = c;
-        param->field_17C   = d;
+        param->isEncoreMode   = d;
     }
 }
 

@@ -11,6 +11,9 @@
 #define RETRO_USE_PLUS (RETRO_GAMEVER >= VER_105)
 #define RETRO_USE_EGS (RETRO_GAMEVER == VER_107)
 
+
+#define RETRO_USE_MOD_LOADER (1)
+
 //used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
 #ifndef RETRO_STANDALONE
 #define RETRO_STANDALONE (1)

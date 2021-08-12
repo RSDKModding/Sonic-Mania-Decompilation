@@ -390,7 +390,20 @@ void UIControl_Unknown2(EntityUIControl *control)
                     }
 #endif
                     else if (UIModeButton && entity->objectID == UIModeButton->objectID) {
+#if RETRO_USE_PLUS
                         UIModeButton_Update();
+#else
+                        EntityUIModeButton *modeButton = (EntityUIModeButton *)RSDK_sceneInfo->entity;
+                        modeButton->touchPosStart.x    = 0xB80000;
+                        modeButton->touchPosStart.y    = 0x3E0000;
+                        modeButton->touchPosEnd.x      = 0;
+                        modeButton->touchPosEnd.y      = -0x120000;
+                        if (modeButton->textSpriteIndex != UIWidgets->textSpriteIndex || modeButton->wasDisabled != modeButton->base.disabled) {
+                            UIModeButton_Update();
+                            modeButton->textSpriteIndex = UIWidgets->textSpriteIndex;
+                            modeButton->wasDisabled     = modeButton->disabled;
+                        }
+#endif
                     }
                     else if (UIVsZoneButton && entity->objectID == UIVsZoneButton->objectID) {
                         UIVsZoneButton_Update();

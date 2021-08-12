@@ -47,6 +47,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Link.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="ModAPI.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="Reader.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Link.hpp" />
     <ClInclude Include="Math.hpp" />
+    <ClInclude Include="ModAPI.hpp" />
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="Palette.hpp" />
     <ClInclude Include="Reader.hpp" />

@@ -11,7 +11,7 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+	MANIA_UI_ITEM_BASE
 } EntityUIReplayCarousel;
 
 // Object Struct

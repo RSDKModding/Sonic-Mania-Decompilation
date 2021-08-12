@@ -218,6 +218,9 @@ void InitObjects()
         if (objectList[stageObjectIDs[o]].stageLoad)
             objectList[stageObjectIDs[o]].stageLoad();
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_STAGELOAD, NULL);
+#endif
 
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entitySlot = e;
@@ -252,6 +255,9 @@ void ProcessObjects()
                 objInfo->staticUpdate();
         }
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_REGULAR));
+#endif
 
     for (int s = 0; s < cameraCount; ++s) {
         CameraInfo *camera = &cameras[s];
@@ -336,6 +342,9 @@ void ProcessObjects()
         }
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONUPDATE, intToVoid(ENGINESTATE_REGULAR));
+#endif
 
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].entryCount = 0;
@@ -365,6 +374,9 @@ void ProcessObjects()
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_REGULAR));
+#endif
 }
 void ProcessPausedObjects()
 {
@@ -379,6 +391,9 @@ void ProcessPausedObjects()
                 objInfo->staticUpdate();
         }
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_PAUSED));
+#endif
 
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
@@ -398,6 +413,9 @@ void ProcessPausedObjects()
         }
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_PAUSED));
+#endif
 
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].entryCount = 0;
@@ -415,6 +433,9 @@ void ProcessPausedObjects()
         }
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONUPDATE, intToVoid(ENGINESTATE_PAUSED));
+#endif
 
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
@@ -427,6 +448,9 @@ void ProcessPausedObjects()
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_PAUSED));
+#endif
 }
 void ProcessFrozenObjects()
 {
@@ -441,6 +465,9 @@ void ProcessFrozenObjects()
                 objInfo->staticUpdate();
         }
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_FROZEN));
+#endif
 
     for (int s = 0; s < cameraCount; ++s) {
         CameraInfo *camera = &cameras[s];
@@ -527,6 +554,9 @@ void ProcessFrozenObjects()
         }
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONUPDATE, intToVoid(ENGINESTATE_FROZEN));
+#endif
 
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].entryCount = 0;
@@ -558,6 +588,9 @@ void ProcessFrozenObjects()
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
+#if RETRO_USE_MOD_LOADER
+    RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_FROZEN));
+#endif
 }
 void ProcessObjectDrawLists()
 {
@@ -631,6 +664,10 @@ void ProcessObjectDrawLists()
                             default: break;
                         }
                     }
+
+#if RETRO_USE_MOD_LOADER
+                    RunModCallbacks(MODCB_ONDRAW, intToVoid(l));
+#endif
 
                     if (currentScreen->clipBound_X1 > 0)
                         currentScreen->clipBound_X1 = 0;

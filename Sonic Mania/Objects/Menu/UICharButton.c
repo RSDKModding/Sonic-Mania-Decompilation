@@ -200,17 +200,17 @@ void UICharButton_Unknown11(void)
         entity->flag            = false;
         entity->timer           = 0;
         entity->state           = UICharButton_Unknown9;
-        entity->processButtonCB = UIButton_ProcessButtonInputs;
+        entity->processButtonCB = UIButton_Unknown6;
     }
     else {
         if (entity->timer == 2) {
             switch (entity->characterID) {
-                case 0: RSDK.PlaySFX(Announcer->sfx_Sonic, false, 255);
-                case 1: RSDK.PlaySFX(Announcer->sfx_Tails, false, 255);
-                case 2: RSDK.PlaySFX(Announcer->sfx_Knuckles, false, 255);
+                case 0: RSDK.PlaySFX(Announcer->sfx_Sonic, false, 255); break;
+                case 1: RSDK.PlaySFX(Announcer->sfx_Tails, false, 255); break;
+                case 2: RSDK.PlaySFX(Announcer->sfx_Knuckles, false, 255); break;
 #if RETRO_USE_PLUS
-                case 3: RSDK.PlaySFX(Announcer->sfx_Mighty, false, 255);
-                case 4: RSDK.PlaySFX(Announcer->sfx_Ray, false, 255);
+                case 3: RSDK.PlaySFX(Announcer->sfx_Mighty, false, 255); break;
+                case 4: RSDK.PlaySFX(Announcer->sfx_Ray, false, 255); break;
 #endif
                 default: break;
             }

@@ -33,14 +33,14 @@ void HUD_LateUpdate(void)
 #if RETRO_GAMEVER != VER_100
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM->chaosEmeralds == 0x7F) {
+        if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM->chaosEmeralds >= 0x7F) {
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV)
                 HUD_GetSuperFrames();
             if (entity->superButtonPos < 0x180000)
                 entity->superButtonPos += 0x80000;
         }
         else {
-            if (entity->superButtonPos >= -0x400000)
+            if (entity->superButtonPos > -0x200000)
                 entity->superButtonPos -= 0x80000;
         }
     }
@@ -56,8 +56,8 @@ void HUD_LateUpdate(void)
                 entity->superButtonPos += 0x80000;
         }
         else {
-            if (entity->superButtonPos <= 0x400000)
-                entity->superButtonPos += 0x80000;
+            if (entity->superButtonPos > -0x400000)
+                entity->superButtonPos -= 0x80000;
         }
     }
 #endif
@@ -533,7 +533,7 @@ void HUD_GetKeyFrame(Animator *animator, int buttonID)
 #else
     if (APICallback_GetConfirmButtonFlip() && buttonID <= 1)
 #endif
-        buttonID ^= 1u;
+        buttonID ^= 1;
     if (val != 1 && (val <= 8 || val > 12)) {
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, animator, true, buttonID);
     }

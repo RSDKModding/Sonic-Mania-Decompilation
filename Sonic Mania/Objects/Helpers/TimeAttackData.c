@@ -321,9 +321,9 @@ int TimeAttackData_SaveTimeAttackDB_CB(int statusCode)
     return 1;
 }
 
-int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int dst)
+int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int val)
 {
-    if ((byte)(dst - 1) > 2)
+    if ((byte)(val - 1) > 2)
         return 0;
 
     if (!TimeAttackData->status || charID != TimeAttackData->characterID || zone != TimeAttackData->zoneID || act != TimeAttackData->act
@@ -331,12 +331,33 @@ int TimeAttackData_SetScore(byte zone, byte charID, byte act, int encore, int ds
         TimeAttackData_ConfigureTableView(zone, charID, act, encore);
     }
 
-    int unknown = API.GetUserDBUnknown(globals->taTableID, dst - 1);
-    if (unknown == -1)
+    int row = API.GetUserDBUnknown(globals->taTableID, (byte)(val - 1));
+    if (row == -1)
         return 0;
-    dst = 0;
-    API.Unknown39(globals->taTableID, unknown, 4, "score", &dst);
+    
+    int dst = 0;
+    API.GetUserDBValue(globals->taTableID, row, 4, "score", &dst);
     return dst;
+}
+
+int TimeAttackData_SetReplayID(byte zone, byte charID, byte act, int encore, int val)
+{
+    if ((byte)(val - 1) > 2)
+        return 0;
+
+    byte value = val - 1;
+    if (!TimeAttackData->status || charID != TimeAttackData->characterID || zone != TimeAttackData->zoneID
+        || act != TimeAttackData->act || encore != TimeAttackData->encore) {
+        TimeAttackData_ConfigureTableView(zone, charID, act, encore);
+    }
+    
+    int unknown = API.GetUserDBUnknown(globals->taTableID, (byte)(val - 1));
+    if (unknown != -1) {
+        int dst = 0;
+        API.GetUserDBValue(globals->taTableID, unknown, 4, "replayID", &dst);
+        return dst;
+    }
+    return 0;
 }
 
 void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore)
@@ -370,10 +391,10 @@ void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int 
     API.TryTrackStat(&stat);
 
     const char *leaderboardName = "";
-    if (zone <= 11 && act <= 1 && playerID <= 5) {
-        int id = act + 2 * zone - 1 + playerID + 4 * (act + 2 * zone) + 120;
-        if (!mode)
-            id = act + 2 * zone - 1 + playerID + 4 * (act + 2 * zone);
+    if (zone < 12 && act < 2 && playerID <= 5) {
+        int id = 10 * (zone - 1) + (5 * act) + playerID;
+        if (mode)
+            id += 120;
         leaderboardName = LeaderboardNames[id];
     }
     API.TrackScore(leaderboardName, time, TimeAttackData_GetLeaderboardRank_CB);

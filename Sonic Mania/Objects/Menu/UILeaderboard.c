@@ -372,9 +372,8 @@ void UILeaderboard_State_Unknown3(void)
 void UILeaderboard_ProcessButtonCB(void)
 {
     RSDK_THIS(UILeaderboard);
-    /*int entryCount = API.LeaderboardEntryCount();
+    Vector2 entryCount = API.LeaderboardEntryCount();
 
-    v5             = v4;
     int oldID      = entity->entryOffset;
     int newID      = entity->entryOffset;
     if (UIControl->keyUp) {
@@ -390,27 +389,28 @@ void UILeaderboard_ProcessButtonCB(void)
         newID = oldID + 5;
     }
 
-    v9     = entryCount + v5;
-    if ((entryCount + v5 - 5) < newID)
-        newID = v9 - 5;
-    if (entryCount > newID)
-        newID = entryCount;
-    if (v5 && oldID != newID) {
+    int end = entryCount.x + entryCount.y;
+    if ((entryCount.x + entryCount.y - 5) < newID)
+        newID = end - 5;
+    if (entryCount.x > newID)
+        newID = entryCount.x;
+
+    if (entryCount.y && oldID != newID) {
         LogHelpers_Print("old: %d, new: %d", oldID, newID);
         entity->entryOffset = newID;
         UILeaderboard_LoadEntries(entity);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
-        if (entryCount <= 1 || newID >= entryCount + 2) {
-            if (newID > (entryCount + v5 - 7)) {
+        if (entryCount.x <= 1 || newID >= entryCount.x + 2) {
+            if (newID > (entryCount.x + entryCount.y - 7)) {
                 LogHelpers_Print("Load down");
-                API.Unknown12(entryCount, v5 + 20, 2);
+                API.Unknown12(entryCount.x, entryCount.y + 20, 2);
             }
         }
         else {
             LogHelpers_Print("Load up");
-            API.Unknown12(entryCount - 20, v5 + 20, 1);
+            API.Unknown12(entryCount.x - 20, entryCount.y + 20, 1);
         }
-    }*/
+    }
 
     if (UIControl->keyY && entity->field_1D8) {
         entity->yPressCB();

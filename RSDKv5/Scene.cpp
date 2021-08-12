@@ -15,6 +15,11 @@ SceneInfo sceneInfo;
 
 void LoadScene()
 {
+#if RETRO_USE_MOD_LOADER
+    //run this before the game actually unloads all the objects & scene assets
+    RunModCallbacks(MODCB_STAGEUNLOAD, NULL);
+#endif
+
     sceneInfo.timeCounter  = 0;
     sceneInfo.minutes      = 0;
     sceneInfo.seconds      = 0;

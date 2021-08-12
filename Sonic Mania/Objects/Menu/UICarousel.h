@@ -30,13 +30,13 @@ typedef struct {
     char field_81;
     char field_82;
     char field_83;
-    int field_84;
-    int field_88;
+    int scrollOffset;
+    int virtualIndex;
     int field_8C;
     Vector2 startPos;
     int field_98;
-    int field_9C;
-    int field_A0;
+    int minOffset;
+    int maxOffset;
     Vector2 offset;
     Entity *parent;
 } EntityUICarousel;

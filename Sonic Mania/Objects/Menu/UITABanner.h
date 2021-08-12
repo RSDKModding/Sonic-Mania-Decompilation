@@ -21,7 +21,7 @@ typedef struct {
     byte characterID;
     byte zoneID;
     byte actID;
-    int field_78;
+    int isEncore;
     int startDir;
     int field_80;
     int field_84;
@@ -52,11 +52,11 @@ void UITABanner_EditorLoad(void);
 void UITABanner_Serialize(void);
 
 // Extra Entity Functions
-void UITABanner_Unknown1(byte characterID, EntityUITABanner *banner, byte zoneID, byte actID, int a5);
-void UITABanner_Unknown2(int drawX, int drawY, int a3);
-void UITABanner_Unknown3(byte actID, byte characterID, int a3, int drawX, int drawY);
+void UITABanner_Unknown1(byte characterID, EntityUITABanner *banner, byte zoneID, byte actID, bool32 isEncore);
+void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore);
+void UITABanner_Unknown3(byte actID, byte characterID, bool32 isEncore, int drawX, int drawY);
 void UITABanner_Unknown4(int drawX, int drawY, int zoneID);
-void UITABanner_Unknown5(byte actID, byte zoneID, byte characterID, int a4, int drawX, int drawY);
+void UITABanner_Unknown5(byte actID, byte zoneID, byte characterID, bool32 isEncore, int drawX, int drawY);
 
 #endif
 

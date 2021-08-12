@@ -47,7 +47,6 @@ enum GameRegions {
 };
 
 #define RETRO_USE_ORIGINAL_CODE (0)
-#define RETRO_USE_MOD_LOADER    (!RETRO_USE_ORIGINAL_CODE && 1)
 #define RETRO_STANDALONE        (1)
 
 #define RETRO_WIN     (0)
@@ -165,6 +164,9 @@ enum GameRegions {
 //enables only EGS's ingame achievements without enabling anything else
 #define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
 
+//enables the use of the mod loader
+#define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)
+
 enum EngineStates {
     ENGINESTATE_LOAD,
     ENGINESTATE_REGULAR,
@@ -210,6 +212,9 @@ enum SeverityModes {
 #include "Userdata.hpp"
 #include "Debug.hpp"
 #include "Link.hpp"
+#if RETRO_USE_MOD_LOADER
+#include "ModAPI.hpp"
+#endif
 
 #include "DefaultObject.hpp"
 #if RETRO_REV02

@@ -46,7 +46,7 @@ void UIVsResults_Create(void *data)
     UIVsResults_SetupSprites();
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (!RSDK_sceneInfo->inEditor) {
         for (int i = 0; i < entity->numRows; ++i) {
             if (!RSDK_sceneInfo->inEditor) {
                 RSDK.SetText(&entity->rowText[i], "00", 0);
@@ -73,8 +73,10 @@ void UIVsResults_SetupSprites(void)
             case ID_SONIC: entity->characterID = 0; break;
             case ID_TAILS: entity->characterID = 1; break;
             case ID_KNUCKLES: entity->characterID = 2; break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY: entity->characterID = 3; break;
             case ID_RAY: entity->characterID = 4; break;
+#endif
             default: break;
         }
     }

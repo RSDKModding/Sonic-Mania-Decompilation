@@ -281,6 +281,7 @@ void DevMenu_MainMenu()
             case 4: engine.running = false; break;
 #else
             case 4:
+                loadMods(); //reload our mod list real quick
                 devMenu.state  = DevMenu_Mods;
                 devMenu.option = 0;
                 devMenu.timer  = 1;
@@ -1374,11 +1375,9 @@ void DevMenu_Mods()
     optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
 
     int y               = dy + 40;
-    SceneListInfo *list = &sceneInfo.listCategory[devMenu.listPos];
-    int off             = list->sceneOffsetStart;
     for (int i = 0; i < 8; ++i) {
-        if (devMenu.scroll + i < list->sceneCount) {
-            DrawDevText(currentScreen->centerX + 96, sceneInfo.listData[off + (devMenu.scroll + i)].name, y, ALIGN_RIGHT, optionColours[i]);
+        if (devMenu.scroll + i < modList.size()) {
+            DrawDevText(currentScreen->centerX + 96, modList[(devMenu.scroll + i)].name.c_str(), y, ALIGN_RIGHT, optionColours[i]);
             y += 8;
             devMenu.scroll = devMenu.scroll;
         }
@@ -1386,8 +1385,8 @@ void DevMenu_Mods()
 
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
-        if (off + devMenu.option < list->sceneOffsetStart) {
-            devMenu.option = list->sceneCount - 1;
+        if (devMenu.option < 0) {
+            devMenu.option = modList.size() - 1;
         }
 
         if (devMenu.option >= devMenu.scroll) {
@@ -1403,8 +1402,8 @@ void DevMenu_Mods()
     else if (controller[CONT_P1].keyUp.down) {
         if (!devMenu.timer) {
             devMenu.option--;
-            if (off + devMenu.option < list->sceneOffsetStart) {
-                devMenu.option = list->sceneCount - 1;
+            if (devMenu.option < 0) {
+                devMenu.option = modList.size() - 1;
             }
         }
 
@@ -1421,7 +1420,7 @@ void DevMenu_Mods()
 
     if (controller[CONT_P1].keyDown.press) {
         devMenu.option++;
-        if (devMenu.option >= list->sceneCount) {
+        if (devMenu.option >= modList.size()) {
             devMenu.option = 0;
         }
 
@@ -1438,7 +1437,7 @@ void DevMenu_Mods()
     else if (controller[CONT_P1].keyDown.down) {
         if (!devMenu.timer) {
             devMenu.option++;
-            if (devMenu.option >= list->sceneCount) {
+            if (devMenu.option >= modList.size()) {
                 devMenu.option = 0;
             }
         }
@@ -1461,6 +1460,7 @@ void DevMenu_Mods()
         devMenu.state   = DevMenu_MainMenu;
         devMenu.scroll  = 0;
         devMenu.option  = 4;
+        saveMods(); //save our changed mod options
     }
 }
 #endif

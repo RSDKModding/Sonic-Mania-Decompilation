@@ -41,8 +41,8 @@ void EggTV_EditorLoad(void);
 void EggTV_Serialize(void);
 
 // Extra Entity Functions
-void EggTV_Unknown1(void);
-void EggTV_Unknown2(void);
+void EggTV_DrawScanlines(void);
+void EggTV_DrawTV(void);
 
 
 #endif //!OBJ_EGGTV_H

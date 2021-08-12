@@ -153,8 +153,8 @@ void MainMenu_ExitGameOption(void)
     Localization_GetString(&buffer, STR_QUITWARNING);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, 0, 1);
-        UIDialog_AddButton(0, dialog, MainMenu_StartExitGame, 1);
+        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
+        UIDialog_AddButton(DIALOG_YES, dialog, MainMenu_StartExitGame, 1);
         UIDialog_Setup(dialog);
     }
 }
@@ -195,15 +195,15 @@ void MainMenu_ChangeMenu(void)
         case 1:
 #if RETRO_USE_PLUS
             if (API.CheckDLC(DLC_PLUS)) {
-                // EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
-                // control->activeEntityID  = 0;
-                // control->dwordCC         = 0;
+                EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
+                control->activeEntityID  = 0;
+                control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack");
             }
             else {
-                // EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
-                // control->activeEntityID  = 0;
-                // control->dwordCC         = 0;
+                EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
+                control->activeEntityID  = 0;
+                control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
 #else
@@ -252,8 +252,8 @@ void MainMenu_ChangeMenu(void)
                     Localization_GetString(&buffer, STR_CONNECTINGTOEGS);
                     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(buffer);
                     if (dialog) {
-                        UIDialog_AddButton(2, dialog, MainMenu_BuyPlusDialogCB, true);
-                        UIDialog_AddButton(3, dialog, 0, true);
+                        UIDialog_AddButton(DIALOG_OK, dialog, MainMenu_BuyPlusDialogCB, true);
+                        UIDialog_AddButton(DIALOG_CANCEL, dialog, 0, true);
                         UIDialog_Setup(dialog);
                     }
                 }

@@ -14,7 +14,7 @@ typedef struct {
     MANIA_UI_ITEM_BASE
     int buttonID;
     bool32 stopMusic;
-    int field_10C;
+    bool32 wasDisabled;
     int field_110;
     int field_114;
     int field_118;

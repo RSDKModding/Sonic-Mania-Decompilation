@@ -22,6 +22,9 @@ RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
 APIFunctionTable API;
 #endif
+#if RETRO_USE_MOD_LOADER
+ModFunctionTable Mod;
+#endif
 
 void LinkGameLogicDLL(GameInfo *info)
 {
@@ -35,6 +38,10 @@ void LinkGameLogicDLL(GameInfo *info)
 #if RETRO_USE_PLUS
     if (info->APIPtrs)
         memcpy(&API, info->APIPtrs, sizeof(APIFunctionTable));
+#endif
+#if RETRO_USE_MOD_LOADER
+    if (info->modPtrs)
+        memcpy(&Mod, info->modPtrs, sizeof(ModFunctionTable));
 #endif
 
     RSDK_info = info->engineInfo; //GameInfo

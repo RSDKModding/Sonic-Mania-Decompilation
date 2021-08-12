@@ -21,12 +21,12 @@ typedef struct {
     int auxFrameID;
     int align;
     int arrowWidth;
-    int isDisabled;
+    bool32 isDisabled;
     int sizeIY;
     Vector2 field_134;
     int field_13C;
     int field_140;
-    int dword144;
+    bool32 textFlag;
     int field_148;
     int touchID;
     Animator animator1;
@@ -53,8 +53,8 @@ void UIChoice_Serialize(void);
 // Extra Entity Functions
 void UIChoice_Unknown1(EntityUIChoice *entity);
 void UIChoice_Unknown2(EntityUIButton *entity);
-void UIChoice_Unknown3(void);
-void UIChoice_Unknown4(void);
+void UIChoice_TouchedCB_Left(void);
+void UIChoice_TouchedCB_Right(void);
 bool32 UIChoice_CheckTouch(void);
 void UIChoice_Unknown6(void);
 void UIChoice_Unknown7(void);

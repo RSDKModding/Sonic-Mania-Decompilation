@@ -21,7 +21,8 @@ void UITAZoneModule_Update(void)
         entity->field_12C -= 192;
 
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    if (entity->state == UITAZoneModule_Unknown17 && (parent->buttons[parent->field_D8] != (EntityUIButton*)entity || parent->state != UIControl_ProcessInputs)) {
+    if (entity->state == UITAZoneModule_Unknown17
+        && (parent->buttons[parent->field_D8] != (EntityUIButton *)entity || parent->state != UIControl_ProcessInputs)) {
         entity->flag  = false;
         entity->state = UITAZoneModule_Unknown16;
     }
@@ -35,10 +36,10 @@ void UITAZoneModule_StaticUpdate(void)
         UITAZoneModule->flag = false;
     }
 
-    //if (UITAZoneModule->field_C != TimeAttackMenu->field_3C) {
-    //    UITAZoneModule->flag    = true;
-    //    UITAZoneModule->field_C = TimeAttackMenu->field_3C;
-    //}
+    if (UITAZoneModule->isEncoreMode != TimeAttackMenu->encoreMode) {
+        UITAZoneModule->flag         = true;
+        UITAZoneModule->isEncoreMode = TimeAttackMenu->encoreMode;
+    }
 }
 
 void UITAZoneModule_Draw(void)
@@ -54,7 +55,7 @@ void UITAZoneModule_Create(void *data)
     entity->posUnknown2.y   = entity->position.y;
     entity->active          = ACTIVE_BOUNDS;
     entity->drawOrder       = 2;
-    entity->visible         = 1;
+    entity->visible         = true;
     entity->drawFX          = FX_FLIP;
     entity->updateRange.x   = 0x800000;
     entity->updateRange.y   = 0x300000;
@@ -71,9 +72,9 @@ void UITAZoneModule_Create(void *data)
 
 void UITAZoneModule_StageLoad(void)
 {
-    UITAZoneModule->field_C   = false;
-    UITAZoneModule->flag      = false;
-    UITAZoneModule->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UITAZoneModule->isEncoreMode = false;
+    UITAZoneModule->flag         = false;
+    UITAZoneModule->aniFrames    = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 }
 
 void UITAZoneModule_Setup(void)
@@ -134,13 +135,13 @@ void UITAZoneModule_Unknown3(void)
     RSDK_THIS(UITAZoneModule);
 
     uint colour = 0x5FA0B0;
-    if (entity->id)
+    if (entity->isEncore)
         colour = 0xF26C4F;
-    int drawX = entity->drawPos.x + 0x790000;
-    int drawY = entity->drawPos.y + 0x230000;
-    UIWidgets_Unknown5(88, -71, 112, 224, drawX, drawY);
 
-    RSDK.DrawRect(drawX, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
+    int drawY = entity->drawPos.y + 0x230000;
+    UIWidgets_Unknown5(88, -71, 112, 224, entity->drawPos.x + 0x790000, drawY);
+
+    RSDK.DrawRect(entity->drawPos.x + 0x790000, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(entity->drawPos.x - 0x990000, entity->drawPos.y - 0x1C0000, 0x1320000, 0x2C0000, 0, 255, INK_NONE, false);
 
     UIWidgets_Unknown5((colour >> 16) & 0xFF, -71, (colour >> 8) & 0xFF, colour & 0xFF, entity->drawPos.x + 0x990000, entity->drawPos.y + 0x230000);
@@ -160,7 +161,7 @@ void UITAZoneModule_Unknown4(void)
     Vector2 drawPos;
     drawPos     = entity->drawPos;
     uint colour = 0xF0F0F0;
-    if (entity->id)
+    if (entity->isEncore)
         colour = 0xF26C4F;
     uint colour2 = 0xF0D808;
 
@@ -168,7 +169,7 @@ void UITAZoneModule_Unknown4(void)
     drawPos.y = entity->drawPos.y + 0x170000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x840000, 0xD0000, colour, 255, INK_NONE, false);
 
-    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, (entity->id != 0) + 10);
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, (entity->isEncore != 0) + 10);
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
     drawPos = UIWidgets_Unknown10(colour, colour2, drawPos.x + 0x840000, drawPos.y);
@@ -252,10 +253,10 @@ void UITAZoneModule_Options3CB(void)
     entity->timer = 0;
     entity->state = UITAZoneModule_Unknown18;
     RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
-    // if (TimeAttackMenu->field_3C)
-    //    RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
-    // else
-    RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
+    if (TimeAttackMenu->encoreMode)
+        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
+    else
+        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
 }
 
 bool32 UITAZoneModule_Options7CB(void)
@@ -275,10 +276,10 @@ void UITAZoneModule_Options5CB(void)
     RSDK_THIS(UITAZoneModule);
     entity->flag  = true;
     entity->state = UITAZoneModule_Unknown17;
-    // if (TimeAttackMenu->field_3C)
-    //    RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
-    // else
-    RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
+    if (TimeAttackMenu->encoreMode)
+        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
+    else
+        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
 }
 
 void UITAZoneModule_Options6CB(void)
@@ -293,8 +294,6 @@ void UITAZoneModule_TransitionCB(void) { UIControl_MatchMenuTag("Leaderboards");
 void UITAZoneModule_Unknown14(void)
 {
     UITransition_StartTransition(UITAZoneModule_TransitionCB, 0);
-    if (UIControl_GetUIControl())
-        UIControl_GetUIControl()->selectionDisabled = true;
 }
 
 void UITAZoneModule_Unknown15(void)
@@ -324,10 +323,10 @@ void UITAZoneModule_Unknown17(void)
     entity->touchCB   = UIButton_ProcessTouch;
     entity->field_138 = entity->animator2.frameID & 3;
     if (UITAZoneModule->flag) {
-        // if (TimeAttackMenu->field_3C)
-        //    RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
-        // else
-        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
+        if (TimeAttackMenu->encoreMode)
+            RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
+        else
+            RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
     }
 }
 

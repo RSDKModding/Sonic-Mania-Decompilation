@@ -371,6 +371,11 @@ void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
 {
     Vector2 drawPos;
     RSDK_THIS(ActClear);
+    if (!mins && !secs && !millisecs) {
+        millisecs = -1;
+        secs      = -1;
+        mins      = -1;
+    }
 
     drawPos.x = pos->x + 0x320000;
     drawPos.y = pos->y - 0x20000;
@@ -378,8 +383,6 @@ void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
 
     drawPos.x = 0x610000 + pos->x + 2;
     drawPos.y = pos->y + 0xE0000;
-    if (!mins && !secs && !millisecs)
-        millisecs = -1;
     ActClear_DrawNumbers(&drawPos, millisecs, 2);
 
     drawPos.x -= 0x90000;
@@ -564,8 +567,8 @@ void ActClear_State_TAFinish(void)
                         ActClear->hitboxID = false;
                     }
                 }
-                RSDK.LoadScene("Presentation", "Menu");
 #endif
+                RSDK.LoadScene("Presentation", "Menu");
             }
         }
         else {
@@ -611,7 +614,11 @@ void ActClear_TallyScore(void)
         Player_GiveScore(player, 100);
     }
 
+#if RETRO_USE_TOUCH_CONTROLS
+    if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press || RSDK_touchMouse->count) {
+#else
     if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press) {
+#endif
         Player_GiveScore(player, entity->scoreBonus + entity->ringBonus + entity->coolBonus);
         entity->field_70 += entity->scoreBonus + entity->ringBonus + entity->coolBonus;
         entity->scoreBonus = 0;
@@ -739,15 +746,30 @@ void ActClear_Unknown9(void)
     }
 
     if (!ActClear->field_10 && !ActClear->field_14) {
+#if RETRO_USE_TOUCH_CONTROLS
+        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
+            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+
+            if (RSDK_touchMouse->down[t]) {
+                if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
+                    RSDK_controller->keyY.press |= 1;
+                    break;
+                }
+            }
+        }
+
+        RSDK_controller->keyStart.press |= RSDK_touchMouse->count && !RSDK_controller->keyY.press;
+#endif
+
 #if RETRO_USE_PLUS
         if (RSDK_controller->keyY.press) {
             if (!ActClear->field_2C) {
                 if (HUD->replaySaveEnabled) {
                     if (!UIDialog->activeDialog) {
                         if (API.CheckDLC(DLC_PLUS)) {
-                            if (ActClear->saveReplay_CB) {
+                            if (ActClear->saveReplay_CB)
                                 ActClear->saveReplay_CB();
-                            }
                             ActClear->field_2C = 1;
                             ActClear->field_14 = 1;
                             return;
@@ -757,6 +779,7 @@ void ActClear_Unknown9(void)
             }
         }
 #endif
+
         if (RSDK_controller->keyStart.press) {
             RSDK.PlaySFX(UIWidgets->sfx_Accept, 0, 255);
 
@@ -765,16 +788,8 @@ void ActClear_Unknown9(void)
                 entity->state = ActClear_State_ActFinish;
             }
             else {
-                entity->state    = 0;
-                EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-                zone->screenID   = 4;
-                zone->timer      = 0;
-                zone->fadeSpeed  = 10;
-                zone->fadeColour = 0;
-                zone->state      = Zone_State_Fadeout;
-                zone->stateDraw  = Zone_StateDraw_Fadeout;
-                zone->visible    = true;
-                zone->drawOrder  = 15;
+                entity->state    = StateMachine_None;
+                Zone_StartFadeOut(10, 0x000000);
             }
         }
     }

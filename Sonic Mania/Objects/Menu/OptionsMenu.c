@@ -332,7 +332,7 @@ void OptionsMenu_Unknown4(void)
         OptionsMenu_Unknown5();
 
     EntityUIButton *button = videoControl->buttons[0];
-    UIButton_Unknown4(button, RSDK.GetSettingsValue(SETTINGS_SHADERID));
+    UIButton_SetChoiceSelection(button, RSDK.GetSettingsValue(SETTINGS_SHADERID));
 
     // button                 = soundControl->buttons[0];
     // button->freeBindP2     = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
@@ -370,15 +370,15 @@ void OptionsMenu_Unknown5(void)
             EntityUIButton *button = videoControl_Win->buttons[i];
 
             if (i == 4) {
-                EntityUIResPicker *child = (EntityUIResPicker*)UIButton_Unknown2(button, button->selection);
+                EntityUIResPicker *child = (EntityUIResPicker*)UIButton_GetChoicePtr(button, button->selection);
                 UIResPicker_GetDisplayInfo(child);
             }
             else if (i == 1) {
-                EntityUIWinSize *child = (EntityUIWinSize *)UIButton_Unknown2(button, button->selection);
+                EntityUIWinSize *child = (EntityUIWinSize *)UIButton_GetChoicePtr(button, button->selection);
                 child->selection       = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT) / SCREEN_YSIZE;
             }
             else if (button->selection != vals[i]) {
-                UIButton_Unknown4(button, vals[i]);
+                UIButton_SetChoiceSelection(button, vals[i]);
             }
         }
     }
@@ -397,8 +397,8 @@ void OptionsMenu_Unknown7(void)
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
         if (dialog) {
             dialog->timer = 900;
-            UIDialog_AddButton(1, dialog, OptionsMenu_Unknown11, true);
-            UIDialog_AddButton(0, dialog, OptionsMenu_Unknown13, true);
+            UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown11, true);
+            UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown13, true);
             UIDialog_Setup(dialog);
         }
     }
@@ -413,8 +413,8 @@ void OptionsMenu_Unknown8(void)
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
         dialog->timer = 900;
-        UIDialog_AddButton(1, dialog, OptionsMenu_Unknown12, true);
-        UIDialog_AddButton(0, dialog, OptionsMenu_Unknown14, true);
+        UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown12, true);
+        UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown14, true);
         UIDialog_Setup(dialog);
     }
 }
@@ -428,8 +428,8 @@ bool32 OptionsMenu_Unknown9(void)
         Localization_GetString(&info, STR_APPLYCHANGEDSETTINGS);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
         if (dialog) {
-            UIDialog_AddButton(1, dialog, OptionsMenu_Unknown14, true);
-            UIDialog_AddButton(0, dialog, OptionsMenu_Unknown10, true);
+            UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown14, true);
+            UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown10, true);
             UIDialog_Setup(dialog);
             return true;
         }
@@ -511,7 +511,7 @@ void OptionsMenu_Unknown21(void)
             Localization_GetString(&info, STR_STEAMOVERLAYUNAVALIABLE);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             if (dialog) {
-                UIDialog_AddButton(2, dialog, NULL, true);
+                UIDialog_AddButton(DIALOG_OK, dialog, NULL, true);
                 UIDialog_Setup(dialog);
             }
         }
@@ -859,8 +859,8 @@ void OptionsMenu_Unknown39(void)
     Localization_GetString(&info, STR_AREYOUSURESAVE);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, 0, true);
-        UIDialog_AddButton(0, dialog, OptionsMenu_EraseAllSaveData, true);
+        UIDialog_AddButton(DIALOG_NO, dialog, NULL, true);
+        UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_EraseAllSaveData, true);
         UIDialog_Setup(dialog);
     }
 }
@@ -881,8 +881,8 @@ void OptionsMenu_Unknown41(void)
     Localization_GetString(&info, STR_AREYOUSURESAVE);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, 0, true);
-        UIDialog_AddButton(0, dialog, OptionsMenu_Unknown40, true);
+        UIDialog_AddButton(DIALOG_NO, dialog, 0, true);
+        UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown40, true);
         UIDialog_Setup(dialog);
     }
 }
@@ -905,8 +905,8 @@ void OptionsMenu_Unknown43(void)
     Localization_GetString(&info, STR_AREYOUSURESAVE);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, 0, true);
-        UIDialog_AddButton(0, dialog, OptionsMenu_Unknown42, true);
+        UIDialog_AddButton(DIALOG_NO, dialog, NULL, true);
+        UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown42, true);
         UIDialog_Setup(dialog);
     }
 }
@@ -941,8 +941,8 @@ void OptionsMenu_Unknown46(void)
         Localization_GetString(&info, STR_AREYOUSURESAVE);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
         if (dialog) {
-            UIDialog_AddButton(1u, dialog, 0, true);
-            UIDialog_AddButton(0, dialog, OptionsMenu_Unknown44, true);
+            UIDialog_AddButton(DIALOG_NO, dialog, NULL, true);
+            UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown44, true);
             UIDialog_Setup(dialog);
         }
     }
@@ -950,7 +950,7 @@ void OptionsMenu_Unknown46(void)
         Localization_GetString(&info, STR_ENCOREREQUIRED);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
         if (dialog) {
-            UIDialog_AddButton(2, dialog, NULL, true);
+            UIDialog_AddButton(DIALOG_OK, dialog, NULL, true);
             UIDialog_Setup(dialog);
         }
     }
@@ -964,8 +964,8 @@ void OptionsMenu_EraseAll_Confirm(void)
     Localization_GetString(&info, STR_AREYOUSURESAVE);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
-        UIDialog_AddButton(1, dialog, NULL, true);
-        UIDialog_AddButton(0, dialog, OptionsMenu_EraseAllData, true);
+        UIDialog_AddButton(DIALOG_NO, dialog, NULL, true);
+        UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_EraseAllData, true);
         UIDialog_Setup(dialog);
     }
 }

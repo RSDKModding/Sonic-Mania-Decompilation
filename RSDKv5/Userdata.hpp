@@ -62,6 +62,17 @@ struct DummyAchievements {
 #endif
 };
 
+struct LeaderboardEntry {
+    TextInfo username;
+#if RETRO_REV02
+    TextInfo userID;
+#endif
+    int globalRank;
+    int score;
+    bool32 isUser;
+    int status;
+};
+
 struct DummyLeaderboards {
     void (*SetDebugValues)(void);
     void (*InitUnknown1)(void);
@@ -70,40 +81,31 @@ struct DummyLeaderboards {
 #if RETRO_VER_EGS
     int (*unknown6)(void);
 #endif
-    void (*FetchLeaderboard)(int a2, int a3);
+    void (*FetchLeaderboard)(const char *name, int id);
     void (*unknown5)(void);
-    void (*TrackScore)(int a2, int a3, int a4);
+    void (*TrackScore)(const char *name, int score, void (*callback)(int status, int rank));
     int (*GetStatus)(void);
 
-    byte field_4;
-    byte field_5;
-    byte field_6;
-    byte field_7;
-    byte field_8;
-    byte field_9;
-    byte field_A;
-    byte field_B;
-    byte field_C;
-    byte field_D;
-    byte field_E;
-    byte field_F;
-    byte field_10;
-    ushort field_11;
-    byte field_13;
-    byte field_14;
-    byte field_15;
-    byte field_16;
-    byte field_17;
-    byte field_18;
-    byte field_19;
-    byte field_1A;
-    byte field_1B;
-    byte field_1C;
-    byte field_1D;
-    byte field_1E;
-    byte field_1F;
-    byte field_20[848];
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    int field_1C;
+    int field_20;
+    int field_24;
+    int prevIsUser;
+    int prevRank;
+    int rankScore;
+    int entryStart;
+    int entryLength;
+    LeaderboardEntry *entryPtrs[200];
     int status;
+    int downloadStatus;
+    int field_364;
+    int list;
+    int listSize;
 };
 
 struct DummyRichPresence {
@@ -274,8 +276,11 @@ void RemoveLastAchievementID(void);
 void ClearAchievements();
 void TryUnlockAchievement(const char *name);
 
-void FetchLeaderboard(int a2, int a3);
-void TrackScore(int a2, int a3, int a4);
+void FillDummyLeaderboardEntries();
+void FetchLeaderboard(const char *name, int id);
+void TrackScore(const char *name, int score, void (*callback)(int status, int rank));
+Vector2 LeaderboardEntryCount();
+LeaderboardEntry *ReadLeaderboardEntry(int entryID);
 inline int GetLeaderboardStatus() { return leaderboards->status; }
 
 void SetPresence(byte id, TextInfo *info);
@@ -410,11 +415,14 @@ inline void UpdateUserDBParents(UserDB *userDB)
 
 inline void InitUserDBValues(UserDB *userDB, va_list list)
 {
-    #if !(RETRO_PLATFORM == RETRO_ANDROID)
     int cnt = 0;
-    while ((int *)list) {
-        userDB->columnTypes[cnt] = va_arg(list, int);
-        memcpy(userDB->columnNames[cnt], 0, 0x10);
+    while (true) {
+        int type = va_arg(list, int);
+        if (type == 0)
+            break;
+
+        userDB->columnTypes[cnt] = type;
+        memset(userDB->columnNames[cnt], 0, 0x10);
         sprintf(userDB->columnNames[cnt], "%s", va_arg(list, const char *));
         GenerateCRC(&userDB->columnUUIDs[cnt], userDB->columnNames[cnt]);
         ++cnt;
@@ -426,7 +434,6 @@ inline void InitUserDBValues(UserDB *userDB, va_list list)
     UpdateUserDBParents(userDB);
     userDB->active = true;
     userDB->valid  = true;
-    #endif
 }
 
 inline ushort InitUserDB(const char *name, ...)
@@ -490,8 +497,6 @@ inline void ClearAllUserDBs()
     }
 }
 
-
-
 inline ushort GetUserDBByID(ushort tableID, uint uuid)
 {
     if (tableID == 0xFFFF)
@@ -552,7 +557,7 @@ inline int GetUserDBRowUnknown(ushort tableID, ushort entryID)
     if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (!userDB->active || userDB->status || entryID > userDB->rowUnknownCount - 1)
+    if (!userDB->active || userDB->status || entryID >= userDB->rowUnknownCount)
         return -1;
 
     return userDB->rowUnknown[entryID];
@@ -571,9 +576,11 @@ inline int AddUserDBEntry(ushort tableID)
 
     UserDBRow *row = &userDB->rows[userDB->entryCount];
     // row->uuid = sub_5EBDF0(userDB);
-    time_t t;
-    tm *tmA = localtime(&t);
-    tm *tmB = localtime(&t);
+
+    time_t timeInfo;
+    time(&timeInfo);
+    tm *tmA = localtime(&timeInfo);
+    tm *tmB = localtime(&timeInfo);
 
     memcpy(&row->createTime, tmA, sizeof(tm));
     memcpy(&row->changeTime, tmB, sizeof(tm));
@@ -590,38 +597,40 @@ inline void StoreUserDBValue(UserDBValue *value, int type, void *data)
 {
     value->size  = 0;
     memset(value->data, 0, sizeof(value->data));
-    switch (type) {
-        case 1:
-        case 2:
-        case 6:
-            value->size = sizeof(byte);
-            memcpy(value->data, data, sizeof(byte));
-            break;
-        case 3:
-        case 7:
-            value->size    =  sizeof(ushort);
-            memcpy(value->data, data, sizeof(ushort));
-            break;
-        case 4:
-        case 8:
-        case 10:
-        case 15:
-            value->size = sizeof(int);
-            memcpy(value->data, data, sizeof(int));
-            break;
-        case 16: {
-            char *string = (char *)data;
-            int len      = strlen(string);
-            if (len < 15) {
-                value->size = len + 1;
-                int id      = 0;
-                while (string[id]) {
-                    value->data[id] = string[id];
+    if (data) {
+        switch (type) {
+            case 1:
+            case 2:
+            case 6:
+                value->size = sizeof(byte);
+                memcpy(value->data, data, sizeof(byte));
+                break;
+            case 3:
+            case 7:
+                value->size = sizeof(ushort);
+                memcpy(value->data, data, sizeof(ushort));
+                break;
+            case 4:
+            case 8:
+            case 10:
+            case 15:
+                value->size = sizeof(int);
+                memcpy(value->data, data, sizeof(int));
+                break;
+            case 16: {
+                char *string = (char *)data;
+                int len      = strlen(string);
+                if (len < 15) {
+                    value->size = len + 1;
+                    int id      = 0;
+                    while (string[id]) {
+                        value->data[id] = string[id];
+                    }
                 }
+                break;
             }
-            break;
+            default: break;
         }
-        default: break;
     }
 }
 

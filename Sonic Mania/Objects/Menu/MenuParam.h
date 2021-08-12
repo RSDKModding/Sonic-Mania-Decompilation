@@ -24,11 +24,14 @@ typedef struct {
     int zoneID;
     int actID;
     int timeScore;
-    int field_17C;
+    int isEncoreMode;
     int field_180;
     int field_184;
     int field_188;
-    int field_18C;
+    byte field_18C;
+    byte field_18D;
+    byte field_18E;
+    byte field_18F;
     int field_190;
     int field_194;
     int field_198;

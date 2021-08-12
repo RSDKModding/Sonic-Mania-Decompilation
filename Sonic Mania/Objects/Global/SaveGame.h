@@ -82,6 +82,7 @@ void SaveGame_SaveFile_CB(int status);
 int SaveGame_GetNotifStringID(int type);
 void SaveGame_ShuffleBSSID(void);
 int *SaveGame_GetGlobalData(void);
+bool32 SaveGame_GetZoneUnlocked(int zoneID);
 float SaveGame_GetCompletionPercent(int *saveRAM);
 void SaveGame_TrackGameProgress(void (*callback)(int));
 void SaveGame_Unknown14(void);

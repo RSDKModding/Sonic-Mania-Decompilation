@@ -149,6 +149,9 @@
     <ClCompile Include="DefaultObject.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="ModAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -273,6 +276,9 @@
     </ClInclude>
     <ClInclude Include="DefaultObject.hpp">
       <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ModAPI.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

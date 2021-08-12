@@ -99,8 +99,8 @@ void UISubHeading_Unknown2(void)
         UIButton_Unknown1(button);
 
     button                  = control->buttons[2];
-    EntityUIButton *option1 = UIButton_Unknown2(button, 1);
-    EntityUIButton *option2 = UIButton_Unknown2(button, 2);
+    EntityUIButton *option1 = UIButton_GetChoicePtr(button, 1);
+    EntityUIButton *option2 = UIButton_GetChoicePtr(button, 2);
     int unlock              = SaveGame_CheckUnlock(2);
     button->disabled        = !unlock;
     if (button->disabled)
@@ -158,32 +158,28 @@ void UISubHeading_Unknown3(void)
 void UISubHeading_Unknown4(int slot)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
-    int *saveRAM             = NULL;
+    int *saveRAM             = SaveGame_GetDataPtr(slot, false);
 
-    if (slot == NO_SAVE_SLOT)
-        saveRAM = globals->noSaveSlot;
-    else
-        saveRAM = &globals->saveRAM[256 * (slot % 8)];
-    UIButton_Unknown4(control->buttons[0], (saveRAM[33] & 0x20) != 0);
-    UIButton_Unknown4(control->buttons[1], (saveRAM[33] & 1) != 0);
+    UIButton_SetChoiceSelection(control->buttons[0], (saveRAM[33] & 0x20) != 0);
+    UIButton_SetChoiceSelection(control->buttons[1], (saveRAM[33] & 1) != 0);
 
     int medals = saveRAM[33];
     if (medals & getMod(MEDAL_NODROPDASH)) {
         if (medals & getMod(MEDAL_PEELOUT)) {
-            UIButton_Unknown4(control->buttons[2], 1);
+            UIButton_SetChoiceSelection(control->buttons[2], 1);
         }
         else if (medals & getMod(MEDAL_INSTASHIELD)) {
-            UIButton_Unknown4(control->buttons[2], 2);
+            UIButton_SetChoiceSelection(control->buttons[2], 2);
         }
     }
     else {
-        UIButton_Unknown4(control->buttons[2], 3);
+        UIButton_SetChoiceSelection(control->buttons[2], 0);
     }
 
     if ((saveRAM[33] & getMod(MEDAL_ANDKNUCKLES)))
-        UIButton_Unknown4(control->buttons[3], 1);
+        UIButton_SetChoiceSelection(control->buttons[3], 1);
     else
-        UIButton_Unknown4(control->buttons[3], 0);
+        UIButton_SetChoiceSelection(control->buttons[3], 0);
 }
 
 int UISubHeading_GetMedalMods(void)

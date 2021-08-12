@@ -56,9 +56,9 @@ void UIButton_Serialize(void);
 
 // Extra Entity Functions
 void UIButton_Unknown1(EntityUIButton *button);
-EntityUIButton *UIButton_Unknown2(EntityUIButton *button, int a2);
-void UIButton_Unknown3(EntityUIButton *button, int a2);
-void UIButton_Unknown4(EntityUIButton *button, int a2);
+EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int a2);
+void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int a2);
+void UIButton_SetChoiceSelection(EntityUIButton *button, int a2);
 void *UIButton_GetOptions2(void);
 void UIButton_Fail(void);
 void UIButton_Unknown6(void);

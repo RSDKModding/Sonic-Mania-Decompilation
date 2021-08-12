@@ -80,7 +80,7 @@ void UIChoice_Draw(void)
         RSDK.DrawSprite(&entity->animator4, &drawPos, false);
     }
 
-    if (entity->dword144 == 1) {
+    if (entity->textFlag) {
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y;
         drawPos.y = entity->field_134.x + entity->position.y;
@@ -112,7 +112,7 @@ void UIChoice_Create(void *data)
         entity->updateRange.y = 0x400000;
         entity->sizeIY        = entity->size.y >> 16;
         entity->size.y        = abs(entity->size.y);
-        entity->dword144      = 1;
+        entity->textFlag      = true;
         entity->touchCB       = UIChoice_CheckTouch;
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
         entity->spriteIndex = UIWidgets->textSpriteIndex;
@@ -150,7 +150,7 @@ void UIChoice_Unknown2(EntityUIButton *entity)
     }
 }
 
-void UIChoice_Unknown3(void)
+void UIChoice_TouchedCB_Left(void)
 {
     RSDK_THIS(UIChoice);
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
@@ -173,12 +173,12 @@ void UIChoice_Unknown3(void)
     } while ((ent && ent->disabled) && id != parent->selection);
 
     if (id != parent->selection) {
-        UIButton_Unknown3(parent, id);
+        UIButton_SetChoiceSelectionWithCB(parent, id);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
     }
 }
 
-void UIChoice_Unknown4(void)
+void UIChoice_TouchedCB_Right(void)
 {
     RSDK_THIS(UIChoice);
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
@@ -196,7 +196,7 @@ void UIChoice_Unknown4(void)
     } while ((ent && ent->disabled) && id != parent->selection);
 
     if (id != parent->selection) {
-        UIButton_Unknown3(parent, id);
+        UIButton_SetChoiceSelectionWithCB(parent, id);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
     }
 }
@@ -204,41 +204,47 @@ void UIChoice_Unknown4(void)
 bool32 UIChoice_CheckTouch(void)
 {
     void (*callbacks[2])(void);
-    Vector2 posStart[2];
-    Vector2 posEnd[2];
+    Vector2 touchStart[2];
+    Vector2 touchEnd[2];
 
     RSDK_THIS(UIChoice);
-    callbacks[0]  = UIChoice_Unknown3;
-    callbacks[1]  = UIChoice_Unknown4;
-    posEnd[0].x   = entity->touchPosEnd.x;
-    posEnd[1].x   = entity->touchPosStart.x;
-    posEnd[0].y   = entity->touchPosEnd.y;
-    posEnd[0].y   = entity->touchPosStart.y;
-    posStart[0].x = entity->touchPosStart.x;
-    posStart[1].x = entity->touchPosStart.x;
-    posStart[0].y = entity->touchPosStart.y;
-    posStart[1].y = entity->touchPosStart.y;
+    callbacks[0]  = UIChoice_TouchedCB_Left;
+    callbacks[1] = UIChoice_TouchedCB_Right;
 
-    bool32 flag = false;
+    touchStart[0].x = entity->touchPosStart.x;
+    touchStart[0].y = entity->touchPosStart.y;
+    touchStart[1].x = entity->touchPosStart.x;
+    touchStart[1].y = entity->touchPosStart.y;
+
+    touchEnd[0].x = entity->touchPosEnd.x;
+    touchEnd[0].y = entity->touchPosEnd.y;
+    touchEnd[1].x = -entity->touchPosEnd.x;
+    touchEnd[1].y = entity->touchPosEnd.y;
+
+    bool32 pressed = false;
     for (int i = 0; i < 2; ++i) {
-        if (RSDK_touchMouse->count == 0) {
-            if (entity->touchPressed && entity->touchID == i && !entity->disabled) {
-                callbacks[i]();
-            }
-        }
-        else {
+        if (RSDK_touchMouse->count) {
+            int sizeX = touchStart[i].x >> 1;
+            int sizeY = touchStart[i].y >> 1;
             for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = (RSDK_screens->position.x << 16) - ((RSDK_screens->width * RSDK_touchMouse->x[t]) * -65536.0f);
-                int y = (RSDK_screens->position.y << 16) - ((RSDK_screens->height * RSDK_touchMouse->y[t]) * -65536.0f);
-                if (abs(posEnd[i].x + entity->position.x - x) < posStart[i].x >> 1
-                    && abs(posEnd[i].y + entity->position.y - y) < posStart[i].y >> 1) {
+                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
+                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+
+                int touchX = abs(touchEnd[i].x + entity->position.x - x);
+                int touchY = abs(touchEnd[i].y + entity->position.y - y);
+                if (touchX < sizeX && touchY < sizeY) {
                     entity->touchID = i;
-                    flag            = true;
+                    pressed         = true;
                 }
             }
         }
+        else if (entity->touchPressed && entity->touchID == i && !entity->disabled) {
+            callbacks[i]();
+        }
     }
-    return flag;
+
+    entity->touchPressed = pressed;
+    return pressed;
 }
 
 void UIChoice_Unknown6(void)

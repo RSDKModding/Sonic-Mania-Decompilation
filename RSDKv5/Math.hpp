@@ -1,6 +1,10 @@
 #ifndef MATH_H
 #define MATH_H
 
+// not "math" but works best here
+#define intToVoid(x) (void *)(size_t)(x)
+#define voidToInt(x) (int)(size_t)(x)
+
 #define maxVal(a, b) (a >= b ? a : b)
 #define minVal(a, b) (a <= b ? a : b)
 

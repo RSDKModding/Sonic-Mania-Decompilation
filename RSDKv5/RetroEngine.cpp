@@ -265,6 +265,11 @@ bool initRetroEngine()
     }
     InitInputDevice();
 
+#if RETRO_USE_MOD_LOADER
+    // we confirmed the game actually is valid, lets start some callbacks
+    RunModCallbacks(MODCB_GAME_STARTUP, NULL);
+#endif
+
     return true;
 }
 void runRetroEngine()
@@ -735,6 +740,9 @@ void InitScriptSystem()
     info.unknown = &unknownInfo;
 #endif
     info.screenInfo = screens;
+#if RETRO_USE_MOD_LOADER
+    info.modPtrs = modFunctionTable;
+#endif
 
     if (!engine.useExternalCode) {
         return linkGameLogic(&info);

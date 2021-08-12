@@ -32,7 +32,7 @@ enum UserdataTableIDs {
 #endif
     APITable_FetchLeaderboard,
     APITable_TrackScore,
-    APITable_LeaderboardsUnknown7,
+    APITable_GetLeaderboardsStatus,
     APITable_LeaderboardEntryCount,
     APITable_Missing2,
     APITable_Unknown12,
@@ -405,12 +405,12 @@ void setupFunctions()
 #endif
     addToAPIFunctionTable(APITable_FetchLeaderboard, leaderboards->FetchLeaderboard);
     addToAPIFunctionTable(APITable_TrackScore, leaderboards->TrackScore);
-    addToAPIFunctionTable(APITable_LeaderboardsUnknown7, leaderboards->GetStatus);
-    addToAPIFunctionTable(APITable_LeaderboardEntryCount, NullFunc); // LeaderboardEntryCount);
+    addToAPIFunctionTable(APITable_GetLeaderboardsStatus, leaderboards->GetStatus);
+    addToAPIFunctionTable(APITable_LeaderboardEntryCount, LeaderboardEntryCount);
     addToAPIFunctionTable(APITable_Missing2, NullFunc);              // Missing2);
     addToAPIFunctionTable(APITable_Unknown12, NullFunc);             // Unknown12);
     addToAPIFunctionTable(APITable_Missing3, NullFunc);              // Missing3);
-    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, NullFunc);  // ReadLeaderboardEntry);
+    addToAPIFunctionTable(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
     addToAPIFunctionTable(APITable_SetPresence, richPresence->SetPresence);
     addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
     addToAPIFunctionTable(APITable_GetStatsStatus, GetStatsStatus);
@@ -691,6 +691,10 @@ void setupFunctions()
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ClearDebugValues, ClearDebugValues);
     addToRSDKFunctionTable(FunctionTable_SetDebugValue, SetDebugValue);
+#endif
+
+#if RETRO_USE_MOD_LOADER
+    initModAPI(); //setup mods & the mod API table
 #endif
 }
 

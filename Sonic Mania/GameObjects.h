@@ -16,6 +16,32 @@
 typedef uint colour;
 typedef uint color;
 
+#if RETRO_USE_MOD_LOADER
+typedef enum {
+    MODCB_GAME_STARTUP,
+    MODCB_STAGELOAD,
+    MODCB_ONUPDATE,
+    MODCB_ONLATEUPDATE,
+    MODCB_ONSTATICUPDATE,
+    MODCB_ONDRAW,
+    MODCB_STAGEUNLOAD,
+}ModCallbackEvents;
+
+// Mod Table
+typedef struct {
+    bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
+    void (*AddModCallback)(int callbackID, void (*callback)(void* data));
+    void *(*AddPublicFunction)(const char *id, const char *functionName, void *functionPtr);
+    void *(*GetPublicFunction)(const char *id, const char *functionName);
+    bool32 *(*GetSettingsBool)(const char *name);
+    int *(*GetSettingsInt)(const char *name);
+    void *(*GetSettingsString)(const char *name, TextInfo *value);
+    void *(*SetSettingsBool)(const char *name, bool32 value);
+    void *(*SetSettingsInt)(const char *name, int value);
+    void *(*SetSettingsString)(const char *name, TextInfo *value);
+} ModFunctionTable;
+#endif
+
 #if RETRO_USE_PLUS
 // Userdata Table
 typedef struct {
@@ -43,10 +69,10 @@ typedef struct {
 #if RETRO_GAMEVER == VER_107
     void (*EGS_LeaderboardUnknown1)(void);
 #endif
-    void (*FetchLeaderboard)(int a1, int a2);
+    void (*FetchLeaderboard)(const char* name, int a2);
     void (*TrackScore)(const char *name, int score, void (*callback)(int status, int rank));
-    void (*GetLeaderboardsUnknown)(void);
-    void (*LeaderboardEntryCount)(void);
+    int (*GetLeaderboardsStatus)(void);
+    Vector2 (*LeaderboardEntryCount)(void);
     int (*GetLeaderboardUnknown2)(void);
     void (*Unknown12)(int a2, uint a3, int a4);
     void (*LeaderboardsUnknown8)(void);
@@ -85,9 +111,9 @@ typedef struct {
     int (*GetUserDBUnknown)(ushort tableID, ushort entryID);
     int (*AddUserDBEntry)(ushort tableID);
     void (*SetUserDBValue)(ushort tableID, int a2, int a3, const char *name, void *value);
-    void (*Unknown39)(ushort tableID, int a2, int a3, const char *name, void *value);
+    void (*GetUserDBValue)(ushort tableID, int a2, int a3, const char *name, void *value);
     uint (*GetUserDBEntryUUID)(ushort tableID, ushort entryID);
-    void (*GetUserDBByID)(ushort tableID, uint uuid);
+    int (*GetUserDBByID)(ushort tableID, uint uuid);
     void (*GetUserDBCreationTime)(ushort tableID, ushort entry, char *buf, uint sizeInBytes, const char *format);
     void (*RemoveDBEntry)(ushort tableID, ushort entry);
     void (*RemoveAllDBEntries)(ushort tableID);
@@ -310,6 +336,10 @@ typedef struct {
 #endif
 } RSDKFunctionTable;
 
+
+#if RETRO_USE_MOD_LOADER
+extern ModFunctionTable Mod;
+#endif
 #if RETRO_USE_PLUS
 extern APIFunctionTable API;
 #endif
