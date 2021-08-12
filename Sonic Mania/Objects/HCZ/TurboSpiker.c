@@ -197,7 +197,7 @@ void TurboSpiker_Hermit_IdleWater(void)
             entity->drawOrder = Zone->drawOrderLow + 1;
             if (entity->spike)
                 entity->spike->drawOrder = Zone->drawOrderLow;
-            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(1), entity->position.x, entity->position.y);
+            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(1), entity->position.x, entity->position.y + 0x80000);
             ember->direction         = entity->direction;
             ember->drawOrder         = entity->drawOrder + 1;
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 6, &ember->animator, true, 0);
