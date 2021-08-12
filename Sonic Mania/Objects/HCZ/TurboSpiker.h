@@ -6,11 +6,28 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	Hitbox hermitHitbox;
+	Hitbox spikeHitbox;
+	Hitbox checkbox;
+	ushort animID;
+	ushort launchSFX;
+	ushort splashSFX;
 } ObjectTurboSpiker;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+	StateMachine(state);
+	uint type;
+	int timer;
+	int unused_64;
+	Vector2 spawnPos;
+	byte spawnDir;
+	Entity *spike;
+	Animator animator;
+	Animator spikeAnimator;
+	bool32 launchPlayed;
+
 } EntityTurboSpiker;
 
 // Object Struct
@@ -27,7 +44,25 @@ void TurboSpiker_EditorDraw(void);
 void TurboSpiker_EditorLoad(void);
 void TurboSpiker_Serialize(void);
 
-// Extra Entity Functions
+void TurboSpiker_DebugSpawn(void);
+void TurboSpiker_DebugDraw(void);
 
+// Extra Entity Functions
+void TurboSpiker_Hermit_Collide(void);
+void TurboSpiker_Hermit_CheckOnScreen(void);
+void TurboSpiker_Hermit_NextState(void);
+void TurboSpiker_Hermit_Create(void);
+void TurboSpiker_Hermit_Idle(void);
+void TurboSpiker_Hermit_IdleWater(void);
+void TurboSpiker_Hermit_Handle(void);
+void TurboSpiker_Hermit_Turn(void);
+void TurboSpiker_Hermit_AfterTurn(void);
+void TurboSpiker_Hermit_Move(void);
+void TurboSpiker_Hermit_Fire(void);
+
+void TurboSpiker_Spike_Collide(void);
+void TurboSpiker_Spike_Fly(void);
+
+void TurboSpiker_Ember_Animate(void);
 
 #endif //!OBJ_TURBOSPIKER_H
