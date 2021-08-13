@@ -377,19 +377,19 @@ void SpecialClear_LoadScene(void)
     else if (!entity->field_120) {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         if (param->field_59 == 1) {
-            RSDK.LoadScene("Presentation", "Menu");
-            RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Menu");
+            RSDK.LoadScene();
         }
         else {
             EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
-                RSDK.LoadScene("Encore Mode", "");
+                RSDK.SetScene("Encore Mode", "");
             else
 #endif
-                RSDK.LoadScene("Mania Mode", "");
+                RSDK.SetScene("Mania Mode", "");
             RSDK_sceneInfo->listPos = saveRAM->storedStageID;
-            RSDK.InitSceneLoad();
+            RSDK.LoadScene();
         }
     }
 }

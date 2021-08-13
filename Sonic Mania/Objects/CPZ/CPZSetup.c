@@ -176,7 +176,7 @@ void CPZSetup_StageFinishCBAct1(void)
 {
     RSDK.GetSceneLayer(0);
     Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void CPZSetup_StageFinishCBAct2(void) { CPZSetup->outro->active = ACTIVE_NORMAL; }

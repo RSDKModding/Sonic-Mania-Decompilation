@@ -284,7 +284,7 @@ void PSZ1Setup_ActTransitionCB(void)
 
     SaveGame_SavePlayerState();
     Zone_StoreEntities(0x3E040000, 0x5240000);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void PSZ1Setup_LevelWrap_Top(void)

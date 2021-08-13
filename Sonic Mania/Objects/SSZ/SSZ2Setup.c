@@ -194,7 +194,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             globals->suppressTitlecard = true;
             ++RSDK_sceneInfo->listPos;
             if (!RSDK.CheckValidScene())
-                RSDK.LoadScene("Presentation", "Title Screen");
+                RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);
         }
         if (player->superState == 2 || player->state == Player_State_Transform)

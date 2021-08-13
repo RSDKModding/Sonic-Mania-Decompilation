@@ -62,10 +62,10 @@ void TTCutscene_SkipCB(void)
 {
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
-        RSDK.LoadScene("Encore Mode", "Stardust Speedway Zone+ 1");
+        RSDK.SetScene("Encore Mode", "Stardust Speedway Zone+ 1");
     else
 #endif
-        RSDK.LoadScene("Mania Mode", "Stardust Speedway Zone 1");
+        RSDK.SetScene("Mania Mode", "Stardust Speedway Zone 1");
     ++RSDK_sceneInfo->listPos;
 }
 
@@ -215,10 +215,10 @@ bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
     if (host->timer >= 64) {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
-            RSDK.LoadScene("Encore Mode", "Stardust Speedway Zone+ 1");
+            RSDK.SetScene("Encore Mode", "Stardust Speedway Zone+ 1");
         else
 #endif
-            RSDK.LoadScene("Mania Mode", "Stardust Speedway Zone 1");
+            RSDK.SetScene("Mania Mode", "Stardust Speedway Zone 1");
         ++RSDK_sceneInfo->listPos;
         Zone_StartFadeOut(10, 0x000000);
         return true;

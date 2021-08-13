@@ -155,7 +155,7 @@ struct ForeachStackInfo {
 };
 
 struct TypeGroupList {
-    int entryCount;
+    int rowCount;
     ushort entries[ENTITY_COUNT];
 };
 

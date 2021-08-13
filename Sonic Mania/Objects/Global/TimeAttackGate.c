@@ -389,7 +389,7 @@ void TimeAttackGate_State_Restarter(void)
                             }
                             if (!Music->activeTrack)
                                 globals->suppressAutoMusic = true;
-                            RSDK.InitSceneLoad();
+                            RSDK.LoadScene();
                         }
                     }
                 }

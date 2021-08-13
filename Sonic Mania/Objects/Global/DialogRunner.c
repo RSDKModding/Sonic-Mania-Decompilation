@@ -149,7 +149,7 @@ void DialogRunner_CheckUserAuth_CB(int a1, int a2)
         if (DialogRunner->field_8) {
             if (!UIDialog->activeDialog) {
                 if (Zone && Zone_GetZoneID() != -1) {
-                    RSDK.LoadScene("Presentation", "Title Screen");
+                    RSDK.SetScene("Presentation", "Title Screen");
                     Zone_StartFadeOut(10, 0x000000);
                 }
                 else if (MenuSetup) {
@@ -166,7 +166,7 @@ void DialogRunner_CheckUserAuth_CB(int a1, int a2)
                     }
                 }
                 else if (FXFade) {
-                    RSDK.LoadScene("Presentation", "Title Screen");
+                    RSDK.SetScene("Presentation", "Title Screen");
                     EntityFXFade *fxFade    = CREATE_ENTITY(FXFade, NULL, entity->position.x, entity->position.y);
                     fxFade->active          = ACTIVE_ALWAYS;
                     fxFade->timer           = 0;

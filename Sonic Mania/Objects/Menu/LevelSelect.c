@@ -472,7 +472,7 @@ void LevelSelect_Unknown3(void)
 {
     RSDK_THIS(LevelSelect);
     if (entity->timer >= 1024)
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     else
         entity->timer += 16;
 }
@@ -547,7 +547,7 @@ void LevelSelect_Unknown7(void)
     if (curLabel->selectable) {
         char buffer[32];
         RSDK.GetCString(buffer, &curLabel->tag);
-        RSDK.LoadScene(buffer, "");
+        RSDK.SetScene(buffer, "");
         RSDK_sceneInfo->listPos += curLabel->data0;
 
 #if RETRO_USE_PLUS

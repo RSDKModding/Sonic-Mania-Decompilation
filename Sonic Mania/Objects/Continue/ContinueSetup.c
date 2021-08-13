@@ -148,13 +148,13 @@ void ContinueSetup_Unknown3(void)
     if (entity->timer == 260) {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
-            RSDK.LoadScene("Encore Mode", "");
+            RSDK.SetScene("Encore Mode", "");
         else
 #endif
-            RSDK.LoadScene("Mania Mode", "");
+            RSDK.SetScene("Mania Mode", "");
         SaveGame->saveRAM->continues   = globals->continues;
         RSDK_sceneInfo->listPos = SaveGame->saveRAM->storedStageID;
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
 
     if (entity->timer < 58) {
@@ -171,8 +171,8 @@ void ContinueSetup_Unknown4(void)
 {
     RSDK_THIS(ContinueSetup);
     if (++entity->timer == 80) {
-        RSDK.LoadScene("Presentation", "Menu");
-        RSDK.InitSceneLoad();
+        RSDK.SetScene("Presentation", "Menu");
+        RSDK.LoadScene();
     }
 }
 

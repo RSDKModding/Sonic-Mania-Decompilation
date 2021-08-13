@@ -211,7 +211,7 @@ int UISubHeading_GetMedalMods(void)
 void UISubHeading_SaveFileCB(int status)
 {
     UIWaitSpinner_Wait2();
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void UISubHeading_SecretsTransitionCB(void)
@@ -364,30 +364,30 @@ void UISubHeading_StartNewSave(void)
             globals->characterFlags    = 0;
             globals->enableIntro       = true;
             globals->suppressTitlecard = true;
-            RSDK.LoadScene("Cutscenes", "Angel Island Zone Encore");
+            RSDK.SetScene("Cutscenes", "Angel Island Zone Encore");
         }
         else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
-            RSDK.LoadScene("Presentation", "Level Select");
+            RSDK.SetScene("Presentation", "Level Select");
         }
         else {
-            RSDK.LoadScene("Cutscenes", "Angel Island Zone");
+            RSDK.SetScene("Cutscenes", "Angel Island Zone");
         }
     }
     else if (entity->encoreMode) {
         globals->playerID       = saveRAM->playerID;
         globals->stock          = saveRAM->stock;
         globals->characterFlags = saveRAM->characterFlags;
-        RSDK.LoadScene("Encore Mode", "");
+        RSDK.SetScene("Encore Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
     }
     else {
-        RSDK.LoadScene("Mania Mode", "");
+        RSDK.SetScene("Mania Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
     }
 
     if (!loadingSave) {
         globals->initCoolBonus = false;
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
 }
 

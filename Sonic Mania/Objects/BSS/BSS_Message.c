@@ -166,8 +166,8 @@ void BSS_Message_LoadPrevScene(void)
     else {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         if (param->field_59 == 1) {
-            RSDK.LoadScene("Presentation", "Menu");
-            RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Menu");
+            RSDK.LoadScene();
         }
         else if (globals->gameMode < MODE_TIMEATTACK) {
             if (globals->saveSlotID == NO_SAVE_SLOT) {
@@ -176,12 +176,12 @@ void BSS_Message_LoadPrevScene(void)
                 EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE)
-                    RSDK.LoadScene("Encore Mode", "");
+                    RSDK.SetScene("Encore Mode", "");
                 else
 #endif
-                    RSDK.LoadScene("Mania Mode", "");
+                    RSDK.SetScene("Mania Mode", "");
                 RSDK_sceneInfo->listPos = saveRAM->storedStageID;
-                RSDK.InitSceneLoad();
+                RSDK.LoadScene();
                 entity->state = StateMachine_None;
             }
             else {
@@ -203,12 +203,12 @@ void BSS_Message_LoadGameState(void)
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
-            RSDK.LoadScene("Encore Mode", "");
+            RSDK.SetScene("Encore Mode", "");
         else
 #endif
-            RSDK.LoadScene("Mania Mode", "");
+            RSDK.SetScene("Mania Mode", "");
         RSDK_sceneInfo->listPos = saveRAM->storedStageID;
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
         entity->state = StateMachine_None;
     }
 }

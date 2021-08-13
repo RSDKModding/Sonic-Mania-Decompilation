@@ -21,8 +21,8 @@ void AnimalHBH_Update(void)
             fxFade->wait         = 240;
         }
         if (entity->timer == 1536) {
-            RSDK.LoadScene("Presentation", "Menu");
-            RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Menu");
+            RSDK.LoadScene();
         }
 
         if (AnimalHBH->palID < AnimalHBH->palCnt) {

@@ -257,15 +257,15 @@ void PBL_Setup_SaveAndChangeScene(void)
             saveRAM->stock = globals->stock;
             saveRAM->playerID= globals->playerID;
             if (globals->gameMode == MODE_ENCORE)
-                RSDK.LoadScene("Encore Mode", "");
+                RSDK.SetScene("Encore Mode", "");
             else
-                RSDK.LoadScene("Mania Mode", "");
+                RSDK.SetScene("Mania Mode", "");
             RSDK_sceneInfo->listPos = saveRAM->storedStageID;
         }
         else {
-            RSDK.LoadScene("Presentation", "Title Screen");
+            RSDK.SetScene("Presentation", "Title Screen");
         }
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
     else {
         entity->timer += 16;

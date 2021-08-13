@@ -84,10 +84,10 @@ void UIVideo_State_FinishPlayback(void)
             char sceneName[64];
             RSDK.GetCString(catName, &entity->stageListCategory);
             RSDK.GetCString(sceneName, &entity->stageListName);
-            RSDK.LoadScene(catName, sceneName);
+            RSDK.SetScene(catName, sceneName);
             if (!RSDK.CheckValidScene())
-                RSDK.LoadScene("Presentation", "Title Screen");
-            RSDK.InitSceneLoad();
+                RSDK.SetScene("Presentation", "Title Screen");
+            RSDK.LoadScene();
         }
         destroyEntity(entity);
     }

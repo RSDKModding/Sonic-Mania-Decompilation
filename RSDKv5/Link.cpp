@@ -437,20 +437,20 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_SaveUserDB, SaveUserDB);
     addToAPIFunctionTable(APITable_ClearUserDB, ClearUserDB);
     addToAPIFunctionTable(APITable_ClearAllUserDBs, ClearAllUserDBs);
-    addToAPIFunctionTable(APITable_Unknown31, NullFunc); // Unknown31);
+    addToAPIFunctionTable(APITable_Unknown31, InitDBRowUnknown);
     addToAPIFunctionTable(APITable_GetUserDBSatus, GetUserDBStatus);
-    addToAPIFunctionTable(APITable_Unknown33, NullFunc); // Unknown33);
-    addToAPIFunctionTable(APITable_Unknown34, NullFunc); // Unknown34);
+    addToAPIFunctionTable(APITable_Unknown33, UserDBUnknown33);
+    addToAPIFunctionTable(APITable_Unknown34, UserDBUnknown34);
     addToAPIFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
     addToAPIFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
-    addToAPIFunctionTable(APITable_Unknown37, AddUserDBEntry);
+    addToAPIFunctionTable(APITable_Unknown37, AddUserDBRow);
     addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
     addToAPIFunctionTable(APITable_Unknown39, GetUserDBValue);
-    addToAPIFunctionTable(APITable_GetEntryUUID, GetUserDBRowUUID);
+    addToAPIFunctionTable(APITable_GetEntryUUID, GetDBRowUUID);
     addToAPIFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
     addToAPIFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);
-    addToAPIFunctionTable(APITable_RemoveDBEntry, RemoveDBEntry);
-    addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBEntries);
+    addToAPIFunctionTable(APITable_RemoveDBEntry, RemoveDBRow);
+    addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBRows);
 #else
     addToAPIFunctionTable("GetConfirmButtonFlip", GetConfirmButtonFlip);
     addToAPIFunctionTable("GetXYButtonFlip", GetXYButtonFlip);

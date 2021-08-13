@@ -129,7 +129,7 @@ void GHZSetup_SetupStartingBG(void)
 void GHZSetup_SetupActTransition(void)
 {
     Zone_StoreEntities(0x3DB00000, 0x6340000);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 void GHZSetup_HandleActTransition(void)
 {

@@ -614,7 +614,7 @@ void TimeAttackMenu_UnknownCB1_ReplayCarousel(void)
     EntityUIControl *control         = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
 
-    API.Unknown31(globals->replayTableID);
+    API.SetupRowUnknown(globals->replayTableID);
     if (control->buttons[0]->selection == 1)
         API.Unknown34(globals->replayTableID, 4, "zoneSortVal", intToVoid(0));
     else
@@ -681,9 +681,9 @@ void TimeAttackMenu_Unknown27(void)
     globals->medalMods  = 0;
 
     if (param->isEncoreMode)
-        RSDK.LoadScene("Encore Mode", "");
+        RSDK.SetScene("Encore Mode", "");
     else
-        RSDK.LoadScene("Mania Mode", "");
+        RSDK.SetScene("Mania Mode", "");
 
     if (param->isEncoreMode)
         RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(param->zoneID, param->characterID, param->actID);
@@ -698,7 +698,7 @@ void TimeAttackMenu_Unknown27(void)
         case 5: globals->playerID = ID_RAY; break;
         default: break;
     }
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void TimeAttackMenu_YPressCB_ZoneSel(void)

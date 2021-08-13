@@ -176,10 +176,10 @@ void TryAgainE_Unknown2(void)
 
     if (entity->timer >= 740) {
         if (API.CheckDLC(DLC_PLUS))
-            RSDK.LoadScene("Presentation", "Encore Summary");
+            RSDK.SetScene("Presentation", "Encore Summary");
         else
-            RSDK.LoadScene("Presentation", "Menu");
-        RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Menu");
+        RSDK.LoadScene();
     }
 }
 

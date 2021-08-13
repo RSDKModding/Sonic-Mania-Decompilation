@@ -110,7 +110,7 @@ void LogoSetup_Unknown3(void)
     if (entity->timer >= 1024) {
         if (RSDK_screens->position.y >= SCREEN_YSIZE) {
             ++RSDK_sceneInfo->listPos;
-            RSDK.InitSceneLoad();
+            RSDK.LoadScene();
         }
         else {
             RSDK_screens->position.y += SCREEN_YSIZE;

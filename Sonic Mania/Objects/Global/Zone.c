@@ -712,9 +712,9 @@ bool32 Zone_IsAct2(void)
 int Zone_GetEncoreStageID(void)
 {
     int pos = RSDK_sceneInfo->listPos;
-    RSDK.LoadScene("Mania Mode", "");
+    RSDK.SetScene("Mania Mode", "");
     int mOff = pos - RSDK_sceneInfo->listPos;
-    RSDK.LoadScene("Encore Mode", "");
+    RSDK.SetScene("Encore Mode", "");
     int eOff = RSDK_sceneInfo->listPos;
 
     int listPos = RSDK_sceneInfo->listPos;
@@ -739,9 +739,9 @@ int Zone_GetEncoreStageID(void)
 int Zone_GetManiaStageID(void)
 {
     int pos = RSDK_sceneInfo->listPos;
-    RSDK.LoadScene("Encore Mode", "");
+    RSDK.SetScene("Encore Mode", "");
     int mOff = pos - RSDK_sceneInfo->listPos;
-    RSDK.LoadScene("Mania Mode", "");
+    RSDK.SetScene("Mania Mode", "");
     int eOff = RSDK_sceneInfo->listPos;
 
     int pos2 = 0;
@@ -802,7 +802,7 @@ void Zone_State_Fadeout(void)
                 RSDK.CopyEntity(Zone->entityData[8], player->camera, false);
         }
 #endif
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
 }
 
@@ -828,9 +828,9 @@ void Zone_State_Fadeout_Unknown(void)
     if (entity->timer > 1024) {
         session->zoneFlags[session->levelIndex] = 1;
         session->matchID                        = session->unknown93 + 1;
-        RSDK.LoadScene("Presentation", "Menu");
+        RSDK.SetScene("Presentation", "Menu");
         RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
 }
 
@@ -867,7 +867,7 @@ void Zone_Unknown17(void)
     TitleCard->suppressCallback = Zone_Unknown16;
     SaveGame_SavePlayerState();
     Player->rings = entity->rings;
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void Zone_State_Fadeout_Destroy(void)

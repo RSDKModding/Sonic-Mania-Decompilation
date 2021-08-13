@@ -618,7 +618,7 @@ void OptionsMenu_Unknown28(void)
 {
     globals->suppressAutoMusic = true;
     RSDK.SetHardResetFlag(true);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void OptionsMenu_Unknown29(int status)
@@ -919,8 +919,8 @@ void OptionsMenu_Unknown44(void)
         control->selectionDisabled = true;
         UIWaitSpinner_Wait();
     }
-    API.Unknown31(globals->replayTableID);
-    API.Unknown31(globals->taTableID);
+    API.SetupRowUnknown(globals->replayTableID);
+    API.SetupRowUnknown(globals->taTableID);
     if (API.GetUserDBUnknownCount(globals->replayTableID) <= 0) {
         ReplayRecorder_SaveReplayDB(OptionsMenu_Unknown45);
     }

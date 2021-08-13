@@ -452,9 +452,9 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown5(EntityCutsceneSeq *host)
 bool32 EncoreGoodEnd_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 {
     if (API.CheckDLC(DLC_PLUS))
-        RSDK.LoadScene("Presentation", "Encore Summary");
+        RSDK.SetScene("Presentation", "Encore Summary");
     else
-        RSDK.LoadScene("Presentation", "Menu");
+        RSDK.SetScene("Presentation", "Menu");
     Zone_StartFadeOut(10, 0x000000);
     Music_FadeOut(0.025);
     return true;

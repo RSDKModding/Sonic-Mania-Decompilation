@@ -224,7 +224,7 @@ void BSS_Setup_StageLoad(void)
 int BSS_Setup_ReloadScene(void)
 {
     int pos = RSDK_sceneInfo->listPos;
-    RSDK.LoadScene("Blue Spheres", "");
+    RSDK.SetScene("Blue Spheres", "");
     RSDK_sceneInfo->listPos = pos;
     return (pos - RSDK_sceneInfo->listPos) % 32;
 }

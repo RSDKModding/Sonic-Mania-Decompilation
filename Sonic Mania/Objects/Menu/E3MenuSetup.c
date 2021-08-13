@@ -93,7 +93,7 @@ void E3MenuSetup_Unknown3(void)
     EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
-    RSDK.LoadScene("Mania Mode", "");
+    RSDK.SetScene("Mania Mode", "");
     EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->selectionID];
     param->zoneID                = module->zoneID;
     param->actID                 = module->actID;
@@ -104,7 +104,7 @@ void E3MenuSetup_Unknown3(void)
         case 2: globals->playerID = ID_TAILS; break;
         case 3: globals->playerID = ID_KNUCKLES; break;
     }
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void E3MenuSetup_Unknown4(void)

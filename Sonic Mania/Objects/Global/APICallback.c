@@ -657,7 +657,7 @@ void APICallback_CheckUserAuth_CB(void)
         if (APICallback->signoutFlag) {
             if (!dialog) {
                 if (Zone) {
-                    RSDK.LoadScene("Presentation", "Title Screen");
+                    RSDK.SetScene("Presentation", "Title Screen");
                     Zone_StartFadeOut(10, 0x000000);
                 }
                 else if (MenuSetup) {

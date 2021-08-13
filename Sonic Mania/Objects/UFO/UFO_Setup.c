@@ -155,7 +155,7 @@ void UFO_Setup_StageLoad(void)
     }
 
     int listPos = RSDK_sceneInfo->listPos;
-    RSDK.LoadScene("Special Stage", "");
+    RSDK.SetScene("Special Stage", "");
     UFO_Setup->specialStageID = listPos - RSDK_sceneInfo->listPos;
     if (UFO_Setup->specialStageID >= 7) {
         UFO_Setup->specialStageID = UFO_Setup->specialStageID % 7;
@@ -361,8 +361,8 @@ void UFO_Setup_Unknown12(void)
     RSDK_THIS(UFO_Setup);
     if (entity->timer >= 1024) {
         if (UFO_Setup->resetToTitle) {
-            RSDK.LoadScene("Presentation", "Title Screen");
-            RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Title Screen");
+            RSDK.LoadScene();
         }
         else {
             for (int i = 0; i < LAYER_COUNT; ++i) {

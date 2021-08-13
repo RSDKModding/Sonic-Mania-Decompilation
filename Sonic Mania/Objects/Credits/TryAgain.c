@@ -143,11 +143,11 @@ void TryAgain_Unknown4(void)
     if (entity->timer >= (RETRO_USE_PLUS ? 740 : 680)) {
 #if RETRO_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
-            RSDK.LoadScene("Presentation", "Game Summary");
+            RSDK.SetScene("Presentation", "Game Summary");
         else
 #endif
-            RSDK.LoadScene("Presentation", "Menu");
-        RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Menu");
+        RSDK.LoadScene();
     }
 }
 

@@ -92,7 +92,7 @@ void GameOver_StageLoad(void)
 void GameOver_SaveGameCallback(int status)
 {
     UIWaitSpinner_Wait2();
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void GameOver_Unknown2(void)
@@ -273,20 +273,20 @@ void GameOver_Unknown5(void)
             session->zoneFlags[session->levelIndex] = 1;
             session->matchID                        = session->unknown93 + 1;
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
-            RSDK.LoadScene("Presentation", "Menu");
-            RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Menu");
+            RSDK.LoadScene();
         }
         else if (entity->animator.animationID != 6) {
             StarPost->storedMS      = 0;
             StarPost->storedSeconds = 0;
             StarPost->storedMinutes = 0;
-            RSDK.InitSceneLoad();
+            RSDK.LoadScene();
         }
         else {
             EntitySaveGame *saveRAM = SaveGame->saveRAM;
             if (globals->gameMode >= MODE_TIMEATTACK) {
-                RSDK.LoadScene("Presentation", "Menu");
-                RSDK.InitSceneLoad();
+                RSDK.SetScene("Presentation", "Menu");
+                RSDK.LoadScene();
             }
             else if (globals->continues > 0) {
                 saveRAM->storedStageID = RSDK_sceneInfo->listPos;
@@ -305,8 +305,8 @@ void GameOver_Unknown5(void)
                     saveRAM->stock          = globals->stock;
                 }
 #endif
-                RSDK.LoadScene("Presentation", "Continue");
-                RSDK.InitSceneLoad();
+                RSDK.SetScene("Presentation", "Continue");
+                RSDK.LoadScene();
             }
             else {
                 saveRAM->lives    = 3;
@@ -326,7 +326,7 @@ void GameOver_Unknown5(void)
 #endif
                 UIWaitSpinner_Wait();
                 SaveGame_SaveFile(GameOver_SaveGameCallback);
-                RSDK.LoadScene("Presentation", "Menu");
+                RSDK.SetScene("Presentation", "Menu");
             }
         }
     }

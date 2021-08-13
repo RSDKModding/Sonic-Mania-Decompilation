@@ -240,8 +240,8 @@ int MenuSetup_StartReturnToTitle(void)
 void MenuSetup_ReturnToTitle(void)
 {
     TimeAttackData_ClearOptions();
-    RSDK.LoadScene("Presentation", "Title Screen");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Presentation", "Title Screen");
+    RSDK.LoadScene();
 }
 
 void MenuSetup_Unknown13(void)
@@ -283,7 +283,7 @@ int MenuSetup_GetMedalMods(void)
 void MenuSetup_SaveFileCB(int status)
 {
     UIWaitSpinner_Wait2();
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void MenuSetup_StartNewSave(void)
@@ -352,20 +352,20 @@ void MenuSetup_StartNewSave(void)
 
     if (entity->type == 1 || entity->isNewSave) {
         if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
-            RSDK.LoadScene("Presentation", "Level Select");
+            RSDK.SetScene("Presentation", "Level Select");
         }
         else {
-            RSDK.LoadScene("Cutscenes", "Angel Island Zone");
+            RSDK.SetScene("Cutscenes", "Angel Island Zone");
         }
     }
     else {
-        RSDK.LoadScene("Mania Mode", "");
+        RSDK.SetScene("Mania Mode", "");
         RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
     }
 
     if (!loadingSave) {
         globals->initCoolBonus = false;
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
 }
 

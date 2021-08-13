@@ -16,8 +16,8 @@ void DASetup_StaticUpdate(void)
     EntityFXFade *fade = (EntityFXFade *)DASetup->fxFade;
     if (DASetup->flag && fade->timer == 512) {
         Music_FadeOut(0.02);
-        RSDK.LoadScene("Presentation", "Menu");
-        RSDK.InitSceneLoad();
+        RSDK.SetScene("Presentation", "Menu");
+        RSDK.LoadScene();
     }
 
     EntityUIControl *control = (EntityUIControl *)DASetup->control;

@@ -294,7 +294,7 @@ void TitleSetup_Unknown10(void)
         if (RSDK_controller->keyA.down && (RSDK_controller->keyX.down || RSDK_controller->keyC.down))
             nextScene = "Level Select";
 #endif
-        RSDK.LoadScene("Presentation", nextScene);
+        RSDK.SetScene("Presentation", nextScene);
 #if RETRO_USE_PLUS
         RSDK.ResetControllerAssignments();
         RSDK.AssignControllerID(CONT_P1, RSDK.MostRecentActiveControllerID(0, 0, 5));
@@ -318,7 +318,7 @@ void TitleSetup_Unknown11(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
     else {
         entity->timer += 8;
@@ -329,7 +329,7 @@ void TitleSetup_Unknown12(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
         RSDK.StopChannel(Music->channelID);
         if (TitleSetup->altMusic) {
             RSDK.PlayStream("IntroTee.ogg", Music->channelID, 0, 0, false);

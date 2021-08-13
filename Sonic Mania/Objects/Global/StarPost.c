@@ -196,14 +196,14 @@ void StarPost_CheckBonusStageEntry(void)
 #if RETRO_USE_PLUS
                 if ((API.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM->storedStageID = RSDK_sceneInfo->listPos;
-                    RSDK.LoadScene("Pinball", "");
+                    RSDK.SetScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->channelID);
                 }
                 else {
 #endif
                     SaveGame->saveRAM->storedStageID = RSDK_sceneInfo->listPos;
-                    RSDK.LoadScene("Blue Spheres", "");
+                    RSDK.SetScene("Blue Spheres", "");
                     RSDK_sceneInfo->listPos += globals->blueSpheresID;
                     Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->channelID);

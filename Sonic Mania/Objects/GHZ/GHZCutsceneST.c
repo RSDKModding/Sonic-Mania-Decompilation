@@ -261,16 +261,16 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
     RSDK_THIS(GHZCutsceneST);
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
-        RSDK.LoadScene("Encore Mode", "");
+        RSDK.SetScene("Encore Mode", "");
     else
 #endif
-        RSDK.LoadScene("Mania Mode", "");
+        RSDK.SetScene("Mania Mode", "");
     globals->parallaxOffset[0] = entity->timer2;
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;
     Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
     return true;
 }
 
@@ -278,10 +278,10 @@ void GHZCutsceneST_SkipCB(void)
 {
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
-        RSDK.LoadScene("Encore Mode", "Green Hill Zone+ 1");
+        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
     else
 #endif
-        RSDK.LoadScene("Mania Mode", "Green Hill Zone 1");
+        RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
 
 void GHZCutsceneST_EditorDraw(void) {}

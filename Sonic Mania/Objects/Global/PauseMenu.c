@@ -285,7 +285,7 @@ void PauseMenu_Unknown8(void)
 {
     globals->specialRingID = 0;
     PauseMenu_StopSound();
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void PauseMenu_Unknown9(void)
@@ -304,9 +304,9 @@ void PauseMenu_Unknown9(void)
         sprintf(param->menuTag, "Competition Zones");
         param->selectionID = session->levelIndex;
     }
-    RSDK.LoadScene("Presentation", "Menu");
+    RSDK.SetScene("Presentation", "Menu");
     PauseMenu_StopSound();
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void PauseMenu_FocusCamera(void)
@@ -704,8 +704,8 @@ void PauseMenu_Unknown28(void)
         if (entity->timer >= 60) {
             entity->fillTimer = 512;
             SaveGame_ClearRestartData();
-            RSDK.LoadScene("Presentation", "Title Screen");
-            RSDK.InitSceneLoad();
+            RSDK.SetScene("Presentation", "Title Screen");
+            RSDK.LoadScene();
         }
         else {
             entity->fillTimer = (entity->timer << 9) / 60;

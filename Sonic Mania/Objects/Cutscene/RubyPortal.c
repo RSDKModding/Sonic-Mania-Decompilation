@@ -200,7 +200,7 @@ void RubyPortal_Unknown4(void)
                 }
                 ++RSDK_sceneInfo->listPos;
                 if (!RSDK.CheckValidScene())
-                    RSDK.LoadScene("Presentation", "Title Screen");
+                    RSDK.SetScene("Presentation", "Title Screen");
                 Zone_StartFadeOut(16, 0xF0F0F0);
                 entity->state = RubyPortal_Unknown5;
 

@@ -217,7 +217,7 @@ void MSZSetup_StageFinishCB_ST(void)
 void MSZSetup_StageFinishCB_K(void)
 {
     Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 #if RETRO_USE_PLUS

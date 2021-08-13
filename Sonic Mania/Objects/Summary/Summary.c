@@ -128,7 +128,7 @@ void Summary_State_Unknown2(void)
 {
     RSDK_THIS(Summary);
     if (RSDK_controller->keyStart.press || (API.GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)) {
-        RSDK.LoadScene("Presentation", "Menu");
+        RSDK.SetScene("Presentation", "Menu");
         entity->timer     = 0;
         entity->state     = Summary_State_Unknown3;
         entity->stateDraw = Summary_State_Draw;
@@ -143,7 +143,7 @@ void Summary_State_Unknown3(void)
 {
     RSDK_THIS(Summary);
     if (entity->timer >= 1024) {
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
     else {
         entity->timer += 0x10;

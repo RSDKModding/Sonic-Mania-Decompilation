@@ -130,7 +130,7 @@ void SpecialRing_StartWarp(void)
         destroyEntity(entity);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         saveRAM->storedStageID  = RSDK_sceneInfo->listPos;
-        RSDK.LoadScene("Special Stage", "");
+        RSDK.SetScene("Special Stage", "");
         RSDK_sceneInfo->listPos += saveRAM->nextSpecialStage;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)

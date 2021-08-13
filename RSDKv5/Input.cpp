@@ -610,5 +610,5 @@ int GetGamePadType(int inputID)
         }
     }
 
-    return controllerUnknown();
+    return ControllerUnknown();
 }

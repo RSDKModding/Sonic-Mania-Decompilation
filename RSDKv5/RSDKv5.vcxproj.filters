@@ -152,6 +152,15 @@
     <ClCompile Include="ModAPI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UserStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserAchievements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserLeaderboards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -278,6 +287,15 @@
       <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="ModAPI.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserStorage.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserAchievements.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserLeaderboards.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,27 +5,12 @@
 DummyCore *dummmyCore = NULL;
 DummyCore *userCore   = NULL;
 
-DummyAchievements *achievements = NULL;
-DummyLeaderboards *leaderboards = NULL;
 DummyRichPresence *richPresence = NULL;
 DummyStats *stats               = NULL;
-DummyUserStorage *userStorage   = NULL;
-
-UserDBStorage *userDBStorage = NULL;
 #endif
 
 // Start custom achievement code
 // this is added because we don't have access to any store APIs that would otherwise use this feature
-#include <vector>
-struct AchievementInfo {
-    const char *identifier;
-    const char *name;
-    const char *description;
-    bool32 achieved;
-};
-
-std::vector<AchievementInfo> achievementList;
-std::vector<int> achievementStack;
 
 void addAchievement(const char *identifier, const char *name, const char *desc)
 {
@@ -38,17 +23,6 @@ void addAchievement(const char *identifier, const char *name, const char *desc)
 }
 
 // End custom achievement code
-
-// Start custom leaderboard code
-// this is added because we don't have access to any store APIs that would otherwise use this feature
-struct LeaderboardInfo {
-    char name[0x40];
-    int score;
-};
-
-std::vector<LeaderboardInfo> leaderboardList;
-
-// End custom leaderboard code
 
 GamePadMappings *gamePadMappings = NULL;
 int gamePadCount                 = 0;
@@ -110,7 +84,7 @@ void initUserData()
         userCore->GetConfirmButtonFlip = GetConfirmButtonFlip;
         userCore->LaunchManual         = LaunchManual;
         userCore->ExitGame             = ExitGame;
-        userCore->controllerUnknown    = controllerUnknown;
+        userCore->ControllerUnknown    = ControllerUnknown;
         userCore->unknown15            = UserCoreUnknown15;
         userCore->CheckDLC             = checkDLC;
         userCore->ShowExtensionOverlay = ShowExtensionOverlay;
@@ -244,34 +218,7 @@ void initUserData()
 }
 void releaseUserData()
 {
-    int achievementsRAM[0x100];
-    memset(achievementsRAM, 0, 0x100 * sizeof(int));
-    for (int i = 0; i < (int)achievementList.size(); ++i) {
-        achievementsRAM[i] = achievementList[i].achieved;
-    }
-#if RETRO_REV02
-    userStorage->SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL, false);
-#else
-    SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
-#endif
-
-    int leaderboardsRAM[0x100];
-    memset(leaderboardsRAM, 0, 0x100 * sizeof(int));
-    leaderboardsRAM[0] = (int)leaderboardList.size();
-    int pos            = 1;
-    for (int i = 0; i < (int)leaderboardList.size(); ++i) {
-        int len                = strlen(leaderboardList[i].name);
-        leaderboardsRAM[pos++] = len;
-        memcpy(&leaderboardsRAM[pos], leaderboardList[i].name, len);
-        int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
-        pos += size;
-        leaderboardsRAM[pos++] = leaderboardList[i].score;
-    }
-#if RETRO_REV02
-    userStorage->SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL, false);
-#else
-    SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
-#endif
+    saveUserData();
 
 #if RETRO_REV02
     if (dummmyCore)
@@ -299,7 +246,45 @@ void releaseUserData()
     if (userStorage)
         free(userStorage);
     userStorage = NULL;
+
+    ReleaseUserStorageDB(userDBStorage);
+
+    if (userDBStorage)
+        free(userDBStorage);
+    userDBStorage = NULL;
 #endif
+}
+
+void saveUserData()
+{
+    int achievementsRAM[0x100];
+    memset(achievementsRAM, 0, 0x100 * sizeof(int));
+    for (int i = 0; i < (int)achievementList.size(); ++i) {
+        achievementsRAM[i] = achievementList[i].achieved;
+    }
+#if RETRO_REV02
+    userStorage->SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL, false);
+#else
+    SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
+#endif
+
+    int leaderboardsRAM[0x100];
+    memset(leaderboardsRAM, 0, 0x100 * sizeof(int));
+    leaderboardsRAM[0] = (int)leaderboardList.size();
+    int pos            = 1;
+    for (int i = 0; i < (int)leaderboardList.size(); ++i) {
+        int len                = strlen(leaderboardList[i].name);
+        leaderboardsRAM[pos++] = len;
+        memcpy(&leaderboardsRAM[pos], leaderboardList[i].name, len);
+        int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
+        pos += size;
+        leaderboardsRAM[pos++] = leaderboardList[i].score;
+    }
+#if RETRO_REV02
+    userStorage->SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL, false);
+#else
+    SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
+#endif 
 }
 
 int GetUserLanguage()
@@ -342,8 +327,7 @@ void LaunchManual()
     // TODO(?): open this url: http://www.sonicthehedgehog.com/mania/manual
 }
 void ExitGame() { engine.running = false; }
-int controllerUnknown() { return 0; }
-
+int ControllerUnknown() { return 0; }
 int ShowExtensionOverlay(byte overlay)
 {
     printLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
@@ -360,166 +344,6 @@ int ShowEncorePage(int a1)
     return 1;
 }
 void EGS_Unknown4(int a1) { printLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1); }
-
-void ClearAchievements() { printLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
-
-void TryUnlockAchievement(const char *name)
-{
-    printLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
-
-    int i = 0;
-    for (; i < (int)achievementList.size(); ++i) {
-        if (strcmp(name, achievementList[i].identifier) == 0) {
-            if (!achievementList[i].achieved) {
-                achievementStack.push_back(i);
-                printLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
-                achievementList[i].achieved = true;
-            }
-            break;
-        }
-    }
-
-    if (i == achievementList.size())
-        printLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
-}
-
-void GetAchievementNames(TextInfo *names, int count)
-{
-    int i = 0;
-    for (; i < count && i < (int)achievementStack.size(); ++i) {
-        SetText(&names[i], (char *)achievementList[i].name, 0);
-    }
-    for (; i < count; ++i) {
-        SetText(&names[i], (char *)"Dummy Achievement", 0);
-    }
-}
-
-TextInfo *GetAchievementText(TextInfo *info)
-{
-    SetText(info, (char *)"Achievement!", 0);
-    return info;
-}
-TextInfo *GetAchievementName(TextInfo *info, uint id)
-{
-    id--;
-    if (id <= achievementList.size())
-        SetText(info, (char *)achievementList[id].name, 0);
-    return info;
-}
-
-int GetNextAchievementID(void)
-{
-    if (achievementStack.size() > 0)
-        return achievementStack[0] + 1;
-    else
-        return 0;
-}
-
-void RemoveLastAchievementID(void)
-{
-    if (achievementStack.size() > 0)
-        achievementStack.erase(achievementStack.begin());
-}
-
-void FillDummyLeaderboardEntries()
-{
-    const char *dummyNames[] = { "ORCIHILLARY124",      "AUCTORJOLIE521",       "SENECTUSFLORENCE789", "MAGNAAVRAM503",       "SITVERNON320",
-                                 "DUICHRISTEN429",      "NULLAKERMIT649",       "INTEGERGEORGE708",    "HENDRERITDREW443",    "UTULYSSES507",
-                                 "ACCUMSANBRUCE276",    "BANANAARON804",        "MAURISSILAS372",      "ETCALVIN641",         "UTGALENA780",
-                                 "FEUGIATSHAY665",      "ORCIJULIET388",        "ETJENNA318",          "LIBEROIDOLA420",      "ATVIELKA576",
-                                 "PHASELLUSJENETTE627", "CONSECTETUERCALEB550", "SITVICTOR359",        "PURUSDARRYL50",       "DONECAVRAM56",
-                                 "PENATIBUSSYBILL30",   "MAURISBARCLAY563",     "CONGUECOLLEEN811",    "MORBIDESTINY655",     "SEMPERIONA579",
-                                 "RISUSKEANE807",       "QUISQUEMARYAM927",     "COMMODOSTEPHANIE54",  "MALESUADABURTON350",  "VIVAMUSROBIN330",
-                                 "QUISQUEWHILEMINA413", "VESTIBULUMRYDER890",   "LACUSINDIRA112",      "NEQUEJESCIE446",      "EGESTASMORGAN390",
-                                 "ETODYSSEUS95",        "EGETHERMIONE127",      "ENIMPASCALE599",      "ODIOWHOOPI328",       "DOLORANGELICA718",
-                                 "ODIOSLOANE426",       "DUIZELDA319",          "METUSPORTER906",      "NONUMMYSHANNON166",   "IPSUMANTHONY906",
-                                 "ACCUMSANRAPHAEL296",  "ORNAREHU604",          "MOLESTIERYDER304",    "FACILISILAITH900",    "MIYVONNE287",
-                                 "CRASHEDY110",         "TEMPUSRAE486",         "ORCICOLBY173",        "ULTRICESJADEN480",    "LECTUSBEAU552",
-                                 "LIGULAJESSAMINE824",  "ORCISOLOMON19",        "VARIUSDARRYL437",     "EUISMODKATELL668",    "LACUSSTEVEN302",
-                                 "ALIQUETRICHARD807",   "PEDEKAI692",           "VIVAMUSCHARLOTTE167", "MAURISLEWIS101",      "NULLANELLE11",
-                                 "MAECENASKAMEKO602",   "LOREMHALEY545",        "PHASELLUSPAUL954",    "ERATGLORIA527",       "DIAMBURKE290",
-                                 "SEMYOKO792",          "ANTEMICHELLE769",      "SEMPERDOMINIC873",    "CONDIMENTUMNYSSA826", "PEDEDYLAN675",
-                                 "ETCRUZ380",           "VELJAQUELYN95",        "NONDACEY190",         "UTCAIN386",           "NULLANOMLANGA941",
-                                 "QUISQUESIERRA659",    "MATTISABDUL346",       "PHASELLUSKNOX183",    "NEQUEXYLA92",         "ORNAREGAY372",
-                                 "FACILISISIVY303",     "TELLUSHARLAN339",      "METUSSOPOLINE75",     "NUNCKYLYNN927",       "PROINHERMIONE775",
-                                 "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
-
-    const char *dummyUserID = "DUMMY_USER_ID";
-
-    leaderboards->field_4 = STATUS_OK;
-    leaderboards->field_8 = 1;
-    leaderboards->field_C = 20;
-    for (int e = 0; e < leaderboards->field_C; ++e) {
-        LeaderboardEntry *entry = leaderboards->entryPtrs[e];
-
-        entry->status     = STATUS_OK;
-        entry->globalRank = leaderboards->field_8 + e;
-        entry->score      = (4 * entry->globalRank + 2400) % 59999;
-        entry->isUser     = leaderboards->prevIsUser && e == leaderboards->prevRank;
-        if (entry->isUser) {
-            GetUserName(&entry->username);
-        }
-        else {
-            SetText(&entry->username, (char *)"", 0);
-            PrependText(&entry->username, (char *)dummyNames[e % 100]);
-        }
-        SetText(&entry->userID, (char *)"DUMMY_USER_ID", 0);
-    }
-}
-
-void FetchLeaderboard(const char *name, int id)
-{
-    printLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %d)", name, id);
-    leaderboards->entryStart  = 1;
-    leaderboards->entryLength = 20;
-    leaderboards->rankScore             = 0;
-    //leaderboards->leaderboardEntryCount = RSDK.Rand(start, end);
-    leaderboards->prevIsUser            = id == 0;
-    if (id == 0) {
-        leaderboards->rankScore = RSDK_random(1000, 9999);
-        leaderboards->prevRank  = RSDK_random(0, (leaderboards->entryStart + leaderboards->entryLength) - 1);
-    }
-    leaderboards->status = STATUS_OK;
-
-    FillDummyLeaderboardEntries();
-}
-void TrackScore(const char *name, int score, void (*callback)(int status, int rank))
-{
-    int id = -1;
-    for (int i = 0; i < leaderboardList.size(); ++i) {
-        if (std::string(leaderboardList[i].name) == name) {
-            id = i;
-            break;
-        }
-    }
-
-    if (id == -1) {
-        LeaderboardInfo info;
-        sprintf(info.name, "%s", name);
-        info.score = 0x7FFFFFFF;
-        id         = leaderboardList.size();
-        leaderboardList.push_back(info);
-    }
-
-    leaderboardList[id].score = score;
-
-    if (callback)
-        callback(true, 1);
-}
-Vector2 LeaderboardEntryCount()
-{
-    Vector2 value;
-    value.x = leaderboards->entryStart;
-    value.y = leaderboards->entryLength;
-    return value;
-}
-LeaderboardEntry *ReadLeaderboardEntry(int entryID)
-{
-    if (entryID < leaderboards->entryStart || entryID >= leaderboards->entryStart + leaderboards->entryLength)
-        return NULL;
-    else
-        return leaderboards->entryPtrs[entryID - leaderboards->entryStart];
-}
 
 void SetPresence(byte id, TextInfo *info)
 {
@@ -600,457 +424,6 @@ void TryTrackStat(StatInfo *stat)
     else {
         printLog(PRINT_NORMAL, "Track stat SKIPPED. Stats are disabled.");
     }
-}
-#endif
-
-#if RETRO_REV02
-const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
-void setupUserDebugValues()
-{
-    achievements->SetDebugValues();
-    leaderboards->SetDebugValues();
-    richPresence->SetDebugValues();
-    stats->SetDebugValues();
-    userStorage->SetDebugValues();
-
-    for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
-        DebugValueInfo *val = &debugValues[debugValCnt++];
-        strcpy(val->name, userDebugValNames[i]);
-        val->value = userCore->values[i];
-        val->min   = 0;
-
-        if (i == 2) {
-            val->type       = 2;
-            val->valByteCnt = 1;
-            val->max        = REGION_EU;
-        }
-        else if (i == 3) {
-            val->type       = 2;
-            val->valByteCnt = 1;
-            val->max        = LANGUAGE_TC;
-        }
-        else {
-            val->type       = 0;
-            val->valByteCnt = 4;
-            val->max        = 1;
-        }
-    }
-}
-void userInitUnknown1()
-{
-    achievements->InitUnknown1();
-    leaderboards->InitUnknown1();
-    richPresence->InitUnknown1();
-    stats->InitUnknown1();
-    userStorage->InitUnknown1();
-}
-void userInitUnknown2()
-{
-    achievements->InitUnknown2();
-    leaderboards->InitUnknown2();
-    richPresence->InitUnknown2();
-    stats->InitUnknown2();
-    userStorage->InitUnknown2();
-}
-#endif
-
-bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int))
-{
-    bool32 success = false;
-    memset(buffer, 0, bufSize);
-#if RETRO_REV02
-    if (!userStorage->noSaveActive) {
-#endif
-        success = LoadUserFile(filename, buffer, bufSize);
-
-        if (bufSize >= 4) {
-            byte *bufTest       = (byte *)buffer;
-            //quick and dirty zlib check
-            if (bufTest[0] == 0x78 && ((bufTest[1] == 0x01 && bufTest[2] == 0xED) || bufTest[1] == 0x9C)) {
-                uLongf destLen = bufSize;
-
-                byte *compData = NULL;
-                AllocateStorage(bufSize, (void **)&compData, DATASET_TMP, false);
-                memcpy(compData, buffer, bufSize);
-
-                uncompress((Bytef *)buffer, &destLen, compData, bufSize);
-
-                RemoveStorageEntry((void **)&compData);
-            }
-        }
-
-        if (callback)
-            callback(STATUS_OK);
-#if RETRO_REV02
-    }
-    else {
-        char buffer[0x100];
-        sprintf(buffer, "TryLoadUserFile(%s, %p, %u, %p) failing due to noSave", filename, buffer, bufSize, callback);
-
-        if (callback)
-            callback(STATUS_ERROR);
-    }
-#endif
-
-    return success;
-}
-bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compressData)
-{
-    bool32 success = false;
-#if RETRO_REV02
-    if (!userStorage->noSaveActive) {
-#endif
-        if (compressData) {
-            int *cbuf = NULL; 
-            AllocateStorage(bufSize, (void **)&cbuf, DATASET_TMP, false);
-
-            uLongf clen = bufSize;
-            compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)bufSize);
-
-            success = SaveUserFile(filename, cbuf, clen);
-
-            RemoveStorageEntry((void **)&cbuf);
-        }
-        else {
-            success = SaveUserFile(filename, buffer, bufSize);
-        }
-
-        if (callback)
-            callback(STATUS_OK);
-#if RETRO_REV02
-    }
-    else {
-        char buffer[0x100];
-        sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback,
-                compressData ? "true" : "false");
-
-        if (callback)
-            callback(STATUS_ERROR);
-    }
-#endif
-
-    return success;
-}
-bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
-{
-#if RETRO_REV02
-    if (!userStorage->noSaveActive) {
-#endif
-        DeleteUserFile(filename);
-
-        if (callback)
-            callback(STATUS_OK);
-#if RETRO_REV02
-    }
-    else {
-        char buffer[0x100];
-        sprintf(buffer, "TryDeleteUserFile(%s, %p) failing due to noSave", filename, callback);
-
-        if (callback)
-            callback(STATUS_ERROR);
-    }
-#endif
-
-    return false;
-}
-
-void (*userFileCallback)();
-void (*userFileCallback2)();
-char userFileDir[0x100];
-
-bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
-{
-    if (userFileCallback)
-        userFileCallback();
-
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    printLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
-
-    FileIO *file = fOpen(pathBuffer, "rb");
-    if (file) {
-        fSeek(file, 0, SEEK_END);
-        int fSize = (int)fTell(file);
-        fSeek(file, 0, SEEK_SET);
-        int size = bufSize;
-        if (bufSize > fSize)
-            size = fSize;
-        fRead(buffer, 1, size, file);
-        fClose(file);
-        if (userFileCallback2)
-            userFileCallback2();
-        return true;
-    }
-    else {
-        if (userFileCallback2)
-            userFileCallback2();
-        printLog(PRINT_NORMAL, "Nope!");
-    }
-    return false;
-}
-bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
-{
-    if (userFileCallback)
-        userFileCallback();
-
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    printLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
-
-    FileIO *file = fOpen(pathBuffer, "wb");
-    if (file) {
-        fWrite(buffer, 1, bufSize, file);
-        fClose(file);
-
-        if (userFileCallback2)
-            userFileCallback2();
-        return true;
-    }
-    else {
-        if (userFileCallback2)
-            userFileCallback2();
-        printLog(PRINT_NORMAL, "Nope!");
-    }
-    return false;
-}
-bool32 DeleteUserFile(const char *filename)
-{
-    if (userFileCallback)
-        userFileCallback();
-
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    printLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
-    int status = remove(pathBuffer);
-
-    if (userFileCallback2)
-        userFileCallback2();
-    return status == 0;
-}
-
-#if RETRO_REV02
-int LoadDBFromBuffer(UserDB *userDB, byte *buffer)
-{
-    uint signature = *(uint *)buffer;
-    if (signature != 0x80074B1E)
-        return 0;
-    buffer += sizeof(int);
-    buffer += sizeof(int); // used size
-
-    userDB->entryCount = *(ushort *)buffer;
-    buffer += sizeof(ushort);
-
-    userDB->columnCount = *buffer;
-    buffer++;
-
-    for (int c = 0; c < userDB->columnCount; ++c) {
-        userDB->columnTypes[c] = *buffer;
-        buffer++;
-
-        sprintf(userDB->columnNames[c], "%s", (char *)buffer);
-        buffer += 0x10;
-
-        GenerateCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
-    }
-
-    for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
-        userDB->rows[r].uuid = *(uint *)buffer;
-        buffer += sizeof(uint);
-
-        memcpy(&userDB->rows[r].createTime, buffer, sizeof(tm));
-        buffer += sizeof(tm);
-        memcpy(&userDB->rows[r].changeTime, buffer, sizeof(tm));
-        buffer += sizeof(tm);
-
-        for (int c = 0; c < userDB->columnCount; ++c) {
-            userDB->rows[r].values[c].size = *buffer;
-            buffer++;
-
-            memcpy(&userDB->rows[r].values[c].data, buffer, userDB->rows[r].values[c].size);
-            buffer += userDB->rows[r].values[c].size;
-        }
-    }
-
-    userDB->active = true;
-    UpdateUserDBParents(userDB);
-    return 1;
-}
-
-size_t GetUserDBWriteSize(UserDB *userDB)
-{
-    int colSize = 1;
-    if (userDB->columnCount)
-        colSize = (0x10 * userDB->columnCount) + userDB->columnCount + 1;
-    size_t size = colSize + 10;
-
-    for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
-        userDB->rows[r].parent = userDB;
-        int rowSize            = (sizeof(tm) * 2) + sizeof(uint);
-        for (int c = 0; c < userDB->columnCount; ++c) {
-            rowSize += sizeof(byte) + userDB->rows[r].values[c].size;
-        }
-        size += rowSize;
-    }
-
-    return size;
-}
-
-void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
-{
-    int size = 0;
-    if (totalSize >= sizeof(int)) {
-        size           = sizeof(int);
-        *(int *)buffer = 0x80074B1E; // signature
-        buffer += sizeof(int);
-    }
-    if (size + sizeof(int) <= totalSize) {
-        size += sizeof(int);
-        *(int *)buffer = (int)GetUserDBWriteSize(userDB); // used size
-        buffer += sizeof(int);
-    }
-    if (size + sizeof(ushort) <= totalSize) {
-        size += sizeof(ushort);
-        *(ushort *)buffer = userDB->entryCount;
-        buffer += sizeof(ushort);
-    }
-    if (size + sizeof(byte) <= totalSize) {
-        ++size;
-        *buffer++ = userDB->columnCount;
-    }
-
-    for (int c = 0; c < userDB->columnCount; ++c) {
-        if (size + sizeof(byte) <= totalSize) {
-            ++size;
-            *buffer++ = (byte)userDB->columnTypes[c];
-        }
-        if (size + 0x10 <= totalSize) {
-            memset(buffer, 0, 0x10 * sizeof(byte));
-            sprintf((char *)buffer, "%s", userDB->columnNames[c]);
-            size += 0x10;
-            buffer += 0x10;
-        }
-    }
-
-    for (int r = 0; r < RETRO_USERDB_ENTRY_MAX; ++r) {
-        if (size + sizeof(uint) <= totalSize) {
-            size += sizeof(uint);
-            *(uint *)buffer = userDB->rows[r].uuid;
-            buffer += sizeof(uint);
-        }
-        if (size + sizeof(tm) <= totalSize) {
-            memcpy(buffer, &userDB->rows[r].createTime, sizeof(tm));
-            size += sizeof(tm);
-            buffer += sizeof(tm);
-        }
-        if (size + sizeof(tm) <= totalSize) {
-            memcpy(buffer, &userDB->rows[r].changeTime, sizeof(tm));
-            size += sizeof(tm);
-            buffer += sizeof(tm);
-        }
-
-        for (int c = 0; c < userDB->columnCount; ++c) {
-            if (size + sizeof(byte) <= totalSize) {
-                ++size;
-                *buffer++ = (byte)userDB->rows[r].values[c].size;
-            }
-            if (userDB->rows[r].values[c].size + size <= totalSize) {
-                memcpy(buffer, userDB->rows[r].values[c].data, userDB->rows[r].values[c].size);
-                size += userDB->rows[r].values[c].size;
-                buffer += userDB->rows[r].values[c].size;
-            }
-        }
-    }
-
-    if (size < totalSize)
-        memset(buffer, 0, totalSize - size);
-}
-
-int UserDBLoadCB(ushort tableID, int status)
-{
-    if (status == STATUS_OK) {
-        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte *)userDBStorage->readBuffer[tableID]);
-        if (result) {
-            // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
-        }
-    }
-    else {
-        ClearUserDB(tableID);
-    }
-    RemoveStorageEntry((void **)&userDBStorage->readBuffer[tableID]);
-
-    if (userDBStorage->callbacks[tableID]) {
-        userDBStorage->callbacks[tableID](status);
-        userDBStorage->callbacks[tableID] = NULL;
-        return 1;
-    }
-    return 0;
-}
-
-int UserDBSaveCB(ushort tableID, int status)
-{
-    RemoveStorageEntry((void **)&userDBStorage->writeBuffer[tableID]);
-    if (status != STATUS_OK)
-        userDBStorage->userDB[tableID].valid = false;
-
-    if (userDBStorage->callbacks[tableID]) {
-        userDBStorage->callbacks[tableID](status);
-        userDBStorage->callbacks[tableID] = NULL;
-        return 1;
-    }
-    return 0;
-}
-
-ushort LoadUserDB(const char *filename, void (*callback)(int))
-{
-    int tableID = -1;
-    uint uuid   = 0;
-    GenerateCRC(&uuid, (char *)filename);
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
-        if (uuid == userDBStorage->userDB[i].uuid)
-            return i;
-    }
-
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
-        if (!userDBStorage->userDB[i].loaded) {
-            tableID = i;
-            break;
-        }
-    }
-
-    if (tableID == -1) {
-        if (callback)
-            callback(STATUS_ERROR);
-        return -1;
-    }
-
-    UserDB *userDB = &userDBStorage->userDB[tableID];
-    userDB->loaded = true;
-    userDB->name   = filename;
-    userDB->uuid   = uuid;
-    AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
-    userDBStorage->userLoadCB[tableID] = UserDBLoadCB;
-    userDBStorage->callbacks[tableID]  = callback;
-    TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->loadCallback[tableID]);
-    return tableID;
-}
-bool32 SaveUserDB(ushort tableID, void (*callback)(int))
-{
-    UserDB *userDB = &userDBStorage->userDB[tableID];
-
-    bool32 success = false;
-    if (userDB->active) {
-        int totalSize = (int)GetUserDBWriteSize(userDB);
-        AllocateStorage(totalSize, (void **)&userDBStorage->writeBuffer[tableID], DATASET_TMP, true);
-        SaveDBToBuffer(userDB, totalSize, (byte *)userDBStorage->writeBuffer[tableID]);
-        userDBStorage->userSaveCB[tableID] = UserDBSaveCB;
-        userDBStorage->callbacks[tableID]  = callback;
-        success = TrySaveUserFile(userDB->name, userDBStorage->writeBuffer[tableID], totalSize, userDBStorage->saveCallback[tableID], true);
-    }
-    else {
-        if (callback)
-            callback(STATUS_ERROR);
-    }
-    return success;
 }
 #endif
 
@@ -1570,134 +943,3 @@ void writeSettings(bool32 writeToFile)
         fClose(file);
     }
 }
-
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-bool32 achievementsEnabled = true;
-ushort achievementAniFrames[2];
-Animator achievementAnimator[2];
-TextInfo achievementText[2];
-int achievementTextWidth[2];
-int achievementID             = 0;
-int achievementsDelay         = 0;
-int achievementsDrawn         = 0;
-int achievementStrW           = 0;
-int achievementStrX           = 0;
-bool32 achievementsLoaded     = false;
-bool32 achievementDrawFlag    = false;
-bool32 achievementUnknownFlag = false;
-
-void LoadAchievementAssets()
-{
-    if (achievementsEnabled) {
-        if (achievements) {
-            if (achievements->CheckAchievementsEnabled()) {
-                if (achievements->Unknown8()) {
-                    if (achievementUnknownFlag) {
-                        achievementUnknownFlag = false;
-                        achievementID          = 0;
-                        achievementDrawFlag    = false;
-                        achievementsDelay      = 0;
-                        achievementsDrawn      = 0;
-                    }
-                    else {
-                        if (achievementID)
-                            achievementsDelay = 180;
-                    }
-
-                    achievementsLoaded = !(CheckSceneFolder("Logos") || CheckSceneFolder("Title"));
-
-                    if (achievementsLoaded) {
-                        achievementAniFrames[0] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-                        SetSpriteAnimation(achievementAniFrames[0], 0, &achievementAnimator[0], true, 0);
-
-                        achievementAniFrames[1] = LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-                        SetSpriteAnimation(achievementAniFrames[1], 0, &achievementAnimator[1], true, 0);
-                    }
-                }
-                else {
-                    achievementsLoaded = false;
-                }
-            }
-        }
-    }
-}
-void ProcessAchievements()
-{
-    if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
-        if (achievementsLoaded) {
-            if (!achievementID) {
-                achievementID = achievements->GetNextAchievementID();
-                if (achievementID) {
-                    achievementDrawFlag = true;
-                    achievementsDelay   = 180;
-                    achievementsDrawn   = false;
-                    achievements->RemoveLastAchievementID();
-
-                    TextInfo buffer;
-                    CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
-                    CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
-                    if (curSKU.language == LANGUAGE_JP) {
-                        achievementTextWidth[0] = 13 * achievementText[0].textLength;
-                        achievementTextWidth[1] = 13 * achievementText[1].textLength;
-                    }
-                    else {
-                        achievementTextWidth[0] =
-                            GetStringWidth(achievementAniFrames[0], 0, &achievementText[0], 0, achievementText[0].textLength, 0);
-                        achievementTextWidth[1] =
-                            GetStringWidth(achievementAniFrames[1], 0, &achievementText[1], 0, achievementText[1].textLength, 0);
-                    }
-
-                    achievementStrW = maxVal(achievementTextWidth[0], achievementTextWidth[1]) + 16;
-                    achievementStrX = achievementTextWidth[1] > achievementTextWidth[0] ? 20 : 0;
-                }
-            }
-
-            if (achievementsDrawn) {
-                if (!--achievementsDelay) {
-                    achievementID       = 0;
-                    achievementDrawFlag = false;
-                }
-            }
-        }
-    }
-}
-void DrawAchievements()
-{
-    if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
-        if (achievementsLoaded && achievementDrawFlag && achievementID) {
-            Vector2 drawPos;
-
-            TextInfo buffer;
-            CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
-            CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
-
-            int drawX = achievementStrX + currentScreen->width - achievementStrW;
-            DrawRectangle(drawX, currentScreen->height - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
-
-            Vector2 vertices[3];
-            vertices[0].x = (drawX - 40) << 16;
-            vertices[1].y = (currentScreen->height - 40) << 16;
-            vertices[0].y = currentScreen->height << 16;
-            vertices[1].x = drawX << 16;
-            vertices[2].x = drawX << 16;
-            vertices[2].y = currentScreen->height << 16;
-            DrawFace(vertices, 3, 255, 16, 124, 255, INK_NONE);
-
-            drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
-            drawPos.y = vertices[1].y + 0xA0000;
-            SetSpriteString(achievementAniFrames[0], 0, &achievementText[0]);
-            DrawText(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].textLength, ALIGN_CENTER, 0, 0, NULL, true);
-
-            vertices[1].y += 0x1C0000;
-
-            drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
-            drawPos.y = vertices[1].y;
-            SetSpriteString(achievementAniFrames[1], 0, &achievementText[1]);
-            DrawText(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].textLength, ALIGN_CENTER, 0, 0, NULL, true);
-
-            achievementsDrawn = true;
-        }
-    }
-}
-
-#endif

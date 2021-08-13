@@ -31,30 +31,30 @@ void CreditsSetup_StaticUpdate(void)
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
                 if (param->field_1A8) {
-                    RSDK.LoadScene("Presentation", "Menu");
+                    RSDK.SetScene("Presentation", "Menu");
                 }
                 else if (SaveGame->saveRAM->chaosEmeralds < 0x7F) {
 #if RETRO_USE_PLUS
                     if (globals->gameMode == MODE_ENCORE)
-                        RSDK.LoadScene("Cutscenes", "Try Again Encore");
+                        RSDK.SetScene("Cutscenes", "Try Again Encore");
                     else
 #endif
-                        RSDK.LoadScene("Cutscenes", "Try Again");
+                        RSDK.SetScene("Cutscenes", "Try Again");
                 }
 #if RETRO_USE_PLUS
                 else if (globals->gameMode == MODE_ENCORE) {
-                    RSDK.LoadScene("Cutscenes", "Mirage Saloon Encore End");
+                    RSDK.SetScene("Cutscenes", "Mirage Saloon Encore End");
                 }
 #endif
                 else {
 #if RETRO_USE_PLUS
                     if (API.CheckDLC(DLC_PLUS))
-                        RSDK.LoadScene("Presentation", "Game Summary");
+                        RSDK.SetScene("Presentation", "Game Summary");
                     else
 #endif
-                        RSDK.LoadScene("Presentation", "Menu");
+                        RSDK.SetScene("Presentation", "Menu");
                 }
-                RSDK.InitSceneLoad();
+                RSDK.LoadScene();
             }
         }
 

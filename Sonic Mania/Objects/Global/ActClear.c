@@ -568,7 +568,7 @@ void ActClear_State_TAFinish(void)
                     }
                 }
 #endif
-                RSDK.LoadScene("Presentation", "Menu");
+                RSDK.SetScene("Presentation", "Menu");
             }
         }
         else {
@@ -647,7 +647,7 @@ void ActClear_LoadNextScene(void)
         globals->specialRingID = 0;
         if (ActClear->actID <= 0) {
             if (globals->gameMode == MODE_COMPETITION) {
-                RSDK.LoadScene("Presentation", "Menu");
+                RSDK.SetScene("Presentation", "Menu");
             }
             else {
                 globals->enableIntro = true;
@@ -665,7 +665,7 @@ void ActClear_LoadNextScene(void)
                 }
                 ++RSDK_sceneInfo->listPos;
                 if (!RSDK.CheckValidScene())
-                    RSDK.LoadScene("Presentation", "Title Screen");
+                    RSDK.SetScene("Presentation", "Title Screen");
             }
         }
         else {

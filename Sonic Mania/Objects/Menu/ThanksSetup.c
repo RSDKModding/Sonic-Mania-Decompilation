@@ -129,7 +129,7 @@ void ThanksSetup_Unknown5(void)
 
     if (entity->timer >= 1024) {
         RSDK_sceneInfo->listPos = 0;
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
     }
     else {
         entity->timer += 16;

@@ -1004,7 +1004,7 @@ bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
     Player->playerCount = 2;
     SaveGame_SavePlayerState();
     SaveGame->saveRAM->saveState = 1; // save file is active
-    RSDK.LoadScene("Cutscenes", "Green Hill Zone");
+    RSDK.SetScene("Cutscenes", "Green Hill Zone");
     EncoreIntro->field_28 = true;
     SaveGame_SaveFile(EncoreIntro_SaveGameCB);
     if (EncoreIntro->field_28) {
@@ -1012,7 +1012,7 @@ bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
         if (EncoreIntro->field_28)
             return true;
     }
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
     destroyEntity(entity);
 
     return false;
@@ -1022,7 +1022,7 @@ bool32 EncoreIntro_CutsceneState_Unknown21(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreIntro);
     if (!EncoreIntro->field_28) {
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
         destroyEntity(entity);
     }
     return false;

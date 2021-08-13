@@ -115,7 +115,7 @@ void MMZSetup_StageLoad(void)
 void MMZSetup_StageFinishCB_Act1(void)
 {
     Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 #if RETRO_USE_PLUS
 void MMZSetup_StageFinishCB_Act2(void) { RSDK.CreateEntity(MMZ2Outro->objectID, NULL, 0, 0); }

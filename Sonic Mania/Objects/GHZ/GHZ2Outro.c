@@ -112,7 +112,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
     
     if (player->position.y > (RSDK_screens->position.y + 0x200) << 16) {
         foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
-        RSDK.LoadScene("Cutscenes", "Green Hill Zone 2");
+        RSDK.SetScene("Cutscenes", "Green Hill Zone 2");
 
         Zone_StartFadeOut(0x10, 0x000000);
         return true;
@@ -413,11 +413,11 @@ bool32 GHZ2Outro_LoadNextStage(EntityCutsceneSeq *host)
         globals->enableIntro = true;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
-            RSDK.LoadScene("Encore Mode", "Chemical Plant Zone+ 1");
+            RSDK.SetScene("Encore Mode", "Chemical Plant Zone+ 1");
         else
 #endif
-            RSDK.LoadScene("Mania Mode", "Chemical Plant Zone 1");
-        RSDK.InitSceneLoad();
+            RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
+        RSDK.LoadScene();
         return true;
     }
     return false;
@@ -427,10 +427,10 @@ void GHZ2Outro_Cutscene_SkipCB(void)
 {
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
-        RSDK.LoadScene("Encore Mode", "Chemical Plant Zone+ 1");
+        RSDK.SetScene("Encore Mode", "Chemical Plant Zone+ 1");
     else
 #endif
-        RSDK.LoadScene("Mania Mode", "Chemical Plant Zone 1");
+        RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
 }
 
 void GHZ2Outro_EditorDraw(void) {}

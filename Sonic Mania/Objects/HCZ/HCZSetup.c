@@ -272,13 +272,13 @@ void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 void HCZSetup_HandleActTransition(void)
 {
     Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void HCZSetup_StageFinishCB_Act2(void)
 {
     if (globals->gameMode == MODE_MANIA && (globals->playerID & 0xFF) == ID_KNUCKLES)
-        RSDK.LoadScene("Cutscenes", "Mirage Saloon K Intro");
+        RSDK.SetScene("Cutscenes", "Mirage Saloon K Intro");
     Zone_StartFadeOut(10, 0x000000);
 }
 

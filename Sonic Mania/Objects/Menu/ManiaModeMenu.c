@@ -57,8 +57,8 @@ bool32 ManiaModeMenu_InitUserdata(void)
                         DialogRunner_PromptSavePreference(storageStatus);
                     }
                     else {
-                        RSDK.LoadScene("Presentation", "Title Screen");
-                        RSDK.InitSceneLoad();
+                        RSDK.SetScene("Presentation", "Title Screen");
+                        RSDK.LoadScene();
                     }
                 }
                 return false;
@@ -96,8 +96,8 @@ bool32 ManiaModeMenu_InitUserdata(void)
                     int status = API.GetSaveStatus();
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {
-                            RSDK.LoadScene("Presentation", "Title Screen");
-                            RSDK.InitSceneLoad();
+                            RSDK.SetScene("Presentation", "Title Screen");
+                            RSDK.LoadScene();
                         }
                         else {
                             DialogRunner_PromptSavePreference(STATUS_CORRUPT);
@@ -127,8 +127,8 @@ bool32 ManiaModeMenu_InitUserdata(void)
                         APICallback_PromptSavePreference(storageStatus);
                     }
                     else {
-                        RSDK.LoadScene("Presentation", "Title Screen");
-                        RSDK.InitSceneLoad();
+                        RSDK.SetScene("Presentation", "Title Screen");
+                        RSDK.LoadScene();
                     }
                 }
                 return false;
@@ -162,8 +162,8 @@ bool32 ManiaModeMenu_InitUserdata(void)
                 else {
                     if (APICallback->saveStatus != STATUS_CONTINUE) {
                         if (APICallback->saveStatus == STATUS_FORBIDDEN) {
-                            RSDK.LoadScene("Presentation", "Title Screen");
-                            RSDK.InitSceneLoad();
+                            RSDK.SetScene("Presentation", "Title Screen");
+                            RSDK.LoadScene();
                         }
                         else {
                             APICallback_PromptSavePreference(STATUS_CORRUPT);
@@ -256,8 +256,8 @@ void ManiaModeMenu_SetBGColours(void)
 void ManiaModeMenu_ReturnToTitle(void)
 {
     TimeAttackData_ClearOptions();
-    RSDK.LoadScene("Presentation", "Title Screen");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Presentation", "Title Screen");
+    RSDK.LoadScene();
 }
 
 void ManiaModeMenu_Unknown13(void)

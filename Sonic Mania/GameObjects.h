@@ -103,7 +103,7 @@ typedef struct {
     void (*SaveUserDB)(ushort tableID, void (*callback)(int status));
     void (*ClearUserDB)(ushort tableID);
     void (*ClearAllUserDBs)(void);
-    void (*Unknown31)(ushort tableID);
+    void (*SetupRowUnknown)(ushort tableID);
     int (*GetUserDBStatus)(ushort tableID);
     void (*Unknown33)(ushort tableID, int a2, const char *name, void *value);
     void (*Unknown34)(ushort tableID, int a2, const char *name, void *value);
@@ -148,14 +148,14 @@ typedef struct {
     void (*AddDrawListRef)(byte layer, ushort entityID);
     void (*SwapDrawListEntries)(byte layer, ushort entryStart, ushort entryEnd, ushort count);
     void (*SetDrawLayerProperties)(byte layer, bool32 sorted, void (*callback)(void));
-    void (*LoadScene)(const char *categoryName, const char *sceneName);
+    void (*SetScene)(const char *categoryName, const char *sceneName);
     void (*SetGameMode)(byte mode);
 #if RETRO_USE_PLUS
     void (*SetHardResetFlag)(bool32 set);
 #endif
     bool32 (*CheckValidScene)(void);
     int (*CheckStageFolder)(const char *folderName);
-    int (*InitSceneLoad)(void);
+    int (*LoadScene)(void);
     int (*GetObjectIDByName)(const char *name);
     void (*ClearCameras)(void);
     void (*AddCamera)(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelative);

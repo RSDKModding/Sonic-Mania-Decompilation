@@ -157,7 +157,7 @@ int TimeAttackData_LoadCB(int statusCode)
 {
     if (statusCode == STATUS_OK) {
         globals->taTableLoaded = STATUS_OK;
-        API.Unknown31(globals->taTableID);
+        API.SetupRowUnknown(globals->taTableID);
         LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetUserDBUnknownCount(globals->taTableID));
     }
     else {
@@ -363,7 +363,7 @@ int TimeAttackData_SetReplayID(byte zone, byte charID, byte act, int encore, int
 void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore)
 {
     LogHelpers_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
-    API.Unknown31(globals->taTableID);
+    API.SetupRowUnknown(globals->taTableID);
     API.Unknown33(globals->taTableID, 2, "zoneID", &zoneID);
     API.Unknown33(globals->taTableID, 2, "act", &act);
     API.Unknown33(globals->taTableID, 2, "characterID", &characterID);

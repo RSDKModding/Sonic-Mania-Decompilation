@@ -143,9 +143,9 @@ void DemoMenu_State_Load(void)
     if (++entity->timer == 30) {
         entity->timer = 0;
         if (entity->selectedZone == 0)
-            RSDK.LoadScene("Media Demo", "Green Hill Zone 1");
+            RSDK.SetScene("Media Demo", "Green Hill Zone 1");
         else
-            RSDK.LoadScene("Media Demo", "Studiopolis Zone 1");
+            RSDK.SetScene("Media Demo", "Studiopolis Zone 1");
 
         foreach_all(TitleSetup, titleSetup)
         {

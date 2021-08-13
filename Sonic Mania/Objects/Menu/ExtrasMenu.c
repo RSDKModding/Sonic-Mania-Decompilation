@@ -144,8 +144,8 @@ void ExtrasMenu_Start_Puyo_vsAI(void)
     param->field_59 = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
-    RSDK.LoadScene("Extras", "Puyo Puyo");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Extras", "Puyo Puyo");
+    RSDK.LoadScene();
 }
 
 void ExtrasMenu_Callback_Puyo_vsAI(void)
@@ -160,8 +160,8 @@ void ExtrasMenu_Start_Puyo_vs2P(void)
     param->field_59 = 2;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
-    RSDK.LoadScene("Extras", "Puyo Puyo");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Extras", "Puyo Puyo");
+    RSDK.LoadScene();
 }
 
 void ExtrasMenu_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(ExtrasMenu_Start_Puyo_vs2P, 32); }
@@ -174,8 +174,8 @@ void ExtrasMenu_Start_Credits(void)
     strcpy(param->menuTag, "Extras");
     param->selectionID = 3;
     param->field_1A8 = 1;
-    RSDK.LoadScene("Presentation", "Credits");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Presentation", "Credits");
+    RSDK.LoadScene();
 }
 
 void ExtrasMenu_Callback_Credits(void)
@@ -191,11 +191,11 @@ void ExtrasMenu_Start_DAGarden(void)
     param->selectionID = 2;
 #if RETRO_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
-        RSDK.LoadScene("Extras", "D.A. Garden Plus");
+        RSDK.SetScene("Extras", "D.A. Garden Plus");
     else
 #endif
-        RSDK.LoadScene("Extras", "D.A. Garden");
-    RSDK.InitSceneLoad();
+        RSDK.SetScene("Extras", "D.A. Garden");
+    RSDK.LoadScene();
 }
 
 void ExtrasMenu_Callback_DAGarden(void) { MenuSetup_StartTransition(ExtrasMenu_Start_DAGarden, 32); }
@@ -207,8 +207,8 @@ void ExtrasMenu_Start_BSS_3K(void)
     param->field_59 = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
-    RSDK.LoadScene("Blue Spheres", "Random");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Blue Spheres", "Random");
+    RSDK.LoadScene();
 }
 
 void ExtrasMenu_Callback_BSS_3K(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_3K, 32); }
@@ -220,8 +220,8 @@ void ExtrasMenu_Start_BSS_Mania(void)
     param->field_59 = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
-    RSDK.LoadScene("Blue Spheres", "Random 2");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Blue Spheres", "Random 2");
+    RSDK.LoadScene();
 }
 
 void ExtrasMenu_Callback_BSS_Mania(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_Mania, 32); }

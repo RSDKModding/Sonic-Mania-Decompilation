@@ -126,8 +126,8 @@ bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     if (host->timer == 10)
         SSZ1Outro->fxFade->state = FXFade_State_FadeIn;
     if (SSZ1Outro->fxFade->timer == 512) {
-        RSDK.LoadScene("Cutscenes", "SSZ Time Warp");
-        RSDK.InitSceneLoad();
+        RSDK.SetScene("Cutscenes", "SSZ Time Warp");
+        RSDK.LoadScene();
         return true;
     }
     return false;

@@ -281,10 +281,10 @@ void AIZSetup_SkipCB(void)
 {
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
-        RSDK.LoadScene("Encore Mode", "Green Hill Zone+ 1");
+        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
     else
 #endif
-        RSDK.LoadScene("Mania Mode", "Green Hill Zone 1");
+        RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
 
 void AIZSetup_CutsceneST_Setup(void)
@@ -849,8 +849,8 @@ bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h)
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     unused(host);
     
-    RSDK.LoadScene("Cutscenes", "Green Hill Zone");
-    RSDK.InitSceneLoad();
+    RSDK.SetScene("Cutscenes", "Green Hill Zone");
+    RSDK.LoadScene();
     return true;
 }
 

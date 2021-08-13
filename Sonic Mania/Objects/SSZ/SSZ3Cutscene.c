@@ -320,7 +320,7 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 bool32 SSZ3Cutscene_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 {
     if (host->timer == 16) {
-        RSDK.InitSceneLoad();
+        RSDK.LoadScene();
         return true;
     }
     return false;

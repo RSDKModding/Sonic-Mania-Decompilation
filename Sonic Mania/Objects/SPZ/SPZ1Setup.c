@@ -138,7 +138,7 @@ void SPZ1Setup_StageLoad(void)
 void SPZ1Setup_SetupActTransition(void)
 {
     Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
-    RSDK.InitSceneLoad();
+    RSDK.LoadScene();
 }
 
 void SPZ1Setup_EditorDraw(void) {}

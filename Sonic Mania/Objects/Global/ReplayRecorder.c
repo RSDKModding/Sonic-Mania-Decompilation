@@ -1265,23 +1265,23 @@ void ReplayRecorder_CreateReplayDB(void)
 uint ReplayRecorder_AddReplayID(byte actID, char zone, int charID, int score, char mode)
 {
     if (globals->replayTableLoaded == STATUS_OK) {
-        uint entry       = API.AddUserDBEntry(globals->replayTableID);
+        uint rowID       = API.AddUserDBEntry(globals->replayTableID);
         int zoneStortVal = score & 0x3FFFFFF | ((actID & 1 | 2 * (mode & 1 | 2 * zone)) << 26);
-        API.SetUserDBValue(globals->replayTableID, entry, 4, "score", &score);
-        API.SetUserDBValue(globals->replayTableID, entry, 2, "zoneID", &zone);
-        API.SetUserDBValue(globals->replayTableID, entry, 2, "act", &actID);
-        API.SetUserDBValue(globals->replayTableID, entry, 2, "characterID", &charID);
-        API.SetUserDBValue(globals->replayTableID, entry, 2, "encore", &actID);
-        API.SetUserDBValue(globals->replayTableID, entry, 4, "zoneSortVal", &zoneStortVal);
-        uint UUID = API.GetUserDBEntryUUID(globals->replayTableID, entry);
+        API.SetUserDBValue(globals->replayTableID, rowID, 4, "score", &score);
+        API.SetUserDBValue(globals->replayTableID, rowID, 2, "zoneID", &zone);
+        API.SetUserDBValue(globals->replayTableID, rowID, 2, "act", &actID);
+        API.SetUserDBValue(globals->replayTableID, rowID, 2, "characterID", &charID);
+        API.SetUserDBValue(globals->replayTableID, rowID, 2, "encore", &actID);
+        API.SetUserDBValue(globals->replayTableID, rowID, 4, "zoneSortVal", &zoneStortVal);
+        uint UUID = API.GetUserDBEntryUUID(globals->replayTableID, rowID);
         char createTime[24];
         sprintf(createTime, "");
-        API.GetUserDBCreationTime(globals->replayTableID, entry, createTime, 23, "%Y/%m/%d %H:%M:%S");
+        API.GetUserDBCreationTime(globals->replayTableID, rowID, createTime, 23, "%Y/%m/%d %H:%M:%S");
         LogHelpers_Print("Replay DB Added Entry");
         LogHelpers_Print("Created at %s", createTime);
-        LogHelpers_Print("Row ID: %d", entry);
+        LogHelpers_Print("Row ID: %d", rowID);
         LogHelpers_Print("UUID: %08X", UUID);
-        return entry;
+        return rowID;
     }
     return -1;
 }
@@ -1294,7 +1294,7 @@ void ReplayRecorder_DeleteTimeAttackRow(int a1, void (*callback)(bool32), int a3
     ReplayDB->deleteCallback = callback;
     API.RemoveDBEntry(globals->replayTableID, a1);
     TimeAttackData->status = 0;
-    API.Unknown31(globals->taTableID);
+    API.SetupRowUnknown(globals->taTableID);
     API.Unknown33(globals->taTableID, 4, "replayID", &id);
     int count = API.GetUserDBUnknownCount(globals->taTableID);
     for (int i = 0; i < count; ++i) {
@@ -1341,7 +1341,7 @@ int ReplayRecorder_SetStatus(int status)
 {
     if (status == STATUS_OK) {
         globals->replayTableLoaded = STATUS_OK;
-        API.Unknown31(globals->replayTableID);
+        API.SetupRowUnknown(globals->replayTableID);
         LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetUserDBUnknownCount(globals->replayTableID));
     }
     else {

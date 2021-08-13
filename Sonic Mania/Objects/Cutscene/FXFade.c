@@ -66,7 +66,7 @@ void FXFade_State_FadeIn(void)
             entity->state = StateMachine_None;
 #if RETRO_USE_PLUS
             if (entity->transitionScene)
-                RSDK.InitSceneLoad();
+                RSDK.LoadScene();
 #endif
         }
         else if (entity->wait <= 0) {
