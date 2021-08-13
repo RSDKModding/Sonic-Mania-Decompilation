@@ -114,7 +114,7 @@ void Ice_Serialize(void);
 // Extra Entity Functions
 void Ice_ZoneCB(void);
 
-void Ice_Unknown2(Entity *p);
+void Ice_FreezePlayer(Entity *p);
 bool32 Ice_Unknown3(void);
 bool32 Ice_Unknown4(void);
 void Ice_State_FrozenPlayer(void);
