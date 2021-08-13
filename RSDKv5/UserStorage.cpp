@@ -346,10 +346,6 @@ ushort InitUserDB(const char *name, ...)
     int tableID = -1;
     uint uuid   = 0;
     GenerateCRC(&uuid, (char *)name);
-    for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
-        if (uuid == userDBStorage->userDB[i].uuid && userDBStorage->userDB[i].loaded)
-            return i;
-    }
 
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
         if (!userDBStorage->userDB[i].loaded) {
@@ -368,7 +364,7 @@ ushort InitUserDB(const char *name, ...)
     userDBStorage->userDB[tableID].name   = name;
     GenerateCRC(&userDBStorage->userDB[tableID].uuid, (char *)name);
     InitUserDBValues(&userDBStorage->userDB[tableID], list);
-    // sub_5EC5F0(&userDBStorage->userDB[v6].parent);
+    UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
     va_end(list);
     return tableID;
 }
@@ -378,7 +374,7 @@ ushort LoadUserDB(const char *filename, void (*callback)(int))
     uint uuid   = 0;
     GenerateCRC(&uuid, (char *)filename);
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
-        if (uuid == userDBStorage->userDB[i].uuid)
+        if (uuid == userDBStorage->userDB[i].uuid && userDBStorage->userDB[i].loaded)
             return i;
     }
 
@@ -395,14 +391,14 @@ ushort LoadUserDB(const char *filename, void (*callback)(int))
         return -1;
     }
 
-    UserDB *userDB = &userDBStorage->userDB[tableID];
-    userDB->loaded = true;
-    userDB->name   = filename;
-    userDB->uuid   = uuid;
     AllocateStorage(sizeof(UserDB), (void **)&userDBStorage->readBuffer[tableID], DATASET_TMP, true);
     userDBStorage->userLoadCB[tableID] = UserDBLoadCB;
     userDBStorage->callbacks[tableID]  = callback;
     TryLoadUserFile(filename, userDBStorage->readBuffer[tableID], sizeof(UserDB), userDBStorage->loadCallback[tableID]);
+    UserDB *userDB = &userDBStorage->userDB[tableID];
+    userDB->loaded = true;
+    userDB->name   = filename;
+    userDB->uuid   = uuid;
     return tableID;
 }
 bool32 SaveUserDB(ushort tableID, void (*callback)(int))
@@ -849,11 +845,11 @@ size_t GetUserDBWriteSize(UserDB *userDB)
 
     return size;
 }
-int LoadDBFromBuffer(UserDB *userDB, byte *buffer)
+bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer)
 {
     uint signature = *(uint *)buffer;
     if (signature != 0x80074B1E)
-        return 0;
+        return false;
     buffer += sizeof(int);
     buffer += sizeof(int); // used size
 
@@ -893,7 +889,7 @@ int LoadDBFromBuffer(UserDB *userDB, byte *buffer)
 
     userDB->active = true;
     UpdateUserDBParents(userDB);
-    return 1;
+    return true;
 }
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
 {
@@ -1038,8 +1034,9 @@ uint CreateRowUUID(UserDB *userDB)
 //User Storage CBs
 int UserDBLoadCB(ushort tableID, int status)
 {
+    bool32 result = false;
     if (status == STATUS_OK) {
-        int result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte *)userDBStorage->readBuffer[tableID]);
+        result = LoadDBFromBuffer(&userDBStorage->userDB[tableID], (byte *)userDBStorage->readBuffer[tableID]);
         if (result) {
             UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
         }
@@ -1050,11 +1047,10 @@ int UserDBLoadCB(ushort tableID, int status)
     RemoveStorageEntry((void **)&userDBStorage->readBuffer[tableID]);
 
     if (userDBStorage->callbacks[tableID]) {
-        userDBStorage->callbacks[tableID](status);
+        userDBStorage->callbacks[tableID](result ? status : STATUS_ERROR);
         userDBStorage->callbacks[tableID] = NULL;
-        return 1;
     }
-    return 0;
+    return result;
 }
 int UserDBSaveCB(ushort tableID, int status)
 {

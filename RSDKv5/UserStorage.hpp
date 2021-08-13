@@ -168,7 +168,7 @@ int GetUserDBStatus(ushort tableID);
 void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format);
 void UpdateUserDBParents(UserDB *userDB);
 size_t GetUserDBWriteSize(UserDB *userDB);
-int LoadDBFromBuffer(UserDB *userDB, byte *buffer);
+bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer);
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer);
 void RemoveNonMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column);
 void RemoveNonMatchingRows(UserDB *userDB, const char *name, void *value);

@@ -343,31 +343,6 @@ void *GetAPIFunction(const char *name)
 
 void setupFunctions()
 {
-    int language = LANGUAGE_EN;
-    int region   = REGION_US;
-    int platform = PLATFORM_DEV;
-
-#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
-    || RETRO_PLATFORM == RETRO_iOS 
-    // platform = PLATFORM_PC;
-#elif RETRO_PLATFORM == RETRO_PS4
-    platform             = PLATFORM_PS4;
-#elif RETRO_PLATFORM == RETRO_XB1
-    platform = PLATFORM_XB1;
-#elif RETRO_PLATFORM == RETRO_SWITCH　|| RETRO_PLATFORM == RETRO_ANDROID
-    platform = PLATFORM_SWITCH;
-#endif
-
-#if RETRO_REV02
-    curSKU.platform = platform;
-    curSKU.language = language;
-    curSKU.region   = region;
-#else
-    gameVerInfo.platform = platform;
-    gameVerInfo.language = language;
-    gameVerInfo.region   = region;
-#endif
-
     CalculateTrigAngles();
     GenerateBlendLookupTable();
     InitGFXSystem();

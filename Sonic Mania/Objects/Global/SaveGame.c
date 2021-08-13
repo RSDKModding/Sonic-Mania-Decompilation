@@ -207,13 +207,13 @@ void SaveGame_SaveLoadedCB(int status)
     }
 
 #if RETRO_USE_PLUS
-    if ((globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
+    if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
         LogHelpers_Print("Loading Time Attack DB");
         globals->taTableLoaded        = STATUS_CONTINUE;
         TimeAttackData->loadEntityPtr = RSDK_sceneInfo->entity;
         TimeAttackData->loadCallback  = NULL;
         globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
-        if (globals->taTableID == 0xFFFF) {
+        if (globals->taTableID == -1) {
             LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
             globals->taTableLoaded = STATUS_ERROR;
         }

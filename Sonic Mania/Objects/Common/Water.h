@@ -52,10 +52,10 @@ typedef struct {
     int type;
     void *childPtr;
     int field_68;
-    byte bubbleType1;
+    sbyte bubbleType1;
     byte field_6D;
     byte field_6E;
-    byte bubbleType2;
+    sbyte bubbleType2;
     int numDuds;
     int countdownID;
     int field_78;

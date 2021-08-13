@@ -485,6 +485,31 @@ void runRetroEngine()
 #endif
         }
 
+#if !RETRO_USE_ORIGINAL_CODE
+        for (int t = 0; t < touchMouseData.count; ++t) {
+            if (touchMouseData.down[t]) {
+                int tx = touchMouseData.x[t] * screens->width;
+                int ty = touchMouseData.y[t] * screens->height;
+
+                if (tx <= 16 && ty <= 16) {
+                    if (engine.devMenu) {
+                        if (sceneInfo.state != ENGINESTATE_DEVMENU) {
+                            devMenu.stateStore = sceneInfo.state;
+                            if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
+                                engine.screenCount = 1;
+                            devMenu.state   = DevMenu_MainMenu;
+                            devMenu.option  = 0;
+                            devMenu.scroll  = 0;
+                            devMenu.timer   = 0;
+                            sceneInfo.state = ENGINESTATE_DEVMENU;
+                            PauseSound();
+                        }
+                    }
+                }
+            }
+        }
+#endif
+
         FlipScreen();
     }
 

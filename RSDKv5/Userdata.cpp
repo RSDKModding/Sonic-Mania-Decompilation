@@ -1,4 +1,4 @@
-#include "RetroEngine.hpp"
+﻿#include "RetroEngine.hpp"
 #include "zlib/zlib.h"
 
 #if RETRO_REV02
@@ -34,6 +34,31 @@ inline void nullUserFunc() {}
 
 void initUserData()
 {
+    int language = LANGUAGE_EN;
+    int region   = REGION_US;
+    int platform = PLATFORM_DEV;
+
+#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
+    || RETRO_PLATFORM == RETRO_iOS
+    // platform = PLATFORM_PC;
+#elif RETRO_PLATFORM == RETRO_PS4
+    platform             = PLATFORM_PS4;
+#elif RETRO_PLATFORM == RETRO_XB1
+    platform = PLATFORM_XB1;
+#elif RETRO_PLATFORM == RETRO_SWITCH　|| RETRO_PLATFORM == RETRO_ANDROID
+    platform = PLATFORM_SWITCH;
+#endif
+
+#if RETRO_REV02
+    curSKU.platform = platform;
+    curSKU.language = language;
+    curSKU.region   = region;
+#else
+    gameVerInfo.platform = platform;
+    gameVerInfo.language = language;
+    gameVerInfo.region   = region;
+#endif
+
 #if RETRO_REV02
     if (!dummmyCore)
         dummmyCore = (DummyCore *)malloc(sizeof(DummyCore));
@@ -602,6 +627,9 @@ void SetSettingsValue(int id, int val)
         default: return;
     }
 }
+#if RETRO_PLATFORM == RETRO_ANDROID
+#include <jni.h>
+#endif
 
 char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RSTICK", "L1", "R1", "C", "Z", "A", "B", "X", "Y", "L2", "R2" };
 
@@ -621,6 +649,23 @@ void readSettings()
     bool32 useBuffer = !(platform == PLATFORM_PC || platform == PLATFORM_DEV);
     char pathBuffer[0x100];
     sprintf(pathBuffer, "%sSettings.ini", userFileDir);
+
+    //TODO: take out lulu.
+    //this could've been solved with setting userfile dir but nooooooooooo
+    // (iniparser doesn't use fOpen it uses normal fopen
+#if RETRO_PLATFORM == RETRO_ANDROID
+    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
+    jobject activity = (jobject)SDL_AndroidGetActivity();
+    jclass cls(env->GetObjectClass(activity));
+    jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
+    auto ret         = env->CallObjectMethod(activity, method);
+
+    strcpy(pathBuffer, env->GetStringUTFChars((jstring)ret, NULL));
+    strcat(pathBuffer, "Settings.ini");
+
+    env->DeleteLocalRef(activity);
+    env->DeleteLocalRef(cls);
+#endif
 
     dictionary *ini = iniparser_load(pathBuffer);
 

@@ -5,7 +5,7 @@ ObjectCollapsingPlatform *CollapsingPlatform;
 void CollapsingPlatform_Update(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    entity->visible                  = false;
+    entity->visible = false;
     if (DebugMode)
         entity->visible = DebugMode->debugActive;
 
@@ -47,10 +47,9 @@ void CollapsingPlatform_Update(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)
 #if RETRO_USE_PLUS
-                && (!entity->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)) 
+                && (!entity->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
-                && !player->sidekick
-                && player->onGround && !player->collisionMode && !entity->eventOnly && entity->delay < 0xFFFF) {
+                && !player->sidekick && player->onGround && !player->collisionMode && !entity->eventOnly && entity->delay < 0xFFFF) {
                 entity->playerPos.x = player->position.x;
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
@@ -99,17 +98,23 @@ void CollapsingPlatform_Draw(void)
     drawPos.x -= entity->size.x >> 1;
     drawPos.y -= entity->size.y >> 1;
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
-    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+
     entity->direction = FLIP_NONE;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+
     drawPos.x += entity->size.x;
     entity->direction = FLIP_X;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+
     drawPos.y += entity->size.y;
     entity->direction = FLIP_XY;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+
     drawPos.x -= entity->size.x;
     entity->direction = FLIP_Y;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
@@ -118,7 +123,8 @@ void CollapsingPlatform_Draw(void)
 void CollapsingPlatform_Create(void *data)
 {
     RSDK_THIS(CollapsingPlatform);
-    entity->visible                  = true;
+
+    entity->visible = true;
     entity->position.x &= 0xFFF80000;
     entity->position.y &= 0xFFF80000;
     entity->drawFX |= FX_FLIP;
@@ -185,10 +191,10 @@ void CollapsingPlatform_State_Left(void)
     RSDK_THIS(CollapsingPlatform);
 
     ushort *tiles = entity->storedTiles;
-    int startTX   = (RSDK_sceneInfo->entity->position.x >> 20) - (entity->size.x >> 21);
-    int startTY   = (RSDK_sceneInfo->entity->position.y >> 20) - (entity->size.y >> 21);
-    int tx        = RSDK_sceneInfo->entity->position.x - (entity->size.x >> 1) + 0x80000;
-    int ty        = (RSDK_sceneInfo->entity->position.y - (entity->size.y >> 1)) + 0x80000;
+    int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
+    int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
+    int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
+    int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
     int sx = entity->size.x >> 20;
     int sy = entity->size.y >> 20;
@@ -197,8 +203,8 @@ void CollapsingPlatform_State_Left(void)
         for (int x = 0; x < sx; ++x) {
             EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
-            tileChunk->layerID  = entity->targetLayer;
-            tileChunk->tileInfo = *tiles;
+            tileChunk->layerID   = entity->targetLayer;
+            tileChunk->tileInfo  = *tiles;
             tileChunk->drawOrder = entity->drawOrder;
             tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
@@ -216,10 +222,10 @@ void CollapsingPlatform_State_Right(void)
     RSDK_THIS(CollapsingPlatform);
 
     ushort *tiles = entity->storedTiles;
-    int startTX   = (RSDK_sceneInfo->entity->position.x >> 20) - (entity->size.x >> 21);
-    int startTY   = (RSDK_sceneInfo->entity->position.y >> 20) - (entity->size.y >> 21);
-    int tx        = RSDK_sceneInfo->entity->position.x - (entity->size.x >> 1) + 0x80000;
-    int ty        = (RSDK_sceneInfo->entity->position.y - (entity->size.y >> 1)) + 0x80000;
+    int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
+    int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
+    int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
+    int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
     int sx = entity->size.x >> 20;
     int sy = entity->size.y >> 20;
@@ -247,10 +253,10 @@ void CollapsingPlatform_State_Center(void)
     RSDK_THIS(CollapsingPlatform);
 
     ushort *tiles = entity->storedTiles;
-    int startTX   = (RSDK_sceneInfo->entity->position.x >> 20) - (entity->size.x >> 21);
-    int startTY   = (RSDK_sceneInfo->entity->position.y >> 20) - (entity->size.y >> 21);
-    int tx        = RSDK_sceneInfo->entity->position.x - (entity->size.x >> 1) + 0x80000;
-    int ty        = (RSDK_sceneInfo->entity->position.y - (entity->size.y >> 1)) + 0x80000;
+    int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
+    int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
+    int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
+    int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
     int tCountX = entity->size.x >> CollapsingPlatform->shift >> 20;
 
@@ -280,8 +286,8 @@ void CollapsingPlatform_State_Center(void)
 void CollapsingPlatform_State_LeftOrRight(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int px                           = entity->playerPos.x;
-    int x                            = entity->position.x;
+    int px = entity->playerPos.x;
+    int x  = entity->position.x;
 
     if (px < x)
         CollapsingPlatform_State_Left();
@@ -292,7 +298,7 @@ void CollapsingPlatform_State_PlayerPos(void)
 {
     RSDK_THIS(CollapsingPlatform);
     int px = entity->playerPos.x;
-    int x = entity->position.x;
+    int x  = entity->position.x;
 
     if (abs(px - x) < entity->size.x / 6) {
         CollapsingPlatform_State_Center();

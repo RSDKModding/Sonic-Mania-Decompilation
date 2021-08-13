@@ -1225,7 +1225,7 @@ void ReplayRecorder_RecordFrameData(void)
 
 void ReplayRecorder_LoadReplayDB(void (*callback)(bool32))
 {
-    if ((globals->replayTableID != 0xFFFF && globals->replayTableLoaded == STATUS_OK) || globals->replayTableLoaded == STATUS_CONTINUE)
+    if ((globals->replayTableID != -1 && globals->replayTableLoaded == STATUS_OK) || globals->replayTableLoaded == STATUS_CONTINUE)
         return;
     LogHelpers_Print("Loading Replay DB");
     globals->replayTableLoaded = STATUS_CONTINUE;

@@ -149,6 +149,52 @@ void PrintMessage(void *msg, int type)
 }
 #endif
 
+#if !RETRO_USE_ORIGINAL_CODE
+byte touchTimer = 0;
+
+void DevMenu_HandleTouchControls() {
+    if (!controller[CONT_P1].keyStart.down && !controller[CONT_P1].keyUp.down && !controller[CONT_P1].keyDown.down) {
+        for (int t = 0; t < touchMouseData.count; ++t) {
+            if (touchMouseData.down[t] && !(touchTimer % 8)) {
+                int tx = touchMouseData.x[t] * screens->width;
+                int ty = touchMouseData.y[t] * screens->height;
+
+                if (tx < screens->centerX) {
+                    if (ty >= screens->centerY) {
+                        if (!controller[CONT_P1].keyDown.down)
+                            controller[CONT_P1].keyDown.press = true;
+                        controller[CONT_P1].keyDown.down = true;
+                        break;
+                    }
+                    else {
+                        if (!controller[CONT_P1].keyUp.down)
+                            controller[CONT_P1].keyUp.press = true;
+                        controller[CONT_P1].keyUp.down = true;
+                        break;
+                    }
+                }
+                else if (tx > screens->centerX) {
+                    if (ty > screens->centerY) {
+                        if (!controller[CONT_P1].keyStart.down)
+                            controller[CONT_P1].keyStart.press = true;
+                        controller[CONT_P1].keyStart.down = true;
+                        break;
+                    }
+                    else {
+                        if (!controller[CONT_P1].keyB.down)
+                            controller[CONT_P1].keyB.press = true;
+                        controller[CONT_P1].keyB.down = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    touchTimer++;
+}
+#endif
+
 void DevMenu_MainMenu()
 {
 #if !RETRO_USE_MOD_LOADER
@@ -226,6 +272,10 @@ void DevMenu_MainMenu()
                   (sizeof(int) * dataStorage[DATASET_TMP].usedStorage) / (float)dataStorage[DATASET_TMP].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
     DrawDevText(currentScreen->centerX - 64, "TMP", y, 0, 0xF0F080);
+
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
 
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
@@ -318,6 +368,10 @@ void DevMenu_ListSel()
             y += 8;
         }
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
 
     if (controller[CONT_P1].keyUp.press) {
         if (--devMenu.option < 0)
@@ -446,6 +500,10 @@ void DevMenu_SceneSel()
         }
     }
 
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
+
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (off + devMenu.option < list->sceneOffsetStart) {
@@ -561,6 +619,10 @@ void DevMenu_Options()
     DrawDevText(currentScreen->centerX, "Debug Flags", dy, ALIGN_CENTER, optionColours[3]);
 #endif
     DrawDevText(currentScreen->centerX, "Back", dy + 12, ALIGN_CENTER, optionColours[optionCount - 1]);
+
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
 
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
@@ -701,6 +763,10 @@ void DevMenu_VideoOptions()
     dy += 16;
     DrawDevText(currentScreen->centerX, "Confirm", dy, ALIGN_CENTER, optionColours[4]);
     DrawDevText(currentScreen->centerX, "Cancel", dy + 8, ALIGN_CENTER, optionColours[5]);
+
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
 
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
@@ -868,6 +934,10 @@ void DevMenu_AudioOptions()
     DrawRectangle(currentScreen->centerX + 9, dy + 1, (int)(engine.soundFXVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     DrawDevText(currentScreen->centerX, "Back", dy + 16, ALIGN_CENTER, optionColours[3]);
 
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
+
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
@@ -986,6 +1056,10 @@ void DevMenu_InputOptions()
     DrawDevText(currentScreen->centerX, "Set Keys For Input 4", dy, ALIGN_CENTER, optionColours[3]);
     DrawDevText(currentScreen->centerX, "Back", dy + 18, ALIGN_CENTER, optionColours[4]);
 
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
+
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
@@ -1047,6 +1121,10 @@ void DevMenu_MappingsOptions()
 {
 
 #if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
+
+#if !RETRO_USE_ORIGINAL_CODE
     if (controller[CONT_P1].keyB.press) {
         devMenu.state   = DevMenu_Options;
         devMenu.option  = 3;
@@ -1072,6 +1150,10 @@ void DevMenu_DebugOptions()
     optionColours[6]                               = 0x808090;
     optionColours[7]                               = 0x808090;
     optionColours[devMenu.option - devMenu.scroll] = 0xF0F0F0;
+
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
 
     bool32 confirm = controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press;
 
@@ -1383,6 +1465,10 @@ void DevMenu_Mods()
             devMenu.scroll = devMenu.scroll;
         }
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    DevMenu_HandleTouchControls();
+#endif
 
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
