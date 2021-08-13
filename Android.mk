@@ -77,6 +77,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := RSDK
 SDL_PATH := ../SDL
 
+LOCAL_CFLAGS   := -fexceptions
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/$(SDL_PATH)/include \
