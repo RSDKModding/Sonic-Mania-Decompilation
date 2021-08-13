@@ -190,14 +190,14 @@ void TurboSpiker_Hermit_IdleWater(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &TurboSpiker->checkbox)) {
-            CREATE_ENTITY(Water, intToVoid(6), entity->position.x, entity->position.y)->childPtr = intToVoid(1);
+            CREATE_ENTITY(Water, intToVoid(6), entity->position.x, entity->position.y + 0x80000)->childPtr = intToVoid(1);
             RSDK.PlaySFX(TurboSpiker->splashSFX, 0, 255);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->spikeAnimator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &entity->animator, true, 0);
             entity->drawOrder = Zone->drawOrderLow + 1;
             if (entity->spike)
                 entity->spike->drawOrder = Zone->drawOrderLow;
-            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(1), entity->position.x, entity->position.y + 0x80000);
+            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(1), entity->position.x, entity->position.y);
             ember->direction         = entity->direction;
             ember->drawOrder         = entity->drawOrder + 1;
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 6, &ember->animator, true, 0);
