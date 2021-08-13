@@ -57,7 +57,7 @@ extern void *modFunctionTable[ModTable_Max];
 
 void initModAPI();
 void loadMods();
-bool32 loadMod();
+bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active);
 void saveMods();
 
 void RunModCallbacks(int callbackID, void *data);

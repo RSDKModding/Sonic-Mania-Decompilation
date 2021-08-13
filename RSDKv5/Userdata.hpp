@@ -965,4 +965,17 @@ void SetSettingsValue(int id, int val);
 void readSettings();
 void writeSettings(bool32 writeToFile);
 
+inline void writeText(FileIO *file, const char *string, ...)
+{
+    // make the full string
+    char buffer[0x100];
+    va_list args;
+    va_start(args, string);
+    vsprintf(buffer, string, args);
+    sprintf(buffer, "%s", buffer);
+    va_end(args);
+
+    fWrite(buffer, sizeof(char), strlen(buffer), file);
+}
+
 #endif

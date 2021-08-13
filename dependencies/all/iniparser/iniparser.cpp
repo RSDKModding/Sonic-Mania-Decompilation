@@ -45,11 +45,13 @@ typedef enum _line_status_ {
 static const char * strlwc(const char * in, char *out, unsigned len)
 {
     unsigned i ;
+    //modified to NOT tolower
 
     if (in==NULL || out == NULL || len==0) return NULL ;
     i=0 ;
     while (in[i] != '\0' && i < len-1) {
-        out[i] = (char)tolower((int)in[i]);
+        //out[i] = (char)tolower((int)in[i]);
+        out[i] = in[i];
         i++ ;
     }
     out[i] = '\0';

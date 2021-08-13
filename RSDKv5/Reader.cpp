@@ -3,7 +3,7 @@
 RSDKFileInfo dataFiles[0x1000];
 RSDKContainer dataPacks[4];
 
-byte dataPackCount = 0;
+byte dataPackCount   = 0;
 ushort dataFileCount = 0;
 
 char gameLogicName[0x400];
@@ -12,15 +12,16 @@ bool32 useDataFile = false;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
 #include <jni.h>
-//TODO: have rdc look over this and make it use nice and shiny RSDK strings
-SDL_RWops *fOpen(const char *path, const char *mode) {
+// TODO: have rdc look over this and make it use nice and shiny RSDK strings
+SDL_RWops *fOpen(const char *path, const char *mode)
+{
     char buffer[0x200];
 
-    JNIEnv* env = (JNIEnv*)SDL_AndroidGetJNIEnv();
+    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
     jobject activity = (jobject)SDL_AndroidGetActivity();
     jclass cls(env->GetObjectClass(activity));
     jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
-    auto ret = env->CallObjectMethod(activity, method);
+    auto ret         = env->CallObjectMethod(activity, method);
 
     strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
     strcat(buffer, path);
@@ -42,7 +43,7 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 
     char pathBuffer[0x100];
     sprintf(pathBuffer, "%s%s", userFileDir, filePath);
-    
+
     InitFileInfo(&info);
     info.externalFile = true;
     if (LoadFile(&info, pathBuffer, FMODE_RB)) {
@@ -115,7 +116,7 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
             fSeek(info->file, file->offset, SEEK_SET);
         }
         else {
-            info->file = NULL;
+            info->file     = NULL;
             info->fileData = &dataPacks[file->packID].dataPtr[file->offset];
         }
 
@@ -143,32 +144,52 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
     if (info->file)
         return false;
 
+    char filePathBuf[0x100];
+    strcpy(filePathBuf, filename);
+    bool32 forceFolder = false;
+
+#if RETRO_USE_MOD_LOADER
+    char pathLower[0x100];
+    memset(pathLower, 0, sizeof(char) * 0x100);
+    for (int c = 0; c < strlen(filename); ++c) {
+        pathLower[c] = tolower(filename[c]);
+    }
+
+    for (int m = 0; m < modList.size(); ++m) {
+        if (modList[m].active) {
+            std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
+            if (iter != modList[m].fileMap.cend()) {
+                strcpy(filePathBuf, iter->second.c_str());
+                forceFolder = true;
+                break;
+            }
+        }
+    }
+#endif
+
     if (!info->externalFile && fileMode == FMODE_RB && useDataFile) {
-        return OpenDataFile(info, filename);
+        if (!forceFolder)
+            return OpenDataFile(info, filename);
     }
-    else {
-        if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
-            info->file = fOpen(filename, openModes[fileMode - 1]);
-        }
-        if (!info->file) {
-            printLog(PRINT_NORMAL, "Couldn't load file '%s'", filename);
-            return false;
-        }
-        info->readPos  = 0;
-        info->fileSize = 0;
 
-        if (fileMode != FMODE_WB) {
-            fSeek(info->file, 0, SEEK_END);
-            info->fileSize = (int)fTell(info->file);
-            fSeek(info->file, 0, SEEK_SET);
-        }
-        printLog(PRINT_NORMAL, "Loaded file '%s'", filename);
-        return true;
+    if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {
+        info->file = fOpen(filePathBuf, openModes[fileMode - 1]);
     }
-    
-    return false;
+    if (!info->file) {
+        printLog(PRINT_NORMAL, "Couldn't load file '%s'", filePathBuf);
+        return false;
+    }
+    info->readPos  = 0;
+    info->fileSize = 0;
+
+    if (fileMode != FMODE_WB) {
+        fSeek(info->file, 0, SEEK_END);
+        info->fileSize = (int)fTell(info->file);
+        fSeek(info->file, 0, SEEK_SET);
+    }
+    printLog(PRINT_NORMAL, "Loaded file '%s'", filePathBuf);
+    return true;
 }
-
 
 void GenerateELoadKeys(FileInfo *info, const char *key1, int key2)
 {
@@ -187,7 +208,7 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int key2)
 
     // StringB
     sprintf(hashBuffer, "%d", key2); // Vary lazy ik
-    GEN_HASH(hashBuffer, (uint*)hash);
+    GEN_HASH(hashBuffer, (uint *)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyB[y + 3] = hash[y + 0];
@@ -243,7 +264,8 @@ void DecryptBytes(FileInfo *info, void *buffer, size_t size)
         }
     }
 }
-void SkipBytes(FileInfo* info, int size) {
+void SkipBytes(FileInfo *info, int size)
+{
     if (size) {
         while (size > 0) {
             info->eKeyPosA++;

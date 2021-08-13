@@ -1377,7 +1377,8 @@ void DevMenu_Mods()
     int y               = dy + 40;
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < modList.size()) {
-            DrawDevText(currentScreen->centerX + 96, modList[(devMenu.scroll + i)].name.c_str(), y, ALIGN_RIGHT, optionColours[i]);
+            DrawDevText(currentScreen->centerX - 96, modList[(devMenu.scroll + i)].name.c_str(), y, ALIGN_LEFT, optionColours[i]);
+            DrawDevText(currentScreen->centerX + 96, modList[(devMenu.scroll + i)].active ? "Y" : "N", y, ALIGN_RIGHT, optionColours[i]);
             y += 8;
             devMenu.scroll = devMenu.scroll;
         }
@@ -1453,8 +1454,8 @@ void DevMenu_Mods()
         }
     }
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
-        // Activate/deactivate cur mod
+    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press || controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
+        modList[devMenu.option].active ^= true;
     }
     else if (controller[CONT_P1].keyB.press) {
         devMenu.state   = DevMenu_MainMenu;
