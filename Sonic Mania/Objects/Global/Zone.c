@@ -587,6 +587,19 @@ void Zone_StartFadeOut(int fadeSpeed, int fadeColour)
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
+void Zone_StartFadeOutRestart(void)
+{
+    EntityZone *zone  = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+    zone->timer     = 640;
+    zone->fadeSpeed = 10;
+    zone->screenID   = PLAYER_MAX;
+    zone->timer      = 0;
+    zone->state      = Zone_State_Fadeout_Restart;
+    zone->stateDraw  = Zone_StateDraw_Fadeout;
+    zone->visible    = true;
+    zone->drawOrder  = DRAWLAYER_COUNT - 1;
+}
+
 void Zone_Unknown2(void)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
@@ -813,7 +826,7 @@ void Zone_State_Fadeout_Restart(void)
     if (entity->timer <= 0) {
         globals->suppressAutoMusic = false;
         globals->suppressTitlecard = false;
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
     else {
         entity->timer -= entity->fadeSpeed;

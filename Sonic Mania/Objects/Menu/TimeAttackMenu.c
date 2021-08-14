@@ -388,16 +388,17 @@ void TimeAttackMenu_Unknown10(signed int zone, int playerID, signed int act, int
 void TimeAttackMenu_Options2CB_ReplayCarousel(void)
 {
     RSDK_THIS(UIReplayCarousel);
-    /*if (UIPopover_Unknown1()) {
+    EntityUIPopover *popover = UIPopover_CreatePopover();
+    if (popover) {
         int y = entity->position.y;
-        if (!entity->field_164)
-            y += entity->field_17C;
+        // if (!entity->field_164)
+        //     y += entity->field_17C;
 
-        UIPopover_Unknown2(7, TimeAttackMenu_Unknown13, 0);
-        UIPopover_Unknown2(8, TimeAttackMenu_Unknown14, 0);
-        UIPopover_Unknown2(9, TimeAttackMenu_XPressCB_Replay, 1);
-        UIPopover_Unknown3(entity->position.x, y);
-    }*/
+        UIPopover_AddButton(popover, 7, TimeAttackMenu_Unknown13, false);
+        UIPopover_AddButton(popover, 8, TimeAttackMenu_Unknown14, false);
+        UIPopover_AddButton(popover, 9, TimeAttackMenu_XPressCB_Replay, true);
+        UIPopover_Setup(popover, entity->position.x, y);
+    }
 }
 
 void TimeAttackMenu_AddReplayEntry(int a1, int a2)
@@ -446,9 +447,9 @@ void TimeAttackMenu_AddReplayEntry(int a1, int a2)
     }
 
     param->field_18C = dbID;
-    // EntityUIPopover *popover         = (EntityUIPopover *)UIPopover->activeEntity;
-    // if (popover)
-    //    *(*&popover[16].base + 200) = 1;
+    EntityUIPopover *popover         = (EntityUIPopover *)UIPopover->activeEntity;
+    if (popover)
+        popover->parent->selectionDisabled = true;
 
     UIWaitSpinner_Wait();
 
@@ -485,9 +486,9 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 a1)
     if (dialog) {
         UIDialog_AddButton(DIALOG_OK, dialog, 0, true);
         UIDialog_Setup(dialog);
-        // EntityUIPopover *popover         = (EntityUIPopover *)UIPopover->activeEntity;
-        // if (popover)
-        //*(*&popover->field_80 + 200) = 0;
+        EntityUIPopover *popover         = (EntityUIPopover *)UIPopover->activeEntity;
+        if (popover)
+            popover->parent->selectionDisabled = false;
     }
 }
 
@@ -500,7 +501,7 @@ void TimeAttackMenu_Unknown13(void)
 
     EntityUIButton *button = control->buttons[0];
     sprintf(param->menuTag, "Replays");
-    // param->field_18D = button->selection;
+    param->field_18D = button->selection;
     // param->field_168 = carousel->field_164;
     // int id           = API.GetUserDBUnknown(globals->replayTableID, carousel->field_164);
     // TimeAttackMenu_AddReplayEntry(id, 0);
@@ -523,34 +524,34 @@ void TimeAttackMenu_Unknown14(void)
 
 void TimeAttackMenu_Unknown15(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    // EntityUIPopover *popover         = (EntityUIPopover *)UIPopover->activeEntity;
-    // v1     = popover->field_84
+    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    EntityUIPopover *popover   = (EntityUIPopover *)UIPopover->activeEntity;
+    EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
 
-    /* EntityUIControl *parent     = *(v1 + 140);
-     int uuid = API.GetUserDBByID(globals->replayTableID, *(v1 + 312));
-     if (uuid != -1) {
-         RSDK.GetCString(param->menuTag, &parent->tag);
-         param->selectionID = parent->activeEntityID;
-         param->clearFlag   = 1;
-         TimeAttackMenu_AddReplayEntry(uuid, 0);
-     }*/
+    EntityUIControl *parent = button->parent;
+    int uuid                = -1; // API.GetUserDBByID(globals->replayTableID, button->dword138);
+    if (uuid != -1) {
+        RSDK.GetCString(param->menuTag, &parent->tag);
+        param->selectionID = parent->activeEntityID;
+        param->clearFlag   = true;
+        TimeAttackMenu_AddReplayEntry(uuid, 0);
+    }
 }
 
 void TimeAttackMenu_Unknown16(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    // EntityUIPopover *popover         = (EntityUIPopover *)UIPopover->activeEntity;
-    // v1     = popover->field_84
+    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    EntityUIPopover *popover   = (EntityUIPopover *)UIPopover->activeEntity;
+    EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
 
-    /* EntityUIControl *parent     = *(v1 + 140);
-     int uuid = API.GetUserDBByID(globals->replayTableID, *(v1 + 312));
-     if (uuid != -1) {
-         RSDK.GetCString(param->menuTag, &parent->tag);
-         param->selectionID = parent->activeEntityID;
-         param->clearFlag   = 1;
-         TimeAttackMenu_AddReplayEntry(uuid, 1);
-     }*/
+    EntityUIControl *parent = button->parent;
+    int uuid                = -1; // API.GetUserDBByID(globals->replayTableID, button->dword138);
+    if (uuid != -1) {
+        RSDK.GetCString(param->menuTag, &parent->tag);
+        param->selectionID = parent->activeEntityID;
+        param->clearFlag   = true;
+        TimeAttackMenu_AddReplayEntry(uuid, 1);
+    }
 }
 
 void TimeAttackMenu_Unknown17(void)
@@ -775,14 +776,14 @@ void TimeAttackMenu_Options2CB_Replays(void)
 
 void TimeAttackMenu_Unknown34(void)
 {
-    /*RSDK_THIS(UIButton); //TODO: what is this
-    v1     = UIPopover_Unknown1();
-    if (v1) {
-        v1->field_84 = entity;
-        UIPopover_Unknown2(7u, TimeAttackMenu_Unknown15, 0);
-        UIPopover_Unknown2(8u, TimeAttackMenu_Unknown16, 0);
-        UIPopover_Unknown3(entity->assignsP1, entity->freeBindP2);
-    }*/
+    RSDK_THIS(UIRankButton);
+    EntityUIPopover *popover     = UIPopover_CreatePopover();
+    if (popover) {
+        popover->storedEntity = entity;
+        UIPopover_AddButton(popover, 7, TimeAttackMenu_Unknown15, 0);
+        UIPopover_AddButton(popover, 8, TimeAttackMenu_Unknown16, 0);
+        //UIPopover_Setup(popover, entity->field_124, entity->field_128);
+    }
 }
 
 void TimeAttackMenu_UnknownCB3_Details(void) { TimeAttackMenu_UnknownCB1_Replays(); }

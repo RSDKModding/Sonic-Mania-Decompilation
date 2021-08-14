@@ -109,7 +109,7 @@ void MagnetSphere_CheckPlayerCollision(void)
             }
         }
         else {
-            if (!entity->playerTimers[pid]) {
+            if (!entity->playerTimers[pid] && player->state != Player_State_None) {
                 if (Player_CheckCollisionTouch(player, entity, &MagnetSphere->hitbox)) {
                     int angle = RSDK.ATan2(entity->position.x - player->position.x, entity->position.y - player->position.y);
 
@@ -135,7 +135,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                     MagnetSphere_MovePlayer(player, pid);
                 }
             }
-            else {
+            else if (entity->playerTimers[pid]) {
                 entity->playerTimers[pid]--;
             }
         }

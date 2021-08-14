@@ -24,15 +24,7 @@ void LRZ3Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_CUCKY;
     if (globals->suppressTitlecard) {
         SaveGame_LoadPlayerState();
-        EntityZone *entZone = (EntityZone *)RSDK.CreateEntity(Zone->objectID, NULL, 0, 0);
-        entZone->screenID   = SCREEN_MAX;
-        entZone->timer      = 640;
-        entZone->fadeSpeed  = 10;
-        entZone->fadeColour = 0x000000;
-        entZone->state      = Zone_State_Fadeout_Restart;
-        entZone->stateDraw  = Zone_StateDraw_Fadeout;
-        entZone->visible    = true;
-        entZone->drawOrder  = DRAWLAYER_COUNT - 1;
+        Zone_StartFadeOutRestart();
     }
 
     if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload()

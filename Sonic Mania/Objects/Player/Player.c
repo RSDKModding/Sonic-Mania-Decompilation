@@ -2354,6 +2354,21 @@ bool32 Player_CheckHit(EntityPlayer *player, void *e)
     Player_Hit(player);
     return true;
 }
+bool32 Player_CheckHitFlip(EntityPlayer *player)
+{
+    if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == Player_State_Drown || player->invincibleTimer
+        || player->blinkTimer > 0) {
+        return false;
+    }
+
+    if (player->direction)
+        player->velocity.x = 0x20000;
+    else
+        player->velocity.x = -0x20000;
+
+    Player_Hit(player);
+    return true;
+}
 bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
     Entity *entity = (Entity *)e;

@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1;
-    int value2;
-    bool32 value3;
-    bool32 value4;
-    bool32 value5;
-    bool32 value6;
-    int value7[32]; //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    int value8[32]; //= { -2, -2, -2, 0, -2, 0, -4, -2, 0, -4, -4, -1, 0, 0, -3, -4, -4, -1, -4, -4, -3, -4, -1, 0, 0, 0, -3, -1, -1, -1, -2, 0 };
+    int palTimer;
+    int fadeTimer;
+    TileLayer* bg1;
+    TileLayer* bg2;
+    TileLayer* fgLow;
+    TileLayer* fgHigh;
+    int deformFG[32]; //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    int deformBG[32]; //= { -2, -2, -2, 0, -2, 0, -4, -2, 0, -4, -4, -1, 0, 0, -3, -4, -4, -1, -4, -4, -3, -4, -1, 0, 0, 0, -3, -1, -1, -1, -2, 0 };
 } ObjectLRZ1Setup;
 
 // Entity Class
@@ -36,6 +36,7 @@ void LRZ1Setup_EditorLoad(void);
 void LRZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-
+void LRZ1Setup_StageFinishCB(void);
+void LRZ1Setup_DrawLayerCB(void);
 
 #endif //!OBJ_LRZ1SETUP_H

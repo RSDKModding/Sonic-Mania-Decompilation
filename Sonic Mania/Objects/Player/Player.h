@@ -396,6 +396,7 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *entity, Hitbox *enti
 bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 
 bool32 Player_CheckHit(EntityPlayer *player, void *entity);
+bool32 Player_CheckHitFlip(EntityPlayer *player);
 bool32 Player_CheckBadnikHit(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy);
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
