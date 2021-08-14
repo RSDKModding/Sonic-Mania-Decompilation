@@ -38,6 +38,8 @@ struct ModPublicFunctionInfo {
     void *ptr;
 };
 
+typedef bool (*modLink)(GameInfo *, const char *);
+
 struct ModInfo {
     std::string name;
     std::string desc;
@@ -47,8 +49,8 @@ struct ModInfo {
     std::vector<ModPublicFunctionInfo> functionList;
     std::string folder;
     bool active;
+    std::vector<modLink> linkModLogic;
 };
-
 
 extern std::vector<ModInfo> modList;
 extern std::vector<ModCallback> modCallbackList[MODCB_MAX];
@@ -62,7 +64,7 @@ void saveMods();
 
 void RunModCallbacks(int callbackID, void *data);
 
-//Mod API
+// Mod API
 bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
 void AddModCallback(int callbackID, ModCallback callback);
 void *AddPublicFunction(const char *folder, const char *functionName, void *functionPtr);

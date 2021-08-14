@@ -775,6 +775,13 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK_ADD_OBJECT(Zone);
 }
 
+#if RETRO_USE_MOD_LOADER
+bool32 LinkModLogic(GameInfo* info, const char* id) {
+    LinkGameLogicDLL(info);
+    return true;
+}
+#endif
+
 #if !RETRO_STANDALONE 
 int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void* info));
 

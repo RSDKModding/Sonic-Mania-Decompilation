@@ -311,8 +311,6 @@ void runRetroEngine()
             for (int c = 0; c < CHANNEL_COUNT; ++c) {
                 StopChannel(c);
             }
-            ReleaseStorage();
-            InitStorage();
             hardResetFlag = true;
             SceneInfo pre = sceneInfo;
             startGameObjects();
@@ -846,26 +844,10 @@ void InitScriptSystem()
         }
     }
 #endif
-#if RETRO_PLATFORM == RETRO_LINUX
-    sprintf(gameLogicName, "%s.so", gameLogicName);
+#if RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+    sprintf(gameLogicName, "%s%s.so", userFileDir, gameLogicName);
     if (!link_handle)
         link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
-
-    if (link_handle) {
-        linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
-        if (linkGameLogic) {
-            linkGameLogic(&info);
-            linked = true;
-        }
-    }
-#endif
-#if RETRO_PLATFORM == RETRO_ANDROID
-    sprintf(gameLogicName, "/data/data/org.libsdl.app/files/Game.so", gameLogicName);
-    // sprintf(gameLogicName, "%s", SDL_GetBasePath());
-    printLog(PRINT_NORMAL, "Loading from %s", SDL_AndroidGetExternalStoragePath());
-    if (!link_handle)
-        link_handle = SDL_LoadObject(gameLogicName);
-    printLog(PRINT_NORMAL, "Link handle? %s", SDL_GetError());
 
     if (link_handle) {
         linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
@@ -879,4 +861,16 @@ void InitScriptSystem()
     if (!linked) {
         printLog(PRINT_POPUP, "Failed to link game logic!");
     }
+#if RETRO_USE_MOD_LOADER
+    for (ModInfo &modInfo : modList) {
+        if (!modInfo.active)
+            continue;
+        for (modLink ptr : modInfo.linkModLogic) {
+            if (!ptr(&info, modInfo.folder.c_str())) {
+                modInfo.active = false;
+            }
+        }
+    }
+#endif
+
 }

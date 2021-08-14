@@ -2,10 +2,19 @@
 #if RETRO_USE_MOD_LOADER
 
 #include <filesystem>
+#include <sstream>
+
 #if RETRO_PLATFORM == RETRO_ANDROID
 namespace fs = std::__fs::filesystem;
 #else
 namespace fs = std::filesystem;
+#endif
+#if RETRO_PLATFORM == RETRO_WIN
+#include "Windows.h"
+#endif
+
+#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+#include <dlfcn.h>
 #endif
 
 std::vector<ModInfo> modList;
@@ -38,7 +47,7 @@ inline void sortMods()
     std::sort(modList.begin(), modList.end(), [](ModInfo a, ModInfo b) {
         if (!(a.active && b.active))
             return a.active;
-        //keep it unsorted i guess
+        // keep it unsorted i guess
         return false;
     });
 }
@@ -131,8 +140,6 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
         info->author  = iniparser_getstring(ini, ":Author", "Unknown Author");
         info->version = iniparser_getstring(ini, ":Version", "1.0.0");
 
-        iniparser_freedict(ini);
-
         // Check for Data/ replacements
         fs::path dataPath(modDir + "/Data");
 
@@ -179,6 +186,92 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 printLog(PRINT_ERROR, "Data Folder Scanning Error: %s", fe.what());
             }
         }
+        std::string logic(iniparser_getstring(ini, ":LogicFile", ""));
+        if (logic.length() && info->active) {
+            std::istringstream stream(logic);
+            std::string buf;
+            while (std::getline(stream, buf, ',')) {
+                int mode = 0;
+#define ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
+#if RETRO_PLATFORM == RETRO_WIN
+                if (ENDS_WITH(".dll"))
+                    mode = 1;
+#elif RETRO_PLATFORM == RETRO_OSX
+                if (ENDS_WITH(".dylib"))
+                    mode = 1;
+#elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+                if (ENDS_WITH(".so"))
+                    mode = 1;
+#else
+                if (false)
+                    ;
+#endif
+#if RETRO_USE_PYTHON
+                else if (ENDS_WITH(".py"))
+                    mode = 2;
+#endif
+#undef ENDS_WITH
+                fs::path file;
+
+                if (!mode) {
+                    // autodec
+                    std::string autodec = "";
+#if RETRO_PLATFORM == RETRO_WIN
+                    autodec = ".dll";
+#elif RETRO_PLATFORM == RETRO_OSX
+                    autodec = ".dylib";
+#elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+                    autodec = ".so";
+#endif
+                    file = fs::path(modDir + "/" + buf + autodec);
+                    if (fs::exists(file))
+                        mode = 1;
+                }
+#if RETRO_USE_PYTHON
+                if (!mode) {
+                    file = fs::path(modDir + "/" + buf + ".py");
+                    if (fs::exists(file))
+                        mode = 2;
+                }
+#endif
+                if (!mode) {
+                    iniparser_freedict(ini);
+                    return false;
+                }
+
+                bool linked = false;
+                if (mode == 1) {
+#if RETRO_PLATFORM == RETRO_WIN
+                    HMODULE hLibModule = LoadLibraryA(file.string().c_str());
+
+                    if (hLibModule) {
+                        modLink linkGameLogic = (modLink)GetProcAddress(hLibModule, "LinkModLogic");
+                        if (linkGameLogic) {
+                            info->linkModLogic.push_back(linkGameLogic);
+                            linked = true;
+                        }
+                    }
+#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
+                    void *link_handle = (void *)dlopen(file.string().c_str(), RTLD_LOCAL | RTLD_LAZY);
+
+                    if (link_handle) {
+                        modLink linkGameLogic = (modLink)dlsym(link_handle, "LinkModLogic");
+                        if (linkGameLogic) {
+                            info->linkModLogic.push_back(linkGameLogic);
+                            linked = true;
+                        }
+                    }
+#endif
+                }
+                // TODO: mode 2 (python)
+                if (!linked) {
+                    iniparser_freedict(ini);
+                    return false;
+                }
+            }
+        }
+
+        iniparser_freedict(ini);
         return true;
     }
     return false;

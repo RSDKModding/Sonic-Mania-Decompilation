@@ -16,6 +16,8 @@
 typedef uint colour;
 typedef uint color;
 
+#define RETRO_USE_MOD_LOADER (1)
+
 #if RETRO_USE_MOD_LOADER
 typedef enum {
     MODCB_GAME_STARTUP,
@@ -1003,5 +1005,8 @@ extern RSDKFunctionTable RSDK;
 #endif
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
+#if RETRO_USE_MOD_LOADER
+DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);
+#endif
 
 #endif //! GAMEOBJECTS_H

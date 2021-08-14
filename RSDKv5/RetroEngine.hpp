@@ -166,6 +166,7 @@ enum GameRegions {
 
 //enables the use of the mod loader
 #define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)
+#define RETRO_USE_PYTHON (RETRO_USE_MOD_LOADER && 0)
 
 enum EngineStates {
     ENGINESTATE_LOAD,
