@@ -82,6 +82,7 @@ char drawGroupNames[0x10][0x10]{
 
 bool32 InitRenderDevice()
 {
+    if (engine.windowActive) return true;
 
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);

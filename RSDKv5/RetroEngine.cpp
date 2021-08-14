@@ -12,6 +12,9 @@ HMODULE hLibModule = NULL;
 #include <dlfcn.h>
 
 void *link_handle = NULL;
+#if RETRO_PLATFORM == RETRO_ANDROID
+#include <jni.h>
+#endif
 #endif
 
 int *gameOptionsPtr = NULL;
@@ -94,8 +97,7 @@ bool32 processEvents()
                     }
                     break;
             }
-            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId); 
-                break;
+            case SDL_FINGERUP: touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId); break;
 #endif //! RETRO_USING_SDL2
 
             case SDL_KEYDOWN:
@@ -242,14 +244,28 @@ bool32 processEvents()
 bool initRetroEngine()
 {
     InitStorage();
-    initUserData();
 
     SetUserFileCallbacks("", NULL, NULL);
 #if RETRO_PLATFORM == RETRO_OSX
     char buffer[0xFF];
     sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
     SetUserFileCallbacks(buffer, NULL, NULL);
+#elif RETRO_PLATFORM == RETRO_ANDROID
+    char buffer[0x100];
+    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
+    jobject activity = (jobject)SDL_AndroidGetActivity();
+    jclass cls(env->GetObjectClass(activity));
+    jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
+    auto ret         = env->CallObjectMethod(activity, method);
+
+    sprintf(buffer, "%s/", env->GetStringUTFChars((jstring)ret, NULL));
+    SetUserFileCallbacks(buffer, NULL, NULL);
+
+    env->DeleteLocalRef(activity);
+    env->DeleteLocalRef(cls);
 #endif
+
+    initUserData();
 
     readSettings();
     startGameObjects();
@@ -288,7 +304,33 @@ void runRetroEngine()
         frameEnd = SDL_GetPerformanceCounter();
 #endif
 
-        engine.running = processEvents();
+#if RETRO_USE_MOD_LOADER
+        if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
+            devMenu.modsChanged = false;
+            saveMods();
+            for (int c = 0; c < CHANNEL_COUNT; ++c) {
+                StopChannel(c);
+            }
+            ReleaseStorage();
+            InitStorage();
+            hardResetFlag = true;
+            SceneInfo pre = sceneInfo;
+            startGameObjects();
+            sceneInfo.classCount = pre.classCount;
+            if (pre.state == ENGINESTATE_LOAD) {
+                sceneInfo.activeCategory = pre.activeCategory;
+                sceneInfo.listPos = pre.listPos;
+            } 
+#if RETRO_USING_SDL2
+            SDL_SetWindowTitle(engine.window, gameVerInfo.gameName);
+#endif
+            LoadGlobalSFX();
+
+            sceneInfo.state = ENGINESTATE_LOAD;
+        }
+#endif
+
+        engine.running  = processEvents();
         foreachStackPtr = foreachStackList;
         switch (sceneInfo.state) {
             default: break;
@@ -491,7 +533,7 @@ void runRetroEngine()
                 int tx = touchMouseData.x[t] * screens->width;
                 int ty = touchMouseData.y[t] * screens->height;
 
-                if (tx <= 16 && ty <= 16) {
+                if (tx <= 32 && ty <= 32) {
                     if (engine.devMenu) {
                         if (sceneInfo.state != ENGINESTATE_DEVMENU) {
                             devMenu.stateStore = sceneInfo.state;
@@ -729,6 +771,10 @@ void LoadGameConfig()
 
 void InitScriptSystem()
 {
+    objectCount = 0;
+    memset(globalObjectIDs, 0, sizeof(int) * OBJECT_COUNT);
+    memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
+    editableVarCount = 0;
     RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update,
                    DefaultObject_LateUpdate, DefaultObject_StaticUpdate, DefaultObject_Draw, DefaultObject_Create, DefaultObject_StageLoad,
                    DefaultObject_EditorDraw, DefaultObject_EditorLoad, DefaultObject_Serialize);

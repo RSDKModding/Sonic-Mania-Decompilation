@@ -83,6 +83,9 @@ struct DevMenu {
     int winScale;
     int winAspect;
     bool32 windowed;
+#if RETRO_USE_MOD_LOADER
+    bool32 modsChanged;
+#endif
 };
 
 extern DevMenu devMenu;

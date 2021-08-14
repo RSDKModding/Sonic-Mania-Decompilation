@@ -35,7 +35,12 @@ void initModAPI()
 
 inline void sortMods()
 {
-    std::sort(modList.begin(), modList.end(), [](ModInfo a, ModInfo b) { return a.active; });
+    std::sort(modList.begin(), modList.end(), [](ModInfo a, ModInfo b) {
+        if (!(a.active && b.active))
+            return a.active;
+        //keep it unsorted i guess
+        return false;
+    });
 }
 
 void loadMods()
@@ -54,7 +59,6 @@ void loadMods()
             char buffer[0x100];
             auto ini = iniparser_load(mod_config.c_str());
 
-            //TODO: retain caps somehow
             int c             = iniparser_getsecnkeys(ini, "Mods");
             const char **keys = new const char *[c];
             iniparser_getseckeys(ini, "Mods", keys);
@@ -180,7 +184,6 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
     return false;
 }
 
-
 void saveMods()
 {
     char modBuf[0x100];
@@ -198,7 +201,7 @@ void saveMods()
         for (int m = 0; m < modList.size(); ++m) {
             ModInfo *info = &modList[m];
 
-            writeText(file, "%s=%c", info->folder.c_str(), info->active ? 'y' : 'n');
+            writeText(file, "%s=%c\n", info->folder.c_str(), info->active ? 'y' : 'n');
         }
         fClose(file);
     }

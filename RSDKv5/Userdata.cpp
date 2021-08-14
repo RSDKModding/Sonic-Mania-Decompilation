@@ -654,17 +654,7 @@ void readSettings()
     //this could've been solved with setting userfile dir but nooooooooooo
     // (iniparser doesn't use fOpen it uses normal fopen
 #if RETRO_PLATFORM == RETRO_ANDROID
-    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
-    jobject activity = (jobject)SDL_AndroidGetActivity();
-    jclass cls(env->GetObjectClass(activity));
-    jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
-    auto ret         = env->CallObjectMethod(activity, method);
-
-    strcpy(pathBuffer, env->GetStringUTFChars((jstring)ret, NULL));
-    strcat(pathBuffer, "Settings.ini");
-
-    env->DeleteLocalRef(activity);
-    env->DeleteLocalRef(cls);
+    //TODO: fuck you
 #endif
 
     dictionary *ini = iniparser_load(pathBuffer);

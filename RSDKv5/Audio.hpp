@@ -60,6 +60,7 @@ void LoadStream(ChannelInfo *channel);
 int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loopPoint, bool32 loadASync);
 
 void LoadSfx(char *filePath, byte plays, byte scope);
+bool32 LoadGlobalSFX();
 inline ushort GetSFX(const char* sfxName) {
     uint hash[4];
     GEN_HASH(sfxName, hash);

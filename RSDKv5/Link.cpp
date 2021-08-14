@@ -343,6 +343,10 @@ void *GetAPIFunction(const char *name)
 
 void setupFunctions()
 {
+    if (RSDKFunctionTable[0]) {
+        initModAPI();
+        return;
+    }
     CalculateTrigAngles();
     GenerateBlendLookupTable();
     InitGFXSystem();

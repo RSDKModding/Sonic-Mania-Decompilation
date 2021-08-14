@@ -432,6 +432,7 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
 
 void InitInputDevice()
 {
+    if (activeInputDevices[0]) return;
     char buffer[0x100];
 #if RETRO_USING_SDL2
     // Support for extra controller types SDL doesn't recognise

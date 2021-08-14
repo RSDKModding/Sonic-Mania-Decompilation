@@ -1470,6 +1470,7 @@ void DevMenu_Mods()
     DevMenu_HandleTouchControls();
 #endif
 
+    int preOption = devMenu.option;
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
@@ -1542,12 +1543,20 @@ void DevMenu_Mods()
 
     if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press || controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
         modList[devMenu.option].active ^= true;
+        devMenu.modsChanged = true;
+    }
+    else if (controller[CONT_P1].keyC.down) {
+        ModInfo swap = modList[preOption];
+        modList[preOption] = modList[devMenu.option];
+        modList[devMenu.option] = swap;
+        devMenu.modsChanged = true;
     }
     else if (controller[CONT_P1].keyB.press) {
         devMenu.state   = DevMenu_MainMenu;
         devMenu.scroll  = 0;
         devMenu.option  = 4;
-        saveMods(); //save our changed mod options
+        saveMods();
+        LoadGameConfig();
     }
 }
 #endif

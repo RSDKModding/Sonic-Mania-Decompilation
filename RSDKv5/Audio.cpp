@@ -88,51 +88,8 @@ bool32 InitAudioDevice()
 #endif
 #endif
 
-    FileInfo info;
-    InitFileInfo(&info);
-
-    if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
-        char buffer[0x100];
-        uint sig = ReadInt32(&info, false);
-
-        if (sig != 0x474643) {
-            CloseFile(&info);
-            return true;
-        }
-
-        ReadString(&info, buffer);
-        ReadString(&info, buffer);
-        ReadString(&info, buffer);
-
-        ReadInt8(&info);
-        ReadInt16(&info);
-
-        byte objCnt = ReadInt8(&info);
-        for (int i = 0; i < objCnt; ++i) {
-            ReadString(&info, buffer);
-        }
-
-        for (int i = 0; i < PALETTE_COUNT; ++i) {
-            byte rows = ReadInt16(&info);
-            for (int r = 0; r < 0x10; ++r) {
-                if ((rows >> r & 1)) {
-                    for (int c = 0; c < 0x10; ++c) {
-                        ReadInt8(&info);
-                        ReadInt8(&info);
-                        ReadInt8(&info);
-                    }
-                }
-            }
-        }
-
-        byte sfxCnt = ReadInt8(&info);
-        for (int i = 0; i < sfxCnt; ++i) {
-            ReadString(&info, buffer);
-            byte maxConcurrentPlays = ReadInt8(&info);
-            LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
-        }
-        CloseFile(&info);
-    }
+    if (!LoadGlobalSFX())
+        return true;
 
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
         channels[i].soundID = -1;
@@ -170,6 +127,7 @@ void ReleaseAudioDevice()
 #if RETRO_USING_SDL2
         if (streamInfo.musicStream)
             SDL_FreeAudioStream(streamInfo.musicStream);
+        SDL_CloseAudioDevice(audioDevice);
         streamInfo.musicStream = NULL;
 #endif
 
@@ -389,6 +347,59 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
         samples_remaining -= samples_to_do;
     }
 }
+
+bool32 LoadGlobalSFX() {
+    for (int i = 0; i < SFX_COUNT; ++i) MEM_ZERO(sfxList[i]);
+
+    FileInfo info;
+    InitFileInfo(&info);
+
+    if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
+        char buffer[0x100];
+        uint sig = ReadInt32(&info, false);
+
+        if (sig != 0x474643) {
+            CloseFile(&info);
+            return false;
+        }
+
+        ReadString(&info, buffer);
+        ReadString(&info, buffer);
+        ReadString(&info, buffer);
+
+        ReadInt8(&info);
+        ReadInt16(&info);
+
+        byte objCnt = ReadInt8(&info);
+        for (int i = 0; i < objCnt; ++i) {
+            ReadString(&info, buffer);
+        }
+
+        for (int i = 0; i < PALETTE_COUNT; ++i) {
+            byte rows = ReadInt16(&info);
+            for (int r = 0; r < 0x10; ++r) {
+                if ((rows >> r & 1)) {
+                    for (int c = 0; c < 0x10; ++c) {
+                        ReadInt8(&info);
+                        ReadInt8(&info);
+                        ReadInt8(&info);
+                    }
+                }
+            }
+        }
+
+        byte sfxCnt = ReadInt8(&info);
+        for (int i = 0; i < sfxCnt; ++i) {
+            ReadString(&info, buffer);
+            byte maxConcurrentPlays = ReadInt8(&info);
+            LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
+        }
+        CloseFile(&info);
+        return true;
+    }
+    return false;
+}
+
 void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *channel)
 {
     if (!channel)
