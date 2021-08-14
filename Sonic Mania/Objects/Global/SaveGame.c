@@ -60,7 +60,7 @@ void SaveGame_LoadSaveData(void)
     }
 
     if (Player) {
-        if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
+        if (!TitleCard || TitleCard->suppressCB != Zone_Unknown16) {
             Player->savedLives    = saveRAM->lives;
             Player->savedScore    = saveRAM->score;
             Player->savedScore1UP = saveRAM->score1UP;
@@ -318,7 +318,7 @@ void SaveGame_SavePlayerState(void)
     globals->restartMilliseconds = RSDK_sceneInfo->milliseconds;
     globals->restartSeconds      = RSDK_sceneInfo->seconds;
     globals->restartMinutes      = RSDK_sceneInfo->minutes;
-    if (saveRAM && TitleCard->suppressCallback != Zone_Unknown16) {
+    if (saveRAM && TitleCard->suppressCB != Zone_Unknown16) {
         saveRAM->lives = player->lives;
         saveRAM->score = player->score;
         saveRAM->score1UP = player->score1UP;
@@ -536,10 +536,11 @@ void SaveGame_Unknown14(void)
 {
     int *saveRAM = NULL;
 
-    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK)
-        saveRAM = NULL;
-    else
-        saveRAM = &globals->saveRAM[0x900];
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+        LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
+        return;
+    }
+    saveRAM     = &globals->saveRAM[0x900];
     saveRAM[21] = 0;
     saveRAM[22] = 0;
     saveRAM[25] = 0;

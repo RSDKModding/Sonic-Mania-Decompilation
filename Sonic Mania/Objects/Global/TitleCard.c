@@ -31,10 +31,8 @@ void TitleCard_Create(void *data)
         TitleCard_SetColours();
 
         if (globals->suppressTitlecard) {
-            if (TitleCard->suppressCallback) {
-                TitleCard->suppressCallback();
-                TitleCard->suppressCallback = NULL;
-            }
+            StateMachine_Run(TitleCard->suppressCB);
+            TitleCard->suppressCB = NULL;
             entity->state = TitleCard_Unknown11;
         }
         else {
@@ -469,7 +467,7 @@ void TitleCard_Unknown9(void)
         entity->state     = TitleCard_Unknown10;
         entity->stateDraw = TitleCard_Unknown14;
         RSDK.SetGameMode(ENGINESTATE_REGULAR);
-        StateMachine_Run(TitleCard->funcA);
+        StateMachine_Run(TitleCard->finishedCB);
     }
     else {
         entity->field_60++;
@@ -611,7 +609,7 @@ void TitleCard_Unknown11(void)
         globals->suppressTitlecard = false;
     }
 
-    StateMachine_Run(TitleCard->funcA);
+    StateMachine_Run(TitleCard->finishedCB);
 }
 
 void TitleCard_Unknown12(void)

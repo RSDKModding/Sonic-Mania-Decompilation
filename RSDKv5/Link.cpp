@@ -419,7 +419,7 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_Unknown31, InitDBRowUnknown);
     addToAPIFunctionTable(APITable_GetUserDBSatus, GetUserDBStatus);
     addToAPIFunctionTable(APITable_Unknown33, UserDBUnknown33);
-    addToAPIFunctionTable(APITable_Unknown34, UserDBUnknown34);
+    addToAPIFunctionTable(APITable_Unknown34, SortUserDBRows);
     addToAPIFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
     addToAPIFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
     addToAPIFunctionTable(APITable_Unknown37, AddUserDBRow);

@@ -107,18 +107,18 @@ typedef struct {
     void (*ClearAllUserDBs)(void);
     void (*SetupRowUnknown)(ushort tableID);
     int (*GetUserDBStatus)(ushort tableID);
-    void (*Unknown33)(ushort tableID, int a2, const char *name, void *value);
-    void (*Unknown34)(ushort tableID, int a2, const char *name, void *value);
+    void (*Unknown33)(ushort tableID, int type, const char *name, void *value);
+    void (*SortDBRows)(ushort tableID, int type, const char *name, bool32 flag);
     int (*GetUserDBUnknownCount)(ushort tableID);
-    int (*GetUserDBUnknown)(ushort tableID, ushort entryID);
-    int (*AddUserDBEntry)(ushort tableID);
-    void (*SetUserDBValue)(ushort tableID, int a2, int a3, const char *name, void *value);
-    void (*GetUserDBValue)(ushort tableID, int a2, int a3, const char *name, void *value);
-    uint (*GetUserDBEntryUUID)(ushort tableID, ushort entryID);
+    int (*GetUserDBUnknown)(ushort tableID, ushort row);
+    int (*AddUserDBRow)(ushort tableID);
+    void (*SetUserDBValue)(ushort tableID, int row, int type, const char *name, void *value);
+    void (*GetUserDBValue)(ushort tableID, int row, int type, const char *name, void *value);
+    uint (*GetUserDBRowUUID)(ushort tableID, ushort row);
     int (*GetUserDBByID)(ushort tableID, uint uuid);
-    void (*GetUserDBCreationTime)(ushort tableID, ushort entry, char *buf, uint sizeInBytes, const char *format);
-    void (*RemoveDBEntry)(ushort tableID, ushort entry);
-    void (*RemoveAllDBEntries)(ushort tableID);
+    void (*GetUserDBCreationTime)(ushort tableID, ushort row, char *buffer, uint sizeInBytes, const char *format);
+    void (*RemoveDBRow)(ushort tableID, ushort row);
+    void (*RemoveAllDBRows)(ushort tableID);
     // count: 59
 } APIFunctionTable;
 #endif

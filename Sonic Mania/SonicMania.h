@@ -3,10 +3,11 @@
 
 #define VER_100 0 // 1.00 (initial console release)
 #define VER_103 3 // 1.03 (pc release/ console patch)
-#define VER_105 5 // 1.04/1.05 + 1.06 (sonic mania plus update)
+#define VER_105 5 // 1.04/1.05
+#define VER_106 6 // 1.06 (steam denuvo removal update)
 #define VER_107 7 // 1.07 (EGS/Origin releases)
 
-#define RETRO_GAMEVER VER_105
+#define RETRO_GAMEVER VER_106
 
 #define RETRO_USE_PLUS (RETRO_GAMEVER >= VER_105)
 #define RETRO_USE_EGS (RETRO_GAMEVER == VER_107)

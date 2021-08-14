@@ -265,6 +265,7 @@ enum WinMappings {
 };
 
 struct InputDevice {
+    void (*processInput)(InputDevice *device, int inputID);
     int gamePadType;
     int inputID;
     byte active;
@@ -275,7 +276,9 @@ struct InputDevice {
     byte field_11;
     byte field_12;
     byte field_13;
-    int field_14[4];
+    int field_14[2];
+    int field_1C;
+    byte controllerID;
 };
 
 struct InputDeviceBase : InputDevice {
@@ -358,7 +361,7 @@ extern InputManagerInfo InputManager;
 extern InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
 extern int InputDeviceCount;
 
-extern uint activeControllers[PLAYER_COUNT];
+extern int activeControllers[PLAYER_COUNT];
 extern InputDevice *activeInputDevices[PLAYER_COUNT];
 
 extern ControllerState controller[PLAYER_COUNT + 1];
@@ -368,8 +371,16 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
+void InitInputDevice();
+void ProcessInput();
+void ProcessKeyboardInput(InputDevice* device, int controllerID);
+void ProcessDeviceInput(InputDevice* device, int controllerID);
+
+inline int controllerUnknown2(int a2, int a3) { return 0; }
+inline int controllerUnknown3(int a2, int a3) { return 0; }
+
 #if RETRO_USING_SDL2
-inline InputDevice* controllerInit(byte controllerID)
+inline InputDevice *controllerInit(byte controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
         return NULL;
@@ -379,13 +390,14 @@ inline InputDevice* controllerInit(byte controllerID)
     char buffer[0x20];
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
-    device->active         = true;
-    device->field_F        = 0;
-    device->gamePadType    = 0x00000;
-    device->inputID        = id;
+    device->active      = true;
+    device->field_F     = 0;
+    device->gamePadType = 0x00000;
+    device->inputID     = id;
+    device->processInput = ProcessDeviceInput;
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
-        if (activeControllers[i] == id) {
+        if (activeControllers[i] == (uint)id) {
             activeInputDevices[i]        = (InputDevice *)device;
             device->assignedControllerID = i + 1;
         }
@@ -415,13 +427,6 @@ inline void controllerClose(byte controllerID)
     }
 }
 #endif
-
-void InitInputDevice();
-void ProcessInput();
-void ProcessDeviceInput(InputDevice* device, int controllerID);
-
-inline int controllerUnknown2(int a2, int a3) { return 0; }
-inline int controllerUnknown3(int a2, int a3) { return 0; }
 
 inline InputDevice *InputDeviceFromID(int inputID)
 {

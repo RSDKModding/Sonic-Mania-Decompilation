@@ -528,48 +528,47 @@ void ActClear_State_TAFinish(void)
 
     if (entity->posUnknown6.x >= -0x80000) {
         if (globals->gameMode == MODE_TIMEATTACK) {
-            if (ActClear->isTimeAttack) {
 #if RETRO_USE_PLUS
-                if (ActClear->bufferMove_CB)
-                    ActClear->bufferMove_CB();
-                HUD->dwordC        = 1;
-                ActClear->field_2C = 0;
-                entity->dword78    = 240;
-                entity->state      = ActClear_Unknown9;
-#else
-                EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
-                ActClear->hitboxID = true;
-                byte playerID           = param->characterID;
-                byte zoneID        = param->zoneID;
-                byte actID              = param->actID;
-
-                int *recordsRAM = NULL;
-                if (globals->saveLoaded == STATUS_OK)
-                    recordsRAM = &globals->saveRAM[0x800];
-
-                if (recordsRAM) {
-                    int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
-
-                    ushort *record = (ushort *)&recordsRAM[36 * playerID - 15 + 3 * zoneID] + 3 * actID;
-                    int rank       = 0;
-                    for (; rank < 3; ++rank) {
-                        if (!record[rank] || time < record[rank])
-                            break;
-                    }
-
-                    if (rank < 3) {
-                        rank++;
-                        TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
-                        TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
-                        param->timeScore = rank;
-                    }
-                    else {
-                        ActClear->hitboxID = false;
-                    }
-                }
-#endif
-                RSDK.SetScene("Presentation", "Menu");
+            if (ActClear->isTimeAttack) {
+                StateMachine_Run(ActClear->bufferMove_CB);
             }
+            HUD->dwordC        = 1;
+            ActClear->field_2C = 0;
+            entity->dword78    = 240;
+            entity->state      = ActClear_Unknown9;
+#else
+            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+            ActClear->hitboxID     = true;
+            byte playerID          = param->characterID;
+            byte zoneID            = param->zoneID;
+            byte actID             = param->actID;
+
+            int *recordsRAM = NULL;
+            if (globals->saveLoaded == STATUS_OK)
+                recordsRAM = &globals->saveRAM[0x800];
+
+            if (recordsRAM) {
+                int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+
+                ushort *record = (ushort *)&recordsRAM[36 * playerID - 15 + 3 * zoneID] + 3 * actID;
+                int rank       = 0;
+                for (; rank < 3; ++rank) {
+                    if (!record[rank] || time < record[rank])
+                        break;
+                }
+
+                if (rank < 3) {
+                    rank++;
+                    TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
+                    TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
+                    param->timeScore = rank;
+                }
+                else {
+                    ActClear->hitboxID = false;
+                }
+            }
+#endif
+            RSDK.SetScene("Presentation", "Menu");
         }
         else {
             entity->state = ActClear_Unknown8;

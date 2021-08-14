@@ -544,7 +544,7 @@ void SetSettingsValue(int id, int val)
             break;
         case SETTINGS_SCREENCOUNT: engine.screenCount = val; break;
 #if RETRO_REV02
-        case SETTINGS_DIMTIMER: engine.dimTimer = val; break;
+        case SETTINGS_DIMTIMER: engine.dimLimit = val; break;
 #endif
         case SETTINGS_STREAMSENABLED:
             if (engine.streamsEnabled != bVal)

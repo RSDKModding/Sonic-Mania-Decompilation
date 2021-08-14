@@ -187,7 +187,7 @@ int APICallback_ReadLeaderboardEntry(int rankID)
         RSDK.PrependText(&APICallback->leaderboardEntry.username, dummyNames[rankID]);
     }
     LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
-                     APICallback->leaderboardEntry.score, APICallback->leaderboardEntry.username.text, APICallback->leaderboardEntry.isUser);
+                     APICallback->leaderboardEntry.score, APICallback->leaderboardEntry.username.nameTimeText, APICallback->leaderboardEntry.isUser);
     return 1;
 }
 

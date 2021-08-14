@@ -310,7 +310,7 @@ void Zone_StageLoad(void)
             }
         }
 
-        if (!TitleCard || TitleCard->suppressCallback != Zone_Unknown16) {
+        if (!TitleCard || TitleCard->suppressCB != Zone_Unknown16) {
             globals->characterFlags = saveRAM->characterFlags;
             globals->stock          = saveRAM->stock;
             globals->playerID       = saveRAM->playerID;
@@ -854,19 +854,19 @@ void Zone_Unknown16(void)
     SaveGame_LoadPlayerState();
     if (Music->activeTrack != Music->field_254)
         Music_TransitionTrack(Music->field_254, 0.04);
-    EntityZone *entityZone      = (EntityZone *)RSDK.CreateEntity(Zone->objectID, NULL, 0, 0);
-    entityZone->screenID        = 0;
-    entityZone->timer           = 640;
-    entityZone->fadeSpeed       = 16;
-    entityZone->fadeColour      = 0xF0F0F0;
-    entityZone->state           = Zone_State_Fadeout_Destroy;
-    entityZone->stateDraw       = Zone_StateDraw_Fadeout;
-    entityZone->visible         = true;
-    globals->suppressTitlecard  = 0;
-    entityZone->drawOrder       = 15;
-    TitleCard->suppressCallback = NULL;
-    Player->rings               = 0;
-    RSDK.ResetEntityPtr(entity, 0, 0);
+    EntityZone *zone           = CREATE_ENTITY(Zone, NULL, 0, 0);
+    zone->screenID             = 0;
+    zone->timer                = 640;
+    zone->fadeSpeed            = 16;
+    zone->fadeColour           = 0xF0F0F0;
+    zone->state                = Zone_State_Fadeout_Destroy;
+    zone->stateDraw            = Zone_StateDraw_Fadeout;
+    zone->visible              = true;
+    zone->drawOrder            = 15;
+    globals->suppressTitlecard = false;
+    TitleCard->suppressCB      = StateMachine_None;
+    Player->rings              = 0;
+    destroyEntity(entity);
 }
 
 void Zone_Unknown17(void)
@@ -877,7 +877,7 @@ void Zone_Unknown17(void)
     StarPost->storedMS          = RSDK_sceneInfo->milliseconds;
     globals->suppressAutoMusic  = true;
     globals->suppressTitlecard  = true;
-    TitleCard->suppressCallback = Zone_Unknown16;
+    TitleCard->suppressCB       = Zone_Unknown16;
     SaveGame_SavePlayerState();
     Player->rings = entity->rings;
     RSDK.LoadScene();

@@ -151,7 +151,7 @@ ushort InitDBRowUnknown(ushort tableID);
 void SetupRowUnknown(UserDB *userDB);
 void UserDBRefreshRowUnknown(UserDB *userDB);
 int UserDBUnknown33(ushort tableID, int type, const char *name, void *value);
-int UserDBUnknown34(ushort tableID, int type, const char *name, bool32 active);
+int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active);
 int GetUserDBRowUnknownCount(ushort tableID);
 int GetUserDBRowUnknown(ushort tableID, ushort entryID);
 
@@ -170,9 +170,9 @@ void UpdateUserDBParents(UserDB *userDB);
 size_t GetUserDBWriteSize(UserDB *userDB);
 bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer);
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer);
-void RemoveNonMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column);
+void RemoveMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column);
 void RemoveNonMatchingRows(UserDB *userDB, const char *name, void *value);
-void UserDBUnknown34_Func(UserDB *userDB, int size, const char *name, bool32 valueActive);
+void HandleUserDBSorting(UserDB *userDB, int size, const char *name, bool32 valueActive);
 uint CreateRowUUID(UserDB *userDB);
 
 // User Storage CBs

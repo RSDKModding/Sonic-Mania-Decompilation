@@ -42,7 +42,7 @@ typedef struct {
     int saveStatus;
     bool32 authFlag;
     bool32 signoutFlag;
-    int field_11C;
+    int prevLeaderboardEntry;
     int playerFlipFlags;
     int notifyAutoSaveFlag;
     int unknown;

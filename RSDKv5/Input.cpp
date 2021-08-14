@@ -7,7 +7,7 @@ InputManagerInfo InputManager;
 InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
 int InputDeviceCount = 0;
 
-uint activeControllers[PLAYER_COUNT];
+int activeControllers[PLAYER_COUNT];
 InputDevice *activeInputDevices[PLAYER_COUNT];
 
 ControllerState controller[PLAYER_COUNT + 1];
@@ -265,7 +265,7 @@ bool32 getControllerButton(InputDevice *device, byte buttonID)
 }
 #endif
 
-void ProcessKeyboardInput(int controllerID)
+void ProcessKeyboardInput(InputDevice *device, int controllerID)
 {
 #if RETRO_USING_SDL2
     int keyCount         = 0;
@@ -430,6 +430,46 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
 #endif
 }
 
+InputDevice *InitKeyboardDevice(uint id)
+{
+    if (InputDeviceCount == INPUTDEVICE_COUNT)
+        return NULL;
+    InputDevice *device = &InputDevices[InputDeviceCount];
+    if (device->active)
+        return NULL;
+
+    InputDeviceCount++;
+    device->gamePadType = 0x10100;
+    device->field_F     = 0;
+    device->inputID     = id;
+    device->active      = true;
+
+    for (int i = 0; i < 4; ++i) {
+        if (activeControllers[i] == id) {
+            activeInputDevices[i]        = device;
+            device->assignedControllerID = true;
+        }
+    }
+    return device;
+}
+
+void StartupKeyboardInput()
+{
+    char buffer[0x10];
+    for (int i = 0; i < PLAYER_COUNT; ++i) {
+        sprintf(buffer, "KBDevice%d", i);
+        uint id = 0;
+        GenerateCRC(&id, buffer);
+
+        InputDevice *device = InitKeyboardDevice(id);
+        if (device) {
+            device->controllerID = i;
+            device->gamePadType |= i + 1;
+            device->processInput = ProcessKeyboardInput;
+        }
+    }
+}
+
 void InitInputDevice()
 {
     if (activeInputDevices[0]) return;
@@ -459,10 +499,9 @@ void InitInputDevice()
     for (int i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_AUTOASSIGN;
         activeInputDevices[i] = NULL;
-
-        sprintf(buffer, "SDLDevice%d", i);
-        // GenerateCRC(&device->inputID, buffer);
     }
+
+    StartupKeyboardInput();
 }
 
 void ProcessInput()
@@ -470,31 +509,29 @@ void ProcessInput()
     InputManager.anyPress = false;
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
-        ProcessKeyboardInput(i + 1);
-
         int assign = activeControllers[i];
         if (assign && assign != CONT_UNASSIGNED) {
             if (assign == CONT_AUTOASSIGN) {
-                uint id              = GetControllerInputID();
+                int id              = GetControllerInputID();
                 activeControllers[i] = id;
-                if (id < -1)
+                if (id != -1)
                     AssignControllerID(i + 1, id);
             }
             else {
                 InputDevice *device = activeInputDevices[i];
-                if (device && device->inputID == assign && device->active)
-                    ProcessDeviceInput(device, i + 1);
+                if (device && device->inputID == assign && device->active && device->processInput)
+                    device->processInput(device, i + 1);
             }
-        }
 
-        InputState *buttons[] = {
-            &controller[i + 1].keyUp, &controller[i + 1].keyDown, &controller[i + 1].keyLeft,  &controller[i + 1].keyRight,
-            &controller[i + 1].keyA,  &controller[i + 1].keyB,    &controller[i + 1].keyC,     &controller[i + 1].keyX,
-            &controller[i + 1].keyY,  &controller[i + 1].keyZ,    &controller[i + 1].keyStart, &controller[i + 1].keySelect,
-        };
-        for (int c = 0; c < 12; ++c) {
-            if (!InputManager.keyPress[i][c])
-                buttons[c]->setReleased();
+            InputState *buttons[] = {
+                &controller[i + 1].keyUp, &controller[i + 1].keyDown, &controller[i + 1].keyLeft,  &controller[i + 1].keyRight,
+                &controller[i + 1].keyA,  &controller[i + 1].keyB,    &controller[i + 1].keyC,     &controller[i + 1].keyX,
+                &controller[i + 1].keyY,  &controller[i + 1].keyZ,    &controller[i + 1].keyStart, &controller[i + 1].keySelect,
+            };
+            for (int c = 0; c < 12; ++c) {
+                if (!InputManager.keyPress[i][c])
+                    buttons[c]->setReleased();
+            }
         }
     }
 

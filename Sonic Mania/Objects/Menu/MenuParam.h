@@ -26,8 +26,8 @@ typedef struct {
     int timeScore;
     int isEncoreMode;
     int field_180;
-    int field_184;
-    int field_188;
+    int viewReplay;
+    int showGhost;
     byte field_18C;
     byte field_18D;
     byte field_18E;

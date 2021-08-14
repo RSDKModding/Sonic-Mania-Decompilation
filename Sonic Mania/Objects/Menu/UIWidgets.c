@@ -319,6 +319,9 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
     memset(&animator, 0, sizeof(Animator));
     memset(&animator2, 0, sizeof(Animator));
 
+    drawPos.x = x;
+    drawPos.y = y + 0x20000;
+
     RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &animator2, true, 9);
     RSDK.DrawSprite(&animator2, &drawPos, 0);
     drawPos.x += 0x100000;

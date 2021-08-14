@@ -11,11 +11,11 @@ typedef struct {
     int frameCounter;
     int *writeBuffer;
     int *readBuffer;
-    int *writeSize;
-    int *readSize;
+    int *frameBuffer_w;
+    int *frameBuffer_r;
     Entity *recorder_r;
     Entity *recorder_w;
-    int dword120;
+    bool32 initialized;
     int dword124;
     int dword128;
     int dword12C;
@@ -38,7 +38,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateDraw);
+    StateMachine(stateLate);
     StateMachine(field_60);
     StateMachine(storedState);
     StateMachine(stateStore);
@@ -80,13 +80,13 @@ void ReplayRecorder_EditorLoad(void);
 void ReplayRecorder_Serialize(void);
 
 // Extra Entity Functions
-void ReplayRecorder_Unknown1(void);
+void ReplayRecorder_TitleCardCB(void);
 void ReplayRecorder_Resume(EntityReplayRecorder *recorder);
-void ReplayRecorder_ResumeFunc(void);
-void ReplayRecorder_Unknown2(void);
+void ReplayRecorder_ResumeStartCB(void);
+void ReplayRecorder_FinishCB(void);
 void ReplayRecorder_Buffer_Move(void);
-void ReplayRecorder_Unknown4(void);
-void ReplayRecorder_CreateReplayDBEntry(void);
+void ReplayRecorder_SaveReplayDLG_NoCB(void);
+void ReplayRecorder_SaveReplayDLG_YesCB(void);
 void ReplayRecorder_Unknown6(void);
 void ReplayRecorder_SaveReplay(void);
 void ReplayRecorder_SavedReplay(bool32 status);
@@ -101,7 +101,7 @@ void ReplayRecorder_Load_CB(int status);
 void ReplayRecorder_ConfigureGhost_CB(void);
 void ReplayRecorder_SetupActions(void);
 void ReplayRecorder_SetupWriteBuffer(void);
-void ReplayRecorder_DrawSprites(void);
+void ReplayRecorder_DrawGhostDisplay(void);
 void ReplayRecorder_Record(EntityReplayRecorder *recorder, EntityPlayer *player);
 void ReplayRecorder_StartRecording(EntityPlayer *player);
 void ReplayRecorder_Play(EntityPlayer *player);
@@ -118,9 +118,9 @@ void ReplayRecorder_PlayBackInput(void);
 void ReplayRecorder_Pause(EntityReplayRecorder *recorder);
 void ReplayRecorder_PlayerState(void);
 void ReplayRecorder_StatePlay(void);
-void ReplayRecorder_Unknown24(void);
-void ReplayRecorder_Unknown25(void);
-void ReplayRecorder_Unknown26(void);
+void ReplayRecorder_None_Replay(void);
+void ReplayRecorder_StateLate_Replay(void);
+void ReplayRecorder_None_Record(void);
 void ReplayRecorder_RecordFrameData(void);
 void ReplayRecorder_LoadReplayDB(void (*callback)(bool32));
 void ReplayRecorder_SaveReplayDB(void (*callback)(bool32));

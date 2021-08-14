@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     ushort spriteIndex;
-    int (*funcA)(void);
-    void (*suppressCallback)(void);
+    StateMachine(finishedCB);
+    StateMachine(suppressCB);
 } ObjectTitleCard;
 
 // Entity Class

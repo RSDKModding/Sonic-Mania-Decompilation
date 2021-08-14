@@ -146,7 +146,7 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         if (bufSize >= 4) {
             byte *bufTest = (byte *)buffer;
             // quick and dirty zlib check
-            if (bufTest[0] == 0x78 && ((bufTest[1] == 0x01 && bufTest[2] == 0xED) || bufTest[1] == 0x9C)) {
+            if (bufTest[0] == 0x78 && (bufTest[1] == 0x01 || bufTest[1] == 0x9C)) {
                 uLongf destLen = bufSize;
 
                 byte *compData = NULL;
@@ -619,9 +619,9 @@ void UserDBRefreshRowUnknown(UserDB *userDB)
     userDB->unknown.Clear();
 
     for (int i = 0; i < userDB->rowCount; ++i) {
-        int *unknown = userDB->unknown.Append();
-        if (unknown)
-            *unknown = i;
+        int *row = userDB->unknown.Append();
+        if (row)
+            *row = i;
     }
 
     SetupRowUnknown(userDB);
@@ -637,7 +637,7 @@ int UserDBUnknown33(ushort tableID, int type, const char *name, void *value)
     RemoveNonMatchingRows(userDB->parent, name, value);
     return userDB->rowUnknownCount;
 }
-int UserDBUnknown34(ushort tableID, int type, const char *name, bool32 active)
+int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active)
 {
     if (tableID == 0xFFFF)
         return 0;
@@ -645,7 +645,7 @@ int UserDBUnknown34(ushort tableID, int type, const char *name, bool32 active)
     if (!userDB->active)
         return 0;
 
-    UserDBUnknown34_Func(userDB->parent, type, name, active);
+    HandleUserDBSorting(userDB->parent, type, name, active);
     return userDB->rowUnknownCount;
 }
 int GetUserDBRowUnknownCount(ushort tableID)
@@ -960,7 +960,7 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
     if (size < totalSize)
         memset(buffer, 0, totalSize - size);
 }
-void RemoveNonMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column)
+void RemoveMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column)
 {
     for (int i = 0; i < userDB->unknown.Count(); ++i) {
         if (!CheckDBValueMatch(a2, userDB->rowUnknown[i], column)) {
@@ -978,12 +978,12 @@ void RemoveNonMatchingRows(UserDB *userDB, const char *name, void *value)
             // this is very hacky
             dbValue.parent = (UserDBRow *)userDB;
             StoreUserDBValue(&dbValue, userDB->columnTypes[id], value);
-            RemoveNonMatchingDBValues(userDB, &dbValue, id);
+            RemoveMatchingDBValues(userDB, &dbValue, id);
             SetupRowUnknown(userDB);
         }
     }
 }
-void UserDBUnknown34_Func(UserDB *userDB, int size, const char *name, bool32 valueActive)
+void HandleUserDBSorting(UserDB *userDB, int size, const char *name, bool32 valueActive)
 {
     if (!userDB->columnCount && userDB->rowUnknownCount) {
         if (size || name) {

@@ -586,25 +586,24 @@ void Player_Create(void *data)
         entity->controllerID   = entity->playerID + 1;
         entity->state          = Player_State_Ground;
 
-        if (RSDK_sceneInfo->entitySlot && globals->gameMode != MODE_COMPETITION) {
-#if RETRO_USE_PLUS
-            if (RSDK_sceneInfo->entitySlot != 1 || globals->gameMode != MODE_TIMEATTACK) {
-                RSDK.AssignControllerID(entity->controllerID, -1);
-                entity->stateInput = Player_ProcessP2Input_AI;
-                entity->sidekick   = true;
-            }
-            else {
-                StateMachine_Run(Player->configureGhost_CB);
-            }
-#else
-            APICallback_AssignControllerID(entity->controllerID, -1);
-            entity->stateInput = Player_ProcessP2Input_AI;
-            entity->sidekick = true;
-#endif
-        }
-        else {
+        if (!RSDK_sceneInfo->entitySlot || globals->gameMode == MODE_COMPETITION) {
             entity->stateInput = Player_ProcessP1Input;
         }
+#if RETRO_USE_PLUS
+        else if (RSDK_sceneInfo->entitySlot == 1 && globals->gameMode == MODE_TIMEATTACK) {
+            Player->configureGhost_CB();
+        }
+#endif
+        else {
+#if RETRO_USE_PLUS
+            RSDK.AssignControllerID(entity->controllerID, -1);
+#else
+            APICallback_AssignControllerID(entity->controllerID, -1);
+#endif
+            entity->stateInput = Player_ProcessP2Input_AI;
+            entity->sidekick   = true;
+        }
+
         RSDK_stickL[entity->controllerID].deadzone = 0.3;
         entity->rings                              = Player->rings;
         entity->ringExtraLife                      = Player->ringExtraLife;

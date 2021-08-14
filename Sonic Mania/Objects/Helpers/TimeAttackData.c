@@ -234,7 +234,7 @@ int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mo
     if (globals->taTableLoaded != STATUS_OK)
         return -1;
 
-    ushort rowID = API.AddUserDBEntry(globals->taTableID);
+    ushort rowID = API.AddUserDBRow(globals->taTableID);
     int encore   = mode & 1;
     API.SetUserDBValue(globals->taTableID, rowID, 2, "zoneID", &zone);
     API.SetUserDBValue(globals->taTableID, rowID, 2, "act", &act);
@@ -242,7 +242,7 @@ int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mo
     API.SetUserDBValue(globals->taTableID, rowID, 2, "encore", &encore);
     API.SetUserDBValue(globals->taTableID, rowID, 4, "score", &time);
     API.SetUserDBValue(globals->taTableID, rowID, 4, "replayID", NULL);
-    uint uuid = API.GetUserDBEntryUUID(globals->taTableID, rowID);
+    uint uuid = API.GetUserDBRowUUID(globals->taTableID, rowID);
     char buf[0x20];
     memset(buf, 0, 0x20 * sizeof(char));
     API.GetUserDBCreationTime(globals->taTableID, rowID, buf, 23, "%Y/%m/%d %H:%M:%S");
@@ -256,11 +256,11 @@ int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mo
 int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int time, void (*callback)(int))
 {
     ushort row = TimeAttackData_AddTimeAttackDBEntry(zone, charID, act, mode, time);
-    uint uuid  = API.GetUserDBEntryUUID(globals->taTableID, row);
+    uint uuid  = API.GetUserDBRowUUID(globals->taTableID, row);
     TimeAttackData_ConfigureTableView(zone, charID, act, mode);
     if (API.GetUserDBUnknownCount(globals->taTableID) > 3) {
         int unknown = API.GetUserDBUnknown(globals->taTableID, 3);
-        API.RemoveDBEntry(globals->taTableID, unknown);
+        API.RemoveDBRow(globals->taTableID, unknown);
         TimeAttackData_ConfigureTableView(zone, charID, act, mode);
     }
 
@@ -268,7 +268,7 @@ int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int t
     int unknown = 0;
     for (c = 0; c < 3; ++c) {
         unknown = API.GetUserDBUnknown(globals->taTableID, c);
-        if (API.GetUserDBEntryUUID(globals->taTableID, unknown) == uuid)
+        if (API.GetUserDBRowUUID(globals->taTableID, unknown) == uuid)
             break;
     }
     if (c == 3) {
@@ -351,10 +351,10 @@ int TimeAttackData_SetReplayID(byte zone, byte charID, byte act, int encore, int
         TimeAttackData_ConfigureTableView(zone, charID, act, encore);
     }
     
-    int unknown = API.GetUserDBUnknown(globals->taTableID, (byte)(val - 1));
-    if (unknown != -1) {
+    int row = API.GetUserDBUnknown(globals->taTableID, (byte)(val - 1));
+    if (row != -1) {
         int dst = 0;
-        API.GetUserDBValue(globals->taTableID, unknown, 4, "replayID", &dst);
+        API.GetUserDBValue(globals->taTableID, row, 4, "replayID", &dst);
         return dst;
     }
     return 0;
@@ -368,7 +368,7 @@ void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, 
     API.Unknown33(globals->taTableID, 2, "act", &act);
     API.Unknown33(globals->taTableID, 2, "characterID", &characterID);
     API.Unknown33(globals->taTableID, 2, "encore", &encore);
-    API.Unknown34(globals->taTableID, 4, "score", NULL);
+    API.SortDBRows(globals->taTableID, 4, "score", false);
     TimeAttackData->status      = 1;
     TimeAttackData->zoneID      = zoneID;
     TimeAttackData->act         = act;

@@ -842,7 +842,7 @@ void OptionsMenu_EraseAllData(void)
     memset(globals->noSaveSlot, 0, 0x400);
     globals->continues = 0;
     SaveGame_ClearProgress();
-    API.RemoveAllDBEntries(globals->taTableID);
+    API.RemoveAllDBRows(globals->taTableID);
     if (!API.GetUserStorageNoSave() && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
         SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
         SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
@@ -892,7 +892,7 @@ void OptionsMenu_Unknown42(void)
     EntityUIControl *control   = (EntityUIControl *)OptionsMenu->dataOptionsControl;
     control->selectionDisabled = true;
     UIWaitSpinner_Wait();
-    API.RemoveAllDBEntries(globals->taTableID);
+    API.RemoveAllDBRows(globals->taTableID);
     TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB);
     LogHelpers_Print("TimeAttack table ID = %d, status = %d", globals->taTableID, globals->taTableLoaded);
 }

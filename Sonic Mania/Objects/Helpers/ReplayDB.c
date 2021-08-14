@@ -86,15 +86,17 @@ int ReplayDB_Buffer_PackEntry(byte *compressed, byte *uncompressed)
 
 int ReplayDB_Buffer_UnpackEntry(byte *uncompressed, byte *compressed)
 {
-    *uncompressed = *compressed;
     int *outPtr   = (int *)uncompressed;
-    int *buf      = (int *)&compressed[2];
+    byte *buf    = &compressed[2];
+
+    // compress state
+    *uncompressed = *compressed;
 
     bool32 flag     = *compressed == 1 || *compressed == 3;
     byte changes    = compressed[1];
     uncompressed[1] = changes;
 
-    int size = 2;
+    int size = 2 * sizeof(byte);
 
     // input
     if (flag || (changes & 0x1)) {
@@ -104,11 +106,11 @@ int ReplayDB_Buffer_UnpackEntry(byte *uncompressed, byte *compressed)
 
     // position
     if (flag || (changes & 0x2)) {
-        int x = *((int *)buf);
+        int x = *(int *)buf;
         buf += sizeof(int);
         size += sizeof(int);
 
-        int y = *((int *)buf);
+        int y = *(int *)buf;
         buf += sizeof(int);
         size += sizeof(int);
 
@@ -118,11 +120,11 @@ int ReplayDB_Buffer_UnpackEntry(byte *uncompressed, byte *compressed)
 
     // velocity
     if (flag || (changes & 0x4)) {
-        int x = *((int *)buf);
+        int x = *(int *)buf;
         buf += sizeof(int);
         size += sizeof(int);
 
-        int y = *((int *)buf);
+        int y = *(int *)buf;
         buf += sizeof(int);
         size += sizeof(int);
 
@@ -132,9 +134,9 @@ int ReplayDB_Buffer_UnpackEntry(byte *uncompressed, byte *compressed)
 
     // rotation
     if (flag || (changes & 0x20)) {
-        outPtr[5] = 2 * *((int *)buf);
-        buf += sizeof(int);
-        size += sizeof(int);
+        int rotation = *buf++;
+        outPtr[5]    = 2 * rotation;
+        size += sizeof(byte);
     }
 
     // direction

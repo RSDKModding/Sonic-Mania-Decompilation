@@ -13,8 +13,8 @@ typedef struct {
     bool32 started;
     int field_1C;
     int field_20;
-    int suppressedTitlecard;
-    int debugEnabled;
+    bool32 suppressedTitlecard;
+    bool32 debugEnabled;
     ushort sfxSignpost;
     ushort sfxTeleport;
     int dword30;
