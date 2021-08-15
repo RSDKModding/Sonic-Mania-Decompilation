@@ -596,9 +596,9 @@ void Player_Create(void *data)
 #endif
         else {
 #if RETRO_USE_PLUS
-            RSDK.AssignControllerID(entity->controllerID, -1);
+            RSDK.AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
 #else
-            APICallback_AssignControllerID(entity->controllerID, -1);
+            APICallback_AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
 #endif
             entity->stateInput = Player_ProcessP2Input_AI;
             entity->sidekick   = true;
@@ -639,17 +639,11 @@ void Player_Create(void *data)
         }
 
         int target = entity->score1UP;
-        int score  = entity->score;
-        if (score <= target) {
-            do
-                score += 50000;
-            while (score <= target);
-            entity->score1UP = score;
-        }
+        while (entity->score1UP <= target) entity->score1UP += 50000;
 
         entity->collisionLayers = Zone->fgLayers;
         entity->drawFX          = FX_ROTATE | FX_FLIP;
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, 1, 0);
+        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_IDLE, &entity->playerAnimator, true, 0);
         Player_ChangePhysicsState(entity);
         entity->maxWalkSpeed = 0x40000;
         entity->maxJogSpeed  = 0x60000;
@@ -818,7 +812,7 @@ void Player_LoadSpritesVS(void)
             for (int i = 0; i < session->playerCount; ++i, ++slotID) {
                 EntityPlayer *player = RSDK_GET_ENTITY(slotID, Player);
                 RSDK.CopyEntity(player, entity, false);
-                player->characterID = globals->playerID >> 8 * i;
+                player->characterID = (globals->playerID >> (8 * i)) & 0xFF;
                 switch (player->characterID) {
                     case ID_TAILS:
                         Player->tailsSpriteIndex      = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
@@ -6271,7 +6265,7 @@ void Player_ProcessP1Input(void)
 {
     RSDK_THIS(Player);
     if (entity->controllerID < PLAYER_MAX) {
-        if (globals->gameMode != MODE_COMPETITION || Announcer->dword38) {
+        if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
 #if RETRO_USE_TOUCH_CONTROLS
             for (int t = 0; t < RSDK_touchMouse->count; ++t) {
                 int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    bool32 field_4;
+    int type;
     int inputID;
     ushort aniFrames;
 } ObjectUIButtonPrompt;

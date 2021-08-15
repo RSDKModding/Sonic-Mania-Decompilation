@@ -23,21 +23,21 @@ typedef struct {
     int characterID;
     int zoneID;
     int actID;
-    int timeScore;
+    int dbRowID;
     int isEncoreMode;
     int field_180;
     int viewReplay;
     int showGhost;
     byte field_18C;
-    byte field_18D;
+    byte replayRank;
     byte field_18E;
     byte field_18F;
     int field_190;
     int field_194;
     int field_198;
     int field_19C;
-    int field_1A0;
-    int field_1A4;
+    int vsZoneID;
+    int vsActID;
     int field_1A8;
 } EntityMenuParam;
 

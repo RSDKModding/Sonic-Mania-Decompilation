@@ -100,7 +100,7 @@ void UIRankButton_Create(void *data)
     entity->options6        = UIRankButton_Options6CB;
     entity->options7        = UIRankButton_Options7CB;
     entity->options8        = UIRankButton_Options8CB;
-    entity->dword158        = 1;
+    entity->dword158        = true;
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &entity->animator1, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &entity->animator3, true, 12);

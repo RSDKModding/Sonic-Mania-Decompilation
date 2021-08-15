@@ -77,6 +77,7 @@ void SaveGame_SaveProgress(void);
 void SaveGame_ClearRestartData(void);
 void SaveGame_SavePlayerState(void);
 void SaveGame_LoadPlayerState(void);
+void SaveGame_ResetPlayerState(void);
 void SaveGame_LoadFile_CB(int status);
 void SaveGame_SaveFile_CB(int status);
 int SaveGame_GetNotifStringID(int type);

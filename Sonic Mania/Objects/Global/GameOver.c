@@ -271,7 +271,7 @@ void GameOver_Unknown5(void)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
             session->zoneFlags[session->levelIndex] = 1;
-            session->matchID                        = session->unknown93 + 1;
+            session->matchID                        = session->prevMatchID + 1;
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             RSDK.SetScene("Presentation", "Menu");
             RSDK.LoadScene();

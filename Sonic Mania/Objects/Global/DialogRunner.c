@@ -40,8 +40,8 @@ void DialogRunner_StageLoad(void)
     SaveGame_LoadSaveData();
     TimeAttackData->status   = 0;
     TimeAttackData->uuid     = 0;
-    TimeAttackData->unknown  = -1;
-    TimeAttackData->field_14 = 0;
+    TimeAttackData->rowID  = -1;
+    TimeAttackData->dbRank   = 0;
     TimeAttackData->rank     = 0;
     TimeAttackData->dword1C  = 0;
     Options->state           = 0;

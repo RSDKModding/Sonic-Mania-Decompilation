@@ -121,19 +121,19 @@ void Localization_GetZoneName(TextInfo *info, byte zone)
 void Localization_SetZoneNameShort(TextInfo *info, byte zone)
 {
     switch (zone) {
-        case 0: RSDK.SetText(info, "GHZ", 0); break;
-        case 1: RSDK.SetText(info, "CPZ", 0); break;
-        case 2: RSDK.SetText(info, "SPZ", 0); break;
-        case 3: RSDK.SetText(info, "FBZ", 0); break;
-        case 4: RSDK.SetText(info, "PGZ", 0); break;
-        case 5: RSDK.SetText(info, "SSZ", 0); break;
-        case 6: RSDK.SetText(info, "HCZ", 0); break;
-        case 7: RSDK.SetText(info, "MSZ", 0); break;
-        case 8: RSDK.SetText(info, "OOZ", 0); break;
-        case 9: RSDK.SetText(info, "LRZ", 0); break;
-        case 10: RSDK.SetText(info, "MMZ", 0); break;
-        case 11: RSDK.SetText(info, "TMZ", 0); break;
-        case 12: RSDK.SetText(info, "???", 0); break;
+        case 0: RSDK.SetText(info, "GHZ", false); break;
+        case 1: RSDK.SetText(info, "CPZ", false); break;
+        case 2: RSDK.SetText(info, "SPZ", false); break;
+        case 3: RSDK.SetText(info, "FBZ", false); break;
+        case 4: RSDK.SetText(info, "PGZ", false); break;
+        case 5: RSDK.SetText(info, "SSZ", false); break;
+        case 6: RSDK.SetText(info, "HCZ", false); break;
+        case 7: RSDK.SetText(info, "MSZ", false); break;
+        case 8: RSDK.SetText(info, "OOZ", false); break;
+        case 9: RSDK.SetText(info, "LRZ", false); break;
+        case 10: RSDK.SetText(info, "MMZ", false); break;
+        case 11: RSDK.SetText(info, "TMZ", false); break;
+        case 12: RSDK.SetText(info, "???", false); break;
         default: break;
     }
 }

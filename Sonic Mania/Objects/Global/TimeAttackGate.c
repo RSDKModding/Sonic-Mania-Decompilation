@@ -194,7 +194,7 @@ void TimeAttackGate_HandleStart(void)
         }
         else if (TimeAttackGate->started) {
             Music_FadeOut(0.025);
-            Announcer_Unknown2(0);
+            Announcer_AnnounceGoal(0);
             RSDK.PlaySFX(TimeAttackGate->sfxSignpost, false, 255);
             TimeAttackGate->playerPtr   = NULL;
             TimeAttackGate->started     = false;
@@ -225,8 +225,8 @@ void TimeAttackGate_Unknown1(void)
         int act      = param->actID;
         int mode     = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
 
-        param->timeScore = TimeAttackData_AddTADBEntry(playerID, zone, act, mode, time, TimeAttackGate_LeaderboardCB);
-        TimeAttackData_AddLeaderboardEntry(playerID, zone, act, mode, time);
+        param->dbRowID = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
+        TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
     }
 }
 

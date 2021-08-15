@@ -32,7 +32,7 @@ void Announcer_Create(void *data)
 
 void Announcer_StageLoad(void)
 {
-    Announcer->dword38 = 0;
+    Announcer->finishedCountdown = false;
     if (RSDK.CheckStageFolder("Menu")) {
         Announcer->sfx_Sonic        = RSDK.GetSFX("VO/Sonic.wav");
         Announcer->sfx_Tails        = RSDK.GetSFX("VO/Tails.wav");
@@ -70,17 +70,17 @@ void Announcer_StageLoad(void)
     }
 }
 
-void Announcer_Unknown1(void)
+void Announcer_StartCountdown(void)
 {
-    Announcer->dword38 = 0;
-    RSDK_THIS(Announcer);
-    entity->state     = Announcer_Unknown5;
-    entity->stateDraw = Announcer_Unknown3;
-    entity->playerID  = 3;
-    entity->scale.x   = 512;
-    entity->scale.y   = 512;
+    Announcer->finishedCountdown = false;
+    EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+    announcer->state     = Announcer_Unknown5;
+    announcer->stateDraw = Announcer_Unknown3;
+    announcer->playerID  = 3;
+    announcer->scale.x   = 0x200;
+    announcer->scale.y   = 0x200;
 }
-void Announcer_Unknown2(int screen)
+void Announcer_AnnounceGoal(int screen)
 {
     EntityAnnouncer *entity = CREATE_ENTITY(Announcer, NULL, 0, 0);
     entity->state           = Announcer_Unknown6;
@@ -141,7 +141,7 @@ void Announcer_Unknown5(void)
     entity->inkEffect = INK_ALPHA;
     if (entity->playerID <= 0) {
         if (entity->timer >= 60) {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            destroyEntity(entity);
         }
         else {
             if (!entity->timer) {
@@ -161,8 +161,8 @@ void Announcer_Unknown5(void)
             entity->timer = 0;
             entity->playerID--;
             if (!entity->playerID) {
-                Announcer->dword38          = true;
-                RSDK_sceneInfo->timeEnabled = true;
+                Announcer->finishedCountdown = true;
+                RSDK_sceneInfo->timeEnabled  = true;
             }
         }
         else {
@@ -199,7 +199,7 @@ void Announcer_Unknown6(void)
     if (entity->timer >= 16) {
         if (entity->timer >= 76) {
             if (entity->timer >= 92) {
-                RSDK.ResetEntityPtr(entity, 0, 0);
+                destroyEntity(entity);
             }
             else {
                 entity->visible = true;
@@ -232,7 +232,7 @@ void Announcer_Unknown6(void)
         }
     }
 }
-void Announcer_Unknown7(void)
+void Announcer_State_AnnounceWinner(void)
 {
     RSDK_THIS(Announcer);
     if (entity->timer >= 150) {
@@ -243,7 +243,7 @@ void Announcer_Unknown7(void)
             case 3: RSDK.PlaySFX(Announcer->sfx_Player4, 0, 255); break;
             default: break;
         }
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        destroyEntity(entity);
     }
     else {
         if (entity->timer == 30)
@@ -251,7 +251,7 @@ void Announcer_Unknown7(void)
         ++entity->timer;
     }
 }
-void Announcer_Unknown8(void)
+void Announcer_State_AnnounceDraw(void)
 {
     RSDK_THIS(Announcer);
     if (entity->timer < 30) {
@@ -264,10 +264,10 @@ void Announcer_Unknown8(void)
         else if (entity->playerID == 1) {
             RSDK.PlaySFX(Announcer->sfx_ItsADraw_Set, 0, 255);
         }
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        destroyEntity(entity);
     }
 }
-void Announcer_Unknown9(void)
+void Announcer_State_AnnounceWinPlayer(void)
 {
     RSDK_THIS(Announcer);
     if (entity->timer >= 30) {
@@ -281,7 +281,7 @@ void Announcer_Unknown9(void)
 #endif
             default: break;
         }
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        destroyEntity(entity);
     }
     else {
         entity->timer++;

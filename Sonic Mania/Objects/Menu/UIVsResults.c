@@ -209,7 +209,7 @@ void UIVsResults_Unknown6(void)
         UIVsResults_DrawRow(r, drawPos.x, drawPos.y);
         drawPos.y += 0x100000;
         if (r < entity->numRows - 1) {
-            drawPos.x += 0x20000;
+            drawPos.y += 0x20000;
         }
     }
     UIVsResults_Unknown5();

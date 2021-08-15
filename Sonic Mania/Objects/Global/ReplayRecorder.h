@@ -30,8 +30,8 @@ typedef struct {
     void(*loadCallback)(bool32);
     char filename[0x100];
     void(*saveFinishPtr)(bool32);
-    int lastUUID;
-    int lastRowID;
+    int replayID;
+    int replayRowID;
 } ObjectReplayRecorder;
 
 // Entity Class

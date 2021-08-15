@@ -114,12 +114,12 @@ typedef struct {
     void (*SaveUserDB)(ushort tableID, void (*callback)(int status));
     void (*ClearUserDB)(ushort tableID);
     void (*ClearAllUserDBs)(void);
-    void (*SetupRowUnknown)(ushort tableID);
-    int (*GetUserDBStatus)(ushort tableID);
+    void (*SetupSortedUserDBRowIDs)(ushort tableID);
+    bool32 (*GetUserDBRowsChanged)(ushort tableID);
     void (*Unknown33)(ushort tableID, int type, const char *name, void *value);
     void (*SortDBRows)(ushort tableID, int type, const char *name, bool32 flag);
-    int (*GetUserDBUnknownCount)(ushort tableID);
-    int (*GetUserDBUnknown)(ushort tableID, ushort row);
+    int (*GetSortedUserDBRowCount)(ushort tableID);
+    int (*GetSortedUserDBRowID)(ushort tableID, ushort row);
     int (*AddUserDBRow)(ushort tableID);
     void (*SetUserDBValue)(ushort tableID, int row, int type, const char *name, void *value);
     void (*GetUserDBValue)(ushort tableID, int row, int type, const char *name, void *value);

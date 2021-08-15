@@ -449,7 +449,7 @@ void HUD_StageLoad(void)
     if (globals->gameMode == MODE_COMPETITION) {
         HUD->compSession[0] = session->unknown84;
         HUD->compSession[1] = session->unknown85;
-        HUD->compSession[2] = session->unknown86;
+        HUD->compSession[2] = session->splitScreenMode;
         HUD->compSession[3] = session->unknown87;
     }
 #endif

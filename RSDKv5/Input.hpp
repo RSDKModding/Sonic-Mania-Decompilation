@@ -265,6 +265,7 @@ enum WinMappings {
 };
 
 struct InputDevice {
+    void (*updateInput)(InputDevice *device);
     void (*processInput)(InputDevice *device, int inputID);
     int gamePadType;
     int inputID;
@@ -272,11 +273,8 @@ struct InputDevice {
     byte assignedControllerID;
     byte field_E;
     byte field_F;
-    byte field_10;
-    byte field_11;
-    byte field_12;
-    byte field_13;
-    int field_14[2];
+    byte anyPress;
+    int inactiveTimer[2];
     int field_1C;
     byte controllerID;
 };
@@ -373,6 +371,10 @@ extern TouchMouseData touchMouseData;
 
 void InitInputDevice();
 void ProcessInput();
+
+void UpdateKeyboardInput(InputDevice *device);
+void UpdateDeviceInput(InputDevice *device);
+
 void ProcessKeyboardInput(InputDevice* device, int controllerID);
 void ProcessDeviceInput(InputDevice* device, int controllerID);
 
@@ -390,10 +392,11 @@ inline InputDevice *controllerInit(byte controllerID)
     char buffer[0x20];
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
-    device->active      = true;
-    device->field_F     = 0;
-    device->gamePadType = 0x00000;
-    device->inputID     = id;
+    device->active       = true;
+    device->field_F      = false;
+    device->gamePadType  = (2 << 16) | (2 << 8) | (1 << 0);
+    device->inputID      = id;
+    device->updateInput  = UpdateDeviceInput;
     device->processInput = ProcessDeviceInput;
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
@@ -440,7 +443,7 @@ inline InputDevice *InputDeviceFromID(int inputID)
 inline int GetControllerInputID()
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && !InputDevices[i].assignedControllerID && !InputDevices[i].field_10) {
+        if (InputDevices[i].active && !InputDevices[i].field_F && !InputDevices[i].assignedControllerID && InputDevices[i].anyPress) {
             return InputDevices[i].inputID;
         }
     }
@@ -457,8 +460,8 @@ inline int ControllerIDForInputID(byte inputID)
 
 inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
 {
-    int v3           = -1;
-    int v4           = -1;
+    uint v3          = -1;
+    uint recentTimer = -1;
     int inputID      = 0;
     int inputIDStore = 0;
     if (a3)
@@ -466,10 +469,10 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
 
     if (InputDeviceCount) {
         for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i].active && !InputDevices[i].field_F && (InputDevices[i].assignedControllerID != 1 || a2 != 1)) {
-                if (InputDevices[i].field_14[a1] < v4) {
-                    v4 = InputDevices[i].field_14[a1];
-                    if (InputDevices[i].field_14[a1] <= v3)
+            if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
+                if (InputDevices[i].inactiveTimer[a1] < recentTimer) {
+                    recentTimer = InputDevices[i].inactiveTimer[a1];
+                    if (InputDevices[i].inactiveTimer[a1] <= v3)
                         inputID = InputDevices[i].inputID;
                     inputIDStore = InputDevices[i].inputID;
                 }
@@ -483,7 +486,7 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
         return inputIDStore;
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && (InputDevices[i].assignedControllerID != 1 || a2 != 1)) {
+        if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
             return InputDevices[i].inputID;
         }
     }
@@ -564,7 +567,7 @@ inline int DoInputUnknown3_Active(int inputID, int a2, int a3)
 inline void AssignControllerID(sbyte controllerID, int inputID)
 {
     int contID = controllerID - 1;
-    if (controllerID < PLAYER_COUNT) {
+    if (contID < PLAYER_COUNT) {
         if (inputID && inputID != CONT_AUTOASSIGN) {
             if (inputID == CONT_UNASSIGNED) {
                 activeControllers[contID] = CONT_UNASSIGNED;

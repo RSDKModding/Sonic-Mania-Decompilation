@@ -50,7 +50,7 @@ void UIControl_Create(void *data)
         }
         entity->updateRange.x = entity->size.x >> 1;
         entity->updateRange.y = entity->size.y >> 1;
-        entity->unknownCount2 = 0;
+        entity->promptCount = 0;
         if (entity->rowCount <= 1)
             entity->rowCount = 1;
 
@@ -71,7 +71,7 @@ void UIControl_Create(void *data)
             if (entityID != SLOT_DIALOG_UICONTROL) {
                 foreach_all(UIButtonPrompt, prompt)
                 {
-                    if (entity->unknownCount2 < 4) {
+                    if (entity->promptCount < 4) {
                         Hitbox hitbox;
                         hitbox.right  = entity->size.x >> 17;
                         hitbox.left   = -(entity->size.x >> 17);
@@ -80,7 +80,7 @@ void UIControl_Create(void *data)
                         if (MathHelpers_PointInHitbox(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x,
                                                       entity->startPos.y - entity->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)) {
                             prompt->parent                            = (Entity *)entity;
-                            entity->unknown2[entity->unknownCount2++] = prompt;
+                            entity->prompts[entity->promptCount++] = prompt;
                         }
                     }
                 }
@@ -207,11 +207,11 @@ void UIControl_ProcessInputs(void)
     UIControl_Unknown16();
 
     if (!UIControl->inputLocked) {
-        for (int i = 1; i <= 4; ++i) {
-            UIControl->upPress[i]    = RSDK_controller[i].keyUp.press || RSDK_stickL[i].keyUp.press;
-            UIControl->downPress[i]  = RSDK_controller[i].keyDown.press || RSDK_stickL[i].keyDown.press;
-            UIControl->leftPress[i]  = RSDK_controller[i].keyLeft.press || RSDK_stickL[i].keyLeft.press;
-            UIControl->rightPress[i] = RSDK_controller[i].keyRight.press || RSDK_stickL[i].keyRight.press;
+        for (int i = 0; i < 4; ++i) {
+            UIControl->upPress[i]    = RSDK_controller[i + 1].keyUp.press || RSDK_stickL[i + 1].keyUp.press;
+            UIControl->downPress[i]  = RSDK_controller[i + 1].keyDown.press || RSDK_stickL[i + 1].keyDown.press;
+            UIControl->leftPress[i]  = RSDK_controller[i + 1].keyLeft.press || RSDK_stickL[i + 1].keyLeft.press;
+            UIControl->rightPress[i] = RSDK_controller[i + 1].keyRight.press || RSDK_stickL[i + 1].keyRight.press;
 
             if (UIControl->upPress[i] && UIControl->downPress[i]) // up and down? neither!
             {
@@ -224,20 +224,20 @@ void UIControl_ProcessInputs(void)
                 UIControl->rightPress[i] = false;
             }
 
-            UIControl->yPress[i] = RSDK_controller[i].keyY.press;
-            UIControl->xPress[i] = RSDK_controller[i].keyX.press;
+            UIControl->yPress[i] = RSDK_controller[i + 1].keyY.press;
+            UIControl->xPress[i] = RSDK_controller[i + 1].keyX.press;
 #if RETRO_USE_PLUS
-            UIControl->startPress[i] = RSDK_controller[i].keyStart.press;
+            UIControl->startPress[i] = RSDK_controller[i + 1].keyStart.press;
             if (API.GetConfirmButtonFlip()) {
 #else
             if (APICallback_GetConfirmButtonFlip()) {
 #endif
-                UIControl->confirmPress[i] = RSDK_controller[i].keyStart.press || RSDK_controller[i].keyB.press;
-                UIControl->backPress[i]    = RSDK_controller[i].keyA.press;
+                UIControl->confirmPress[i] = RSDK_controller[i + 1].keyStart.press || RSDK_controller[i + 1].keyB.press;
+                UIControl->backPress[i]    = RSDK_controller[i + 1].keyA.press;
             }
             else {
-                UIControl->confirmPress[i] = RSDK_controller[i].keyStart.press || RSDK_controller[i].keyA.press;
-                UIControl->backPress[i]    = RSDK_controller[i].keyB.press;
+                UIControl->confirmPress[i] = RSDK_controller[i + 1].keyStart.press || RSDK_controller[i + 1].keyA.press;
+                UIControl->backPress[i]    = RSDK_controller[i + 1].keyB.press;
             }
         }
 
@@ -427,8 +427,8 @@ void UIControl_Unknown2(EntityUIControl *control)
 
 void UIControl_Unknown3(EntityUIControl *entity)
 {
-    for (int i = 0; i < entity->unknownCount2; ++i) {
-        entity->unknown2[i]->active = ACTIVE_NORMAL;
+    for (int i = 0; i < entity->promptCount; ++i) {
+        entity->prompts[i]->active = ACTIVE_NORMAL;
     }
 }
 
@@ -461,8 +461,8 @@ void UIControl_Unknown4(EntityUIControl *entity)
     entity->childHasFocus = false;
     entity->dwordCC       = 1;
 
-    for (int i = 0; i < entity->unknownCount2; ++i) {
-        entity->unknown2[i]->active = ACTIVE_NORMAL;
+    for (int i = 0; i < entity->promptCount; ++i) {
+        entity->prompts[i]->active = ACTIVE_NORMAL;
     }
     if (entity->unknownCallback3) {
         Entity *storeEntity    = RSDK_sceneInfo->entity;
@@ -521,9 +521,9 @@ void UIControl_Unknown6(EntityUIControl *control)
     control->active     = ACTIVE_NEVER;
     control->visible    = false;
     control->state      = StateMachine_None;
-    if (entity->unknownCount2) {
-        for (int i = 0; i < control->unknownCount2; ++i) {
-            control->unknown2[i]->active = ACTIVE_BOUNDS;
+    if (entity->promptCount) {
+        for (int i = 0; i < control->promptCount; ++i) {
+            control->prompts[i]->active = ACTIVE_BOUNDS;
         }
     }
 }
@@ -598,10 +598,10 @@ void UIControl_Unknown7(void)
             else {
                 int x         = entity->startPos.x - entity->cameraOffset.x;
                 int y         = entity->startPos.y - entity->cameraOffset.y;
-                bounds.right  = entity->size.x >> 17;
                 bounds.left   = -(entity->size.x >> 17);
-                bounds.bottom = entity->size.y >> 17;
                 bounds.top    = -(entity->size.y >> 17);
+                bounds.right  = entity->size.x >> 17;
+                bounds.bottom = entity->size.y >> 17;
                 if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, button->position.x, button->position.y)) {
                     if (entity->buttonCount < 64) {
                         if (!button->parent)

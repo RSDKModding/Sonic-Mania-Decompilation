@@ -14,25 +14,11 @@ void setupUserDebugValues()
     userStorage->SetDebugValues();
 
     for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
-        DebugValueInfo *val = &debugValues[debugValCnt++];
-        strcpy(val->name, userDebugValNames[i]);
-        val->value = userCore->values[i];
-        val->min   = 0;
-
-        if (i == 2) {
-            val->type       = 2;
-            val->valByteCnt = 1;
-            val->max        = REGION_EU;
-        }
-        else if (i == 3) {
-            val->type       = 2;
-            val->valByteCnt = 1;
-            val->max        = LANGUAGE_TC;
+        if (i == 2 || i == 3) {
+            SetDebugValue(userDebugValNames[i], userCore->values[i], DTYPE_INT8, 0, i == 2 ? REGION_EU : LANGUAGE_TC);
         }
         else {
-            val->type       = 0;
-            val->valByteCnt = 4;
-            val->max        = 1;
+            SetDebugValue(userDebugValNames[i], userCore->values[i], DTYPE_BOOL, false, true);
         }
     }
 }
@@ -609,6 +595,8 @@ ushort InitDBRowUnknown(ushort tableID)
 void SetupRowUnknown(UserDB *userDB)
 {
     userDB->rowUnknownCount = 0;
+    memset(userDB->rowUnknown, 0, sizeof(userDB->rowUnknown));
+
     for (int i = 0; i < userDB->unknown.Count(); ++i) {
         userDB->rowUnknown[i] = *userDB->unknown.At(i);
         ++userDB->rowUnknownCount;
@@ -623,6 +611,8 @@ void UserDBRefreshRowUnknown(UserDB *userDB)
         if (row)
             *row = i;
     }
+
+    userDB->status = false;
 
     SetupRowUnknown(userDB);
 }
@@ -1012,23 +1002,28 @@ void HandleUserDBSorting(UserDB *userDB, int size, const char *name, bool32 valu
 }
 uint CreateRowUUID(UserDB *userDB)
 {
-    while (true) {
+    bool32 flag = true;
+    uint uuid   = 0;
+
+    while (flag) {
         byte bytes[4];
         bytes[0] = rand();
         bytes[1] = rand();
         bytes[2] = rand();
         bytes[3] = rand();
-        uint uuid = (bytes[0]) | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+        uuid = (bytes[0]) | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
 
         if (uuid < 0x10000000)
             uuid |= 0x10000000;
 
+        flag = false;
         for (int e = 0; e < userDB->rowCount; ++e) {
             if (uuid == userDB->rows[e].uuid) {
-                return uuid;
+                flag = true;
             }
         }
     }
+    return uuid;
 }
 
 //User Storage CBs

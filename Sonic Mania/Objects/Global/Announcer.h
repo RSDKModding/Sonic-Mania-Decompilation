@@ -31,7 +31,7 @@ typedef struct {
     ushort sfx_Player4;
     ushort sfx_ItsADraw;
     ushort sfx_ItsADraw_Set;
-    int dword38;
+    bool32 finishedCountdown;
 } ObjectAnnouncer;
 
 // Entity Class
@@ -62,14 +62,14 @@ void Announcer_EditorLoad(void);
 void Announcer_Serialize(void);
 
 // Extra Entity Functions
-void Announcer_Unknown1(void);
-void Announcer_Unknown2(int screen);
+void Announcer_StartCountdown(void);
+void Announcer_AnnounceGoal(int screen);
 void Announcer_Unknown3(void);
 void Announcer_Unknown4(void);
 void Announcer_Unknown5(void);
 void Announcer_Unknown6(void);
-void Announcer_Unknown7(void);
-void Announcer_Unknown8(void);
-void Announcer_Unknown9(void);
+void Announcer_State_AnnounceWinner(void);
+void Announcer_State_AnnounceDraw(void);
+void Announcer_State_AnnounceWinPlayer(void);
 
 #endif //!OBJ_ANNOUNCER_H

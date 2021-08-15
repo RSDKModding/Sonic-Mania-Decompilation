@@ -6,7 +6,7 @@ ObjectUIReplayCarousel *UIReplayCarousel;
 void UIReplayCarousel_Update(void)
 {
     RSDK_THIS(UIReplayCarousel);
-    entity->dbUnknownCount = API.GetUserDBUnknownCount(globals->replayTableID);
+    entity->dbUnknownCount = API.GetSortedUserDBRowCount(globals->replayTableID);
     UIReplayCarousel_SetupButtonCallbacks();
     UIReplayCarousel_HandleTouchPositions();
     entity->active = ACTIVE_NORMAL;
@@ -220,7 +220,7 @@ void UIReplayCarousel_SetupButtonCallbacks(void)
     void *state = entity->stateDraw;
 
     if (entity->dbUnknownCount) {
-        if (!API.GetUserDBStatus(globals->replayTableID) && globals->replayTableLoaded == STATUS_OK) {
+        if (!API.GetUserDBRowsChanged(globals->replayTableID) && globals->replayTableLoaded == STATUS_OK) {
             entity->stateDraw       = UIReplayCarousel_StateDraw_Unknown3;
             entity->processButtonCB = UIReplayCarousel_ProcessButtonCB;
             entity->touchCB         = UIButton_TouchCB_Alt;
@@ -292,7 +292,7 @@ void UIReplayCarousel_Unknown6(void)
             int id = i + entity->dbUnknownID;
             if (id >= entity->dbUnknownCount)
                 break;
-            int row    = API.GetUserDBUnknown(globals->replayTableID, id);
+            int row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
             int zoneID = 0xFF;
             API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
             API.GetUserDBCreationTime(globals->replayTableID, row, buffer, 31, "%D");
@@ -524,7 +524,7 @@ void UIReplayCarousel_StateDraw_Unknown3(void)
         ushort characterID = 0;
         ushort encore      = 0;
 
-        int row = API.GetUserDBUnknown(globals->replayTableID, id);
+        int row = API.GetSortedUserDBRowID(globals->replayTableID, id);
         API.GetUserDBValue(globals->replayTableID, row, 4, "score", &score);
         API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
         API.GetUserDBValue(globals->replayTableID, row, 2, "act", &act);

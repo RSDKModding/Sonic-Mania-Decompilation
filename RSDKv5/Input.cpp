@@ -265,6 +265,73 @@ bool32 getControllerButton(InputDevice *device, byte buttonID)
 }
 #endif
 
+void UpdateKeyboardInput(InputDevice *device)
+{
+    device->anyPress = false;
+#if RETRO_USING_SDL2
+    int keyCount         = 0;
+    const byte *keyState = SDL_GetKeyboardState(&keyCount);
+
+    int inputID           = device->controllerID + 1;
+    InputState *buttons[] = {
+        &controller[inputID].keyUp, &controller[inputID].keyDown, &controller[inputID].keyLeft,  &controller[inputID].keyRight,
+        &controller[inputID].keyA,  &controller[inputID].keyB,    &controller[inputID].keyC,     &controller[inputID].keyX,
+        &controller[inputID].keyY,  &controller[inputID].keyZ,    &controller[inputID].keyStart, &controller[inputID].keySelect,
+    };
+
+    bool32 confirmPress = false;
+    for (int i = 0; i < KEY_MAX; i++) {
+        if (keyState[winAPIToSDLMappings(buttons[i]->keyMap)]) {
+            device->anyPress |= true;
+            confirmPress |= (i == 3 || i == 9);
+        }
+    }
+
+    if (device->anyPress)
+        device->inactiveTimer[0] = 0;
+    else
+        device->inactiveTimer[0]++;
+
+    if (confirmPress)
+        device->inactiveTimer[1] = 0;
+    else
+        device->inactiveTimer[1]++;
+
+#endif
+}
+void UpdateDeviceInput(InputDevice *device)
+{
+    device->anyPress = false;
+#if RETRO_USING_SDL2
+    int keyCount         = 0;
+    const byte *keyState = SDL_GetKeyboardState(&keyCount);
+
+    int buttonMap[] = {
+        SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+        SDL_CONTROLLER_BUTTON_A,       SDL_CONTROLLER_BUTTON_B,         SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_X,
+        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_GUIDE,
+    };
+
+    bool32 confirmPress = false;
+    for (int i = 0; i < KEY_MAX; ++i) {
+        if (getControllerButton(device, buttonMap[i])) {
+            device->anyPress |= true;
+            confirmPress |= (i == 3 || i == 9);
+        }
+    }
+
+    if (device->anyPress)
+        device->inactiveTimer[0] = 0;
+    else
+        device->inactiveTimer[0]++;
+
+    if (confirmPress)
+        device->inactiveTimer[1] = 0;
+    else
+        device->inactiveTimer[1]++;
+#endif
+}
+
 void ProcessKeyboardInput(InputDevice *device, int controllerID)
 {
 #if RETRO_USING_SDL2
@@ -279,8 +346,16 @@ void ProcessKeyboardInput(InputDevice *device, int controllerID)
         &controller[controllerID].keyY,  &controller[controllerID].keyZ,    &controller[controllerID].keyStart, &controller[controllerID].keySelect,
     };
 
+    int inputID    = device->controllerID + 1;
+    int mappings[] = {
+        controller[inputID].keyUp.keyMap,    controller[inputID].keyDown.keyMap,  controller[inputID].keyLeft.keyMap,
+        controller[inputID].keyRight.keyMap, controller[inputID].keyA.keyMap,     controller[inputID].keyB.keyMap,
+        controller[inputID].keyC.keyMap,     controller[inputID].keyX.keyMap,     controller[inputID].keyY.keyMap,
+        controller[inputID].keyZ.keyMap,     controller[inputID].keyStart.keyMap, controller[inputID].keySelect.keyMap,
+    };
+
     for (int i = 0; i < KEY_MAX; i++) {
-        if (keyState[winAPIToSDLMappings(buttons[i]->keyMap)]) {
+        if (keyState[winAPIToSDLMappings(mappings[i])]) {
             InputManager.keyPress[controllerID - 1][i] = true;
             buttons[i]->setHeld();
         }
@@ -296,6 +371,8 @@ void ProcessKeyboardInput(InputDevice *device, int controllerID)
 void ProcessDeviceInput(InputDevice *device, int controllerID)
 {
 #if RETRO_USING_SDL2
+    for (int i = 0; i < 12; ++i) InputManager.keyPress[controllerID - 1][i] = false;
+
     InputState *buttons[] = {
         &controller[controllerID].keyUp, &controller[controllerID].keyDown, &controller[controllerID].keyLeft,  &controller[controllerID].keyRight,
         &controller[controllerID].keyA,  &controller[controllerID].keyB,    &controller[controllerID].keyC,     &controller[controllerID].keyX,
@@ -307,11 +384,7 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
         SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_GUIDE,
     };
 
-    // dont update buttons from controllers if a key was pressed
-    bool32 keyboardInput = false;
-    for (int i = 0; i < 12; ++i) keyboardInput |= InputManager.keyPress[controllerID - 1][i];
-
-    for (int i = 0; i < KEY_MAX && !keyboardInput; ++i) {
+    for (int i = 0; i < KEY_MAX; ++i) {
         if (getControllerButton(device, buttonMap[i])) {
             buttons[i]->setHeld();
             InputManager.keyPress[controllerID - 1][i] = true;
@@ -439,7 +512,7 @@ InputDevice *InitKeyboardDevice(uint id)
         return NULL;
 
     InputDeviceCount++;
-    device->gamePadType = 0x10100;
+    device->gamePadType = (1 << 16) | (1 << 8);
     device->field_F     = 0;
     device->inputID     = id;
     device->active      = true;
@@ -465,6 +538,7 @@ void StartupKeyboardInput()
         if (device) {
             device->controllerID = i;
             device->gamePadType |= i + 1;
+            device->updateInput  = UpdateKeyboardInput;
             device->processInput = ProcessKeyboardInput;
         }
     }
@@ -507,6 +581,12 @@ void InitInputDevice()
 void ProcessInput()
 {
     InputManager.anyPress = false;
+
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        InputDevice *device = &InputDevices[i];
+        if (device && device->updateInput)
+            device->updateInput(device);
+    }
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
         int assign = activeControllers[i];

@@ -582,7 +582,7 @@ void TitleCard_Unknown10(void)
         if (globals->gameMode >= MODE_TIMEATTACK) {
             if (globals->gameMode == MODE_COMPETITION) {
                 Competition_ClearMatchData();
-                Announcer_Unknown1();
+                Announcer_StartCountdown();
             }
             destroyEntity(entity);
         }

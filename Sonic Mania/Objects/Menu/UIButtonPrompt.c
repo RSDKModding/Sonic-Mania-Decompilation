@@ -82,7 +82,16 @@ void UIButtonPrompt_LateUpdate(void)
     }
 }
 
-void UIButtonPrompt_StaticUpdate(void) {}
+void UIButtonPrompt_StaticUpdate(void)
+{
+    UIButtonPrompt->type = UIButtonPrompt_GetGamepadType();
+    int id                       = RSDK.MostRecentActiveControllerID(0, 0, 0);
+    int type                   = RSDK.GetControllerType(id);
+    if ((type & 0xFF00) == 0x100)
+        UIButtonPrompt->inputID = type & 0xFF;
+    else
+        UIButtonPrompt->inputID = 1;
+}
 
 void UIButtonPrompt_Draw(void)
 {
@@ -126,7 +135,7 @@ void UIButtonPrompt_Create(void *data)
 
 void UIButtonPrompt_StageLoad(void)
 {
-    UIButtonPrompt->field_4   = true;
+    UIButtonPrompt->type      = 1;
     UIButtonPrompt->inputID   = 1;
     UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
 }
@@ -150,7 +159,7 @@ int UIButtonPrompt_GetGamepadType(void)
     int id          = RSDK.MostRecentActiveControllerID(0, 0, 0);
     int gamepadType = RSDK.GetControllerType(id);
 
-    if ((gamepadType & 0xFF00) == 256) {
+    if ((gamepadType & 0xFF00) == 0x100) {
         switch (Localization->language) {
             case LANGUAGE_FR: return 9;
             case LANGUAGE_IT: return 10;
@@ -159,7 +168,7 @@ int UIButtonPrompt_GetGamepadType(void)
             default: return 1;
         }
     }
-    else if ((gamepadType & 0xFF00) == 512) {
+    else if ((gamepadType & 0xFF00) == 0x200) {
         switch (gamepadType) {
             case 2: return 3;
             case 3: return 6;
@@ -281,8 +290,8 @@ void UIButtonPrompt_Unknown4(void)
         if (API.GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
 
-        if (UIButtonPrompt->field_4 != 1 && (UIButtonPrompt->field_4 <= 8 || UIButtonPrompt->field_4 > 12)) {
-            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->field_4, &entity->animator2, true, buttonID);
+        if (UIButtonPrompt->type != 1 && (UIButtonPrompt->type <= 8 || UIButtonPrompt->type > 12)) {
+            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &entity->animator2, true, buttonID);
         }
         else {
             int mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, buttonID);

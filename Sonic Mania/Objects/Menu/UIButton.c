@@ -83,22 +83,22 @@ void UIButton_Create(void *data)
 {
     RSDK_THIS(UIButton);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->drawOrder     = 2;
-        entity->visible       = !entity->invisible;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x400000;
-        entity->dword138      = entity->size.y >> 16;
-        entity->size.y        = abs(entity->size.y);
+        entity->drawOrder       = 2;
+        entity->visible         = !entity->invisible;
+        entity->active          = ACTIVE_BOUNDS;
+        entity->updateRange.x   = 0x800000;
+        entity->updateRange.y   = 0x400000;
+        entity->dword138        = entity->size.y >> 16;
+        entity->size.y          = abs(entity->size.y);
         entity->processButtonCB = UIButton_ProcessButtonInputs;
-        entity->touchCB       = UIButton_ProcessTouch;
-        entity->options3      = UIButton_Unknown15;
-        entity->failCB        = UIButton_Fail;
-        entity->options5      = UIButton_Unknown12;
-        entity->options6      = UIButton_Unknown13;
-        entity->options7      = UIButton_Unknown10;
-        entity->options8      = UIButton_Unknown11;
-        entity->dword14C      = 1;
+        entity->touchCB         = UIButton_ProcessTouch;
+        entity->options3        = UIButton_Unknown15;
+        entity->failCB          = UIButton_Fail;
+        entity->options5        = UIButton_Unknown12;
+        entity->options6        = UIButton_Unknown13;
+        entity->options7        = UIButton_Unknown10;
+        entity->options8        = UIButton_Unknown11;
+        entity->dword14C        = 1;
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
         entity->textSpriteIndex = UIWidgets->textSpriteIndex;
         entity->startListID     = entity->listID;
@@ -205,10 +205,10 @@ void UIButton_SetChoiceSelection(EntityUIButton *button, int selection)
         if (entPtr) {
             if (entPtr->objectID == UIChoice->objectID) {
                 EntityUIChoice *choice = (EntityUIChoice *)entPtr;
-                choice->field_134.x = 0;
-                choice->field_134.y = 0;
-                choice->flag  = false;
-                choice->state = UIChoice_Unknown6;
+                choice->field_134.x    = 0;
+                choice->field_134.y    = 0;
+                choice->flag           = false;
+                choice->state          = UIChoice_Unknown6;
             }
             else if (entPtr->objectID == UIVsRoundPicker->objectID) {
                 UIVsRoundPicker_Unknown4((EntityUIVsRoundPicker *)entPtr);
@@ -246,7 +246,7 @@ void UIButton_Fail(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, 0, 255); }
 void UIButton_Unknown6(void)
 {
     RSDK_THIS(UIButton);
-    EntityUIControl *control = (EntityUIControl*)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)entity->parent;
 
     UIControl_Unknown15(control, entity->position.x, entity->position.y);
     if (!UIControl_Unknown9(control)) {
@@ -266,7 +266,7 @@ void UIButton_Unknown6(void)
             colID = 0;
         }
 
-        bool32 flag          = false;
+        bool32 flag = false;
         if (control->rowCount > 1) {
             if (UIControl->keyUp) {
                 --rowID;
@@ -276,14 +276,14 @@ void UIButton_Unknown6(void)
                 ++rowID;
                 flag = true;
             }
-            if (UIControl->keyLeft) {
-                --colID;
-                flag = true;
-            }
-            if (UIControl->keyRight) {
-                ++colID;
-                flag = true;
-            }
+        }
+        if (UIControl->keyLeft) {
+            --colID;
+            flag = true;
+        }
+        if (UIControl->keyRight) {
+            ++colID;
+            flag = true;
         }
 
         if (flag) {
@@ -298,7 +298,7 @@ void UIButton_Unknown6(void)
                 else {
                     rowID = 0;
                 }
-                
+
                 int colCount = control->columnCount;
                 if (colID < control->columnCount)
                     colCount = colID;
@@ -347,9 +347,6 @@ void UIButton_Unknown6(void)
                         && !control->dialogHasFocus) {
                         StateMachine_Run(entity->options5);
                     }
-                    else {
-                        StateMachine_Run(entity->options3);
-                    }
                 }
             }
             else {
@@ -366,7 +363,7 @@ bool32 UIButton_TouchCB_Alt(void)
 
     bool32 touchFlag = false;
     int lastTouchID  = -1;
-    uint lastTouch    = 0xFFFFFFFF;
+    uint lastTouch   = 0xFFFFFFFF;
 
     for (int i = 0; i < entity->touchPosCount; ++i) {
         Vector2 touchPos1 = entity->touchPos1[i];
@@ -385,7 +382,7 @@ bool32 UIButton_TouchCB_Alt(void)
                 if (x < x2 && y < y2) {
                     touchFlag = true;
                     if ((touchPos1.x >> 16) * (touchPos1.y >> 16) < lastTouch) {
-                        lastTouch    = (touchPos1.x >> 16) * (touchPos1.y >> 16);
+                        lastTouch   = (touchPos1.x >> 16) * (touchPos1.y >> 16);
                         lastTouchID = i;
                     }
                 }
@@ -513,7 +510,7 @@ void UIButton_ProcessButtonInputs(void)
     bool32 flag2  = 0;
     if (entPtr && entity->choiceCount == 1 && entPtr->processButtonCB && !entity->choiceDir && !entity->disabled) {
         Entity *entStore       = RSDK_sceneInfo->entity;
-        RSDK_sceneInfo->entity = (Entity*)entPtr;
+        RSDK_sceneInfo->entity = (Entity *)entPtr;
         entPtr->processButtonCB();
         RSDK_sceneInfo->entity = entStore;
     }
@@ -658,15 +655,15 @@ void UIButton_Unknown12(void)
                     UIChoice_Unknown1((EntityUIChoice *)entPtr);
                 }
                 else {
-                    if (entPtr->objectID == UIVsRoundPicker->objectID) {
-                        entPtr->active  = ACTIVE_BOUNDS;
-                        entPtr->visible = true;
-                        // entPtr->assignsP1  = 0;
-                        // entPtr->freeBindP2 = 0;
-                        // entPtr->transition = -0x20000;
-                        // entPtr->stopMusic  = -0x20000;
-                        // entPtr->flag       = true;
-                        // entPtr->state      = UIVsRoundPicker_Unknown9;
+                    EntityUIVsRoundPicker *roundPicker = (EntityUIVsRoundPicker *)entPtr;
+                    if (roundPicker->objectID == UIVsRoundPicker->objectID) {
+                        roundPicker->active    = ACTIVE_BOUNDS;
+                        roundPicker->field_124 = 0;
+                        roundPicker->field_128 = 0;
+                        roundPicker->field_12C = -0x20000;
+                        roundPicker->field_130 = -0x20000;
+                        roundPicker->flag      = true;
+                        roundPicker->state     = UIVsRoundPicker_Unknown9;
                     }
                     else {
                         EntityUIResPicker *resPicker = (EntityUIResPicker *)entPtr;
@@ -709,19 +706,19 @@ void UIButton_Unknown13(void)
         EntityUIButton *entPtr = UIButton_GetChoicePtr(entity, entity->selection);
         if (entPtr) {
             if (entPtr->objectID == UIChoice->objectID) {
-                // entPtr->field_134.x = 0;
-                // entPtr->field_134.y = 0;
-                entPtr->flag  = false;
-                entPtr->state = UIChoice_Unknown6;
+                ((EntityUIChoice *)entPtr)->field_134.x = 0;
+                ((EntityUIChoice *)entPtr)->field_134.y = 0;
+                entPtr->flag                            = false;
+                entPtr->state                           = UIChoice_Unknown6;
             }
             else if (entPtr->objectID == UIVsRoundPicker->objectID) {
-                // UIVsRoundPicker_Unknown4(entPtr);
+                UIVsRoundPicker_Unknown4((EntityUIVsRoundPicker *)entPtr);
             }
             else if (entPtr->objectID == UIResPicker->objectID) {
-                // UIResPicker_Unknown3(entPtr);
+                UIResPicker_Unknown3((EntityUIResPicker *)entPtr);
             }
             else if (entPtr->objectID == UIWinSize->objectID) {
-                // UIWinSize_Unknown3(entPtr);
+                UIWinSize_Unknown3((EntityUIWinSize *)entPtr);
             }
         }
     }

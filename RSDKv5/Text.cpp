@@ -247,19 +247,30 @@ void AppendText(TextInfo *info, char *text)
         return;
 
     int len = 0;
-    for (int pos = 0; text[pos]; ++len) {
-        pos += stringFlags[*text & 0xFF];
+    char *textBuf = text;
+    for (int pos = 0; *textBuf; ++len) {
+        pos += stringFlags[*textBuf++ & 0xFF];
     }
     if (!len)
         return;
 
     int newLen = (len + info->length);
     if (info->length < newLen || !info->text) {
+        if (info->text) {
+            ushort *buffer = info->text;
+            AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, DATASET_STR, false);
+            for (int charID = 0; charID < info->textLength; ++charID) {
+                info->text[charID] = buffer[charID];
+            }
+            buffer = NULL;
+        }
+        else {
+            AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, DATASET_STR, false);
+        }
         info->length = newLen;
-        AllocateStorage(sizeof(ushort) * info->length, (void **)&info->text, DATASET_STR, false);
     }
 
-    for (int pos = info->textLength; pos < len; ++pos) {
+    for (int pos = info->textLength; pos < info->textLength + len; ++pos) {
         ushort c = 0;
         switch (stringFlags[*text & 0xFF]) {
             case 1:
@@ -305,7 +316,7 @@ void AppendString(TextInfo *info, TextInfo *string)
         info->length = string->textLength + info->textLength;
     }
 
-    int textLen           = info->textLength;
+    int textLen = info->textLength;
     info->textLength += string->textLength;
     int id            = 0;
     for (; textLen < info->textLength; ++textLen) {

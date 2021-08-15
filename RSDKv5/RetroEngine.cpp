@@ -342,14 +342,8 @@ void runRetroEngine()
                     InitObjects();
 #if RETRO_REV02
                     userCore->SetupDebugValues();
-                    for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
-                        DebugValueInfo *val = &debugValues[debugValCnt++];
-                        strncpy(val->name, drawGroupNames[v], 0x10);
-                        val->type       = 0;
-                        val->value      = &engine.drawLayerVisible[v];
-                        val->valByteCnt = 4;
-                        val->min        = 0;
-                        val->max        = 1;
+                    for (int v = 0; v < DRAWLAYER_COUNT; ++v) {
+                        SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
                     }
 #endif
                     // dim after 5 mins

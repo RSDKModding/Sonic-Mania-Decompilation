@@ -919,13 +919,13 @@ void OptionsMenu_Unknown44(void)
         control->selectionDisabled = true;
         UIWaitSpinner_Wait();
     }
-    API.SetupRowUnknown(globals->replayTableID);
-    API.SetupRowUnknown(globals->taTableID);
-    if (API.GetUserDBUnknownCount(globals->replayTableID) <= 0) {
+    API.SetupSortedUserDBRowIDs(globals->replayTableID);
+    API.SetupSortedUserDBRowIDs(globals->taTableID);
+    if (API.GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
         ReplayRecorder_SaveReplayDB(OptionsMenu_Unknown45);
     }
     else {
-        int id = API.GetUserDBUnknown(globals->replayTableID, 0);
+        int id = API.GetSortedUserDBRowID(globals->replayTableID, 0);
         ReplayRecorder_DeleteTimeAttackRow(id, OptionsMenu_Unknown45, 1);
     }
 }

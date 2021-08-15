@@ -840,7 +840,7 @@ void Zone_State_Fadeout_Unknown(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (entity->timer > 1024) {
         session->zoneFlags[session->levelIndex] = 1;
-        session->matchID                        = session->unknown93 + 1;
+        session->matchID                        = session->prevMatchID + 1;
         RSDK.SetScene("Presentation", "Menu");
         RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
         RSDK.LoadScene();

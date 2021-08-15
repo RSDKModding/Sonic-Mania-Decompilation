@@ -51,7 +51,7 @@ typedef struct {
     bool32 resetSelection;
     byte buttonCount;
 #if RETRO_USE_PLUS
-    byte unknownCount2;
+    byte promptCount;
 #endif
     byte rowCount;
     byte columnCount;
@@ -79,7 +79,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     EntityUICarousel *carousel;
 #endif
-    EntityUIButtonPrompt *unknown2[4];
+    EntityUIButtonPrompt *prompts[4];
     EntityUIButton *buttons[64];
     bool32 (*backPressCB)(void);
     void (*processButtonInputCB)(void);

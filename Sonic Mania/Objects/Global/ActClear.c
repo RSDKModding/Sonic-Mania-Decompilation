@@ -194,7 +194,7 @@ void ActClear_Draw(void)
             ActClear_DrawNumbers(&drawPos, entity->coolBonus, 0);
         }
         else {
-            if (!TimeAttackData->field_14) {
+            if (!TimeAttackData->dbRank) {
                 entity                = (EntityActClear *)RSDK_sceneInfo->entity;
                 entity->animator2.frameID = 16;
                 RSDK.DrawSprite(&entity->animator2, &drawPos, true);
@@ -202,7 +202,7 @@ void ActClear_Draw(void)
                 drawPos.x -= 0x90000;
             }
             else if (!entity->field_7C || (entity->field_7C == 1 && (Zone->timer & 8)))
-                ActClear_DrawNumbers(&drawPos, TimeAttackData->field_14, 0);
+                ActClear_DrawNumbers(&drawPos, TimeAttackData->dbRank, 0);
         }
     }
 
@@ -316,7 +316,7 @@ void ActClear_Create(void *data)
         if (globals->gameMode == MODE_TIMEATTACK) {
 #if RETRO_USE_PLUS
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-            entity->time = TimeAttackData_SetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
+            entity->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
 #else
 
 #endif
@@ -709,15 +709,15 @@ void ActClear_Unknown9(void)
 
     if (entity->dword78 > 0) {
 #if RETRO_USE_PLUS
-        if (TimeAttackData->field_14 <= 0 || ReplayRecorder->dword13C) {
+        if (TimeAttackData->dbRank <= 0 || ReplayRecorder->dword13C) {
 #else
-        if (TimeAttackData->field_14 <= 0) {
+        if (TimeAttackData->dbRank <= 0) {
 #endif
             --entity->dword78;
         }
         else {
             if (entity->dword78 == 120) {
-                if (TimeAttackData->field_14 == 1)
+                if (TimeAttackData->dbRank == 1)
                     entity->field_80 = 1;
                 entity->field_7C = 1;
                 RSDK.PlaySFX(ActClear->sfx_Event, 0, 255);
@@ -727,12 +727,12 @@ void ActClear_Unknown9(void)
                 --entity->dword78;
             }
             else {
-                if (TimeAttackData->field_14 == 1) {
+                if (TimeAttackData->dbRank == 1) {
                     RSDK.PlaySFX(Announcer->sfx_NewRecordTop, 0, 255);
                     --entity->dword78;
                 }
                 else {
-                    if (TimeAttackData->field_14 > 3) {
+                    if (TimeAttackData->dbRank > 3) {
                         --entity->dword78;
                     }
                     else {
@@ -767,8 +767,7 @@ void ActClear_Unknown9(void)
                 if (HUD->replaySaveEnabled) {
                     if (!UIDialog->activeDialog) {
                         if (API.CheckDLC(DLC_PLUS)) {
-                            if (ActClear->saveReplay_CB)
-                                ActClear->saveReplay_CB();
+                            StateMachine_Run(ActClear->saveReplay_CB);
                             ActClear->field_2C = 1;
                             ActClear->field_14 = 1;
                             return;
