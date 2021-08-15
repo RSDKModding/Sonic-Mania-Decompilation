@@ -397,6 +397,9 @@ void LoadSceneFile()
 #if RETRO_REV02
                 SetEditableVar(VAR_UINT8, "filter", objID, offsetof(Entity, filter));
 #endif
+#if RETRO_USE_MOD_LOADER
+                currentObjectID = objID;
+#endif
                 if (obj->serialize)
                     obj->serialize();
             }

@@ -133,7 +133,7 @@ struct ObjectInfo {
     void (*lateUpdate)(void);
     void (*staticUpdate)(void);
     void (*draw)(void);
-    void(*create)(void *);
+    void (*create)(void *);
     void (*stageLoad)(void);
     void (*editorDraw)(void);
     void (*editorLoad)(void);
@@ -141,6 +141,9 @@ struct ObjectInfo {
     Object **type;
     int entitySize;
     int objectSize;
+#if RETRO_USE_MOD_LOADER
+    ObjectInfo* inherited;
+#endif
 };        
 
 struct EditableVarInfo {

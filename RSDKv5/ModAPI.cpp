@@ -3,6 +3,9 @@
 
 #include <filesystem>
 #include <sstream>
+#include <stdexcept>
+
+int currentObjectID = 0;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
 namespace fs = std::__fs::filesystem;
@@ -28,21 +31,25 @@ void initModAPI()
 {
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
 
+    addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
     addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
     addToModFunctionTable(ModTable_AddModCallback, AddModCallback);
     addToModFunctionTable(ModTable_AddPublicFunction, AddPublicFunction);
     addToModFunctionTable(ModTable_GetPublicFunction, GetPublicFunction);
-    addToModFunctionTable(ModTable_GetSettingsBool, NULL);
-    addToModFunctionTable(ModTable_GetSettingsInt, NULL);
-    addToModFunctionTable(ModTable_GetSettingsString, NULL);
-    addToModFunctionTable(ModTable_SetSettingsBool, NULL);
-    addToModFunctionTable(ModTable_SetSettingsInt, NULL);
-    addToModFunctionTable(ModTable_SetSettingsString, NULL);
+    addToModFunctionTable(ModTable_GetModPath, GetModPath);
+    addToModFunctionTable(ModTable_GetSettingsBool, GetSettingsBool);
+    addToModFunctionTable(ModTable_GetSettingsInt, GetSettingsInteger);
+    addToModFunctionTable(ModTable_GetSettingsString, GetSettingsString);
+    addToModFunctionTable(ModTable_SetSettingsBool, SetSettingsBool);
+    addToModFunctionTable(ModTable_SetSettingsInt, SetSettingsInteger);
+    addToModFunctionTable(ModTable_SetSettingsString, SetSettingsString);
+    addToModFunctionTable(ModTable_SaveSettings, SaveSettings);
+    addToModFunctionTable(ModTable_Super, Super);
 
     loadMods();
 }
 
-inline void sortMods()
+void sortMods()
 {
     std::sort(modList.begin(), modList.end(), [](ModInfo a, ModInfo b) {
         if (!(a.active && b.active))
@@ -116,6 +123,8 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
     if (!info)
         return false;
 
+    printLog(PRINT_NORMAL, "[MOD] Trying to load mod %s...", folder.c_str());
+
     info->fileMap.clear();
     info->name    = "";
     info->desc    = "";
@@ -140,7 +149,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
         info->author  = iniparser_getstring(ini, ":Author", "Unknown Author");
         info->version = iniparser_getstring(ini, ":Version", "1.0.0");
 
-        // Check for Data/ replacements
+        // DATA
         fs::path dataPath(modDir + "/Data");
 
         if (fs::exists(dataPath) && fs::is_directory(dataPath)) {
@@ -186,6 +195,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 printLog(PRINT_ERROR, "Data Folder Scanning Error: %s", fe.what());
             }
         }
+        // LOGIC
         std::string logic(iniparser_getstring(ini, ":LogicFile", ""));
         if (logic.length() && info->active) {
             std::istringstream stream(logic);
@@ -270,6 +280,35 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 }
             }
         }
+        // SETTINGS
+        FileIO *set = fOpen((modDir + "/modSettings.ini").c_str(), "r");
+        if (set) {
+            fClose(set);
+            using namespace std;
+            auto ini = iniparser_load((modDir + "/modSettings.ini").c_str());
+            int sec  = iniparser_getnsec(ini);
+            if (sec) {
+                for (int i = 0; i < sec; ++i) {
+                    const char *secn  = iniparser_getsecname(ini, i);
+                    int len           = iniparser_getsecnkeys(ini, secn);
+                    const char **keys = new const char *[len];
+                    iniparser_getseckeys(ini, secn, keys);
+                    map<string, string> secset;
+                    for (int j = 0; j < len; ++j)
+                        secset.insert(pair<string, string>(keys[j] + strlen(secn) + 1, iniparser_getstring(ini, keys[j], "")));
+                    info->settings.insert(pair<string, map<string, string>>(secn, secset));
+                }
+            }
+            else {
+                // either you use categories or you don't, i don't make the rules
+                map<string, string> secset;
+                for (int j = 0; j < ini->size; ++j) secset.insert(pair<string, string>(ini->key[j] + 1, ini->val[j]));
+                info->settings.insert(pair<string, map<string, string>>("", secset));
+            }
+            iniparser_freedict(ini);
+        }
+
+        printLog(PRINT_NORMAL, "[MOD] Loaded mod %s! Active: %s", folder.c_str(), active ? "Y" : "N");
 
         iniparser_freedict(ini);
         return true;
@@ -285,6 +324,8 @@ void saveMods()
 
     sortMods();
 
+    printLog(PRINT_NORMAL, "[MOD] Saving mods...");
+
     if (fs::exists(modPath) && fs::is_directory(modPath)) {
         std::string mod_config = modPath.string() + "/modconfig.ini";
         FileIO *file           = fOpen(mod_config.c_str(), "w");
@@ -293,6 +334,7 @@ void saveMods()
 
         for (int m = 0; m < modList.size(); ++m) {
             ModInfo *info = &modList[m];
+            SaveSettings(info->folder.c_str());
 
             writeText(file, "%s=%c\n", info->folder.c_str(), info->active ? 'y' : 'n');
         }
@@ -355,6 +397,8 @@ void *AddPublicFunction(const char *folder, const char *functionName, void *func
 void *GetPublicFunction(const char *folder, const char *functionName)
 {
     for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
         if (modList[m].folder == folder) {
             for (int f = 0; f < modList[m].functionList.size(); ++f) {
                 if (modList[m].functionList[f].name == functionName)
@@ -365,4 +409,241 @@ void *GetPublicFunction(const char *folder, const char *functionName)
     return NULL;
 }
 
+void GetModPath(const char *id, TextInfo *result)
+{
+    int m;
+    for (m = 0; m < modList.size(); ++m)
+        if (modList[m].active && modList[m].folder == id)
+            break;
+    if (m == modList.size())
+        return;
+
+    char buf[0x200];
+    sprintf(buf, "%smods/%s", userFileDir, id);
+    SetText(result, buf, strlen(buf));
+}
+
+std::string GetModPath_i(const char *id)
+{
+    int m;
+    for (m = 0; m < modList.size(); ++m)
+        if (modList[m].active && modList[m].folder == id)
+            break;
+    if (m == modList.size())
+        return std::string();
+
+    return std::string(userFileDir) + "mods/" + id;
+}
+
+std::string GetSettingsValue(const char *id, const char *key)
+{
+    std::string skey(key);
+    if (!strchr(key, ':'))
+        skey = std::string(":") + key;
+
+    std::string cat  = skey.substr(0, skey.find(":"));
+    std::string rkey = skey.substr(skey.find(":") + 1);
+
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
+        if (modList[m].folder == id) {
+            try {
+                return modList[m].settings.at(cat).at(rkey);
+            } catch (std::out_of_range) {
+                return std::string();
+            }
+        }
+    }
+    return std::string();
+}
+
+bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
+{
+    std::string v = GetSettingsValue(id, key);
+    if (!v.length()) {
+        SetSettingsBool(id, key, fallback);
+        return fallback;
+    }
+    char first = v.at(0);
+    if (first == 'y' || first == 'Y' || first == 't' || first == 'T' || (first = GetSettingsInteger(id, key, 0)))
+        return true;
+    if (first == 'n' || first == 'N' || first == 'f' || first == 'F' || !first)
+        return false;
+    SetSettingsBool(id, key, fallback);
+    return fallback;
+}
+
+int GetSettingsInteger(const char *id, const char *key, int fallback)
+{
+    std::string v = GetSettingsValue(id, key);
+    if (!v.length()) {
+        SetSettingsInteger(id, key, fallback);
+        return fallback;
+    }
+    try {
+        return std::stoi(v);
+    } catch (...) {
+        SetSettingsInteger(id, key, fallback);
+        return fallback;
+    }
+}
+
+void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback)
+{
+    std::string v = GetSettingsValue(id, key);
+    if (!v.length()) {
+        SetText(result, (char *)fallback, strlen(fallback));
+        SetSettingsString(id, key, result);
+        return;
+    }
+    SetText(result, (char *)v.c_str(), v.length());
+}
+
+void SetSettingsValue(const char *id, const char *key, std::string val)
+{
+    std::string skey(key);
+    if (!strchr(key, ':'))
+        skey = std::string(":") + key;
+
+    std::string cat  = skey.substr(0, skey.find(":"));
+    std::string rkey = skey.substr(skey.find(":") + 1);
+
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
+        if (modList[m].folder == id) {
+            modList[m].settings[cat][rkey] = val;
+            break;
+        }
+    }
+}
+
+void SetSettingsBool(const char *id, const char *key, bool32 val) { SetSettingsValue(id, key, val ? "Y" : "N"); }
+void SetSettingsInteger(const char *id, const char *key, int val) { SetSettingsValue(id, key, std::to_string(val)); }
+void SetSettingsString(const char *id, const char *key, TextInfo *val)
+{
+    char *buf = new char[val->textLength];
+    GetCString(buf, val);
+    SetSettingsValue(id, key, buf);
+}
+
+void SaveSettings(const char *id)
+{
+    using namespace std;
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
+        if (modList[m].folder == id) {
+            if (!modList[m].settings.size()) break;
+            TextInfo path;
+            FileIO *file = fOpen((GetModPath_i(id) + "/modSettings.ini").c_str(), "w");
+
+            if (modList[m].settings[""].size()) {
+                for (pair<string, string> pair : modList[m].settings[""]) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+            }
+            for (pair<string, map<string, string>> kv : modList[m].settings) {
+                if (!kv.first.length())
+                    continue;
+                writeText(file, "\n[%s]\n", kv.first.c_str());
+                for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+            }
+            fClose(file);
+            printLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", id);
+            return;
+        }
+    }
+}
+
+// i'm going to hell for this
+int superLevels = 1;
+void Super(int objectID, ModSuper callback, void *data)
+{
+    ObjectInfo *super = &objectList[stageObjectIDs[objectID]];
+    if (HASH_MATCH(super->hash, super->inherited->hash)) {
+        for (int i = 0; i < superLevels; i++) {
+            *super->inherited->type = *super->type;
+            super = super->inherited;
+        }
+        ++superLevels;
+    }
+    else {
+        *super->inherited->type = *super->type;
+        super       = super->inherited;
+        superLevels = 1;
+    }
+    switch (callback) {
+        case SUPER_CREATE: super->create(data); break;
+        case SUPER_DRAW: super->draw(); break;
+        case SUPER_UPDATE: super->update(); break;
+        case SUPER_STAGELOAD: super->stageLoad(); break;
+        case SUPER_LATEUPDATE: super->lateUpdate(); break;
+        case SUPER_STATICUPDATE: super->staticUpdate(); break;
+        case SUPER_SERIALIZE: super->serialize(); break;
+        case SUPER_EDITORLOAD: super->editorLoad(); break;
+        case SUPER_EDITORDRAW: super->editorDraw(); break;
+    }
+    superLevels = 1;
+}
+
+void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+                       void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                       void (*editorLoad)(void), void (*serialize)(void), const char *inherited)
+{
+    int preCount = objectCount + 1;
+    uint hash[4];
+    GEN_HASH(name, hash);
+
+    for (int i = 0; i < objectCount; ++i) {
+        if (HASH_MATCH(objectList[i].hash, hash)) {
+            objectCount = i;
+            --preCount;
+            if (!inherited)
+                inherited = name;
+            break;
+        }
+    }
+    ObjectInfo* inherit = NULL;
+
+    if (inherited) {
+        uint hash[4];
+        GEN_HASH(inherited, hash);
+        for (int i = 0; i < preCount; ++i) {
+            if (HASH_MATCH(objectList[i].hash, hash)) {
+                inherit = new ObjectInfo(objectList[i]);
+                break;
+            }
+        }
+        if (inherit) {
+            if (!update)
+                update = []() { Super(sceneInfo.entity->objectID, SUPER_UPDATE, NULL); };
+            if (!lateUpdate)
+                lateUpdate = []() { Super(sceneInfo.entity->objectID, SUPER_LATEUPDATE, NULL); };
+            if (!staticUpdate)
+                staticUpdate = []() { Super(currentObjectID, SUPER_STATICUPDATE, NULL); };
+            if (!draw)
+                draw = []() { Super(sceneInfo.entity->objectID, SUPER_DRAW, NULL); };
+            if (!stageLoad)
+                stageLoad = []() { Super(currentObjectID, SUPER_STAGELOAD, NULL); };
+            if (!serialize)
+                serialize = []() { Super(currentObjectID, SUPER_SERIALIZE, NULL); };
+            if (!editorDraw)
+                editorDraw = []() { Super(currentObjectID, SUPER_EDITORDRAW, NULL); };
+            if (!editorLoad)
+                editorLoad = []() { Super(currentObjectID, SUPER_EDITORLOAD, NULL); };
+            if (!create)
+                create = [](void *data) { Super(sceneInfo.entity->objectID, SUPER_CREATE, data); };
+        }
+        else
+            inherited = NULL;
+    }
+
+    RegisterObject(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
+                   serialize);
+    if (inherited) {
+        ObjectInfo *info = &objectList[objectCount - 1];
+        info->inherited  = inherit;
+    }
+    objectCount = preCount;
+}
 #endif

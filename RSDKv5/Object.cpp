@@ -215,6 +215,9 @@ void InitObjects()
     cameraCount          = 0;
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
+#if RETRO_USE_MOD_LOADER
+        currentObjectID = o;
+#endif
         if (objectList[stageObjectIDs[o]].stageLoad)
             objectList[stageObjectIDs[o]].stageLoad();
     }
@@ -249,6 +252,9 @@ void ProcessObjects()
     }
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
+#if RETRO_USE_MOD_LOADER
+        currentObjectID = o;
+#endif
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
         if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_NORMAL) {
             if (objInfo->staticUpdate)
@@ -385,6 +391,9 @@ void ProcessPausedObjects()
     }
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
+#if RETRO_USE_MOD_LOADER
+        currentObjectID = o;
+#endif
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
         if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
@@ -459,6 +468,9 @@ void ProcessFrozenObjects()
     }
 
     for (int o = 0; o < sceneInfo.classCount; ++o) {
+#if RETRO_USE_MOD_LOADER
+        currentObjectID = o;
+#endif
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
         if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)

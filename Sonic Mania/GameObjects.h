@@ -31,16 +31,25 @@ typedef enum {
 
 // Mod Table
 typedef struct {
-    bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
+    void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+                           void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                           void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
+
+    bool32 (*LoadModInfo)(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
     void (*AddModCallback)(int callbackID, void (*callback)(void* data));
-    void *(*AddPublicFunction)(const char *id, const char *functionName, void *functionPtr);
-    void *(*GetPublicFunction)(const char *id, const char *functionName);
-    bool32 *(*GetSettingsBool)(const char *name);
-    int *(*GetSettingsInt)(const char *name);
-    void *(*GetSettingsString)(const char *name, TextInfo *value);
-    void *(*SetSettingsBool)(const char *name, bool32 value);
-    void *(*SetSettingsInt)(const char *name, int value);
-    void *(*SetSettingsString)(const char *name, TextInfo *value);
+    void *(*AddPublicFunction)(const char *folder, const char *functionName, void *functionPtr);
+    void *(*GetPublicFunction)(const char *folder, const char *functionName);
+    const char *(*GetModPath)(const char *id);
+
+    bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
+    int (*GetSettingsInteger)(const char *id, const char *key, int fallback);
+    void (*GetSettingsString)(const char *id, const char *key, TextInfo* result, const char *fallback);
+
+    void (*SetSettingsBool)(const char *id, const char *key, bool32 val);
+    void (*SetSettingsInteger)(const char *id, const char *key, int val);
+    void (*SetSettingsString)(const char *id, const char *key, TextInfo *val);
+
+    void (*SaveSettings)(const char *id);
 } ModFunctionTable;
 #endif
 

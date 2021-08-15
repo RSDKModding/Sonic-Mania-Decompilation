@@ -862,15 +862,17 @@ void InitScriptSystem()
         printLog(PRINT_POPUP, "Failed to link game logic!");
     }
 #if RETRO_USE_MOD_LOADER
-    for (ModInfo &modInfo : modList) {
-        if (!modInfo.active)
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
             continue;
-        for (modLink ptr : modInfo.linkModLogic) {
-            if (!ptr(&info, modInfo.folder.c_str())) {
-                modInfo.active = false;
+        for (modLink ptr : modList[m].linkModLogic) {
+            if (!ptr(&info, modList[m].folder.c_str())) {
+                modList[m].active = false;
+                printLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].folder.c_str());
             }
         }
     }
+    sortMods();
 #endif
 
 }
