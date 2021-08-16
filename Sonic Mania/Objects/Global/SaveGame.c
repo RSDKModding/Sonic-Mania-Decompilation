@@ -157,15 +157,10 @@ void SaveGame_LoadFile(void)
     globals->saveLoaded     = STATUS_CONTINUE;
     SaveGame->loadEntityPtr = RSDK_sceneInfo->entity;
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
-#if RETRO_USE_PLUS
-    API.LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
-#else
-    APICallback_LoadUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_LoadFile_CB);
-#endif
+    API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
 void SaveGame_SaveFile(void (*callback)(int status))
 {
-#if RETRO_USE_PLUS
     if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
             callback(false);
@@ -173,19 +168,12 @@ void SaveGame_SaveFile(void (*callback)(int status))
     else {
         SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
         SaveGame->saveCallback  = callback;
-        API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
-    }
+#if RETRO_USE_PLUS
+        API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
 #else
-    if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
-        if (callback)
-            callback(false);
-    }
-    else {
-        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
-        SaveGame->saveCallback = callback;
-        APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
-    }
+        API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB);
 #endif
+    }
 }
 
 void SaveGame_SaveLoadedCB(int status)
@@ -285,7 +273,6 @@ void SaveGame_SaveProgress(void)
     saveRAM->characterFlags = globals->characterFlags;
     saveRAM->stock          = globals->stock;
     saveRAM->playerID       = globals->playerID;
-#endif
     if (!ActClear || ActClear->actID <= 0) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
             if (Zone_IsAct2()) {
@@ -298,6 +285,18 @@ void SaveGame_SaveProgress(void)
             }
         }
     }
+#else
+    if (globals->gameMode == MODE_MANIA) {
+        if (Zone_IsAct2()) {
+            if (saveRAM->zoneID < Zone_GetZoneID() + 1)
+                saveRAM->zoneID = Zone_GetZoneID() + 1;
+            if (saveRAM->zoneID > 11) {
+                saveRAM->zoneID = 2;
+                saveRAM->zoneID = 12;
+            }
+        }
+    }
+#endif
 }
 void SaveGame_ClearRestartData(void)
 {
@@ -475,7 +474,7 @@ int *SaveGame_GetGlobalData(void)
 
 bool32 SaveGame_GetZoneUnlocked(int zoneID)
 {
-    if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
+    if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
     }
@@ -529,7 +528,7 @@ void SaveGame_TrackGameProgress(void (*callback)(int))
     if (callback)
         callback(0);
 #else
-    APICallback_TrackGameProgress(callback, percent);
+    APICallback_TrackGameProgress(callback);
 #endif
 }
 void SaveGame_Unknown14(void)

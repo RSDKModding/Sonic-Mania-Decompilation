@@ -75,14 +75,14 @@ void E3MenuSetup_Unknown2(void)
     int id = 0;
     foreach_all(UITAZoneModule, module)
     {
-        module->options2 = E3MenuSetup_ZoneModule_Unknown;
+        module->options2 = E3MenuSetup_Unknown4;
         if (!id) { // GHZ
             module->zoneID = 0;
-            zone->actID = 1;
+            module->actID = 1;
         }
         else if (id == 1) { // MSZ
             module->zoneID = 7;
-            zone->actID = 1;
+            module->actID = 1;
         }
     }
 }
@@ -94,10 +94,10 @@ void E3MenuSetup_Unknown3(void)
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.SetScene("Mania Mode", "");
-    EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->selectionID];
+    EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->activeEntityID];
     param->zoneID                = module->zoneID;
     param->actID                 = module->actID;
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->playerID, param->actID);
+    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
     switch (param->characterID) {
         default: break;
         case 1: globals->playerID = ID_SONIC; break;

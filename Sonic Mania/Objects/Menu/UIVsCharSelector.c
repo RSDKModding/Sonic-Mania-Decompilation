@@ -48,7 +48,11 @@ void UIVsCharSelector_Update(void)
     entity->field_11C = minVal(entity->field_11C, 0x11800);
 
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    if ((entity->state == UIVsCharSelector_Unknown10 || entity->state == UIVsCharSelector_Unknown11)
+    if ((
+#if RETRO_USE_PLUS
+            entity->state == UIVsCharSelector_Unknown10 ||
+#endif
+            entity->state == UIVsCharSelector_Unknown11)
         && (parent->state != UIControl_ProcessInputs || parent->active != ACTIVE_ALWAYS || parent->selectionDisabled)) {
         entity->flag      = false;
         entity->ready = false;
@@ -205,6 +209,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
             entity->frameID -= max;
         }
 
+#if RETRO_GAMEVER != VER_100
         int activePlayers = 0;
         for (int i = 0; i < parent->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)parent->buttons[i];
@@ -226,11 +231,13 @@ void UIVsCharSelector_ProcessButtonCB(void)
             entity->field_11C = 0;
             entity->field_118 = 0x8000;
         }
+#endif
+
         if (storedFrame != entity->frameID)
             UIVsCharSelector_SetupText();
 
         bool32 pressed = false;
-        if (API.GetConfirmButtonFlip())
+        if (API_GetConfirmButtonFlip())
             pressed = RSDK_controller[entity->playerID + 1].keyB.press;
         else
             pressed = RSDK_controller[entity->playerID + 1].keyA.press;
@@ -257,7 +264,7 @@ void UIVsCharSelector_ProcessButtonCB_Alt(void)
         parent->posUnknown.x = entity->position.x;
 
         bool32 pressed = false;
-        if (API.GetConfirmButtonFlip())
+        if (API_GetConfirmButtonFlip())
             pressed = RSDK_controller[entity->playerID + 1].keyB.press;
         else
             pressed = RSDK_controller[entity->playerID + 1].keyA.press;
@@ -274,7 +281,11 @@ void UIVsCharSelector_Unknown7(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
+#if RETRO_USE_PLUS
     entity->state = UIVsCharSelector_Unknown10;
+#else
+    entity->state = UIVsCharSelector_Unknown8;
+#endif
     if (!entity->flag) {
         entity->field_110 = 0x4000;
         entity->field_11C = 0;
@@ -287,8 +298,12 @@ void UIVsCharSelector_Unknown8(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    int id = RSDK.ControllerIDForInputID(entity->playerID + 1);
+    int id = API_ControllerIDForInputID(entity->playerID + 1);
+#if RETRO_USE_PLUS
     if (!id || id == CONT_AUTOASSIGN) {
+#else
+    if (id + 1 <= 1) {
+#endif
         entity->state = UIVsCharSelector_Unknown9;
         UIVsCharSelector_Unknown9();
     }
@@ -301,16 +316,17 @@ void UIVsCharSelector_Unknown9(void)
 
     entity->processButtonCB = StateMachine_None;
     entity->flag            = false;
-    entity->ready           = false;
 
-    int id       = RSDK.ControllerIDForInputID(entity->playerID + 1);
+    int id = API_ControllerIDForInputID(entity->playerID + 1);
+#if RETRO_USE_PLUS
+    entity->ready = false;
     int assigned = RSDK.GetAssignedControllerID(id);
     if (parent->active == ACTIVE_ALWAYS) {
         if (!id) {
-            RSDK.AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
+            API_AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
         }
         else if (!assigned && id != CONT_AUTOASSIGN) {
-            RSDK.AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
+            API_AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
         }
         else if (id != CONT_AUTOASSIGN) {
             entity->field_11C = 0;
@@ -319,15 +335,22 @@ void UIVsCharSelector_Unknown9(void)
             entity->state     = UIVsCharSelector_Unknown10;
         }
     }
+#else
+    if (id >= 2) {
+        entity->state = UIVsCharSelector_Unknown8;
+        entity->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+    }
+#endif
 }
 
+#if RETRO_USE_PLUS
 void UIVsCharSelector_Unknown10(void)
 {
     RSDK_THIS(UIVsCharSelector);
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
     entity->flag = true;
-    int id       = RSDK.ControllerIDForInputID(entity->playerID + 1);
+    int id       = API_ControllerIDForInputID(entity->playerID + 1);
     int assigned = RSDK.GetAssignedControllerID(id);
 
     if (parent->active == ACTIVE_ALWAYS) {
@@ -343,6 +366,7 @@ void UIVsCharSelector_Unknown10(void)
         }
     }
 }
+#endif
 
 void UIVsCharSelector_Unknown11(void)
 {

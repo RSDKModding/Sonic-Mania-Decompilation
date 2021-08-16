@@ -26,7 +26,9 @@ typedef struct {
     int matchID;
     int matchCount;
     int monitorMode;
+#if RETRO_USE_PLUS
     int unknown29;
+#endif
     int zoneFlags[12];
     byte characterFlags[PLAYER_MAX];
     byte winnerFlags[12];
@@ -38,6 +40,7 @@ typedef struct {
     int totalRings[PLAYER_MAX];
     int wins[PLAYER_MAX];
     int lives[PLAYER_MAX];
+#if RETRO_USE_PLUS
     int unknown84;
     int unknown85;
     int splitScreenMode;
@@ -45,6 +48,7 @@ typedef struct {
     bool32 readOnlyDisplayMode;
     int controllerIDs[PLAYER_MAX];
     int prevMatchID;
+#endif
 } EntityCompetitionSession;
 
 // Object Entity
@@ -62,6 +66,12 @@ void CompetitionSession_EditorLoad(void);
 void CompetitionSession_Serialize(void);
 
 // Extra Entity Functions
+#if !RETRO_USE_PLUS
+void CompetitionSession_ResetOptions(void);
+void CompetitionSession_ClearMatchData(void);
+void CompetitionSession_DeriveWinner(int playerID, int flags);
+void CompetitionSession_WinMatchFor(int player);
+#endif
 
 
 #endif //!OBJ_COMPETITIONSESSION_H

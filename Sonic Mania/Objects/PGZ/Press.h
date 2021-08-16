@@ -10,7 +10,9 @@ typedef struct {
 	Hitbox hitbox;
 	ushort impactSFX;
 	ushort pressSFX;
+#if RETRO_USE_PLUS
 	bool32 canSuper;
+#endif
 } ObjectPress;
 
 // Entity Class
@@ -50,7 +52,7 @@ void Press_EditorLoad(void);
 void Press_Serialize(void);
 
 // Extra Entity Functions
-bool32 Press_SuperCheck(int);
+bool32 Press_SuperCheck(bool32 hud);
 void Press_Move(void);
 void Press_Crush(void);
 void Press_FinalCrush(void);

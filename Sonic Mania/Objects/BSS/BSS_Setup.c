@@ -213,11 +213,7 @@ void BSS_Setup_StageLoad(void)
     if (param->field_59 == 1) {
         TextInfo info;
         Localization_GetString(&info, STR_RPC_PLAYING);
-#if RETRO_USE_PLUS
-        API.SetRichPresence(PRESENCE_GENERIC, &info);
-#else
-        APICallback_SetRichPresence(PRESENCE_GENERIC, &info);
-#endif
+        API_SetRichPresence(PRESENCE_GENERIC, &info);
     }
 }
 

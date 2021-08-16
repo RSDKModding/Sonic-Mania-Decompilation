@@ -65,9 +65,11 @@ typedef struct {
 #endif
     Vector2 startPos;
     Vector2 posUnknown;
-    int childHasFocus;
-    int dialogHasFocus;
-    int popoverHasFocus;
+    bool32 childHasFocus;
+    bool32 dialogHasFocus;
+#if RETRO_USE_PLUS
+    bool32 popoverHasFocus;
+#endif
     int dwordC4;
     bool32 selectionDisabled;
     int dwordCC;
@@ -112,7 +114,9 @@ void UIControl_Serialize(void);
 // Extra Entity Functions
 int UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity);
 void UIControl_Unknown2(EntityUIControl *control);
+#if RETRO_USE_PLUS
 void UIControl_Unknown3(EntityUIControl *entity);
+#endif
 void UIControl_Unknown4(EntityUIControl *entity);
 void UIControl_Unknown5(EntityUIControl *entity);
 void UIControl_Unknown6(EntityUIControl *entity);

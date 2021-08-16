@@ -11,7 +11,7 @@ void UIWidgets_StaticUpdate(void)
     ++UIWidgets->arrayIndex;
     UIWidgets->arrayIndex &= 0x7FFF;
 #if RETRO_USE_PLUS
-    UIWidgets->value = UIWidgets->array1[(UIWidgets->arrayIndex >> 1) & 0xF];
+    UIWidgets->buttonColour = UIWidgets->buttonColours[(UIWidgets->arrayIndex >> 1) & 0xF];
 #endif  
 }
 
@@ -22,8 +22,10 @@ void UIWidgets_Create(void *data) {}
 void UIWidgets_StageLoad(void)
 {
     UIWidgets->active                = ACTIVE_ALWAYS;
-    UIWidgets->uiSpriteIndex         = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
+    UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
+#if RETRO_USE_PLUS
     UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+#endif
     UIWidgets->labelSpriteIndex      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
@@ -36,55 +38,22 @@ void UIWidgets_StageLoad(void)
     UIWidgets->sfx_Fail   = RSDK.GetSFX("Stage/Fail.wav");
 
 #if RETRO_USE_PLUS
-    byte *arrPtr = (byte *)UIWidgets->array1;
-    arrPtr[2]    = -80;
-    arrPtr[1]    = 0;
-    arrPtr[0]    = 0;
-    arrPtr[6]    = -72;
-    arrPtr[5]    = 24;
-    arrPtr[4]    = 32;
-    arrPtr[10]   = -68;
-    arrPtr[9]    = 52;
-    arrPtr[8]    = 64;
-    arrPtr[14]   = -60;
-    arrPtr[13]   = 76;
-    arrPtr[12]   = 96;
-    arrPtr[18]   = -52;
-    arrPtr[17]   = 100;
-    arrPtr[16]   = -128;
-    arrPtr[22]   = -48;
-    arrPtr[21]   = 124;
-    arrPtr[20]   = -96;
-    arrPtr[26]   = -40;
-    arrPtr[25]   = -104;
-    arrPtr[24]   = -64;
-    arrPtr[30]   = -32;
-    arrPtr[29]   = -80;
-    arrPtr[28]   = -32;
-    arrPtr[34]   = -32;
-    arrPtr[33]   = -80;
-    arrPtr[32]   = -32;
-    arrPtr[38]   = -40;
-    arrPtr[37]   = -104;
-    arrPtr[36]   = -64;
-    arrPtr[42]   = -44;
-    arrPtr[41]   = 124;
-    arrPtr[40]   = -96;
-    arrPtr[46]   = -52;
-    arrPtr[45]   = 100;
-    arrPtr[44]   = -128;
-    arrPtr[50]   = -60;
-    arrPtr[49]   = 76;
-    arrPtr[48]   = 96;
-    arrPtr[54]   = -68;
-    arrPtr[53]   = 52;
-    arrPtr[52]   = 64;
-    arrPtr[58]   = -72;
-    arrPtr[57]   = 24;
-    arrPtr[56]   = 32;
-    arrPtr[62]   = -80;
-    arrPtr[61]   = 0;
-    arrPtr[60]   = 0;
+    UIWidgets->buttonColours[0]  = 0xB00000;
+    UIWidgets->buttonColours[1]  = 0xB81820;
+    UIWidgets->buttonColours[2]  = 0xBC3440;
+    UIWidgets->buttonColours[3]  = 0xC44C60;
+    UIWidgets->buttonColours[4]  = 0xCC6480;
+    UIWidgets->buttonColours[5]  = 0xD07CA0;
+    UIWidgets->buttonColours[6]  = 0xD898C0;
+    UIWidgets->buttonColours[7]  = 0xE0B0E0;
+    UIWidgets->buttonColours[8]  = 0xE0B0E0;
+    UIWidgets->buttonColours[9]  = 0xD898C0;
+    UIWidgets->buttonColours[10] = 0xD07CA0;
+    UIWidgets->buttonColours[11] = 0xCC6480;
+    UIWidgets->buttonColours[12] = 0xC44C60;
+    UIWidgets->buttonColours[13] = 0xBC3440;
+    UIWidgets->buttonColours[14] = 0xB81820;
+    UIWidgets->buttonColours[15] = 0xB00000;
 #endif
 }
 
@@ -309,6 +278,8 @@ Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int drawX, int drawY
     result.y = drawY;
     return result;
 }
+
+#if RETRO_USE_PLUS
 void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int y)
 {
     Vector2 drawPos;
@@ -349,6 +320,7 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
         drawPos.x += 0x80000;
     }
 }
+#endif
 
 void UIWidgets_EditorDraw(void) {}
 

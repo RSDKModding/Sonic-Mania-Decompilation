@@ -48,12 +48,12 @@ void UIModeButton_Serialize(void);
 
 // Extra Entity Functions
 void UIModeButton_Unknown1(void);
-bool32 UIModeButton_Unknown2(void);
-bool32 UIModeButton_Unknown3(void);
-void UIModeButton_Unknown4(void);
-void UIModeButton_Unknown5(void);
-void UIModeButton_Unknown6(void);
-void UIModeButton_Unknown7(void);
+bool32 UIModeButton_Options7CB(void);
+bool32 UIModeButton_Options8CB(void);
+void UIModeButton_Options5CB(void);
+void UIModeButton_Options3CB(void);
+void UIModeButton_FailCB(void);
+void UIModeButton_Options6CB(void);
 void UIModeButton_Unknown8(void);
 void UIModeButton_Unknown9(void);
 void UIModeButton_Unknown10(void);

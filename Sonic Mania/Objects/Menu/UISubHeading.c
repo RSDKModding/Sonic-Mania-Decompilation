@@ -61,6 +61,7 @@ void UISubHeading_Create(void *data)
 
 void UISubHeading_StageLoad(void) {}
 
+#if RETRO_USE_PLUS
 void UISubHeading_Initialize(void)
 {
     TextInfo tag;
@@ -390,6 +391,7 @@ void UISubHeading_StartNewSave(void)
         RSDK.LoadScene();
     }
 }
+#endif
 
 void UISubHeading_EditorDraw(void) {}
 

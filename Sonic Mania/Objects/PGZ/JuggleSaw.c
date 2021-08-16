@@ -427,6 +427,7 @@ void JuggleSaw_Saw_Handle(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &JuggleSaw->sawHitbox)) {
                 int animID = player->playerAnimator.animationID;
+#if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY
                     && (animID == ANI_CROUCH || animID == ANI_JUMP || animID == ANI_SPINDASH || animID == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
@@ -440,6 +441,7 @@ void JuggleSaw_Saw_Handle(void)
                     entity->state       = JuggleSaw_Saw_Knocked;
                 }
                 else
+#endif
                     Player_CheckHit(player, entity);
             }
         }

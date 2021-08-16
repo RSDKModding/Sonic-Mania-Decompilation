@@ -98,7 +98,11 @@ void OOZSetup_StaticUpdate(void)
                         }
                         break;
                     case 2:
-                        if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
+                        if (player->state != Player_State_BubbleBounce
+#if RETRO_USE_PLUS
+                            && player->state != Player_State_MightyHammerDrop
+#endif
+                            ) {
                             OOZSetup->activePlayers &= ~(1 << playerID);
                             if (player->onGround == true) {
                                 player->interaction    = true;
@@ -108,7 +112,11 @@ void OOZSetup_StaticUpdate(void)
                         }
                         break;
                     case 3:
-                        if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
+                        if (player->state != Player_State_BubbleBounce
+#if RETRO_USE_PLUS
+                            && player->state != Player_State_MightyHammerDrop
+#endif
+                            ) {
                             OOZSetup->activePlayers &= ~(1 << playerID);
                             if (player->onGround) {
                                 player->interaction    = true;

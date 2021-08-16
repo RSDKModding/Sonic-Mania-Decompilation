@@ -12,6 +12,7 @@ void Press_LateUpdate(void) {}
 
 void Press_StaticUpdate(void)
 {
+#if RETRO_USE_PLUS
     Press->canSuper = true;
     RSDK_GET_PLAYER(player, p2, c);
     if (player->objectID == Player->objectID) {
@@ -30,9 +31,8 @@ void Press_StaticUpdate(void)
     }
     else
         Press->canSuper = false;
+#endif
 }
-
-bool32 Press_SuperCheck(int hud) { return Press->canSuper; }
 
 void Press_Draw(void)
 {
@@ -74,7 +74,55 @@ void Press_Draw(void)
         Press_DrawHandle();
 }
 
-void Press_DrawHandle()
+void Press_Create(void *data)
+{
+    RSDK_THIS(Press);
+    entity->active    = ACTIVE_BOUNDS;
+    entity->visible   = true;
+    entity->drawOrder = Zone->drawOrderLow;
+    if (RSDK_sceneInfo->inEditor != true) {
+        entity->size *= 8;
+        int size = entity->size;
+        entity->speed <<= 15;
+        entity->updateRange.x = 0x1000000;
+        // i don't think i can make this any more readable :(
+        entity->threads = ((size / 7) + ((size - (size / 7)) / 2)) / 32;
+        size <<= 15;
+        entity->scale.y       = 0x200;
+        entity->height        = size - 0x38 * entity->threads;
+        entity->updateRange.y = 0x380000 * entity->threads + 0x1000000;
+        entity->drawPos.x     = entity->position.x;
+        entity->drawPos.y     = entity->position.y;
+        entity->drawPos.y -= size;
+        entity->offTop    = (entity->offTop << 16) - size;
+        entity->offBottom = (entity->offBottom << 16) - size + 0xFFFF;
+        RSDK.SetSpriteAnimation(Press->animID, 0, &entity->crusherAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->animID, 1, &entity->threadAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->animID, 2, &entity->bumperAnimator, true, 0);
+        entity->state = Press_Crush;
+    }
+}
+
+void Press_StageLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        Press->animID = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE);
+    Press->hitbox.left   = -112;
+    Press->hitbox.top    = -16;
+    Press->hitbox.right  = 112;
+    Press->hitbox.bottom = 16;
+#if RETRO_USE_PLUS
+    Player->canSuper     = Press_SuperCheck;
+#endif
+    Press->impactSFX     = RSDK.GetSFX("Stage/Impact2.wav");
+    Press->pressSFX      = RSDK.GetSFX("PSZ/Press.wav");
+}
+
+#if RETRO_USE_PLUS
+bool32 Press_SuperCheck(bool32 hud) { return Press->canSuper; }
+#endif
+
+void Press_DrawHandle(void)
 {
     RSDK_THIS(Press);
     Vector2 drawPos = entity->drawPos;
@@ -119,60 +167,6 @@ void Press_DrawHandle()
     entity->crusherAnimator.frameID = 1;
     RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
     entity->drawFX &= ~FX_SCALE;
-}
-
-void Press_Create(void *data)
-{
-    RSDK_THIS(Press);
-    entity->active    = ACTIVE_BOUNDS;
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    if (RSDK_sceneInfo->inEditor != true) {
-        entity->size *= 8;
-        int size = entity->size;
-        entity->speed <<= 15;
-        entity->updateRange.x = 0x1000000;
-        // i don't think i can make this any more readable :(
-        entity->threads = ((size / 7) + ((size - (size / 7)) / 2)) / 32;
-        size <<= 15;
-        entity->scale.y       = 0x200;
-        entity->height        = size - 0x38 * entity->threads;
-        entity->updateRange.y = 0x380000 * entity->threads + 0x1000000;
-        entity->drawPos.x     = entity->position.x;
-        entity->drawPos.y     = entity->position.y;
-        entity->drawPos.y -= size;
-        entity->offTop    = (entity->offTop << 16) - size;
-        entity->offBottom = (entity->offBottom << 16) - size + 0xFFFF;
-        RSDK.SetSpriteAnimation(Press->animID, 0, &entity->crusherAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Press->animID, 1, &entity->threadAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Press->animID, 2, &entity->bumperAnimator, true, 0);
-        entity->state = Press_Crush;
-    }
-}
-
-void Press_StageLoad(void)
-{
-    if (RSDK.CheckStageFolder("PSZ1"))
-        Press->animID = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE);
-    Press->hitbox.left   = -112;
-    Press->hitbox.top    = -16;
-    Press->hitbox.right  = 112;
-    Press->hitbox.bottom = 16;
-    Player->canSuper     = Press_SuperCheck;
-    Press->impactSFX     = RSDK.GetSFX("Stage/Impact2.wav");
-    Press->pressSFX      = RSDK.GetSFX("PSZ/Press.wav");
-}
-
-void Press_EditorDraw(void) {}
-
-void Press_EditorLoad(void) {}
-
-void Press_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(Press, VAR_UINT16, size);
-    RSDK_EDITABLE_VAR(Press, VAR_UINT32, speed);
-    RSDK_EDITABLE_VAR(Press, VAR_ENUM, offTop);
-    RSDK_EDITABLE_VAR(Press, VAR_ENUM, offBottom);
 }
 
 void Press_Move(void)
@@ -332,4 +326,16 @@ void Press_HandleCrates(void)
         }
         --entity->timer;
     }
+}
+
+void Press_EditorDraw(void) {}
+
+void Press_EditorLoad(void) {}
+
+void Press_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(Press, VAR_UINT16, size);
+    RSDK_EDITABLE_VAR(Press, VAR_UINT32, speed);
+    RSDK_EDITABLE_VAR(Press, VAR_ENUM, offTop);
+    RSDK_EDITABLE_VAR(Press, VAR_ENUM, offBottom);
 }

@@ -495,7 +495,11 @@ void Cylinder_State_Unknown4(void)
         }
         else {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1) && !player->onGround) {
-                if (player->state == Player_State_MightyHammerDrop || player->state == Player_State_BubbleBounce) {
+                if (
+#if RETRO_USE_PLUS
+                    player->state == Player_State_MightyHammerDrop ||
+#endif
+                    player->state == Player_State_BubbleBounce) {
                     player->onGround = true;
                 }
                 else if ((player->position.y < entity->position.y && player->velocity.y >= 0)

@@ -480,6 +480,7 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 0x50, colourStore[c]);
                 }
                 break;
+#if RETRO_USE_PLUS
             case ID_MIGHTY:
                 for (int c = 0; c < 6; ++c) {
                     colourStore[c] = RSDK.GetPaletteEntry(0, c + 96);
@@ -504,6 +505,7 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 113, colourStore[c]);
                 }
                 break;
+#endif
         }
     }
 
@@ -1965,9 +1967,16 @@ void Player_HandleDeath(EntityPlayer *player)
                         if (globals->gameMode == MODE_COMPETITION) {
                             int playerID                      = RSDK.GetEntityID(player);
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-                            if (!session->finishFlags[playerID])
+                            if (!session->finishFlags[playerID]) {
+#if RETRO_USE_PLUS 
                                 Competition_CalculateScore(playerID, 1);
+#else
+                                CompetitionSession_DeriveWinner(playerID, 1);
+#endif
+                            }
+#if RETRO_USE_PLUS
                             foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
+#endif
                         }
                         else if (saveRAM) {
                             RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(1));
@@ -1987,20 +1996,16 @@ void Player_HandleDeath(EntityPlayer *player)
                             }
 #endif
 
-#if RETRO_USE_PLUS
-                            if (globals->saveSlotID != NO_SAVE_SLOT && !API.GetUserStorageNoSave() && SaveGame->saveRAM
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !checkNoSave && SaveGame->saveRAM
                                 && globals->saveLoaded == STATUS_OK) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
-                                API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
-                            }
+#if RETRO_USE_PLUS
+                                API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
 #else
-                    if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-                        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
-                        SaveGame->saveCallback = NULL;
-                        APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
-                    }
+                                API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB);
 #endif
+                            }
 
                             EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
                             gameOver->activeScreens |= 1 << player->playerID;
@@ -2027,20 +2032,16 @@ void Player_HandleDeath(EntityPlayer *player)
                             }
 #endif
 
-#if RETRO_USE_PLUS
-                            if (globals->saveSlotID != NO_SAVE_SLOT && !API.GetUserStorageNoSave() && SaveGame->saveRAM
+                            if (globals->saveSlotID != NO_SAVE_SLOT && !checkNoSave && SaveGame->saveRAM
                                 && globals->saveLoaded == STATUS_OK) {
                                 SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
-                                API.SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, 0);
-                            }
+#if RETRO_USE_PLUS
+                                API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
 #else
-                    if (globals->saveSlotID != NO_SAVE_SLOT && globals->noSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-                        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
-                        SaveGame->saveCallback = NULL;
-                        APICallback_SaveUserFile(globals->saveRAM, "SaveData.bin", 0x10000, SaveGame_SaveFile_CB);
-                    }
+                                API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB);
 #endif
+                            }
                         }
                         Music_FadeOut(0.025);
                         Zone_Unknown2();
@@ -2065,9 +2066,16 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (globals->gameMode == MODE_COMPETITION) {
                         int playerID                      = RSDK.GetEntityID(player);
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-                        if (!session->finishFlags[playerID])
+                        if (!session->finishFlags[playerID]) {
+#if RETRO_USE_PLUS
                             Competition_CalculateScore(playerID, 1);
+#else
+                            CompetitionSession_DeriveWinner(playerID, 1);
+#endif
+                        }
+#if RETRO_USE_PLUS
                         foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
+#endif
                     }
                     else {
                         EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
@@ -2098,18 +2106,12 @@ void Player_HandleDeath(EntityPlayer *player)
                         screenID                  = player->camera->screenID;
                         player->camera->targetPtr = (Entity *)player->camera;
                     }
-                    if (globals->gameMode == MODE_COMPETITION) {
-                        Competition_CalculateScore(RSDK.GetEntityID(player), 1);
-                        foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
-                    }
-                    else {
-                        EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                        RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
-                        gameOver->playerID = RSDK.GetEntityID(player);
-                        GameOver->activeScreens |= 1 << screenID;
-                        RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                        RSDK_sceneInfo->timeEnabled = false;
-                    }
+                    EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
+                    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
+                    gameOver->playerID = RSDK.GetEntityID(player);
+                    GameOver->activeScreens |= 1 << screenID;
+                    RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                    RSDK_sceneInfo->timeEnabled = false;
 
                     if (player->objectID == Player->objectID) {
                         player->maxGlideSpeed = 0;
@@ -2470,7 +2472,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
                                             (entity->position.x >> 0x10), (entity->position.y >> 0x10));
             API.TryTrackStat(&info);
 #else
-            APICallback_TrackActClear(Zone->actID, Zone_GetZoneID(), id, &info, (entity->position.x >> 0x10), (entity->position.y >> 0x10));
+            APICallback_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), id, (entity->position.x >> 0x10), (entity->position.y >> 0x10));
 #endif
         }
 
@@ -6329,8 +6331,10 @@ void Player_ProcessP1Input(void)
                         if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
                             EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                             bool32 flag                = true;
+#if RETRO_USE_PLUS
                             if (ActClear && ActClear->dword34)
                                 flag = false;
+#endif
                             if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
                                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                                 pauseMenu->triggerPlayer = entity->playerID;
@@ -6455,8 +6459,10 @@ void Player_ProcessP1Input(void)
                 if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
                     EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                     bool32 flag                = true;
+#if RETRO_USE_PLUS
                     if (ActClear && ActClear->dword34)
                         flag = false;
+#endif
                     if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                         pauseMenu->triggerPlayer = entity->playerID;

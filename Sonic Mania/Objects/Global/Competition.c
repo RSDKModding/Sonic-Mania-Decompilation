@@ -223,9 +223,9 @@ void Competition_CalculateScore(int playerID, byte flags)
             }
 
             for (int p = 0; p < session->playerCount; ++p) {
-                bool32 flag = session->lives[p] > 0 && session->finishFlags[p] != 1 && scores[p] == winner;
+                bool32 flag = session->wins[p] > 0 && session->finishFlags[p] != 1 && scores[p] == winner;
                 if (flag) {
-                    ++session->lives[p];
+                    ++session->wins[p];
                     session->winnerFlags[session->matchID] |= (1 << p);
                 }
             }

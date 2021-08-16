@@ -7,8 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     ushort aniFrames;
-    int field_8;
+    Entity *entityPtr;
+#if RETRO_USE_PLUS
     bool32 isEncoreMode;
+#endif
     bool32 flag;
 } ObjectUITAZoneModule;
 
@@ -29,7 +31,9 @@ typedef struct {
     byte field_138;
     byte characterID;
     byte actID;
+#if RETRO_USE_PLUS
     bool32 isEncore;
+#endif
     int field_140;
     int field_144;
     int field_148;

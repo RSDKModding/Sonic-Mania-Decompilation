@@ -128,7 +128,7 @@ void SignPost_Create(void *data)
                 case 1:
                     if (globals->gameMode != MODE_COMPETITION) {
                         entity->active = ACTIVE_XBOUNDS;
-                        entity->state  = NULL;
+                        entity->state  = StateMachine_None;
                     }
                     else {
                         destroyEntity(entity);
@@ -463,20 +463,25 @@ void SignPost_CheckTouch(void)
                             RSDK.PlaySFX(SignPost->sfx_SignPost2P, 0, 255);
                         }
 
-                        EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+#if RETRO_USE_PLUS
+                        EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
                         if (!manager) {
                             Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, entity->position.x, entity->position.y);
-                            manager                   = (EntityCompetition *)Competition->activeEntity;
                         }
-                        manager->playerFlags[player->playerID]       = true;
+                        manager->playerFlags[player->playerID] = true;
+#endif
                         session->rings[player->playerID]             = player->rings;
                         session->time[player->playerID].minutes      = RSDK_sceneInfo->minutes;
                         session->time[player->playerID].seconds      = RSDK_sceneInfo->seconds;
                         session->time[player->playerID].milliseconds = RSDK_sceneInfo->milliseconds;
                         session->score[player->playerID]             = player->score;
                         session->lives[player->playerID]             = player->lives;
+#if RETRO_USE_PLUS
                         Competition_CalculateScore(player->playerID, 2);
+#else
+                        CompetitionSession_DeriveWinner(player->playerID, 2);
+#endif
 
                         entity->activePlayers |= (1 << p);
                         if (entity->activePlayers == SignPost->maxPlayerCount)

@@ -86,7 +86,7 @@ bool32 DASetup_HandleMedallionDebug(void)
 {
     int *saveRAM = NULL;
     if (!RSDK_sceneInfo->inEditor) {
-        if (globals->saveLoaded == STATUS_OK && !API.GetUserStorageNoSave()) {
+        if (globals->saveLoaded == STATUS_OK && !checkNoSave) {
             saveRAM = &globals->saveRAM[0x900];
         }
     }
@@ -141,25 +141,23 @@ void DASetup_SetupUI(void)
     DASetup_DisplayTrack(0);
     EntityUIInfoLabel *label = (EntityUIInfoLabel *)DASetup->labelA;
     Localization_GetString(&buffer, STR_SELECTATRACK);
+#if RETRO_USE_PLUS
     RSDK.PrintText(PRINT_NORMAL, &buffer);
+#endif
     UIInfoLabel_SetString(label, &buffer);
 }
 
 void DASetup_State_ManageControl(void)
 {
     int prevTrack = DASetup->trackID;
-    if (UIControl->keyRight) {
+    if (UIControl->keyRight)
         DASetup->trackID++;
-    }
-    else if (UIControl->keyLeft) {
+    else if (UIControl->keyLeft)
         DASetup->trackID--;
-    }
-    else if (UIControl->keyUp) {
+    else if (UIControl->keyUp)
         DASetup->trackID += 10;
-    }
-    else if (UIControl->keyDown) {
+    else if (UIControl->keyDown)
         DASetup->trackID -= 10;
-    }
 
     if (DASetup->trackID < 0)
         DASetup->trackID += DASetup->trackCount;

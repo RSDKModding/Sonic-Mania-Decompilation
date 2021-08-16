@@ -40,8 +40,10 @@ void UIUsernamePopup_ShowPopup(void)
 {
     EntityUIUsernamePopup *entity = (EntityUIUsernamePopup *)UIUsernamePopup->popup;
     if (entity->state == UIUsernamePopup_State_Setup) {
-        if (API.GetUsername(&entity->username)) {
+        if (API_GetUsername(&entity->username)) {
+#if RETRO_USE_PLUS
             RSDK.PrintText(0, &entity->username);
+#endif
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->username);
             int width        = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);

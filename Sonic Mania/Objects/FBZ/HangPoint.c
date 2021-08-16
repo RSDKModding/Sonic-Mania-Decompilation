@@ -200,8 +200,8 @@ void HangPoint_Update(void)
                             }
                         }
                         else if ((!((1 << (playerID + 4)) & entity->activePlayers)
-                                     && (entity->direction != FLIP_NONE || entity->field_7C >= entity->length)
-                                     && (entity->direction != FLIP_X || entity->field_7C <= 0))
+                                  && (entity->direction != FLIP_NONE || entity->field_7C >= entity->length)
+                                  && (entity->direction != FLIP_X || entity->field_7C <= 0))
                                  || player->sidekick) {
                             bool32 flag = false;
                             if (player->left) {
@@ -216,6 +216,7 @@ void HangPoint_Update(void)
                                                 point->activePlayers |= 1 << playerID;
                                                 point->field_5C[playerID]    = 0x200000;
                                                 point->playerTimer[playerID] = 0;
+#if RETRO_USE_PLUS
                                                 if (player->characterID == ID_RAY) {
                                                     if (player->maxGlideSpeed)
                                                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 6);
@@ -223,8 +224,11 @@ void HangPoint_Update(void)
                                                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 1);
                                                 }
                                                 else {
+#endif
                                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 3);
+#if RETRO_USE_PLUS
                                                 }
+#endif
 
                                                 player->position.x = point->position.x;
                                                 if (RSDK.GetEntityID(point) < RSDK_sceneInfo->entitySlot)
@@ -249,6 +253,7 @@ void HangPoint_Update(void)
                                                 point->activePlayers |= 1 << playerID;
                                                 point->field_5C[playerID]    = -0x200000;
                                                 point->playerTimer[playerID] = 0;
+#if RETRO_USE_PLUS
                                                 if (player->characterID == ID_RAY) {
                                                     if (!player->maxGlideSpeed) {
                                                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 0);
@@ -258,8 +263,11 @@ void HangPoint_Update(void)
                                                     }
                                                 }
                                                 else {
+#endif
                                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 3);
+#if RETRO_USE_PLUS
                                                 }
+#endif
 
                                                 player->position.x = point->position.x;
                                                 if (RSDK.GetEntityID(point) < RSDK_sceneInfo->entitySlot)
@@ -273,17 +281,21 @@ void HangPoint_Update(void)
                                 }
                             }
                             if (!flag) {
+#if RETRO_USE_PLUS
                                 if (player->characterID == ID_RAY && player->maxGlideSpeed == 1)
                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_DROPDASH, &player->playerAnimator, false, 0);
                                 else
+#endif
                                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
                                 HangPoint_Unknown1(entity, player, playerID);
                             }
                         }
                         else {
+#if RETRO_USE_PLUS
                             if (player->characterID == ID_RAY && player->maxGlideSpeed == 1)
                                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_DROPDASH, &player->playerAnimator, false, 0);
                             else
+#endif
                                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
                             HangPoint_Unknown1(entity, player, playerID);
                         }

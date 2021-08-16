@@ -350,8 +350,10 @@ void TitleCard_Unknown5(void)
 void TitleCard_Unknown6(void)
 {
     RSDK_THIS(TitleCard);
+#if RETRO_USE_PLUS
     if (ActClear && ActClear->dword34)
-        ActClear->dword34 = 0;
+        ActClear->dword34 = false;
+#endif
 
     Zone_ApplyWorldBounds();
     
@@ -581,7 +583,11 @@ void TitleCard_Unknown10(void)
         globals->enableIntro = false;
         if (globals->gameMode >= MODE_TIMEATTACK) {
             if (globals->gameMode == MODE_COMPETITION) {
+#if RETRO_USE_PLUS
                 Competition_ClearMatchData();
+#else
+                CompetitionSession_ClearMatchData();
+#endif
                 Announcer_StartCountdown();
             }
             destroyEntity(entity);

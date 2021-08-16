@@ -109,10 +109,14 @@ void ActClear_Draw(void)
     entity->data1.frameID = 1;
     RSDK.DrawSprite(&entity->data1, &drawPos, true);
     drawPos.x += 0x320000;
+#if RETRO_USE_PLUS
     if (globals->gameMode != MODE_TIMEATTACK) {
+#endif
         entity->data1.frameID = 8;
         RSDK.DrawSprite(&entity->data1, &drawPos, true);
+#if RETRO_USE_PLUS
     }
+#endif
     entity->data1.frameID = 10;
     drawPos.x += 0x340000;
     RSDK.DrawSprite(&entity->data1, &drawPos, true);
@@ -121,14 +125,19 @@ void ActClear_Draw(void)
     int dy = drawPos.y + 0xE0000;
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
+
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x = dx - 0x620000;
         drawPos.y = dy - 0xE0000;
         ActClear_DrawTime(RSDK_sceneInfo->minutes, &drawPos, RSDK_sceneInfo->seconds, RSDK_sceneInfo->milliseconds);
     }
     else {
+#endif
         ActClear_DrawNumbers(&drawPos, entity->scoreBonus, 0);
+#if RETRO_USE_PLUS
     }
+#endif
 
     drawPos.x = offset + entity->posUnknown4.x - 0x5C0000;
     drawPos.y = entity->posUnknown4.y;
@@ -157,6 +166,7 @@ void ActClear_Draw(void)
 
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         TimeAttackData_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
@@ -165,8 +175,11 @@ void ActClear_Draw(void)
             ActClear_DrawTime(minsPtr, &drawPos, secsPtr, millisecsPtr);
     }
     else {
+#endif
         ActClear_DrawNumbers(&drawPos, entity->ringBonus, 0);
+#if RETRO_USE_PLUS
     }
+#endif
 
     if (entity->field_84 == 1) {
         drawPos.x = entity->posUnknown5.x;
@@ -179,10 +192,14 @@ void ActClear_Draw(void)
         RSDK.DrawSprite(&entity->data1, &drawPos, true);
 
         drawPos.x += 0x320000;
+#if RETRO_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
+#endif
             entity->data1.frameID = 8;
             RSDK.DrawSprite(&entity->data1, &drawPos, true);
+#if RETRO_USE_PLUS
         }
+#endif
 
         entity->data1.frameID = 10;
         drawPos.x += 0x340000;
@@ -190,8 +207,11 @@ void ActClear_Draw(void)
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
+#if RETRO_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
+#endif
             ActClear_DrawNumbers(&drawPos, entity->coolBonus, 0);
+#if RETRO_USE_PLUS
         }
         else {
             if (!TimeAttackData->dbRank) {
@@ -204,11 +224,13 @@ void ActClear_Draw(void)
             else if (!entity->field_7C || (entity->field_7C == 1 && (Zone->timer & 8)))
                 ActClear_DrawNumbers(&drawPos, TimeAttackData->dbRank, 0);
         }
+#endif
     }
 
     drawPos.x = entity->posUnknown6.x;
     drawPos.y = entity->posUnknown6.y;
 
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x             = offset + entity->posUnknown6.x - 0x5C0000;
         entity->data1.frameID = 19;
@@ -233,6 +255,7 @@ void ActClear_Draw(void)
         }
     }
     else {
+#endif
         drawPos.x             = offset + entity->posUnknown6.x - 0x440000;
         entity->data1.frameID = 9;
         RSDK.DrawSprite(&entity->data1, &drawPos, true);
@@ -243,15 +266,19 @@ void ActClear_Draw(void)
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
-        ActClear_DrawNumbers(&drawPos, entity->field_70, 0);
+        ActClear_DrawNumbers(&drawPos, entity->totalScore, 0);
+#if RETRO_USE_PLUS
     }
+#endif
 }
 
 void ActClear_Create(void *data)
 {
     RSDK_THIS(ActClear);
     if (!RSDK_sceneInfo->inEditor) {
+#if RETRO_USE_PLUS
         ActClear->dword34        = 1;
+#endif
         entity->active           = ACTIVE_NORMAL;
         entity->visible          = true;
         entity->drawOrder        = Zone->hudDrawOrder;
@@ -285,7 +312,9 @@ void ActClear_Create(void *data)
 #endif
         }
 
+#if RETRO_USE_PLUS
         if (!ActClear->field_30) {
+#endif
             switch (RSDK_sceneInfo->minutes) {
                 case 0:
                     if (RSDK_sceneInfo->seconds >= 30)
@@ -309,20 +338,21 @@ void ActClear_Create(void *data)
                     break;
                 default: break;
             }
+#if RETRO_USE_PLUS
         }
+#endif
+
         entity->ringBonus      = 100 * player1->rings;
         entity->coolBonus      = globals->coolBonus[0];
         globals->initCoolBonus = false;
-        if (globals->gameMode == MODE_TIMEATTACK) {
 #if RETRO_USE_PLUS
+        if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
             entity->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
-#else
-
-#endif
             entity->field_7C = 0;
             entity->field_80 = 0;
         }
+#endif
         entity->field_84      = 1;
         entity->posUnknown.x  = 0xE00000;
         entity->posUnknown.y  = 0x580000;
@@ -338,7 +368,9 @@ void ActClear_Create(void *data)
         entity->posUnknown6.y = 0xC00000;
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->data1, true, 0);
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 1, &entity->animator2, true, 0);
+#if RETRO_USE_PLUS
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->data3, true, 12);
+#endif
         switch (globals->playerID & 0xFF) {
             case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 1); break;
             case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameData, true, 2); break;
@@ -359,14 +391,17 @@ void ActClear_Create(void *data)
 
 void ActClear_StageLoad(void)
 {
-    ActClear->dword34        = 0;
     ActClear->spriteIndex    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
     ActClear->sfx_ScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
     ActClear->sfx_ScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
+#if RETRO_USE_PLUS
+    ActClear->dword34        = 0;
     ActClear->sfx_Event      = RSDK.GetSFX("Special/Event.wav");
     ActClear->forceNoSave       = false;
+#endif
 }
 
+#if RETRO_USE_PLUS
 void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
 {
     Vector2 drawPos;
@@ -395,6 +430,7 @@ void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
         mins = -1;
     ActClear_DrawNumbers(&drawPos, mins, 1);
 }
+#endif
 
 void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
 {
@@ -527,52 +563,23 @@ void ActClear_State_TAFinish(void)
         entity->posUnknown5.x -= 0x100000;
 
     if (entity->posUnknown6.x >= -0x80000) {
-        if (globals->gameMode == MODE_TIMEATTACK) {
 #if RETRO_USE_PLUS
+        if (globals->gameMode == MODE_TIMEATTACK) {
             if (ActClear->isTimeAttack) {
                 StateMachine_Run(ActClear->bufferMove_CB);
             }
             HUD->dwordC        = 1;
             ActClear->field_2C = 0;
             entity->dword78    = 240;
-            entity->state      = ActClear_Unknown9;
-#else
-            EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-            ActClear->hitboxID     = true;
-            byte playerID          = param->characterID;
-            byte zoneID            = param->zoneID;
-            byte actID             = param->actID;
-
-            int *recordsRAM = NULL;
-            if (globals->saveLoaded == STATUS_OK)
-                recordsRAM = &globals->saveRAM[0x800];
-
-            if (recordsRAM) {
-                int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
-
-                ushort *record = (ushort *)&recordsRAM[36 * playerID - 15 + 3 * zoneID] + 3 * actID;
-                int rank       = 0;
-                for (; rank < 3; ++rank) {
-                    if (!record[rank] || time < record[rank])
-                        break;
-                }
-
-                if (rank < 3) {
-                    rank++;
-                    TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
-                    TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
-                    param->timeScore = rank;
-                }
-                else {
-                    ActClear->hitboxID = false;
-                }
-            }
-#endif
+            entity->state      = ActClear_State_TAResults;
             RSDK.SetScene("Presentation", "Menu");
         }
         else {
             entity->state = ActClear_Unknown8;
         }
+#else
+        entity->state = ActClear_Unknown8;
+#endif
     }
     else {
         entity->posUnknown6.x += 0x100000;
@@ -596,19 +603,19 @@ void ActClear_TallyScore(void)
     EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
 
     if (entity->scoreBonus > 0) {
-        entity->field_70 += 100;
+        entity->totalScore += 100;
         entity->scoreBonus -= 100;
         Player_GiveScore(player, 100);
     }
 
     if (entity->ringBonus > 0) {
-        entity->field_70 += 100;
+        entity->totalScore += 100;
         entity->ringBonus -= 100;
         Player_GiveScore(player, 100);
     }
 
     if (entity->coolBonus > 0) {
-        entity->field_70 += 100;
+        entity->totalScore += 100;
         entity->coolBonus -= 100;
         Player_GiveScore(player, 100);
     }
@@ -619,7 +626,7 @@ void ActClear_TallyScore(void)
     if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press) {
 #endif
         Player_GiveScore(player, entity->scoreBonus + entity->ringBonus + entity->coolBonus);
-        entity->field_70 += entity->scoreBonus + entity->ringBonus + entity->coolBonus;
+        entity->totalScore += entity->scoreBonus + entity->ringBonus + entity->coolBonus;
         entity->scoreBonus = 0;
         entity->ringBonus  = 0;
         entity->coolBonus  = 0;
@@ -648,6 +655,41 @@ void ActClear_LoadNextScene(void)
             if (globals->gameMode == MODE_COMPETITION) {
                 RSDK.SetScene("Presentation", "Menu");
             }
+#if !RETRO_USE_PLUS
+            else if (globals->gameMode == MODE_TIMEATTACK) {
+                EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+                ActClear->field_10     = true;
+                byte playerID          = param->characterID;
+                byte zoneID            = param->zoneID;
+                byte actID             = param->actID;
+
+                int *recordsRAM = NULL;
+                if (globals->saveLoaded == STATUS_OK)
+                    recordsRAM = &globals->saveRAM[0x800];
+
+                if (recordsRAM) {
+                    int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+
+                    ushort *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
+                    int rank       = 0;
+                    for (; rank < 3; ++rank) {
+                        if (!record[rank] || time < record[rank])
+                            break;
+                    }
+
+                    if (rank < 3) {
+                        rank++;
+                        TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
+                        TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
+                        param->timeScore = rank;
+                    }
+                    else {
+                        ActClear->field_10 = false;
+                    }
+                }
+                RSDK.SetScene("Presentation", "Menu");
+            }
+#endif
             else {
                 globals->enableIntro = true;
                 Player_SaveValues();
@@ -656,7 +698,11 @@ void ActClear_LoadNextScene(void)
                 if (Zone->actID > 0)
                     SaveGame->saveRAM->collectedSpecialRings = 0;
                 SaveGame_SaveProgress();
+#if RETRO_USE_PLUS
                 if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
+#else
+                if (globals->gameMode == MODE_MANIA) {
+#endif
                     if (Zone_IsAct2())
                         SaveGame_MarkZoneCompleted(Zone_GetZoneID());
                     ActClear->field_10 = 1;
@@ -672,7 +718,11 @@ void ActClear_LoadNextScene(void)
             SaveGame_ClearRestartData();
             StarPost_ResetStarPosts();
             SaveGame_SaveProgress();
+#if RETRO_USE_PLUS
             if (globals->saveSlotID != NO_SAVE_SLOT && !ActClear->forceNoSave) {
+#else
+            if (globals->gameMode == MODE_MANIA) {
+#endif
                 ActClear->field_10 = 1;
                 SaveGame_SaveFile(ActClear_SaveGameCallback);
             }
@@ -688,31 +738,20 @@ void ActClear_LoadNextScene(void)
                 entity->state = ActClear_State_ActFinish;
             }
             else {
-                entity->state    = 0;
-                EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-                zone->screenID   = 4;
-                zone->timer      = 0;
-                zone->fadeSpeed  = 10;
-                zone->fadeColour = 0x000000;
-                zone->state      = Zone_State_Fadeout;
-                zone->stateDraw  = Zone_StateDraw_Fadeout;
-                zone->visible    = true;
-                zone->drawOrder  = 15;
+                entity->state    = StateMachine_None;
+                Zone_StartFadeOut(10, 0x000000);
             }
         }
     }
 }
 
-void ActClear_Unknown9(void)
+#if RETRO_USE_PLUS
+void ActClear_State_TAResults(void)
 {
     RSDK_THIS(ActClear);
 
     if (entity->dword78 > 0) {
-#if RETRO_USE_PLUS
         if (TimeAttackData->dbRank <= 0 || ReplayRecorder->dword13C) {
-#else
-        if (TimeAttackData->dbRank <= 0) {
-#endif
             --entity->dword78;
         }
         else {
@@ -761,7 +800,6 @@ void ActClear_Unknown9(void)
         RSDK_controller->keyStart.press |= RSDK_touchMouse->count && !RSDK_controller->keyY.press;
 #endif
 
-#if RETRO_USE_PLUS
         if (RSDK_controller->keyY.press) {
             if (!ActClear->field_2C) {
                 if (HUD->replaySaveEnabled) {
@@ -776,7 +814,6 @@ void ActClear_Unknown9(void)
                 }
             }
         }
-#endif
 
         if (RSDK_controller->keyStart.press) {
             RSDK.PlaySFX(UIWidgets->sfx_Accept, 0, 255);
@@ -792,6 +829,7 @@ void ActClear_Unknown9(void)
         }
     }
 }
+#endif
 
 void ActClear_Unknown10(void)
 {
@@ -848,7 +886,9 @@ void ActClear_State_ActFinish(void)
             }
         }
         else {
+#if RETRO_USE_PLUS
             ActClear->field_1C           = 1;
+#endif
             ActClear->actID              = 0;
             RSDK_sceneInfo->milliseconds = 0;
             RSDK_sceneInfo->seconds      = 0;
@@ -860,7 +900,7 @@ void ActClear_State_ActFinish(void)
             }
         }
         if (entity->state != ActClear_ForcePlayerOnScreen)
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+            destroyEntity(entity);
     }
 }
 

@@ -48,8 +48,10 @@ void TitleSetup_Unknown4(void);
 void TitleSetup_Unknown5(void);
 void TitleSetup_Unknown6(void);
 void TitleSetup_Unknown7(void);
-void TitleSetup_SetupLogo_NoPlus(void);
+void TitleSetup_SetupLogo(void);
+#if RETRO_USE_PLUS
 void TitleSetup_SetupLogo_Plus(void);
+#endif
 void TitleSetup_Unknown10(void);
 void TitleSetup_Unknown11(void);
 void TitleSetup_Unknown12(void);

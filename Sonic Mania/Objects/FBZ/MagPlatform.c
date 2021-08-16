@@ -71,18 +71,26 @@ void MagPlatform_Unknown1(void)
                 break;
             case 4:
                 if (!player->onGround) {
+#if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(1024, player, true, &player->uncurlTimer)) {
                         Player_CheckHit(player, entity);
                     }
+#else
+                    Player_CheckHit(player, entity);
+#endif
                 }
                 else if (player->collisionMode) {
                     if (entity->velocity.y > 0) {
                         Player_CheckHit(player, entity);
                     }
                     else {
+#if RETRO_USE_PLUS
                         if (!Player_CheckMightyUnspin(1024, player, true, &player->uncurlTimer)) {
                             Player_CheckHit(player, entity);
                         }
+#else
+                        Player_CheckHit(player, entity);
+#endif
                     }
                 }
                 else {

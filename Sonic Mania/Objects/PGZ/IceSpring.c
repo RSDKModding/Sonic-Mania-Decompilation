@@ -50,7 +50,11 @@ void IceSpring_Update(void)
 
                 EntityShield *shield      = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
                 StateMachine(playerState) = player->state;
-                if (playerState != Ice_State_FrozenPlayer && shield->animator.animationID != 2 && playerState != Player_State_MightyHammerDrop) {
+                if (playerState != Ice_State_FrozenPlayer && shield->animator.animationID != 2
+#if RETRO_USE_PLUS
+                    && playerState != Player_State_MightyHammerDrop
+#endif
+                    ) {
                     if (player->shield == 3 && player->invincibleTimer <= 0 && !entity->timer) {
                         entity->timer = 15;
                         Ice_ShatterGenerator(8, 8, 6, 0, 0, 0);
@@ -58,7 +62,11 @@ void IceSpring_Update(void)
                     ++i;
                     continue;
                 }
-                if (!collideCheck || playerState == Player_State_MightyHammerDrop) {
+                if (!collideCheck
+#if RETRO_USE_PLUS
+                    || playerState == Player_State_MightyHammerDrop
+#endif
+                    ) {
                     switch (collided) {
                         case 1: IceSpring_Shatter(0, 0); foreach_break;
                         case 2:

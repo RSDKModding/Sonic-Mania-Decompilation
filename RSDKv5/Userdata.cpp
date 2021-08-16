@@ -376,12 +376,12 @@ void SetPresence(byte id, TextInfo *info)
     char buffer2[0xFF];
     GetCString(buffer, info);
 #if RETRO_REV02
+    richPresence->curID = id;
     sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
 #else
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
 #endif
     printLog(PRINT_NORMAL, buffer2);
-    richPresence->curID = id;
 }
 
 #if !RETRO_REV02
@@ -401,7 +401,6 @@ void TrackGameProgress(float percent)
 {
     printLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100);
 }
-void ClearPrerollErrors() { printLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()"); }
 #else
 #define voidToInt(x)   (int)(size_t)(x)
 #define voidToFloat(x) *(float *)&(x)

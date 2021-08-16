@@ -50,8 +50,12 @@ void UIButton_Draw(void)
     drawPos.x -= entity->field_140;
     drawPos.y -= entity->field_140;
     size >>= 16;
-    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword138, (UIWidgets->value >> 16) & 0xFF, (UIWidgets->value >> 8) & 0xFF,
-                       (UIWidgets->value) & 0xFF, drawPos.x, drawPos.y);
+#if RETRO_USE_PLUS
+    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword138, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+                       (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+#else
+    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword138, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+#endif
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x += entity->field_140;
@@ -287,6 +291,7 @@ void UIButton_Unknown6(void)
         }
 
         if (flag) {
+#if RETRO_USE_PLUS
             if (control->noWrap) {
                 int rowCount = control->rowCount;
                 if (rowID < control->rowCount)
@@ -311,6 +316,7 @@ void UIButton_Unknown6(void)
                 }
             }
             else {
+#endif
                 if (rowID < 0)
                     rowID += control->rowCount;
                 if (rowID >= control->rowCount)
@@ -319,7 +325,9 @@ void UIButton_Unknown6(void)
                     colID += control->columnCount;
                 if (colID >= control->columnCount)
                     colID -= control->columnCount;
+#if RETRO_USE_PLUS
             }
+#endif
 
             int id = control->buttonCount - 1;
             if (colID + rowID * control->columnCount < id)
@@ -565,6 +573,7 @@ void UIButton_ProcessButtonInputs(void)
     }
 
     if (flag) {
+#if RETRO_USE_PLUS
         if (control->noWrap) {
             int count = control->rowCount;
             if (rowID < control->rowCount)
@@ -585,6 +594,7 @@ void UIButton_ProcessButtonInputs(void)
                 columnID = 0;
         }
         else {
+#endif
             if (rowID < 0)
                 rowID += control->rowCount;
 
@@ -596,7 +606,9 @@ void UIButton_ProcessButtonInputs(void)
 
             if (columnID >= control->columnCount)
                 columnID -= control->columnCount;
+#if RETRO_USE_PLUS
         }
+#endif
 
         int id = columnID + control->columnCount * rowID;
         if (id >= control->buttonCount - 1)
@@ -734,13 +746,17 @@ void UIButton_Unknown15(void)
         parent->state = StateMachine_None;
 
     if (entity->assignsP1) {
-        int id = RSDK.MostRecentActiveControllerID(0, 0, 0);
-        RSDK.ResetControllerAssignments();
-        RSDK.AssignControllerID(CONT_P1, id);
+#if RETRO_USE_PLUS
+        int id = API_MostRecentActiveControllerID(0, 0, 0);
+#else
+        int id = API_MostRecentActiveControllerID(0);
+#endif
+        API_ResetControllerAssignments();
+        API_AssignControllerID(CONT_P1, id);
     }
 
     if (entity->freeBindP2)
-        RSDK.AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
+        API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     parent->backoutTimer = 30;
     if (entity->transition) {

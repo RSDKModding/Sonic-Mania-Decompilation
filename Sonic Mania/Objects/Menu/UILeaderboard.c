@@ -37,7 +37,7 @@ void UILeaderboard_Create(void *data)
     entity->posUnknown2.y      = entity->position.y;
     entity->active        = ACTIVE_BOUNDS;
     entity->drawOrder     = 2;
-    entity->visible       = 1;
+    entity->visible       = true;
     entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x300000;
@@ -84,11 +84,38 @@ void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
     UILeaderboard_LoadEntries(entity);
 }
 
+#if !RETRO_USE_PLUS
+void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
+{
+    int count = APICallback_LeaderboardEntryCount();
+    leaderboard->entryLength = count;
+    if (leaderboard->entryUnknown && count >= 1) {
+        int i = 0;
+        for (; i < leaderboard->entryLength; ++i) {
+            bool32 isUser = API_ReadLeaderboardEntry(i)->isUser;
+            if (isUser)
+                break;
+        }
+
+        int offset = leaderboard->entryLength - 6;
+        if (i - 2 < offset)
+            offset = i - 2;
+        if (offset <= 0)
+            offset = 0;
+        leaderboard->entryOffset = offset;
+    }
+    else {
+        leaderboard->entryOffset = 0;
+    }
+    UILeaderboard_SetupEntrySprites(leaderboard);
+}
+#endif
+
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
 {
     if (!RSDK_sceneInfo->inEditor) {
         for (int i = 0; i < 5; ++i) {
-            LeaderboardEntry *entry = API.ReadLeaderboardEntry(i + entity->entryOffset);
+            LeaderboardEntry *entry = API_ReadLeaderboardEntry(i + entity->entryOffset);
             if (entry && entry->status == STATUS_OK) {
                 char buffer[0x10];
 
@@ -372,31 +399,27 @@ void UILeaderboard_State_Unknown3(void)
 void UILeaderboard_ProcessButtonCB(void)
 {
     RSDK_THIS(UILeaderboard);
+#if RETRO_USE_PLUS
     Vector2 entryCount = API.LeaderboardEntryCount();
 
-    int oldID      = entity->entryOffset;
     int newID      = entity->entryOffset;
-    if (UIControl->keyUp) {
-        newID = oldID - 1;
-    }
-    else if (UIControl->keyDown) {
-        newID = oldID + 1;
-    }
-    else if (UIControl->keyLeft) {
-        newID = oldID - 5;
-    }
-    else if (UIControl->keyRight) {
-        newID = oldID + 5;
-    }
+    if (UIControl->keyUp)
+        newID--;
+    else if (UIControl->keyDown)
+        newID++;
+    else if (UIControl->keyLeft)
+        newID -= 5;
+    else if (UIControl->keyRight)
+        newID += 5;
 
     int end = entryCount.x + entryCount.y;
-    if ((entryCount.x + entryCount.y - 5) < newID)
+    if (newID >= end)
         newID = end - 5;
-    if (entryCount.x > newID)
+    if (newID < entryCount.x)
         newID = entryCount.x;
 
-    if (entryCount.y && oldID != newID) {
-        LogHelpers_Print("old: %d, new: %d", oldID, newID);
+    if (entryCount.y && entity->entryOffset != newID) {
+        LogHelpers_Print("old: %d, new: %d", entity->entryOffset, newID);
         entity->entryOffset = newID;
         UILeaderboard_LoadEntries(entity);
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
@@ -411,15 +434,38 @@ void UILeaderboard_ProcessButtonCB(void)
             API.Unknown12(entryCount.x - 20, entryCount.y + 20, 1);
         }
     }
+#else
+    int newID = entity->entryOffset;
+    if (UIControl->keyUp)
+        newID--;
+    else if (UIControl->keyDown)
+        newID++;
+    else if (UIControl->keyLeft)
+        newID -= 5;
+    else if (UIControl->keyRight)
+        newID += 5;
+
+    int end = entity->entryOffset + entity->entryLength;
+    if (newID >= end)
+        newID = end - 5;
+    if (newID < entity->entryOffset)
+        newID = entity->entryOffset;
+
+    if (entity->entryLength && entity->entryOffset != newID) {
+        entity->entryOffset = newID;
+        UILeaderboard_LoadEntries(entity);
+        RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+    }
+#endif
 
     if (UIControl->keyY && entity->field_1D8) {
         entity->yPressCB();
         RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
     }
     if (entity->state == UILeaderboard_State_Unknown2 || !entity->flag) {
-        entity->flag  = true;
-        entity->state = UILeaderboard_State_Unknown3;
-        entity->field_1CC  = 0;
+        entity->flag      = true;
+        entity->state     = UILeaderboard_State_Unknown3;
+        entity->field_1CC = 0;
     }
 }
 

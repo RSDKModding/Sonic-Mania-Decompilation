@@ -19,7 +19,7 @@ typedef struct {
     int field_68;
     int field_6C;
     Vector2 *posPtr;
-    int field_74;
+    EntityUIControl *parent;
     Vector2 offset;
     Vector2 size;
     byte p1Score;

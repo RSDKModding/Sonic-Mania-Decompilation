@@ -23,13 +23,16 @@ void MSZSetup_StageLoad(void)
         MSZSetup_Unknown4(1024);
     }
     else {
+#if RETRO_USE_PLUS
         // GiantPistol->field_4   = false;
         MSZSetup->chuggaVolume = 0;
+#endif
+
         if (Zone->actID) {
             MSZSetup->flag = true;
             RSDK.CopyPalette(4, 128, 0, 128, 128);
 #if RETRO_USE_PLUS
-            if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
+            if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
                 RSDK.CopyPalette(0, 128, 5, 128, 128);
                 RSDK.LoadPalette(0, "EncoreMSZ2.act", 255);
                 RSDK.CopyPalette(0, 128, 1, 128, 128);
@@ -37,24 +40,26 @@ void MSZSetup_StageLoad(void)
                 RSDK.RotatePalette(2, 204, 207, false);
             }
             else {
-#endif
-                for (int i = 0; i < 0x400; ++i) {
-                    MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
-                }
-#if RETRO_USE_PLUS
+                for (int i = 0; i < 0x400; ++i) MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
             }
+#else
+            for (int i = 0; i < 0x400; ++i) MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
 #endif
 
+#if RETRO_USE_PLUS
             if (!(RSDK_sceneInfo->filter & FILTER_ENCORE) && (globals->playerID & ID_KNUCKLES)) {
+#else
+            if (globals->playerID & ID_KNUCKLES) {
+#endif
                 Zone->screenBoundsL1[0] = 0;
                 Zone->screenBoundsL1[1] = 0;
                 Zone->screenBoundsL1[2] = 0;
                 Zone->screenBoundsL1[3] = 0;
                 if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x1440000, 0x4C0000, 0x1F40000, 0x2340000)) {
-                    Zone->screenBoundsB1[0] = 0x234;
-                    Zone->screenBoundsB1[1] = 0x234;
-                    Zone->screenBoundsB1[2] = 0x234;
-                    Zone->screenBoundsB1[3] = 0x234;
+                    Zone->screenBoundsB1[0] = 564;
+                    Zone->screenBoundsB1[1] = 564;
+                    Zone->screenBoundsB1[2] = 564;
+                    Zone->screenBoundsB1[3] = 564;
                 }
                 if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
                     Zone_ReloadStoredEntities(0x2300000, 0x1200000, true);
@@ -96,7 +101,11 @@ void MSZSetup_StageLoad(void)
             else {
 #endif
                 if (RSDK.GetEntityCount(Tornado->objectID, false) <= 0) {
+#if RETRO_USE_PLUS
                     RSDK.ResetEntitySlot(32, MSZSetup->objectID, MSZSetup_ManageFadeK);
+#else
+                    RSDK.ResetEntitySlot(17, MSZSetup->objectID, MSZSetup_ManageFadeK);
+#endif
                     if (!PlayerHelpers_CheckIntro())
                         FXFade_StopAll();
                     if (PlayerHelpers_CheckAct1Regular()) {
@@ -107,10 +116,16 @@ void MSZSetup_StageLoad(void)
                 else {
                     MSZSetup_Unknown2();
                     MSZSetup_Unknown4(1024);
+#if RETRO_USE_PLUS
                     RSDK.ResetEntitySlot(32, MSZSetup->objectID, MSZSetup_ManageFadeST);
+#else
+                    RSDK.ResetEntitySlot(17, MSZSetup->objectID, MSZSetup_ManageFadeST);
+#endif
                     if (PlayerHelpers_CheckAct1Regular())
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
+#if RETRO_USE_PLUS
                     // GiantPistol->field_4 = true;
+#endif
                 }
 #if RETRO_USE_PLUS
             }
@@ -118,7 +133,9 @@ void MSZSetup_StageLoad(void)
         }
     }
 
+#if RETRO_USE_PLUS
     MSZSetup->sfxLocoChugga = RSDK.GetSFX("MSZ/LocoChugga.wav");
+#endif
     Animals->animalTypes[0] = ANIMAL_LOCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
 }
@@ -229,7 +246,7 @@ void MSZSetup_ActivateMSZ2Cutscene(void) { MSZSetup->msz2Cutscene->active = ACTI
 void MSZSetup_GetAchievement(void)
 {
     if (!MSZSetup->hasAchievement) {
-        API.UnlockAchievement("ACH_MSZ");
+        API_UnlockAchievement("ACH_MSZ");
         MSZSetup->hasAchievement = true;
     }
 }
@@ -291,6 +308,7 @@ void MSZSetup_Unknown9(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void MSZSetup_Unknown10(void)
 {
     RSDK_THIS(MSZSetup);
@@ -339,6 +357,7 @@ void MSZSetup_Unknown12(void)
         // entity->state            = MSZSetup_Unknown13;
     }
 }
+#endif
 
 void MSZSetup_PlayerState_Pilot(void)
 {

@@ -12,6 +12,7 @@ struct LeaderboardEntry {
     int status;
 };
 
+#if RETRO_REV02
 struct DummyLeaderboards {
     void (*SetDebugValues)(void);
     void (*InitUnknown1)(void);
@@ -46,6 +47,7 @@ struct DummyLeaderboards {
     int list;
     int listSize;
 };
+#endif
 
 // Start custom leaderboard code
 // this is added because we don't have access to any store APIs that would otherwise use this feature
@@ -58,6 +60,7 @@ extern std::vector<LeaderboardInfo> leaderboardList;
 
 // End custom leaderboard code
 
+#if RETRO_REV02
 extern DummyLeaderboards *leaderboards;
 
 void FillDummyLeaderboardEntries();
@@ -66,5 +69,6 @@ void TrackScore(const char *name, int score, void (*callback)(int status, int ra
 Vector2 LeaderboardEntryCount();
 LeaderboardEntry *ReadLeaderboardEntry(int entryID);
 inline int GetLeaderboardStatus() { return leaderboards->status; }
+#endif
 
 #endif // USER_LEADERBOARDS_H

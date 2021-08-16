@@ -27,7 +27,10 @@ typedef struct {
     byte editorFlip;
     bool32 field_1CC;
     int entryOffset;
-    int field_1D4;
+    int entryLength;
+#if !RETRO_USE_PLUS
+    int entryUnknown;
+#endif
     int field_1D8;
     StateMachine(yPressCB);
     TextInfo field_1E0;
@@ -62,6 +65,9 @@ void UILeaderboard_Serialize(void);
 
 // Extra Entity Functions
 void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity);
+#if !RETRO_USE_PLUS 
+void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard);
+#endif
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity);
 
 void UILeaderboard_DrawPrimitives(void);

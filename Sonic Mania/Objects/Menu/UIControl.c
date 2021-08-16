@@ -50,7 +50,9 @@ void UIControl_Create(void *data)
         }
         entity->updateRange.x = entity->size.x >> 1;
         entity->updateRange.y = entity->size.y >> 1;
+#if RETRO_USE_PLUS
         entity->promptCount = 0;
+#endif
         if (entity->rowCount <= 1)
             entity->rowCount = 1;
 
@@ -66,6 +68,7 @@ void UIControl_Create(void *data)
         entity->position.y += entity->cameraOffset.y;
         entity->startPos.x = entity->position.x;
         entity->startPos.y = entity->position.y;
+#if RETRO_USE_PLUS
         int entityID       = RSDK.GetEntityID(entity);
         if (UIButtonPrompt) {
             if (entityID != SLOT_DIALOG_UICONTROL) {
@@ -86,6 +89,7 @@ void UIControl_Create(void *data)
                 }
             }
         }
+#endif
 
         RSDK_stickL[1].deadzone = 0.75f;
         RSDK_stickL[2].deadzone = 0.75f;
@@ -183,18 +187,14 @@ void UIControl_ClearInputs(char id)
     UIControl->keyStart = id == 5;
 #endif
 
-#if RETRO_USE_PLUS
-    if (API.GetConfirmButtonFlip()) {
-#else
-    if (APICallback_GetConfirmButtonFlip()) {
-#endif
-        UIControl->keyConfirm    = id == 1;
-        UIControl->keyBack = id == 0;
+    if (API_GetConfirmButtonFlip()) {
+        UIControl->keyConfirm = id == 1;
+        UIControl->keyBack    = id == 0;
         UIControl->flagA      = id == 0;
     }
     else {
-        UIControl->keyConfirm    = id == 0;
-        UIControl->keyBack = id == 1;
+        UIControl->keyConfirm = id == 0;
+        UIControl->keyBack    = id == 1;
         UIControl->flagA      = id == 1;
     }
     UIControl->field_C     = true;
@@ -228,10 +228,8 @@ void UIControl_ProcessInputs(void)
             UIControl->xPress[i] = RSDK_controller[i + 1].keyX.press;
 #if RETRO_USE_PLUS
             UIControl->startPress[i] = RSDK_controller[i + 1].keyStart.press;
-            if (API.GetConfirmButtonFlip()) {
-#else
-            if (APICallback_GetConfirmButtonFlip()) {
 #endif
+            if (API_GetConfirmButtonFlip()) {
                 UIControl->confirmPress[i] = RSDK_controller[i + 1].keyStart.press || RSDK_controller[i + 1].keyB.press;
                 UIControl->backPress[i]    = RSDK_controller[i + 1].keyA.press;
             }
@@ -249,10 +247,8 @@ void UIControl_ProcessInputs(void)
         UIControl->keyX     = RSDK_controller->keyX.press;
 #if RETRO_USE_PLUS
         UIControl->keyStart = RSDK_controller->keyStart.press;
-        if (API.GetConfirmButtonFlip()) {
-#else
-        if (APICallback_GetConfirmButtonFlip()) {
 #endif
+        if (API_GetConfirmButtonFlip()) {
             UIControl->keyConfirm    = RSDK_controller->keyStart.press || RSDK_controller->keyB.press;
             UIControl->keyBack = RSDK_controller->keyA.press;
         }
@@ -280,7 +276,11 @@ void UIControl_ProcessInputs(void)
     if (!entity->selectionDisabled) {
         bool32 flag = false;
         if (UIControl->keyBack) {
-            if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
+            if (!entity->childHasFocus && !entity->dialogHasFocus
+#if RETRO_USE_PLUS
+                && !entity->popoverHasFocus 
+#endif
+                && entity->backoutTimer <= 0) {
                 if (entity->backPressCB) {
                     flag = entity->backPressCB();
                     if (!flag) {
@@ -308,6 +308,7 @@ void UIControl_ProcessInputs(void)
                 if (flag)
                     return;
             }
+#if RETRO_USE_PLUS
             else {
                 LogHelpers_Print("Backout prevented");
                 LogHelpers_Print("childHasFocus = %d", entity->childHasFocus);
@@ -315,6 +316,7 @@ void UIControl_ProcessInputs(void)
                 LogHelpers_Print("popoverHasFocus = %d", entity->popoverHasFocus);
                 LogHelpers_Print("backoutTimer = %d", entity->backoutTimer);
             }
+#endif
         }
 
         if (entity->processButtonInputCB)
@@ -324,13 +326,23 @@ void UIControl_ProcessInputs(void)
 
         if (!entity->selectionDisabled) {
             if (UIControl->keyY) {
-                if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
+                if (!entity->childHasFocus
+                    && !entity->dialogHasFocus
+#if RETRO_USE_PLUS
+                    && !entity->popoverHasFocus
+#endif
+                    && entity->backoutTimer <= 0) {
                     StateMachine_Run(entity->yPressCB);
                 }
                 UIControl->keyY = false;
             }
             if (UIControl->keyX) {
-                if (!entity->childHasFocus && !entity->dialogHasFocus && !entity->popoverHasFocus && entity->backoutTimer <= 0) {
+                if (!entity->childHasFocus 
+                    && !entity->dialogHasFocus
+#if RETRO_USE_PLUS
+                    && !entity->popoverHasFocus 
+#endif
+                    && entity->backoutTimer <= 0) {
                     StateMachine_Run(entity->xPressCB);
                 }
                 UIControl->keyX = false;
@@ -398,8 +410,8 @@ void UIControl_Unknown2(EntityUIControl *control)
                         modeButton->touchPosStart.y    = 0x3E0000;
                         modeButton->touchPosEnd.x      = 0;
                         modeButton->touchPosEnd.y      = -0x120000;
-                        if (modeButton->textSpriteIndex != UIWidgets->textSpriteIndex || modeButton->wasDisabled != modeButton->base.disabled) {
-                            UIModeButton_Update();
+                        if (modeButton->textSpriteIndex != UIWidgets->textSpriteIndex || modeButton->wasDisabled != modeButton->disabled) {
+                            UIModeButton_Unknown1();
                             modeButton->textSpriteIndex = UIWidgets->textSpriteIndex;
                             modeButton->wasDisabled     = modeButton->disabled;
                         }
@@ -425,12 +437,14 @@ void UIControl_Unknown2(EntityUIControl *control)
     }
 }
 
+#if RETRO_USE_PLUS
 void UIControl_Unknown3(EntityUIControl *entity)
 {
     for (int i = 0; i < entity->promptCount; ++i) {
         entity->prompts[i]->active = ACTIVE_NORMAL;
     }
 }
+#endif
 
 void UIControl_Unknown4(EntityUIControl *entity)
 {
@@ -461,9 +475,11 @@ void UIControl_Unknown4(EntityUIControl *entity)
     entity->childHasFocus = false;
     entity->dwordCC       = 1;
 
+#if RETRO_USE_PLUS
     for (int i = 0; i < entity->promptCount; ++i) {
         entity->prompts[i]->active = ACTIVE_NORMAL;
     }
+#endif
     if (entity->unknownCallback3) {
         Entity *storeEntity    = RSDK_sceneInfo->entity;
         RSDK_sceneInfo->entity = (Entity *)entity;
@@ -476,7 +492,11 @@ void UIControl_Unknown5(EntityUIControl *entity)
 {
     entity->active  = ACTIVE_ALWAYS;
     entity->visible = true;
-    if (!entity->dialogHasFocus && !entity->popoverHasFocus && !entity->childHasFocus) {
+    if (!entity->dialogHasFocus
+#if RETRO_USE_PLUS
+        && !entity->popoverHasFocus
+#endif
+        && !entity->childHasFocus) {
         if (entity->dwordC4) {
             entity->activeEntityID = entity->storedEntityID;
             entity->storedEntityID = 0;
@@ -484,8 +504,16 @@ void UIControl_Unknown5(EntityUIControl *entity)
         }
         else if (entity->resetSelection) {
             entity->activeEntityID = entity->startingID;
+#if !RETRO_USE_PLUS
+            entity->position.x   = entity->startPos.x;
+            entity->position.y   = entity->startPos.y;
+            entity->posUnknown.x = entity->startPos.x;
+            entity->posUnknown.y = entity->startPos.y;
+            entity->state        = UIControl_ProcessInputs;
+#endif
         }
 
+#if RETRO_USE_PLUS
         if (entity->resetSelection) {
             entity->position.x   = entity->startPos.x;
             entity->position.y   = entity->startPos.y;
@@ -511,6 +539,7 @@ void UIControl_Unknown5(EntityUIControl *entity)
                 entity->state = UIControl_ProcessInputs;
             }
         }
+#endif
     }
 }
 
@@ -521,11 +550,13 @@ void UIControl_Unknown6(EntityUIControl *control)
     control->active     = ACTIVE_NEVER;
     control->visible    = false;
     control->state      = StateMachine_None;
+#if RETRO_USE_PLUS
     if (entity->promptCount) {
         for (int i = 0; i < control->promptCount; ++i) {
             control->prompts[i]->active = ACTIVE_BOUNDS;
         }
     }
+#endif
 }
 
 void UIControl_Unknown7(void)
@@ -698,7 +729,9 @@ void UIControl_Unknown15(EntityUIControl *entity, int x, int y)
         y      = entity->position.y;
     }
 
+#if RETRO_USE_PLUS
     if (!entity->noClamp) {
+#endif
         int startX = entity->startPos.x - entity->cameraOffset.x;
         int startY = entity->startPos.y - entity->cameraOffset.y;
         int x1     = startX + (RSDK_screens->width << 15) - (entity->size.x >> 1);
@@ -716,7 +749,9 @@ void UIControl_Unknown15(EntityUIControl *entity, int x, int y)
         finalY = y2;
         if (y1 > y2)
             finalY = y1;
+#if RETRO_USE_PLUS
     }
+#endif
     entity->posUnknown.x = finalX;
     entity->posUnknown.y = finalY;
 }
@@ -763,7 +798,11 @@ void UIControl_ProcessButtonInput(void)
 
                 Entity *storeEntity    = RSDK_sceneInfo->entity;
                 RSDK_sceneInfo->entity = (Entity *)button;
-                if (button->touchCB && !entity->dialogHasFocus && !entity->popoverHasFocus) {
+                if (button->touchCB && !entity->dialogHasFocus
+#if RETRO_USE_PLUS
+                    && !entity->popoverHasFocus
+#endif
+                    ) {
                     if (!button->options8 || !button->options8()) {
                         if (flag || button->touchCB()) {
                             flag = true;

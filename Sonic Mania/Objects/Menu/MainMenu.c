@@ -193,7 +193,6 @@ void MainMenu_ChangeMenu(void)
             }
             break;
         case 1:
-#if RETRO_USE_PLUS
             if (API.CheckDLC(DLC_PLUS)) {
                 EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
                 control->activeEntityID  = 0;
@@ -206,22 +205,14 @@ void MainMenu_ChangeMenu(void)
                 control->dwordCC         = 0;
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
-#else
-            UIControl_MatchMenuTag("Time Attack");
-#endif
             break;
         case 2:
-#if RETRO_USE_PLUS
             if (API.CheckDLC(DLC_PLUS))
                 UIControl_MatchMenuTag("Competition");
             else
                 UIControl_MatchMenuTag("Competition Legacy");
-#else
-            UIControl_MatchMenuTag("Competition");
-#endif
             break;
         case 3: UIControl_MatchMenuTag("Options"); break;
-#if RETRO_USE_PLUS
         case 4: UIControl_MatchMenuTag("Extras"); break;
         case 5:
             if (API.GetUserStorageNoSave()) {
@@ -260,7 +251,6 @@ void MainMenu_ChangeMenu(void)
             }
 #endif
             break;
-#endif
         default: break;
     }
 }

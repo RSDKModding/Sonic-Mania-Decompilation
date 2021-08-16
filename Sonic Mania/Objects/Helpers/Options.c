@@ -103,11 +103,7 @@ void Options_LoadOptionsBin(void)
                 globals->optionsLoaded = STATUS_CONTINUE;
                 Options->loadEntityPtr = RSDK_sceneInfo->entity;
                 Options->loadCallback  = Options_LoadCallback;
-#if RETRO_USE_PLUS
-                API.LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options_LoadOptionsCallback);
-#else
-                APICallback_LoadUserFile(globals->optionsRAM, "Options.bin", 0x200, Options_LoadOptionsCallback);
-#endif
+                API_LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options_LoadOptionsCallback);
             }
         }
     }
@@ -132,9 +128,9 @@ void Options_SaveOptionsBin(void (*callback)(int))
                 Options->saveEntityPtr = RSDK_sceneInfo->entity;
                 Options->saveCallback  = callback;
 #if RETRO_USE_PLUS
-                API.SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, 0);
+                API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, false);
 #else
-                APICallback_SaveUserFile(globals->optionsRAM, "Options.bin", 0x200, Options_SaveOptionsCallback);
+                API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback);
 #endif
             }
             else {

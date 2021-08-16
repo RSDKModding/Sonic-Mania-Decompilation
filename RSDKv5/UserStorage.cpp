@@ -108,17 +108,19 @@ bool32 GetUserName(TextInfo *info)
     SetText(info, (char *)"IntegerGeorge802", false);
     return true;
 }
-#if RETRO_REV02
 void ClearPrerollErrors()
 {
+#if RETRO_REV02
     if (userStorage->authStatus != STATUS_OK)
         userStorage->authStatus = STATUS_NONE;
 
     userStorage->field_14 = 0;
     if (userStorage->saveStatus != STATUS_OK)
         userStorage->saveStatus = STATUS_NONE;
-}
+#else
+    printLog(PRINT_NONE, "DUMMY ClearPrerollErrors()");
 #endif
+}
 
 bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int))
 {

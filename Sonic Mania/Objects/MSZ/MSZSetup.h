@@ -75,9 +75,11 @@ void MSZSetup_HandleRestart(void);
 void MSZSetup_SwitchPalettes(void);
 
 void MSZSetup_Unknown9(void);
+#if RETRO_USE_PLUS
 void MSZSetup_Unknown10(void);
 void MSZSetup_Unknown11(void);
 void MSZSetup_Unknown12(void);
+#endif
 
 void MSZSetup_PlayerState_Pilot(void);
 

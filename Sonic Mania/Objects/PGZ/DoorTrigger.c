@@ -35,7 +35,9 @@ void DoorTrigger_Update(void)
             bool32 flag = anim == ANI_JUMP;
             switch (player->characterID) {
                 case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
+#if RETRO_USE_PLUS
                 case ID_MIGHTY: flag |= anim == ANI_DROPDASH; break;
+#endif
                 case ID_TAILS:
                     if (anim != ANI_JUMP) {
                         flag = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;

@@ -267,7 +267,11 @@ void FBZMissile_Unknown8(void)
     foreach_active(Player, player)
     {
         int velY = player->velocity.y;
-        if (Player_CheckCollisionBox(player, entity, &FBZMissile->hitbox3) && player->state == Player_State_MightyHammerDrop && !player->sidekick) {
+        if (Player_CheckCollisionBox(player, entity, &FBZMissile->hitbox3)
+#if RETRO_USE_PLUS
+            && player->state == Player_State_MightyHammerDrop 
+#endif
+            && !player->sidekick) {
             RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
             RSDK.PlaySFX(Player->sfx_Release, false, 255);
             player->velocity.y = velY - 0x10000;

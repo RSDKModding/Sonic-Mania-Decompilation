@@ -547,6 +547,7 @@ void ItemBox_GivePowerup(void)
                 }
 #endif
                 return;
+#if RETRO_USE_PLUS
             case 13: {
                 byte playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 byte newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -647,6 +648,7 @@ void ItemBox_GivePowerup(void)
                 }
                 return;
             }
+#endif
             case 14:
                 Player_GiveRings(50, player, 0);
                 Player_CheckGoSuper(player, 127);

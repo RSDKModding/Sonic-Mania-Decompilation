@@ -14,15 +14,19 @@ typedef struct {
 #endif
     bool32 isTimeAttack;
     int field_10;
+#if RETRO_USE_PLUS
     int field_14;
+#endif
     int actID;
     int field_1C;
+#if RETRO_USE_PLUS
     bool32 forceNoSave;
     void (*bufferMove_CB)(void);
     void (*saveReplay_CB)(void);
     int field_2C;
     int field_30;
     bool32 dword34;
+#endif
 } ObjectActClear;
 
 // Entity Class
@@ -34,7 +38,7 @@ typedef struct {
     int scoreBonus;
     int ringBonus;
     int coolBonus;
-    int field_70;
+    int totalScore;
     int time;
     int dword78;
     int field_7C;
@@ -52,7 +56,9 @@ typedef struct {
     Animator playerNameData;
     Animator gotThroughData;
     Animator actNoData;
+#if RETRO_USE_PLUS
     Animator data3;
+#endif
 } EntityActClear;
 
 // Object Struct
@@ -70,7 +76,9 @@ void ActClear_EditorLoad(void);
 void ActClear_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs);
+#endif
 void ActClear_DrawNumbers(Vector2 *pos, int value, signed int maxVals);
 void ActClear_CheckPlayerVictory(void);
 void ActClear_SaveGameCallback(int success);
@@ -82,7 +90,9 @@ void ActClear_State_TAFinish(void);
 void ActClear_Unknown8(void);
 void ActClear_TallyScore(void);
 void ActClear_LoadNextScene(void);
-void ActClear_Unknown9(void);
+#if RETRO_USE_PLUS
+void ActClear_State_TAResults(void);
+#endif
 void ActClear_Unknown10(void);
 void ActClear_State_ActFinish(void);
 

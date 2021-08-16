@@ -155,8 +155,7 @@ typedef struct {
     int rayDiveTimer;
     bool32 gotHit[PLAYER_MAX];
     void (*configureGhost_CB)(void);
-    // canSuper(HUD)
-    bool32 (*canSuper)(int);
+    bool32 (*canSuper)(bool32);
     int field_A70;
 } ObjectPlayer;
 #else

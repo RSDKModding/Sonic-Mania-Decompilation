@@ -157,12 +157,14 @@ void LRZ2Setup_HandleStageReload(void)
 
 void LRZ2Setup_GenericTrigger_CB(void)
 {
-    if (globals->gameMode <= MODE_ENCORE) {
+    if (isMainGameMode()) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             globals->tempFlags = player1->position.y > 0x4000000;
         }
+#endif
 
         if (player1->stateInput) {
             player1->stateInput = StateMachine_None;

@@ -7,7 +7,6 @@ std::vector<LeaderboardInfo> leaderboardList;
 
 #if RETRO_REV02
 DummyLeaderboards *leaderboards = NULL;
-#endif
 
 void FillDummyLeaderboardEntries()
 {
@@ -109,3 +108,4 @@ LeaderboardEntry *ReadLeaderboardEntry(int entryID)
     else
         return leaderboards->entryPtrs[entryID - leaderboards->entryStart];
 }
+#endif

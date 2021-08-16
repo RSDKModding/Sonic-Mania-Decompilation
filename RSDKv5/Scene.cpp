@@ -190,12 +190,12 @@ void LoadScene()
             if (objectCount > 0) {
                 int objID                            = 0;
                 stageObjectIDs[sceneInfo.classCount] = 0;
-                do {
+                for (int objID = 0; objID < objectCount; ++objID) {
                     if (HASH_MATCH(hash, objectList[objID].hash)) {
-                        stageObjectIDs[sceneInfo.classCount++] = objID;
+                        stageObjectIDs[sceneInfo.classCount] = objID;
+                        sceneInfo.classCount++;
                     }
-                    ++objID;
-                } while (objID < objectCount);
+                }
             }
         }
 
@@ -385,8 +385,11 @@ void LoadSceneFile()
                 }
             }
 
-            if (!objID && i >= TYPE_DEFAULTCOUNT)
+#if !RETRO_USE_ORIGINAL_CODE
+            if (!objID && i >= TYPE_DEFAULTCOUNT) {
                 printLog(PRINT_NORMAL, "Object %d is unimplimented!", i);
+            }
+#endif
 
             ObjectInfo *obj          = &objectList[stageObjectIDs[objID]];
             byte varCnt              = ReadInt8(&info);

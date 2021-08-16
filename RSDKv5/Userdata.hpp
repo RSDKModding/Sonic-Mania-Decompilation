@@ -98,14 +98,14 @@ void EGS_Unknown4(int a1);
 
 void SetPresence(byte id, TextInfo *info);
 
-void TryTrackStat(StatInfo *stat);
-
 //Rev01 ver of TrackStat basically
 #if !RETRO_REV02
-void TrackActClear();
-void TrackTAClear(byte a1, byte a2, byte a3, int a4);
-void TrackEnemyDefeat();
-void ClearPrerollErrors();
+void TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time);
+void TrackTAClear(byte zoneID, byte actID, byte playerID, int time);
+void TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY);
+void TrackGameProgress(float percent);
+#else
+void TryTrackStat(StatInfo *stat);
 #endif
 
 #if RETRO_REV02

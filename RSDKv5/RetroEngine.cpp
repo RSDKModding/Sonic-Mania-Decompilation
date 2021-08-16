@@ -311,7 +311,9 @@ void runRetroEngine()
             for (int c = 0; c < CHANNEL_COUNT; ++c) {
                 StopChannel(c);
             }
+#if RETRO_REV02
             hardResetFlag = true;
+#endif
             SceneInfo pre = sceneInfo;
             startGameObjects();
             sceneInfo.classCount = pre.classCount;
@@ -676,7 +678,8 @@ void LoadGameConfig()
                 globalObjectIDs[globalObjectCount] = 0;
                 for (objID = 0; objID < objectCount; ++objID) {
                     if (HASH_MATCH(hash, objectList[objID].hash)) {
-                        globalObjectIDs[globalObjectCount++] = objID;
+                        globalObjectIDs[globalObjectCount] = objID;
+                        globalObjectCount++;
                     }
                 }
             }
@@ -779,6 +782,7 @@ void InitScriptSystem()
                    DevOutput_Serialize);
 #endif
     globalObjectIDs[0] = 0;
+
 #if RETRO_REV02
     globalObjectIDs[1] = 1;
 #endif

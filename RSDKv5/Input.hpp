@@ -458,6 +458,7 @@ inline int ControllerIDForInputID(byte inputID)
     return 0;
 }
 
+#if RETRO_REV02
 inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
 {
     uint v3          = -1;
@@ -493,6 +494,41 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
 
     return inputIDStore;
 }
+#else
+inline int MostRecentActiveControllerID(int a2)
+{
+    uint v3          = -1;
+    uint recentTimer = -1;
+    int inputID      = 0;
+    int inputIDStore = 0;
+
+    if (InputDeviceCount) {
+        for (int i = 0; i < InputDeviceCount; ++i) {
+            if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
+                if (InputDevices[i].inactiveTimer[0] < recentTimer) {
+                    recentTimer = InputDevices[i].inactiveTimer[0];
+                    if (InputDevices[i].inactiveTimer[0] <= v3)
+                        inputID = InputDevices[i].inputID;
+                    inputIDStore = InputDevices[i].inputID;
+                }
+            }
+        }
+
+        if (inputID)
+            return inputID;
+    }
+    if (inputIDStore)
+        return inputIDStore;
+
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
+            return InputDevices[i].inputID;
+        }
+    }
+
+    return inputIDStore;
+}
+#endif
 
 int GetGamePadType(int inputID);
 

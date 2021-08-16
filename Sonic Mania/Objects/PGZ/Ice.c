@@ -411,7 +411,7 @@ void Ice_State_FrozenPlayer(void)
             entity->velocity.y = -entity->jumpStrength >> 1;
             entity->onGround   = false;
             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, true, 0);
-            Ice_ShatterGenerator(24,  20,  64,  0,  0,  2);
+            Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
             RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
             Ice->playerTimers[RSDK.GetEntityID(entity)] = 30;
             entity->skidding                            = 0;
@@ -434,7 +434,7 @@ void Ice_State_FrozenPlayer(void)
                     entity->velocity.y = -entity->jumpStrength >> 1;
                     entity->onGround   = false;
                     RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, true, 0);
-                    Ice_ShatterGenerator(24,  20,  64,  0,  0,  2);
+                    Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
                     RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
                     Ice->playerTimers[RSDK.GetEntityID(entity)] = 30;
                     entity->skidding                            = 0;
@@ -444,7 +444,7 @@ void Ice_State_FrozenPlayer(void)
                     entity->spindashCharge                      = 0;
                 }
                 else {
-                    Ice_ShatterGenerator(24,  20,  8,  0,  0,  0);
+                    Ice_ShatterGenerator(24, 20, 8, 0, 0, 0);
                     RSDK.PlaySFX(Ice->sfxStruggle, 0, 255);
                 }
             }
@@ -485,7 +485,8 @@ void Ice_State_FrozenPlayer(void)
 void Ice_ShatterGenerator(int xr, int yr, int count, int velX, int velY, int a6)
 {
     RSDK_THIS(Ice);
-    if (a6 > 0) count >>= 1;
+    if (a6 > 0)
+        count >>= 1;
     for (int i = 0; i < maxVal(0, count); ++i) {
         int randY                     = RSDK.Rand(-yr, yr + 1) << 16;
         int randX                     = RSDK.Rand(-xr, xr + 1) << 16;
@@ -524,7 +525,7 @@ void Ice_Unknown8(Entity *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
-    Ice_ShatterGenerator(24,  20,  64,  0,  0,  2);
+    Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
     Ice->playerTimers[RSDK.GetEntityID(player)] = 30;
 
     player->skidding       = 0;
@@ -555,13 +556,13 @@ Entity *Ice_Shatter(EntityIce *ice, int velX, int velY)
     RSDK.PlaySFX(Ice->sfxWindowShatter, false, 255);
     if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
         entity->position.y -= 0x370000;
-        Ice_ShatterGenerator(19,  55,  96,  velX,  velY,  2);
+        Ice_ShatterGenerator(19, 55, 96, velX, velY, 2);
     }
     else if (entity->size) {
-        Ice_ShatterGenerator(16,  16,  16,  velX,  velY,  2);
+        Ice_ShatterGenerator(16, 16, 16, velX, velY, 2);
     }
     else {
-        Ice_ShatterGenerator(24,  20,  64,  velX,  velY,  2);
+        Ice_ShatterGenerator(24, 20, 64, velX, velY, 2);
     }
 
     int count = 0;
@@ -792,13 +793,13 @@ void Ice_Unknown12(void)
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !entity->dwordE4) {
                     if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
                         entity->position.y -= 0x370000;
-                        Ice_ShatterGenerator(19,  55,  36,  0,  0,  0);
+                        Ice_ShatterGenerator(19, 55, 36, 0, 0, 0);
                     }
                     else if (entity->size) {
-                        Ice_ShatterGenerator(19,  17,  6,  0,  0,  0);
+                        Ice_ShatterGenerator(19, 17, 6, 0, 0, 0);
                     }
                     else {
-                        Ice_ShatterGenerator(19,  20,  12,  0,  0,  0);
+                        Ice_ShatterGenerator(19, 20, 12, 0, 0, 0);
                     }
 
                     entity->animator1.frameID += 2;
@@ -828,12 +829,14 @@ void Ice_Unknown12(void)
                             player->onGround   = false;
                             foreach_return;
                         }
+#if RETRO_USE_PLUS
                         else if (player->state == Player_State_MightyHammerDrop && !player->sidekick) {
                             Ice_Unknown7(0, (Entity *)player, player->velocity.y);
                             player->velocity.y = prevVel - 0x10000;
                             player->onGround   = false;
                             foreach_return;
                         }
+#endif
                     }
                     player->position.x += entity->playerPos.x;
                     player->position.y += entity->playerPos.y;

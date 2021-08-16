@@ -33,11 +33,9 @@
 #define setAlignment(x)
 #endif
 
-typedef enum {
 #if RETRO_USE_PLUS
-	DLC_PLUS
+typedef enum { DLC_PLUS } GameDLC;
 #endif
-} GameDLC;
 
 // "Base" Classes
 #define MANIA_PLATFORM_BASE                                                                                                                          \

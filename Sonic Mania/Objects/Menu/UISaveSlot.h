@@ -80,8 +80,8 @@ void UISaveSlot_EditorLoad(void);
 void UISaveSlot_Serialize(void);
 
 // Extra Entity Functions
-byte UISaveSlot_Unknown1(byte id);
 #if RETRO_USE_PLUS
+byte UISaveSlot_Unknown1(byte id);
 void UISaveSlot_Unknown2(byte playerID, bool32 isSilhouette, byte buddyID, byte *friendIDs, byte friendCount, int drawX, int drawY);
 #endif
 void UISaveSlot_Unknown3(int drawX, int drawY);

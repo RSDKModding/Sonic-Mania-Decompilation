@@ -354,11 +354,7 @@ void LevelSelect_Unknown2(void)
     RSDK_THIS(LevelSelect);
 
     bool32 confirmPress = false;
-#if RETRO_USE_PLUS
-    if (API.GetConfirmButtonFlip())
-#else
-    if (APICallback_GetConfirmButtonFlip())
-#endif
+    if (API_GetConfirmButtonFlip())
         confirmPress = RSDK_controller->keyB.press;
     else
         confirmPress = RSDK_controller->keyA.press;
@@ -369,8 +365,6 @@ void LevelSelect_Unknown2(void)
             LevelSelect_SetLabelHighlighted(false);
 #if RETRO_USE_PLUS
             if (--entity->labelID == 28 && !API.CheckDLC(DLC_PLUS))
-#else
-            if (--entity->labelID == 28)
 #endif
                 --entity->labelID;
             if (entity->labelID < 0)
@@ -385,8 +379,8 @@ void LevelSelect_Unknown2(void)
                 LevelSelect_SetLabelHighlighted(false);
 #if RETRO_USE_PLUS
                 if (++entity->labelID == 28 && !API.CheckDLC(DLC_PLUS))
-                    ++entity->labelID;
 #endif
+                    ++entity->labelID;
                 if (entity->labelID == entity->labelCount)
                     entity->labelID = 0;
                 LevelSelect_SetLabelHighlighted(true);
@@ -495,15 +489,15 @@ void LevelSelect_Unknown6(void)
     if (!curLabel)
         curLabel = (EntityUIText *)entity->labelPtrs2[entity->labelID];
 
-    int val                = 0x1000000;
+    int distance                = 0x1000000;
     EntityUIText *labelPtr = NULL;
     if (curLabel->position.x < 0x1000000) {
         foreach_active(UIText, label)
         {
             if (label->position.x > 0x1000000) {
                 int pos = abs(label->position.y - curLabel->position.y);
-                if (pos < val) {
-                    val      = pos;
+                if (pos < distance) {
+                    distance = pos;
                     labelPtr = label;
                 }
             }
@@ -513,28 +507,27 @@ void LevelSelect_Unknown6(void)
         foreach_active(UIText, label)
         {
             if (label->position.x < 0x1000000) {
-                int pos = abs(label->position.y - curLabel->position.y);
-                if (pos < val) {
-                    val      = pos;
+                int dist = abs(label->position.y - curLabel->position.y);
+                if (dist < distance) {
+                    distance = dist;
                     labelPtr = label;
                 }
             }
         }
     }
 
+    int labelID = entity->labelID;
     for (int i = 0; i < entity->labelCount; ++i) {
-        if (entity->labelPtrs[i] == (Entity *)labelPtr && entity->labelPtrs[i]->position.x == labelPtr->position.x) {
-            LevelSelect_SetLabelHighlighted(false);
-
-#if RETRO_USE_PLUS
-            if (--entity->labelID == 28 && !API.CheckDLC(DLC_PLUS))
-                --entity->labelID;
-#endif
-            if (entity->labelID < 0)
-                entity->labelID = entity->labelCount - 1;
-
-            LevelSelect_SetLabelHighlighted(true);
+        if (entity->labelPtrs[i] == (Entity *)labelPtr || entity->labelPtrs2[i] == (Entity *)labelPtr) {
+            labelID = i;
+            break;
         }
+    }
+
+    if (entity->labelID != labelID) {
+        LevelSelect_SetLabelHighlighted(false);
+        entity->labelID = labelID;
+        LevelSelect_SetLabelHighlighted(true);
     }
 }
 

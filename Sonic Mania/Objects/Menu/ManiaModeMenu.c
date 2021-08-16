@@ -35,7 +35,6 @@ void ManiaModeMenu_Initialize(void)
 
 bool32 ManiaModeMenu_InitUserdata(void)
 {
-#if RETRO_USE_PLUS
     if (!MenuSetup->dword10)
         MenuSetup->fxFade->timer = 512;
     int authStatus = API.GetUserAuthStatus();
@@ -105,73 +104,6 @@ bool32 ManiaModeMenu_InitUserdata(void)
             }
         }
     }
-#else
-    if (!MenuSetup->dword10)
-        MenuSetup->fxFade->timer = 512;
-
-    APICallback_GetUserAuthStatus();
-    if (!APICallback->authStatus) {
-        APICallback_TryAuth();
-    }
-    else if (APICallback->authStatus != STATUS_CONTINUE) {
-        int storageStatus = APICallback_GetStorageStatus();
-        if (!storageStatus) {
-            APICallback_TryInitStorage();
-        }
-        else if (storageStatus != STATUS_CONTINUE) {
-            if (!globals->noSave && (APICallback->authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
-                if (APICallback->saveStatus != STATUS_CONTINUE) {
-                    if (APICallback->saveStatus != STATUS_FORBIDDEN) {
-                        APICallback_PromptSavePreference(storageStatus);
-                    }
-                    else {
-                        RSDK.SetScene("Presentation", "Title Screen");
-                        RSDK.LoadScene();
-                    }
-                }
-                return false;
-            }
-
-            if (!MenuSetup->gameLoaded) {
-                UIWaitSpinner_Wait();
-                Options_LoadOptionsBin();
-                SaveGame_LoadFile();
-                MenuSetup->gameLoaded = true;
-            }
-            if (MenuSetup->dword10)
-                return true;
-            if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK) {
-                if (!globals->noSave && APICallback_NotifyAutosave())
-                    return false;
-                UIWaitSpinner_Wait2();
-                if (APICallback_CheckUnreadNotifs())
-                    return false;
-                MenuSetup->dword10 = 1;
-                return true;
-            }
-
-            if (globals->noSave) {
-                UIWaitSpinner_Wait2();
-                return true;
-            }
-            else {
-                if (globals->optionsLoaded != STATUS_ERROR && globals->saveLoaded != STATUS_ERROR) {
-                }
-                else {
-                    if (APICallback->saveStatus != STATUS_CONTINUE) {
-                        if (APICallback->saveStatus == STATUS_FORBIDDEN) {
-                            RSDK.SetScene("Presentation", "Title Screen");
-                            RSDK.LoadScene();
-                        }
-                        else {
-                            APICallback_PromptSavePreference(STATUS_CORRUPT);
-                        }
-                    }
-                }
-            }
-        }
-    }
-#endif
     return false;
 }
 

@@ -58,7 +58,11 @@ void BouncePlant_Update(void)
                         player->groundVel     = player->velocity.x;
 
                         if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop
-                            || player->state == Player_State_MightyHammerDrop) {
+
+#if RETRO_USE_PLUS 
+                            || player->state == Player_State_MightyHammerDrop
+#endif
+                            ) {
                             player->state = Player_State_Ground;
                         }
                     }
@@ -83,7 +87,10 @@ void BouncePlant_Update(void)
                         player->groundVel     = player->velocity.x;
 
                         if (player->state == Player_State_GlideSlide || player->state == Player_State_KnuxGlideDrop
-                            || player->state == Player_State_MightyHammerDrop) {
+#if RETRO_USE_PLUS
+                            || player->state == Player_State_MightyHammerDrop
+#endif
+                            ) {
                             player->state = Player_State_Ground;
                         }
                     }

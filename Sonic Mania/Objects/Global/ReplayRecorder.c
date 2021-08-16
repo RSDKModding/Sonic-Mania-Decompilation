@@ -483,7 +483,7 @@ void ReplayRecorder_Buffer_SaveFile(const char *fileName, int *buffer)
     LogHelpers_Print("Buffer_SaveFile(%s, %08x)", fileName, buffer);
     if (buffer[3]) {
         ReplayRecorder->saveFinishPtr = ReplayRecorder_SavedReplay;
-        API.SaveUserFile(fileName, buffer, buffer[11], ReplayRecorder_SetReplayStatus, true);
+        API_SaveUserFile(fileName, buffer, buffer[11], ReplayRecorder_SetReplayStatus, true);
     }
     else {
         LogHelpers_Print("Attempted to save an empty replay buffer");
@@ -505,7 +505,7 @@ void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*c
     ReplayRecorder->buffer       = buffer;
     ReplayRecorder->loadCallback = callback;
     strcpy(ReplayRecorder->filename, fileName);
-    API.LoadUserFile(fileName, buffer, 0x100000, ReplayRecorder_Load_CB);
+    API_LoadUserFile(fileName, buffer, 0x100000, ReplayRecorder_Load_CB);
 }
 
 void ReplayRecorder_Load_CB(int status)

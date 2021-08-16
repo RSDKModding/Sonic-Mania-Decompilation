@@ -38,8 +38,12 @@ void UIWinSize_Draw(void)
     drawPos.y = entity->position.y;
     drawPos.x -= entity->offset;
     drawPos.y -= entity->offset;
-    UIWidgets_Unknown7((entity->size.y >> 16), size, entity->height, (UIWidgets->value >> 16) & 0xFF, (UIWidgets->value >> 8) & 0xFF,
-                       (UIWidgets->value & 0xFF), drawPos.x, drawPos.y);
+#if RETRO_USE_PLUS
+    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->height, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+                       (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+#else
+    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->height, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+#endif
 
     drawPos = entity->position;
     drawPos.x += entity->offset;
@@ -104,7 +108,11 @@ void UIWinSize_StageLoad(void) { UIWinSize->aniFrames = RSDK.LoadSpriteAnimation
 void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
 {
     RSDK_THIS(UIWinSize);
+#if RETRO_USE_PLUS 
     if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
+#else
+    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
+#endif
         int height = 0;
         RSDK.GetWindowSize(NULL, &height);
         entity->maxScale = height / 240;

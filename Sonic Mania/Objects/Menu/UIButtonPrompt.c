@@ -43,7 +43,11 @@ void UIButtonPrompt_Update(void)
         entity->prevButton = button;
     }
 
+#if RETRO_USE_PLUS
     if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
+#else
+    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
+#endif
         int mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
         if (textChanged || entity->mappings != mappings) {
             UIButtonPrompt_Unknown4();
@@ -85,8 +89,12 @@ void UIButtonPrompt_LateUpdate(void)
 void UIButtonPrompt_StaticUpdate(void)
 {
     UIButtonPrompt->type = UIButtonPrompt_GetGamepadType();
-    int id                       = RSDK.MostRecentActiveControllerID(0, 0, 0);
-    int type                   = RSDK.GetControllerType(id);
+#if RETRO_USE_PLUS
+    int id                       = API_MostRecentActiveControllerID(0, 0, 0);
+#else
+    int id = API_MostRecentActiveControllerID(0);
+#endif
+    int type                   = API_GetControllerType(id);
     if ((type & 0xFF00) == 0x100)
         UIButtonPrompt->inputID = type & 0xFF;
     else
@@ -156,8 +164,12 @@ int UIButtonPrompt_GetButtonMappings(int input, int button)
 
 int UIButtonPrompt_GetGamepadType(void)
 {
-    int id          = RSDK.MostRecentActiveControllerID(0, 0, 0);
-    int gamepadType = RSDK.GetControllerType(id);
+#if RETRO_USE_PLUS 
+    int id = API_MostRecentActiveControllerID(0, 0, 0);
+#else
+    int id = API_MostRecentActiveControllerID(0);
+#endif
+    int gamepadType = API_GetControllerType(id);
 
     if ((gamepadType & 0xFF00) == 0x100) {
         switch (Localization->language) {
@@ -287,7 +299,7 @@ void UIButtonPrompt_Unknown4(void)
     }
     else {
         int buttonID = entity->buttonID;
-        if (API.GetConfirmButtonFlip() && buttonID <= 1)
+        if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
 
         if (UIButtonPrompt->type != 1 && (UIButtonPrompt->type <= 8 || UIButtonPrompt->type > 12)) {
@@ -363,7 +375,7 @@ void UIButtonPrompt_Unknown7(void)
         entity->flag  = true;
         entity->state = UIButtonPrompt_Unknown6;
         int buttonID  = entity->buttonID;
-        if (API.GetConfirmButtonFlip() && buttonID <= 1)
+        if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
         UIControl_ClearInputs(buttonID);
     }

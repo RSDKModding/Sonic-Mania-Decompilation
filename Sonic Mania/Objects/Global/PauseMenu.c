@@ -54,7 +54,7 @@ void PauseMenu_StaticUpdate(void)
             flag = Zone->timer > 1;
 
         if (!cnt && pauseMenu->objectID == TYPE_BLANK && flag && !PauseMenu->disableEvents) {
-            if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
+            if (API_GetUserAuthStatus() == STATUS_FORBIDDEN) {
                 PauseMenu->signoutDetected = true;
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                 pauseMenu->triggerPlayer = 0;
@@ -70,17 +70,17 @@ void PauseMenu_StaticUpdate(void)
             else {
                 for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
 #if RETRO_USE_PLUS
-                    int id = RSDK.ControllerIDForInputID(i + 1);
+                    int id = API_ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
                         //PauseMenu->controllerDisconnect = true;
                         //RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                         //pauseMenu->triggerPlayer = i;
                     }
 #else
-                    if (APICallback_InputIDIsDisconnected(i + 1)) {
-                        PauseMenu->controllerDisconnect = true;
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        pauseMenu->triggerPlayer = i;
+                    if (API_InputIDIsDisconnected(i + 1)) {
+                        // PauseMenu->controllerDisconnect = true;
+                        // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        // pauseMenu->triggerPlayer = i;
                     }
 #endif
                 }
@@ -126,8 +126,8 @@ void PauseMenu_StageLoad(void)
     PauseMenu->controllerDisconnect = false;
     PauseMenu->dword10              = false;
     PauseMenu->signoutDetected      = false;
-    PauseMenu->plusChanged          = false;
 #if RETRO_USE_PLUS
+    PauseMenu->plusChanged          = false;
     if (!globals->hasPlusInitial) {
         globals->lastHasPlus    = API.CheckDLC(DLC_PLUS);
         globals->hasPlusInitial = true;
@@ -357,12 +357,14 @@ void PauseMenu_Restart_CB(void)
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
     TextInfo textBuffer;
 
-    int strID = STR_AREYOUSURE;
 #if RETRO_USE_PLUS
+    int strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->dword134)
         strID = STR_RESTARTWARNING;
-#endif
     Localization_GetString(&textBuffer, strID);
+#else
+    Localization_GetString(&textBuffer, STR_RESTARTWARNING);
+#endif
 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
@@ -397,12 +399,14 @@ void PauseMenu_Exit_CB(void)
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
     TextInfo textBuffer;
 
-    int strID = STR_AREYOUSURE;
 #if RETRO_USE_PLUS
+    int strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->dword134)
         strID = STR_QUITWARNINGLOSEPROGRESS;
-#endif
     Localization_GetString(&textBuffer, strID);
+#else
+    Localization_GetString(&textBuffer, STR_QUITWARNINGLOSEPROGRESS);
+#endif
 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
     if (dialog) {
@@ -478,7 +482,11 @@ void PauseMenu_SetupButtons(void)
     RSDK_THIS(PauseMenu);
     entity->timer      = 0;
     PauseMenu->dword10 = 0;
+#if RETRO_USE_PLUS
     if (PauseMenu->controllerDisconnect || PauseMenu->signoutDetected || PauseMenu->plusChanged) {
+#else
+    if (PauseMenu->controllerDisconnect || PauseMenu->signoutDetected) {
+#endif
         if (PauseMenu->controllerDisconnect)
             entity->field_AC = PauseMenu_Unknown32;
 
@@ -502,8 +510,8 @@ void PauseMenu_SetupButtons(void)
             entity->state = PauseMenu_Unknown24;
         entity->stateDraw = PauseMenu_Unknown36;
 #if RETRO_USE_PLUS
-        if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(CONT_P2) == CONT_AUTOASSIGN)
-            RSDK.AssignControllerID(CONT_P2, CONT_ANY);
+        if (globals->gameMode < MODE_TIMEATTACK && API_ControllerIDForInputID(CONT_P2) == CONT_AUTOASSIGN)
+            API_AssignControllerID(CONT_P2, CONT_ANY);
 #endif
     }
 
@@ -570,13 +578,8 @@ void PauseMenu_Unknown22(void)
 void PauseMenu_Unknown23(void)
 {
     RSDK_THIS(PauseMenu);
-#if RETRO_USE_PLUS
-    if (!entity->timer && globals->gameMode < MODE_TIMEATTACK && !RSDK.ControllerIDForInputID(2))
-        RSDK.AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
-#else
-    if (!entity->timer && globals->gameMode < MODE_TIMEATTACK && !APICallback->ControllerIDForInputID(2))
-        APICallback->AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
-#endif
+    if (!entity->timer && globals->gameMode < MODE_TIMEATTACK && !API_ControllerIDForInputID(2))
+        API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     if (entity->timer >= 8) {
         entity->field_68.y = 0;
@@ -730,23 +733,17 @@ void PauseMenu_Unknown31(void)
     RSDK.ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
 
     int id = RSDK.MostRecentActiveControllerID(1, 1, 5);
-    if (id)
-        RSDK.AssignControllerID(entity->triggerPlayer + 1, id);
-    else
-        RSDK.AssignControllerID(entity->triggerPlayer + 1, CONT_AUTOASSIGN);
-    if (globals->gameMode < MODE_TIMEATTACK && !RSDK.ControllerIDForInputID(2))
-        RSDK.AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 #else
-    APICallback->ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
-
-    int id = APICallback->MostRecentActiveControllerID(1, 1, 5);
-    if (id)
-        APICallback->AssignControllerID(entity->triggerPlayer + 1, id);
-    else
-        APICallback->AssignControllerID(entity->triggerPlayer + 1, CONT_AUTOASSIGN);
-    if (globals->gameMode < MODE_TIMEATTACK && !APICallback->ControllerIDForInputID(2))
-        APICallback->AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
+    int contID = API_ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
+    int id = API_MostRecentActiveControllerID(contID);
 #endif
+
+    if (id)
+        API_AssignControllerID(entity->triggerPlayer + 1, id);
+    else
+        API_AssignControllerID(entity->triggerPlayer + 1, CONT_AUTOASSIGN);
+    if (globals->gameMode < MODE_TIMEATTACK && !API_ControllerIDForInputID(2))
+        API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     PauseMenu->dword10 = true;
 }
@@ -754,12 +751,11 @@ void PauseMenu_Unknown31(void)
 bool32 PauseMenu_Unknown32(void)
 {
     RSDK_THIS(PauseMenu);
+    int id = API_ControllerIDForInputID(entity->triggerPlayer + 1);
 #if RETRO_USE_PLUS
-    int id = RSDK.ControllerIDForInputID(entity->triggerPlayer + 1);
     return RSDK.GetAssignedControllerID(id) || PauseMenu->dword10;
 #else
-    int id = APICallback->ControllerIDForInputID(entity->triggerPlayer + 1);
-    return /*APICallback->GetAssignedControllerID(id) ||*/ PauseMenu->dword10;
+    return id || PauseMenu->dword10;
 #endif
 }
 
@@ -783,30 +779,34 @@ void PauseMenu_Unknown33(void)
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
             UIDialog_AddButton(4, dialog, PauseMenu_Unknown31, 0);
             UIDialog_Setup(dialog);
-#if RETRO_USE_PLUS
-            if (globals->gameMode < MODE_TIMEATTACK && RSDK.ControllerIDForInputID(2) == CONT_AUTOASSIGN)
-                RSDK.AssignControllerID(CONT_P2, CONT_ANY);
-#else
-            if (globals->gameMode < MODE_TIMEATTACK && APICallback->ControllerIDForInputID(2) == CONT_AUTOASSIGN)
-                APICallback->AssignControllerID(CONT_P2, CONT_ANY);
-#endif
+            if (globals->gameMode < MODE_TIMEATTACK && API_ControllerIDForInputID(2) == CONT_AUTOASSIGN)
+                API_AssignControllerID(CONT_P2, CONT_ANY);
         }
+#if RETRO_USE_PLUS
         else if (PauseMenu->signoutDetected || PauseMenu->plusChanged) {
             int strID = STR_TESTSTR;
             if (PauseMenu->signoutDetected) {
                 strID = STR_SIGNOUTDETECTED;
             }
-#if RETRO_USE_PLUS
             else if (PauseMenu->plusChanged) {
                 strID = STR_RETRURNINGTOTITLE;
             }
-#endif
+
             Localization_GetString(&textBuffer, strID);
 
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
             UIDialog_AddButton(2, dialog, PauseMenu_Unknown29, 1);
             UIDialog_Setup(dialog);
         }
+#else
+        else if (PauseMenu->signoutDetected) {
+            Localization_GetString(&textBuffer, STR_SIGNOUTDETECTED);
+
+            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
+            UIDialog_AddButton(2, dialog, PauseMenu_Unknown29, 1);
+            UIDialog_Setup(dialog);
+        }
+#endif
     }
 
     ++entity->timer;

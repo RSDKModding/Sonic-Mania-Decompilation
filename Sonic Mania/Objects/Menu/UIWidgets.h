@@ -7,17 +7,20 @@
 typedef struct {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    int array1[0x10];
-#endif
+    int buttonColours[16];
     int arrayIndex;
     int field_48[12];
+#else
+    int arrayIndex;
+    int buttonColours[16];
+#endif
     Animator animator1;
     Animator animator2;
     ushort uiSpriteIndex;
 #if RETRO_USE_PLUS
     ushort saveSelectSpriteIndex;
-    ushort textSpriteIndex;
 #endif
+    ushort textSpriteIndex;
     ushort labelSpriteIndex;
     ushort sfx_Bleep;
     ushort sfx_Accept;
@@ -26,7 +29,7 @@ typedef struct {
     ushort sfx_Woosh;
     ushort sfx_Fail;
 #if RETRO_USE_PLUS
-    int value;
+    colour buttonColour;
 #endif
 } ObjectUIWidgets;
 
@@ -62,6 +65,8 @@ void UIWidgets_Unknown7(int a1, int a2, int a3, int red, int green, int blue, in
 void UIWidgets_Unknown8(int a1, int x, int y);
 void UIWidgets_Unknown9(int a1, int x, int y);
 Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int drawX, int drawY);
+#if RETRO_USE_PLUS
 void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int y);
+#endif
 
 #endif //!OBJ_UIWIDGETS_H

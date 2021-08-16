@@ -112,8 +112,10 @@ void Zone_LateUpdate(void)
             StateMachine_Run(Zone->timeOverState);
         }
 
+#if RETRO_USE_PLUS
         if (RSDK_sceneInfo->minutes == 59 && RSDK_sceneInfo->seconds == 59)
             ActClear->field_30 = true;
+#endif
 
         if (Player->playerCount > 0) {
             EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -395,7 +397,11 @@ void Zone_StageLoad(void)
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
             else {
+#if RETRO_USE_PLUS 
                 Competition_ResetOptions();
+#else
+                CompetitionSession_ResetOptions();
+#endif
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
         }
@@ -405,7 +411,11 @@ void Zone_StageLoad(void)
         }
     }
     else {
+#if RETRO_USE_PLUS
         Competition_ResetOptions();
+#else
+        CompetitionSession_ResetOptions();
+#endif
         RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
     }
 
@@ -415,31 +425,19 @@ void Zone_StageLoad(void)
         case MODE_NOSAVE:
 #endif
         case MODE_MANIA: Localization_GetString(&textInfo, STR_RPC_MANIA);
-#if RETRO_USE_PLUS
-            API.SetRichPresence(PRESENCE_MANIA, &textInfo);
-#else
-            APICallback_SetRichPresence(PRESENCE_MANIA, &textInfo);
-#endif
+            API_SetRichPresence(PRESENCE_MANIA, &textInfo);
             break;
 #if RETRO_USE_PLUS
         case MODE_ENCORE:
             Localization_GetString(&textInfo, STR_RPC_ENCORE);
-            API.SetRichPresence(PRESENCE_ENCORE, &textInfo);
+            API_SetRichPresence(PRESENCE_ENCORE, &textInfo);
             break;
 #endif
         case MODE_TIMEATTACK: Localization_GetString(&textInfo, STR_RPC_TA);
-#if RETRO_USE_PLUS
-            API.SetRichPresence(PRESENCE_TA, &textInfo);
-#else
-            APICallback_SetRichPresence(PRESENCE_TA, &textInfo);
-#endif
+            API_SetRichPresence(PRESENCE_TA, &textInfo);
             break;
         case MODE_COMPETITION: Localization_GetString(&textInfo, STR_RPC_COMP);
-#if RETRO_USE_PLUS
-            API.SetRichPresence(PRESENCE_COMP, &textInfo);
-#else
-            APICallback_SetRichPresence(PRESENCE_COMP, &textInfo);
-#endif
+            API_SetRichPresence(PRESENCE_COMP, &textInfo);
             break;
         default: break;
     }
@@ -840,7 +838,11 @@ void Zone_State_Fadeout_Unknown(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (entity->timer > 1024) {
         session->zoneFlags[session->levelIndex] = 1;
+#if RETRO_USE_PLUS
         session->matchID                        = session->prevMatchID + 1;
+#else
+        session->matchID++;
+#endif
         RSDK.SetScene("Presentation", "Menu");
         RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
         RSDK.LoadScene();

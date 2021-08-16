@@ -60,7 +60,9 @@ void UIVsCharSelector_ProcessButtonCB_Alt(void);
 void UIVsCharSelector_Unknown7(void);
 void UIVsCharSelector_Unknown8(void);
 void UIVsCharSelector_Unknown9(void);
+#if RETRO_USE_PLUS
 void UIVsCharSelector_Unknown10(void);
+#endif
 void UIVsCharSelector_Unknown11(void);
 
 #endif //!OBJ_UIVSCHARSELECTOR_H

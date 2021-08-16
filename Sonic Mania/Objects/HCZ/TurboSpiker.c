@@ -322,7 +322,10 @@ void TurboSpiker_Spike_Collide(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &TurboSpiker->spikeHitbox)
-            && !Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)) {
+#if RETRO_USE_PLUS
+            && !Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)
+#endif
+            ) {
             Player_CheckHit(player, entity);
         }
     }

@@ -137,6 +137,7 @@ void GameOver_Unknown2(void)
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (entity->timer == 0) {
+#if RETRO_USE_PLUS
         if (globals->gameMode != MODE_COMPETITION) {
             Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
         }
@@ -177,17 +178,23 @@ void GameOver_Unknown2(void)
                 }
             }
         }
+#else
+        Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
+#endif
     }
 
     if (++entity->timer == 120) {
         entity->timer = 0;
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_COMPETITION || Zone->field_15C)
             entity->state = GameOver_Unknown3;
         else
+#endif
             entity->state = GameOver_Unknown4;
     }
 }
 
+#if RETRO_USE_PLUS
 void GameOver_Unknown3(void)
 {
     RSDK_THIS(GameOver);
@@ -211,6 +218,7 @@ void GameOver_Unknown3(void)
     if (id >= session->playerCount - 1 || deadPlayers == session->playerCount || Zone->field_15C)
         entity->state = GameOver_Unknown4;
 }
+#endif
 
 void GameOver_Unknown4(void)
 {
@@ -271,7 +279,11 @@ void GameOver_Unknown5(void)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
             session->zoneFlags[session->levelIndex] = 1;
-            session->matchID                        = session->prevMatchID + 1;
+#if RETRO_USE_PLUS
+            session->matchID = session->prevMatchID + 1;
+#else
+            session->matchID++;
+#endif
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             RSDK.SetScene("Presentation", "Menu");
             RSDK.LoadScene();

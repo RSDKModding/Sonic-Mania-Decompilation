@@ -17,13 +17,17 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     int type;
+#if RETRO_USE_PLUS
     StateMachine(state);
+#endif
     bool32 flag;
     int timer;
     int storeY;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
-    Animator data3;
+#if RETRO_USE_PLUS
+    Animator animator3;
+#endif
 } EntityTitleLogo;
 
 // Object Struct
@@ -42,10 +46,12 @@ void TitleLogo_Serialize(void);
 
 // Extra Entity Functions
 void TitleLogo_Unknown1(void);
+#if RETRO_USE_PLUS
 void TitleLogo_Unknown2(void);
 void TitleLogo_Unknown3(void);
 void TitleLogo_Unknown4(void);
 void TitleLogo_Unknown5(void);
 void TitleLogo_Unknown6(void);
+#endif
 
 #endif //!OBJ_TITLELOGO_H

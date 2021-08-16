@@ -44,6 +44,7 @@ void UISubHeading_EditorLoad(void);
 void UISubHeading_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void UISubHeading_Initialize(void);
 void UISubHeading_Unknown2(void);
 void UISubHeading_Unknown3(void);
@@ -55,5 +56,6 @@ void UISubHeading_Unknown9(void);
 void UISubHeading_Unknown10(void);
 void UISubHeading_Unknown11(void);
 void UISubHeading_StartNewSave(void);
+#endif
 
 #endif //!OBJ_UISUBHEADING_H

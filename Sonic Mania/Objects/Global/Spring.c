@@ -216,7 +216,7 @@ void Spring_State_Horizontal(void)
         foreach_active(Player, player)
         {
             if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
-                && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2 && (entity->onGround == false || player->onGround == 1)) {
+                && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2 && (!entity->onGround || player->onGround)) {
                 if (player->collisionMode == CMODE_ROOF) {
                     player->velocity.x = -entity->velocity.x;
                     player->groundVel  = -entity->velocity.x;

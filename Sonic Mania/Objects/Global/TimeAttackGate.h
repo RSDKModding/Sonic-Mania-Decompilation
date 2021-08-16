@@ -64,7 +64,9 @@ void TimeAttackGate_Serialize(void);
 // Extra Entity Functions
 void TimeAttackGate_HandleSpin(void);
 void TimeAttackGate_HandleStart(void);
+#if RETRO_USE_PLUS
 void TimeAttackGate_Unknown1(void);
+#endif
 void TimeAttackGate_LeaderboardCB(int status);
 void TimeAttackGate_CheckTouch(void);
 

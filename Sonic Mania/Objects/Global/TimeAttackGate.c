@@ -118,7 +118,11 @@ void TimeAttackGate_HandleSpin(void)
 
     foreach_active(Player, player)
     {
+#if RETRO_USE_PLUS
         if (!player->sidekick && !player->isGhost) {
+#else
+        if (!player->sidekick) {
+#endif
             if (!entity->playerPos.x || !entity->playerPos.y) {
                 foreach_break;
             }
@@ -189,7 +193,9 @@ void TimeAttackGate_HandleStart(void)
                 EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(1), entity->position.x, entity->position.y);
                 TimeAttackGate->activeEntity    = (Entity *)restarter;
                 restarter->isPermanent          = true;
+#if RETRO_USE_PLUS
                 StateMachine_Run(TimeAttackGate->startCB);
+#endif
             }
         }
         else if (TimeAttackGate->started) {
@@ -199,10 +205,14 @@ void TimeAttackGate_HandleStart(void)
             TimeAttackGate->playerPtr   = NULL;
             TimeAttackGate->started     = false;
             RSDK_sceneInfo->timeEnabled = false;
+#if RETRO_USE_PLUS
             StateMachine_Run(TimeAttackGate->endCB);
+#endif
             if (!TimeAttackGate->debugEnabled)
                 ActClear->isTimeAttack = true;
+#if RETRO_USE_PLUS
             TimeAttackGate_Unknown1();
+#endif
         }
     }
 
@@ -210,6 +220,7 @@ void TimeAttackGate_HandleStart(void)
     entity->playerPos.y = player1->position.y;
 }
 
+#if RETRO_USE_PLUS
 void TimeAttackGate_Unknown1(void)
 {
     if (!TimeAttackGate->debugEnabled) {
@@ -229,6 +240,7 @@ void TimeAttackGate_Unknown1(void)
         TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
     }
 }
+#endif
 
 void TimeAttackGate_LeaderboardCB(int status)
 {

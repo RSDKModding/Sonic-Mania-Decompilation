@@ -78,7 +78,9 @@ void FlowerPod_State_Pod(void)
         bool32 flag = anim == ANI_JUMP || anim == ANI_SPINDASH;
         switch (player->characterID) {
             case ID_SONIC:
+#if RETRO_USE_PLUS
             case ID_MIGHTY: flag |= anim == ANI_DROPDASH; break;
+#endif
             case ID_TAILS:
                 if (!flag) {
                     flag = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;

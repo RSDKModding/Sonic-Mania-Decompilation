@@ -78,12 +78,12 @@ void UIModeButton_Create(void *data)
         entity->field_118       = 0x280000;
         entity->processButtonCB = UIButton_Unknown6;
         entity->touchCB         = UIButton_ProcessTouch;
-        entity->options3        = UIModeButton_Unknown5;
-        entity->failCB          = UIModeButton_Unknown6;
-        entity->options5        = UIModeButton_Unknown4;
-        entity->options6        = UIModeButton_Unknown7;
-        entity->options7        = UIModeButton_Unknown2;
-        entity->options8        = UIModeButton_Unknown3;
+        entity->options3        = UIModeButton_Options3CB;
+        entity->failCB          = UIModeButton_FailCB;
+        entity->options5        = UIModeButton_Options5CB;
+        entity->options6        = UIModeButton_Options6CB;
+        entity->options7        = UIModeButton_Options7CB;
+        entity->options8        = UIModeButton_Options8CB;
         UIModeButton_Unknown1();
         entity->textSpriteIndex = UIWidgets->textSpriteIndex;
     }
@@ -135,18 +135,18 @@ void UIModeButton_Unknown1(void)
     }
 }
 
-bool32 UIModeButton_Unknown2(void)
+bool32 UIModeButton_Options7CB(void)
 {
     RSDK_THIS(UIModeButton);
     return entity->state == UIModeButton_Unknown9;
 }
-bool32 UIModeButton_Unknown3(void)
+bool32 UIModeButton_Options8CB(void)
 {
     RSDK_THIS(UIModeButton);
     return entity->state == UIModeButton_Unknown10;
 }
 
-void UIModeButton_Unknown4(void)
+void UIModeButton_Options5CB(void)
 {
     RSDK_THIS(UIModeButton);
     if (entity->state != UIModeButton_Unknown9) {
@@ -162,17 +162,21 @@ void UIModeButton_Unknown4(void)
     }
 }
 
-void UIModeButton_Unknown5(void)
+void UIModeButton_Options3CB(void)
 {
     RSDK_THIS(UIModeButton);
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
     if (entity->buttonID == 2) {
-        int id = RSDK.MostRecentActiveControllerID(1, 0, 5);
-        RSDK.ResetControllerAssignments();
-        RSDK.AssignControllerID(1, id);
-        RSDK.AssignControllerID(2, -1);
-        RSDK.AssignControllerID(3, -1);
-        RSDK.AssignControllerID(4, -1);
+#if RETRO_USE_PLUS
+        int id = API_MostRecentActiveControllerID(1, 0, 5);
+#else
+        int id = API_MostRecentActiveControllerID(0);
+#endif
+        API_ResetControllerAssignments();
+        API_AssignControllerID(1, id);
+        API_AssignControllerID(2, CONT_AUTOASSIGN);
+        API_AssignControllerID(3, CONT_AUTOASSIGN);
+        API_AssignControllerID(4, CONT_AUTOASSIGN);
     }
     UITransition_StartTransition(entity->options2, 14);
     if (entity->stopMusic)
@@ -183,9 +187,9 @@ void UIModeButton_Unknown5(void)
     RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
 }
 
-void UIModeButton_Unknown6(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, false, 255); }
+void UIModeButton_FailCB(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, false, 255); }
 
-void UIModeButton_Unknown7(void)
+void UIModeButton_Options6CB(void)
 {
     RSDK_THIS(UIModeButton);
     entity->state = UIModeButton_Unknown8;
@@ -214,8 +218,8 @@ void UIModeButton_Unknown9(void)
 {
     RSDK_THIS(UIModeButton);
     entity->field_120 += 0x4000;
-    entity->field_110 += entity->field_124;
-    if (entity->field_110 >= 0 && entity->field_124 > 0) {
+    entity->field_110 += entity->field_120;
+    if (entity->field_110 >= 0 && entity->field_120 > 0) {
         entity->field_110 = 0;
         entity->field_120 = 0;
     }

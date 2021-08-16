@@ -44,8 +44,12 @@ void UIVsRoundPicker_Draw(void)
     drawPos.y = entity->position.y;
     drawPos.x -= entity->field_128;
     drawPos.y -= entity->field_128;
-    UIWidgets_Unknown7((entity->size.y >> 16), size, entity->dword120, (UIWidgets->value >> 16) & 0xFF, (UIWidgets->value >> 8) & 0xFF,
-                       (UIWidgets->value & 0xFF), drawPos.x, drawPos.y);
+#if RETRO_USE_PLUS
+    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword120, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+                       (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+#else
+    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+#endif
 
     drawPos = entity->position;
     drawPos.x += entity->field_128;

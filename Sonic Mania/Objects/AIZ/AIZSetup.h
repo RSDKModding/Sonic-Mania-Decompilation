@@ -6,12 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
+#if RETRO_USE_PLUS
     int aniTiles1[13];
     int aniTiles2[12];
     int aniTiles3[15];
     int aniTiles4[14];
     int aniTiles5[15];
     int aniTiles6[14];
+#endif
     bool32 cutsceneInit;
     int dword154;
     bool32 playingDrillSFX;
@@ -25,12 +27,14 @@ typedef struct {
     Entity *phantomRuby;
     Entity *fxRuby;
     Entity *decorations[3];
+#if RETRO_USE_PLUS
     int aniTileFrameA;
     int aniTilesDelay1;
     int aniTileFrameB;
     int aniTilesDelay2;
     int aniTileFrameC;
     int aniTilesDelay3;
+#endif  
     ushort knuxSpriteIndex;
     ushort sfxDrill;
     ushort sfxBreak;
@@ -59,8 +63,10 @@ void AIZSetup_EditorLoad(void);
 void AIZSetup_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void AIZSetup_bgSwitch1_CB(void);
 void AIZSetup_bgSwitch2_CB(void);
+#endif
 
 void AIZSetup_Unknown4(void);
 void AIZSetup_Unknown5(void);

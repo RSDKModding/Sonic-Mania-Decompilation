@@ -34,8 +34,13 @@ void HUD_LateUpdate(void)
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM->chaosEmeralds >= 0x7F) {
+#if RETRO_USE_PLUS
             if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV)
                 HUD_GetSuperFrames();
+#else
+            if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_SWITCH || RSDK_info->platform == PLATFORM_DEV)
+                HUD_GetSuperFrames();
+#endif
             if (entity->superButtonPos < 0x180000)
                 entity->superButtonPos += 0x80000;
         }
@@ -255,10 +260,10 @@ void HUD_Draw(void)
     }
 #else
     switch (player->characterID) {
-        default:
-        case ID_SONIC: entity->lifeIconsData.frameID = 0;
-        case ID_TAILS: entity->lifeIconsData.frameID = 1;
-        case ID_KNUCKLES: entity->lifeIconsData.frameID = 2;
+        default: 
+        case ID_SONIC: entity->lifeIconsData.frameID = 0; break;
+        case ID_TAILS: entity->lifeIconsData.frameID = 1; break;
+        case ID_KNUCKLES: entity->lifeIconsData.frameID = 2; break;
     }
 #endif
     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
@@ -319,7 +324,7 @@ void HUD_Draw(void)
     lifePos.x += 0x300000;
     if (player->lives < 10)
         lifePos.x -= 0x80000;
-    HUD_DrawNumbersBase10(&lifePos, lives, 0);
+    HUD_DrawNumbersBase10(&lifePos, player->lives, 0);
 #endif
 
     if (globals->gameMode == MODE_COMPETITION) {
@@ -348,8 +353,8 @@ void HUD_Draw(void)
 #else
         switch (RSDK_sceneInfo->currentScreenID) {
             default: break;
-            case 0: RSDK.DrawRectangle(0, RSDK_screens->height - 1, RSDK_screens->width, 1, 0, 255, INK_NONE, true); break;
-            case 1: RSDK.DrawRectangle(0, 0, RSDK_screens[1].width, 1, 0, 255, INK_NONE, true); break;
+            case 0: RSDK.DrawRect(0, RSDK_screens->height - 1, RSDK_screens->width, 1, 0, 255, INK_NONE, true); break;
+            case 1: RSDK.DrawRect(0, 0, RSDK_screens[1].width, 1, 0, 255, INK_NONE, true); break;
         }
 #endif
     }
@@ -359,7 +364,9 @@ void HUD_Create(void *data)
 {
     RSDK_THIS(HUD);
     if (!RSDK_sceneInfo->inEditor) {
+#if RETRO_USE_PLUS
         ActClear->field_30   = 0;
+#endif
         entity->active       = ACTIVE_NORMAL;
         entity->visible      = true;
         entity->drawOrder    = Zone->hudDrawOrder;
@@ -528,11 +535,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 void HUD_GetKeyFrame(Animator *animator, int buttonID)
 {
     int val = UIButtonPrompt_GetGamepadType();
-#if RETRO_USE_PLUS
-    if (API.GetConfirmButtonFlip() && buttonID <= 1)
-#else
-    if (APICallback_GetConfirmButtonFlip() && buttonID <= 1)
-#endif
+    if (API_GetConfirmButtonFlip && buttonID <= 1)
         buttonID ^= 1;
     if (val != 1 && (val <= 8 || val > 12)) {
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, animator, true, buttonID);
@@ -566,14 +569,17 @@ void HUD_GetSuperFrames(void)
 {
     RSDK_THIS(HUD);
     HUD_GetKeyFrame(&entity->superButtonData1, 3);
+#if RETRO_USE_PLUS
     HUD_GetKeyFrame(&entity->taData3, 3);
     HUD_GetKeyFrame(&entity->taData4, 4);
+#endif
 }
 #endif
 
 void HUD_State_ComeOnScreen(void)
 {
     RSDK_THIS(HUD);
+#if RETRO_USE_PLUS
     Vector2 *ptrs[4];
     void **statePtr = NULL;
 
@@ -606,11 +612,27 @@ void HUD_State_ComeOnScreen(void)
     else {
         ptrs[3]->x += 0x80000;
     }
+#else
+    if (entity->dword5C[0].x < entity->field_9C)
+        entity->dword5C[0].x += 0x80000;
+    if (entity->dword5C[1].x < entity->field_9C)
+        entity->dword5C[1].x += 0x80000;
+    if (entity->dword5C[2].x < entity->field_9C)
+        entity->dword5C[2].x += 0x80000;
+    if (entity->dword5C[3].x >= entity->field_9C) {
+        entity->state = StateMachine_None;
+    }
+    else {
+        entity->dword5C[3].x += 0x80000;
+    }
+#endif
 }
 
 void HUD_State_GoOffScreen(void)
 {
     RSDK_THIS(HUD);
+
+#if RETRO_USE_PLUS
     Vector2 *ptrs[4];
     void **statePtr = NULL;
 
@@ -633,9 +655,8 @@ void HUD_State_GoOffScreen(void)
         ptrs[1]->x -= 0x80000;
     if (ptrs[2]->x - ptrs[1]->x > 0x100000)
         ptrs[2]->x -= 0x80000;
-    if (ptrs[3]->x - ptrs[2]->x > 0x100000) {
-        ptrs[3]->x = ptrs[3]->x - 0x80000;
-    }
+    if (ptrs[3]->x - ptrs[2]->x > 0x100000)
+        ptrs[3]->x -=0x80000;
 
     if (ptrs[3]->x < -0x500000) {
         if (globals->gameMode == MODE_COMPETITION) {
@@ -658,12 +679,26 @@ void HUD_State_GoOffScreen(void)
             destroyEntity(entity);
         }
     }
+#else
+    entity->dword5C[0].x -= 0x80000;
+    if (entity->dword5C[1].x - entity->dword5C[0].x > 0x100000)
+        entity->dword5C[1].x -= 0x80000;
+    if (entity->dword5C[2].x - entity->dword5C[1].x > 0x100000)
+        entity->dword5C[2].x -= 0x80000;
+    if (entity->dword5C[3].x - entity->dword5C[2].x > 0x100000)
+        entity->dword5C[3].x -= 0x80000;
+
+    if (entity->dword5C[3].x < -0x400000)
+        destroyEntity(entity);
+#endif
 }
 
 void HUD_EditorDraw(void) {
     RSDK_THIS(HUD);
+#if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->taData1, true, 0);
     RSDK.DrawSprite(&entity->taData1, NULL, 0);
+#endif
 }
 
 void HUD_EditorLoad(void) { HUD->hudMappings = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

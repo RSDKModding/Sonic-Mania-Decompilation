@@ -128,8 +128,8 @@ void TryAgain_Unknown4(void)
     if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press)
         entity->timer = 600;
     if (entity->timer == 600) {
-        PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
 #if RETRO_USE_PLUS
+        PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;

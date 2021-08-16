@@ -8,13 +8,19 @@ void AIZSetup_LateUpdate(void) {}
 
 void AIZSetup_StaticUpdate(void)
 {
+#if RETRO_USE_PLUS
     if (Zone->actID != 3 && !AIZSetup->cutsceneInit) {
+#else
+    if (!AIZSetup->cutsceneInit) {
+#endif
         AIZSetup_SetupObjects();
         AIZSetup_GetCutsceneSetupPtr();
         AIZSetup->cutsceneInit = true;
     }
 
+#if RETRO_USE_PLUS
     if (AIZSetup->bg4Info) {
+#endif
         if (RSDK_screens->position.x <= 4096)
             AIZSetup->bg2Info->scrollPos = 0;
         else
@@ -28,6 +34,7 @@ void AIZSetup_StaticUpdate(void)
             AIZSetup->bg2Info->drawLayer[0] = DRAWLAYER_COUNT;
             AIZSetup->bg3Info->drawLayer[0] = 0;
         }
+#if RETRO_USE_PLUS
     }
     else {
         if (!(Zone->timer & 3)) {
@@ -40,14 +47,17 @@ void AIZSetup_StaticUpdate(void)
             }
         }
     }
+#endif
 
     if (!(Zone->timer % 5)) {
         RSDK.RotatePalette(0, 171, 174, true);
+#if RETRO_USE_PLUS
         RSDK.RotatePalette(1, 171, 174, true);
         CutsceneHBH->paletteColours[43] = RSDK.GetPaletteEntry(0, 171);
         CutsceneHBH->paletteColours[44] = RSDK.GetPaletteEntry(0, 172);
         CutsceneHBH->paletteColours[45] = RSDK.GetPaletteEntry(0, 173);
         CutsceneHBH->paletteColours[46] = RSDK.GetPaletteEntry(0, 174);
+#endif
     }
 
     if (!AIZSetup->dword154 || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
@@ -61,6 +71,7 @@ void AIZSetup_StaticUpdate(void)
         AIZSetup->playingDrillSFX = true;
     }
 
+#if RETRO_USE_PLUS
     --AIZSetup->aniTilesDelay1;
     if (AIZSetup->aniTilesDelay1 < 0) {
         ++AIZSetup->aniTileFrameA;
@@ -68,7 +79,7 @@ void AIZSetup_StaticUpdate(void)
             AIZSetup->aniTileFrameA = 0;
         }
         AIZSetup->aniTilesDelay1 = AIZSetup->aniTiles2[AIZSetup->aniTileFrameA];
-        RSDK.DrawAniTiles(AIZSetup->aniTiles, 196u, 16 * AIZSetup->aniTiles1[AIZSetup->aniTileFrameA], 0, 16, 32);
+        RSDK.DrawAniTiles(AIZSetup->aniTiles, 196, 16 * AIZSetup->aniTiles1[AIZSetup->aniTileFrameA], 0, 16, 32);
     }
 
     --AIZSetup->aniTilesDelay2;
@@ -78,7 +89,7 @@ void AIZSetup_StaticUpdate(void)
             AIZSetup->aniTileFrameB = 0;
         }
         AIZSetup->aniTilesDelay2 = AIZSetup->aniTiles4[AIZSetup->aniTileFrameB];
-        RSDK.DrawAniTiles(AIZSetup->aniTiles, 198u, 16 * AIZSetup->aniTiles3[AIZSetup->aniTileFrameB], 32, 16, 48);
+        RSDK.DrawAniTiles(AIZSetup->aniTiles, 198, 16 * AIZSetup->aniTiles3[AIZSetup->aniTileFrameB], 32, 16, 48);
     }
 
     --AIZSetup->aniTilesDelay3;
@@ -88,8 +99,9 @@ void AIZSetup_StaticUpdate(void)
             AIZSetup->aniTileFrameC = 0;
         }
         AIZSetup->aniTilesDelay3 = AIZSetup->aniTiles6[AIZSetup->aniTileFrameC];
-        RSDK.DrawAniTiles(AIZSetup->aniTiles, 201u, 16 * AIZSetup->aniTiles5[AIZSetup->aniTileFrameC], 32, 16, 48);
+        RSDK.DrawAniTiles(AIZSetup->aniTiles, 201, 16 * AIZSetup->aniTiles5[AIZSetup->aniTileFrameC], 32, 16, 48);
     }
+#endif
 }
 
 void AIZSetup_Draw(void) {}
@@ -98,11 +110,16 @@ void AIZSetup_Create(void *data) {}
 
 void AIZSetup_StageLoad(void)
 {
+#if RETRO_USE_PLUS
     if (Zone->actID != 3)
-        Zone->screenBoundsB1[0] = 240;
+#endif
+        Zone->screenBoundsB1[0] = SCREEN_YSIZE;
+
     AIZSetup->cutsceneInit    = false;
     AIZSetup->aniTiles        = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
     AIZSetup->knuxSpriteIndex = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
+
+#if RETRO_USE_PLUS
     if (RSDK.GetSceneLayerID("Background 4") >= DRAWLAYER_COUNT) {
         for (int i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
             int *deformData = RSDK.GetSceneLayer(i)->deformationDataW;
@@ -136,6 +153,7 @@ void AIZSetup_StageLoad(void)
         }
     }
     else {
+#endif
         AIZSetup->bg1Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
         AIZSetup->bg2Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 2"));
         AIZSetup->bg3Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 3"));
@@ -150,7 +168,9 @@ void AIZSetup_StageLoad(void)
             int pFac                                   = AIZSetup->bg3Info->scrollInfo[i].parallaxFactor;
             AIZSetup->bg3Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * pFac);
         }
+#if RETRO_USE_PLUS
     }
+#endif
 
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_RICKY;
@@ -163,6 +183,7 @@ void AIZSetup_StageLoad(void)
         foreach_all(AIZTornado, tornado) { destroyEntity(tornado); }
         foreach_all(AIZTornadoPath, node) { destroyEntity(node); }
     }
+#if RETRO_USE_PLUS
     BGSwitch->switchCallback[0] = AIZSetup_bgSwitch1_CB;
     BGSwitch->switchCallback[1] = AIZSetup_bgSwitch2_CB;
     BGSwitch->layerIDs[0]       = 0;
@@ -172,8 +193,10 @@ void AIZSetup_StageLoad(void)
     RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
     RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
     Water->waterPalette = 1;
+#endif
 }
 
+#if RETRO_USE_PLUS
 void AIZSetup_bgSwitch1_CB(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
@@ -185,6 +208,7 @@ void AIZSetup_bgSwitch2_CB(void)
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
 }
+#endif
 
 void AIZSetup_Unknown4(void)
 {

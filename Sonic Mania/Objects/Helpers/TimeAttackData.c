@@ -23,7 +23,7 @@ void TimeAttackData_TrackActClear(byte act, byte zone, StatInfo * stat, byte cha
     stat->data[5] = intToVoid(rings);
     stat->data[6] = intToVoid(score);
 #else
-    APICallback_TrackActClear(zoneID, act, charID, score, rings, time);
+    APICallback_TrackActClear(zone, act, charID, score, rings, time);
 #endif
 }
 void TimeAttackData_TrackTAClear(byte actID, byte zone, StatInfo *stat, byte charID, int gameMode, int time)
@@ -38,7 +38,7 @@ void TimeAttackData_TrackTAClear(byte actID, byte zone, StatInfo *stat, byte cha
     stat->data[3] = (void *)ModeNames[gameMode];
     stat->data[4] = intToVoid(time);
 #else
-    APICallback_TrackTAClear(zoneID, act, charID, time);
+    APICallback_TrackTAClear(zone, actID, charID, time);
 #endif
 }
 void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, byte charID, bool32 encore, int x, int y)
@@ -54,38 +54,29 @@ void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, by
     stat->data[4]     = intToVoid(x);
     stat->data[5]     = intToVoid(y);
 #else
-    APICallback_TrackEnemyDefeat(zoneID, act, charID, x, y);
+    APICallback_TrackEnemyDefeat(zoneID, actID, charID, x, y);
 #endif
 }
 
 void TimeAttackData_ClearOptions(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+    param->selectionFlag   = 0;
+    memset(param->menuTag, 0, 0x100);
+    param->selectionID = 0;
+    param->field_160   = 0;
+    param->clearFlag   = 0;
+    param->zoneID      = 0;
+    param->actID       = 0;
 #if RETRO_USE_PLUS
-    param->selectionFlag = 0;
-    memset(param->menuTag, 0, 0x100);
-    param->selectionID         = 0;
-    param->field_160         = 0;
-    param->clearFlag         = 0;
-    param->zoneID                  = 0;
-    param->actID                   = 0;
-    param->dbRowID               = 0;
-    globals->gameMode              = MODE_MANIA;
-    globals->suppressTitlecard     = false;
-    globals->suppressAutoMusic     = false;
+    param->dbRowID    = 0;
+    globals->gameMode = MODE_MANIA;
 #else
-    param->selectionFlag = 0;
-    memset(param->menuTag, 0, 0x100);
-    param->selectionID         = 0;
-    param->field_160           = 0;
-    param->clearFlag           = 0;
-    param->zoneID              = 0;
-    param->actID               = 0;
-    param->timeScore           = 0;
-    globals->gameMode          = MODE_NOSAVE;
+    param->timeScore  = 0;
+    globals->gameMode = MODE_NOSAVE;
+#endif
     globals->suppressAutoMusic = false;
     globals->suppressTitlecard = false;
-#endif
 }
 int TimeAttackData_GetManiaListPos(int zoneID, int playerID, int act)
 {
@@ -404,21 +395,43 @@ void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int 
 #else
 void TimeAttackData_SaveTATime(byte zone, byte act, byte player, byte rank, ushort time)
 {
-    int *recordsRAM = NULL;
-    if (globals->saveLoaded == STATUS_OK)
-        recordsRAM = &globals->saveRAM[0x800];
-    if (!recordsRAM)
-        return;
+    rank--;
+    if (rank < 3) {
+        int *recordsRAM = NULL;
+        if (globals->saveLoaded == STATUS_OK)
+            recordsRAM = &globals->saveRAM[0x800];
+        if (!recordsRAM)
+            return;
 
-    // playerID * (1 zones)
-    // zone * (1 acts)
-    // act * (3 ranks)
-    ushort *times = (ushort *)&recordsRAM[(36 * player) - 15 + (3 * zone)] + 3 * act;
-    for (int r = rank - 1; r < 2; ++r) {
-        times[r] = times[r + 1];
+        // playerID * (1 zones)
+        // zone * (1 acts)
+        // act * (3 ranks)
+        ushort *record = TimeAttackData_GetRecordedTime(zone, act, player, 1);
+
+        for (int r = 2; r > rank; ++r) {
+            record[r] = record[r - 1];
+        }
+
+        record[rank] = time;
     }
+}
 
-    times[rank - 1] = time;
+ushort *TimeAttackData_GetRecordedTime(byte zone, byte act, byte player, byte rank) {
+    rank--;
+    if (rank >= 3)
+        return NULL;
+
+    ushort *saveRAM = NULL;
+    if (globals->saveLoaded == STATUS_OK)
+        saveRAM = (ushort *)&globals->saveRAM[0x800];
+    else
+        return NULL;
+
+    int pos = act + 2 * (zone * 12) - 10;
+    if (saveRAM[pos + rank + 2 * pos]) {
+        return &saveRAM[pos + rank + 2 * pos];
+    }
+    return NULL;
 }
 
 #endif

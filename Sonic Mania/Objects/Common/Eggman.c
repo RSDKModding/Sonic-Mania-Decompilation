@@ -48,18 +48,14 @@ void Eggman_Create(void *data)
 
 void Eggman_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZCutscene")) {
+    if (RSDK.CheckStageFolder("GHZCutscene"))
         Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanGHZCutt.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("FBZ")) {
+    else if (RSDK.CheckStageFolder("FBZ"))
         Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanFBZ.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("TMZ3")) {
+    else if (RSDK.CheckStageFolder("TMZ3"))
         Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanTMZ.bin", SCOPE_STAGE);
-    }
-    else {
+    else
         Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanAll.bin", SCOPE_STAGE);
-    }
 }
 
 void Eggman_Unknown1(void)
@@ -140,8 +136,8 @@ void Eggman_Unknown7(void)
     entity->position.x += entity->velocity.x;
     entity->velocity.x += 0x200;
 
-    if (!RSDK.CheckOnScreen(entity, 0)) {
-        entity->active = 0;
+    if (!RSDK.CheckOnScreen(entity, NULL)) {
+        entity->active = ACTIVE_NEVER;
         entity->state  = Eggman_Unknown1;
     }
 }

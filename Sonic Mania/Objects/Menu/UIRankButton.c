@@ -248,7 +248,7 @@ void UIRankButton_Unknown5(int colour, int a2, int a3, int a4, int a5)
     RSDK_THIS(UIRankButton);
 
     if (entity->field_14C)
-        UIWidgets_Unknown7(a5 >> 16, a4 >> 16, a5 >> 16, (UIWidgets->value >> 16) & 0xFF, (UIWidgets->value >> 8) & 0xFF, UIWidgets->value & 0xFF,
+        UIWidgets_Unknown7(a5 >> 16, a4 >> 16, a5 >> 16, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF,
                            a2 - entity->field_14C, a3 - entity->field_14C);
     UIWidgets_Unknown7(a5 >> 16, a4 >> 16, a5 >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, entity->field_14C + a2,
                        entity->field_14C + a3);

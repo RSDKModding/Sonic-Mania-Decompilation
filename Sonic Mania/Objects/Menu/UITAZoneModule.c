@@ -32,6 +32,7 @@ void UITAZoneModule_LateUpdate(void) {}
 
 void UITAZoneModule_StaticUpdate(void)
 {
+#if RETRO_USE_PLUS
     if (UITAZoneModule->flag) {
         UITAZoneModule->flag = false;
     }
@@ -40,6 +41,13 @@ void UITAZoneModule_StaticUpdate(void)
         UITAZoneModule->flag         = true;
         UITAZoneModule->isEncoreMode = TimeAttackMenu->encoreMode;
     }
+#else
+    EntityUITAZoneModule *entity = (EntityUITAZoneModule*)UITAZoneModule->entityPtr;
+    if (entity) {
+        entity->active  = ACTIVE_ALWAYS;
+        entity->visible = UITAZoneModule->flag;
+    }
+#endif
 }
 
 void UITAZoneModule_Draw(void)
@@ -72,8 +80,10 @@ void UITAZoneModule_Create(void *data)
 
 void UITAZoneModule_StageLoad(void)
 {
+#if RETRO_USE_PLUS
     UITAZoneModule->isEncoreMode = false;
     UITAZoneModule->flag         = false;
+#endif
     UITAZoneModule->aniFrames    = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 }
 
@@ -135,8 +145,10 @@ void UITAZoneModule_Unknown3(void)
     RSDK_THIS(UITAZoneModule);
 
     uint colour = 0x5FA0B0;
+#if RETRO_USE_PLUS
     if (entity->isEncore)
         colour = 0xF26C4F;
+#endif
 
     int drawY = entity->drawPos.y + 0x230000;
     UIWidgets_Unknown5(88, -71, 112, 224, entity->drawPos.x + 0x790000, drawY);
@@ -161,15 +173,21 @@ void UITAZoneModule_Unknown4(void)
     Vector2 drawPos;
     drawPos     = entity->drawPos;
     uint colour = 0xF0F0F0;
+#if RETRO_USE_PLUS
     if (entity->isEncore)
         colour = 0xF26C4F;
+#endif
     uint colour2 = 0xF0D808;
 
     drawPos.x = entity->drawPos.x - 0x390000;
     drawPos.y = entity->drawPos.y + 0x170000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x840000, 0xD0000, colour, 255, INK_NONE, false);
 
+#if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, (entity->isEncore != 0) + 10);
+#else
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, 10);
+#endif
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
     drawPos = UIWidgets_Unknown10(colour, colour2, drawPos.x + 0x840000, drawPos.y);
@@ -253,9 +271,11 @@ void UITAZoneModule_Options3CB(void)
     entity->timer = 0;
     entity->state = UITAZoneModule_Unknown18;
     RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+#if RETRO_USE_PLUS
     if (TimeAttackMenu->encoreMode)
         RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
     else
+#endif
         RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
 }
 
@@ -276,9 +296,11 @@ void UITAZoneModule_Options5CB(void)
     RSDK_THIS(UITAZoneModule);
     entity->flag  = true;
     entity->state = UITAZoneModule_Unknown17;
+#if RETRO_USE_PLUS
     if (TimeAttackMenu->encoreMode)
         RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
     else
+#endif
         RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
 }
 
@@ -323,9 +345,11 @@ void UITAZoneModule_Unknown17(void)
     entity->touchCB   = UIButton_ProcessTouch;
     entity->field_138 = entity->animator2.frameID & 3;
     if (UITAZoneModule->flag) {
+#if RETRO_USE_PLUS
         if (TimeAttackMenu->encoreMode)
             RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
         else
+#endif
             RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
     }
 }

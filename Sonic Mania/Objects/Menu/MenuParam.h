@@ -14,8 +14,6 @@ typedef struct {
     byte selectionFlag;
     byte field_59;
     char menuTag[0x100];
-    byte field_15A;
-    byte field_15B;
     int selectionID;
     int field_160;
     int clearFlag;
@@ -24,6 +22,7 @@ typedef struct {
     int zoneID;
     int actID;
     int dbRowID;
+#if RETRO_USE_PLUS
     int isEncoreMode;
     int field_180;
     int viewReplay;
@@ -36,6 +35,13 @@ typedef struct {
     int field_194;
     int field_198;
     int field_19C;
+#else
+    int timeScore;
+    int field_174;
+    int field_178;
+    int field_17C;
+    int field_180;
+#endif
     int vsZoneID;
     int vsActID;
     int field_1A8;

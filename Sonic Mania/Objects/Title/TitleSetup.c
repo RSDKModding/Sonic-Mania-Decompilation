@@ -40,11 +40,10 @@ void TitleSetup_StageLoad(void)
 {
     TextInfo presence;
     Localization_GetString(&presence, STR_RPC_TITLE);
+    API_SetRichPresence(PRESENCE_TITLE, &presence);
 #if RETRO_USE_PLUS
-    API.SetRichPresence(PRESENCE_TITLE, &presence);
     API.SetUserStorageNoSave(false);
 #else
-    APICallback_SetRichPresence(PRESENCE_TITLE, &presence);
     globals->noSave = false;
 #endif
     globals->blueSpheresInit = false;
@@ -173,7 +172,7 @@ void TitleSetup_Unknown6(void)
             }
             if (titleLogo->type == 1) {
                 titleLogo->flag = true;
-                RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 2, &titleLogo->data1, true, 0);
+                RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 2, &titleLogo->animator1, true, 0);
             }
         }
 
@@ -201,14 +200,14 @@ void TitleSetup_Unknown7(void)
             entity->state = TitleSetup_SetupLogo_Plus;
         else
 #endif
-            entity->state = TitleSetup_SetupLogo_NoPlus;
+            entity->state = TitleSetup_SetupLogo;
     }
     else {
         entity->timer -= 16;
     }
 }
 
-void TitleSetup_SetupLogo_NoPlus(void)
+void TitleSetup_SetupLogo(void)
 {
     RSDK_THIS(TitleSetup);
 #if RETRO_USE_PLUS
@@ -233,13 +232,12 @@ void TitleSetup_SetupLogo_NoPlus(void)
         entity->state = TitleSetup_Unknown10;
     }
 }
+#if RETRO_USE_PLUS
 void TitleSetup_SetupLogo_Plus(void)
 {
     RSDK_THIS(TitleSetup);
-#if RETRO_USE_PLUS
     if (entity->timer < 120)
         TitleSetup_CheckCheatCode();
-#endif
     if (++entity->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
@@ -250,9 +248,7 @@ void TitleSetup_SetupLogo_Plus(void)
                     titleLogo->velocity.y = -0x30000;
                     titleLogo->timer      = 2;
                     titleLogo->state      = TitleLogo_Unknown4;
-#if RETRO_USE_PLUS
                     RSDK.PlaySFX(TitleLogo->sfx_Plus, 0, 255);
-#endif
                     break;
                 case 6: titleLogo->position.y += 0x80000; break;
                 case 7:
@@ -266,13 +262,12 @@ void TitleSetup_SetupLogo_Plus(void)
             }
         }
 
-#if RETRO_USE_PLUS
         RSDK.CreateEntity(TitleEggman->objectID, 0, 0, 0xC00000);
-#endif
         entity->timer = 0;
-        entity->state = TitleSetup_SetupLogo_NoPlus;
+        entity->state = TitleSetup_SetupLogo;
     }
 }
+#endif
 
 void TitleSetup_Unknown10(void)
 {
@@ -296,13 +291,12 @@ void TitleSetup_Unknown10(void)
 #endif
         RSDK.SetScene("Presentation", nextScene);
 #if RETRO_USE_PLUS
-        RSDK.ResetControllerAssignments();
-        RSDK.AssignControllerID(CONT_P1, RSDK.MostRecentActiveControllerID(0, 0, 5));
+        int id = API_MostRecentActiveControllerID(0, 0, 5);
 #else
-        int id = MostRecentActiveControllerID(0);
-        APICallback_ResetControllerAssignments();
-        APICallback_AssignControllerID(id);
+        int id = API_MostRecentActiveControllerID(0);
 #endif
+        API_ResetControllerAssignments();
+        API_AssignControllerID(1, id);
         RSDK.StopChannel(Music->channelID);
         entity->state     = TitleSetup_Unknown11;
         entity->stateDraw = TitleSetup_Unknown13;
