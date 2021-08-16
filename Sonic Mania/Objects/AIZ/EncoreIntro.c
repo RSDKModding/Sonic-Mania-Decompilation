@@ -326,7 +326,7 @@ bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_Unknown6;
-            titleCard->stateDraw = TitleCard_Unknown12;
+            titleCard->stateDraw = TitleCard_StateDraw_Default;
             foreach_break;
         }
         foreach_all(HUD, hud)
@@ -1067,7 +1067,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
             EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->objectID);
             titleCard->active          = ACTIVE_NORMAL;
             titleCard->state           = TitleCard_Unknown6;
-            titleCard->stateDraw       = TitleCard_Unknown12;
+            titleCard->stateDraw       = TitleCard_StateDraw_Default;
         }
 
         Vector2 size;

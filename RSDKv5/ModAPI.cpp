@@ -14,10 +14,14 @@ namespace fs = std::filesystem;
 #endif
 #if RETRO_PLATFORM == RETRO_WIN
 #include "Windows.h"
+#undef GetObject // fuck you
 #endif
 
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
 #include <dlfcn.h>
+#if RETRO_PLATFORM == RETRO_ANDROID
+#define dlopen(file, flags) SDL_LoadObject(file)
+#endif
 #endif
 
 std::vector<ModInfo> modList;
@@ -32,6 +36,7 @@ void initModAPI()
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
 
     addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
+    addToModFunctionTable(ModTable_GetGlobals, GetGlobals);
     addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
     addToModFunctionTable(ModTable_AddModCallback, AddModCallback);
     addToModFunctionTable(ModTable_AddPublicFunction, AddPublicFunction);
@@ -40,11 +45,14 @@ void initModAPI()
     addToModFunctionTable(ModTable_GetSettingsBool, GetSettingsBool);
     addToModFunctionTable(ModTable_GetSettingsInt, GetSettingsInteger);
     addToModFunctionTable(ModTable_GetSettingsString, GetSettingsString);
+    addToModFunctionTable(ModTable_ForeachSetting, ForeachSetting);
+    addToModFunctionTable(ModTable_ForeachSettingCategory, ForeachSettingCategory);
     addToModFunctionTable(ModTable_SetSettingsBool, SetSettingsBool);
     addToModFunctionTable(ModTable_SetSettingsInt, SetSettingsInteger);
     addToModFunctionTable(ModTable_SetSettingsString, SetSettingsString);
     addToModFunctionTable(ModTable_SaveSettings, SaveSettings);
     addToModFunctionTable(ModTable_Super, Super);
+    addToModFunctionTable(ModTable_GetObject, GetObject);
 
     loadMods();
 }
@@ -482,7 +490,7 @@ int GetSettingsInteger(const char *id, const char *key, int fallback)
         return fallback;
     }
     try {
-        return std::stoi(v);
+        return std::stoi(v, nullptr, 0);
     } catch (...) {
         SetSettingsInteger(id, key, fallback);
         return fallback;
@@ -498,6 +506,109 @@ void GetSettingsString(const char *id, const char *key, TextInfo *result, const 
         return;
     }
     SetText(result, (char *)v.c_str(), v.length());
+}
+
+bool32 ForeachSettingCategory(const char *id, TextInfo *textInfo)
+{
+    if (!textInfo)
+        return false;
+    using namespace std;
+    map<string, map<string, string>> settings;
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
+        if (modList[m].folder == id) {
+            settings = modList[m].settings;
+        }
+    }
+    if (!settings.size())
+        return false;
+
+    if (textInfo->text)
+        ++foreachStackPtr->id;
+    else {
+        ++foreachStackPtr;
+        foreachStackPtr->id = 0;
+    }
+    int sid = 0;
+    string cat;
+    bool32 set = false;
+    if (settings[""].size() && foreachStackPtr->id == sid++) {
+        set = true;
+        cat = "";
+    }
+    if (!set) {
+        for (pair<string, map<string, string>> kv : settings) {
+            if (!kv.first.length())
+                continue;
+            if (kv.second.size() && foreachStackPtr->id == sid++) {
+                set = true;
+                cat = kv.first;
+                break;
+            }
+        }
+    }
+    if (!set) {
+        foreachStackPtr--;
+        return false;
+    }
+    SetText(textInfo, (char *)cat.c_str(), cat.length());
+    return true;
+}
+
+bool32 ForeachSetting(const char *id, TextInfo *textInfo)
+{
+    if (!textInfo)
+        return false;
+    using namespace std;
+    map<string, map<string, string>> settings;
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
+        if (modList[m].folder == id) {
+            settings = modList[m].settings;
+        }
+    }
+    if (!settings.size())
+        return false;
+
+    if (textInfo->text)
+        ++foreachStackPtr->id;
+    else {
+        ++foreachStackPtr;
+        foreachStackPtr->id = 0;
+    }
+    int sid = 0;
+    string key, cat;
+    if (settings[""].size()) {
+        for (pair<string, string> pair : settings[""]) {
+            if (foreachStackPtr->id == sid++) {
+                cat = "";
+                key = pair.first;
+                break;
+            }
+        }
+    }
+    if (!key.length()) {
+        for (pair<string, map<string, string>> kv : settings) {
+            if (!kv.first.length())
+                continue;
+            for (pair<string, string> pair : kv.second) {
+                if (foreachStackPtr->id == sid++) {
+                    cat = kv.first;
+                    key = pair.first;
+                    break;
+                }
+            }
+        }
+    }
+    if (!key.length()) {
+        foreachStackPtr--;
+        return false;
+    }
+    string r = cat + ":" + key;
+    SetText(textInfo, (char *)r.c_str(), r.length());
+    return true;
 }
 
 void SetSettingsValue(const char *id, const char *key, std::string val)
@@ -535,7 +646,8 @@ void SaveSettings(const char *id)
         if (!modList[m].active)
             break;
         if (modList[m].folder == id) {
-            if (!modList[m].settings.size()) break;
+            if (!modList[m].settings.size())
+                break;
             TextInfo path;
             FileIO *file = fOpen((GetModPath_i(id) + "/modSettings.ini").c_str(), "w");
 
@@ -556,34 +668,76 @@ void SaveSettings(const char *id)
 }
 
 // i'm going to hell for this
+// nvm im actually so proud of this func yall have no idea i'm insane
 int superLevels = 1;
 void Super(int objectID, ModSuper callback, void *data)
 {
     ObjectInfo *super = &objectList[stageObjectIDs[objectID]];
+    Object *before    = NULL;
     if (HASH_MATCH(super->hash, super->inherited->hash)) {
         for (int i = 0; i < superLevels; i++) {
+            before = *super->type;
+            if (!super->inherited) {
+                superLevels = i;
+                break;
+            }
+            // if overriding, force it all to be that object and don't set it back
             *super->inherited->type = *super->type;
-            super = super->inherited;
+            super                   = super->inherited;
         }
         ++superLevels;
     }
-    else {
+    else if (super->inherited) {
+        // if we're just inheriting, set it back properly afterward
+        before                  = *super->inherited->type;
         *super->inherited->type = *super->type;
-        super       = super->inherited;
-        superLevels = 1;
+        super                   = super->inherited;
+        superLevels             = 1;
     }
     switch (callback) {
-        case SUPER_CREATE: super->create(data); break;
-        case SUPER_DRAW: super->draw(); break;
-        case SUPER_UPDATE: super->update(); break;
-        case SUPER_STAGELOAD: super->stageLoad(); break;
-        case SUPER_LATEUPDATE: super->lateUpdate(); break;
-        case SUPER_STATICUPDATE: super->staticUpdate(); break;
-        case SUPER_SERIALIZE: super->serialize(); break;
-        case SUPER_EDITORLOAD: super->editorLoad(); break;
-        case SUPER_EDITORDRAW: super->editorDraw(); break;
+        case SUPER_CREATE:
+            if (super->create)
+                super->create(data);
+            break;
+        case SUPER_DRAW:
+            if (super->draw)
+                super->draw();
+            break;
+        case SUPER_UPDATE:
+            if (super->update)
+                super->update();
+            break;
+        case SUPER_STAGELOAD:
+            if (super->stageLoad)
+                super->stageLoad();
+            break;
+        case SUPER_LATEUPDATE:
+            if (super->lateUpdate)
+                super->lateUpdate();
+            break;
+        case SUPER_STATICUPDATE:
+            if (super->staticUpdate)
+                super->staticUpdate();
+            break;
+        case SUPER_SERIALIZE:
+            if (super->serialize)
+                super->serialize();
+            break;
+        case SUPER_EDITORLOAD:
+            if (super->editorLoad)
+                super->editorLoad();
+            break;
+        case SUPER_EDITORDRAW:
+            if (super->editorDraw)
+                super->editorDraw();
+            break;
     }
-    superLevels = 1;
+    *super->type = before;
+    superLevels  = 1;
+}
+
+void* GetGlobals() {
+    return (void*)gameOptionsPtr;
 }
 
 void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
@@ -603,7 +757,7 @@ void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, ui
             break;
         }
     }
-    ObjectInfo* inherit = NULL;
+    ObjectInfo *inherit = NULL;
 
     if (inherited) {
         uint hash[4];
@@ -640,10 +794,25 @@ void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, ui
 
     RegisterObject(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
                    serialize);
+
     if (inherited) {
         ObjectInfo *info = &objectList[objectCount - 1];
         info->inherited  = inherit;
+        if (HASH_MATCH(info->hash, inherit->hash)) {
+            // we override an obj and lets check for structPtr
+            if (!info->type) {
+                info->type       = inherit->type;
+                info->objectSize = inherit->objectSize;
+            }
+        }
     }
     objectCount = preCount;
+}
+
+Object *GetObject(const char *name)
+{
+    if (int o = GetObjectByName(name))
+        return *objectList[stageObjectIDs[o]].type;
+    return NULL;
 }
 #endif

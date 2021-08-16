@@ -39,7 +39,7 @@ void TitleCard_Create(void *data)
             if (!globals->atlEnabled)
                 Zone->timer2 = 0;
             entity->state     = TitleCard_Unknown6;
-            entity->stateDraw = TitleCard_Unknown12;
+            entity->stateDraw = TitleCard_StateDraw_Default;
         }
 
         entity->dword70 = (RSDK_screens->centerX - 152) << 16;
@@ -612,7 +612,7 @@ void TitleCard_Unknown11(void)
     StateMachine_Run(TitleCard->finishedCB);
 }
 
-void TitleCard_Unknown12(void)
+void TitleCard_StateDraw_Default(void)
 {
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard) {

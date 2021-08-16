@@ -778,6 +778,11 @@ void LinkGameLogicDLL(GameInfo *info)
 #if RETRO_USE_MOD_LOADER
 bool32 LinkModLogic(GameInfo* info, const char* id) {
     LinkGameLogicDLL(info);
+    TextInfo r;
+    Mod.GetSettingsString(id, "Nuts:Balls", &r, "no..."); 
+    RSDK.PrintInteger(PRINT_NORMAL, "MY BALLS", Mod.GetSettingsBool(id, "Deez", true));
+    RSDK.PrintInteger(PRINT_NORMAL, "MY BALLS", Mod.GetSettingsInteger(id, "Nuts:More?", 100));
+    Mod.SaveSettings(id);
     return true;
 }
 #endif

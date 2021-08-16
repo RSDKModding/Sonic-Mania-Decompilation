@@ -98,6 +98,27 @@ LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
 LOCAL_SRC_FILES := $(subst jni/src/, , $(WILDCARD_SETUP))
 
 include $(BUILD_STATIC_LIBRARY)
+#MOD BC ITS FUNNY
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := Mod
+LOCAL_CFLAGS   := -fexceptions
+
+LOCAL_C_INCLUDES := \
+    $(LOCAL_PATH)/mods/ProperTest
+
+
+WILDCARD_SETUP := \
+  $(wildcard $(LOCAL_PATH)/mods/ProperTest/*.c) \
+  $(wildcard $(LOCAL_PATH)/mods/ProperTest/*.cpp)
+
+
+LOCAL_SRC_FILES := \
+	$(subst jni/src/, , $(WILDCARD_SETUP))
+
+
+
+include $(BUILD_SHARED_LIBRARY)
 
 ######################################################################
 #GAME
@@ -119,7 +140,7 @@ WILDCARD_SETUP := \
 LOCAL_SRC_FILES := \
 	$(subst jni/src/, , $(WILDCARD_SETUP))
 
-LOCAL_SHARED_LIBRARIES := SDL2 libvorbis libogg libtheora RSDK
+LOCAL_SHARED_LIBRARIES := SDL2 libvorbis libogg libtheora RSDK Mod
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
 
 
@@ -127,4 +148,3 @@ LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
 include $(BUILD_SHARED_LIBRARY)
 
 ######################################################################
-

@@ -763,10 +763,13 @@ void LoadGameConfig()
 
 void InitScriptSystem()
 {
+#if RETRO_USE_MOD_LOADER
     objectCount = 0;
     memset(globalObjectIDs, 0, sizeof(int) * OBJECT_COUNT);
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;
+    foreachStackPtr  = foreachStackList;
+#endif
     RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update,
                    DefaultObject_LateUpdate, DefaultObject_StaticUpdate, DefaultObject_Draw, DefaultObject_Create, DefaultObject_StageLoad,
                    DefaultObject_EditorDraw, DefaultObject_EditorLoad, DefaultObject_Serialize);
@@ -806,14 +809,11 @@ void InitScriptSystem()
 #if RETRO_USE_MOD_LOADER
     info.modPtrs = modFunctionTable;
 #endif
-
-    if (!engine.useExternalCode) {
-        return linkGameLogic(&info);
-    }
-
     bool32 linked = false;
+
+    if (engine.useExternalCode) {
 #if RETRO_PLATFORM == RETRO_WIN
-    if (!hLibModule)
+        if (!hLibModule)
         hLibModule = LoadLibraryA(gameLogicName);
 
     if (hLibModule) {
@@ -825,7 +825,7 @@ void InitScriptSystem()
     }
 #endif
 #if RETRO_PLATFORM == RETRO_OSX
-    char buffer[0x100];
+        char buffer[0x100];
     sprintf(buffer, "%s%s.dylib", userFileDir, gameLogicName);
     if (!link_handle)
         link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
@@ -839,23 +839,28 @@ void InitScriptSystem()
     }
 #endif
 #if RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
-    sprintf(gameLogicName, "%s%s.so", userFileDir, gameLogicName);
-    if (!link_handle)
-        link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
+        sprintf(gameLogicName, "%s%s.so", userFileDir, gameLogicName);
+        if (!link_handle)
+            link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
 
-    if (link_handle) {
-        linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
-        if (linkGameLogic) {
-            linkGameLogic(&info);
-            linked = true;
+        if (link_handle) {
+            linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
+            if (linkGameLogic) {
+                linkGameLogic(&info);
+                linked = true;
+            }
         }
-    }
 #endif
 
-    if (!linked) {
-        printLog(PRINT_POPUP, "Failed to link game logic!");
+        if (!linked) {
+            printLog(PRINT_POPUP, "Failed to link game logic!");
+        }
     }
-#if RETRO_USE_MOD_LOADER
+    else {
+        linkGameLogic(&info);
+    }
+
+    #if RETRO_USE_MOD_LOADER
     for (int m = 0; m < modList.size(); ++m) {
         if (!modList[m].active)
             continue;

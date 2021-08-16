@@ -4,7 +4,6 @@
 #define minVal(a, b)                      ((a) < (b) ? (a) : (b))
 #define maxVal(a, b)                      ((a) > (b) ? (a) : (b))
 #define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
-#define fabs(a)                           ((a) > 0 ? (a) : -(a))
 
 #define intToVoid(x)   (void *)(size_t)(x)
 #define floatToVoid(x) intToVoid(*(int *)&(x))
@@ -27,7 +26,19 @@ typedef enum {
     MODCB_ONSTATICUPDATE,
     MODCB_ONDRAW,
     MODCB_STAGEUNLOAD,
-}ModCallbackEvents;
+} ModCallbackEvents;
+
+typedef enum {
+    SUPER_UPDATE,
+    SUPER_LATEUPDATE,
+    SUPER_STATICUPDATE,
+    SUPER_DRAW,
+    SUPER_CREATE,
+    SUPER_STAGELOAD,
+    SUPER_EDITORDRAW,
+    SUPER_EDITORLOAD,
+    SUPER_SERIALIZE
+} ModSuper;
 
 // Mod Table
 typedef struct {
@@ -35,22 +46,32 @@ typedef struct {
                            void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                            void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
 
+    void* (*GetGlobals)();
+
     bool32 (*LoadModInfo)(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
-    void (*AddModCallback)(int callbackID, void (*callback)(void* data));
+    void (*AddModCallback)(int callbackID, void (*callback)(void *data));
     void *(*AddPublicFunction)(const char *folder, const char *functionName, void *functionPtr);
     void *(*GetPublicFunction)(const char *folder, const char *functionName);
     const char *(*GetModPath)(const char *id);
 
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int (*GetSettingsInteger)(const char *id, const char *key, int fallback);
-    void (*GetSettingsString)(const char *id, const char *key, TextInfo* result, const char *fallback);
+    void (*GetSettingsString)(const char *id, const char *key, TextInfo *result, const char *fallback);
+    bool32 (*ForeachSetting)(const char* id, TextInfo* textInfo);
+    bool32 (*ForeachSettingCategory)(const char *id, TextInfo *textInfo);
 
     void (*SetSettingsBool)(const char *id, const char *key, bool32 val);
     void (*SetSettingsInteger)(const char *id, const char *key, int val);
     void (*SetSettingsString)(const char *id, const char *key, TextInfo *val);
 
     void (*SaveSettings)(const char *id);
+
+    void (*Super)(int objectID, ModSuper callback, void* data);
+
+    Object *(*GetObject)(const char* name);
 } ModFunctionTable;
+
+#define GET_OBJECT(name) ((Object##name*)Mod.GetObject(#name))
 #endif
 
 #if RETRO_USE_PLUS
@@ -80,7 +101,7 @@ typedef struct {
 #if RETRO_GAMEVER == VER_107
     void (*EGS_LeaderboardUnknown1)(void);
 #endif
-    void (*FetchLeaderboard)(const char* name, int a2);
+    void (*FetchLeaderboard)(const char *name, int a2);
     void (*TrackScore)(const char *name, int score, void (*callback)(int status, int rank));
     int (*GetLeaderboardsStatus)(void);
     Vector2 (*LeaderboardEntryCount)(void);
@@ -114,12 +135,12 @@ typedef struct {
     void (*SaveUserDB)(ushort tableID, void (*callback)(int status));
     void (*ClearUserDB)(ushort tableID);
     void (*ClearAllUserDBs)(void);
-    void (*SetupSortedUserDBRowIDs)(ushort tableID);
-    bool32 (*GetUserDBRowsChanged)(ushort tableID);
+    void (*SetupRowUnknown)(ushort tableID);
+    int (*GetUserDBStatus)(ushort tableID);
     void (*Unknown33)(ushort tableID, int type, const char *name, void *value);
     void (*SortDBRows)(ushort tableID, int type, const char *name, bool32 flag);
-    int (*GetSortedUserDBRowCount)(ushort tableID);
-    int (*GetSortedUserDBRowID)(ushort tableID, ushort row);
+    int (*GetUserDBUnknownCount)(ushort tableID);
+    int (*GetUserDBUnknown)(ushort tableID, ushort row);
     int (*AddUserDBRow)(ushort tableID);
     void (*SetUserDBValue)(ushort tableID, int row, int type, const char *name, void *value);
     void (*GetUserDBValue)(ushort tableID, int row, int type, const char *name, void *value);
@@ -286,8 +307,7 @@ typedef struct {
     bool32 (*CheckObjectCollisionPlatform)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox, bool32 setPos);
     bool32 (*ObjectTileCollision)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
                                   bool32 setPos);
-    bool32 (*ObjectTileGrip)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset,
-                             int tolerance);
+    bool32 (*ObjectTileGrip)(void *entity, ushort collisionLayers, byte collisionMode, byte collisionPlane, int xOffset, int yOffset, int tolerance);
     void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
     int (*GetTileAngle)(ushort tileID, byte cPlane, byte cMode);
     void (*SetTileAngle)(ushort tileID, byte cPlane, byte cMode, byte value);
@@ -347,7 +367,6 @@ typedef struct {
 #endif
 } RSDKFunctionTable;
 
-
 #if RETRO_USE_MOD_LOADER
 extern ModFunctionTable Mod;
 #endif
@@ -356,629 +375,24 @@ extern APIFunctionTable API;
 #endif
 extern RSDKFunctionTable RSDK;
 
-#include "PGZ/Acetone.h"
-#include "Global/ActClear.h"
-#include "AIZ/AIZEggRobo.h"
-#include "AIZ/AIZEncoreTutorial.h"
-#include "AIZ/AIZKingClaw.h"
-#include "AIZ/AIZRockPile.h"
-#include "AIZ/AIZSetup.h"
-#include "AIZ/AIZTornado.h"
-#include "AIZ/AIZTornadoPath.h"
-#include "CPZ/AmoebaDroid.h"
-#include "Credits/AnimalHBH.h"
-#include "Global/Animals.h"
-#include "Global/Announcer.h"
-#include "Global/APICallback.h"
-#include "OOZ/Aquis.h"
-#include "MSZ/Armadiloid.h"
-#include "Helpers/BadnikHelpers.h"
-#include "CPZ/Ball.h"
-#include "OOZ/BallCannon.h"
-#include "TMZ/BallHog.h"
-#include "MSZ/BarStool.h"
-#include "HPZ/Batbot.h"
-#include "GHZ/Batbrain.h"
-#include "SSZ/Beanstalk.h"
-#include "Common/BGSwitch.h"
-#include "FBZ/BigSqueeze.h"
-#include "MMZ/BladePole.h"
-#include "FBZ/Blaster.h"
-#include "HCZ/Blastoid.h"
-#include "AIZ/Bloominator.h"
-#include "SBZ/Bomb.h"
-#include "SSZ/BouncePlant.h"
-#include "Global/BoundsMarker.h"
-#include "Common/BreakableWall.h"
-#include "HCZ/BreakBar.h"
-#include "GHZ/Bridge.h"
-#include "BSS/BSS_Collectable.h"
-#include "BSS/BSS_Collected.h"
-#include "BSS/BSS_Horizon.h"
-#include "BSS/BSS_HUD.h"
-#include "BSS/BSS_Message.h"
-#include "BSS/BSS_Palette.h"
-#include "BSS/BSS_Player.h"
-#include "BSS/BSS_Setup.h"
-#include "CPZ/Bubbler.h"
-#include "LRZ/BuckwildBall.h"
-#include "HCZ/Buggernaut.h"
-#include "MSZ/Bumpalo.h"
-#include "SSZ/Bungee.h"
-#include "GHZ/BurningLog.h"
-#include "Common/Button.h"
-#include "HCZ/ButtonDoor.h"
-#include "GHZ/BuzzBomber.h"
-#include "MMZ/BuzzSaw.h"
-#include "SPZ/CableWarp.h"
-#include "MSZ/Cactula.h"
-#include "Global/Camera.h"
-#include "SPZ/Canista.h"
-#include "SBZ/Caterkiller.h"
-#include "CPZ/CaterkillerJr.h"
-#include "Cutscene/ChaosEmerald.h"
-#include "GHZ/CheckerBall.h"
-#include "CPZ/ChemBubble.h"
-#include "CPZ/ChemicalBall.h"
-#include "CPZ/ChemicalPool.h"
-#include "GHZ/Chopper.h"
-#include "SPZ/CircleBumper.h"
-#include "SPZ/Clapperboard.h"
-#include "FBZ/Clucker.h"
-#include "Common/CollapsingPlatform.h"
-#include "MSZ/CollapsingSand.h"
-#include "Helpers/ColorHelpers.h"
-#include "Global/Competition.h"
-#include "Menu/CompetitionMenu.h"
-#include "Common/CompetitionSession.h"
-#include "SSZ/Constellation.h"
-#include "Continue/ContinuePlayer.h"
-#include "Continue/ContinueSetup.h"
-#include "LRZ/ConveyorBelt.h"
-#include "LRZ/ConveyorPlatform.h"
-#include "MMZ/ConveyorWheel.h"
-#include "GHZ/CorkscrewPath.h"
-#include "Global/COverlay.h"
-#include "CPZ/CPZ1Intro.h"
-#include "CPZ/CPZ2Outro.h"
-#include "CPZ/CPZBoss.h"
-#include "CPZ/CPZSetup.h"
-#include "CPZ/CPZShutter.h"
-#include "GHZ/Crabmeat.h"
-#include "FBZ/Crane.h"
-#include "TMZ/CrashTest.h"
-#include "PGZ/Crate.h"
-#include "Credits/CreditsSetup.h"
-#include "TMZ/CrimsonEye.h"
-#include "LRZ/Current.h"
-#include "Cutscene/CutsceneHBH.h"
-#include "Cutscene/CutsceneRules.h"
-#include "Cutscene/CutsceneSeq.h"
-#include "FBZ/Cylinder.h"
-#include "Menu/DAControl.h"
-#include "SSZ/Dango.h"
-#include "Menu/DASetup.h"
-#include "LRZ/DashLift.h"
-#include "MSZ/DBTower.h"
-#include "HCZ/DCEvent.h"
-#include "GHZ/DDWrecker.h"
-#include "Global/Debris.h"
-#include "Global/DebugMode.h"
-#include "Common/Decoration.h"
-#include "Menu/DemoMenu.h"
-#include "GHZ/DERobot.h"
-#include "Global/DialogRunner.h"
-#include "SPZ/DirectorChair.h"
-#include "HCZ/DiveEggman.h"
-#include "CPZ/DNARiser.h"
-#include "PGZ/DoorTrigger.h"
-#include "PGZ/Dragonfly.h"
-#include "Helpers/DrawHelpers.h"
-#include "LRZ/Drillerdroid.h"
-#include "LRZ/DrillerdroidO.h"
-#include "Global/Dust.h"
-#include "Menu/E3MenuSetup.h"
-#include "SPZ/EggJanken.h"
-#include "SPZ/EggJankenPart.h"
-#include "MSZ/EggLoco.h"
-#include "Common/Eggman.h"
-#include "MMZ/EggPistonsMKII.h"
-#include "Global/EggPrison.h"
-#include "SSZ/EggTower.h"
-#include "SPZ/EggTV.h"
-#include "FBZ/ElectroMagnet.h"
-#include "Credits/EncoreGoodEnd.h"
-#include "AIZ/EncoreIntro.h"
-#include "Global/EncoreRoute.h"
-#include "ERZ/ERZGunner.h"
-#include "ERZ/ERZKing.h"
-#include "ERZ/ERZMystic.h"
-#include "ERZ/ERZOutro.h"
-#include "ERZ/ERZRider.h"
-#include "ERZ/ERZSetup.h"
-#include "ERZ/ERZShinobi.h"
-#include "ERZ/ERZStart.h"
-#include "TMZ/EscapeCar.h"
-#include "Global/Explosion.h"
-#include "Menu/ExtrasMenu.h"
-#include "FBZ/Fan.h"
-#include "MMZ/FarPlane.h"
-#include "FBZ/FBZ1Outro.h"
-#include "FBZ/FBZ2Outro.h"
-#include "FBZ/FBZFan.h"
-#include "FBZ/FBZMissile.h"
-#include "FBZ/FBZSetup.h"
-#include "FBZ/FBZSinkTrash.h"
-#include "FBZ/FBZStorm.h"
-#include "FBZ/FBZTrash.h"
-#include "AIZ/FernParallax.h"
-#include "SPZ/FilmProjector.h"
-#include "SPZ/FilmReel.h"
-#include "GHZ/Fireball.h"
-#include "SSZ/Fireflies.h"
-#include "SSZ/Firework.h"
-#include "LRZ/Fireworm.h"
-#include "FBZ/FlameSpring.h"
-#include "LRZ/Flamethrower.h"
-#include "TMZ/FlasherMKII.h"
-#include "Common/FlingRamp.h"
-#include "MSZ/Flipper.h"
-#include "SSZ/FlowerPod.h"
-#include "FBZ/FoldingPlatform.h"
-#include "Common/ForceSpin.h"
-#include "Common/ForceUnstick.h"
-#include "PGZ/FrostThrower.h"
-#include "SPZ/Funnel.h"
-#include "Cutscene/FXExpandRing.h"
-#include "Cutscene/FXFade.h"
-#include "Cutscene/FXRuby.h"
-#include "Cutscene/FXSpinRay.h"
-#include "Cutscene/FXTrail.h"
-#include "Cutscene/FXWaveRing.h"
-#include "MMZ/Gachapandora.h"
-#include "Global/GameOver.h"
-#include "Helpers/GameProgress.h"
-#include "OOZ/GasPlatform.h"
-#include "Common/GenericTrigger.h"
-#include "GHZ/GHZ2Outro.h"
-#include "GHZ/GHZCutsceneK.h"
-#include "GHZ/GHZCutsceneST.h"
-#include "GHZ/GHZSetup.h"
-#include "MSZ/GiantPistol.h"
-#include "SSZ/GigaMetal.h"
-#include "HCZ/Gondola.h"
-#include "CPZ/Grabber.h"
-#include "SPZ/GreenScreen.h"
-#include "TMZ/GymBar.h"
-#include "HCZ/HandLauncher.h"
-#include "HCZ/HangConveyor.h"
-#include "FBZ/HangGlider.h"
-#include "FBZ/HangPoint.h"
-#include "OOZ/Hatch.h"
-#include "MSZ/Hatterkiller.h"
-#include "HCZ/HCZ1Intro.h"
-#include "HCZ/HCZOneWayDoor.h"
-#include "HCZ/HCZSetup.h"
-#include "HCZ/HCZSpikeBall.h"
-#include "SPZ/HeavyGunner.h"
-#include "LRZ/HeavyKing.h"
-#include "MSZ/HeavyMystic.h"
-#include "LRZ/HeavyRider.h"
-#include "PGZ/HeavyShinobi.h"
-#include "SSZ/HiLoSign.h"
-#include "MSZ/Honkytonk.h"
-#include "SSZ/Hotaru.h"
-#include "SSZ/HotaruHiWatt.h"
-#include "SSZ/HotaruMKII.h"
-#include "LRZ/HPZEmerald.h"
-#include "Global/HUD.h"
-#include "PGZ/Ice.h"
-#include "PGZ/IceBomba.h"
-#include "PGZ/IceSpring.h"
-#include "Global/ImageTrail.h"
-#include "PGZ/Ink.h"
-#include "PGZ/InkWipe.h"
-#include "Global/InvincibleStars.h"
-#include "Global/InvisibleBlock.h"
-#include "Global/ItemBox.h"
-#include "LRZ/Iwamodoki.h"
-#include "TMZ/JacobsLadder.h"
-#include "HPZ/Jawz.h"
-#include "HCZ/Jellygnite.h"
-#include "PGZ/JuggleSaw.h"
-#include "SSZ/JunctionWheel.h"
-#include "SSZ/Kabasira.h"
-#include "SSZ/Kanabun.h"
-#include "LRZ/KingAttack.h"
-#include "LRZ/KingClaw.h"
-#include "ERZ/KleptoMobile.h"
-#include "TMZ/LargeGear.h"
-#include "FBZ/Launcher.h"
-#include "TMZ/LaunchSpring.h"
-#include "HCZ/LaundroMobile.h"
-#include "LRZ/LavaFall.h"
-#include "LRZ/LavaGeyser.h"
-#include "SPZ/LEDPanel.h"
-#include "SPZ/Letterboard.h"
-#include "Menu/LevelSelect.h"
-#include "FBZ/LightBarrier.h"
-#include "MSZ/LightBulb.h"
-#include "Global/Localization.h"
-#include "MSZ/LocoSmoke.h"
-#include "Helpers/LogHelpers.h"
-#include "Menu/LogoSetup.h"
-#include "SPZ/LottoBall.h"
-#include "SPZ/LottoMachine.h"
-#include "SPZ/LoveTester.h"
-#include "LRZ/LRZ1Intro.h"
-#include "LRZ/LRZ1Outro.h"
-#include "LRZ/LRZ1Setup.h"
-#include "LRZ/LRZ2Setup.h"
-#include "LRZ/LRZ3Cutscene.h"
-#include "LRZ/LRZ3Outro.h"
-#include "LRZ/LRZ3OutroK.h"
-#include "LRZ/LRZ3Setup.h"
-#include "LRZ/LRZConvControl.h"
-#include "LRZ/LRZConvDropper.h"
-#include "LRZ/LRZConveyor.h"
-#include "LRZ/LRZConvItem.h"
-#include "LRZ/LRZConvSwitch.h"
-#include "LRZ/LRZFireball.h"
-#include "LRZ/LRZRockPile.h"
-#include "LRZ/LRZSpikeBall.h"
-#include "LRZ/LRZSpiral.h"
-#include "TMZ/MagnetSphere.h"
-#include "FBZ/MagPlatform.h"
-#include "FBZ/MagSpikeBall.h"
-#include "Menu/MainMenu.h"
-#include "Menu/ManiaModeMenu.h"
-#include "Helpers/MathHelpers.h"
-#include "MMZ/MatryoshkaBom.h"
-#include "MMZ/MechaBu.h"
-#include "HCZ/MegaChopper.h"
-#include "OOZ/MegaOctus.h"
-#include "Menu/MenuParam.h"
-#include "Menu/MenuSetup.h"
-#include "TMZ/MetalArm.h"
-#include "SSZ/MetalSonic.h"
-#include "OOZ/MeterDroid.h"
-#include "SPZ/MicDrop.h"
-#include "FBZ/Mine.h"
-#include "MMZ/MMZ2Outro.h"
-#include "MMZ/MMZLightning.h"
-#include "MMZ/MMZSetup.h"
-#include "MMZ/MMZWheel.h"
-#include "TMZ/MonarchBG.h"
-#include "SSZ/MonarchPlans.h"
-#include "AIZ/MonkeyDude.h"
-#include "GHZ/Motobug.h"
-#include "SSZ/MSBomb.h"
-#include "SSZ/MSFactory.h"
-#include "SSZ/MSHologram.h"
-#include "SSZ/MSOrb.h"
-#include "SSZ/MSPanel.h"
-#include "MSZ/MSZ1KIntro.h"
-#include "MSZ/MSZ2Cutscene.h"
-#include "MSZ/MSZCutsceneK.h"
-#include "MSZ/MSZCutsceneST.h"
-#include "MSZ/MSZSetup.h"
-#include "MSZ/MSZSpotlight.h"
-#include "Global/Music.h"
-#include "PGZ/Newspaper.h"
-#include "GHZ/Newtron.h"
-#include "Global/NoSwap.h"
-#include "OOZ/Octus.h"
-#include "CPZ/OneWayDoor.h"
-#include "OOZ/OOZ1Outro.h"
-#include "OOZ/OOZ2Outro.h"
-#include "OOZ/OOZFlames.h"
-#include "OOZ/OOZSetup.h"
-#include "Helpers/Options.h"
-#include "Menu/OptionsMenu.h"
-#include "SBZ/Orbinaut.h"
-#include "LRZ/OrbitSpike.h"
-#include "MSZ/PaintingEyes.h"
-#include "Common/Palette.h"
-#include "PGZ/PaperRoller.h"
-#include "Common/ParallaxSprite.h"
-#include "Helpers/ParticleHelpers.h"
-#include "SPZ/PathInverter.h"
-#include "Global/PauseMenu.h"
-#include "Pinball/PBL_Bumper.h"
-#include "Pinball/PBL_Camera.h"
-#include "Pinball/PBL_Crane.h"
-#include "Pinball/PBL_Flipper.h"
-#include "Pinball/PBL_HUD.h"
-#include "Pinball/PBL_Player.h"
-#include "Pinball/PBL_Ring.h"
-#include "Pinball/PBL_Sector.h"
-#include "Pinball/PBL_Setup.h"
-#include "Pinball/PBL_TargetBumper.h"
-#include "Unused/Pendulum.h"
-#include "PGZ/PetalPile.h"
-#include "ERZ/PhantomEgg.h"
-#include "ERZ/PhantomGunner.h"
-#include "ERZ/PhantomHand.h"
-#include "ERZ/PhantomKing.h"
-#include "ERZ/PhantomMissile.h"
-#include "ERZ/PhantomMystic.h"
-#include "ERZ/PhantomRider.h"
-#include "ERZ/PhantomRuby.h"
-#include "ERZ/PhantomShield.h"
-#include "ERZ/PhantomShinobi.h"
-#include "SPZ/PimPom.h"
-#include "MSZ/Pinata.h"
-#include "MMZ/Piston.h"
-#include "ERZ/PKingAttack.h"
-#include "MMZ/PlaneSeeSaw.h"
-#include "Global/PlaneSwitch.h"
-#include "Common/Platform.h"
-#include "Common/PlatformControl.h"
-#include "Common/PlatformNode.h"
-#include "Player/Player.h"
-#include "Player/PlayerHelpers.h"
-#include "Player/PlayerProbe.h"
-#include "MMZ/PohBee.h"
-#include "HCZ/Pointdexter.h"
-#include "SPZ/PopcornKernel.h"
-#include "SPZ/PopcornMachine.h"
-#include "TMZ/PopOut.h"
-#include "PGZ/Press.h"
-#include "PGZ/PrintBlock.h"
-#include "Common/Projectile.h"
-#include "FBZ/Propeller.h"
-#include "FBZ/PropellerShaft.h"
-#include "PGZ/PSZ1Intro.h"
-#include "PGZ/PSZ1Setup.h"
-#include "PGZ/PSZ2Intro.h"
-#include "PGZ/PSZ2Outro.h"
-#include "PGZ/PSZ2Setup.h"
-#include "PGZ/PSZDoor.h"
-#include "PGZ/PSZEggman.h"
-#include "PGZ/PSZLauncher.h"
-#include "HCZ/PullChain.h"
-#include "OOZ/PullSwitch.h"
-#include "OOZ/PushSpring.h"
-#include "Puyo/PuyoAI.h"
-#include "Puyo/PuyoAttack.h"
-#include "Puyo/PuyoBean.h"
-#include "Puyo/PuyoGame.h"
-#include "Puyo/PuyoIndicator.h"
-#include "Puyo/PuyoLabel.h"
-#include "Puyo/PuyoLevelSelect.h"
-#include "Puyo/PuyoMatch.h"
-#include "Puyo/PuyoScore.h"
-#include "MSZ/Rattlekiller.h"
-#include "CPZ/Reagent.h"
-#include "HPZ/Redz.h"
-#include "Helpers/ReplayDB.h"
-#include "Global/ReplayRecorder.h"
-#include "LRZ/Rexon.h"
-#include "AIZ/Rhinobot.h"
-#include "Global/Ring.h"
-#include "ERZ/RingField.h"
-#include "LRZ/RisingLava.h"
-#include "LRZ/RockDrill.h"
-#include "SPZ/RockemSockem.h"
-#include "MSZ/RollerMKII.h"
-#include "MSZ/RotatingSpikes.h"
-#include "CPZ/RotatingStair.h"
-#include "MMZ/RPlaneShifter.h"
-#include "SSZ/RTeleporter.h"
-#include "Cutscene/RubyPortal.h"
-#include "Global/SaveGame.h"
-#include "MMZ/Scarab.h"
-#include "AIZ/SchrodingersCapsule.h"
-#include "Global/ScoreBonus.h"
-#include "HCZ/ScrewMobile.h"
-#include "SSZ/SDashWheel.h"
-#include "MSZ/SeeSaw.h"
-#include "MSZ/SeltzerBottle.h"
-#include "MSZ/SeltzerWater.h"
-#include "TMZ/SentryBug.h"
-#include "Global/Shield.h"
-#include "PGZ/Shiversaw.h"
-#include "SPZ/ShopWindow.h"
-#include "PGZ/Shuriken.h"
-#include "SPZ/Shutterbug.h"
-#include "MSZ/SideBarrel.h"
-#include "Global/SignPost.h"
-#include "SSZ/SilverSonic.h"
-#include "MMZ/SizeLaser.h"
-#include "LRZ/SkyTeleporter.h"
-#include "OOZ/Smog.h"
-#include "PGZ/Snowflakes.h"
-#include "OOZ/Sol.h"
-#include "Global/Soundboard.h"
-#include "PGZ/SP500.h"
-#include "PGZ/SP500MkII.h"
-#include "SSZ/SparkRail.h"
-#include "HCZ/Spear.h"
-#include "Unused/SpearBlock.h"
-#include "UFO/SpecialClear.h"
-#include "Global/SpecialRing.h"
-#include "CPZ/SpeedBooster.h"
-#include "Global/SpeedGate.h"
-#include "FBZ/SpiderMobile.h"
-#include "MMZ/SpikeCorridor.h"
-#include "LRZ/SpikeCrusher.h"
-#include "SSZ/SpikeFlail.h"
-#include "GHZ/SpikeLog.h"
-#include "Global/Spikes.h"
-#include "Common/SpinBooster.h"
-#include "SPZ/SpinSign.h"
-#include "CPZ/Spiny.h"
-#include "FBZ/SpiralPlatform.h"
-#include "GHZ/Splats.h"
-#include "Global/Spring.h"
-#include "CPZ/Springboard.h"
-#include "SPZ/SPZ1Intro.h"
-#include "SPZ/SPZ1Setup.h"
-#include "SPZ/SPZ2Outro.h"
-#include "SPZ/SPZ2Setup.h"
-#include "SSZ/SSZ1Intro.h"
-#include "SSZ/SSZ1Outro.h"
-#include "SSZ/SSZ1Setup.h"
-#include "SSZ/SSZ2Setup.h"
-#include "SSZ/SSZ3Cutscene.h"
-#include "SSZ/SSZEggman.h"
-#include "SSZ/SSZSpikeBall.h"
-#include "SSZ/SSZSpotlight.h"
-#include "CPZ/Staircase.h"
-#include "LRZ/Stalactite.h"
-#include "Global/StarPost.h"
-#include "HPZ/Stegway.h"
-#include "CPZ/StickyPlatform.h"
-#include "Summary/Summary.h"
-#include "Summary/SummaryEmerald.h"
-#include "Global/SuperSparkle.h"
-#include "AIZ/Sweep.h"
-#include "MSZ/SwingRope.h"
-#include "OOZ/SwitchDoor.h"
-#include "CPZ/Syringe.h"
-#include "Menu/TAEmerald.h"
-#include "Unused/TargetBumper.h"
-#include "FBZ/Technosqueek.h"
-#include "TMZ/TeeterTotter.h"
-#include "FBZ/TetherBall.h"
-#include "Menu/ThanksSetup.h"
-#include "LRZ/ThoughtBubble.h"
-#include "Common/TilePlatform.h"
-#include "Helpers/TimeAttackData.h"
-#include "Global/TimeAttackGate.h"
-#include "Menu/TimeAttackMenu.h"
-#include "SSZ/TimePost.h"
-#include "SSZ/TimeTravelSetup.h"
-#include "CPZ/TippingPlatform.h"
-#include "Title/Title3DSprite.h"
-#include "Title/TitleBG.h"
-#include "Global/TitleCard.h"
-#include "Title/TitleEggman.h"
-#include "Title/TitleLogo.h"
-#include "Title/TitleSetup.h"
-#include "Title/TitleSonic.h"
-#include "TMZ/TMZ1Outro.h"
-#include "TMZ/TMZ1Setup.h"
-#include "TMZ/TMZ2Outro.h"
-#include "TMZ/TMZ2Setup.h"
-#include "TMZ/TMZ3Setup.h"
-#include "TMZ/TMZAlert.h"
-#include "TMZ/TMZBarrier.h"
-#include "TMZ/TMZCable.h"
-#include "TMZ/TMZFlames.h"
-#include "MSZ/Tornado.h"
-#include "MSZ/TornadoPath.h"
-#include "LRZ/Toxomister.h"
-#include "CPZ/TransportTube.h"
-#include "Credits/TryAgain.h"
-#include "Credits/TryAgainE.h"
-#include "SSZ/TTCutscene.h"
-#include "CPZ/TubeSpring.h"
-#include "SPZ/Tubinaut.h"
-#include "FBZ/Tuesday.h"
-#include "LRZ/Turbine.h"
-#include "HCZ/TurboSpiker.h"
-#include "TMZ/TurboTurtle.h"
-#include "PGZ/Turntable.h"
-#include "LRZ/TurretSwitch.h"
-#include "SPZ/TVFlyingBattery.h"
-#include "SPZ/TVPole.h"
-#include "SPZ/TVVan.h"
-#include "CPZ/TwistedTubes.h"
-#include "FBZ/TwistingDoor.h"
-#include "HCZ/TwistingSlide.h"
-#include "MSZ/UberCaterkiller.h"
-#include "UFO/UFO_Camera.h"
-#include "UFO/UFO_Circuit.h"
-#include "UFO/UFO_Decoration.h"
-#include "UFO/UFO_Dust.h"
-#include "UFO/UFO_HUD.h"
-#include "UFO/UFO_ItemBox.h"
-#include "UFO/UFO_Message.h"
-#include "UFO/UFO_Plasma.h"
-#include "UFO/UFO_Player.h"
-#include "UFO/UFO_Ring.h"
-#include "UFO/UFO_Setup.h"
-#include "UFO/UFO_Shadow.h"
-#include "UFO/UFO_SpeedLines.h"
-#include "UFO/UFO_Sphere.h"
-#include "UFO/UFO_Springboard.h"
-#include "UFO/UFO_Water.h"
-#include "Menu/UIBackground.h"
-#include "Menu/UIButton.h"
-#include "Menu/UIButtonLabel.h"
-#include "Menu/UIButtonPrompt.h"
-#include "Menu/UICarousel.h"
-#include "Menu/UICharButton.h"
-#include "Menu/UIChoice.h"
-#include "Menu/UIControl.h"
-#include "Menu/UICreditsText.h"
-#include "Menu/UIDialog.h"
-#include "Menu/UIDiorama.h"
-#include "Menu/UIHeading.h"
-#include "Menu/UIInfoLabel.h"
-#include "Menu/UIKeyBinder.h"
-#include "Menu/UILeaderboard.h"
-#include "Menu/UIMedallionPanel.h"
-#include "Menu/UIModeButton.h"
-#include "Menu/UIOptionPanel.h"
-#include "Menu/UIPicture.h"
-#include "Menu/UIPopover.h"
-#include "Menu/UIRankButton.h"
-#include "Menu/UIReplayCarousel.h"
-#include "Menu/UIResPicker.h"
-#include "Menu/UISaveSlot.h"
-#include "Menu/UIShifter.h"
-#include "Menu/UISlider.h"
-#include "Menu/UISubHeading.h"
-#include "Menu/UITABanner.h"
-#include "Menu/UITAZoneModule.h"
-#include "Menu/UIText.h"
-#include "Menu/UITransition.h"
-#include "Menu/UIUsernamePopup.h"
-#include "Menu/UIVideo.h"
-#include "Menu/UIVsCharSelector.h"
-#include "Menu/UIVsResults.h"
-#include "Menu/UIVsRoundPicker.h"
-#include "Menu/UIVsScoreboard.h"
-#include "Menu/UIVsZoneButton.h"
-#include "Menu/UIWaitSpinner.h"
-#include "Menu/UIWidgets.h"
-#include "Menu/UIWinSize.h"
-#include "SSZ/UncurlPlant.h"
-#include "OOZ/Valve.h"
-#include "MMZ/VanishPlatform.h"
-#include "MSZ/Vultron.h"
-#include "LRZ/WalkerLegs.h"
-#include "TMZ/WallBumper.h"
-#include "Unused/WallCrawl.h"
-#include "FBZ/WarpDoor.h"
-#include "Common/Water.h"
-#include "GHZ/WaterfallSound.h"
-#include "HCZ/WaterGush.h"
-#include "SPZ/WeatherMobile.h"
-#include "SPZ/WeatherTV.h"
-#include "HCZ/Whirlpool.h"
-#include "Unused/Wisp.h"
-#include "PGZ/WoodChipper.h"
-#include "PGZ/Woodrow.h"
-#include "SSZ/YoyoPulley.h"
-#include "GHZ/ZipLine.h"
-#include "Global/Zone.h"
+#include "Spikes.h"
+#include "TitleCard.h"
+#include "Zone.h"
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (byte)object->objectID, offsetof(Entity##object, var))
 #define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
-    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
-                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
-                        object##_Serialize, NULL)
+    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,            \
+                       object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,          \
+                       object##_Serialize, NULL)
 #if RETRO_USE_PLUS
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
 #define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
 #define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
-#define SPAWN_CHILD(obj, data)      Entity##obj *child = (Entity##obj *)RSDK.CreateEntity(obj->objectID, (void*)(data), entity->position.x, entity->position.y)
+#define SPAWN_CHILD(obj, data)                                                                                                                       \
+    Entity##obj *child = (Entity##obj *)RSDK.CreateEntity(obj->objectID, (void *)(data), entity->position.x, entity->position.y)
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
@@ -1013,9 +427,16 @@ extern RSDKFunctionTable RSDK;
 #define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
 #endif
 
-DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
-#if RETRO_USE_MOD_LOADER
-DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);
+#ifdef _MSC_VER
+#define DLLExport       __declspec(dllexport)
+#define setAlignment(x) __declspec(align(x))
+#else
+#define DLLExport
+#define setAlignment(x)
 #endif
+
+
+
+extern "C" DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);
 
 #endif //! GAMEOBJECTS_H

@@ -31,6 +31,7 @@ typedef enum {
 
 typedef enum {
     ModTable_RegisterObject,
+    ModTable_GetGlobals,
     ModTable_LoadModInfo,
     ModTable_AddModCallback,
     ModTable_AddPublicFunction,
@@ -39,11 +40,14 @@ typedef enum {
     ModTable_GetSettingsBool,
     ModTable_GetSettingsInt,
     ModTable_GetSettingsString,
+    ModTable_ForeachSetting,
+    ModTable_ForeachSettingCategory,
     ModTable_SetSettingsBool,
     ModTable_SetSettingsInt,
     ModTable_SetSettingsString,
     ModTable_SaveSettings,
     ModTable_Super,
+    ModTable_GetObject,
     ModTable_Max
 } ModFunctionTable;
 
@@ -88,6 +92,7 @@ void RunModCallbacks(int callbackID, void *data);
 void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                        void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
+void* GetGlobals();
 
 bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
 void AddModCallback(int callbackID, ModCallback callback);
@@ -98,6 +103,8 @@ void GetModPath(const char *id, TextInfo *result);
 bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback);
 int GetSettingsInteger(const char *id, const char *key, int fallback);
 void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback);
+bool32 ForeachSetting(const char* id, TextInfo* textInfo);
+bool32 ForeachSettingCategory(const char *id, TextInfo *textInfo);
 
 void SetSettingsBool(const char *id, const char *key, bool32 val);
 void SetSettingsInteger(const char *id, const char *key, int val);
@@ -106,6 +113,8 @@ void SetSettingsString(const char *id, const char *key, TextInfo *val);
 void SaveSettings(const char *id);
 
 void Super(int objectID, ModSuper callback, void *data);
+
+Object* GetObject(const char* name);
 
 #endif
 

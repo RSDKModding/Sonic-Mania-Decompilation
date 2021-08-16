@@ -393,7 +393,7 @@ bool32 CPZ1Intro_Unknown15(void *h)
         {
             titlecard->active    = ACTIVE_NORMAL;
             titlecard->state     = TitleCard_Unknown6;
-            titlecard->stateDraw = TitleCard_Unknown12;
+            titlecard->stateDraw = TitleCard_StateDraw_Default;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;
         }
