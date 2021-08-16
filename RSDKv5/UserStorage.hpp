@@ -100,9 +100,7 @@ int GetUserStorageNoSave();
 int TryAuth();
 int TryInitStorage();
 bool32 GetUserName(TextInfo *info);
-#if RETRO_REV02
 void ClearPrerollErrors();
-#endif
 
 extern void (*userFileCallback)();
 extern void (*userFileCallback2)();

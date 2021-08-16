@@ -118,7 +118,7 @@ void ClearPrerollErrors()
     if (userStorage->saveStatus != STATUS_OK)
         userStorage->saveStatus = STATUS_NONE;
 #else
-    printLog(PRINT_NONE, "DUMMY ClearPrerollErrors()");
+    printLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()");
 #endif
 }
 
