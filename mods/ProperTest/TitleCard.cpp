@@ -150,13 +150,13 @@ void ResetColors()
 void LoadFromSettings(const char *id)
 {
     using namespace std;
-    if (Mod.GetSettingsBool(id, "PZTC:Defaults", true))
+    if (Mod.GetConfigBool(id, "PZTC:Defaults", true))
         ResetColors();
     else {
         colors.clear();
         palette.clear();
     }
-    usePal = Mod.GetSettingsBool(id, "PZTC:ModifyPalette", true);
+    usePal = Mod.GetConfigBool(id, "PZTC:ModifyPalette", true);
     if (usePal) {
         // regular
         // to index #46: FUCK you
@@ -164,10 +164,10 @@ void LoadFromSettings(const char *id)
         // encore
         palette[5] = { 56, 9, 35, 34, 33 };
     }
-    lumaThreshold = (float)Mod.GetSettingsInteger(id, "PZTC:LumaThreshold", 25) / 100;
+    lumaThreshold = (float)Mod.GetConfigInteger(id, "PZTC:LumaThreshold", 25) / 100;
     TextInfo buf;
     INIT_TEXTINFO(buf);
-    while (Mod.ForeachSettingCategory(id, &buf)) {
+    while (Mod.ForeachConfigCategory(id, &buf)) {
         if (!(buf.text[0] == 'P' && buf.text[1] == 'Z' && buf.text[2] == 'T' && buf.text[3] == 'C'))
             continue;
         char *cstr = new char[buf.length];
@@ -176,7 +176,7 @@ void LoadFromSettings(const char *id)
         string colorstr = str;
         TextInfo copyBuf;
         INIT_TEXTINFO(copyBuf);
-        Mod.GetSettingsString(id, (str + ":Copy").c_str(), &copyBuf, "");
+        Mod.GetConfigString(id, (str + ":Copy").c_str(), &copyBuf, "");
         if (copyBuf.textLength) {
             char *cstr = new char[copyBuf.length];
             RSDK.GetCString(cstr, &copyBuf);
@@ -202,15 +202,15 @@ void LoadFromSettings(const char *id)
             if (i == 2)
                 stage = buf; // set stage if we're on stage
         }
-        colors[stage][filter][0] = Mod.GetSettingsInteger(id, (colorstr + ":C1").c_str(), colors[""][filter][0]);
-        colors[stage][filter][1] = Mod.GetSettingsInteger(id, (colorstr + ":C2").c_str(), colors[""][filter][1]);
-        colors[stage][filter][2] = Mod.GetSettingsInteger(id, (colorstr + ":C3").c_str(), colors[""][filter][2]);
-        colors[stage][filter][3] = Mod.GetSettingsInteger(id, (colorstr + ":C4").c_str(), colors[""][filter][3]);
-        colors[stage][filter][4] = Mod.GetSettingsInteger(id, (colorstr + ":BG").c_str(), colors[""][filter][4]);
-        colors[stage][filter][5] = Mod.GetSettingsInteger(id, (colorstr + ":ACT").c_str(), colors[""][filter][5]);
+        colors[stage][filter][0] = Mod.GetConfigInteger(id, (colorstr + ":C1").c_str(), colors[""][filter][0]);
+        colors[stage][filter][1] = Mod.GetConfigInteger(id, (colorstr + ":C2").c_str(), colors[""][filter][1]);
+        colors[stage][filter][2] = Mod.GetConfigInteger(id, (colorstr + ":C3").c_str(), colors[""][filter][2]);
+        colors[stage][filter][3] = Mod.GetConfigInteger(id, (colorstr + ":C4").c_str(), colors[""][filter][3]);
+        colors[stage][filter][4] = Mod.GetConfigInteger(id, (colorstr + ":BG").c_str(), colors[""][filter][4]);
+        colors[stage][filter][5] = Mod.GetConfigInteger(id, (colorstr + ":ACT").c_str(), colors[""][filter][5]);
         int decor                = colors[stage][filter][4];
         if (decor == colors[""][filter][4])
             decor = colors[""][filter][6];
-        colors[stage][filter][6] = Mod.GetSettingsInteger(id, (colorstr + ":DECOR").c_str(), decor);
+        colors[stage][filter][6] = Mod.GetConfigInteger(id, (colorstr + ":DECOR").c_str(), decor);
     }
 }

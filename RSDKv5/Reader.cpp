@@ -134,7 +134,6 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
 
     char filePathBuf[0x100];
     strcpy(filePathBuf, filename);
-    bool32 forceFolder = false;
 
 #if RETRO_USE_MOD_LOADER
     char pathLower[0x100];
@@ -148,7 +147,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
             std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
             if (iter != modList[m].fileMap.cend()) {
                 strcpy(filePathBuf, iter->second.c_str());
-                forceFolder = true;
+                info->externalFile = true;
                 break;
             }
         }
@@ -156,8 +155,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
 #endif
 
     if (!info->externalFile && fileMode == FMODE_RB && useDataFile) {
-        if (!forceFolder)
-            return OpenDataFile(info, filename);
+        return OpenDataFile(info, filename);
     }
 
     if (fileMode == FMODE_RB || fileMode == FMODE_WB || fileMode == FMODE_RB_PLUS) {

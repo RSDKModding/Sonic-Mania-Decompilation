@@ -45,8 +45,8 @@ typedef struct {
     void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                            void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                            void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
-
     void* (*GetGlobals)();
+    void (*Super)(int objectID, ModSuper callback, void *data);
 
     bool32 (*LoadModInfo)(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
     void (*AddModCallback)(int callbackID, void (*callback)(void *data));
@@ -57,8 +57,6 @@ typedef struct {
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int (*GetSettingsInteger)(const char *id, const char *key, int fallback);
     void (*GetSettingsString)(const char *id, const char *key, TextInfo *result, const char *fallback);
-    bool32 (*ForeachSetting)(const char* id, TextInfo* textInfo);
-    bool32 (*ForeachSettingCategory)(const char *id, TextInfo *textInfo);
 
     void (*SetSettingsBool)(const char *id, const char *key, bool32 val);
     void (*SetSettingsInteger)(const char *id, const char *key, int val);
@@ -66,7 +64,11 @@ typedef struct {
 
     void (*SaveSettings)(const char *id);
 
-    void (*Super)(int objectID, ModSuper callback, void* data);
+    bool32 (*GetConfigBool)(const char *id, const char *key, bool32 fallback);
+    int (*GetConfigInteger)(const char *id, const char *key, int fallback);
+    void (*GetConfigString)(const char *id, const char *key, TextInfo *result, const char *fallback);
+    bool32 (*ForeachConfig)(const char *id, TextInfo *textInfo);
+    bool32 (*ForeachConfigCategory)(const char *id, TextInfo *textInfo);
 
     Object *(*GetObject)(const char* name);
 } ModFunctionTable;
@@ -426,16 +428,6 @@ extern RSDKFunctionTable RSDK;
 #else
 #define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
 #endif
-
-#ifdef _MSC_VER
-#define DLLExport       __declspec(dllexport)
-#define setAlignment(x) __declspec(align(x))
-#else
-#define DLLExport
-#define setAlignment(x)
-#endif
-
-
 
 extern "C" DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);
 

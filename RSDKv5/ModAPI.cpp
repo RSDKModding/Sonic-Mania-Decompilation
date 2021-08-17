@@ -35,8 +35,9 @@ void initModAPI()
 {
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
 
-    addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
     addToModFunctionTable(ModTable_GetGlobals, GetGlobals);
+    addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
+    addToModFunctionTable(ModTable_Super, Super);
     addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
     addToModFunctionTable(ModTable_AddModCallback, AddModCallback);
     addToModFunctionTable(ModTable_AddPublicFunction, AddPublicFunction);
@@ -45,13 +46,15 @@ void initModAPI()
     addToModFunctionTable(ModTable_GetSettingsBool, GetSettingsBool);
     addToModFunctionTable(ModTable_GetSettingsInt, GetSettingsInteger);
     addToModFunctionTable(ModTable_GetSettingsString, GetSettingsString);
-    addToModFunctionTable(ModTable_ForeachSetting, ForeachSetting);
-    addToModFunctionTable(ModTable_ForeachSettingCategory, ForeachSettingCategory);
     addToModFunctionTable(ModTable_SetSettingsBool, SetSettingsBool);
     addToModFunctionTable(ModTable_SetSettingsInt, SetSettingsInteger);
     addToModFunctionTable(ModTable_SetSettingsString, SetSettingsString);
     addToModFunctionTable(ModTable_SaveSettings, SaveSettings);
-    addToModFunctionTable(ModTable_Super, Super);
+    addToModFunctionTable(ModTable_GetConfigBool, GetConfigBool);
+    addToModFunctionTable(ModTable_GetConfigInt, GetConfigInteger);
+    addToModFunctionTable(ModTable_GetConfigString, GetConfigString);
+    addToModFunctionTable(ModTable_ForeachConfig, ForeachConfig);
+    addToModFunctionTable(ModTable_ForeachConfigCategory, ForeachConfigCategory);
     addToModFunctionTable(ModTable_GetObject, GetObject);
 
     loadMods();
@@ -124,6 +127,37 @@ void loadMods()
         }
     }
     sortMods();
+}
+
+void loadCfg(ModInfo *info, std::string path)
+{
+    FileInfo *cfg     = new FileInfo();
+    cfg->externalFile = true;
+    // CFG FILE READ
+    if (LoadFile(cfg, path.c_str(), FMODE_RB)) {
+        int catCount = ReadInt8(cfg);
+        for (int c = 0; c < catCount; ++c) {
+            char catBuf[0x100];
+            ReadString(cfg, catBuf);
+            int keyCount = ReadInt8(cfg);
+            for (int k = 0; k < keyCount; ++k) {
+                // ReadString except w packing the type bit
+                byte size    = ReadInt8(cfg);
+                char *keyBuf = new char[size & 0x7F];
+                ReadBytes(cfg, keyBuf, size & 0x7F);
+                keyBuf[size & 0x7F] = 0;
+                byte type = size & 0x80;
+                if (!type) {
+                    char buf[0xFFFF];
+                    ReadString(cfg, buf);
+                    info->config[catBuf][keyBuf] = buf;
+                }
+                else
+                    info->config[catBuf][keyBuf] = std::to_string(ReadInt32(cfg, false));
+            }
+        }
+    }
+    CloseFile(cfg);
 }
 
 bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active)
@@ -314,6 +348,97 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 info->settings.insert(pair<string, map<string, string>>("", secset));
             }
             iniparser_freedict(ini);
+        }
+        // CONFIG
+        loadCfg(info, modDir + "/modConfig.cfg");
+
+        std::string cfg(iniparser_getstring(ini, ":ConfigFile", ""));
+        bool saveCfg = false;
+        if (cfg.length() && info->active) {
+            std::istringstream stream(cfg);
+            std::string buf;
+            while (std::getline(stream, buf, ',')) {
+                int mode = 0;
+#define ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
+                if (ENDS_WITH(".ini"))
+                    mode = 1;
+                else if (ENDS_WITH(".cfg"))
+                    mode = 2;
+#undef ENDS_WITH
+                fs::path file;
+
+                if (!mode) {
+                    file = fs::path(modDir + "/" + buf + ".ini");
+                    if (fs::exists(file))
+                        mode = 1;
+                }
+                if (!mode) {
+                    file = fs::path(modDir + "/" + buf + ".cfg");
+                    if (fs::exists(file))
+                        mode = 2;
+                }
+
+                // if fail just free do nothing
+                if (!mode)
+                    continue;
+                saveCfg = true;
+
+                if (mode == 1) {
+                    FileIO *set = fOpen(file.string().c_str(), "r");
+                    if (set) {
+                        fClose(set);
+                        using namespace std;
+                        auto ini = iniparser_load(file.string().c_str());
+                        int sec  = iniparser_getnsec(ini);
+                        for (int i = 0; i < sec; ++i) {
+                            const char *secn  = iniparser_getsecname(ini, i);
+                            int len           = iniparser_getsecnkeys(ini, secn);
+                            const char **keys = new const char *[len];
+                            iniparser_getseckeys(ini, secn, keys);
+                            for (int j = 0; j < len; ++j) info->config[secn][keys[j] + strlen(secn) + 1] = iniparser_getstring(ini, keys[j], "");
+                        }
+                        iniparser_freedict(ini);
+                    }
+                }
+                else if (mode == 2)
+                    loadCfg(info, file.string());
+            }
+        }
+
+        if (saveCfg && info->config.size()) {
+            FileIO *cfg = fOpen((modDir + "/modConfig.cfg").c_str(), "wb");
+            byte ct     = info->config.size();
+            fWrite(&ct, 1, 1, cfg);
+            for (auto kv : info->config) {
+                if (!kv.first.length()) continue; //don't save no-categories
+                byte len = kv.first.length();
+                fWrite(&len, 1, 1, cfg);
+                writeText(cfg, kv.first.c_str());
+                byte kt = kv.second.size();
+                fWrite(&kt, 1, 1, cfg);
+                for (auto kkv : kv.second)
+                {
+                    byte len = (byte)(kkv.first.length()) & 0x7F;
+                    bool isint = false;
+                    int r = 0;
+                    try {
+                        r = std::stoi(kkv.second, nullptr, 0);
+                        isint = true;
+                        len |= 0x80;
+                    }
+                    catch (...) {}  
+                    fWrite(&len, 1, 1, cfg);
+                    writeText(cfg, kkv.first.c_str());
+                    if (isint)
+                        fWrite(&r, sizeof(int), 1, cfg);
+                    else {
+                        byte len = kkv.second.length();
+                        fWrite(&len, 1, 1, cfg);
+                        writeText(cfg, kkv.second.c_str());
+                    }
+                }
+            }
+            fClose(cfg);
         }
 
         printLog(PRINT_NORMAL, "[MOD] Loaded mod %s! Active: %s", folder.c_str(), active ? "Y" : "N");
@@ -508,20 +633,78 @@ void GetSettingsString(const char *id, const char *key, TextInfo *result, const 
     SetText(result, (char *)v.c_str(), v.length());
 }
 
-bool32 ForeachSettingCategory(const char *id, TextInfo *textInfo)
+std::string GetConfigValue(const char *id, const char *key)
 {
-    if (!textInfo)
-        return false;
-    using namespace std;
-    map<string, map<string, string>> settings;
+    std::string skey(key);
+    if (!strchr(key, ':'))
+        skey = std::string(":") + key;
+
+    std::string cat  = skey.substr(0, skey.find(":"));
+    std::string rkey = skey.substr(skey.find(":") + 1);
+
     for (int m = 0; m < modList.size(); ++m) {
         if (!modList[m].active)
             break;
         if (modList[m].folder == id) {
-            settings = modList[m].settings;
+            try {
+                return modList[m].config.at(cat).at(rkey);
+            } catch (std::out_of_range) {
+                return std::string();
+            }
         }
     }
-    if (!settings.size())
+    return std::string();
+}
+
+bool32 GetConfigBool(const char *id, const char *key, bool32 fallback)
+{
+    std::string v = GetConfigValue(id, key);
+    if (!v.length()) 
+        return fallback;
+    char first = v.at(0);
+    if (first == 'y' || first == 'Y' || first == 't' || first == 'T' || (first = GetConfigInteger(id, key, 0)))
+        return true;
+    if (first == 'n' || first == 'N' || first == 'f' || first == 'F' || !first)
+        return false;
+    return fallback;
+}
+
+int GetConfigInteger(const char *id, const char *key, int fallback)
+{
+    std::string v = GetConfigValue(id, key);
+    if (!v.length()) 
+        return fallback;
+    try {
+        return std::stoi(v, nullptr, 0);
+    } catch (...) {
+        return fallback;
+    }
+}
+
+void GetConfigString(const char *id, const char *key, TextInfo *result, const char *fallback)
+{
+    std::string v = GetConfigValue(id, key);
+    if (!v.length()) {
+        SetText(result, (char *)fallback, strlen(fallback));
+        return;
+    }
+    SetText(result, (char *)v.c_str(), v.length());
+}
+
+bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo)
+{
+    if (!textInfo)
+        return false;
+    using namespace std;
+    map<string, map<string, string>> config;
+    for (int m = 0; m < modList.size(); ++m) {
+        if (!modList[m].active)
+            break;
+        if (modList[m].folder == id) {
+            config = modList[m].config;
+        }
+    }
+    if (!config.size())
         return false;
 
     if (textInfo->text)
@@ -533,12 +716,12 @@ bool32 ForeachSettingCategory(const char *id, TextInfo *textInfo)
     int sid = 0;
     string cat;
     bool32 set = false;
-    if (settings[""].size() && foreachStackPtr->id == sid++) {
+    if (config[""].size() && foreachStackPtr->id == sid++) {
         set = true;
         cat = "";
     }
     if (!set) {
-        for (pair<string, map<string, string>> kv : settings) {
+        for (pair<string, map<string, string>> kv : config) {
             if (!kv.first.length())
                 continue;
             if (kv.second.size() && foreachStackPtr->id == sid++) {
@@ -556,20 +739,20 @@ bool32 ForeachSettingCategory(const char *id, TextInfo *textInfo)
     return true;
 }
 
-bool32 ForeachSetting(const char *id, TextInfo *textInfo)
+bool32 ForeachConfig(const char *id, TextInfo *textInfo)
 {
     if (!textInfo)
         return false;
     using namespace std;
-    map<string, map<string, string>> settings;
+    map<string, map<string, string>> config;
     for (int m = 0; m < modList.size(); ++m) {
         if (!modList[m].active)
             break;
         if (modList[m].folder == id) {
-            settings = modList[m].settings;
+            config = modList[m].config;
         }
     }
-    if (!settings.size())
+    if (!config.size())
         return false;
 
     if (textInfo->text)
@@ -580,8 +763,8 @@ bool32 ForeachSetting(const char *id, TextInfo *textInfo)
     }
     int sid = 0;
     string key, cat;
-    if (settings[""].size()) {
-        for (pair<string, string> pair : settings[""]) {
+    if (config[""].size()) {
+        for (pair<string, string> pair : config[""]) {
             if (foreachStackPtr->id == sid++) {
                 cat = "";
                 key = pair.first;
@@ -590,7 +773,7 @@ bool32 ForeachSetting(const char *id, TextInfo *textInfo)
         }
     }
     if (!key.length()) {
-        for (pair<string, map<string, string>> kv : settings) {
+        for (pair<string, map<string, string>> kv : config) {
             if (!kv.first.length())
                 continue;
             for (pair<string, string> pair : kv.second) {
@@ -736,9 +919,7 @@ void Super(int objectID, ModSuper callback, void *data)
     superLevels  = 1;
 }
 
-void* GetGlobals() {
-    return (void*)gameOptionsPtr;
-}
+void *GetGlobals() { return (void *)gameOptionsPtr; }
 
 void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),

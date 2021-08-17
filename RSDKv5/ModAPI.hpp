@@ -32,6 +32,7 @@ typedef enum {
 typedef enum {
     ModTable_RegisterObject,
     ModTable_GetGlobals,
+    ModTable_Super,
     ModTable_LoadModInfo,
     ModTable_AddModCallback,
     ModTable_AddPublicFunction,
@@ -40,13 +41,15 @@ typedef enum {
     ModTable_GetSettingsBool,
     ModTable_GetSettingsInt,
     ModTable_GetSettingsString,
-    ModTable_ForeachSetting,
-    ModTable_ForeachSettingCategory,
     ModTable_SetSettingsBool,
     ModTable_SetSettingsInt,
     ModTable_SetSettingsString,
     ModTable_SaveSettings,
-    ModTable_Super,
+    ModTable_GetConfigBool,
+    ModTable_GetConfigInt,
+    ModTable_GetConfigString,
+    ModTable_ForeachConfig,
+    ModTable_ForeachConfigCategory,
     ModTable_GetObject,
     ModTable_Max
 } ModFunctionTable;
@@ -71,6 +74,7 @@ struct ModInfo {
     bool active;
     std::vector<modLink> linkModLogic;
     std::map<std::string, std::map<std::string, std::string>> settings;
+    std::map<std::string, std::map<std::string, std::string>> config;
 };
 
 extern std::vector<ModInfo> modList;
@@ -103,14 +107,19 @@ void GetModPath(const char *id, TextInfo *result);
 bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback);
 int GetSettingsInteger(const char *id, const char *key, int fallback);
 void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback);
-bool32 ForeachSetting(const char* id, TextInfo* textInfo);
-bool32 ForeachSettingCategory(const char *id, TextInfo *textInfo);
 
 void SetSettingsBool(const char *id, const char *key, bool32 val);
 void SetSettingsInteger(const char *id, const char *key, int val);
 void SetSettingsString(const char *id, const char *key, TextInfo *val);
 
 void SaveSettings(const char *id);
+
+bool32 GetConfigBool(const char *id, const char *key, bool32 fallback);
+int GetConfigInteger(const char *id, const char *key, int fallback);
+void GetConfigString(const char *id, const char *key, TextInfo *result, const char *fallback);
+bool32 ForeachConfig(const char* id, TextInfo* textInfo);
+bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo);
+
 
 void Super(int objectID, ModSuper callback, void *data);
 
