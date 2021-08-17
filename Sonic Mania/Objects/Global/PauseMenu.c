@@ -768,11 +768,7 @@ void PauseMenu_Unknown33(void)
         UIControl->inputLocked = false;
         if (PauseMenu->controllerDisconnect) {
             int strID = STR_RECONNECTWIRELESSCONTROLLER;
-#if RETRO_USE_PLUS
-            if (RSDK_sku->platform == PLATFORM_SWITCH)
-#else
-            if (RSDK_info->platform == PLATFORM_SWITCH)
-#endif
+            if (sku_platform == PLATFORM_SWITCH)
                 strID = STR_RECONNECTCONTROLLER;
             Localization_GetString(&textBuffer, strID);
 

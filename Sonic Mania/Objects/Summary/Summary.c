@@ -202,12 +202,12 @@ void Summary_LoadTimes(void)
 {
     RSDK_THIS(Summary);
     if (globals->gameMode == MODE_ENCORE) {
-        if (Localization->language == LANGUAGE_JP || RSDK_sku->region == REGION_JP)
+        if (Localization->language == LANGUAGE_JP || sku_region == REGION_JP)
             Summary_SetTextString(1, entity->gameModeText, "STORY MODE PLUS");
         else
             Summary_SetTextString(1, entity->gameModeText, "ENCORE MODE");
     }
-    else if (Localization->language == LANGUAGE_JP || RSDK_sku->region == REGION_JP) {
+    else if (Localization->language == LANGUAGE_JP || sku_region == REGION_JP) {
         Summary_SetTextString(1, entity->gameModeText, "STORY MODE");
     }
     else {

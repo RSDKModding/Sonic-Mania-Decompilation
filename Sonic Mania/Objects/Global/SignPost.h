@@ -3,6 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SIGNPOSTANI_SONIC,
+    SIGNPOSTANI_TAILS,
+    SIGNPOSTANI_KNUX,
+#if RETRO_USE_PLUS
+    SIGNPOSTANI_MIGHTY,
+    SIGNPOSTANI_RAY,
+#endif
+    SIGNPOSTANI_EGGMAN,
+    SIGNPOSTANI_POST,
+}SignPostAniIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -28,7 +40,7 @@ typedef struct {
     Vector2 vsBoundsOffset;
     int vsExtendTop;
     int vsExtendBottom;
-    int gap78;
+    int field_78;
     int gravityStrength;
     int spinCount;
     int spinSpeed;

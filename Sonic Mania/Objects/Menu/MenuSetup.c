@@ -134,43 +134,26 @@ void MenuSetup_StageLoad(void)
     }
 #else
     RSDK.StopChannel(Music->channelID);
-    Music->activeTrack = -1;
+    Music->activeTrack   = -1;
 #endif
 
     if (!RSDK_sceneInfo->inEditor) {
-#if RETRO_USE_PLUS
-        switch (RSDK_sku->platform) {
-#else
-        switch (RSDK_info->platform) {
-#endif
+        switch (sku_platform) {
             case PLATFORM_PC: LogHelpers_Print("PC SKU"); break;
             case PLATFORM_PS4: LogHelpers_Print("PS4 SKU"); break;
             case PLATFORM_XB1: LogHelpers_Print("XB1 SKU"); break;
             case PLATFORM_SWITCH: LogHelpers_Print("NX SKU"); break;
             case PLATFORM_DEV: LogHelpers_Print("DEV SKU"); break;
-            default:
-#if RETRO_USE_PLUS
-                LogHelpers_Print("INVALID PLATFORM: %d", RSDK_sku->platform);
-#else
-                LogHelpers_Print("INVALID PLATFORM: %d", RSDK_info->platform);
-#endif
-                break;
+            default: LogHelpers_Print("INVALID PLATFORM: %d", sku_platform); break;
         }
 
-#if RETRO_USE_PLUS
-        switch (RSDK_sku->region) {
-#else
-        switch (RSDK_info->region) {
-#endif
+        switch (sku_region) {
             case REGION_US: LogHelpers_Print("US REGION"); break;
             case REGION_JP: LogHelpers_Print("JP REGION"); break;
-            case REGION_EU: LogHelpers_Print("EU REGION"); break;
-            default:
-#if RETRO_USE_PLUS
-                LogHelpers_Print("INVALID REGION: %d", RSDK_sku->region);
-#else
-                LogHelpers_Print("INVALID REGION: %d", RSDK_info->region);
-#endif
+            case REGION_EU:
+                LogHelpers_Print("EU REGION");
+                break;
+                LogHelpers_Print("INVALID REGION: %d", sku_region);
                 break;
         }
     }
@@ -196,22 +179,37 @@ void MenuSetup_StartTransition(void (*callback)(void), int time)
 #if RETRO_USE_PLUS
     menuSetup->state = ManiaModeMenu_Unknown13;
 #else
-    menuSetup->state   = MenuSetup_Unknown13;
+    menuSetup->state     = MenuSetup_Unknown13;
 #endif
-    menuSetup->timedState      = callback;
+    menuSetup->timedState = callback;
 }
 
-//START PRE-PLUS AREA
 #if !RETRO_USE_PLUS
-void MenuSetup_Initialize(void) {
+void MenuSetup_StartTransitionLB(void (*callback)(void), int time)
+{
+    EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
+    menuSetup->active          = ACTIVE_ALWAYS;
+    menuSetup->fadeColour      = 0x000000;
+    menuSetup->field_68        = 5;
+    menuSetup->timeOut         = time;
+    menuSetup->state           = MenuSetup_Leaderboard_Unknown;
+    menuSetup->timedState = callback;
+}
+#endif
+
+// START PRE-PLUS AREA
+#if !RETRO_USE_PLUS
+void MenuSetup_Initialize(void)
+{
     TextInfo info;
     INIT_TEXTINFO(info);
 
-    foreach_all(UIControl, control) {
+    foreach_all(UIControl, control)
+    {
         RSDK.PrependText(&info, "Main Menu");
         if (RSDK.StringCompare(&info, &control->tag, false)) {
-            MenuSetup->mainMenu = (Entity*)control;
-            control->backPressCB    = MenuSetup_ReturnToTitleOption;
+            MenuSetup->mainMenu  = (Entity *)control;
+            control->backPressCB = MenuSetup_ReturnToTitleOption;
         }
         RSDK.PrependText(&info, "Time Attack");
         if (RSDK.StringCompare(&info, &control->tag, false))
@@ -222,12 +220,12 @@ void MenuSetup_Initialize(void) {
         RSDK.PrependText(&info, "Leaderboards");
         if (RSDK.StringCompare(&info, &control->tag, false)) {
             MenuSetup->leaderboards = (Entity *)control;
-            control->backPressCB        = MenuSetup_TA_Unknown51;
+            control->backPressCB    = MenuSetup_TA_Unknown51;
         }
         RSDK.PrependText(&info, "Competition");
         if (RSDK.StringCompare(&info, &control->tag, false)) {
             MenuSetup->competition = (Entity *)control;
-            //control->backPressCB       = MenuSetup_VS_BackoutFromVsCharSelect;
+            control->backPressCB   = MenuSetup_VS_BackoutFromVsCharSelect;
         }
         RSDK.PrependText(&info, "Competition Rules");
         if (RSDK.StringCompare(&info, &control->tag, false))
@@ -235,7 +233,7 @@ void MenuSetup_Initialize(void) {
         RSDK.PrependText(&info, "Competition Zones");
         if (RSDK.StringCompare(&info, &control->tag, false)) {
             MenuSetup->competitionZones = (Entity *)control;
-            //control->backPressCB            = MenuSetup_VS_Unknown60;
+            control->backPressCB        = MenuSetup_VS_Unknown60;
         }
         RSDK.PrependText(&info, "Competition Round");
         if (RSDK.StringCompare(&info, &control->tag, false))
@@ -297,15 +295,17 @@ void MenuSetup_Initialize(void) {
     }
 
     Hitbox hitbox;
-    foreach_all(UIButtonPrompt, prompt) {
+    foreach_all(UIButtonPrompt, prompt)
+    {
 
         EntityUIControl *saveControl = (EntityUIControl *)MenuSetup->saveSelect;
-        hitbox.right                  = saveControl->size.x >> 17;
-        hitbox.left                   = -(saveControl->size.x >> 17);
-        hitbox.bottom                 = saveControl->size.y >> 17;
-        hitbox.top                    = -(saveControl->size.y >> 17);
+        hitbox.right                 = saveControl->size.x >> 17;
+        hitbox.left                  = -(saveControl->size.x >> 17);
+        hitbox.bottom                = saveControl->size.y >> 17;
+        hitbox.top                   = -(saveControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, saveControl->startPos.x - saveControl->cameraOffset.x,
-                                      saveControl->startPos.y - saveControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y))
+                                      saveControl->startPos.y - saveControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+            && prompt->buttonID == 2)
             MenuSetup->saveSelPrompt = (Entity *)prompt;
 
         EntityUIControl *leaderboardsControl = (EntityUIControl *)MenuSetup->leaderboards;
@@ -315,7 +315,8 @@ void MenuSetup_Initialize(void) {
         hitbox.top                           = -(leaderboardsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x,
                                       leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y, &hitbox, prompt->position.x,
-                                      prompt->position.y))
+                                      prompt->position.y)
+            && prompt->buttonID == 3)
             MenuSetup->leaderboardPrompt = (Entity *)prompt;
 
         EntityUIControl *optionsControl = (EntityUIControl *)MenuSetup->options;
@@ -324,13 +325,15 @@ void MenuSetup_Initialize(void) {
         hitbox.bottom                   = optionsControl->size.y >> 17;
         hitbox.top                      = -(optionsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, optionsControl->startPos.x - optionsControl->cameraOffset.x,
-                                      optionsControl->startPos.y - optionsControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y))
+                                      optionsControl->startPos.y - optionsControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+            && prompt->buttonID == 3)
             MenuSetup->optionsPrompt = (Entity *)prompt;
     }
 
     foreach_all(UILeaderboard, leaderboard) { MenuSetup->leaderboardWidget = (Entity *)leaderboard; }
 
-    foreach_all(UIInfoLabel, label) {
+    foreach_all(UIInfoLabel, label)
+    {
         EntityUIControl *roundControl = (EntityUIControl *)MenuSetup->competitionRound;
         hitbox.right                  = roundControl->size.x >> 17;
         hitbox.left                   = -(roundControl->size.x >> 17);
@@ -432,9 +435,7 @@ bool32 MenuSetup_InitUserdata(void)
                 return true;
             }
             else {
-                if (globals->optionsLoaded != STATUS_ERROR && globals->saveLoaded != STATUS_ERROR) {
-                }
-                else {
+                if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR) {
                     if (APICallback->saveStatus != STATUS_CONTINUE) {
                         if (APICallback->saveStatus == STATUS_FORBIDDEN) {
                             RSDK.SetScene("Presentation", "Title Screen");
@@ -467,12 +468,12 @@ void MenuSetup_Unknown3(void)
     EntityUIControl *compRules    = (EntityUIControl *)MenuSetup->competitionRules;
     EntityUIControl *language     = (EntityUIControl *)MenuSetup->language;
 
-
     foreach_all(UIModeButton, modeButton) { modeButton->options2 = MenuSetup_ChangeMenu; }
     foreach_all(UISaveSlot, saveSlot) { saveSlot->options2 = MenuSetup_StartNewSave; }
 
     Hitbox hitbox;
-    foreach_all(UIButton, button) {
+    foreach_all(UIButton, button)
+    {
         switch (button->listID) {
             case 17:
                 if (!button->frameID) {
@@ -508,21 +509,21 @@ void MenuSetup_Unknown3(void)
         hitbox.left   = -(controls_win->size.x >> 17);
         hitbox.bottom = controls_win->size.y >> 17;
         hitbox.top    = -(controls_win->size.y >> 17);
-        //if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-        //    button->options2 = MenuSetup_Options_Unknown24;
+        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+            button->options2 = MenuSetup_Options_Unknown24;
 
-        posX      = compRules->startPos.x - compRules->cameraOffset.x;
-        posY      = compRules->startPos.y - compRules->cameraOffset.y;
+        posX          = compRules->startPos.x - compRules->cameraOffset.x;
+        posY          = compRules->startPos.y - compRules->cameraOffset.y;
         hitbox.right  = compRules->size.x >> 17;
         hitbox.left   = -(compRules->size.x >> 17);
         hitbox.bottom = compRules->size.y >> 17;
         hitbox.top    = -(compRules->size.y >> 17);
-        //if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 9
-        //    && button->frameID == 2)
-        //    button->options2 = MenuSetup_VS_Unknown52;
+        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 9
+            && button->frameID == 2)
+            button->options2 = MenuSetup_VS_Unknown52;
 
-        posX      = secrets->startPos.x - secrets->cameraOffset.x;
-        posY      = secrets->startPos.y - secrets->cameraOffset.y;
+        posX          = secrets->startPos.x - secrets->cameraOffset.x;
+        posY          = secrets->startPos.y - secrets->cameraOffset.y;
         hitbox.right  = secrets->size.x >> 17;
         hitbox.left   = -(secrets->size.x >> 17);
         hitbox.bottom = secrets->size.y >> 17;
@@ -531,19 +532,18 @@ void MenuSetup_Unknown3(void)
             && button->frameID == 2)
             button->options2 = MenuSetup_OpenSaveSelectMenu;
 
-        posX      = options->startPos.x - options->cameraOffset.x;
-        posY      = options->startPos.y - options->cameraOffset.y;
+        posX          = options->startPos.x - options->cameraOffset.x;
+        posY          = options->startPos.y - options->cameraOffset.y;
         hitbox.right  = options->size.x >> 17;
         hitbox.left   = -(options->size.x >> 17);
         hitbox.bottom = options->size.y >> 17;
         hitbox.top    = -(options->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
-            && button->frameID == 3) {
+        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3) {
             switch (button->frameID) {
-                //case 0: button->options2 = MenuSetup_Options_Unknown19; break;
-                //case 1: button->options2 = MenuSetup_Options_Unknown16; break;
-                //case 2: button->options2 = MenuSetup_Options_Unknown21; break;
-                //case 3: button->options2 = MenuSetup_Options_Unknown17; break;
+                case 0: button->options2 = MenuSetup_Options_Unknown19; break;
+                case 1: button->options2 = MenuSetup_Options_Unknown16; break;
+                case 2: button->options2 = MenuSetup_Options_Unknown21; break;
+                case 3: button->options2 = MenuSetup_Options_Unknown17; break;
             }
         }
 
@@ -553,8 +553,8 @@ void MenuSetup_Unknown3(void)
         hitbox.left   = -(language->size.x >> 17);
         hitbox.bottom = language->size.y >> 17;
         hitbox.top    = -(language->size.y >> 17);
-        //if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-        //    button->options2 = MenuSetup_Options_Unknown52;
+        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+            button->options2 = MenuSetup_Options_Unknown52;
 
         posX          = video->startPos.x - video->cameraOffset.x;
         posY          = video->startPos.y - video->cameraOffset.y;
@@ -562,9 +562,9 @@ void MenuSetup_Unknown3(void)
         hitbox.left   = -(video->size.x >> 17);
         hitbox.bottom = video->size.y >> 17;
         hitbox.top    = -(video->size.y >> 17);
-        //if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
-        //    && button->frameID == 0)
-        //    button->options2 = MenuSetup_Options_Unknown53;
+        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+            && button->frameID == 0)
+            button->options2 = MenuSetup_Options_Unknown53;
 
         posX          = video_win->startPos.x - video_win->cameraOffset.x;
         posY          = video_win->startPos.y - video_win->cameraOffset.y;
@@ -575,12 +575,12 @@ void MenuSetup_Unknown3(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17
             && button->frameID == 0) {
             switch (button->frameID) {
-                //case 2: button->callbackUnknown1 = MenuSetup_Options_Unknown53; break;
-                //case 7: button->callbackUnknown1 = MenuSetup_Options_Unknown54; break;
-                //case 13: button->callbackUnknown1 = MenuSetup_Options_Unknown55; break;
-                //case 14: button->callbackUnknown1 = MenuSetup_Options_Unknown56; break;
-                //case 15: button->callbackUnknown1 = MenuSetup_Options_Unknown57; break;
-                //case 16: button->callbackUnknown1 = MenuSetup_Options_Unknown58; break;
+                case 2: button->callbackUnknown1 = MenuSetup_Options_Unknown53; break;
+                case 7: button->callbackUnknown1 = MenuSetup_Options_Unknown54; break;
+                case 13: button->callbackUnknown1 = MenuSetup_Options_Unknown55; break;
+                case 14: button->callbackUnknown1 = MenuSetup_Options_Unknown56; break;
+                case 15: button->callbackUnknown1 = MenuSetup_Options_Unknown57; break;
+                case 16: button->callbackUnknown1 = MenuSetup_Options_Unknown58; break;
                 default: break;
             }
         }
@@ -622,9 +622,9 @@ void MenuSetup_Unknown3(void)
         }
     }
 
-    foreach_active(UITAZoneModule, module) { module->options2 = MenuSetup_TA_StartAttempt_Callback; }
-    
-    ((EntityUILeaderboard*)MenuSetup->leaderboardWidget)->yPressCB = MenuSetup_TA_Unknown52;
+    foreach_all(UITAZoneModule, module) { module->options2 = MenuSetup_TA_StartAttempt_Callback; }
+
+    ((EntityUILeaderboard *)MenuSetup->leaderboardWidget)->yPressCB = MenuSetup_TA_Unknown52;
 
     foreach_all(UISlider, slider)
     {
@@ -632,59 +632,60 @@ void MenuSetup_Unknown3(void)
         hitbox.left   = -(sound->size.x >> 17);
         hitbox.bottom = sound->size.y >> 17;
         hitbox.top    = -(sound->size.y >> 17);
-        //if (MathHelpers_PointInHitbox(FLIP_NONE, sound->startPos.x - sound->cameraOffset.x, sound->startPos.y - sound->cameraOffset.y, &hitbox,
-        //                              slider->position.x, slider->position.y)
-        //    && slider->listID == 5)
-        //    slider->sliderChangedCB = MenuSetup_Options_Unknown59;
+        if (MathHelpers_PointInHitbox(FLIP_NONE, sound->startPos.x - sound->cameraOffset.x, sound->startPos.y - sound->cameraOffset.y, &hitbox,
+                                      slider->position.x, slider->position.y)
+            && slider->listID == 5)
+            slider->sliderChangedCB = MenuSetup_Options_Unknown59;
     }
 
-    //comp->processButtonInputCB = MenuSetup_VS_Unknown50;
-    //comp->unknownCallback3     = MenuSetup_VS_Unknown51;
+    comp->processButtonInputCB = MenuSetup_VS_Unknown50;
+    comp->unknownCallback3     = MenuSetup_VS_Unknown51;
     if (comp->active == ACTIVE_ALWAYS) {
         RSDK_THIS(UIControl);
         entity->childHasFocus = false;
-        //LODWORD(RSDK_sceneInfo->entity->data[13]) = 0;
+        // LODWORD(RSDK_sceneInfo->entity->data[13]) = 0;
 
-        foreach_all(UIVsCharSelector, selector) {
-            selector->flag  = true;
-            selector->ready = false;
+        foreach_all(UIVsCharSelector, selector)
+        {
+            selector->flag            = true;
+            selector->ready           = false;
             selector->processButtonCB = UIVsCharSelector_ProcessButtonCB;
         }
     }
 
-    //compRound->processButtonInputCB = MenuSetup_VS_Unknown53;
-    //compRound->unknownCallback3     = MenuSetup_VS_Unknown54;
-    //if (compRound->active == ACTIVE_ALWAYS)
-    //    MenuSetup_VS_Unknown54();
-    
-    //compTotal->processButtonInputCB = MenuSetup_VS_Unknown55;
-    //compTotal->unknownCallback3     = MenuSetup_VS_Unknown56;
-    //compTotal->unknownCallback4     = MenuSetup_VS_Unknown57;
+    compRound->processButtonInputCB = MenuSetup_VS_Unknown53;
+    compRound->unknownCallback3     = MenuSetup_VS_Unknown54;
+    if (compRound->active == ACTIVE_ALWAYS)
+        MenuSetup_VS_Unknown54();
+
+    compTotal->processButtonInputCB = MenuSetup_VS_Unknown55;
+    compTotal->unknownCallback3     = MenuSetup_VS_Unknown56;
+    compTotal->unknownCallback4     = MenuSetup_VS_Unknown57;
     compTotal->posUnknown.y         = compTotal->startPos.y;
     compTotal->position.y           = compTotal->startPos.y;
-    // if (compTotal->active == ACTIVE_ALWAYS)
-    //     MenuSetup_VS_Unknown56();
+    if (compTotal->active == ACTIVE_ALWAYS)
+        MenuSetup_VS_Unknown56();
 
-    saveSel->unknownCallback4             = MenuSetup_CheckNoSaveSelected;
-    saveSel->yPressCB                     = MenuSetup_SaveSel_YPressCB;
+    saveSel->unknownCallback4 = MenuSetup_CheckNoSaveSelected;
+    saveSel->yPressCB         = MenuSetup_SaveSel_YPressCB;
 
     extras->processButtonInputCB = MenuSetup_Extras_ProcessButtonCB;
 
-    //options->unknownCallback3 = MenuSetup_Options_Unknown25;
+    options->unknownCallback3 = MenuSetup_Options_Unknown25;
     if (RSDK_info->platform == PLATFORM_DEV || RSDK_info->platform == PLATFORM_SWITCH)
         options->yPressCB = MenuSetup_Options_LaunchManual;
     else
         MenuSetup->optionsPrompt->visible = false;
 
-    //video_win->unknownCallback4  = MenuSetup_Unknown53;
+    video_win->unknownCallback4 = MenuSetup_Unknown53;
 
-    //foreach_all(UIVsZoneButton, zoneButton) { zoneButton->options2 = MenuSetup_VS_StartMatch_CB; }
+    foreach_all(UIVsZoneButton, zoneButton) { zoneButton->options2 = MenuSetup_VS_StartMatch_CB; }
 }
 
 void MenuSetup_Unknown52(void)
 {
     EntityUIControl *mainMenu = (EntityUIControl *)MenuSetup->mainMenu;
-    
+
     EntityUIButton *taButton = mainMenu->buttons[1];
     taButton->disabled       = !SaveGame_CheckUnlock(0);
     EntityUIButton *vsButton = mainMenu->buttons[1];
@@ -701,7 +702,7 @@ void MenuSetup_Unknown52(void)
             ++maxRounds;
     }
 
-    EntityUIButton *vsButton1 = ((EntityUIControl*)MenuSetup->competitionRules)->buttons[1];
+    EntityUIButton *vsButton1 = ((EntityUIControl *)MenuSetup->competitionRules)->buttons[1];
     if (vsButton1->choiceCount >= 1) {
         EntityUIVsRoundPicker *picker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(vsButton1, vsButton1->selection);
 
@@ -712,7 +713,7 @@ void MenuSetup_Unknown52(void)
         }
     }
 
-    EntityUIControl *secrets = (EntityUIControl *)MenuSetup->secrets;
+    EntityUIControl *secrets       = (EntityUIControl *)MenuSetup->secrets;
     EntityUIButton *secretsButton1 = secrets->buttons[0];
     secretsButton1->disabled       = !SaveGame_CheckUnlock(5);
     if (secretsButton1->disabled)
@@ -750,6 +751,7 @@ void MenuSetup_Unknown52(void)
 
 void MenuSetup_Unknown7(void) {}
 
+// Main Menu
 int MenuSetup_GetActiveMenu(void)
 {
     Entity *control = (Entity *)UIControl_GetUIControl();
@@ -806,7 +808,7 @@ void MenuSetup_ChangeMenu(void)
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
-                ((EntityUIControl*)MenuSetup->saveSelect)->activeEntityID = 7;
+                ((EntityUIControl *)MenuSetup->saveSelect)->activeEntityID = 7;
                 UIControl_MatchMenuTag("Save Select");
             }
             break;
@@ -873,6 +875,7 @@ void MenuSetup_Unknown13(void)
         entity->fadeTimer = 0;
 }
 
+// Save Select
 int MenuSetup_GetMedalMods(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->secrets;
@@ -930,7 +933,7 @@ void MenuSetup_StartNewSave(void)
         memset(globals->noSaveSlot, 0, 0x400);
         globals->tempFlags  = false;
         globals->saveSlotID = NO_SAVE_SLOT;
-        globals->gameMode  = MODE_NOSAVE;
+        globals->gameMode   = MODE_NOSAVE;
         globals->medalMods  = MenuSetup_GetMedalMods();
     }
     else {
@@ -1005,7 +1008,7 @@ void MenuSetup_CheckNoSaveSelected(void)
             prompt->headingAnchor = 3;
         }
         else {
-            prompt->promptID = 3;
+            prompt->promptID      = 3;
             prompt->headingAnchor = 2;
         }
     }
@@ -1105,13 +1108,13 @@ void MenuSetup_TA_StartAttempt(void)
 void MenuSetup_TA_Unknown50(void)
 {
     EntityUIControl *leaderboardControl = (EntityUIControl *)MenuSetup->leaderboards;
-    UIControl->flagA             = false;
-    leaderboardControl->active  = ACTIVE_NEVER;
-    leaderboardControl->visible = false;
-    leaderboardControl->state        = StateMachine_None;
+    UIControl->flagA                    = false;
+    leaderboardControl->active          = ACTIVE_NEVER;
+    leaderboardControl->visible         = false;
+    leaderboardControl->state           = StateMachine_None;
 
     UIControl_Unknown4((EntityUIControl *)MenuSetup->timeAttackZones);
-    //sub_7100017054(MenuSetup->timeAttackZones, *&MenuSetup->leaderboardWidget->playerID,
+    // sub_7100017054(MenuSetup->timeAttackZones, *&MenuSetup->leaderboardWidget->playerID,
     //                     BYTE1(*&MenuSetup->leaderboardWidget->playerID), BYTE2(*&MenuSetup->leaderboardWidget->playerID), 0);
 }
 
@@ -1123,23 +1126,818 @@ bool32 MenuSetup_TA_Unknown51(void)
 
 void MenuSetup_TA_Unknown52(void)
 {
-    //sub_7100016B74(*&Obj_MenuSetup->leaderboardWidget->playerID, BYTE1(*&Obj_MenuSetup->leaderboardWidget->playerID),
-    //                      BYTE2(*&Obj_MenuSetup->leaderboardWidget->playerID), Obj_MenuSetup->leaderboardWidget->entryIsUser, 0LL);
+    // sub_7100016B74(*&MenuSetup->leaderboardWidget->playerID, BYTE1(*&MenuSetup->leaderboardWidget->playerID),
+    //                      BYTE2(*&MenuSetup->leaderboardWidget->playerID), MenuSetup->leaderboardWidget->entryIsUser, 0LL);
 }
 
 void MenuSetup_Leaderboard_Unknown(void) {}
 
+// Competition
 void MenuSetup_VS_OpenCompRules(void) { UIControl_MatchMenuTag("Competition Rules"); }
 void MenuSetup_VS_OpenCompZones(void) { UIControl_MatchMenuTag("Competition Zones"); }
 
+void MenuSetup_VS_Unknown50(void)
+{
+    EntityUIControl *control = (EntityUIControl *)MenuSetup->competition;
+
+    if (control) {
+        bool32 flag = true;
+        for (int i = 0; i < control->buttonCount; ++i) {
+            EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
+
+            Entity *entStore       = RSDK_sceneInfo->entity;
+            RSDK_sceneInfo->entity = (Entity *)button;
+            StateMachine_Run(button->processButtonCB);
+            RSDK_sceneInfo->entity = entStore;
+
+            if (flag) {
+                if (button->ready)
+                    flag = !button->flag;
+                else
+                    flag = false;
+            }
+        }
+
+        if (flag) {
+            control->selectionDisabled = true;
+            UITransition_StartTransition(MenuSetup_VS_OpenCompRules, 0);
+        }
+    }
+}
+
+void MenuSetup_VS_Unknown51(void)
+{
+    RSDK_THIS(UIControl);
+
+    entity->childHasFocus = false;
+    for (int i = 0; i < entity->buttonCount; ++i) {
+        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)entity->buttons[i];
+
+        button->flag            = true;
+        button->ready           = false;
+        button->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+    }
+}
+
+void MenuSetup_VS_StartMatch(void)
+{
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
+
+    sprintf(param->menuTag, "Competition Round");
+    session->levelIndex = ((EntityUIControl *)MenuSetup->competitionZones)->activeEntityID;
+    session->zoneID     = param->vsZoneID;
+    session->actID      = param->vsActID;
+
+    RSDK.SetScene("Mania Mode", "");
+    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
+    SaveGame_ResetPlayerState();
+    memset(globals->noSaveSlot, 0, 0x400);
+
+    globals->continues  = 0;
+    globals->saveSlotID = 255;
+    globals->gameMode   = MODE_COMPETITION;
+    globals->medalMods  = 0;
+
+    globals->playerID = ID_NONE;
+    for (int i = 0; i < competition_PlayerCount; ++i) globals->playerID |= session->characterFlags[i] << (8 * i);
+    globals->itemMode = session->monitorMode;
+    RSDK.LoadScene();
+}
+
+void MenuSetup_VS_StartMatch_CB(void) { MenuSetup_StartTransition(MenuSetup_VS_StartMatch, 32); }
+
+void MenuSetup_VS_Unknown52(void)
+{
+    EntityUIControl *rulesControl     = (EntityUIControl *)MenuSetup->competitionRules;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+
+    int matchCount = 0;
+    foreach_all(UIVsRoundPicker, picker)
+    {
+        matchCount = picker->val;
+        foreach_break;
+    }
+
+    int monitorMode = 0;
+    if (rulesControl->buttons[0]->selection) {
+        if (rulesControl->buttons[0]->selection == 1) {
+            monitorMode = 2;
+        }
+        else if (rulesControl->buttons[0]->selection == 2) {
+            monitorMode = 1;
+        }
+    }
+
+    CompetitionSession_ResetOptions();
+
+    session->matchCount  = matchCount;
+    session->inMatch     = true;
+    session->monitorMode = monitorMode;
+
+    EntityUIControl *zoneControl = (EntityUIControl *)MenuSetup->competitionZones;
+    zoneControl->position        = zoneControl->startPos;
+    zoneControl->posUnknown.x    = zoneControl->startPos.x;
+    zoneControl->posUnknown.y    = zoneControl->startPos.y;
+    zoneControl->activeEntityID  = 0;
+
+    foreach_all(UIVsZoneButton, zoneButton)
+    {
+        zoneButton->xOut      = !SaveGame_GetZoneUnlocked(zoneButton->zoneID);
+        zoneButton->obfuscate = zoneButton->xOut;
+    }
+
+    UIControl_MatchMenuTag("Competition Zones");
+}
+
+void MenuSetup_VS_OpenCompTotal(void) { UIControl_MatchMenuTag("Competition Total"); }
+
+void MenuSetup_VS_Unknown53(void)
+{
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    if (UIControl->confirmPress[0] || UIControl->confirmPress[1] || UIControl->confirmPress[2] || UIControl->confirmPress[3]) {
+        bool32 flag = false;
+        int count   = 0;
+        for (int p = 0; p < competition_PlayerCount; ++p) {
+            if (session->lives[p] > 0)
+                count++;
+            if (session->wins[p] > (session->matchCount >> 1))
+                flag = true;
+        }
+
+        if (flag || count < 2 || session->matchID >= session->matchCount)
+            UITransition_StartTransition(MenuSetup_VS_OpenCompTotal, 0);
+        else
+            UITransition_StartTransition(MenuSetup_VS_OpenCompZones, 0);
+
+        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        UIControl->inputLocked = true;
+    }
+}
+
+void MenuSetup_VS_Unknown54(void)
+{
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityUIControl *roundControl     = (EntityUIControl *)MenuSetup->competitionRound;
+
+    TextInfo info;
+    INIT_TEXTINFO(info);
+    char textBuffer[0x100];
+    memset(textBuffer, 0, sizeof(textBuffer));
+    Localization_GetZoneName(&info, session->zoneID);
+    if (session->zoneID < 12) {
+        char buf[16];
+        sprintf(buf, " ZONE %d", session->actID + 1);
+        RSDK.AppendText(&info, buf);
+    }
+    RSDK.GetCString(textBuffer, &info);
+    UIInfoLabel_SetText((EntityUIInfoLabel *)MenuSetup->roundLabel, textBuffer);
+
+    // EntityUIVsScoreboard *scoreboard = (EntityUIVsScoreboard*)MenuSetup->roundScoreboard;
+    // sub_71000587C4(scoreboard, session->wins[0], session->wins[1]);
+    // v11                  = session->wins[0] == session->wins[1];
+    // scoreboard->sizeY    = session->wins[0] != session->wins[1];
+    // scoreboard->field_A4 = session->wins[1] > session->wins[0];
+
+    int bestRings      = 0;
+    int bestTotalRings = 0;
+    int bestScore      = 0;
+    int bestItems      = 0;
+    int bestTime       = -1;
+    int times[PLAYER_MAX];
+
+    for (int p = 0; p < competition_PlayerCount; ++p) {
+        if (session->rings[p] > bestRings)
+            bestRings = session->rings[p];
+
+        if (session->totalRings[p] > bestTotalRings)
+            bestTotalRings = session->totalRings[p];
+
+        if (session->score[p] > bestScore)
+            bestScore = session->score[p];
+
+        if (session->items[p] > bestItems)
+            bestItems = session->items[p];
+
+        times[p] = session->time[p].milliseconds + 100 * (session->time[p].seconds + 4 * (16 * session->time[p].minutes - session->time[p].minutes));
+        if (times[p] < bestTime)
+            bestTime = times[p];
+    }
+
+    char buffer[0x40];
+    int winnerCount = 0;
+    for (int p = 0; p < competition_PlayerCount; ++p) {
+        EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
+
+        results->field_1D4 = session->winnerFlags[p] & (1 << p);
+        results->field_1D8 = session->winnerFlags[p] & (1 << p);
+        if (session->winnerFlags[p] & (1 << p))
+            winnerCount++;
+        results->trophyCount = session->wins[p];
+        memset(buffer, 0, sizeof(buffer));
+
+        sprintf(buffer, "%d", session->rings[p]);
+        if (!RSDK_sceneInfo->inEditor) {
+            RSDK.SetText(&results->rowText[0], buffer, 0);
+            RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
+        }
+
+        printf(buffer, "%d", session->totalRings[p]);
+        if (!RSDK_sceneInfo->inEditor) {
+            RSDK.SetText(&results->rowText[1], buffer, 0);
+            RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
+        }
+
+        sprintf(buffer, "%d", session->score[p]);
+        if (!RSDK_sceneInfo->inEditor) {
+            RSDK.SetText(&results->rowText[2], buffer, 0);
+            RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
+        }
+
+        sprintf(buffer, "%d", session->items[p]);
+        if (!RSDK_sceneInfo->inEditor) {
+            RSDK.SetText(&results->rowText[3], buffer, 0);
+            RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
+        }
+
+        sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
+        if (!RSDK_sceneInfo->inEditor) {
+            RSDK.SetText(&results->rowText[4], buffer, 0);
+            RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
+        }
+
+        if (session->finishFlags[p] != 1) {
+            results->row0Highlight = session->rings[p] == bestRings;
+            results->row1Highlight = session->totalRings[p] == bestTotalRings;
+            results->row2Highlight = session->score[p] == bestScore;
+            results->row3Highlight = session->items[p] == bestItems;
+            results->row4Highlight = times[p] > 0 && times[p] == bestTime;
+        }
+    }
+
+    if (winnerCount == 1) {
+        int winner = -1;
+        for (int p = 0; p < competition_PlayerCount; ++p) {
+            if ((1 << p) & session->winnerFlags[p]) {
+                winner = p;
+                break;
+            }
+        }
+
+        LogHelpers_Print("Announce_CharWins(%d)", session->characterFlags[winner]);
+        EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+        announcer->state           = Announcer_State_AnnounceWinPlayer;
+        announcer->playerID        = session->characterFlags[winner];
+    }
+    else {
+        LogHelpers_Print("Announce_ItsADraw(%d)", 0);
+        EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+        announcer->state           = Announcer_State_AnnounceDraw;
+        announcer->playerID        = 0;
+        announcer->timer           = 0;
+    }
+}
+
+void MenuSetup_VS_OpenCompetition(void) { UIControl_MatchMenuTag("Competition"); }
+
+void MenuSetup_VS_Unknown55(void)
+{
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    if (UIControl->keyConfirm) {
+        int mostWins = 0;
+        for (int p = 0; p < session->playerCount; ++p) {
+            if (session->wins[p] > mostWins)
+                mostWins = session->wins[p];
+        }
+
+        int winnerCount = 0;
+        for (int p = 0; p < session->playerCount; ++p) {
+            if (session->wins[p] == mostWins)
+                winnerCount++;
+        }
+
+        if (winnerCount > 1) {
+            MenuSetup_StartTransition(MenuSetup_VS_StartPuyoMatch, 32);
+        }
+        else {
+            CompetitionSession_ResetOptions();
+            UITransition_StartTransition(MenuSetup_VS_OpenCompetition, 0);
+        }
+        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        UIControl->inputLocked = true;
+    }
+}
+
+void MenuSetup_VS_Unknown56(void)
+{
+    EntityUIControl *totalControl     = (EntityUIControl *)MenuSetup->competitionTotal;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+
+    MenuSetup->field_140 = 120;
+
+    totalControl->posUnknown.y = totalControl->startPos.y;
+    totalControl->position.y   = totalControl->startPos.y;
+
+    TextInfo info;
+    INIT_TEXTINFO(info);
+
+    EntityUIInfoLabel *label = (EntityUIInfoLabel *)MenuSetup->totalLabel;
+    Localization_GetString(&info, STR_COMPTOTAL);
+    UIInfoLabel_SetString(label, &info);
+
+    int highestScore = 0;
+    for (int p = 0; p < session->playerCount; ++p) {
+        if (session->wins[p] > highestScore)
+            highestScore = session->wins[p];
+    }
+
+    int count    = 0;
+    int winnerID = -1;
+    for (int p = 0; p < session->playerCount; ++p) {
+        if (session->wins[p] == highestScore) {
+            winnerID = p;
+            ++count;
+        }
+    }
+
+    // EntityUIVsScoreboard *scoreboard = (EntityUIVsScoreboard*)MenuSetup->totalScoreboard;
+    // sub_71000587C4(scoreboard, session->wins[0], session->wins[1]);
+    // v11                  = session->wins[0] == session->wins[1];
+    // scoreboard->sizeY    = session->wins[0] != session->wins[1];
+    // scoreboard->field_A4 = session->wins[1] > session->wins[0];
+
+    if (count <= 1) {
+        LogHelpers_Print("Announce_WinnerIs(%d)", winnerID);
+        EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+        announcer->state           = Announcer_State_AnnounceWinner;
+        announcer->playerID        = winnerID;
+    }
+    else {
+        LogHelpers_Print("Announce_ItsADraw(%d)", 1);
+        EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+        announcer->state           = Announcer_State_AnnounceDraw;
+        announcer->playerID        = 1;
+        announcer->timer           = 0;
+    }
+
+    for (int p = 0; p < session->playerCount; ++p) {
+        EntityUIVsResults *results = (EntityUIVsResults *)totalControl->buttons[p];
+        bool32 *highlight          = &results->row0Highlight;
+
+        results->numRows     = session->matchCount;
+        results->field_1D4   = session->wins[p] == highestScore;
+        results->trophyCount = session->wins[p];
+        for (int r = 0; r < results->numRows; ++r) {
+            char buffer[0x40];
+            sprintf(buffer, "%d", session->winnerFlags[r]);
+            if (!RSDK_sceneInfo->inEditor) {
+                RSDK.SetText(&results->rowText[r], buffer, 0);
+                RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
+            }
+            highlight[r] = ((1 << p) & session->winnerFlags[r]);
+        }
+    }
+}
+
+void MenuSetup_VS_Unknown57(void)
+{
+    EntityUIControl *totalControl = (EntityUIControl *)MenuSetup->competitionTotal;
+
+    if (totalControl->active == ACTIVE_ALWAYS) {
+        if (totalControl->position.y == totalControl->posUnknown.y) {
+            if (MenuSetup->field_140 <= 0) {
+                int pos = totalControl->startPos.y;
+                if (totalControl->posUnknown.y == totalControl->startPos.y) {
+                    EntityUIVsResults *button = (EntityUIVsResults *)totalControl->buttons[0];
+                    if (button) {
+                        if (button->field_1D0 + button->position.y - 0x708000 > totalControl->startPos.y)
+                            pos = button->field_1D0 + button->position.y - 0x708000;
+                    }
+                }
+                totalControl->posUnknown.y = pos;
+                MenuSetup->field_140       = 120;
+            }
+            else {
+                MenuSetup->field_140--;
+            }
+        }
+    }
+}
+
+void MenuSetup_VS_Unknown58(void)
+{
+    EntityUIControl *control     = (EntityUIControl *)MenuSetup->competition;
+    EntityUIControl *zoneControl = (EntityUIControl *)MenuSetup->competitionZones;
+
+    UIControl_Unknown6(zoneControl);
+    UIControl_Unknown4(control);
+    CompetitionSession_ResetOptions();
+    zoneControl->childHasFocus = false;
+
+    foreach_all(UIVsZoneButton, zoneButton)
+    {
+        zoneButton->xOut      = !SaveGame_GetZoneUnlocked(zoneButton->zoneID);
+        zoneButton->obfuscate = zoneButton->xOut;
+    }
+}
+
+void MenuSetup_VS_BackoutFromVsCharSelect_CB(void)
+{
+    EntityUIControl *control   = UIControl_GetUIControl();
+    control->selectionDisabled = false;
+    UIControl_Unknown11(&control->parentTag);
+}
+
+bool32 MenuSetup_VS_BackoutFromVsCharSelect(void)
+{
+    LogHelpers_Print("BackoutFromVsCharSelect()");
+    EntityUIControl *control = (EntityUIControl *)MenuSetup->competition;
+
+    for (int i = 0; i < control->buttonCount; ++i) {
+        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttonCount;
+        if (button->objectID == UIVsCharSelector->objectID && button->prevFlag && UIControl->backPress[button->playerID]) {
+            UITransition_StartTransition(MenuSetup_VS_BackoutFromVsCharSelect_CB, 0);
+            return true;
+        }
+    }
+
+    if (!control->buttonCount) {
+        control->selectionDisabled = true;
+        if (!UIControl->backPress[0] && UIControl->keyBack) {
+            UITransition_StartTransition(MenuSetup_VS_BackoutFromVsCharSelect_CB, 0);
+            return true;
+        }
+    }
+    return false;
+}
+
+void MenuSetup_VS_Unknown59(void) { UITransition_StartTransition(MenuSetup_VS_Unknown58, 0); }
+
+bool32 MenuSetup_VS_Unknown60(void)
+{
+    TextInfo info;
+    INIT_TEXTINFO(info);
+
+    Localization_GetString(&info, STR_EXITCOMP);
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+    if (dialog) {
+        UIDialog_AddButton(DIALOG_NO, dialog, 0, true);
+        UIDialog_AddButton(DIALOG_YES, dialog, MenuSetup_VS_Unknown59, true);
+        UIDialog_Setup(dialog);
+    }
+    return true;
+}
+
+void MenuSetup_VS_StartPuyoMatch(void)
+{
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+
+    TimeAttackData_ClearOptions();
+    param->selectionFlag = 3;
+    globals->gameMode    = MODE_COMPETITION;
+    strcpy(param->menuTag, "Competition Total");
+    param->selectionID = 0;
+    RSDK.SetScene("Extras", "Puyo Puyo");
+    RSDK.LoadScene();
+}
+
+// Options
+void MenuSetup_Options_Unknown19(void)
+{
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
+        UIControl_MatchMenuTag("Video WIN");
+    }
+    else {
+        UIControl_MatchMenuTag("Video");
+    }
+}
+
+void MenuSetup_Options_Unknown16(void) { UIControl_MatchMenuTag("Sound"); }
+
+void MenuSetup_Options_Unknown17(void) { UIControl_MatchMenuTag("Language"); }
+
+void MenuSetup_Options_Unknown21(void)
+{
+    int id   = API_MostRecentActiveControllerID(0);
+    int type = API_GetControllerType(id);
+
+    switch (sku_platform) {
+        case PLATFORM_DEV:
+        case PLATFORM_PC:
+            if (sku_platform == PLATFORM_DEV || type)
+                UIControl_MatchMenuTag("Controls WIN");
+            else
+                UIControl_MatchMenuTag("Controls XB1");
+            break;
+        case PLATFORM_PS4: UIControl_MatchMenuTag("Controls PS4"); break;
+        case PLATFORM_XB1: UIControl_MatchMenuTag("Controls XB1"); break;
+        case PLATFORM_SWITCH:
+            switch (type) {
+                case 1: UIControl_MatchMenuTag("Controls NX"); break;
+                case 2: UIControl_MatchMenuTag("Controls NX Grip"); break;
+                case 3: UIControl_MatchMenuTag("Controls NX Joycon"); break;
+                case 4: UIControl_MatchMenuTag("Controls NX Pro"); break;
+                default: break;
+            }
+            break;
+    }
+}
+
+void MenuSetup_Options_Unknown22_P1(void)
+{
+    RSDK_controller[1].keyUp.keyMap     = 38;
+    RSDK_controller[1].keyDown.keyMap   = 40;
+    RSDK_controller[1].keyLeft.keyMap   = 37;
+    RSDK_controller[1].keyRight.keyMap  = 39;
+    RSDK_controller[1].keyA.keyMap      = 65;
+    RSDK_controller[1].keyB.keyMap      = 83;
+    RSDK_controller[1].keyC.keyMap      = 0;
+    RSDK_controller[1].keyX.keyMap      = 81;
+    RSDK_controller[1].keyY.keyMap      = 87;
+    RSDK_controller[1].keyZ.keyMap      = 0;
+    RSDK_controller[1].keyStart.keyMap  = 13;
+    RSDK_controller[1].keySelect.keyMap = 9;
+}
+
+void MenuSetup_Options_Unknown22_P2(void)
+{
+    RSDK_controller[2].keyUp.keyMap     = 104;
+    RSDK_controller[2].keyDown.keyMap   = 101;
+    RSDK_controller[2].keyLeft.keyMap   = 100;
+    RSDK_controller[2].keyRight.keyMap  = 102;
+    RSDK_controller[2].keyA.keyMap      = 74;
+    RSDK_controller[2].keyB.keyMap      = 75;
+    RSDK_controller[2].keyC.keyMap      = 0;
+    RSDK_controller[2].keyX.keyMap      = 85;
+    RSDK_controller[2].keyY.keyMap      = 73;
+    RSDK_controller[2].keyZ.keyMap      = 0;
+    RSDK_controller[2].keyStart.keyMap  = 219;
+    RSDK_controller[2].keySelect.keyMap = 221;
+}
+
+void MenuSetup_Options_Unknown51(int id)
+{
+    EntityUIControl *control = (EntityUIControl *)MenuSetup->controls_KB;
+    foreach_all(UISubHeading, subHeading)
+    {
+        Hitbox hitbox;
+        hitbox.right  = control->size.x >> 17;
+        hitbox.left   = -(control->size.x >> 17);
+        hitbox.bottom = control->size.y >> 17;
+        hitbox.top    = -(control->size.y >> 17);
+
+        if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
+                                      &hitbox, subHeading->position.x, subHeading->position.y)) {
+            subHeading->frameID = id + 8;
+            foreach_break;
+        }
+    }
+
+    for (int i = 0; i < control->buttonCount; ++i) {
+        EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
+        if (binder->objectID == UIKeyBinder->objectID) {
+            // binder->field_105 = id;
+            if (id == 1)
+                binder->options2 = MenuSetup_Options_Unknown22_P2;
+            else if (!id)
+                binder->options2 = MenuSetup_Options_Unknown22_P1;
+        }
+    }
+}
+
+void MenuSetup_Unknown53(void) { MenuSetup_Unknown54(); }
+
+void MenuSetup_Unknown54(void)
+{
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
+        EntityUIControl *videoControl_Win = (EntityUIControl *)MenuSetup->video_win;
+        EntityOptions *options            = (EntityOptions *)globals->optionsRAM;
+        Options_GetWinSize();
+
+        int vals[7];
+
+        vals[0] = RSDK.GetSettingsValue(SETTINGS_SHADERID);
+        vals[1] = options->windowSize;
+        vals[2] = RSDK.GetSettingsValue(SETTINGS_BORDERED);
+
+        vals[3] = 0;
+        if (!RSDK.GetSettingsValue(SETTINGS_WINDOWED) || options->windowSize)
+            vals[3] = 1;
+
+        vals[4] = 0;
+        vals[5] = RSDK.GetSettingsValue(SETTINGS_VSYNC);
+        vals[6] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
+
+        for (int i = 0; i < videoControl_Win->buttonCount; ++i) {
+            EntityUIButton *button = videoControl_Win->buttons[i];
+
+            if (i == 4) {
+                EntityUIResPicker *child = (EntityUIResPicker *)UIButton_GetChoicePtr(button, button->selection);
+                UIResPicker_GetDisplayInfo(child);
+            }
+            else if (i == 1) {
+                EntityUIWinSize *child = (EntityUIWinSize *)UIButton_GetChoicePtr(button, button->selection);
+                child->selection       = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT) / SCREEN_YSIZE;
+            }
+            else if (button->selection != vals[i]) {
+                UIButton_SetChoiceSelection(button, vals[i]);
+            }
+        }
+    }
+}
+
+void MenuSetup_Options_Unknown24(void)
+{
+    RSDK_THIS(UIButton);
+    EntityUIControl *control = (EntityUIControl *)MenuSetup->controls_win;
+
+    for (int i = 0; i < control->buttonCount; ++i) {
+        if (entity == control->buttons[i]) {
+            MenuSetup_Options_Unknown51(i);
+            UIControl_MatchMenuTag("Controls KB");
+            break;
+        }
+    }
+}
+
+void MenuSetup_Options_Unknown25(void)
+{
+    if (Options->state) {
+        UIWaitSpinner_Wait();
+        Options_SaveOptionsBin(MenuSetup_Options_Unknown27);
+    }
+}
+
+void MenuSetup_Options_Unknown27(int status) { UIWaitSpinner_Wait2(); }
+
 void MenuSetup_Options_LaunchManual(void)
 {
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, 0LL, 255LL);
+    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 0xFF);
     APICallback_LaunchManual();
+}
+
+void MenuSetup_Options_Unknown52(void)
+{
+    EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
+    EntityUIControl *control = (EntityUIControl *)MenuSetup->language;
+
+    if (control->activeEntityID < 0)
+        options->language = -1;
+    else
+        options->language = control->activeEntityID;
+    options->overrideLanguage = control->activeEntityID >= 0;
+
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
+        RSDK.SetSettingsValue(SETTINGS_LANGUAGE, control->activeEntityID);
+    Options->state = 1;
+
+    Localization->language = control->activeEntityID;
+    control->startingID    = control->activeEntityID;
+    Localization->loaded   = false;
+    Localization_LoadStrings();
+    UIWidgets_ApplyLanguage();
+    UIHeading_LoadSprites();
+    UIControl_MatchMenuTag("Options");
+}
+
+void MenuSetup_Options_Unknown53(void)
+{
+    RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    options->screenShader  = entity->selection;
+    options->field_60      = true;
+    RSDK.SetSettingsValue(SETTINGS_SHADERID, entity->selection);
+    Options->state = 1;
+}
+
+void MenuSetup_Options_Unknown54(void)
+{
+    RSDK_THIS(UIButton);
+
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+    if (entity->selection != 4) {
+        switch (entity->selection) {
+            case 0:
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424);
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 240);
+                break;
+            case 1:
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 848);
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 480);
+                break;
+            case 2:
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 1272);
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 720);
+                break;
+            case 3:
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 1696);
+                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 960);
+                break;
+        }
+
+        options->windowSize = entity->selection;
+        Options->state      = 1;
+    }
+}
+
+void MenuSetup_Options_Unknown55(void)
+{
+    RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
+    options->windowBorder = entity->selection;
+    RSDK.SetSettingsValue(SETTINGS_BORDERED, entity->selection);
+    RSDK.UpdateWindow();
+    Options->state = 1;
+}
+
+void MenuSetup_Options_Unknown56(void)
+{
+    RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
+    options->windowed = entity->selection ^ 1;
+    RSDK.SetSettingsValue(SETTINGS_WINDOWED, entity->selection ^ 1);
+    RSDK.UpdateWindow();
+    Options->state = 1;
+}
+
+void MenuSetup_Options_Unknown57(void)
+{
+    RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
+    options->vSync = entity->selection;
+    RSDK.SetSettingsValue(SETTINGS_VSYNC, entity->selection);
+    Options->state = 1;
+}
+
+void MenuSetup_Options_Unknown58(void)
+{
+    RSDK_THIS(UIButton);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
+    options->tripleBuffering = entity->selection;
+    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, entity->selection);
+    Options->state = 1;
+}
+
+void MenuSetup_Options_Unknown59(void)
+{
+    RSDK_THIS(UISlider);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
+    // what the hell is up with this???????
+    // it'd only ever be 1 or 2 why are F1,F2,F4,F5 & FC options?????
+    // this is a CB for the slider why are the boolean values here???
+    bool32 value = entity->frameID != 1;
+    switch (value) {
+        case 0xF1:
+            options->windowed = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
+            Options->state = 1;
+            break;
+        case 0xF2:
+            options->windowBorder = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
+            Options->state = 1;
+            break;
+        case 0xF4:
+            options->vSync = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
+            Options->state = 1;
+            break;
+        case 0xF5:
+            options->tripleBuffering = entity->sliderPos;
+            RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
+            Options->state = 1;
+            break;
+        case 0xFC:
+            options->screenShader = entity->sliderPos;
+            options->field_60     = true;
+            RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
+            RSDK.SetSettingsValue(SETTINGS_CHANGED, 0);
+            Options->state = 1;
+            break;
+        case 0:
+            options->volMusic = entity->sliderPos;
+            options->field_68 = 1;
+            RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
+            Options->state = 1;
+            break;
+        case 1:
+            options->volSfx   = entity->sliderPos;
+            options->field_70 = true;
+            RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
+            Options->state = 1;
+            break;
+        default: Options->state = 1; break;
+    }
 }
 
 void MenuSetup_OpenExtrasMenu(void) { UIControl_MatchMenuTag("Extras"); }
 
+// Extras
 void MenuSetup_Extras_ProcessButtonCB(void) { UIControl_ProcessButtonInput(); }
 
 void MenuSetup_Extras_Start_Puyo_vsAI(void)

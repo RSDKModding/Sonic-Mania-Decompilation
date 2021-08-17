@@ -141,31 +141,19 @@ void TitleLogo_Unknown1(void)
         case LANGUAGE_EN:
         case LANGUAGE_JP: RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 0); break;
         case LANGUAGE_FR:
-#if RETRO_USE_PLUS
-            if (RSDK_sku->platform == PLATFORM_SWITCH)
-#else
-            if (RSDK_info->platform == PLATFORM_SWITCH)
-#endif
+            if (sku_platform == PLATFORM_SWITCH)
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 2);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 1);
             break;
         case LANGUAGE_IT:
-#if RETRO_USE_PLUS
-            if (RSDK_sku->platform == PLATFORM_XB1 || RSDK_sku->platform == PLATFORM_SWITCH)
-#else
-            if (RSDK_info->platform == PLATFORM_XB1 || RSDK_info->platform == PLATFORM_SWITCH)
-            #endif
+            if (sku_platform == PLATFORM_XB1 || sku_platform == PLATFORM_SWITCH)
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 4);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 3);
             break;
         case LANGUAGE_GE:
-#if RETRO_USE_PLUS
-            if (RSDK_sku->platform == PLATFORM_SWITCH)
-#else
-            if (RSDK_info->platform == PLATFORM_SWITCH)
-#endif
+            if (sku_platform == PLATFORM_SWITCH)
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 6);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 8, &entity->animator1, true, 5);

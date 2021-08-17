@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+#if !RETRO_USE_PLUS
+//preplus was always 2P
+#define competition_PlayerCount (2)
+#endif
+
 //created so I can easily set up times in an array
 typedef struct {
     int minutes;

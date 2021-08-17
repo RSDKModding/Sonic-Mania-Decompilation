@@ -43,11 +43,7 @@ void UIButtonPrompt_Update(void)
         entity->prevButton = button;
     }
 
-#if RETRO_USE_PLUS
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
-#else
-    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
-#endif
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         int mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
         if (textChanged || entity->mappings != mappings) {
             UIButtonPrompt_Unknown4();

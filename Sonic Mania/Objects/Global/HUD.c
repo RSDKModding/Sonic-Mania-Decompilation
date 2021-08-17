@@ -34,13 +34,8 @@ void HUD_LateUpdate(void)
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM->chaosEmeralds >= 0x7F) {
-#if RETRO_USE_PLUS
-            if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV)
+            if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetSuperFrames();
-#else
-            if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_SWITCH || RSDK_info->platform == PLATFORM_DEV)
-                HUD_GetSuperFrames();
-#endif
             if (entity->superButtonPos < 0x180000)
                 entity->superButtonPos += 0x80000;
         }
@@ -52,7 +47,7 @@ void HUD_LateUpdate(void)
 #if RETRO_USE_PLUS
     else if (globals->gameMode == MODE_TIMEATTACK) {
         if (HUD->dwordC) {
-            if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV) {
+            if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
                 HUD_GetKeyFrame(&entity->superButtonData1, 3);
                 HUD_GetKeyFrame(&entity->taData3, 3);
                 HUD_GetKeyFrame(&entity->taData4, 4);

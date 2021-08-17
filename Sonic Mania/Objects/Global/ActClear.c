@@ -141,14 +141,17 @@ void ActClear_Draw(void)
 
     drawPos.x = offset + entity->posUnknown4.x - 0x5C0000;
     drawPos.y = entity->posUnknown4.y;
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK)
         entity->data1.frameID = 17;
     else
+#endif
         entity->data1.frameID = 5;
     RSDK.DrawSprite(&entity->data1, &drawPos, true);
 
     dx = drawPos.x + 0x320000;
     drawPos.x += 0x320000;
+#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x             = dx - 0xA0000;
         entity->data1.frameID = 1;
@@ -156,9 +159,12 @@ void ActClear_Draw(void)
         drawPos.x += 0xA0000;
     }
     else {
+#endif
         entity->data1.frameID = 8;
         RSDK.DrawSprite(&entity->data1, &drawPos, true);
+#if RETRO_USE_PLUS
     }
+#endif
 
     entity->data1.frameID = 10;
     drawPos.x += 0x340000;
@@ -185,9 +191,11 @@ void ActClear_Draw(void)
         drawPos.x = entity->posUnknown5.x;
         drawPos.y = entity->posUnknown5.y;
         drawPos.x = offset + drawPos.x - 0x5C0000;
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK)
             entity->data1.frameID = 18;
         else
+#endif
             entity->data1.frameID = 15;
         RSDK.DrawSprite(&entity->data1, &drawPos, true);
 
@@ -663,29 +671,23 @@ void ActClear_LoadNextScene(void)
                 byte zoneID            = param->zoneID;
                 byte actID             = param->actID;
 
-                int *recordsRAM = NULL;
-                if (globals->saveLoaded == STATUS_OK)
-                    recordsRAM = &globals->saveRAM[0x800];
+                int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
 
-                if (recordsRAM) {
-                    int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+                ushort *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
+                int rank       = 0;
+                for (; rank < 3; ++rank) {
+                    if (!record[rank] || time < record[rank])
+                        break;
+                }
 
-                    ushort *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
-                    int rank       = 0;
-                    for (; rank < 3; ++rank) {
-                        if (!record[rank] || time < record[rank])
-                            break;
-                    }
-
-                    if (rank < 3) {
-                        rank++;
-                        TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
-                        TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
-                        param->timeScore = rank;
-                    }
-                    else {
-                        ActClear->field_10 = false;
-                    }
+                if (rank < 3) {
+                    rank++;
+                    TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
+                    TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
+                    param->timeScore = rank;
+                }
+                else {
+                    ActClear->field_10 = false;
                 }
                 RSDK.SetScene("Presentation", "Menu");
             }

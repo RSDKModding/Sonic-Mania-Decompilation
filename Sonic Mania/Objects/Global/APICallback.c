@@ -49,6 +49,7 @@ void APICallback_StageLoad(void)
     APICallback->GetStorageStatus             = RSDK.GetAPIFunction("GetStorageStatus");
     APICallback->LoadUserFile                 = RSDK.GetAPIFunction("LoadUserFile");
     APICallback->SaveUserFile                 = RSDK.GetAPIFunction("SaveUserFile");
+    APICallback->SaveSettingsINI              = RSDK.GetAPIFunction("SaveSettingsINI");
     APICallback->GetUserLanguage              = RSDK.GetAPIFunction("GetUserLanguage");
     APICallback->GetConfirmButtonFlip         = RSDK.GetAPIFunction("GetConfirmButtonFlip");
     APICallback->ControllerIDForInputID       = RSDK.GetAPIFunction("ControllerIDForInputID");
@@ -84,8 +85,13 @@ void APICallback_SetRichPresence(int id, TextInfo *msg)
 
 int APICallback_GetUserLanguage(void)
 {
-    LogHelpers_Print("EMPTY GetUserLanguage() -> GameInfo->language (%d)", RSDK_info->language);
-    return RSDK_info->language;
+    if (APICallback->GetUserLanguage) {
+        return APICallback->GetUserLanguage();
+    }
+    else {
+        LogHelpers_Print("EMPTY GetUserLanguage() -> GameInfo->language (%d)", RSDK_info->language);
+        return RSDK_info->language;
+    }
 }
 
 bool32 APICallback_GetConfirmButtonFlip(void)
@@ -139,6 +145,16 @@ void APICallback_SaveCB(void)
 
     if (entity->fileCallback)
         entity->fileCallback(true);
+}
+
+void APICallback_SaveSettingsINI(void) {
+    if (APICallback->SetRichPresence) {
+        LogHelpers_Print("API SaveSettingsINI(%d)");
+        APICallback->SaveSettingsINI();
+    }
+    else {
+        LogHelpers_Print("EMPTY SaveSettingsINI()");
+    }
 }
 
 LeaderboardEntry *APICallback_ReadLeaderboardEntry(int rankID)

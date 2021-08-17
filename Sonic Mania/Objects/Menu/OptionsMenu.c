@@ -201,7 +201,7 @@ void OptionsMenu_Unknown3(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y)) {
             if (button->listID == 3 && button->frameID == 2) {
                 button->options2 = OptionsMenu_Unknown21;
-                if (RSDK_sku->platform == PLATFORM_DEV || RSDK_sku->platform == PLATFORM_PC)
+                if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC)
                     button->transition = false;
             }
         }
@@ -312,7 +312,7 @@ void OptionsMenu_Unknown3(void)
     videoControl_Win->yPressCB         = OptionsMenu_Unknown7;
     videoControl_Win->backPressCB      = OptionsMenu_Unknown9;
 
-    if (RSDK_sku->platform == PLATFORM_SWITCH || RSDK_sku->platform == PLATFORM_DEV) {
+    if (sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
         optionsControl->yPressCB = OptionsMenu_ShowManual;
     }
     else {
@@ -328,7 +328,7 @@ void OptionsMenu_Unknown4(void)
     EntityUIControl *videoControl        = (EntityUIControl *)OptionsMenu->videoControl;
     EntityUIControl *soundControl        = (EntityUIControl *)OptionsMenu->soundControl;
 
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV)
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
         OptionsMenu_Unknown5();
 
     EntityUIButton *button = videoControl->buttons[0];
@@ -347,7 +347,7 @@ void OptionsMenu_Unknown4(void)
 }
 void OptionsMenu_Unknown5(void)
 {
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = (EntityUIControl *)OptionsMenu->videoControl_Windows;
         EntityOptions *options            = (EntityOptions *)globals->optionsRAM;
         Options_GetWinSize();
@@ -482,11 +482,12 @@ void OptionsMenu_Unknown14(void)
 
 void OptionsMenu_Unknown15(void)
 {
-    if (RSDK_sku->platform != PLATFORM_PC && RSDK_sku->platform != PLATFORM_DEV)
-        UIControl_MatchMenuTag("Video");
-    else {
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         RSDK.SetSettingsValue(SETTINGS_STORE, 0);
         UIControl_MatchMenuTag("Video WIN");
+    }
+    else {
+        UIControl_MatchMenuTag("Video");
     }
 }
 void OptionsMenu_Unknown16(void) { UIControl_MatchMenuTag("Sound"); }
@@ -730,7 +731,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
     RSDK_THIS(UISlider);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    // what the hell is up with thsi???????
+    // what the hell is up with this???????
     // it'd only ever be 1 or 2 why are F1,F2,F4,F5 & FC options?????
     // this is a CB for the slider why are the boolean values here???
     bool32 value = entity->frameID != 1;

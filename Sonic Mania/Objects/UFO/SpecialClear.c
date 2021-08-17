@@ -14,10 +14,9 @@ void SpecialClear_StaticUpdate(void) {}
 
 void SpecialClear_Draw(void)
 {
+    RSDK_THIS(SpecialClear);
     Vector2 vertPos[4];
     Vector2 drawPos;
-
-    RSDK_THIS(SpecialClear);
 
     int centerX             = RSDK_screens->centerX << 16;
     drawPos.x               = centerX - 0x600000;
@@ -270,31 +269,40 @@ void SpecialClear_Create(void *data)
         entity->emeraldSpeeds[5]    = -0xD2000;
         entity->emeraldPositions[6] = 0x1D00000;
         entity->emeraldSpeeds[6]    = -0xDC000;
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 5, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 6, &entity->data3, true, 0);
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 7, &entity->data4, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_BONUS, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_NUMBERS, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_EMERALDS, &entity->data4, true, 0);
         switch (globals->playerID & 0xFF) {
-            case ID_TAILS:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 1, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 1);
+            case ID_TAILS: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_TAILS, &entity->data1, true, 0);
+#if RETRO_USE_PLUS
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_TAILS);
+#else
+                RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->data5, true, SC_ANI_TAILS);
+#endif
                 break;
-            case ID_KNUCKLES:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 2, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 2);
+            case ID_KNUCKLES: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_KNUX, &entity->data1, true, 0);
+#if RETRO_USE_PLUS
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_KNUX);
+#else
+                RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->data5, true, SC_ANI_TAILS);
+#endif
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 3, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 3);
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_MIGHTY, &entity->data1, true, 0);
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, 3);
                 break;
             case ID_RAY:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 4, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 4);
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_RAY, &entity->data1, true, 0);
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_RAY);
                 break;
 #endif
-            default:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 0, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, 8, &entity->data5, true, 0);
+            default: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_SONIC, &entity->data1, true, 0);
+#if RETRO_USE_PLUS
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_SONIC);
+#else
+                RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->data5, true, SC_ANI_TAILS);
+#endif
                 break;
         }
     }
@@ -303,6 +311,9 @@ void SpecialClear_Create(void *data)
 void SpecialClear_StageLoad(void)
 {
     SpecialClear->spriteIndex     = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE);
+#if !RETRO_USE_PLUS
+    SpecialClear->continueFrames = RSDK.LoadSpriteAnimation("Players/Continue.bin", SCOPE_STAGE);
+#endif
     SpecialClear->sfx_ScoreAdd    = RSDK.GetSFX("Global/ScoreAdd.wav");
     SpecialClear->sfx_ScoreTotal  = RSDK.GetSFX("Global/ScoreTotal.wav");
     SpecialClear->sfx_Event       = RSDK.GetSFX("Special/Event.wav");

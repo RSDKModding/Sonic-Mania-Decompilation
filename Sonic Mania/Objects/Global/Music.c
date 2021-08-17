@@ -60,7 +60,7 @@ void Music_StageLoad(void)
     globals->restartMusicID = TRACK_STAGE;
     Music->nextTrack        = TRACK_NONE;
 #if RETRO_USE_PLUS
-    if (RSDK_sku->platform == PLATFORM_DEV)
+    if (sku_platform == PLATFORM_DEV)
         RSDK.SetDebugValue("Vape Mode", &globals->vapeMode, DTYPE_BOOL, false, true);
 #endif
 }

@@ -107,11 +107,7 @@ void UIResPicker_StageLoad(void) { UIResPicker->aniFrames = RSDK.LoadSpriteAnima
 
 void UIResPicker_GetDisplayInfo(EntityUIResPicker *entity)
 {
-#if RETRO_USE_PLUS
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
-#else
-    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
-#endif
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         TextInfo info;
         RSDK.GetDisplayInfo(&entity->selection, &entity->displayWidth, &entity->displayHeight, &entity->displayRefreshRate, &info);
 

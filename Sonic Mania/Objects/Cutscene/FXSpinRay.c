@@ -71,9 +71,9 @@ void FXSpinRay_Create(void *data)
         entity->field_80[3].y = -entity->field_70 >> 4;
         entity->offset        = 8;
         entity->state         = FXSpinRay_State_FadeIn;
-        entity->r             = 240;
-        entity->g             = 240;
-        entity->b             = 240;
+        entity->r             = 0xF0;
+        entity->g             = 0xF0;
+        entity->b             = 0xF0;
     }
 }
 

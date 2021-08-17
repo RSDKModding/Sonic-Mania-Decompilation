@@ -64,13 +64,13 @@ void ContinueSetup_Create(void *data)
         entity->updateRange.x = 0x4000000;
         entity->updateRange.y = 0x4000000;
         switch (globals->playerID & 0xFF) {
-            case ID_TAILS: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 11, &ContinueSetup->animator, true, 1); break;
-            case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 11, &ContinueSetup->animator, true, 2); break;
+            case ID_TAILS: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 1); break;
+            case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 2); break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 11, &ContinueSetup->animator, true, 3); break;
-            case ID_RAY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 11, &ContinueSetup->animator, true, 4); break;
+            case ID_MIGHTY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 3); break;
+            case ID_RAY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 4); break;
 #endif
-            default: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 11, &ContinueSetup->animator, true, 0); break;
+            default: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 0); break;
         }
         RSDK.SetActivePalette(1, 0, RSDK_screens->height);
     }

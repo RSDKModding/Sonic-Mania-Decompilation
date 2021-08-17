@@ -20,11 +20,7 @@ void Localization_StageLoad(void)
         Localization_LoadStrings();
     }
     else {
-#if RETRO_USE_PLUS
-        Localization->language = RSDK_sku->language;
-#else
-        Localization->language = RSDK_info->language;
-#endif
+        Localization->language = sku_language;
         Localization_LoadStrings();
     }
 }

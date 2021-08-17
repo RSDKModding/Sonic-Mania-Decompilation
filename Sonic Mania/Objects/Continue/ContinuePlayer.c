@@ -29,19 +29,19 @@ void ContinuePlayer_Create(void *data)
         if (!entity->isPlayer2) {
             switch (globals->playerID & 0xFF) {
                 case ID_TAILS:
-                    RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 2, &entity->animator, true, 0);
+                    RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_TAILS, &entity->animator, true, 0);
                     entity->position.y += 0x40000;
                     break;
-                case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 4, &entity->animator, true, 0); break;
+                case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_KNUX, &entity->animator, true, 0); break;
 #if RETRO_USE_PLUS
-                case ID_MIGHTY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 6, &entity->animator, true, 0); break;
+                case ID_MIGHTY: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_MIGHTY, &entity->animator, true, 0); break;
                 case ID_RAY:
-                    RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 8, &entity->animator, true, 0);
+                    RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_RAY, &entity->animator, true, 0);
                     entity->position.y += 0x40000;
                     break;
 #endif
                 default:
-                    RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 0, &entity->animator, true, 0);
+                    RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_SONIC, &entity->animator, true, 0);
                     if (globals->playerID & ID_TAILS_ASSIST)
                         entity->position.x -= 0x100000;
                     break;
@@ -50,7 +50,7 @@ void ContinuePlayer_Create(void *data)
             entity->aniFrames = ContinuePlayer->playerAniFrames;
         }
         else {
-            RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, 10, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_IDLE_AI, &entity->animator, true, 0);
             if (!(globals->playerID & ID_TAILS_ASSIST))
                 entity->active = ACTIVE_NEVER;
             entity->timer     = 76;

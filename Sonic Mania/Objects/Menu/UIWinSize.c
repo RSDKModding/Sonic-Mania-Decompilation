@@ -90,7 +90,7 @@ void UIWinSize_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x400000;
-        entity->selection     = winHeight / 240;
+        entity->selection     = winHeight / SCREEN_YSIZE;
         entity->height        = entity->size.y >> 16;
         entity->size.y        = abs(entity->size.y);
         entity->textFlag      = true;
@@ -108,14 +108,10 @@ void UIWinSize_StageLoad(void) { UIWinSize->aniFrames = RSDK.LoadSpriteAnimation
 void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
 {
     RSDK_THIS(UIWinSize);
-#if RETRO_USE_PLUS 
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV) {
-#else
-    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
-#endif
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         int height = 0;
         RSDK.GetWindowSize(NULL, &height);
-        entity->maxScale = height / 240;
+        entity->maxScale = height / SCREEN_YSIZE;
         if (entity->selection < 1)
             entity->selection = entity->maxScale - 1;
         if (entity->selection >= entity->maxScale)

@@ -17,6 +17,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
+#if !RETRO_USE_PLUS
+    int value;
+#endif
     byte zoneID;
     TextInfo text1;
     TextInfo text2;
@@ -28,19 +31,29 @@ typedef struct {
     TextInfo text4;
     int field_12C;
     Vector2 drawPos;
+#if !RETRO_USE_PLUS
+    int field_138_2;
+    int id;
+    int field_140;
+    int announceTimer;
+#endif
     byte field_138;
     byte characterID;
     byte actID;
 #if RETRO_USE_PLUS
     bool32 isEncore;
+#else
+    byte rank;
 #endif
-    int field_140;
-    int field_144;
-    int field_148;
     int field_14C;
     int field_150;
+#if RETRO_USE_PLUS
     int field_154;
     int field_158;
+#endif
+#if !RETRO_USE_PLUS
+    Animator animator7;
+#endif
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -82,5 +95,23 @@ void UITAZoneModule_Unknown15(void);
 void UITAZoneModule_Unknown16(void);
 void UITAZoneModule_Unknown17(void);
 void UITAZoneModule_Unknown18(void);
+
+#if !RETRO_USE_PLUS
+void UITAZoneModule_DrawTime(Vector2 *drawPos, int minutes, int seconds, int milliseconds);
+void UITAZoneModule_Unknown8(void);
+void UITAZoneModule_Unknown7(void);
+void UITAZoneModule_Unknown19(void);
+void UITAZoneModule_Unknown21(void);
+void UITAZoneModule_Unknown22(void);
+void UITAZoneModule_Unknown23(void);
+void UITAZoneModule_Unknown24(void);
+void UITAZoneModule_Unknown25(int player, int zone, int act, int a4, void (*callback)(void));
+void UITAZoneModule_Unknown26(EntityUIControl *control, char characterID, unsigned int zoneID, char actID, int score);
+void UITAZoneModule_Unknown27(void);
+void UITAZoneModule_Unknown28(void);
+void UITAZoneModule_Unknown29(void);
+void UITAZoneModule_Unknown30(void);
+void UITAZoneModule_Unknown31(void);
+#endif
 
 #endif //!OBJ_UITAZONEMODULE_H

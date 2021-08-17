@@ -397,18 +397,12 @@ void TimeAttackData_SaveTATime(byte zone, byte act, byte player, byte rank, usho
 {
     rank--;
     if (rank < 3) {
-        int *recordsRAM = NULL;
-        if (globals->saveLoaded == STATUS_OK)
-            recordsRAM = &globals->saveRAM[0x800];
-        if (!recordsRAM)
-            return;
-
         // playerID * (1 zones)
         // zone * (1 acts)
         // act * (3 ranks)
         ushort *record = TimeAttackData_GetRecordedTime(zone, act, player, 1);
 
-        for (int r = 2; r > rank; ++r) {
+        for (int r = 2; r > rank; --r) {
             record[r] = record[r - 1];
         }
 
@@ -428,10 +422,7 @@ ushort *TimeAttackData_GetRecordedTime(byte zone, byte act, byte player, byte ra
         return NULL;
 
     int pos = act + 2 * (zone * 12) - 10;
-    if (saveRAM[pos + rank + 2 * pos]) {
-        return &saveRAM[pos + rank + 2 * pos];
-    }
-    return NULL;
+    return &saveRAM[pos + rank + 2 * pos];
 }
 
 #endif

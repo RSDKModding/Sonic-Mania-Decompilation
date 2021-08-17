@@ -283,7 +283,7 @@ void MainMenu_Unknown3(void)
     {
         if (button->listID == 1) {
             if (button->frameID == 7) {
-                if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
+                if (sku_platform && sku_platform != PLATFORM_DEV) {
                     EntityUIControl *mainMenu = (EntityUIControl *)MainMenu->menuControlPtr;
                     RSDK.ResetEntityPtr(button, TYPE_BLANK, NULL);
                     --mainMenu->buttonCount;

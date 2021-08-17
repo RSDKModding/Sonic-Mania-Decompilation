@@ -3,10 +3,29 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SC_ANI_SONIC,
+    SC_ANI_TAILS,
+    SC_ANI_KNUX,
+#if RETRO_USE_PLUS
+    SC_ANI_MIGHTY,
+    SC_ANI_RAY,
+#endif
+    SC_ANI_BONUS,
+    SC_ANI_NUMBERS,
+    SC_ANI_EMERALDS,
+#if RETRO_USE_PLUS
+    SC_ANI_CONTINUE,
+#endif
+}SpecialClearAniIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     ushort spriteIndex;
+#if !RETRO_USE_PLUS
+    ushort continueFrames;
+#endif
     ushort sfx_ScoreAdd;
     ushort sfx_ScoreTotal;
     ushort sfx_Event;

@@ -5,6 +5,7 @@ ObjectTurboSpiker *TurboSpiker;
 // back in 3mixed, i was assigned this object
 // i was never able to get it properly working
 // here it is. :smirk2: -rmg
+// hello rmg, this is rdc. there were MULTIPLE easy to find/fix bugs here so don't u dare smirk
 
 void TurboSpiker_Update(void)
 {
@@ -19,8 +20,8 @@ void TurboSpiker_StaticUpdate(void) {}
 void TurboSpiker_Draw(void)
 {
     RSDK_THIS(TurboSpiker);
-    RSDK.DrawSprite(&entity->animator, 0, false);
-    RSDK.DrawSprite(&entity->spikeAnimator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&entity->spikeAnimator, NULL, false);
 }
 
 void TurboSpiker_Create(void *data)
@@ -35,8 +36,9 @@ void TurboSpiker_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
     entity->spawnDir      = entity->direction;
-    if (data)
+    if (data) {
         entity->active = ACTIVE_NORMAL;
+    }
     else {
         entity->unused_64 = 0x10;
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &entity->animator, true, 0);
@@ -65,23 +67,18 @@ void TurboSpiker_StageLoad(void)
     DEBUGMODE_ADD_OBJ(TurboSpiker);
 }
 
-void TurboSpiker_DebugDraw()
+void TurboSpiker_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void TurboSpiker_DebugSpawn() { CREATE_ENTITY(TurboSpiker, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
-
-void TurboSpiker_EditorDraw(void) { TurboSpiker_DebugDraw(); }
-
-void TurboSpiker_EditorLoad(void) { TurboSpiker_StageLoad(); }
-
-void TurboSpiker_Serialize(void)
+void TurboSpiker_DebugSpawn(void)
 {
-    RSDK_EDITABLE_VAR(TurboSpiker, VAR_ENUM, type);
-    RSDK_EDITABLE_VAR(TurboSpiker, VAR_UINT8, direction);
+    RSDK_THIS(TurboSpiker);
+    CREATE_ENTITY(TurboSpiker, NULL, entity->position.x, entity->position.y);
 }
+
 
 void TurboSpiker_Hermit_Collide(void)
 {
@@ -99,7 +96,7 @@ void TurboSpiker_Hermit_Collide(void)
 void TurboSpiker_Hermit_CheckOnScreen(void)
 {
     RSDK_THIS(TurboSpiker);
-    if (!RSDK.CheckOnScreen(entity, 0) && RSDK.CheckPosOnScreen(&entity->spawnPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->spawnPos, &entity->updateRange)) {
         entity->position.x = entity->spawnPos.x;
         entity->position.y = entity->spawnPos.y;
         if (entity->spike)
@@ -113,10 +110,10 @@ void TurboSpiker_Hermit_NextState(void)
 {
     RSDK_THIS(TurboSpiker);
     entity->position.x += entity->velocity.x;
-    if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8u) == false) {
+    if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &entity->animator, true, 0);
         entity->timer = 0;
-        if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000 * (entity->direction ? -1 : 1), 0x80000, 8u))
+        if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000 * (entity->direction ? -1 : 1), 0x80000, 8))
             entity->state = TurboSpiker_Hermit_Turn;
         else
             entity->state = TurboSpiker_Hermit_Move;
@@ -139,7 +136,7 @@ void TurboSpiker_Hermit_Create(void)
     spike->direction         = entity->direction;
     spike->drawOrder         = entity->drawOrder - 1;
     RSDK.SetSpriteAnimation(TurboSpiker->animID, 3, &spike->animator, true, 0);
-    spike->state  = (void (*)(void))TurboSpiker_Spike_Collide;
+    spike->state  = TurboSpiker_Spike_Collide;
     entity->spike = (Entity*)spike;
     if (!entity->type) {
         entity->timer      = 64;
@@ -244,7 +241,7 @@ void TurboSpiker_Hermit_AfterTurn(void)
     RSDK.ProcessAnimation(&entity->animator);
     if (entity->animator.frameID == entity->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &entity->animator, true, 0);
-        entity->direction ^= 1u;
+        entity->direction ^= 1;
         entity->velocity.x = -entity->velocity.x;
         if (entity->spike) {
             entity->spike->direction = entity->direction;
@@ -274,7 +271,7 @@ void TurboSpiker_Hermit_Move(void)
         entity->spike->position.x = entity->position.x;
         entity->spike->position.y = entity->position.y;
     }
-    if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8u) == true) {
+    if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
         entity->velocity.y = 0;
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &entity->animator, true, 0);
         entity->state = TurboSpiker_Hermit_Handle;
@@ -297,9 +294,9 @@ void TurboSpiker_Hermit_Fire(void)
             RSDK.PlaySFX(TurboSpiker->launchSFX, 0, 255);
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 4, &spike->spikeAnimator, true, 0);
             spike->direction  = entity->direction;
-            spike->velocity.x = 0x14000 * (entity->direction ? 1 : -1);
+            spike->velocity.x = 0x14000 * (entity->direction ? -1 : 1);
             spike->velocity.y = -0x30000;
-            spike->state      = (void (*)(void))TurboSpiker_Spike_Fly;
+            spike->state      = TurboSpiker_Spike_Fly;
             entity->spike     = NULL;
         }
         entity->velocity.x = 0x20000 * (entity->direction ? 1 : -1);
@@ -345,6 +342,18 @@ void TurboSpiker_Spike_Fly(void)
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     TurboSpiker_Spike_Collide();
+
+    if (!(Zone->timer & 3)) {
+        EntityTurboSpiker *ember =
+            CREATE_ENTITY(TurboSpiker, intToVoid(1), (RSDK.Rand(-4, 4) << 16) + entity->position.x, (RSDK.Rand(-2, 3) << 16) + entity->position.y);
+        ember->direction         = entity->direction;
+        ember->drawOrder         = entity->drawOrder + 1;
+        RSDK.SetSpriteAnimation(TurboSpiker->animID, 6, &ember->animator, true, 0);
+        ember->state = TurboSpiker_Ember_Animate;
+    }
+    RSDK.ProcessAnimation(&entity->animator);
+    if (!RSDK.CheckOnScreen(entity, NULL))
+        destroyEntity(entity);
 }
 
 void TurboSpiker_Ember_Animate(void)
@@ -353,4 +362,14 @@ void TurboSpiker_Ember_Animate(void)
     RSDK.ProcessAnimation(&entity->animator);
     if (entity->animator.frameCount - 1 == entity->animator.frameID)
         destroyEntity(entity);
+}
+
+void TurboSpiker_EditorDraw(void) { TurboSpiker_DebugDraw(); }
+
+void TurboSpiker_EditorLoad(void) { TurboSpiker_StageLoad(); }
+
+void TurboSpiker_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(TurboSpiker, VAR_ENUM, type);
+    RSDK_EDITABLE_VAR(TurboSpiker, VAR_UINT8, direction);
 }

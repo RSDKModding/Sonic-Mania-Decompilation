@@ -6397,13 +6397,13 @@ void Player_ProcessP1Input(void)
 
             // if (!LottoMachine || !((1 << entity->playerID) & LottoMachine->activePlayers)) {
 #if RETRO_USE_PLUS
-            if (RSDK_sku->platform == PLATFORM_DEV && controller->keyZ.press) {
+            if (sku_platform == PLATFORM_DEV && controller->keyZ.press) {
                 Zone->swapGameMode = true;
                 RSDK.PlaySFX(Player->sfx_Transform2, 0, 0xFE);
                 Zone_StartFadeOut(64, 0xF0F0F0);
             }
             // TEMP!! I SOULD REMOVE THIS!!!
-            else if (RSDK_sku->platform == PLATFORM_DEV && controller->keySelect.press) {
+            else if (sku_platform == PLATFORM_DEV && controller->keySelect.press) {
                 entity->characterID <<= 1;
                 if (entity->characterID > ID_RAY)
                     entity->characterID = 1;

@@ -14,7 +14,7 @@ void UILeaderboard_Update(void)
         entity->timer2 -= 192;
 
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    if (entity->state == UILeaderboard_State_Unknown3 && (parent->activeEntityID != entity->frameID || parent->state != UIControl_ProcessInputs)) {
+    if (entity->state == UILeaderboard_State_Unknown3 && (parent->activeEntityID != entity->zoneID || parent->state != UIControl_ProcessInputs)) {
         entity->flag  = false;
         entity->state = UILeaderboard_State_Unknown2;
     }
@@ -64,22 +64,22 @@ void UILeaderboard_StageLoad(void) { UILeaderboard->aniFrames = RSDK.LoadSpriteA
 void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
 {
     RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 12, &entity->animator6, true, 0);
-    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 13, &entity->animator3, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 13, &entity->animator3, true, entity->zoneID);
 
     int frame = 0;
-    if (entity->frameID2 <= 1)
+    if (entity->playerID <= 1)
         frame = 0;
     else
-        frame = entity->frameID2 - 1;
+        frame = entity->playerID - 1;
     RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 1, &entity->animator7, true, frame);
     RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 2, &entity->animator8, true, frame);
 
-    if (entity->frameID2 <= 1)
+    if (entity->playerID <= 1)
         frame = 5;
     else
-        frame = entity->frameID2 + 4;
+        frame = entity->playerID + 4;
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator9, true, frame);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator10, true, entity->frameID3 + 3);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator10, true, entity->actID + 3);
     RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator5, true, 0);
     UILeaderboard_LoadEntries(entity);
 }
@@ -89,7 +89,7 @@ void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
 {
     int count = APICallback_LeaderboardEntryCount();
     leaderboard->entryLength = count;
-    if (leaderboard->entryUnknown && count >= 1) {
+    if (leaderboard->entryIsUser && count >= 1) {
         int i = 0;
         for (; i < leaderboard->entryLength; ++i) {
             bool32 isUser = API_ReadLeaderboardEntry(i)->isUser;
@@ -109,6 +109,25 @@ void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
     }
     UILeaderboard_SetupEntrySprites(leaderboard);
 }
+
+
+void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, byte player, byte zone, byte act)
+{
+    leaderboard->timer       = 0;
+    leaderboard->entryOffset = 0;
+
+    leaderboard->entryLength = APICallback_LeaderboardEntryCount();
+    leaderboard->playerID    = player;
+    leaderboard->zoneID      = zone;
+    leaderboard->actID       = act;
+    RSDK.CopyPalette((zone >> 3) + 1, 32 * zone, 0, 224, 32);
+    UILeaderboard_SetupEntrySprites(leaderboard);
+    Localization_GetZoneName(&leaderboard->field_1E0, zone);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &leaderboard->animator4, true, 0);
+    if (!RSDK_sceneInfo->inEditor)
+        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &leaderboard->field_1E0);
+}
+
 #endif
 
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
@@ -295,7 +314,7 @@ void UILeaderboard_Unknown3(void)
         entity->drawFX    = FX_NONE;
     }
     else {
-        SpriteFrame *frame = RSDK.GetFrame(UILeaderboard->aniFrames, 13, entity->frameID);
+        SpriteFrame *frame = RSDK.GetFrame(UILeaderboard->aniFrames, 13, entity->zoneID);
         frame->pivotX      = -33;
         frame->width       = 66;
         frame->sprX        = entity->timer;

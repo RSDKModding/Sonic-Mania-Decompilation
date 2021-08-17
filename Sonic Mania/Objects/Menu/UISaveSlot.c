@@ -539,9 +539,11 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
 
         drawPos.x = positions[i].x;
         drawPos.y = positions[i].y;
-        if (i
+        if (
 #if RETRO_USE_PLUS
-            || !entity->encoreMode
+            i || !entity->encoreMode
+#else
+            true
 #endif
         ) {
             entity->animator1.frameID = 3;

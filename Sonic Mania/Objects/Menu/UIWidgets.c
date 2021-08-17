@@ -76,40 +76,33 @@ void UIWidgets_ApplyLanguage(void)
     }
 }
 
-void UIWidgets_Unknown2(int a1, int a2, int a3, int a4)
+void UIWidgets_Unknown2(int height, int width, int x, int y)
 {
-    int v4 = a1 << 16;
-    int v5 = a2 << 16;
-    int v6 = a1 << 16 >> 1;
-    int v7 = a2 << 16 >> 1;
-    RSDK.DrawRect(a3 - v7, a4 - v6, a2 << 16, 0x30000, 0, 255, 0, 0);
-    RSDK.DrawRect(a3 - v7, a4 - v6, 0x30000, v4, 0, 255, 0, 0);
-    RSDK.DrawRect(a3 - v7, v6 + a4 - 0x30000, v5, 0x30000, 0, 255, 0, 0);
-    RSDK.DrawRect(v7 - 0x30000 + a3, a4 - v6, 0x30000, v4, 0, 255, 0, 0);
+    int w = width << 16 >> 1;
+    int h = height << 16 >> 1;
+    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, 0x000000, 255, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 255, INK_NONE, false);
+    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, 0x000000, 255, INK_NONE, false);
+    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 255, INK_NONE, false);
 }
-void UIWidgets_Unknown3(int a1, int a2, int a3, int a4)
+void UIWidgets_Unknown3(int height, int width, int x, int y)
 {
-    int v4 = a2 << 16;
-    int v5 = a1 << 16;
-    int v6 = v4 - 0x60000;
-    int v7 = a1 << 16 >> 1;
-    int v8 = v4 >> 1;
-    RSDK.DrawRect(a3 - (v4 >> 1) + 0x30000, a4 - v7, v4 - 0x60000, 0x30000, 0, 255, INK_BLEND, 0);
-    RSDK.DrawRect(a3 - v8, a4 - v7, 0x30000, v5, 0, 255, INK_BLEND, 0);
-    RSDK.DrawRect(a3 - v8 + 0x30000, v7 + a4 - 0x30000, v6, 0x30000, 0, 255, INK_BLEND, 0);
-    RSDK.DrawRect(v8 - 0x30000 + a3, a4 - v7, 0x30000, v5, 0, 255, INK_BLEND, 0);
+    int w = width << 16 >> 1;
+    int h = height << 16 >> 1;
+    RSDK.DrawRect(x - w + 0x30000, y - h, (width << 16) - 0x60000, 0x30000, 0x000000, 255, INK_BLEND, false);
+    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 255, INK_BLEND, false);
+    RSDK.DrawRect(x - w + 0x30000, h + y - 0x30000, (width << 16) - 0x60000, 0x30000, 0x000000, 255, INK_BLEND, false);
+    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 255, INK_BLEND, false);
 }
-void UIWidgets_Unknown4(int a1, int a2, int a3, int a4)
+void UIWidgets_Unknown4(int height, int width, int x, int y)
 {
-    int v4    = a1 << 16;
-    int v5    = a1 << 16 >> 1;
-    int v6    = a2 << 16;
-    int v7    = a2 << 16 >> 1;
-    colour v8 = RSDK.GetPaletteEntry(3, (UIWidgets->arrayIndex >> 1) & 0xF);
-    RSDK.DrawRect(a3 - v7, a4 - v5, v6, 0x30000, v8, 255, 0, 0);
-    RSDK.DrawRect(a3 - v7, a4 - v5, 0x30000, v4, v8, 255, 0, 0);
-    RSDK.DrawRect(a3 - v7, v5 + a4 - 0x30000, v6, 0x30000, v8, 255, 0, 0);
-    RSDK.DrawRect(v7 - 0x30000 + a3, a4 - v5, 0x30000, v4, v8, 255, 0, 0);
+    int w    = width << 16 >> 1;
+    int h    = height << 16 >> 1;
+    colour colour = RSDK.GetPaletteEntry(3, (UIWidgets->arrayIndex >> 1) & 0xF);
+    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, colour, 255, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
+    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, colour, 255, INK_NONE, false);
+    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
 }
 void UIWidgets_Unknown5(int red, int a2, int green, int blue, int x, int y)
 {
@@ -224,9 +217,9 @@ void UIWidgets_Unknown7(int a1, int a2, int a3, int red, int green, int blue, in
     if (RSDK_sceneInfo->inEditor) {
         colour clr = blue | (green << 8) | (red << 16);
         RSDK.DrawLine(v8, Y1, v9, verts[1].y, clr, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 255, 0, 0);
-        RSDK.DrawLine(verts[2].x, verts[2].y, verts[3].x, verts[3].y, clr, 255, 0, 0);
-        RSDK.DrawLine(verts[3].x, verts[3].y, verts[0].x, verts[0].y, clr, 255, 0, 0);
+        RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 255, INK_NONE, false);
+        RSDK.DrawLine(verts[2].x, verts[2].y, verts[3].x, verts[3].y, clr, 255, INK_NONE, false);
+        RSDK.DrawLine(verts[3].x, verts[3].y, verts[0].x, verts[0].y, clr, 255, INK_NONE, false);
     }
     else {
         int sx = RSDK_screens->position.x << 16;
@@ -250,10 +243,10 @@ void UIWidgets_Unknown8(int a1, int x, int y)
     drawPos.y                    = y;
     UIWidgets->animator2.frameID = 2;
     drawPos.y -= a1 << 15;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
     UIWidgets->animator2.frameID = 3;
     drawPos.y += a1 << 16;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
 }
 void UIWidgets_Unknown9(int a1, int x, int y)
 {
@@ -263,10 +256,10 @@ void UIWidgets_Unknown9(int a1, int x, int y)
     drawPos.y                    = y;
     UIWidgets->animator2.frameID = 0;
     drawPos.x -= a1 >> 1;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
     UIWidgets->animator2.frameID = 1;
     drawPos.x += a1;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, 0);
+    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
 }
 Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int drawX, int drawY)
 {
@@ -294,7 +287,7 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
     drawPos.y = y + 0x20000;
 
     RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &animator2, true, 9);
-    RSDK.DrawSprite(&animator2, &drawPos, 0);
+    RSDK.DrawSprite(&animator2, &drawPos, false);
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
     if (minutes) {
@@ -316,7 +309,7 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
         if (!strBuf[i])
             break;
         RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 8, &animator, true, (byte)(strBuf[i] - '0'));
-        RSDK.DrawSprite(&animator, &drawPos, 0);
+        RSDK.DrawSprite(&animator, &drawPos, false);
         drawPos.x += 0x80000;
     }
 }

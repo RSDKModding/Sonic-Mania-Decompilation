@@ -27,11 +27,7 @@ void LogoSetup_Create(void *data)
         entity->visible   = true;
         entity->drawOrder = 12;
         entity->stateDraw = LogoSetup_Unknown4;
-#if RETRO_USE_PLUS
-        if (RSDK_sku->region == REGION_JP)
-#else
-        if (RSDK_info->region == REGION_JP)
-#endif
+        if (sku_region == REGION_JP)
             entity->state = LogoSetup_CESAScreen;
         else
             entity->state = LogoSetup_SegaScreen;

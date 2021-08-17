@@ -20,16 +20,17 @@ typedef struct {
     int times[5];
     int ranks[5];
     int isUser[5];
-    byte frameID2;
-    byte frameID;
-    byte frameID3;
+    byte playerID;
+    byte zoneID;
+    byte actID;
     int timer2;
     byte editorFlip;
     bool32 field_1CC;
     int entryOffset;
     int entryLength;
 #if !RETRO_USE_PLUS
-    int entryUnknown;
+    int entryIsUser;
+    int taRecord;
 #endif
     int field_1D8;
     StateMachine(yPressCB);
@@ -67,6 +68,7 @@ void UILeaderboard_Serialize(void);
 void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity);
 #if !RETRO_USE_PLUS 
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard);
+void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, byte player, byte zone, byte act);
 #endif
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity);
 

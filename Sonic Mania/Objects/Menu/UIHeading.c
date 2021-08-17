@@ -9,8 +9,6 @@ void UIHeading_Update(void)
         RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, entity->headingID, &entity->animator, true, 0);
         entity->textSpriteIndex = UIHeading->textSpriteIndex;
     }
-    if (entity->state)
-        printf("");
     StateMachine_Run(entity->state);
 }
 
@@ -29,8 +27,7 @@ void UIHeading_Create(void *data)
 {
     RSDK_THIS(UIHeading);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->startPos.x    = entity->position.x;
-        entity->startPos.y    = entity->position.y;
+        entity->startPos      = entity->position;
         entity->visible       = true;
         entity->drawOrder     = 2;
         entity->active        = ACTIVE_BOUNDS;

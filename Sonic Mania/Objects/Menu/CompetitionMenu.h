@@ -3,6 +3,7 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -71,5 +72,6 @@ void CompetitionMenu_ExitComp_YesCB(void);
 bool32 CompetitionMenu_Unknown29(void);
 bool32 CompetitionMenu_Unknown30(void);
 void CompetitionMenu_GotoPuyoVS(void);
+#endif
 
 #endif //!OBJ_COMPETITIONMENU_H

@@ -80,11 +80,7 @@ void HCZSetup_StaticUpdate(void)
             ushort tile =
                 RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
             if (((tile >= 226 && tile <= 224) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
-                if (player->state != Player_State_BubbleBounce
-#if RETRO_USE_PLUS
-                    && player->state != Player_State_MightyHammerDrop
-#endif
-                ) {
+                if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {
                     if (player->onGround) {
                         if (player->state != Player_State_WaterSlide) {
                             player->interaction    = true;
@@ -98,11 +94,9 @@ void HCZSetup_StaticUpdate(void)
                             ++HCZSetup->activePlayerCount;
                         }
                     }
-#if RETRO_USE_PLUS
                     else if (player->playerAnimator.animationID == ANI_FLUME) {
                         ++HCZSetup->activePlayerCount;
                     }
-#endif
                 }
             }
         }
@@ -203,10 +197,8 @@ void HCZSetup_StageLoad(void)
             PlayerHelpers_CheckPlayerPos(0x5900000, 0xB00000, 0x2600000, 0x6800000);
         Zone->screenBoundsL1[0] = 168;
         Zone->screenBoundsL1[1] = 168;
-#if RETRO_USE_PLUS
         Zone->screenBoundsL1[2] = 168;
         Zone->screenBoundsL1[3] = 168;
-#endif
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
             Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
         }

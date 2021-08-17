@@ -87,11 +87,7 @@ void Options_LoadCallback(int success)
 
 void Options_LoadOptionsBin(void)
 {
-#if RETRO_USE_PLUS
-    if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
-#else
-    if (RSDK_info->platform && RSDK_info->platform != PLATFORM_DEV) {
-#endif
+    if (sku_platform && sku_platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Localization->loaded = 0;
@@ -119,11 +115,7 @@ void Options_LoadOptionsBin(void)
 void Options_SaveOptionsBin(void (*callback)(int))
 {
     if (Options->state) {
-#if RETRO_USE_PLUS
-        if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
-#else
-        if (RSDK_info->platform && RSDK_info->platform != PLATFORM_DEV) {
-#endif
+        if (sku_platform && sku_platform != PLATFORM_DEV) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = RSDK_sceneInfo->entity;
                 Options->saveCallback  = callback;
@@ -141,7 +133,11 @@ void Options_SaveOptionsBin(void (*callback)(int))
             return;
         }
         else {
+#if RETRO_USE_PLUS
             RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+#else
+            APICallback_SaveSettingsINI();
+#endif
             Options_Reload();
         }
     }
@@ -160,11 +156,8 @@ void Options_SetLanguage(int language)
         options->language         = -1;
         options->overrideLanguage = false;
     }
-#if RETRO_USE_PLUS
-    if (RSDK_sku->platform == PLATFORM_PC || RSDK_sku->platform == PLATFORM_DEV)
-#else
-    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV)
-#endif
+
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
         RSDK.SetSettingsValue(SETTINGS_LANGUAGE, language);
     Options->state = 1;
 }
@@ -175,11 +168,7 @@ void Options_Unknown1(EntityOptions *options)
         Localization->language = options->language;
     }
     else {
-#if RETRO_USE_PLUS
-        options->language = RSDK_sku->language;
-#else
-        options->language = RSDK_info->language;
-#endif
+        options->language = sku_language;
     }
 
     if (!options->field_60) {

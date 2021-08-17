@@ -426,8 +426,8 @@ void Water_State_Palette(void)
             int waterID = 0;
 #if RETRO_USE_PLUS
             if (!player->isGhost)
-                waterID = underwater;
 #endif
+                waterID = underwater;
             if (!waterID) {
                 if (player->underwater) {
                     EntityWater *childPtr = NULL;

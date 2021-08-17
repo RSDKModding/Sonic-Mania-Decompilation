@@ -45,7 +45,7 @@ void DialogRunner_StageLoad(void)
     TimeAttackData->rank     = 0;
     TimeAttackData->dword1C  = 0;
     Options->state           = 0;
-    if (RSDK_sku->platform && RSDK_sku->platform != PLATFORM_DEV) {
+    if (sku_platform && sku_platform != PLATFORM_DEV) {
         EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
         options->vSync           = false;
         options->windowed        = false;
@@ -123,11 +123,11 @@ void DialogRunner_PromptSavePreference_CB(void)
             switch (entity->status) {
                 case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
-                    if (RSDK_sku->platform != PLATFORM_XB1)
+                    if (sku_platform != PLATFORM_XB1)
                         stringID = STR_SAVELOADFAIL;
                     break;
                 case STATUS_CORRUPT: stringID = STR_CORRUPTSAVE; break;
-                case STATUS_NOSPACE: stringID = (RSDK_sku->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
+                case STATUS_NOSPACE: stringID = (sku_platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
             }
             Localization_GetString(&info, stringID);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);

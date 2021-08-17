@@ -4,6 +4,10 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+#define sku_platform RSDK_sku->platform
+#define sku_language RSDK_sku->language
+#define sku_region   RSDK_sku->region
+
 #define API_GetConfirmButtonFlip         API.GetConfirmButtonFlip
 #define API_UnlockAchievement            API.UnlockAchievement
 #define API_SetRichPresence              API.SetRichPresence
@@ -19,6 +23,10 @@
 #define API_GetUsername                  API.GetUsername
 #define API_ReadLeaderboardEntry         API.ReadLeaderboardEntry
 #else
+#define sku_platform RSDK_info->platform
+#define sku_language RSDK_info->language
+#define sku_region   RSDK_info->region
+
 #define API_GetConfirmButtonFlip         APICallback_GetConfirmButtonFlip
 #define API_UnlockAchievement            APICallback_UnlockAchievement
 #define API_SetRichPresence              APICallback_SetRichPresence
@@ -47,7 +55,8 @@ typedef struct {
     int(*SetRichPresence)(int, TextInfo *);
     int (*LoadUserFile)(const char *, void *, size_t, void(*)(int));
     int (*SaveUserFile)(const char *, void *, size_t, void(*)(int));
-    void *GetUserLanguage;
+    void (*SaveSettingsINI)(void);
+    int (*GetUserLanguage)(void);
     int (*GetConfirmButtonFlip)(void);
     int(*FetchLeaderboard)(byte, byte, int, int, int, int);
     int (*LeaderboardStatus)(void);
@@ -131,6 +140,7 @@ void APICallback_SetNoSaveEnabled(void);
 void APICallback_SetNoSaveDisabled(void);
 void APICallback_SaveUserFile(const char *name, void *buffer, int size, void (*callback)(int));
 void APICallback_SaveCB(void);
+void APICallback_SaveSettingsINI();
 LeaderboardEntry *APICallback_ReadLeaderboardEntry(int rankID);
 void APICallback_NotifyAutoSave_OK(void);
 void APICallback_NotifyAutoSave_CB(void);

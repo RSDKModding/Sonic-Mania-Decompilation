@@ -97,6 +97,7 @@ int MenuSetup_GetActiveMenu(void);
 void MenuSetup_ChangeMenuTrack(void);
 void MenuSetup_SetBGColours(void);
 void MenuSetup_ChangeMenu(void);
+void MenuSetup_StartTransitionLB(void (*callback)(void), int time);
 
 //Main Menu
 bool32 MenuSetup_ReturnToTitleOption(void);
@@ -130,9 +131,47 @@ void MenuSetup_Leaderboard_Unknown(void);
 //Comptetition
 void MenuSetup_VS_OpenCompRules(void);
 void MenuSetup_VS_OpenCompZones(void);
+void MenuSetup_VS_Unknown50(void);
+void MenuSetup_VS_Unknown51(void);
+void MenuSetup_VS_StartMatch(void);
+void MenuSetup_VS_StartMatch_CB(void);
+void MenuSetup_VS_Unknown52(void);
+void MenuSetup_VS_OpenCompTotal(void);
+void MenuSetup_VS_Unknown53(void);
+void MenuSetup_VS_Unknown54(void);
+void MenuSetup_VS_OpenCompetition(void);
+void MenuSetup_VS_Unknown55(void);
+void MenuSetup_VS_Unknown56(void);
+void MenuSetup_VS_Unknown57(void);
+void MenuSetup_VS_Unknown58(void);
+void MenuSetup_VS_BackoutFromVsCharSelect_CB(void);
+bool32 MenuSetup_VS_BackoutFromVsCharSelect(void);
+void MenuSetup_VS_Unknown59(void);
+bool32 MenuSetup_VS_Unknown60(void);
+void MenuSetup_VS_StartPuyoMatch(void);
 
-//Options
+// Options
+void MenuSetup_Options_Unknown19(void);
+void MenuSetup_Options_Unknown16(void);
+void MenuSetup_Options_Unknown17(void);
+void MenuSetup_Options_Unknown21(void);
+void MenuSetup_Options_Unknown22_P1(void);
+void MenuSetup_Options_Unknown22_P2(void);
+void MenuSetup_Options_Unknown51(int id);
+void MenuSetup_Unknown53(void);
+void MenuSetup_Unknown54(void);
+void MenuSetup_Options_Unknown24(void);
+void MenuSetup_Options_Unknown25(void);
+void MenuSetup_Options_Unknown27(int ststaus);
 void MenuSetup_Options_LaunchManual(void);
+void MenuSetup_Options_Unknown52(void);
+void MenuSetup_Options_Unknown53(void);
+void MenuSetup_Options_Unknown54(void);
+void MenuSetup_Options_Unknown55(void);
+void MenuSetup_Options_Unknown56(void);
+void MenuSetup_Options_Unknown57(void);
+void MenuSetup_Options_Unknown58(void);
+void MenuSetup_Options_Unknown59(void);
 
 //Extras
 void MenuSetup_OpenExtrasMenu(void);
