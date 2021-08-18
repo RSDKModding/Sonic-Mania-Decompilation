@@ -250,11 +250,11 @@ struct RetroEngine {
     bool32 showPaletteOverlay = false;
     bool32 drawLayerVisible[DRAWLAYER_COUNT];
 
-    bool32 isFullScreen = false;
+    bool32 isWindowed = false;
 
     bool32 windowActive    = false;
     bool32 startFullScreen = false;
-    bool32 borderless      = false;
+    bool32 hasBorder      = false;
     bool32 exclusiveFS     = false;
     bool32 vsync           = false;
     bool32 tripleBuffer    = false;
