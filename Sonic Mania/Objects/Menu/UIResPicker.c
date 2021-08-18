@@ -137,7 +137,11 @@ void UIResPicker_ApplySettings(void)
         RSDK.SetSettingsValue(SETTINGS_REFRESHRATE, 60);
     else
         RSDK.SetSettingsValue(SETTINGS_REFRESHRATE, entity->displayRefreshRate);
+#if RETRO_USE_PLUS
     RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+#else
+    RSDK.UpdateWindow();
+#endif
 }
 
 void UIResPicker_ProcessButtonCB(void)

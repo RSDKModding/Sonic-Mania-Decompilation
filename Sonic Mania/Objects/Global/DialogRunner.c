@@ -218,11 +218,11 @@ void DialogRunner_CheckUserAuth_CB(int a1, int a2)
 void DialogRunner_ManageNotifs(int a1)
 {
     RSDK_THIS(DialogRunner);
-    if (SaveGame_CountUnreadNotifs()) {
+    if (GameProgress_CountUnreadNotifs()) {
         TextInfo info;
         INIT_TEXTINFO(info);
         if (!UIDialog->activeDialog) {
-            int str = SaveGame_GetNotifStringID(SaveGame_GetNextNotif());
+            int str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B4       = 1;
@@ -234,7 +234,7 @@ void DialogRunner_ManageNotifs(int a1)
     else {
         DialogRunner->entityPtr = NULL;
         UIWaitSpinner_Wait();
-        SaveGame_TrackGameProgress(DialogRunner_Wait);
+        GameProgress_TrackGameProgress(DialogRunner_Wait);
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
 }
@@ -246,14 +246,15 @@ void DialogRunner_GetNextNotif(void)
         return;
     }
     else {
-        int id             = SaveGame_GetNextNotif();
+        EntityGameProgress *progress = GameProgress_GetGameProgress();
+        int id             = GameProgress_GetNextNotif();
         if (id >= 0)
-            globals->saveRAM[0x935 + id] = true;
+            progress->unreadNotifs[id] = true;
     }
 }
 bool32 DialogRunner_CheckUnreadNotifs(void)
 {
-    if (!SaveGame_CountUnreadNotifs())
+    if (!GameProgress_CountUnreadNotifs())
         return false;
     if (!DialogRunner->entityPtr)
         DialogRunner->entityPtr = CREATE_ENTITY(DialogRunner, DialogRunner_ManageNotifs, 0, 0);

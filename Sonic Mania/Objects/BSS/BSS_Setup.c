@@ -217,12 +217,13 @@ void BSS_Setup_StageLoad(void)
     }
 }
 
-int BSS_Setup_ReloadScene(void)
+int BSS_Setup_GetStageID(void)
 {
     int pos = RSDK_sceneInfo->listPos;
     RSDK.SetScene("Blue Spheres", "");
+    int id                  = (pos - RSDK_sceneInfo->listPos) % 32;
     RSDK_sceneInfo->listPos = pos;
-    return (pos - RSDK_sceneInfo->listPos) % 32;
+    return id;
 }
 
 void BSS_Setup_SetupPalette(void)
@@ -436,7 +437,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_ProcessChain();
                 --BSS_Setup->sphereCount;
                 if (!entity->ringLoopFlag) {
-                    RSDK.CreateEntity(BSS_Collected->objectID, (void *)1, entity->playerPos.x, entity->playerPos.y);
+                    CREATE_ENTITY(BSS_Collected, (void *)1, entity->playerPos.x, entity->playerPos.y);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
 
@@ -484,7 +485,7 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_SPHERE_YELLOW:
             if (entity->globeTimer < 128) {
-                EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
+                EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
                 RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerAnimator, 0, 0);
@@ -497,7 +498,7 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_SPHERE_GREEN:
             if (entity->globeTimer > 128) {
-                RSDK.CreateEntity(BSS_Collected->objectID, (void *)3, entity->playerPos.x, entity->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, (void *)3, entity->playerPos.x, entity->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
                 RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
             }
@@ -516,7 +517,7 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_RING:
             if (entity->globeTimer < 128) {
-                RSDK.CreateEntity(BSS_Collected->objectID, 0, entity->playerPos.x, entity->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, 0, entity->playerPos.x, entity->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_RING_SPARKLE;
                 BSS_Setup_CollectRing();
             }
@@ -536,7 +537,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_ProcessChain();
                 --BSS_Setup->sphereCount;
                 if (!entity->ringLoopFlag) {
-                    RSDK.CreateEntity(BSS_Collected->objectID, (void *)1, posX, posY);
+                    CREATE_ENTITY(BSS_Collected, (void *)1, posX, posY);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
                 if (BSS_Setup->sphereCount <= 0) {
@@ -590,7 +591,7 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_SPHERE_YELLOW:
             if (entity->globeTimer > 128) {
-                EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
+                EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
                 RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerAnimator, 0, 0);
@@ -603,14 +604,14 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_SPHERE_GREEN:
             if (entity->globeTimer > 128) {
-                RSDK.CreateEntity(BSS_Collected->objectID, (void *)3, posX, posY);
+                CREATE_ENTITY(BSS_Collected, intToVoid(3), posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
                 RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
             }
             break;
         case BSS_RING:
             if (entity->globeTimer > 128) {
-                RSDK.CreateEntity(BSS_Collected->objectID, 0, posX, posY);
+                CREATE_ENTITY(BSS_Collected, 0, posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_RING_SPARKLE;
                 BSS_Setup_CollectRing();
             }
@@ -622,31 +623,19 @@ void BSS_Setup_HandleSteppedObjects(void)
             if (entity->globeTimer > 240) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
                 if (!param->field_59 && globals->gameMode < MODE_TIMEATTACK) {
-                    int pos = BSS_Setup_ReloadScene();
+                    int pos = BSS_Setup_GetStageID();
                     if (pos >= 0) {
-                        int *saveRAM = SaveGame_GetGlobalData();
-                        if (saveRAM) {
-                            byte medalType = 0;
-                            if (fieldData == BSS_MEDAL_SILVER) {
-                                medalType = 1;
-                            }
-                            else if (fieldData == BSS_MEDAL_GOLD) {
-                                medalType = 2;
-                            }
-                            if (medalType)
-                                SaveGame_GetMedal(pos, medalType);
+                        EntityGameProgress *progress = GameProgress_GetGameProgress();
+                        if (progress) {
+                            byte medal = fieldData == BSS_MEDAL_SILVER ? 1 : fieldData == BSS_MEDAL_GOLD ? 2 : 0;
 
-#if RETRO_USE_PLUS
-                            if (saveRAM[30] && saveRAM[71] == 0x1F)
-                                API.UnlockAchievement("ACH_GOLD_MEDAL");
-                            if (saveRAM[31] && saveRAM[72] == 0x1F)
-                                API.UnlockAchievement("ACH_SILVER_MEDAL");
-#else
-                            if (saveRAM[30] && saveRAM[71] == 0x1F)
-                                APICallback_UnlockAchievement("ACH_GOLD_MEDAL");
-                            if (saveRAM[31] && saveRAM[72] == 0x1F)
-                                APICallback_UnlockAchievement("ACH_SILVER_MEDAL");
-#endif
+                            if (medal)
+                                GameProgress_GiveMedal(pos, medal);
+
+                            if (progress->allGoldMedals && progress->goldMedalCount == 31)
+                                API_UnlockAchievement("ACH_GOLD_MEDAL");
+                            if (progress->allSilverMedals && progress->silverMedalCount == 31)
+                                API_UnlockAchievement("ACH_SILVER_MEDAL");
                         }
                     }
                 }
@@ -845,7 +834,7 @@ void BSS_Setup_State_PinkSphereWarp(void)
         }
 
         entity->angle = val << 6;
-        RSDK.CreateEntity(BSS_Collected->objectID, (void *)5, entity->playerPos.x, entity->playerPos.y);
+        CREATE_ENTITY(BSS_Collected, (void *)5, entity->playerPos.x, entity->playerPos.y);
         BSS_Setup->playField[entity->playerPos.y + (BSS_PLAYFIELD_H * entity->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
         entity->timer                                                                       = 100;
         entity->state                                                                       = BSS_Setup_State_Unknown23;
@@ -1064,7 +1053,7 @@ void BSS_Setup_State_Unknown23(void)
 {
     RSDK_THIS(BSS_Setup);
 
-    EntityBSS_Player *player = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     if (entity->alpha <= 0) {
         if (player->up) {
             entity->timer = 1;
@@ -1083,7 +1072,7 @@ void BSS_Setup_State_Unknown23(void)
     if (!--entity->timer) {
         entity->state = BSS_Setup_State_HandleStage;
 
-        EntityBSS_Player *player1 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER1);
+        EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         if (player1->onGround)
             RSDK.SetSpriteAnimation(player1->spriteIndex, 1, &player1->playerAnimator, 0, 0);
 

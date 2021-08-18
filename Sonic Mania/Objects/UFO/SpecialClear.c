@@ -655,7 +655,7 @@ void SpecialClear_Unknown15(void)
         if (globals->gameMode < MODE_TIMEATTACK && globals->saveSlotID != NO_SAVE_SLOT) {
             entity->field_120 = 1;
             UIWaitSpinner_Wait();
-            SaveGame_TrackGameProgress(SpecialClear_SaveCB);
+            GameProgress_TrackGameProgress(SpecialClear_SaveCB);
         }
     }
     else {

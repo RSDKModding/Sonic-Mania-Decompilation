@@ -14,6 +14,31 @@ enum ControllerIDs {
     CONT_P4         = 4,
 };
 
+enum InputDeviceTypes {
+    DEVICE_TYPE_UNKNOWN    = 0,
+    DEVICE_TYPE_KEYBOARD   = 1,
+    DEVICE_TYPE_CONTROLLER = 2,
+};
+
+enum InputDeviceIDs {
+    DEVICE_KEYBOARD        = 0,
+    DEVICE_XBOX            = 1,
+    DEVICE_PS4             = 2,
+    DEVICE_SATURN          = 3,
+    DEVICE_SWITCH          = 4,
+    DEVICE_SWITCH_PRO      = 5,
+    DEVICE_SWITCH_JOY_L    = 6,
+    DEVICE_SWITCH_JOY_R    = 7,
+    DEVICE_SWITCH_JOY_GRIP = 8,
+};
+
+enum InputDeviceFlags {
+    DEVICE_FLAG_UNKNOWN1    = 1,
+    DEVICE_FLAG_UNKNOWN2    = 2,
+    DEVICE_FLAG_UNKNOWN3    = 3,
+    DEVICE_FLAG_UNKNOWN4    = 4,
+};
+
 enum ControllerKeys {
     KEY_UP,
     KEY_DOWN,
@@ -29,8 +54,6 @@ enum ControllerKeys {
     KEY_SELECT,
     KEY_MAX,
 };
-
-
 
 enum WinMappings {
     VK_LBUTTON                         = 0x01,
@@ -394,7 +417,7 @@ inline InputDevice *controllerInit(byte controllerID)
     GenerateCRC(&id, buffer);
     device->active       = true;
     device->field_F      = false;
-    device->gamePadType  = (2 << 16) | (2 << 8) | (1 << 0);
+    device->gamePadType  = (DEVICE_FLAG_UNKNOWN2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_XBOX << 0);
     device->inputID      = id;
     device->updateInput  = UpdateDeviceInput;
     device->processInput = ProcessDeviceInput;

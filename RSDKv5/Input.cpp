@@ -512,7 +512,7 @@ InputDevice *InitKeyboardDevice(uint id)
         return NULL;
 
     InputDeviceCount++;
-    device->gamePadType = (1 << 16) | (1 << 8);
+    device->gamePadType = (DEVICE_FLAG_UNKNOWN1 << 16) | (DEVICE_TYPE_KEYBOARD << 8) | (DEVICE_KEYBOARD << 0);
     device->field_F     = 0;
     device->inputID     = id;
     device->active      = true;
@@ -546,7 +546,8 @@ void StartupKeyboardInput()
 
 void InitInputDevice()
 {
-    if (activeInputDevices[0]) return;
+    if (activeInputDevices[0])
+        return;
     char buffer[0x100];
 #if RETRO_USING_SDL2
     // Support for extra controller types SDL doesn't recognise
@@ -576,6 +577,11 @@ void InitInputDevice()
     }
 
     StartupKeyboardInput();
+
+    for (int c = 0; c < gamePadCount; ++c) {
+        //printLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[c].name, gamePadMappings[c].vendorID,
+        //         gamePadMappings[c].productID);
+    }
 }
 
 void ProcessInput()

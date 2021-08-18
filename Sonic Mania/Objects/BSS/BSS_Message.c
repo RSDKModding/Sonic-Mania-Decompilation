@@ -147,7 +147,7 @@ void BSS_Message_State_Finish(void)
     RSDK_THIS(BSS_Message);
     entity->timer2 += 16;
     if (entity->timer2 > 320)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
 }
 void BSS_Message_TrackProgress_CB(int success)
 {
@@ -172,7 +172,7 @@ void BSS_Message_LoadPrevScene(void)
         else if (globals->gameMode < MODE_TIMEATTACK) {
             if (globals->saveSlotID == NO_SAVE_SLOT) {
                 globals->blueSpheresInit = true;
-                SaveGame_ShuffleBSSID();
+                GameProgress_ShuffleBSSID();
                 EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE)
@@ -188,7 +188,7 @@ void BSS_Message_LoadPrevScene(void)
                 entity->state    = BSS_Message_LoadGameState;
                 entity->field_6C = 1;
                 UIWaitSpinner_Wait();
-                SaveGame_TrackGameProgress(BSS_Message_TrackProgress_CB);
+                GameProgress_TrackGameProgress(BSS_Message_TrackProgress_CB);
             }
         }
     }
@@ -199,7 +199,7 @@ void BSS_Message_LoadGameState(void)
     RSDK_THIS(BSS_Message);
     if (!entity->field_6C) {
         globals->blueSpheresInit = true;
-        SaveGame_ShuffleBSSID();
+        GameProgress_ShuffleBSSID();
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)

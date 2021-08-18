@@ -35,19 +35,19 @@ void ExtrasMenu_Unknown2(void)
     EntityUIControl *control = (EntityUIControl *)ExtrasMenu->extrasControl;
 
     EntityUIButton *button = control->buttons[0];
-    int unlock             = SaveGame_CheckUnlock(8);
+    int unlock             = GameProgress_CheckUnlock(8);
     button->disabled       = !unlock;
     if (button->disabled)
         UIButton_Unknown1(button);
 
     button           = control->buttons[1];
-    unlock           = SaveGame_CheckUnlock(6);
+    unlock           = GameProgress_CheckUnlock(6);
     button->disabled = !unlock;
     if (button->disabled)
         UIButton_Unknown1(button);
 
     button           = control->buttons[2];
-    unlock           = SaveGame_CheckUnlock(7);
+    unlock           = GameProgress_CheckUnlock(7);
     button->disabled = !unlock && !globals->medallionDebug;
 }
 

@@ -116,7 +116,7 @@ void BSS_Setup_EditorLoad(void);
 void BSS_Setup_Serialize(void);
 
 // Extra Entity Functions
-int BSS_Setup_ReloadScene(void);
+int BSS_Setup_GetStageID(void);
 void BSS_Setup_SetupPalette(void);
 void BSS_Setup_SetupCollectables(void);
 void BSS_Setup_CollectRing(void);

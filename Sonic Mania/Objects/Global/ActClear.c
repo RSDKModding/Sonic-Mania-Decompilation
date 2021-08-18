@@ -336,10 +336,9 @@ void ActClear_Create(void *data)
                 case 4: entity->scoreBonus = 500; break;
                 case 5: entity->scoreBonus = 100; break;
                 case 9:
-                    if (!(globals->medalMods & getMod(MEDAL_NOTIMEOVER)) && !RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK
-                        && RSDK_sceneInfo->seconds == 59) {
+                    if (!RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && RSDK_sceneInfo->seconds == 59) {
 #if RETRO_USE_PLUS
-                        if (globals->gameMode != MODE_ENCORE)
+                        if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER)))
 #endif
                             entity->scoreBonus = 100000;
                     }
@@ -685,10 +684,12 @@ void ActClear_LoadNextScene(void)
                     TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
                     TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
                     param->timeScore = rank;
+                    SaveGame_SaveFile(ActClear_SaveGameCallback);
                 }
                 else {
                     ActClear->field_10 = false;
                 }
+
                 RSDK.SetScene("Presentation", "Menu");
             }
 #endif
@@ -706,7 +707,7 @@ void ActClear_LoadNextScene(void)
                 if (globals->gameMode == MODE_MANIA) {
 #endif
                     if (Zone_IsAct2())
-                        SaveGame_MarkZoneCompleted(Zone_GetZoneID());
+                        GameProgress_MarkZoneCompleted(Zone_GetZoneID());
                     ActClear->field_10 = 1;
                     SaveGame_SaveFile(ActClear_SaveGameCallback);
                 }

@@ -15,20 +15,26 @@ typedef struct {
     ushort sfx_SonicWins;
     ushort sfx_TailsWins;
     ushort sfx_KnuxWins;
+#if RETRO_USE_PLUS
     ushort sfx_MightyWins;
     ushort sfx_RayWins;
+#endif
     ushort sfx_NewRecordTop;
     ushort sfx_NewRecordMid;
     ushort sfx_Sonic;
     ushort sfx_Tails;
     ushort sfx_Knuckles;
+#if RETRO_USE_PLUS
     ushort sfx_Mighty;
     ushort sfx_Ray;
+#endif
     ushort sfx_TheWinnerIs;
     ushort sfx_Player1;
     ushort sfx_Player2;
+#if RETRO_USE_PLUS
     ushort sfx_Player3;
     ushort sfx_Player4;
+#endif
     ushort sfx_ItsADraw;
     ushort sfx_ItsADraw_Set;
     bool32 finishedCountdown;

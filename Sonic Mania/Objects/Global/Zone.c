@@ -91,7 +91,11 @@ void Zone_LateUpdate(void)
 
         StateMachine_Run(entity->state);
 
-        if (RSDK_sceneInfo->minutes == 10 && !(globals->medalMods & MEDAL_NOTIMEOVER)) {
+        if (RSDK_sceneInfo->minutes == 10
+#if RETRO_USE_PLUS
+            && !(globals->medalMods & MEDAL_NOTIMEOVER)
+#endif
+        ) {
             RSDK_sceneInfo->minutes      = 9;
             RSDK_sceneInfo->seconds      = 59;
             RSDK_sceneInfo->milliseconds = 99;
@@ -100,14 +104,16 @@ void Zone_LateUpdate(void)
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             foreach_active(Player, playerLoop)
             {
-                bool32 flag = false;
+                bool32 flag = true;
+#if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_COMPETITION && (session->finishFlags[playerLoop->playerID]) == 2) {
-                    flag = true;
+                    flag = false;
                 }
-                if (!playerLoop->sidekick && !flag)
+#endif
+                if (!playerLoop->sidekick && flag)
                     playerLoop->hurtFlag = 1;
             }
-            Zone->field_15C = 1;
+            Zone->field_15C = true;
 
             StateMachine_Run(Zone->timeOverState);
         }

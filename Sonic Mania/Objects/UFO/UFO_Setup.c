@@ -287,7 +287,7 @@ void UFO_Setup_Finish_Win(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     saveRAM->chaosEmeralds |= 1 << UFO_Setup->specialStageID;
     if (globals->saveSlotID != NO_SAVE_SLOT)
-        SaveGame_GetEmerald(saveRAM->nextSpecialStage);
+        GameProgress_GiveEmerald(saveRAM->nextSpecialStage);
 
     foreach_all(UFO_Player, player)
     {

@@ -80,23 +80,5 @@ void SaveGame_LoadPlayerState(void);
 void SaveGame_ResetPlayerState(void);
 void SaveGame_LoadFile_CB(int status);
 void SaveGame_SaveFile_CB(int status);
-int SaveGame_GetNotifStringID(int type);
-void SaveGame_ShuffleBSSID(void);
-int *SaveGame_GetGlobalData(void);
-bool32 SaveGame_GetZoneUnlocked(int zoneID);
-float SaveGame_GetCompletionPercent(int *saveRAM);
-void SaveGame_TrackGameProgress(void (*callback)(int));
-void SaveGame_Unknown14(void);
-void SaveGame_UnlockAllMedals(void);
-void SaveGame_ClearProgress(void);
-void SaveGame_MarkZoneCompleted(int zoneID);
-bool32 SaveGame_CheckZoneClear(void);
-void SaveGame_GetEmerald(int emeraldID);
-void SaveGame_GetMedal(byte medalID, byte type);
-void SaveGame_GetEnding(byte ending);
-void SaveGame_PrintSaveProgress(void);
-int SaveGame_CountUnreadNotifs(void);
-int SaveGame_GetNextNotif(void);
-bool32 SaveGame_CheckUnlock(char type);
 
 #endif //!OBJ_SAVEGAME_H

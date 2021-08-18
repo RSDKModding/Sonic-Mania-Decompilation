@@ -168,7 +168,6 @@ void APICallback_ResetControllerAssignments(void);
 void APICallback_TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time);
 void APICallback_TrackTAClear(byte zoneID, byte actID, byte playerID, int time);
 void APICallback_TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY);
-void APICallback_TrackGameProgress(void (*callback)(int));
 void APICallback_TryAuth_No(void);
 void APICallback_TryAuth_Yes(void);
 void APICallback_TryAuth_CB(void);

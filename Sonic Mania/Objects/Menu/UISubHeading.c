@@ -95,22 +95,22 @@ void UISubHeading_Unknown2(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
     EntityUIButton *button   = control->buttons[1];
-    button->disabled         = !SaveGame_CheckUnlock(5) && globals->superSecret;
+    button->disabled         = !GameProgress_CheckUnlock(5) && globals->superSecret;
     if (button->disabled)
         UIButton_Unknown1(button);
 
     button                  = control->buttons[2];
     EntityUIButton *option1 = UIButton_GetChoicePtr(button, 1);
     EntityUIButton *option2 = UIButton_GetChoicePtr(button, 2);
-    int unlock              = SaveGame_CheckUnlock(2);
+    int unlock              = GameProgress_CheckUnlock(2);
     button->disabled        = !unlock;
     if (button->disabled)
         UIButton_Unknown1(button);
-    option1->disabled = !SaveGame_CheckUnlock(2);
-    option2->disabled = !SaveGame_CheckUnlock(3);
+    option1->disabled = !GameProgress_CheckUnlock(2);
+    option2->disabled = !GameProgress_CheckUnlock(3);
 
     button           = control->buttons[3];
-    unlock           = SaveGame_CheckUnlock(4);
+    unlock           = GameProgress_CheckUnlock(4);
     button->disabled = !unlock;
     if (button->disabled)
         UIButton_Unknown1(button);
@@ -159,12 +159,12 @@ void UISubHeading_Unknown3(void)
 void UISubHeading_Unknown4(int slot)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
-    int *saveRAM             = SaveGame_GetDataPtr(slot, false);
+    EntitySaveGame *saveGame  = (EntitySaveGame *)SaveGame_GetDataPtr(slot, false);
 
-    UIButton_SetChoiceSelection(control->buttons[0], (saveRAM[33] & 0x20) != 0);
-    UIButton_SetChoiceSelection(control->buttons[1], (saveRAM[33] & 1) != 0);
+    UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & getMod(MEDAL_NOTIMEOVER)) != 0);
+    UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & getMod(MEDAL_ANDKNUCKLES)) != 0);
 
-    int medals = saveRAM[33];
+    int medals = saveGame->medalMods;
     if (medals & getMod(MEDAL_NODROPDASH)) {
         if (medals & getMod(MEDAL_PEELOUT)) {
             UIButton_SetChoiceSelection(control->buttons[2], 1);
@@ -177,7 +177,7 @@ void UISubHeading_Unknown4(int slot)
         UIButton_SetChoiceSelection(control->buttons[2], 0);
     }
 
-    if ((saveRAM[33] & getMod(MEDAL_ANDKNUCKLES)))
+    if (saveGame->medalMods & getMod(MEDAL_ANDKNUCKLES))
         UIButton_SetChoiceSelection(control->buttons[3], 1);
     else
         UIButton_SetChoiceSelection(control->buttons[3], 0);

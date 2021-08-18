@@ -181,13 +181,13 @@ void CompetitionMenu_Unknown3(void)
             if (control == (EntityUIControl *)CompetitionMenu->compRulesControl) {
                 switch (session->monitorMode) {
                     case 0: UIButton_SetChoiceSelection(control->buttons[0], 0); break;
-                    case 1: break;
+                    case 1: UIButton_SetChoiceSelection(control->buttons[0], 2); break;
                     case 2: UIButton_SetChoiceSelection(control->buttons[0], 1); break;
                 }
 
-                EntityUIChoice *choice = (EntityUIChoice *)UIButton_GetChoicePtr(control->buttons[1], control->buttons[1]->selection);
-                if (choice)
-                    choice->noText = session->matchCount;
+                EntityUIVsRoundPicker *picker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(control->buttons[1], control->buttons[1]->selection);
+                if (picker)
+                    picker->val = session->matchCount;
                 UIButton_SetChoiceSelectionWithCB(control->buttons[2], session->splitScreenMode);
                 CompetitionMenu_Unknown9(session->playerCount);
             }
@@ -208,7 +208,7 @@ int CompetitionMenu_Unknown4(void)
     int count = 0;
     foreach_all(UIVsZoneButton, zoneButton)
     {
-        zoneButton->xOut      = !SaveGame_GetZoneUnlocked(zoneButton->zoneID);
+        zoneButton->xOut      = !GameProgress_GetZoneUnlocked(zoneButton->zoneID);
         zoneButton->obfuscate = zoneButton->xOut;
 
         if (!zoneButton->xOut)
@@ -586,7 +586,7 @@ void CompetitionMenu_Round_ProcessInputCB(void)
         for (int i = 0; i < 12; ++i) {
             if (zoneControl->buttons[i]) {
                 EntityUIVsZoneButton *zoneButton = (EntityUIVsZoneButton *)zoneControl->buttons[i];
-                if (!session->zoneFlags[i] && SaveGame_GetZoneUnlocked(zoneButton->zoneID))
+                if (!session->zoneFlags[i] && GameProgress_GetZoneUnlocked(zoneButton->zoneID))
                     ++count2;
             }
         }

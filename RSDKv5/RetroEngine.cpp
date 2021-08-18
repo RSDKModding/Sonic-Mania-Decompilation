@@ -33,7 +33,7 @@ bool32 processEvents()
                         SDL_RestoreWindow(engine.window);
                         SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
                         SDL_ShowCursor(SDL_FALSE);
-                        engine.isFullScreen = true;
+                        engine.isWindowed = false;
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: return false;
@@ -148,8 +148,8 @@ bool32 processEvents()
                         break;
                     case SDLK_F3: engine.shaderID = (engine.shaderID + 1) % (shaderCount - 4); break;
                     case SDLK_F4:
-                        engine.isFullScreen ^= 1;
-                        if (engine.isFullScreen) {
+                        engine.isWindowed ^= 1;
+                        if (!engine.isWindowed) {
 #if RETRO_USING_SDL2
                             SDL_RestoreWindow(engine.window);
                             SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);

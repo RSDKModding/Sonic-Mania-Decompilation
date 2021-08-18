@@ -34,25 +34,35 @@ void Announcer_StageLoad(void)
 {
     Announcer->finishedCountdown = false;
     if (RSDK.CheckStageFolder("Menu")) {
+#if !RETRO_USE_PLUS
+        Announcer->sfx_NewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
+        Announcer->sfx_NewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
+#endif
         Announcer->sfx_Sonic        = RSDK.GetSFX("VO/Sonic.wav");
         Announcer->sfx_Tails        = RSDK.GetSFX("VO/Tails.wav");
         Announcer->sfx_Knuckles     = RSDK.GetSFX("VO/Knuckles.wav");
+#if RETRO_USE_PLUS
         Announcer->sfx_Mighty       = RSDK.GetSFX("VO/Mighty.wav");
         Announcer->sfx_Ray          = RSDK.GetSFX("VO/Ray.wav");
+#endif
         Announcer->sfx_TheWinnerIs  = RSDK.GetSFX("VO/TheWinnerIs.wav");
         Announcer->sfx_Player1      = RSDK.GetSFX("VO/Player1.wav");
         Announcer->sfx_Player2      = RSDK.GetSFX("VO/Player2.wav");
+#if RETRO_USE_PLUS
         Announcer->sfx_Player3      = RSDK.GetSFX("VO/Player3.wav");
         Announcer->sfx_Player4      = RSDK.GetSFX("VO/Player4.wav");
+#endif
         Announcer->sfx_SonicWins    = RSDK.GetSFX("VO/SonicWins.wav");
         Announcer->sfx_TailsWins    = RSDK.GetSFX("VO/TailsWins.wav");
         Announcer->sfx_KnuxWins     = RSDK.GetSFX("VO/KnuxWins.wav");
+#if RETRO_USE_PLUS
         Announcer->sfx_MightyWins   = RSDK.GetSFX("VO/MightyWins.wav");
         Announcer->sfx_RayWins      = RSDK.GetSFX("VO/RayWins.wav");
         Announcer->sfx_ItsADraw     = RSDK.GetSFX("VO/ItsADraw.wav");
         Announcer->sfx_ItsADraw_Set = RSDK.GetSFX("VO/ItsADraw_Set.wav");
         LogHelpers_Print("sfxDrawRound = %d", Announcer->sfx_ItsADraw);
         LogHelpers_Print("sfxDrawSet = %d", Announcer->sfx_ItsADraw_Set);
+#endif
     }
     else if (globals->gameMode == MODE_COMPETITION) {
         Announcer->spriteIndex = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
@@ -63,9 +73,11 @@ void Announcer_StageLoad(void)
         Announcer->sfx_Goal    = RSDK.GetSFX("VO/Goal.wav");
     }
     else if (globals->gameMode == MODE_TIMEATTACK) {
-        Announcer->spriteIndex      = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
+        Announcer->spriteIndex = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
+#if RETRO_USE_PLUS
         Announcer->sfx_NewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
         Announcer->sfx_NewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
+#endif
         Announcer->sfx_Goal         = RSDK.GetSFX("VO/Goal.wav");
     }
 }
@@ -239,8 +251,10 @@ void Announcer_State_AnnounceWinner(void)
         switch (entity->playerID) {
             case 0: RSDK.PlaySFX(Announcer->sfx_Player1, 0, 255); break;
             case 1: RSDK.PlaySFX(Announcer->sfx_Player2, 0, 255); break;
+#if RETRO_USE_PLUS
             case 2: RSDK.PlaySFX(Announcer->sfx_Player3, 0, 255); break;
             case 3: RSDK.PlaySFX(Announcer->sfx_Player4, 0, 255); break;
+#endif
             default: break;
         }
         destroyEntity(entity);

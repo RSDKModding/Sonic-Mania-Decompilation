@@ -116,10 +116,10 @@ void UIButtonPrompt_Create(void *data)
         entity->startPos      = entity->position;
         entity->visible       = true;
         entity->drawOrder     = 2;
-        entity->scaleMax      = 512;
-        entity->scaleSpeed    = 16;
-        entity->scale.x       = 512;
-        entity->scale.y       = 512;
+        entity->scaleMax      = 0x200;
+        entity->scaleSpeed    = 0x10;
+        entity->scale.x       = 0x200;
+        entity->scale.y       = 0x200;
         entity->field_94      = 0;
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x2000000;
@@ -167,7 +167,8 @@ int UIButtonPrompt_GetGamepadType(void)
 #endif
     int gamepadType = API_GetControllerType(id);
 
-    if ((gamepadType & 0xFF00) == 0x100) {
+    int deviceType = (gamepadType >> 8) & 0xFF;
+    if (deviceType == DEVICE_TYPE_KEYBOARD) {
         switch (Localization->language) {
             case LANGUAGE_FR: return 9;
             case LANGUAGE_IT: return 10;
@@ -176,15 +177,15 @@ int UIButtonPrompt_GetGamepadType(void)
             default: return 1;
         }
     }
-    else if ((gamepadType & 0xFF00) == 0x200) {
-        switch (gamepadType) {
-            case 2: return 3;
-            case 3: return 6;
-            case 4:
-            case 5:
-            case 8: return 4;
-            case 6: return 7;
-            case 7: return 8;
+    else if (deviceType == DEVICE_TYPE_CONTROLLER) {
+        switch (gamepadType & 0xFF) {
+            case DEVICE_PS4: return 3;
+            case DEVICE_SATURN: return 6;
+            case DEVICE_SWITCH:
+            case DEVICE_SWITCH_PRO:
+            case DEVICE_SWITCH_JOY_GRIP: return 4;
+            case DEVICE_SWITCH_JOY_L: return 7;
+            case DEVICE_SWITCH_JOY_R: return 8;
             default: break;
         }
     }

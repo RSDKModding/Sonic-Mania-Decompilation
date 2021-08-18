@@ -33,16 +33,16 @@ void UILeaderboard_Draw(void)
 void UILeaderboard_Create(void *data)
 {
     RSDK_THIS(UILeaderboard);
-    entity->posUnknown2.x      = entity->position.x;
-    entity->posUnknown2.y      = entity->position.y;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = 2;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x300000;
-    entity->processButtonCB    = UILeaderboard_ProcessButtonCB;
-    entity->state              = UILeaderboard_State_Unknown1;
+    entity->posUnknown2.x   = entity->position.x;
+    entity->posUnknown2.y   = entity->position.y;
+    entity->active          = ACTIVE_BOUNDS;
+    entity->drawOrder       = 2;
+    entity->visible         = true;
+    entity->drawFX          = FX_FLIP;
+    entity->updateRange.x   = 0x800000;
+    entity->updateRange.y   = 0x300000;
+    entity->processButtonCB = UILeaderboard_ProcessButtonCB;
+    entity->state           = UILeaderboard_State_Unknown1;
     UILeaderboard_SetupEntrySprites(entity);
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
     if (!RSDK_sceneInfo->inEditor) {
@@ -135,7 +135,11 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
     if (!RSDK_sceneInfo->inEditor) {
         for (int i = 0; i < 5; ++i) {
             LeaderboardEntry *entry = API_ReadLeaderboardEntry(i + entity->entryOffset);
+#if RETRO_USE_PLUS
             if (entry && entry->status == STATUS_OK) {
+#else
+            if (entry) {
+#endif
                 char buffer[0x10];
 
                 if (entry->globalRank < 1)
@@ -181,13 +185,13 @@ void UILeaderboard_DrawPrimitives(void)
     Vector2 drawPos;
 
     if (!RSDK_sceneInfo->inEditor)
-        UIWidgets_Unknown3(158, 414, RSDK_sceneInfo->entity->position.x + 0x30000, RSDK_sceneInfo->entity->position.y + 0x30000);
+        UIWidgets_Unknown3(158, 414, entity->position.x + 0x30000, entity->position.y + 0x30000);
 
     UIWidgets_Unknown2(158, 414, entity->position.x, entity->position.y);
 
-    drawPos.x = entity->position.x - 0x8C0000;
+    drawPos.x = entity->position.x - 0x840000;
     drawPos.y = entity->position.y - 0x4C0000;
-    RSDK.DrawRect(drawPos.x, drawPos.y, 0x1120000, 0x180000, 0, 255, INK_NONE, false);
+    RSDK.DrawRect(drawPos.x, drawPos.y, 0x1120000, 0x180000, 0x000000, 255, INK_NONE, false);
 
     drawPos.y += 0x180000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x580000, 0x100000, 0xF0F0F0, 255, INK_NONE, false);
@@ -215,21 +219,21 @@ void UILeaderboard_DrawPrimitives(void)
     drawPos.x += 0x3A0000;
     UIWidgets_Unknown5(96, 15, 160, 176, drawPos.x, drawPos.y);
 
-    drawPos.y += 0xF0000;
     drawPos.x += 0x270000;
+    drawPos.y += 0xF0000;
     UIWidgets_Unknown5(88, -39, 112, 224, drawPos.x, drawPos.y);
 
     RSDK.DrawRect(drawPos.x, drawPos.y - 0x270000, 0x3F0000, 0x280000, 0x5870E0, 255, INK_NONE, false);
 
-    drawPos.y = entity->position.y - 0x240000;
     drawPos.x = entity->position.x - 0xCC0000;
+    drawPos.y = entity->position.y - 0x240000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x680000, 0x200000, 0x60A0AB, 255, INK_NONE, false);
 
     drawPos.x += 0x680000;
     UIWidgets_Unknown5(96, 31, 160, 176, drawPos.x, drawPos.y);
 
-    drawPos.y += 0x1F0000;
     drawPos.x += 0x1F0000;
+    drawPos.y += 0x1F0000;
     UIWidgets_Unknown5(88, -31, 112, 224, drawPos.x, drawPos.y);
 
     drawPos.y -= 0x1F0000;
@@ -238,13 +242,13 @@ void UILeaderboard_DrawPrimitives(void)
     drawPos.x += 0x790000;
     UIWidgets_Unknown5(88, 31, 112, 224, drawPos.x, drawPos.y);
 
-    drawPos.y += 0x1F0000;
     drawPos.x += 0x1F0000;
+    drawPos.y += 0x1F0000;
     UIWidgets_Unknown5(232, -31, 40, 88, drawPos.x, drawPos.y);
 
     RSDK.DrawRect(drawPos.x, drawPos.y - 0x1F0000, 0x790000, 0x200000, 0xE82858, 255, INK_NONE, false);
 
-    RSDK.DrawRect(entity->position.x - 0xCC0000, entity->position.y - 0x40000, 0x1980000, 0x500000, 0, 255, INK_NONE, false);
+    RSDK.DrawRect(entity->position.x - 0xCC0000, entity->position.y - 0x40000, 0x1980000, 0x500000, 0x000000, 255, INK_NONE, false);
 }
 
 void UILeaderboard_DrawEntries(void)
@@ -253,7 +257,7 @@ void UILeaderboard_DrawEntries(void)
     Vector2 drawPos;
 
     UILeaderboard_Unknown3();
-    drawPos.x = entity->position.x + 0x8C0000;
+    drawPos.x = entity->position.x - 0x8C0000;
     drawPos.y = entity->position.y - 0x4C0000;
     if (!RSDK_sceneInfo->inEditor) {
         drawPos.x += 0xC0000;
@@ -261,6 +265,7 @@ void UILeaderboard_DrawEntries(void)
         RSDK.DrawText(&entity->animator4, &drawPos, &entity->field_1E0, 0, entity->field_1E0.textLength, ALIGN_LEFT, 0, 0, 0, false);
 
         drawPos.x -= 0xC0000;
+        drawPos.y -= 0x70000;
     }
     drawPos.y += 0x1C0000;
     RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 9, &entity->animator11, true, 10);
@@ -302,9 +307,9 @@ void UILeaderboard_Unknown3(void)
     RSDK_THIS(UILeaderboard);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x = 0xA80000;
-    drawPos.y                      = entity->position.y - 0x380000;
-    UIWidgets_Unknown2(40, 72, drawPos.x, drawPos.x);
+    drawPos.x = entity->position.x - 0xA80000;
+    drawPos.y = entity->position.y - 0x380000;
+    UIWidgets_Unknown2(40, 72, drawPos.x, drawPos.y);
 
     if (RSDK_sceneInfo->inEditor) {
         entity->direction = entity->editorFlip;
@@ -467,8 +472,8 @@ void UILeaderboard_ProcessButtonCB(void)
     int end = entity->entryOffset + entity->entryLength;
     if (newID >= end)
         newID = end - 5;
-    if (newID < entity->entryOffset)
-        newID = entity->entryOffset;
+    if (newID < 0)
+        newID = 0;
 
     if (entity->entryLength && entity->entryOffset != newID) {
         entity->entryOffset = newID;

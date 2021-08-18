@@ -39,7 +39,7 @@ bool ReloadShaders() {
             shaderList[i].linear = true;
         }
 
-        if (engine.isFullScreen)
+        if (!engine.isWindowed)
             shaderList[0].linear = true;
         else
             shaderList[0].linear = false;

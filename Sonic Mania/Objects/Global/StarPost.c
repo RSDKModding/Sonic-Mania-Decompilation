@@ -192,9 +192,9 @@ void StarPost_CheckBonusStageEntry(void)
                 SaveGame_SaveGameState();
                 RSDK.PlaySFX(StarPost->sfx_Warp, 0, 0xFE);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                int *saveRAM = SaveGame_GetGlobalData();
 #if RETRO_USE_PLUS
-                if ((API.CheckDLC(DLC_PLUS) && saveRAM && saveRAM[30]) || globals->gameMode == MODE_ENCORE) {
+                EntityGameProgress *progress = GameProgress_GetGameProgress();
+                if ((API.CheckDLC(DLC_PLUS) && progress && progress->allGoldMedals) || globals->gameMode == MODE_ENCORE) {
                     SaveGame->saveRAM->storedStageID = RSDK_sceneInfo->listPos;
                     RSDK.SetScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);

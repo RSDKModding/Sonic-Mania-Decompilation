@@ -142,7 +142,7 @@ void TimeAttackMenu_Initialize(void)
 
 void TimeAttackMenu_Unknown2(void)
 {
-    foreach_all(UITAZoneModule, module) { module->disabled = !SaveGame_GetZoneUnlocked(module->zoneID); }
+    foreach_all(UITAZoneModule, module) { module->disabled = !GameProgress_GetZoneUnlocked(module->zoneID); }
 }
 
 void TimeAttackMenu_Unknown3(void)
@@ -201,11 +201,11 @@ void TimeAttackMenu_Unknown3(void)
 
     EntityUIButton *replayButton   = detailsControl->buttons[0];
     replayButton->options2         = TimeAttackMenu_Options2CB_Replays;
-    replayButton->callbackUnknown1 = TimeAttackMenu_UnknownCB1_Replays;
+    replayButton->choiceChangeCB = TimeAttackMenu_UnknownCB1_Replays;
 
     EntityUIReplayCarousel *replayCarousel      = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
     replayCarousel->options2                    = TimeAttackMenu_Options2CB_ReplayCarousel;
-    replayControl->buttons[0]->callbackUnknown1 = TimeAttackMenu_SortReplayChoiceCB;
+    replayControl->buttons[0]->choiceChangeCB = TimeAttackMenu_SortReplayChoiceCB;
 }
 
 void TimeAttackMenu_Unknown4(void)

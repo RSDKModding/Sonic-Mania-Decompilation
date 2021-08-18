@@ -197,13 +197,15 @@ LeaderboardEntry *APICallback_ReadLeaderboardEntry(int rankID)
     APICallback->leaderboardEntry.isUser     = APICallback->prevIsUser && rankID == APICallback->prevRank;
     if (APICallback->leaderboardEntry.isUser) {
         RSDK.SetText(&APICallback->leaderboardEntry.username, "YOU", 0);
+        LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
+                         APICallback->leaderboardEntry.score, "YOU", APICallback->leaderboardEntry.isUser);
     }
     else {
         RSDK.SetText(&APICallback->leaderboardEntry.username, "", 0);
         RSDK.PrependText(&APICallback->leaderboardEntry.username, dummyNames[rankID]);
+        LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
+                         APICallback->leaderboardEntry.score, dummyNames[rankID], APICallback->leaderboardEntry.isUser);
     }
-    LogHelpers_Print("RSDKRankEntry { globalRank: %d, score: %d, entryName: %s, isUser: %d }", APICallback->leaderboardEntry.globalRank,
-                     APICallback->leaderboardEntry.score, APICallback->leaderboardEntry.username.text, APICallback->leaderboardEntry.isUser);
     return &APICallback->leaderboardEntry;
 }
 
@@ -329,7 +331,7 @@ int APICallback_LeaderboardStatus(void)
     }
     else {
         LogHelpers_Print("DUMMY LeaderboardStatus()");
-        if (APICallback->leaderboardsStatus == STATUS_OK) {
+        if (APICallback->leaderboardsStatus == STATUS_CONTINUE) {
             if (APICallback->unknown < 60) {
                 APICallback->unknown++;
                 return APICallback->leaderboardsStatus;
@@ -607,23 +609,6 @@ void APICallback_TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int en
         LogHelpers_Print("EMPTY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
 }
 
-void APICallback_TrackGameProgress(void (*callback)(int))
-{
-    if (globals->noSave || globals->saveLoaded != STATUS_OK) {
-        LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
-    }
-    else if (!globals->saveRAM[0x900]) {
-        float percent = SaveGame_GetCompletionPercent(&globals->saveRAM[0x900]);
-        if (APICallback->TrackGameProgress)
-            APICallback->TrackGameProgress(percent);
-        else
-            LogHelpers_Print("EMPTY TrackGameProgress(%f)", percent);
-        SaveGame_SaveFile(callback);
-    }
-    if (callback)
-        callback(0);
-}
-
 void APICallback_TryAuth_No(void)
 {
     APICallback->authStatus = STATUS_ERROR;
@@ -789,26 +774,23 @@ void APICallback_Wait(int success) { UIWaitSpinner_Wait2(); }
 
 void APICallback_GetNextNotif(void)
 {
-    int *saveRAM = NULL;
     if (RSDK_sceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
-        LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }
     else {
-        saveRAM            = &globals->saveRAM[0x900];
-        int id             = SaveGame_GetNextNotif();
-        saveRAM[id + 0x35] = true;
+        EntityGameProgress *progress = GameProgress_GetGameProgress();
+        progress->unreadNotifs[GameProgress_GetNextNotif()] = true;
     }
 }
 
 void APICallback_ManageNotifs(void)
 {
     RSDK_THIS(APICallback);
-    if (SaveGame_CountUnreadNotifs()) {
+    if (GameProgress_CountUnreadNotifs()) {
         TextInfo info;
         INIT_TEXTINFO(info);
         if (!UIDialog->activeDialog) {
-            int str = SaveGame_GetNotifStringID(SaveGame_GetNextNotif());
+            int str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B4       = true;
@@ -820,14 +802,14 @@ void APICallback_ManageNotifs(void)
     else {
         APICallback->activeEntity = NULL;
         UIWaitSpinner_Wait();
-        SaveGame_TrackGameProgress(APICallback_Wait);
+        GameProgress_TrackGameProgress(APICallback_Wait);
         destroyEntity(entity);
     }
 }
 
 bool32 APICallback_CheckUnreadNotifs(void)
 {
-    if (!SaveGame_CountUnreadNotifs())
+    if (!GameProgress_CountUnreadNotifs())
         return false;
     if (!APICallback->activeEntity)
         APICallback->activeEntity = (Entity *)CREATE_ENTITY(APICallback, APICallback_ManageNotifs, 0, 0);

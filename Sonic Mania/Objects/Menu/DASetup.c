@@ -84,49 +84,47 @@ void DASetup_DisplayTrack(int trackID)
 
 bool32 DASetup_HandleMedallionDebug(void)
 {
-    int *saveRAM = NULL;
-    if (!RSDK_sceneInfo->inEditor) {
-        if (globals->saveLoaded == STATUS_OK && !checkNoSave) {
-            saveRAM = &globals->saveRAM[0x900];
-        }
-    }
-    if (!globals->medallionDebug || !saveRAM)
+    EntityGameProgress *progress = GameProgress_GetGameProgress();
+    if (!globals->medallionDebug || !progress)
         return false;
 
     switch (DASetup->trackID) {
         case 8:
-            if (!SaveGame_CheckZoneClear())
-                return false;
-            RSDK.PlaySFX(DASetup->sfxScoreTotal, false, 255);
-            return true;
+            if (GameProgress_CheckZoneClear()) {
+                RSDK.PlaySFX(DASetup->sfxScoreTotal, false, 255);
+                return true;
+            }
+            break;
         case 44:
-            if (saveRAM[72] < 32) {
-                SaveGame_GetMedal(globals->blueSpheresID, 1);
-                SaveGame_ShuffleBSSID();
+            if (progress->silverMedalCount < 32) {
+                GameProgress_GiveMedal(globals->blueSpheresID, 1);
+                GameProgress_ShuffleBSSID();
                 RSDK.PlaySFX(DASetup->sfxMedal, false, 255);
+                return true;
             }
-            else {
-                if (saveRAM[71] >= 32)
-                    return false;
-                SaveGame_GetMedal(globals->blueSpheresID, 2);
-                SaveGame_ShuffleBSSID();
+            else if (progress->goldMedalCount < 32) {
+                GameProgress_GiveMedal(globals->blueSpheresID, 2);
+                GameProgress_ShuffleBSSID();
                 RSDK.PlaySFX(DASetup->sfxMedal, false, 255);
+                return true;
             }
-            return true;
+            break;
         case 46:
-            if (saveRAM[30])
-                return false;
-            SaveGame_UnlockAllMedals();
-            saveRAM[69] = 0;
-            RSDK.PlaySFX(DASetup->sfxEmerald, false, 255);
-            return true;
+            if (!progress->allGoldMedals) {
+                GameProgress_UnlockAllMedals();
+                progress->allSpecialCleared = false;
+                RSDK.PlaySFX(DASetup->sfxEmerald, false, 255);
+                return true;
+            }
+            break;
         case 48:
-            if (saveRAM[72] <= 0 && !saveRAM[32])
-                return false;
-            SaveGame_ClearProgress();
-            saveRAM[69] = 0;
-            RSDK.PlaySFX(DASetup->sfxSSExit, false, 255);
-            return true;
+            if (progress->silverMedalCount > 0 || progress->zoneClearFlags[0]) {
+                GameProgress_ClearProgress();
+                progress->allSpecialCleared = false;
+                RSDK.PlaySFX(DASetup->sfxSSExit, false, 255);
+                return true;
+            }
+            break;
         default: break;
     }
     return false;

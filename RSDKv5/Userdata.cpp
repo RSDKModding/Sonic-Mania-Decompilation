@@ -454,8 +454,8 @@ void TryTrackStat(StatInfo *stat)
 int GetSettingsValue(int id)
 {
     switch (id) {
-        case SETTINGS_WINDOWED: return !engine.isFullScreen; // windowed
-        case SETTINGS_BORDERED: return !engine.borderless;   // bordered
+        case SETTINGS_WINDOWED: return engine.isWindowed; 
+        case SETTINGS_BORDERED: return engine.hasBorder; 
         case SETTINGS_EXCLUSIVEFS: return engine.exclusiveFS;
         case SETTINGS_VSYNC: return engine.vsync;
         case SETTINGS_TRIPLEBUFFERED: return engine.tripleBuffer;
@@ -490,15 +490,15 @@ void SetSettingsValue(int id, int val)
     bool32 bVal = val;
     switch (id) {
         case SETTINGS_WINDOWED:
-            if ((!engine.isFullScreen) != bVal) {
+            if (engine.isWindowed != bVal) {
                 settingsChanged     = true;
-                engine.isFullScreen = !bVal;
+                engine.isWindowed = bVal;
             }
             break;
         case SETTINGS_BORDERED:
-            if ((!engine.borderless) != bVal) {
+            if (engine.hasBorder != bVal) {
                 settingsChanged   = true;
-                engine.borderless = !bVal;
+                engine.hasBorder = bVal;
             }
             break;
         case SETTINGS_EXCLUSIVEFS:
@@ -570,8 +570,8 @@ void SetSettingsValue(int id, int val)
 #endif
             break;
         case SETTINGS_STORE:
-            settingsStorage.windowed      = engine.isFullScreen;
-            settingsStorage.bordered      = engine.borderless;
+            settingsStorage.windowed      = engine.isWindowed;
+            settingsStorage.bordered      = engine.hasBorder;
             settingsStorage.exclusiveFS   = engine.exclusiveFS;
             settingsStorage.vsync         = engine.vsync;
             settingsStorage.shaderSupport = engine.shaderSupport;
@@ -597,8 +597,8 @@ void SetSettingsValue(int id, int val)
         case SETTINGS_RELOAD:
             settingsChanged = true;
 
-            engine.isFullScreen  = settingsStorage.windowed;
-            engine.borderless    = settingsStorage.bordered;
+            engine.isWindowed    = settingsStorage.windowed;
+            engine.hasBorder     = settingsStorage.bordered;
             engine.exclusiveFS   = settingsStorage.exclusiveFS;
             engine.vsync         = settingsStorage.vsync;
             engine.shaderSupport = settingsStorage.shaderSupport;
@@ -691,8 +691,10 @@ void readSettings()
         engine.XYFlip = false;
 #endif
 
-        engine.startFullScreen = !iniparser_getboolean(ini, "Video:windowed", true);
-        engine.borderless      = !iniparser_getboolean(ini, "Video:border", true);
+        engine.isWindowed      = iniparser_getboolean(ini, "Video:windowed", true);
+        engine.startFullScreen = !engine.isWindowed;
+
+        engine.hasBorder      =  iniparser_getboolean(ini, "Video:border", true);
         engine.exclusiveFS     = iniparser_getboolean(ini, "Video:exclusiveFS", false);
         engine.vsync           = iniparser_getboolean(ini, "Video:vsync", false);
         engine.tripleBuffer    = iniparser_getboolean(ini, "Video:tripleBuffering", false);
@@ -808,8 +810,9 @@ void readSettings()
         iniparser_freedict(ini);
     }
     else {
-        engine.startFullScreen = engine.startFullScreen = false;
-        engine.borderless                               = false;
+        engine.isWindowed                               = true;
+        engine.startFullScreen                          = false;
+        engine.hasBorder                                = false;
         engine.exclusiveFS                              = true;
         engine.vsync                                    = true;
         engine.tripleBuffer                             = false;
@@ -817,11 +820,11 @@ void readSettings()
         pixWidth                                        = 424;
         engine.fsWidth                                  = 0;
         engine.windowWidth                              = pixWidth * 1;
+        engine.windowHeight                             = SCREEN_YSIZE * 1;
         engine.fsHeight                                 = 0;
         engine.refreshRate                              = 60;
         engine.shaderID                                 = SHADER_NONE;
-        engine.streamsEnabled                           = 1;
-        engine.windowHeight                             = SCREEN_YSIZE * 1;
+        engine.streamsEnabled                           = true;
         engine.streamVolume                             = 1.0f;
         engine.soundFXVolume                            = 1.0f;
         engine.devMenu                                  = false;
@@ -895,7 +898,7 @@ void writeSettings(bool32 writeToFile)
         writeText(file, "; NB: Fullscreen Resolution can be explicitly set with values fsWidth and fsHeight\n");
         writeText(file, "; If not listed, fullscreen will just use the desktop resolution\n");
         writeText(file, "windowed=%s\n", (!engine.startFullScreen ? "y" : "n"));
-        writeText(file, "border=%s\n", (!engine.borderless ? "y" : "n"));
+        writeText(file, "border=%s\n", (engine.hasBorder ? "y" : "n"));
         writeText(file, "exclusiveFS=%s\n", (engine.exclusiveFS ? "y" : "n"));
         writeText(file, "vsync=%s\n", (engine.vsync ? "y" : "n"));
         writeText(file, "tripleBuffering=%s\n", (engine.tripleBuffer ? "y" : "n"));

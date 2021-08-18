@@ -151,10 +151,10 @@ bool32 InitRenderDevice()
         SDL_RestoreWindow(engine.window);
         SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
         SDL_ShowCursor(SDL_FALSE);
-        engine.isFullScreen = true;
+        engine.isWindowed = false;
     }
 
-    if (engine.borderless) {
+    if (!engine.hasBorder) {
         SDL_RestoreWindow(engine.window);
         SDL_SetWindowBordered(engine.window, SDL_FALSE);
     }
@@ -404,14 +404,13 @@ void UpdateWindow()
         }
     }
 
-    if (engine.isFullScreen) {
+    if (!engine.isWindowed) {
         SDL_RestoreWindow(engine.window);
         SDL_SetWindowFullscreen(engine.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
         SDL_ShowCursor(SDL_FALSE);
-        engine.isFullScreen = true;
     }
 
-    if (engine.borderless) {
+    if (!engine.hasBorder) {
         SDL_RestoreWindow(engine.window);
         SDL_SetWindowBordered(engine.window, SDL_FALSE);
     }
@@ -555,7 +554,7 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, T
 void GetWindowSize(int *width, int *height)
 {
 #if RETRO_USING_SDL2
-    if (engine.isFullScreen) {
+    if (!engine.isWindowed) {
         SDL_GetRendererOutputSize(engine.renderer, width, height);
     }
     else {

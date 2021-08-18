@@ -56,7 +56,7 @@ void Options_GetWinSize(void)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     int windowed           = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
-    if (windowed == 2) {
+    if (!windowed) {
         options->windowSize = 4;
     }
     else {

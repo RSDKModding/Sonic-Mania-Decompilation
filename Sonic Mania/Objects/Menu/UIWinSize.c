@@ -144,7 +144,11 @@ void UIWinSize_ApplySettings(void)
 
     RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, entity->selection * RSDK_screens->width);
     RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, entity->selection * RSDK_screens->height);
+#if RETRO_USE_PLUS
     RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
+#else
+    RSDK.UpdateWindow();
+#endif
 }
 
 void UIWinSize_ProcessButtonCB(void)

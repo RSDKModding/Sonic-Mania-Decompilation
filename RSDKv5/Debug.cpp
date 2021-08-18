@@ -665,7 +665,7 @@ void DevMenu_Options()
     if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         switch (devMenu.option) {
             case 0: {
-                devMenu.windowed = !engine.isFullScreen;
+                devMenu.windowed = !engine.isWindowed;
                 devMenu.winScale = (engine.windowWidth / pixWidth) - 1;
                 int aspect       = (int)((engine.windowWidth / (float)engine.windowHeight) * (float)SCREEN_YSIZE) >> 3;
                 switch (aspect) {
@@ -860,7 +860,7 @@ void DevMenu_VideoOptions()
         case 4: // confirm
             if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
                 // do confirm
-                engine.isFullScreen  = !devMenu.windowed;
+                engine.isWindowed  = !devMenu.windowed;
                 shaderList[0].linear = !devMenu.windowed;
                 if (!devMenu.winScale)
                     engine.shaderID = SHADER_NONE;

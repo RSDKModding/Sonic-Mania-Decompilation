@@ -282,9 +282,9 @@ void UITAZoneModule_Unknown4(void)
         ushort *records1 = TimeAttackData_GetRecordedTime(entity->zoneID, 0, entity->characterID, 1);
         ushort *records2 = TimeAttackData_GetRecordedTime(entity->zoneID, 1, entity->characterID, 1);
 
-        int time = records1[0] + records2[1];
+        int time = records1[0] + records2[0];
 
-        if (records1[0] && records2[1])
+        if (records1[0] && records2[0])
             UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
         else if (entity->characterID != 3 && records1[0] && entity->zoneID == 7)
             UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
@@ -801,7 +801,7 @@ void UITAZoneModule_Unknown24(void)
         RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 0xFF);
     }
     else {
-        if (MenuSetup && UIControl->keyX) {
+        if (MenuSetup && UIControl->keyY) {
             UITAZoneModule_Unknown25(entity->characterID, entity->zoneID, entity->actID, 0, UITAZoneModule_Unknown14);
             RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 0xFF);
         }
@@ -830,7 +830,7 @@ void UITAZoneModule_Unknown25(int player, int zone, int act, int a4, void (*call
 
         bool32 isUser = false;
         if (!a4)
-            isUser = records != NULL;
+            isUser = *records;
         leaderboard->taRecord    = *records;
         leaderboard->entryIsUser = isUser;
         APICallback_FetchLeaderboardData(zone, act, player, 0, 100, isUser);

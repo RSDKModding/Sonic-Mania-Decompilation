@@ -193,10 +193,10 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int selection)
             }
         }
 
-        if (button->callbackUnknown1) {
+        if (button->choiceChangeCB) {
             Entity *entStore       = RSDK_sceneInfo->entity;
             RSDK_sceneInfo->entity = (Entity *)button;
-            button->callbackUnknown1();
+            button->choiceChangeCB();
             RSDK_sceneInfo->entity = entStore;
         }
     }
@@ -495,12 +495,10 @@ void UIButton_ProcessButtonInputs(void)
     else
         rowID = 0;
 
-    if (control->columnCount) {
+    if (control->columnCount)
         columnID = control->activeEntityID % control->columnCount;
-    }
-    else {
+    else
         columnID = 0;
-    }
 
     bool32 flag = 0;
     if (control->rowCount > 1) {

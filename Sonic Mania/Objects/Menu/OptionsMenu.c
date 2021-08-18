@@ -243,7 +243,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(videoControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
             && !button->frameID)
-            button->callbackUnknown1 = OptionsMenu_Unknown31;
+            button->choiceChangeCB = OptionsMenu_Unknown31;
 
         posX          = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
         posY          = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
@@ -264,12 +264,12 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(videoControl_Win->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17) {
             switch (button->frameID) {
-                case 2: button->callbackUnknown1 = OptionsMenu_Unknown31; break;
-                case 7: button->callbackUnknown1 = OptionsMenu_Unknown32; break;
-                case 13: button->callbackUnknown1 = OptionsMenu_Unknown33; break;
-                case 14: button->callbackUnknown1 = OptionsMenu_Unknown34; break;
-                case 15: button->callbackUnknown1 = OptionsMenu_Unknown35; break;
-                case 16: button->callbackUnknown1 = OptionsMenu_Unknown36; break;
+                case 2: button->choiceChangeCB = OptionsMenu_Unknown31; break;
+                case 7: button->choiceChangeCB = OptionsMenu_Unknown32; break;
+                case 13: button->choiceChangeCB = OptionsMenu_Unknown33; break;
+                case 14: button->choiceChangeCB = OptionsMenu_Unknown34; break;
+                case 15: button->choiceChangeCB = OptionsMenu_Unknown35; break;
+                case 16: button->choiceChangeCB = OptionsMenu_Unknown36; break;
             }
         }
 
@@ -334,10 +334,11 @@ void OptionsMenu_Unknown4(void)
     EntityUIButton *button = videoControl->buttons[0];
     UIButton_SetChoiceSelection(button, RSDK.GetSettingsValue(SETTINGS_SHADERID));
 
-    // button                 = soundControl->buttons[0];
-    // button->freeBindP2     = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
-    // button                 = soundControl->buttons[1];
-    // button->freeBindP2     = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
+    EntityUISlider *slider = (EntityUISlider *)soundControl->buttons[0];
+    slider->sliderPos      = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
+
+    slider = (EntityUISlider *)soundControl->buttons[1];
+    slider->sliderPos     = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
 
     languageControl->startingID     = Localization->language;
     languageControl->activeEntityID = Localization->language;
@@ -662,24 +663,8 @@ void OptionsMenu_Unknown32(void)
 
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     if (entity->selection != 4) {
-        switch (entity->selection) {
-            case 0:
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424);
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 240);
-                break;
-            case 1:
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 848);
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 480);
-                break;
-            case 2:
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 1272);
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 720);
-                break;
-            case 3:
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 1696);
-                RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, 960);
-                break;
-        }
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (entity->selection + 1));
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (entity->selection + 1));
 
         options->windowSize = entity->selection;
         Options->state   = 1;
@@ -732,7 +717,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     // what the hell is up with this???????
-    // it'd only ever be 1 or 2 why are F1,F2,F4,F5 & FC options?????
+    // it'd only ever be 0 or 1 why are F1,F2,F4,F5 & FC options?????
     // this is a CB for the slider why are the boolean values here???
     bool32 value = entity->frameID != 1;
     switch (value) {
@@ -842,7 +827,7 @@ void OptionsMenu_EraseAllData(void)
     }
     memset(globals->noSaveSlot, 0, 0x400);
     globals->continues = 0;
-    SaveGame_ClearProgress();
+    GameProgress_ClearProgress();
     API.RemoveAllDBRows(globals->taTableID);
     if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
         SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
@@ -870,7 +855,7 @@ void OptionsMenu_Unknown40(void)
 {
     EntityUIControl *control   = (EntityUIControl *)OptionsMenu->dataOptionsControl;
     control->selectionDisabled = true;
-    SaveGame_Unknown14();
+    GameProgress_ClearBSSSave();
     SaveGame_SaveFile(OptionsMenu_EraseSaveDataCB);
 }
 

@@ -158,12 +158,13 @@ void LevelSelect_CheatActivated_UnlockAllMedals(void)
 {
     if (globals->superSecret && (globals->secrets & getMod(SECRET_RICKYMODE))) {
         RSDK.PlaySFX(LevelSelect->sfxMedalGot, 0, 255);
-        SaveGame_UnlockAllMedals();
+        GameProgress_UnlockAllMedals();
         if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
             LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
         }
         else {
-            globals->saveRAM[2373] = 0;
+            EntityGameProgress *progress = GameProgress_GetGameProgress();
+            progress->allSpecialCleared = false;
         }
     }
     else {

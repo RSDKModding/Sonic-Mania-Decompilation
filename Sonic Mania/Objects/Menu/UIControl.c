@@ -133,50 +133,20 @@ EntityUIControl *UIControl_GetUIControl(void)
 
 void UIControl_ClearInputs(char id)
 {
-    UIControl->upPress[0]      = false;
-    UIControl->downPress[0]    = false;
-    UIControl->leftPress[0]    = false;
-    UIControl->rightPress[0]   = false;
-    UIControl->yPress[0]       = false;
-    UIControl->xPress[0]       = false;
-    UIControl->backPress[0]    = false;
-    UIControl->confirmPress[0] = false;
+    for (int i = 0; i < 4; ++i) {
+        UIControl->upPress[i]      = false;
+        UIControl->downPress[i]    = false;
+        UIControl->leftPress[i]    = false;
+        UIControl->rightPress[i]   = false;
+        UIControl->yPress[i]       = false;
+        UIControl->xPress[i]       = false;
+        UIControl->backPress[i]    = false;
+        UIControl->confirmPress[i] = false;
 #if RETRO_USE_PLUS
-    UIControl->startPress[0] = false;
+        UIControl->startPress[i] = false;
 #endif
-    UIControl->upPress[1]      = false;
-    UIControl->downPress[1]    = false;
-    UIControl->leftPress[1]    = false;
-    UIControl->rightPress[1]   = false;
-    UIControl->yPress[1]       = false;
-    UIControl->xPress[1]       = false;
-    UIControl->backPress[1]    = false;
-    UIControl->confirmPress[1] = false;
-#if RETRO_USE_PLUS
-    UIControl->startPress[1] = false;
-#endif
-    UIControl->upPress[2]      = false;
-    UIControl->downPress[2]    = false;
-    UIControl->leftPress[2]    = false;
-    UIControl->rightPress[2]   = false;
-    UIControl->yPress[2]       = false;
-    UIControl->xPress[2]       = false;
-    UIControl->backPress[2]    = false;
-    UIControl->confirmPress[2] = false;
-#if RETRO_USE_PLUS
-    UIControl->startPress[2] = false;
-#endif
-    UIControl->upPress[3]      = false;
-    UIControl->downPress[3]    = false;
-    UIControl->leftPress[3]    = false;
-    UIControl->rightPress[3]   = false;
-    UIControl->yPress[3]       = false;
-    UIControl->xPress[3]       = false;
-    UIControl->backPress[3]    = false;
-    UIControl->confirmPress[3] = false;
-#if RETRO_USE_PLUS
-    UIControl->startPress[3] = false;
-#endif
+    }
+
     UIControl->keyUp    = false;
     UIControl->keyDown  = false;
     UIControl->keyLeft  = false;

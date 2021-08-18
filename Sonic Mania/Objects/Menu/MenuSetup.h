@@ -151,27 +151,27 @@ bool32 MenuSetup_VS_Unknown60(void);
 void MenuSetup_VS_StartPuyoMatch(void);
 
 // Options
-void MenuSetup_Options_Unknown19(void);
-void MenuSetup_Options_Unknown16(void);
-void MenuSetup_Options_Unknown17(void);
-void MenuSetup_Options_Unknown21(void);
+void MenuSetup_Options_OpenVideoMenu(void);
+void MenuSetup_Options_OpenSoundMenu(void);
+void MenuSetup_Options_OpenLanguageMenu(void);
+void MenuSetup_Options_OpenControlsMenu(void);
 void MenuSetup_Options_Unknown22_P1(void);
 void MenuSetup_Options_Unknown22_P2(void);
 void MenuSetup_Options_Unknown51(int id);
 void MenuSetup_Unknown53(void);
 void MenuSetup_Unknown54(void);
-void MenuSetup_Options_Unknown24(void);
+void MenuSetup_Options_OpenKBControlsMenu(void);
 void MenuSetup_Options_Unknown25(void);
 void MenuSetup_Options_Unknown27(int ststaus);
 void MenuSetup_Options_LaunchManual(void);
 void MenuSetup_Options_Unknown52(void);
-void MenuSetup_Options_Unknown53(void);
-void MenuSetup_Options_Unknown54(void);
-void MenuSetup_Options_Unknown55(void);
-void MenuSetup_Options_Unknown56(void);
-void MenuSetup_Options_Unknown57(void);
-void MenuSetup_Options_Unknown58(void);
-void MenuSetup_Options_Unknown59(void);
+void MenuSetup_Options_ShaderIDChanged_CB(void);
+void MenuSetup_Options_WinSizeChanged_CB(void);
+void MenuSetup_Options_BorderedChanged_CB(void);
+void MenuSetup_Options_FullscreenChanged_CB(void);
+void MenuSetup_Options_VSyncChanged_CB(void);
+void MenuSetup_Options_TripleBufferedChanged_CB(void);
+void MenuSetup_Options_SliderChanged_CB(void);
 
 //Extras
 void MenuSetup_OpenExtrasMenu(void);

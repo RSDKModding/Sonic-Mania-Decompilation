@@ -33,7 +33,7 @@ typedef struct {
     int field_150;
     Vector2 posUnknown;
     int selection;
-    void (*callbackUnknown1)(void);
+    void (*choiceChangeCB)(void);
     Animator animator;
     ushort textSpriteIndex;
     int startListID;

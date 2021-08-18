@@ -269,12 +269,12 @@ void MainMenu_Unknown2(void)
     EntityUIButton *taButton = control->buttons[1];
     if (API.CheckDLC(DLC_PLUS))
         taButton = control->buttons[2];
-    taButton->disabled = !SaveGame_CheckUnlock(0);
+    taButton->disabled = !GameProgress_CheckUnlock(0);
 
     EntityUIButton *compButton = control->buttons[2];
     if (API.CheckDLC(DLC_PLUS))
         compButton = control->buttons[3];
-    compButton->disabled = !SaveGame_CheckUnlock(1);
+    compButton->disabled = !GameProgress_CheckUnlock(1);
 }
 
 void MainMenu_Unknown3(void)
@@ -283,9 +283,9 @@ void MainMenu_Unknown3(void)
     {
         if (button->listID == 1) {
             if (button->frameID == 7) {
-                if (sku_platform && sku_platform != PLATFORM_DEV) {
+                if (sku_platform != PLATFORM_PC && sku_platform != PLATFORM_DEV) {
                     EntityUIControl *mainMenu = (EntityUIControl *)MainMenu->menuControlPtr;
-                    RSDK.ResetEntityPtr(button, TYPE_BLANK, NULL);
+                    destroyEntity(button);
                     --mainMenu->buttonCount;
                     --mainMenu->rowCount;
                     mainMenu->buttons[6] = NULL;
