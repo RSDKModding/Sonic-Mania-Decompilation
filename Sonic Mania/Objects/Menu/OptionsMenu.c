@@ -582,8 +582,8 @@ void OptionsMenu_Unknown23(int id)
 
     for (int i = 0; i < control->buttonCount; ++i) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
-        // if (binder->objectID == UIKeyBinder->objectID)
-        //    binder->field_105 = id;
+        if (binder->objectID == UIKeyBinder->objectID)
+           binder->inputID = id;
     }
 }
 

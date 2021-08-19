@@ -655,7 +655,7 @@ void UIControl_Unknown11(TextInfo *info)
     if (info->textLength) {
         foreach_all(UIControl, entity)
         {
-            if (entity->active == ACTIVE_ALWAYS || (!RSDK.StringCompare(info, &entity->tag, false)))
+            if (entity->active == ACTIVE_ALWAYS || !RSDK.StringCompare(info, &entity->tag, false))
                 UIControl_Unknown6(entity);
             else
                 UIControl_Unknown4(entity);

@@ -324,27 +324,27 @@ void AppendString(TextInfo *info, TextInfo *string)
     }
 }
 
-bool32 StringCompare(TextInfo *textA, TextInfo *textB, byte a3)
+bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch)
 {
     if (textA->textLength != textB->textLength)
         return false;
     ushort *textPtrA = textA->text;
     ushort *textPtrB = textB->text;
 
-    if (a3) {
+    if (exactMatch) { //each character has to match
         for (int i = 0; i < textA->textLength; ++i) {
             if (textPtrA[i] != textPtrB[i])
                 return false;
         }
         return true;
     }
-    else {
+    else { //attempt to ignore case sensitivity when matching
         if (textA->textLength <= 0)
             return true;
 
         for (int i = 0; i < textA->textLength; ++i) {
             if (textPtrA[i] != textPtrB[i]) {
-                if (textPtrA[i] != textPtrB[i] + 0x10 && textPtrA[i] != textPtrB[i] - 0x10) {
+                if (textPtrA[i] != textPtrB[i] + 0x20 && textPtrA[i] != textPtrB[i] - 0x20) {
                     return false;
                 }
             }

@@ -226,7 +226,7 @@ void Sol_Unknown5(void)
             entity->animator1.frameID = 1;
         }
 
-        entity->direction = player->position.x >= entity->position.x;
+        entity->direction = playerPtr->position.x >= entity->position.x;
     }
 
     Sol_CheckOnScreen();

@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    ushort aniFrames;
+    ushort sfxShot;
 } ObjectAquis;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    byte field_60;
+    int timer2;
+    Vector2 startPos;
+    byte startDir;
+    Animator animator1;
+    Animator animator2;
 } EntityAquis;
 
 // Object Struct
@@ -28,6 +41,19 @@ void Aquis_EditorLoad(void);
 void Aquis_Serialize(void);
 
 // Extra Entity Functions
+void Aquis_DebugSpawn(void);
+void Aquis_DebugDraw(void);
 
+void Aquis_CheckPlayerCollisions(void);
+void Aquis_CheckOnScreen(void);
+
+void Aquis_State_Setup(void);
+void Aquis_Unknown5(void);
+void Aquis_Unknown6(void);
+void Aquis_Unknown7(void);
+void Aquis_Unknown8(void);
+void Aquis_Unknown9(void);
+
+void Aquis_State_Shot(void);
 
 #endif //!OBJ_AQUIS_H

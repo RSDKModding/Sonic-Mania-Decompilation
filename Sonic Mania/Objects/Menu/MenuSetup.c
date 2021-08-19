@@ -193,7 +193,7 @@ void MenuSetup_StartTransitionLB(void (*callback)(void), int time)
     menuSetup->field_68        = 5;
     menuSetup->timeOut         = time;
     menuSetup->state           = MenuSetup_Leaderboard_Unknown;
-    menuSetup->timedState = callback;
+    menuSetup->timedState      = callback;
 }
 #endif
 
@@ -785,7 +785,7 @@ void MenuSetup_Unknown7(void)
             UIButton_SetChoiceSelection(control->buttons[1], 1);
         }
 
-        if (control == (EntityUIControl*)MenuSetup->secrets) {
+        if (control == (EntityUIControl *)MenuSetup->secrets) {
             EntityUIControl *control = (EntityUIControl *)MenuSetup->secrets;
 
             UIButton_SetChoiceSelection(control->buttons[0], (globals->medalMods & getMod(MEDAL_ANDKNUCKLES)) != 0);
@@ -823,9 +823,9 @@ void MenuSetup_Unknown7(void)
         }
 
         if (control == (EntityUIControl *)MenuSetup->language) {
-            EntityUIControl *control        = (EntityUIControl *)MenuSetup->language;
-            control->startingID     = Localization->language;
-            control->activeEntityID = Localization->language;
+            EntityUIControl *control = (EntityUIControl *)MenuSetup->language;
+            control->startingID      = Localization->language;
+            control->activeEntityID  = Localization->language;
         }
 
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -1261,7 +1261,7 @@ void MenuSetup_Leaderboard_Unknown(void)
         UIDialog_SetupText(dialog, &info);
     }
     else if (status >= STATUS_ERROR) {
-        status = APICallback_LeaderboardStatus();
+        status  = APICallback_LeaderboardStatus();
         int str = STR_COMMERROR;
         if (status == 504)
             str = STR_NOWIFI;
@@ -1273,11 +1273,11 @@ void MenuSetup_Leaderboard_Unknown(void)
 
         UIDialog_SetupText(dialog, &info);
         UIDialog_AddButton(DIALOG_OK, dialog, 0, true);
-        
-        EntityUIControl *parent = (EntityUIControl*)dialog->parent;
-        parent->rowCount       = 1;
-        parent->columnCount    = 1;
-        parent->activeEntityID = 0;
+
+        EntityUIControl *parent = (EntityUIControl *)dialog->parent;
+        parent->rowCount        = 1;
+        parent->columnCount     = 1;
+        parent->activeEntityID  = 0;
 
         if (leaderboard->taRecord)
             leaderboard->entryIsUser = !leaderboard->entryIsUser;
@@ -1297,13 +1297,13 @@ void MenuSetup_Leaderboard_Unknown(void)
             prompt->promptID = 14;
         else
             prompt->promptID = 15;
-        prompt->field_78     = -1;
-        prompt->visible = leaderboard->taRecord != 0;
+        prompt->field_78 = -1;
+        prompt->visible  = leaderboard->taRecord != 0;
 
         UILeaderboard_InitLeaderboard(leaderboard);
         UIDialog_Unknown4(dialog, entity->timedState);
-        entity->timedState    = StateMachine_None;
-        MenuSetup->dialog = NULL;
+        entity->timedState = StateMachine_None;
+        MenuSetup->dialog  = NULL;
         destroyEntity(entity);
     }
 }
@@ -1872,7 +1872,7 @@ void MenuSetup_Options_Unknown51(int id)
     for (int i = 0; i < control->buttonCount; ++i) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
         if (binder->objectID == UIKeyBinder->objectID) {
-            // binder->field_105 = id;
+            binder->inputID = id;
             if (id == 1)
                 binder->options2 = MenuSetup_Options_Unknown22_P2;
             else if (!id)

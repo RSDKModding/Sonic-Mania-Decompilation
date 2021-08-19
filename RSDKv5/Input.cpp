@@ -252,6 +252,100 @@ int winAPIToSDLMappings(int mapping)
     }
 }
 
+int SDLToWinAPIMappings(int mapping)
+{
+    switch (mapping) {
+        default: return VK_UNKNOWN;
+        case SDL_SCANCODE_CANCEL: return VK_CANCEL;
+        case SDL_SCANCODE_TAB: return VK_TAB;
+        case SDL_SCANCODE_CLEAR: return VK_CLEAR;
+        case SDL_SCANCODE_RETURN: return VK_RETURN;
+        case SDL_SCANCODE_MENU: return VK_MENU;
+        case SDL_SCANCODE_PAUSE: return VK_PAUSE;
+        case SDL_SCANCODE_CAPSLOCK: return VK_CAPITAL;
+        case SDL_SCANCODE_ESCAPE: return VK_ESCAPE;
+        case SDL_SCANCODE_SPACE: return VK_SPACE;
+        case SDL_SCANCODE_PAGEUP: return VK_PRIOR;
+        case SDL_SCANCODE_PAGEDOWN: return VK_NEXT;
+        case SDL_SCANCODE_END: return VK_END;
+        case SDL_SCANCODE_HOME: return VK_HOME;
+        case SDL_SCANCODE_LEFT: return VK_LEFT;
+        case SDL_SCANCODE_UP: return VK_UP;
+        case SDL_SCANCODE_RIGHT: return VK_RIGHT;
+        case SDL_SCANCODE_DOWN: return VK_DOWN;
+        case SDL_SCANCODE_SELECT: return VK_SELECT;
+        case SDL_SCANCODE_EXECUTE: return VK_EXECUTE;
+        case SDL_SCANCODE_PRINTSCREEN: return VK_SNAPSHOT;
+        case SDL_SCANCODE_INSERT: return VK_INSERT;
+        case SDL_SCANCODE_DELETE: return VK_DELETE;
+        case SDL_SCANCODE_HELP: return VK_HELP;
+        case SDL_SCANCODE_0: return VK_0;
+        case SDL_SCANCODE_1: return VK_1;
+        case SDL_SCANCODE_2: return VK_2;
+        case SDL_SCANCODE_3: return VK_3;
+        case SDL_SCANCODE_4: return VK_4;
+        case SDL_SCANCODE_5: return VK_5;
+        case SDL_SCANCODE_6: return VK_6;
+        case SDL_SCANCODE_7: return VK_7;
+        case SDL_SCANCODE_8: return VK_8;
+        case SDL_SCANCODE_9: return VK_9;
+        case SDL_SCANCODE_A: return VK_A;
+        case SDL_SCANCODE_B: return VK_B;
+        case SDL_SCANCODE_C: return VK_C;
+        case SDL_SCANCODE_D: return VK_D;
+        case SDL_SCANCODE_E: return VK_E;
+        case SDL_SCANCODE_F: return VK_F;
+        case SDL_SCANCODE_G: return VK_G;
+        case SDL_SCANCODE_H: return VK_H;
+        case SDL_SCANCODE_I: return VK_I;
+        case SDL_SCANCODE_J: return VK_J;
+        case SDL_SCANCODE_K: return VK_K;
+        case SDL_SCANCODE_L: return VK_L;
+        case SDL_SCANCODE_M: return VK_M;
+        case SDL_SCANCODE_N: return VK_N;
+        case SDL_SCANCODE_O: return VK_O;
+        case SDL_SCANCODE_P: return VK_P;
+        case SDL_SCANCODE_Q: return VK_Q;
+        case SDL_SCANCODE_R: return VK_R;
+        case SDL_SCANCODE_S: return VK_S;
+        case SDL_SCANCODE_T: return VK_T;
+        case SDL_SCANCODE_U: return VK_U;
+        case SDL_SCANCODE_V: return VK_V;
+        case SDL_SCANCODE_W: return VK_W;
+        case SDL_SCANCODE_X: return VK_X;
+        case SDL_SCANCODE_Y: return VK_Y;
+        case SDL_SCANCODE_Z: return VK_Z;
+        case SDL_SCANCODE_F1: return VK_F1;
+        case SDL_SCANCODE_F2: return VK_F2;
+        case SDL_SCANCODE_F3: return VK_F3;
+        case SDL_SCANCODE_F4: return VK_F4;
+        case SDL_SCANCODE_F5: return VK_F5;
+        case SDL_SCANCODE_F6: return VK_F6;
+        case SDL_SCANCODE_F7: return VK_F7;
+        case SDL_SCANCODE_F8: return VK_F8;
+        case SDL_SCANCODE_F9: return VK_F9;
+        case SDL_SCANCODE_F10: return VK_F10;
+        case SDL_SCANCODE_F11: return VK_F11;
+        case SDL_SCANCODE_F12: return VK_F12;
+        case SDL_SCANCODE_F13: return VK_F13;
+        case SDL_SCANCODE_F14: return VK_F14;
+        case SDL_SCANCODE_F15: return VK_F15;
+        case SDL_SCANCODE_F16: return VK_F16;
+        case SDL_SCANCODE_F17: return VK_F17;
+        case SDL_SCANCODE_F18: return VK_F18;
+        case SDL_SCANCODE_F19: return VK_F19;
+        case SDL_SCANCODE_F20: return VK_F20;
+        case SDL_SCANCODE_F21: return VK_F21;
+        case SDL_SCANCODE_F22: return VK_F22;
+        case SDL_SCANCODE_F23: return VK_F23;
+        case SDL_SCANCODE_F24: return VK_F24;
+        case SDL_SCANCODE_LSHIFT: return VK_LSHIFT;
+        case SDL_SCANCODE_RSHIFT: return VK_RSHIFT;
+        case SDL_SCANCODE_LCTRL: return VK_LCONTROL;
+        case SDL_SCANCODE_RCTRL: return VK_RCONTROL;
+    }
+}
+
 bool32 getControllerButton(InputDevice *device, byte buttonID)
 {
     if (buttonID == (byte)SDL_CONTROLLER_BUTTON_INVALID || !device)
@@ -345,16 +439,26 @@ void ProcessKeyboardInput(InputDevice *device, int controllerID)
         &controller[controllerID].keyY,  &controller[controllerID].keyZ,    &controller[controllerID].keyStart, &controller[controllerID].keySelect,
     };
 
+    int lastKey = -1;
+    for (int i = 0; i < keyCount; i++) {
+        if (keyState[i]) {
+            lastKey = i;
+        }
+    }
+
     int inputID    = device->controllerID + 1;
-    int mappings[] = {
-        controller[inputID].keyUp.keyMap,    controller[inputID].keyDown.keyMap,  controller[inputID].keyLeft.keyMap,
-        controller[inputID].keyRight.keyMap, controller[inputID].keyA.keyMap,     controller[inputID].keyB.keyMap,
-        controller[inputID].keyC.keyMap,     controller[inputID].keyX.keyMap,     controller[inputID].keyY.keyMap,
-        controller[inputID].keyZ.keyMap,     controller[inputID].keyStart.keyMap, controller[inputID].keySelect.keyMap,
+    int *mappings[] = {
+        &controller[inputID].keyUp.keyMap,    &controller[inputID].keyDown.keyMap,  &controller[inputID].keyLeft.keyMap,
+        &controller[inputID].keyRight.keyMap, &controller[inputID].keyA.keyMap,     &controller[inputID].keyB.keyMap,
+        &controller[inputID].keyC.keyMap,     &controller[inputID].keyX.keyMap,     &controller[inputID].keyY.keyMap,
+        &controller[inputID].keyZ.keyMap,     &controller[inputID].keyStart.keyMap, &controller[inputID].keySelect.keyMap,
     };
 
     for (int i = 0; i < KEY_MAX; i++) {
-        if (keyState[winAPIToSDLMappings(mappings[i])]) {
+        if (*mappings[i] == -1 && lastKey != -1)
+            *mappings[i] = SDLToWinAPIMappings(lastKey);
+
+        if (keyState[winAPIToSDLMappings(*mappings[i])]) {
             InputManager.keyPress[controllerID - 1][i] = true;
             buttons[i]->setHeld();
         }

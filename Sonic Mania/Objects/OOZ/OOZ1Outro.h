@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    ushort sfxDrop;
 } ObjectOOZ1Outro;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    bool32 activated;
+    int field_64;
+    int field_68;
+    int field_6C;
+    int field_70;
+    int field_74;
+    int field_78;
+    Hitbox hitbox;
+    int boundsL;
+    int boundsR;
+    int boundsT;
+    int boundsB;
 } EntityOOZ1Outro;
 
 // Object Struct
@@ -28,6 +43,9 @@ void OOZ1Outro_EditorLoad(void);
 void OOZ1Outro_Serialize(void);
 
 // Extra Entity Functions
-
+bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host);
 
 #endif //!OBJ_OOZ1OUTRO_H

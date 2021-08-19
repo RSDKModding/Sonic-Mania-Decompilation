@@ -574,20 +574,23 @@ void Platform_State_PlayerActivated(void)
     if (!flag) {
         if (entity->amplitude.y > 0) {
             entity->amplitude.y = entity->amplitude.y - (entity->speed << 16);
-            if (entity->amplitude.y <= 0)
+            if (entity->amplitude.y <= 0) {
                 entity->amplitude.y = 0;
+                if (entity->activeScreens && Platform->useClack)
+                    RSDK.PlaySFX(Platform->sfx_Clack, 0, 255);
+            }
         }
     }
     else {
         if (entity->amplitude.y < entity->amplitude.x) {
             entity->amplitude.y = entity->amplitude.y + (entity->speed << 16);
-            if (entity->amplitude.y >= entity->amplitude.x)
+            if (entity->amplitude.y >= entity->amplitude.x) {
                 entity->amplitude.y = entity->amplitude.x;
+                if (entity->activeScreens && Platform->useClack)
+                    RSDK.PlaySFX(Platform->sfx_Clack, 0, 255);
+            }
         }
     }
-
-    if (entity->activeScreens && Platform->useClack)
-        RSDK.PlaySFX(Platform->sfx_Clack, 0, 255);
 
     if (entity->direction) {
         entity->drawPos.x = (-entity->amplitude.y >> 8) * RSDK.Cos256(entity->angle) + entity->centerPos.x;

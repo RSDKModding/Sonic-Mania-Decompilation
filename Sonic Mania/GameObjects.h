@@ -213,7 +213,7 @@ typedef struct {
     void (*LoadStrings)(TextInfo *dst, const char *path, int);
     bool32 (*SplitStringList)(TextInfo *list, TextInfo *strings, int start, int end);
     void (*GetCString)(char *text, TextInfo *info);
-    bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 flag);
+    bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 exactMatch);
     void (*GetDisplayInfo)(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
     void (*GetWindowSize)(int *width, int *height);
     int (*SetScreenSize)(byte screenID, ushort width, ushort height);

@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    ushort aniFrames;
+    ushort sfxShot;
 } ObjectOctus;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    byte field_60;
+    Vector2 startPos;
+    byte startDir;
+    int field_70;
+    Animator animator;
 } EntityOctus;
 
 // Object Struct
@@ -28,6 +40,18 @@ void Octus_EditorLoad(void);
 void Octus_Serialize(void);
 
 // Extra Entity Functions
+void Octus_DebugSpawn(void);
+void Octus_DebugDraw(void);
 
+void Octus_CheckPlayerCollisions(void);
+void Octus_CheckOnScreen(void);
+
+void Octus_State_Setup(void);
+void Octus_Unknown5(void);
+void Octus_Unknown6(void);
+void Octus_Unknown7(void);
+void Octus_Unknown8(void);
+void Octus_Unknown9(void);
+void Octus_State_Shot(void);
 
 #endif //!OBJ_OCTUS_H
