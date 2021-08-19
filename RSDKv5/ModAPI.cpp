@@ -83,7 +83,6 @@ void loadMods()
         FileIO *configFile     = fOpen(mod_config.c_str(), "r");
         if (configFile) {
             fClose(configFile);
-            char buffer[0x100];
             auto ini = iniparser_load(mod_config.c_str());
 
             int c             = iniparser_getsecnkeys(ini, "Mods");
@@ -91,7 +90,6 @@ void loadMods()
             iniparser_getseckeys(ini, "Mods", keys);
 
             for (int m = 0; m < c; ++m) {
-                bool active = false;
                 ModInfo info;
                 if (loadMod(&info, modPath.string(), std::string(keys[m] + 5), iniparser_getboolean(ini, keys[m], false)))
                     modList.push_back(info);
@@ -185,7 +183,6 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
         info->folder = folder;
         info->active = active;
 
-        char infoBuf[0x100];
         info->name    = iniparser_getstring(ini, ":Name", "Unnamed Mod");
         info->desc    = iniparser_getstring(ini, ":Description", "");
         info->author  = iniparser_getstring(ini, ":Author", "Unknown Author");
@@ -831,7 +828,7 @@ void SaveSettings(const char *id)
         if (modList[m].folder == id) {
             if (!modList[m].settings.size())
                 break;
-            TextInfo path;
+            
             FileIO *file = fOpen((GetModPath_i(id) + "/modSettings.ini").c_str(), "w");
 
             if (modList[m].settings[""].size()) {

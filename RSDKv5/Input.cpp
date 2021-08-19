@@ -304,7 +304,6 @@ void UpdateDeviceInput(InputDevice *device)
     device->anyPress = false;
 #if RETRO_USING_SDL2
     int keyCount         = 0;
-    const byte *keyState = SDL_GetKeyboardState(&keyCount);
 
     int buttonMap[] = {
         SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,

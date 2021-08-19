@@ -59,6 +59,10 @@
 		C96888A125DF48CE00BEE4B8 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = C968889025DF48CD00BEE4B8 /* inflate.c */; };
 		C96888A225DF48CE00BEE4B8 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = C968889125DF48CD00BEE4B8 /* crc32.c */; };
 		C96888A325DF48CE00BEE4B8 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = C968889225DF48CD00BEE4B8 /* uncompr.c */; };
+		C975E69426CB365000F09AD4 /* UserAchievements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E68B26CB364F00F09AD4 /* UserAchievements.cpp */; };
+		C975E69526CB365000F09AD4 /* ModAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E68E26CB364F00F09AD4 /* ModAPI.cpp */; };
+		C975E69626CB365000F09AD4 /* UserStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E69026CB365000F09AD4 /* UserStorage.cpp */; };
+		C975E69726CB365000F09AD4 /* UserLeaderboards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E69126CB365000F09AD4 /* UserLeaderboards.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -169,6 +173,15 @@
 		C968889025DF48CD00BEE4B8 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = inflate.c; path = dependencies/all/zlib/inflate.c; sourceTree = SOURCE_ROOT; };
 		C968889125DF48CD00BEE4B8 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crc32.c; path = dependencies/all/zlib/crc32.c; sourceTree = SOURCE_ROOT; };
 		C968889225DF48CD00BEE4B8 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uncompr.c; path = dependencies/all/zlib/uncompr.c; sourceTree = SOURCE_ROOT; };
+		C975E68B26CB364F00F09AD4 /* UserAchievements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserAchievements.cpp; sourceTree = "<group>"; };
+		C975E68C26CB364F00F09AD4 /* ModAPI.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ModAPI.hpp; sourceTree = "<group>"; };
+		C975E68D26CB364F00F09AD4 /* UserLeaderboards.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserLeaderboards.hpp; sourceTree = "<group>"; };
+		C975E68E26CB364F00F09AD4 /* ModAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModAPI.cpp; sourceTree = "<group>"; };
+		C975E68F26CB364F00F09AD4 /* UserStorage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserStorage.hpp; sourceTree = "<group>"; };
+		C975E69026CB365000F09AD4 /* UserStorage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserStorage.cpp; sourceTree = "<group>"; };
+		C975E69126CB365000F09AD4 /* UserLeaderboards.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserLeaderboards.cpp; sourceTree = "<group>"; };
+		C975E69226CB365000F09AD4 /* UserAchievements.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserAchievements.hpp; sourceTree = "<group>"; };
+		C975E69326CB365000F09AD4 /* main.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +252,15 @@
 		C968822C25DF3D5E00BEE4B8 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				C975E69326CB365000F09AD4 /* main.hpp */,
+				C975E68E26CB364F00F09AD4 /* ModAPI.cpp */,
+				C975E68C26CB364F00F09AD4 /* ModAPI.hpp */,
+				C975E68B26CB364F00F09AD4 /* UserAchievements.cpp */,
+				C975E69226CB365000F09AD4 /* UserAchievements.hpp */,
+				C975E69126CB365000F09AD4 /* UserLeaderboards.cpp */,
+				C975E68D26CB364F00F09AD4 /* UserLeaderboards.hpp */,
+				C975E69026CB365000F09AD4 /* UserStorage.cpp */,
+				C975E68F26CB364F00F09AD4 /* UserStorage.hpp */,
 				C92834EF2631163900D51CCE /* Video.cpp */,
 				C92834F02631163900D51CCE /* Video.hpp */,
 				C968825025DF3D7D00BEE4B8 /* Animation.cpp */,
@@ -432,18 +454,21 @@
 				C965667C26BCF27B0076832A /* theoraplay.c in Sources */,
 				C96888A125DF48CE00BEE4B8 /* inflate.c in Sources */,
 				C968826F25DF3D7E00BEE4B8 /* RetroEngine.cpp in Sources */,
+				C975E69726CB365000F09AD4 /* UserLeaderboards.cpp in Sources */,
 				C968827025DF3D7E00BEE4B8 /* Palette.cpp in Sources */,
 				C968889E25DF48CE00BEE4B8 /* trees.c in Sources */,
 				C968825E25DF3D7E00BEE4B8 /* DefaultObject.cpp in Sources */,
 				C968826125DF3D7E00BEE4B8 /* Math.cpp in Sources */,
 				C968826825DF3D7E00BEE4B8 /* Object.cpp in Sources */,
 				C968889F25DF48CE00BEE4B8 /* gzread.c in Sources */,
+				C975E69426CB365000F09AD4 /* UserAchievements.cpp in Sources */,
 				C968889A25DF48CE00BEE4B8 /* gzlib.c in Sources */,
 				C96888A325DF48CE00BEE4B8 /* uncompr.c in Sources */,
 				C968826225DF3D7E00BEE4B8 /* main.cpp in Sources */,
 				C968889625DF48CE00BEE4B8 /* infback.c in Sources */,
 				C968826E25DF3D7E00BEE4B8 /* Sprite.cpp in Sources */,
 				C968825F25DF3D7E00BEE4B8 /* Collision.cpp in Sources */,
+				C975E69526CB365000F09AD4 /* ModAPI.cpp in Sources */,
 				C968826325DF3D7E00BEE4B8 /* Reader.cpp in Sources */,
 				C968826925DF3D7E00BEE4B8 /* Scene.cpp in Sources */,
 				C968826425DF3D7E00BEE4B8 /* Userdata.cpp in Sources */,
@@ -454,6 +479,7 @@
 				C96888A225DF48CE00BEE4B8 /* crc32.c in Sources */,
 				C968889925DF48CE00BEE4B8 /* compress.c in Sources */,
 				C968827225DF3D7E00BEE4B8 /* Storage.cpp in Sources */,
+				C975E69626CB365000F09AD4 /* UserStorage.cpp in Sources */,
 				C968886E25DF3F4C00BEE4B8 /* dictionary.cpp in Sources */,
 				C968825C25DF3D7E00BEE4B8 /* Shader.cpp in Sources */,
 				C968826625DF3D7E00BEE4B8 /* TestObject.cpp in Sources */,
@@ -469,7 +495,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -528,7 +554,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

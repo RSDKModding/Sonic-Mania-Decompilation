@@ -188,7 +188,6 @@ void LoadScene()
             GEN_HASH(hashBuffer, hash);
 
             if (objectCount > 0) {
-                int objID                            = 0;
                 stageObjectIDs[sceneInfo.classCount] = 0;
                 for (int objID = 0; objID < objectCount; ++objID) {
                     if (HASH_MATCH(hash, objectList[objID].hash)) {
@@ -298,7 +297,6 @@ void LoadSceneFile()
             for (int s = 1; s < SCREEN_MAX; ++s) layer->drawLayer[s] = layer->drawLayer[0];
 
             layer->width = ReadInt16(&info);
-            int w        = layer->width;
             int shift    = 1;
             int shift2   = 1;
             int val      = 0;
@@ -309,7 +307,6 @@ void LoadSceneFile()
             layer->widthShift = shift;
 
             layer->height = ReadInt16(&info);
-            int h         = layer->height;
             shift     = 1;
             shift2    = 1;
             val       = 0;

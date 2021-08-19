@@ -31,8 +31,6 @@ void FillDummyLeaderboardEntries()
                                  "FACILISISIVY303",     "TELLUSHARLAN339",      "METUSSOPOLINE75",     "NUNCKYLYNN927",       "PROINHERMIONE775",
                                  "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
-    const char *dummyUserID = "DUMMY_USER_ID";
-
     leaderboards->field_4 = STATUS_OK;
     leaderboards->field_8 = 1;
     leaderboards->field_C = 20;
