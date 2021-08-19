@@ -190,12 +190,11 @@ void Press_Move(void)
             entity->onFloor |= 1 << playerBit;
         }
         entity->position.y += entity->offTop - entity->offBottom;
-        int collide = Player_CheckCollisionBox(player, entity, &Press->hitbox) - 1;
-        if (collide) {
-            if (collide == 3) // collision bottom (crush detection)
-                player->collisionFlagV |= 2u;
+        int collide = Player_CheckCollisionBox(player, entity, &Press->hitbox);
+        if (collide == 4) { // collision bottom (crush detection)
+            player->collisionFlagV |= 2;
         }
-        else // if top
+        else if (collide == 1) // if top
             entity->onRoof |= 1 << playerBit;
         ++playerBit;
         entity->position.y -= entity->offTop;
@@ -250,12 +249,12 @@ void Press_HandleMovement(void)
     foreach_active(Crate, crate)
     {
         entity->position.y += entity->offBottom;
-        if (RSDK.CheckObjectCollisionBox(entity, &Press->hitbox, crate, &crate->hitbox, false)) {
+        if (RSDK.CheckObjectCollisionBox(entity, &Press->hitbox, crate, &crate->hitbox, false) == 1) {
             bottom = true;
             Crate_MoveY(crate, -floorOffset);
         }
         entity->position.y += entity->offTop - entity->offBottom;
-        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, entity, &Press->hitbox, false)) {
+        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, entity, &Press->hitbox, false) == 1) {
             top       = true;
             int frame = crate->frameID;
             if (!frame) // white (segregation)

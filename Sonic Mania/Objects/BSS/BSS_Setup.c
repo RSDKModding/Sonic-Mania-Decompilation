@@ -319,7 +319,7 @@ void BSS_Setup_CollectRing(void)
     if (BSS_Setup->ringCount > 0) {
         BSS_Setup->ringCount--;
         if (!BSS_Setup->ringCount) {
-            RSDK.CreateEntity(BSS_Message->objectID, (void *)1, entity->position.x, entity->position.y);
+            RSDK.CreateEntity(BSS_Message->objectID, intToVoid(1), entity->position.x, entity->position.y);
             RSDK.PlaySFX(BSS_Setup->sfxEvent, 0, 255);
         }
     }
@@ -437,7 +437,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_ProcessChain();
                 --BSS_Setup->sphereCount;
                 if (!entity->ringLoopFlag) {
-                    CREATE_ENTITY(BSS_Collected, (void *)1, entity->playerPos.x, entity->playerPos.y);
+                    CREATE_ENTITY(BSS_Collected, intToVoid(1), entity->playerPos.x, entity->playerPos.y);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
 
@@ -498,7 +498,7 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_SPHERE_GREEN:
             if (entity->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, (void *)3, entity->playerPos.x, entity->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, intToVoid(3), entity->playerPos.x, entity->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
                 RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
             }
@@ -509,7 +509,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->spinTimer  = 0;
                 entity->globeTimer = 0;
                 RSDK.PlaySFX(BSS_Setup->sfxTeleport, 0, 255);
-                EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, (void *)0xF0F0F0, entity->position.x, entity->position.y);
+                EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), entity->position.x, entity->position.y);
                 fade->speedIn      = 32;
                 fade->speedOut     = 32;
                 fade->wait         = 48;
@@ -537,7 +537,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_ProcessChain();
                 --BSS_Setup->sphereCount;
                 if (!entity->ringLoopFlag) {
-                    CREATE_ENTITY(BSS_Collected, (void *)1, posX, posY);
+                    CREATE_ENTITY(BSS_Collected, intToVoid(1), posX, posY);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
                 if (BSS_Setup->sphereCount <= 0) {
@@ -776,7 +776,7 @@ void BSS_Setup_State_PinkSphereWarp(void)
         bool32 flag = false;
         for (; (count && val >= 0) && !flag; --count) {
             for (int y = 0; y < BSS_PLAYFIELD_H; ++y) {
-                for (int x = 0; x < 0x20; ++x) {
+                for (int x = 0; x < BSS_PLAYFIELD_W; ++x) {
                     ushort tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
                     if ((tile & 0x7F) == BSS_SPHERE_PINK && (x != entity->playerPos.x || y != entity->playerPos.y) && --val <= -1) {
                         entity->playerPos.x = x;
@@ -834,7 +834,7 @@ void BSS_Setup_State_PinkSphereWarp(void)
         }
 
         entity->angle = val << 6;
-        CREATE_ENTITY(BSS_Collected, (void *)5, entity->playerPos.x, entity->playerPos.y);
+        CREATE_ENTITY(BSS_Collected, intToVoid(5), entity->playerPos.x, entity->playerPos.y);
         BSS_Setup->playField[entity->playerPos.y + (BSS_PLAYFIELD_H * entity->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
         entity->timer                                                                       = 100;
         entity->state                                                                       = BSS_Setup_State_Unknown23;
@@ -852,7 +852,7 @@ void BSS_Setup_State_Exit(void)
     PauseMenu->disableEvents = true;
     entity->maxSpeed         = 0;
     if (entity->spinTimer <= 0) {
-        RSDK.CreateEntity(BSS_Message->objectID, (void *)2, entity->position.x, entity->position.y);
+        RSDK.CreateEntity(BSS_Message->objectID, intToVoid(2), entity->position.x, entity->position.y);
         foreach_active(BSS_Player, player) { player->stateInput = StateMachine_None; }
     }
     else {

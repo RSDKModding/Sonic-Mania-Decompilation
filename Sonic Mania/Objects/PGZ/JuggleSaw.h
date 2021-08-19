@@ -7,16 +7,16 @@
 typedef enum { JSAW_NO_SAW = 0, JSAW_HAS_SAW = 1, JSAW_AWAITING_SAW = 2 } JuggleSawMode;
 
 typedef struct {
-	RSDK_OBJECT
-	Hitbox hitbox;
-	Hitbox friendbox;
-	Hitbox sawHitbox;
-	Hitbox grabboxR;
-	Hitbox grabboxL;
-	ushort animID;
-	ushort explodeSFX;
-	ushort juggleSFX;
-	ushort throwSFX;
+    RSDK_OBJECT
+    Hitbox hitbox;
+    Hitbox friendbox;
+    Hitbox sawHitbox;
+    Hitbox grabboxFloor;
+    Hitbox grabboxWall;
+    ushort animID;
+    ushort explodeSFX;
+    ushort juggleSFX;
+    ushort throwSFX;
 } ObjectJuggleSaw;
 
 // Entity Class

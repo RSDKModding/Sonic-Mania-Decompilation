@@ -48,7 +48,6 @@
     <ClInclude Include="Objects\Common\BreakableWall.h" />
     <ClInclude Include="Objects\Common\Button.h" />
     <ClInclude Include="Objects\Common\CollapsingPlatform.h" />
-    <ClInclude Include="Objects\Common\CompetitionSession.h" />
     <ClInclude Include="Objects\Common\Decoration.h" />
     <ClInclude Include="Objects\Common\Eggman.h" />
     <ClInclude Include="Objects\Common\FlingRamp.h" />
@@ -136,7 +135,6 @@
     <ClInclude Include="Objects\FBZ\Crane.h" />
     <ClInclude Include="Objects\FBZ\Cylinder.h" />
     <ClInclude Include="Objects\FBZ\ElectroMagnet.h" />
-    <ClInclude Include="Objects\FBZ\Fan.h" />
     <ClInclude Include="Objects\FBZ\FBZ1Outro.h" />
     <ClInclude Include="Objects\FBZ\FBZ2Outro.h" />
     <ClInclude Include="Objects\FBZ\FBZFan.h" />
@@ -230,8 +228,10 @@
     <ClInclude Include="Objects\HCZ\BreakBar.h" />
     <ClInclude Include="Objects\HCZ\Buggernaut.h" />
     <ClInclude Include="Objects\HCZ\ButtonDoor.h" />
+    <ClInclude Include="Objects\HCZ\Current.h" />
     <ClInclude Include="Objects\HCZ\DCEvent.h" />
     <ClInclude Include="Objects\HCZ\DiveEggman.h" />
+    <ClInclude Include="Objects\HCZ\Fan.h" />
     <ClInclude Include="Objects\HCZ\Gondola.h" />
     <ClInclude Include="Objects\HCZ\HandLauncher.h" />
     <ClInclude Include="Objects\HCZ\HangConveyor.h" />
@@ -239,6 +239,7 @@
     <ClInclude Include="Objects\HCZ\HCZOneWayDoor.h" />
     <ClInclude Include="Objects\HCZ\HCZSetup.h" />
     <ClInclude Include="Objects\HCZ\HCZSpikeBall.h" />
+    <ClInclude Include="Objects\HCZ\Jawz.h" />
     <ClInclude Include="Objects\HCZ\Jellygnite.h" />
     <ClInclude Include="Objects\HCZ\LaundroMobile.h" />
     <ClInclude Include="Objects\HCZ\MegaChopper.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Objects\HCZ\Whirlpool.h" />
     <ClInclude Include="Objects\Helpers\BadnikHelpers.h" />
     <ClInclude Include="Objects\Helpers\ColorHelpers.h" />
+    <ClInclude Include="Objects\Helpers\CompetitionSession.h" />
     <ClInclude Include="Objects\Helpers\DrawHelpers.h" />
     <ClInclude Include="Objects\Helpers\GameProgress.h" />
     <ClInclude Include="Objects\Helpers\LogHelpers.h" />
@@ -261,13 +263,11 @@
     <ClInclude Include="Objects\Helpers\ReplayDB.h" />
     <ClInclude Include="Objects\Helpers\TimeAttackData.h" />
     <ClInclude Include="Objects\HPZ\Batbot.h" />
-    <ClInclude Include="Objects\HPZ\Jawz.h" />
     <ClInclude Include="Objects\HPZ\Redz.h" />
     <ClInclude Include="Objects\HPZ\Stegway.h" />
     <ClInclude Include="Objects\LRZ\BuckwildBall.h" />
     <ClInclude Include="Objects\LRZ\ConveyorBelt.h" />
     <ClInclude Include="Objects\LRZ\ConveyorPlatform.h" />
-    <ClInclude Include="Objects\LRZ\Current.h" />
     <ClInclude Include="Objects\LRZ\DashLift.h" />
     <ClInclude Include="Objects\LRZ\Drillerdroid.h" />
     <ClInclude Include="Objects\LRZ\DrillerdroidO.h" />
@@ -689,8 +689,6 @@
     </ClCompile>
     <ClCompile Include="Objects\Common\CollapsingPlatform.c">
     </ClCompile>
-    <ClCompile Include="Objects\Common\CompetitionSession.c">
-    </ClCompile>
     <ClCompile Include="Objects\Common\Decoration.c">
     </ClCompile>
     <ClCompile Include="Objects\Common\Eggman.c">
@@ -864,8 +862,6 @@
     <ClCompile Include="Objects\FBZ\Cylinder.c">
     </ClCompile>
     <ClCompile Include="Objects\FBZ\ElectroMagnet.c">
-    </ClCompile>
-    <ClCompile Include="Objects\FBZ\Fan.c">
     </ClCompile>
     <ClCompile Include="Objects\FBZ\FBZ1Outro.c">
     </ClCompile>
@@ -1053,10 +1049,12 @@
     </ClCompile>
     <ClCompile Include="Objects\HCZ\ButtonDoor.c">
     </ClCompile>
+    <ClCompile Include="Objects\HCZ\Current.c" />
     <ClCompile Include="Objects\HCZ\DCEvent.c">
     </ClCompile>
     <ClCompile Include="Objects\HCZ\DiveEggman.c">
     </ClCompile>
+    <ClCompile Include="Objects\HCZ\Fan.c" />
     <ClCompile Include="Objects\HCZ\Gondola.c">
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HandLauncher.c">
@@ -1071,6 +1069,7 @@
     </ClCompile>
     <ClCompile Include="Objects\HCZ\HCZSpikeBall.c">
     </ClCompile>
+    <ClCompile Include="Objects\HCZ\Jawz.c" />
     <ClCompile Include="Objects\HCZ\Jellygnite.c">
     </ClCompile>
     <ClCompile Include="Objects\HCZ\LaundroMobile.c">
@@ -1097,6 +1096,7 @@
     </ClCompile>
     <ClCompile Include="Objects\Helpers\ColorHelpers.c">
     </ClCompile>
+    <ClCompile Include="Objects\Helpers\CompetitionSession.c" />
     <ClCompile Include="Objects\Helpers\DrawHelpers.c">
     </ClCompile>
     <ClCompile Include="Objects\Helpers\GameProgress.c">
@@ -1115,8 +1115,6 @@
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Batbot.c">
     </ClCompile>
-    <ClCompile Include="Objects\HPZ\Jawz.c">
-    </ClCompile>
     <ClCompile Include="Objects\HPZ\Redz.c">
     </ClCompile>
     <ClCompile Include="Objects\HPZ\Stegway.c">
@@ -1126,8 +1124,6 @@
     <ClCompile Include="Objects\LRZ\ConveyorBelt.c">
     </ClCompile>
     <ClCompile Include="Objects\LRZ\ConveyorPlatform.c">
-    </ClCompile>
-    <ClCompile Include="Objects\LRZ\Current.c">
     </ClCompile>
     <ClCompile Include="Objects\LRZ\DashLift.c">
     </ClCompile>

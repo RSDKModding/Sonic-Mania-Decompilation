@@ -18,12 +18,16 @@ void IceBomba_Draw(void)
     Vector2 drawPos = entity->position;
     drawPos.x += 0x40000;
     drawPos.y += 0x1A0000;
-    entity->direction = 0;
+
+    int dirStore      = entity->direction;
+    entity->direction = FLIP_NONE;
     RSDK.DrawSprite(&entity->bombAnimator, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator, 0, false);
-    entity->direction = entity->direction;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    entity->direction = dirStore;
     entity->inkEffect = INK_ALPHA;
-    RSDK.DrawSprite(&entity->wingAnimator, 0, false);
+    RSDK.DrawSprite(&entity->wingAnimator, NULL, false);
+
     entity->inkEffect = INK_NONE;
 }
 
@@ -32,38 +36,38 @@ void IceBomba_Create(void *data)
     RSDK_THIS(IceBomba);
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
-    if (RSDK_sceneInfo->inEditor)
-        return;
-    entity->dip <<= 7;
-    entity->drawFX |= FX_FLIP;
-    if (data) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x400000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(IceBomba->animID, 2, &entity->animator, true, 0);
-        entity->state = IceBomba_Bomb_Handle;
-    }
-    else {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->alpha         = 0x80;
-        entity->spawnDist     = entity->dist;
-        entity->updateRange.x = (entity->dist + 0x80) << 16;
-        entity->updateRange.y = (entity->dip + 0x8000) << 8;
-        entity->spawnPos.x    = entity->position.x;
-        entity->spawnPos.y    = entity->position.y;
-        RSDK.SetSpriteAnimation(IceBomba->animID, 0, &entity->animator, true, 0);
-        RSDK.SetSpriteAnimation(IceBomba->animID, 1, &entity->wingAnimator, true, 0);
-        RSDK.SetSpriteAnimation(IceBomba->animID, 2, &entity->bombAnimator, true, 0);
-        entity->direction = entity->dir;
-        if (entity->dir) {
-            entity->animator.frameID     = 4;
-            entity->bombAnimator.frameID = 4;
+    if (!RSDK_sceneInfo->inEditor) {
+        entity->dip <<= 7;
+        entity->drawFX |= FX_FLIP;
+        if (data) {
+            entity->active        = ACTIVE_NORMAL;
+            entity->updateRange.x = 0x400000;
+            entity->updateRange.y = 0x800000;
+            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &entity->animator, true, 0);
+            entity->state = IceBomba_Bomb_Handle;
         }
         else {
-            entity->animator.frameID     = 0;
-            entity->bombAnimator.frameID = 0;
+            entity->active        = ACTIVE_BOUNDS;
+            entity->alpha         = 0x80;
+            entity->spawnDist     = entity->dist;
+            entity->updateRange.x = (entity->dist + 0x80) << 16;
+            entity->updateRange.y = (entity->dip + 0x8000) << 8;
+            entity->spawnPos.x    = entity->position.x;
+            entity->spawnPos.y    = entity->position.y;
+            RSDK.SetSpriteAnimation(IceBomba->animID, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &entity->wingAnimator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &entity->bombAnimator, true, 0);
+            entity->direction = entity->dir;
+            if (entity->dir) {
+                entity->animator.frameID     = 4;
+                entity->bombAnimator.frameID = 4;
+            }
+            else {
+                entity->animator.frameID     = 0;
+                entity->bombAnimator.frameID = 0;
+            }
+            entity->state = IceBomba_Fly_Create;
         }
-        entity->state = IceBomba_Fly_Create;
     }
 }
 
@@ -86,31 +90,23 @@ void IceBomba_StageLoad(void)
     IceBomba->checkbox.top      = 64;
     IceBomba->checkbox.right    = 12;
     IceBomba->checkbox.bottom   = 128;
-    DEBUGMODE_ADD_OBJ(IceBomba);
     IceBomba->explosionSFX = RSDK.GetSFX("Stage/Explosion.wav");
     IceBomba->freezeSFX    = RSDK.GetSFX("PSZ/Freeze.wav");
+    DEBUGMODE_ADD_OBJ(IceBomba);
 }
 
-void IceBomba_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(IceBomba, VAR_UINT8, dir);
-    RSDK_EDITABLE_VAR(IceBomba, VAR_UINT16, dist);
-    RSDK_EDITABLE_VAR(IceBomba, VAR_UINT16, dip);
-}
-
-void IceBomba_DebugDraw()
+void IceBomba_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(IceBomba->animID, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
-void IceBomba_DebugSpawn() { CREATE_ENTITY(IceBomba, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void IceBomba_DebugSpawn(void)
+{
+    RSDK_THIS(IceBomba);
+    CREATE_ENTITY(IceBomba, NULL, entity->position.x, entity->position.y);
+}
 
-void IceBomba_EditorDraw(void) { IceBomba_DebugDraw(); }
-
-void IceBomba_EditorLoad(void) { IceBomba_StageLoad(); }
-
-// Extra Entity Functions
 void IceBomba_Fly_Collide(void)
 {
     RSDK_THIS(IceBomba);
@@ -285,4 +281,15 @@ void IceBomba_Bomb_Handle(void)
     }
     else
         destroyEntity(entity);
+}
+
+void IceBomba_EditorDraw(void) { IceBomba_DebugDraw(); }
+
+void IceBomba_EditorLoad(void) { IceBomba_StageLoad(); }
+
+void IceBomba_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(IceBomba, VAR_UINT8, dir);
+    RSDK_EDITABLE_VAR(IceBomba, VAR_UINT16, dist);
+    RSDK_EDITABLE_VAR(IceBomba, VAR_UINT16, dip);
 }

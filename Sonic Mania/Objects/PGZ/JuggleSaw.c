@@ -17,7 +17,7 @@ void JuggleSaw_StaticUpdate(void) {}
 void JuggleSaw_Draw(void)
 {
     RSDK_THIS(JuggleSaw);
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void JuggleSaw_Create(void *data)
@@ -29,36 +29,37 @@ void JuggleSaw_Create(void *data)
     entity->active        = ACTIVE_BOUNDS;
     entity->updateRange.x = 0xC00000;
     entity->updateRange.y = 0xC00000;
-    if (RSDK_sceneInfo->inEditor)
-        return;
-    if (data) {
-        RSDK.SetSpriteAnimation(JuggleSaw->animID, 6, &entity->animator, true, 0);
-        entity->state = JuggleSaw_Saw_Handle;
-        return;
+    if (!RSDK_sceneInfo->inEditor) {
+        if (data) {
+            RSDK.SetSpriteAnimation(JuggleSaw->animID, 6, &entity->animator, true, 0);
+            entity->state = JuggleSaw_Saw_Handle;
+        }
+        else {
+            entity->spawnPos.x = entity->position.x;
+            entity->spawnPos.y = entity->position.y;
+            entity->spawnDir   = entity->direction;
+            switch (entity->direction) {
+                case FLIP_NONE: RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->hasSaw == JSAW_HAS_SAW, &entity->animator, true, 0); break;
+                case FLIP_X:
+                    entity->direction = FLIP_Y;
+                    RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->hasSaw == JSAW_HAS_SAW, &entity->animator, true, 0);
+                    break;
+                case FLIP_Y:
+                    entity->direction = FLIP_NONE;
+                    RSDK.SetSpriteAnimation(JuggleSaw->animID, 4 - (entity->hasSaw != JSAW_HAS_SAW), &entity->animator, true, 0);
+                    break;
+                case FLIP_XY:
+                    entity->direction = FLIP_X;
+                    RSDK.SetSpriteAnimation(JuggleSaw->animID, 4 - (entity->hasSaw != JSAW_HAS_SAW), &entity->animator, true, 0);
+                    break;
+                default: break;
+            }
+            if (!entity->sawSpeed)
+                entity->sawSpeed = 8;
+            entity->sawSpeed <<= 7;
+            entity->state = JuggleSaw_Crab_Create;
+        }
     }
-    entity->spawnPos.x = entity->position.x;
-    entity->spawnPos.y = entity->position.y;
-    entity->spawnDir   = entity->direction;
-    switch (entity->direction) {
-        case FLIP_NONE: RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->hasSaw == JSAW_HAS_SAW, &entity->animator, true, 0); break;
-        case FLIP_X:
-            entity->direction = FLIP_XY;
-            RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->hasSaw == JSAW_HAS_SAW, &entity->animator, true, 0);
-            break;
-        case FLIP_Y:
-            entity->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(JuggleSaw->animID, 4 - (entity->hasSaw != JSAW_HAS_SAW), &entity->animator, true, 0);
-            break;
-        case FLIP_XY:
-            entity->direction = FLIP_X;
-            RSDK.SetSpriteAnimation(JuggleSaw->animID, 4 - (entity->hasSaw != JSAW_HAS_SAW), &entity->animator, true, 0);
-            break;
-        default: break;
-    }
-    if (!entity->sawSpeed)
-        entity->sawSpeed = 8;
-    entity->sawSpeed <<= 7;
-    entity->state = JuggleSaw_Crab_Create;
 }
 
 void JuggleSaw_StageLoad(void)
@@ -83,16 +84,16 @@ void JuggleSaw_StageLoad(void)
     JuggleSaw->sawHitbox.right  = 12;
     JuggleSaw->sawHitbox.bottom = 12;
 
-    JuggleSaw->grabboxR.left   = -24;
-    JuggleSaw->grabboxR.top    = -38;
-    JuggleSaw->grabboxR.right  = -16;
-    JuggleSaw->grabboxR.bottom = -30;
+    JuggleSaw->grabboxFloor.left   = -24;
+    JuggleSaw->grabboxFloor.top    = -38;
+    JuggleSaw->grabboxFloor.right  = -16;
+    JuggleSaw->grabboxFloor.bottom = -30;
 
     // yes im SURE this is accurate
-    JuggleSaw->grabboxL.left   = 38;
-    JuggleSaw->grabboxL.top    = -24;
-    JuggleSaw->grabboxL.right  = 30;
-    JuggleSaw->grabboxL.bottom = -16;
+    JuggleSaw->grabboxWall.left   = 38;
+    JuggleSaw->grabboxWall.top    = -24;
+    JuggleSaw->grabboxWall.right  = 30;
+    JuggleSaw->grabboxWall.bottom = -16;
 
     DEBUGMODE_ADD_OBJ(JuggleSaw);
     JuggleSaw->explodeSFX = RSDK.GetSFX("Stage/Explosion.wav");
@@ -111,18 +112,6 @@ void JuggleSaw_DebugSpawn(void)
     CREATE_ENTITY(JuggleSaw, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y)->sawDelay = 30;
 }
 
-void JuggleSaw_EditorDraw(void) { JuggleSaw_DebugDraw(); }
-
-void JuggleSaw_EditorLoad(void) { JuggleSaw_StageLoad(); }
-
-void JuggleSaw_Serialize(void) {
-    RSDK_EDITABLE_VAR(JuggleSaw, VAR_UINT8, direction);
-    RSDK_EDITABLE_VAR(JuggleSaw, VAR_UINT16, sawDelay);
-    RSDK_EDITABLE_VAR(JuggleSaw, VAR_ENUM, sawSpeed);
-    RSDK_EDITABLE_VAR(JuggleSaw, VAR_BOOL, hasSaw); //liars.
-    RSDK_EDITABLE_VAR(JuggleSaw, VAR_UINT16, setID);
-}
-
 void JuggleSaw_Crab_Collide(void)
 {
     RSDK_THIS(JuggleSaw);
@@ -133,20 +122,20 @@ void JuggleSaw_Crab_Collide(void)
                 int debrisX = entity->position.x;
                 int debrisY = entity->position.y;
                 if (entity->spawnDir >= FLIP_Y)
-                    debrisX += 0x200000 * ((entity->direction & 1) ? -1 : 1);
+                    debrisX += 0x200000 * ((entity->direction & FLIP_X) ? -1 : 1);
                 else
-                    debrisY += 0x200000 * ((entity->direction & 2) ? 1 : -1);
+                    debrisY += 0x200000 * ((entity->direction & FLIP_Y) ? 1 : -1);
                 EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, debrisX, debrisY);
                 RSDK.SetSpriteAnimation(JuggleSaw->animID, 6, &debris->animator, true, 0);
                 int vx1 = -4, vx2 = 5, vy1 = -4, vy2 = 5;
-                if (entity->spawnDir >= 2u) {
-                    if (entity->direction & 1)
+                if (entity->spawnDir >= FLIP_Y) {
+                    if (entity->direction & FLIP_X)
                         vx2 = -1;
                     else
                         vx1 = -4;
                 }
                 else {
-                    if (entity->direction & 2)
+                    if (entity->direction & FLIP_Y)
                         vy1 = -4;
                     else
                         vy2 = -1;
@@ -187,78 +176,77 @@ void JuggleSaw_Crab_Handle(void)
         case FLIP_XY: entity->position.y = (RSDK.Cos256(entity->angle) << 10) + entity->spawnPos.y; break;
         default: break;
     }
+
     if (entity->hasSaw != JSAW_HAS_SAW) {
         entity->angle += 2;
-        JuggleSaw_Crab_Collide();
-        JuggleSaw_Crab_CheckOnScreen();
-        return;
-    }
-    entity->angle += 4;
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        RSDK.PlaySFX(JuggleSaw->juggleSFX, 0, 255);
-        if (entity->spawnDir >= FLIP_Y)
-            entity->direction ^= FLIP_Y;
-        else
-            entity->direction ^= FLIP_X;
     }
     else {
-        if (entity->sawTimer == entity->sawDelay - 1)
-            --entity->sawTimer;
-    }
-    if (++entity->sawTimer < entity->sawDelay) {
-        JuggleSaw_Crab_Collide();
-        JuggleSaw_Crab_CheckOnScreen();
-        return;
-    }
-    if (!entity->friends[0] || entity->friends[0]->objectID != entity->objectID) {
-        entity->friends[0]  = NULL;
-        entity->friendCount = 0;
-        foreach_active(JuggleSaw, newFriend)
-        {
-            if (newFriend != entity && newFriend->hasSaw == JSAW_NO_SAW && newFriend->setID == entity->setID
-                && RSDK.CheckObjectCollisionTouchBox(newFriend, &JuggleSaw->hitbox, entity, &JuggleSaw->friendbox)) {
-                entity->friends[entity->friendCount++] = (Entity*)newFriend;
-                if (entity->friendCount == 8)
-                    foreach_break;
-            }
-        }
-        if (!entity->friendCount) {
-            JuggleSaw_Crab_Collide();
-            JuggleSaw_Crab_CheckOnScreen();
-            return;
-        }
-        entity->friends[0] = entity->friends[RSDK.Rand(0, entity->friendCount)];
-        bool32 throwCheck  = true;
-        if (entity->spawnDir >= 2u) {
-            int friendY = entity->friends[0]->position.y;
-            if (friendY < entity->position.y) {
-                if (!(entity->direction & 2))
-                    --entity->sawTimer;
-            }
-            throwCheck &= (entity->direction & 2) == 0;
+        entity->angle += 4;
+        if (entity->animator.frameID == entity->animator.frameCount - 1) {
+            RSDK.PlaySFX(JuggleSaw->juggleSFX, 0, 255);
+            if (entity->spawnDir >= FLIP_Y)
+                entity->direction ^= FLIP_Y;
+            else
+                entity->direction ^= FLIP_X;
         }
         else {
-            int friendX = entity->friends[0]->position.x;
-            if (friendX < entity->position.x) {
-                if (!(entity->direction & 1))
-                    --entity->sawTimer;
-            }
-            throwCheck &= (entity->direction & 1) == 0;
+            if (entity->sawTimer == entity->sawDelay - 1)
+                --entity->sawTimer;
         }
-        if (!(throwCheck && entity->sawTimer >= entity->sawDelay)) {
-            --entity->sawTimer;
-            JuggleSaw_Crab_Collide();
-            JuggleSaw_Crab_CheckOnScreen();
-            return;
+
+        if (++entity->sawTimer >= entity->sawDelay) {
+            bool32 flag = true;
+
+            if (!entity->friends[0] || entity->friends[0]->objectID != entity->objectID) {
+                entity->friendCount = 0;
+                foreach_active(JuggleSaw, newFriend)
+                {
+                    if (newFriend != entity && newFriend->hasSaw == JSAW_NO_SAW && newFriend->setID == entity->setID && entity->friendCount < 8) {
+                        if (RSDK.CheckObjectCollisionTouchBox(newFriend, &JuggleSaw->hitbox, entity, &JuggleSaw->friendbox))
+                            entity->friends[entity->friendCount++] = (Entity *)newFriend;
+                    }
+                }
+
+                if (entity->friendCount) {
+                    entity->friends[0] = entity->friends[RSDK.Rand(0, entity->friendCount)];
+                    bool32 throwCheck  = false;
+                    if (entity->spawnDir >= FLIP_Y) {
+                        if (entity->friends[0]->position.y < entity->position.y) {
+                            if (!(entity->direction & FLIP_Y))
+                                --entity->sawTimer;
+                        }
+                        else
+                            throwCheck = !(entity->direction & FLIP_Y);
+                    }
+                    else {
+                        if (entity->friends[0]->position.x < entity->position.x) {
+                            if (!(entity->direction & FLIP_X))
+                                --entity->sawTimer;
+                        }
+                        else
+                            throwCheck = !(entity->direction & FLIP_X);
+                    }
+
+                    flag = false;
+                    if (throwCheck && entity->sawTimer >= entity->sawDelay) {
+                        flag = true;
+                    }
+                }
+                else {
+                    flag = false;
+                }
+            }
+
+            if (flag) {
+                RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir >= FLIP_Y ? 5 : 2, &entity->animator, true, 0);
+                if (entity->spawnDir >= FLIP_Y)
+                    entity->direction ^= FLIP_Y;
+                else
+                    entity->direction ^= FLIP_X;
+                entity->state = JuggleSaw_Crab_ThrowSaw;
+            }
         }
     }
-
-    RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir > 1u ? 5 : 2, &entity->animator, true, 0);
-    if (entity->spawnDir >= FLIP_Y)
-        entity->direction ^= FLIP_Y;
-    else
-        entity->direction ^= FLIP_X;
-    entity->state = JuggleSaw_Crab_ThrowSaw;
     JuggleSaw_Crab_Collide();
     JuggleSaw_Crab_CheckOnScreen();
 }
@@ -287,33 +275,13 @@ void JuggleSaw_Crab_ThrowSaw(void)
             reciever->active     = ACTIVE_NORMAL;
             EntityJuggleSaw *saw = CREATE_ENTITY(JuggleSaw, intToVoid(1), entity->position.x, entity->position.y);
             int sx = 0x2C0000, sy = -0xE0000;
-            if (entity->spawnDir >= 2u) {
+            if (entity->spawnDir >= FLIP_Y) {
                 sx = 0xE0000;
                 sy = 0x2C0000;
             }
             saw->position.x += sx * ((entity->direction & FLIP_X) ? -1 : 1);
             saw->position.y += sy * ((entity->direction & FLIP_Y) ? -1 : 1);
 
-            /*if (entity->spawnDir >= 2u) {
-                if ((entity->direction & FLIP_X) != 0)
-                    saw->position.x -= 0xE0000;
-                else
-                    saw->position.x += 0xE0000;
-                if ((entity->direction & FLIP_Y) != 0)
-                    saw->position.y -= 0x2C0000;
-                else
-                    saw->position.y += 0x2C0000;
-            }
-            else {
-                if ((entity->direction & FLIP_Y) != 0)
-                    saw->position.y += 0xE0000;
-                else
-                    saw->position.y -= 0xE0000;
-                if ((entity->direction & FLIP_X) != 0)
-                    saw->position.x -= 0x2C0000;
-                else
-                    saw->position.x += 0x2C0000;
-            }//*/
             int recieverX   = reciever->position.x, targetX;
             int recieverY   = reciever->position.y, targetY;
             int recieverDir = reciever->direction, sawDir = 0;
@@ -323,40 +291,10 @@ void JuggleSaw_Crab_ThrowSaw(void)
                 sawDir  = (recieverDir & FLIP_X) | (reciever->spawnPos.y >= entity->spawnPos.y ? FLIP_Y : 0);
             }
             else {
-                targetY = recieverY + 0x220000 * ((recieverDir & FLIP_Y) ? 1 : -1);
                 targetX = recieverX + 0x140000 * (reciever->spawnPos.x >= entity->spawnPos.x ? 1 : -1);
-                sawDir  = (recieverDir & FLIP_Y) | (reciever->spawnPos.x >= entity->spawnPos.x ? FLIP_X : 0);
+                targetY = recieverY + 0x220000 * ((recieverDir & FLIP_Y) ? 1 : -1);
+                sawDir  = (recieverDir & FLIP_Y) | (reciever->spawnPos.x >= entity->spawnPos.x ? FLIP_X : FLIP_NONE);
             }
-            /*if (reciever->spawnDir >= 2u) {
-                int v15 = recieverDir & FLIP_X;
-                if ((recieverDir & FLIP_X) != 0)
-                    targetX = recieverX - 0x220000;
-                else
-                    targetX = recieverX + 0x220000;
-                sawDir = recieverDir & FLIP_X;
-                if (reciever->spawnPos.y >= entity->spawnPos.y) {
-                    targetY = recieverY + 0x140000;
-                    sawDir  = v15 | 2;
-                }
-                else {
-                    targetY = recieverY - 0x140000;
-                }
-            }
-            else {
-                int v14 = recieverDir & FLIP_Y;
-                if ((recieverDir & FLIP_Y) != 0)
-                    targetY = recieverY + 0x220000;
-                else
-                    targetY = recieverY - 0x220000;
-                sawDir = recieverDir & FLIP_Y;
-                if (reciever->spawnPos.x >= entity->spawnPos.x) {
-                    targetX = recieverX + 0x140000;
-                    sawDir  = v14 | 1;
-                }
-                else {
-                    targetX = recieverX - 0x140000;
-                }
-            }//*/
 
             saw->direction   = sawDir;
             int targetAngle  = RSDK.ATan2(targetX - saw->position.x, targetY - saw->position.y);
@@ -369,13 +307,13 @@ void JuggleSaw_Crab_ThrowSaw(void)
             entity->hasSaw  = JSAW_NO_SAW;
         }
         else {
-            RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir > 1u ? 4 : 1, animator, true, 0);
+            RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir >= FLIP_Y ? 4 : 1, animator, true, 0);
             entity->state = JuggleSaw_Crab_Handle;
         }
         entity->friends[0] = NULL;
     }
     if (animator->frameID == animator->frameCount - 1) {
-        RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir > 1u ? 3 : 0, animator, true, 0);
+        RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir >= FLIP_Y ? 3 : 0, animator, true, 0);
         entity->state = JuggleSaw_Crab_Handle;
     }
     JuggleSaw_Crab_Collide();
@@ -390,11 +328,17 @@ void JuggleSaw_Saw_Handle(void)
     EntityJuggleSaw *reciever = (EntityJuggleSaw *)entity->friends[0];
     int oldDir                = reciever->direction;
     reciever->direction       = entity->direction;
-    Hitbox *grabbox           = &JuggleSaw->grabboxR;
-    if (!(reciever->spawnDir < FLIP_Y))
-        grabbox = &JuggleSaw->grabboxL;
+    Hitbox *grabbox           = &JuggleSaw->grabboxFloor;
+    if (reciever->spawnDir >= FLIP_Y)
+        grabbox = &JuggleSaw->grabboxWall;
+
+    //I have decided to imortalize this bit of code that the below code replaces because this cost RMG and I at least 4 hours of our lives collectively.
+    //reciever->direction = oldDir;
+    //if (RSDK.CheckObjectCollisionTouchBox(reciever, grabbox, entity, &JuggleSaw->sawHitbox)) {
+
+    bool32 collided     = RSDK.CheckObjectCollisionTouchBox(reciever, grabbox, entity, &JuggleSaw->sawHitbox);
     reciever->direction = oldDir;
-    if (RSDK.CheckObjectCollisionTouchBox(reciever, grabbox, entity, &JuggleSaw->sawHitbox)) {
+    if (collided) {
         int newDir = 0;
         if (reciever->spawnDir >= FLIP_Y) {
             int velY = entity->velocity.y;
@@ -417,11 +361,10 @@ void JuggleSaw_Saw_Handle(void)
         reciever->direction = newDir;
 
         reciever->hasSaw = JSAW_HAS_SAW;
-        RSDK.SetSpriteAnimation(JuggleSaw->animID, entity->spawnDir > 1u ? 4 : 1, &reciever->animator, true, 0);
+        RSDK.SetSpriteAnimation(JuggleSaw->animID, reciever->spawnDir >= FLIP_Y ? 4 : 1, &reciever->animator, true, 0);
         destroyEntity(entity);
-        return;
     }
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
+    else if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
         RSDK.ProcessAnimation(&entity->animator);
         foreach_active(Player, player)
         {
@@ -461,4 +404,17 @@ void JuggleSaw_Saw_Knocked(void)
 
     if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
         destroyEntity(entity);
+}
+
+void JuggleSaw_EditorDraw(void) { JuggleSaw_DebugDraw(); }
+
+void JuggleSaw_EditorLoad(void) { JuggleSaw_StageLoad(); }
+
+void JuggleSaw_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(JuggleSaw, VAR_UINT8, direction);
+    RSDK_EDITABLE_VAR(JuggleSaw, VAR_UINT16, sawDelay);
+    RSDK_EDITABLE_VAR(JuggleSaw, VAR_ENUM, sawSpeed);
+    RSDK_EDITABLE_VAR(JuggleSaw, VAR_BOOL, hasSaw); // liars.
+    RSDK_EDITABLE_VAR(JuggleSaw, VAR_UINT16, setID);
 }

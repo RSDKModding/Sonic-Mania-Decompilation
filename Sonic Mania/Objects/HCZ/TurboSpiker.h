@@ -27,7 +27,6 @@ typedef struct {
 	Animator animator;
 	Animator spikeAnimator;
 	bool32 launchPlayed;
-
 } EntityTurboSpiker;
 
 // Object Struct

@@ -48,7 +48,7 @@ void TurboSpiker_Create(void *data)
 
 void TurboSpiker_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HCZ") == 1)
+    if (RSDK.CheckStageFolder("HCZ"))
         TurboSpiker->animID = RSDK.LoadSpriteAnimation("HCZ/TurboSpiker.bin", SCOPE_STAGE);
     TurboSpiker->hermitHitbox.left   = -14;
     TurboSpiker->hermitHitbox.top    = -14;
@@ -331,7 +331,7 @@ void TurboSpiker_Spike_Collide(void)
 void TurboSpiker_Spike_Fly(void)
 {
     RSDK_THIS(TurboSpiker);
-    if (entity->launchPlayed == false) {
+    if (!entity->launchPlayed) {
         RSDK.PlaySFX(TurboSpiker->launchSFX, 0, 255);
         entity->launchPlayed = true;
     }
@@ -347,11 +347,11 @@ void TurboSpiker_Spike_Fly(void)
         EntityTurboSpiker *ember =
             CREATE_ENTITY(TurboSpiker, intToVoid(1), (RSDK.Rand(-4, 4) << 16) + entity->position.x, (RSDK.Rand(-2, 3) << 16) + entity->position.y);
         ember->direction         = entity->direction;
-        ember->drawOrder         = entity->drawOrder + 1;
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 6, &ember->animator, true, 0);
+        ember->drawOrder         = entity->drawOrder - 1;
+        RSDK.SetSpriteAnimation(TurboSpiker->animID, 5, &ember->animator, true, 0);
         ember->state = TurboSpiker_Ember_Animate;
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&entity->spikeAnimator);
     if (!RSDK.CheckOnScreen(entity, NULL))
         destroyEntity(entity);
 }
@@ -360,7 +360,7 @@ void TurboSpiker_Ember_Animate(void)
 {
     RSDK_THIS(TurboSpiker);
     RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameCount - 1 == entity->animator.frameID)
+    if (entity->animator.frameID == entity->animator.frameCount - 1)
         destroyEntity(entity);
 }
 

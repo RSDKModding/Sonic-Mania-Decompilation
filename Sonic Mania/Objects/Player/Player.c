@@ -3111,7 +3111,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         Ice->playerTimers[1] = 0;
         foreach_all(Ice, ice)
         {
-            if (ice->state == Ice_Unknown16)
+            if (ice->state == Ice_State_PlayerBlock)
                destroyEntity(ice);
         }
     }

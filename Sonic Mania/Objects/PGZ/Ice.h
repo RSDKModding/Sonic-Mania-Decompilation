@@ -125,16 +125,16 @@ Entity *Ice_Shatter(EntityIce *ice, int velX, int velY);
 void Ice_TimeOverCB(void);
 
 void Ice_Unknown11(void);
-void Ice_Unknown12(void);
+void Ice_State_Pillar(void);
 void Ice_Unknown13(void);
 void Ice_Unknown14(void);
 void Ice_Unknown15(void);
-void Ice_Unknown16(void);
-void Ice_ShatterState(void);
+void Ice_State_PlayerBlock(void);
+void Ice_State_Shard(void);
 
 void Ice_StateDraw_Unknown1(void);
-void Ice_StateDraw_Unknown2(void);
-void Ice_StateDraw_Unknown3(void);
-void Ice_StateDraw_Shatter(void);
+void Ice_StateDraw_PlayerBlock(void);
+void Ice_StateDraw_Pillar(void);
+void Ice_StateDraw_Shard(void);
 
 #endif //! OBJ_ICE_H

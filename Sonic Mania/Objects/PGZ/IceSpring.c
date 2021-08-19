@@ -7,6 +7,7 @@ void IceSpring_Update(void)
     //this was unironically fun to decompile
     //so many label jumps
     RSDK_THIS(IceSpring);
+    entity->playerBits = 0;
     if (entity->state) {
         if (!entity->animator.animationSpeed) {
             int i = 0;
@@ -15,6 +16,9 @@ void IceSpring_Update(void)
                 if (entity->planeFilter && player->collisionPlane != ((entity->planeFilter - 1) & 1))
                     continue;
 
+                int storeX = player->position.x;
+                int storeY = player->position.y;
+
                 int collided = 0;
                 if (player->state == Ice_State_FrozenPlayer)
                     collided = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &Ice->hitbox2, 0);
@@ -22,11 +26,13 @@ void IceSpring_Update(void)
                     collided = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, Player_GetHitbox(player), 0);
                 if (!collided) {
                     ++i;
+                    player->position.x = storeX;
+                    player->position.y = storeY;
                     continue;
                 }
 
                 int type = entity->type;
-                bool32 collideCheck;
+                bool32 collideCheck = false;
                 if (!type) {
                     if ((entity->direction & 2) != 0)
                         collideCheck = collided == 4;
@@ -45,14 +51,13 @@ void IceSpring_Update(void)
                 }
                 if (collideCheck) {
                     entity->playerBits |= 1 << i;
-                    IceSpring->animators[i] = player->playerAnimator;
+                    memcpy(&IceSpring->animators[i], &player->playerAnimator, sizeof(Animator));
                 }
 
-                EntityShield *shield      = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
-                StateMachine(playerState) = player->state;
-                if (playerState != Ice_State_FrozenPlayer && shield->animator.animationID != 2
+                EntityShield *shield      = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                if (player->state != Ice_State_FrozenPlayer && shield->animator.animationID != 2
 #if RETRO_USE_PLUS
-                    && playerState != Player_State_MightyHammerDrop
+                    && player->state != Player_State_MightyHammerDrop
 #endif
                     ) {
                     if (player->shield == 3 && player->invincibleTimer <= 0 && !entity->timer) {
@@ -60,11 +65,10 @@ void IceSpring_Update(void)
                         Ice_ShatterGenerator(8, 8, 6, 0, 0, 0);
                     }
                     ++i;
-                    continue;
                 }
-                if (!collideCheck
+                else if (!collideCheck
 #if RETRO_USE_PLUS
-                    || playerState == Player_State_MightyHammerDrop
+                    || player->state == Player_State_MightyHammerDrop
 #endif
                     ) {
                     switch (collided) {
@@ -77,14 +81,17 @@ void IceSpring_Update(void)
                     }
                     return;
                 }
+                player->position.x = storeX;
+                player->position.y = storeY;
             }
         }
-        entity->state(); // skipping using StateMachine_Run cause we already check
+        StateMachine_Run(entity->state);
         for (int i = 0; i < Player->playerCount; ++i) {
-            if (((1 << i) & entity->playerBits) != 0) {
-                EntityPlayer *player   = (EntityPlayer *)RSDK.GetEntityByID(i);
-                IceSpring              = IceSpring;
-                player->playerAnimator = IceSpring->animators[i];
+            if ((1 << i) & entity->playerBits) {
+                EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
+                if (IceSpring->animators[i].animationID == ANI_JUMP) {
+                    memcpy(&player->playerAnimator, &IceSpring->animators[i], sizeof(Animator));
+                }
                 player->jumpAbility    = 0;
                 if (player->sidekick && entity->playerBits == 0b10) {
                     RSDK.SetSpriteAnimation(IceSpring->animID, entity->type, &entity->animator, true, 0);
@@ -121,32 +128,53 @@ void IceSpring_Draw(void)
 void IceSpring_Create(void *data)
 {
     RSDK_THIS(IceSpring);
-    entity->drawFX = FX_FLIP;
-    if (RSDK_sceneInfo->inEditor)
-        return;
 
-    entity->type %= 3;
-    if (data) {
-        entity->type     = voidToInt(data);
-        entity->flipFlag = (byte)voidToInt(data);
-    }
-    RSDK.SetSpriteAnimation(IceSpring->animID, entity->type, &entity->animator, true, 0);
-    entity->active                  = 4;
-    entity->animator.animationSpeed = 0;
-    entity->updateRange.x           = 0x600000;
-    entity->updateRange.y           = 0x600000;
-    entity->visible                 = 1;
-    if (entity->planeFilter && ((entity->planeFilter - 1) & 2))
-        entity->drawOrder = Zone->drawOrderHigh;
-    else
-        entity->drawOrder = Zone->drawOrderLow;
-    int type = entity->type;
-    if (type) {
-        if (--type) {
-            if (type == 1) {
+    entity->drawFX = FX_FLIP;
+    if (!RSDK_sceneInfo->inEditor) {
+        entity->type %= 3;
+        if (data) {
+            entity->type     = voidToInt(data);
+            entity->flipFlag = voidToInt(data);
+        }
+        RSDK.SetSpriteAnimation(IceSpring->animID, entity->type, &entity->animator, true, 0);
+        entity->active                  = 4;
+        entity->animator.animationSpeed = 0;
+        entity->updateRange.x           = 0x600000;
+        entity->updateRange.y           = 0x600000;
+        entity->visible                 = true;
+        if (entity->planeFilter && ((entity->planeFilter - 1) & 2))
+            entity->drawOrder = Zone->drawOrderHigh;
+        else
+            entity->drawOrder = Zone->drawOrderLow;
+        int type = entity->type;
+
+        switch (entity->type) {
+            case 0:
+                entity->velocity.y = 0x80000 * (entity->flipFlag ? 1 : -1);
+                entity->direction  = entity->flipFlag;
+
+                entity->hitbox.left   = -16;
+                entity->hitbox.top    = -8;
+                entity->hitbox.right  = 16;
+                entity->hitbox.bottom = 8;
+
+                entity->state = Spring_State_Vertical;
+                break;
+            case 1:
+                entity->velocity.x = 0x80000 * (entity->flipFlag ? -1 : 1);
+                entity->direction  = entity->flipFlag;
+
+                entity->hitbox.left   = -8;
+                entity->hitbox.top    = -16;
+                entity->hitbox.right  = 8;
+                entity->hitbox.bottom = 16;
+
+                entity->state = Spring_State_Horizontal;
+                break;
+            case 2:
                 entity->direction  = entity->flipFlag;
                 entity->velocity.x = 0x54000 * ((entity->flipFlag & 1) ? -1 : 1);
-                entity->velocity.y = 0x54000 * ((entity->flipFlag < 2u) ? -1 : 1);
+                entity->velocity.y = 0x54000 * ((entity->flipFlag < 2) ? -1 : 1);
 
                 entity->hitbox.left   = -12;
                 entity->hitbox.top    = -12;
@@ -154,30 +182,8 @@ void IceSpring_Create(void *data)
                 entity->hitbox.bottom = 12;
 
                 entity->state = Spring_State_Diagonal;
-            }
+                break;
         }
-        else {
-            entity->velocity.x = 0x80000 * (entity->flipFlag ? -1 : 1);
-            entity->direction  = entity->flipFlag;
-
-            entity->hitbox.left   = -8;
-            entity->hitbox.top    = -16;
-            entity->hitbox.right  = 8;
-            entity->hitbox.bottom = 16;
-
-            entity->state = Spring_State_Horizontal;
-        }
-    }
-    else {
-        entity->velocity.y = 0x80000 * (entity->flipFlag ? 1 : -1);
-        entity->direction  = entity->flipFlag;
-
-        entity->hitbox.left   = -16;
-        entity->hitbox.top    = -8;
-        entity->hitbox.right  = 16;
-        entity->hitbox.bottom = 8;
-
-        entity->state = Spring_State_Vertical;
     }
 }
 

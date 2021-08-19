@@ -34,40 +34,43 @@ void Ice_Create(void *data)
 
         if (data) {
             entity->active = ACTIVE_NORMAL;
-            if (data == intToVoid(2)) {
-                entity->updateRange.x  = 0x800000;
-                entity->updateRange.y  = 0x800000;
-                entity->hitbox1.left   = -19;
-                entity->hitbox1.top    = -110;
-                entity->hitbox1.right  = 19;
-                entity->hitbox1.bottom = 0;
-                entity->hitbox3.left   = -19;
-                entity->hitbox3.top    = -110;
-                entity->hitbox3.right  = 19;
-                entity->hitbox3.bottom = 0;
-                entity->dwordE4        = 240;
-                entity->alpha          = 128;
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARBLOCK, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &entity->animator4, true, 0);
-                entity->state     = Ice_Unknown12;
-                entity->stateDraw = Ice_StateDraw_Unknown3;
-            }
-            else if (data == intToVoid(3)) {
-                entity->updateRange.x = 0x400000;
-                entity->updateRange.y = 0x400000;
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_SHARD, &entity->animator1, true, 0);
-                entity->state     = Ice_ShatterState;
-                entity->stateDraw = Ice_StateDraw_Shatter;
-            }
-            else {
-                entity->hitbox1.left   = -24;
-                entity->hitbox1.top    = -24;
-                entity->hitbox1.right  = 24;
-                entity->hitbox1.bottom = 24;
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERBLOCK, &entity->animator1, true, 0);
-                entity->isPermanent = true;
-                entity->state       = Ice_Unknown16;
-                entity->stateDraw   = Ice_StateDraw_Unknown2;
+
+            switch (voidToInt(data)) {
+                case 1:
+                    entity->hitbox1.left   = -24;
+                    entity->hitbox1.top    = -24;
+                    entity->hitbox1.right  = 24;
+                    entity->hitbox1.bottom = 24;
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERBLOCK, &entity->animator1, true, 0);
+                    entity->isPermanent = true;
+                    entity->state       = Ice_State_PlayerBlock;
+                    entity->stateDraw   = Ice_StateDraw_PlayerBlock;
+                    break;
+                case 2:
+                    entity->updateRange.x  = 0x800000;
+                    entity->updateRange.y  = 0x800000;
+                    entity->hitbox1.left   = -19;
+                    entity->hitbox1.top    = -110;
+                    entity->hitbox1.right  = 19;
+                    entity->hitbox1.bottom = 0;
+                    entity->hitbox3.left   = -19;
+                    entity->hitbox3.top    = -110;
+                    entity->hitbox3.right  = 19;
+                    entity->hitbox3.bottom = 0;
+                    entity->dwordE4        = 240;
+                    entity->alpha          = 128;
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARBLOCK, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &entity->animator4, true, 0);
+                    entity->state     = Ice_State_Pillar;
+                    entity->stateDraw = Ice_StateDraw_Pillar;
+                    break;
+                case 3:
+                    entity->updateRange.x = 0x400000;
+                    entity->updateRange.y = 0x400000;
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_SHARD, &entity->animator1, true, 0);
+                    entity->state     = Ice_State_Shard;
+                    entity->stateDraw = Ice_StateDraw_Shard;
+                    break;
             }
         }
         else {
@@ -248,7 +251,7 @@ void Ice_Create(void *data)
             entity->hitbox2.right  = entity->hitbox1.right + 8;
             entity->hitbox2.bottom = entity->hitbox1.bottom + 8;
             entity->alpha          = 384;
-            entity->state          = Ice_Unknown12;
+            entity->state          = Ice_State_Pillar;
             entity->stateDraw      = Ice_StateDraw_Unknown1;
         }
     }
@@ -394,13 +397,32 @@ bool32 Ice_Unknown4(void)
 void Ice_State_FrozenPlayer(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        if (!entity->groundVel) {
-            if (Ice_Unknown3())
-                return;
+
+    bool32 flag = entity->onGround;
+    int skid    = entity->groundVel;
+    bool32 groundFlag    = entity->groundedStore;
+
+    if (!flag) {
+        flag |= entity->groundedStore || entity->velocity.x;
+        skid = entity->velocity.x;
+        groundFlag = entity->velocity.y;
+    }
+    if (!flag) {
+        flag |= abs(entity->skidding) < 0x50000 || !Ice_Unknown3();
+        skid       = entity->velocity.x;
+        groundFlag = entity->velocity.y;
+    }
+
+    if (flag) {
+        if (entity->onGround) {
+            if (!entity->groundVel) {
+                if (Ice_Unknown3())
+                    return;
+            }
         }
-        entity->skidding = entity->groundVel;
-        if (!entity->groundedStore) {
+
+        entity->skidding = skid;
+        if (!groundFlag) {
             if (Ice_Unknown4())
                 return;
         }
@@ -468,15 +490,6 @@ void Ice_State_FrozenPlayer(void)
             }
             else {
                 entity->velocity.y += 0x3800;
-            }
-        }
-    }
-    else {
-        if ((abs(entity->skidding) < 0x50000 || !Ice_Unknown3()) || (entity->groundedStore || entity->velocity.x)) {
-            entity->skidding = entity->velocity.x;
-            if (!entity->velocity.y) {
-                if (Ice_Unknown4())
-                    return;
             }
         }
     }
@@ -628,13 +641,13 @@ void Ice_Unknown11(void)
     RSDK_THIS(Ice);
     foreach_all(Ice, ice)
     {
-        if (ice != entity && ice->state == Ice_Unknown12 && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox1, ice, &ice->hitbox2)) {
+        if (ice != entity && ice->state == Ice_State_Pillar && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox1, ice, &ice->hitbox2)) {
             ice->state = Ice_Unknown13;
         }
     }
 }
 
-void Ice_Unknown12(void)
+void Ice_State_Pillar(void)
 {
     RSDK_THIS(Ice);
 
@@ -850,7 +863,7 @@ void Ice_Unknown12(void)
     RSDK.ProcessAnimation(&entity->animator4);
     if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
         if (!RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, entity->hitbox1.bottom << 16, true)
-            && entity->state == Ice_Unknown12) {
+            && entity->state == Ice_State_Pillar) {
             entity->state = Ice_Unknown13;
         }
         RSDK.ProcessAnimation(&entity->animator1);
@@ -880,7 +893,7 @@ void Ice_Unknown13(void)
     entity->timer  = 15;
     entity->state  = Ice_Unknown14;
     entity->active = ACTIVE_NORMAL;
-    Ice_Unknown12();
+    Ice_State_Pillar();
 }
 
 void Ice_Unknown14(void)
@@ -904,20 +917,20 @@ void Ice_Unknown15(void)
     entity->velocity.y += 0x3800;
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, entity->hitbox1.bottom << 16, true)) {
         entity->velocity.y = 0;
-        entity->state      = Ice_Unknown12;
-        Ice_Unknown12();
+        entity->state      = Ice_State_Pillar;
+        Ice_State_Pillar();
     }
     else {
         int velY = entity->velocity.y;
         foreach_all(Ice, ice)
         {
             if (ice != entity) {
-                if ((ice->stateDraw == Ice_StateDraw_Unknown1 || ice->stateDraw == Ice_StateDraw_Unknown2)
+                if ((ice->stateDraw == Ice_StateDraw_Unknown1 || ice->stateDraw == Ice_StateDraw_PlayerBlock)
                     && RSDK.CheckObjectCollisionPlatform(ice, &ice->hitbox1, entity, &entity->hitbox1, true)) {
                     entity->velocity.y = 0;
-                    if (ice->state == Ice_Unknown12) {
+                    if (ice->state == Ice_State_Pillar) {
                         entity->active = ACTIVE_BOUNDS;
-                        entity->state  = Ice_Unknown12;
+                        entity->state  = Ice_State_Pillar;
                     }
                 }
             }
@@ -928,7 +941,7 @@ void Ice_Unknown15(void)
             if (RSDK.CheckObjectCollisionPlatform(spikes, &spikes->hitbox, entity, &entity->hitbox1, true)) {
                 entity->velocity.y = 0;
                 entity->active     = ACTIVE_BOUNDS;
-                entity->state      = Ice_Unknown12;
+                entity->state      = Ice_State_Pillar;
             }
         }
 
@@ -939,14 +952,14 @@ void Ice_Unknown15(void)
                 entity->velocity.y = 0;
                 if (itemBox->onGround) {
                     entity->active = ACTIVE_BOUNDS;
-                    entity->state  = Ice_Unknown12;
+                    entity->state  = Ice_State_Pillar;
                 }
             }
         }
 
         if (!entity->velocity.y && velY >= 0x60000) {
             if (ice) {
-                if (ice->stateDraw == Ice_StateDraw_Unknown2) {
+                if (ice->stateDraw == Ice_StateDraw_PlayerBlock) {
                     Ice_Unknown8((Entity *)ice->playerPtr);
                 }
                 else {
@@ -963,11 +976,11 @@ void Ice_Unknown15(void)
                 entity->type = 0;
             Ice_Shatter(entity, 0, 0);
         }
-        Ice_Unknown12();
+        Ice_State_Pillar();
     }
 }
 
-void Ice_Unknown16(void)
+void Ice_State_PlayerBlock(void)
 {
     RSDK_THIS(Ice);
 
@@ -1046,18 +1059,17 @@ void Ice_Unknown16(void)
             entity->drawOrder  = playerPtr->drawOrder + 1;
         }
     }
-    else if (playerPtr->state != Player_State_FlyIn && playerPtr->state != Player_State_JumpIn) {
-        if (!Player_CheckValidState(playerPtr)) {
-            Ice_Unknown8((Entity *)entity->playerPtr);
-            destroyEntity(entity);
-        }
-        else {
-            playerPtr->outerbox = NULL;
-            playerPtr->innerbox = NULL;
-            playerPtr->visible  = true;
-        }
-    }
     else {
+        if (playerPtr->state != Player_State_FlyIn && playerPtr->state != Player_State_JumpIn) {
+            if (!Player_CheckValidState(playerPtr)) {
+                Ice_Unknown8((Entity *)entity->playerPtr);
+            }
+            else {
+                playerPtr->outerbox = NULL;
+                playerPtr->innerbox = NULL;
+                playerPtr->visible  = true;
+            }
+        }
         destroyEntity(entity);
     }
 #else
@@ -1107,7 +1119,7 @@ void Ice_Unknown16(void)
         entity->timer--;
 }
 
-void Ice_ShatterState(void)
+void Ice_State_Shard(void)
 {
     RSDK_THIS(Ice);
     RSDK.ProcessAnimation(&entity->animator1);
@@ -1160,7 +1172,7 @@ void Ice_StateDraw_Unknown1(void)
     entity->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_Unknown2(void)
+void Ice_StateDraw_PlayerBlock(void)
 {
     RSDK_THIS(Ice);
     Vector2 drawPos;
@@ -1188,7 +1200,7 @@ void Ice_StateDraw_Unknown2(void)
     entity->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_Unknown3(void)
+void Ice_StateDraw_Pillar(void)
 {
     RSDK_THIS(Ice);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
@@ -1199,7 +1211,7 @@ void Ice_StateDraw_Unknown3(void)
     entity->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_Shatter(void)
+void Ice_StateDraw_Shard(void)
 {
     RSDK_THIS(Ice);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
