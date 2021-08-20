@@ -17,7 +17,7 @@ void *link_handle = NULL;
 #endif
 #endif
 
-int *gameOptionsPtr = NULL;
+int *globalVarsPtr = NULL;
 RetroEngine engine  = RetroEngine();
 
 bool32 processEvents()
@@ -751,12 +751,12 @@ void LoadGameConfig()
             sceneID += category->sceneCount;
         }
 
-        byte cfmCount = ReadInt8(&info);
-        for (int i = 0; i < cfmCount && gameOptionsPtr; ++i) {
+        byte varCount = ReadInt8(&info);
+        for (int i = 0; i < varCount && globalVarsPtr; ++i) {
             int offset = ReadInt32(&info, false);
             int count  = ReadInt32(&info, false);
             for (int v = 0; v < count; ++v) {
-                gameOptionsPtr[offset + v] = ReadInt32(&info, false);
+                globalVarsPtr[offset + v] = ReadInt32(&info, false);
             }
         }
 

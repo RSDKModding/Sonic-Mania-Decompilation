@@ -3,9 +3,11 @@
 
 #include "SonicMania.h"
 
-// Object Class
 typedef enum { JSAW_NO_SAW = 0, JSAW_HAS_SAW = 1, JSAW_AWAITING_SAW = 2 } JuggleSawMode;
 
+#define JuggleSaw_MaxFriends (8)
+
+// Object Class
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
@@ -27,7 +29,7 @@ typedef struct {
     uint sawSpeed;
     JuggleSawMode hasSaw;
     ushort setID;
-    Entity *friends[8];
+    Entity *friends[JuggleSaw_MaxFriends];
     byte friendCount;
     byte sawTimer;
     Vector2 spawnPos;

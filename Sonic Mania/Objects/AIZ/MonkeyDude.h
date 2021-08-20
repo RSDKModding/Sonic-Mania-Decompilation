@@ -3,16 +3,20 @@
 
 #include "SonicMania.h"
 
+#define MonkeyDude_MaxBodyParts (4)
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox coconutHitbox;
-    Animator bodyData;
-    Animator mainData;
-    Animator coconutData;
+    Animator bodyAnimator;
+    Animator mainAnimator;
+    Animator coconutAnimator;
     ushort aniFrames;
+#if RETRO_USE_PLUS
     ushort sfxDrop;
+#endif
 } ObjectMonkeyDude;
 
 // Entity Class
@@ -22,10 +26,10 @@ typedef struct {
     int timer;
     int activeParts;
     int currentAngle;
-    void (*bodyStates[4])(void);
-    int bodyAngles[4];
-    int bodyUnknown2[4];
-    int bodyUnknown[4];
+    void (*bodyStates[MonkeyDude_MaxBodyParts])(void);
+    int bodyAngles[MonkeyDude_MaxBodyParts];
+    int bodyUnknown2[MonkeyDude_MaxBodyParts];
+    int bodyUnknown[MonkeyDude_MaxBodyParts];
     byte bodyPartID;
     Vector2 startPos;
     byte startDir;
@@ -34,9 +38,9 @@ typedef struct {
     int nummoves;
     int throwCount;
     int angleSpeed;
-    Animator coconutData;
+    Animator coconutAnimator;
     Animator handData;
-    int field_FC;
+    int coconutFrame;
 } EntityMonkeyDude;
 
 // Object Struct
@@ -65,6 +69,8 @@ void MonkeyDude_State3(void);
 void MonkeyDude_State4(void);
 void MonkeyDude_State_BodyUnknown(void);
 void MonkeyDude_State_BodyUnknown2(void);
+#if RETRO_USE_PLUS
 void MonkeyDude_State_Coconut(void);
+#endif
 
 #endif //!OBJ_MONKEYDUDE_H

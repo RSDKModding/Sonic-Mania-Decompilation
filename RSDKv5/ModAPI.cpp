@@ -36,6 +36,7 @@ void initModAPI()
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
 
     addToModFunctionTable(ModTable_GetGlobals, GetGlobals);
+    addToModFunctionTable(ModTable_RegisterGlobals, ModRegisterGlobalVariables);
     addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
     addToModFunctionTable(ModTable_Super, Super);
     addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
@@ -916,7 +917,28 @@ void Super(int objectID, ModSuper callback, void *data)
     superLevels  = 1;
 }
 
-void *GetGlobals() { return (void *)gameOptionsPtr; }
+void *GetGlobals() { return (void *)globalVarsPtr; }
+
+void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint size)
+{
+    AllocateStorage(size, globals, DATASET_STG, true);
+    FileInfo info;
+    InitFileInfo(&info);
+
+    int *varPtr = *(int **)globals;
+    if (LoadFile(&info, globalsPath, FMODE_RB)) {
+        byte varCount = ReadInt8(&info);
+        for (int i = 0; i < varCount && globalVarsPtr; ++i) {
+            int offset = ReadInt32(&info, false);
+            int count  = ReadInt32(&info, false);
+            for (int v = 0; v < count; ++v) {
+                varPtr[offset + v] = ReadInt32(&info, false);
+            }
+        }
+
+        CloseFile(&info);
+    }
+}
 
 void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),

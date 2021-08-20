@@ -321,12 +321,12 @@ inline void SetEngineState(byte state)
         sceneInfo.state |= ENGINESTATE_STEPOVER;
 }
 
-extern int *gameOptionsPtr;
+extern int *globalVarsPtr;
 
-inline void InitGameOptions(void **options, int size)
+inline void RegisterGlobalVariables(void **globals, int size)
 {
-    AllocateStorage(size, options, DATASET_STG, true);
-    gameOptionsPtr = (int *)*options;
+    AllocateStorage(size, globals, DATASET_STG, true);
+    globalVarsPtr = (int *)*globals;
 }
 
 #if RETRO_USING_DIRECTX9

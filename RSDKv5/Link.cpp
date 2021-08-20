@@ -467,7 +467,7 @@ void setupFunctions()
 #endif
 
     // Function Table
-    addToRSDKFunctionTable(FunctionTable_InitGameOptions, InitGameOptions);
+    addToRSDKFunctionTable(FunctionTable_InitGameOptions, RegisterGlobalVariables);
     addToRSDKFunctionTable(FunctionTable_RegisterObject, RegisterObject);
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_RegisterObjectContainer, RegisterObjectContainer);

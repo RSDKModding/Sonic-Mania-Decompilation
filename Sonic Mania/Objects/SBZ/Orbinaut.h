@@ -3,14 +3,28 @@
 
 #include "SonicMania.h"
 
+#define Orbinaut_MaxOrbs (4)
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    ushort aniFrames;
 } ObjectOrbinaut;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int planeFilter;
+    Vector2 startPos;
+    byte startDir;
+    byte activeOrbs;
+    Vector2 orbPositions[Orbinaut_MaxOrbs];
+    bool32 fireOrbs;
+    Animator animatorFace;
+    Animator animatorOrb;
 } EntityOrbinaut;
 
 // Object Entity
@@ -28,6 +42,18 @@ void Orbinaut_EditorLoad(void);
 void Orbinaut_Serialize(void);
 
 // Extra Entity Functions
+void Orbinaut_DebugSpawn(void);
+void Orbinaut_DebugDraw(void);
 
+void Orbinaut_HandlePlayerInteractions(void);
+void Orbinaut_HandleRotation(void);
+void Orbinaut_CheckOnScreen(void);
+
+void Orbinaut_State_Setup(void);
+void Orbinaut_Unknown6(void);
+void Orbinaut_Unknown7(void);
+void Orbinaut_Unknown8(void);
+void Orbinaut_State_Orb(void);
+void Orbinaut_Unknown10(void);
 
 #endif //!OBJ_ORBINAUT_H

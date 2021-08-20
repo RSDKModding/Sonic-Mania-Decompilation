@@ -17,7 +17,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
+    int idleTimer;
     int timer;
     EntityPlayer *playerPtr;
     Vector2 startPos;

@@ -170,7 +170,7 @@ void LoadScene()
             for (int o = 0; o < globalObjectCount; ++o) {
                 stageObjectIDs[o] = globalObjectIDs[o];
             }
-            sceneInfo.classCount = TYPE_DEFAULTCOUNT + globalObjectCount;
+            sceneInfo.classCount = globalObjectCount;
         }
         else {
             for (int o = 0; o < TYPE_DEFAULTCOUNT; ++o) {
@@ -187,13 +187,11 @@ void LoadScene()
             uint hash[4];
             GEN_HASH(hashBuffer, hash);
 
-            if (objectCount > 0) {
-                stageObjectIDs[sceneInfo.classCount] = 0;
-                for (int objID = 0; objID < objectCount; ++objID) {
-                    if (HASH_MATCH(hash, objectList[objID].hash)) {
-                        stageObjectIDs[sceneInfo.classCount] = objID;
-                        sceneInfo.classCount++;
-                    }
+            stageObjectIDs[sceneInfo.classCount] = 0;
+            for (int objID = 0; objID < objectCount; ++objID) {
+                if (HASH_MATCH(hash, objectList[objID].hash)) {
+                    stageObjectIDs[sceneInfo.classCount] = objID;
+                    sceneInfo.classCount++;
                 }
             }
         }

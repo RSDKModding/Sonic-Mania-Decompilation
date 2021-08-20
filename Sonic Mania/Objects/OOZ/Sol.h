@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Sol_MaxFlameOrbs 4
+#define Sol_MaxFlameOrbs (4)
 
 // Object Class
 typedef struct {

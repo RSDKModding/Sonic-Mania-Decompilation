@@ -46,7 +46,7 @@ void Redz_Create(void *data)
 
 void Redz_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("HPZ"))
+    //if (RSDK.CheckStageFolder("HPZ"))
         Redz->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Redz.bin", SCOPE_STAGE);
     Redz->hitboxBadnik.left   = -16;
     Redz->hitboxBadnik.top    = -16;

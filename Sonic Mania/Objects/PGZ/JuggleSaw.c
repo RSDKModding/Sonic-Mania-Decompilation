@@ -201,7 +201,8 @@ void JuggleSaw_Crab_Handle(void)
                 entity->friendCount = 0;
                 foreach_active(JuggleSaw, newFriend)
                 {
-                    if (newFriend != entity && newFriend->hasSaw == JSAW_NO_SAW && newFriend->setID == entity->setID && entity->friendCount < 8) {
+                    if (newFriend != entity && newFriend->hasSaw == JSAW_NO_SAW && newFriend->setID == entity->setID
+                        && entity->friendCount < JuggleSaw_MaxFriends) {
                         if (RSDK.CheckObjectCollisionTouchBox(newFriend, &JuggleSaw->hitbox, entity, &JuggleSaw->friendbox))
                             entity->friends[entity->friendCount++] = (Entity *)newFriend;
                     }

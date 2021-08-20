@@ -153,7 +153,7 @@ void WallCrawl_State_Main(void)
                 entity->state = WallCrawl_State_Idle;
                 if (!(entity->direction & FLIP_X))
                     offsetX = 0x180000;
-                entity->field_5C                                                                                       = 30;
+                entity->idleTimer                                                                                       = 30;
                 CREATE_ENTITY(WallCrawl, intToVoid(true), entity->position.x + offsetX, entity->position.y)->direction = entity->direction;
                 entity->timer                                                                                          = 180;
                 entity->playerPtr                                                                                      = NULL;
@@ -182,7 +182,7 @@ void WallCrawl_State_Main(void)
         offsetX = 0xC0000;
     if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, (2 * ((entity->direction & 1) != 0) + 1), 0, offsetX, offsetY, 0)) {
         entity->state    = WallCrawl_State_Idle;
-        entity->field_5C = 30;
+        entity->idleTimer = 30;
         if (entity->playerPtr) {
             entity->playerPtr = 0;
             entity->timer     = 180;
@@ -196,7 +196,7 @@ void WallCrawl_State_Main(void)
 void WallCrawl_State_Idle(void)
 {
     RSDK_THIS(WallCrawl);
-    if (!--entity->timer) {
+    if (!--entity->idleTimer) {
         if (abs(entity->velocity.y) == 0x8000)
             entity->direction ^= FLIP_Y;
         entity->state = WallCrawl_State_Main;

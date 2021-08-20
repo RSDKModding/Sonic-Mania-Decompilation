@@ -30,6 +30,7 @@ typedef enum {
 } ModSuper;
 
 typedef enum {
+    ModTable_RegisterGlobals,
     ModTable_RegisterObject,
     ModTable_GetGlobals,
     ModTable_Super,
@@ -93,6 +94,7 @@ inline void sortMods();
 void RunModCallbacks(int callbackID, void *data);
 
 // Mod API
+void ModRegisterGlobalVariables(const char* globalsPath, void **globals, uint size);
 void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                        void (*editorLoad)(void), void (*serialize)(void), const char *inherited);

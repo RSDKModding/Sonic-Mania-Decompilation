@@ -5,12 +5,28 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitbox2;
+    ushort aniFrames;
+    ushort sfxRev;
+    ushort sfxRelease;
 } ObjectStegway;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 startPos;
+    byte startDir;
+    int timer;
+    int field_6C;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    bool32 dustFlag;
+    int field_BC;
+    bool32 flag;
 } EntityStegway;
 
 // Object Entity
@@ -28,6 +44,18 @@ void Stegway_EditorLoad(void);
 void Stegway_Serialize(void);
 
 // Extra Entity Functions
+void Stegway_DebugSpawn(void);
+void Stegway_DebugDraw(void);
 
+void Stegway_CheckOnScreen(void);
+void Stegway_HandlePlayerInteractions(void);
+void Stegway_SetupAnims(char type, bool32 force);
+
+void Stegway_State_Setup(void);
+void Stegway_Unknown6(void);
+void Stegway_Unknown7(void);
+void Stegway_Unknown8(void);
+void Stegway_Unknown9(void);
+void Stegway_Unknown10(void);
 
 #endif //!OBJ_STEGWAY_H

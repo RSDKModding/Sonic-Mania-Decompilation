@@ -31,9 +31,12 @@ typedef enum {
 
 // Mod Table
 typedef struct {
+    void (*RegisterGlobalVariables)(void **globals, int size);
     void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                            void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                            void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
+    void *(*GetGlobals)(void); //returns the default loaded global variables (should be mania's in most cases)
+    void (*super)(int objectID, int callback, void *data);
 
     bool32 (*LoadModInfo)(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
     void (*AddModCallback)(int callbackID, void (*callback)(void* data));

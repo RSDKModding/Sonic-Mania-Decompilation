@@ -6255,11 +6255,11 @@ bool32 Player_CheckRaySwooping(void) { return Player->raySwoopTimer > 0; }
 
 void Player_UpdateRayDiveSFX(int sfxID)
 {
-    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (float)Player->rayDiveTimer * 0.00390625, 0.0, 1.0);
+    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (float)Player->rayDiveTimer * (1.0f / 256.0f), 0.0, 1.0);
 }
 void Player_UpdateRaySwoopSFX(int sfxID)
 {
-    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (float)((float)Player->raySwoopTimer * 0.8) * 0.00390625, 0.0, 1.0);
+    RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (Player->raySwoopTimer * 0.8f) * (1.0f / 256.0f), 0.0, 1.0);
 }
 #endif
 
