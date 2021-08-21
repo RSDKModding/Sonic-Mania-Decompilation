@@ -322,7 +322,11 @@ void Fan_HandlePlayerInteractions_Top(void)
         if (entity->position.y > Water->waterLevel && !(Zone->timer & 3)) {
             EntityWater *water = CREATE_ENTITY(Water, intToVoid(7), entity->position.x, entity->position.y - 0x100000);
             water->isPermanent = false;
+#if RETRO_USE_PLUS
             water->position.x += RSDK.Random(-6, 7, &Zone->randKey) << 16;
+#else
+            water->position.x += RSDK.Rand(-6, 7) << 16;
+#endif
             water->field_68   = water->position.x;
             water->velocity.y = -0x40000;
             water->childPtr   = 0;

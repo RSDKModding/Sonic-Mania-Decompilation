@@ -42,7 +42,7 @@ void SpeedBooster_Create(void *data)
     }
     else {
         entity->active = ACTIVE_BOUNDS;
-        if (entity->speed == 0)
+        if (!entity->speed)
             entity->speed = RSDK.CheckStageFolder("CPZ") ? 10 : 16;
         entity->groundVel = entity->speed << 16;
         RSDK.SetSpriteAnimation(SpeedBooster->animID, 0, &entity->animator, true, 0);
@@ -71,16 +71,14 @@ void SpeedBooster_StageLoad(void)
         SpeedBooster->sfxID         = RSDK.GetSFX("Stage/SpeedBooster.wav");
         SpeedBooster->defaultState  = SpeedBooster_SSZState;
     }
-    int count = DebugMode->itemCount;
-    if (count < 256) {
-        DebugMode->itemCount++;
-        DebugMode->objectIDs[count] = SpeedBooster->objectID;
-        DebugMode->spawn[count]     = SpeedBooster_DebugSpawn;
-        DebugMode->draw[count]      = SpeedBooster_DebugDraw;
-    }
+    DEBUGMODE_ADD_OBJ(SpeedBooster);
 }
 
-void SpeedBooster_DebugSpawn(void) { DEBUGMODE_ADD_OBJ(SpeedBooster); }
+void SpeedBooster_DebugSpawn(void)
+{
+    RSDK_THIS(SpeedBooster);
+    CREATE_ENTITY(SpeedBooster, NULL, entity->position.x, entity->position.y);
+}
 
 void SpeedBooster_DebugDraw(void)
 {
@@ -116,34 +114,35 @@ void SpeedBooster_Interact(void)
     {
         int playerID   = RSDK.GetEntityID(player);
         Hitbox *hitbox = &SpeedBooster->hitbox;
-        if (entity->playerCooldown[playerID] || player->playerAnimator.animationID == 18 || !Player_CheckCollisionTouch(player, entity, hitbox)
+        if (entity->playerCooldown[playerID] || player->playerAnimator.animationID == ANI_HURT || !Player_CheckCollisionTouch(player, entity, hitbox)
             || !player->onGround) {
             entity->playerPos[playerID] = player->position.x;
-            continue;
-        }
-        entity->velocity.x       = 2 * (player->position.x < entity->position.x) - 1;
-        entity->state            = SpeedBooster->defaultState;
-        entity->animator.frameID = 0;
-        RSDK.PlaySFX(SpeedBooster->sfxID, 0, 255);
-        entity->active = ACTIVE_NORMAL;
-        bool32 check   = isSSZ ? (entity->playerPos[playerID] <= entity->position.x) : (!entity->direction);
-        if (check) {
-            if (player->groundVel < entity->groundVel)
-                player->groundVel = entity->groundVel;
-            player->direction = 0;
         }
         else {
-            if (player->groundVel > -entity->groundVel)
-                player->groundVel = -entity->groundVel;
-            player->direction = 1;
+            entity->velocity.x       = 2 * (player->position.x < entity->position.x) - 1;
+            entity->state            = SpeedBooster->defaultState;
+            entity->animator.frameID = 0;
+            RSDK.PlaySFX(SpeedBooster->sfxID, 0, 255);
+            entity->active = ACTIVE_NORMAL;
+            bool32 check   = isSSZ ? (entity->playerPos[playerID] <= entity->position.x) : (!entity->direction);
+            if (check) {
+                if (player->groundVel < entity->groundVel)
+                    player->groundVel = entity->groundVel;
+                player->direction = 0;
+            }
+            else {
+                if (player->groundVel > -entity->groundVel)
+                    player->groundVel = -entity->groundVel;
+                player->direction = 1;
+            }
+            entity->playerCooldown[playerID] = 30;
+            player->controlLock              = 16;
+            player->pushing                  = 0;
+            player->tileCollisions           = true;
+            if (player->state != Player_State_Roll)
+                player->state = Player_State_Ground;
+            entity->playerPos[playerID] = player->position.x;
         }
-        entity->playerCooldown[playerID] = 30;
-        player->controlLock              = 16;
-        player->pushing                  = 0;
-        player->tileCollisions           = true;
-        if (player->state != Player_State_Roll)
-            player->state = Player_State_Ground;
-        entity->playerPos[playerID] = player->position.x;
     }
 }
 
@@ -175,7 +174,7 @@ void SpeedBooster_Wait1(void)
 {
     RSDK_THIS(SpeedBooster);
     entity->drawPos.x -= entity->velocity.x;
-    if (entity->cooldown-- == 1) {
+    if (!--entity->cooldown) {
         entity->cooldown = 6;
         entity->state    = SpeedBooster_Wait2;
     }
@@ -186,7 +185,7 @@ void SpeedBooster_Wait2(void)
 {
     RSDK_THIS(SpeedBooster);
     entity->drawPos.x += entity->velocity.x;
-    if (entity->cooldown-- == 1) {
+    if (!--entity->cooldown) {
         entity->active = ACTIVE_BOUNDS;
         entity->state  = SpeedBooster_BasicState;
     }

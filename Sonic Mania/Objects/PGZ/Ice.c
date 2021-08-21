@@ -111,8 +111,8 @@ void Ice_Create(void *data)
                 case 18:
                     if (entity->subType >= 3)
                         RSDK.SetSpriteAnimation(Spring->spriteIndex, (entity->subType - 3), &entity->animator2, true, 0);
-                    // else
-                    //    RSDK.SetSpriteAnimation(IceSpring->aniFrames, entity->subType, &entity->animator2, true, 0);
+                    else
+                       RSDK.SetSpriteAnimation(IceSpring->animID, entity->subType, &entity->animator2, true, 0);
                     if (entity->size) {
                         switch (entity->subType) {
                             case 0:
@@ -182,10 +182,9 @@ void Ice_Create(void *data)
                     }
                     break;
                 default:
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, ICEANI_ICEBLOCK, &entity->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, ICEANI_ICEBLOCK, &entity->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, ICEANI_PLAYERGLINT, &entity->animator3, true,
-                                            (entity->type > 12 ? 2 : 0) + entity->type - 5);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &entity->animator3, true, (entity->type > 12 ? 2 : 0) + entity->type - 5);
                     if (entity->type != 12) {
                         if (globals->gameMode == MODE_COMPETITION) {
                             if (globals->itemMode == 1) {
@@ -1039,7 +1038,7 @@ void Ice_State_PlayerBlock(void)
             }
 
             if (--entity->dwordE4 <= 0) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, 2, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &entity->animator3, true, 0);
                 entity->dwordE4 = 30 * RSDK.Rand(1, 9);
             }
             entity->animator1.frameID = playerPtr->timer;

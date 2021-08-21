@@ -7,14 +7,15 @@ void DebugMode_Update(void)
     RSDK_THIS(DebugMode);
 
     bool32 flag = false;
+    // Disables Achievements
 #if RETRO_USE_PLUS
-    API.SetAchievementStatus(false); // Disables Achievements
+    API.SetAchievementStatus(false);
 #else
     if (!APICallback->achievementsDisabled)
         APICallback->achievementsDisabled = true;
 #endif
-    if (Zone)
-        Zone->stageFinishCallback = NULL;
+    //if (Zone)
+    //    Zone->stageFinishCallback = NULL;
     if (RSDK_controller[CONT_P1].keyUp.down || (RSDK_stickL[CONT_P1].vDelta > 0.3)) {
         entity->position.y -= entity->velocity.y;
         flag = true;
@@ -42,12 +43,20 @@ void DebugMode_Update(void)
             entity->velocity.y = 0x100000;
     }
 
+#if RETRO_GAMEVER != VER_100
+    bool32 keyBack = RSDK_controller[CONT_P1].keyY.press;
+    bool32 keySpawn = RSDK_controller[CONT_P1].keyX.press;
+#else
+    bool32 spawnKey = RSDK_controller[CONT_P1].keyX.press;
+    bool32 keySpawn = RSDK_controller[CONT_P1].keyY.press;
+#endif
+
     if (RSDK_controller[CONT_P1].keyA.press) {
         ++DebugMode->objID;
         DebugMode->objID %= DebugMode->itemCount;
         DebugMode->itemSubType = 0;
     }
-    else if (RSDK_controller[CONT_P1].keyX.press) {
+    else if (keySpawn) {
         EntityPlayer *player        = (EntityPlayer *)RSDK_sceneInfo->entity;
         player->objectID            = Player->objectID;
         player->groundVel           = 0;
@@ -68,7 +77,7 @@ void DebugMode_Update(void)
         DebugMode->debugActive = false;
     }
     else if (RSDK_controller[CONT_P1].keyA.down) {
-        if (RSDK_controller[CONT_P1].keyC.press || RSDK_controller[CONT_P1].keyY.press) {
+        if (RSDK_controller[CONT_P1].keyC.press || keyBack) {
             --DebugMode->objID;
             if (DebugMode->objID < 0) {
                 DebugMode->objID = DebugMode->itemCount - 1;
@@ -81,9 +90,8 @@ void DebugMode_Update(void)
                 DebugMode->itemSubType = DebugMode->subtypeCount - 1;
         }
     }
-    else if (RSDK_controller[CONT_P1].keyC.press || RSDK_controller[CONT_P1].keyY.press) {
-        if (DebugMode->spawn[DebugMode->objID])
-            DebugMode->spawn[DebugMode->objID]();
+    else if (RSDK_controller[CONT_P1].keyC.press || keyBack) {
+        StateMachine_Run(DebugMode->spawn[DebugMode->objID]);
     }
     else if (RSDK_controller[CONT_P1].keyB.press) {
         if (DebugMode->itemSubType >= DebugMode->subtypeCount - 1)
@@ -99,8 +107,7 @@ void DebugMode_StaticUpdate(void) {}
 
 void DebugMode_Draw(void)
 {
-    if (DebugMode->draw[DebugMode->objID])
-        DebugMode->draw[DebugMode->objID]();
+    StateMachine_Run(DebugMode->draw[DebugMode->objID]);
 }
 
 void DebugMode_Create(void *data)
@@ -117,7 +124,7 @@ void DebugMode_StageLoad(void)
     DebugMode->debugActive = false;
 
     for (int i = 0; i < 0x100; ++i) {
-        DebugMode->objectIDs[i] = 0;
+        DebugMode->objectIDs[i] = TYPE_BLANK;
         DebugMode->draw[i]      = NULL;
         DebugMode->spawn[i]     = DebugMode_NullState;
     }

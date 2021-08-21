@@ -3731,17 +3731,16 @@ void Player_State_Ground(void)
                     if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
                         entity->direction ^= FLIP_X;
                         entity->skidding = 1;
-                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimator, 0, 0);
+                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimator, false, 0);
                     }
-                    --entity->skidding;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SKID, &entity->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SKID, &entity->playerAnimator, false, 0);
                     if (abs(entity->groundVel) >= 0x60000) {
-                        int spd = 144;
                         if (abs(entity->groundVel) >= 0xA0000)
-                            spd = 64;
-                        entity->playerAnimator.animationSpeed = spd;
+                            entity->playerAnimator.animationSpeed = 64;
+                        else
+                            entity->playerAnimator.animationSpeed = 144;
                     }
                     else {
                         entity->skidding -= 8;
@@ -3749,17 +3748,19 @@ void Player_State_Ground(void)
                     RSDK.PlaySFX(Player->sfx_Skidding, 0, 255);
                     EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
                     dust->state      = Dust_State_Skid;
-                    --entity->skidding;
                 }
             }
-
-            if (entity->direction) {
-                if (entity->groundVel >= 0) {
-                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SKIDTURN, &entity->playerAnimator, 0, 0);
+            else {
+                int spd = entity->playerAnimator.animationSpeed;
+                if (entity->direction) {
+                    if (entity->groundVel >= 0) {
+                        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SKIDTURN, &entity->playerAnimator, false, 0);
+                    }
                 }
-            }
-            else if (entity->groundVel <= 0) {
-                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SKIDTURN, &entity->playerAnimator, 0, 0);
+                else if (entity->groundVel <= 0) {
+                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_SKIDTURN, &entity->playerAnimator, false, 0);
+                }
+                entity->playerAnimator.animationSpeed = spd;
             }
             --entity->skidding;
         }

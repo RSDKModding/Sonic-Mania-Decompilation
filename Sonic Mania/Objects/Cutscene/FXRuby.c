@@ -75,7 +75,7 @@ void FXRuby_StageLoad(void)
     for (int i = 0; i < 0x10000; ++i) FXRuby->lookupTable[0xFFFF - i] = i;
 }
 
-void FXRuby_Unknown1(void)
+void FXRuby_SetupLayerDeformation(void)
 {
     for (int l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetSceneLayer(l);

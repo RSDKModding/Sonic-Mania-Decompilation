@@ -11,7 +11,9 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int timer;
+    EntityHangGlider *gliders[4];
 } EntityPSZ1Intro;
 
 // Object Struct
@@ -29,6 +31,12 @@ void PSZ1Intro_EditorLoad(void);
 void PSZ1Intro_Serialize(void);
 
 // Extra Entity Functions
+void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider);
+
+bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 PSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 PSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+
 #endif
 
 #endif //!OBJ_PSZ1INTRO_H

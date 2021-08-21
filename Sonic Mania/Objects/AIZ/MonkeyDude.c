@@ -171,7 +171,9 @@ void MonkeyDude_State_Setup(void)
         entity->timer    = 8;
         entity->state    = MonkeyDude_State3;
     }
+#if RETRO_USE_PLUS
     MonkeyDude_HandleStates();
+#endif
 
     int unknown = 0;
     for (int i = 0; i < MonkeyDude_MaxBodyParts; ++i) {

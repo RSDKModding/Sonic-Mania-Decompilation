@@ -105,6 +105,118 @@ void MetalSonic_StageLoad(void)
     MetalSonic->sfxTransform2   = RSDK.GetSFX("Stage/Transform2.wav");
 }
 
+void MetalSonic_ProcessBGParallax(int mult)
+{
+    for (int i = 0; i < 2; ++i) {
+        TileLayer *bg = RSDK.GetSceneLayer(i);
+        for (int s = 0; s < bg->scrollInfoCount; ++s) {
+            bg->scrollInfo[0].scrollPos += mult * bg->scrollInfo[0].parallaxFactor;
+        }
+    }
+
+    TileLayer *bg3 = RSDK.GetSceneLayer(2);
+    bg3->scrollPos += mult * bg3->parallaxFactor;
+
+    foreach_active(EggTower, tower) { tower->rotationX += (mult >> 8); }
+}
+
+void MetalSonic_HandleStageWrap(void)
+{
+    RSDK_THIS(MetalSonic);
+    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+
+    if (camera->position.x < 0xF000000)
+    {
+        if (camera->position.x <= 0x1000000) {
+            player->position.x += 0xE000000;
+            entity->position.x += 0xE000000;
+            camera->position.x += 0xE000000;
+            camera->center.x += 0xE00;
+            MetalSonic_ProcessBGParallax(-0xE0000);
+            if (entity->objectID == GigaMetal->objectID) {
+                camera->boundsL += 0xE00;
+                camera->boundsR += 0xE00;
+                Zone->screenBoundsL1[0] += 0xE00;
+                Zone->screenBoundsR1[0] += 0xE00;
+                Zone->screenBoundsL2[0] += 0xE000000;
+                Zone->screenBoundsR2[0] += 0xE000000;
+            }
+
+            foreach_active(MSOrb, orb) { orb->position.x += 0xE000000; }
+            foreach_active(MSBomb, bomb) { bomb->position.x += 0xE000000; }
+            foreach_active(Ring, ring) { ring->position.x += 0xE000000; }
+            foreach_active(Spring, spring) { spring->position.x += 0xE000000; }
+            foreach_active(Spikes, spikes) { spikes->position.x += 0xE000000; }
+            foreach_active(Firework, fireWork) { fireWork->position.x += 0xE000000; }
+            foreach_active(EggPrison, prison) { prison->position.x += 0xE000000; }
+            foreach_active(SSZSpotlight, spotlight)
+            {
+                spotlight->position.x += 0xE000000;
+                spotlight->offsetPos.x += 0xE000000;
+            }
+            foreach_active(ImageTrail, trail)
+            {
+                trail->position.x += 0xE000000;
+                trail->currentPos.x += 0xE000000;
+                for (int i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x += 0xE000000;
+            }
+            foreach_active(Platform, platform)
+            {
+                platform->position.x += 0xE000000;
+                platform->centerPos.x += 0xE000000;
+            }
+
+            for (int i = 1; i < Player->playerCount; ++i) {
+                RSDK_GET_ENTITY(i, Player)->position.x += 0xE000000;
+            }
+        }
+    }
+    else {
+        player->position.x -= 0xE000000;
+        entity->position.x -= 0xE000000;
+        camera->position.x -= 0xE000000;
+        camera->center.x -= 0xE00;
+        MetalSonic_ProcessBGParallax(0xE0000);
+        if (entity->objectID == GigaMetal->objectID) {
+            camera->boundsL -= 0xE00;
+            camera->boundsR -= 0xE00;
+            Zone->screenBoundsL1[0] -= 0xE00;
+            Zone->screenBoundsR1[0] -= 0xE00;
+            Zone->screenBoundsL2[0] -= 0xE000000;
+            Zone->screenBoundsR2[0] -= 0xE000000;
+        }
+
+        foreach_active(MSOrb, orb) { orb->position.x -= 0xE000000; }
+        foreach_active(MSBomb, bomb) { bomb->position.x -= 0xE000000; }
+        foreach_active(Ring, ring) { ring->position.x -= 0xE000000; }
+        foreach_active(Spring, spring) { spring->position.x -= 0xE000000; }
+        foreach_active(Spikes, spikes) { spikes->position.x -= 0xE000000; }
+        foreach_active(Firework, fireWork) { fireWork->position.x -= 0xE000000; }
+        foreach_active(EggPrison, prison) { prison->position.x -= 0xE000000; }
+        foreach_active(SSZSpotlight, spotlight)
+        {
+            spotlight->position.x -= 0xE000000;
+            spotlight->offsetPos.x -= 0xE000000;
+        }
+        foreach_active(ImageTrail, trail)
+        {
+            trail->position.x -= 0xE000000;
+            trail->currentPos.x -= 0xE000000;
+            for (int i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x -= 0xE000000;
+        }
+        foreach_active(Platform, platform)
+        {
+            platform->position.x -= 0xE000000;
+            platform->centerPos.x -= 0xE000000;
+        }
+
+        for (int i = 1; i < Player->playerCount; ++i) {
+            RSDK_GET_ENTITY(i, Player)->position.x -= 0xE000000;
+        }
+    }
+}
+
 void MetalSonic_EditorDraw(void)
 {
 

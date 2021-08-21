@@ -188,30 +188,35 @@ void SpecialRing_State_Normal(void)
     updateRange.y = 0x800000;
     if (!RSDK.CheckOnScreen(entity, &updateRange)) {
         entity->scale.x = 0;
-        RSDK.GetEntityByID(SLOT_PLAYER1);
     }
 
-    if (entity->scale.x >= 320)
-        entity->scale.x = 320;
+    if (entity->scale.x >= 0x140)
+        entity->scale.x = 0x140;
     else
-        entity->scale.x += ((360 - entity->scale.x) >> 5);
+        entity->scale.x += ((0x168 - entity->scale.x) >> 5);
 
     RSDK.MatrixScaleXYZ(&entity->matrix, entity->scale.x, entity->scale.x, entity->scale.x);
     RSDK.MatrixTranslateXYZ(&entity->matrix, entity->position.x, entity->position.y, 0, false);
     RSDK.MatrixRotateXYZ(&entity->matrix2, 0, entity->angleY, entity->angleZ);
     RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &entity->matrix);
-    RSDK.MatrixRotateX(&entity->matrix4, 480);
+    RSDK.MatrixRotateX(&entity->matrix4, 0x1E0);
     RSDK.MatrixRotateXYZ(&entity->matrix3, 0, entity->angleY, entity->angleZ);
     RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &entity->matrix4);
 
-    if (entity->enabled && entity->scale.x > 256) {
+    if (entity->enabled && entity->scale.x > 0x100) {
         foreach_active(Player, player) {
             if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && !player->sidekick) {
                 if (Player_CheckCollisionTouch(player, entity, &SpecialRing->hitbox) && RSDK_sceneInfo->timeEnabled) {
                     entity->dword68 = 0x100000;
                     entity->state   = SpecialRing_State_Warp;
                     EntitySaveGame *saveRAM = SaveGame->saveRAM;
+#if RETRO_GAMEVER != VER_100
+                    // rings spawned via debug mode give you 50 rings, always
                     if (saveRAM->chaosEmeralds != 0x7F && entity->id) {
+#else
+                    // rings spawned via debug mode take you to special stage, always
+                    if (saveRAM->chaosEmeralds != 0x7F) {
+#endif
                         player->visible             = false;
                         player->active              = ACTIVE_NEVER;
                         RSDK_sceneInfo->timeEnabled = false;

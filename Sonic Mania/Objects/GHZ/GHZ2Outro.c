@@ -158,7 +158,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
             ruby->drawFX        = FX_ROTATE;
         }
 
-        FXRuby_Unknown1();
+        FXRuby_SetupLayerDeformation();
         return true;
     }
     return false;

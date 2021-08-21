@@ -214,7 +214,10 @@ void BallCannon_StateCheckPlayerCollisions(void)
 
         if (Player_CheckCollisionBox(player, entity, &BallCannon->hitbox2) == 1) {
             if (player->playerAnimator.animationID == ANI_JUMP || player->state == Player_State_DropDash
-                || player->state == Player_State_MightyHammerDrop) {
+#if RETRO_USE_PLUS
+                || player->state == Player_State_MightyHammerDrop
+#endif
+                ) {
                 if (storeVelY >= 0 && !player->groundedStore) {
                     for (int i = 0; i < 16; ++i) {
                         EntityBallCannon *debris =

@@ -402,9 +402,9 @@ void ActClear_StageLoad(void)
     ActClear->sfx_ScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
     ActClear->sfx_ScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
 #if RETRO_USE_PLUS
-    ActClear->dword34        = 0;
-    ActClear->sfx_Event      = RSDK.GetSFX("Special/Event.wav");
-    ActClear->forceNoSave       = false;
+    ActClear->dword34     = 0;
+    ActClear->sfx_Event   = RSDK.GetSFX("Special/Event.wav");
+    ActClear->forceNoSave = false;
 #endif
 }
 

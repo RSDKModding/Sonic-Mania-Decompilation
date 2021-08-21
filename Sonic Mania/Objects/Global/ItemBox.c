@@ -1053,8 +1053,8 @@ void ItemBox_HandleObjectCollisions(void)
             if (ice->stateDraw == Ice_StateDraw_Unknown1) {
                 int storeX = ice->position.x;
                 int storeY = ice->position.y;
-                ice->position.x -= ice[2].alpha;
-                ice->position.y -= ice[2].rotation;
+                ice->position.x -= ice->playerPos.x;
+                ice->position.y -= ice->playerPos.y;
 
                 if (RSDK.CheckObjectCollisionBox(ice, &ice->hitbox1, entity, &ItemBox->hitbox, true)) {
                     entity->position.x += ice->playerPos.x;

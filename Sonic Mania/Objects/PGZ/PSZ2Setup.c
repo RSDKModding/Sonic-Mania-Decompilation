@@ -81,19 +81,15 @@ void PSZ2Setup_StageLoad(void)
     if (isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
         Zone->screenBoundsL1[0] = 1024;
         Zone->screenBoundsL1[1] = 1024;
-#if RETRO_USE_PLUS
         Zone->screenBoundsL1[2] = 1024;
         Zone->screenBoundsL1[3] = 1024;
-#endif
         FXFade_StopAll();
     }
     else {
         Zone->screenBoundsB1[0] = 1556;
         Zone->screenBoundsB1[1] = 1556;
-#if RETRO_USE_PLUS
         Zone->screenBoundsB1[2] = 1556;
         Zone->screenBoundsB1[3] = 1556;
-#endif
         PSZ2Setup_ActTransitionLoad();
     }
 
@@ -140,7 +136,7 @@ void PSZ2Setup_ActTransitionLoad(void)
     Zone->screenBoundsB1[3] = 1556;
 }
 
-void PSZ2Setup_StageFinishCB(void) { RSDK.CreateEntity(PSZ2Outro->objectID, NULL, 0, 0); }
+void PSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }
 
 void PSZ2Setup_EditorDraw(void) {}
 

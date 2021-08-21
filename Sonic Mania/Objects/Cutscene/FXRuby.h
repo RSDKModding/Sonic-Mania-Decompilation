@@ -47,7 +47,7 @@ void FXRuby_EditorLoad(void);
 void FXRuby_Serialize(void);
 
 // Extra Entity Functions
-void FXRuby_Unknown1(void);
+void FXRuby_SetupLayerDeformation(void);
 void FXRuby_Unknown2(void);
 
 void FXRuby_Unknown3(void);

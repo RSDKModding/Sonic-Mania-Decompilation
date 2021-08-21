@@ -4,29 +4,33 @@ ObjectSSZ3Cutscene *SSZ3Cutscene;
 
 void SSZ3Cutscene_Update(void)
 {
-    void *states[]  = { SSZ3Cutscene_CutsceneState_Unknown1, SSZ3Cutscene_CutsceneState_Unknown2, SSZ3Cutscene_CutsceneState_Unknown4,
-                       SSZ3Cutscene_CutsceneState_Unknown5, SSZ3Cutscene_CutsceneState_Unknown6, SSZ3Cutscene_CutsceneState_Unknown7,
-                       SSZ3Cutscene_CutsceneState_Unknown8, SSZ3Cutscene_CutsceneState_Unknown9, NULL };
-    void *states2[] = { SSZ3Cutscene_CutsceneState_Unknown4,
-                        SSZ3Cutscene_CutsceneState_Unknown5,
-                        SSZ3Cutscene_CutsceneState_Unknown6,
-                        SSZ3Cutscene_CutsceneState_Unknown7,
-                        SSZ3Cutscene_CutsceneState_Unknown8,
-                        SSZ3Cutscene_CutsceneState_Unknown9,
+    RSDK_THIS(SSZ3Cutscene);
+
+    void *statesIntro[] = { SSZ3Cutscene_IntroState_Unknown1, SSZ3Cutscene_IntroState_Unknown2, NULL };
+#if RETRO_USE_PLUS
+    void *statesOutro[] = { SSZ3Cutscene_OutroState_Unknown1,
+                        SSZ3Cutscene_OutroState_Unknown2,
+                        SSZ3Cutscene_OutroState_Unknown3,
+                        SSZ3Cutscene_OutroState_Unknown4,
+                        SSZ3Cutscene_OutroState_Unknown5,
+                        SSZ3Cutscene_OutroState_LoadNextScene,
                         NULL };
 
-    RSDK_THIS(SSZ3Cutscene);
     if (!entity->flag) {
-        CutsceneSeq_StartSequence((Entity *)entity, states);
+        CutsceneSeq_StartSequence((Entity *)entity, statesIntro);
         entity->active = ACTIVE_NEVER;
     }
     else {
-        CutsceneSeq_StartSequence((Entity *)entity, states2);
+        CutsceneSeq_StartSequence((Entity *)entity, statesOutro);
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         entity->active = ACTIVE_NEVER;
     }
+#else
+    CutsceneSeq_StartSequence((Entity *)entity, statesIntro);
+    entity->active = ACTIVE_NEVER;
+#endif
 }
 
 void SSZ3Cutscene_LateUpdate(void) {}
@@ -39,12 +43,15 @@ void SSZ3Cutscene_Create(void *data)
 {
     RSDK_THIS(SSZ3Cutscene);
     entity->active = ACTIVE_NORMAL;
+#if RETRO_USE_PLUS
     entity->flag   = voidToInt(data);
+#endif
 }
 
 void SSZ3Cutscene_StageLoad(void) {}
 
-void SSZ3Cutscene_Unknown(void)
+#if RETRO_USE_PLUS
+void SSZ3Cutscene_HandleRubyFX(void)
 {
     foreach_active(Player, player)
     {
@@ -56,10 +63,15 @@ void SSZ3Cutscene_Unknown(void)
         }
     }
 }
+#endif
 
-bool32 SSZ3Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_IntroState_Unknown1(EntityCutsceneSeq *host)
 {
+#if RETRO_USE_PLUS
     if (!host->timer) {
+#else
+    if (host->timer >= 8) {
+#endif
         foreach_active(Player, player)
         {
             player->groundVel  = 0x40000;
@@ -82,20 +94,21 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
     return false;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_IntroState_Unknown2(EntityCutsceneSeq *host)
 {
     if (host->timer >= 40) {
         foreach_active(Player, player)
         {
-            if (!player->sidekick) {
+            if (!player->sidekick)
                 player->stateInput = Player_ProcessP1Input;
-            }
         }
         return true;
     }
     return false;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+
+#if RETRO_USE_PLUS
+bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
@@ -112,7 +125,7 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         }
     }
 
-    FXRuby_Unknown1();
+    FXRuby_SetupLayerDeformation();
 
     int pos  = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 2;
     int pos2 = 0;
@@ -145,12 +158,12 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 
     return true;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown5(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_OutroState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
     EntityPhantomRuby *ruby = entity->ruby;
     EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    SSZ3Cutscene_Unknown();
+    SSZ3Cutscene_HandleRubyFX();
     if (abs(player->position.x - ruby->position.x) < 0x900000) {
         foreach_active(Player, player) { player->right = false; }
         foreach_active(EggTower, tower) { destroyEntity(tower); }
@@ -158,11 +171,11 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown6(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_OutroState_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
-    SSZ3Cutscene_Unknown();
+    SSZ3Cutscene_HandleRubyFX();
     if (RSDK.GetEntityCount(PhantomRuby->objectID, true) > 0) {
         foreach_active(PhantomRuby, ruby) { entity->ruby = ruby; }
     }
@@ -174,12 +187,12 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown7(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
     EntityPhantomRuby *ruby = entity->ruby;
-    SSZ3Cutscene_Unknown();
+    SSZ3Cutscene_HandleRubyFX();
     if (!host->timer)
         PhantomRuby_Unknown2(ruby);
 
@@ -230,7 +243,7 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown7(EntityCutsceneSeq *host)
 
     return false;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player1);
@@ -240,7 +253,7 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host)
     RSDK_THIS(SSZ3Cutscene);
     EntityPhantomRuby *ruby = entity->ruby;
 
-    SSZ3Cutscene_Unknown();
+    SSZ3Cutscene_HandleRubyFX();
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {
@@ -317,7 +330,7 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown8(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ3Cutscene_CutsceneState_Unknown9(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_OutroState_LoadNextScene(EntityCutsceneSeq *host)
 {
     if (host->timer == 16) {
         RSDK.LoadScene();
@@ -325,6 +338,7 @@ bool32 SSZ3Cutscene_CutsceneState_Unknown9(EntityCutsceneSeq *host)
     }
     return false;
 }
+#endif
 
 void SSZ3Cutscene_EditorDraw(void) {}
 
