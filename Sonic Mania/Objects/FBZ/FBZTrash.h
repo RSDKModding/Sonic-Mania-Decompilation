@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectFBZTrash;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int type;
+    int frameID;
+    int field_64;
+    int timer;
+    int field_6C;
+    Vector2 field_70;
+    Vector2 field_78;
+    Entity *parent;
+    Hitbox hitbox;
+    Animator animator;
 } EntityFBZTrash;
 
 // Object Struct
@@ -28,6 +40,12 @@ void FBZTrash_EditorLoad(void);
 void FBZTrash_Serialize(void);
 
 // Extra Entity Functions
-
+void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int angle);
+void FBZTrash_Unknown2(int x, int y);
+void FBZTrash_Unknown3(void);
+void FBZTrash_Unknown4(void);
+void FBZTrash_Unknown5(void);
+void FBZTrash_Unknown6(void);
+void FBZTrash_Unknown7(void);
 
 #endif //!OBJ_FBZTRASH_H

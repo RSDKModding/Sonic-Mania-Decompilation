@@ -11,7 +11,8 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int field_58;
 } EntityFBZ2Outro;
 
 // Object Struct
@@ -29,6 +30,12 @@ void FBZ2Outro_EditorLoad(void);
 void FBZ2Outro_Serialize(void);
 
 // Extra Entity Functions
+void FBZ2Outro_StartCutscene(EntityFBZ2Outro *outro);
+
+bool32 FBZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 FBZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+
 #endif
 
 #endif //!OBJ_FBZ2OUTRO_H
