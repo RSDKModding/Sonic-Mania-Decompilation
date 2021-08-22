@@ -40,11 +40,11 @@ void FBZ1Outro_StageLoad(void)
 {
     foreach_all(BigSqueeze, boss)
     {
-        // switch (boss->type) {
-        //    case 2: FBZ1Outro->boss1 = boss; break;
-        //    case 3: FBZ1Outro->boss2 = boss; break;
-        //    case 0: FBZ1Outro->boss3 = boss; break;
-        //}
+        switch (boss->type) {
+            case 2: FBZ1Outro->boss1 = boss; break;
+            case 3: FBZ1Outro->boss2 = boss; break;
+            case 0: FBZ1Outro->boss3 = boss; break;
+        }
     }
 
     foreach_all(CollapsingPlatform, platform)
@@ -154,7 +154,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
 
     if (BigSqueeze->value4[3] - BigSqueeze->value4[2] <= 0xB00000) {
-        BigSqueeze->value5 = false;
+        BigSqueeze->isRumbling = false;
         RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_HURT, &player1->playerAnimator, false, 0);
         player1->state    = Player_State_Air;
         player1->onGround = false;
@@ -167,11 +167,11 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             destroyEntity(FBZ1Outro->craneP2);
             entity->grabbedPlayers |= 2;
         }
-        // boss1->timer2               = 0;
-        // boss1->state                = BigSqueeze_Unknown20;
-        // boss2->timer2               = 0;
-        // boss2->state                = BigSqueeze_Unknown20;
-        // boss3->state                = BigSqueeze_Unknown18;
+        boss1->timer2               = 0;
+        boss1->state                = BigSqueeze_State3_Unknown1;
+        boss2->timer2               = 0;
+        boss2->state                = BigSqueeze_State3_Unknown1;
+        boss3->state                = BigSqueeze_Unknown18;
         Zone->screenBoundsB1[0] = 2660;
         Zone->screenBoundsB1[1] = 2660;
         Zone->screenBoundsR1[0] = 14080;
@@ -181,14 +181,14 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         return true;
     }
     else {
-        BigSqueeze->value5 = true;
+        BigSqueeze->isRumbling = true;
         FBZ1Outro_Unknown2();
         if (host->field_6C[0])
             host->field_6C[0] = 1;
-        // boss1->timer2 = 0;
-        // boss1->state  = BigSqueeze_Unknown21;
-        // boss2->timer2 = 0;
-        // boss2->state  = BigSqueeze_Unknown21;
+        boss1->timer2 = 0;
+        boss1->state  = BigSqueeze_State3_Unknown2;
+        boss2->timer2 = 0;
+        boss2->state  = BigSqueeze_State3_Unknown2;
     }
     return false;
 }
@@ -199,10 +199,10 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 
     EntityBigSqueeze *boss1 = FBZ1Outro->boss1;
     EntityBigSqueeze *boss2 = FBZ1Outro->boss2;
-    // boss1->timer2            = 0;
-    // boss1->state             = BigSqueeze_Unknown20;
-    // boss2->timer2            = 0;
-    // boss2->state             = BigSqueeze_Unknown20;
+    boss1->timer2            = 0;
+    boss1->state             = BigSqueeze_State3_Unknown1;
+    boss2->timer2            = 0;
+    boss2->state             = BigSqueeze_State3_Unknown1;
 
     EntityCrane *craneP1 = FBZ1Outro->craneP1;
     craneP1->position.x  = player1->position.x;
@@ -215,7 +215,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         EntityCrane *craneP2 = FBZ1Outro->craneP2;
         craneP2->position.x  = player2->position.x;
         if (craneP2->state == Crane_State_Unknown5) {
-            craneP2->startPos.x = player2->position.x;
+            craneP2->startPos.x = craneP2->position.x;
             craneP2->startPos.y = craneP2->position.y;
             entity->grabbedPlayers |= 2;
         }

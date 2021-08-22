@@ -2,15 +2,9 @@
 
 ObjectFBZSetup *FBZSetup;
 
-void FBZSetup_Update(void)
-{
+void FBZSetup_Update(void) {}
 
-}
-
-void FBZSetup_LateUpdate(void)
-{
-
-}
+void FBZSetup_LateUpdate(void) {}
 
 void FBZSetup_StaticUpdate(void)
 {
@@ -37,15 +31,9 @@ void FBZSetup_StaticUpdate(void)
     RSDK.GetSceneLayer(FBZSetup->bgOutsideLayer)->scrollPos = (RSDK.Sin512(Zone->timer2) + 512) << 10;
 }
 
-void FBZSetup_Draw(void)
-{
+void FBZSetup_Draw(void) {}
 
-}
-
-void FBZSetup_Create(void* data)
-{
-
-}
+void FBZSetup_Create(void *data) {}
 
 void FBZSetup_StageLoad(void)
 {
@@ -63,8 +51,8 @@ void FBZSetup_StageLoad(void)
     bgLayer->drawLayer[3]       = 0;
     if (!Zone->actID)
         bgLayer->scanlineCallback = FBZSetup_ScanlineCallback;
-    
-    int val = -336;
+
+    int val  = -336;
     int val2 = 0;
     for (int i = 0; i < 0x400; ++i) {
         int angle = val >> 1;
@@ -93,7 +81,8 @@ void FBZSetup_StageLoad(void)
     }
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-        foreach_all(FBZ1Outro, outro) {
+        foreach_all(FBZ1Outro, outro)
+        {
             Zone->forcePlayerOnScreenFlag = true;
             FBZSetup->outroPtr            = outro;
             foreach_break;
@@ -126,25 +115,22 @@ void FBZSetup_ActTransitionLoad(void)
     Zone->screenBoundsB1[0] = 4324;
     Zone->screenBoundsL1[1] = 0;
     Zone->screenBoundsB1[1] = 4324;
-#if RETRO_USE_PLUS
     Zone->screenBoundsL1[2] = 0;
     Zone->screenBoundsB1[2] = 4324;
     Zone->screenBoundsL1[3] = 0;
     Zone->screenBoundsB1[3] = 4324;
-#endif
 
-    int id = 0;
-    TileLayer *layer                          = RSDK.GetSceneLayer(2);
+    int id           = 0;
+    TileLayer *layer = RSDK.GetSceneLayer(2);
     for (int i = 0; i < layer->scrollInfoCount; ++i) {
         layer->scrollInfo[i].scrollPos = globals->parallaxOffset[id++];
     }
 
-    foreach_all(ParallaxSprite, parallaxSprite) { 
-        parallaxSprite->scrollPos.x = globals->parallaxOffset[id++];
-    }
+    foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->scrollPos.x = globals->parallaxOffset[id++]; }
 }
 
-void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, int a6) {
+void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, int a6)
+{
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
     int val            = (a3 * screen->position.y) >> 8;
     int start          = a4 - val;
@@ -172,12 +158,12 @@ void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, 
 
 void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 {
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
-    int y                  = screen->position.y >> 3;
+    ScreenInfo *screen        = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    int y                     = screen->position.y >> 3;
     ScanlineInfo *scanlinePtr = scanlines;
 
     for (int i = 0; i < SCREEN_YSIZE; ++i) {
-        int pos               = (i + y) & 0x3FF;
+        int pos                 = (i + y) & 0x3FF;
         scanlinePtr->deform.x   = FBZSetup->array1[pos];
         scanlinePtr->deform.y   = 0;
         scanlinePtr->position.x = ((screen->position.x << 14) - FBZSetup->array1[pos] * screen->centerX) & 0xFFFF8000;
@@ -255,21 +241,11 @@ void FBZSetup_GenericTriggerCB_B(void)
 
 void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outroPtr->active = ACTIVE_NORMAL; }
 #if RETRO_USE_PLUS
-void FBZSetup_StageFinishCB_Act2(void) { RSDK.CreateEntity(FBZ2Outro->objectID, NULL, 0, 0); }
+void FBZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
 #endif
 
-void FBZSetup_EditorDraw(void)
-{
+void FBZSetup_EditorDraw(void) {}
 
-}
+void FBZSetup_EditorLoad(void) {}
 
-void FBZSetup_EditorLoad(void)
-{
-
-}
-
-void FBZSetup_Serialize(void)
-{
-
-}
-
+void FBZSetup_Serialize(void) {}

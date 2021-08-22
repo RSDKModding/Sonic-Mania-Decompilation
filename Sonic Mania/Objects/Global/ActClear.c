@@ -912,8 +912,8 @@ void ActClear_ForcePlayerOnScreen(void)
     RSDK_THIS(ActClear);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    bool32 flagA          = false;
-    bool32 flagB          = false;
+    bool32 flagP2          = false;
+    bool32 flagP1          = false;
     int screenOffX        = RSDK_screens->width - 16 + RSDK_screens->position.x;
     screenOffX <<= 16;
     player1->up        = false;
@@ -943,13 +943,13 @@ void ActClear_ForcePlayerOnScreen(void)
             }
         }
 
-        if (!player1->onGround && !player1->groundVel) {
-            flagB = true;
+        if (player1->onGround && !player1->groundVel) {
+            flagP1 = true;
         }
     }
 
     if (player2->objectID != Player->objectID) {
-        flagA = true;
+        flagP2 = true;
     }
     else {
         player2->up        = false;
@@ -959,15 +959,15 @@ void ActClear_ForcePlayerOnScreen(void)
         if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn) {
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
                     player2->direction = FLIP_NONE;
-                    flagA              = true;
+                    flagP2              = true;
                 }
             }
         }
         else if (player2->position.x >= screenOffX) {
             player2->stateInput = Player_ProcessP2Input_AI;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, false, 0);
             player2->state     = Player_State_Ground;
             player2->groundVel = -0x40000;
             player2->left      = true;
@@ -975,32 +975,32 @@ void ActClear_ForcePlayerOnScreen(void)
 
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
                     player2->direction = FLIP_NONE;
-                    flagA              = true;
+                    flagP2              = true;
                 }
             }
         }
         else {
             if (player2->onGround && !player2->groundVel) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
                 player2->direction = FLIP_NONE;
-                flagA              = true;
+                flagP2              = true;
             }
         }
     }
 
-    if (flagB) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, 0, 0);
+    if (flagP1) {
+        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, false, 0);
         player1->direction = FLIP_NONE;
     }
     ++entity->stageFinishTimer;
-    if ((flagB && flagA) || entity->stageFinishTimer >= 900) {
+    if ((flagP1 && flagP2) || entity->stageFinishTimer >= 900) {
         if (entity->timer >= 10) {
             Player->jumpInDelay = 0;
             Zone->stageFinishCallback();
             Zone->stageFinishCallback = NULL;
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+            destroyEntity(entity);
         }
         else {
             entity->timer++;

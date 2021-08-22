@@ -96,7 +96,7 @@ void FBZTrash_Unknown3(void)
                 int rx = (entity->position.x - trash->position.x) >> 16;
                 int ry = (entity->position.y - trash->position.y) >> 16;
                 if (rx * rx + ry * ry < 288) {
-                    if (BigSqueeze->value5)
+                    if (BigSqueeze->isRumbling)
                         entity->field_64 = (entity->field_64 + trash->field_64) >> 1;
                     else
                         entity->field_64 >>= 1;
@@ -120,7 +120,7 @@ void FBZTrash_Unknown3(void)
 
     foreach_active(BigSqueeze, boss)
     {
-        /*switch (boss->type) {
+        switch (boss->type) {
             case 1:
                 if (entity->position.y >  boss->position.y + 0xC00000) {
                     entity->position.y =  boss->position.y + 0xC00000;
@@ -131,7 +131,7 @@ void FBZTrash_Unknown3(void)
                 if (entity->position.x < boss->position.x + 0x180000) {
                     entity->position.x = boss->position.x + 0x180000;
                     entity->velocity.x = 5 * boss->velocity.x;
-                    if (entity->onGround && BigSqueeze->value5) {
+                    if (entity->onGround && BigSqueeze->isRumbling) {
                         entity->field_64 = 128;
                         entity->onGround = false;
                     }
@@ -141,13 +141,13 @@ void FBZTrash_Unknown3(void)
                 if (entity->position.x > boss->position.x - 0x180000) {
                     entity->position.x = boss->position.x - 0x180000;
                     entity->velocity.x = 5 * boss->velocity.x;
-                    if (entity->onGround && BigSqueeze->value5) {
+                    if (entity->onGround && BigSqueeze->isRumbling) {
                         entity->field_64 = 128;
                         entity->onGround = false;
                     }
                 }
                 break;
-        }*/
+        }
     }
 }
 
@@ -232,7 +232,7 @@ void FBZTrash_Unknown7(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && Player_CheckBadnikBreak(entity, player, true)) {
             foreach_all(Animals, animals) { destroyEntity(animals); }
 #if RETRO_USE_PLUS
             if (player->state != Player_State_MightyHammerDrop)

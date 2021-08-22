@@ -10,7 +10,7 @@ typedef struct {
     int value2[13]; //= { 4, 8, -131072, -65536, 9, -65536, -65536, 10, 65536, -65536, 11, 131072, -65536 };
     int value3[25]; //= { 8, 0, -131072, -65536, 1, -65536, -65536, 2, 65536, -65536, 3, 131072, -65536, 4, -131072, -32768, 5, -65536, -32768, 6, 65536, -32768, 7, 131072, -32768 };
     int value4[4];
-    bool32 value5;
+    bool32 isRumbling;
     int value6;
     int value7;
     ushort sfxBossHit;
@@ -22,7 +22,21 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    int type;
+    int timer2;
+    int invincibilityTimer;
+    int timer;
+    Entity *eggman;
+    int field_74;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
+    Hitbox hitbox;
 } EntityBigSqueeze;
 
 // Object Struct
@@ -40,6 +54,33 @@ void BigSqueeze_EditorLoad(void);
 void BigSqueeze_Serialize(void);
 
 // Extra Entity Functions
+bool32 BigSqueeze_RumbleCheckCB(void);
 
+void BigSqueeze_HandleWallCollisions(void);
+void BigSqueeze_CheckPlayerCollisions(void);
+void BigSqueeze_CheckPlayerCollisions2(void);
+void BigSqueeze_Hit(void);
+
+void BigSqueeze_Unknown6(void);
+void BigSqueeze_Unknown7(int *debrisData);
+
+void BigSqueeze_StateDraw2_Unknown1(void);
+void BigSqueeze_StateDraw3_Unknown1(void);
+
+void BigSqueeze_State1_SetupIntro(void);
+void BigSqueeze_State1_SetupEggman(void);
+void BigSqueeze_State1_SetupBossArena(void);
+void BigSqueeze_State1_SetupBoss(void);
+
+void BigSqueeze_State2_Unknown1(void);
+void BigSqueeze_State2_Unknown2(void);
+void BigSqueeze_State2_Die(void);
+void BigSqueeze_State2_SpawnSignPost(void);
+void BigSqueeze_Unknown18(void);
+
+void BigSqueeze_State1_Unknown5(void);
+
+void BigSqueeze_State3_Unknown1(void);
+void BigSqueeze_State3_Unknown2(void);
 
 #endif //!OBJ_BIGSQUEEZE_H
