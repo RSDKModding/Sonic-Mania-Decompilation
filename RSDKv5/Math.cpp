@@ -29,6 +29,7 @@ uint randKey = 0;
 
 void CalculateTrigAngles()
 {
+    srand(time(NULL));
     randKey = rand();
 
     for (int i = 0; i < 0x400; ++i) {

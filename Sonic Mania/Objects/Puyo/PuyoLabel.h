@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectPuyoLabel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int listID;
+    int frame;
+    int field_64;
+    int field_68;
+    int field_6C;
+    Animator animator;
 } EntityPuyoLabel;
 
 // Object Struct

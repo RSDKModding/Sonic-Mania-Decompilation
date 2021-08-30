@@ -127,6 +127,11 @@ void TryAgain_Unknown4(void)
     ++entity->timer;
     if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press)
         entity->timer = 600;
+#if RETRO_USE_TOUCH_CONTROLS
+    else if (RSDK_touchMouse->count)
+        entity->timer = 600;
+#endif
+
     if (entity->timer == 600) {
 #if RETRO_USE_PLUS
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);

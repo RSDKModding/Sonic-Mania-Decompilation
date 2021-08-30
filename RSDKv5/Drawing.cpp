@@ -82,7 +82,8 @@ char drawGroupNames[0x10][0x10]{
 
 bool32 InitRenderDevice()
 {
-    if (engine.windowActive) return true;
+    if (engine.windowActive)
+        return true;
 
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -2544,10 +2545,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
     }
 }
 
-void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
+void DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative)
 {
-    if (data && data->framePtrs) {
-        SpriteFrame *frame = &data->framePtrs[data->frameID];
+    if (animator && animator->framePtrs) {
+        SpriteFrame *frame = &animator->framePtrs[animator->frameID];
         Vector2 pos;
         if (!position)
             pos = sceneInfo.entity->position;
@@ -2564,7 +2565,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
         int rotation = sceneInfo.entity->rotation;
         int drawFX   = sceneInfo.entity->drawFX;
         if (sceneInfo.entity->drawFX & FX_ROTATE) {
-            switch (data->rotationFlag) {
+            switch (animator->rotationFlag) {
                 case ROTFLAG_NONE:
                     rotation = 0;
                     if ((sceneInfo.entity->drawFX & FX_ROTATE) != FX_NONE)
@@ -2607,7 +2608,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                             break;
                         case 1: // 45 deg
                             rotation = 0x80;
-                            frame += data->frameCount;
+                            frame += animator->frameCount;
                             if (sceneInfo.entity->direction)
                                 rotation = 0x00;
                             break;
@@ -2616,7 +2617,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                             break;
                         case 3: // 135 deg
                             rotation = 0x100;
-                            frame += data->frameCount;
+                            frame += animator->frameCount;
                             if (sceneInfo.entity->direction)
                                 rotation = 0x80;
                             break;
@@ -2625,7 +2626,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                             break;
                         case 5: // 225 deg
                             rotation = 0x180;
-                            frame += data->frameCount;
+                            frame += animator->frameCount;
                             if (sceneInfo.entity->direction)
                                 rotation = 0x100;
                             break;
@@ -2634,7 +2635,7 @@ void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative)
                             break;
                         case 7: // 315 deg
                             rotation = 0x180;
-                            frame += data->frameCount;
+                            frame += animator->frameCount;
                             if (!sceneInfo.entity->direction)
                                 rotation = 0;
                             break;
@@ -4079,10 +4080,10 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
     }
 }
 
-void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8, Vector2 *charOffsets,
-              bool32 screenRelative)
+void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
+              Vector2 *charOffsets, bool32 screenRelative)
 {
-    if (data && info && data->framePtrs) {
+    if (animator && info && animator->framePtrs) {
         if (!position)
             position = &sceneInfo.entity->position;
         Entity *entity = sceneInfo.entity;
@@ -4115,8 +4116,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame,
                 if (charOffsets) {
                     for (; startFrame < endFrame; ++startFrame) {
                         ushort curChar = info->text[startFrame];
-                        if (curChar < data->frameCount) {
-                            SpriteFrame *frame = &data->framePtrs[curChar];
+                        if (curChar < animator->frameCount) {
+                            SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height,
                                               frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -4127,8 +4128,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame,
                 else {
                     for (; startFrame < endFrame; ++startFrame) {
                         ushort curChar = info->text[startFrame];
-                        if (curChar < data->frameCount) {
-                            SpriteFrame *frame = &data->framePtrs[curChar];
+                        if (curChar < animator->frameCount) {
+                            SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -4142,8 +4143,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame,
                 if (charOffsets) {
                     for (Vector2 *charOffset = &charOffsets[endFrame]; endFrame >= startFrame; --endFrame) {
                         ushort curChar = info->text[endFrame];
-                        if (curChar < data->frameCount) {
-                            SpriteFrame *frame = &data->framePtrs[curChar];
+                        if (curChar < animator->frameCount) {
+                            SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
                                               frame->height, frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha,
                                               frame->sheetID);
@@ -4155,8 +4156,8 @@ void DrawText(Animator *data, Vector2 *position, TextInfo *info, int startFrame,
                 else {
                     for (; endFrame >= startFrame; --endFrame) {
                         ushort curChar = info->text[endFrame];
-                        if (curChar < data->frameCount) {
-                            SpriteFrame *frame = &data->framePtrs[curChar];
+                        if (curChar < animator->frameCount) {
+                            SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x = (x - frame->width) - spacing;

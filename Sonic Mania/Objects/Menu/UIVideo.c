@@ -35,6 +35,13 @@ bool32 UIVideo_SkipCallback(void)
         UIVideo->playing = true;
         return true;
     }
+#if RETRO_USE_TOUCH_CONTROLS
+    else if (RSDK_touchMouse->count) {
+        Music_FadeOut(0.0125);
+        UIVideo->playing = true;
+        return true;
+    }
+#endif
     return false;
 }
 

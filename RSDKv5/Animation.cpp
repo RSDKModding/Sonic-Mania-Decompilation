@@ -44,7 +44,7 @@ short LoadSpriteAnimation(const char *filename, Scopes scope)
         memcpy(spr->hash, hash, 4 * sizeof(uint));
 
         uint frameCount = ReadInt32(&info, false);
-        AllocateStorage(frameCount * sizeof(SpriteFrame), (void**)&spr->frames, DATASET_STG, false);
+        AllocateStorage(frameCount * sizeof(SpriteFrame), (void **)&spr->frames, DATASET_STG, false);
 
         byte sheetCount = ReadInt8(&info);
         for (int s = 0; s < sheetCount; ++s) {
@@ -133,26 +133,26 @@ short CreateSpriteAnimation(const char *filename, uint frameCount, uint animCoun
     return id;
 }
 
-void ProcessAnimation(Animator *data)
+void ProcessAnimation(Animator *animator)
 {
-    if (data) {
-        if (data->framePtrs) {
-            data->animationTimer += data->animationSpeed;
-            if (data->framePtrs == (SpriteFrame *)1) {
-                while (data->animationTimer > data->frameDelay) {
-                    ++data->frameID;
-                    data->animationTimer = data->animationTimer - data->frameDelay;
-                    if (data->frameID >= data->frameCount)
-                        data->frameID = data->loopIndex;
+    if (animator) {
+        if (animator->framePtrs) {
+            animator->animationTimer += animator->animationSpeed;
+            if (animator->framePtrs == (SpriteFrame *)1) {
+                while (animator->animationTimer > animator->frameDelay) {
+                    ++animator->frameID;
+                    animator->animationTimer = animator->animationTimer - animator->frameDelay;
+                    if (animator->frameID >= animator->frameCount)
+                        animator->frameID = animator->loopIndex;
                 }
             }
             else {
-                while (data->animationTimer > data->frameDelay) {
-                    ++data->frameID;
-                    data->animationTimer = data->animationTimer - data->frameDelay;
-                    if (data->frameID >= data->frameCount)
-                        data->frameID = data->loopIndex;
-                    data->frameDelay = data->framePtrs[data->frameID].delay;
+                while (animator->animationTimer > animator->frameDelay) {
+                    ++animator->frameID;
+                    animator->animationTimer = animator->animationTimer - animator->frameDelay;
+                    if (animator->frameID >= animator->frameCount)
+                        animator->frameID = animator->loopIndex;
+                    animator->frameDelay = animator->framePtrs[animator->frameID].delay;
                 }
             }
         }
@@ -168,7 +168,7 @@ int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startInde
     if (!info->text)
         return 0;
 
-    SpriteAnimation *spr       = &spriteAnimationList[sprIndex];
+    SpriteAnimation *spr = &spriteAnimationList[sprIndex];
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
@@ -203,19 +203,19 @@ int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startInde
     return 0;
 }
 
-void SetSpriteString(ushort spriteIndex, ushort animID, TextInfo* info) {
+void SetSpriteString(ushort spriteIndex, ushort animID, TextInfo *info)
+{
     if (spriteIndex >= SPRFILE_COUNT)
         return;
     if (!info)
         return;
 
-    
     SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
         for (int c = 0; c < info->textLength; ++c) {
-            int charVal = info->text[c];
+            int charVal   = info->text[c];
             info->text[c] = -1;
             for (int f = 0; f < anim->frameCount; ++f) {
                 if (spr->frames[f + anim->frameListOffset].id == charVal) {

@@ -26,6 +26,19 @@ void CreditsSetup_StaticUpdate(void)
                 fade->oneWay   = 0;
                 Music_FadeOut(0.0125);
             }
+#if RETRO_USE_TOUCH_CONTROLS
+            else if (RSDK_touchMouse->count) {
+                CreditsSetup->skipFlag = true;
+
+                fade->state    = FXFade_State_FadeIn;
+                fade->speedIn  = 8;
+                fade->wait     = 64;
+                fade->speedOut = 8;
+                fade->timer    = 0;
+                fade->oneWay   = 0;
+                Music_FadeOut(0.0125);
+            }
+#endif
         }
         else {
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {

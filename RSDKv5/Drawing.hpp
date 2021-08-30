@@ -232,7 +232,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
 void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
 void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect);
 
-void DrawSprite(Animator *data, Vector2 *position, bool32 screenRelative);
+void DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative);
 void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);
 void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
                         short Rotation, InkEffects inkEffect, signed int alpha, int sheetID);
@@ -242,7 +242,7 @@ void DrawDeformedSprite(ushort spriteIndex, InkEffects inkEffect, int alpha);
 void DrawTile(ushort *tileInfo, int countX, int countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
 void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ushort width, ushort height);
 
-void DrawText(Animator *data, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
+void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative);
 void DrawDevText(int x, const char *text, int y, int align, uint colour);
 

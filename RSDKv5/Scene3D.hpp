@@ -138,27 +138,27 @@ inline void Prepare3DScene(ushort sceneID)
     }
 }
 
-inline void SetMeshAnimation(ushort model, Animator *data, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
+inline void SetMeshAnimation(ushort model, Animator *animator, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
 {
     if (model >= MODEL_MAX) {
-        if (data)
-            data->framePtrs = 0;
+        if (animator)
+            animator->framePtrs = 0;
         return;
     }
-    if (!data)
+    if (!animator)
         return;
 
-    if (data->animationID == model && !forceApply)
+    if (animator->animationID == model && !forceApply)
         return;
-    data->framePtrs       = (SpriteFrame *)1;
-    data->animationTimer  = 0;
-    data->frameID         = frameID;
-    data->frameCount      = modelList[model].frameCount;
-    data->animationSpeed  = animSpeed;
-    data->prevAnimationID = data->animationID;
-    data->frameDelay      = 0x100;
-    data->loopIndex       = loopIndex;
-    data->animationID     = model;
+    animator->framePtrs       = (SpriteFrame *)1;
+    animator->animationTimer  = 0;
+    animator->frameID         = frameID;
+    animator->frameCount      = modelList[model].frameCount;
+    animator->animationSpeed  = animSpeed;
+    animator->prevAnimationID = animator->animationID;
+    animator->frameDelay      = 0x100;
+    animator->loopIndex       = loopIndex;
+    animator->animationID     = model;
 }
 inline void SetDiffuseColour(ushort sceneID, byte x, byte y, byte z)
 {
@@ -188,7 +188,7 @@ inline void SetSpecularIntensity(ushort sceneID, byte x, byte y, byte z)
     }
 }
 void AddModelToScene(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
-void AddMeshFrameToScene(ushort animID, ushort sceneID, Animator *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
+void AddMeshFrameToScene(ushort animID, ushort sceneID, Animator *animator, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void Draw3DScene(ushort sceneID);
 
 #endif

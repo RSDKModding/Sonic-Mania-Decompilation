@@ -166,9 +166,14 @@ void TryAgainE_Unknown2(void)
 
     if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press)
         entity->timer = 600;
+#if RETRO_USE_TOUCH_CONTROLS
+    else if (RSDK_touchMouse->count)
+        entity->timer = 600;
+#endif
+
     if (entity->timer == 600) {
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-        EntityFXFade *fxFade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;
         fxFade->fadeOutBlack = true;

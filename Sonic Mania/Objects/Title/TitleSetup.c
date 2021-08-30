@@ -110,10 +110,17 @@ void TitleSetup_CheckCheatCode(void)
 }
 bool32 TitleSetup_IntroCallback(void)
 {
-    if (!RSDK_controller->keyA.press && !RSDK_controller->keyB.press && !RSDK_controller->keyStart.press)
-        return false;
-    RSDK.StopChannel(Music->channelID);
-    return true;
+    if (RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyStart.press) {
+        RSDK.StopChannel(Music->channelID);
+        return true;
+    }
+#if RETRO_USE_TOUCH_CONTROLS
+    else if (RSDK_touchMouse->count) {
+        RSDK.StopChannel(Music->channelID);
+        return true;
+    }
+#endif
+    return false;
 }
 
 void TitleSetup_Unknown4(void)

@@ -134,6 +134,15 @@ void Summary_State_Unknown2(void)
         entity->stateDraw = Summary_State_Draw;
         Music_FadeOut(0.01);
     }
+#if RETRO_USE_TOUCH_CONTROLS
+    else if (RSDK_touchMouse->count) {
+        RSDK.SetScene("Presentation", "Menu");
+        entity->timer     = 0;
+        entity->state     = Summary_State_Unknown3;
+        entity->stateDraw = Summary_State_Draw;
+        Music_FadeOut(0.01);
+    }
+#endif
     else {
         entity->timer = 0;
     }

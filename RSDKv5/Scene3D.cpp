@@ -610,10 +610,10 @@ void AddModelToScene(ushort modelID, ushort sceneID, byte drawMode, Matrix *matW
         }
     }
 }
-void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *animator, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
-        if (matWorld && data) {
+        if (matWorld && animator) {
             Model *mdl           = &modelList[modelID];
             Scene3D *scn         = &scene3DList[sceneID];
             ushort *indices      = mdl->indices;
@@ -625,15 +625,15 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *data, byte dr
                 scn->drawMode = drawMode;
                 scn->faceCount += indCnt / mdl->faceVertCount;
 
-                int nextFrame = data->frameID + 1;
-                if (nextFrame >= data->frameCount)
-                    nextFrame = data->loopIndex;
-                int frameOffset     = data->frameID * mdl->vertCount;
+                int nextFrame = animator->frameID + 1;
+                if (nextFrame >= animator->frameCount)
+                    nextFrame = animator->loopIndex;
+                int frameOffset     = animator->frameID * mdl->vertCount;
                 int nextFrameOffset = nextFrame * mdl->vertCount;
 
                 int i           = 0;
                 int f           = 0;
-                int interpolate = data->animationTimer;
+                int interpolate = animator->animationTimer;
                 switch (mdl->flags) {
                     default:
                     case MODEL_NOFLAGS:

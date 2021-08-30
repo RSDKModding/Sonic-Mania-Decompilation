@@ -90,32 +90,32 @@ inline SpriteFrame *GetFrame(ushort sprIndex, ushort anim, int frame)
     return &spr->frames[frame + spr->animations[anim].frameListOffset];
 }
 
-inline Hitbox *GetHitbox(Animator *data, byte hitboxID)
+inline Hitbox *GetHitbox(Animator *animator, byte hitboxID)
 {
-    if (data && data->framePtrs)
-        return &data->framePtrs[data->frameID].hitboxes[hitboxID & (FRAMEHITBOX_COUNT - 1)];
+    if (animator && animator->framePtrs)
+        return &animator->framePtrs[animator->frameID].hitboxes[hitboxID & (FRAMEHITBOX_COUNT - 1)];
     else
         return NULL;
 }
 
-inline short GetFrameID(Animator *data)
+inline short GetFrameID(Animator *animator)
 {
-    if (data && data->framePtrs)
-        return data->framePtrs[data->frameID].id;
+    if (animator && animator->framePtrs)
+        return animator->framePtrs[animator->frameID].id;
     else
         return 0;
 }
 
-void ProcessAnimation(Animator *data);
+void ProcessAnimation(Animator *animator);
 
-inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator *data, bool32 forceApply, short frameID)
+inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator *animator, bool32 forceApply, short frameID)
 {
     if (spriteIndex >= SPRFILE_COUNT) {
-        if (data)
-            data->framePtrs = NULL;
+        if (animator)
+            animator->framePtrs = NULL;
         return;
     }
-    if (!data)
+    if (!animator)
         return;
     SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
     if (animationID >= spr->animCount)
@@ -123,19 +123,19 @@ inline void SetSpriteAnimation(ushort spriteIndex, ushort animationID, Animator 
 
     SpriteAnimationEntry *anim = &spr->animations[animationID];
     SpriteFrame *frames        = &spr->frames[anim->frameListOffset];
-    if (data->framePtrs == frames && !forceApply)
+    if (animator->framePtrs == frames && !forceApply)
         return;
 
-    data->framePtrs       = frames;
-    data->animationTimer  = 0;
-    data->frameID         = frameID;
-    data->frameCount      = anim->frameCount;
-    data->frameDelay      = data->framePtrs[frameID].delay;
-    data->animationSpeed  = anim->animationSpeed;
-    data->rotationFlag    = anim->rotationFlag;
-    data->loopIndex       = anim->loopIndex;
-    data->prevAnimationID = data->animationID;
-    data->animationID     = animationID;
+    animator->framePtrs       = frames;
+    animator->animationTimer  = 0;
+    animator->frameID         = frameID;
+    animator->frameCount      = anim->frameCount;
+    animator->frameDelay      = animator->framePtrs[frameID].delay;
+    animator->animationSpeed  = anim->animationSpeed;
+    animator->rotationFlag    = anim->rotationFlag;
+    animator->loopIndex       = anim->loopIndex;
+    animator->prevAnimationID = animator->animationID;
+    animator->animationID     = animationID;
 }
 
 inline void EditSpriteAnimation(ushort spriteIndex, ushort animID, const char *name, int frameOffset, ushort frameCount, short animSpeed,
