@@ -237,29 +237,32 @@ bool32 processEvents()
 bool initRetroEngine()
 {
 #if RETRO_PLATFORM == RETRO_ANDROID
-    sleep(5); // wait to initialize the engine
+    sleep(1); // wait to initialize the engine
 #endif
 
     InitStorage();
 
-    SetUserFileCallbacks("", NULL, NULL);
 #if RETRO_PLATFORM == RETRO_OSX
-    char buffer[0xFF];
+    char buffer[0x100];
     sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
     SetUserFileCallbacks(buffer, NULL, NULL);
 #elif RETRO_PLATFORM == RETRO_ANDROID
-    char buffer[0x100];
+    char buffer[0x200];
+
     JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
     jobject activity = (jobject)SDL_AndroidGetActivity();
     jclass cls(env->GetObjectClass(activity));
     jmethodID method = env->GetMethodID(cls, "getBasePath", "()Ljava/lang/String;");
     auto ret         = env->CallObjectMethod(activity, method);
 
-    sprintf(buffer, "%s/", env->GetStringUTFChars((jstring)ret, NULL));
+    strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
+
     SetUserFileCallbacks(buffer, NULL, NULL);
 
     env->DeleteLocalRef(activity);
     env->DeleteLocalRef(cls);
+#else
+    SetUserFileCallbacks("", NULL, NULL);
 #endif
 
     initUserData();
@@ -272,10 +275,12 @@ bool initRetroEngine()
         engine.running = false;
         return false;
     }
+
     if (!InitAudioDevice()) {
         engine.running = false;
         return false;
     }
+
     InitInputDevice();
 
 #if RETRO_USE_MOD_LOADER
@@ -826,7 +831,7 @@ void InitScriptSystem()
     }
 #endif
 #if RETRO_PLATFORM == RETRO_OSX
-        char buffer[0x100];
+    char buffer[0x100];
     sprintf(buffer, "%s%s.dylib", userFileDir, gameLogicName);
     if (!link_handle)
         link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
@@ -861,7 +866,7 @@ void InitScriptSystem()
         linkGameLogic(&info);
     }
 
-    #if RETRO_USE_MOD_LOADER
+#if RETRO_USE_MOD_LOADER
     for (int m = 0; m < modList.size(); ++m) {
         if (!modList[m].active)
             continue;
@@ -874,5 +879,4 @@ void InitScriptSystem()
     }
     sortMods();
 #endif
-
 }
