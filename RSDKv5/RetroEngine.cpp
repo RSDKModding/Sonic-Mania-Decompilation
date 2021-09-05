@@ -14,6 +14,7 @@ HMODULE hLibModule = NULL;
 void *link_handle = NULL;
 #if RETRO_PLATFORM == RETRO_ANDROID
 #include <jni.h>
+#include <unistd.h>
 #endif
 #endif
 
@@ -243,6 +244,10 @@ bool32 processEvents()
 
 bool initRetroEngine()
 {
+#if RETRO_PLATFORM == RETRO_ANDROID
+    sleep(1); // wait to initialize the engine
+#endif
+
     InitStorage();
 
     SetUserFileCallbacks("", NULL, NULL);
