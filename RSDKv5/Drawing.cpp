@@ -95,8 +95,6 @@ bool32 InitRenderDevice()
     SDL_DisplayMode dm;
     SDL_GetDesktopDisplayMode(0, &dm);
     float hdp = 0, vdp = 0;
-    SDL_GetDisplayDPI(0, &dpi, &hdp, &vdp);
-    printLog(PRINT_NORMAL, "dpi: %f %f %f", dpi, hdp, vdp);
 
     bool landscape = dm.h < dm.w;
     int h          = landscape ? dm.w : dm.h;
