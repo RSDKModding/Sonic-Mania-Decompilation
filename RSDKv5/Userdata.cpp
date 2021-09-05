@@ -649,13 +649,6 @@ void readSettings()
     char pathBuffer[0x100];
     sprintf(pathBuffer, "%sSettings.ini", userFileDir);
 
-    //TODO: take out lulu.
-    //this could've been solved with setting userfile dir but nooooooooooo
-    // (iniparser doesn't use fOpen it uses normal fopen
-#if RETRO_PLATFORM == RETRO_ANDROID
-    //TODO: fuck you
-#endif
-
     dictionary *ini = iniparser_load(pathBuffer);
 
     int defKeyMaps[PLAYER_COUNT + 1][12] = { { VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN, VK_UNKNOWN,

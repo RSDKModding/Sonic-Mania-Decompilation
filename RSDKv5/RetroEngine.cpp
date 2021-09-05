@@ -80,7 +80,7 @@ bool32 processEvents()
             case SDL_FINGERUP: {
                 int count            = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
                 touchMouseData.count = 0;
-                for (int i = 0; i < touchMouseData.count; i++) {
+                for (int i = 0; i < count; i++) {
                     SDL_Finger *finger = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
                     if (finger) {
                         touchMouseData.down[touchMouseData.count] = true;
@@ -237,7 +237,7 @@ bool32 processEvents()
 bool initRetroEngine()
 {
 #if RETRO_PLATFORM == RETRO_ANDROID
-    sleep(1); // wait to initialize the engine
+    sleep(5); // wait to initialize the engine
 #endif
 
     InitStorage();
