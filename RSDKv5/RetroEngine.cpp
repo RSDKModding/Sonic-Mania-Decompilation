@@ -76,27 +76,7 @@ bool32 processEvents()
 
 #if defined(RETRO_USING_TOUCH) && RETRO_USING_SDL2
             case SDL_FINGERMOTION:
-                touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
-                for (int i = 0; i < touchMouseData.count; i++) {
-                    SDL_Finger *finger = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
-                    if (finger) {
-                        touchMouseData.down[i] = true;
-                        touchMouseData.x[i]    = finger->x;
-                        touchMouseData.y[i]    = finger->y;
-                    }
-                }
-                break;
             case SDL_FINGERDOWN:
-                touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
-                for (int i = 0; i < touchMouseData.count; i++) {
-                    SDL_Finger *finger = SDL_GetTouchFinger(engine.sdlEvents.tfinger.touchId, i);
-                    if (finger) {
-                        touchMouseData.down[i] = true;
-                        touchMouseData.x[i]    = finger->x;
-                        touchMouseData.y[i]    = finger->y;
-                    }
-                }
-                break;
             case SDL_FINGERUP:
                 touchMouseData.count = SDL_GetNumTouchFingers(engine.sdlEvents.tfinger.touchId);
                 for (int i = 0; i < touchMouseData.count; i++) {
