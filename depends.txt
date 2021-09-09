@@ -1,0 +1,13 @@
+Common:
+iniparser - ini parsing
+stb_vorbis - music streams
+miniz - zlib
+
+Windows:
+winapi/directx9
+XAudio
+steamworks sdk
+libCurl - idfk
+
+Switch:
+the switch sdk LOL

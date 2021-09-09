@@ -5,12 +5,29 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    Hitbox hitboxStump;
+    Hitbox hitboxWood;
+    Hitbox hitboxRazor;
+    ushort sfxChipperChips;
+    bool32 playingChipSFX;
+    ushort sfxChipperWood;
+    bool32 playingWoodSFX;
 } ObjectWoodChipper;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    ushort size;
+    int speed;
+    int timer;
+    Vector2 field_68[3];
+    int field_80;
+    byte activePlayers;
+    Animator animator1;
+    Animator animator2;
 } EntityWoodChipper;
 
 // Object Struct
@@ -28,6 +45,9 @@ void WoodChipper_EditorLoad(void);
 void WoodChipper_Serialize(void);
 
 // Extra Entity Functions
+void WoodChipper_HandlePlayerCollisions(void);
 
+void WoodChipper_State_Chipper(void);
+void WoodChipper_State_Debris(void);
 
 #endif //!OBJ_WOODCHIPPER_H
