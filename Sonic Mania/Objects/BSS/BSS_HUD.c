@@ -12,15 +12,16 @@ void BSS_HUD_Draw(void)
 {
     Vector2 drawPos;
     RSDK_THIS(BSS_HUD);
+
     drawPos.y             = 0xD0000;
     drawPos.x             = (RSDK_screens->centerX - 141) << 16;
     RSDK.DrawSprite(&entity->animData1, &drawPos, true);
 
     drawPos.x += 0x250000;
     drawPos.y = 0x110000;
-    int x     = drawPos.x;
     BSS_HUD_DrawNumbers(BSS_Setup->sphereCount, &drawPos);
-    drawPos.x = x + 0xA80000;
+
+    drawPos.x += 0xA80000;
     drawPos.y = 0xD0000;
     RSDK.DrawSprite(&entity->animData2, &drawPos, true);
 

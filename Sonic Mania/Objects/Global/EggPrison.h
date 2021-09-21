@@ -17,8 +17,8 @@ typedef struct {
     StateMachine(state);
     int type;
     int timer;
-    int angleY;
-    int offsetY;
+    int originY;
+    int buttonPos;
     int activated;
     int field_70;
     Hitbox hitbox1;
@@ -45,7 +45,7 @@ void EggPrison_EditorLoad(void);
 void EggPrison_Serialize(void);
 
 // Extra Entity Functions
-void EggPrison_HandleTileCollisions(void);
+void EggPrison_HandleMovement(void);
 void EggPrison_Activated(void);
 void EggPrison_Unknown1(void);
 void EggPrison_Unknown2(void);

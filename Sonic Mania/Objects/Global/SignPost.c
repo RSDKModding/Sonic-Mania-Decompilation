@@ -356,7 +356,7 @@ void SignPost_State_Fall(void)
         if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 32) << 16) {
             entity->velocity.x = -entity->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 1, 0, 0x180000, 0, true)) {
+        else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
             entity->velocity.x = -entity->velocity.x;
         }
     }
@@ -364,13 +364,13 @@ void SignPost_State_Fall(void)
         if (entity->position.x < (RSDK_screens->position.x + 32) << 16) {
             entity->velocity.x = -entity->velocity.x;
         }
-        else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 1, 0, 0x180000, 0, true)) {
+        else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x180000, 0, true)) {
             entity->velocity.x = -entity->velocity.x;
         }
     }
 
     entity->velocity.y += 0xC00;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
+    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
         foreach_active(ItemBox, itemBox) {
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, entity, &SignPost->itemBoxHitbox)) {

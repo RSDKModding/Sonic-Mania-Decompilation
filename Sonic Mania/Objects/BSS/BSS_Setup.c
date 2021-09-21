@@ -70,11 +70,11 @@ void BSS_Setup_StageLoad(void)
     BSS_Setup->globeMappings  = RSDK.LoadSpriteAnimation("SpecialBS/Globe.bin", SCOPE_STAGE);
     BSS_Setup->bgLayer        = RSDK.GetSceneLayerID("Background");
     BSS_Setup->globeLayer     = RSDK.GetSceneLayerID("Globe");
-    BSS_Setup->frustrum1Layer = RSDK.GetSceneLayerID("Frustum 1");
-    BSS_Setup->frustrum2Layer = RSDK.GetSceneLayerID("Frustum 2");
+    BSS_Setup->frustum1Layer  = RSDK.GetSceneLayerID("Frustum 1");
+    BSS_Setup->frustum2Layer  = RSDK.GetSceneLayerID("Frustum 2");
     BSS_Setup->playFieldLayer = RSDK.GetSceneLayerID("Playfield");
     BSS_Setup->ringCountLayer = RSDK.GetSceneLayerID("Ring Count");
-    BSS_Setup_SetupCollectables();
+    BSS_Setup_SetupFrustum();
     BSS_Setup->ringCount = 0;
     TileLayer *playField = RSDK.GetSceneLayer(BSS_Setup->playFieldLayer);
 
@@ -109,7 +109,7 @@ void BSS_Setup_StageLoad(void)
 
         BSS_Palette->startColourID = 16 * (BSS_Setup->flags[1] & 0x0F);
 
-        //Top Left Quadrant
+        // Top Left Quadrant
         for (int y = 0, py = 0; y < BSS_PLAYFIELD_H / 2; ++y, ++py) {
             for (int x = 0, px = 0; x < BSS_PLAYFIELD_W / 2; ++x, ++px) {
                 int tx = px + (0x10 * (BSS_Setup->flags[0] & 0x0F));
@@ -137,7 +137,7 @@ void BSS_Setup_StageLoad(void)
 
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int playFieldPos                    = (x * BSS_PLAYFIELD_H) + y;
+                int playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -177,7 +177,7 @@ void BSS_Setup_StageLoad(void)
 
                 ushort tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int playFieldPos                    = (x * BSS_PLAYFIELD_H) + y;
+                int playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -208,7 +208,6 @@ void BSS_Setup_StageLoad(void)
     BSS_Setup->sfxMedalCaught = RSDK.GetSFX("Special/MedalCaught.wav");
     BSS_Setup->sfxTeleport    = RSDK.GetSFX("Global/Teleport.wav");
 
-    
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     if (param->field_59 == 1) {
         TextInfo info;
@@ -244,31 +243,31 @@ void BSS_Setup_SetupPalette(void)
     }
 }
 
-void BSS_Setup_SetupCollectables(void)
+void BSS_Setup_SetupFrustum(void)
 {
     int offset = 0;
     int count  = 0;
     for (int f = 0; f < 2; ++f) {
-        int frustrumID = 0;
+        int frustumID = 0;
         if (f)
-            frustrumID = BSS_Setup->frustrum2Layer;
+            frustumID = BSS_Setup->frustum2Layer;
         else
-            frustrumID = BSS_Setup->frustrum1Layer;
-        TileLayer *frustrum = RSDK.GetSceneLayer(frustrumID);
+            frustumID = BSS_Setup->frustum1Layer;
+        TileLayer *frustum = RSDK.GetSceneLayer(frustumID);
 
         count     = offset;
         int lastX = 0;
         int lastY = 0;
 
-        for (int y = 0; y < frustrum->height; ++y) {
-            for (int x = 0; x < frustrum->width; ++x) {
-                ushort id = (RSDK.GetTileInfo(frustrumID, x, y) & 0x3FF);
-                if (id == 1 || id == 8) {
+        for (int y = 0; y < frustum->height; ++y) {
+            for (int x = 0; x < frustum->width; ++x) {
+                ushort id = (RSDK.GetTileInfo(frustumID, x, y) & 0x3FF);
+                if (id == BSS_SPHERE_BLUE || id == BSS_SPAWN_UP) {
                     BSS_Setup->offsetTable[count].x = x;
                     BSS_Setup->offsetTable[count].y = y;
                     count++;
 
-                    if (id == 8) {
+                    if (id == BSS_SPAWN_UP) {
                         lastX = x;
                         lastY = y;
                     }
@@ -276,19 +275,19 @@ void BSS_Setup_SetupCollectables(void)
             }
         }
 
-        BSS_Setup->frustrumOffsetCount[f] = count - offset;
-        BSS_Setup->frustrumOffset[f]      = offset;
-        Vector2 *offsetTable              = &BSS_Setup->offsetTable[BSS_Setup->frustrumOffset[f]];
-        int *offsetRadiusTable            = &BSS_Setup->offsetRadiusTable[BSS_Setup->frustrumOffset[f]];
+        BSS_Setup->frustumCount[f]  = count - offset;
+        BSS_Setup->frustumOffset[f] = offset;
+        Vector2 *offsetTable        = &BSS_Setup->offsetTable[BSS_Setup->frustumOffset[f]];
+        int *offsetRadiusTable      = &BSS_Setup->offsetRadiusTable[BSS_Setup->frustumOffset[f]];
 
-        for (int i = 0; i < BSS_Setup->frustrumOffsetCount[f]; ++i) {
+        for (int i = 0; i < BSS_Setup->frustumCount[f]; ++i) {
             offsetTable[i].x -= lastX;
             offsetTable[i].y -= lastY;
             offsetRadiusTable[i] = offsetTable[i].x * offsetTable[i].x + offsetTable[i].y * offsetTable[i].y;
         }
 
-        for (int o = 0; o < BSS_Setup->frustrumOffsetCount[f]; ++o) {
-            for (int i = BSS_Setup->frustrumOffsetCount[f] - 1; i > o; --i) {
+        for (int o = 0; o < BSS_Setup->frustumCount[f]; ++o) {
+            for (int i = BSS_Setup->frustumCount[f] - 1; i > o; --i) {
                 int ox = offsetTable[i - 1].x;
                 int oy = offsetTable[i - 1].y;
                 int id = offsetRadiusTable[i - 1];
@@ -303,7 +302,7 @@ void BSS_Setup_SetupCollectables(void)
             }
         }
 
-        offset += BSS_Setup->frustrumOffsetCount[f];
+        offset += BSS_Setup->frustumCount[f];
     }
 
     for (int i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + 0x60; ++i) {
@@ -660,8 +659,8 @@ void BSS_Setup_HandleCollectableMovement(void)
 {
     RSDK_THIS(BSS_Setup);
     entity->offsetDir = entity->angle >> 6;
-    int off           = BSS_Setup->frustrumOffset[(entity->angle & 0x3F) != 0];
-    int id            = BSS_Setup->frustrumOffsetCount[(entity->angle & 0x3F) != 0];
+    int off           = BSS_Setup->frustumOffset[(entity->angle & 0x3F) != 0];
+    int id            = BSS_Setup->frustumCount[(entity->angle & 0x3F) != 0];
     Vector2 *offset   = &BSS_Setup->offsetTable[off];
 
     int slot = RESERVE_ENTITY_COUNT;
@@ -690,8 +689,8 @@ void BSS_Setup_HandleCollectableMovement(void)
                                            + (BSS_PLAYFIELD_H * ((entity->offset.x + entity->playerPos.x) & 0x1F))];
         if (tile) {
             EntityBSS_Collectable *collectable = (EntityBSS_Collectable *)RSDK.GetEntityByID(slot);
-            int x = ((entity->offset.x * RSDK.Cos256(entity->angle)) + entity->offset.y * RSDK.Sin256(entity->angle)) >> 4;
-            int y = ((entity->offset.y * RSDK.Cos256(entity->angle)) - entity->offset.x * RSDK.Sin256(entity->angle)) >> 4;
+            int x = (entity->offset.x * RSDK.Cos256(entity->angle) + entity->offset.y * RSDK.Sin256(entity->angle)) >> 4;
+            int y = (entity->offset.y * RSDK.Cos256(entity->angle) - entity->offset.x * RSDK.Sin256(entity->angle)) >> 4;
             y     = -(y + entity->paletteLine - 16);
             if (y < 0) {
                 collectable->objectID = TYPE_BLANK;
@@ -703,7 +702,7 @@ void BSS_Setup_HandleCollectableMovement(void)
                     entity->xMultiplier  = BSS_Setup->xMultiplierTable[y];
                     entity->divisor      = BSS_Setup->divisorTable[y];
                     collectable->frameID = BSS_Setup->frameTable[y];
-                    collectable->frameID -= (abs(x) >> 5);
+                    collectable->frameID -= abs(x) >> 5;
                     if (collectable->frameID < 0)
                         collectable->frameID = 0;
 
@@ -838,11 +837,8 @@ void BSS_Setup_State_PinkSphereWarp(void)
         BSS_Setup->playField[entity->playerPos.y + (BSS_PLAYFIELD_H * entity->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
         entity->timer                                                                       = 100;
         entity->state                                                                       = BSS_Setup_State_Unknown23;
-        BSS_Setup_HandleCollectableMovement();
     }
-    else {
-        BSS_Setup_HandleCollectableMovement();
-    }
+    BSS_Setup_HandleCollectableMovement();
 }
 
 void BSS_Setup_State_Exit(void)
@@ -957,14 +953,14 @@ void BSS_Setup_State_HandleStage(void)
                 else if (entity->spinState == 0) {
                     entity->globeTimer += 256;
                     entity->palettePage ^= 1;
+
+                    entity->playerPos.x -= RSDK.Sin256(entity->angle) >> 8;
+                    entity->playerPos.x &= 0x1F;
+                    entity->playerPos.y += RSDK.Cos256(entity->angle) >> 8;
+                    entity->playerPos.y &= 0x1F;
+
+                    entity->spinState = 0;
                 }
-
-                entity->playerPos.x -= RSDK.Sin256(entity->angle) >> 8;
-                entity->playerPos.x &= 0x1F;
-                entity->playerPos.y += RSDK.Cos256(entity->angle) >> 8;
-                entity->playerPos.y &= 0x1F;
-
-                entity->spinState = 0;
             }
         }
 
@@ -1116,7 +1112,7 @@ void BSS_Setup_Unknown12(void)
 
     int i                              = RESERVE_ENTITY_COUNT;
     EntityBSS_Collectable *collectable = NULL;
-    
+
     collectable = RSDK_GET_ENTITY(i++, BSS_Collectable);
     while (collectable->objectID != TYPE_BLANK) {
         int ix                  = (collectable->position.x >> 16);

@@ -930,22 +930,17 @@ void ActClear_ForcePlayerOnScreen(void)
     }
     else {
         if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (RSDK_screens->centerX << 15)) {
+            player1->right = true;
             if (!player1->skidding) {
-                if (!player1->left) {
+                if (!player1->left)
                     player1->right = false;
-                }
-                else {
+                else
                     player1->left = false;
-                }
-            }
-            else {
-                player1->right = true;
             }
         }
 
-        if (player1->onGround && !player1->groundVel) {
+        if (player1->onGround && !player1->groundVel)
             flagP1 = true;
-        }
     }
 
     if (player2->objectID != Player->objectID) {

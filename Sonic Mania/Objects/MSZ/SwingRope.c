@@ -95,14 +95,14 @@ void SwingRope_Draw(void)
     RSDK_THIS(SwingRope);
 
     entity->ropeData.frameID = (entity->rotatedAngle >> 10) & 0x1F;
-    entity->rotation         = entity->rotatedAngle & 0xF;
+    entity->rotation         = (entity->rotatedAngle >> 6) & 0xF;
     entity->drawFX           = FX_ROTATE;
     RSDK.DrawSprite(&entity->ropeData, NULL, false);
 
     entity->ropePos.x = entity->position.x;
     entity->ropePos.y = entity->position.y;
 
-    int angle = entity->rotatedAngle >> 6;
+    int angle    = entity->rotatedAngle >> 6;
     int rotAngle = entity->rotatedAngle;
     for (int s = 0; s < entity->ropeSize; ++s) {
         entity->angle = angle & 0x1FF;

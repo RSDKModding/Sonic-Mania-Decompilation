@@ -21,6 +21,8 @@ void BSS_Message_Draw(void)
     drawPos.x = (RSDK_screens->centerX - entity->timer2) << 16;
     drawPos.y = 0x680000;
     RSDK.DrawSprite(&entity->leftData, &drawPos, true);
+
+    drawPos.x = (RSDK_screens->centerX + entity->timer2) << 16;
     RSDK.DrawSprite(&entity->rightData, &drawPos, true);
     if (entity->flag)
         RSDK.FillScreen(entity->colour, entity->timer, entity->timer - 128, entity->timer - 256);
@@ -33,25 +35,27 @@ void BSS_Message_Create(void *data)
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = 1;
         entity->drawOrder = 15;
-        if (voidToInt(data) == 1) {
-            entity->timer2 = 320;
-            entity->state  = BSS_Message_State_Perfect;
-            RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 3, &entity->leftData, true, 0);
-            RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 3, &entity->rightData, true, 1);
-        }
-        else {
-            entity->flag = true;
-            if (voidToInt(data) == 2) {
-                entity->colour = 0;
-                entity->state  = BSS_Message_State_Unknown;
-            }
-            else {
+
+        switch (voidToInt(data)) {
+            case 0:
+                entity->flag   = true;
                 entity->colour = 0xF0F0F0;
                 entity->timer  = 512;
                 entity->state  = BSS_Message_State_GetBS;
                 RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 2, &entity->leftData, true, 0);
                 RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 2, &entity->rightData, true, 1);
-            }
+                break;
+            case 1:
+                entity->timer2 = 320;
+                entity->state  = BSS_Message_State_Perfect;
+                RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 3, &entity->leftData, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 3, &entity->rightData, true, 1);
+                break;
+            case 2:
+                entity->flag   = true;
+                entity->colour = 0;
+                entity->state  = BSS_Message_State_Unknown;
+                break;
         }
     }
 }

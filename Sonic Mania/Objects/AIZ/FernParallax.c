@@ -37,10 +37,10 @@ void FernParallax_Draw(void)
     bufPos->x = drawPos.x;
     bufPos->y = drawPos.y;
 
+    int bottom = ((screen->height + screen->position.y) << 16) - (otherHitbox->bottom << 16);
     if (RSDK.CheckObjectCollisionTouchBox(&FernParallax->entityBuffer[0], &thisHitbox, &FernParallax->entityBuffer[1], otherHitbox)
-        && ((screen->height + screen->position.y) << 16) - (otherHitbox->bottom << 16) - drawPos.y > 0) {
-        drawPos.y = ((screen->height + screen->position.y) << 16) - (otherHitbox->bottom << 16)
-                    - ((((screen->height + screen->position.y) << 16) - (otherHitbox->bottom << 16) - drawPos.y) >> 3);
+        && bottom - drawPos.y > 0) {
+        drawPos.y = bottom - ((bottom - drawPos.y) >> 3);
     }
     RSDK.DrawSprite(&entity->animator, &drawPos, false);
 }

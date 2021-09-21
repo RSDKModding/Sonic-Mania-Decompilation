@@ -44,7 +44,7 @@ typedef struct {
     int medalScaleTable[32]; //= { 4, 4, 5, 5, 6, 6, 7, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 32, 32, 32, 32, 32, 32, 32
                          //};
     int screenYValues[32];
-    int value7[32];
+    int medalScreenYVals[32];
     ushort spriteIndex;
     ushort ringSpriteIndex;
 } ObjectBSS_Collectable;

@@ -18,13 +18,9 @@ void BSS_Collected_Update(void)
             break;
         case 1:
             if (BSS_Setup->sphereCount <= 0) {
-                if (BSS_Setup->playField[fieldPos] != 130) {
-                    destroyEntity(entity);
-                }
-                else {
-                    BSS_Setup->playField[fieldPos] = 2;
-                    destroyEntity(entity);
-                }
+                if (BSS_Setup->playField[fieldPos] == BSS_BLUE_STOOD)
+                    BSS_Setup->playField[fieldPos] = BSS_SPHERE_RED;
+                destroyEntity(entity);
             }
             else {
                 if (setup->globeTimer < 32 || setup->globeTimer > 224)
@@ -34,13 +30,9 @@ void BSS_Collected_Update(void)
         case 2:
             if (setup->state == BSS_Setup_State_HandleStage) {
                 if (setup->globeTimer > 32 && setup->globeTimer < 224) {
-                    if (BSS_Setup->playField[fieldPos] != BSS_BLUE_STOOD) {
-                        destroyEntity(entity);
-                    }
-                    else {
+                    if (BSS_Setup->playField[fieldPos] == BSS_BLUE_STOOD)
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_RED;
-                        destroyEntity(entity);
-                    }
+                    destroyEntity(entity);
                 }
             }
             break;
@@ -52,25 +44,17 @@ void BSS_Collected_Update(void)
             break;
         case 4:
             if (setup->state == BSS_Setup_State_HandleStage && --entity->timer <= 0) {
-                if (BSS_Setup->playField[fieldPos] != BSS_SPHERE_GREEN_STOOD) {
-                    destroyEntity(entity);
-                }
-                else {
+                if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_GREEN_STOOD)
                     BSS_Setup->playField[fieldPos] = BSS_SPHERE_BLUE;
-                    destroyEntity(entity);
-                }
+                destroyEntity(entity);
             }
             break;
         case 5:
             if (setup->state == BSS_Setup_State_HandleStage) {
                 if (setup->playerPos.x != entity->position.x || setup->playerPos.y != entity->position.y) {
-                    if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_PINK_STOOD) {
+                    if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_PINK_STOOD)
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_PINK;
-                        destroyEntity(entity);
-                    }
-                    else {
-                        destroyEntity(entity);
-                    }
+                    destroyEntity(entity);
                 }
             }
             break;

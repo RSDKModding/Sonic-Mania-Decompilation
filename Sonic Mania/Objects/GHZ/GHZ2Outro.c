@@ -63,9 +63,8 @@ bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
     EntityDERobot *robot = (EntityDERobot *)entity->DERobot;
     robot->state       = StateMachine_None;
     robot->active = ACTIVE_NEVER;
-    for (int p = 0; p < Player->playerCount; ++p) {
-        CutsceneSeq_LockPlayerControl(RSDK_GET_ENTITY(p, Player));
-    }
+
+    CutsceneSeq_LockAllPlayerControl();
 
     foreach_active(Player, player)
     {

@@ -12,8 +12,9 @@ void BSS_Palette_Draw(void) {}
 
 void BSS_Palette_Create(void *data)
 {
+    RSDK_THIS(BSS_Palette);
     if (!RSDK_sceneInfo->inEditor)
-        RSDK.ResetEntityPtr(RSDK_sceneInfo->entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
 }
 
 void BSS_Palette_StageLoad(void)

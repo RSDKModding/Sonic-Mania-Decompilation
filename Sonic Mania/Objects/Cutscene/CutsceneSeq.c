@@ -13,10 +13,9 @@ void CutsceneSeq_LateUpdate(void)
     RSDK_THIS(CutsceneSeq);
     entity->currentState      = (bool32(*)(Entity *))entity->cutsceneStates[entity->stateID];
     if (entity->currentState) {
-        EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK_sceneInfo->entity;
         RSDK_sceneInfo->entity         = entity->cutsceneCurEntity;
-        bool32 stateComplete           = entity->currentState((Entity*)cutsceneSeq);
-        RSDK_sceneInfo->entity         = (Entity *)cutsceneSeq;
+        bool32 stateComplete           = entity->currentState((Entity*)entity);
+        RSDK_sceneInfo->entity         = (Entity *)entity;
         ++entity->timer;
         if (stateComplete) {
             LogHelpers_Print("State completed");
@@ -80,7 +79,7 @@ void CutsceneSeq_Create(void *data)
 {
     RSDK_THIS(CutsceneSeq);
     entity->active            = ACTIVE_NORMAL;
-    entity->visible           = 0;
+    entity->visible           = false;
     entity->fillTimerA        = 0;
     entity->drawOrder         = Zone->hudDrawOrder + 1;
     entity->fillTimerB        = 0;

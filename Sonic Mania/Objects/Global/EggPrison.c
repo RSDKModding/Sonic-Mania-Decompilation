@@ -9,7 +9,7 @@ void EggPrison_Update(void)
 
     if (entity->type == 1) {
         RSDK.ProcessAnimation(&entity->animator2);
-        EggPrison_HandleTileCollisions();
+        EggPrison_HandleMovement();
         if (!entity->activated) {
             foreach_active(Player, player)
             {
@@ -23,24 +23,24 @@ void EggPrison_Update(void)
                         entity->velocity.x = 0;
                         entity->active     = ACTIVE_NORMAL;
                         entity->state      = EggPrison_Activated;
-                        entity->offsetY    = -0x80000;
+                        entity->buttonPos    = -0x80000;
                     }
                     else {
                         if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
-                            if (entity->offsetY < 0)
-                                entity->offsetY += 0x10000;
+                            if (entity->buttonPos < 0)
+                                entity->buttonPos += 0x10000;
                         }
                         else {
                             Hitbox *playerHitbox = Player_GetHitbox(player);
-                            entity->offsetY      = ((playerHitbox->top - 48) << 16) - entity->position.y + player->position.y;
-                            if (entity->offsetY >= -0x80000) {
-                                if (entity->offsetY > 0)
-                                    entity->offsetY = 0;
-                                entity->offsetY &= 0xFFFF0000;
+                            entity->buttonPos      = ((playerHitbox->top - 48) << 16) - entity->position.y + player->position.y;
+                            if (entity->buttonPos >= -0x80000) {
+                                if (entity->buttonPos > 0)
+                                    entity->buttonPos = 0;
+                                entity->buttonPos &= 0xFFFF0000;
                             }
                             else {
-                                entity->offsetY = -0x80000;
-                                entity->offsetY &= 0xFFFF0000;
+                                entity->buttonPos = -0x80000;
+                                entity->buttonPos &= 0xFFFF0000;
                             }
                         }
                     }
@@ -57,7 +57,7 @@ void EggPrison_Update(void)
             Player_CheckCollisionBox(player, entity, &entity->hitbox1);
             if (entity->state == EggPrison_Unknown2) {
                 if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == 1) {
-                    entity->offsetY = 0x80000;
+                    entity->buttonPos = 0x80000;
                     if (entity->type < 2)
                         RSDK_sceneInfo->timeEnabled = false;
                     if (entity->type == 5) {
@@ -78,21 +78,21 @@ void EggPrison_Update(void)
                     }
                 }
                 else {
-                    if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
-                        if (entity->offsetY > 0)
-                            entity->offsetY -= 0x10000;
-                    }
-                    else {
+                    if (Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
                         Hitbox *playerHitbox = Player_GetHitbox(player);
-                        entity->offsetY      = ((playerHitbox->bottom + 48) << 16) - entity->position.y + player->position.y;
-                        if (entity->offsetY <= 0x80000) {
-                            if (entity->offsetY < 0)
-                                entity->offsetY = 0;
+                        entity->buttonPos      = ((playerHitbox->bottom + 48) << 16) - entity->position.y + player->position.y;
+                        if (entity->buttonPos <= 0x80000) {
+                            if (entity->buttonPos < 0)
+                                entity->buttonPos = 0;
                         }
                         else {
-                            entity->offsetY = 0x80000;
+                            entity->buttonPos = 0x80000;
                         }
-                        entity->offsetY &= 0xFFFF0000;
+                        entity->buttonPos &= 0xFFFF0000;
+                    }
+                    else {
+                        if (entity->buttonPos > 0)
+                            entity->buttonPos -= 0x10000;
                     }
                 }
             }
@@ -115,7 +115,7 @@ void EggPrison_Draw(void)
         entity->direction = FLIP_Y;
         drawPos.x         = entity->position.x;
         drawPos.y         = entity->position.y;
-        drawPos.y += entity->offsetY;
+        drawPos.y += entity->buttonPos;
         RSDK.DrawSprite(&entity->data4, &drawPos, 0);
         entity->direction = FLIP_NONE;
         RSDK.DrawSprite(&entity->data1, NULL, false);
@@ -128,7 +128,7 @@ void EggPrison_Draw(void)
     else {
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y;
-        drawPos.y += entity->offsetY;
+        drawPos.y += entity->buttonPos;
         RSDK.DrawSprite(&entity->data4, &drawPos, false);
         RSDK.DrawSprite(&entity->data1, NULL, false);
         RSDK.DrawSprite(&entity->data3, NULL, false);
@@ -198,22 +198,22 @@ void EggPrison_StageLoad(void)
     EggPrison->sfxSpring   = RSDK.GetSFX("Global/Spring.wav");
 }
 
-void EggPrison_HandleTileCollisions(void)
+void EggPrison_HandleMovement(void)
 {
     RSDK_THIS(EggPrison);
 
     bool32 flag = false;
     if (entity->field_70) {
-        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, -0x300000, 0x900000, false)
-            || RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0x300000, 0x900000, false)) {
-            entity->angleY -= entity->velocity.y;
+        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x300000, 0x900000, false)
+            || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x300000, 0x900000, false)) {
+            entity->originY -= entity->velocity.y;
             flag = true;
         }
     }
 
     if (!flag) {
-        if (entity->angleY < (RSDK_screens->position.y + 64) << 16)
-            entity->angleY += entity->velocity.y;
+        if (entity->originY < (RSDK_screens->position.y + 64) << 16)
+            entity->originY += entity->velocity.y;
     }
 
     if (entity->state != EggPrison_Unknown5) {
@@ -235,7 +235,7 @@ void EggPrison_HandleTileCollisions(void)
         }
     }
     entity->position.x += entity->velocity.x;
-    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->angleY;
+    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->originY;
     entity->angle += 4;
     entity->angle &= 0xFF;
 }
@@ -360,7 +360,7 @@ void EggPrison_Activated(void)
 void EggPrison_Unknown1(void)
 {
     RSDK_THIS(EggPrison);
-    entity->angleY = entity->position.y;
+    entity->originY = entity->position.y;
     entity->state  = EggPrison_Unknown2;
 }
 
