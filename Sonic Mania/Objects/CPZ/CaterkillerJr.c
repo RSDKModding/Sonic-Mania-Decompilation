@@ -14,15 +14,9 @@ void CaterkillerJr_Update(void)
     }
 }
 
-void CaterkillerJr_LateUpdate(void)
-{
+void CaterkillerJr_LateUpdate(void) {}
 
-}
-
-void CaterkillerJr_StaticUpdate(void)
-{
-
-}
+void CaterkillerJr_StaticUpdate(void) {}
 
 void CaterkillerJr_Draw(void)
 {
@@ -31,32 +25,32 @@ void CaterkillerJr_Draw(void)
 
     for (int i = 6; i >= 0; --i) {
         entity->direction = entity->bodyDirection[i];
-        RSDK.DrawSprite(&entity->bodyAnimators[i], &entity->bodyStartPos[i], false);
+        RSDK.DrawSprite(&entity->bodyAnimators[i], &entity->bodyPosition[i], false);
     }
 
     entity->direction = entity->bodyDirection[3];
-    RSDK.DrawSprite(&entity->animator2, &entity->bodyStartPos[3], false);
+    RSDK.DrawSprite(&entity->animator2, &entity->bodyPosition[3], false);
 
     entity->direction = entity->bodyDirection[2];
-    RSDK.DrawSprite(&entity->animator1, &entity->bodyStartPos[2], false);
+    RSDK.DrawSprite(&entity->animator1, &entity->bodyPosition[2], false);
 
     entity->direction = entity->bodyDirection[1];
-    RSDK.DrawSprite(&entity->bodyAnimators[7], &entity->bodyStartPos[1], false);
+    RSDK.DrawSprite(&entity->bodyAnimators[7], &entity->bodyPosition[1], false);
 
     entity->direction = storeDir;
 }
 
-void CaterkillerJr_Create(void* data)
+void CaterkillerJr_Create(void *data)
 {
     RSDK_THIS(CaterkillerJr);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->visible             = true;
-        entity->drawOrder           = Zone->drawOrderHigh;
-        entity->headStartPos.x      = entity->position.x;
-        entity->headStartPos.y      = entity->position.y;
-        entity->drawFX              = FX_FLIP;
-        entity->updateRange.x       = 0x800000;
-        entity->updateRange.y       = 0x800000;
+        entity->visible           = true;
+        entity->drawOrder         = Zone->drawOrderHigh;
+        entity->headStartPos.x    = entity->position.x;
+        entity->headStartPos.y    = entity->position.y;
+        entity->drawFX            = FX_FLIP;
+        entity->updateRange.x     = 0x800000;
+        entity->updateRange.y     = 0x800000;
         entity->bodyVelocity[0].x = (2 * (entity->direction != FLIP_NONE) - 1) << 16;
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 0, &entity->bodyAnimators[0], true, 6);
         RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &entity->bodyAnimators[1], true, 6);
@@ -105,21 +99,21 @@ void CaterkillerJr_SetupPositions(void)
 {
     RSDK_THIS(CaterkillerJr);
     for (int i = 0; i < 7; ++i) {
-        entity->bodyStartPos[i].x   = entity->position.x;
-        entity->bodyStartPos[i].y   = entity->position.y;
+        entity->bodyPosition[i].x = entity->position.x;
+        entity->bodyPosition[i].y = entity->position.y;
         entity->bodyVelocity[i].x = 0;
         entity->bodyVelocity[i].y = 0;
-        entity->bodyDirection[i]    = entity->direction;
+        entity->bodyDirection[i]  = entity->direction;
         entity->bodyTimer[i]      = 0;
     }
 
     if (entity->direction) {
-        entity->field_128 = entity->position.x - 0x3C0000;
-        entity->field_12C = entity->position.x + 0xBC0000;
+        entity->boundL = entity->position.x - 0x3C0000;
+        entity->boundR = entity->position.x + 0xBC0000;
     }
     else {
-        entity->field_128 = entity->position.x - 0xBC0000;
-        entity->field_12C = entity->position.x + 0x3C0000;
+        entity->boundL = entity->position.x - 0xBC0000;
+        entity->boundR = entity->position.x + 0x3C0000;
     }
 
     entity->bodyAnimators[7].animationTimer = 14;
@@ -129,7 +123,7 @@ void CaterkillerJr_SetupPositions(void)
     entity->bodyAnimators[7].frameID        = 8;
     entity->animator1.frameID               = 8;
     entity->animator2.frameID               = 8;
-    entity->bodyVelocity[0].x             = (2 * (entity->direction != FLIP_NONE) - 1) << 16;
+    entity->bodyVelocity[0].x               = (2 * (entity->direction != FLIP_NONE) - 1) << 16;
     entity->active                          = ACTIVE_BOUNDS;
     entity->state                           = CaterkillerJr_State1;
 }
@@ -138,7 +132,7 @@ void CaterkillerJr_State1(void)
 {
     RSDK_THIS(CaterkillerJr);
 
-    int pos     = 2 * (entity->direction != FLIP_NONE) - 1;
+    int pos = 2 * (entity->direction != FLIP_NONE) - 1;
     switch (++entity->timer) {
         case 12: entity->bodyVelocity[1].x = pos << 16; break;
         case 24: entity->bodyVelocity[2].x = pos << 16; break;
@@ -146,9 +140,9 @@ void CaterkillerJr_State1(void)
         case 48: entity->bodyVelocity[4].x = pos << 16; break;
         case 56: entity->bodyVelocity[5].x = pos << 16; break;
         case 64:
-            entity->timer               = 0;
+            entity->timer             = 0;
             entity->bodyVelocity[6].x = pos << 16;
-            entity->state               = CaterkillerJr_State2;
+            entity->state             = CaterkillerJr_State2;
             break;
     }
     CaterkillerJr_State2();
@@ -159,23 +153,23 @@ void CaterkillerJr_State2(void)
     RSDK_THIS(CaterkillerJr);
     for (int i = 0; i < 7; ++i) {
         RSDK.ProcessAnimation(&entity->bodyAnimators[i]);
-        entity->bodyStartPos[i].x += entity->bodyVelocity[i].x;
-        if (entity->bodyDirection[i] && entity->bodyStartPos[i].x >= entity->field_12C - 0x80000) {
+        entity->bodyPosition[i].x += entity->bodyVelocity[i].x;
+        if (entity->bodyDirection[i] && entity->bodyPosition[i].x >= entity->boundR - 0x80000) {
             entity->bodyDirection[i] ^= 1;
             entity->bodyAnimators[i].animationTimer = 0;
             entity->bodyAnimators[i].frameID        = 0;
         }
-        else if (!entity->bodyDirection[i] && entity->bodyStartPos[i].x <= entity->field_128 + 0x80000) {
+        else if (!entity->bodyDirection[i] && entity->bodyPosition[i].x <= entity->boundL + 0x80000) {
             entity->bodyDirection[i] ^= 1;
             entity->bodyAnimators[i].animationTimer = 0;
             entity->bodyAnimators[i].frameID        = 0;
         }
 
-        if (entity->bodyVelocity[i].x <= 0 && entity->bodyStartPos[i].x <= entity->field_128) {
+        if (entity->bodyVelocity[i].x <= 0 && entity->bodyPosition[i].x <= entity->boundL) {
             entity->bodyVelocity[i].x = -entity->bodyVelocity[i].x;
             entity->bodyTimer[i]      = 0xA00;
         }
-        else if (entity->bodyVelocity[i].x >= 0 && entity->bodyStartPos[i].x >= entity->field_12C) {
+        else if (entity->bodyVelocity[i].x >= 0 && entity->bodyPosition[i].x >= entity->boundR) {
             entity->bodyVelocity[i].x = -entity->bodyVelocity[i].x;
             entity->bodyTimer[i]      = 0xA00;
         }
@@ -190,7 +184,7 @@ void CaterkillerJr_State2(void)
                 entity->bodyTimer[i] += 17;
                 val = RSDK.Sin1024(entity->bodyTimer[i]) << 8;
             }
-            entity->bodyStartPos[i].y = val + entity->headStartPos.y;
+            entity->bodyPosition[i].y = val + entity->headStartPos.y;
             entity->bodyTimer[i] %= 3072;
         }
     }
@@ -199,14 +193,16 @@ void CaterkillerJr_State2(void)
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
 
-    foreach_active(Player, player) {
-        entity->position = entity->bodyStartPos[0];
+    foreach_active(Player, player)
+    {
+        entity->position = entity->bodyPosition[0];
         if (Player_CheckBadnikHit(player, entity, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
             for (int i = 0; i < 6; ++i) {
-                EntityDebris *debris  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->bodyStartPos[i + 1].x, entity->bodyStartPos[i + 1].y);
-                debris->animator       = entity->bodyAnimators[i + 1];
-                debris->velocity.x = RSDK.Rand(-16, 16) << 14;
-                debris->velocity.y = RSDK.Rand(-8, 8) << 14;
+                EntityDebris *debris =
+                    CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->bodyPosition[i + 1].x, entity->bodyPosition[i + 1].y);
+                debris->animator      = entity->bodyAnimators[i + 1];
+                debris->velocity.x    = RSDK.Rand(-16, 16) << 14;
+                debris->velocity.y    = RSDK.Rand(-8, 8) << 14;
                 debris->gravity       = 0x3800;
                 debris->drawOrder     = Zone->drawOrderLow;
                 debris->updateRange.x = 0x400000;
@@ -220,27 +216,20 @@ void CaterkillerJr_State2(void)
 
         if (entity->objectID != TYPE_BLANK) {
             for (int i = 0; i < 6; ++i) {
-                entity->position.x = entity->bodyStartPos[i + 1].x;
-                entity->position.y = entity->bodyStartPos[i + 1].y;
+                entity->position.x = entity->bodyPosition[i + 1].x;
+                entity->position.y = entity->bodyPosition[i + 1].y;
                 if (Player_CheckCollisionTouch(player, entity, &CaterkillerJr->hitbox)) {
                     Player_CheckHit(player, entity);
                 }
             }
-            entity->position.x = entity->bodyStartPos[0].x;
-            entity->position.y = entity->bodyStartPos[0].y;
+            entity->position.x = entity->bodyPosition[0].x;
+            entity->position.y = entity->bodyPosition[0].y;
         }
     }
 }
 
-void CaterkillerJr_EditorDraw(void)
-{
+void CaterkillerJr_EditorDraw(void) {}
 
-}
-
-void CaterkillerJr_EditorLoad(void)
-{
-
-}
+void CaterkillerJr_EditorLoad(void) {}
 
 void CaterkillerJr_Serialize(void) { RSDK_EDITABLE_VAR(CaterkillerJr, VAR_UINT8, direction); }
-

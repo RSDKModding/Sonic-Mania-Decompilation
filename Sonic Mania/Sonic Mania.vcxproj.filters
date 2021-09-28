@@ -113,9 +113,6 @@
     <ClInclude Include="GameLink.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="GameOptions.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="SonicMania.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -1949,12 +1946,12 @@
     <ClInclude Include="Objects\HCZ\Jawz.h">
       <Filter>Sources\Objects\HCZ</Filter>
     </ClInclude>
+    <ClInclude Include="GameVariables.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GameOptions.c">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Global\ActClear.c">
@@ -3783,6 +3780,9 @@
     </ClCompile>
     <ClCompile Include="Objects\HCZ\Jawz.c">
       <Filter>Sources\Objects\HCZ</Filter>
+    </ClCompile>
+    <ClCompile Include="GameVariables.c">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

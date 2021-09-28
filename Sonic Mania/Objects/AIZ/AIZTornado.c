@@ -5,7 +5,7 @@ ObjectAIZTornado *AIZTornado;
 void AIZTornado_Update(void)
 {
     RSDK_THIS(AIZTornado);
-    entity->prevPos.x = RSDK_sceneInfo->entity->position.x;
+    entity->prevPos.x = entity->position.x;
     entity->prevPos.y = entity->position.y;
     StateMachine_Run(entity->state);
     entity->animator1.frameID = entity->dword60 >> 4;

@@ -4400,7 +4400,7 @@ void Player_State_DropDash(void)
         else
             RSDK.PlaySFX(Player->sfx_Release, 0, 255);
 
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, 0, 0);
+        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
         if (!entity->collisionMode) {
             entity->position.y += entity->cameraOffset;
         }
@@ -4416,7 +4416,7 @@ void Player_State_DropDash(void)
     }
     else {
         entity->jumpAbilityTimer = 0;
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, 0, 0);
+        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
         entity->state = Player_State_Air;
     }
 }

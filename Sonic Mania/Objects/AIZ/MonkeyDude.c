@@ -22,7 +22,7 @@ void MonkeyDude_Draw(void)
     RSDK_THIS(MonkeyDude);
 #if RETRO_USE_PLUS
     if (entity->state == MonkeyDude_State_Coconut) {
-        RSDK.DrawSprite(&entity->coconutAnimator, NULL, false);
+        RSDK.DrawSprite(&entity->animator, NULL, false);
     }
     else {
 #endif
@@ -33,19 +33,17 @@ void MonkeyDude_Draw(void)
         else
             drawPos.x = entity->position.x + 0xD0000;
 
-        if (!entity->coconutAnimator.frameID)
+        if (!entity->animator.frameID)
             drawPos.y = entity->position.y + -0x20000;
         else
             drawPos.y = entity->position.y + -0x40000;
         RSDK.DrawSprite(&MonkeyDude->bodyAnimator, &drawPos, false);
 
         for (entity->bodyPartID = 0; entity->bodyPartID < MonkeyDude_MaxBodyParts; ++entity->bodyPartID) {
-            if (entity->direction) {
+            if (entity->direction)  
                 drawPos.x += RSDK.Sin256(entity->bodyAngles[entity->bodyPartID]) << 11;
-            }
-            else {
+            else
                 drawPos.x -= RSDK.Sin256(entity->bodyAngles[entity->bodyPartID]) << 11;
-            }
 
             drawPos.y += RSDK.Cos256(entity->bodyAngles[entity->bodyPartID]) << 11;
 
@@ -54,7 +52,7 @@ void MonkeyDude_Draw(void)
                 if (entity->throwCount >= 4)
                     animator = &entity->handData;
                 else
-                    animator = &MonkeyDude->coconutAnimator;
+                    animator = &MonkeyDude->animator;
             }
             else {
                 animator = &MonkeyDude->bodyAnimator;
@@ -62,11 +60,11 @@ void MonkeyDude_Draw(void)
             RSDK.DrawSprite(animator, &drawPos, false);
         }
 
-        RSDK.DrawSprite(&entity->coconutAnimator, NULL, false);
+        RSDK.DrawSprite(&entity->animator, NULL, false);
 
         drawPos.x = entity->position.x;
         drawPos.y = entity->drawY;
-        RSDK.DrawSprite(&MonkeyDude->mainAnimator, &drawPos, false);
+        RSDK.DrawSprite(&MonkeyDude->tailAnimator, &drawPos, false);
 #if RETRO_USE_PLUS
     }
 #endif
@@ -89,12 +87,12 @@ void MonkeyDude_Create(void *data)
         entity->nummoves = 3;
 
     if (data) {
-        RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &entity->coconutAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &entity->animator, true, 0);
         entity->state = MonkeyDude_State_Coconut;
     }
     else {
 #endif
-        RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &entity->coconutAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &entity->animator, true, 0);
         RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 3, &entity->handData, true, 0);
         entity->state = MonkeyDude_State_Setup;
 #if RETRO_USE_PLUS
@@ -115,15 +113,15 @@ void MonkeyDude_StageLoad(void)
     MonkeyDude->coconutHitbox.right  = 4;
     MonkeyDude->coconutHitbox.bottom = 4;
 #else
-    MonkeyDude->aniFrames           = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
-    MonkeyDude->hitbox.left         = -8;
-    MonkeyDude->hitbox.top          = -8;
-    MonkeyDude->hitbox.right        = 8;
-    MonkeyDude->hitbox.bottom       = 8;
+    MonkeyDude->aniFrames     = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
+    MonkeyDude->hitbox.left   = -8;
+    MonkeyDude->hitbox.top    = -8;
+    MonkeyDude->hitbox.right  = 8;
+    MonkeyDude->hitbox.bottom = 8;
 #endif
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 2, &MonkeyDude->bodyAnimator, true, 0);
-    RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 1, &MonkeyDude->mainAnimator, true, 0);
-    RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &MonkeyDude->coconutAnimator, true, 0);
+    RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 1, &MonkeyDude->tailAnimator, true, 0);
+    RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &MonkeyDude->animator, true, 0);
 #if RETRO_USE_PLUS
     MonkeyDude->sfxDrop = RSDK.GetSFX("Stage/Drop.wav");
 #endif
@@ -134,8 +132,8 @@ void MonkeyDude_DebugDraw(void)
 {
 #if RETRO_USE_PLUS
     RSDK_THIS(MonkeyDude);
-    RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &entity->coconutAnimator, true, 0);
-    RSDK.DrawSprite(&entity->coconutAnimator, NULL, false);
+    RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 #endif
 }
 
@@ -162,42 +160,42 @@ void MonkeyDude_State_Setup(void)
     entity->throwCount  = 0;
     entity->state       = MonkeyDude_State2;
 #if RETRO_USE_PLUS
-    RSDK.ProcessAnimation(&entity->coconutAnimator);
+    RSDK.ProcessAnimation(&entity->animator);
 #else
-    entity->coconutAnimator.frameID = (entity->coconutFrame++ >> 3) & 1;
+    entity->animator.frameID  = (entity->coconutFrame++ >> 3) & 1;
 #endif
     if (--entity->timer <= 0) {
         entity->coconutFrame = 0;
-        entity->timer    = 8;
-        entity->state    = MonkeyDude_State3;
+        entity->timer        = 8;
+        entity->state        = MonkeyDude_State3;
     }
 #if RETRO_USE_PLUS
     MonkeyDude_HandleStates();
 #endif
 
-    int unknown = 0;
+    int delay = 0;
     for (int i = 0; i < MonkeyDude_MaxBodyParts; ++i) {
-        entity->bodyAngles[i]  = 0;
-        entity->bodyUnknown[i] = unknown;
-        entity->bodyStates[i]  = MonkeyDude_State_BodyUnknown;
+        entity->bodyAngles[i] = 0;
+        entity->bodyTimers[i] = delay;
+        entity->bodyStates[i] = MonkeyDude_State_BodyUnknown;
 
-        unknown += 24 / (MonkeyDude_MaxBodyParts - 1);
+        delay += 24 / (MonkeyDude_MaxBodyParts - 1);
     }
 }
 
 void MonkeyDude_HandleBodyPart(void)
 {
     RSDK_THIS(MonkeyDude);
-    entity->bodyUnknown[entity->bodyPartID] = entity->bodyPartID;
+    entity->bodyTimers[entity->bodyPartID] = entity->bodyPartID;
     switch (entity->throwCount) {
         case 0:
         case 4:
             entity->angleSpeed = 4;
-            entity->bodyUnknown[entity->bodyPartID] *= 4;
-            entity->bodyUnknown2[entity->bodyPartID] ^= 1;
+            entity->bodyTimers[entity->bodyPartID] *= 4;
+            entity->bodyFlags[entity->bodyPartID] ^= 1;
             if (!entity->bodyPartID) {
                 entity->currentAngle = entity->bodyAngles[0];
-                if (entity->bodyUnknown2[0]) {
+                if (entity->bodyFlags[0]) {
                     entity->currentAngle -= RSDK.Rand(0, 96);
                     if (entity->currentAngle < 32)
                         entity->currentAngle = 32;
@@ -213,28 +211,26 @@ void MonkeyDude_HandleBodyPart(void)
             break;
         case 1:
             entity->angleSpeed = 5;
-            entity->bodyUnknown[entity->bodyPartID] *= 2;
-            entity->currentAngle                     = 176;
-            entity->bodyUnknown2[entity->bodyPartID] = 0;
+            entity->bodyTimers[entity->bodyPartID] *= 2;
+            entity->currentAngle                  = 176;
+            entity->bodyFlags[entity->bodyPartID] = 0;
             if (entity->bodyPartID == MonkeyDude_MaxBodyParts - 1) {
                 ++entity->throwCount;
                 entity->activeParts = 0;
             }
             break;
         case 2:
-            entity->bodyUnknown[entity->bodyPartID] *= 2;
-            entity->currentAngle                     = 96;
-            entity->bodyUnknown2[entity->bodyPartID] = 1;
+            entity->bodyTimers[entity->bodyPartID] *= 2;
+            entity->currentAngle                  = 96;
+            entity->bodyFlags[entity->bodyPartID] = 1;
             if (entity->bodyPartID == MonkeyDude_MaxBodyParts - 1) {
                 ++entity->throwCount;
                 entity->activeParts = 0;
             }
             break;
-        default:
-            if (entity->bodyPartID == MonkeyDude_MaxBodyParts - 1)
-                entity->activeParts = 0;
-            break;
     }
+    if (entity->bodyPartID == MonkeyDude_MaxBodyParts - 1)
+        entity->activeParts = 0;
 }
 
 #if RETRO_USE_PLUS
@@ -305,15 +301,15 @@ void MonkeyDude_HandleStates(void)
 void MonkeyDude_State2(void)
 {
     RSDK_THIS(MonkeyDude);
-#if RETRO_USE_PLUS 
-    RSDK.ProcessAnimation(&entity->coconutAnimator);
+#if RETRO_USE_PLUS
+    RSDK.ProcessAnimation(&entity->animator);
 #else
-    entity->coconutAnimator.frameID = (entity->coconutFrame++ >> 3) & 1;
+    entity->animator.frameID  = (entity->coconutFrame++ >> 3) & 1;
 #endif
     if (--entity->timer <= 0) {
         entity->coconutFrame = 0;
-        entity->timer    = 8;
-        entity->state    = MonkeyDude_State3;
+        entity->timer        = 8;
+        entity->state        = MonkeyDude_State3;
     }
 #if RETRO_USE_PLUS
     MonkeyDude_HandleStates();
@@ -324,7 +320,7 @@ void MonkeyDude_State3(void)
 {
     RSDK_THIS(MonkeyDude);
     entity->drawY += entity->velocity.y;
-    entity->coconutAnimator.frameID = 0;
+    entity->animator.frameID = 0;
     if (--entity->timer <= 0) {
         entity->timer = 8;
         entity->state = MonkeyDude_State4;
@@ -363,8 +359,8 @@ void MonkeyDude_State_BodyUnknown(void)
         MonkeyDude_HandleBodyPart();
     }
 
-    if (entity->bodyUnknown[entity->bodyPartID]) {
-        entity->bodyUnknown[entity->bodyPartID]--;
+    if (entity->bodyTimers[entity->bodyPartID]) {
+        entity->bodyTimers[entity->bodyPartID]--;
     }
     else if (entity->bodyAngles[entity->bodyPartID] >= 128) {
         entity->activeParts |= (1 << entity->bodyPartID);
@@ -380,11 +376,11 @@ void MonkeyDude_State_BodyUnknown2(void)
     if (entity->activeParts == ((1 << MonkeyDude_MaxBodyParts) - 1))
         MonkeyDude_HandleBodyPart();
 
-    if (entity->bodyUnknown[entity->bodyPartID]) {
-        entity->bodyUnknown[entity->bodyPartID]--;
+    if (entity->bodyTimers[entity->bodyPartID]) {
+        entity->bodyTimers[entity->bodyPartID]--;
     }
     else {
-        if (entity->bodyUnknown2[entity->bodyPartID]) {
+        if (entity->bodyFlags[entity->bodyPartID]) {
             if (entity->bodyAngles[entity->bodyPartID] <= entity->currentAngle) {
                 entity->activeParts |= (1 << entity->bodyPartID);
             }
@@ -411,7 +407,7 @@ void MonkeyDude_State_Coconut(void)
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
     if (RSDK.CheckOnScreen(entity, NULL)) {
-        RSDK.ProcessAnimation(&entity->coconutAnimator);
+        RSDK.ProcessAnimation(&entity->animator);
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, entity, &MonkeyDude->coconutHitbox)) {

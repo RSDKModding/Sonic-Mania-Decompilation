@@ -31,7 +31,7 @@ void BoundsMarker_Create(void* data)
     EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->vsDisable && globals->gameMode == MODE_COMPETITION) {
-            RSDK.ResetEntityPtr(entity, 0, 0);
+            destroyEntity(entity);
         }
         else {
             entity->active = ACTIVE_XBOUNDS;
@@ -59,32 +59,27 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
     EntityPlayer *player = (EntityPlayer*)p;
     ushort playerID = RSDK.GetEntityID(player);
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
-        int w = 0;
-        if (entity->position.x - player->position.x >= 0)
-            w = entity->position.x - player->position.x;
-        else
-            w = player->position.x - entity->position.x;
-        if (w < entity->width) {
+        if (abs(entity->position.x - player->position.x) < entity->width) {
             switch (entity->type) {
-                case 0:
+                case 0: //bottom
                     Zone->screenBoundsB2[playerID] = entity->position.y;
                     Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
                     Zone->deathBoundary[playerID] = entity->position.y;
                     break;
-                case 1:
+                case 1: //bottom (offset)
                     if (player->position.y < entity->position.y - (entity->offset << 16)) {
                         Zone->screenBoundsB2[playerID] = entity->position.y;
                         Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
                         Zone->deathBoundary[playerID] = entity->position.y;
                     }
                     break;
-                case 2:
+                case 2: //top (offset)
                     if (player->position.y > entity->position.y + (entity->offset << 16)) {
                         Zone->screenBoundsT2[playerID] = entity->position.y;
                         Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
                     }
                     break;
-                case 3:
+                case 3: //top
                     Zone->screenBoundsT2[playerID] = entity->position.y;
                     Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
                     break;

@@ -11,8 +11,8 @@ typedef struct {
     Hitbox hitbox;
     Hitbox coconutHitbox;
     Animator bodyAnimator;
-    Animator mainAnimator;
-    Animator coconutAnimator;
+    Animator tailAnimator;
+    Animator animator;
     ushort aniFrames;
 #if RETRO_USE_PLUS
     ushort sfxDrop;
@@ -28,8 +28,8 @@ typedef struct {
     int currentAngle;
     void (*bodyStates[MonkeyDude_MaxBodyParts])(void);
     int bodyAngles[MonkeyDude_MaxBodyParts];
-    int bodyUnknown2[MonkeyDude_MaxBodyParts];
-    int bodyUnknown[MonkeyDude_MaxBodyParts];
+    int bodyFlags[MonkeyDude_MaxBodyParts];
+    int bodyTimers[MonkeyDude_MaxBodyParts];
     byte bodyPartID;
     Vector2 startPos;
     byte startDir;
@@ -38,7 +38,7 @@ typedef struct {
     int nummoves;
     int throwCount;
     int angleSpeed;
-    Animator coconutAnimator;
+    Animator animator;
     Animator handData;
     int coconutFrame;
 } EntityMonkeyDude;

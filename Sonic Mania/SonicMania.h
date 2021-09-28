@@ -88,7 +88,7 @@ typedef enum { DLC_PLUS } GameDLC;
     bool32 flag;                                                                                                                                     \
     bool32 disabled;
 
-#include "GameOptions.h"
+#include "GameVariables.h"
 #include "GameObjects.h"
 
 extern SceneInfo *RSDK_sceneInfo;

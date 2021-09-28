@@ -820,7 +820,7 @@ void InitScriptSystem()
     if (engine.useExternalCode) {
 #if RETRO_PLATFORM == RETRO_WIN
         if (!hLibModule)
-        hLibModule = LoadLibraryA(gameLogicName);
+            hLibModule = LoadLibraryA(gameLogicName);
 
     if (hLibModule) {
         linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");

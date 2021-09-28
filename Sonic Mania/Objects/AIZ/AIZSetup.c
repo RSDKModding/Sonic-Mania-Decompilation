@@ -676,7 +676,7 @@ bool32 AIZSetup_Cutscene2_Unknown1(Entity *h)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (!host->timer) {
         player1->state      = Player_State_None;
-        player1->stateInput = 0;
+        player1->stateInput = StateMachine_None;
         player1->direction  = FLIP_X;
         player1->drawFX     = FX_FLIP;
         RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 1, &player1->playerAnimator, true, 0);

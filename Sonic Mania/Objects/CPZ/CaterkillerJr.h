@@ -16,12 +16,12 @@ typedef struct {
     StateMachine(state);
     int timer;
     Vector2 headStartPos;
-    Vector2 bodyStartPos[8];
+    Vector2 bodyPosition[8];
     Vector2 bodyVelocity[8];
     int bodyDirection[8];
     int bodyTimer[8];
-    int field_128;
-    int field_12C;
+    int boundL;
+    int boundR;
     Animator bodyAnimators[8];
     Animator animator1;
     Animator animator2;
