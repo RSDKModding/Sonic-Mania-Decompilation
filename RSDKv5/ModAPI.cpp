@@ -24,6 +24,11 @@ namespace fs = std::filesystem;
 #endif
 #endif
 
+//this helps later on just trust me
+#define MODAPI_ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
+
+std::map<std::string, ModInfo> langMap;
+
 std::vector<ModInfo> modList;
 std::vector<ModCallback> modCallbackList[MODCB_MAX];
 
@@ -74,6 +79,7 @@ void sortMods()
 void loadMods()
 {
     modList.clear();
+    langMap.clear();
     for (int c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
     char modBuf[0x100];
     sprintf(modBuf, "%smods/", userFileDir);
@@ -92,8 +98,11 @@ void loadMods()
 
             for (int m = 0; m < c; ++m) {
                 ModInfo info;
-                if (loadMod(&info, modPath.string(), std::string(keys[m] + 5), iniparser_getboolean(ini, keys[m], false)))
+                if (loadMod(&info, modPath.string(), std::string(keys[m] + 5), iniparser_getboolean(ini, keys[m], false))) {
+                    if (info.language)
+                        langMap.insert(std::pair<std::string, ModInfo>(info.language, info));
                     modList.push_back(info);
+                }
             }
         }
 
@@ -117,8 +126,10 @@ void loadMods()
                         }
                     }
 
-                    if (flag && loadMod(&info, modPath.string(), modDirPath.filename().string(), false))
+                    if (flag && loadMod(&info, modPath.string(), modDirPath.filename().string(), false)) {
                         modList.push_back(info);
+                        if (info.language) langMap.insert(std::pair<std::string, ModInfo>(info.language, info));
+                    }
                 }
             }
         } catch (fs::filesystem_error fe) {
@@ -145,7 +156,7 @@ void loadCfg(ModInfo *info, std::string path)
                 char *keyBuf = new char[size & 0x7F];
                 ReadBytes(cfg, keyBuf, size & 0x7F);
                 keyBuf[size & 0x7F] = 0;
-                byte type = size & 0x80;
+                byte type           = size & 0x80;
                 if (!type) {
                     char buf[0xFFFF];
                     ReadString(cfg, buf);
@@ -242,25 +253,19 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::string buf;
             while (std::getline(stream, buf, ',')) {
                 int mode = 0;
-#define ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
 #if RETRO_PLATFORM == RETRO_WIN
-                if (ENDS_WITH(".dll"))
+                if (MODAPI_ENDS_WITH(".dll"))
                     mode = 1;
 #elif RETRO_PLATFORM == RETRO_OSX
-                if (ENDS_WITH(".dylib"))
+                if (MODAPI_ENDS_WITH(".dylib"))
                     mode = 1;
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
-                if (ENDS_WITH(".so"))
+                if (MODAPI_ENDS_WITH(".so"))
                     mode = 1;
 #else
                 if (false)
                     ;
 #endif
-#if RETRO_USE_PYTHON
-                else if (ENDS_WITH(".py"))
-                    mode = 2;
-#endif
-#undef ENDS_WITH
                 fs::path file;
 
                 if (!mode) {
@@ -274,16 +279,28 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     autodec = ".so";
 #endif
                     file = fs::path(modDir + "/" + buf + autodec);
-                    if (fs::exists(file))
+                    if (fs::exists(file)) {
+                        buf += autodec;
                         mode = 1;
+                    }
                 }
-#if RETRO_USE_PYTHON
                 if (!mode) {
-                    file = fs::path(modDir + "/" + buf + ".py");
-                    if (fs::exists(file))
-                        mode = 2;
+                    // lang mod time
+                    int i = 0;
+                    for (auto ext : langMap) {
+                        i++;
+                        if (MODAPI_ENDS_WITH(ext.first.c_str()))
+                            break;
+                        file = fs::path(modDir + "/" + buf + ext.first);
+                        if (fs::exists(file)) {
+                            buf += ext.first;
+                            break;
+                        }
+                    }
+                    if (i != langMap.size())
+                        mode = i + 1;
                 }
-#endif
+
                 if (!mode) {
                     iniparser_freedict(ini);
                     return false;
@@ -292,28 +309,72 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 bool linked = false;
                 if (mode == 1) {
 #if RETRO_PLATFORM == RETRO_WIN
-                    HMODULE hLibModule = LoadLibraryA(file.string().c_str());
-
-                    if (hLibModule) {
-                        modLink linkGameLogic = (modLink)GetProcAddress(hLibModule, "LinkModLogic");
-                        if (linkGameLogic) {
-                            info->linkModLogic.push_back(linkGameLogic);
-                            linked = true;
-                        }
-                    }
+                    HMODULE link_handle = LoadLibraryA(file.string().c_str());
+#define getAddress GetProcAddress
 #elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
-                    void *link_handle = (void *)dlopen(file.string().c_str(), RTLD_LOCAL | RTLD_LAZY);
+                    std::string fl = file.string().c_str();
+#if RETRO_PLATFORM == RETRO_ANDROID
+                    // only load ones that are compiled. this is to still allow lang mods to work
+                    fl = "lib" + buf;
+#endif
+                    void *link_handle = (void *)dlopen(fl, RTLD_LOCAL | RTLD_LAZY);
+#define getAddress dlsym
+#endif
 
                     if (link_handle) {
-                        modLink linkGameLogic = (modLink)dlsym(link_handle, "LinkModLogic");
-                        if (linkGameLogic) {
-                            info->linkModLogic.push_back(linkGameLogic);
-                            linked = true;
+                        langSetup languageSetup = (langSetup)getAddress(link_handle, "SetupLanguage");
+                        if (languageSetup) {
+                            modLink newLogicLink = (modLink)getAddress(link_handle, "NewLogicLink");
+                            if (newLogicLink) {
+                                info->language = (const char *)languageSetup; // little bit of cheating
+                                info->linkModLogic.push_back(newLogicLink);
+                            }
+                        }
+                        else {
+                            modLink linkGameLogic = (modLink)getAddress(link_handle, "LinkModLogic");
+                            if (linkGameLogic) {
+                                info->linkModLogic.push_back(linkGameLogic);
+                                linked = true;
+                            }
                         }
                     }
+
+                    if (info->language) {
+                        GameInfo linkInfo;
+
+                        linkInfo.functionPtrs = RSDKFunctionTable;
+#if RETRO_REV02
+                        linkInfo.APIPtrs    = APIFunctionTable;
+                        linkInfo.currentSKU = &curSKU;
 #endif
+                        linkInfo.engineInfo = &gameVerInfo;
+                        linkInfo.sceneInfo  = &sceneInfo;
+                        linkInfo.controller = controller;
+                        linkInfo.stickL     = stickL;
+#if RETRO_REV02
+                        linkInfo.stickR   = stickR;
+                        linkInfo.triggerL = triggerL;
+                        linkInfo.triggerR = triggerR;
+#endif
+                        linkInfo.touchMouse = &touchMouseData;
+#if RETRO_REV02
+                        linkInfo.unknown = &unknownInfo;
+#endif
+                        linkInfo.screenInfo = screens;
+                        linkInfo.modPtrs    = modFunctionTable;
+
+                        info->language = ("." + std::string(((langSetup)info->language)(&linkInfo))).c_str();
+                        linked         = true;
+                    }
                 }
-                // TODO: mode 2 (python)
+                else { // mode must be over 1
+                    // index
+                    auto it = langMap.begin();
+                    std::advance(it, mode - 2);
+                    info->linkModLogic.push_back((modLink)(it->second.linkModLogic[0]((GameInfo *)info, buf.c_str())));
+                    linked = true;
+                }
+
                 if (!linked) {
                     iniparser_freedict(ini);
                     return false;
@@ -357,12 +418,10 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::string buf;
             while (std::getline(stream, buf, ',')) {
                 int mode = 0;
-#define ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
-                if (ENDS_WITH(".ini"))
+                if (MODAPI_ENDS_WITH(".ini"))
                     mode = 1;
-                else if (ENDS_WITH(".cfg"))
+                else if (MODAPI_ENDS_WITH(".cfg"))
                     mode = 2;
-#undef ENDS_WITH
                 fs::path file;
 
                 if (!mode) {
@@ -408,23 +467,23 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             byte ct     = info->config.size();
             fWrite(&ct, 1, 1, cfg);
             for (auto kv : info->config) {
-                if (!kv.first.length()) continue; //don't save no-categories
+                if (!kv.first.length())
+                    continue; // don't save no-categories
                 byte len = kv.first.length();
                 fWrite(&len, 1, 1, cfg);
                 writeText(cfg, kv.first.c_str());
                 byte kt = kv.second.size();
                 fWrite(&kt, 1, 1, cfg);
-                for (auto kkv : kv.second)
-                {
-                    byte len = (byte)(kkv.first.length()) & 0x7F;
+                for (auto kkv : kv.second) {
+                    byte len   = (byte)(kkv.first.length()) & 0x7F;
                     bool isint = false;
-                    int r = 0;
+                    int r      = 0;
                     try {
-                        r = std::stoi(kkv.second, nullptr, 0);
+                        r     = std::stoi(kkv.second, nullptr, 0);
                         isint = true;
                         len |= 0x80;
+                    } catch (...) {
                     }
-                    catch (...) {}  
                     fWrite(&len, 1, 1, cfg);
                     writeText(cfg, kkv.first.c_str());
                     if (isint)
@@ -657,7 +716,7 @@ std::string GetConfigValue(const char *id, const char *key)
 bool32 GetConfigBool(const char *id, const char *key, bool32 fallback)
 {
     std::string v = GetConfigValue(id, key);
-    if (!v.length()) 
+    if (!v.length())
         return fallback;
     char first = v.at(0);
     if (first == 'y' || first == 'Y' || first == 't' || first == 'T' || (first = GetConfigInteger(id, key, 0)))
@@ -670,7 +729,7 @@ bool32 GetConfigBool(const char *id, const char *key, bool32 fallback)
 int GetConfigInteger(const char *id, const char *key, int fallback)
 {
     std::string v = GetConfigValue(id, key);
-    if (!v.length()) 
+    if (!v.length())
         return fallback;
     try {
         return std::stoi(v, nullptr, 0);
@@ -829,7 +888,7 @@ void SaveSettings(const char *id)
         if (modList[m].folder == id) {
             if (!modList[m].settings.size())
                 break;
-            
+
             FileIO *file = fOpen((GetModPath_i(id) + "/modSettings.ini").c_str(), "w");
 
             if (modList[m].settings[""].size()) {
