@@ -1,3 +1,6 @@
 [submodule "mods/v5py"]
 	path = mods/v5py
 	url = https://github.com/MGRich/v5py
+[submodule "mods/PZTC"]
+	path = mods/PZTC
+	url = https://github.com/MGRich/PerZoneTitleCards
