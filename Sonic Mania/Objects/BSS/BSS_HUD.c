@@ -21,7 +21,7 @@ void BSS_HUD_Draw(void)
     drawPos.y = 0x110000;
     BSS_HUD_DrawNumbers(BSS_Setup->sphereCount, &drawPos);
 
-    drawPos.x += 0xA80000;
+    drawPos.x = (RSDK_screens->centerX + 64) << 16;
     drawPos.y = 0xD0000;
     RSDK.DrawSprite(&entity->animData2, &drawPos, true);
 

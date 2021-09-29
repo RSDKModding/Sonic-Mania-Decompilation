@@ -559,7 +559,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->globeTimer = 0;
                 entity->playerPos.x += RSDK.Sin256(entity->angle) >> 8;
                 entity->playerPos.x &= 0x1F;
-                entity->playerPos.y += RSDK.Cos256(entity->angle) >> 8;
+                entity->playerPos.y -= RSDK.Cos256(entity->angle) >> 8;
                 entity->playerPos.y &= 0x1F;
                 RSDK.PlaySFX(BSS_Setup->sfxSSExit, 0, 255);
                 Music_FadeOut(0.0125);
@@ -645,7 +645,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->globeTimer = 0;
                 entity->playerPos.x += RSDK.Sin256(entity->angle) >> 8;
                 entity->playerPos.x &= 0x1F;
-                entity->playerPos.y += RSDK.Cos256(entity->angle) >> 8;
+                entity->playerPos.y -= RSDK.Cos256(entity->angle) >> 8;
                 entity->playerPos.y &= 0x1F;
                 globals->specialCleared = true;
                 RSDK.PlaySFX(BSS_Setup->sfxSSExit, 0, 255);
@@ -862,8 +862,8 @@ void BSS_Setup_State_Exit(void)
     if (entity->spinTimer & 0xF) {
         globe->drawLayer[0]           = DRAWLAYER_COUNT;
         int timer                     = entity->spinTimer & 0xF;
-        entity->globeSpinData.frameID = BSS_Setup->globeFrameTable[timer];
-        entity->direction             = BSS_Setup->globeDirTableL[timer];
+        entity->globeSpinData.frameID = BSS_Setup->globeFrameTable[timer - 1];
+        entity->direction             = BSS_Setup->globeDirTableL[timer - 1];
     }
     else {
         if (entity->spinTimer > 0) {
