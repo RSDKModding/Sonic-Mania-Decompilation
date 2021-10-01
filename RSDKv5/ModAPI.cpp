@@ -100,10 +100,9 @@ void sortMods()
 
 void unloadMods()
 {
-    for (ModInfo &mod : modList) {
+    for (ModInfo &mod : modList)
         if (mod.unloadMod)
             mod.unloadMod();
-    }
     modList.clear();
     langMap.clear();
     waitList.clear();
@@ -147,7 +146,6 @@ void loadMods()
 
         // try the waitlist
         for (int &m : waitList) {
-            modList[m].language = 0;
             loadMod(&modList[m], modPath.string(), modList[m].folder, true);
             modList[m].language = 0;
         }
@@ -294,17 +292,12 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 buf      = trim(buf);
 #if RETRO_PLATFORM == RETRO_WIN
                 if (MODAPI_ENDS_WITH(".dll"))
-                    mode = 1;
 #elif RETRO_PLATFORM == RETRO_OSX
                 if (MODAPI_ENDS_WITH(".dylib"))
-                    mode = 1;
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                 if (MODAPI_ENDS_WITH(".so"))
-                    mode = 1;
-#else
-                if (false)
-                    ;
 #endif
+                    mode = 1;
                 fs::path file;
 
                 if (!mode) {
@@ -318,6 +311,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     autodec = ".so";
 #endif
                     file = fs::path(modDir + "/" + buf + autodec);
+                    bool exists = fs::exists(file);
                     if (fs::exists(file)) {
                         buf += autodec;
                         mode = 1;
@@ -386,7 +380,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         info->unloadMod = (void (*)())getAddress(link_handle, "UnloadMod");
                     }
 
-                    if (info->language && active) {
+                    if (info->language) {
                         GameInfo linkInfo;
 
                         linkInfo.functionPtrs = RSDKFunctionTable;
