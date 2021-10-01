@@ -18,16 +18,29 @@ bool32 validDraw = false;
 ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
 ForeachStackInfo *foreachStackPtr = NULL;
 
+#if RETRO_USE_MOD_LOADER
 void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                     void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                     void (*editorLoad)(void), void (*serialize)(void))
+{
+    return RegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize);
+}
+void RegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update,
+                        std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
+                        std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                        std::function<void(void)> editorLoad, std::function<void(void)> serialize)
+#else
+void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+                    void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                    void (*editorLoad)(void), void (*serialize)(void))
+#endif
 {
     if (objectCount < OBJECT_COUNT) {
         ObjectInfo *info = &objectList[objectCount];
         if (entitySize > sizeof(EntityBase))
             printf("Class exceeds max entity memory: %s \n", name);
         GEN_HASH(name, info->hash);
-        info->type = structPtr;
+        info->type         = structPtr;
         info->entitySize   = entitySize;
         info->objectSize   = objectSize;
         info->update       = update;
@@ -143,9 +156,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                 int tmp = 0;
                 switch (dataType) {
                     case SVAR_UINT8:
-                    case SVAR_INT8: 
-                        dataPos += sizeof(byte) * arraySize;
-                        break;
+                    case SVAR_INT8: dataPos += sizeof(byte) * arraySize; break;
                     case SVAR_UINT16:
                     case SVAR_INT16:
                         tmp = (dataPos & -(int)sizeof(short)) + sizeof(short);
@@ -155,13 +166,13 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         break;
                     case SVAR_UINT32:
                     case SVAR_INT32:
-                    case SVAR_BOOL: 
+                    case SVAR_BOOL:
                         tmp = (dataPos & -(int)sizeof(int)) + sizeof(int);
                         if ((dataPos & -(int)sizeof(int)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
                         break;
-                    case SVAR_PTR: 
+                    case SVAR_PTR:
                         tmp = (dataPos & -(int)sizeof(void *)) + sizeof(void *);
                         if ((dataPos & -(int)sizeof(void *)) >= dataPos)
                             tmp = dataPos;
@@ -206,7 +217,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 }
 
 void SetActiveVariable(int objectID, const char *name) { printLog(PRINT_NORMAL, "SetActiveVariable(%d, \"%s\") called", objectID, name); }
-void AddEnumVar(const char* name) { printLog(PRINT_NORMAL, "AddEnumVar(\"%s\") called", name); }
+void AddEnumVar(const char *name) { printLog(PRINT_NORMAL, "AddEnumVar(\"%s\") called", name); }
 
 void InitObjects()
 {
@@ -793,7 +804,7 @@ void ResetEntitySlot(ushort slotID, ushort type, void *data)
     }
 }
 
-Entity* CreateEntity(ushort type, void *data, int x, int y)
+Entity *CreateEntity(ushort type, void *data, int x, int y)
 {
     ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
     Entity *entityPtr   = &objectEntityList[sceneInfo.createSlot];

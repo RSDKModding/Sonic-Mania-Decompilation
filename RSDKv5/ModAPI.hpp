@@ -6,6 +6,8 @@
 #include <string>
 #include <map>
 
+#include <functional>
+
 typedef enum {
     MODCB_GAME_STARTUP,
     MODCB_STAGELOAD,
@@ -32,10 +34,12 @@ typedef enum {
 typedef enum {
     ModTable_RegisterGlobals,
     ModTable_RegisterObject,
+    ModTable_RegisterObjectSTD,
     ModTable_GetGlobals,
     ModTable_Super,
     ModTable_LoadModInfo,
     ModTable_AddModCallback,
+    ModTable_AddModCallbackSTD,
     ModTable_AddPublicFunction,
     ModTable_GetPublicFunction,
     ModTable_GetModPath,
@@ -56,6 +60,7 @@ typedef enum {
 } ModFunctionTable;
 
 typedef void (*ModCallback)(void *);
+typedef std::function<void(void *)> ModCallbackSTD;
 
 struct ModPublicFunctionInfo {
     std::string name;
@@ -63,8 +68,9 @@ struct ModPublicFunctionInfo {
 };
 
 typedef bool (*modLink)(GameInfo *, const char *);
-typedef const char* (*langSetup)(GameInfo *, const char*);
-typedef modLink (*newLangLink)(const char *, const char *);
+typedef std::function<bool(GameInfo*, const char*)> modLinkSTD;
+typedef const char *(*langSetup)(GameInfo *, const char *);
+typedef modLink (*newLangLink)(const char *, const char *, int*);
 
 struct ModInfo {
     std::string name;
@@ -75,14 +81,15 @@ struct ModInfo {
     std::vector<ModPublicFunctionInfo> functionList;
     std::string folder;
     bool active;
-    std::vector<modLink> linkModLogic;
+    std::vector<modLinkSTD> linkModLogic;
+    void (*unloadMod)();
     std::map<std::string, std::map<std::string, std::string>> settings;
     std::map<std::string, std::map<std::string, std::string>> config;
-    const char* language = NULL;
+    const char *language = NULL;
 };
 
 extern std::vector<ModInfo> modList;
-extern std::vector<ModCallback> modCallbackList[MODCB_MAX];
+extern std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
 
 extern void *modFunctionTable[ModTable_Max];
 extern int currentObjectID;
@@ -97,14 +104,19 @@ inline void sortMods();
 void RunModCallbacks(int callbackID, void *data);
 
 // Mod API
-void ModRegisterGlobalVariables(const char* globalsPath, void **globals, uint size);
+void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint size);
 void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                        void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
-void* GetGlobals();
+void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update,
+                           std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
+                           std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                           std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited);
+void *GetGlobals();
 
 bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
 void AddModCallback(int callbackID, ModCallback callback);
+void AddModCallback_STD(int callbackID, ModCallbackSTD callback);
 void *AddPublicFunction(const char *folder, const char *functionName, void *functionPtr);
 void *GetPublicFunction(const char *folder, const char *functionName);
 void GetModPath(const char *id, TextInfo *result);
@@ -122,13 +134,12 @@ void SaveSettings(const char *id);
 bool32 GetConfigBool(const char *id, const char *key, bool32 fallback);
 int GetConfigInteger(const char *id, const char *key, int fallback);
 void GetConfigString(const char *id, const char *key, TextInfo *result, const char *fallback);
-bool32 ForeachConfig(const char* id, TextInfo* textInfo);
+bool32 ForeachConfig(const char *id, TextInfo *textInfo);
 bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo);
-
 
 void Super(int objectID, ModSuper callback, void *data);
 
-Object* GetObject(const char* name);
+Object *GetObject(const char *name);
 
 #endif
 

@@ -1,6 +1,10 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#if RETRO_USE_MOD_LOADER
+#include <functional>
+#endif
+
 #define OBJECT_COUNT (0x400)
 
 //0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
@@ -129,6 +133,17 @@ struct EntityBase : Entity {
 
 struct ObjectInfo {
     uint hash[4];
+#if RETRO_USE_MOD_LOADER //using std::function makes it easier to use stuff like lambdas
+    std::function<void(void)> update;
+    std::function<void(void)> lateUpdate;
+    std::function<void(void)> staticUpdate;
+    std::function<void(void)> draw;
+    std::function<void(void*)> create;
+    std::function<void(void)> stageLoad;
+    std::function<void(void)> editorDraw;
+    std::function<void(void)> editorLoad;
+    std::function<void(void)> serialize;
+#else
     void (*update)(void);
     void (*lateUpdate)(void);
     void (*staticUpdate)(void);
@@ -138,6 +153,7 @@ struct ObjectInfo {
     void (*editorDraw)(void);
     void (*editorLoad)(void);
     void (*serialize)(void);
+#endif
     Object **type;
     int entitySize;
     int objectSize;
@@ -183,6 +199,13 @@ extern bool32 validDraw;
 void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                   void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                   void (*editorLoad)(void), void (*serialize)(void));
+
+#if RETRO_USE_MOD_LOADER
+void RegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update, std::function<void(void)> lateUpdate,
+                    std::function<void(void)> staticUpdate, std::function<void(void)> draw, std::function<void(void*)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                    std::function<void(void)> editorLoad, std::function<void(void)> serialize);
+#endif
+
 #if RETRO_REV02
 void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize);
 #endif

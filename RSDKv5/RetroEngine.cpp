@@ -870,7 +870,7 @@ void InitScriptSystem()
     for (int m = 0; m < modList.size(); ++m) {
         if (!modList[m].active || modList[m].language)
             continue;
-        for (modLink ptr : modList[m].linkModLogic) {
+        for (modLinkSTD ptr : modList[m].linkModLogic) {
             if (!ptr(&info, modList[m].folder.c_str())) {
                 modList[m].active = false;
                 printLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].folder.c_str());

@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <functional>
 
 int currentObjectID = 0;
 
@@ -30,7 +31,7 @@ namespace fs = std::filesystem;
 std::map<std::string, int> langMap;
 
 std::vector<ModInfo> modList;
-std::vector<ModCallback> modCallbackList[MODCB_MAX];
+std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
 
 // did we try to load a logic of a different lang? load it later
 std::vector<int> waitList;
@@ -39,6 +40,22 @@ void *modFunctionTable[ModTable_Max];
 
 #define addToModFunctionTable(id, func) modFunctionTable[id] = (void *)func;
 
+// https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
+std::string trim(const std::string &s)
+{
+    auto start = s.begin();
+    while (start != s.end() && std::isspace(*start)) {
+        start++;
+    }
+
+    auto end = s.end();
+    do {
+        end--;
+    } while (std::distance(start, end) > 0 && std::isspace(*end));
+
+    return std::string(start, end + 1);
+}
+
 void initModAPI()
 {
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
@@ -46,9 +63,11 @@ void initModAPI()
     addToModFunctionTable(ModTable_GetGlobals, GetGlobals);
     addToModFunctionTable(ModTable_RegisterGlobals, ModRegisterGlobalVariables);
     addToModFunctionTable(ModTable_RegisterObject, ModRegisterObject);
+    addToModFunctionTable(ModTable_RegisterObjectSTD, ModRegisterObject_STD);
     addToModFunctionTable(ModTable_Super, Super);
     addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
     addToModFunctionTable(ModTable_AddModCallback, AddModCallback);
+    addToModFunctionTable(ModTable_AddModCallbackSTD, AddModCallback_STD);
     addToModFunctionTable(ModTable_AddPublicFunction, AddPublicFunction);
     addToModFunctionTable(ModTable_GetPublicFunction, GetPublicFunction);
     addToModFunctionTable(ModTable_GetModPath, GetModPath);
@@ -79,13 +98,20 @@ void sortMods()
     });
 }
 
-void loadMods()
-{
-    using namespace std;
+void unloadMods() {
+    for (ModInfo& mod : modList) {
+        if (mod.unloadMod) mod.unloadMod();
+    }
     modList.clear();
     langMap.clear();
     waitList.clear();
     for (int c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
+}
+
+void loadMods()
+{
+    using namespace std;
+    unloadMods();
     char modBuf[0x100];
     sprintf(modBuf, "%smods/", userFileDir);
     fs::path modPath(modBuf);
@@ -260,6 +286,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::string buf;
             while (std::getline(stream, buf, ',')) {
                 int mode = 0;
+                buf = trim(buf);
 #if RETRO_PLATFORM == RETRO_WIN
                 if (MODAPI_ENDS_WITH(".dll"))
                     mode = 1;
@@ -351,6 +378,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                                 linked = true;
                             }
                         }
+                        info->unloadMod = (void(*)())getAddress(link_handle, "UnloadMod");
                     }
 
                     if (info->language && active) {
@@ -392,8 +420,12 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     std::advance(it, mode - 2);
                     const char *fid = info->folder.c_str();
                     const char *log = buf.c_str();
-                    modLink res     = ((newLangLink)modList[it->second].linkModLogic[0])(fid, log);
-                    info->linkModLogic.push_back(res);
+                    int isSTD = 0;
+                    modLink res     = (*(newLangLink*)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
+                    if (isSTD) 
+                        info->linkModLogic.push_back(*(modLinkSTD*)res);
+                    else
+                        info->linkModLogic.push_back(res);
                     linked = true;
                 }
 
@@ -439,6 +471,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::istringstream stream(cfg);
             std::string buf;
             while (std::getline(stream, buf, ',')) {
+                buf = trim(buf);
                 int mode = 0;
                 if (MODAPI_ENDS_WITH(".ini"))
                     mode = 1;
@@ -586,6 +619,11 @@ bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, Te
 }
 
 void AddModCallback(int callbackID, ModCallback callback)
+{
+    return AddModCallback_STD(callbackID, callback);
+}
+
+void AddModCallback_STD(int callbackID, ModCallbackSTD callback)
 {
     if (callbackID < 0 || callbackID >= MODCB_MAX)
         return;
@@ -1025,6 +1063,14 @@ void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, ui
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                        void (*editorLoad)(void), void (*serialize)(void), const char *inherited)
 {
+    return ModRegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw,
+                                 editorLoad, serialize, inherited);
+}
+
+void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update, std::function<void(void)> lateUpdate,
+                           std::function<void(void)> staticUpdate, std::function<void(void)> draw, std::function<void(void*)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                           std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
+{
     int preCount = objectCount + 1;
     uint hash[4];
     GEN_HASH(name, hash);
@@ -1073,7 +1119,7 @@ void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, ui
             inherited = NULL;
     }
 
-    RegisterObject(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
+    RegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
                    serialize);
 
     if (inherited) {
