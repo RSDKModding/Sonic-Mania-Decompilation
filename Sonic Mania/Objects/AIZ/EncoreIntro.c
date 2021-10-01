@@ -71,13 +71,12 @@ void EncoreIntro_Create(void *data)
         if (globals->enableIntro) {
             foreach_all(HUD, hud)
             {
-                hud->field_9C = hud->dword5C[0].x;
-                hud->dword5C[0].x -= 0x1000000;
-                hud->dword5C[1].x -= 0x1100000;
-                hud->dword5C[2].x -= 0x1200000;
-                hud->dword5C[3].x -= 0x1300000;
+                hud->maxOffset = hud->offsets[HUDOFF_SCORE].x;
+                hud->offsets[HUDOFF_SCORE].x -= 0x1000000;
+                hud->offsets[HUDOFF_TIME].x -= 0x1100000;
+                hud->offsets[HUDOFF_RINGS].x -= 0x1200000;
+                hud->offsets[HUDOFF_LIFE].x -= 0x1300000;
                 hud->state = HUD_State_ComeOnScreen;
-                hud->state = StateMachine_None;
             }
 
             EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
@@ -331,8 +330,8 @@ bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         }
         foreach_all(HUD, hud)
         {
-            hud->competitionStates[0] = HUD_State_ComeOnScreen;
-            hud->state                = hud->competitionStates[0];
+            hud->vsStates[0] = HUD_State_ComeOnScreen;
+            hud->state                = hud->vsStates[0];
         }
         Music_PlayTrack(TRACK_STAGE);
         EncoreIntro_SetupCutscenePart2();
@@ -1078,8 +1077,8 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
 
         foreach_all(HUD, hud)
         {
-            hud->competitionStates[0] = HUD_State_ComeOnScreen;
-            hud->state                = hud->competitionStates[0];
+            hud->vsStates[0] = HUD_State_ComeOnScreen;
+            hud->state                = hud->vsStates[0];
         }
 
         foreach_all(SchrodingersCapsule, capsule)

@@ -51,26 +51,30 @@ void BreakableWall_EditorLoad(void);
 void BreakableWall_Serialize(void);
 
 // Extra Entity Functions
+
 //States
 void BreakableWall_State_BottomChunks(void);
 void BreakableWall_State_BottomFull(void);
 void BreakableWall_State_FallingTile(void);
-void BreakableWall_State_HWall(void);
-void BreakableWall_State_HandleHWall(void);
+void BreakableWall_State_BreakableSides(void);
 void BreakableWall_State_Tile(void);
 void BreakableWall_State_Top(void);
-void BreakableWall_State_VerticalChunks(void);
+void BreakableWall_State_TopChunks(void);
+
 //Draw States
-void BreakableWall_StateDraw_BWall(void);
-void BreakableWall_StateDraw_BWall2(void);
+void BreakableWall_StateDraw_Outline(void);
+void BreakableWall_StateDraw_Outline2(void);
 void BreakableWall_StateDraw_Tile(void);
-//Break
-void BreakableWall_Break1(void);
-void BreakableWall_Break2AND3(void);
-void BreakableWall_Break4(void);
-void BreakableWall_Break5(void);
-void BreakableWall_BreakV(void);
-void BreakableWall_BreakUnknown(EntityBreakableWall *entity, byte flip);
+
+//Breaking
+void BreakableWall_HandleTopBreak_All(void);
+void BreakableWall_HandleTopBreak_Chunks(void);
+void BreakableWall_HandleSidesBreak(void);
+void BreakableWall_HandleBottomBreak_Chunks(void);
+void BreakableWall_HandleBottomBreak_All(void);
+void BreakableWall_HandleBlockBreak_V(void);
+void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, byte flip);
+
 // Misc
 void BreakableWall_GiveScoreBonus(void *plr);
 

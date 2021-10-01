@@ -459,11 +459,11 @@ void CPZBoss_State_HandleBossMatchFinish(void)
 
             EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
             RSDK.ResetEntityPtr(hud, HUD->objectID, NULL);
-            hud->dword5C[1].x -= 0x1100000;
-            hud->dword5C[2].x -= 0x1200000;
-            hud->field_9C = hud->dword5C[0].x;
-            hud->dword5C[3].x -= 0x1300000;
-            hud->dword5C[0].x -= 0x1000000;
+            hud->maxOffset = hud->offsets[HUDOFF_SCORE].x;
+            hud->offsets[HUDOFF_SCORE].x -= 0x1000000;
+            hud->offsets[HUDOFF_TIME].x -= 0x1100000;
+            hud->offsets[HUDOFF_RINGS].x -= 0x1200000;
+            hud->offsets[HUDOFF_LIFE].x -= 0x1300000;
             hud->state = HUD_State_ComeOnScreen;
         }
     }
@@ -509,11 +509,11 @@ void CPZBoss_State_Unknown11(void)
 
         EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
         RSDK.ResetEntityPtr(hud, HUD->objectID, NULL);
-        hud->dword5C[1].x -= 0x1100000;
-        hud->dword5C[2].x -= 0x1200000;
-        hud->field_9C = hud->dword5C[0].x;
-        hud->dword5C[3].x -= 0x1300000;
-        hud->dword5C[0].x -= 0x1000000;
+        hud->maxOffset = hud->offsets[HUDOFF_SCORE].x;
+        hud->offsets[HUDOFF_SCORE].x -= 0x1000000;
+        hud->offsets[HUDOFF_TIME].x -= 0x1100000;
+        hud->offsets[HUDOFF_RINGS].x -= 0x1200000;
+        hud->offsets[HUDOFF_LIFE].x -= 0x1300000;
         hud->state = HUD_State_ComeOnScreen;
 
         entity->active = ACTIVE_NORMAL;

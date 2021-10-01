@@ -1975,7 +1975,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
                             }
 #if RETRO_USE_PLUS
-                            foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
+                            foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
 #endif
                         }
                         else if (saveRAM) {
@@ -2074,7 +2074,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
                         }
 #if RETRO_USE_PLUS
-                        foreach_all(HUD, hud) { hud->competitionStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
+                        foreach_all(HUD, hud) { hud->vsStates[RSDK.GetEntityID(player)] = HUD_State_GoOffScreen; }
 #endif
                     }
                     else {

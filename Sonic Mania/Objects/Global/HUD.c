@@ -19,7 +19,7 @@ void HUD_LateUpdate(void)
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_COMPETITION) {
         for (entity->screenID = 0; entity->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++entity->screenID) {
-            StateMachine_Run(entity->competitionStates[entity->screenID]);
+            StateMachine_Run(entity->vsStates[entity->screenID]);
         }
     }
     else {
@@ -29,7 +29,6 @@ void HUD_LateUpdate(void)
     StateMachine_Run(entity->state);
 #endif
 
-    
 #if RETRO_GAMEVER != VER_100
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -72,29 +71,30 @@ void HUD_Draw(void)
     EntityPlayer *player = RSDK_GET_ENTITY(RSDK_sceneInfo->currentScreenID, Player);
 
     Vector2 lifePos;
-    Vector2 pos[4];
+    Vector2 offset[4];
 
-    pos[0].x = entity->dword5C[0].x;
-    pos[0].y = entity->dword5C[0].y;
-    pos[1].x = entity->dword5C[1].x;
-    pos[1].y = entity->dword5C[1].y;
-    pos[2].x = entity->dword5C[2].x;
-    pos[2].y = entity->dword5C[2].y;
-    pos[3].x = entity->dword5C[3].x;
-    pos[3].y = entity->dword5C[3].y;
+    offset[HUDOFF_SCORE].x = entity->offsets[HUDOFF_SCORE].x;
+    offset[HUDOFF_SCORE].y = entity->offsets[HUDOFF_SCORE].y;
+    offset[HUDOFF_TIME].x  = entity->offsets[HUDOFF_TIME].x;
+    offset[HUDOFF_TIME].y  = entity->offsets[HUDOFF_TIME].y;
+    offset[HUDOFF_RINGS].x = entity->offsets[HUDOFF_RINGS].x;
+    offset[HUDOFF_RINGS].y = entity->offsets[HUDOFF_RINGS].y;
+    offset[HUDOFF_LIFE].x  = entity->offsets[HUDOFF_LIFE].x;
+    offset[HUDOFF_LIFE].y  = entity->offsets[HUDOFF_LIFE].y;
     if (globals->gameMode == MODE_COMPETITION) {
 #if RETRO_USE_PLUS
-        pos[0].x = entity->dwordB4[RSDK_sceneInfo->currentScreenID].x;
-        pos[0].y = entity->dwordB4[RSDK_sceneInfo->currentScreenID].y;
-        pos[1].x = entity->dwordD4[RSDK_sceneInfo->currentScreenID].x;
-        pos[1].y = entity->dwordD4[RSDK_sceneInfo->currentScreenID].y;
-        pos[2].x = entity->dwordF4[RSDK_sceneInfo->currentScreenID].x;
-        pos[2].y = entity->dwordF4[RSDK_sceneInfo->currentScreenID].y;
-        pos[3].x = entity->dword114[RSDK_sceneInfo->currentScreenID].x;
-        pos[3].y = entity->dword114[RSDK_sceneInfo->currentScreenID].y;
+        offset[HUDOFF_SCORE].x = entity->vsScoreOffsets[RSDK_sceneInfo->currentScreenID].x;
+        offset[HUDOFF_SCORE].y = entity->vsScoreOffsets[RSDK_sceneInfo->currentScreenID].y;
+        offset[HUDOFF_TIME].x  = entity->vsTimeOffsets[RSDK_sceneInfo->currentScreenID].x;
+        offset[HUDOFF_TIME].y  = entity->vsTimeOffsets[RSDK_sceneInfo->currentScreenID].y;
+        offset[HUDOFF_RINGS].x = entity->vsRingsOffsets[RSDK_sceneInfo->currentScreenID].x;
+        offset[HUDOFF_RINGS].y = entity->vsRingsOffsets[RSDK_sceneInfo->currentScreenID].y;
+        offset[HUDOFF_LIFE].x  = entity->vsLifeOffsets[RSDK_sceneInfo->currentScreenID].x;
+        offset[HUDOFF_LIFE].y  = entity->vsLifeOffsets[RSDK_sceneInfo->currentScreenID].y;
 #endif
 
-        foreach_active(Player, plr) {
+        foreach_active(Player, plr)
+        {
             if (plr != player) {
                 entity->playerIDData.frameID = plr->playerID;
                 RSDK.DrawSprite(&entity->playerIDData, &plr->position, false);
@@ -105,7 +105,7 @@ void HUD_Draw(void)
     else {
         if (HUD->swapCooldown > 0) {
             RSDK.ProcessAnimation(&entity->playerIDData);
-            RSDK.DrawSprite(&entity->playerIDData, &player->position, 0);
+            RSDK.DrawSprite(&entity->playerIDData, &player->position, false);
             --HUD->swapCooldown;
         }
     }
@@ -128,22 +128,22 @@ void HUD_Draw(void)
 #endif
 
     entity->hudElementsData.frameID = 0;
-    RSDK.DrawSprite(&entity->hudElementsData, &pos[0], true);
+    RSDK.DrawSprite(&entity->hudElementsData, &offset[HUDOFF_SCORE], true);
 
-    lifePos.x = pos[0].x + 0x610000;
-    lifePos.y = pos[0].y + 0xE0000;
+    lifePos.x = offset[HUDOFF_SCORE].x + 0x610000;
+    lifePos.y = offset[HUDOFF_SCORE].y + 0xE0000;
     HUD_DrawNumbersBase10(&lifePos, player->score, 0);
     entity->hudElementsData.frameID = entity->timeFlashFrame + 1;
-    RSDK.DrawSprite(&entity->hudElementsData, &pos[1], true);
+    RSDK.DrawSprite(&entity->hudElementsData, &offset[HUDOFF_TIME], true);
 
     if (!entity->field_150 || Zone->timer2 & 8) {
-        lifePos.x                       = pos[1].x + 0x340000;
-        lifePos.y                       = pos[1].y - 0x20000;
+        lifePos.x                       = offset[HUDOFF_TIME].x + 0x340000;
+        lifePos.y                       = offset[HUDOFF_TIME].y - 0x20000;
         entity->hudElementsData.frameID = 12;
         RSDK.DrawSprite(&entity->hudElementsData, &lifePos, true);
 
-        lifePos.x = pos[1].x + 0x610000;
-        lifePos.y = pos[1].y + 0xE0000;
+        lifePos.x = offset[HUDOFF_TIME].x + 0x610000;
+        lifePos.y = offset[HUDOFF_TIME].y + 0xE0000;
         HUD_DrawNumbersBase10(&lifePos, RSDK_sceneInfo->milliseconds, 2);
 
         lifePos.x -= 0x90000;
@@ -160,10 +160,10 @@ void HUD_Draw(void)
     }
 
     entity->hudElementsData.frameID = entity->ringFlashFrame + 3;
-    RSDK.DrawSprite(&entity->hudElementsData, &pos[2], true);
+    RSDK.DrawSprite(&entity->hudElementsData, &offset[HUDOFF_RINGS], true);
     if (!entity->field_154 || Zone->timer2 & 8) {
-        lifePos.x = pos[2].x + 0x610000;
-        lifePos.y = pos[2].y + 0xE0000;
+        lifePos.x = offset[HUDOFF_RINGS].x + 0x610000;
+        lifePos.y = offset[HUDOFF_RINGS].y + 0xE0000;
 
         if (player->hyperRing)
             HUD_DrawNumbersHyperRing(&lifePos, player->rings);
@@ -238,11 +238,11 @@ void HUD_Draw(void)
 #endif
 
     int cID    = -1;
-    lifePos.x  = pos[3].x;
-    lifePos.y  = pos[3].y;
+    lifePos.x  = offset[HUDOFF_LIFE].x;
+    lifePos.y  = offset[HUDOFF_LIFE].y;
     int charID = player->characterID;
 #if RETRO_USE_PLUS
-    int lives  = entity->lives[player->playerID];
+    int lives = entity->lives[player->playerID];
     for (; charID > 0; ++cID) charID >>= 1;
     entity->lifeIconsData.frameID = cID;
     if (cID < 0) {
@@ -255,7 +255,7 @@ void HUD_Draw(void)
     }
 #else
     switch (player->characterID) {
-        default: 
+        default:
         case ID_SONIC: entity->lifeIconsData.frameID = 0; break;
         case ID_TAILS: entity->lifeIconsData.frameID = 1; break;
         case ID_KNUCKLES: entity->lifeIconsData.frameID = 2; break;
@@ -278,8 +278,8 @@ void HUD_Draw(void)
             for (id = -1; charID > 0; ++id) charID >>= 1;
             entity->lifeIconsData.frameID = id;
             if (id >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
-                if ((sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown
-                    && sidekick->state != Player_State_EncoreRespawn) || !sidekick->maxGlideSpeed) {
+                if ((sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
+                    || !sidekick->maxGlideSpeed) {
                     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
                 }
             }
@@ -360,56 +360,34 @@ void HUD_Create(void *data)
     RSDK_THIS(HUD);
     if (!RSDK_sceneInfo->inEditor) {
 #if RETRO_USE_PLUS
-        ActClear->field_30   = 0;
+        ActClear->field_30 = 0;
 #endif
-        entity->active       = ACTIVE_NORMAL;
-        entity->visible      = true;
-        entity->drawOrder    = Zone->hudDrawOrder;
-        entity->dword5C[0].x = 0x100000;
-        entity->dword5C[0].y = 0xC0000;
-        entity->dword5C[1].x = 0x100000;
-        entity->dword5C[1].y = 0x1C0000;
-        entity->dword5C[2].x = 0x100000;
-        entity->dword5C[2].y = 0x2C0000;
-        entity->dword5C[3].x = 0x100000;
-        entity->dword5C[3].y = (RSDK_screens->height - 12) << 16;
+        entity->active                  = ACTIVE_NORMAL;
+        entity->visible                 = true;
+        entity->drawOrder               = Zone->hudDrawOrder;
+        entity->offsets[HUDOFF_SCORE].x = 0x100000;
+        entity->offsets[HUDOFF_SCORE].y = 0xC0000;
+        entity->offsets[HUDOFF_TIME].x  = 0x100000;
+        entity->offsets[HUDOFF_TIME].y  = 0x1C0000;
+        entity->offsets[HUDOFF_RINGS].x = 0x100000;
+        entity->offsets[HUDOFF_RINGS].y = 0x2C0000;
+        entity->offsets[HUDOFF_LIFE].x  = 0x100000;
+        entity->offsets[HUDOFF_LIFE].y  = (RSDK_screens->height - 12) << 16;
 #if RETRO_GAMEVER != VER_100
-        entity->superButtonPos     = -0x200000;
+        entity->superButtonPos = -0x200000;
 #endif
 
 #if RETRO_USE_PLUS
-        entity->dwordB4[0].x  = entity->dword5C[0].x;
-        entity->dwordB4[0].y  = entity->dword5C[0].y;
-        entity->dwordD4[0].x  = entity->dword5C[1].x;
-        entity->dwordD4[0].y  = entity->dword5C[1].y;
-        entity->dwordF4[0].x  = entity->dword5C[2].x;
-        entity->dwordF4[0].y  = entity->dword5C[2].y;
-        entity->dword114[0].x = entity->dword5C[3].x;
-        entity->dword114[0].y = entity->dword5C[3].y;
-        entity->dwordB4[1].x  = entity->dword5C[0].x;
-        entity->dwordB4[1].y  = entity->dword5C[0].y;
-        entity->dwordD4[1].x  = entity->dword5C[1].x;
-        entity->dwordD4[1].y  = entity->dword5C[1].y;
-        entity->dwordF4[1].x  = entity->dword5C[2].x;
-        entity->dwordF4[1].y  = entity->dword5C[2].y;
-        entity->dword114[1].x = entity->dword5C[3].x;
-        entity->dword114[1].y = entity->dword5C[3].y;
-        entity->dwordB4[2].x  = entity->dword5C[0].x;
-        entity->dwordB4[2].y  = entity->dword5C[0].y;
-        entity->dwordD4[2].x  = entity->dword5C[1].x;
-        entity->dwordD4[2].y  = entity->dword5C[1].y;
-        entity->dwordF4[2].x  = entity->dword5C[2].x;
-        entity->dwordF4[2].y  = entity->dword5C[2].y;
-        entity->dword114[2].x = entity->dword5C[3].x;
-        entity->dword114[2].y = entity->dword5C[3].y;
-        entity->dwordB4[3].x  = entity->dword5C[0].x;
-        entity->dwordB4[3].y  = entity->dword5C[0].y;
-        entity->dwordD4[3].x  = entity->dword5C[1].x;
-        entity->dwordD4[3].y  = entity->dword5C[1].y;
-        entity->dwordF4[3].x  = entity->dword5C[2].x;
-        entity->dwordF4[3].y  = entity->dword5C[2].y;
-        entity->dword114[3].x = entity->dword5C[3].x;
-        entity->dword114[3].y = entity->dword5C[3].y;
+        for (int i = 0; i < SCREEN_MAX; ++i) {
+            entity->vsScoreOffsets[i].x = entity->offsets[HUDOFF_SCORE].x;
+            entity->vsScoreOffsets[i].y = entity->offsets[HUDOFF_SCORE].y;
+            entity->vsTimeOffsets[i].x  = entity->offsets[HUDOFF_TIME].x;
+            entity->vsTimeOffsets[i].y  = entity->offsets[HUDOFF_TIME].y;
+            entity->vsRingsOffsets[i].x = entity->offsets[HUDOFF_RINGS].x;
+            entity->vsRingsOffsets[i].y = entity->offsets[HUDOFF_RINGS].y;
+            entity->vsLifeOffsets[i].x  = entity->offsets[HUDOFF_LIFE].x;
+            entity->vsLifeOffsets[i].y  = entity->offsets[HUDOFF_LIFE].y;
+        }
 #endif
         RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->hudElementsData, true, 0);
         RSDK.SetSpriteAnimation(HUD->hudMappings, 1, &entity->numbersData, true, 0);
@@ -437,15 +415,15 @@ void HUD_Create(void *data)
 
 void HUD_StageLoad(void)
 {
-    HUD->hudMappings         = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    HUD->hudMappings = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
 #if RETRO_GAMEVER != VER_100
     HUD->superButtonMappings = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
 #endif
 
 #if RETRO_USE_PLUS
-    HUD->sfxClick            = RSDK.GetSFX("Stage/Click.wav");
-    HUD->sfxStarpost         = RSDK.GetSFX("Global/StarPost.wav");
-    HUD->dwordC                       = 0;
+    HUD->sfxClick    = RSDK.GetSFX("Stage/Click.wav");
+    HUD->sfxStarpost = RSDK.GetSFX("Global/StarPost.wav");
+    HUD->dwordC      = 0;
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
@@ -460,7 +438,7 @@ void HUD_StageLoad(void)
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
 {
     RSDK_THIS(HUD);
-    int mult          = 1;
+    int mult = 1;
     if (!maxDigits) {
         if (value <= 0) {
             maxDigits = 1;
@@ -485,7 +463,7 @@ void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
 {
     RSDK_THIS(HUD);
-    int mult          = 1;
+    int mult = 1;
     for (int i = 4; i; --i) {
         entity->numbersData.frameID = value / mult & 0xF;
         RSDK.DrawSprite(&entity->numbersData, drawPos, true);
@@ -497,9 +475,9 @@ void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 {
     RSDK_THIS(HUD);
-    int cnt           = 0;
-    int mult          = 1;
-    int mult2         = 1;
+    int cnt   = 0;
+    int mult  = 1;
+    int mult2 = 1;
     if (value <= 0) {
         cnt = 1;
     }
@@ -525,7 +503,7 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
     drawPos->x -= 0x40000;
     RSDK.DrawSprite(&entity->hyperNumbersData, drawPos, true);
 }
-    
+
 #if RETRO_GAMEVER != VER_100
 void HUD_GetKeyFrame(Animator *animator, int buttonID)
 {
@@ -538,11 +516,11 @@ void HUD_GetKeyFrame(Animator *animator, int buttonID)
     else {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
-        int id               = RSDK.ControllerIDForInputID(player->controllerID);
+        int id = RSDK.ControllerIDForInputID(player->controllerID);
 #else
-        int id = CONT_ANY;
+        int id                 = CONT_ANY;
 #endif
-        int contID           = player->controllerID;
+        int contID = player->controllerID;
         if (id == CONT_UNASSIGNED)
             contID = CONT_P1;
 
@@ -575,51 +553,50 @@ void HUD_State_ComeOnScreen(void)
 {
     RSDK_THIS(HUD);
 #if RETRO_USE_PLUS
-    Vector2 *ptrs[4];
-    void **statePtr = NULL;
+    Vector2 *offset[4];
+    void **state = NULL;
 
-    int *ptr = NULL;
+    int *max = NULL;
     if (globals->gameMode == MODE_COMPETITION) {
-        statePtr = (void **)&entity->competitionStates[entity->screenID];
-        ptrs[0]  = &entity->dwordB4[RSDK_sceneInfo->currentScreenID];
-        ptrs[1]  = &entity->dwordD4[RSDK_sceneInfo->currentScreenID];
-        ptrs[2]  = &entity->dwordF4[RSDK_sceneInfo->currentScreenID];
-        ptrs[3]  = &entity->dword114[RSDK_sceneInfo->currentScreenID];
-        ptr      = &entity->field_134[RSDK_sceneInfo->currentScreenID];
+        state                = (void **)&entity->vsStates[entity->screenID];
+        offset[HUDOFF_SCORE] = &entity->vsScoreOffsets[RSDK_sceneInfo->currentScreenID];
+        offset[HUDOFF_TIME]  = &entity->vsTimeOffsets[RSDK_sceneInfo->currentScreenID];
+        offset[HUDOFF_RINGS] = &entity->vsRingsOffsets[RSDK_sceneInfo->currentScreenID];
+        offset[HUDOFF_LIFE]  = &entity->vsLifeOffsets[RSDK_sceneInfo->currentScreenID];
+        max                  = &entity->vsMaxOffsets[RSDK_sceneInfo->currentScreenID];
     }
     else {
-        statePtr = (void **)&entity->state;
-        ptrs[0]  = &entity->dword5C[0];
-        ptrs[1]  = &entity->dword5C[1];
-        ptrs[2]  = &entity->dword5C[2];
-        ptrs[3]  = &entity->dword5C[3];
-        ptr      = &entity->field_9C;
+        state                = (void **)&entity->state;
+        offset[HUDOFF_SCORE] = &entity->offsets[HUDOFF_SCORE];
+        offset[HUDOFF_TIME]  = &entity->offsets[HUDOFF_TIME];
+        offset[HUDOFF_RINGS] = &entity->offsets[HUDOFF_RINGS];
+        offset[HUDOFF_LIFE]  = &entity->offsets[HUDOFF_LIFE];
+        max                  = &entity->maxOffset;
     }
-    if (ptrs[0]->x < *ptr)
-        ptrs[0]->x += 0x80000;
-    if (ptrs[1]->x < *ptr)
-        ptrs[1]->x += 0x80000;
-    if (ptrs[2]->x < *ptr)
-        ptrs[2]->x += 0x80000;
-    if (ptrs[3]->x >= *ptr) {
-        *statePtr = NULL;
-    }
-    else {
-        ptrs[3]->x += 0x80000;
-    }
+    if (offset[HUDOFF_SCORE]->x < *max)
+        offset[HUDOFF_SCORE]->x += 0x80000;
+    if (offset[HUDOFF_TIME]->x < *max)
+        offset[HUDOFF_TIME]->x += 0x80000;
+    if (offset[HUDOFF_RINGS]->x < *max)
+        offset[HUDOFF_RINGS]->x += 0x80000;
+    if (offset[HUDOFF_LIFE]->x < *max)
+        offset[HUDOFF_LIFE]->x += 0x80000;
+    else
+        *state = NULL;
 #else
-    if (entity->dword5C[0].x < entity->field_9C)
-        entity->dword5C[0].x += 0x80000;
-    if (entity->dword5C[1].x < entity->field_9C)
-        entity->dword5C[1].x += 0x80000;
-    if (entity->dword5C[2].x < entity->field_9C)
-        entity->dword5C[2].x += 0x80000;
-    if (entity->dword5C[3].x >= entity->field_9C) {
+    if (entity->offsets[HUDOFF_SCORE].x < entity->maxOffset)
+        entity->offsets[HUDOFF_SCORE].x += 0x80000;
+
+    if (entity->offsets[HUDOFF_TIME].x < entity->maxOffset)
+        entity->offsets[HUDOFF_TIME].x += 0x80000;
+
+    if (entity->offsets[HUDOFF_RINGS].x < entity->maxOffset)
+        entity->offsets[HUDOFF_RINGS].x += 0x80000;
+
+    if (entity->offsets[HUDOFF_LIFE].x < entity->maxOffset)
+        entity->offsets[HUDOFF_LIFE].x += 0x80000;
+    else
         entity->state = StateMachine_None;
-    }
-    else {
-        entity->dword5C[3].x += 0x80000;
-    }
 #endif
 }
 
@@ -628,32 +605,32 @@ void HUD_State_GoOffScreen(void)
     RSDK_THIS(HUD);
 
 #if RETRO_USE_PLUS
-    Vector2 *ptrs[4];
+    Vector2 *offset[4];
     void **statePtr = NULL;
 
     if (globals->gameMode == MODE_COMPETITION) {
-        statePtr = (void **)&entity->competitionStates[entity->screenID];
-        ptrs[0]  = &entity->dwordB4[entity->screenID];
-        ptrs[1]  = &entity->dwordD4[entity->screenID];
-        ptrs[2]  = &entity->dwordF4[entity->screenID];
-        ptrs[3]  = &entity->dword114[entity->screenID];
+        statePtr             = (void **)&entity->vsStates[entity->screenID];
+        offset[HUDOFF_SCORE] = &entity->vsScoreOffsets[entity->screenID];
+        offset[HUDOFF_TIME]  = &entity->vsTimeOffsets[entity->screenID];
+        offset[HUDOFF_RINGS] = &entity->vsRingsOffsets[entity->screenID];
+        offset[HUDOFF_LIFE]  = &entity->vsLifeOffsets[entity->screenID];
     }
     else {
-        statePtr = (void **)&entity->state;
-        ptrs[0]  = entity->dword5C;
-        ptrs[1]  = &entity->dword5C[1];
-        ptrs[2]  = &entity->dword5C[2];
-        ptrs[3]  = &entity->dword5C[3];
+        statePtr             = (void **)&entity->state;
+        offset[HUDOFF_SCORE] = &entity->offsets[HUDOFF_SCORE];
+        offset[HUDOFF_TIME]  = &entity->offsets[HUDOFF_TIME];
+        offset[HUDOFF_RINGS] = &entity->offsets[HUDOFF_RINGS];
+        offset[HUDOFF_LIFE]  = &entity->offsets[HUDOFF_LIFE];
     }
-    ptrs[0]->x -= 0x80000;
-    if (ptrs[1]->x - ptrs[0]->x > 0x100000)
-        ptrs[1]->x -= 0x80000;
-    if (ptrs[2]->x - ptrs[1]->x > 0x100000)
-        ptrs[2]->x -= 0x80000;
-    if (ptrs[3]->x - ptrs[2]->x > 0x100000)
-        ptrs[3]->x -=0x80000;
+    offset[HUDOFF_SCORE]->x -= 0x80000;
+    if (offset[HUDOFF_TIME]->x - offset[HUDOFF_SCORE]->x > 0x100000)
+        offset[HUDOFF_TIME]->x -= 0x80000;
+    if (offset[HUDOFF_RINGS]->x - offset[HUDOFF_TIME]->x > 0x100000)
+        offset[HUDOFF_RINGS]->x -= 0x80000;
+    if (offset[HUDOFF_LIFE]->x - offset[HUDOFF_RINGS]->x > 0x100000)
+        offset[HUDOFF_LIFE]->x -= 0x80000;
 
-    if (ptrs[3]->x < -0x500000) {
+    if (offset[HUDOFF_LIFE]->x < -0x500000) {
         if (globals->gameMode == MODE_COMPETITION) {
             *statePtr = NULL;
             Competition_CalculateScore(entity->screenID, 1);
@@ -675,24 +652,25 @@ void HUD_State_GoOffScreen(void)
         }
     }
 #else
-    entity->dword5C[0].x -= 0x80000;
-    if (entity->dword5C[1].x - entity->dword5C[0].x > 0x100000)
-        entity->dword5C[1].x -= 0x80000;
-    if (entity->dword5C[2].x - entity->dword5C[1].x > 0x100000)
-        entity->dword5C[2].x -= 0x80000;
-    if (entity->dword5C[3].x - entity->dword5C[2].x > 0x100000)
-        entity->dword5C[3].x -= 0x80000;
+    entity->offsets[HUDOFF_SCORE].x -= 0x80000;
+    if (entity->offsets[HUDOFF_TIME].x - entity->offsets[HUDOFF_SCORE].x > 0x100000)
+        entity->offsets[HUDOFF_TIME].x -= 0x80000;
+    if (entity->offsets[HUDOFF_RINGS].x - entity->offsets[HUDOFF_TIME].x > 0x100000)
+        entity->offsets[HUDOFF_RINGS].x -= 0x80000;
+    if (entity->offsets[HUDOFF_LIFE].x - entity->offsets[HUDOFF_RINGS].x > 0x100000)
+        entity->offsets[HUDOFF_LIFE].x -= 0x80000;
 
-    if (entity->dword5C[3].x < -0x400000)
+    if (entity->offsets[HUDOFF_LIFE].x < -0x400000)
         destroyEntity(entity);
 #endif
 }
 
-void HUD_EditorDraw(void) {
+void HUD_EditorDraw(void)
+{
     RSDK_THIS(HUD);
 #if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->taData1, true, 0);
-    RSDK.DrawSprite(&entity->taData1, NULL, 0);
+    RSDK.DrawSprite(&entity->taData1, NULL, false);
 #endif
 }
 

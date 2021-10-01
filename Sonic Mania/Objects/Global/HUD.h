@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    HUDOFF_SCORE,
+    HUDOFF_TIME,
+    HUDOFF_RINGS,
+    HUDOFF_LIFE,
+}HUDOffsetTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -25,22 +32,22 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    Vector2 dword5C[4];
+    Vector2 offsets[4];
 #if RETRO_USE_PLUS
     int lifeFrameIDs[4];
     int lives[PLAYER_MAX];
 #endif
-    int field_9C;
+    int maxOffset;
 #if RETRO_GAMEVER != VER_100
     int superButtonPos;
 #endif
 #if RETRO_USE_PLUS
-    void (*competitionStates[PLAYER_MAX])(void);
-    Vector2 dwordB4[4];
-    Vector2 dwordD4[4];
-    Vector2 dwordF4[4];
-    Vector2 dword114[4];
-    int field_134[4];
+    void (*vsStates[PLAYER_MAX])(void);
+    Vector2 vsScoreOffsets[4];
+    Vector2 vsTimeOffsets[4];
+    Vector2 vsRingsOffsets[4];
+    Vector2 vsLifeOffsets[4];
+    int vsMaxOffsets[4];
     int screenID;
 #endif
 #if RETRO_GAMEVER != VER_100

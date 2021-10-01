@@ -682,7 +682,7 @@ void CheckerBall_Unknown5(void)
 
     foreach_active(BreakableWall, breakableWall)
     {
-        if (breakableWall->state == BreakableWall_State_HWall
+        if (breakableWall->state == BreakableWall_State_BreakableSides
             && RSDK.CheckObjectCollisionTouchBox(breakableWall, &breakableWall->hitbox, entity, &CheckerBall->hitbox)) {
             int *arrayPtr2 = BreakableWall->value3;
 

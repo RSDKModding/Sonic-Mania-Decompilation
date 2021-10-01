@@ -227,6 +227,8 @@ void CollapsingPlatform_State_Right(void)
     int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
     int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
+    int timerSX   = entity->size.x >> CollapsingPlatform->shift >> 20;
+
     int sx = entity->size.x >> 20;
     int sy = entity->size.y >> 20;
     for (int y = 0; y < sy; ++y) {
@@ -240,7 +242,6 @@ void CollapsingPlatform_State_Right(void)
             tileChunk->tilePos.x = x + startTX;
             int timerX           = x >> CollapsingPlatform->shift;
             int timerY           = y >> CollapsingPlatform->shift;
-            int timerSX          = entity->size.x >> CollapsingPlatform->shift >> 20;
             tileChunk->timer     = 3 * (sy + 2 * (timerSX - timerX) - timerY);
             ++tiles;
         }
@@ -258,7 +259,8 @@ void CollapsingPlatform_State_Center(void)
     int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
     int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
-    int tCountX = entity->size.x >> CollapsingPlatform->shift >> 20;
+    int timerSX = entity->size.x >> CollapsingPlatform->shift >> 20;
+    int timerSY = entity->size.y >> CollapsingPlatform->shift >> 20;
 
     int sx = entity->size.x >> 20;
     int sy = entity->size.y >> 20;
@@ -271,11 +273,10 @@ void CollapsingPlatform_State_Center(void)
             tileChunk->drawOrder = entity->drawOrder;
             tileChunk->tilePos.x = x + startTX;
             tileChunk->tilePos.y = y + startTY;
-            int timerX           = abs((tCountX >> 1) - (x >> CollapsingPlatform->shift));
+            int timerX           = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
             int timerY           = y >> CollapsingPlatform->shift;
-            int timerSY          = y >> CollapsingPlatform->shift >> 20;
             tileChunk->timer     = 3 * (timerSY + 2 * timerX - timerY);
-            if (!(tCountX & 1) && x >> CollapsingPlatform->shift < (tCountX >> 1))
+            if (!(timerSX & 1) && x >> CollapsingPlatform->shift < (timerSX >> 1))
                 tileChunk->timer -= 6;
             ++tiles;
         }
