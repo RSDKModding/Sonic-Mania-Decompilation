@@ -868,7 +868,7 @@ void InitScriptSystem()
 
 #if RETRO_USE_MOD_LOADER
     for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
+        if (!modList[m].active || modList[m].language)
             continue;
         for (modLink ptr : modList[m].linkModLogic) {
             if (!ptr(&info, modList[m].folder.c_str())) {

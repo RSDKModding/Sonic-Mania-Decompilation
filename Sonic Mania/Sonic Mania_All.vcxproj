@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="GameLink.h" />
     <ClInclude Include="GameObjects.h" />
-    <ClInclude Include="GameOptions.h" />
+    <ClInclude Include="GameVariables.h" />
     <ClInclude Include="Objects\AIZ\AIZEggRobo.h" />
     <ClInclude Include="Objects\AIZ\AIZEncoreTutorial.h" />
     <ClInclude Include="Objects\AIZ\AIZKingClaw.h" />
@@ -635,7 +635,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.c" />
-    <ClCompile Include="GameOptions.c" />
+    <ClCompile Include="GameVariables.c" />
     <ClCompile Include="Objects\AIZ\AIZEggRobo.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

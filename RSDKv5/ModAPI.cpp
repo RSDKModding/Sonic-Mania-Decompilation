@@ -24,13 +24,16 @@ namespace fs = std::filesystem;
 #endif
 #endif
 
-//this helps later on just trust me
+// this helps later on just trust me
 #define MODAPI_ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
 
-std::map<std::string, ModInfo> langMap;
+std::map<std::string, int> langMap;
 
 std::vector<ModInfo> modList;
 std::vector<ModCallback> modCallbackList[MODCB_MAX];
+
+// did we try to load a logic of a different lang? load it later
+std::vector<int> waitList;
 
 void *modFunctionTable[ModTable_Max];
 
@@ -78,16 +81,18 @@ void sortMods()
 
 void loadMods()
 {
+    using namespace std;
     modList.clear();
     langMap.clear();
+    waitList.clear();
     for (int c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
     char modBuf[0x100];
     sprintf(modBuf, "%smods/", userFileDir);
     fs::path modPath(modBuf);
 
     if (fs::exists(modPath) && fs::is_directory(modPath)) {
-        std::string mod_config = modPath.string() + "/modconfig.ini";
-        FileIO *configFile     = fOpen(mod_config.c_str(), "r");
+        string mod_config  = modPath.string() + "/modconfig.ini";
+        FileIO *configFile = fOpen(mod_config.c_str(), "r");
         if (configFile) {
             fClose(configFile);
             auto ini = iniparser_load(mod_config.c_str());
@@ -98,12 +103,22 @@ void loadMods()
 
             for (int m = 0; m < c; ++m) {
                 ModInfo info;
-                if (loadMod(&info, modPath.string(), std::string(keys[m] + 5), iniparser_getboolean(ini, keys[m], false))) {
-                    if (info.language)
-                        langMap.insert(std::pair<std::string, ModInfo>(info.language, info));
-                    modList.push_back(info);
+                bool32 active = iniparser_getboolean(ini, keys[m], false);
+                bool32 loaded = loadMod(&info, modPath.string(), string(keys[m] + 5), active);
+                if (info.language && active) {
+                    if (info.language == (const char *)1 && !loaded)
+                        waitList.push_back(modList.size());
+                    else
+                        langMap.insert(pair<string, int>(info.language, modList.size()));
                 }
+                modList.push_back(info);
             }
+        }
+
+        // try the waitlist
+        for (int &m : waitList) {
+            loadMod(&modList[m], modPath.string(), modList[m].folder, true);
+            modList[m].language = 0;
         }
 
         try {
@@ -118,17 +133,9 @@ void loadMods()
                     const std::string mod_inifile = modDir + "/mod.ini";
                     std::string folder            = modDirPath.filename().string();
 
-                    bool flag = true;
-                    for (int m = 0; m < modList.size(); ++m) {
-                        if (modList[m].folder == folder) {
-                            flag = false;
-                            break;
-                        }
-                    }
-
-                    if (flag && loadMod(&info, modPath.string(), modDirPath.filename().string(), false)) {
+                    if (std::find_if(modList.begin(), modList.end(), [&folder](ModInfo m) { return m.folder == folder; }) == modList.end()) {
+                        loadMod(&info, modPath.string(), modDirPath.filename().string(), false);
                         modList.push_back(info);
-                        if (info.language) langMap.insert(std::pair<std::string, ModInfo>(info.language, info));
                     }
                 }
             }
@@ -286,22 +293,28 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 }
                 if (!mode) {
                     // lang mod time
-                    int i = 0;
+                    int i      = 0;
+                    bool found = false;
                     for (auto ext : langMap) {
                         i++;
-                        if (MODAPI_ENDS_WITH(ext.first.c_str()))
+                        if (MODAPI_ENDS_WITH(ext.first.c_str())) {
+                            found = true;
                             break;
+                        }
                         file = fs::path(modDir + "/" + buf + ext.first);
                         if (fs::exists(file)) {
                             buf += ext.first;
+                            found = true;
                             break;
                         }
                     }
-                    if (i != langMap.size())
+                    if (found)
                         mode = i + 1;
                 }
 
                 if (!mode) {
+                    // can be a lang not seen yet, set the language flag
+                    info->language = (const char *)1;
                     iniparser_freedict(ini);
                     return false;
                 }
@@ -328,6 +341,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                             if (newLogicLink) {
                                 info->language = (const char *)languageSetup; // little bit of cheating
                                 info->linkModLogic.push_back(newLogicLink);
+                                linked = true;
                             }
                         }
                         else {
@@ -339,7 +353,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         }
                     }
 
-                    if (info->language) {
+                    if (info->language && active) {
                         GameInfo linkInfo;
 
                         linkInfo.functionPtrs = RSDKFunctionTable;
@@ -363,15 +377,23 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         linkInfo.screenInfo = screens;
                         linkInfo.modPtrs    = modFunctionTable;
 
-                        info->language = ("." + std::string(((langSetup)info->language)(&linkInfo))).c_str();
-                        linked         = true;
+                        const char *fid = info->folder.c_str();
+                        std::string res = ((langSetup)info->language)(&linkInfo, fid);
+                        res             = "." + res;
+                        char buf[0x10];
+                        memset(buf, 0, 0x10); // hwhat
+                        res.copy(buf, res.size());
+                        info->language = buf;
                     }
                 }
                 else { // mode must be over 1
                     // index
                     auto it = langMap.begin();
                     std::advance(it, mode - 2);
-                    info->linkModLogic.push_back((modLink)(it->second.linkModLogic[0]((GameInfo *)info, buf.c_str())));
+                    const char *fid = info->folder.c_str();
+                    const char *log = buf.c_str();
+                    modLink res     = ((newLangLink)modList[it->second].linkModLogic[0])(fid, log);
+                    info->linkModLogic.push_back(res);
                     linked = true;
                 }
 

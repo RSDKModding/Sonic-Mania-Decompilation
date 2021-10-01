@@ -63,7 +63,8 @@ struct ModPublicFunctionInfo {
 };
 
 typedef bool (*modLink)(GameInfo *, const char *);
-typedef const char* (*langSetup)(GameInfo *);
+typedef const char* (*langSetup)(GameInfo *, const char*);
+typedef modLink (*newLangLink)(const char *, const char *);
 
 struct ModInfo {
     std::string name;
@@ -79,8 +80,6 @@ struct ModInfo {
     std::map<std::string, std::map<std::string, std::string>> config;
     const char* language = NULL;
 };
-
-extern std::map<std::string, ModInfo> langMap;
 
 extern std::vector<ModInfo> modList;
 extern std::vector<ModCallback> modCallbackList[MODCB_MAX];
