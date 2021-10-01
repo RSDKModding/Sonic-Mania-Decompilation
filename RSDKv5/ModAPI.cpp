@@ -139,12 +139,15 @@ void loadMods()
                     else
                         langMap.insert(pair<string, int>(info.language, modList.size()));
                 }
+                if (!loaded) 
+                    info.active = false;                
                 modList.push_back(info);
             }
         }
 
         // try the waitlist
         for (int &m : waitList) {
+            modList[m].language = 0;
             loadMod(&modList[m], modPath.string(), modList[m].folder, true);
             modList[m].language = 0;
         }
