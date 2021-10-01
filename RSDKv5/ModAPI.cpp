@@ -98,9 +98,11 @@ void sortMods()
     });
 }
 
-void unloadMods() {
-    for (ModInfo& mod : modList) {
-        if (mod.unloadMod) mod.unloadMod();
+void unloadMods()
+{
+    for (ModInfo &mod : modList) {
+        if (mod.unloadMod)
+            mod.unloadMod();
     }
     modList.clear();
     langMap.clear();
@@ -286,7 +288,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::string buf;
             while (std::getline(stream, buf, ',')) {
                 int mode = 0;
-                buf = trim(buf);
+                buf      = trim(buf);
 #if RETRO_PLATFORM == RETRO_WIN
                 if (MODAPI_ENDS_WITH(".dll"))
                     mode = 1;
@@ -378,7 +380,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                                 linked = true;
                             }
                         }
-                        info->unloadMod = (void(*)())getAddress(link_handle, "UnloadMod");
+                        info->unloadMod = (void (*)())getAddress(link_handle, "UnloadMod");
                     }
 
                     if (info->language && active) {
@@ -420,10 +422,10 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     std::advance(it, mode - 2);
                     const char *fid = info->folder.c_str();
                     const char *log = buf.c_str();
-                    int isSTD = 0;
-                    modLink res     = (*(newLangLink*)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
-                    if (isSTD) 
-                        info->linkModLogic.push_back(*(modLinkSTD*)res);
+                    int isSTD       = 0;
+                    modLink res     = (*(newLangLink *)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
+                    if (isSTD)
+                        info->linkModLogic.push_back(*(modLinkSTD *)res);
                     else
                         info->linkModLogic.push_back(res);
                     linked = true;
@@ -471,7 +473,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::istringstream stream(cfg);
             std::string buf;
             while (std::getline(stream, buf, ',')) {
-                buf = trim(buf);
+                buf      = trim(buf);
                 int mode = 0;
                 if (MODAPI_ENDS_WITH(".ini"))
                     mode = 1;
@@ -618,10 +620,7 @@ bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, Te
     return false;
 }
 
-void AddModCallback(int callbackID, ModCallback callback)
-{
-    return AddModCallback_STD(callbackID, callback);
-}
+void AddModCallback(int callbackID, ModCallback callback) { return AddModCallback_STD(callbackID, callback); }
 
 void AddModCallback_STD(int callbackID, ModCallbackSTD callback)
 {
@@ -1067,8 +1066,9 @@ void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, ui
                                  editorLoad, serialize, inherited);
 }
 
-void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update, std::function<void(void)> lateUpdate,
-                           std::function<void(void)> staticUpdate, std::function<void(void)> draw, std::function<void(void*)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update,
+                           std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
+                           std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                            std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
 {
     int preCount = objectCount + 1;
@@ -1120,7 +1120,7 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize
     }
 
     RegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
-                   serialize);
+                       serialize);
 
     if (inherited) {
         ObjectInfo *info = &objectList[objectCount - 1];

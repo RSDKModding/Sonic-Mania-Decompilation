@@ -19,7 +19,7 @@ void *link_handle = NULL;
 #endif
 
 int *globalVarsPtr = NULL;
-RetroEngine engine  = RetroEngine();
+RetroEngine engine = RetroEngine();
 
 bool32 processEvents()
 {
@@ -321,8 +321,8 @@ void runRetroEngine()
             sceneInfo.classCount = pre.classCount;
             if (pre.state == ENGINESTATE_LOAD) {
                 sceneInfo.activeCategory = pre.activeCategory;
-                sceneInfo.listPos = pre.listPos;
-            } 
+                sceneInfo.listPos        = pre.listPos;
+            }
 #if RETRO_USING_SDL2
             SDL_SetWindowTitle(engine.window, gameVerInfo.gameName);
 #endif
@@ -557,6 +557,7 @@ void runRetroEngine()
     writeSettings(false);
     releaseUserData();
     ReleaseStorage();
+    unloadMods();
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
     SDL_Quit();
@@ -822,27 +823,27 @@ void InitScriptSystem()
         if (!hLibModule)
             hLibModule = LoadLibraryA(gameLogicName);
 
-    if (hLibModule) {
-        linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
-        if (linkGameLogic) {
-            linkGameLogic(&info);
-            linked = true;
+        if (hLibModule) {
+            linkPtr linkGameLogic = (linkPtr)GetProcAddress(hLibModule, "LinkGameLogicDLL");
+            if (linkGameLogic) {
+                linkGameLogic(&info);
+                linked = true;
+            }
         }
-    }
 #endif
 #if RETRO_PLATFORM == RETRO_OSX
-    char buffer[0x100];
-    sprintf(buffer, "%s%s.dylib", userFileDir, gameLogicName);
-    if (!link_handle)
-        link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
+        char buffer[0x100];
+        sprintf(buffer, "%s%s.dylib", userFileDir, gameLogicName);
+        if (!link_handle)
+            link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
 
-    if (link_handle) {
-        linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
-        if (linkGameLogic) {
-            linkGameLogic(&info);
-            linked = true;
+        if (link_handle) {
+            linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
+            if (linkGameLogic) {
+                linkGameLogic(&info);
+                linked = true;
+            }
         }
-    }
 #endif
 #if RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
         sprintf(gameLogicName, "%s%s.so", userFileDir, gameLogicName);

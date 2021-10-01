@@ -68,9 +68,9 @@ struct ModPublicFunctionInfo {
 };
 
 typedef bool (*modLink)(GameInfo *, const char *);
-typedef std::function<bool(GameInfo*, const char*)> modLinkSTD;
+typedef std::function<bool(GameInfo *, const char *)> modLinkSTD;
 typedef const char *(*langSetup)(GameInfo *, const char *);
-typedef modLink (*newLangLink)(const char *, const char *, int*);
+typedef modLink (*newLangLink)(const char *, const char *, int *);
 
 struct ModInfo {
     std::string name;
@@ -95,6 +95,7 @@ extern void *modFunctionTable[ModTable_Max];
 extern int currentObjectID;
 
 void initModAPI();
+void unloadMods();
 void loadMods();
 bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active);
 void saveMods();
