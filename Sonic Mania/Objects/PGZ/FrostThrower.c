@@ -8,15 +8,9 @@ void FrostThrower_Update(void)
     StateMachine_Run(entity->state);
 }
 
-void FrostThrower_LateUpdate(void)
-{
+void FrostThrower_LateUpdate(void) {}
 
-}
-
-void FrostThrower_StaticUpdate(void)
-{
-
-}
+void FrostThrower_StaticUpdate(void) {}
 
 void FrostThrower_Draw(void)
 {
@@ -26,7 +20,7 @@ void FrostThrower_Draw(void)
         FrostThrower_Unknown1();
 }
 
-void FrostThrower_Create(void* data)
+void FrostThrower_Create(void *data)
 {
     RSDK_THIS(FrostThrower);
     entity->active        = ACTIVE_BOUNDS;
@@ -128,9 +122,9 @@ void FrostThrower_Unknown5(void)
     RSDK_THIS(FrostThrower);
     if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
         entity->active = ACTIVE_NORMAL;
-        entity->timer       = 0;
-        entity->flag        = true;
-        entity->state       = FrostThrower_Unknown6;
+        entity->timer  = 0;
+        entity->flag   = true;
+        entity->state  = FrostThrower_Unknown6;
         RSDK.PlaySfx(FrostThrower->sfxFrostThrower, false, 255);
     }
 }
@@ -188,7 +182,7 @@ void FrostThrower_Unknown6(void)
 
     FrostThrower_Unknown3();
     FrostThrower_Unknown4();
-    
+
     ++entity->timer;
     if (entity->timer >= entity->duration) {
         entity->state = FrostThrower_Unknown7;
@@ -253,24 +247,18 @@ void FrostThrower_Unknown7(void)
 
     if (entity->timer >= 20) {
         entity->active = ACTIVE_BOUNDS;
-        entity->flag        = false;
-        entity->state       = FrostThrower_Unknown5;
-        entity->timer       = 0;
+        entity->flag   = false;
+        entity->state  = FrostThrower_Unknown5;
+        entity->timer  = 0;
     }
     else {
         entity->timer++;
     }
 }
 
-void FrostThrower_EditorDraw(void)
-{
+void FrostThrower_EditorDraw(void) {}
 
-}
-
-void FrostThrower_EditorLoad(void)
-{
-
-}
+void FrostThrower_EditorLoad(void) {}
 
 void FrostThrower_Serialize(void)
 {
@@ -278,4 +266,3 @@ void FrostThrower_Serialize(void)
     RSDK_EDITABLE_VAR(FrostThrower, VAR_UINT16, intervalOffset);
     RSDK_EDITABLE_VAR(FrostThrower, VAR_UINT16, duration);
 }
-

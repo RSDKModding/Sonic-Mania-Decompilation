@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxFrostThrower;
+    ushort sfxFreeze;
 } ObjectAcetone;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    ushort timer;
+    Animator animator1;
+    Animator animator2;
+    ushort interval;
+    ushort intervalOffset;
+    ushort duration;
+    Hitbox hitbox;
+    bool32 flag;
+    int field_A4[4];
+    int field_B4[4];
+    Vector2 field_C4[12];
 } EntityAcetone;
 
 // Object Entity
@@ -28,6 +43,13 @@ void Acetone_EditorLoad(void);
 void Acetone_Serialize(void);
 
 // Extra Entity Functions
+void Acetone_Unknown1(void);
+void Acetone_Unknown2(void);
+void Acetone_Unknown3(void);
+void Acetone_Unknown4(void);
+void Acetone_Unknown5(void);
+void Acetone_Unknown6(void);
+void Acetone_Unknown7(void);
 
 
 #endif //!OBJ_ACETONE_H

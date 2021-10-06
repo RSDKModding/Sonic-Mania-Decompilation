@@ -85,9 +85,14 @@ void InvisibleBlock_DrawSprites(void)
     }
 }
 
-void InvisibleBlock_EditorDraw(void) {}
+void InvisibleBlock_EditorDraw(void) { InvisibleBlock_DrawSprites(); }
 
-void InvisibleBlock_EditorLoad(void) {}
+void InvisibleBlock_EditorLoad(void)
+{
+    InvisibleBlock->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(InvisibleBlock->spriteIndex, 2, &InvisibleBlock->animator, true, 0);
+    InvisibleBlock->animator.frameID = 10;
+}
 
 void InvisibleBlock_Serialize(void)
 {
