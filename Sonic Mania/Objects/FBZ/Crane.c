@@ -94,7 +94,7 @@ void Crane_HandlePlayerInteractions(void)
         if (!entity->grabbedPlayer) {
             if ((entity->playerType || !player->sidekick) && (entity->playerType != 1 || player->sidekick)) {
                 if (Player_CheckCollisionTouch(player, entity, &Crane->hitbox2)) {
-                    RSDK.PlaySFX(Crane->sfxGrab, false, 255);
+                    RSDK.PlaySfx(Crane->sfxGrab, false, 255);
                     entity->state       = Crane_State_Unknown5;
                     entity->isPermanent = true;
                     RSDK.SetSpriteAnimation(Crane->aniFrames, 0, &entity->animator1, true, 0);

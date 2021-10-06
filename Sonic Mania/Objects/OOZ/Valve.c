@@ -15,7 +15,7 @@ void Valve_Update(void)
     }
 
     if (entity->animator2.animationID == 2 && entity->animator2.frameID == 5 && entity->animator2.animationTimer == 1)
-        RSDK.PlaySFX(Valve->sfxClick, 0, 255);
+        RSDK.PlaySfx(Valve->sfxClick, 0, 255);
 }
 
 void Valve_LateUpdate(void) {}

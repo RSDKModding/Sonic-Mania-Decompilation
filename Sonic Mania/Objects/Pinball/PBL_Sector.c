@@ -14,7 +14,7 @@ void PBL_Sector_Update(void)
                     foreach_active(PBL_HUD, hud) { PBL_HUD_DisplayMessage(hud, "GO! GO!", 7); }
                     player->position.y = entity->position.y - entity->size.y - 0xC0000;
                     player->active     = ACTIVE_NEVER;
-                    RSDK.PlaySFX(PBL_Crane->sfxBackGlass, 0, 255);
+                    RSDK.PlaySfx(PBL_Crane->sfxBackGlass, 0, 255);
                     PBL_Setup_GiveScore(1000);
                     if (entity->craneID >= PBL_Setup->sectorCount) {
                         entity->active = ACTIVE_NEVER;

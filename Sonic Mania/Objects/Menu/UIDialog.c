@@ -347,7 +347,7 @@ void UIDialog_Unknown11(void)
     pos.x = 0;
     pos.y = 0;
     if (entity->field_5C == 1) {
-        RSDK.PlaySFX(UIWidgets->sfx_Woosh, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Woosh, false, 255);
         UIControl_Unknown12((Entity *)entity->parent);
     }
 
@@ -365,7 +365,7 @@ void UIDialog_Unknown11(void)
                 entity->drawPos.x = pos.x;
                 entity->drawPos.y = pos.y;
                 if (entity->field_5C - 16 == 1 && entity->field_B4)
-                    RSDK.PlaySFX(UIWidgets->sfx_Event, false, 255);
+                    RSDK.PlaySfx(UIWidgets->sfx_Event, false, 255);
                 ++entity->field_5C;
             }
         }

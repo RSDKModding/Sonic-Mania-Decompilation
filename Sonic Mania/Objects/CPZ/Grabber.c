@@ -104,7 +104,7 @@ void Grabber_CheckPlayerCollisions(void)
         if (player != (EntityPlayer *)entity->grabbedPlayer) {
             if (entity->state == Grabber_State_Unknown3) {
                 if (Player_CheckCollisionTouch(player, entity, &Grabber->hitbox2)) {
-                    RSDK.PlaySFX(Grabber->sfxGrab, 0, 255);
+                    RSDK.PlaySfx(Grabber->sfxGrab, 0, 255);
                     entity->state           = Grabber_State_Unknown7;
                     entity->isPermanent     = true;
                     entity->grabbedPlayer   = (Entity*)player;
@@ -164,7 +164,7 @@ void Grabber_HandleExplode(void)
                 entity->grabbedPlayer = 0;
             }
             CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySFX(Explosion->sfx_Destroy, 0, 255);
+            RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
             destroyEntity(entity);
         }
     }

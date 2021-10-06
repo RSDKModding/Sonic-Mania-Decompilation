@@ -297,7 +297,7 @@ typedef struct {
     byte (*GetTileBehaviour)(ushort tileID, byte cPlane);
     void (*SetTileBehaviour)(ushort tileID, byte cPlane, byte value);
     int (*GetSFX)(const char *path);
-    int (*PlaySFX)(ushort sfx, int loop, int pan);
+    int (*PlaySfx)(ushort sfx, int loop, int pan);
     void (*StopSFX)(ushort sfx);
     int (*PlayStream)(const char *filename, uint slot, uint startPos, uint loopPoint, bool32 loadASync);
     int (*SetChannelAttributes)(byte slot, float volume, float pan, float speed);

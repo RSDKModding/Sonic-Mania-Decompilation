@@ -577,7 +577,7 @@ void Platform_State_PlayerActivated(void)
             if (entity->amplitude.y <= 0) {
                 entity->amplitude.y = 0;
                 if (entity->activeScreens && Platform->useClack)
-                    RSDK.PlaySFX(Platform->sfx_Clack, 0, 255);
+                    RSDK.PlaySfx(Platform->sfx_Clack, 0, 255);
             }
         }
     }
@@ -587,7 +587,7 @@ void Platform_State_PlayerActivated(void)
             if (entity->amplitude.y >= entity->amplitude.x) {
                 entity->amplitude.y = entity->amplitude.x;
                 if (entity->activeScreens && Platform->useClack)
-                    RSDK.PlaySFX(Platform->sfx_Clack, 0, 255);
+                    RSDK.PlaySfx(Platform->sfx_Clack, 0, 255);
             }
         }
     }
@@ -652,7 +652,7 @@ void Platform_State_Pushable(void)
 
     if (entity->velocity.x > 0 || entity->velocity.x < 0) {
         if (!Platform->playingPushSFX) {
-            RSDK.PlaySFX(Platform->sfx_Push, true, 255);
+            RSDK.PlaySfx(Platform->sfx_Push, true, 255);
             Platform->playingPushSFX = true;
         }
     }
@@ -764,7 +764,7 @@ void Platform_State_MovingSpike(void)
     entity->drawPos.y = entity->centerPos.y + y1 - y2;
     if (((move >> 16) & 1) != entity->hasTension) {
         if (entity->activeScreens)
-            RSDK.PlaySFX(Platform->sfx_Clang, 0, 255);
+            RSDK.PlaySfx(Platform->sfx_Clang, 0, 255);
         entity->hasTension = (move >> 16) & 1;
     }
     entity->velocity.x = entity->drawPos.x + drawX;
@@ -859,7 +859,7 @@ void Platform_State_14(void)
                 entity->angle = entity->groundVel + 0x100;
             }
             else {
-                RSDK.PlaySFX(Platform->sfx_Clacker, 0, 255);
+                RSDK.PlaySfx(Platform->sfx_Clacker, 0, 255);
                 entity->angle = entity->groundVel + 0x100;
             }
         }
@@ -869,7 +869,7 @@ void Platform_State_14(void)
             entity->angle = entity->groundVel + 0x100;
         }
         else {
-            RSDK.PlaySFX(Platform->sfx_Clacker, 0, 255);
+            RSDK.PlaySfx(Platform->sfx_Clacker, 0, 255);
             entity->angle = entity->groundVel + 0x100;
         }
     }

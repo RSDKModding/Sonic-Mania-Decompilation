@@ -133,7 +133,7 @@ void Tornado_Unknown3(void)
     Tornado_Unknown5();
     if (++entity->timer == 180) {
         entity->timer = 0;
-        RSDK.PlaySFX(Tornado->sfxImpact, false, 255);
+        RSDK.PlaySfx(Tornado->sfxImpact, false, 255);
         entity->field_94 = -0x20000;
         entity->field_98 = -0x40000;
         RSDK.SetSpriteAnimation(Tornado->knuxFrames, 4, &entity->animatorKnux, false, 0);
@@ -368,7 +368,7 @@ void Tornado_Unknown7(void)
     entity->position.y += TornadoPath->field_8.y;
     if (!(Zone->timer % 3)) {
         if (entity->onGround) {
-            RSDK.PlaySFX(Tornado->sfxExplosion, false, 255);
+            RSDK.PlaySfx(Tornado->sfxExplosion, false, 255);
         }
         if (Zone->timer & 4) {
             EntityExplosion *explosion =

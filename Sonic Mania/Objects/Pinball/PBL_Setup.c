@@ -198,7 +198,7 @@ void PBL_Setup_GiveScore(int score)
     }
 
     if (PBL_Setup->score > PBL_Setup->score1UP) {
-        RSDK.PlaySFX(PBL_Setup->sfxContinue, 0, 255);
+        RSDK.PlaySfx(PBL_Setup->sfxContinue, 0, 255);
 
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         if (saveRAM->continues < 20)

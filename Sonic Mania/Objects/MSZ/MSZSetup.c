@@ -321,7 +321,7 @@ void MSZSetup_Unknown10(void)
         }
         Zone->screenBoundsL1[0] = 0x2980;
         Zone->screenBoundsL2[0] = 0x29800000;
-        MSZSetup->chuggaChannel = RSDK.PlaySFX(MSZSetup->sfxLocoChugga, 1, 255);
+        MSZSetup->chuggaChannel = RSDK.PlaySfx(MSZSetup->sfxLocoChugga, 1, 255);
         RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, 0.0, 0.0, 1.0);
         MSZSetup_Unknown2();
         MSZSetup_Unknown4(0);

@@ -124,7 +124,7 @@ void PetalPile_State_HandleInteractions(void)
                     entity->field_8C = player->groundVel >> 1;
                     entity->field_84 = player->position.x - entity->position.x;
                     entity->field_88 = 0;
-                    RSDK.PlaySFX(PetalPile->sfxPetals, false, 255);
+                    RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                     entity->state = PetalPile_State_Unknown3;
                     foreach_break;
                 }
@@ -148,7 +148,7 @@ void PetalPile_State_HandleInteractions(void)
                 entity->field_98 = 0xF5555;
                 entity->field_84 = explosion->position.x - entity->position.x;
                 entity->field_88 = 0;
-                RSDK.PlaySFX(PetalPile->sfxPetals, false, 255);
+                RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                 entity->state = PetalPile_State_Unknown3;
                 foreach_break;
             }

@@ -99,7 +99,7 @@ void Announcer_AnnounceGoal(int screen)
     entity->stateDraw       = Announcer_Unknown4;
     entity->screen          = screen;
     RSDK.SetSpriteAnimation(Announcer->spriteIndex, 0, &entity->animator, true, 0);
-    RSDK.PlaySFX(Announcer->sfx_Goal, 0, 255);
+    RSDK.PlaySfx(Announcer->sfx_Goal, 0, 255);
 }
 void Announcer_Unknown3(void)
 {
@@ -157,7 +157,7 @@ void Announcer_Unknown5(void)
         }
         else {
             if (!entity->timer) {
-                RSDK.PlaySFX(Announcer->sfx_Go, 0, 255);
+                RSDK.PlaySfx(Announcer->sfx_Go, 0, 255);
                 RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 3);
             }
 
@@ -183,15 +183,15 @@ void Announcer_Unknown5(void)
                 switch (entity->playerID) {
                     default: break;
                     case 1:
-                        RSDK.PlaySFX(Announcer->sfx_One, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfx_One, 0, 255);
                         RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 2);
                         break;
                     case 2:
-                        RSDK.PlaySFX(Announcer->sfx_Two, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfx_Two, 0, 255);
                         RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 1);
                         break;
                     case 3:
-                        RSDK.PlaySFX(Announcer->sfx_Three, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfx_Three, 0, 255);
                         RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 0);
                         break;
                 }
@@ -249,11 +249,11 @@ void Announcer_State_AnnounceWinner(void)
     RSDK_THIS(Announcer);
     if (entity->timer >= 150) {
         switch (entity->playerID) {
-            case 0: RSDK.PlaySFX(Announcer->sfx_Player1, 0, 255); break;
-            case 1: RSDK.PlaySFX(Announcer->sfx_Player2, 0, 255); break;
+            case 0: RSDK.PlaySfx(Announcer->sfx_Player1, 0, 255); break;
+            case 1: RSDK.PlaySfx(Announcer->sfx_Player2, 0, 255); break;
 #if RETRO_USE_PLUS
-            case 2: RSDK.PlaySFX(Announcer->sfx_Player3, 0, 255); break;
-            case 3: RSDK.PlaySFX(Announcer->sfx_Player4, 0, 255); break;
+            case 2: RSDK.PlaySfx(Announcer->sfx_Player3, 0, 255); break;
+            case 3: RSDK.PlaySfx(Announcer->sfx_Player4, 0, 255); break;
 #endif
             default: break;
         }
@@ -261,7 +261,7 @@ void Announcer_State_AnnounceWinner(void)
     }
     else {
         if (entity->timer == 30)
-            RSDK.PlaySFX(Announcer->sfx_TheWinnerIs, 0, 255);
+            RSDK.PlaySfx(Announcer->sfx_TheWinnerIs, 0, 255);
         ++entity->timer;
     }
 }
@@ -273,10 +273,10 @@ void Announcer_State_AnnounceDraw(void)
     }
     else {
         if (!entity->playerID) {
-            RSDK.PlaySFX(Announcer->sfx_ItsADraw, 0, 255);
+            RSDK.PlaySfx(Announcer->sfx_ItsADraw, 0, 255);
         }
         else if (entity->playerID == 1) {
-            RSDK.PlaySFX(Announcer->sfx_ItsADraw_Set, 0, 255);
+            RSDK.PlaySfx(Announcer->sfx_ItsADraw_Set, 0, 255);
         }
         destroyEntity(entity);
     }
@@ -286,12 +286,12 @@ void Announcer_State_AnnounceWinPlayer(void)
     RSDK_THIS(Announcer);
     if (entity->timer >= 30) {
         switch (entity->playerID) {
-            case ID_SONIC: RSDK.PlaySFX(Announcer->sfx_SonicWins, 0, 255); break;
-            case ID_TAILS: RSDK.PlaySFX(Announcer->sfx_TailsWins, 0, 255); break;
-            case ID_KNUCKLES: RSDK.PlaySFX(Announcer->sfx_KnuxWins, 0, 255); break;
+            case ID_SONIC: RSDK.PlaySfx(Announcer->sfx_SonicWins, 0, 255); break;
+            case ID_TAILS: RSDK.PlaySfx(Announcer->sfx_TailsWins, 0, 255); break;
+            case ID_KNUCKLES: RSDK.PlaySfx(Announcer->sfx_KnuxWins, 0, 255); break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: RSDK.PlaySFX(Announcer->sfx_MightyWins, 0, 255); break;
-            case ID_RAY: RSDK.PlaySFX(Announcer->sfx_RayWins, 0, 255); break;
+            case ID_MIGHTY: RSDK.PlaySfx(Announcer->sfx_MightyWins, 0, 255); break;
+            case ID_RAY: RSDK.PlaySfx(Announcer->sfx_RayWins, 0, 255); break;
 #endif
             default: break;
         }

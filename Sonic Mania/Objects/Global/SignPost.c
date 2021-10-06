@@ -335,7 +335,7 @@ void SignPost_State_Fall(void)
                 if (Player_CheckCollisionTouch(player, entity, &SignPost->hitbox)) {
                     entity->velocity.x = (entity->position.x - player->position.x) >> 4;
                     entity->velocity.y = -0x20000;
-                    RSDK.PlaySFX(SignPost->sfx_Twinkle, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfx_Twinkle, 0, 255);
                     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
                     scoreBonus->drawOrder    = Zone->drawOrderHigh;
                     scoreBonus->animator.frameID = 0;
@@ -374,7 +374,7 @@ void SignPost_State_Fall(void)
         foreach_active(ItemBox, itemBox) {
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, entity, &SignPost->itemBoxHitbox)) {
-                    RSDK.PlaySFX(SignPost->sfx_BubbleBounce, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfx_BubbleBounce, 0, 255);
                     itemBox->velocity.y = -0x50000;
                     itemBox->hidden     = 0;
                     itemBox->state      = ItemBox_State_Falling;
@@ -391,7 +391,7 @@ void SignPost_State_Fall(void)
             }
         }
         if (entity->velocity.y >= 0) {
-            RSDK.PlaySFX(SignPost->sfx_Slide, 0, 255);
+            RSDK.PlaySfx(SignPost->sfx_Slide, 0, 255);
             entity->spinCount  = 4;
             entity->velocity.y = 0;
             Music_FadeOut(0.025);
@@ -435,7 +435,7 @@ void SignPost_CheckTouch(void)
                 if (flag) {
                     if (!((1 << p) & entity->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         Announcer_AnnounceGoal(player->camera->screenID);
-                    RSDK.PlaySFX(SignPost->sfx_SignPost, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfx_SignPost, 0, 255);
                     entity->active = ACTIVE_NORMAL;
                     if (player->superState == 2)
                         player->superState = 3;
@@ -462,7 +462,7 @@ void SignPost_CheckTouch(void)
 #endif
                                 default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
                             }
-                            RSDK.PlaySFX(SignPost->sfx_SignPost2P, 0, 255);
+                            RSDK.PlaySfx(SignPost->sfx_SignPost2P, 0, 255);
                         }
 
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

@@ -17,11 +17,11 @@ void PBL_TargetBumper_LateUpdate(void)
     int z = entity->position.y;
 
     Matrix *mat = &PBL_Camera->matrix1;
-    entity->depth = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
-    if (entity->depth >= 0x4000) {
+    entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (entity->depth3D >= 0x4000) {
         int depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
                      + ((mat->values[0][1] * (entity->height >> 8)) & 0xFFFFFF00));
-        depth /= entity->depth;
+        depth /= entity->depth3D;
     }
 }
 
@@ -30,7 +30,7 @@ void PBL_TargetBumper_StaticUpdate(void) {}
 void PBL_TargetBumper_Draw(void)
 {
     RSDK_THIS(PBL_TargetBumper);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         uint colour = RSDK.GetPaletteEntry(0, (entity->field_60 & 0xFF) - 80);
         RSDK.SetDiffuseColour(PBL_TargetBumper->sceneIndex, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
         RSDK.Prepare3DScene(PBL_TargetBumper->sceneIndex);
@@ -122,7 +122,7 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                     entity->state      = PBL_TargetBumper_Unknown3;
                     entity->velocity.y = -8;
                     PBL_Setup_GiveScore(1000);
-                    RSDK.PlaySFX(PBL_TargetBumper->sfxTargetBumper, false, 255);
+                    RSDK.PlaySfx(PBL_TargetBumper->sfxTargetBumper, false, 255);
                     break;
                 case 2:
                     if (velX < 0) {

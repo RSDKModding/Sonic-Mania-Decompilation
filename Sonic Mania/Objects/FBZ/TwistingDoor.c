@@ -133,7 +133,7 @@ void TwistingDoor_Unknown1(void)
     RSDK_THIS(TwistingDoor);
     EntityButton *button = entity->buttonPtr;
     if (button->activated) {
-        RSDK.PlaySFX(TwistingDoor->sfxOpen, 0, 255);
+        RSDK.PlaySfx(TwistingDoor->sfxOpen, 0, 255);
         entity->active        = ACTIVE_NORMAL;
         entity->state         = TwistingDoor_Unknown2;
         entity->collapseDelay = entity->type < 2 ? 64 : 128;

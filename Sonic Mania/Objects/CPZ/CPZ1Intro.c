@@ -261,7 +261,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
 
 
     if (!host->timer) {
-        RSDK.PlaySFX(CPZ1Intro->sfxChemDrop, 0, 255);
+        RSDK.PlaySfx(CPZ1Intro->sfxChemDrop, 0, 255);
         EntityDebris *debris =
             (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, player1->position.x + 0x20000, (RSDK_screens->position.y - 8) << 16);
         debris->updateRange.x = 0x800000;
@@ -279,7 +279,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
 
     int playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
     if (debris->position.y >= playerY) {
-        RSDK.PlaySFX(CPZ1Intro->sfxDNABurst, 0, 255);
+        RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, 0, 255);
         ParticleHelpers_Unknown1(debris->position.x, playerY);
         destroyEntity(debris);
         if ((globals->playerID & 0xFFFFFF00) == ID_TAILS_ASSIST)

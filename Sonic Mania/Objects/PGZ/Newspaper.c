@@ -93,7 +93,7 @@ void Newspaper_HandleInteractions(void)
                 RSDK.SetSpriteAnimation(Newspaper->aniFrames, RSDK.Rand(0, 2) + 2, &debris->animator, true, RSDK.Rand(0, 6));
 
                 if (Newspaper->sfxPaperStack) {
-                    RSDK.PlaySFX(Newspaper->sfxPaperStack, false, 255);
+                    RSDK.PlaySfx(Newspaper->sfxPaperStack, false, 255);
                     Newspaper->sfxPaperStack = 0;
                 }
             }

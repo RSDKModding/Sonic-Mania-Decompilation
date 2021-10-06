@@ -13,7 +13,7 @@ void BSS_Player_Update(void)
             entity->velocity.y = -0x100000;
             entity->onGround   = false;
             RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->playerAnimator, false, 0);
-            RSDK.PlaySFX(BSS_Player->sfx_Jump, 0, 255);
+            RSDK.PlaySfx(BSS_Player->sfx_Jump, 0, 255);
         }
     }
     else {

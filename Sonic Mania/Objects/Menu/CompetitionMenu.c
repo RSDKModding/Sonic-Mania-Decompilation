@@ -598,7 +598,7 @@ void CompetitionMenu_Round_ProcessInputCB(void)
             UITransition_StartTransition(CompetitionMenu_GotoCompZones, 0);
         }
 
-        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         UIControl->inputLocked = true;
     }
 }
@@ -752,7 +752,7 @@ void CompetitionMenu_Results_ProcessInputCB(void)
             Competition_ResetOptions();
             UITransition_StartTransition(CompetitionMenu_GotoCompetition, 0);
         }
-        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         UIControl->inputLocked = true;
     }
 }

@@ -52,11 +52,11 @@ void PBL_Flipper_LateUpdate(void)
     int x       = entity->position.x;
     Matrix *mat = &PBL_Camera->matrix1;
 
-    entity->depth = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
-    if (entity->depth >= 0x4000) {
+    entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (entity->depth3D >= 0x4000) {
         int depth       = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
                      + ((mat->values[0][1] * (entity->height >> 8)) & 0xFFFFFF00));
-        depth /= entity->depth;
+        depth /= entity->depth3D;
         entity->visible = abs(depth) < 256;
     }
 }
@@ -66,7 +66,7 @@ void PBL_Flipper_StaticUpdate(void) {}
 void PBL_Flipper_Draw(void)
 {
     RSDK_THIS(PBL_Flipper);
-    if (entity->depth >= 0x4000 && entity->minCraneID <= PBL_Setup->sectorID) {
+    if (entity->depth3D >= 0x4000 && entity->minCraneID <= PBL_Setup->sectorID) {
         RSDK.Prepare3DScene(PBL_Flipper->sceneIndex);
         RSDK.MatrixScaleXYZ(&entity->matrix1, entity->scale.x, entity->scale.y, 0x100);
         RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, false);
@@ -249,7 +249,7 @@ void PBL_Flipper_Unknown2(void)
     if (entity->buttonDown) {
         entity->velocity.y = 0x2000;
         entity->state      = PBL_Flipper_Unknown3;
-        RSDK.PlaySFX(PBL_Flipper->sfxFlipper, false, 255);
+        RSDK.PlaySfx(PBL_Flipper->sfxFlipper, false, 255);
     }
     PBL_Flipper_HandlePlayerInteractions();
 }

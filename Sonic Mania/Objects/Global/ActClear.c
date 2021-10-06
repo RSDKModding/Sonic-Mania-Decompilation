@@ -642,11 +642,11 @@ void ActClear_TallyScore(void)
     if (entity->scoreBonus + entity->ringBonus + entity->coolBonus <= 0) {
         entity->timer = 0;
         entity->state = ActClear_LoadNextScene;
-        RSDK.PlaySFX(ActClear->sfx_ScoreTotal, 0, 255);
+        RSDK.PlaySfx(ActClear->sfx_ScoreTotal, 0, 255);
     }
     else if (++entity->timer == 2) {
         entity->timer = 0;
-        RSDK.PlaySFX(ActClear->sfx_ScoreAdd, 0, 255);
+        RSDK.PlaySfx(ActClear->sfx_ScoreAdd, 0, 255);
     }
     Music->nextTrack = -1;
     ActClear_CheckPlayerVictory();
@@ -762,7 +762,7 @@ void ActClear_State_TAResults(void)
                 if (TimeAttackData->dbRank == 1)
                     entity->field_80 = 1;
                 entity->field_7C = 1;
-                RSDK.PlaySFX(ActClear->sfx_Event, 0, 255);
+                RSDK.PlaySfx(ActClear->sfx_Event, 0, 255);
             }
 
             if (entity->dword78 != 30) {
@@ -770,7 +770,7 @@ void ActClear_State_TAResults(void)
             }
             else {
                 if (TimeAttackData->dbRank == 1) {
-                    RSDK.PlaySFX(Announcer->sfx_NewRecordTop, 0, 255);
+                    RSDK.PlaySfx(Announcer->sfx_NewRecordTop, 0, 255);
                     --entity->dword78;
                 }
                 else {
@@ -778,7 +778,7 @@ void ActClear_State_TAResults(void)
                         --entity->dword78;
                     }
                     else {
-                        RSDK.PlaySFX(Announcer->sfx_NewRecordMid, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfx_NewRecordMid, 0, 255);
                         --entity->dword78;
                     }
                 }
@@ -819,7 +819,7 @@ void ActClear_State_TAResults(void)
         }
 
         if (RSDK_controller->keyStart.press) {
-            RSDK.PlaySFX(UIWidgets->sfx_Accept, 0, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Accept, 0, 255);
 
             RSDK_THIS(ActClear);
             if (ActClear->actID > 0 || Zone->stageFinishCallback) {

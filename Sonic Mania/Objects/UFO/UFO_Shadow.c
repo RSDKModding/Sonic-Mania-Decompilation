@@ -20,10 +20,11 @@ void UFO_Shadow_LateUpdate(void)
             int z           = entity->position.y >> 8;
             Matrix *mat     = &UFO_Camera->matWorld;
 
-            entity->depth = mat->values[2][3] + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
-            if (entity->depth >= 0x4000)
+            entity->depth3D = mat->values[2][3] + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+            if (entity->depth3D >= 0x4000)
                 entity->visible =
-                    abs((int)((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00)) / entity->depth)
+                    abs((int)((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00))
+                        / entity->depth3D)
                     < 0x100;
         }
     }
@@ -37,7 +38,7 @@ void UFO_Shadow_StaticUpdate(void) {}
 void UFO_Shadow_Draw(void)
 {
     RSDK_THIS(UFO_Shadow);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         RSDK.MatrixScaleXYZ(&entity->matrix, entity->shadowScale, 0x100, entity->shadowScale);
         RSDK.MatrixTranslateXYZ(&entity->matrix, entity->position.x, 0, entity->position.y, 0);
         RSDK.MatrixMultiply(&entity->matrix, &entity->matrix, &UFO_Camera->matWorld);

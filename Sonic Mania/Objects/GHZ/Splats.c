@@ -212,7 +212,7 @@ void Splats_Unknown5(void)
         else {
             RSDK.SetSpriteAnimation(Splats->aniFrames, 2, &entity->animator2, true, 0);
             entity->delay = entity->minDelay;
-            RSDK.PlaySFX(Splats->sfxSplatsSpawn, 0, 255);
+            RSDK.PlaySfx(Splats->sfxSplatsSpawn, 0, 255);
             EntitySplats *child = (EntitySplats *)RSDK.CreateEntity(Splats->objectID, intToVoid(1), entity->position.x, entity->position.y - 0x60000);
             child->parent       = (Entity *)entity;
             child->bounceCount  = entity->bounceCount;
@@ -246,7 +246,7 @@ void Splats_Unknown6(void)
         entity->animator1.loopIndex  = 4;
         entity->animator1.frameCount = 5;
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, 0x120000, true)) {
-            RSDK.PlaySFX(Splats->sfxSplatsLand, 0, 255);
+            RSDK.PlaySfx(Splats->sfxSplatsLand, 0, 255);
             EntitySplats *splats = (EntitySplats *)RSDK.CreateEntity(Splats->objectID, intToVoid(2), entity->position.x, entity->position.y);
             splats->direction    = entity->direction;
             entity->delay        = 4;
@@ -268,7 +268,7 @@ void Splats_Unknown7(void)
         entity->animator1.loopIndex  = 4;
         entity->animator1.frameCount = 5;
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, 0x120000, true)) {
-            RSDK.PlaySFX(Splats->sfxSplatsLand, 0, 0xFF);
+            RSDK.PlaySfx(Splats->sfxSplatsLand, 0, 0xFF);
             if (entity->bounceCount) {
                 if (++entity->activeCount < entity->bounceCount) {
                     entity->delay = 4;

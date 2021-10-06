@@ -20,7 +20,7 @@ void UFO_Sphere_LateUpdate(void)
 
     entity->worldPos.x = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
     entity->worldPos.y = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-    entity->depth      = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+    entity->depth3D    = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 }
 
 void UFO_Sphere_StaticUpdate(void) {}
@@ -29,14 +29,13 @@ void UFO_Sphere_Draw(void)
 {
     RSDK_THIS(UFO_Sphere);
     if (entity->drawOrder == 4) {
-        if (entity->depth < 0x100)
-            return;
-
-        entity->direction = entity->animator.frameID > 8;
-        entity->drawPos.x = (RSDK_screens->centerX + (entity->worldPos.x << 8) / entity->depth) << 16;
-        entity->drawPos.y = (RSDK_screens->centerY - (entity->worldPos.y << 8) / entity->depth) << 16;
-        entity->scale.x   = entity->dword9C / entity->depth;
-        entity->scale.y   = entity->dword9C / entity->depth;
+        if (entity->depth3D >= 0x100) {
+            entity->direction = entity->animator.frameID > 8;
+            entity->drawPos.x = (RSDK_screens->centerX + (entity->worldPos.x << 8) / entity->depth3D) << 16;
+            entity->drawPos.y = (RSDK_screens->centerY - (entity->worldPos.y << 8) / entity->depth3D) << 16;
+            entity->scale.x   = entity->dword9C / entity->depth3D;
+            entity->scale.y   = entity->dword9C / entity->depth3D;
+        }
     }
     RSDK.DrawSprite(&entity->animator, &entity->drawPos, true);
 }
@@ -129,12 +128,12 @@ void UFO_Sphere_CheckPlayerCollision(void)
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
                         player->state = UFO_Player_Unknown8;
                         if (UFO_Setup->rings > 0)
-                            RSDK.PlaySFX(UFO_Player->sfx_LoseRings, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfx_LoseRings, 0, 255);
                         UFO_Ring_LoseRings(player);
                         RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, 4, &entity->animator, true, 0);
                         entity->dword9C = 0x1800000;
                         entity->state   = UFO_Sphere_Unknown5;
-                        RSDK.PlaySFX(UFO_Sphere->sfx_LedgeBreak, 0, 255);
+                        RSDK.PlaySfx(UFO_Sphere->sfx_LedgeBreak, 0, 255);
                     }
                 }
             }
@@ -152,7 +151,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
                         player->state = UFO_Player_Unknown8;
                         if (UFO_Setup->rings > 0)
-                            RSDK.PlaySFX(UFO_Player->sfx_LoseRings, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfx_LoseRings, 0, 255);
                         UFO_Ring_LoseRings(player);
                     }
                 }

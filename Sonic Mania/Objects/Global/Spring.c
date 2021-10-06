@@ -137,7 +137,7 @@ void Spring_State_Vertical(void)
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
-                        RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
                     }
                 }
@@ -162,7 +162,7 @@ void Spring_State_Vertical(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (!entity->timer) {
-                    RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -206,7 +206,7 @@ void Spring_State_Horizontal(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
-                    RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -246,7 +246,7 @@ void Spring_State_Horizontal(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
-                    RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -307,7 +307,7 @@ void Spring_State_Diagonal(void)
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
-                        RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
                     }
                 }

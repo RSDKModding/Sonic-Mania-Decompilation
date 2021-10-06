@@ -457,7 +457,7 @@ bool32 EncoreIntro_CutsceneState_Unknown9(EntityCutsceneSeq *host)
     buddy->velocity.y = -0x30000;
     globals->playerID = (buddy->characterID << 8) + ID_SONIC;
     Music_FadeOut(0.025);
-    RSDK.PlaySFX(EncoreIntro->sfxHighFive, 0, 255);
+    RSDK.PlaySfx(EncoreIntro->sfxHighFive, 0, 255);
 
     if (globals->characterFlags == (ID_SONIC | ID_RAY))
         CREATE_ENTITY(AIZEncoreTutorial, intToVoid(5), (buddy->position.x >> 1) + (player->position.x >> 1), player->position.y - 0x480000);
@@ -513,7 +513,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
             }
             else {
                 if (host->timer == 496) {
-                    RSDK.PlaySFX(EncoreIntro->sfxMysticHat, 0, 255);
+                    RSDK.PlaySfx(EncoreIntro->sfxMysticHat, 0, 255);
                 }
                 else if (host->timer < 570) {
                     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
@@ -536,7 +536,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
             mystic->drawOrder  = Zone->playerDrawHigh - 1;
             destroyEntity(otherBuddy);
 
-            RSDK.PlaySFX(EncoreIntro->sfxMysticPoof, 0, 255);
+            RSDK.PlaySfx(EncoreIntro->sfxMysticPoof, 0, 255);
             CREATE_ENTITY(Explosion, intToVoid(2), mystic->position.x, mystic->position.y)->drawOrder = Zone->playerDrawHigh - 1;
             Music_PlayTrack(TRACK_HBHMISCHIEF);
 
@@ -635,7 +635,7 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
     buddy->direction  = ruby->position.x < buddy->position.x;
 
     if (host->timer == 33) {
-        RSDK.PlaySFX(EncoreIntro->sfxMysticTransform, 0, 255);
+        RSDK.PlaySfx(EncoreIntro->sfxMysticTransform, 0, 255);
         ruby->state = StateMachine_None;
     }
     else if (host->timer >= 34) {
@@ -826,7 +826,7 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
 
     switch (host->timer) {
         case 33:
-            RSDK.PlaySFX(EncoreIntro->sfxPon, 0, 255);
+            RSDK.PlaySfx(EncoreIntro->sfxPon, 0, 255);
             ruby->visible    = 1;
             ruby->position.x = mystic->position.x + 0x320000;
             ruby->position.y = mystic->position.y;
@@ -853,7 +853,7 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
             else {
                 ruby->position.y = king->position.y + 0x60000;
                 ruby->state      = StateMachine_None;
-                RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
+                RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
                 RSDK.SetSpriteAnimation(king->spriteIndex, 3, &king->animator2, true, 0);
                 return true;
             }
@@ -886,7 +886,7 @@ bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host)
         case 58:
         case 66:
         case 74:
-            RSDK.PlaySFX(EncoreIntro->sfxKingCharge, 0, 255);
+            RSDK.PlaySfx(EncoreIntro->sfxKingCharge, 0, 255);
             HeavyMystic_Unknown2();
             break;
         case 102: return true;

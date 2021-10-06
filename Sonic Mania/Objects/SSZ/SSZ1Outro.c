@@ -137,7 +137,7 @@ void SSZ1Outro_Unknown3(Entity *entity)
 {
     CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), entity->position.x, entity->position.y);
     CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-    RSDK.PlaySFX(Explosion->sfx_Destroy, 0, 255);
+    RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
     destroyEntity(entity);
 }
 

@@ -24,7 +24,7 @@ void PBL_Player_LateUpdate(void)
     Matrix *mat = &PBL_Camera->matrix1;
 
     
-    entity->depth = mat->values[2][3] + mat->values[2][0] * (entity->position.x >> 0x10) + mat->values[2][2] * (entity->position.y >> 0x10)
+    entity->depth3D = mat->values[2][3] + mat->values[2][0] * (entity->position.x >> 0x10) + mat->values[2][2] * (entity->position.y >> 0x10)
                     + mat->values[2][1] * (entity->height >> 0x10);
 }
 
@@ -33,7 +33,7 @@ void PBL_Player_StaticUpdate(void) {}
 void PBL_Player_Draw(void)
 {
     RSDK_THIS(PBL_Player);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(PBL_Player->sceneIndex);
         RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->height + 0x100000, entity->position.y, true);
         RSDK.MatrixRotateX(&entity->matrix1, entity->angleX);
@@ -232,7 +232,7 @@ void PBL_Player_State_Launcher(void)
         entity->collisionPlane = 1;
         entity->onGround       = false;
         entity->state          = PBL_Player_State_Air;
-        RSDK.PlaySFX(PBL_Player->sfxPlunger, 0, 255);
+        RSDK.PlaySfx(PBL_Player->sfxPlunger, 0, 255);
     }
 }
 

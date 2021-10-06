@@ -122,7 +122,7 @@ void SpeedGate_State_Unknown1(void)
                 entity->timer2 = 0;
                 if (entity->field_70 < 0)
                     entity->timer2 = 0x200;
-                RSDK.PlaySFX(SpeedGate->sfx_StarPost, 0, 255);
+                RSDK.PlaySfx(SpeedGate->sfx_StarPost, 0, 255);
                 foreach_return;
             }
         }
@@ -183,7 +183,7 @@ void SpeedGate_State_Unknown2(void)
                 thisEntity->timer2 = 0;
                 if (thisEntity->field_70 < 0)
                     thisEntity->timer2 = 0x200;
-                RSDK.PlaySFX(SpeedGate->sfx_StarPost, 0, 255);
+                RSDK.PlaySfx(SpeedGate->sfx_StarPost, 0, 255);
             }
         }
     }

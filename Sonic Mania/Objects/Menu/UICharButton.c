@@ -154,7 +154,7 @@ void UICharButton_Unknown4(void)
     if (UIControl_GetUIControl())
         UIControl_GetUIControl()->selectionDisabled = true;
     ((EntityUIControl *)entity->parent)->backoutTimer = 30;
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
 }
 
 bool32 UICharButton_Unknown5(void)
@@ -205,12 +205,12 @@ void UICharButton_Unknown11(void)
     else {
         if (entity->timer == 2) {
             switch (entity->characterID) {
-                case 0: RSDK.PlaySFX(Announcer->sfx_Sonic, false, 255); break;
-                case 1: RSDK.PlaySFX(Announcer->sfx_Tails, false, 255); break;
-                case 2: RSDK.PlaySFX(Announcer->sfx_Knuckles, false, 255); break;
+                case 0: RSDK.PlaySfx(Announcer->sfx_Sonic, false, 255); break;
+                case 1: RSDK.PlaySfx(Announcer->sfx_Tails, false, 255); break;
+                case 2: RSDK.PlaySfx(Announcer->sfx_Knuckles, false, 255); break;
 #if RETRO_USE_PLUS
-                case 3: RSDK.PlaySFX(Announcer->sfx_Mighty, false, 255); break;
-                case 4: RSDK.PlaySFX(Announcer->sfx_Ray, false, 255); break;
+                case 3: RSDK.PlaySfx(Announcer->sfx_Mighty, false, 255); break;
+                case 4: RSDK.PlaySfx(Announcer->sfx_Ray, false, 255); break;
 #endif
                 default: break;
             }

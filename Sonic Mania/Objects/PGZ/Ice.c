@@ -350,7 +350,7 @@ void Ice_FreezePlayer(Entity *p)
         player->timer          = 0;
         player->abilityTimer   = 0;
         player->spindashCharge = 0;
-        RSDK.PlaySFX(Ice->sfxFreeze, false, 255);
+        RSDK.PlaySfx(Ice->sfxFreeze, false, 255);
     }
 }
 
@@ -433,7 +433,7 @@ void Ice_State_FrozenPlayer(void)
             entity->onGround   = false;
             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, true, 0);
             Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
-            RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
+            RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
             Ice->playerTimers[RSDK.GetEntityID(entity)] = 30;
             entity->skidding                            = 0;
             entity->pushing                             = 0;
@@ -456,7 +456,7 @@ void Ice_State_FrozenPlayer(void)
                     entity->onGround   = false;
                     RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, true, 0);
                     Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
-                    RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
+                    RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
                     Ice->playerTimers[RSDK.GetEntityID(entity)] = 30;
                     entity->skidding                            = 0;
                     entity->pushing                             = 0;
@@ -466,7 +466,7 @@ void Ice_State_FrozenPlayer(void)
                 }
                 else {
                     Ice_ShatterGenerator(24, 20, 8, 0, 0, 0);
-                    RSDK.PlaySFX(Ice->sfxStruggle, 0, 255);
+                    RSDK.PlaySfx(Ice->sfxStruggle, 0, 255);
                 }
             }
         }
@@ -536,7 +536,7 @@ void Ice_Unknown7(int velX, Entity *p, int velY)
 void Ice_Unknown8(Entity *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
-    RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
+    RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
     Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
     Ice->playerTimers[RSDK.GetEntityID(player)] = 30;
 
@@ -565,7 +565,7 @@ Entity *Ice_Shatter(EntityIce *ice, int velX, int velY)
     RSDK_THIS(Ice);
     EntityItemBox *itemBox = NULL;
 
-    RSDK.PlaySFX(Ice->sfxWindowShatter, false, 255);
+    RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
     if (entity->animator1.animationID == ICEANI_PILLARBLOCK) {
         entity->position.y -= 0x370000;
         Ice_ShatterGenerator(19, 55, 96, velX, velY, 2);

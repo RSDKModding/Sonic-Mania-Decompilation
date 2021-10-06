@@ -159,7 +159,7 @@ void Redz_State_Unknown3(void)
         entity->state  = Redz_State_Unknown4;
         entity->timer2 = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 1, &entity->animator, true, 0);
-        RSDK.PlaySFX(Redz->sfxFlame, false, 255);
+        RSDK.PlaySfx(Redz->sfxFlame, false, 255);
     }
     else {
         entity->timer2++;

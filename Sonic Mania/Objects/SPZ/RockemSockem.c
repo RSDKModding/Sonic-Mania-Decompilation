@@ -111,7 +111,7 @@ void RockemSockem_Update(void)
                 }
 
                 if (entity->ballAnimator.animationID != 3)
-                    RSDK.PlaySFX(RockemSockem->sfxRockemSockem, 0, 255);
+                    RSDK.PlaySfx(RockemSockem->sfxRockemSockem, 0, 255);
                 player->state    = Player_State_Air;
                 player->onGround = false;
                 RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 3, &entity->ballAnimator, true, entity->ballAnimator.frameID);

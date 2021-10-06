@@ -472,7 +472,7 @@ void SizeLaser_Unknown3(void)
                             break;
                     }
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                    RSDK.PlaySFX(SizeLaser->sfxGrow2, 0, 255);
+                    RSDK.PlaySfx(SizeLaser->sfxGrow2, 0, 255);
                     player->tileCollisions = true;
                     player->entPtr         = Player_State_Hit;
                     player->state          = SizeLaser_P2JumpInGrow;
@@ -492,7 +492,7 @@ void SizeLaser_Unknown3(void)
                 player->scale.x = 0x200;
                 player->scale.y = 0x200;
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                RSDK.PlaySFX(SizeLaser->sfxShrink2, 0, 255);
+                RSDK.PlaySfx(SizeLaser->sfxShrink2, 0, 255);
                 player->tileCollisions = true;
                 player->entPtr         = Player_State_Hit;
                 player->state          = SizeLaser_P2JumpInShrink;

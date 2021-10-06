@@ -239,7 +239,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
                 robot->state = DERobot_Unknown23;
             }
         }
-        RSDK.PlaySFX(DERobot->sfxButton2, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxButton2, 0, 255);
     }
     if (host->timer == 240) {
         eggman->state  = Eggman_Unknown2;
@@ -253,7 +253,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         if (shinobi)
             shinobi->state = CutsceneHBH_Unknown15;
         Camera_Unknown3(0, 0, entity->position.x, entity->position.y - 0x400000, 1);
-        RSDK.PlaySFX(GHZ2Outro->sfxRocketJet, 0, 255);
+        RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
     }
 
     if (host->timer == 288) {
@@ -265,11 +265,11 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
             }
             rider->state = CutsceneHBH_Unknown17;
         }
-        RSDK.PlaySFX(GHZ2Outro->sfxHeliWoosh, 0, 255);
+        RSDK.PlaySfx(GHZ2Outro->sfxHeliWoosh, 0, 255);
     }
     if (host->timer == 304) {
         CutsceneHBH_Unknown7();
-        RSDK.PlaySFX(GHZ2Outro->sfxShinobiJump, 0, 255);
+        RSDK.PlaySfx(GHZ2Outro->sfxShinobiJump, 0, 255);
     }
 
     if (host->timer == 320) {
@@ -284,7 +284,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
             king->direction ^= FLIP_X;
             king->state = CutsceneHBH_Unknown18;
         }
-        RSDK.PlaySFX(GHZ2Outro->sfxRocketJet, 0, 255);
+        RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
         foreach_active(Player, player) { player->down = false; }
         EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
         ruby->startPos.x        = ruby->position.x;

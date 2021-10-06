@@ -44,7 +44,7 @@ void FBZFan_Update(void)
 
         if (RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, player, &FBZFan->playerHitbox)) {
             if (!((1 << playerID) & entity->activePlayers) && flag) {
-                RSDK.PlaySFX(FBZFan->sfxFan, false, 255);
+                RSDK.PlaySfx(FBZFan->sfxFan, false, 255);
                 entity->activePlayers |= (1 << playerID);
             }
         }

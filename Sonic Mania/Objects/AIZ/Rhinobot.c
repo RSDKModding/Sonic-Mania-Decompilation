@@ -179,7 +179,7 @@ void Rhinobot_State2(void)
                 entity->timedState = Rhinobot_State4;
                 entity->flag       = true;
                 if (entity->activeScreens)
-                    RSDK.PlaySFX(Rhinobot->sfxHuff, 0, 255);
+                    RSDK.PlaySfx(Rhinobot->sfxHuff, 0, 255);
                 flag = true;
             }
         }
@@ -211,7 +211,7 @@ void Rhinobot_State2(void)
             || (!entity->field_6C && entity->field_68 && entity->velocity.x > -0x28000)) && !entity->flag) {
             entity->flag = true;
             if (entity->activeScreens)
-                RSDK.PlaySFX(Rhinobot->sfxHuff, 0, 255);
+                RSDK.PlaySfx(Rhinobot->sfxHuff, 0, 255);
         }
     }
 
@@ -263,7 +263,7 @@ void Rhinobot_HandleUpdate4(void)
         RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &entity->animatorBot, true, 0);
         entity->flag = true;
         if (entity->activeScreens)
-            RSDK.PlaySFX(Rhinobot->sfxHuff, 0, 255);
+            RSDK.PlaySfx(Rhinobot->sfxHuff, 0, 255);
         entity->state = Rhinobot_State2;
         Rhinobot_State2();
     }

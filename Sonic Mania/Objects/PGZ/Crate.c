@@ -86,7 +86,7 @@ void Crate_Break(EntityCrate *entity)
             default: break;
         }
     }
-    RSDK.PlaySFX(Crate->sfxExplosion2, 0, 255);
+    RSDK.PlaySfx(Crate->sfxExplosion2, 0, 255);
     entity->position.y -= 0x10000;
 
     foreach_active(Crate, crate)

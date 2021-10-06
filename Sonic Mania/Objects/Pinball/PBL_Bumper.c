@@ -17,11 +17,11 @@ void PBL_Bumper_LateUpdate(void)
     int z = entity->position.y;
 
     Matrix *mat   = &PBL_Camera->matrix1;
-    entity->depth = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
-    if (entity->depth >= 0x4000) {
+    entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (entity->depth3D >= 0x4000) {
         int depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
                      + ((mat->values[0][1] * (entity->height >> 8)) & 0xFFFFFF00));
-        depth /= entity->depth;
+        depth /= entity->depth3D;
     }
 }
 
@@ -30,7 +30,7 @@ void PBL_Bumper_StaticUpdate(void) {}
 void PBL_Bumper_Draw(void)
 {
     RSDK_THIS(PBL_Bumper);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(PBL_Bumper->sceneIndex);
         RSDK.MatrixScaleXYZ(&entity->matrix2, entity->scale.x, entity->scale.y, entity->scale.x);
         RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->height, entity->position.y, false);
@@ -84,7 +84,7 @@ void PBL_Bumper_HandlePlayerInteractions(void)
                 entity->field_64 = 0x8000;
                 entity->active   = ACTIVE_NORMAL;
                 entity->state    = PBL_Bumper_Unknown3;
-                RSDK.PlaySFX(PBL_Bumper->sfxBumper, false, 255);
+                RSDK.PlaySfx(PBL_Bumper->sfxBumper, false, 255);
             }
             int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
             player->velocity.x >>= 1;

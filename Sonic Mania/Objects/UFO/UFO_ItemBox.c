@@ -21,12 +21,12 @@ void UFO_ItemBox_LateUpdate(void)
 
         entity->worldX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
         entity->worldY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-        entity->depth  = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+        entity->depth3D = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 
-        if (entity->depth >= 0x2000) {
+        if (entity->depth3D >= 0x2000) {
             int depth = (int)((mat->values[0][3] << 8) + (y * mat->values[0][1] & 0xFFFFFF00) + (z * mat->values[0][2] & 0xFFFFFF00)
                               + (x * mat->values[0][0] & 0xFFFFFF00))
-                        / entity->depth;
+                        / entity->depth3D;
             entity->visible = abs(depth) < 0x100;
         }
         else {
@@ -52,10 +52,10 @@ void UFO_ItemBox_Draw(void)
                                &entity->matrix3, 0xFFFF00);
         RSDK.Draw3DScene(UFO_ItemBox->sceneIndex);
 
-        entity->drawPos.x = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth) << 16;
-        entity->drawPos.y = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth) << 16;
-        entity->scale.x   = 0x2000000 / entity->depth;
-        entity->scale.y   = 0x2000000 / entity->depth;
+        entity->drawPos.x = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
+        entity->drawPos.y = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
+        entity->scale.x   = 0x2000000 / entity->depth3D;
+        entity->scale.y   = 0x2000000 / entity->depth3D;
     }
     RSDK.DrawSprite(&entity->itemData, &entity->drawPos, true);
 }
@@ -117,11 +117,11 @@ void UFO_ItemBox_Unknown1(void)
                     player->state           = UFO_Player_StateJump;
                     RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerAnimator, 128, 0, true, 0);
                     if (entity->type >= 3) {
-                        RSDK.PlaySFX(UFO_ItemBox->sfx_Bumper, 0, 255);
+                        RSDK.PlaySfx(UFO_ItemBox->sfx_Bumper, 0, 255);
                         entity->timer = 16;
                     }
                     else {
-                        RSDK.PlaySFX(UFO_ItemBox->sfx_Destroy, 0, 255);
+                        RSDK.PlaySfx(UFO_ItemBox->sfx_Destroy, 0, 255);
                         entity->drawOrder = 12;
                         entity->active    = 2;
                         entity->state     = UFO_ItemBox_Unknown2;

@@ -20,7 +20,7 @@ void PBL_Ring_LateUpdate(void)
 
     entity->worldX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
     entity->worldY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
-    entity->depth  = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
+    entity->depth3D = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 }
 
 void PBL_Ring_StaticUpdate(void) {}
@@ -29,13 +29,13 @@ void PBL_Ring_Draw(void)
 {
     RSDK_THIS(PBL_Ring);
 
-    if (entity->depth >= 0x100) {
+    if (entity->depth3D >= 0x100) {
         Vector2 drawPos;
         entity->direction = entity->animator.frameID > 8;
-        drawPos.x         = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth) << 16;
-        drawPos.y         = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth) << 16;
-        entity->scale.x   = 0x1000000 / entity->depth;
-        entity->scale.y   = 0x1000000 / entity->depth;
+        drawPos.x         = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
+        drawPos.y         = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
+        entity->scale.x   = 0x1000000 / entity->depth3D;
+        entity->scale.y   = 0x1000000 / entity->depth3D;
         if (entity->state == PBL_Ring_State_Ring)
             entity->animator.frameID = PBL_Setup->timer2;
         RSDK.DrawSprite(&entity->animator, &drawPos, true);
@@ -73,12 +73,12 @@ void PBL_Ring_GiveRing(void)
     PBL_Setup_GiveScore(10);
 
     if (PBL_Setup->ringPan) {
-        int channel = RSDK.PlaySFX(PBL_Ring->sfxRing, 0, 255);
+        int channel = RSDK.PlaySfx(PBL_Ring->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         PBL_Setup->ringPan = 0;
     }
     else {
-        int channel = RSDK.PlaySFX(PBL_Ring->sfxRing, 0, 255);
+        int channel = RSDK.PlaySfx(PBL_Ring->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         PBL_Setup->ringPan = 1;
     }

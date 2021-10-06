@@ -105,7 +105,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 player->state             = Player_State_Air;
                 entity->playerTimers[pid] = 30;
                 entity->activePlayers &= ~(1 << pid);
-                RSDK.PlaySFX(Player->sfx_Jump, 0, 255);
+                RSDK.PlaySfx(Player->sfx_Jump, 0, 255);
             }
         }
         else {
@@ -165,7 +165,7 @@ void MagnetSphere_MovePlayer(void *p, int playerID)
     byte angle = MagnetSphere->sphereAngle[playerID];
     MagnetSphere->sphereAngle[playerID] += 4;
     if ((((MagnetSphere->sphereAngle[playerID] + 64) >> 7) & 1) != ((angle + 64) >> 7) && !player->sidekick)
-        RSDK.PlaySFX(MagnetSphere->sfxPlasmaBall, 0, 255);
+        RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, 0, 255);
 }
 
 void MagnetSphere_EditorDraw(void) {}

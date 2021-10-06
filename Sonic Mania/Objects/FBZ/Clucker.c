@@ -252,7 +252,7 @@ void Clucker_State_Unknown4(void)
         }
         projectile->direction = entity->direction;
         entity->timer         = entity->delay;
-        RSDK.PlaySFX(Clucker->sfxShot, false, 255);
+        RSDK.PlaySfx(Clucker->sfxShot, false, 255);
     }
 
     EntityPlayer *player = Player_Unknown3();

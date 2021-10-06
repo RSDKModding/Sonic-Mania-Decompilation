@@ -142,7 +142,7 @@ void HangPoint_Update(void)
                     player->nextGroundState = StateMachine_None;
                     player->state           = Player_State_None;
                     player->maxGlideSpeed   = RSDK.Rand(0, 2);
-                    RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                    RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                     entity->active = ACTIVE_NORMAL;
                 }
             }
@@ -386,7 +386,7 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int playerID)
             entity->field_5C[playerID] += 0x15556;
             if (entity->field_5C[playerID] >= 0) {
                 entity->field_5C[playerID] = 0;
-                RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                 player->maxGlideSpeed ^= 1;
             }
         }
@@ -394,7 +394,7 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int playerID)
             entity->field_5C[playerID] -= 0x15556;
             if (entity->field_5C[playerID] <= 0) {
                 entity->field_5C[playerID] = 0;
-                RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                 player->maxGlideSpeed ^= 1;
             }
         }

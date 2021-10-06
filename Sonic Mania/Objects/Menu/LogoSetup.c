@@ -81,7 +81,7 @@ void LogoSetup_SegaScreen(void)
     RSDK_THIS(LogoSetup);
     if (entity->timer <= 0) {
         if (!RSDK_screens->position.y)
-            RSDK.PlaySFX(LogoSetup->sfx_Sega, 0, 0xFF);
+            RSDK.PlaySfx(LogoSetup->sfx_Sega, 0, 0xFF);
         entity->timer     = 0;
         entity->state     = LogoSetup_Unknown2;
         entity->stateDraw = 0;

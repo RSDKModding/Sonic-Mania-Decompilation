@@ -111,7 +111,7 @@ void DemoMenu_State_Selection(void)
     RSDK_THIS(DemoMenu);
     if (RSDK_controller->keyUp.press || RSDK_controller->keyDown.press) {
         entity->selectedZone ^= 1;
-        RSDK.PlaySFX(TitleSetup->sfx_MenuBleep, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfx_MenuBleep, 0, 255);
     }
     else {
         float vDelta   = RSDK_stickL->vDelta;
@@ -123,7 +123,7 @@ void DemoMenu_State_Selection(void)
                 vDelta = -vDelta;
             if (vDelta > 0.5) {
                 entity->selectedZone ^= 1;
-                RSDK.PlaySFX(TitleSetup->sfx_MenuBleep, 0, 255);
+                RSDK.PlaySfx(TitleSetup->sfx_MenuBleep, 0, 255);
             }
             entity->vDelta = RSDK_stickL->vDelta;
         }
@@ -132,7 +132,7 @@ void DemoMenu_State_Selection(void)
     if (RSDK_controller->keyStart.press || RSDK_controller->keyA.press) {
         entity->state = DemoMenu_State_Load;
         RSDK.StopChannel(Music->channelID);
-        RSDK.PlaySFX(TitleSetup->sfx_MenuAccept, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfx_MenuAccept, 0, 255);
     }
 }
 void DemoMenu_State_Load(void)

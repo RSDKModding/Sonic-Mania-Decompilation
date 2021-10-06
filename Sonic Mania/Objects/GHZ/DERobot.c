@@ -253,7 +253,7 @@ void DERobot_Unknown5(void)
         }
 
         if (playSFX)
-            RSDK.PlaySFX(DERobot->sfxLedgeBreak, 0, 255);
+            RSDK.PlaySfx(DERobot->sfxLedgeBreak, 0, 255);
     }
 }
 
@@ -325,7 +325,7 @@ void DERobot_Unknown7(void)
     }
     else {
         entity->field_C4 = 48;
-        RSDK.PlaySFX(DERobot->sfxHit, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxHit, 0, 255);
         if (entity->field_C8 == 2) {
             entity->field_D4 = 16;
             entity->field_D8 = 0x20000;
@@ -364,7 +364,7 @@ void DERobot_Unknown8(void)
     {
         if (!entity->field_C4 && Player_CheckBadnikHit(player, entity, &DERobot->hitbox) && Player_CheckBossHit(player, entity)) {
             DERobot_Unknown7();
-            RSDK.PlaySFX(DERobot->sfxHit, 0, 255);
+            RSDK.PlaySfx(DERobot->sfxHit, 0, 255);
             player->velocity.x = 0x60000;
         }
     }
@@ -568,7 +568,7 @@ void DERobot_Unknown19(void)
     RSDK_THIS(DERobot);
     RSDK.ProcessAnimation(&entity->animator3);
     if (entity->animator3.animationSpeed == 240)
-        RSDK.PlaySFX(DERobot->sfxBuzzsaw, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxBuzzsaw, 0, 255);
 
     if (entity->animator3.animationSpeed >= 0x100u)
         entity->state = DERobot_Unknown20;
@@ -631,12 +631,12 @@ void DERobot_Unknown23(void)
     }
 
     if (entity->timer++ == -1)
-        RSDK.PlaySFX(DERobot->sfxButton2, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxButton2, 0, 255);
 
     if (entity->timer == 30) {
         entity->timer = 0;
         entity->state = DERobot_Unknown24;
-        RSDK.PlaySFX(DERobot->sfxBuzzsaw, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxBuzzsaw, 0, 255);
     }
 }
 
@@ -685,14 +685,14 @@ void DERobot_Unknown27(void)
 
     entity->timer++;
     if (entity->timer == 30) {
-        RSDK.PlaySFX(DERobot->sfxButton2, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxButton2, 0, 255);
     }
     if (entity->timer >= 30) {
         if (entity->rotation >= 0) {
             entity->timer  = 0;
             entity->state  = 0;
             entity->drawFX = FX_NONE;
-            RSDK.PlaySFX(DERobot->sfxHullClose, 0, 255);
+            RSDK.PlaySfx(DERobot->sfxHullClose, 0, 255);
         }
         else {
             entity->rotation += 8;
@@ -732,7 +732,7 @@ void DERobot_Unknown29(void)
         EntityExplosion *explosion =
             (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, intToVoid(3), entity->position.x, entity->position.y - 0x80000);
         explosion->drawOrder = Zone->drawOrderHigh;
-        RSDK.PlaySFX(DERobot->sfxExplosion, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxExplosion, 0, 255);
     }
     else {
         entity->animator1.animationSpeed++;
@@ -789,7 +789,7 @@ void DERobot_Unknown32(void)
         entity->timer++;
         if (entity->timer == 60) {
             RSDK.CreateEntity(DERobot->objectID, intToVoid(6), entity->position.x, 0x3080000);
-            RSDK.PlaySFX(DERobot->sfxTargeting, 0, 255);
+            RSDK.PlaySfx(DERobot->sfxTargeting, 0, 255);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.125);
         }
 
@@ -919,7 +919,7 @@ void DERobot_Unknown34(void)
         RSDK.SetSpriteAnimation(Eggman->spriteIndex, 2, &eggman->animator, true, 0);
         eggman->state = Eggman_Unknown2;
         Camera_ShakeScreen(0, 0, 8);
-        RSDK.PlaySFX(DERobot->sfxLedgeBreak, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxLedgeBreak, 0, 255);
     }
     DERobot_Unknown4(0);
     DERobot_Unknown4(2);
@@ -970,7 +970,7 @@ void DERobot_Unknown36(void)
     if (entity->timer == 240) {
         EntityDERobot *robotPart = (EntityDERobot *)RSDK.CreateEntity(DERobot->objectID, intToVoid(6), entity->position.x, 0x3080000);
         robotPart->dword70       = (Entity *)player1;
-        RSDK.PlaySFX(DERobot->sfxTargeting, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxTargeting, 0, 255);
     }
     else if (entity->timer == 340) {
         entity->timer = 0;
@@ -985,7 +985,7 @@ void DERobot_Unknown36(void)
             robotPart->offset.y = robotPart->position.y;
             robotPart->scale.y  = 0x2000;
             robotPart->scale.x  = (entity->offset.x - entity->position.x + 0x360000) >> 11;
-            RSDK.PlaySFX(DERobot->sfxDrop, 0, 255);
+            RSDK.PlaySfx(DERobot->sfxDrop, 0, 255);
         }
     }
 
@@ -1056,7 +1056,7 @@ void DERobot_Unknown36(void)
         part2->field_B0  = entity->field_D8;
         part2->field_B4  = 0;
         Camera_ShakeScreen(0, 0, 4);
-        RSDK.PlaySFX(DERobot->sfxImpact, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxImpact, 0, 255);
         if (entity->position.x > 0x4D800000) {
             entity->field_C8 = 1;
             DERobot_Unknown7();
@@ -1104,7 +1104,7 @@ void DERobot_Unknown37(void)
         part1->field_B0  = entity->field_D8;
         part1->field_B4  = 0;
         Camera_ShakeScreen(0, 0, 4);
-        RSDK.PlaySFX(DERobot->sfxImpact, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxImpact, 0, 255);
         if (entity->position.x > 0x4E000000) {
             entity->field_C8 = 1;
             DERobot_Unknown7();
@@ -1118,7 +1118,7 @@ void DERobot_Unknown38(void)
     RSDK_THIS(DERobot);
 
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(DERobot->sfxExplosion, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxExplosion, 0, 255);
         if ((Zone->timer & 4)) {
             EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
                                                                               (RSDK.Rand(-48, 48) << 16) + entity->position.x,
@@ -1163,7 +1163,7 @@ void DERobot_Unknown38(void)
         entity->offset.x   = 0;
         entity->velocity.y = -0x40000;
         entity->state      = DERobot_Unknown39;
-        RSDK.PlaySFX(DERobot->sfxLedgeBreak, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxLedgeBreak, 0, 255);
     }
 }
 
@@ -1171,7 +1171,7 @@ void DERobot_Unknown39(void)
 {
     RSDK_THIS(DERobot);
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(DERobot->sfxExplosion, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxExplosion, 0, 255);
         if ((Zone->timer & 4)) {
             EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
                                                                               (RSDK.Rand(-48, 48) << 16) + entity->position.x,
@@ -1184,7 +1184,7 @@ void DERobot_Unknown39(void)
     entity->position.y += entity->velocity.y;
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
         DERobot_Unknown6();
-        RSDK.PlaySFX(DERobot->sfxLedgeBreak, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxLedgeBreak, 0, 255);
         entity->state      = DERobot_Unknown40;
         entity->velocity.y = -0x10000 - (entity->velocity.y >> 1);
         Camera_ShakeScreen(0, 0, 8);
@@ -1209,7 +1209,7 @@ void DERobot_Unknown40(void)
     entity->velocity.y += 0x2000;
     entity->position.y += entity->velocity.y;
     if (++entity->timer == 96)
-        RSDK.PlaySFX(DERobot->sfxDrop, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxDrop, 0, 255);
 
     if (entity->timer == 180) {
         if (Music_CheckMusicStack()) {

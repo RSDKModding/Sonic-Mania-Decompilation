@@ -18,7 +18,7 @@ void Spear_Update(void)
         else
             entity->field_7C = 0x48000 * timer;
         if (entity->field_7C == 0x48000)
-            RSDK.PlaySFX(Spear->sfxSpear, 0, 255);
+            RSDK.PlaySfx(Spear->sfxSpear, 0, 255);
     }
     Spear_Unknown1();
     foreach_active(Player, player)

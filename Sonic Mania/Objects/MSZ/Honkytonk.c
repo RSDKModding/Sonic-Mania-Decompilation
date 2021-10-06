@@ -54,7 +54,7 @@ void Honkytonk_Update(void)
             player->velocity.y = ((player->velocity.y >> 8) * RSDK.Cos256(entity->angle)) - ((player->velocity.x >> 8) * RSDK.Sin256(entity->angle));
 
             float speeds[] = { 1.0, 1.25, 1.5, 0.75 };
-            int channel    = RSDK.PlaySFX(Honkytonk->sfxPiano, 0, 255);
+            int channel    = RSDK.PlaySfx(Honkytonk->sfxPiano, 0, 255);
             RSDK.SetChannelAttributes(channel, 1.0, 0.0, speeds[Zone->timer & 3]);
         }
         else {

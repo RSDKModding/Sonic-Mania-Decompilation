@@ -497,7 +497,7 @@ void PauseMenu_SetupButtons(void)
         entity->stateDraw = PauseMenu_Unknown37;
     }
     else {
-        RSDK.PlaySFX(PauseMenu->sfxAccept, 0, 255);
+        RSDK.PlaySfx(PauseMenu->sfxAccept, 0, 255);
         PauseMenu_AddButton(0, PauseMenu_Resume_CB);
         if (!entity->disableRestart)
             PauseMenu_AddButton(1, PauseMenu_Restart_CB);

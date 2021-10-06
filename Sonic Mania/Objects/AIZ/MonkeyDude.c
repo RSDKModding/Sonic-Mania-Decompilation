@@ -266,7 +266,7 @@ void MonkeyDude_HandleStates(void)
                     coconut->velocity.x = 0x20000;
                 coconut->velocity.y = -0x40000;
                 coconut->direction  = entity->direction;
-                RSDK.PlaySFX(MonkeyDude->sfxDrop, 0, 255);
+                RSDK.PlaySfx(MonkeyDude->sfxDrop, 0, 255);
                 ++entity->throwCount;
             }
         }

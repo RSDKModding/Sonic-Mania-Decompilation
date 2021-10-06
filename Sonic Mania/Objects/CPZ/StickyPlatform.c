@@ -198,7 +198,7 @@ void StickyPlatform_Interact(void)
                     player->velocity.y              = 0;
                     player->groundVel               = 0;
                     player->rotation                = 0;
-                    RSDK.PlaySFX(StickyPlatform->sfxID, 0, 255);
+                    RSDK.PlaySfx(StickyPlatform->sfxID, 0, 255);
                 }
             }
         }

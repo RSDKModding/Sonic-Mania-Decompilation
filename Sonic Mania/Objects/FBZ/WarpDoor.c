@@ -83,9 +83,9 @@ void WarpDoor_Update(void)
                             if (RSDK.CheckStageFolder("TMZ2")) {
                                 if (entity->effect == 1) {
                                     int sfx     = RSDK.Rand(0, 6);
-                                    int channel = RSDK.PlaySFX(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
+                                    int channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-                                    channel = RSDK.PlaySFX(WarpDoor->sfxRubyAttackR[sfx], 0, 0xFF);
+                                    channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                                     foreach_active(TMZBarrier, barrier)
                                     {
@@ -107,7 +107,7 @@ void WarpDoor_Update(void)
                                 }
                             }
                             else if (RSDK.CheckStageFolder("FBZ")) {
-                                RSDK.PlaySFX(WarpDoor->sfxWarpDoor, 0, 255);
+                                RSDK.PlaySfx(WarpDoor->sfxWarpDoor, 0, 255);
                                 flag = false;
                                 if (entity->go) {
                                     tag->fadeTimer = 256;

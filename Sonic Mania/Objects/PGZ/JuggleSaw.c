@@ -183,7 +183,7 @@ void JuggleSaw_Crab_Handle(void)
     else {
         entity->angle += 4;
         if (entity->animator.frameID == entity->animator.frameCount - 1) {
-            RSDK.PlaySFX(JuggleSaw->juggleSFX, 0, 255);
+            RSDK.PlaySfx(JuggleSaw->juggleSFX, 0, 255);
             if (entity->spawnDir >= FLIP_Y)
                 entity->direction ^= FLIP_Y;
             else
@@ -271,7 +271,7 @@ void JuggleSaw_Crab_ThrowSaw(void)
     if (animator->frameID == 3) {
         EntityJuggleSaw *reciever = (EntityJuggleSaw *)entity->friends[0];
         if (reciever->objectID == JuggleSaw->objectID) {
-            RSDK.PlaySFX(JuggleSaw->throwSFX, 0, 255);
+            RSDK.PlaySfx(JuggleSaw->throwSFX, 0, 255);
             reciever->hasSaw    = JSAW_AWAITING_SAW;
             reciever->active     = ACTIVE_NORMAL;
             EntityJuggleSaw *saw = CREATE_ENTITY(JuggleSaw, intToVoid(1), entity->position.x, entity->position.y);
@@ -375,7 +375,7 @@ void JuggleSaw_Saw_Handle(void)
                 if (player->characterID == ID_MIGHTY
                     && (animID == ANI_CROUCH || animID == ANI_JUMP || animID == ANI_SPINDASH || animID == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
-                        RSDK.PlaySFX(Player->sfx_PimPom, 0, 0xFF);
+                        RSDK.PlaySfx(Player->sfx_PimPom, 0, 0xFF);
                         player->uncurlTimer = 30;
                     }
                     int targetAngle     = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);

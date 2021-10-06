@@ -13,7 +13,7 @@ void EggLoco_Update(void)
     StateMachine_Run(entity->state);
 
     if (!(Zone->timer & 0x3F)) {
-        RSDK.PlaySFX(EggLoco->sfxSmoke, false, 255);
+        RSDK.PlaySfx(EggLoco->sfxSmoke, false, 255);
         CREATE_ENTITY(LocoSmoke, NULL, entity->position.x + 0x450000, entity->position.y - 0x480000);
     }
 }
@@ -184,7 +184,7 @@ void EggLoco_State_Unknown2(void)
 {
     RSDK_THIS(EggLoco);
     if (++entity->timer == 4) {
-        RSDK.PlaySFX(EggLoco->sfxWhistle, false, 255);
+        RSDK.PlaySfx(EggLoco->sfxWhistle, false, 255);
         entity->timer = 0;
         entity->state = EggLoco_State_Unknown3;
     }

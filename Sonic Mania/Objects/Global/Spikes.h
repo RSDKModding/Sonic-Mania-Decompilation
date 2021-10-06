@@ -26,11 +26,11 @@ typedef struct {
     byte stagger;
     short timer;
     int planeFilter;
-    int dword6C;
-    int dword70;
+    int stateMove;
+    int moveOffset;
     Vector2 offset;
     short timer2;
-    byte field_7E;
+    byte shatterTimer;
     Hitbox hitbox;
     Animator animator;
 } EntitySpikes;

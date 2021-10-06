@@ -27,7 +27,7 @@ void WoodChipper_StaticUpdate(void)
 
     if (cuttingCount) {
         if (!WoodChipper->playingWoodSFX) {
-            RSDK.PlaySFX(WoodChipper->sfxChipperWood, true, 255);
+            RSDK.PlaySfx(WoodChipper->sfxChipperWood, true, 255);
             WoodChipper->playingWoodSFX = true;
         }
     }
@@ -38,7 +38,7 @@ void WoodChipper_StaticUpdate(void)
 
     if (debrisCount) {
         if (!WoodChipper->playingChipSFX) {
-            RSDK.PlaySFX(WoodChipper->sfxChipperChips, true, 255);
+            RSDK.PlaySfx(WoodChipper->sfxChipperChips, true, 255);
             WoodChipper->playingChipSFX = true;
         }
     }

@@ -17,7 +17,7 @@ void WaterGush_Update(void)
                 entity->active = ACTIVE_NORMAL;
                 if (!player->sidekick)
                     entity->flag = true;
-                RSDK.PlaySFX(WaterGush->sfxGush, false, 255);
+                RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
                 entity->activePlayers |= 1 << playerID;
                 RSDK.SetSpriteAnimation(player->spriteIndex, 18, &player->playerAnimator, true, 6);
                 player->nextGroundState = 0;
@@ -72,7 +72,7 @@ void WaterGush_Update(void)
 
     if (entity->flag) {
         if (!flag) {
-            RSDK.PlaySFX(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
             WaterGush_Unknown3();
         }
 

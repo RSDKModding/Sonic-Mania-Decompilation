@@ -196,7 +196,7 @@ void HangConveyor_Unknown2(void)
                                 entity->activePlayers3 |= 1 << playerID;
                                 player->position.y = entity->position.y + 0x150000;
                             }
-                            RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                            RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_POLESWINGH, &player->playerAnimator, true, 0);
                             player->playerAnimator.animationSpeed = 0;
                             player->nextGroundState               = StateMachine_None;

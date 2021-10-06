@@ -70,7 +70,7 @@ void EggPrison_Update(void)
                         player->onGround   = false;
                         player->velocity.y = -0xA0000;
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
-                        RSDK.PlaySFX(EggPrison->sfxSpring, 0, 255);
+                        RSDK.PlaySfx(EggPrison->sfxSpring, 0, 255);
                     }
                     else {
                         entity->active = ACTIVE_NORMAL;
@@ -391,7 +391,7 @@ void EggPrison_Unknown3(void)
         Entity *explosion    = RSDK.CreateEntity(Explosion->objectID, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + 1),
                                               (RSDK.Rand(-24, 24) << 16) + entity->position.x, (RSDK.Rand(-24, 24) << 16) + entity->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
-        RSDK.PlaySFX(EggPrison->sfxDestroy, 0, 255);
+        RSDK.PlaySfx(EggPrison->sfxDestroy, 0, 255);
     }
     if (++entity->timer == 20) {
         entity->timer = 0;

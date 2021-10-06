@@ -143,7 +143,7 @@ void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int newType, int new
         chemPool->type  = newType;
         chemPool->timer = 4;
         chemPool->state = ChemicalPool_State_Change;
-        RSDK.PlaySFX(ChemicalPool->sfxChemChange, 0, 255);
+        RSDK.PlaySfx(ChemicalPool->sfxChemChange, 0, 255);
     }
 }
 
@@ -332,7 +332,7 @@ void ChemicalPool_State_Green(void)
             player->onGround    = false;
             player->jumpAbility = 0;
             player->velocity.y  = -0x140000;
-            RSDK.PlaySFX(ChemicalPool->sfxChemRed, 0, 255);
+            RSDK.PlaySfx(ChemicalPool->sfxChemRed, 0, 255);
         }
     }
 }
@@ -360,7 +360,7 @@ void ChemicalPool_State_Blue(void)
                     player->velocity.y = -0x80000;
                 player->onGround    = false;
                 player->jumpAbility = 0;
-                RSDK.PlaySFX(ChemicalPool->sfxChemYellow, 0, 255);
+                RSDK.PlaySfx(ChemicalPool->sfxChemYellow, 0, 255);
             }
         }
     }

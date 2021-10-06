@@ -270,12 +270,12 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
 void UFO_Setup_PlaySphereSFX(void)
 {
     if (UFO_Setup->spherePan) {
-        int channel = RSDK.PlaySFX(UFO_Setup->sfx_BlueSphere, 0, 255);
+        int channel = RSDK.PlaySfx(UFO_Setup->sfx_BlueSphere, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->spherePan = 0;
     }
     else {
-        int channel = RSDK.PlaySFX(UFO_Setup->sfx_BlueSphere, 0, 255);
+        int channel = RSDK.PlaySfx(UFO_Setup->sfx_BlueSphere, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->spherePan = 1;
     }
@@ -298,7 +298,7 @@ void UFO_Setup_Finish_Win(void)
     saveRAM->nextSpecialStage = (saveRAM->nextSpecialStage + 1) % 7;
     setup->visible = true;
     setup->state   = UFO_Setup_Unknown12;
-    RSDK.PlaySFX(UFO_Setup->sfx_SSExit, 0, 255);
+    RSDK.PlaySfx(UFO_Setup->sfx_SSExit, 0, 255);
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }
@@ -314,7 +314,7 @@ void UFO_Setup_Finish_Fail(void)
 
     setup->visible = true;
     setup->state   = UFO_Setup_Unknown12;
-    RSDK.PlaySFX(UFO_Setup->sfx_SSExit, 0, 255);
+    RSDK.PlaySfx(UFO_Setup->sfx_SSExit, 0, 255);
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }

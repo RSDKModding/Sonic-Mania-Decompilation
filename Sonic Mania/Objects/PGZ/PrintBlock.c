@@ -37,7 +37,7 @@ void PrintBlock_Update(void)
                 pos.x = 0x200000;
                 pos.y = 0x200000;
                 if (RSDK.CheckOnScreen(entity, &pos)) {
-                    int channel = RSDK.PlaySFX(PrintBlock->sfxLetter, 0, 255);
+                    int channel = RSDK.PlaySfx(PrintBlock->sfxLetter, 0, 255);
                     RSDK.SetChannelAttributes(channel, 1.0, 0.0, 1.0);
                 }
                 entity->state = PrintBlock_Unknown1;

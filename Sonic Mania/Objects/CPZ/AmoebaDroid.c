@@ -164,7 +164,7 @@ void AmoebaDroid_CheckHit(void)
             }
             else {
                 entity->invincibleTimer = 48;
-                RSDK.PlaySFX(AmoebaDroid->sfxHit, false, 255);
+                RSDK.PlaySfx(AmoebaDroid->sfxHit, false, 255);
             }
         }
     }
@@ -311,7 +311,7 @@ void AmoebaDroid_StateMain_Unknown2(void)
         entity->state      = AmoebaDroid_StateMain_Unknown3;
         ChemicalPool_SetDeform(entity->position.x, 0x100000);
         CREATE_ENTITY(AmoebaDroid, intToVoid(3), entity->position.x, entity->position.y);
-        RSDK.PlaySFX(Water->sfx_Splash, false, 255);
+        RSDK.PlaySfx(Water->sfx_Splash, false, 255);
     }
     AmoebaDroid_CheckHit();
 }
@@ -371,7 +371,7 @@ void AmoebaDroid_StateMain_Unknown5(void)
             entity->state      = AmoebaDroid_StateMain_Unknown7;
             ChemicalPool_SetDeform(entity->position.x, -0xC0000);
             CREATE_ENTITY(AmoebaDroid, intToVoid(4), entity->position.x, entity->position.y);
-            RSDK.PlaySFX(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
         }
     }
     else if (entity->position.x < AmoebaDroid->arenaLeft + 0x400000) {
@@ -379,7 +379,7 @@ void AmoebaDroid_StateMain_Unknown5(void)
         entity->timer--;
     }
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySFX(AmoebaDroid->sfxGather, false, 255);
+        RSDK.PlaySfx(AmoebaDroid->sfxGather, false, 255);
     ChemicalPool_SetDeform(entity->position.x, -0x8000);
 }
 
@@ -403,7 +403,7 @@ void AmoebaDroid_StateMain_Unknown6(void)
             entity->state      = AmoebaDroid_StateMain_Unknown7;
             ChemicalPool_SetDeform(entity->position.x, -0xC0000);
             CREATE_ENTITY(AmoebaDroid, intToVoid(4), entity->position.x, entity->position.y);
-            RSDK.PlaySFX(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
         }
     }
     else if (entity->position.x > AmoebaDroid->arenaRight - 0x400000) {
@@ -411,7 +411,7 @@ void AmoebaDroid_StateMain_Unknown6(void)
         entity->timer--;
     }
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySFX(AmoebaDroid->sfxGather, false, 255);
+        RSDK.PlaySfx(AmoebaDroid->sfxGather, false, 255);
     ChemicalPool_SetDeform(entity->position.x, -0x8000);
 }
 
@@ -462,7 +462,7 @@ void AmoebaDroid_StateMain_Unknown8(void)
             entity->partAngle  = 196;
             entity->partOffset = 0x2800;
             entity->state      = AmoebaDroid_StateMain_Unknown9;
-            RSDK.PlaySFX(AmoebaDroid->sfxRelease, false, 255);
+            RSDK.PlaySfx(AmoebaDroid->sfxRelease, false, 255);
         }
         else {
             entity->velocity.y = minVal(-entity->velocity.y, -0x20000);
@@ -478,7 +478,7 @@ void AmoebaDroid_StateMain_Unknown8(void)
                 debris->updateRange.x = 0x200000;
                 debris->updateRange.y = 0x200000;
             }
-            RSDK.PlaySFX(AmoebaDroid->sfxBounce, false, 255);
+            RSDK.PlaySfx(AmoebaDroid->sfxBounce, false, 255);
         }
     }
     AmoebaDroid_CheckHit();
@@ -538,7 +538,7 @@ void AmoebaDroid_StateMain_Unknown10(void)
         AmoebaDroid_HandleDropletRelease(true);
         RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &entity->animator3, true, 0);
-        RSDK.PlaySFX(AmoebaDroid->sfxRelease, false, 255);
+        RSDK.PlaySfx(AmoebaDroid->sfxRelease, false, 255);
     }
     else if (entity->timer == 240) {
         entity->timer      = 0;
@@ -655,7 +655,7 @@ void AmoebaDroid_StateMain_Death(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(AmoebaDroid->sfxExplosion, false, 255);
+        RSDK.PlaySfx(AmoebaDroid->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
                           (RSDK.Rand(entity->hitbox.left, entity->hitbox.right) << 16) + entity->position.x,
@@ -691,7 +691,7 @@ void AmoebaDroid_StateMain_SpawnSignpost(void)
             signPost->position.x = entity->position.x;
             signPost->active     = ACTIVE_NORMAL;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySFX(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
         }
         destroyEntity(entity);
     }

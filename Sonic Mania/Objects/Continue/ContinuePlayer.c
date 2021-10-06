@@ -117,7 +117,7 @@ void ContinuePlayer_Unknown2(void)
     if (entity->timer <= 0) {
         ContinuePlayer_Unknown1();
         entity->state = ContinuePlayer_Unknown3;
-        RSDK.PlaySFX(ContinuePlayer->sfxRoll, 0, 255);
+        RSDK.PlaySfx(ContinuePlayer->sfxRoll, 0, 255);
     }
     else {
         entity->timer--;
@@ -129,7 +129,7 @@ void ContinuePlayer_Unknown3(void)
     RSDK_THIS(ContinuePlayer);
 
     if (entity->groundVel >= 0xC0000) {
-        RSDK.PlaySFX(ContinuePlayer->sfxRelease, 0, 255);
+        RSDK.PlaySfx(ContinuePlayer->sfxRelease, 0, 255);
         entity->state = ContinuePlayer_Unknown4;
     }
     else {

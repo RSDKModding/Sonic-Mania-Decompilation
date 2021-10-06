@@ -141,7 +141,7 @@ void AIZRockPile_SpawnRocks(int *speeds)
         debris->gravity       = 0x1800;
     }
 
-    RSDK.PlaySFX(AIZRockPile->sfx_Break, 0, 255);
+    RSDK.PlaySfx(AIZRockPile->sfx_Break, 0, 255);
     RSDK.ResetEntityPtr(entity, 0, 0);
 }
 

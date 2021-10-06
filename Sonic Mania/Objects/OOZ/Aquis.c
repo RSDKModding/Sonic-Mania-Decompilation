@@ -249,7 +249,7 @@ void Aquis_Unknown7(void)
             shot->velocity.y = 0x20000;
             shot->direction  = entity->direction;
             shot->active     = ACTIVE_NORMAL;
-            RSDK.PlaySFX(Aquis->sfxShot, false, 255);
+            RSDK.PlaySfx(Aquis->sfxShot, false, 255);
         }
     }
     else {

@@ -141,7 +141,7 @@ void TransportTube_State_Type1(void)
                     player->nextAirState      = StateMachine_None;
                     player->nextGroundState   = StateMachine_None;
                     TransportTube->field_4[i] = 0;
-                    RSDK.PlaySFX(TransportTube->sfxTravel, 0, 255);
+                    RSDK.PlaySfx(TransportTube->sfxTravel, 0, 255);
                     entity->playerTimers[i] = 2;
                 }
             }
@@ -247,7 +247,7 @@ void TransportTube_State_Type5(void)
 
             if (player->velocity.x || player->velocity.y) {
                 entity->playerTimers[i] = 2;
-                RSDK.PlaySFX(TransportTube->sfxTravel, 0, 255);
+                RSDK.PlaySfx(TransportTube->sfxTravel, 0, 255);
             }
         }
     }

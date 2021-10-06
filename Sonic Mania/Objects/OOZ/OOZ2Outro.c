@@ -172,11 +172,11 @@ void OOZ2Outro_Unknown4(void)
 
     if (!(Zone->timer & 0xF)) {
         Camera_ShakeScreen(0, 0, 4);
-        RSDK.PlaySFX(OOZ2Outro->sfxGlug, false, 255);
+        RSDK.PlaySfx(OOZ2Outro->sfxGlug, false, 255);
     }
 
     if (++entity->timer == 140)
-        RSDK.PlaySFX(OOZ2Outro->sfxSubLaunch, false, 255);
+        RSDK.PlaySfx(OOZ2Outro->sfxSubLaunch, false, 255);
 
     if (entity->timer > 180) {
         entity->timer      = 0;

@@ -125,7 +125,7 @@ void Blastoid_State_Body(void)
                 projectile->velocity.y = -0x10000;
             }
             RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.PlaySFX(Blastoid->sfxShot, false, 255);
+            RSDK.PlaySfx(Blastoid->sfxShot, false, 255);
             break;
         }
         case 121: entity->timer = 0; break;

@@ -73,7 +73,7 @@ void HangGlider_Unknown1(void)
                 entity->animator3.rotationFlag = 1;
                 entity->rotation               = 128;
                 entity->drawFX                 = FX_ROTATE;
-                RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                 entity->state = HangGlider_Unknown2;
             }
         }

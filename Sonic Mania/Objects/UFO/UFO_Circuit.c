@@ -15,12 +15,12 @@ void UFO_Circuit_LateUpdate(void)
     int z         = entity->position.y;
     int y         = entity->height;
     int x         = entity->position.x;
-    entity->depth = UFO_Camera->matWorld.values[2][1] * (y >> 16) + UFO_Camera->matWorld.values[2][2] * (z >> 16)
+    entity->depth3D = UFO_Camera->matWorld.values[2][1] * (y >> 16) + UFO_Camera->matWorld.values[2][2] * (z >> 16)
                     + UFO_Camera->matWorld.values[2][0] * (x >> 16) + UFO_Camera->matWorld.values[2][3];
-    if (entity->depth >= 1024) {
+    if (entity->depth3D >= 0x400) {
         int depth = (int)((UFO_Camera->matWorld.values[0][3] << 8) + (UFO_Camera->matWorld.values[0][2] * (z >> 8) & 0xFFFFFF00)
-                    + (UFO_Camera->matWorld.values[0][0] * (x >> 8) & 0xFFFFFF00)
-                    + (UFO_Camera->matWorld.values[0][1] * (y >> 8) & 0xFFFFFF00)) / entity->depth;
+                    + (UFO_Camera->matWorld.values[0][0] * (x >> 8) & 0xFFFFFF00) + (UFO_Camera->matWorld.values[0][1] * (y >> 8) & 0xFFFFFF00))
+                    / entity->depth3D;
         entity->visible = abs(depth) < 0x100;
     }
 }
@@ -30,7 +30,7 @@ void UFO_Circuit_StaticUpdate(void) {}
 void UFO_Circuit_Draw(void)
 {
     RSDK_THIS(UFO_Circuit);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Circuit->sceneIndex);
         RSDK.MatrixScaleXYZ(&entity->matrix1, 0x200, 0x200, 0x200);
         RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, false);

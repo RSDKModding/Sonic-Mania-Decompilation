@@ -85,7 +85,7 @@ void Fireball_State_Unknown1(void)
         fireball->groundVel      = -entity->groundVel;
         fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(256 - fireball->angle);
         fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(256 - fireball->angle);
-        RSDK.PlaySFX(Fireball->sfxFireball, false, 255);
+        RSDK.PlaySfx(Fireball->sfxFireball, false, 255);
     }
 }
 
@@ -99,7 +99,7 @@ void Fireball_State_Unknown2(void)
         fireball->groundVel      = -entity->groundVel;
         fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(256 - fireball->angle);
         fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(256 - fireball->angle);
-        RSDK.PlaySFX(Fireball->sfxFireball, false, 255);
+        RSDK.PlaySfx(Fireball->sfxFireball, false, 255);
     }
 }
 
@@ -113,7 +113,7 @@ void Fireball_State_Unknown3(void)
         fireball->groundVel      = -entity->groundVel;
         fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(256 - fireball->angle);
         fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(256 - fireball->angle);
-        RSDK.PlaySFX(Fireball->sfxFireball, false, 255);
+        RSDK.PlaySfx(Fireball->sfxFireball, false, 255);
     }
 }
 

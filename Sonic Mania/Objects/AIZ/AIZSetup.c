@@ -67,7 +67,7 @@ void AIZSetup_StaticUpdate(void)
         }
     }
     else if (!AIZSetup->playingDrillSFX) {
-        RSDK.PlaySFX(AIZSetup->sfxDrill, 1, 255);
+        RSDK.PlaySfx(AIZSetup->sfxDrill, 1, 255);
         AIZSetup->playingDrillSFX = true;
     }
 
@@ -554,7 +554,7 @@ bool32 AIZSetup_Cutscene1_Unknown7(Entity *h)
             ((EntityDecoration *)AIZSetup->decorations[1])->rotSpeed = 0;
             if ((globals->playerID & 0xFFFFFF00) == 512)
                 RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimator, true, 0);
-            RSDK.PlaySFX(AIZSetup->sfxBreak, 0, 0);
+            RSDK.PlaySfx(AIZSetup->sfxBreak, 0, 0);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.05);
         }
     }
@@ -689,9 +689,9 @@ bool32 AIZSetup_Cutscene2_Unknown2(Entity *h)
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     switch (host->timer) {
-        case 0: RSDK.PlaySFX(AIZKingClaw->sfxClack, 0, 0); break;
+        case 0: RSDK.PlaySfx(AIZKingClaw->sfxClack, 0, 0); break;
         case 10:
-            RSDK.PlaySFX(AIZKingClaw->sfxWalkerLegs, 0, 0);
+            RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, 0, 0);
             RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 2, &player1->playerAnimator, true, 0);
             break;
         case 40: return true;
@@ -711,7 +711,7 @@ bool32 AIZSetup_Cutscene2_Unknown3(Entity *h)
     }
     else if (host->timer == 120) {
         AIZSetup->dword154 = 0;
-        RSDK.PlaySFX(AIZSetup->sfxBreak, 0, 0);
+        RSDK.PlaySfx(AIZSetup->sfxBreak, 0, 0);
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.2);
     }
     return host->timer == 200;
@@ -778,7 +778,7 @@ bool32 AIZSetup_Cutscene2_Unknown6(Entity *h)
         ruby->sfx                = 0;
         PhantomRuby_Unknown2(ruby);
         player1->drawOrder = Zone->playerDrawHigh + 2;
-        RSDK.PlaySFX(AIZSetup->sfxHeliWoosh, 0, 0);
+        RSDK.PlaySfx(AIZSetup->sfxHeliWoosh, 0, 0);
     }
     AIZSetup_Unknown24();
     return ruby->position.x >= player1->position.x - 0x100000;
@@ -791,7 +791,7 @@ bool32 AIZSetup_Cutscene2_Unknown7(Entity *h)
     EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)AIZSetup->phantomRuby;
     if (!host->timer) {
-        RSDK.PlaySFX(AIZSetup->sfxImpact, 0, 0);
+        RSDK.PlaySfx(AIZSetup->sfxImpact, 0, 0);
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         Music_TransitionTrack(TRACK_EGGMAN1, 1.0);
 

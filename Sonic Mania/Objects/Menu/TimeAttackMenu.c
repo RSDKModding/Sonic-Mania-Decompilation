@@ -608,7 +608,7 @@ void TimeAttackMenu_YPressCB_Replay(void)
         carousel->field_16C     = 0;
         carousel->field_170     = 0;
         UIButton_SetChoiceSelectionWithCB(control->buttons[0], control->buttons[0]->selection ^ 1);
-        RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
     }
 }
 
@@ -708,7 +708,7 @@ void TimeAttackMenu_YPressCB_ZoneSel(void)
 {
     if (API.CheckDLC(DLC_PLUS)) {
         TimeAttackMenu_SetEncoreLayouts(!TimeAttackMenu->encoreMode);
-        RSDK.PlaySFX(UIWidgets->sfx_Woosh, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Woosh, false, 255);
     }
 }
 

@@ -87,7 +87,7 @@ void Reagent_Unknown1(void)
             entity->state    = Reagent_Unknown2;
             chemPool->active = ACTIVE_NORMAL;
             ChemicalPool_ChangeState(chemPool, entity->type, entity->r, entity->g, entity->b);
-            RSDK.PlaySFX(Reagent->sfxLand, 0, 255);
+            RSDK.PlaySfx(Reagent->sfxLand, 0, 255);
         }
     }
 

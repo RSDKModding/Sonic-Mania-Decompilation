@@ -422,7 +422,7 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown4(EntityCutsceneSeq *host)
             fxFade->speedIn      = 256;
             fxFade->speedOut     = 64;
             fxFade->drawOrder    = Zone->drawOrderHigh;
-            RSDK.PlaySFX(EncoreGoodEnd->sfxSnap, false, 255);
+            RSDK.PlaySfx(EncoreGoodEnd->sfxSnap, false, 255);
             return true;
         }
     }

@@ -139,7 +139,7 @@ void Fan_StaticUpdate(void)
 
             if (count) {
                 if (!Fan->playingFanSFX) {
-                    RSDK.PlaySFX(Fan->sfxFan, 37404, 0xFF);
+                    RSDK.PlaySfx(Fan->sfxFan, 37404, 0xFF);
                     Fan->playingFanSFX = true;
                 }
                 return;

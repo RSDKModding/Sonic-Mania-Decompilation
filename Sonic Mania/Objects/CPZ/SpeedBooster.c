@@ -122,7 +122,7 @@ void SpeedBooster_Interact(void)
             entity->velocity.x       = 2 * (player->position.x < entity->position.x) - 1;
             entity->state            = SpeedBooster->defaultState;
             entity->animator.frameID = 0;
-            RSDK.PlaySFX(SpeedBooster->sfxID, 0, 255);
+            RSDK.PlaySfx(SpeedBooster->sfxID, 0, 255);
             entity->active = ACTIVE_NORMAL;
             bool32 check   = isSSZ ? (entity->playerPos[playerID] <= entity->position.x) : (!entity->direction);
             if (check) {

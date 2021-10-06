@@ -316,7 +316,7 @@ void ReplayRecorder_SaveReplay(void)
         LogHelpers_Print("Saving replay...");
         foreach_all(HUD, hud) { foreach_break; }
         RSDK.SetSpriteAnimation(HUD->hudMappings, 11, &hud->taData2, true, 0);
-        RSDK.PlaySFX(HUD->sfxClick, 0, 255);
+        RSDK.PlaySfx(HUD->sfxClick, 0, 255);
         EntityDialogRunner *runner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_HandleCallback, 0, 0);
         runner->callback           = ReplayRecorder_Unknown6;
         runner->timer              = 45;
@@ -360,7 +360,7 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 a1)
             ActClear->field_14 = 0;
             foreach_all(HUD, hud) { foreach_break; }
             RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &hud->taData2, true, 0);
-            RSDK.PlaySFX(HUD->sfxStarpost, 0, 255);
+            RSDK.PlaySfx(HUD->sfxStarpost, 0, 255);
             HUD->replaySaveEnabled = 0;
         }
         else {
@@ -400,7 +400,7 @@ void ReplayRecorder_Unknown10(int status)
     else {
         foreach_all(HUD, hud) { foreach_break; }
         RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &hud->taData2, true, 0);
-        RSDK.PlaySFX(HUD->sfxStarpost, 0, 255);
+        RSDK.PlaySfx(HUD->sfxStarpost, 0, 255);
         HUD->replaySaveEnabled = 0;
     }
 }

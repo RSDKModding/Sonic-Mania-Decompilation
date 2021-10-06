@@ -71,7 +71,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             ActClear->actID = 1;
             post->state     = SignPost_State_Fall;
             post->active    = ACTIVE_NORMAL;
-            RSDK.PlaySFX(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
             return true;
         }
     }

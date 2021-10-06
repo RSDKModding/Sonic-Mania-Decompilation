@@ -100,7 +100,7 @@ void Zone_LateUpdate(void)
             RSDK_sceneInfo->seconds      = 59;
             RSDK_sceneInfo->milliseconds = 99;
             RSDK_sceneInfo->timeEnabled  = false;
-            RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
+            RSDK.PlaySfx(Player->sfx_Hurt, 0, 255);
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             foreach_active(Player, playerLoop)
             {

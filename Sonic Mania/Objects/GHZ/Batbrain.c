@@ -156,7 +156,7 @@ void Batbrain_Unknown5(void)
         entity->state = Batbrain_Unknown6;
 
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySFX(Batbrain->sfxFlap, 0, 255);
+        RSDK.PlaySfx(Batbrain->sfxFlap, 0, 255);
 
     RSDK.ProcessAnimation(&entity->animator);
     Batbrain_CheckHit();
@@ -177,7 +177,7 @@ void Batbrain_Unknown6(void)
     }
 
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySFX(Batbrain->sfxFlap, 0, 255);
+        RSDK.PlaySfx(Batbrain->sfxFlap, 0, 255);
 
     RSDK.ProcessAnimation(&entity->animator);
     Batbrain_CheckHit();

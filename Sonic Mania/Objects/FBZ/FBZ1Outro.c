@@ -177,7 +177,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         Zone->screenBoundsR1[0] = 14080;
         Zone->screenBoundsR1[1] = 14080;
         platform->playerPos.x   = 1;
-        RSDK.PlaySFX(FBZ1Outro->sfxDrop, false, 255);
+        RSDK.PlaySfx(FBZ1Outro->sfxDrop, false, 255);
         return true;
     }
     else {

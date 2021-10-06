@@ -319,17 +319,17 @@ void BSS_Setup_CollectRing(void)
         BSS_Setup->ringCount--;
         if (!BSS_Setup->ringCount) {
             RSDK.CreateEntity(BSS_Message->objectID, intToVoid(1), entity->position.x, entity->position.y);
-            RSDK.PlaySFX(BSS_Setup->sfxEvent, 0, 255);
+            RSDK.PlaySfx(BSS_Setup->sfxEvent, 0, 255);
         }
     }
 
     if (BSS_Setup->ringPan) {
-        int channel = RSDK.PlaySFX(BSS_Setup->sfxRing, 0, 255);
+        int channel = RSDK.PlaySfx(BSS_Setup->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         BSS_Setup->ringPan = 0;
     }
     else {
-        int channel = RSDK.PlaySFX(BSS_Setup->sfxRing, 0, 255);
+        int channel = RSDK.PlaySfx(BSS_Setup->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         BSS_Setup->ringPan = 1;
     }
@@ -443,11 +443,11 @@ void BSS_Setup_HandleSteppedObjects(void)
                 if (BSS_Setup->sphereCount <= 0) {
                     BSS_Setup->sphereCount = 0;
                     entity->state          = BSS_Setup_Finished;
-                    RSDK.PlaySFX(BSS_Setup->sfxSSJettison, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxSSJettison, 0, 255);
                     Music_FadeOut(0.0125);
                 }
                 else {
-                    RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
                 }
             }
             break;
@@ -457,7 +457,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->pauseFlag  = true;
                 entity->spinTimer  = 0;
                 entity->globeTimer = 0;
-                RSDK.PlaySFX(BSS_Setup->sfxSSExit, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSSExit, 0, 255);
                 Music_FadeOut(0.0125);
             }
             break;
@@ -468,7 +468,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                         entity->bumperFlag  = true;
                         entity->globeSpeed  = -entity->globeSpeed;
                         entity->unknownFlag = false;
-                        RSDK.PlaySFX(BSS_Setup->sfxBumper, 0, 255);
+                        RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
                     }
                 }
                 else if (!entity->spinState) {
@@ -477,7 +477,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                         entity->bumperFlag  = true;
                         entity->globeSpeed  = -entity->globeSpeed;
                         entity->unknownFlag = false;
-                        RSDK.PlaySFX(BSS_Setup->sfxBumper, 0, 255);
+                        RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
                     }
                 }
             }
@@ -492,14 +492,14 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->globeSpeed *= 2;
                 entity->spinState     = 0;
                 entity->globeSpeedInc = 4;
-                RSDK.PlaySFX(BSS_Setup->sfxSpring, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSpring, 0, 255);
             }
             break;
         case BSS_SPHERE_GREEN:
             if (entity->globeTimer > 128) {
                 CREATE_ENTITY(BSS_Collected, intToVoid(3), entity->playerPos.x, entity->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
-                RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
             }
             break;
         case BSS_SPHERE_PINK:
@@ -507,7 +507,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->state      = BSS_Setup_State_PinkSphereWarp;
                 entity->spinTimer  = 0;
                 entity->globeTimer = 0;
-                RSDK.PlaySFX(BSS_Setup->sfxTeleport, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxTeleport, 0, 255);
                 EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), entity->position.x, entity->position.y);
                 fade->speedIn      = 32;
                 fade->speedOut     = 32;
@@ -541,13 +541,13 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
                 if (BSS_Setup->sphereCount <= 0) {
                     BSS_Setup->sphereCount = 0;
-                    RSDK.PlaySFX(BSS_Setup->sfxMedal, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxMedal, 0, 255);
                     entity->state = BSS_Setup_Finished;
-                    RSDK.PlaySFX(BSS_Setup->sfxSSJettison, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxSSJettison, 0, 255);
                     Music_FadeOut(0.0125);
                 }
                 else {
-                    RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
                 }
             }
             break;
@@ -561,7 +561,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->playerPos.x &= 0x1F;
                 entity->playerPos.y -= RSDK.Cos256(entity->angle) >> 8;
                 entity->playerPos.y &= 0x1F;
-                RSDK.PlaySFX(BSS_Setup->sfxSSExit, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSSExit, 0, 255);
                 Music_FadeOut(0.0125);
             }
             break;
@@ -574,7 +574,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                             entity->bumperFlag  = true;
                             entity->globeSpeed  = -entity->globeSpeed;
                             entity->unknownFlag = true;
-                            RSDK.PlaySFX(BSS_Setup->sfxBumper, 0, 255);
+                            RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
                         }
                     }
                 }
@@ -583,7 +583,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                         entity->bumperFlag  = true;
                         entity->globeSpeed  = -entity->globeSpeed;
                         entity->unknownFlag = true;
-                        RSDK.PlaySFX(BSS_Setup->sfxBumper, 0, 255);
+                        RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
                     }
                 }
             }
@@ -598,14 +598,14 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->globeSpeed *= 2;
                 entity->spinState     = 0;
                 entity->globeSpeedInc = 4;
-                RSDK.PlaySFX(BSS_Setup->sfxSpring, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSpring, 0, 255);
             }
             break;
         case BSS_SPHERE_GREEN:
             if (entity->globeTimer > 128) {
                 CREATE_ENTITY(BSS_Collected, intToVoid(3), posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
-                RSDK.PlaySFX(BSS_Setup->sfxBlueSphere, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
             }
             break;
         case BSS_RING:
@@ -648,7 +648,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 entity->playerPos.y -= RSDK.Cos256(entity->angle) >> 8;
                 entity->playerPos.y &= 0x1F;
                 globals->specialCleared = true;
-                RSDK.PlaySFX(BSS_Setup->sfxSSExit, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSSExit, 0, 255);
             }
             break;
         default: break;
@@ -737,7 +737,7 @@ void BSS_Setup_State_FinishWalk(void)
     RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
     entity->globeTimer += entity->globeSpeed;
     if (++entity->spinTimer == 120)
-        RSDK.PlaySFX(BSS_Setup->sfxMedalCaught, 0, 255);
+        RSDK.PlaySfx(BSS_Setup->sfxMedalCaught, 0, 255);
     BSS_Setup_HandleSteppedObjects();
 
     if (entity->globeSpeed <= 0 && entity->globeTimer < 0) {
@@ -1482,7 +1482,7 @@ void BSS_Setup_ProcessChain(void)
             }
 
             BSS_Setup->sphereCount -= spheresCollected;
-            RSDK.PlaySFX(BSS_Setup->sfxLoseRings, 0, 0xFF);
+            RSDK.PlaySfx(BSS_Setup->sfxLoseRings, 0, 0xFF);
         }
     }
 }

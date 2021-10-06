@@ -109,7 +109,7 @@ void CircleBumper_Unknown1(void)
         if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikHit(player, entity, &CircleBumper->hitbox)) {
             entity->animator.frameID = 0;
             entity->stateCollide     = CircleBumper_Unknown3;
-            RSDK.PlaySFX(CircleBumper->sfxBumper, 0, 255);
+            RSDK.PlaySfx(CircleBumper->sfxBumper, 0, 255);
             entity->active = ACTIVE_NORMAL;
             int angle      = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
             int xVel       = 0x700 * RSDK.Cos256(angle);

@@ -86,7 +86,7 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
             signpost->active = ACTIVE_NORMAL;
         }
 
-        RSDK.PlaySFX(SignPost->sfx_Twinkle, false, 255);
+        RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
         return true;
     }
     return false;

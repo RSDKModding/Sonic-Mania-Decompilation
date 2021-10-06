@@ -102,25 +102,25 @@ void LevelSelect_StageLoad(void)
 void LevelSelect_CheatActivated_AllEmeralds(void)
 {
     Music_FadeOut(0.125);
-    RSDK.PlaySFX(LevelSelect->sfxEmerald, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxEmerald, 0, 255);
     SaveGame->saveRAM->chaosEmeralds = 0x7F;
 }
 
 void LevelSelect_CheatActivated_ChangeSuperMusicFlag(void)
 {
-    RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
     globals->superMusicEnabled ^= 1;
 }
 
 void LevelSelect_CheatActivated_MaxContinues(void)
 {
-    RSDK.PlaySFX(LevelSelect->sfxContinue, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxContinue, 0, 255);
     SaveGame->saveRAM->continues = 14;
 }
 
 void LevelSelect_CheatActivated_MaxControl(void)
 {
-    RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
     globals->medalMods &= ~getMod(MEDAL_NODROPDASH);
     globals->medalMods |= getMod(MEDAL_INSTASHIELD);
     globals->medalMods |= getMod(MEDAL_PEELOUT);
@@ -128,20 +128,20 @@ void LevelSelect_CheatActivated_MaxControl(void)
 
 void LevelSelect_CheatActivated_RickyMode(void)
 {
-    RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
     globals->secrets ^= SECRET_RICKYMODE;
 }
 
 void LevelSelect_CheatActivated_SuperDash(void)
 {
-    RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
     globals->secrets ^= SECRET_SUPERDASH;
 }
 
 void LevelSelect_CheatActivated_SwapGameMode(void)
 {
     if (API.CheckDLC(DLC_PLUS)) {
-        RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
         if (globals->gameMode == MODE_ENCORE) {
             globals->gameMode = MODE_MANIA;
         }
@@ -157,7 +157,7 @@ void LevelSelect_CheatActivated_SwapGameMode(void)
 void LevelSelect_CheatActivated_UnlockAllMedals(void)
 {
     if (globals->superSecret && (globals->secrets & getMod(SECRET_RICKYMODE))) {
-        RSDK.PlaySFX(LevelSelect->sfxMedalGot, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxMedalGot, 0, 255);
         GameProgress_UnlockAllMedals();
         if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
             LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
@@ -168,7 +168,7 @@ void LevelSelect_CheatActivated_UnlockAllMedals(void)
         }
     }
     else {
-        RSDK.PlaySFX(LevelSelect->sfxRing, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
     }
 }
 #endif
@@ -413,7 +413,7 @@ void LevelSelect_Unknown2(void)
                         if (entity->labelID != 28 || API.CheckDLC(DLC_PLUS))
                             LevelSelect_Unknown7();
                         else
-                            RSDK.PlaySFX(LevelSelect->sfxFail, 0, 255);
+                            RSDK.PlaySfx(LevelSelect->sfxFail, 0, 255);
 #else
                         LevelSelect_Unknown7();
 #endif
@@ -573,7 +573,7 @@ void LevelSelect_Unknown7(void)
         Music_FadeOut(0.1);
     }
     else {
-        RSDK.PlaySFX(LevelSelect->sfxFail, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxFail, 0, 255);
     }
 }
 

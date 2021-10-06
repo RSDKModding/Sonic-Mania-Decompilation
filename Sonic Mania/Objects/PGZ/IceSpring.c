@@ -214,7 +214,7 @@ void IceSpring_Serialize(void)
 void IceSpring_Shatter(int velX, int velY)
 {
     RSDK_THIS(IceSpring);
-    RSDK.PlaySFX(IceSpring->shatterSFX, 0, 255);
+    RSDK.PlaySfx(IceSpring->shatterSFX, 0, 255);
     Ice_ShatterGenerator(8, 8, 16, velX, velY, 0);
     if (entity->type < 2)
         destroyEntity(entity);

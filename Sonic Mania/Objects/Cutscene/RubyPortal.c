@@ -46,7 +46,7 @@ void RubyPortal_Create(void *data)
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
-                door->hitbox.left   = -0x800;
+                door->hitbox.top   = -0x800;
                 door->hitbox.right  = 0;
                 door->hitbox.bottom = -0x800;
             }
@@ -205,9 +205,9 @@ void RubyPortal_Unknown4(void)
                 entity->state = RubyPortal_Unknown5;
 
                 int sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
-                int channel = RSDK.PlaySFX(WarpDoor->sfxRubyAttackL[sfx], 0, 0);
+                int channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], 0, 0);
                 RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-                channel = RSDK.PlaySFX(WarpDoor->sfxRubyAttackR[sfx], 0, 0);
+                channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0);
                 RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
             }
         }

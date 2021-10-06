@@ -123,7 +123,7 @@ void ContinueSetup_Unknown2(void)
             player->state = ContinuePlayer_Unknown2;
         }
         entity->state = ContinueSetup_Unknown3;
-        RSDK.PlaySFX(ContinueSetup->sfxAccept, 0, 255);
+        RSDK.PlaySfx(ContinueSetup->sfxAccept, 0, 255);
     }
     if (!entity->countTimer && ++entity->timer == 60) {
         entity->timer      = 0;

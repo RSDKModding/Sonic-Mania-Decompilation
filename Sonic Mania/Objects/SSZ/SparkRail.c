@@ -10,7 +10,7 @@ void SparkRail_Update(void)
     {
         if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->onGround) {
             if (abs(player->groundVel) > 0x80000) {
-                RSDK.PlaySFX(SparkRail->sfxPon, false, 255);
+                RSDK.PlaySfx(SparkRail->sfxPon, false, 255);
                 EntityDebris *spark = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &spark->animator, true, 0);
                 spark->drawFX     = FX_FLIP;

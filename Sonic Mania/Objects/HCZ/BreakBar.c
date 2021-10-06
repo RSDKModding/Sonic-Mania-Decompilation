@@ -180,7 +180,7 @@ void BreakBar_HandlePlayerInteractions(void *p)
                 }
             }
         }
-        RSDK.PlaySFX(BreakBar->sfxBreak, false, 255);
+        RSDK.PlaySfx(BreakBar->sfxBreak, false, 255);
         entity->destroyFlag = true;
     }
 }
@@ -217,7 +217,7 @@ void BreakBar_State_Main(void)
                     entity->direction |= FLIP_Y;
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                     entity->activePlayersGrabbed |= 1 << playerID;
-                    RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                    RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                 }
             }
 

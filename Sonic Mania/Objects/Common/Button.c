@@ -175,7 +175,7 @@ void Button_CheckEggmanCollisions(void)
             eggman->onGround = true;
             entity->field_78 = Button->field_20;
             if (!entity->field_74) {
-                RSDK.PlaySFX(Button->sfxButton, 0, 255);
+                RSDK.PlaySfx(Button->sfxButton, 0, 255);
                 entity->activated = true;
                 entity->field_68 ^= 1;
             }
@@ -195,7 +195,7 @@ void Button_CheckPRiderCollisions(void)
         /*if (RSDK.CheckObjectCollisionPlatform(entity, &entity->hitbox, rider, &rider->hitbox, true)) {
             entity->field_78 = Button->field_20;
             if (!entity->field_74) {
-                RSDK.PlaySFX(Button->sfxButton, 0, 255);
+                RSDK.PlaySfx(Button->sfxButton, 0, 255);
                 entity->activated = true;
                 entity->field_68 ^= 1;
             }
@@ -262,7 +262,7 @@ void Button_TypeFloor(void)
                 Player_CheckCollisionBox(player, entity, &entity->hitbox);
                 player->angle = 0;
                 if (!entity->field_74) {
-                    RSDK.PlaySFX(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
                     entity->activated = true;
                     entity->field_68 ^= 1;
                 }
@@ -333,7 +333,7 @@ void Button_TypeRoof(void)
 
             if (entity->field_78 == -Button->field_20) {
                 if (!entity->field_74) {
-                    RSDK.PlaySFX(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
                     entity->activated = true;
                     entity->field_68 ^= 1;
                 }
@@ -405,7 +405,7 @@ void Button_TypeRWall(void)
 
             if (entity->field_78 == Button->field_20) {
                 if (!entity->field_74) {
-                    RSDK.PlaySFX(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
                     entity->activated = true;
                     entity->field_68 ^= 1;
                 }
@@ -477,7 +477,7 @@ void Button_TypeLWall(void)
             }
             if (entity->field_78 == -Button->field_20) {
                 if (!entity->field_74) {
-                    RSDK.PlaySFX(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
                     entity->activated = true;
                     entity->field_68 ^= 1;
                 }

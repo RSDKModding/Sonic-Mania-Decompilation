@@ -311,7 +311,7 @@ void BreakableWall_HandleTopBreak_All(void)
                             th += 0x100000;
                         }
 
-                        RSDK.PlaySFX(BreakableWall->sfx_Break, 0, 255);
+                        RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
                         BreakableWall_GiveScoreBonus(player);
 #if RETRO_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
@@ -433,7 +433,7 @@ void BreakableWall_HandleSidesBreak(void)
                                 player->velocity.x -= player->velocity.x >> 2;
                             }
                         }
-                        RSDK.PlaySFX(BreakableWall->sfx_Break, 0, 255);
+                        RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
                         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     continue; // skip to next loop, so we dont do the box collision
@@ -533,7 +533,7 @@ void BreakableWall_HandleBottomBreak_All(void)
                         offsetY += 0x100000;
                     }
 
-                    RSDK.PlaySFX(BreakableWall->sfx_Break, 0, 255);
+                    RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
                     player->velocity.y = velY;
                     destroyEntity(entity);
                 }
@@ -601,7 +601,7 @@ void BreakableWall_HandleBlockBreak_V(void)
     entity->size.y     = sizeY;
     entity->position.x = posX;
     entity->position.y = posY;
-    RSDK.PlaySFX(BreakableWall->sfx_Break, false, 255);
+    RSDK.PlaySfx(BreakableWall->sfx_Break, false, 255);
 }
 void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, byte flip)
 {

@@ -284,7 +284,7 @@ void UIRankButton_Options6CB(void)
     entity->state = UIRankButton_Unknown12;
 }
 
-void UIRankButton_FailCB(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, false, 255); }
+void UIRankButton_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfx_Fail, false, 255); }
 
 void UIRankButton_Options3CB(void)
 {
@@ -293,7 +293,7 @@ void UIRankButton_Options3CB(void)
     control->backoutTimer    = 30;
     entity->timer            = 0;
     entity->state            = UIRankButton_Unknown14;
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
 }
 
 void UIRankButton_Unknown12(void)

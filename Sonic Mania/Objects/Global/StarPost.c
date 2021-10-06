@@ -190,7 +190,7 @@ void StarPost_CheckBonusStageEntry(void)
         if (!globals->recallEntities) {
             if (Player_CheckCollisionTouch(RSDK.GetEntityByID(SLOT_PLAYER1), entity, &entity->starHitbox)) {
                 SaveGame_SaveGameState();
-                RSDK.PlaySFX(StarPost->sfx_Warp, 0, 0xFE);
+                RSDK.PlaySfx(StarPost->sfx_Warp, 0, 0xFE);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
 #if RETRO_USE_PLUS
                 EntityGameProgress *progress = GameProgress_GetGameProgress();
@@ -297,7 +297,7 @@ void StarPost_CheckCollisions(void)
                 }
                 entity->activated |= 1 << playerSlot;
                 entity->active = ACTIVE_NORMAL;
-                RSDK.PlaySFX(StarPost->sfx_StarPost, 0, 255);
+                RSDK.PlaySfx(StarPost->sfx_StarPost, 0, 255);
             }
         }
     }

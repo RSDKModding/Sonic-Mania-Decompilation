@@ -67,11 +67,11 @@ void SpikeLog_State_Main(void)
                                 player->jumpAbility      = 0;
                                 player->jumpAbilityTimer = 0;
                                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, 0, 0);
-                                RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
+                                RSDK.PlaySfx(Player->sfx_MightyUnspin, 0, 255);
                             }
                             if (!player->uncurlTimer) {
                                 player->uncurlTimer = 15;
-                                RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+                                RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
                             }
                         }
                     }

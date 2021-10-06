@@ -182,7 +182,7 @@ void BigSqueeze_Hit(void)
     }
     else {
         entity->invincibilityTimer = 48;
-        RSDK.PlaySFX(BigSqueeze->sfxBossHit, false, 255);
+        RSDK.PlaySfx(BigSqueeze->sfxBossHit, false, 255);
     }
 }
 
@@ -397,7 +397,7 @@ void BigSqueeze_State2_Unknown2(void)
     RSDK.ProcessAnimation(&entity->animator2);
     RSDK.ProcessAnimation(&entity->animator5);
     if (!entity->timer2)
-        RSDK.PlaySFX(BigSqueeze->sfxOrbinaut, false, 255);
+        RSDK.PlaySfx(BigSqueeze->sfxOrbinaut, false, 255);
     if (++entity->timer2 == 16)
         FBZTrash_Unknown2(entity->position.x, entity->position.y + 0x300000);
     if (entity->timer2 == 120) {
@@ -407,7 +407,7 @@ void BigSqueeze_State2_Unknown2(void)
         entity->state = BigSqueeze_State2_Unknown1;
     }
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySFX(BigSqueeze->sfxMagnet, false, 255);
+        RSDK.PlaySfx(BigSqueeze->sfxMagnet, false, 255);
     BigSqueeze_CheckPlayerCollisions2();
 }
 
@@ -415,7 +415,7 @@ void BigSqueeze_State2_Die(void)
 {
     RSDK_THIS(BigSqueeze);
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(BigSqueeze->sfxExplosion2, false, 255);
+        RSDK.PlaySfx(BigSqueeze->sfxExplosion2, false, 255);
         if (Zone->timer & 4) {
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
                           (RSDK.Rand(entity->hitbox.left, entity->hitbox.right) << 16) + entity->position.x,
@@ -449,7 +449,7 @@ void BigSqueeze_State2_Die(void)
                 {
                     if (trash->state != FBZTrash_Unknown3) {
                         CREATE_ENTITY(Explosion, intToVoid(1), trash->position.x, trash->position.y)->drawOrder = Zone->drawOrderHigh;
-                        RSDK.PlaySFX(Explosion->sfx_Destroy, false, 255);
+                        RSDK.PlaySfx(Explosion->sfx_Destroy, false, 255);
                         destroyEntity(trash);
                     }
                 }
@@ -471,7 +471,7 @@ void BigSqueeze_State2_SpawnSignPost(void)
             signPost->position.x = entity->position.x;
             signPost->active     = ACTIVE_NORMAL;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySFX(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
         }
 
         entity->state = StateMachine_None;
