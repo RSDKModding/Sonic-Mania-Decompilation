@@ -302,7 +302,7 @@ void Ice_ZoneCB(void)
     }
 }
 
-void Ice_FreezePlayer(Entity *p)
+void Ice_FreezePlayer(void *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);

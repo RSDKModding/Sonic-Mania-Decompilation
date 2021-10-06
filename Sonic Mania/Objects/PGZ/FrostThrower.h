@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxFrostThrower;
+    ushort sfxFreeze;
 } ObjectFrostThrower;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    ushort timer;
+    Animator animator1;
+    Animator animator2;
+    ushort interval;
+    ushort intervalOffset;
+    ushort duration;
+    Hitbox hitbox;
+    bool32 flag;
+    int field_A4[4];
+    int field_B4[4];
+    Vector2 field_C4[12];
 } EntityFrostThrower;
 
 // Object Struct
@@ -28,6 +43,12 @@ void FrostThrower_EditorLoad(void);
 void FrostThrower_Serialize(void);
 
 // Extra Entity Functions
-
+void FrostThrower_Unknown1(void);
+void FrostThrower_Unknown2(void);
+void FrostThrower_Unknown3(void);
+void FrostThrower_Unknown4(void);
+void FrostThrower_Unknown5(void);
+void FrostThrower_Unknown6(void);
+void FrostThrower_Unknown7(void);
 
 #endif //!OBJ_FROSTTHROWER_H
