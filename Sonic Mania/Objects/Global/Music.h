@@ -90,7 +90,7 @@ void Music_Unknown5(EntityMusic *entity);
 void Music_ResumePrevTrack(byte trackID, bool32 transitionFade);
 void Music_Unknown7(EntityMusic *entity);
 void Music_ClearMusicStack(void);
-void Music_TransitionTrack(byte trackID, float a2);
+void Music_TransitionTrack(byte trackID, float fadeSpeed);
 void Music_FadeOut(float fadeSpeed);
 void Music_State_Unknown11(void);
 void Music_State_Unknown12(void);

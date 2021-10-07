@@ -107,7 +107,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
         player1->state      = Player_State_Ground;
         player1->up         = false;
-        player1->stateInput = 0;
+        player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->jumpPress = false;
         player1->jumpHold  = false;
@@ -144,7 +144,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (RSDK_screens->position.x < Zone->screenBoundsL1[0]) {
-        if (player1->groundVel > 0x20000)
+        if (player1->groundVel < 0x20000)
             player1->groundVel = 0x20000;
         if (player2->objectID == Player->objectID) {
             if (player2->groundVel < 0x20000)

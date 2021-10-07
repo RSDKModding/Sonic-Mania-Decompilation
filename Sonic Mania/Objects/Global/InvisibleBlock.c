@@ -9,19 +9,19 @@ void InvisibleBlock_Update(void)
     {
         if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && (!entity->noChibi || !player->isChibi)) {
             switch (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
-                case 1:
+                case C_TOP:
                     if (!entity->noCrush)
                         player->collisionFlagV |= 1;
                     break;
-                case 2:
+                case C_LEFT:
                     if (!entity->noCrush)
                         player->collisionFlagH |= 1;
                     break;
-                case 3:
+                case C_RIGHT:
                     if (!entity->noCrush)
                         player->collisionFlagH |= 2;
                     break;
-                case 4:
+                case C_BOTTOM:
                     if (!entity->noCrush)
                         player->collisionFlagV |= 2;
                     break;

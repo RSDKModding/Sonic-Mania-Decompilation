@@ -58,9 +58,9 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
     if (host->timer == 1) {
         foreach_all(Player, player)
         {
-            host->position.x = player->position.x;
-            host->position.y = player->position.y;
-            host->position.y += (entity->size.y >> 1) - 0x400000;
+            player->position.x = entity->position.x;
+            player->position.y = entity->position.y;
+            player->position.y += (entity->size.y >> 1) - 0x400000;
         }
 
         entity->boundsR         = Zone->screenBoundsR1[0];
@@ -143,7 +143,7 @@ bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
         globals->suppressTitlecard = true;
-        foreach_active(TitleCard, titlecard)
+        foreach_all(TitleCard, titlecard)
         {
             titlecard->active    = ACTIVE_NORMAL;
             titlecard->state     = TitleCard_Unknown6;
