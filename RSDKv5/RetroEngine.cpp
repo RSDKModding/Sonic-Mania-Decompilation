@@ -199,6 +199,10 @@ bool32 processEvents()
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
+                    case SDLK_F9:
+                        if (engine.devMenu)
+                            showHitboxes ^= 1;
+                        break;
                     case SDLK_F10:
                         if (engine.devMenu)
                             engine.showPaletteOverlay ^= 1;
@@ -334,6 +338,9 @@ void runRetroEngine()
 
         engine.running  = processEvents();
         foreachStackPtr = foreachStackList;
+#if !RETRO_USE_ORIGINAL_CODE
+        debugHitboxCount = 0;
+#endif
         switch (sceneInfo.state) {
             default: break;
             case ENGINESTATE_LOAD:
