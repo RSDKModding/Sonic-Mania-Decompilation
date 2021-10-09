@@ -64,8 +64,8 @@ inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int thisOffset, Ent
         bool32 collided = x * x + y * y < r * r;
         Hitbox thisHitbox;
         Hitbox otherHitbox;
-        thisHitbox.left = thisOffset;
-        otherHitbox.left = otherOffset;
+        thisHitbox.left = thisOffset >> 16;
+        otherHitbox.left = otherOffset >> 16;
 
         int thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, thisEntity, &thisHitbox);
         int otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, otherEntity, &otherHitbox);

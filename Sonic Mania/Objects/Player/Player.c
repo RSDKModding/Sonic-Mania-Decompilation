@@ -183,8 +183,7 @@ void Player_LateUpdate(void)
         entity->collisionFlagV = 0;
         entity->underwater     = false;
         Player_ChangePhysicsState(entity);
-        Entity *powerup = RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(entity));
-        destroyEntity(powerup);
+        destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield));
 
         switch (entity->hurtFlag) {
             default: break;
@@ -352,7 +351,7 @@ void Player_StaticUpdate(void)
 {
 #if RETRO_USE_PLUS
     if (Player->field_A70 > 0) {
-        RSDK.GetEntityByID(SLOT_PLAYER1);
+        RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         foreach_all(HUD, hud)
         {
             if (hud)
@@ -927,7 +926,7 @@ void Player_GiveLife(EntityPlayer *entity)
 void Player_ApplyShieldEffect(EntityPlayer *player)
 {
     if (player->shield && player->superState != 2 && player->invincibleTimer <= 0) {
-        Entity *shield = (Entity *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
         RSDK.ResetEntityPtr(shield, Shield->objectID, player);
     }
 }
@@ -2007,7 +2006,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
                             }
 
-                            EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
+                            EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                             gameOver->activeScreens |= 1 << player->playerID;
                             RSDK.SetGameMode(ENGINESTATE_FROZEN);
                             RSDK_sceneInfo->timeEnabled = false;
@@ -2078,7 +2077,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
                     }
                     else {
-                        EntityGameOver *gameOver = RSDK.GetEntityByID(SLOT_GAMEOVER);
+                        EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                         RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
@@ -2136,7 +2135,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     if (!EncoreIntro) {
                         Player_ResetState(player);
                         if (!player->playerID && globals->gameMode == MODE_ENCORE) {
-                            Player_ResetState((EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2));
+                            Player_ResetState(RSDK_GET_ENTITY(SLOT_PLAYER2, Player));
                         }
                         if (player->objectID == Player->objectID) {
                             player->maxGlideSpeed = 0;
@@ -2395,7 +2394,7 @@ bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox
     }
 #endif
 
-    EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(player->playerID + Player->playerCount));
+    EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + player->playerID, Shield);
     Hitbox *otherHitbox  = &defaultHitbox;
     if (shield->objectID != Shield->objectID || shield->state != Shield_State_Insta) {
         Hitbox *hitbox = player->outerbox;
@@ -3070,13 +3069,13 @@ void Player_StartPeelout(void)
     entity->state          = Player_State_Peelout;
     entity->abilityTimer   = 0;
     entity->spindashCharge = 0;
-    RSDK.PlaySfx(Player->sfx_PeelCharge, 0, 255);
+    RSDK.PlaySfx(Player->sfx_PeelCharge, false, 255);
 }
 #if RETRO_USE_PLUS
 bool32 Player_SwapMainPlayer(bool32 flag)
 {
     RSDK_THIS(Player);
-    EntityPlayer *sidekick = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+    EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (!sidekick->objectID)
         return false;
 
@@ -3138,16 +3137,16 @@ bool32 Player_SwapMainPlayer(bool32 flag)
     Player_ChangePhysicsState(entity);
     sidekick->controllerID    = sidekickController;
     sidekick->stateInput      = sidekickInputState;
-    sidekick->sidekick        = 1;
+    sidekick->sidekick        = true;
     sidekick->score           = 0;
     sidekick->score1UP        = 0;
     sidekick->rings           = 0;
     sidekick->ringExtraLife   = 0;
-    sidekick->shield          = 0;
+    sidekick->shield          = SHIELD_NONE;
     sidekick->invincibleTimer = 0;
     sidekick->speedShoesTimer = 0;
     sidekick->camera          = sidekickCam;
-    sidekick->hyperRing       = 0;
+    sidekick->hyperRing       = false;
     sidekick->playerID        = RSDK.GetEntityID(sidekick);
     Player_ChangePhysicsState(sidekick);
     if (sidekick->superState == 2)
@@ -3255,10 +3254,10 @@ void Player_Hit(EntityPlayer *player)
     }
     else {
         int entityID   = RSDK.GetEntityID(player);
-        Entity *shield = (Entity *)RSDK.GetEntityByID((ushort)(Player->playerCount + entityID));
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + entityID, Shield);
         if (shield->objectID == Shield->objectID) {
-            player->shield = 0;
-            RSDK.ResetEntityPtr(shield, 0, 0);
+            player->shield = SHIELD_NONE;
+            destroyEntity(shield);
             flag = 1;
         }
         else {
@@ -3460,7 +3459,7 @@ void Player_Unknown9(void)
     if (entity->characterID == ID_SONIC)
         entity->spriteIndex = Player->superSpriteIndex;
     entity->superState = 2;
-    RSDK.ResetEntityPtr(RSDK.GetEntityByID(entity->playerID + Player->playerCount), 0, 0);
+    destroyEntity(RSDK.GetEntityByID(entity->playerID + Player->playerCount));
     entity->invincibleTimer = 60;
     entity->superState      = 2;
     Player_ChangePhysicsState(entity);
@@ -4217,12 +4216,13 @@ void Player_State_Transform(void)
         }
     }
     else {
-        Entity *powerup = RSDK.GetEntityByID(entity->playerID + 2 * Player->playerCount);
-        RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, entity);
+        EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + entity->playerID, ImageTrail);
+        RSDK.ResetEntityPtr(trail, ImageTrail->objectID, entity);
         if (ERZStart)
             entity->shield = SHIELD_LIGHTNING;
         RSDK.PlaySfx(Player->sfx_Transform2, 0, 255);
-        Entity *shield = RSDK.GetEntityByID(entity->playerID + Player->playerCount);
+
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + entity->playerID, Shield);
         RSDK.ResetEntityPtr(shield, SuperSparkle->objectID, entity);
         entity->superState = 2;
         Player_ChangePhysicsState(entity);
@@ -4445,10 +4445,10 @@ void Player_State_BubbleBounce(void)
                 entity->camera->field_90 = 0x200000;
             }
 
-            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
             entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12) + 48;
-            int id                                = RSDK.GetEntityID(entity);
-            EntityShield *shield                  = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
+
+            EntityShield *shield                  = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield);
             RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &shield->animator2, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &shield->animator, true, 0);
             shield->state = Shield_State_BubbleAlt;
@@ -5973,8 +5973,7 @@ void Player_SonicJumpAbility(void)
                 && !Player_CheckGoSuper(entity, SaveGame->saveRAM[28])
 #endif
             ) {
-                int id               = RSDK.GetEntityID(entity);
-                EntityShield *shield = (EntityShield *)RSDK.GetEntityByID((ushort)(Player->playerCount + id));
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield);
                 if (entity->invincibleTimer) {
                     if (shield->objectID != Shield->objectID || shield->animator.animationID != ANI_JUMP) {
                         if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
@@ -5990,7 +5989,7 @@ void Player_SonicJumpAbility(void)
                                 RSDK.PlaySfx(Shield->sfx_InstaShield, 0, 255);
                                 RSDK.ResetEntityPtr(shield, Shield->objectID, entity);
                                 shield->inkEffect = INK_ADD;
-                                shield->alpha     = 256;
+                                shield->alpha     = 0x100;
                                 RSDK.SetSpriteAnimation(Shield->spriteIndex, 10, &shield->animator, true, 0);
                                 shield->state = Shield_State_Insta;
                             }
@@ -6158,13 +6157,13 @@ void Player_MightyJumpAbility(void)
                 else
                     entity->velocity.y = 0xC0000;
                 entity->jumpAbilityTimer = 0;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_DROPDASH, &entity->playerAnimator, 0, 2);
-                entity->nextAirState    = 0;
-                entity->nextGroundState = 0;
+                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_DROPDASH, &entity->playerAnimator, false, 2);
+                entity->nextAirState    = StateMachine_None;
+                entity->nextGroundState = StateMachine_None;
                 RSDK.PlaySfx(Player->sfx_Release, 0, 255);
-                int id          = RSDK.GetEntityID(entity);
-                Entity *powerup = RSDK.GetEntityByID(2 * Player->playerCount + id);
-                RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, entity);
+
+                EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(entity), ImageTrail);
+                RSDK.ResetEntityPtr(trail, ImageTrail->objectID, entity);
                 if (entity->camera && !Zone->field_154) {
                     entity->scrollDelay   = 8;
                     entity->camera->state = Camera_State_HLock;
@@ -6330,7 +6329,7 @@ void Player_ProcessP1Input(void)
                 if (RSDK_touchMouse->down[t]) {
                     if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
                         if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-                            EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
+                            EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                             bool32 flag                = true;
 #if RETRO_USE_PLUS
                             if (ActClear && ActClear->dword34)
@@ -6458,7 +6457,7 @@ void Player_ProcessP1Input(void)
 #endif
 
                 if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-                    EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
+                    EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                     bool32 flag                = true;
 #if RETRO_USE_PLUS
                     if (ActClear && ActClear->dword34)

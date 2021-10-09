@@ -742,7 +742,9 @@ void ProcessObjectDrawLists()
 
                     switch (info->type) {
                         case H_TYPE_TOUCH: DrawRectangle(x, y, w, h, info->collision ? 0x808000 : 0xFF0000, 0x60, INK_ALPHA, false); break;
-                        case H_TYPE_CIRCLE: DrawCircle(info->pos.x, info->pos.y, info->hitbox.left, 0xFF0000, 0x60, INK_ALPHA, false); break;
+                        case H_TYPE_CIRCLE:
+                            DrawCircle(info->pos.x, info->pos.y, info->hitbox.left, info->collision ? 0x808000 : 0xFF0000, 0x60, INK_ALPHA, false);
+                            break;
                         case H_TYPE_BOX:
                             DrawRectangle(x, y, w, h, 0x0000FF, 0x60, INK_ALPHA, false);
                             if (info->collision & 1) //top
