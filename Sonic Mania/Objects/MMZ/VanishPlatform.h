@@ -10,7 +10,10 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_PLATFORM_BASE
+    ushort interval;
+    ushort intervalOffset;
+    ushort duration;
 } EntityVanishPlatform;
 
 // Object Struct
@@ -28,6 +31,7 @@ void VanishPlatform_EditorLoad(void);
 void VanishPlatform_Serialize(void);
 
 // Extra Entity Functions
-
+void VanishPlatform_Unknown1(void);
+void VanishPlatform_Unknown2(void);
 
 #endif //!OBJ_VANISHPLATFORM_H
