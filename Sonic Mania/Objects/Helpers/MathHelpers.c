@@ -14,69 +14,69 @@ void MathHelpers_Create(void *data) {}
 
 void MathHelpers_StageLoad(void) {}
 
-void MathHelpers_Unknown1(Vector2 *pos, int a1, int a3, int a4, int a5, int a6)
+void MathHelpers_Lerp1(Vector2 *pos, int percent, int startX, int startY, int endX, int endY)
 {
-    if (a1 < 0) {
-        pos->x = a3;
-        pos->y = a4;
+    if (percent < 0) {
+        pos->x = startX;
+        pos->y = startY;
     }
-    else if (a1 >= 0x100) {
-        pos->x = a5;
-        pos->y = a6;
+    else if (percent >= 0x100) {
+        pos->x = endX;
+        pos->y = endY;
     }
     else {
-        pos->x = a3 + a1 * ((a5 - a3) >> 8);
-        pos->y = a4 + a1 * ((a6 - a4) >> 8);
+        pos->x = startX + percent * ((endX - startX) >> 8);
+        pos->y = startY + percent * ((endY - startY) >> 8);
     }
 }
 
-void MathHelpers_Unknown2(Vector2 *pos, int a1, int a3, int a4, int a5, int a6)
+void MathHelpers_Lerp2(Vector2 *pos, int percent, int startX, int startY, int endX, int endY)
 {
-    if (a1 < 0) {
-        pos->x = a3;
-        pos->y = a4;
+    if (percent < 0) {
+        pos->x = startX;
+        pos->y = startY;
     }
-    else if (a1 >= 0x100) {
-        pos->x = a5;
-        pos->y = a6;
+    else if (percent >= 0x100) {
+        pos->x = endX;
+        pos->y = endY;
     }
     else {
-        int val = (RSDK.Sin1024(a1 + 0x300) >> 2) + 256;
-        pos->x  = a3 + val * ((a5 - a3) >> 8);
-        pos->y  = a4 + val * ((a6 - a4) >> 8);
+        int val = (RSDK.Sin1024(percent + 0x300) >> 2) + 256;
+        pos->x  = startX + val * ((endX - startX) >> 8);
+        pos->y  = startY + val * ((endY - startY) >> 8);
     }
 }
 
-void MathHelpers_Unknown3(Vector2 *pos, int a1, int a3, int a4, int a5, int a6)
+void MathHelpers_Lerp3(Vector2 *pos, int percent, int startX, int startY, int endX, int endY)
 {
-    if (a1 < 0) {
-        pos->x = a3;
-        pos->y = a4;
+    if (percent < 0) {
+        pos->x = startX;
+        pos->y = startY;
     }
-    else if (a1 >= 0x100) {
-        pos->x = a5;
-        pos->y = a6;
+    else if (percent >= 0x100) {
+        pos->x = endX;
+        pos->y = endY;
     }
     else {
-        pos->x = a3 + (RSDK.Sin1024(a1) >> 2) * ((a5 - a3) >> 8);
-        pos->y = a4 + (RSDK.Sin1024(a1) >> 2) * ((a6 - a4) >> 8);
+        pos->x = startX + (RSDK.Sin1024(percent) >> 2) * ((endX - startX) >> 8);
+        pos->y = startY + (RSDK.Sin1024(percent) >> 2) * ((endY - startY) >> 8);
     }
 }
 
-void MathHelpers_Unknown4(Vector2 *pos, int a1, int a3, int a4, int a5, int a6)
+void MathHelpers_Lerp4(Vector2 *pos, int percent, int startX, int startY, int endX, int endY)
 {
-    if (a1 < 0) {
-        pos->x = a3;
-        pos->y = a4;
+    if (percent < 0) {
+        pos->x = startX;
+        pos->y = startY;
     }
-    else if (a1 >= 0x100) {
-        pos->x = a5;
-        pos->y = a6;
+    else if (percent >= 0x100) {
+        pos->x = endX;
+        pos->y = endY;
     }
     else {
-        int val = (RSDK.Sin512(a1 + 0x180) >> 2) + 0x80;
-        pos->x  = a3 + val * ((a5 - a3) >> 8);
-        pos->y  = a4 + val * ((a6 - a4) >> 8);
+        int val = (RSDK.Sin512(percent + 0x180) >> 2) + 0x80;
+        pos->x  = startX + val * ((endX - startX) >> 8);
+        pos->y  = startY + val * ((endY - startY) >> 8);
     }
 }
 

@@ -28,10 +28,10 @@ void MathHelpers_EditorLoad(void);
 void MathHelpers_Serialize(void);
 
 // Extra Entity Functions
-void MathHelpers_Unknown1(Vector2 *pos, int a1, int a3, int a4, int a5, int a6);
-void MathHelpers_Unknown2(Vector2 *pos, int a1, int a3, int a4, int a5, int a6);
-void MathHelpers_Unknown3(Vector2 *pos, int a1, int a3, int a4, int a5, int a6);
-void MathHelpers_Unknown4(Vector2 *pos, int a1, int a3, int a4, int a5, int a6);
+void MathHelpers_Lerp1(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
+void MathHelpers_Lerp2(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
+void MathHelpers_Lerp3(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
+void MathHelpers_Lerp4(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
 Vector2 MathHelpers_Unknown5(int percent, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
 int MathHelpers_Unknown6(uint a1);
 int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8);

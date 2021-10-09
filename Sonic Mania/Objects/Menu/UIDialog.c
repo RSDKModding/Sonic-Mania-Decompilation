@@ -361,7 +361,7 @@ void UIDialog_Unknown11(void)
             else {
                 entity->field_70.x = RSDK_screens->width << 16;
                 entity->field_70.y = 0x900000;
-                MathHelpers_Unknown3(&pos, maxVal(((entity->field_5C - 16) << 8) / 10, 0), -0x400000 - (RSDK_screens->width << 16), 0, 0, 0);
+                MathHelpers_Lerp3(&pos, maxVal(((entity->field_5C - 16) << 8) / 10, 0), -0x400000 - (RSDK_screens->width << 16), 0, 0, 0);
                 entity->drawPos.x = pos.x;
                 entity->drawPos.y = pos.y;
                 if (entity->field_5C - 16 == 1 && entity->field_B4)
@@ -372,7 +372,7 @@ void UIDialog_Unknown11(void)
         else {
             entity->drawPos.x = -0x400000 - (RSDK_screens->width << 16);
             entity->drawPos.y = 0;
-            MathHelpers_Unknown1(&pos, maxVal(((entity->field_5C - 8) << 8) / 8, 0), RSDK_screens->width << 16, 0x10000, RSDK_screens->width << 16,
+            MathHelpers_Lerp1(&pos, maxVal(((entity->field_5C - 8) << 8) / 8, 0), RSDK_screens->width << 16, 0x10000, RSDK_screens->width << 16,
                                  0x900000);
             entity->field_70 = pos;
             entity->field_5C++;
@@ -381,7 +381,7 @@ void UIDialog_Unknown11(void)
     else {
         entity->drawPos.x = -0x400000 - (RSDK_screens->width << 16);
         entity->drawPos.y = 0;
-        MathHelpers_Unknown3(&pos, maxVal((entity->field_5C << 8) / 8, 0), 0, 0x10000, RSDK_screens->width << 16, 0x10000);
+        MathHelpers_Lerp3(&pos, maxVal((entity->field_5C << 8) / 8, 0), 0, 0x10000, RSDK_screens->width << 16, 0x10000);
         ++entity->field_5C;
         entity->field_70.x = pos.x;
         entity->field_70.y = pos.y;
@@ -410,7 +410,7 @@ void UIDialog_Unknown13(void)
         else {
             entity->drawPos.x = (RSDK_screens->width + 64) << 16;
             entity->drawPos.y = 0;
-            MathHelpers_Unknown3(&pos, maxVal(((entity->field_5C - 8) << 8) / 8, 0), RSDK_screens->width << 16, 0x900000, RSDK_screens->width << 16, 0);
+            MathHelpers_Lerp3(&pos, maxVal(((entity->field_5C - 8) << 8) / 8, 0), RSDK_screens->width << 16, 0x900000, RSDK_screens->width << 16, 0);
             ++entity->field_5C;
             entity->field_70.x = pos.x;
             entity->field_70.y = pos.y;
@@ -419,7 +419,7 @@ void UIDialog_Unknown13(void)
     else {
         entity->field_70.x = RSDK_screens->width << 16;
         entity->field_70.y = 0x900000;
-        MathHelpers_Unknown2(&pos, maxVal((entity->field_5C << 8) / 8, 0), 0, 0, (RSDK_screens->width + 64) << 16, 0);
+        MathHelpers_Lerp2(&pos, maxVal((entity->field_5C << 8) / 8, 0), 0, 0, (RSDK_screens->width + 64) << 16, 0);
         ++entity->field_5C;
         entity->drawPos.x = pos.x;
         entity->drawPos.y = pos.y;

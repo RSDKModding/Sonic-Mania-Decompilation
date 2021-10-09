@@ -245,11 +245,11 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     if (player2->objectID == Player->objectID)
         RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
 
-    if (camera->field_8C || RSDK_screens->position.x < Zone->screenBoundsL1[0] || host->timer < 30) {
+    if (camera->offset.x || RSDK_screens->position.x < Zone->screenBoundsL1[0] || host->timer < 30) {
         if (RSDK_screens->position.x < Zone->screenBoundsL1[0])
             RSDK_screens->position.x++;
-        if (camera->field_8C > 0)
-            camera->field_8C -= 0x10000;
+        if (camera->offset.x > 0)
+            camera->offset.x -= 0x10000;
     }
     else {
         Zone_StoreEntities(0x35D40000, 0xA640000);

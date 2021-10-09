@@ -324,7 +324,7 @@ void JuggleSaw_Crab_ThrowSaw(void)
 void JuggleSaw_Saw_Handle(void)
 {
     RSDK_THIS(JuggleSaw);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     EntityJuggleSaw *reciever = (EntityJuggleSaw *)entity->friends[0];
     int oldDir                = reciever->direction;
@@ -342,22 +342,16 @@ void JuggleSaw_Saw_Handle(void)
     if (collided) {
         int newDir = 0;
         if (reciever->spawnDir >= FLIP_Y) {
-            int velY = entity->velocity.y;
-            if (velY) {
-                if (velY >= 0)
-                    newDir = oldDir | FLIP_Y;
-                else
-                    newDir = oldDir & ~FLIP_Y;
-            }
+            if (entity->velocity.y > 0)
+                newDir = oldDir | FLIP_Y;
+            else if (entity->velocity.y < 0)
+                newDir = oldDir & ~FLIP_Y;
         }
         else {
-            int velX = entity->velocity.x;
-            if (velX) {
-                if (velX >= 0)
-                    newDir = oldDir | FLIP_X;
-                else
-                    newDir = oldDir & ~FLIP_X;
-            }
+            if (entity->velocity.x > 0)
+                newDir = oldDir | FLIP_X;
+            else if (entity->velocity.x < 0)
+                newDir = oldDir & ~FLIP_X;
         }
         reciever->direction = newDir;
 

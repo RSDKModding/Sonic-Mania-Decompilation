@@ -343,7 +343,7 @@ void TitleCard_Unknown5(void)
     foreach_active(Player, player)
     {
         if (player->camera)
-            player->camera->field_90 = 0;
+            player->camera->offset.y = 0;
     }
 }
 

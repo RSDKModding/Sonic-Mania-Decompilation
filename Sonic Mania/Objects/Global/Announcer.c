@@ -215,7 +215,7 @@ void Announcer_Unknown6(void)
             }
             else {
                 entity->visible = true;
-                MathHelpers_Unknown1(&entity->pos, ((entity->timer - 76) << 8) / 16, 0, 0, RSDK_screens->width << 16, 0);
+                MathHelpers_Lerp1(&entity->pos, ((entity->timer - 76) << 8) / 16, 0, 0, RSDK_screens->width << 16, 0);
                 ++entity->timer;
             }
         }

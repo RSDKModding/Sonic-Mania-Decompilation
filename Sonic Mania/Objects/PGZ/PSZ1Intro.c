@@ -76,10 +76,10 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
             EntityCamera *camera = player->camera;
             if (camera) {
-                camera->position.x = glider->position.x;
-                camera->position.y = glider->position.y;
-                camera->field_94   = 1;
-                camera->field_90   = 0x200000;
+                camera->position.x  = glider->position.x;
+                camera->position.y  = glider->position.y;
+                camera->offsetYFlag = true;
+                camera->offset.y    = 0x200000;
             }
             else {
                 glider->velocity.x = 0x38000;

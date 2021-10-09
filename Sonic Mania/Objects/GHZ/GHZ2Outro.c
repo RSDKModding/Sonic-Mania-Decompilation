@@ -207,7 +207,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.0125);
     }
     if (host->timer == 120)
-        Camera_Unknown3(3, 0, entity->position.x, entity->position.y, 4);
+        Camera_SetupLerp(3, 0, entity->position.x, entity->position.y, 4);
     if (host->timer >= 208) {
         foreach_active(Player, player)
         {
@@ -252,7 +252,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         EntityCutsceneHBH *shinobi = CutsceneHBH_GetEntity(HBH_MYSTIC);
         if (shinobi)
             shinobi->state = CutsceneHBH_Unknown15;
-        Camera_Unknown3(0, 0, entity->position.x, entity->position.y - 0x400000, 1);
+        Camera_SetupLerp(0, 0, entity->position.x, entity->position.y - 0x400000, 1);
         RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
     }
 

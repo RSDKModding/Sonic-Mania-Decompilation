@@ -1052,7 +1052,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
         player->state          = Player_State_Ground;
         player->camera         = camera;
 
-        Camera_Unknown3(0, 0, camera->position.x, camera->position.y, 0);
+        Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
         camera->targetPtr = (Entity *)player;
         camera->state     = Camera_State_Follow;
 

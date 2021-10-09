@@ -91,7 +91,7 @@ void UIUsernamePopup_Unknown4(void)
         }
         else {
             entity->drawFlag = true;
-            MathHelpers_Unknown1(&entity->posUnknown, 32 * clampVal(entity->timer - entity->timeOut, 0, 8), -entity->dword6C, entity->dword6C, 0, 0);
+            MathHelpers_Lerp1(&entity->posUnknown, 32 * clampVal(entity->timer - entity->timeOut, 0, 8), -entity->dword6C, entity->dword6C, 0, 0);
             ++entity->timer;
         }
     }

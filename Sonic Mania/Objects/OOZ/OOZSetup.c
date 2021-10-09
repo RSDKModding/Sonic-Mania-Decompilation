@@ -494,7 +494,7 @@ void OOZSetup_PlayerState_OilSlide(void)
     }
     else {
         if (entity->camera)
-            entity->camera->field_94 = 0;
+            entity->camera->offsetYFlag = false;
         entity->jumpAbilityTimer = 0;
         if (entity->angle) {
             if (entity->angle <= 128) {
@@ -563,7 +563,7 @@ void OOZSetup_PlayerState_OilFall(void)
     Player_HandleGroundMovement();
 
     if (entity->camera)
-        entity->camera->field_94 = 0;
+        entity->camera->offsetYFlag = false;
     entity->jumpAbilityTimer = 0;
     entity->nextAirState     = Player_State_Air;
     if (entity->jumpPress) {

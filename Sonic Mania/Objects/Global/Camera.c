@@ -27,11 +27,9 @@ void Camera_LateUpdate(void)
         else
             entity->shakePos.y = -entity->shakePos.y;
     }
-    if (!entity->field_94) {
-        int pos = entity->field_90 - (entity->field_90 >> 3);
-        if (pos < 0)
-            pos = 0;
-        entity->field_90 = pos;
+
+    if (!entity->offsetYFlag) {
+        entity->offset.y = maxVal(entity->offset.y - (entity->offset.y >> 3), 0);
     }
 }
 
@@ -49,8 +47,8 @@ void Camera_Create(void *data)
 {
     int screen = voidToInt(data);
     RSDK_THIS(Camera);
-    entity->field_8C = 0x80000;
-    entity->centerY  = 104;
+    entity->offset.x = 0x80000;
+    entity->centerY  = RSDK_screens->centerY - 16;
     if (entity->active != ACTIVE_NORMAL) {
         entity->screenID = screen;
         RSDK.AddCamera(&entity->center, RSDK_screens[screen].centerX << 16, RSDK_screens[screen].centerY << 16, false);
@@ -236,7 +234,7 @@ void Camera_HandleVBounds(void)
     Zone->screenBoundsB2[entity->screenID] = entity->boundsB << 16;
 }
 
-void Camera_Unknown3(int a1, int screen, int x, int y, int a5)
+void Camera_SetupLerp(int type, int screen, int x, int y, int speed)
 {
     foreach_all(Camera, camera)
     {
@@ -245,10 +243,10 @@ void Camera_Unknown3(int a1, int screen, int x, int y, int a5)
             camera->startLerpPos.y = camera->position.y;
             camera->endLerpPos.x   = x;
             camera->endLerpPos.y   = y;
-            camera->field_A8       = a1;
-            camera->field_A4       = a5;
-            camera->state          = Camera_State_Unknown;
-            foreach_return;
+            camera->lerpType       = type;
+            camera->lerpSpeed      = speed;
+            camera->state          = Camera_State_HandleLerp;
+            foreach_break;
         }
     }
 }
@@ -305,9 +303,9 @@ void Camera_State_Follow(void)
         Camera_HandleVBounds();
         Entity *target = entity->targetPtr;
         target->position.x += entity->field_6C.x;
-        if (target->position.x <= entity->position.x + entity->field_8C) {
-            if (target->position.x < entity->position.x - entity->field_8C) {
-                int pos = target->position.x + entity->field_8C - entity->position.x;
+        if (target->position.x <= entity->position.x + entity->offset.x) {
+            if (target->position.x < entity->position.x - entity->offset.x) {
+                int pos = target->position.x + entity->offset.x - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
                 entity->position.x += pos;
@@ -315,7 +313,7 @@ void Camera_State_Follow(void)
             target->position.x -= entity->field_6C.x;
         }
         else {
-            int pos = target->position.x - entity->position.x - entity->field_8C;
+            int pos = target->position.x - entity->position.x - entity->offset.x;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             entity->position.x += pos;
@@ -324,9 +322,9 @@ void Camera_State_Follow(void)
 
         target->position.y += entity->field_6C.y;
         int adjust = target->position.y - entity->adjustY;
-        if (adjust <= entity->position.y + entity->field_90) {
-            if (adjust < entity->position.y - entity->field_90) {
-                int pos = target->position.y + entity->field_90 - entity->position.y - entity->adjustY;
+        if (adjust <= entity->position.y + entity->offset.y) {
+            if (adjust < entity->position.y - entity->offset.y) {
+                int pos = target->position.y + entity->offset.y - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
                 entity->position.y += pos;
@@ -334,7 +332,7 @@ void Camera_State_Follow(void)
             target->position.y -= entity->field_6C.y;
         }
         else {
-            int pos = adjust - entity->position.y - entity->field_90;
+            int pos = adjust - entity->position.y - entity->offset.y;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             entity->position.y += pos;
@@ -349,9 +347,9 @@ void Camera_State_HLock(void)
         Camera_HandleHBounds();
         Entity *target = entity->targetPtr;
         target->position.x += entity->field_6C.x;
-        if (target->position.x <= entity->position.x + entity->field_8C) {
-            if (target->position.x < entity->position.x - entity->field_8C) {
-                int pos = target->position.x + entity->field_8C - entity->position.x;
+        if (target->position.x <= entity->position.x + entity->offset.x) {
+            if (target->position.x < entity->position.x - entity->offset.x) {
+                int pos = target->position.x + entity->offset.x - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
                 entity->position.x = entity->position.x + pos;
@@ -359,7 +357,7 @@ void Camera_State_HLock(void)
             target->position.x -= entity->field_6C.x;
         }
         else {
-            int pos = target->position.x - entity->position.x - entity->field_8C;
+            int pos = target->position.x - entity->position.x - entity->offset.x;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             entity->position.x = entity->position.x + pos;
@@ -375,9 +373,9 @@ void Camera_State_VLock(void)
         Entity *target = entity->targetPtr;
         target->position.y += entity->field_6C.y;
         int adjust = target->position.y - entity->adjustY;
-        if (adjust <= entity->position.y + entity->field_90) {
-            if (adjust < entity->position.y - entity->field_90) {
-                int pos = target->position.y + entity->field_90 - entity->position.y - entity->adjustY;
+        if (adjust <= entity->position.y + entity->offset.y) {
+            if (adjust < entity->position.y - entity->offset.y) {
+                int pos = target->position.y + entity->offset.y - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
                 entity->position.y = entity->position.y + pos;
@@ -385,7 +383,7 @@ void Camera_State_VLock(void)
             target->position.y -= entity->field_6C.y;
         }
         else {
-            int pos = adjust - entity->position.y - entity->field_90;
+            int pos = adjust - entity->position.y - entity->offset.y;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             entity->position.y = entity->position.y + pos;
@@ -393,34 +391,34 @@ void Camera_State_VLock(void)
         }
     }
 }
-void Camera_State_Unknown(void)
+void Camera_State_HandleLerp(void)
 {
     RSDK_THIS(Camera);
-    entity->field_A0 += entity->field_A4;
+    entity->lerpPercent += entity->lerpSpeed;
 
-    switch (entity->field_A8) {
+    switch (entity->lerpType) {
         default: break;
         case 0:
-            MathHelpers_Unknown1(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+            MathHelpers_Lerp1(&entity->position, entity->lerpPercent, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
                                  entity->endLerpPos.y);
             break;
         case 1:
-            MathHelpers_Unknown2(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+            MathHelpers_Lerp2(&entity->position, entity->lerpPercent, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
                                  entity->endLerpPos.y);
             break;
         case 2:
-            MathHelpers_Unknown3(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+            MathHelpers_Lerp3(&entity->position, entity->lerpPercent, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
                                  entity->endLerpPos.y);
             break;
         case 3:
-            MathHelpers_Unknown4(&entity->position, entity->field_A0, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
+            MathHelpers_Lerp4(&entity->position, entity->lerpPercent, entity->startLerpPos.x, entity->startLerpPos.y, entity->endLerpPos.x,
                                  entity->endLerpPos.y);
             break;
     }
 
-    if (entity->field_A0 >= 0x100) {
-        entity->field_A0 = 0;
-        entity->state    = StateMachine_None;
+    if (entity->lerpPercent >= 0x100) {
+        entity->lerpPercent = 0;
+        entity->state       = StateMachine_None;
     }
 }
 

@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    Hitbox hitbox4;
+    Hitbox hitbox5;
+    Hitbox hitbox6;
+    ushort aniFrames;
 } ObjectJunctionWheel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Animator animator1;
+    Animator animator2;
+    byte field_88;
 } EntityJunctionWheel;
 
 // Object Struct

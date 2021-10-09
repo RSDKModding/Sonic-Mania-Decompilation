@@ -236,8 +236,8 @@ void WarpDoor_Unknown1(void)
             player->camera->state      = Camera_State_Follow;
             player->camera->position.x = player->position.x;
             player->camera->position.y = player->position.y;
-            player->camera->field_8C   = 0;
-            player->camera->field_90   = 0;
+            player->camera->offset.x   = 0;
+            player->camera->offset.y   = 0;
         }
     }
 }

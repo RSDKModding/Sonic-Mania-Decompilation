@@ -447,7 +447,7 @@ bool32 AIZSetup_Cutscene1_Unknown5(Entity *h)
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
         player1->camera = NULL;
-        Camera_Unknown3(0, 0, AIZSetup->platform->position.x - 0x400000, camera->position.y, 3);
+        Camera_SetupLerp(0, 0, AIZSetup->platform->position.x - 0x400000, camera->position.y, 3);
         player1->stateInput = StateMachine_None;
         player1->state      = Player_State_Ground;
         player1->up         = true;
@@ -744,7 +744,7 @@ bool32 AIZSetup_Cutscene2_Unknown5(Entity *h)
 
     if (!host->timer) {
         player1->camera = 0;
-        Camera_Unknown3(0, 0, player1->position.x - 0x600000, camera->position.y, 3);
+        Camera_SetupLerp(0, 0, player1->position.x - 0x600000, camera->position.y, 3);
     }
     else if (camera->position.x <= camera->endLerpPos.x) {
         if (host->field_68) {

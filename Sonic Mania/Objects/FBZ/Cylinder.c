@@ -709,7 +709,7 @@ void Cylinder_Player_State_Unknown2(void)
     Player_HandleGroundMovement();
     entity->skidding = 0;
     if (entity->camera)
-        entity->camera->field_94 = 0;
+        entity->camera->offsetYFlag = false;
     entity->jumpAbilityTimer = 0;
 
     if (entity->jumpPress) {
@@ -755,7 +755,7 @@ void Cylinder_Player_State_Unknown3(void)
         entity->playerAnimator.animationSpeed = 0xF0;
 
     if (entity->camera)
-        entity->camera->field_94 = 0;
+        entity->camera->offsetYFlag = false;
     entity->jumpAbilityTimer = 0;
     entity->angle            = angle;
     if (entity->jumpPress) {

@@ -481,7 +481,7 @@ void Ice_State_FrozenPlayer(void)
                 if (!entity->groundVel)
                     entity->groundVel += (5000 * RSDK.Sin256(entity->angle)) >> 8;
                 if (entity->camera)
-                    entity->camera->field_94 = 0;
+                    entity->camera->offsetYFlag = false;
                 entity->jumpAbilityTimer = 0;
                 entity->rollingFriction  = rollFric;
                 if (entity->state == Player_State_Ground)

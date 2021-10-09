@@ -6,12 +6,18 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectMMZLightning;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int field_60;
+    int field_64;
+    Animator animator;
 } EntityMMZLightning;
 
 // Object Struct
@@ -29,6 +35,14 @@ void MMZLightning_EditorLoad(void);
 void MMZLightning_Serialize(void);
 
 // Extra Entity Functions
+void MMZLightning_Unknown1(void);
+void MMZLightning_Unknown2(void);
+void MMZLightning_Unknown3(void);
+void MMZLightning_Unknown4(void);
+void MMZLightning_Unknown5(void);
+void MMZLightning_Unknown6(void);
+void MMZLightning_Unknown7(void);
+
 #endif
 
 #endif //!OBJ_MMZLIGHTNING_H

@@ -539,11 +539,11 @@ void PauseMenu_Unknown21(void)
         Vector2 pos;
 
         int val = 32 * entity->timer;
-        MathHelpers_Unknown3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
+        MathHelpers_Lerp3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
 
         entity->field_68.x = pos.x;
         entity->field_68.y = pos.y;
-        MathHelpers_Unknown3(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
+        MathHelpers_Lerp3(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
 
         ++entity->timer;
         entity->field_70.x = pos.x;
@@ -595,11 +595,11 @@ void PauseMenu_Unknown23(void)
         Vector2 pos;
 
         int val = 32 * entity->timer;
-        MathHelpers_Unknown3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
+        MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
 
         entity->field_68.x = pos.x;
         entity->field_68.y = pos.y;
-        MathHelpers_Unknown3(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
+        MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
 
         entity->field_70.x = pos.x;
         entity->field_70.y = pos.y;
