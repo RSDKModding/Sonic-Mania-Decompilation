@@ -32,7 +32,7 @@ void BuzzSaw_Create(void *data)
         RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, entity->type, &entity->animator, true, 0);
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = (abs(entity->speed * entity->amplitude.x) + 64) << 17;
-        entity->updateRange.x = (abs(entity->speed * entity->amplitude.y) + 64) << 17;
+        entity->updateRange.y = (abs(entity->speed * entity->amplitude.y) + 64) << 17;
         entity->amplitude.x >>= 10;
         entity->amplitude.y >>= 10;
         entity->visible   = true;

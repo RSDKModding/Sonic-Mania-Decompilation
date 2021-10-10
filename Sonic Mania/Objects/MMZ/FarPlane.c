@@ -8,7 +8,7 @@ void FarPlane_LateUpdate(void)
 {
     RSDK_THIS(FarPlane);
     if (entity->active == ACTIVE_ALWAYS) {
-        FarPlane_Unknown1();
+        FarPlane_SetupEntities();
     }
     else if (entity->active == ACTIVE_BOUNDS) {
         entity->active                                      = ACTIVE_NORMAL;
@@ -17,16 +17,16 @@ void FarPlane_LateUpdate(void)
         FarPlane->field_18.y                                = entity->origin.y;
         FarPlane->field_20.x                                = entity->position.x;
         FarPlane->field_20.y                                = entity->position.y;
-        RSDK.SetDrawLayerProperties(1, false, FarPlane_Unknown3);
-        RSDK.SetDrawLayerProperties(3, false, FarPlane_Unknown4);
-        FarPlane_Unknown2(ACTIVE_NORMAL);
+        RSDK.SetDrawLayerProperties(1, false, FarPlane_DrawLayerCB_Low);
+        RSDK.SetDrawLayerProperties(3, false, FarPlane_DrawLayerCB_High);
+        FarPlane_SetEntityActivities(ACTIVE_NORMAL);
     }
     else if (!RSDK.CheckOnScreen(entity, NULL)) {
         entity->active                                      = ACTIVE_BOUNDS;
         RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = DRAWLAYER_COUNT;
         RSDK.SetDrawLayerProperties(1, false, NULL);
         RSDK.SetDrawLayerProperties(3, false, NULL);
-        FarPlane_Unknown2(ACTIVE_NEVER);
+        FarPlane_SetEntityActivities(ACTIVE_NEVER);
     }
 }
 
@@ -53,6 +53,7 @@ void FarPlane_Draw(void)
 void FarPlane_Create(void *data)
 {
     RSDK_THIS(FarPlane);
+
     if (!RSDK_sceneInfo->inEditor) {
         entity->updateRange.x = entity->size.x + (entity->size.x >> 1);
         entity->updateRange.y = entity->size.y + (entity->size.y >> 1);
@@ -68,11 +69,11 @@ void FarPlane_StageLoad(void)
     if (FarPlane->layerID != 0xFFFF) {
         TileLayer *layer                               = RSDK.GetSceneLayer(FarPlane->layerID);
         layer->drawLayer[0]                            = DRAWLAYER_COUNT;
-        layer->scanlineCallback                        = FarPlane_Unknown5;
+        layer->scanlineCallback                        = FarPlane_ScanlineCB;
         RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0]  = 2;
         RSDK.GetSceneLayer(Zone->fgHigh)->drawLayer[0] = 7;
-        RSDK.SetDrawLayerProperties(1, 0, 0);
-        RSDK.SetDrawLayerProperties(2, 0, 0);
+        RSDK.SetDrawLayerProperties(1, false, NULL);
+        RSDK.SetDrawLayerProperties(2, false, NULL);
         RSDK.CopyPalette(0, 0, 3, 0, 128);
         RSDK.CopyPalette(0, 144, 3, 144, 112);
         RSDK.CopyPalette(3, 0, 4, 0, 255);
@@ -85,12 +86,11 @@ void FarPlane_StageLoad(void)
         Zone->deathBoundary[0] -= 0x8000000;
         Zone->screenBoundsB1[1] -= 0x800;
         Zone->deathBoundary[1] -= 0x8000000;
-#if RETRO_USE_PLUS
         Zone->screenBoundsB1[2] -= 0x800;
         Zone->deathBoundary[2] -= 0x8000000;
         Zone->screenBoundsB1[3] -= 0x800;
         Zone->deathBoundary[3] -= 0x8000000;
-#endif
+
         ++Zone->drawOrderLow;
         ++Zone->playerDrawLow;
         ++Zone->fgLayerHigh;
@@ -102,12 +102,12 @@ void FarPlane_StageLoad(void)
     }
 }
 
-void FarPlane_Unknown1(void)
+void FarPlane_SetupEntities(void)
 {
     RSDK_THIS(FarPlane);
     entity->entityCount = 0;
 
-    for (int i = 0; i < 0x800 && entity->entityCount < 0x100; ++i) {
+    for (int i = 0; i < SCENEENTITY_COUNT && entity->entityCount < 0x100; ++i) {
         Entity *entPtr = RSDK.GetEntityByID(i);
         if (abs(entity->origin.x - entPtr->position.x) < entity->size.x) {
             if (abs(entity->origin.y - entPtr->position.y) < entity->size.y) {
@@ -120,7 +120,7 @@ void FarPlane_Unknown1(void)
     entity->active = ACTIVE_BOUNDS;
 }
 
-void FarPlane_Unknown2(byte active)
+void FarPlane_SetEntityActivities(byte active)
 {
     RSDK_THIS(FarPlane);
     for (int i = 0; i < entity->entityCount; ++i) {
@@ -128,7 +128,7 @@ void FarPlane_Unknown2(byte active)
     }
 }
 
-void FarPlane_Unknown3(void)
+void FarPlane_DrawLayerCB_Low(void)
 {
     int id = 0;
     for (int i = 0; i < 0x200 && id < 0x200; ++i) {
@@ -220,7 +220,7 @@ void FarPlane_Unknown3(void)
     }
 }
 
-void FarPlane_Unknown4(void)
+void FarPlane_DrawLayerCB_High(void)
 {
     int id = 0;
     for (int i = 0; i < 0x200 && id < 0x200; ++i) {
@@ -267,7 +267,7 @@ void FarPlane_Unknown4(void)
     }
 }
 
-void FarPlane_Unknown5(ScanlineInfo *scanline)
+void FarPlane_ScanlineCB(ScanlineInfo *scanline)
 {
     int x = FarPlane->field_8.x - (RSDK_screens->centerX << 17);
     int y = FarPlane->field_8.y - (RSDK_screens->centerY << 17);
