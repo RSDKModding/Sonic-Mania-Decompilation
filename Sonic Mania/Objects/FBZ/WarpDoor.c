@@ -295,7 +295,7 @@ bool32 WarpDoor_Unknown5(short a1, Vector2 *posPtr)
         return false;
     if (Zone->timer < 1)
         return false;
-    EntityPlayer *player = RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (!player || !player->camera)
         return false;
     if (a1 > -1) {
