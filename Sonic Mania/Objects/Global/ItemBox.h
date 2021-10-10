@@ -3,6 +3,30 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    ITEMBOX_RING,
+    ITEMBOX_BLUESHIELD,
+    ITEMBOX_BUBBLESHIELD,
+    ITEMBOX_FIRESHIELD,
+    ITEMBOX_LIGHTNINGSHIELD,
+    ITEMBOX_INVINCIBLE,
+    ITEMBOX_SNEAKERS,
+    ITEMBOX_1UP_SONIC,
+    ITEMBOX_1UP_TAILS,
+    ITEMBOX_1UP_KNUX,
+    ITEMBOX_EGGMAN,
+    ITEMBOX_HYPERRING,
+    ITEMBOX_SWAP,
+    ITEMBOX_RANDOM,
+    ITEMBOX_SUPER,
+#if RETRO_USE_PLUS
+    ITEMBOX_1UP_MIGHTY,
+    ITEMBOX_1UP_RAY,
+    ITEMBOX_STOCK,
+#endif
+    ITEMBOX_COUNT
+}ItemBoxTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -21,7 +45,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
+    ItemBoxTypes type;
     Vector2 contentsPos;
     Vector2 unknownPos;
     int contentsSpeed;
@@ -30,7 +54,7 @@ typedef struct {
     bool32 isFalling;
     bool32 isContents;
     bool32 hidden;
-    int planeFilter;
+    PlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
     Animator brokenData;
     Animator contentsData;

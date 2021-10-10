@@ -11,22 +11,13 @@ void BoundsMarker_Update(void)
     }
 }
 
-void BoundsMarker_LateUpdate(void)
-{
+void BoundsMarker_LateUpdate(void) {}
 
-}
+void BoundsMarker_StaticUpdate(void) {}
 
-void BoundsMarker_StaticUpdate(void)
-{
+void BoundsMarker_Draw(void) {}
 
-}
-
-void BoundsMarker_Draw(void)
-{
-
-}
-
-void BoundsMarker_Create(void* data)
+void BoundsMarker_Create(void *data)
 {
     EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
     if (!RSDK_sceneInfo->inEditor) {
@@ -49,37 +40,34 @@ void BoundsMarker_Create(void* data)
     }
 }
 
-void BoundsMarker_StageLoad(void)
-{
-
-}
+void BoundsMarker_StageLoad(void) {}
 
 void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos)
 {
-    EntityPlayer *player = (EntityPlayer*)p;
-    ushort playerID = RSDK.GetEntityID(player);
+    EntityPlayer *player = (EntityPlayer *)p;
+    ushort playerID      = RSDK.GetEntityID(player);
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
         if (abs(entity->position.x - player->position.x) < entity->width) {
             switch (entity->type) {
-                case 0: //bottom
+                case 0: // bottom
                     Zone->screenBoundsB2[playerID] = entity->position.y;
                     Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
-                    Zone->deathBoundary[playerID] = entity->position.y;
+                    Zone->deathBoundary[playerID]  = entity->position.y;
                     break;
-                case 1: //bottom (offset)
+                case 1: // bottom (offset)
                     if (player->position.y < entity->position.y - (entity->offset << 16)) {
                         Zone->screenBoundsB2[playerID] = entity->position.y;
                         Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
-                        Zone->deathBoundary[playerID] = entity->position.y;
+                        Zone->deathBoundary[playerID]  = entity->position.y;
                     }
                     break;
-                case 2: //top (offset)
+                case 2: // top (offset)
                     if (player->position.y > entity->position.y + (entity->offset << 16)) {
                         Zone->screenBoundsT2[playerID] = entity->position.y;
                         Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
                     }
                     break;
-                case 3: //top
+                case 3: // top
                     Zone->screenBoundsT2[playerID] = entity->position.y;
                     Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
                     break;
@@ -100,11 +88,9 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
 }
 void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
 {
-    EntityPlayer *player       = (EntityPlayer *)p;
+    EntityPlayer *player = (EntityPlayer *)p;
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
-        foreach_all(BoundsMarker, entity) {
-            BoundsMarker_CheckBounds(player, entity, setPos);
-        }
+        foreach_all(BoundsMarker, entity) { BoundsMarker_CheckBounds(player, entity, setPos); }
     }
 }
 
@@ -112,7 +98,7 @@ void BoundsMarker_EditorDraw(void)
 {
     Animator animator;
     RSDK.SetSpriteAnimation(BoundsMarker->spriteIndex, 0, &animator, true, 2);
-    RSDK.DrawSprite(&animator, NULL, 0);
+    RSDK.DrawSprite(&animator, NULL, false);
 }
 
 void BoundsMarker_EditorLoad(void) { BoundsMarker->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
@@ -124,4 +110,3 @@ void BoundsMarker_Serialize(void)
     RSDK_EDITABLE_VAR(BoundsMarker, VAR_BOOL, vsDisable);
     RSDK_EDITABLE_VAR(BoundsMarker, VAR_ENUM, offset);
 }
-

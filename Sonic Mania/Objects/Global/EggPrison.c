@@ -7,23 +7,23 @@ void EggPrison_Update(void)
     RSDK_THIS(EggPrison);
     StateMachine_Run(entity->state);
 
-    if (entity->type == 1) {
+    if (entity->type == EGGPRISON_FLYING) {
         RSDK.ProcessAnimation(&entity->animator2);
         EggPrison_HandleMovement();
         if (!entity->activated) {
             foreach_active(Player, player)
             {
-                if (Player_CheckCollisionBox(player, entity, &entity->hitbox1) == 1) {
+                if (Player_CheckCollisionBox(player, entity, &entity->hitbox1) == C_TOP) {
                     player->position.x += entity->velocity.x;
                     player->position.y += 0x10000;
                 }
 
                 if (entity->state == EggPrison_Unknown2) {
-                    if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == 4) {
+                    if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == C_BOTTOM) {
                         entity->velocity.x = 0;
                         entity->active     = ACTIVE_NORMAL;
                         entity->state      = EggPrison_Activated;
-                        entity->buttonPos    = -0x80000;
+                        entity->buttonPos  = -0x80000;
                     }
                     else {
                         if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
@@ -32,7 +32,7 @@ void EggPrison_Update(void)
                         }
                         else {
                             Hitbox *playerHitbox = Player_GetHitbox(player);
-                            entity->buttonPos      = ((playerHitbox->top - 48) << 16) - entity->position.y + player->position.y;
+                            entity->buttonPos    = ((playerHitbox->top - 48) << 16) - entity->position.y + player->position.y;
                             if (entity->buttonPos >= -0x80000) {
                                 if (entity->buttonPos > 0)
                                     entity->buttonPos = 0;
@@ -56,11 +56,11 @@ void EggPrison_Update(void)
         {
             Player_CheckCollisionBox(player, entity, &entity->hitbox1);
             if (entity->state == EggPrison_Unknown2) {
-                if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == 1) {
+                if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == C_TOP) {
                     entity->buttonPos = 0x80000;
-                    if (entity->type < 2)
+                    if (entity->type < EGGPRISON_DUD)
                         RSDK_sceneInfo->timeEnabled = false;
-                    if (entity->type == 5) {
+                    if (entity->type == EGGPRISON_ANIMALS) {
                         int anim = player->playerAnimator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                             player->storedAnim = player->playerAnimator.animationID;
@@ -80,7 +80,7 @@ void EggPrison_Update(void)
                 else {
                     if (Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
                         Hitbox *playerHitbox = Player_GetHitbox(player);
-                        entity->buttonPos      = ((playerHitbox->bottom + 48) << 16) - entity->position.y + player->position.y;
+                        entity->buttonPos    = ((playerHitbox->bottom + 48) << 16) - entity->position.y + player->position.y;
                         if (entity->buttonPos <= 0x80000) {
                             if (entity->buttonPos < 0)
                                 entity->buttonPos = 0;
@@ -111,15 +111,15 @@ void EggPrison_Draw(void)
 {
     RSDK_THIS(EggPrison);
     Vector2 drawPos;
-    if (entity->type == 1) {
+    if (entity->type == EGGPRISON_FLYING) {
         entity->direction = FLIP_Y;
         drawPos.x         = entity->position.x;
         drawPos.y         = entity->position.y;
         drawPos.y += entity->buttonPos;
-        RSDK.DrawSprite(&entity->data4, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
         entity->direction = FLIP_NONE;
-        RSDK.DrawSprite(&entity->data1, NULL, false);
-        RSDK.DrawSprite(&entity->data3, NULL, false);
+        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        RSDK.DrawSprite(&entity->animator3, NULL, false);
         RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->direction = FLIP_X;
         RSDK.DrawSprite(&entity->animator2, NULL, false);
@@ -129,24 +129,24 @@ void EggPrison_Draw(void)
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y;
         drawPos.y += entity->buttonPos;
-        RSDK.DrawSprite(&entity->data4, &drawPos, false);
-        RSDK.DrawSprite(&entity->data1, NULL, false);
-        RSDK.DrawSprite(&entity->data3, NULL, false);
+        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        RSDK.DrawSprite(&entity->animator3, NULL, false);
     }
 }
 
 void EggPrison_Create(void *data)
 {
     RSDK_THIS(EggPrison);
-    if (globals->gameMode < MODE_TIMEATTACK || entity->type >= 1) {
+    if (globals->gameMode < MODE_TIMEATTACK || entity->type >= EGGPRISON_FLYING) {
         entity->drawFX = FX_FLIP;
         if (!RSDK_sceneInfo->inEditor) {
             if (data)
                 entity->type = voidToInt(data);
-            if (entity->type == 1) {
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->data1, true, 1);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->data4, true, 0);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->data3, true, 1);
+            if (entity->type == EGGPRISON_FLYING) {
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 1);
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 1);
                 RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->animator2, true, 0);
                 entity->hitbox2.left   = -16;
                 entity->hitbox2.top    = 24;
@@ -161,9 +161,9 @@ void EggPrison_Create(void *data)
                 entity->velocity.y     = 0x4000;
             }
             else {
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->data1, true, 0);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->data4, true, 0);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->data3, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 0);
                 entity->hitbox2.left   = -16;
                 entity->hitbox2.top    = -38;
                 entity->hitbox2.right  = 16;
@@ -243,25 +243,25 @@ void EggPrison_HandleMovement(void)
 void EggPrison_Activated(void)
 {
     RSDK_THIS(EggPrison);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data3, true, 0);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
     entity->state = EggPrison_Unknown3;
 
     switch (entity->type) {
         default:
-        case 0:
-        case 1:
-        case 2:
+        case EGGPRISON_NORMAL:
+        case EGGPRISON_FLYING:
+        case EGGPRISON_DUD:
             for (int i = 0; i < 10; ++i) {
                 EntityAnimals *animals =
                     (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[i & 1] + 1),
                                                        (((RSDK.Rand(0, 48) & -4) - 24) << 16) + entity->position.x, entity->position.y + 0x40000);
-                animals->delay          = 4 * i;
-                animals->state          = Animals_State_BounceAround;
-                animals->behaviour      = 1;
-                animals->direction      = (i ^ (i >> 1)) & 1;
+                animals->delay     = 4 * i;
+                animals->state     = Animals_State_BounceAround;
+                animals->behaviour = 1;
+                animals->direction = (i ^ (i >> 1)) & 1;
             }
             break;
-        case 3: {
+        case EGGPRISON_RINGS: {
             int angle = 144;
             for (int r = 0; r < 6; ++r) {
                 EntityRing *ring = (EntityRing *)RSDK.CreateEntity(
@@ -281,7 +281,7 @@ void EggPrison_Activated(void)
             }
             break;
         }
-        case 4: {
+        case EGGPRISON_TRAP: {
             EntityTechnosqueek *technosqueek = CREATE_ENTITY(Technosqueek, NULL, entity->position.x - 0x80000, entity->position.y);
             technosqueek->velocity.x         = -0x30000;
             technosqueek->velocity.y         = -0x40000;
@@ -296,9 +296,9 @@ void EggPrison_Activated(void)
             technosqueek->state      = Technosqueek_State_Unknown6;
 
             EntityBlaster *blaster = CREATE_ENTITY(Blaster, NULL, entity->position.x - 0x180000, entity->position.y);
-            blaster->velocity.x = -0x30000;
-            blaster->velocity.y = -0x30000;
-            blaster->active     = ACTIVE_NORMAL;
+            blaster->velocity.x    = -0x30000;
+            blaster->velocity.y    = -0x30000;
+            blaster->active        = ACTIVE_NORMAL;
             blaster->state         = Blaster_State_Unknown7;
 
             blaster             = CREATE_ENTITY(Blaster, NULL, entity->position.x + 0x180000, entity->position.y);
@@ -309,7 +309,7 @@ void EggPrison_Activated(void)
             blaster->state      = Blaster_State_Unknown7;
             break;
         }
-        case 5:
+        case EGGPRISON_ANIMALS:
             for (int a = 0; a < 10; ++a) {
                 EntityAnimals *animals = (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[a & 1] + 1),
                                                                             (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + entity->position.x,
@@ -322,8 +322,7 @@ void EggPrison_Activated(void)
             break;
     }
 
-    EntityDebris *debris =
-        (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_FallAndFlicker, entity->position.x - 0x160000, entity->position.y);
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x - 0x160000, entity->position.y);
     RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 2);
     debris->velocity.x    = -0x20000;
     debris->velocity.y    = -0x20000;
@@ -334,7 +333,7 @@ void EggPrison_Activated(void)
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
 
-    debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
     RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 3);
     debris->velocity.x    = 0;
     debris->velocity.y    = -0x30000;
@@ -345,7 +344,7 @@ void EggPrison_Activated(void)
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
 
-    debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_FallAndFlicker, entity->position.x + 0x160000, entity->position.y);
+    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + 0x160000, entity->position.y);
     RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 4);
     debris->velocity.x    = 0x20000;
     debris->velocity.y    = -0x20000;
@@ -361,20 +360,20 @@ void EggPrison_Unknown1(void)
 {
     RSDK_THIS(EggPrison);
     entity->originY = entity->position.y;
-    entity->state  = EggPrison_Unknown2;
+    entity->state   = EggPrison_Unknown2;
 }
 
 void EggPrison_Unknown2(void)
 {
     RSDK_THIS(EggPrison);
-    for (int p = 0; p < Player->playerCount && entity->type < 2; ++p) {
+    for (int p = 0; p < Player->playerCount && entity->type < EGGPRISON_DUD; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
             if (abs(entity->position.x - player->position.x) < 0x1000000) {
                 if (abs(entity->position.y - player->position.y) < 0x1000000 && entity->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
-                    if (!entity->type) {
+                    if (entity->type == EGGPRISON_NORMAL) {
                         Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
                         Zone->screenBoundsR1[p] = (entity->position.x >> 0x10) + RSDK_screens[p].centerX;
                     }
@@ -395,7 +394,7 @@ void EggPrison_Unknown3(void)
     }
     if (++entity->timer == 20) {
         entity->timer = 0;
-        if (entity->type < 2) {
+        if (entity->type < EGGPRISON_DUD) {
             entity->state = EggPrison_Unknown4;
             Music_FadeOut(0.025);
         }
@@ -424,11 +423,58 @@ void EggPrison_Unknown5(void)
         entity->velocity.x -= 0x1000;
 
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
 }
 
-void EggPrison_EditorDraw(void) {}
+void EggPrison_EditorDraw(void)
+{
+    RSDK_THIS(EggPrison);
+    Vector2 drawPos;
 
-void EggPrison_EditorLoad(void) {}
+    if (entity->type == EGGPRISON_FLYING) {
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 1);
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 1);
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->animator2, true, 0);
+
+        entity->direction = FLIP_Y;
+        drawPos.x         = entity->position.x;
+        drawPos.y         = entity->position.y;
+        drawPos.y += entity->buttonPos;
+        RSDK.DrawSprite(&entity->animator4, &drawPos, 0);
+        entity->direction = FLIP_NONE;
+        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        RSDK.DrawSprite(&entity->animator3, NULL, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
+        entity->direction = FLIP_X;
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
+        entity->direction = FLIP_NONE;
+    }
+    else {
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 0);
+
+        drawPos.x = entity->position.x;
+        drawPos.y = entity->position.y;
+        drawPos.y += entity->buttonPos;
+        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        RSDK.DrawSprite(&entity->animator3, NULL, false);
+    }
+}
+
+void EggPrison_EditorLoad(void)
+{
+    EggPrison->spriteIndex = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(EggPrison, type);
+    RSDK_ENUM_VAR(EGGPRISON_NORMAL);
+    RSDK_ENUM_VAR(EGGPRISON_FLYING);
+    RSDK_ENUM_VAR(EGGPRISON_DUD);
+    RSDK_ENUM_VAR(EGGPRISON_RINGS);
+    RSDK_ENUM_VAR(EGGPRISON_TRAP);
+    RSDK_ENUM_VAR(EGGPRISON_ANIMALS);
+}
 
 void EggPrison_Serialize(void) { RSDK_EDITABLE_VAR(EggPrison, VAR_ENUM, type); }

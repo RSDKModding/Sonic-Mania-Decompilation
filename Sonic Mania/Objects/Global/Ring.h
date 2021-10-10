@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    RING_TYPE_NORMAL,
+    RING_TYPE_BIG,
+}RingTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

@@ -3,6 +3,15 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPRING_VERT_RED,
+    SPRING_VERT_YELLOW,
+    SPRING_HORIZ_RED,
+    SPRING_HORIZ_YELLOW,
+    SPRING_DIAG_RED,
+    SPRING_DIAG_YELLOW,
+} SpringTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -14,8 +23,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int flipFlag;
+    SpringTypes type;
+    FlipFlags flipFlag;
     byte planeFilter;
     int timer;
     Animator animator;

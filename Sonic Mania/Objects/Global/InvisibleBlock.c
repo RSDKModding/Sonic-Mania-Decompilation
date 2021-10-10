@@ -92,6 +92,11 @@ void InvisibleBlock_EditorLoad(void)
     InvisibleBlock->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(InvisibleBlock->spriteIndex, 2, &InvisibleBlock->animator, true, 0);
     InvisibleBlock->animator.frameID = 10;
+
+    RSDK_ACTIVE_VAR(InvisibleBlock, planeFilter);
+    RSDK_ENUM_VAR(PLANEFILTER_NONE);
+    RSDK_ENUM_VAR(PLANEFILTER_A);
+    RSDK_ENUM_VAR(PLANEFILTER_B);
 }
 
 void InvisibleBlock_Serialize(void)

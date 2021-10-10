@@ -8,7 +8,7 @@ void ItemBox_Update(void)
     StateMachine_Run(entity->state);
 
 #if RETRO_USE_PLUS
-    if (entity->type == 17) {
+    if (entity->type == ITEMBOX_STOCK) {
         if (entity->contentsData.animationID == 2 || entity->contentsData.animationID == 7 || entity->contentsData.animationID == 8) {
             if (globals->characterFlags == 0x1F && globals->gameMode == MODE_ENCORE) {
                 RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->contentsData, false, 0);
@@ -83,29 +83,29 @@ void ItemBox_Create(void *data)
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         switch (entity->type) {
-            case 7: // Sonic
-            case 8: // Tails
-            case 9: // Knuckles
+            case ITEMBOX_1UP_SONIC:
+            case ITEMBOX_1UP_TAILS:
+            case ITEMBOX_1UP_KNUX:
 #if RETRO_USE_PLUS
-            case 15: // Mighty
-            case 16: // Ray
+            case ITEMBOX_1UP_MIGHTY:
+            case ITEMBOX_1UP_RAY:
 #endif
                 if (globals->gameMode == MODE_TIMEATTACK) {
-                    entity->type = 0;
+                    entity->type = ITEMBOX_RING;
                 }
 #if RETRO_USE_PLUS
                 else if (globals->gameMode == MODE_ENCORE) {
-                    entity->type = 17;
+                    entity->type = ITEMBOX_STOCK;
                 }
 #endif
                 else {
                     switch (player->characterID) {
-                        case ID_SONIC: entity->type = 7; break;
-                        case ID_TAILS: entity->type = 8; break;
-                        case ID_KNUCKLES: entity->type = 9; break;
+                        case ID_SONIC: entity->type = ITEMBOX_1UP_SONIC; break;
+                        case ID_TAILS: entity->type = ITEMBOX_1UP_TAILS; break;
+                        case ID_KNUCKLES: entity->type = ITEMBOX_1UP_KNUX; break;
 #if RETRO_USE_PLUS
-                        case ID_MIGHTY: entity->type = 15; break;
-                        case ID_RAY: entity->type = 16; break;
+                        case ID_MIGHTY: entity->type = ITEMBOX_1UP_MIGHTY; break;
+                        case ID_RAY: entity->type = ITEMBOX_1UP_RAY; break;
 #endif
                         default: break;
                     }
@@ -170,20 +170,14 @@ void ItemBox_StageLoad(void)
     ItemBox->hiddenHitbox.right  = 15;
     ItemBox->hiddenHitbox.bottom = 16;
 
-    if (DebugMode->itemCount < 256) {
-        DebugMode->objectIDs[DebugMode->itemCount] = ItemBox->objectID;
-        DebugMode->spawn[DebugMode->itemCount]     = ItemBox_DebugSpawn;
-        DebugMode->draw[DebugMode->itemCount++]    = ItemBox_DebugDraw;
-    }
+    DEBUGMODE_ADD_OBJ(ItemBox);
 
     if (globals->gameMode == MODE_COMPETITION) {
         if (globals->itemMode == 1) {
-            foreach_all(ItemBox, entity) { entity->type = 13;
-            }
+            foreach_all(ItemBox, entity) { entity->type = ITEMBOX_RANDOM; }
         }
         else if (globals->itemMode == 2) {
-            foreach_all(ItemBox, entity) { entity->type = 12;
-            }
+            foreach_all(ItemBox, entity) { entity->type = ITEMBOX_SWAP; }
         }
     }
 
@@ -197,11 +191,7 @@ void ItemBox_StageLoad(void)
 void ItemBox_DebugDraw(void)
 {
     RSDK_THIS(ItemBox);
-#if RETRO_USE_PLUS
-    DebugMode->subtypeCount = API.CheckDLC(DLC_PLUS) != 0 ? 18 : 15;
-#else
-    DebugMode->subtypeCount = 15;
-#endif
+    DebugMode->subtypeCount = ITEMBOX_COUNT;
     RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
     RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &DebugMode->animator, true, DebugMode->itemSubType);
@@ -212,15 +202,15 @@ void ItemBox_DebugDraw(void)
 }
 void ItemBox_DebugSpawn(void)
 {
-    EntityItemBox *entity =
-        (EntityItemBox *)RSDK.CreateEntity(ItemBox->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
-    entity->type                 = DebugMode->itemSubType;
-    entity->contentsData.frameID = DebugMode->itemSubType;
+    RSDK_THIS(ItemBox);
+    EntityItemBox *itemBox        = CREATE_ENTITY(ItemBox, 0, entity->position.x, entity->position.y);
+    itemBox->type                 = DebugMode->itemSubType;
+    itemBox->contentsData.frameID = DebugMode->itemSubType;
 }
 
 void ItemBox_State_Broken(void)
 {
-    //RSDK_THIS(ItemBox);
+    // RSDK_THIS(ItemBox);
     // if (LRZConvItem)
     //    LRZConvItem_Unknown2(entity);
     ItemBox_HandleFallingCollision();
@@ -276,13 +266,13 @@ void ItemBox_State_Normal(void)
     ItemBox_HandleObjectCollisions();
     ItemBox_CheckHit();
     RSDK.ProcessAnimation(&entity->overlayData);
-    if (entity->type == 17) {
-        RSDK.ProcessAnimation(&entity->contentsData);
 #if RETRO_USE_PLUS
+    if (entity->type == ITEMBOX_STOCK) {
+        RSDK.ProcessAnimation(&entity->contentsData);
         if (!API.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
             entity->contentsData.frameID = 0;
-#endif
     }
+#endif
 
     if (entity->timer) {
         entity->timer--;
@@ -309,13 +299,13 @@ void ItemBox_State_Falling(void)
 
     ItemBox_CheckHit();
     RSDK.ProcessAnimation(&entity->overlayData);
-    if (entity->type == 17) {
-        RSDK.ProcessAnimation(&entity->contentsData);
 #if RETRO_USE_PLUS
+    if (entity->type == ITEMBOX_STOCK) {
+        RSDK.ProcessAnimation(&entity->contentsData);
         if (!API.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
             entity->contentsData.frameID = 0;
-#endif
     }
+#endif
 
     if (entity->timer) {
         entity->timer--;
@@ -340,13 +330,13 @@ void ItemBox_State_Conveyor(void)
 
     ItemBox_CheckHit();
     RSDK.ProcessAnimation(&entity->overlayData);
-    if (entity->type == 17) {
-        RSDK.ProcessAnimation(&entity->contentsData);
 #if RETRO_USE_PLUS
+    if (entity->type == ITEMBOX_STOCK) {
+        RSDK.ProcessAnimation(&entity->contentsData);
         if (!API.CheckDLC(DLC_PLUS) && entity->contentsData.frameID >= 3)
             entity->contentsData.frameID = 0;
-#endif
     }
+#endif
 
     if (entity->timer) {
         entity->timer--;
@@ -363,7 +353,8 @@ void ItemBox_State_Conveyor(void)
 void ItemBox_CheckHit(void)
 {
     RSDK_THIS(ItemBox);
-    foreach_active (Player, player) {
+    foreach_active(Player, player)
+    {
         if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
 #if RETRO_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1 && !entity->parent) {
@@ -389,7 +380,7 @@ void ItemBox_CheckHit(void)
                 entity->position.x += entity->unknownPos.x;
                 entity->position.y += entity->unknownPos.y;
 
-                if (side == 4) {
+                if (side == C_BOTTOM) {
                     entity->active = ACTIVE_ALWAYS;
                     if (!entity->lrzConvPhys)
                         entity->state = ItemBox_State_Falling;
@@ -397,12 +388,12 @@ void ItemBox_CheckHit(void)
                     if (player->onGround == false)
                         player->velocity.y = 0x20000;
                 }
-                else if (side == 1) {
+                else if (side == C_TOP) {
                     player->position.x += entity->unknownPos.x;
                     player->position.y += entity->unknownPos.y;
                 }
 
-                if (Player_CheckCollisionBox(player, entity, &ItemBox->hitbox) == 4) {
+                if (Player_CheckCollisionBox(player, entity, &ItemBox->hitbox) == C_BOTTOM) {
                     if (player->onGround) {
                         player->position.x = px;
                         player->position.y = py;
@@ -410,7 +401,7 @@ void ItemBox_CheckHit(void)
                 }
             }
             else {
-                int anim    = player->playerAnimator.animationID;
+                int anim = player->playerAnimator.animationID;
                 bool32 flag =
                     anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || entity->direction || player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
@@ -431,20 +422,21 @@ void ItemBox_CheckHit(void)
                     entity->position.x += entity->unknownPos.x;
                     entity->position.y += entity->unknownPos.y;
 
-                    if (side == 4) {
+                    if (side == C_BOTTOM) {
                         entity->active = ACTIVE_ALWAYS;
                         if (!entity->lrzConvPhys)
                             entity->state = ItemBox_State_Falling;
-                        entity->velocity.y = -0x20000;
-                        if (player->onGround == false)
+                        if (!player->onGround)
                             player->velocity.y = 0x20000;
+                        else
+                            entity->velocity.y = -0x20000;
                     }
-                    else if (side == 1) {
+                    else if (side == C_TOP) {
                         player->position.x += entity->unknownPos.x;
                         player->position.y += entity->unknownPos.y;
                     }
 
-                    if (Player_CheckCollisionBox(player, entity, &ItemBox->hitbox) == 4) {
+                    if (Player_CheckCollisionBox(player, entity, &ItemBox->hitbox) == C_BOTTOM) {
                         if (player->onGround) {
                             player->position.x = px;
                             player->position.y = py;
@@ -462,33 +454,33 @@ void ItemBox_CheckHit(void)
 void ItemBox_GivePowerup(void)
 {
     RSDK_THIS(ItemBox);
-    EntityPlayer *player  = (EntityPlayer *)entity->storedEntity;
+    EntityPlayer *player = (EntityPlayer *)entity->storedEntity;
     while (true) {
         switch (entity->type) {
-            case 0: Player_GiveRings(10, player, 1); return;
-            case 1:
+            case ITEMBOX_RING: Player_GiveRings(10, player, 1); return;
+            case ITEMBOX_BLUESHIELD:
                 player->shield = SHIELD_BLUE;
                 Player_ApplyShieldEffect(player);
                 RSDK.PlaySfx(Shield->sfx_BlueShield, 0, 255);
                 return;
-            case 2:
+            case ITEMBOX_BUBBLESHIELD:
                 player->shield = SHIELD_BUBBLE;
                 Player_ApplyShieldEffect(player);
                 RSDK.PlaySfx(Shield->sfx_BubbleShield, 0, 255);
                 player->airTimer = 0;
                 Music_ResumePrevTrack(TRACK_DROWNING, false);
                 return;
-            case 3:
+            case ITEMBOX_FIRESHIELD:
                 player->shield = SHIELD_FIRE;
                 Player_ApplyShieldEffect(player);
                 RSDK.PlaySfx(Shield->sfx_FireShield, 0, 255);
                 return;
-            case 4:
+            case ITEMBOX_LIGHTNINGSHIELD:
                 player->shield = SHIELD_LIGHTNING;
                 Player_ApplyShieldEffect(player);
                 RSDK.PlaySfx(Shield->sfx_LightningShield, 0, 255);
                 return;
-            case 5:
+            case ITEMBOX_INVINCIBLE:
                 if (!player->superState) {
                     EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
                     RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->objectID, player);
@@ -496,7 +488,7 @@ void ItemBox_GivePowerup(void)
                     Music_PlayMusicTrack(TRACK_INVINCIBLE);
                 }
                 return;
-            case 6:
+            case ITEMBOX_SNEAKERS:
                 player->speedShoesTimer = 1320;
                 Player_ChangePhysicsState(player);
                 if (!player->superState) {
@@ -505,17 +497,21 @@ void ItemBox_GivePowerup(void)
                     RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
                 }
                 return;
-            case 7:
-            case 8:
-            case 9:
-            case 15:
-            case 16: Player_GiveLife(player); return;
-            case 10: Player_CheckHit(player, entity); return;
-            case 11:
+            case ITEMBOX_1UP_SONIC:
+            case ITEMBOX_1UP_TAILS:
+            case ITEMBOX_1UP_KNUX:
+#if RETRO_USE_PLUS
+            case ITEMBOX_1UP_MIGHTY:
+            case ITEMBOX_1UP_RAY:
+#endif
+                Player_GiveLife(player);
+                return;
+            case ITEMBOX_EGGMAN: Player_CheckHit(player, entity); return;
+            case ITEMBOX_HYPERRING:
                 RSDK.PlaySfx(ItemBox->sfx_HyperRing, 0, 255);
                 player->hyperRing = true;
                 return;
-            case 12:
+            case ITEMBOX_SWAP:
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     if (!globals->stock || player->playerAnimator.animationID == ANI_TRANSFORM) {
@@ -533,7 +529,7 @@ void ItemBox_GivePowerup(void)
                     }
                     globals->stock |= charID;
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
-                    explosion->drawOrder = Zone->drawOrderHigh;
+                    explosion->drawOrder       = Zone->drawOrderHigh;
                     RSDK.PlaySfx(ItemBox->sfx_PowerDown, 0, 255);
                 }
                 else if (globals->gameMode != MODE_COMPETITION) {
@@ -548,7 +544,7 @@ void ItemBox_GivePowerup(void)
 #endif
                 return;
 #if RETRO_USE_PLUS
-            case 13: {
+            case ITEMBOX_RANDOM: {
                 byte playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 byte newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 if (player->playerAnimator.animationID == ANI_TRANSFORM) {
@@ -557,10 +553,10 @@ void ItemBox_GivePowerup(void)
                 else {
                     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-                    
+
                     int charID = -1;
                     for (int i = player1->characterID; i > 0; ++charID) i >>= 1;
-                    playerIDs[0]          = charID;
+                    playerIDs[0] = charID;
 
                     charID = -1;
                     for (int i = player2->characterID; i > 0; ++charID) i >>= 1;
@@ -649,11 +645,11 @@ void ItemBox_GivePowerup(void)
                 return;
             }
 #endif
-            case 14:
+            case ITEMBOX_SUPER:
                 Player_GiveRings(50, player, 0);
                 Player_CheckGoSuper(player, 127);
                 return;
-            case 17: {
+            case ITEMBOX_STOCK: {
                 if (entity->contentsData.animationID == 7) {
 #if RETRO_USE_PLUS
                     if (globals->gameMode == MODE_ENCORE) {
@@ -663,15 +659,14 @@ void ItemBox_GivePowerup(void)
                             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                             if (player2->objectID) {
                                 int id = 0;
-                                while ((globals->stock >> id) & 0xFF)
-                                    id += 8;
+                                while ((globals->stock >> id) & 0xFF) id += 8;
                                 globals->stock |= (1 << entity->contentsData.frameID << id);
                                 HUD->stockFlashTimers[(id >> 3) + 1] = 120;
                             }
                             else {
-                                player2->objectID = Player->objectID;
+                                player2->objectID   = Player->objectID;
                                 Player->jumpInDelay = 0;
-                                EntityDust *dust = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
+                                EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
                                 dust->visible         = 0;
                                 dust->active          = ACTIVE_NEVER;
@@ -715,10 +710,10 @@ void ItemBox_GivePowerup(void)
                                             player2->velocity.y = -0xE0000;
                                         }
                                     }
-                                    player2->entPtr     = dust;
-                                    player2->maxGlideSpeed = 0;
-                                    player2->nextAirState     = StateMachine_None;
-                                    player2->nextGroundState  = StateMachine_None;
+                                    player2->entPtr          = dust;
+                                    player2->maxGlideSpeed   = 0;
+                                    player2->nextAirState    = StateMachine_None;
+                                    player2->nextGroundState = StateMachine_None;
                                     player2->stateInput      = Player_ProcessP2InputLag;
                                     player2->tileCollisions  = false;
                                     player2->interaction     = false;
@@ -731,8 +726,8 @@ void ItemBox_GivePowerup(void)
                                     player2->controllerID    = CONT_P2;
                                     player2->sidekick        = true;
                                     player2->drawFX          = FX_FLIP | FX_ROTATE;
-                                    player2->visible          = true;
-                                    HUD->stockFlashTimers[0]  = 120;
+                                    player2->visible         = true;
+                                    HUD->stockFlashTimers[0] = 120;
                                 }
                             }
                         }
@@ -751,7 +746,7 @@ void ItemBox_GivePowerup(void)
                             default: break;
                         }
                         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
-                        explosion->drawOrder = Zone->drawOrderHigh;
+                        explosion->drawOrder       = Zone->drawOrderHigh;
                         RSDK.PlaySfx(ItemBox->sfx_PowerDown, 0, 255);
 #if RETRO_USE_PLUS
                     }
@@ -759,17 +754,17 @@ void ItemBox_GivePowerup(void)
                 }
                 else {
                     switch (entity->contentsData.frameID) {
-                        case 1: entity->type = 1; break;
-                        case 2: entity->type = 2; break;
-                        case 3: entity->type = 3; break;
-                        case 4: entity->type = 4; break;
-                        case 5: entity->type = 11; break;
-                        case 6: entity->type = 12; break;
-                        case 7: entity->type = 13; break;
-                        default: entity->type = 0; break;
+                        case 1: entity->type = ITEMBOX_BLUESHIELD; break;
+                        case 2: entity->type = ITEMBOX_BUBBLESHIELD; break;
+                        case 3: entity->type = ITEMBOX_FIRESHIELD; break;
+                        case 4: entity->type = ITEMBOX_LIGHTNINGSHIELD; break;
+                        case 5: entity->type = ITEMBOX_HYPERRING; break;
+                        case 6: entity->type = ITEMBOX_SWAP; break;
+                        case 7: entity->type = ITEMBOX_RANDOM; break;
+                        default: entity->type = ITEMBOX_RING; break;
                     }
                     player = (EntityPlayer *)entity->parent;
-                    if ((uint)entity->type <= 0x11)
+                    if ((uint)entity->type <= ITEMBOX_STOCK)
                         continue;
                 }
                 return;
@@ -792,7 +787,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     else
 #endif
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
-    itemBox->storedEntity  = (Entity*)player;
+    itemBox->storedEntity  = (Entity *)player;
     itemBox->alpha         = 256;
     itemBox->contentsSpeed = -0x30000;
     itemBox->active        = ACTIVE_NORMAL;
@@ -810,7 +805,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 
     for (int d = 0; d < 6; ++d) {
         EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
-                                                                itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
+                                                                 itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
         debris->state        = Debris_State_Fall;
         debris->gravity      = 0x4000;
         debris->velocity.x   = RSDK.Rand(0, 0x20000);
@@ -825,48 +820,37 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 
     RSDK.PlaySfx(ItemBox->sfx_Destroy, 0, 255);
     itemBox->active = ACTIVE_NORMAL;
-    if (itemBox->type == 13) {
+    if (itemBox->type == ITEMBOX_RANDOM) {
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_ENCORE) {
 #endif
             while (true) {
                 itemBox->type = RSDK.Rand(0, 13);
                 switch (itemBox->type) {
-                    case 7:
+                    case ITEMBOX_1UP_SONIC:
                         if (globals->gameMode == MODE_TIMEATTACK)
                             continue;
                         switch (player->characterID) {
-                            case ID_SONIC:
-                                itemBox->type                 = 7;
-                                itemBox->contentsData.frameID = itemBox->type;
-                                break;
-                            case ID_TAILS:
-                                itemBox->type                 = 8;
-                                itemBox->contentsData.frameID = itemBox->type;
-                                break;
-                            case ID_KNUCKLES:
-                                itemBox->type                 = 9;
-                                itemBox->contentsData.frameID = itemBox->type;
-                                break;
+                            case ID_SONIC: itemBox->type = ITEMBOX_1UP_SONIC; break;
+                            case ID_TAILS: itemBox->type = ITEMBOX_1UP_TAILS; break;
+                            case ID_KNUCKLES: itemBox->type = ITEMBOX_1UP_KNUX; break;
 #if RETRO_USE_PLUS
-                            case ID_MIGHTY:
-                                itemBox->type                 = 15;
-                                itemBox->contentsData.frameID = itemBox->type;
-                                break;
-                            case ID_RAY:
-                                itemBox->type                 = 16;
-                                itemBox->contentsData.frameID = itemBox->type;
+                            case ID_MIGHTY: itemBox->type = ITEMBOX_1UP_MIGHTY; break;
+                            case ID_RAY: itemBox->type = ITEMBOX_1UP_RAY;
 #endif
                                 break;
-                            default: itemBox->contentsData.frameID = itemBox->type; break;
+                            default: break;
                         }
                         itemBox->contentsData.frameID = itemBox->type;
                         break;
-                    case 8:
-                    case 9:
-                    case 15:
-                    case 16: continue;
-                    case 12:
+                    case ITEMBOX_1UP_TAILS:
+                    case ITEMBOX_1UP_KNUX:
+#if RETRO_USE_PLUS
+                    case ITEMBOX_1UP_MIGHTY:
+                    case ITEMBOX_1UP_RAY:
+#endif
+                        continue;
+                    case ITEMBOX_SWAP:
                         if (globals->gameMode != MODE_COMPETITION)
                             continue;
                         itemBox->contentsData.frameID = itemBox->type;
@@ -899,8 +883,8 @@ bool32 ItemBox_HandleFallingCollision(void)
 
     if (flag
         || (entity->direction != FLIP_Y || entity->brokenData.animationID != 1
-             ? !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
-             : !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
+                ? !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
+                : !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
         entity->unknownPos.x += entity->position.x;
         entity->unknownPos.y += entity->position.y;
         return false;
@@ -966,7 +950,7 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
         if (entity->state == ItemBox_State_Falling)
             entity->state = ItemBox_State_Normal;
         if (platform->state == Platform_State_Collapsing && !platform->collapseDelay)
-           platform->collapseDelay = 30;
+            platform->collapseDelay = 30;
         platform->stood      = true;
         entity->velocity.y   = 0;
         platform->position.x = platform->centerPos.x;
@@ -1124,7 +1108,8 @@ void ItemBox_HandleObjectCollisions(void)
     }
 }
 
-void ItemBox_EditorDraw(void) {
+void ItemBox_EditorDraw(void)
+{
     RSDK_THIS(ItemBox);
     Animator used;
     RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &used, true, 0);
@@ -1136,7 +1121,37 @@ void ItemBox_EditorDraw(void) {
     RSDK.DrawSprite(&used, &drawPos, false);
 }
 
-void ItemBox_EditorLoad(void) { ItemBox->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE); }
+void ItemBox_EditorLoad(void)
+{
+    ItemBox->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(ItemBox, type);
+    RSDK_ENUM_VAR(ITEMBOX_RING);
+    RSDK_ENUM_VAR(ITEMBOX_BLUESHIELD);
+    RSDK_ENUM_VAR(ITEMBOX_BUBBLESHIELD);
+    RSDK_ENUM_VAR(ITEMBOX_FIRESHIELD);
+    RSDK_ENUM_VAR(ITEMBOX_LIGHTNINGSHIELD);
+    RSDK_ENUM_VAR(ITEMBOX_INVINCIBLE);
+    RSDK_ENUM_VAR(ITEMBOX_SNEAKERS);
+    RSDK_ENUM_VAR(ITEMBOX_1UP_SONIC);
+    RSDK_ENUM_VAR(ITEMBOX_1UP_TAILS);
+    RSDK_ENUM_VAR(ITEMBOX_1UP_KNUX);
+    RSDK_ENUM_VAR(ITEMBOX_EGGMAN);
+    RSDK_ENUM_VAR(ITEMBOX_HYPERRING);
+    RSDK_ENUM_VAR(ITEMBOX_SWAP);
+    RSDK_ENUM_VAR(ITEMBOX_RANDOM);
+    RSDK_ENUM_VAR(ITEMBOX_SUPER);
+#if RETRO_USE_PLUS
+    RSDK_ENUM_VAR(ITEMBOX_1UP_MIGHTY);
+    RSDK_ENUM_VAR(ITEMBOX_1UP_RAY);
+    RSDK_ENUM_VAR(ITEMBOX_STOCK);
+#endif
+
+    RSDK_ACTIVE_VAR(ItemBox, planeFilter);
+    RSDK_ENUM_VAR(PLANEFILTER_NONE);
+    RSDK_ENUM_VAR(PLANEFILTER_A);
+    RSDK_ENUM_VAR(PLANEFILTER_B);
+}
 
 void ItemBox_Serialize(void)
 {

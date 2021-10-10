@@ -28,7 +28,7 @@ void Ring_Create(void *data)
         layer = Zone->drawOrderHigh;
 
     entity->drawOrder = layer + 1;
-    if (entity->type == 1) {
+    if (entity->type == RING_TYPE_BIG) {
         entity->drawFX |= FX_FLIP;
         entity->ringAmount = 5;
     }
@@ -501,16 +501,16 @@ void Ring_Collect(void)
                     player = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
 
                 int ringAmount = 1;
-                if (entity->type == 1) {
+                if (entity->type == RING_TYPE_BIG) {
                     player->ringExtraLife += 100 * (entity->ringAmount / 100);
                     ringAmount = entity->ringAmount;
                 }
                 Player_GiveRings(ringAmount, player, true);
                 int max = 0x100000;
-                if (entity->type != 1)
+                if (entity->type != RING_TYPE_BIG)
                     max = 0x80000;
 
-                int cnt = 4 * (entity->type == 1) + 4;
+                int cnt = 4 * (entity->type == RING_TYPE_BIG) + 4;
                 int min = -max;
                 for (int i = 0; i < cnt; ++i) {
                     EntityRing *sparkle = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(min, max),
@@ -533,8 +533,8 @@ void Ring_Collect(void)
                     sparkle->animator.animationSpeed = RSDK.Rand(6, 8);
                     sparkle->timer                   = 2 * i++;
                 }
-                RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
-                entity->active = -1;
+                destroyEntity(entity);
+                entity->active = ACTIVE_NEVER2;
                 foreach_return;
             }
         }
@@ -655,7 +655,18 @@ void Ring_EditorDraw(void)
     RSDK.DrawSprite(&entity->animator, NULL, 0);
 }
 
-void Ring_EditorLoad(void) { Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
+void Ring_EditorLoad(void)
+{
+    Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
+    RSDK_ACTIVE_VAR(Ring, type);
+    RSDK_ENUM_VAR(RING_TYPE_NORMAL);
+    RSDK_ENUM_VAR(RING_TYPE_BIG);
+
+    RSDK_ACTIVE_VAR(Ring, planeFilter);
+    RSDK_ENUM_VAR(PLANEFILTER_NONE);
+    RSDK_ENUM_VAR(PLANEFILTER_A);
+    RSDK_ENUM_VAR(PLANEFILTER_B);
+}
 void Ring_Serialize(void)
 {
     RSDK_EDITABLE_VAR(Ring, VAR_ENUM, type);

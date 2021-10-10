@@ -34,7 +34,7 @@ void EncoreRoute_Update(void)
             RSDK.SetTileInfo(dst, posX, posY, RSDK.GetTileInfo(src, x + offX, y + offY));
         }
     }
-    RSDK.ResetEntityPtr(entity, 0, NULL);
+    destroyEntity(entity);
 }
 
 void EncoreRoute_LateUpdate(void) {}
@@ -46,7 +46,7 @@ void EncoreRoute_Draw(void) {}
 void EncoreRoute_Create(void *data)
 {
     RSDK_THIS(EncoreRoute);
-    entity->active            = ACTIVE_ALWAYS;
+    entity->active = ACTIVE_ALWAYS;
 }
 
 void EncoreRoute_StageLoad(void) {}
