@@ -27,32 +27,52 @@ typedef enum {
     MODCB_ONSTATICUPDATE,
     MODCB_ONDRAW,
     MODCB_STAGEUNLOAD,
-}ModCallbackEvents;
+} ModCallbackEvents;
+
+typedef enum {
+    SUPER_UPDATE,
+    SUPER_LATEUPDATE,
+    SUPER_STATICUPDATE,
+    SUPER_DRAW,
+    SUPER_CREATE,
+    SUPER_STAGELOAD,
+    SUPER_EDITORDRAW,
+    SUPER_EDITORLOAD,
+    SUPER_SERIALIZE
+} ModSuper;
 
 // Mod Table
 typedef struct {
-    void (*RegisterGlobalVariables)(void **globals, int size);
-    void (*RegisterObject)(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
-                           void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                           void (*editorLoad)(void), void (*serialize)(void), const char *inherited);
-    void *(*GetGlobals)(void); //returns the default loaded global variables (should be mania's in most cases)
-    void (*super)(int objectID, int callback, void *data);
+    void (*RegisterGlobals)(const char *globalsPath, void **globals, uint size);
+    void *RegisterObject_FuncP;
+    void *RegisterObject_STD;
+    void *(*GetGlobals)();
+    void (*Super)(int objectID, ModSuper callback, void *data);
 
     bool32 (*LoadModInfo)(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
-    void (*AddModCallback)(int callbackID, void (*callback)(void* data));
+    void *AddModCallback_FuncP;
+    void *AddModCallback_STD;
     void *(*AddPublicFunction)(const char *folder, const char *functionName, void *functionPtr);
     void *(*GetPublicFunction)(const char *folder, const char *functionName);
     const char *(*GetModPath)(const char *id);
 
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int (*GetSettingsInteger)(const char *id, const char *key, int fallback);
-    void (*GetSettingsString)(const char *id, const char *key, TextInfo* result, const char *fallback);
+    void (*GetSettingsString)(const char *id, const char *key, TextInfo *result, const char *fallback);
 
     void (*SetSettingsBool)(const char *id, const char *key, bool32 val);
     void (*SetSettingsInteger)(const char *id, const char *key, int val);
     void (*SetSettingsString)(const char *id, const char *key, TextInfo *val);
 
     void (*SaveSettings)(const char *id);
+
+    bool32 (*GetConfigBool)(const char *id, const char *key, bool32 fallback);
+    int (*GetConfigInteger)(const char *id, const char *key, int fallback);
+    void (*GetConfigString)(const char *id, const char *key, TextInfo *result, const char *fallback);
+    bool32 (*ForeachConfig)(const char *id, TextInfo *textInfo);
+    bool32 (*ForeachConfigCategory)(const char *id, TextInfo *textInfo);
+
+    Object *(*GetObject)(const char *name);
 } ModFunctionTable;
 #endif
 
@@ -364,9 +384,9 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (byte)object->objectID, offsetof(Entity##object, var))
 #define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
-    Mod.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
-                        object##_Serialize, NULL)
+                        object##_Serialize)
 #if RETRO_USE_PLUS
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
