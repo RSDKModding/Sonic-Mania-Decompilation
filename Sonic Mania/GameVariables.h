@@ -55,6 +55,12 @@ typedef enum { SCN_FILTER_MANIA = 3, SCN_FILTER_ENCORE = 5 } SceneFilters;
 #endif
 
 typedef enum {
+    PLANEFILTER_NONE,
+    PLANEFILTER_A,
+    PLANEFILTER_B,
+} PlaneFilterTypes;
+
+typedef enum {
     SLOT_PLAYER1             = 0,
     SLOT_PLAYER2             = 1,
     SLOT_PLAYER3             = 2,
