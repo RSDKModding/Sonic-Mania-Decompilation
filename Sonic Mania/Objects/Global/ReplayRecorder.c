@@ -554,8 +554,8 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[18] = OOZSetup_PlayerState_OilPool;
     ReplayRecorder->actions[19] = OOZSetup_PlayerState_OilSlide;
     ReplayRecorder->actions[20] = OOZSetup_PlayerState_OilStrip;
-    ReplayRecorder->actions[21] = StateMachine_None; // PlaneSeeSaw_Unknown4;
-    ReplayRecorder->actions[22] = StateMachine_None; // PlaneSeeSaw_Unknown5;
+    ReplayRecorder->actions[21] = PlaneSeeSaw_PlayerState_ToBG;
+    ReplayRecorder->actions[22] = PlaneSeeSaw_PlayerState_ToFG;
     ReplayRecorder->actions[23] = Player_State_Air;
     ReplayRecorder->actions[24] = Player_State_BubbleBounce;
     ReplayRecorder->actions[25] = Player_State_FlyCarried;

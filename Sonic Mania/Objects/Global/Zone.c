@@ -69,13 +69,13 @@ void Zone_LateUpdate(void)
                 if (Zone->screenBoundsB2[playerID] <= Zone->deathBoundary[playerID]) {
                     if (player->position.y > Zone->deathBoundary[playerID]) {
                         player->hurtFlag                   = 2;
-                        Zone->playerBoundActiveB[playerID] = 0;
+                        Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
                 else {
                     if (player->position.y > Zone->screenBoundsB2[playerID]) {
                         player->hurtFlag                   = 2;
-                        Zone->playerBoundActiveB[playerID] = 0;
+                        Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
             }
@@ -376,7 +376,7 @@ void Zone_StageLoad(void)
             Zone->screenBoundsT2[s] = Zone->screenBoundsT1[s] << 0x10;
             Zone->screenBoundsB2[s] = Zone->screenBoundsB1[s] << 0x10;
 
-            Zone->deathBoundary[s]      = Zone->screenBoundsT1[s] << 0x10;
+            Zone->deathBoundary[s]      = Zone->screenBoundsB1[s] << 0x10;
             Zone->playerBoundActiveL[s] = true;
             Zone->playerBoundActiveR[s] = true;
             Zone->playerBoundActiveT[s] = false;
