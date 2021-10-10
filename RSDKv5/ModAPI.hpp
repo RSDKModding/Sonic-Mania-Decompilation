@@ -82,7 +82,7 @@ struct ModInfo {
     std::string folder;
     bool active;
     std::vector<modLinkSTD> linkModLogic;
-    void (*unloadMod)();
+    void (*unloadMod)() = NULL;
     std::map<std::string, std::map<std::string, std::string>> settings;
     std::map<std::string, std::map<std::string, std::string>> config;
     const char *language = NULL;
