@@ -481,7 +481,7 @@ void ItemBox_GivePowerup(void)
                 RSDK.PlaySfx(Shield->sfx_LightningShield, 0, 255);
                 return;
             case ITEMBOX_INVINCIBLE:
-                if (!player->superState) {
+                if (player->superState == SUPERSTATE_NONE) {
                     EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
                     RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->objectID, player);
                     player->invincibleTimer = 1260;
@@ -491,7 +491,7 @@ void ItemBox_GivePowerup(void)
             case ITEMBOX_SNEAKERS:
                 player->speedShoesTimer = 1320;
                 Player_ChangePhysicsState(player);
-                if (!player->superState) {
+                if (player->superState == SUPERSTATE_NONE) {
                     Music_PlayMusicTrack(TRACK_SNEAKERS);
                     EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail);
                     RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);

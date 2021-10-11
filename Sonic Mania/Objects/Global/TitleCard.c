@@ -87,11 +87,11 @@ void TitleCard_Create(void *data)
             if (player->camera)
                 RSDK.CopyEntity(player->camera, (Entity *)Zone->entityData[8], false);
             Player_ApplyShieldEffect(player);
-            if (player->invincibleTimer > 0 && player->superState != 2) {
+            if (player->invincibleTimer > 0 && player->superState != SUPERSTATE_SUPER) {
                 RSDK.ResetEntityPtr(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)), InvincibleStars->objectID, player);
             }
 
-            if (player->speedShoesTimer > 0 || player->superState == 2) {
+            if (player->speedShoesTimer > 0 || player->superState == SUPERSTATE_SUPER) {
                 RSDK.ResetEntityPtr(RSDK.GetEntityByID(2 * Player->playerCount + RSDK.GetEntityID(player)), ImageTrail->objectID, player);
             }
 

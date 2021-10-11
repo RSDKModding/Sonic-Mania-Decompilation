@@ -5,12 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectTMZFlames;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int offset;
+    Animator animator;
 } EntityTMZFlames;
 
 // Object Struct
@@ -28,6 +33,8 @@ void TMZFlames_EditorLoad(void);
 void TMZFlames_Serialize(void);
 
 // Extra Entity Functions
-
+void TMZFlames_Unknown1(void);
+void TMZFlames_Unknown2(void);
+void TMZFlames_Unknown3(void);
 
 #endif //!OBJ_TMZFLAMES_H

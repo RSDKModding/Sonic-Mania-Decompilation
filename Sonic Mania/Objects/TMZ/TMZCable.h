@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
 } ObjectTMZCable;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int cableID;
+    Vector2 field_64;
+    Vector2 drawPos[8];
+    bool32 drawFlags[8];
+    Vector2 *posPtr;
+    Animator animator;
 } EntityTMZCable;
 
 // Object Struct
@@ -28,6 +37,11 @@ void TMZCable_EditorLoad(void);
 void TMZCable_Serialize(void);
 
 // Extra Entity Functions
-
+void TMZCable_Unknown1(void);
+void TMZCable_Unknown2(void);
+void TMZCable_Unknown3(void);
+void TMZCable_Unknown4(void);
+void TMZCable_Unknown5(void);
+void TMZCable_Unknown6(void);
 
 #endif //!OBJ_TMZCABLE_H

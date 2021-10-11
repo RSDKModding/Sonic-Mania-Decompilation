@@ -437,8 +437,8 @@ void SignPost_CheckTouch(void)
                         Announcer_AnnounceGoal(player->camera->screenID);
                     RSDK.PlaySfx(SignPost->sfx_SignPost, 0, 255);
                     entity->active = ACTIVE_NORMAL;
-                    if (player->superState == 2)
-                        player->superState = 3;
+                    if (player->superState == SUPERSTATE_SUPER)
+                        player->superState = SUPERSTATE_FADEOUT;
 
                     int vel = 0;
                     if (player->onGround)

@@ -6,6 +6,9 @@
 #define clampVal(value, minimum, maximum) (((value) < (minimum)) ? (minimum) : (((value) > (maximum)) ? (maximum) : (value)))
 #define fabs(a)                           ((a) > 0 ? (a) : -(a))
 
+#define setBit(value, set, pos) ((value) ^= (-(int)(set) ^ (value)) & (1 << (pos)))
+#define getBit(b, pos)          ((b) >> (pos) & 1)
+
 #define intToVoid(x)   (void *)(size_t)(x)
 #define floatToVoid(x) intToVoid(*(int *)&(x))
 #define voidToInt(x)   (int)(size_t)(x)

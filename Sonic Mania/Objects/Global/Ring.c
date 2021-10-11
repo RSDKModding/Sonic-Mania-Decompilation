@@ -609,21 +609,19 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
     if (!(ringCount2 & 1))
         angle = angleVal - 8;
 
-    if (ringCount2 > 0) {
-        do {
-            EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
-            ringGrow->velocity.x = radius * RSDK.Cos256(angle);
-            ringGrow->velocity.y = radius * RSDK.Sin256(angle);
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
-            angle += 16;
-            ringGrow->animator.animationSpeed = 0x200;
-            ringGrow->scale.x                 = scale;
-            ringGrow->scale.y                 = scale;
-            ringGrow->drawFX                  = 5;
-            ringGrow->drawOrder               = drawOrder;
-            ringGrow->state                   = Ring_State_Grow;
-            ringGrow->stateDraw               = Ring_StateDraw_Normal;
-        } while (!--ringCount2);
+    for (int r = 0; r < ringCount2; ++r) {
+        EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
+        ringGrow->velocity.x = radius * RSDK.Cos256(angle);
+        ringGrow->velocity.y = radius * RSDK.Sin256(angle);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
+        angle += 16;
+        ringGrow->animator.animationSpeed = 0x200;
+        ringGrow->scale.x                 = scale;
+        ringGrow->scale.y                 = scale;
+        ringGrow->drawFX                  = 5;
+        ringGrow->drawOrder               = drawOrder;
+        ringGrow->state                   = Ring_State_Grow;
+        ringGrow->stateDraw               = Ring_StateDraw_Normal;
     }
 
     angleVal = 0xC0 - 8 * (ringCount & 0xFFFFFFFE);
@@ -631,21 +629,19 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
     if (!(ringCount & 1))
         angle = angleVal - 8;
 
-    if (ringCount > 0) {
-        do {
-            EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
-            ringGrow->velocity.x = (radius + 0x200) * RSDK.Cos256(angle);
-            ringGrow->velocity.y = (radius + 0x200) * RSDK.Sin256(angle);
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
-            angle += 16;
-            ringGrow->animator.animationSpeed = 0x200;
-            ringGrow->scale.x                 = scale + 0x40;
-            ringGrow->scale.y                 = scale + 0x40;
-            ringGrow->drawFX                  = 5;
-            ringGrow->drawOrder               = drawOrder;
-            ringGrow->state                   = Ring_State_Grow;
-            ringGrow->stateDraw               = Ring_StateDraw_Normal;
-        } while (!--ringCount);
+    for (int r = 0; r < ringCount; ++r) {
+        EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
+        ringGrow->velocity.x = (radius + 0x200) * RSDK.Cos256(angle);
+        ringGrow->velocity.y = (radius + 0x200) * RSDK.Sin256(angle);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
+        angle += 16;
+        ringGrow->animator.animationSpeed = 0x200;
+        ringGrow->scale.x                 = scale + 0x40;
+        ringGrow->scale.y                 = scale + 0x40;
+        ringGrow->drawFX                  = 5;
+        ringGrow->drawOrder               = drawOrder;
+        ringGrow->state                   = Ring_State_Grow;
+        ringGrow->stateDraw               = Ring_StateDraw_Normal;
     }
 
     angleVal = 0xC0 - 8 * (ringCount3 & 0xFFFFFFFE);
@@ -653,21 +649,19 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
     if (!(ringCount3 & 1))
         angle = angleVal - 8;
 
-    if (ringCount3 > 0) {
-        do {
-            EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
-            ringGrow->velocity.x = (radius + 0x400) * RSDK.Cos256(angle);
-            ringGrow->velocity.y = (radius + 0x400) * RSDK.Sin256(angle);
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
-            angle += 16;
-            ringGrow->animator.animationSpeed = 0x200;
-            ringGrow->scale.x                 = scale + 0x80;
-            ringGrow->scale.y                 = scale + 0x80;
-            ringGrow->drawFX                  = 5;
-            ringGrow->drawOrder               = drawOrder;
-            ringGrow->state                   = Ring_State_Grow;
-            ringGrow->stateDraw               = Ring_StateDraw_Normal;
-        } while (!--ringCount3);
+    for (int r = 0; r < ringCount3; ++r) {
+        EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
+        ringGrow->velocity.x = (radius + 0x400) * RSDK.Cos256(angle);
+        ringGrow->velocity.y = (radius + 0x400) * RSDK.Sin256(angle);
+        RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &ringGrow->animator, true, 0);
+        angle += 16;
+        ringGrow->animator.animationSpeed = 0x200;
+        ringGrow->scale.x                 = scale + 0x80;
+        ringGrow->scale.y                 = scale + 0x80;
+        ringGrow->drawFX                  = 5;
+        ringGrow->drawOrder               = drawOrder;
+        ringGrow->state                   = Ring_State_Grow;
+        ringGrow->stateDraw               = Ring_StateDraw_Normal;
     }
 }
 

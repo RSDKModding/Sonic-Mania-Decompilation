@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-enum PLAYER_ANI {
+typedef enum {
     ANI_IDLE,
     ANI_BORED1,
     ANI_BORED2,
@@ -61,15 +61,41 @@ enum PLAYER_ANI {
     ANI_SWIM,
     ANI_SWIMTIRED,
     ANI_SWIMLIFT,
-};
+} PLAYER_ANI;
 
-enum ShieldTypes {
+typedef enum {
+    CHAR_NONE,
+    CHAR_SONIC,
+    CHAR_TAILS,
+    CHAR_SONIC_TAILS,
+    CHAR_KNUX,
+    CHAR_SONIC_KNUX,
+    CHAR_TAILS_KNUX,
+    CHAR_SONIC_TAILS_KNUX,
+} CharacterIDS;
+
+typedef enum {
     SHIELD_NONE,
     SHIELD_BLUE,
     SHIELD_BUBBLE,
     SHIELD_FIRE,
     SHIELD_LIGHTNING,
-};
+} ShieldTypes;
+
+typedef enum {
+    HURTFLAG_NONE,
+    HURTFLAG_HURT,
+    HURTFLAG_DIE,
+    HURTFLAG_DROWN,
+} HurtFlags;
+
+typedef enum {
+    SUPERSTATE_NONE,
+    SUPERSTATE_FADEIN,
+    SUPERSTATE_SUPER,
+    SUPERSTATE_FADEOUT,
+    SUPERSTATE_DONE,
+} SuperStates;
 
 // Object Class
 #if RETRO_USE_PLUS
@@ -156,7 +182,7 @@ typedef struct {
     bool32 gotHit[PLAYER_MAX];
     void (*configureGhost_CB)(void);
     bool32 (*canSuper)(bool32);
-    int field_A70;
+    int superDashCooldown;
 } ObjectPlayer;
 #else
 typedef struct {
@@ -246,7 +272,7 @@ typedef struct {
     ushort playerID;
     Hitbox *outerbox;
     Hitbox *innerbox;
-    int characterID;
+    CharacterIDS characterID;
     int rings;
     int ringExtraLife;
     int shield;
@@ -300,12 +326,12 @@ typedef struct {
     StateMachine(stateInput);
     int controllerID;
     int controlLock;
-    int up;
-    int down;
-    int left;
-    int right;
-    int jumpPress;
-    int jumpHold;
+    bool32 up;
+    bool32 down;
+    bool32 left;
+    bool32 right;
+    bool32 jumpPress;
+    bool32 jumpHold;
     int jumpAbility;
     int jumpAbilityTimer;
     StateMachine(movesetState);
@@ -417,7 +443,7 @@ void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
 void Player_CheckFlyCarry(EntityPlayer *player);
 void Player_P2JumpBackIn(void);
-void Player_Unknown9(void);
+void Player_ForceSuperTransform(void);
 
 //States
 void Player_State_None(void);

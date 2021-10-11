@@ -464,7 +464,7 @@ void SizeLaser_Unknown3(void)
                             break;
 #endif
                         default:
-                            if (player->superState == 2)
+                            if (player->superState == SUPERSTATE_SUPER)
                                 player->spriteIndex = Player->superSpriteIndex;
                             else
                                 player->spriteIndex = Player->sonicSpriteIndex;

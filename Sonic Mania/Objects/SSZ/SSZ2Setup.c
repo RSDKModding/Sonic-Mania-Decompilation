@@ -197,7 +197,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
                 RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);
         }
-        if (player->superState == 2 || player->state == Player_State_Transform)
+        if (player->superState == SUPERSTATE_SUPER || player->state == Player_State_Transform)
             globals->restartPowerups |= 0x80;
         globals->restartMusicID = Music->activeTrack;
     }
