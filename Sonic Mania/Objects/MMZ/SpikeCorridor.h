@@ -28,11 +28,7 @@ typedef struct {
     sbyte field_77;
     int fallOffset;
     Hitbox hitbox;
-    Hitbox hitboxes[2];
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
+    Hitbox hitboxes[4];
     Entity* parent;
 } EntitySpikeCorridor;
 

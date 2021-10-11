@@ -8,6 +8,14 @@ typedef enum {
     RING_TYPE_BIG,
 }RingTypes;
 
+typedef enum {
+    RING_MOVE_NONE,
+    RING_MOVE_NORMAL,
+    RING_MOVE_CIRCLE,
+    RING_MOVE_PATH,
+    RING_MOVE_TRACK,
+}RingMoveTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -22,14 +30,14 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
-    int planeFilter;
+    RingTypes type;
+    PlaneFilterTypes planeFilter;
     int ringAmount;
     int timer;
     int maxFrameCount;
     int sparkleType;
     EntityPlayer *storedPlayer;
-    int moveType;
+    RingMoveTypes moveType;
     Vector2 amplitude;
     int speed;
     Vector2 offset;

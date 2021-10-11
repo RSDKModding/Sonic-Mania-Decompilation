@@ -62,7 +62,7 @@ void SpikeCorridor_SetupHitboxes(void)
     entity->hitboxes[1].right  = size + 8 * entity->colWidth;
 }
 
-void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, sbyte a3, int animFlag)
+void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, sbyte a3, bool32 animFlag)
 {
     RSDK_THIS(SpikeCorridor);
     Vector2 drawPos;
@@ -71,7 +71,7 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, sbyte a3, int 
     drawPos.x  = 0;
     drawPos.y  = entity->position.y + offsetY;
 
-    int anim = animFlag != 0 ? 5 : 0;
+    int anim = animFlag ? 5 : 0;
 
     for (int x = 0; x < entity->colWidth;) {
         drawPos.x = startX;
