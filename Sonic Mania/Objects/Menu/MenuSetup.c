@@ -153,6 +153,7 @@ void MenuSetup_StageLoad(void)
             case REGION_EU:
                 LogHelpers_Print("EU REGION");
                 break;
+            default:
                 LogHelpers_Print("INVALID REGION: %d", sku_region);
                 break;
         }

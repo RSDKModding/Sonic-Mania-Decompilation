@@ -55,6 +55,8 @@ void PSZ2Intro_StageLoad(void)
 bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+    
     EntityFXFade *fxFade = PSZ2Intro->fxFade;
     EntitySignPost *post = (EntitySignPost *)PSZ2Intro->signPost;
     if (!host->timer) {
@@ -99,6 +101,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+    
     if (!host->timer) {
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
@@ -142,6 +146,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     if (RSDK_screens->position.x < Zone->screenBoundsL1[0]) {
         if (player1->groundVel > 0x20000)

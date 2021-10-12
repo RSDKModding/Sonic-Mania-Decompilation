@@ -146,8 +146,7 @@ void IceSpring_Create(void *data)
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = Zone->drawOrderLow;
-        int type = entity->type;
-
+        
         switch (entity->type) {
             case 0:
                 entity->velocity.y = 0x80000 * (entity->flipFlag ? 1 : -1);

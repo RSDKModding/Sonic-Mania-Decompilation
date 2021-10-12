@@ -196,35 +196,35 @@ void EncoreGoodEnd_Unknown11(void)
     RSDK_THIS(Player);
 
     EntityDecoration *playerDecor = EncoreGoodEnd->decorations[5];
-    switch (entity->maxGlideSpeed) {
+    switch (entity->abilityValue1) {
         case 0:
             if (EncoreGoodEnd->decorations[5]->animator.frameID == 8) {
-                entity->maxGlideSpeed                      = 1;
+                entity->abilityValue1                      = 1;
                 EncoreGoodEnd->decorations[12]->visible    = true;
                 EncoreGoodEnd->decorations[12]->velocity.y = -0x40000;
-                entity->field_1F8                          = 0;
+                entity->abilityValue2                          = 0;
             }
             break;
         case 1:
-            if (++entity->field_1F8 >= 15) {
-                entity->field_1F8                          = 0;
-                entity->maxGlideSpeed                      = 2;
+            if (++entity->abilityValue2 >= 15) {
+                entity->abilityValue2                      = 0;
+                entity->abilityValue1                      = 2;
                 EncoreGoodEnd->decorations[13]->visible    = true;
                 EncoreGoodEnd->decorations[13]->velocity.y = -0x40000;
             }
             break;
         case 2:
-            if (++entity->field_1F8 >= 15) {
-                entity->field_1F8                          = 0;
-                entity->maxGlideSpeed                      = 3;
+            if (++entity->abilityValue2 >= 15) {
+                entity->abilityValue2                      = 0;
+                entity->abilityValue1                      = 3;
                 EncoreGoodEnd->decorations[14]->visible    = true;
                 EncoreGoodEnd->decorations[14]->velocity.y = -0x40000;
             }
             break;
         case 3:
-            if (++entity->field_1F8 >= 15) {
-                entity->field_1F8                          = 0;
-                entity->maxGlideSpeed                      = 4;
+            if (++entity->abilityValue2 >= 15) {
+                entity->abilityValue2                      = 0;
+                entity->abilityValue1                      = 4;
                 EncoreGoodEnd->decorations[15]->visible    = true;
                 EncoreGoodEnd->decorations[15]->velocity.y = -0x40000;
             }

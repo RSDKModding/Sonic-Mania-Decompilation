@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C972C54726B8FD4900CB2F1E /* GameOptions.c in Sources */ = {isa = PBXBuildFile; fileRef = C972C54326B8FD4900CB2F1E /* GameOptions.c */; };
 		C972C54826B8FD4900CB2F1E /* GameObjects.c in Sources */ = {isa = PBXBuildFile; fileRef = C972C54426B8FD4900CB2F1E /* GameObjects.c */; };
 /* End PBXBuildFile section */
 
@@ -26,8 +25,6 @@
 /* Begin PBXFileReference section */
 		C968092E26B8FCD10083FF3D /* libGame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGame.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C972C54126B8FD4900CB2F1E /* GameObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameObjects.h; path = "Sonic Mania/GameObjects.h"; sourceTree = SOURCE_ROOT; };
-		C972C54226B8FD4900CB2F1E /* GameOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameOptions.h; path = "Sonic Mania/GameOptions.h"; sourceTree = SOURCE_ROOT; };
-		C972C54326B8FD4900CB2F1E /* GameOptions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GameOptions.c; path = "Sonic Mania/GameOptions.c"; sourceTree = SOURCE_ROOT; };
 		C972C54426B8FD4900CB2F1E /* GameObjects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GameObjects.c; path = "Sonic Mania/GameObjects.c"; sourceTree = SOURCE_ROOT; };
 		C972C54526B8FD4900CB2F1E /* GameLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameLink.h; path = "Sonic Mania/GameLink.h"; sourceTree = SOURCE_ROOT; };
 		C972C54626B8FD4900CB2F1E /* SonicMania.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SonicMania.h; path = "Sonic Mania/SonicMania.h"; sourceTree = SOURCE_ROOT; };
@@ -97,8 +94,6 @@
 				C972C54526B8FD4900CB2F1E /* GameLink.h */,
 				C972C54426B8FD4900CB2F1E /* GameObjects.c */,
 				C972C54126B8FD4900CB2F1E /* GameObjects.h */,
-				C972C54326B8FD4900CB2F1E /* GameOptions.c */,
-				C972C54226B8FD4900CB2F1E /* GameOptions.h */,
 				C972C54626B8FD4900CB2F1E /* SonicMania.h */,
 				C972C54026B8FD3D00CB2F1E /* Objects */,
 			);
@@ -200,7 +195,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C972C54826B8FD4900CB2F1E /* GameObjects.c in Sources */,
-				C972C54726B8FD4900CB2F1E /* GameOptions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

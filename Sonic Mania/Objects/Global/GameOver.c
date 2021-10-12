@@ -117,12 +117,8 @@ void GameOver_Unknown2(void)
             entity->letterPositions[i].y += entity->letterPosMove[i].y;
             if (entity->letterPosMove[i].y > 0 && entity->letterPositions[i].y > entity->unknownPos1[i].y) {
                 entity->letterPositions[i].y = entity->unknownPos1[i].y;
-                // entity->letterPosMove[i].y -= entity->letterPosMove[i].y;
-                int val                    = entity->letterPosMove[i].y;
-                entity->letterPosMove[i].y = val;
                 int newVal                 = ((((1431655765LL * entity->letterPosMove[i].y) >> 32) - entity->letterPosMove[i].y) >> 1)
                              + ((((1431655765LL * entity->letterPosMove[i].y) >> 32) - entity->letterPosMove[i].y) >> 31);
-                int myVal                  = (entity->letterPosMove[i].y / 2) - entity->letterPosMove[i].y;
                 entity->letterPosMove[i].y = newVal;
                 ++entity->unknownArray1[i];
             }

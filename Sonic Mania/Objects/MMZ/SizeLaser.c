@@ -214,32 +214,32 @@ void SizeLaser_P2JumpInResize(void)
     entity->position.x = player1->position.x;
     entity->position.y = player1->position.y;
 
-    entity->position.x += entity->maxGlideSpeed;
-    entity->position.y += entity->field_1F8;
-    if (entity->maxGlideSpeed <= 0) {
-        if (entity->maxGlideSpeed < 0) {
-            entity->maxGlideSpeed -= (entity->maxGlideSpeed >> 4);
-            if (entity->maxGlideSpeed > 0)
-                entity->maxGlideSpeed = 0;
+    entity->position.x += entity->abilityValue1;
+    entity->position.y += entity->abilityValue2;
+    if (entity->abilityValue1 <= 0) {
+        if (entity->abilityValue1 < 0) {
+            entity->abilityValue1 -= (entity->abilityValue1 >> 4);
+            if (entity->abilityValue1 > 0)
+                entity->abilityValue1 = 0;
         }
     }
     else {
-        entity->maxGlideSpeed -= (entity->maxGlideSpeed >> 4);
-        if (entity->maxGlideSpeed < 0)
-            entity->maxGlideSpeed = 0;
+        entity->abilityValue1 -= (entity->abilityValue1 >> 4);
+        if (entity->abilityValue1 < 0)
+            entity->abilityValue1 = 0;
     }
 
-    if (entity->field_1F8 <= 0) {
-        if (entity->field_1F8 < 0) {
-            entity->field_1F8 -= (entity->maxGlideSpeed >> 4);
-            if (entity->field_1F8 > 0)
-                entity->field_1F8 = 0;
+    if (entity->abilityValue2 <= 0) {
+        if (entity->abilityValue2 < 0) {
+            entity->abilityValue2 -= (entity->abilityValue1 >> 4);
+            if (entity->abilityValue2 > 0)
+                entity->abilityValue2 = 0;
         }
     }
     else {
-        entity->field_1F8 -= (entity->maxGlideSpeed >> 4);
-        if (entity->field_1F8 < 0)
-            entity->field_1F8 = 0;
+        entity->abilityValue2 -= (entity->abilityValue1 >> 4);
+        if (entity->abilityValue2 < 0)
+            entity->abilityValue2 = 0;
     }
 
     if (player1->state == SizeLaser_P2JumpInShrink) {

@@ -169,7 +169,7 @@ void WoodChipper_HandlePlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &WoodChipper->hitboxRazor)
-            && (!entity->field_80 || prevPlayers && (prevPlayers != 2 || !player2->sidekick))
+            && (!entity->field_80 || (prevPlayers && (prevPlayers != 2 || !player2->sidekick)))
 #if RETRO_USE_PLUS
             && !Player_CheckMightyUnspin(1024, player, false, &player->uncurlTimer)
 #endif

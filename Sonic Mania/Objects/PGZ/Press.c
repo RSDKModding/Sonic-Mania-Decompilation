@@ -14,7 +14,8 @@ void Press_StaticUpdate(void)
 {
 #if RETRO_USE_PLUS
     Press->canSuper = true;
-    RSDK_GET_PLAYER(player, p2, c);
+    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    
     if (player->objectID == Player->objectID) {
         foreach_active(Press, press)
         {

@@ -57,7 +57,7 @@ void TimeAttackData_MigrateLegacyTADB(void);
 int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mode, int time);
 int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int time, void (*callback)(int));
 int TimeAttackData_SaveTimeAttackDB(void (*callback)(int));
-int TimeAttackData_SaveTimeAttackDB_CB(int statusCode);
+void TimeAttackData_SaveTimeAttackDB_CB(int statusCode);
 int TimeAttackData_GetScore(byte zone, byte charID, byte act, int encore, int val);
 int TimeAttackData_GetReplayID(byte zone, byte charID, byte act, int encore, int val);
 void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore);

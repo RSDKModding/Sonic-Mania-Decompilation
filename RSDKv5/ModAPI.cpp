@@ -311,7 +311,6 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     autodec = ".so";
 #endif
                     file = fs::path(modDir + "/" + buf + autodec);
-                    bool exists = fs::exists(file);
                     if (fs::exists(file)) {
                         buf += autodec;
                         mode = 1;
@@ -356,7 +355,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     // only load ones that are compiled. this is to still allow lang mods to work
                     fl = "lib" + buf;
 #endif
-                    void *link_handle = (void *)dlopen(fl, RTLD_LOCAL | RTLD_LAZY);
+                    void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
 #endif
 

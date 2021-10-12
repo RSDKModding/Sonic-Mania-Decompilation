@@ -129,7 +129,8 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
-
+    unused(camera);
+    
     EntityBigSqueeze *boss1 = FBZ1Outro->boss1;
     EntityBigSqueeze *boss2 = FBZ1Outro->boss2;
     EntityBigSqueeze *boss3 = FBZ1Outro->boss3;
@@ -196,6 +197,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     EntityBigSqueeze *boss1 = FBZ1Outro->boss1;
     EntityBigSqueeze *boss2 = FBZ1Outro->boss2;
@@ -228,6 +230,8 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 bool32 FBZ1Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+    
     FBZ1Outro_DispenseTrash();
     return player1->onGround && (player2->objectID != Player->objectID || player2->onGround);
 }

@@ -397,8 +397,6 @@ void UpdateDeviceInput(InputDevice *device)
 {
     device->anyPress = false;
 #if RETRO_USING_SDL2
-    int keyCount         = 0;
-
     int buttonMap[] = {
         SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
         SDL_CONTROLLER_BUTTON_A,       SDL_CONTROLLER_BUTTON_B,         SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_X,

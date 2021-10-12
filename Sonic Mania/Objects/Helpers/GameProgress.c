@@ -143,8 +143,6 @@ void GameProgress_TrackGameProgress(void (*callback)(int))
 }
 void GameProgress_ClearBSSSave(void)
 {
-    int *saveRAM = NULL;
-
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to clear BSS before loading SaveGame file");
         return;

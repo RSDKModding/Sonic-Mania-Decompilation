@@ -164,6 +164,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     RSDK_THIS(PSZ2Outro);
     EntityPSZEggman *eggman = (EntityPSZEggman *)entity->eggman;
     RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {

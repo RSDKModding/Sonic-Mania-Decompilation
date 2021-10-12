@@ -318,8 +318,8 @@ typedef struct {
 #if RETRO_USE_PLUS
     bool32 isGhost;
 #endif
-    int maxGlideSpeed;
-    int field_1F8;
+    int abilityValue1;
+    int abilityValue2;
     int field_1FC;
     int field_200;
     int field_204;

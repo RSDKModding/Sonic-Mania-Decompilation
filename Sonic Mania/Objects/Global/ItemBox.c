@@ -700,14 +700,14 @@ void ItemBox_GivePowerup(void)
                                     }
                                     else {
                                         player2->state         = Player_State_JumpIn;
-                                        player2->maxGlideSpeed = ((RSDK_screens->position.y + RSDK_screens->height + 16) << 16) - player->position.y;
+                                        player2->abilityValue1 = ((RSDK_screens->position.y + RSDK_screens->height + 16) << 16) - player->position.y;
                                         player2->drawFX |= FX_SCALE;
                                         player2->scale.x = 1024;
                                         player2->scale.y = 1024;
-                                        int spd          = player2->maxGlideSpeed / -12;
+                                        int spd          = player2->abilityValue1 / -12;
                                         if (spd >= -0x68000 || spd > -0xE0000) {
                                             if (spd < -0x68000)
-                                                player2->velocity.y = player2->maxGlideSpeed / -12;
+                                                player2->velocity.y = player2->abilityValue1 / -12;
                                             else
                                                 player2->velocity.y = -0x68000;
                                         }
@@ -716,7 +716,7 @@ void ItemBox_GivePowerup(void)
                                         }
                                     }
                                     player2->entPtr     = dust;
-                                    player2->maxGlideSpeed = 0;
+                                    player2->abilityValue1 = 0;
                                     player2->nextAirState     = StateMachine_None;
                                     player2->nextGroundState  = StateMachine_None;
                                     player2->stateInput      = Player_ProcessP2InputLag;

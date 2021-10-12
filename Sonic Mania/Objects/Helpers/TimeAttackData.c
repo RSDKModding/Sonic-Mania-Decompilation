@@ -298,7 +298,7 @@ int TimeAttackData_SaveTimeAttackDB(void (*callback)(int))
     return 1;
 }
 
-int TimeAttackData_SaveTimeAttackDB_CB(int statusCode)
+void TimeAttackData_SaveTimeAttackDB_CB(int statusCode)
 {
     if (TimeAttackData->saveCallback) {
         Entity *entStore = RSDK_sceneInfo->entity;
@@ -309,7 +309,6 @@ int TimeAttackData_SaveTimeAttackDB_CB(int statusCode)
         TimeAttackData->saveCallback  = NULL;
         TimeAttackData->saveEntityPtr = NULL;
     }
-    return 1;
 }
 
 int TimeAttackData_GetScore(byte zone, byte charID, byte act, int encore, int rank)

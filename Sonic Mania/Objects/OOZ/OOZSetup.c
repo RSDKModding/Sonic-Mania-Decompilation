@@ -462,7 +462,6 @@ void OOZSetup_PlayerState_OilStrip(void)
     entity->onGround     = true;
     Player_State_Ground();
 
-    int anim = animator->animationID;
 #if RETRO_USE_PLUS
     if ((animator->animationID == ANI_HURT || animator->animationID == ANI_FLUME) && (entity->groundedStore == true) & entity->onGround) {
 #else

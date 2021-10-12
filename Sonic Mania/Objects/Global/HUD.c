@@ -279,7 +279,7 @@ void HUD_Draw(void)
             entity->lifeIconsData.frameID = id;
             if (id >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
                 if ((sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
-                    || !sidekick->maxGlideSpeed) {
+                    || !sidekick->abilityValue1) {
                     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
                 }
             }

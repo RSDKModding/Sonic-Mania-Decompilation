@@ -31,9 +31,9 @@ void Spring_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->type %= 6;
         if (data) {
-            int *pv          = (int *)data;
-            entity->type     = (*pv >> 0) & 0xFF;
-            entity->flipFlag = (*pv >> 8) & 0xFF;
+            int propertyVal  = voidToInt(data);
+            entity->type     = (propertyVal >> 0) & 0xFF;
+            entity->flipFlag = (propertyVal >> 8) & 0xFF;
         }
         RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->animator, true, 0);
         entity->active                  = ACTIVE_BOUNDS;

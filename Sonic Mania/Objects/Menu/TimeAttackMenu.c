@@ -795,7 +795,6 @@ void TimeAttackMenu_UnknownCB1_Replays(void)
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
 
-    int encore = TimeAttackMenu->encoreMode;
     int act    = control->buttons[0]->selection;
     UITABanner_Unknown1(param->characterID, (EntityUITABanner *)TimeAttackMenu->banner, param->zoneID, act, TimeAttackMenu->encoreMode);
     TimeAttackData_ConfigureTableView(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode);

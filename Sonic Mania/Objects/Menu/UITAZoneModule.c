@@ -78,11 +78,11 @@ void UITAZoneModule_StaticUpdate(void)
 
 void UITAZoneModule_Draw(void)
 {
-    RSDK_THIS(UITAZoneModule);
     UITAZoneModule_Unknown3();
     UITAZoneModule_Unknown6();
 #if !RETRO_USE_PLUS
-
+    RSDK_THIS(UITAZoneModule);
+    
     if (entity->field_138_2 >= 1) {
         RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, ((entity->drawPos.x - 0x990000) >> 16) - RSDK_screens->position.x,
                            ((entity->drawPos.y + 0x240000) >> 16) - 16 - RSDK_screens->position.y,

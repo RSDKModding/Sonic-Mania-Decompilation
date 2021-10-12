@@ -966,9 +966,9 @@ void Zone_Unknown19(void)
             playerPtr->nextGroundState = player->nextGroundState;
             playerPtr->onGround        = player->onGround;
             playerPtr->groundedStore   = player->groundedStore;
-            playerPtr->maxGlideSpeed   = player->maxGlideSpeed;
+            playerPtr->abilityValue1   = player->abilityValue1;
             playerPtr->entPtr          = player->entPtr;
-            playerPtr->field_1F8       = player->field_1F8;
+            playerPtr->abilityValue2   = player->abilityValue2;
             playerPtr->field_218       = player->field_218;
             playerPtr->field_1FC       = player->field_1FC;
             playerPtr->field_21C       = player->field_21C;
