@@ -21,21 +21,17 @@ void PlaneSwitch_Update(void)
             if (xDif < 0x180000 && yDif < entity->size << 19) {
                 if (scanX + pos >= entity->position.x) {
                     player->collisionPlane = (entity->flags >> 3) & 1;
-                    if (!(entity->flags & 4)) {
+                    if (!(entity->flags & 4))
                         player->drawOrder = Zone->playerDrawLow;
-                    }
-                    else {
+                    else
                         player->drawOrder = Zone->playerDrawHigh;
-                    }
                 }
                 else {
                     player->collisionPlane = (entity->flags >> 1) & 1;
-                    if (!(entity->flags & 1)) {
+                    if (!(entity->flags & 1))
                         player->drawOrder = Zone->playerDrawLow;
-                    }
-                    else {
+                    else
                         player->drawOrder = Zone->playerDrawHigh;
-                    }
                 }
             }
         }
@@ -92,14 +88,15 @@ void PlaneSwitch_Create(void *data)
         if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
             x = entity->size * RSDK.Sin256(entity->angle) << 11;
         else
-            x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
+            x = -(entity->size * RSDK.Sin256(entity->angle) << 11);
         entity->updateRange.x = x + 0x200000;
 
         int y = 0;
         if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
             y = entity->size * RSDK.Cos256(entity->angle) << 11;
         else
-            y = -0x800 * entity->size * RSDK.Cos256(entity->angle);
+            y = -(entity->size * RSDK.Cos256(entity->angle) << 11);
+
         entity->visible       = false;
         entity->updateRange.y = y + 0x200000;
         entity->drawOrder     = Zone->drawOrderLow;

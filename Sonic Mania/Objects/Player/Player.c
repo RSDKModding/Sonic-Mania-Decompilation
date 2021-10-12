@@ -1127,7 +1127,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags)
 
 #if RETRO_USE_PLUS
     RSDK.StopSFX(Player->sfx_SwapFail);
-    if (globals->medalMods & getMod(SECRET_SUPERDASH) || true)
+    if (globals->medalMods & getMod(SECRET_SUPERDASH))
         player->movesetState = ERZStart_Player_StartSuperFly;
 #endif
 

@@ -21,7 +21,7 @@ typedef struct {
     Vector2 shakePos;
     Vector2 lookPos;
     Vector2 offset;
-    int offsetYFlag;
+    bool32 offsetYFlag;
     int centerY;
     int adjustY;
     int lerpPercent;
