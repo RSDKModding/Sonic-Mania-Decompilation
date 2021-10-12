@@ -311,7 +311,7 @@ void Ice_FreezePlayer(void *p)
         ice->playerPtr = (Entity *)player;
 #if RETRO_USE_PLUS
         switch (player->characterID) {
-            case ID_SONIC: ice->animationID = 4 * (player->superState == 2) + ICEANI_SONICIDLE; break;
+            case ID_SONIC: ice->animationID = 4 * (player->superState == SUPERSTATE_SUPER) + ICEANI_SONICIDLE; break;
             case ID_TAILS: ice->animationID = ICEANI_TAILSIDLE; break;
             case ID_KNUCKLES: ice->animationID = ICEANI_KNUXIDLE; break;
             case ID_MIGHTY: ice->animationID = ICEANI_MIGHTYIDLE; break;

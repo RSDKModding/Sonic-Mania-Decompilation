@@ -542,9 +542,8 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
             EntityPlayer *playerData = (EntityPlayer *)entityData;
             EntityPlayer *player     = (EntityPlayer *)entity;
             player->shield           = playerData->shield;
-            if (player->shield && player->superState != 2 && player->shield <= 0) {
-                int id         = RSDK.GetEntityID(player);
-                Entity *shield = (Entity *)RSDK.GetEntityByID(Player->playerCount + id);
+            if (player->shield && player->superState != SUPERSTATE_SUPER && player->shield <= 0) {
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                 RSDK.ResetEntityPtr(shield, Shield->objectID, player);
             }
         }

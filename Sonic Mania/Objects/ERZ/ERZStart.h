@@ -28,6 +28,12 @@ void ERZStart_EditorLoad(void);
 void ERZStart_Serialize(void);
 
 // Extra Entity Functions
+void ERZStart_Unknown16(void);
+void ERZStart_Unknown17(void);
 
+void ERZStart_Player_HandleSuperDash(void *p);
+void ERZStart_State_PlayerSuperFly(void);
+void ERZStart_Player_StartSuperFly(void);
+void ERZStart_State_PlayerRebound(void);
 
 #endif //!OBJ_ERZSTART_H

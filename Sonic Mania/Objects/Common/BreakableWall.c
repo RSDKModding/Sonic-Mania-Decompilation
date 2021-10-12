@@ -407,7 +407,7 @@ void BreakableWall_HandleSidesBreak(void)
                     default: break;
                     case ID_SONIC:
                         flag |= player->playerAnimator.animationID == ANI_DROPDASH;
-                        flag |= player->superState == 2;
+                        flag |= player->superState == SUPERSTATE_SUPER;
                         break;
                     case ID_KNUCKLES: flag = true; break;
                 }

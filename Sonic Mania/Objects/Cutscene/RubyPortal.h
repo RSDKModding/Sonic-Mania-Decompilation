@@ -8,7 +8,9 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     ushort spriteIndex;
+#if RETRO_USE_PLUS
     bool32 openPortal;
+#endif
 } ObjectRubyPortal;
 
 // Entity Class

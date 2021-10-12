@@ -21,21 +21,21 @@ typedef struct {
     int value13;
     int value14;
     int value15;
-    byte value16;
-    byte value17;
-    ushort value18;
-    ushort value19;
-    ushort value20;
-    ushort value21;
-    ushort value22;
-    ushort value23;
-    ushort value24;
-    ushort value25;
-    ushort value26;
-    ushort value27;
-    ushort value28;
-    ushort value29;
-    byte value30;
+    bool32 setupPalette;
+    bool32 value17;
+    ushort sfxHit;
+    ushort sfxExplosion2;
+    ushort sfxRocketJet;
+    ushort sfxExplosion3;
+    ushort sfxJump;
+    ushort sfxLand;
+    ushort sfxRepel;
+    ushort sfxShield;
+    ushort sfxShock;
+    ushort sfxSummon;
+    ushort sfxMissile;
+    ushort aniFrames;
+    bool32 field_244;
 } ObjectPhantomEgg;
 
 // Entity Class

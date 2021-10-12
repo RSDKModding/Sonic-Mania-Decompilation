@@ -51,7 +51,7 @@ void OOZSetup_StaticUpdate(void)
             int behaviour = RSDK.GetTileBehaviour(tile, player->collisionPlane);
 
             if (behaviour) {
-                if (player->shield == SHIELD_FIRE && player->superState != 2 && behaviour != 4) {
+                if (player->shield == SHIELD_FIRE && player->superState != SUPERSTATE_SUPER && behaviour != 4) {
                     int tx = (player->position.x & 0xFFF00000) + 0x70000;
                     int ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
                     if (behaviour == 1) {

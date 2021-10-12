@@ -35,6 +35,7 @@ void RubyPortal_Create(void *data)
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(RubyPortal->spriteIndex, 0, &entity->animator, true, 0);
+#if RETRO_USE_PLUS
         if (data) {
             entity->state = (Type_StateMachine)data;
         }
@@ -59,6 +60,24 @@ void RubyPortal_Create(void *data)
         else {
             entity->state = RubyPortal_Unknown3;
         }
+#else
+        entity->state = StateMachine_None;
+        if (!RSDK.CheckStageFolder("ERZ")) {
+            EntityWarpDoor *door = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+            if (door->objectID == WarpDoor->objectID) {
+                entity->hitbox      = door->hitbox;
+                door->hitbox.left   = 0;
+                door->hitbox.top    = -0x800;
+                door->hitbox.right  = 0;
+                door->hitbox.bottom = -0x800;
+            }
+            entity->state = RubyPortal_Unknown2;
+            if (StarPost->postIDs[0])
+                TMZ2_DrawDynTiles2();
+            else
+                TMZ2_DrawDynTiles1();
+        }
+#endif
     }
 }
 
@@ -73,7 +92,7 @@ void RubyPortal_StageLoad(void)
     }
     else {
 #else // preplus has an explicit check
-    else if (RSDK.CheckStageFolder("TMZ")) {
+    else if (RSDK.CheckStageFolder("TMZ2")) {
 #endif
         RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
     }
@@ -82,8 +101,8 @@ void RubyPortal_StageLoad(void)
     RubyPortal->hitbox.top    = -24;
     RubyPortal->hitbox.right  = 24;
     RubyPortal->hitbox.bottom = 24;
-    RubyPortal->openPortal    = false;
 #if RETRO_USE_PLUS 
+    RubyPortal->openPortal    = false;
     RSDK.SetDebugValue("Open Portal", &RubyPortal->openPortal, DTYPE_BOOL, false, true);
 #endif
 }
@@ -146,7 +165,11 @@ void RubyPortal_Unknown1(void)
 void RubyPortal_Unknown2(void)
 {
     RSDK_THIS(RubyPortal);
-    if (TMZBarrier->flags == 15 || RubyPortal->openPortal)
+#if RETRO_USE_PLUS
+    if (TMZBarrier->flags == 0xF || RubyPortal->openPortal)
+#else
+    if (TMZBarrier->flags == 0xF)
+#endif
         entity->state = RubyPortal_Unknown3;
 }
 
@@ -156,6 +179,7 @@ void RubyPortal_Unknown3(void)
 
     if (++entity->timer >= 120) {
         entity->visible = true;
+#if RETRO_USE_PLUS
         if (globals->gameMode == MODE_MANIA) {
             entity->state = RubyPortal_Unknown4;
         }
@@ -170,6 +194,12 @@ void RubyPortal_Unknown3(void)
                 entity->state = RubyPortal_Unknown7;
             }
         }
+#else
+        if (!isMainGameMode())
+            entity->state = RubyPortal_Unknown6;
+        else
+            entity->state = RubyPortal_Unknown4;
+#endif
     }
 }
 
@@ -189,6 +219,12 @@ void RubyPortal_Unknown4(void)
                 }
 
                 SaveGame_SavePlayerState();
+
+#if !RETRO_USE_PLUS && RETRO_GAMEVER != VER_100
+                if (player->superState == SUPERSTATE_SUPER)
+                    globals->restartPowerups |= 0x80;
+#endif
+
                 globals->suppressAutoMusic = true;
                 globals->suppressTitlecard = true;
                 if (player1->invincibleTimer <= 1) {
@@ -202,7 +238,10 @@ void RubyPortal_Unknown4(void)
                 if (!RSDK.CheckValidScene())
                     RSDK.SetScene("Presentation", "Title Screen");
                 Zone_StartFadeOut(16, 0xF0F0F0);
+
+#if RETRO_USE_PLUS
                 entity->state = RubyPortal_Unknown5;
+#endif
 
                 int sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
                 int channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], 0, 0);
@@ -222,7 +261,7 @@ void RubyPortal_Unknown4(void)
 void RubyPortal_Unknown5(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player->superState == 2 || player->state == Player_State_Transform)
+    if (player->superState == SUPERSTATE_SUPER || player->state == Player_State_Transform)
         globals->restartPowerups |= 0x80;
     globals->restartMusicID = Music->activeTrack;
 }

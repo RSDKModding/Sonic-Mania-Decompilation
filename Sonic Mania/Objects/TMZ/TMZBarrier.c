@@ -11,7 +11,7 @@ void TMZBarrier_Update(void)
             RSDK.CopyTileLayer(Zone->fgLow, entity->position.x >> 20, entity->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
         else
             RSDK.CopyTileLayer(Zone->fgLow, entity->position.x >> 20, entity->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 
@@ -54,7 +54,7 @@ void TMZBarrier_StageLoad(void)
                     RSDK.CopyTileLayer(Zone->fgLow, barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
                 else
                     RSDK.CopyTileLayer(Zone->fgLow, barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
-                RSDK.ResetEntityPtr(barrier, TYPE_BLANK, NULL);
+                destroyEntity(barrier);
             }
         }
     }

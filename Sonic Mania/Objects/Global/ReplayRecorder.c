@@ -580,7 +580,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[44] = Player_State_Peelout;
     ReplayRecorder->actions[45] = Player_State_Roll;
     ReplayRecorder->actions[46] = Player_State_Spindash;
-    ReplayRecorder->actions[47] = Player_Unknown9;
+    ReplayRecorder->actions[47] = Player_ForceSuperTransform;
     ReplayRecorder->actions[48] = Player_State_None;
     ReplayRecorder->actions[49] = Player_State_Transform;
     ReplayRecorder->actions[50] = Player_Unknown7;

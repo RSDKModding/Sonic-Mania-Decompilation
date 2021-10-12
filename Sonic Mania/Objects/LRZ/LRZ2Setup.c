@@ -185,7 +185,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
             Zone_StartFadeOut(10, 0x000000);
         }
 
-        if (player1->superState == 2 || player1->state == Player_State_Transform) {
+        if (player1->superState == SUPERSTATE_SUPER || player1->state == Player_State_Transform) {
             globals->restartPowerups |= 0x80;
         }
         globals->restartMusicID = Music->activeTrack;
