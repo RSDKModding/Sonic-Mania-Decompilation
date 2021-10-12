@@ -156,11 +156,11 @@ void PlatformControl_Create(void *data)
             if (SDashWheel && !flag) {
                 foreach_all(SDashWheel, wheel)
                 {
-                    // if (wheel->tag == entity->buttonTag) {
-                    //     flag = true;
-                    //     control = (Entity *)wheel;
-                    //     foreach_break;
-                    // }
+                    if (wheel->tag == entity->buttonTag) {
+                        flag = true;
+                        control = (Entity *)wheel;
+                        foreach_break;
+                    }
                 }
             }
             if (PullChain && !flag) {

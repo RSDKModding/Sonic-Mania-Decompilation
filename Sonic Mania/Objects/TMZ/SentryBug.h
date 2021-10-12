@@ -9,17 +9,60 @@ typedef struct {
     int value1[84]; //= { -327680, 196608, -589824, 655360, -458752, 1048576, 458752, 196608, 196608, 655360, -196608, 1048576, -458752, 196608, -720896, 655360, -524288, 1048576, 589824, 196608, 393216, 655360, 0, 1048576, -589824, 196608, -720896, 655360, -524288, 1048576, 589824, 196608, 524288, 655360, 196608, 1048576, -589824, 196608, -720896, 655360, -524288, 1048576, 589824, 196608, 720896, 655360, 524288, 1048576, 589824, 196608, 720896, 655360, 524288, 1048576, -589824, 196608, -524288, 655360, -196608, 1048576, 458752, 196608, 720896, 655360, 524288, 1048576, -589824, 196608, -393216, 655360, 0, 1048576, 327680, 196608, 589824, 655360, 458752, 1048576, -458752, 196608, -196608, 655360, 196608, 1048576 };
     int value2[12]; //= { -65536, -65536, -131072, -32768, -65536, 32768, 65536, -65536, 131072, -32768, 65536, 32768 };
     int value3[12]; //= { 65536, -65536, 131072, -32768, 65536, 32768, -65536, -65536, -131072, -32768, -65536, 32768 };
-    colour value4;
-    ushort value5;
-    ushort value6;
-    ushort value7;
-    ushort value8;
-    ushort value9;
+    Hitbox hitbox;
+    ushort meshFrames;
+    ushort sceneIndex;
+    ushort aniFrames;
+    ushort sfxPon;
+    ushort sfxSwarm;
 } ObjectSentryBug;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateLate);
+    byte speed;
+    Vector2 amplitude;
+    bool32 drawFlag;
+    bool32 drawNet;
+    int timer;
+    Vector2 field_78;
+    Vector2 field_80;
+    EntityPlayer *playerPtr;
+    int netX;
+    int netY;
+    int netRotation;
+    int netScale;
+    int netColour;
+    Vector2 positions[6];
+    Vector2 positions2[6];
+    int field_100;
+    int field_104;
+    int field_108;
+    int field_10C;
+    int field_110;
+    int field_114;
+    int field_118;
+    int field_11C;
+    int field_120;
+    int field_124;
+    int field_128;
+    int field_12C;
+    int field_130;
+    int field_134;
+    int field_138;
+    int field_13C;
+    int field_140;
+    int field_144;
+    int field_148;
+    int field_14C;
+    int field_150;
+    int field_154;
+    Matrix matrix1;
+    Matrix matrix2;
+    Animator animator2;
+    Animator animator1;
 } EntitySentryBug;
 
 // Object Struct
@@ -37,6 +80,23 @@ void SentryBug_EditorLoad(void);
 void SentryBug_Serialize(void);
 
 // Extra Entity Functions
+void SentryBug_DebugSpawn(void);
+void SentryBug_DebugDraw(void);
 
+void SentryBug_CheckPlayerCollisions(void);
+
+void SentryBug_StateLate_Unknown1(void);
+void SentryBug_SetupPositions2(void);
+void SentryBug_StateLate_Unknown2(void);
+void SentryBug_StateLate_Unknown3(void);
+void SentryBug_StateLate_Unknown4(void);
+void SentryBug_StateLate_Unknown5(void);
+
+void SentryBug_State_Unknown1(void);
+void SentryBug_State_Unknown2(void);
+void SentryBug_State_Unknown3(void);
+void SentryBug_State_Unknown4(void);
+void SentryBug_State_Unknown5(void);
+void SentryBug_State_Unknown6(void);
 
 #endif //!OBJ_SENTRYBUG_H
