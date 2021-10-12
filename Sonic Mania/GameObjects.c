@@ -25,7 +25,7 @@ APIFunctionTable API;
 #if RETRO_USE_MOD_LOADER
 ModFunctionTable Mod;
 
-#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction("SonicMania", #func, (void*)(func))
+#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void*)(func))
 #endif
 
 void LinkGameLogicDLL(GameInfo *info)

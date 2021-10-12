@@ -94,6 +94,8 @@ extern std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
 extern void *modFunctionTable[ModTable_Max];
 extern int currentObjectID;
 
+extern ModInfo* currentMod;
+
 void initModAPI();
 void unloadMods();
 void loadMods();
@@ -118,7 +120,7 @@ void *GetGlobals();
 bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
 void AddModCallback(int callbackID, ModCallback callback);
 void AddModCallback_STD(int callbackID, ModCallbackSTD callback);
-void *AddPublicFunction(const char *folder, const char *functionName, void *functionPtr);
+void AddPublicFunction(const char *functionName, void *functionPtr);
 void *GetPublicFunction(const char *folder, const char *functionName);
 void GetModPath(const char *id, TextInfo *result);
 
@@ -126,17 +128,17 @@ bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback);
 int GetSettingsInteger(const char *id, const char *key, int fallback);
 void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback);
 
-void SetSettingsBool(const char *id, const char *key, bool32 val);
-void SetSettingsInteger(const char *id, const char *key, int val);
-void SetSettingsString(const char *id, const char *key, TextInfo *val);
+void SetSettingsBool(const char *key, bool32 val);
+void SetSettingsInteger(const char *key, int val);
+void SetSettingsString(const char *key, TextInfo *val);
 
-void SaveSettings(const char *id);
+void SaveSettings();
 
-bool32 GetConfigBool(const char *id, const char *key, bool32 fallback);
-int GetConfigInteger(const char *id, const char *key, int fallback);
-void GetConfigString(const char *id, const char *key, TextInfo *result, const char *fallback);
-bool32 ForeachConfig(const char *id, TextInfo *textInfo);
-bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo);
+bool32 GetConfigBool(const char *key, bool32 fallback);
+int GetConfigInteger(const char *key, int fallback);
+void GetConfigString(const char *key, TextInfo *result, const char *fallback);
+bool32 ForeachConfig(TextInfo *textInfo);
+bool32 ForeachConfigCategory(TextInfo *textInfo);
 
 void Super(int objectID, ModSuper callback, void *data);
 

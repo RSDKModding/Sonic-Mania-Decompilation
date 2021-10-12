@@ -32,6 +32,9 @@ std::map<std::string, int> langMap;
 
 std::vector<ModInfo> modList;
 std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
+ModInfo *currentMod;
+
+std::vector<ModPublicFunctionInfo> gamePublicFuncs;
 
 // did we try to load a logic of a different lang? load it later
 std::vector<int> waitList;
@@ -138,8 +141,8 @@ void loadMods()
                     else
                         langMap.insert(pair<string, int>(info.language, modList.size()));
                 }
-                if (!loaded) 
-                    info.active = false;                
+                if (!loaded)
+                    info.active = false;
                 modList.push_back(info);
             }
         }
@@ -210,6 +213,8 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 {
     if (!info)
         return false;
+
+    ModInfo *cur = currentMod;
 
     printLog(PRINT_NORMAL, "[MOD] Trying to load mod %s...", folder.c_str());
 
@@ -310,7 +315,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                     autodec = ".so";
 #endif
-                    file = fs::path(modDir + "/" + buf + autodec);
+                    file        = fs::path(modDir + "/" + buf + autodec);
                     bool exists = fs::exists(file);
                     if (fs::exists(file)) {
                         buf += autodec;
@@ -405,6 +410,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         linkInfo.modPtrs    = modFunctionTable;
 
                         const char *fid = info->folder.c_str();
+                        currentMod      = info;
                         std::string res = ((langSetup)info->language)(&linkInfo, fid);
                         res             = "." + res;
                         char buf[0x10];
@@ -430,6 +436,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 
                 if (!linked) {
                     iniparser_freedict(ini);
+                    currentMod = cur;
                     return false;
                 }
             }
@@ -555,6 +562,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
         printLog(PRINT_NORMAL, "[MOD] Loaded mod %s! Active: %s", folder.c_str(), active ? "Y" : "N");
 
         iniparser_freedict(ini);
+        currentMod = cur;
         return true;
     }
     return false;
@@ -562,6 +570,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 
 void saveMods()
 {
+    ModInfo *cur = currentMod;
     char modBuf[0x100];
     sprintf(modBuf, "%smods/", userFileDir);
     fs::path modPath(modBuf);
@@ -577,13 +586,13 @@ void saveMods()
         writeText(file, "[Mods]\n");
 
         for (int m = 0; m < modList.size(); ++m) {
-            ModInfo *info = &modList[m];
-            SaveSettings(info->folder.c_str());
-
-            writeText(file, "%s=%c\n", info->folder.c_str(), info->active ? 'y' : 'n');
+            currentMod = &modList[m];
+            SaveSettings();
+            writeText(file, "%s=%c\n", currentMod->folder.c_str(), currentMod->active ? 'y' : 'n');
         }
         fClose(file);
     }
+    currentMod = cur;
 }
 
 void RunModCallbacks(int callbackID, void *data)
@@ -591,9 +600,9 @@ void RunModCallbacks(int callbackID, void *data)
     if (callbackID < 0 || callbackID >= MODCB_MAX)
         return;
 
-    for (int c = 0; c < modCallbackList[callbackID].size(); ++c) {
-        if (modCallbackList[callbackID][c])
-            modCallbackList[callbackID][c](data);
+    for (auto &c : modCallbackList[callbackID]) {
+        if (c)
+            c(data);
     }
 }
 
@@ -627,29 +636,31 @@ void AddModCallback_STD(int callbackID, ModCallbackSTD callback)
     modCallbackList[callbackID].push_back(callback);
 }
 
-void *AddPublicFunction(const char *folder, const char *functionName, void *functionPtr)
+void AddPublicFunction(const char *functionName, void *functionPtr)
 {
-    for (int m = 0; m < modList.size(); ++m) {
-        if (modList[m].folder == folder) {
-            ModPublicFunctionInfo info;
-            info.name = functionName;
-            info.ptr  = functionPtr;
-            modList[m].functionList.push_back(info);
-        }
-    }
-    return NULL;
+    if (!currentMod)
+        return gamePublicFuncs.push_back({ functionName, functionPtr });
+    if (!currentMod->active)
+        return;
+    currentMod->functionList.push_back({ functionName, functionPtr });
 }
 
-void *GetPublicFunction(const char *folder, const char *functionName)
+void *GetPublicFunction(const char *id, const char *functionName)
 {
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == folder) {
-            for (int f = 0; f < modList[m].functionList.size(); ++f) {
-                if (modList[m].functionList[f].name == functionName)
-                    return modList[m].functionList[f].ptr;
-            }
+    if (!id) {
+        for (auto &f : gamePublicFuncs)
+            if (f.name == functionName)
+                return f.ptr;
+        return NULL;
+    }
+    if (!strlen(id))
+        id = currentMod->folder.c_str();
+    for (ModInfo &m : modList) {
+        if (m.active && m.folder == id) {
+            for (auto &f : m.functionList)
+                if (f.name == functionName)
+                    return f.ptr;
+            return NULL;
         }
     }
     return NULL;
@@ -690,12 +701,10 @@ std::string GetSettingsValue(const char *id, const char *key)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == id) {
+    for (ModInfo &m : modList) {
+        if (m.active && m.folder == id) {
             try {
-                return modList[m].settings.at(cat).at(rkey);
+                return m.settings.at(cat).at(rkey);
             } catch (std::out_of_range) {
                 return std::string();
             }
@@ -706,9 +715,15 @@ std::string GetSettingsValue(const char *id, const char *key)
 
 bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
 {
+    if (!id) {
+        if (!currentMod)
+            return fallback;
+        id = currentMod->folder.c_str();
+    }
     std::string v = GetSettingsValue(id, key);
     if (!v.length()) {
-        SetSettingsBool(id, key, fallback);
+        if (currentMod->folder == id)
+            SetSettingsBool(key, fallback);
         return fallback;
     }
     char first = v.at(0);
@@ -716,38 +731,57 @@ bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
         return true;
     if (first == 'n' || first == 'N' || first == 'f' || first == 'F' || !first)
         return false;
-    SetSettingsBool(id, key, fallback);
+    if (currentMod->folder == id)
+        SetSettingsBool(key, fallback);
     return fallback;
 }
 
 int GetSettingsInteger(const char *id, const char *key, int fallback)
 {
+    if (!id) {
+        if (!currentMod)
+            return fallback;
+        id = currentMod->folder.c_str();
+    }
     std::string v = GetSettingsValue(id, key);
     if (!v.length()) {
-        SetSettingsInteger(id, key, fallback);
+        if (currentMod->folder == id)
+            SetSettingsInteger(key, fallback);
         return fallback;
     }
     try {
         return std::stoi(v, nullptr, 0);
     } catch (...) {
-        SetSettingsInteger(id, key, fallback);
+        if (currentMod->folder == id)
+            SetSettingsInteger(key, fallback);
         return fallback;
     }
 }
 
 void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback)
 {
+    if (!id) {
+        if (!currentMod) {
+            SetText(result, (char *)fallback, strlen(fallback));
+            return;
+        }
+        id = currentMod->folder.c_str();
+    }
+
     std::string v = GetSettingsValue(id, key);
     if (!v.length()) {
+        if (currentMod->folder == id)
+            SetSettingsString(key, result);
         SetText(result, (char *)fallback, strlen(fallback));
-        SetSettingsString(id, key, result);
         return;
     }
     SetText(result, (char *)v.c_str(), v.length());
 }
 
-std::string GetConfigValue(const char *id, const char *key)
+std::string GetConfigValue(const char *key)
 {
+    if (!currentMod || !currentMod->active)
+        return std::string();
     std::string skey(key);
     if (!strchr(key, ':'))
         skey = std::string(":") + key;
@@ -755,36 +789,30 @@ std::string GetConfigValue(const char *id, const char *key)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == id) {
-            try {
-                return modList[m].config.at(cat).at(rkey);
-            } catch (std::out_of_range) {
-                return std::string();
-            }
-        }
+    try {
+        return currentMod->config.at(cat).at(rkey);
+    } catch (std::out_of_range) {
+        return std::string();
     }
     return std::string();
 }
 
-bool32 GetConfigBool(const char *id, const char *key, bool32 fallback)
+bool32 GetConfigBool(const char *key, bool32 fallback)
 {
-    std::string v = GetConfigValue(id, key);
+    std::string v = GetConfigValue(key);
     if (!v.length())
         return fallback;
     char first = v.at(0);
-    if (first == 'y' || first == 'Y' || first == 't' || first == 'T' || (first = GetConfigInteger(id, key, 0)))
+    if (first == 'y' || first == 'Y' || first == 't' || first == 'T' || (first = GetConfigInteger(key, 0)))
         return true;
     if (first == 'n' || first == 'N' || first == 'f' || first == 'F' || !first)
         return false;
     return fallback;
 }
 
-int GetConfigInteger(const char *id, const char *key, int fallback)
+int GetConfigInteger(const char *key, int fallback)
 {
-    std::string v = GetConfigValue(id, key);
+    std::string v = GetConfigValue(key);
     if (!v.length())
         return fallback;
     try {
@@ -794,9 +822,9 @@ int GetConfigInteger(const char *id, const char *key, int fallback)
     }
 }
 
-void GetConfigString(const char *id, const char *key, TextInfo *result, const char *fallback)
+void GetConfigString(const char *key, TextInfo *result, const char *fallback)
 {
-    std::string v = GetConfigValue(id, key);
+    std::string v = GetConfigValue(key);
     if (!v.length()) {
         SetText(result, (char *)fallback, strlen(fallback));
         return;
@@ -804,20 +832,12 @@ void GetConfigString(const char *id, const char *key, TextInfo *result, const ch
     SetText(result, (char *)v.c_str(), v.length());
 }
 
-bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo)
+bool32 ForeachConfigCategory(TextInfo *textInfo)
 {
-    if (!textInfo)
+    if (!textInfo || !currentMod)
         return false;
     using namespace std;
-    map<string, map<string, string>> config;
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == id) {
-            config = modList[m].config;
-        }
-    }
-    if (!config.size())
+    if (!currentMod->config.size())
         return false;
 
     if (textInfo->text)
@@ -829,12 +849,12 @@ bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo)
     int sid = 0;
     string cat;
     bool32 set = false;
-    if (config[""].size() && foreachStackPtr->id == sid++) {
+    if (currentMod->config[""].size() && foreachStackPtr->id == sid++) {
         set = true;
         cat = "";
     }
     if (!set) {
-        for (pair<string, map<string, string>> kv : config) {
+        for (pair<string, map<string, string>> kv : currentMod->config) {
             if (!kv.first.length())
                 continue;
             if (kv.second.size() && foreachStackPtr->id == sid++) {
@@ -852,20 +872,12 @@ bool32 ForeachConfigCategory(const char *id, TextInfo *textInfo)
     return true;
 }
 
-bool32 ForeachConfig(const char *id, TextInfo *textInfo)
+bool32 ForeachConfig(TextInfo *textInfo)
 {
-    if (!textInfo)
+    if (!textInfo || !currentMod)
         return false;
     using namespace std;
-    map<string, map<string, string>> config;
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == id) {
-            config = modList[m].config;
-        }
-    }
-    if (!config.size())
+    if (!currentMod->config.size())
         return false;
 
     if (textInfo->text)
@@ -876,8 +888,8 @@ bool32 ForeachConfig(const char *id, TextInfo *textInfo)
     }
     int sid = 0;
     string key, cat;
-    if (config[""].size()) {
-        for (pair<string, string> pair : config[""]) {
+    if (currentMod->config[""].size()) {
+        for (pair<string, string> pair : currentMod->config[""]) {
             if (foreachStackPtr->id == sid++) {
                 cat = "";
                 key = pair.first;
@@ -886,7 +898,7 @@ bool32 ForeachConfig(const char *id, TextInfo *textInfo)
         }
     }
     if (!key.length()) {
-        for (pair<string, map<string, string>> kv : config) {
+        for (pair<string, map<string, string>> kv : currentMod->config) {
             if (!kv.first.length())
                 continue;
             for (pair<string, string> pair : kv.second) {
@@ -907,8 +919,10 @@ bool32 ForeachConfig(const char *id, TextInfo *textInfo)
     return true;
 }
 
-void SetSettingsValue(const char *id, const char *key, std::string val)
+void SetSettingsValue(const char *key, std::string val)
 {
+    if (!currentMod)
+        return;
     std::string skey(key);
     if (!strchr(key, ':'))
         skey = std::string(":") + key;
@@ -916,51 +930,38 @@ void SetSettingsValue(const char *id, const char *key, std::string val)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == id) {
-            modList[m].settings[cat][rkey] = val;
-            break;
-        }
-    }
+    currentMod->settings[cat][rkey] = val;
 }
 
-void SetSettingsBool(const char *id, const char *key, bool32 val) { SetSettingsValue(id, key, val ? "Y" : "N"); }
-void SetSettingsInteger(const char *id, const char *key, int val) { SetSettingsValue(id, key, std::to_string(val)); }
-void SetSettingsString(const char *id, const char *key, TextInfo *val)
+void SetSettingsBool(const char *key, bool32 val) { SetSettingsValue(key, val ? "Y" : "N"); }
+void SetSettingsInteger(const char *key, int val) { SetSettingsValue(key, std::to_string(val)); }
+void SetSettingsString(const char *key, TextInfo *val)
 {
     char *buf = new char[val->textLength];
     GetCString(buf, val);
-    SetSettingsValue(id, key, buf);
+    SetSettingsValue(key, buf);
 }
 
-void SaveSettings(const char *id)
+void SaveSettings()
 {
     using namespace std;
-    for (int m = 0; m < modList.size(); ++m) {
-        if (!modList[m].active)
-            break;
-        if (modList[m].folder == id) {
-            if (!modList[m].settings.size())
-                break;
+    if (!currentMod || !currentMod->settings.size())
+        return;
 
-            FileIO *file = fOpen((GetModPath_i(id) + "/modSettings.ini").c_str(), "w");
+    FileIO *file = fOpen((GetModPath_i(currentMod->folder.c_str()) + "/modSettings.ini").c_str(), "w");
 
-            if (modList[m].settings[""].size()) {
-                for (pair<string, string> pair : modList[m].settings[""]) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
-            }
-            for (pair<string, map<string, string>> kv : modList[m].settings) {
-                if (!kv.first.length())
-                    continue;
-                writeText(file, "\n[%s]\n", kv.first.c_str());
-                for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
-            }
-            fClose(file);
-            printLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", id);
-            return;
-        }
+    if (currentMod->settings[""].size()) {
+        for (pair<string, string> pair : currentMod->settings[""]) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
+    for (pair<string, map<string, string>> kv : currentMod->settings) {
+        if (!kv.first.length())
+            continue;
+        writeText(file, "\n[%s]\n", kv.first.c_str());
+        for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+    }
+    fClose(file);
+    printLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->folder.c_str());
+    return;
 }
 
 // i'm going to hell for this
@@ -970,6 +971,7 @@ void Super(int objectID, ModSuper callback, void *data)
 {
     ObjectInfo *super = &objectList[stageObjectIDs[objectID]];
     Object *before    = NULL;
+    ModInfo* curMod = currentMod;
     if (HASH_MATCH(super->hash, super->inherited->hash)) {
         for (int i = 0; i < superLevels; i++) {
             before = *super->type;
@@ -1030,6 +1032,7 @@ void Super(int objectID, ModSuper callback, void *data)
     }
     *super->type = before;
     superLevels  = 1;
+    currentMod = curMod;
 }
 
 void *GetGlobals() { return (void *)globalVarsPtr; }
@@ -1068,7 +1071,8 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize
                            std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                            std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
 {
-    int preCount = objectCount + 1;
+    ModInfo *curMod = currentMod;
+    int preCount    = objectCount + 1;
     uint hash[4];
     GEN_HASH(name, hash);
 
@@ -1115,6 +1119,18 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize
         else
             inherited = NULL;
     }
+
+    // clang-format off
+    update       = [curMod, update]()           { currentMod = curMod; update();       currentMod = NULL; };
+    lateUpdate   = [curMod, lateUpdate]()       { currentMod = curMod; lateUpdate();   currentMod = NULL; };
+    staticUpdate = [curMod, staticUpdate]()     { currentMod = curMod; staticUpdate(); currentMod = NULL; };
+    draw         = [curMod, draw]()             { currentMod = curMod; draw();         currentMod = NULL; };
+    stageLoad    = [curMod, stageLoad]()        { currentMod = curMod; stageLoad();    currentMod = NULL; };
+    serialize    = [curMod, serialize]()        { currentMod = curMod; serialize();    currentMod = NULL; };
+    editorDraw   = [curMod, editorDraw]()       { currentMod = curMod; editorDraw();   currentMod = NULL; };
+    editorLoad   = [curMod, editorLoad]()       { currentMod = curMod; editorLoad();   currentMod = NULL; };
+    create       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
+    // clang-format on
 
     RegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
                        serialize);
