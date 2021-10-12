@@ -33,10 +33,10 @@ void Mine_Update(void)
                     && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, entity, &FBZMissile->hitbox1)) {
                     if (--missile->timer <= 0) {
                         destroyEntity(missile);
-                        RSDK.PlaySFX(Player->sfx_Release, false, 255);
+                        RSDK.PlaySfx(Player->sfx_Release, false, 255);
                     }
                     CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
-                    RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
+                    RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(entity);
                     foreach_return;
                 }
@@ -55,7 +55,7 @@ void Mine_Update(void)
             }
 
             CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y - 0x30000)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySFX(Mine->sfxExplosion, false, 255);
+            RSDK.PlaySfx(Mine->sfxExplosion, false, 255);
 #if RETRO_USE_PLUS
             Mine_CheckMightyHit();
 #endif

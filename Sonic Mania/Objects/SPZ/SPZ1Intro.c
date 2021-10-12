@@ -106,7 +106,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 45)
-        RSDK.PlaySFX(Player->sfx_Roll, 0, 255);
+        RSDK.PlaySfx(Player->sfx_Roll, 0, 255);
     if (host->timer == 90) {
         return true;
     }
@@ -129,8 +129,8 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->state           = Player_State_Air;
         player1->nextAirState    = 0;
         player1->nextGroundState = 0;
-        RSDK.PlaySFX(SPZ1Intro->sfxGasPop, 0, 255);
-        RSDK.PlaySFX(SPZ1Intro->sfxPon, 0, 255);
+        RSDK.PlaySfx(SPZ1Intro->sfxGasPop, 0, 255);
+        RSDK.PlaySfx(SPZ1Intro->sfxPon, 0, 255);
         RSDK.StopSFX(Player->sfx_Roll);
         Camera_ShakeScreen(0, 0, 2);
         EntityDebris *debris = SPZ1Intro->debris;

@@ -201,7 +201,7 @@ void Stegway_Unknown8(void)
         entity->timer = 0;
         entity->state = Stegway_Unknown9;
         Stegway_SetupAnims(2, false);
-        RSDK.PlaySFX(Stegway->sfxRev, false, 255);
+        RSDK.PlaySfx(Stegway->sfxRev, false, 255);
     }
 }
 
@@ -220,7 +220,7 @@ void Stegway_Unknown9(void)
         Stegway_SetupAnims(1, false);
         entity->dustFlag = true;
         entity->velocity.x *= 12;
-        RSDK.PlaySFX(Stegway->sfxRelease, false, 255);
+        RSDK.PlaySfx(Stegway->sfxRelease, false, 255);
     }
 }
 

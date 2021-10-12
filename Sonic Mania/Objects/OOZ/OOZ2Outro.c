@@ -7,8 +7,8 @@ void OOZ2Outro_Update(void)
 {
     RSDK_THIS(OOZ2Outro);
 
-    Entity *entityPtr = NULL; //*&MegaOctus->field_4;
-    if (globals->gameMode < MODE_TIMEATTACK && entityPtr && !entityPtr->objectID) {
+    Entity *boss = MegaOctus->bossPtr;
+    if (globals->gameMode < MODE_TIMEATTACK && boss && !boss->objectID) {
         entity->scrollOffset.x = entity->moveOffset.x & 0xFFFF0000;
         entity->scrollOffset.y = entity->moveOffset.y & 0xFFFF0000;
 
@@ -23,6 +23,7 @@ void OOZ2Outro_Update(void)
             }
             player->collisionLayers |= Zone->moveID;
             player->moveOffset.x = -(int)(entity->moveOffset.x & 0xFFFF0000);
+            player->moveOffset.y = -(int)(entity->moveOffset.y & 0xFFFF0000);
         }
 
         if (entity->prisonPtr) {
@@ -172,11 +173,11 @@ void OOZ2Outro_Unknown4(void)
 
     if (!(Zone->timer & 0xF)) {
         Camera_ShakeScreen(0, 0, 4);
-        RSDK.PlaySFX(OOZ2Outro->sfxGlug, false, 255);
+        RSDK.PlaySfx(OOZ2Outro->sfxGlug, false, 255);
     }
 
     if (++entity->timer == 140)
-        RSDK.PlaySFX(OOZ2Outro->sfxSubLaunch, false, 255);
+        RSDK.PlaySfx(OOZ2Outro->sfxSubLaunch, false, 255);
 
     if (entity->timer > 180) {
         entity->timer      = 0;

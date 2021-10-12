@@ -122,7 +122,7 @@ void Staircase_Wait(void)
     if (--entity->timer < 0) {
         entity->timer = 128;
         if (!RSDK.IsSFXPlaying(Staircase->sfxID))
-            RSDK.PlaySFX(Staircase->sfxID, 0, 255);
+            RSDK.PlaySfx(Staircase->sfxID, 0, 255);
         entity->state     = Staircase_MoveBlocks;
         entity->drawState = Staircase_DrawBlocks;
     }

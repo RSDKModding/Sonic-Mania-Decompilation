@@ -159,7 +159,7 @@ void FBZStorm_Unknown2(void)
         }
     }
     else {
-        RSDK.PlaySFX(FBZStorm->sfxRain, true, 0xFF);
+        RSDK.PlaySfx(FBZStorm->sfxRain, true, 0xFF);
         FBZStorm->playingRainSFX = true;
     }
 }
@@ -200,7 +200,7 @@ void FBZStorm_Unknown5(void)
     RSDK_THIS(FBZStorm);
     RSDK.SetLimitedFade(0, 2, 3, FBZStorm->array1[entity->timer], 0x80, 0x100);
     if (!entity->timer)
-        RSDK.PlaySFX(FBZStorm->sfxThunder, 0, 255);
+        RSDK.PlaySfx(FBZStorm->sfxThunder, 0, 255);
     if (++entity->timer == 20) {
         entity->timer = RSDK.Rand(180, 320);
         entity->state = FBZStorm_Unknown4;

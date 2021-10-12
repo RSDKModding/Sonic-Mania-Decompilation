@@ -26,13 +26,13 @@ void UFO_Springboard_Update(void)
                             player->onGround        = 0;
                             player->state           = UFO_Player_HandleTilt;
                             RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerAnimator, 128, 0, true, 0);
-                            RSDK.PlaySFX(UFO_Player->sfx_Spring, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfx_Spring, 0, 255);
                         }
                         else {
                             player->bumperTimer = 16;
                             player->velocity.x  = -player->velocity.x;
                             player->velocity.y  = -player->velocity.y;
-                            RSDK.PlaySFX(UFO_Player->sfx_Bumper, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfx_Bumper, 0, 255);
                         }
                     }
                 }
@@ -59,11 +59,11 @@ void UFO_Springboard_LateUpdate(void)
     int x       = entity->position.x;
     Matrix *mat = &UFO_Camera->matWorld;
 
-    entity->depth = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
-    if (entity->depth >= 0x4000) {
+    entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (entity->depth3D >= 0x4000) {
         int depth = (int)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
                      + (mat->values[0][1] * (entity->height >> 8) & 0xFFFFFF00))
-                    / entity->depth;
+                    / entity->depth3D;
         entity->visible = abs(depth) < 256;
     }
 }
@@ -73,7 +73,7 @@ void UFO_Springboard_StaticUpdate(void) {}
 void UFO_Springboard_Draw(void)
 {
     RSDK_THIS(UFO_Springboard);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Springboard->sceneIndex);
         RSDK.MatrixScaleXYZ(&entity->matrix1, 0x100, entity->scale.x, 0x100);
         RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, 0);

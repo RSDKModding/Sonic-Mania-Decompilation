@@ -766,7 +766,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
 
 void OptionsMenu_ShowManual(void)
 {
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
     API.LaunchManual();
 }
 

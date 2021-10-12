@@ -178,7 +178,7 @@ void UIChoice_TouchedCB_Left(void)
 
     if (id != parent->selection) {
         UIButton_SetChoiceSelectionWithCB(parent, id);
-        RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Bleep, 0, 255);
     }
 }
 
@@ -201,7 +201,7 @@ void UIChoice_TouchedCB_Right(void)
 
     if (id != parent->selection) {
         UIButton_SetChoiceSelectionWithCB(parent, id);
-        RSDK.PlaySFX(UIWidgets->sfx_Bleep, 0, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Bleep, 0, 255);
     }
 }
 

@@ -89,12 +89,12 @@ void HandLauncher_CheckPlayerCollisions(void)
                         player->groundVel = 0;
                         if (entity->state != HandLauncher_Unknown8) {
                             if (HandLauncher->dunkeyMode)
-                                RSDK.PlaySFX(HandLauncher->sfxDunkey, 0, 255);
+                                RSDK.PlaySfx(HandLauncher->sfxDunkey, 0, 255);
                             else
-                                RSDK.PlaySFX(Player->sfx_Roll, 0, 255);
+                                RSDK.PlaySfx(Player->sfx_Roll, 0, 255);
                         }
                         if (!HandLauncher->dunkeyMode)
-                            RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
+                            RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 0);
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
@@ -253,7 +253,7 @@ void HandLauncher_Unknown8(void)
         else {
             HandLauncher_State_Release();
             if (!HandLauncher->dunkeyMode) {
-                RSDK.PlaySFX(Player->sfx_Release, 0, 255);
+                RSDK.PlaySfx(Player->sfx_Release, 0, 255);
             }
             RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 4, &entity->animator2, true, 0);
             entity->position                 = entity->playerPos;

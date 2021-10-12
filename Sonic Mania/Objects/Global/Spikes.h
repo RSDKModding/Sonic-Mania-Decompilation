@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPIKES_UP,
+    SPIKES_DOWN,
+    SPIKES_LEFT,
+    SPIKES_RIGHT,
+}SpikeTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -20,17 +27,17 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
+    SpikeTypes type;
     bool32 moving;
     byte count;
     byte stagger;
     short timer;
     int planeFilter;
-    int dword6C;
-    int dword70;
+    int stateMove;
+    int moveOffset;
     Vector2 offset;
     short timer2;
-    byte field_7E;
+    byte shatterTimer;
     Hitbox hitbox;
     Animator animator;
 } EntitySpikes;

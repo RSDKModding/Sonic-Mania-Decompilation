@@ -75,7 +75,7 @@ void GasPlatform_Unknown1(void)
     RSDK_THIS(GasPlatform);
 
     if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &GasPlatform->range))
-        RSDK.PlaySFX(GasPlatform->sfxGasPop, false, 255);
+        RSDK.PlaySfx(GasPlatform->sfxGasPop, false, 255);
     entity->active     = ACTIVE_NORMAL;
     entity->velocity.y = -0x96800;
     entity->state      = GasPlatform_Unknown2;
@@ -131,7 +131,7 @@ void GasPlatform_Unknown2(void)
                     player->state      = Player_State_Air;
                     player->onGround   = false;
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
-                    RSDK.PlaySFX(GasPlatform->sfxSpring, false, 255);
+                    RSDK.PlaySfx(GasPlatform->sfxSpring, false, 255);
                     entity->collapseDelay = 240;
                     entity->state         = GasPlatform_Unknown3;
                 }
@@ -180,7 +180,7 @@ void GasPlatform_Unknown4(void)
     entity->drawPos.x = (RSDK.Rand(-1, 1) << 16) + entity->centerPos.x;
     entity->drawPos.y = (RSDK.Rand(-2, 2) << 16) + entity->centerPos.y;
     if (entity->collapseDelay <= 0) {
-        RSDK.PlaySFX(GasPlatform->sfxGasPop, false, 255);
+        RSDK.PlaySfx(GasPlatform->sfxGasPop, false, 255);
         entity->active     = ACTIVE_NORMAL;
         entity->velocity.y = -0x8C000;
         entity->state      = GasPlatform_Unknown2;

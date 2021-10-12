@@ -245,7 +245,7 @@ void *UIButton_GetOptions2(void)
     return entPtr->options2;
 }
 
-void UIButton_Fail(void) { RSDK.PlaySFX(UIWidgets->sfx_Fail, 0, 255); }
+void UIButton_Fail(void) { RSDK.PlaySfx(UIWidgets->sfx_Fail, 0, 255); }
 
 void UIButton_Unknown6(void)
 {
@@ -335,7 +335,7 @@ void UIButton_Unknown6(void)
             if (control->activeEntityID != id) {
                 control->activeEntityID = id;
                 StateMachine_Run(entity->options6);
-                RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
             }
         }
         else {
@@ -566,7 +566,7 @@ void UIButton_ProcessButtonInputs(void)
             selection -= entity->choiceCount;
         if (selection != entity->selection) {
             UIButton_SetChoiceSelectionWithCB(entity, selection);
-            RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         }
     }
 
@@ -614,7 +614,7 @@ void UIButton_ProcessButtonInputs(void)
         if (control->activeEntityID != id && entity != control->buttons[id]) {
             control->activeEntityID = id;
             UIButton_Unknown13();
-            RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         }
     }
     else {
@@ -622,7 +622,7 @@ void UIButton_ProcessButtonInputs(void)
 
         if (UIControl->keyConfirm && (!UIChoice || options2)) {
             if (entity->disabled || (entity->choiceCount > 0 && entPtr->disabled))
-                RSDK.PlaySFX(UIWidgets->sfx_Fail, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfx_Fail, false, 255);
             else
                 UIButton_Unknown15();
         }
@@ -770,7 +770,7 @@ void UIButton_Unknown15(void)
         RSDK.StopChannel(Music->channelID);
     entity->timer = 0;
     entity->state = UIButton_Unknown18;
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
 }
 
 void UIButton_Unknown16(void)

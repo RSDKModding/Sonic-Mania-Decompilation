@@ -15,7 +15,7 @@ void Soundboard_StaticUpdate(void)
                 checkFlag                  = false;
                 Soundboard->sfxUnknown7[s] = 0;
                 if (!Soundboard->sfxUnknown4[s]) {
-                    Soundboard->sfxChannel[s]  = RSDK.PlaySFX(Soundboard->sfxList[s], Soundboard->sfxLoopPoint[s], 255);
+                    Soundboard->sfxChannel[s]  = RSDK.PlaySfx(Soundboard->sfxList[s], Soundboard->sfxLoopPoint[s], 255);
                     Soundboard->sfxUnknown4[s] = true;
                     Soundboard->sfxUnknown6[s] = 0;
                 }

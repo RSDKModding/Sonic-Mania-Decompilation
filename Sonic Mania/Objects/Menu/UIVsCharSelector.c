@@ -187,13 +187,13 @@ void UIVsCharSelector_ProcessButtonCB(void)
             inc               = -1;
             entity->field_11C = 0;
             entity->field_118 = 0x8000;
-            RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         }
         else if (UIControl->rightPress[entity->playerID]) {
             ++entity->frameID;
             entity->field_11C = 0;
             entity->field_118 = 0x8000;
-            RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         }
 
 #if RETRO_USE_PLUS
@@ -246,7 +246,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
             entity->state           = UIVsCharSelector_Unknown11;
             entity->processButtonCB = StateMachine_None;
             entity->ready           = true;
-            RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         }
         else if (!entity->flag && !entity->ready) {
             if (parent->active == ACTIVE_ALWAYS)
@@ -384,12 +384,12 @@ void UIVsCharSelector_Unknown11(void)
     else {
         if (entity->timer == 2) {
             switch (entity->frameID) {
-                case 0: RSDK.PlaySFX(Announcer->sfx_Sonic, false, 255); break;
-                case 1: RSDK.PlaySFX(Announcer->sfx_Tails, false, 255); break;
-                case 2: RSDK.PlaySFX(Announcer->sfx_Knuckles, false, 255); break;
+                case 0: RSDK.PlaySfx(Announcer->sfx_Sonic, false, 255); break;
+                case 1: RSDK.PlaySfx(Announcer->sfx_Tails, false, 255); break;
+                case 2: RSDK.PlaySfx(Announcer->sfx_Knuckles, false, 255); break;
 #if RETRO_USE_PLUS
-                case 3: RSDK.PlaySFX(Announcer->sfx_Mighty, false, 255); break;
-                case 4: RSDK.PlaySFX(Announcer->sfx_Ray, false, 255); break;
+                case 3: RSDK.PlaySfx(Announcer->sfx_Mighty, false, 255); break;
+                case 4: RSDK.PlaySfx(Announcer->sfx_Ray, false, 255); break;
 #endif
                 default: break;
             }

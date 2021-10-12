@@ -199,6 +199,10 @@ bool32 processEvents()
                             sceneInfo.state = ENGINESTATE_LOAD;
                         }
                         break;
+                    case SDLK_F9:
+                        if (engine.devMenu)
+                            showHitboxes ^= 1;
+                        break;
                     case SDLK_F10:
                         if (engine.devMenu)
                             engine.showPaletteOverlay ^= 1;
@@ -334,6 +338,9 @@ void runRetroEngine()
 
         engine.running  = processEvents();
         foreachStackPtr = foreachStackList;
+#if !RETRO_USE_ORIGINAL_CODE
+        debugHitboxCount = 0;
+#endif
         switch (sceneInfo.state) {
             default: break;
             case ENGINESTATE_LOAD:
@@ -775,6 +782,7 @@ void InitScriptSystem()
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;
     foreachStackPtr  = foreachStackList;
+    currentMod = NULL;
 #endif
     RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update,
                    DefaultObject_LateUpdate, DefaultObject_StaticUpdate, DefaultObject_Draw, DefaultObject_Create, DefaultObject_StageLoad,
@@ -871,6 +879,7 @@ void InitScriptSystem()
     for (int m = 0; m < modList.size(); ++m) {
         if (!modList[m].active || modList[m].language)
             continue;
+        currentMod = &modList[m];
         for (modLinkSTD ptr : modList[m].linkModLogic) {
             if (!ptr(&info, modList[m].folder.c_str())) {
                 modList[m].active = false;
@@ -878,6 +887,7 @@ void InitScriptSystem()
             }
         }
     }
+    currentMod = NULL;
     sortMods();
 #endif
 }

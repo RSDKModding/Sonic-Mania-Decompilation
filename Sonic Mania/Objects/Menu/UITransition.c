@@ -123,7 +123,7 @@ void UITransition_State_TransitionIn(void)
         entity->field_6C = true;
         int remain       = entity->timer - entity->timeLimit;
         if (!remain)
-            RSDK.PlaySFX(UIWidgets->sfx_Woosh, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Woosh, false, 255);
 
         int offsets[3];
         offsets[0] = clampVal(remain, 0, 8);

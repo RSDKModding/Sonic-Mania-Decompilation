@@ -6,28 +6,48 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[21]; //= { 5, 0, 0, -131072, -163840, 1, 0, 131072, -131072, 2, 0, -163840, -65536, 3, 0, 163840, -65536, 4, 0, 65536, 65536 };
-    colour value2;
-    colour value3;
-    colour value4;
-    int value5;
-    int value6;
-    int value7;
-    int value8;
-    int value9;
-    ushort value10;
-    ushort value11;
-    ushort value12;
-    ushort value13;
-    ushort value14;
-    ushort value15;
-    ushort value16;
-    ushort value17;
+    int debrisSpeeds[21]; //= { 5, 0, 0, -131072, -163840, 1, 0, 131072, -131072, 2, 0, -163840, -65536, 3, 0, 163840, -65536, 4, 0, 65536, 65536 };
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    int boundsL;
+    int boundsR;
+    int startX;
+    int boundsT;
+    int boundsB;
+    ushort sfxHit;
+    ushort sfxExplosion;
+    ushort sfxDestroy;
+    ushort sfxToss;
+    ushort sfxGrab;
+    ushort sfxValve;
+    ushort sfxWrench;
+    ushort aniFrames;
 } ObjectMeterDroid;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    int timer;
+    int invincibilityTimer;
+    int health;
+    int field_6C;
+    Vector2 field_70;
+    int field_78;
+    int field_7C;
+    int field_80;
+    int field_84;
+    Vector2 field_88;
+    Vector2 field_90;
+    Vector2 field_98;
+    int field_A0;
+    Entity *valvePtr;
+    Animator animator1;
+    Animator animator2;
+    Animator animator4;
+    Animator animator3;
 } EntityMeterDroid;
 
 // Object Struct
@@ -45,6 +65,32 @@ void MeterDroid_EditorLoad(void);
 void MeterDroid_Serialize(void);
 
 // Extra Entity Functions
+void MeterDroid_CheckPlayerCollisions(void);
+void MeterDroid_CheckPlayerCollisions2(void);
+void MeterDroid_CheckPlayerCollisions3(void);
+void MeterDroid_Hit(void);
+void MeterDroid_Unknown5(void);
+void MeterDroid_PopPlatforms(void);
 
+void MeterDroid_StateDraw_Unknown1(void);
+void MeterDroid_StateDraw_Unknown3(void);
+void MeterDroid_StateDraw_Unknown2(void);
+
+void MeterDroid_State_Setup(void);
+void MeterDroid_State_Unknown1(void);
+void MeterDroid_State_Unknown2(void);
+void MeterDroid_State_Unknown3(void);
+void MeterDroid_State_Unknown4(void);
+void MeterDroid_State_Unknown5(void);
+void MeterDroid_State_Unknown6(void);
+void MeterDroid_State_Unknown7(void);
+void MeterDroid_State_Unknown8(void);
+void MeterDroid_State_Unknown9(void);
+void MeterDroid_State_Unknown10(void);
+void MeterDroid_State_Unknown11(void);
+void MeterDroid_State_Unknown12(void);
+void MeterDroid_State_Unknown13(void);
+void MeterDroid_State_Die(void);
+void MeterDroid_State_FinishAct(void);
 
 #endif //!OBJ_METERDROID_H

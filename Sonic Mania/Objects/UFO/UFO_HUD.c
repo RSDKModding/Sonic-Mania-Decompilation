@@ -112,7 +112,7 @@ void UFO_HUD_CheckLevelUp(void)
         UFO_Player_ChangeMachState();
         hud->scale.x = 768;
         hud->scale.y = 768;
-        RSDK.PlaySFX(UFO_Sphere->sfx_MachSpeed, 0, 255);
+        RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, 0, 255);
     }
 
     if (hud->scale.x == 512) {
@@ -139,7 +139,7 @@ void UFO_HUD_LevelUpMach(void)
     UFO_Player_ChangeMachState();
     hud->scale.x = 0x300;
     hud->scale.y = 0x300;
-    RSDK.PlaySFX(UFO_Sphere->sfx_MachSpeed, 0, 255);
+    RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, 0, 255);
 }
 
 void UFO_HUD_DrawNumbers(Vector2 *drawPos, int value)

@@ -24,6 +24,8 @@ APIFunctionTable API;
 #endif
 #if RETRO_USE_MOD_LOADER
 ModFunctionTable Mod;
+
+#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void*)(func))
 #endif
 
 void LinkGameLogicDLL(GameInfo *info)
@@ -771,6 +773,163 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK_ADD_OBJECT(YoyoPulley);
     RSDK_ADD_OBJECT(ZipLine);
     RSDK_ADD_OBJECT(Zone);
+
+#if RETRO_USE_MOD_LOADER
+    if (info->modPtrs) {
+        ADD_PUBLIC_FUNC(Player_State_None);
+        ADD_PUBLIC_FUNC(Player_State_Ground);
+        ADD_PUBLIC_FUNC(Player_State_Air);
+        ADD_PUBLIC_FUNC(Player_State_Roll);
+        ADD_PUBLIC_FUNC(Player_State_ForceRoll_Ground);
+        ADD_PUBLIC_FUNC(Player_State_ForceRoll_Air);
+        ADD_PUBLIC_FUNC(Player_State_LookUp);
+        ADD_PUBLIC_FUNC(Player_State_Crouch);
+        ADD_PUBLIC_FUNC(Player_State_Spindash);
+        ADD_PUBLIC_FUNC(Player_State_Peelout);
+        ADD_PUBLIC_FUNC(Player_State_OuttaHere);
+        ADD_PUBLIC_FUNC(Player_State_Transform);
+        ADD_PUBLIC_FUNC(Player_State_Hit);
+        ADD_PUBLIC_FUNC(Player_State_Die);
+        ADD_PUBLIC_FUNC(Player_State_Drown);
+        ADD_PUBLIC_FUNC(Player_State_DropDash);
+        ADD_PUBLIC_FUNC(Player_State_BubbleBounce);
+        ADD_PUBLIC_FUNC(Player_State_TailsFlight);
+        ADD_PUBLIC_FUNC(Player_State_FlyCarried);
+        ADD_PUBLIC_FUNC(Player_State_KnuxGlideLeft);
+        ADD_PUBLIC_FUNC(Player_State_KnuxGlideRight);
+        ADD_PUBLIC_FUNC(Player_State_KnuxGlideDrop);
+        ADD_PUBLIC_FUNC(Player_State_GlideSlide);
+        ADD_PUBLIC_FUNC(Player_State_KnuxWallClimb);
+        ADD_PUBLIC_FUNC(Player_State_KnuxLedgePullUp);
+#if RETRO_USE_PLUS
+        ADD_PUBLIC_FUNC(Player_State_MightyHammerDrop);
+        ADD_PUBLIC_FUNC(Player_State_MightyUnspin);
+        ADD_PUBLIC_FUNC(Player_SpawnMightyHammerdropDust);
+        ADD_PUBLIC_FUNC(Player_CheckMightyUnspin);
+        ADD_PUBLIC_FUNC(Player_State_RayGlide);
+#endif
+        ADD_PUBLIC_FUNC(Player_State_FlyIn);
+        ADD_PUBLIC_FUNC(Player_State_JumpIn);
+        ADD_PUBLIC_FUNC(Player_State_StartJumpIn);
+        ADD_PUBLIC_FUNC(Player_EndFlyJumpIn);
+        ADD_PUBLIC_FUNC(Player_State_EncoreRespawn);
+        ADD_PUBLIC_FUNC(Player_State_Victory);
+        ADD_PUBLIC_FUNC(Player_State_Bubble);
+        ADD_PUBLIC_FUNC(Player_State_WaterSlide);
+
+        ADD_PUBLIC_FUNC(Player_SonicJumpAbility);
+        ADD_PUBLIC_FUNC(Player_TailsJumpAbility);
+        ADD_PUBLIC_FUNC(Player_KnuxJumpAbility);
+#if RETRO_USE_PLUS
+        ADD_PUBLIC_FUNC(Player_MightyJumpAbility);
+        ADD_PUBLIC_FUNC(Player_RayJumpAbility);
+
+        ADD_PUBLIC_FUNC(Player_CheckRayDiving);
+        ADD_PUBLIC_FUNC(Player_CheckRaySwooping);
+#endif
+
+        ADD_PUBLIC_FUNC(Player_GiveScore);
+        ADD_PUBLIC_FUNC(Player_GiveRings);
+        ADD_PUBLIC_FUNC(Player_GiveLife);
+        ADD_PUBLIC_FUNC(Player_ApplyShieldEffect);
+        ADD_PUBLIC_FUNC(Player_ChangeCharacter);
+        ADD_PUBLIC_FUNC(Player_CheckGoSuper);
+        ADD_PUBLIC_FUNC(Player_LoseRings);
+        ADD_PUBLIC_FUNC(Player_LoseHyperRings);
+        ADD_PUBLIC_FUNC(Player_HandleDeath);
+        ADD_PUBLIC_FUNC(Player_ResetState);
+
+        ADD_PUBLIC_FUNC(Player_GetHitbox);
+        ADD_PUBLIC_FUNC(Player_CheckCollisionTouch);
+        ADD_PUBLIC_FUNC(Player_CheckCollisionBox);
+        ADD_PUBLIC_FUNC(Player_CheckCollisionPlatform);
+
+        ADD_PUBLIC_FUNC(Player_CheckHit);
+        ADD_PUBLIC_FUNC(Player_CheckHitFlip);
+        ADD_PUBLIC_FUNC(Player_CheckBadnikHit);
+        ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
+        ADD_PUBLIC_FUNC(Player_CheckBossHit);
+        ADD_PUBLIC_FUNC(Player_CheckProjectileHit);
+        ADD_PUBLIC_FUNC(Player_CheckHit2);
+
+        ADD_PUBLIC_FUNC(Ice_State_FrozenPlayer);
+
+        ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct1);
+        ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct2);
+        ADD_PUBLIC_FUNC(PlayerHelpers_CheckIntro);
+        ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct1Regular);
+        ADD_PUBLIC_FUNC(PlayerHelpers_CheckStageReload);
+        ADD_PUBLIC_FUNC(PlayerHelpers_CheckPlayerPos);
+
+        ADD_PUBLIC_FUNC(GameProgress_GetNotifStringID);
+        ADD_PUBLIC_FUNC(GameProgress_ShuffleBSSID);
+        ADD_PUBLIC_FUNC(GameProgress_GetGameProgress);
+        ADD_PUBLIC_FUNC(GameProgress_GetZoneUnlocked);
+        ADD_PUBLIC_FUNC(GameProgress_GetCompletionPercent);
+        ADD_PUBLIC_FUNC(GameProgress_TrackGameProgress);
+        ADD_PUBLIC_FUNC(GameProgress_UnlockAllMedals);
+        ADD_PUBLIC_FUNC(GameProgress_MarkZoneCompleted);
+        ADD_PUBLIC_FUNC(GameProgress_CheckZoneClear);
+        ADD_PUBLIC_FUNC(GameProgress_GiveEmerald);
+        ADD_PUBLIC_FUNC(GameProgress_GiveMedal);
+        ADD_PUBLIC_FUNC(GameProgress_GiveEnding);
+        ADD_PUBLIC_FUNC(GameProgress_PrintSaveProgress);
+        ADD_PUBLIC_FUNC(GameProgress_CountUnreadNotifs);
+        ADD_PUBLIC_FUNC(GameProgress_GetNextNotif);
+        ADD_PUBLIC_FUNC(GameProgress_CheckUnlock);
+
+        ADD_PUBLIC_FUNC(MathHelpers_Lerp1);
+        ADD_PUBLIC_FUNC(MathHelpers_Lerp2);
+        ADD_PUBLIC_FUNC(MathHelpers_Lerp3);
+        ADD_PUBLIC_FUNC(MathHelpers_Lerp4);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown5);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown6);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
+        ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown9);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown10);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown11);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown12);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown13);
+        ADD_PUBLIC_FUNC(MathHelpers_Unknown14);
+
+        ADD_PUBLIC_FUNC(Options_Reload);
+        ADD_PUBLIC_FUNC(Options_GetWinSize);
+        ADD_PUBLIC_FUNC(Options_LoadCallback);
+        ADD_PUBLIC_FUNC(Options_LoadOptionsBin);
+        ADD_PUBLIC_FUNC(Options_SaveOptionsBin);
+        ADD_PUBLIC_FUNC(Options_SetLanguage);
+        ADD_PUBLIC_FUNC(Options_Unknown1);
+        ADD_PUBLIC_FUNC(Options_LoadOptionsCallback);
+        ADD_PUBLIC_FUNC(Options_SaveOptionsCallback);
+
+        ADD_PUBLIC_FUNC(Camera_SetCameraBounds);
+        ADD_PUBLIC_FUNC(Camera_SetTargetEntity);
+        ADD_PUBLIC_FUNC(Camera_ShakeScreen);
+        ADD_PUBLIC_FUNC(Camera_HandleHBounds);
+        ADD_PUBLIC_FUNC(Camera_HandleVBounds);
+        ADD_PUBLIC_FUNC(Camera_SetupLerp);
+
+        ADD_PUBLIC_FUNC(Music_SetMusicTrack);
+        ADD_PUBLIC_FUNC(Music_State_PlayMusic);
+        ADD_PUBLIC_FUNC(Music_PlayMusicTrack);
+        ADD_PUBLIC_FUNC(Music_PlayTrack);
+        ADD_PUBLIC_FUNC(Music_PlayTrackPtr);
+
+        ADD_PUBLIC_FUNC(Soundboard_LoadSFX);
+
+        ADD_PUBLIC_FUNC(Zone_GetZoneID);
+        ADD_PUBLIC_FUNC(Zone_StoreEntities);
+        ADD_PUBLIC_FUNC(Zone_ReloadStoredEntities);
+        ADD_PUBLIC_FUNC(Zone_StartFadeOut);
+        ADD_PUBLIC_FUNC(Zone_StartFadeOutRestart);
+        ADD_PUBLIC_FUNC(Zone_StartTeleportAction);
+        ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
+        ADD_PUBLIC_FUNC(Zone_IsAct2);
+        ADD_PUBLIC_FUNC(Zone_GetEncoreStageID);
+        ADD_PUBLIC_FUNC(Zone_GetManiaStageID);
+    }
+#endif
 }
 
 #if RETRO_USE_MOD_LOADER

@@ -83,9 +83,9 @@ void WarpDoor_Update(void)
                             if (RSDK.CheckStageFolder("TMZ2")) {
                                 if (entity->effect == 1) {
                                     int sfx     = RSDK.Rand(0, 6);
-                                    int channel = RSDK.PlaySFX(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
+                                    int channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-                                    channel = RSDK.PlaySFX(WarpDoor->sfxRubyAttackR[sfx], 0, 0xFF);
+                                    channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                                     foreach_active(TMZBarrier, barrier)
                                     {
@@ -107,7 +107,7 @@ void WarpDoor_Update(void)
                                 }
                             }
                             else if (RSDK.CheckStageFolder("FBZ")) {
-                                RSDK.PlaySFX(WarpDoor->sfxWarpDoor, 0, 255);
+                                RSDK.PlaySfx(WarpDoor->sfxWarpDoor, 0, 255);
                                 flag = false;
                                 if (entity->go) {
                                     tag->fadeTimer = 256;
@@ -236,8 +236,8 @@ void WarpDoor_Unknown1(void)
             player->camera->state      = Camera_State_Follow;
             player->camera->position.x = player->position.x;
             player->camera->position.y = player->position.y;
-            player->camera->field_8C   = 0;
-            player->camera->field_90   = 0;
+            player->camera->offset.x   = 0;
+            player->camera->offset.y   = 0;
         }
     }
 }
@@ -295,7 +295,7 @@ bool32 WarpDoor_Unknown5(short a1, Vector2 *posPtr)
         return false;
     if (Zone->timer < 1)
         return false;
-    EntityPlayer *player = RSDK.GetEntityByID(SLOT_PLAYER1);
+    EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (!player || !player->camera)
         return false;
     if (a1 > -1) {

@@ -18,12 +18,50 @@ Entity *collisionEntity = NULL;
 
 CollisionSensor sensors[6];
 
+#if !RETRO_USE_ORIGINAL_CODE
+bool32 showHitboxes = false;
+
+int debugHitboxCount = 0;
+DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
+
+int addDebugHitbox(byte type, Entity *entity, Hitbox *hitbox)
+{
+    int i = 0;
+    int entityID = GetEntityID((EntityBase *)entity);
+    for (; i < debugHitboxCount; ++i) {
+        if (debugHitboxList[i].hitbox.left == hitbox->left && debugHitboxList[i].hitbox.top == hitbox->top
+            && debugHitboxList[i].hitbox.right == hitbox->right && debugHitboxList[i].hitbox.bottom == hitbox->bottom
+            && debugHitboxList[i].pos.x == entity->position.x && debugHitboxList[i].pos.y == entity->position.y
+            && debugHitboxList[i].entityID == entityID) {
+            return i;
+        }
+    }
+
+    if (i < DEBUG_HITBOX_MAX) {
+        debugHitboxList[i].type          = type;
+        debugHitboxList[i].entityID      = entityID;
+        debugHitboxList[i].collision     = 0;
+        debugHitboxList[i].hitbox.left   = hitbox->left;
+        debugHitboxList[i].hitbox.top    = hitbox->top;
+        debugHitboxList[i].hitbox.right  = hitbox->right;
+        debugHitboxList[i].hitbox.bottom = hitbox->bottom;
+        debugHitboxList[i].pos.x         = entity->position.x;
+        debugHitboxList[i].pos.y         = entity->position.y;
+
+        int id = debugHitboxCount;
+        debugHitboxCount++;
+        return id;
+    }
+
+    return -1;
+}
+#endif
+
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox)
 {
     int store = 0;
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
         return false;
-
     if ((thisEntity->direction & FLIP_X) == FLIP_X) {
         store             = -thisHitbox->left;
         thisHitbox->left  = -thisHitbox->right;
@@ -69,6 +107,19 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (showHitboxes) {
+        int thisHitboxID  = addDebugHitbox(H_TYPE_TOUCH, thisEntity, thisHitbox);
+        int otherHitboxID = addDebugHitbox(H_TYPE_TOUCH, otherEntity, otherHitbox);
+
+        if (thisHitboxID >= 0 && collided)
+            debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
+        if (otherHitboxID >= 0 && collided)
+            debugHitboxList[otherHitboxID].collision |= 1 << (collided - 1);
+    }
+#endif
+
     return collided;
 }
 
@@ -168,28 +219,7 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
         int oy  = ((otherY - otherEntity->position.y) >> 0x10);
         int ox2 = ((otherX2 - otherEntity->position.x) >> 0x10);
         int oy2 = ((otherY2 - otherEntity->position.y) >> 0x10);
-        if (ox * ox + oy * oy >= ox2 * ox2 + oy2 * oy2) {
-            if (collisionResultY || !collisionResultX) {
-                otherEntity->position.x = otherX2;
-                otherEntity->position.y = otherY2;
-                if (setValues) {
-                    if (collisionResultY == 1) {
-                        if (otherEntity->velocity.y > 0)
-                            otherEntity->velocity.y = 0;
-                        if (!otherEntity->onGround && otherEntity->velocity.y >= 0) {
-                            otherEntity->groundVel = otherEntity->velocity.x;
-                            otherEntity->angle     = 0;
-                            otherEntity->onGround  = true;
-                        }
-                    }
-                    else if (collisionResultY == 4 && otherEntity->velocity.y < 0) {
-                        otherEntity->velocity.y = 0;
-                    }
-                }
-                return collisionResultY;
-            }
-        }
-        else if (!collisionResultX && collisionResultY) {
+        if (((ox * ox + oy * oy >= ox2 * ox2 + oy2 * oy2) && (collisionResultY || !collisionResultX)) || (!collisionResultX && collisionResultY)) {
             otherEntity->position.x = otherX2;
             otherEntity->position.y = otherY2;
             if (setValues) {
@@ -206,35 +236,62 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
                     otherEntity->velocity.y = 0;
                 }
             }
+
+#if !RETRO_USE_ORIGINAL_CODE
+            if (showHitboxes) {
+                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity, thisHitbox);
+                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, otherEntity, otherHitbox);
+
+                if (thisHitboxID >= 0 && collisionResultY)
+                    debugHitboxList[thisHitboxID].collision |= 1 << (collisionResultY - 1);
+                if (otherHitboxID >= 0 && collisionResultY)
+                    debugHitboxList[otherHitboxID].collision |= 1 << (4 - collisionResultY);
+            }
+#endif
             return collisionResultY;
         }
-
-        otherEntity->position.x = otherX;
-        otherEntity->position.y = otherY;
-        if (!setValues)
-            return collisionResultX;
-
-        int vel = 0;
-        if (otherEntity->onGround) {
-            vel = otherEntity->groundVel;
-            if (otherEntity->collisionMode == CMODE_ROOF)
-                vel = -vel;
-        }
         else {
-            vel = otherEntity->velocity.x;
-        }
+            otherEntity->position.x = otherX;
+            otherEntity->position.y = otherY;
+            if (setValues) {
+                int vel = 0;
+                if (otherEntity->onGround) {
+                    vel = otherEntity->groundVel;
+                    if (otherEntity->collisionMode == CMODE_ROOF)
+                        vel = -vel;
+                }
+                else {
+                    vel = otherEntity->velocity.x;
+                }
 
-        if (collisionResultX == 2) {
-            if (vel <= 0)
-                return collisionResultX;
-        }
-        else if (collisionResultX != 3 || vel >= 0) {
+                if ((collisionResultX == 2 && vel > 0) || (collisionResultX == 3 && vel < 0)) {
+                    otherEntity->groundVel  = 0;
+                    otherEntity->velocity.x = 0;
+                }
+            }
+
+#if !RETRO_USE_ORIGINAL_CODE
+            if (showHitboxes) {
+                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity, thisHitbox);
+                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, otherEntity, otherHitbox);
+
+                if (thisHitboxID >= 0 && collisionResultX)
+                    debugHitboxList[thisHitboxID].collision |= 1 << (collisionResultX - 1);
+                if (otherHitboxID >= 0 && collisionResultX)
+                    debugHitboxList[otherHitboxID].collision |= 1 << (4 - collisionResultX);
+            }
+#endif
+
             return collisionResultX;
         }
-        otherEntity->groundVel  = 0;
-        otherEntity->velocity.x = 0;
-        return collisionResultX;
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (showHitboxes) {
+        addDebugHitbox(H_TYPE_BOX, thisEntity, thisHitbox);
+        addDebugHitbox(H_TYPE_BOX, otherEntity, otherHitbox);
+    }
+#endif
     return 0;
 }
 
@@ -304,6 +361,18 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
     }
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (showHitboxes) {
+        int thisHitboxID  = addDebugHitbox(H_TYPE_PLAT, thisEntity, thisHitbox);
+        int otherHitboxID = addDebugHitbox(H_TYPE_PLAT, otherEntity, otherHitbox);
+
+        if (thisHitboxID >= 0 && collided)
+            debugHitboxList[thisHitboxID].collision |= 1 << 0;
+        if (otherHitboxID >= 0 && collided)
+            debugHitboxList[otherHitboxID].collision |= 1 << 3;
+    }
+#endif
 
     return collided;
 }

@@ -183,7 +183,7 @@ void Bomb_State_Explode(void)
         Bomb_CheckOnScreen();
     }
     else {
-        RSDK.PlaySFX(Bomb->sfxExplosion, false, 255);
+        RSDK.PlaySfx(Bomb->sfxExplosion, false, 255);
         EntityBomb *debris  = CREATE_ENTITY(Bomb, intToVoid(true), entity->position.x, entity->position.y);
         debris->velocity.x  = -0x20000;
         debris->velocity.y  = -0x30000;

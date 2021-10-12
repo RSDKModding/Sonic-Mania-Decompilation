@@ -14,7 +14,7 @@ void ElectroMagnet_StaticUpdate(void)
 {
     if (ElectroMagnet->field_18) {
         if (!ElectroMagnet->playingMagnetSFX) {
-            RSDK.PlaySFX(ElectroMagnet->sfxMagnet, true, 255);
+            RSDK.PlaySfx(ElectroMagnet->sfxMagnet, true, 255);
             ElectroMagnet->playingMagnetSFX = true;
         }
         ElectroMagnet->field_18 = 0;

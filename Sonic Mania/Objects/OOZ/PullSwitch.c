@@ -18,7 +18,7 @@ void PullSwitch_Update(void)
     }
     else {
         if (OOZSetup->fadeTimer > 16 || Smog->field_4) {
-            RSDK.PlaySFX(PullSwitch->sfxSmogClear, 0, 255);
+            RSDK.PlaySfx(PullSwitch->sfxSmogClear, 0, 255);
         }
         OOZSetup->fadeTimer = 0;
         Smog->field_4     = 0;

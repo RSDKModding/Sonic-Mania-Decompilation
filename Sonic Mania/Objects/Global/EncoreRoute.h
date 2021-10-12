@@ -3,37 +3,22 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
+
+typedef enum {
+    EROUTE_FRAME_UNKNOWN
+}EncoreRouteFrameIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    char field_4;
-    char field_5;
-    char field_6;
-    char field_7;
-    char field_8;
-    char field_9;
-    char field_A;
-    char field_B;
-    char field_C;
-    char field_D;
-    char field_E;
-    char field_F;
-    char field_10;
-    char field_11;
-    char field_12;
-    char field_13;
-    char field_14;
-    char field_15;
-    char field_16;
-    char field_17;
-    char field_18;
-    char field_19;
-    char field_1A;
-    char field_1B;
-    char field_1C;
-    char field_1D;
-    char field_1E;
-    char field_1F;
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    int field_1C;
 } ObjectEncoreRoute;
 
 // Entity Class
@@ -41,9 +26,9 @@ typedef struct {
     RSDK_ENTITY
     Vector2 offset;
     Vector2 size;
-    char layerSrc;
-    char layerDest;
-    int frameID;
+    byte layerSrc;
+    byte layerDest;
+    EncoreRouteFrameIDs frameID;
 } EntityEncoreRoute;
 
 // Object Struct
@@ -62,5 +47,6 @@ void EncoreRoute_Serialize(void);
 
 // Extra Entity Functions
 
+#endif
 
 #endif //!OBJ_ENCOREROUTE_H

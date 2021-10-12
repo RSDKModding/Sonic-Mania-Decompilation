@@ -113,7 +113,7 @@ void FBZMissile_Unknown2(void)
         case 9:
         case 25:
         case 41: {
-            RSDK.PlaySFX(FBZMissile->sfxPush, false, 255);
+            RSDK.PlaySfx(FBZMissile->sfxPush, false, 255);
             EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(3), entity->position.x, entity->position.y);
             missile->isPermanent      = true;
             missile->velocity.y       = -0x60000;
@@ -131,7 +131,7 @@ void FBZMissile_Unknown3(void)
     RSDK_THIS(FBZMissile);
 
     if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
-        RSDK.PlaySFX(FBZMissile->sfxPush2, false, 255);
+        RSDK.PlaySfx(FBZMissile->sfxPush2, false, 255);
         EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(4), entity->position.x, entity->position.y);
         missile->drawOrder        = entity->drawOrder;
         missile->direction        = entity->direction;
@@ -203,7 +203,7 @@ void FBZMissile_Unknown6(void)
                     Player_CheckHit(player, entity);
 
                 CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
-                RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
+                RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                 destroyEntity(entity);
 
                 foreach_break;
@@ -216,17 +216,17 @@ void FBZMissile_Unknown6(void)
                 if (missile->type == 2 && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, entity, &FBZMissile->hitbox1)) {
                     if (--missile->timer <= 0) {
                         destroyEntity(missile);
-                        RSDK.PlaySFX(Player->sfx_Release, false, 255);
+                        RSDK.PlaySfx(Player->sfx_Release, false, 255);
                     }
                     CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
-                    RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
+                    RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(entity);
                 }
             }
         }
         else {
             CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
+            RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             destroyEntity(entity);
         }
     }
@@ -272,8 +272,8 @@ void FBZMissile_Unknown8(void)
             && player->state == Player_State_MightyHammerDrop 
 #endif
             && !player->sidekick) {
-            RSDK.PlaySFX(FBZMissile->sfxExplosion, false, 255);
-            RSDK.PlaySFX(Player->sfx_Release, false, 255);
+            RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
+            RSDK.PlaySfx(Player->sfx_Release, false, 255);
             player->velocity.y = velY - 0x10000;
             player->onGround   = false;
             destroyEntity(entity);

@@ -88,7 +88,7 @@ bool32 TubeSpring_Spring(bool32 interact)
 
             if (interact) {
                 RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 1, &entity->animator, true, 0);
-                RSDK.PlaySFX(TubeSpring->sfxExit, 0, 255);
+                RSDK.PlaySfx(TubeSpring->sfxExit, 0, 255);
                 entity->state = TubeSpring_Springing;
             }
 

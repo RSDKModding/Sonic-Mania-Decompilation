@@ -45,7 +45,7 @@ void PropellerShaft_Update(void)
             else {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                     entity->activePlayers |= 1 << pID;
-                    RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
+                    RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;

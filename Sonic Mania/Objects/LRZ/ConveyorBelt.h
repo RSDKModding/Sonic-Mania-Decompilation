@@ -5,12 +5,17 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
 } ObjectConveyorBelt;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 size;
+    int speed;
+    Animator animator;
+    Hitbox hitbox;
 } EntityConveyorBelt;
 
 // Object Struct

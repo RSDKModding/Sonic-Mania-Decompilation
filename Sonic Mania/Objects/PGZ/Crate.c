@@ -86,14 +86,14 @@ void Crate_Break(EntityCrate *entity)
             default: break;
         }
     }
-    RSDK.PlaySFX(Crate->sfxExplosion2, 0, 255);
+    RSDK.PlaySfx(Crate->sfxExplosion2, 0, 255);
     entity->position.y -= 0x10000;
 
     foreach_active(Crate, crate)
     {
         if (crate != entity && crate->state == Crate_Null1
-            && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, crate, &crate->hitbox) == 1) {
-            crate->state = Crate_Null2;
+            && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, crate, &crate->hitbox)) {
+            crate->state = Crate_ApplyGravity;
         }
     }
     destroyEntity(entity);
@@ -108,7 +108,7 @@ void Crate_MoveY(EntityCrate *entity, int offset)
     int start           = (entity->drawPos.y - 0x300000) & 0xFFFF0000;
     foreach_active(Crate, crate)
     {
-        if (crate != entity && RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, crate, &crate->hitbox, true) == 1)
+        if (crate != entity && RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, crate, &crate->hitbox, true) == C_TOP)
             Crate_MoveY(crate, start - crate->drawPos.y);
     }
 }
@@ -240,8 +240,20 @@ bool32 Crate_Collide(void)
 void Crate_Null1(void) {
     //hehe
 }
-void Crate_Null2(void) {
-    //crate :D
+void Crate_ApplyGravity(void)
+{
+    RSDK_THIS(Crate);
+    RSDK_sceneInfo->entity->position.y -= 0x10000;
+    foreach_active(Crate, crate)
+    {
+        if (crate != entity && crate->state == Crate_Null1
+            && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, crate, &crate->hitbox)) {
+            crate->state = Crate_ApplyGravity;
+        }
+    }
+    entity->position.y += 0x10000;
+    entity->collapseDelay = 15;
+    entity->state         = Crate_WaitToFall;
 }
 void Crate_WaitToFall(void)
 {

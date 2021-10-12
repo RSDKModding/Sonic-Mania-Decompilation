@@ -26,7 +26,7 @@ void SSZ2Setup_StaticUpdate(void)
                 debris->position.x = player->position.x;
                 debris->position.y = player->position.y + (hitbox->bottom << 16);
                 debris->timer      = 30;
-                RSDK.PlaySFX(SSZ2Setup->sfxSpark, false, 255);
+                RSDK.PlaySfx(SSZ2Setup->sfxSpark, false, 255);
                 SSZ2Setup->sparkTimer = 3;
             }
         }
@@ -149,7 +149,7 @@ void SSZ2Setup_GenericTriggerCallback1(void)
             RSDK.CreateEntity(Animals->objectID, (Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), boss->position.x,
                               boss->position.y);
             RSDK.CreateEntity(Explosion->objectID, intToVoid(1), boss->position.x, boss->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySFX(Explosion->sfx_Destroy, 0, 255);
+            RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
             destroyEntity(boss);
         }*/
     }
@@ -197,7 +197,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
                 RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);
         }
-        if (player->superState == 2 || player->state == Player_State_Transform)
+        if (player->superState == SUPERSTATE_SUPER || player->state == Player_State_Transform)
             globals->restartPowerups |= 0x80;
         globals->restartMusicID = Music->activeTrack;
     }

@@ -78,7 +78,7 @@ void PSZ2Setup_StageLoad(void)
     PSZ2Setup->aniTiles1         = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
     PSZ2Setup->aniTiles2         = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
 
-    if (isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
+    if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
         Zone->screenBoundsL1[0] = 1024;
         Zone->screenBoundsL1[1] = 1024;
         Zone->screenBoundsL1[2] = 1024;
@@ -122,17 +122,17 @@ void PSZ2Setup_ActTransitionLoad(void)
     Zone->screenBoundsR1[0] = 944;
     Zone->screenBoundsT1[0] = 0;
     Zone->screenBoundsB1[0] = 1556;
-    Zone->screenBoundsL1[0] = 0;
-    Zone->screenBoundsR1[0] = 944;
-    Zone->screenBoundsT1[0] = 0;
+    Zone->screenBoundsL1[1] = 0;
+    Zone->screenBoundsR1[1] = 944;
+    Zone->screenBoundsT1[1] = 0;
     Zone->screenBoundsB1[1] = 1556;
-    Zone->screenBoundsL1[0] = 0;
-    Zone->screenBoundsR1[0] = 944;
-    Zone->screenBoundsT1[0] = 0;
+    Zone->screenBoundsL1[2] = 0;
+    Zone->screenBoundsR1[2] = 944;
+    Zone->screenBoundsT1[2] = 0;
     Zone->screenBoundsB1[2] = 1556;
-    Zone->screenBoundsL1[0] = 0;
-    Zone->screenBoundsR1[0] = 944;
-    Zone->screenBoundsT1[0] = 0;
+    Zone->screenBoundsL1[3] = 0;
+    Zone->screenBoundsR1[3] = 944;
+    Zone->screenBoundsT1[3] = 0;
     Zone->screenBoundsB1[3] = 1556;
 }
 

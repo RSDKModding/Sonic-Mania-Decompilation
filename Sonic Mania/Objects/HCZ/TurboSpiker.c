@@ -188,7 +188,7 @@ void TurboSpiker_Hermit_IdleWater(void)
     {
         if (Player_CheckCollisionTouch(player, entity, &TurboSpiker->checkbox)) {
             CREATE_ENTITY(Water, intToVoid(6), entity->position.x, entity->position.y + 0x80000)->childPtr = intToVoid(1);
-            RSDK.PlaySFX(TurboSpiker->splashSFX, 0, 255);
+            RSDK.PlaySfx(TurboSpiker->splashSFX, 0, 255);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->spikeAnimator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &entity->animator, true, 0);
             entity->drawOrder = Zone->drawOrderLow + 1;
@@ -291,7 +291,7 @@ void TurboSpiker_Hermit_Fire(void)
             entity->direction = Player_Unknown3()->position.x < entity->position.x;
         EntityTurboSpiker *spike = (EntityTurboSpiker *)entity->spike;
         if (spike) {
-            RSDK.PlaySFX(TurboSpiker->launchSFX, 0, 255);
+            RSDK.PlaySfx(TurboSpiker->launchSFX, 0, 255);
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 4, &spike->spikeAnimator, true, 0);
             spike->direction  = entity->direction;
             spike->velocity.x = 0x14000 * (entity->direction ? -1 : 1);
@@ -332,7 +332,7 @@ void TurboSpiker_Spike_Fly(void)
 {
     RSDK_THIS(TurboSpiker);
     if (!entity->launchPlayed) {
-        RSDK.PlaySFX(TurboSpiker->launchSFX, 0, 255);
+        RSDK.PlaySfx(TurboSpiker->launchSFX, 0, 255);
         entity->launchPlayed = true;
     }
     if (!entity->activeScreens) {

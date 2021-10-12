@@ -42,9 +42,9 @@ void PaperRoller_EditorLoad(void);
 void PaperRoller_Serialize(void);
 
 // Extra Entity Functions
-void PaperRoller_Unknown1(uint colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4);
-void PaperRoller_Unknown2(void);
-void PaperRoller_Unknown3(void);
+void PaperRoller_DrawLineDeform(uint colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4);
+void PaperRoller_DrawPaperLines(void);
+void PaperRoller_DrawRollers(void);
 void PaperRoller_Unknown4(void);
 void PaperRoller_Unknown5(void);
 

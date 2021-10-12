@@ -101,7 +101,7 @@ void CPZBoss_State_SetupPlayer(void)
         Music_SetMusicTrack("BossPuyo.ogg", TRACK_EGGMAN2, 846720);
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
         Entity *entPtr = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 1);
-        Camera_Unknown3(2, 0, entPtr->position.x, entPtr->position.y, 8);
+        Camera_SetupLerp(2, 0, entPtr->position.x, entPtr->position.y, 8);
         foreach_active(HUD, hud)
         {
             CPZBoss->hudSlotID = RSDK.GetEntityID(hud);
@@ -277,7 +277,7 @@ void CPZBoss_State_HandleBossMatch(void)
         if (RSDK_controller[1].keyStart.press) {
             if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == TYPE_BLANK) {
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                RSDK.PlaySFX(PauseMenu->sfxAccept, 0, 255);
+                RSDK.PlaySfx(PauseMenu->sfxAccept, 0, 255);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
             }
         }
@@ -333,7 +333,7 @@ void CPZBoss_State_HandlePlayerMatchFinish(void)
     if (!CPZBoss_Unknown1()) {
         RSDK.ProcessAnimation(&entity->animator1);
         if (!(Zone->timer % 3)) {
-            RSDK.PlaySFX(CPZBoss->sfxExplosion, 0, 255);
+            RSDK.PlaySfx(CPZBoss->sfxExplosion, 0, 255);
             if ((Zone->timer & 4) != 0) {
                 int data = ((RSDK.Rand(0, 256) > 192) + 2);
                 CREATE_ENTITY(Explosion, intToVoid(data), entity->field_6C + RSDK.Rand(-0x300000, 0x300000),
@@ -357,7 +357,7 @@ void CPZBoss_State_PlayerWin(void)
     if (!CPZBoss_Unknown1()) {
         RSDK.ProcessAnimation(&entity->animator1);
         if (!(Zone->timer % 3)) {
-            RSDK.PlaySFX(CPZBoss->sfxExplosion, 0, 255);
+            RSDK.PlaySfx(CPZBoss->sfxExplosion, 0, 255);
             if ((Zone->timer & 4)) {
                 EntityExplosion *explosion =
                     CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), entity->position.x + RSDK.Rand(-0x100000, 0x100000),
@@ -379,7 +379,7 @@ void CPZBoss_State_PlayerWin(void)
                 Music_TransitionTrack(TRACK_STAGE, 0.0125);
             }
 
-            // RSDK.PlaySFX(PuyoBean->field_DB4, 0, 255);
+            // RSDK.PlaySfx(PuyoBean->field_DB4, 0, 255);
             foreach_active(TippingPlatform, platform)
             {
                 if (platform->bossID == 2) {
@@ -426,7 +426,7 @@ void CPZBoss_State_HandleBossMatchFinish(void)
         if (++entity->timer == 60) {
             entity->timer = 0;
             entity->state = CPZBoss_Unknown1;
-            // RSDK.PlaySFX(PuyoBean->field_DB4, 0, 255);
+            // RSDK.PlaySfx(PuyoBean->field_DB4, 0, 255);
             foreach_active(TippingPlatform, platform)
             {
                 if (platform->bossID == 1) {

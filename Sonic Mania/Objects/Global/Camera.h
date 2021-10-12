@@ -20,14 +20,13 @@ typedef struct {
     Vector2 lastPos;
     Vector2 shakePos;
     Vector2 lookPos;
-    int field_8C;
-    int field_90;
-    int field_94;
+    Vector2 offset;
+    bool32 offsetYFlag;
     int centerY;
     int adjustY;
-    int field_A0;
-    int field_A4;
-    int field_A8;
+    int lerpPercent;
+    int lerpSpeed;
+    int lerpType;
     Vector2 endLerpPos;
     Vector2 startLerpPos;
     Vector2 boundsOffset;
@@ -57,13 +56,13 @@ EntityCamera *Camera_SetTargetEntity(int screen, void *t);
 void Camera_ShakeScreen(int shakeX, int screen, int shakeY);
 void Camera_HandleHBounds(void);
 void Camera_HandleVBounds(void);
-void Camera_Unknown3(int a1, int screen, int x, int y, int a5);
+void Camera_SetupLerp(int type, int screen, int x, int y, int speed);
 
 //States
 void Camera_State_Roam(void);
 void Camera_State_Follow(void);
 void Camera_State_HLock(void);
 void Camera_State_VLock(void);
-void Camera_State_Unknown(void);
+void Camera_State_HandleLerp(void);
 
 #endif //!OBJ_CAMERA_H

@@ -96,7 +96,7 @@ void DoorTrigger_Update(void)
                         player->jumpAbility = 0;
                         player->onGround    = false;
                     }
-                    RSDK.PlaySFX(DoorTrigger->sfxShatter, false, 255);
+                    RSDK.PlaySfx(DoorTrigger->sfxShatter, false, 255);
 
                     int spawnX = entity->position.x;
                     int spawnY = entity->position.y;

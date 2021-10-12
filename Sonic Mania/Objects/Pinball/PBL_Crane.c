@@ -322,7 +322,7 @@ void PBL_Crane_State_Unknown2(void)
     if (++entity->timer == 30) {
         entity->timer = 0;
         entity->state = PBL_Crane_State_Unknown3;
-        RSDK.PlaySFX(PBL_Crane->sfxCraneMove, false, 255);
+        RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 255);
     }
 }
 
@@ -334,12 +334,12 @@ void PBL_Crane_State_Unknown3(void)
     if (RSDK_stickL[1].keyLeft.press || RSDK_controller[1].keyLeft.press) {
         ++entity->timer;
         entity->velocity.x = -0x18000;
-        RSDK.PlaySFX(PBL_Crane->sfxCraneMove, false, 255);
+        RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 255);
     }
     else if (RSDK_stickL[1].keyRight.press || RSDK_controller[1].keyRight.press) {
         ++entity->timer;
         entity->velocity.x = 0x18000;
-        RSDK.PlaySFX(PBL_Crane->sfxCraneMove, false, 255);
+        RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 255);
     }
     else if (RSDK_stickL[1].keyDown.press || RSDK_controller[1].keyDown.press) {
         entity->timer = 4;
@@ -358,7 +358,7 @@ void PBL_Crane_State_Unknown3(void)
     if (entity->timer == 4) {
         entity->timer = 0;
         entity->state = PBL_Crane_State_Unknown4;
-        RSDK.PlaySFX(PBL_Crane->sfxCraneDrop, false, 255);
+        RSDK.PlaySfx(PBL_Crane->sfxCraneDrop, false, 255);
     }
 }
 
@@ -379,7 +379,7 @@ void PBL_Crane_State_Unknown4(void)
             }
         }
         entity->state = PBL_Crane_State_Unknown5;
-        RSDK.PlaySFX(PBL_Crane->sfxCraneGrab, false, 255);
+        RSDK.PlaySfx(PBL_Crane->sfxCraneGrab, false, 255);
     }
 }
 
@@ -400,7 +400,7 @@ void PBL_Crane_State_Unknown5(void)
     if (entity->animator3.frameID == entity->animator3.frameCount - 1) {
         entity->timer = 0;
         entity->state = PBL_Crane_State_Unknown6;
-        RSDK.PlaySFX(PBL_Crane->sfxCraneRise, false, 255);
+        RSDK.PlaySfx(PBL_Crane->sfxCraneRise, false, 255);
     }
 }
 
@@ -428,17 +428,17 @@ void PBL_Crane_State_Unknown6(void)
             else
                 crane->velocity.x = -0x20000;
             if (crane->animator1.frameID != 5) {
-                RSDK.PlaySFX(PBL_Crane->sfxPrizeGood, false, 255);
+                RSDK.PlaySfx(PBL_Crane->sfxPrizeGood, false, 255);
                 entity->state = StateMachine_None;
             }
             else {
-                RSDK.PlaySFX(PBL_Crane->sfxPrizeBad, false, 255);
+                RSDK.PlaySfx(PBL_Crane->sfxPrizeBad, false, 255);
                 entity->state = StateMachine_None;
             }
         }
         else {
             parent->state = PBL_Crane_State2_Unknown3;
-            RSDK.PlaySFX(PBL_Crane->sfxPrizeBad, false, 255);
+            RSDK.PlaySfx(PBL_Crane->sfxPrizeBad, false, 255);
             entity->state = StateMachine_None;
         }
     }

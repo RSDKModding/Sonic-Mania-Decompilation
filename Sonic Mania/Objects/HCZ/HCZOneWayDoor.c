@@ -37,7 +37,7 @@ void HCZOneWayDoor_Update(void)
             entity->field_74--;
             if (entity->field_74 <= 0) {
                 if (entity->activeScreens)
-                    RSDK.PlaySFX(HCZOneWayDoor->sfxClack, false, 255);
+                    RSDK.PlaySfx(HCZOneWayDoor->sfxClack, false, 255);
             }
         }
         else {
@@ -69,7 +69,7 @@ void HCZOneWayDoor_Update(void)
             entity->field_74++;
             if (entity->field_74 >= entity->duration) {
                 if (entity->activeScreens)
-                    RSDK.PlaySFX(HCZOneWayDoor->sfxClack, false, 255);
+                    RSDK.PlaySfx(HCZOneWayDoor->sfxClack, false, 255);
             }
         }
     }

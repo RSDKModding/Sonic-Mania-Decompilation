@@ -10,7 +10,7 @@ void ImageTrail_LateUpdate(void)
     EntityPlayer *player = (EntityPlayer *)entity->player;
 
     // Check for fadeouts/destroy flags
-    if (player->superState == 2) {
+    if (player->superState == SUPERSTATE_SUPER) {
         entity->baseAlpha = 0x100;
     }
     else {

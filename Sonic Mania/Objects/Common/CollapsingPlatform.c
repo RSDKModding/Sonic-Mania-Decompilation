@@ -16,7 +16,7 @@ void CollapsingPlatform_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     StateMachine_Run(entity->state);
-                    RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
+                    RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
                     if (entity->respawn) {
                         entity->collapseDelay = 0;
                         entity->playerPos.x   = 0;
@@ -31,7 +31,7 @@ void CollapsingPlatform_Update(void)
 #endif
         if (--entity->collapseDelay == 0) {
             StateMachine_Run(entity->state);
-            RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
+            RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
             if (entity->respawn) {
                 entity->collapseDelay = 0;
                 entity->playerPos.x   = 0;
@@ -54,7 +54,7 @@ void CollapsingPlatform_Update(void)
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     StateMachine_Run(entity->state);
-                    RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
+                    RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
                     if (entity->respawn) {
                         entity->collapseDelay = 0;
                         entity->playerPos.x   = 0;
@@ -72,7 +72,7 @@ void CollapsingPlatform_Update(void)
             entity->collapseDelay = entity->delay;
             if (!entity->delay) {
                 StateMachine_Run(entity->state);
-                RSDK.PlaySFX(CollapsingPlatform->sfx_Crumble, 0, 255);
+                RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
                 if (entity->respawn) {
                     entity->collapseDelay = 0;
                     entity->playerPos.x   = 0;

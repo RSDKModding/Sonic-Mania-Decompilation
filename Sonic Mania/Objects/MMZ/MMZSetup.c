@@ -118,7 +118,7 @@ void MMZSetup_StageFinishCB_Act1(void)
     RSDK.LoadScene();
 }
 #if RETRO_USE_PLUS
-void MMZSetup_StageFinishCB_Act2(void) { RSDK.CreateEntity(MMZ2Outro->objectID, NULL, 0, 0); }
+void MMZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
 #endif
 
 void MMZSetup_EditorDraw(void) {}

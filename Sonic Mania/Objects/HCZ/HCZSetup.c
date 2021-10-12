@@ -56,14 +56,14 @@ void HCZSetup_StaticUpdate(void)
         if (HCZSetup->playingLoopSFX) {
             if (!(HCZSetup->waterfallSFXTimer & 0x1F)) {
                 RSDK.StopSFX(HCZSetup->sfxWaterfall);
-                RSDK.PlaySFX(HCZSetup->sfxWaterfallLoop, 0, 255);
+                RSDK.PlaySfx(HCZSetup->sfxWaterfallLoop, 0, 255);
             }
             ++HCZSetup->waterfallSFXTimer;
         }
         else {
             HCZSetup->waterfallSFXTimer = 0;
             HCZSetup->playingLoopSFX    = true;
-            RSDK.PlaySFX(HCZSetup->sfxWaterfall, 0, 255);
+            RSDK.PlaySfx(HCZSetup->sfxWaterfall, 0, 255);
             ++HCZSetup->waterfallSFXTimer;
         }
     }

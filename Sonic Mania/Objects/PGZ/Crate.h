@@ -35,7 +35,7 @@ void Crate_Break(EntityCrate *entity);
 void Crate_MoveY(EntityCrate *entity, int offset);
 bool32 Crate_Collide(void);
 void Crate_Null1(void);
-void Crate_Null2(void);
+void Crate_ApplyGravity(void);
 void Crate_WaitToFall(void);
 void Crate_Fall(void);
 

@@ -353,7 +353,7 @@ void Tuesday_Unknown2(void)
 {
     RSDK_THIS(Tuesday);
     if (++entity->field_92 == 240) {
-        RSDK.PlaySFX(Tuesday->sfxElecCharge, false, 255);
+        RSDK.PlaySfx(Tuesday->sfxElecCharge, false, 255);
         entity->timer          = 120;
         int slotID             = RSDK_sceneInfo->entitySlot + 1;
         EntityTuesday *tuesday = RSDK_GET_ENTITY(slotID, Tuesday);
@@ -387,7 +387,7 @@ void Tuesday_Unknown2(void)
         entity->field_92 = 0;
     }
     if (entity->timer == 60)
-        RSDK.PlaySFX(Tuesday->sfxZap, false, 255);
+        RSDK.PlaySfx(Tuesday->sfxZap, false, 255);
     Tuesday_Unknown3();
 }
 
@@ -441,7 +441,7 @@ void Tuesday_Unknown3(void)
                     }
                     else {
                         entity->invincibleTimer = 30;
-                        RSDK.PlaySFX(Tuesday->sfxBossHit, false, 255);
+                        RSDK.PlaySfx(Tuesday->sfxBossHit, false, 255);
                     }
                 }
             }
@@ -630,7 +630,7 @@ void Tuesday_State_Destroyed(void)
     RSDK_THIS(Tuesday);
 
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(Tuesday->sfxExplosion, false, 255);
+        RSDK.PlaySfx(Tuesday->sfxExplosion, false, 255);
 
         if (Zone->timer & 4) {
             int data = ((RSDK.Rand(0, 256) > 192) + 2);
@@ -773,7 +773,7 @@ void Tuesday_State_Debris(void)
             entity->visible ^= 1;
         }
         else if (entity->velocity.y == 0x8000) {
-            RSDK.PlaySFX(Tuesday->sfxDrop, false, 255);
+            RSDK.PlaySfx(Tuesday->sfxDrop, false, 255);
         }
     }
     else {

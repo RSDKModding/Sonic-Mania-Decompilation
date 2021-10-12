@@ -73,7 +73,7 @@ void DNARiser_StageLoad(void)
 void DNARiser_State_BubbleBurst(void)
 {
     RSDK_THIS(DNARiser);
-    RSDK.PlaySFX(DNARiser->sfxBurst, 0, 255);
+    RSDK.PlaySfx(DNARiser->sfxBurst, 0, 255);
     entity->popPos = entity->position;
     entity->popped = true;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &entity->animator, true, 0);
@@ -82,7 +82,7 @@ void DNARiser_State_BubbleBurst(void)
 void DNARiser_State_Burst_Helix(void)
 {
     RSDK_THIS(DNARiser);
-    RSDK.PlaySFX(DNARiser->sfxBurst, 0, 255);
+    RSDK.PlaySfx(DNARiser->sfxBurst, 0, 255);
     entity->popPos = entity->position;
     entity->popped = true;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &entity->animator, true, 0);
@@ -150,7 +150,7 @@ void DNARiser_HandleInteractions(void)
 
         if (!((1 << playerID) & entity->activePlayers)) {
             if (Player_CheckCollisionTouch(player, entity, &DNARiser->hitbox)) {
-                RSDK.PlaySFX(DNARiser->sfxGrab, 0, 255);
+                RSDK.PlaySfx(DNARiser->sfxGrab, 0, 255);
                 entity->field_A8 = 30;
                 entity->timer2   = 30;
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
@@ -206,11 +206,11 @@ void DNARiser_State_Unknown3(void)
         int angle = (((0x57262 * (entity->curHeight >> 16)) >> 16) + 250) & 0x3FF;
         if (angle >= 0x200u && !entity->field_B0) {
             entity->field_B0 = 1;
-            RSDK.PlaySFX(DNARiser->sfxScan, 0, 255);
+            RSDK.PlaySfx(DNARiser->sfxScan, 0, 255);
         }
         else if (angle <= 0x1FF && entity->field_B0) {
             entity->field_B0 = 0;
-            RSDK.PlaySFX(DNARiser->sfxScan, 0, 255);
+            RSDK.PlaySfx(DNARiser->sfxScan, 0, 255);
         }
 
         entity->position.y = entity->vector_D0.y - entity->curHeight;
@@ -227,7 +227,7 @@ void DNARiser_State_Unknown3(void)
 #endif
                         while (sfxID == entity->field_B6);
                     }
-                    RSDK.PlaySFX(DNARiser->sfxTiny[sfxID], 0, 255);
+                    RSDK.PlaySfx(DNARiser->sfxTiny[sfxID], 0, 255);
                     entity->field_B6 = sfxID;
 #if RETRO_USE_PLUS
                     entity->timer2   = RSDK.Random(2, 8, &Zone->randKey);
@@ -263,7 +263,7 @@ void DNARiser_State_Unknown3(void)
         int playerID = RSDK.GetEntityID(player);
         if (!((1 << playerID) & entity->activePlayers)) {
             if (Player_CheckCollisionTouch(player, entity, &DNARiser->hitbox)) {
-                RSDK.PlaySFX(DNARiser->sfxGrab, 0, 255);
+                RSDK.PlaySfx(DNARiser->sfxGrab, 0, 255);
                 entity->timer2   = 30;
                 entity->field_A8 = 30;
                 entity->activePlayers |= (1 << playerID);

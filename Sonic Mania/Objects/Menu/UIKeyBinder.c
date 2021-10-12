@@ -87,7 +87,7 @@ void UIKeyBinder_Update(void)
                 UIKeyBinder->activeBinder = 0;
                 parent->childHasFocus     = false;
                 RSDK.SetSettingsValue(SETTINGS_CHANGED, 1);
-                RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
             }
         }
         else {
@@ -95,7 +95,7 @@ void UIKeyBinder_Update(void)
             int frame = UIButtonPrompt_MappingsToFrame(entity->field_16C);
             RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
             UIKeyBinder_SetMappings(input, entity->type, -1);
-            RSDK.PlaySFX(UIKeyBinder->sfxFail, false, 255);
+            RSDK.PlaySfx(UIKeyBinder->sfxFail, false, 255);
         }
     }
 
@@ -294,7 +294,7 @@ void UIKeyBinder_Options3CB(void)
         parent->selectionDisabled = true;
         UIKeyBinder->activeBinder = (Entity *)entity;
         entity->state             = UIKeyBinder_Unknown14;
-        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         UIKeyBinder_SetMappings(entity->inputID + 1, entity->type, -1);
     }
 }

@@ -14,6 +14,26 @@ struct CollisionSensor {
     byte angle;
 };
 
+#if !RETRO_USE_ORIGINAL_CODE
+#define DEBUG_HITBOX_MAX (0x400)
+
+struct DebugHitboxInfo {
+    byte type;
+    byte collision;
+    ushort entityID;
+    Hitbox hitbox;
+    Vector2 pos;
+};
+
+enum DebugHitboxTypes { H_TYPE_TOUCH, H_TYPE_CIRCLE, H_TYPE_BOX, H_TYPE_PLAT };
+
+extern bool32 showHitboxes;
+extern int debugHitboxCount;
+extern DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
+
+int addDebugHitbox(byte type, Entity *entity, Hitbox *hitbox);
+#endif
+
 extern int collisionTolerance;
 extern int collisionOffset;
 extern int collisionMaskAir;
@@ -38,6 +58,24 @@ inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int thisOffset, Ent
     int x = (thisEntity->position.x - otherEntity->position.x) >> 16;
     int y = (thisEntity->position.y - otherEntity->position.y) >> 16;
     int r = (thisOffset + otherOffset) >> 16;
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (showHitboxes) {
+        bool32 collided = x * x + y * y < r * r;
+        Hitbox thisHitbox;
+        Hitbox otherHitbox;
+        thisHitbox.left = thisOffset >> 16;
+        otherHitbox.left = otherOffset >> 16;
+
+        int thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, thisEntity, &thisHitbox);
+        int otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, otherEntity, &otherHitbox);
+
+        if (thisHitboxID >= 0 && collided)
+            debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
+        if (otherHitboxID >= 0 && collided)
+            debugHitboxList[otherHitboxID].collision |= 1 << (collided - 1);
+    }
+#endif
     return x * x + y * y < r * r;
 }
 byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues);

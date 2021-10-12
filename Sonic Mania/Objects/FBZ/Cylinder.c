@@ -606,7 +606,7 @@ void Cylinder_State_Unknown5(void)
                         player->abilityValue = 128;
                     player->onGround = true;
                     if (player->jumpPress) {
-                        RSDK.PlaySFX(Player->sfx_Jump, false, 255);
+                        RSDK.PlaySfx(Player->sfx_Jump, false, 255);
                         if (player->position.x < entity->position.x)
                             player->velocity.x = -0x60000;
                         else
@@ -709,7 +709,7 @@ void Cylinder_Player_State_Unknown2(void)
     Player_HandleGroundMovement();
     entity->skidding = 0;
     if (entity->camera)
-        entity->camera->field_94 = 0;
+        entity->camera->offsetYFlag = false;
     entity->jumpAbilityTimer = 0;
 
     if (entity->jumpPress) {
@@ -729,7 +729,7 @@ void Cylinder_Player_State_Unknown2(void)
             RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
             entity->direction ^= 1;
             entity->state = Cylinder_Player_State_Unknown3;
-            RSDK.PlaySFX(Player->sfx_Roll, false, 255);
+            RSDK.PlaySfx(Player->sfx_Roll, false, 255);
         }
     }
 }
@@ -755,7 +755,7 @@ void Cylinder_Player_State_Unknown3(void)
         entity->playerAnimator.animationSpeed = 0xF0;
 
     if (entity->camera)
-        entity->camera->field_94 = 0;
+        entity->camera->offsetYFlag = false;
     entity->jumpAbilityTimer = 0;
     entity->angle            = angle;
     if (entity->jumpPress) {

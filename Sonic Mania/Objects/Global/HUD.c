@@ -32,7 +32,7 @@ void HUD_LateUpdate(void)
 #if RETRO_GAMEVER != VER_100
     if (globals->gameMode < MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < 2 && SaveGame->saveRAM->chaosEmeralds >= 0x7F) {
+        if (RSDK_sceneInfo->timeEnabled && player->rings >= 50 && player->superState < SUPERSTATE_SUPER && SaveGame->saveRAM->chaosEmeralds >= 0x7F) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV)
                 HUD_GetSuperFrames();
             if (entity->superButtonPos < 0x180000)

@@ -114,7 +114,7 @@ typedef struct {
     int alpha;                                                                                                                                       \
     int rotation;                                                                                                                                    \
     int groundVel;                                                                                                                                   \
-    int depth;                                                                                                                                       \
+    int depth3D;                                                                                                                                     \
     ushort group;                                                                                                                                    \
     ushort objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
@@ -535,6 +535,14 @@ typedef enum {
     CMODE_ROOF,
     CMODE_RWALL,
 } CModes;
+
+typedef enum {
+    C_NONE,
+    C_TOP,
+    C_LEFT,
+    C_RIGHT,
+    C_BOTTOM,
+} CSides;
 
 typedef enum {
     S3D_FLATCLR_WIREFRAME               = 0x0,

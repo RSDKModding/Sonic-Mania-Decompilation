@@ -110,7 +110,7 @@ void BallCannon_Unknown1(void)
                     }
                     else {
                         if (Player_CheckCollisionTouch(player, entity, &BallCannon->hitbox1)) {
-                            RSDK.PlaySFX(Player->sfx_Roll, false, 255);
+                            RSDK.PlaySfx(Player->sfx_Roll, false, 255);
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
                             player->position.x     = entity->position.x;
                             player->position.y     = entity->position.y;
@@ -181,7 +181,7 @@ void BallCannon_Unknown5(void)
                 int playerID = RSDK.GetEntityID(player);
 
                 if (((1 << playerID) & entity->activePlayers)) {
-                    RSDK.PlaySFX(BallCannon->sfxFire, false, 255);
+                    RSDK.PlaySfx(BallCannon->sfxFire, false, 255);
                     player->velocity = entity->velocity;
                     player->visible  = true;
                     if (entity->exit) {
@@ -227,7 +227,7 @@ void BallCannon_StateCheckPlayerCollisions(void)
                         debris->velocity.y = BallCannon->array2[(i * 2) + 1];
                     }
 
-                    RSDK.PlaySFX(BallCannon->sfxLedgeBreak, false, 255);
+                    RSDK.PlaySfx(BallCannon->sfxLedgeBreak, false, 255);
                     memcpy(&player->playerAnimator, animator, sizeof(Animator));
                     player->velocity.x = storeVelX;
                     player->velocity.y = storeVelY;
@@ -259,7 +259,7 @@ void BallCannon_Unknown7(void)
             else {
                 if (Player_CheckCollisionTouch(player, entity, &BallCannon->hitbox3)) {
                     RSDK.SetSpriteAnimation(player->spriteIndex, 10, &player->playerAnimator, false, 0);
-                    RSDK.PlaySFX(BallCannon->sfxFire, false, 255);
+                    RSDK.PlaySfx(BallCannon->sfxFire, false, 255);
                     player->state                  = Player_State_None;
                     player->nextGroundState        = 0;
                     player->nextAirState           = 0;

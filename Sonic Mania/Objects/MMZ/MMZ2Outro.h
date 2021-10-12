@@ -6,12 +6,17 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort sfxThunda;
+    ushort sfxLightsOut;
+    ushort sfxTMZEyes;
 } ObjectMMZ2Outro;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int timer;
+    int flashTimer;
 } EntityMMZ2Outro;
 
 // Object Struct
@@ -29,6 +34,14 @@ void MMZ2Outro_EditorLoad(void);
 void MMZ2Outro_Serialize(void);
 
 // Extra Entity Functions
+void MMZ2Outro_StartCutscene(void);
+
+bool32 MMZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host);
 #endif
 
 #endif //!OBJ_MMZ2OUTRO_H

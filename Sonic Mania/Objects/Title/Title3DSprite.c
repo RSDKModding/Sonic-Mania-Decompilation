@@ -10,7 +10,7 @@ void Title3DSprite_Update(void)
     entity->field_5C = valA + (entity->position.x >> 8) * RSDK.Cos1024(TitleBG->angle);
     entity->field_60 = valB - (entity->position.x >> 8) * RSDK.Sin1024(TitleBG->angle);
     entity->field_60 >>= 10;
-    entity->depth    = entity->field_60;
+    entity->depth3D  = entity->field_60;
     entity->field_5C = -entity->field_5C >> 10;
 }
 
@@ -21,7 +21,7 @@ void Title3DSprite_StaticUpdate(void) {}
 void Title3DSprite_Draw(void)
 {
     RSDK_THIS(Title3DSprite);
-    int depth = entity->depth + Title3DSprite->field_C;
+    int depth = entity->depth3D + Title3DSprite->field_C;
     if (depth && depth >= 256) {
         int scale = 0x18000 * Title3DSprite->field_4 / depth;
         if (scale > 0x200)

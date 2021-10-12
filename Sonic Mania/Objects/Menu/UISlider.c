@@ -163,7 +163,7 @@ void UISlider_ButtonPressCB(void)
     }
 
     if (valueChanged) {
-        RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         StateMachine_Run(entity->sliderChangedCB);
     }
 
@@ -183,7 +183,7 @@ void UISlider_ButtonPressCB(void)
                 entity->flag  = false;
                 entity->state = UISlider_Unknown9;
             }
-            RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         }
     }
     else {
@@ -218,7 +218,7 @@ bool32 UISlider_TouchCB(void)
                 int touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
                 if (!entity->flagB && touchX < sizeX && touchY < sizeY) {
                     entity->flagB = true;
-                    RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+                    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
                 }
 
                 if (entity->flagB) {
@@ -245,7 +245,7 @@ bool32 UISlider_TouchCB(void)
         UISlider->entityPtr = NULL;
     }
     if (entity->touchPressed)
-        RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
     entity->flagB        = false;
     entity->touchPressed = false;
     return false;

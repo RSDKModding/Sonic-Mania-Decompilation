@@ -26,12 +26,12 @@ void UFO_Decoration_LateUpdate(void)
 
     Matrix *mat = &UFO_Camera->matWorld;
 
-    entity->depth = mat->values[2][1] * (entity->height >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    entity->depth3D = mat->values[2][1] * (entity->height >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
 
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         int val = (int)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
                    + (mat->values[0][1] * (entity->height >> 8) & 0xFFFFFF00))
-                  / entity->depth;
+                  / entity->depth3D;
         entity->visible = abs(val) < 256;
     }
 }
@@ -41,7 +41,7 @@ void UFO_Decoration_StaticUpdate(void) {}
 void UFO_Decoration_Draw(void)
 {
     RSDK_THIS(UFO_Decoration);
-    if (entity->depth >= 0x4000) {
+    if (entity->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Decoration->sceneIndex);
         RSDK.MatrixScaleXYZ(&entity->matrix1, entity->scale.x, entity->size, entity->scale.x);
         RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, 0);

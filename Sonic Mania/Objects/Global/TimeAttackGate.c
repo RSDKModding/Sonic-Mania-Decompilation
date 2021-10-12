@@ -186,7 +186,7 @@ void TimeAttackGate_HandleStart(void)
         entity->field_84 = 1;
         if (!entity->finishLine) {
             if (!TimeAttackGate->started) {
-                RSDK.PlaySFX(TimeAttackGate->sfxSignpost, false, 255);
+                RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
                 TimeAttackGate->playerPtr       = player1;
                 TimeAttackGate->started         = true;
                 RSDK_sceneInfo->timeEnabled     = true;
@@ -201,7 +201,7 @@ void TimeAttackGate_HandleStart(void)
         else if (TimeAttackGate->started) {
             Music_FadeOut(0.025);
             Announcer_AnnounceGoal(0);
-            RSDK.PlaySFX(TimeAttackGate->sfxSignpost, false, 255);
+            RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
             TimeAttackGate->playerPtr   = NULL;
             TimeAttackGate->started     = false;
             RSDK_sceneInfo->timeEnabled = false;
@@ -381,7 +381,7 @@ void TimeAttackGate_State_Restarter(void)
                 }
                 else {
                     if (!entity->restartTimer)
-                        TimeAttackGate->dword30 = RSDK.PlaySFX(TimeAttackGate->sfxTeleport, false, 255);
+                        TimeAttackGate->dword30 = RSDK.PlaySfx(TimeAttackGate->sfxTeleport, false, 255);
 
                     if (entity->restartTimer < 35) {
                         entity->restartTimer++;

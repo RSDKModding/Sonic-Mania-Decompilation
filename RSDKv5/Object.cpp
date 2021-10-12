@@ -721,13 +721,66 @@ void ProcessObjectDrawLists()
 #if !RETRO_USE_ORIGINAL_CODE
             if (engine.showPaletteOverlay) {
                 for (int p = 0; p < PALETTE_COUNT; ++p) {
-                    int x = (pixWidth - (0xF << 3));
-                    int y = (SCREEN_YSIZE - (0xF << 2));
+                    int x = (pixWidth - (0x10 << 3));
+                    int y = (SCREEN_YSIZE - (0x10 << 2));
                     for (int c = 0; c < PALETTE_SIZE; ++c) {
                         uint clr = GetPaletteEntry(p, c);
 
                         DrawRectangle(x + ((c & 0xF) << 1) + ((p % (PALETTE_COUNT / 2)) * (2 * 16)),
                                       y + ((c >> 4) << 1) + ((p / (PALETTE_COUNT / 2)) * (2 * 16)), 2, 2, clr, 0xFF, INK_NONE, true);
+                    }
+                }
+            }
+
+            if (showHitboxes) {
+                for (int i = 0; i < debugHitboxCount; ++i) {
+                    DebugHitboxInfo *info = &debugHitboxList[i];
+                    int x                 = info->pos.x + (info->hitbox.left << 16);
+                    int y                 = info->pos.y + (info->hitbox.top << 16);
+                    int w                 = abs((info->pos.x + (info->hitbox.right << 16)) - x);
+                    int h                 = abs((info->pos.y + (info->hitbox.bottom << 16)) - y);
+
+                    switch (info->type) {
+                        case H_TYPE_TOUCH: DrawRectangle(x, y, w, h, info->collision ? 0x808000 : 0xFF0000, 0x60, INK_ALPHA, false); break;
+                        case H_TYPE_CIRCLE:
+                            DrawCircle(info->pos.x, info->pos.y, info->hitbox.left, info->collision ? 0x808000 : 0xFF0000, 0x60, INK_ALPHA, false);
+                            break;
+                        case H_TYPE_BOX:
+                            DrawRectangle(x, y, w, h, 0x0000FF, 0x60, INK_ALPHA, false);
+                            if (info->collision & 1) //top
+                                DrawRectangle(x, y, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                            if (info->collision & 8) //bottom
+                                DrawRectangle(x, y + h, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                            if (info->collision & 2) { //left
+                                int sy = y;
+                                int sh = h;
+                                if (info->collision & 1) {
+                                    sy += 1 << 16;
+                                    sh -= 1 << 16;
+                                }
+                                if (info->collision & 8)
+                                    sh -= 1 << 16;
+                                DrawRectangle(x, sy, 1 << 16, sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                            }
+                            if (info->collision & 4) { //right
+                                int sy = y;
+                                int sh = h;
+                                if (info->collision & 1) {
+                                    sy += 1 << 16;
+                                    sh -= 1 << 16;
+                                }
+                                if (info->collision & 8)
+                                    sh -= 1 << 16;
+                                DrawRectangle(x + w, sy, 1 << 16, sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                            }
+                            break;
+                        case H_TYPE_PLAT:
+                            DrawRectangle(x, y, w, h, 0x00FF00, 0x60, INK_ALPHA, false);
+                            if (info->collision & 1) // top
+                                DrawRectangle(x, y, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                            if (info->collision & 8) // bottom
+                                DrawRectangle(x, y + h, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                            break;
                     }
                 }
             }

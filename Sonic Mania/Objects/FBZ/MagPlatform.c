@@ -119,7 +119,7 @@ void MagPlatform_Unknown3(void)
     if (entity->drawPos.y <= entity->centerPos.y - entity->length) {
         entity->drawPos.y = entity->centerPos.y - entity->length;
         if (entity->velocity.y < -0x20000)
-            RSDK.PlaySFX(MagPlatform->sfxChain, false, 255);
+            RSDK.PlaySfx(MagPlatform->sfxChain, false, 255);
         entity->velocity.y = 0;
     }
     entity->position.y = posY;

@@ -124,7 +124,7 @@ void UIResPicker_GetDisplayInfo(EntityUIResPicker *entity)
 void UIResPicker_ApplySettings(void)
 {
     RSDK_THIS(UIResPicker);
-    RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
     entity->field_128 = -0x20000;
     entity->field_12C = -0x20000;
     entity->field_120 = 0;

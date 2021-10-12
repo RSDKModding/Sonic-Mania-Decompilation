@@ -33,7 +33,7 @@ void Springboard_Update(void)
                     int pos                = minVal(2 * val3 - 16, 39);
                     playerPtr->velocity.y  = Springboard->array2[pos] - playerPtr->gravityStrength - entity->force;
                     playerPtr->jumpAbility = 0;
-                    RSDK.PlaySFX(Springboard->sfxSpring, 0, 255);
+                    RSDK.PlaySfx(Springboard->sfxSpring, 0, 255);
                 }
             }
         }

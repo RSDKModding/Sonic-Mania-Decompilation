@@ -164,7 +164,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             ++curPlayer;
         }
         host->field_6C[0] = 1;
-        Camera_Unknown3(0, 0, camera->position.x, camera->position.y, 0);
+        Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
         return true;
     }
     else {

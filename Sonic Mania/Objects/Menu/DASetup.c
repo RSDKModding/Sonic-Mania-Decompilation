@@ -91,7 +91,7 @@ bool32 DASetup_HandleMedallionDebug(void)
     switch (DASetup->trackID) {
         case 8:
             if (GameProgress_CheckZoneClear()) {
-                RSDK.PlaySFX(DASetup->sfxScoreTotal, false, 255);
+                RSDK.PlaySfx(DASetup->sfxScoreTotal, false, 255);
                 return true;
             }
             break;
@@ -99,13 +99,13 @@ bool32 DASetup_HandleMedallionDebug(void)
             if (progress->silverMedalCount < 32) {
                 GameProgress_GiveMedal(globals->blueSpheresID, 1);
                 GameProgress_ShuffleBSSID();
-                RSDK.PlaySFX(DASetup->sfxMedal, false, 255);
+                RSDK.PlaySfx(DASetup->sfxMedal, false, 255);
                 return true;
             }
             else if (progress->goldMedalCount < 32) {
                 GameProgress_GiveMedal(globals->blueSpheresID, 2);
                 GameProgress_ShuffleBSSID();
-                RSDK.PlaySFX(DASetup->sfxMedal, false, 255);
+                RSDK.PlaySfx(DASetup->sfxMedal, false, 255);
                 return true;
             }
             break;
@@ -113,7 +113,7 @@ bool32 DASetup_HandleMedallionDebug(void)
             if (!progress->allGoldMedals) {
                 GameProgress_UnlockAllMedals();
                 progress->allSpecialCleared = false;
-                RSDK.PlaySFX(DASetup->sfxEmerald, false, 255);
+                RSDK.PlaySfx(DASetup->sfxEmerald, false, 255);
                 return true;
             }
             break;
@@ -121,7 +121,7 @@ bool32 DASetup_HandleMedallionDebug(void)
             if (progress->silverMedalCount > 0 || progress->zoneClearFlags[0]) {
                 GameProgress_ClearProgress();
                 progress->allSpecialCleared = false;
-                RSDK.PlaySFX(DASetup->sfxSSExit, false, 255);
+                RSDK.PlaySfx(DASetup->sfxSSExit, false, 255);
                 return true;
             }
             break;
@@ -163,7 +163,7 @@ void DASetup_State_ManageControl(void)
         DASetup->trackID -= DASetup->trackCount;
 
     if (prevTrack != DASetup->trackID) {
-        RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
         DASetup_DisplayTrack(DASetup->trackID);
     }
 

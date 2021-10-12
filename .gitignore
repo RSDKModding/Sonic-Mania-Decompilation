@@ -272,3 +272,8 @@ Ignored/
 .idea/
 android/key/
 android/local.properties
+
+
+mods/*
+!mods/v5py
+!mods/PZTC

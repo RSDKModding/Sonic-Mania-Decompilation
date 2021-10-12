@@ -159,7 +159,7 @@ void TetherBall_Unknown2(void)
             entity->angle    = entity->angleEnd;
             entity->rotation = entity->angleEnd << 16;
             entity->state    = TetherBall_Unknown3;
-            RSDK.PlaySFX(TetherBall->sfxWhack, 0, 255);
+            RSDK.PlaySfx(TetherBall->sfxWhack, 0, 255);
         }
     }
     else {
@@ -167,7 +167,7 @@ void TetherBall_Unknown2(void)
             entity->angle    = entity->angleStart;
             entity->rotation = entity->angleStart << 16;
             entity->state    = TetherBall_Unknown3;
-            RSDK.PlaySFX(TetherBall->sfxWhack, 0, 255);
+            RSDK.PlaySfx(TetherBall->sfxWhack, 0, 255);
         }
     }
 

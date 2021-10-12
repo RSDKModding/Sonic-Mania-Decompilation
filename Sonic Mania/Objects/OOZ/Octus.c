@@ -175,7 +175,7 @@ void Octus_Unknown8(void)
             shot->position.x -= 0xE0000;
             shot->velocity.x = -0x20000;
         }
-        RSDK.PlaySFX(Octus->sfxShot, false, 255);
+        RSDK.PlaySfx(Octus->sfxShot, false, 255);
     }
     else if (entity->timer <= 0) {
         entity->state = Octus_Unknown9;

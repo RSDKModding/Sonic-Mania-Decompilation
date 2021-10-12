@@ -69,13 +69,13 @@ void Zone_LateUpdate(void)
                 if (Zone->screenBoundsB2[playerID] <= Zone->deathBoundary[playerID]) {
                     if (player->position.y > Zone->deathBoundary[playerID]) {
                         player->hurtFlag                   = 2;
-                        Zone->playerBoundActiveB[playerID] = 0;
+                        Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
                 else {
                     if (player->position.y > Zone->screenBoundsB2[playerID]) {
                         player->hurtFlag                   = 2;
-                        Zone->playerBoundActiveB[playerID] = 0;
+                        Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
             }
@@ -100,7 +100,7 @@ void Zone_LateUpdate(void)
             RSDK_sceneInfo->seconds      = 59;
             RSDK_sceneInfo->milliseconds = 99;
             RSDK_sceneInfo->timeEnabled  = false;
-            RSDK.PlaySFX(Player->sfx_Hurt, 0, 255);
+            RSDK.PlaySfx(Player->sfx_Hurt, 0, 255);
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             foreach_active(Player, playerLoop)
             {
@@ -376,7 +376,7 @@ void Zone_StageLoad(void)
             Zone->screenBoundsT2[s] = Zone->screenBoundsT1[s] << 0x10;
             Zone->screenBoundsB2[s] = Zone->screenBoundsB1[s] << 0x10;
 
-            Zone->deathBoundary[s]      = Zone->screenBoundsT1[s] << 0x10;
+            Zone->deathBoundary[s]      = Zone->screenBoundsB1[s] << 0x10;
             Zone->playerBoundActiveL[s] = true;
             Zone->playerBoundActiveR[s] = true;
             Zone->playerBoundActiveT[s] = false;
@@ -542,9 +542,8 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
             EntityPlayer *playerData = (EntityPlayer *)entityData;
             EntityPlayer *player     = (EntityPlayer *)entity;
             player->shield           = playerData->shield;
-            if (player->shield && player->superState != 2 && player->shield <= 0) {
-                int id         = RSDK.GetEntityID(player);
-                Entity *shield = (Entity *)RSDK.GetEntityByID(Player->playerCount + id);
+            if (player->shield && player->superState != SUPERSTATE_SUPER && player->shield <= 0) {
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                 RSDK.ResetEntityPtr(shield, Shield->objectID, player);
             }
         }

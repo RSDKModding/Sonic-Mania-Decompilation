@@ -1139,7 +1139,7 @@ void MenuSetup_SaveSel_YPressCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->saveSelect;
     if (control->active == ACTIVE_ALWAYS && control->activeEntityID == 8) {
-        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         UIControl->inputLocked = true;
 
         UITransition_StartTransition(MenuSetup_OpenSecretsMenu, 0);
@@ -1447,7 +1447,7 @@ void MenuSetup_VS_Unknown53(void)
         else
             UITransition_StartTransition(MenuSetup_VS_OpenCompZones, 0);
 
-        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         UIControl->inputLocked = true;
     }
 }
@@ -1600,7 +1600,7 @@ void MenuSetup_VS_Unknown55(void)
             CompetitionSession_ResetOptions();
             UITransition_StartTransition(MenuSetup_VS_OpenCompetition, 0);
         }
-        RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
         UIControl->inputLocked = true;
     }
 }
@@ -1949,7 +1949,7 @@ void MenuSetup_Options_Unknown27(int status) { UIWaitSpinner_Wait2(); }
 
 void MenuSetup_Options_LaunchManual(void)
 {
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 0xFF);
+    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
     APICallback_LaunchManual();
 }
 

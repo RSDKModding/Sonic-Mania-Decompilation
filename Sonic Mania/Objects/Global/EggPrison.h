@@ -3,6 +3,15 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    EGGPRISON_NORMAL,
+    EGGPRISON_FLYING,
+    EGGPRISON_DUD,
+    EGGPRISON_RINGS,
+    EGGPRISON_TRAP,
+    EGGPRISON_ANIMALS,
+}EggPrisonTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -15,7 +24,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
+    EggPrisonTypes type;
     int timer;
     int originY;
     int buttonPos;
@@ -24,10 +33,10 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
-    Animator data3;
-    Animator data4;
+    Animator animator3;
+    Animator animator4;
 } EntityEggPrison;
 
 // Object Struct

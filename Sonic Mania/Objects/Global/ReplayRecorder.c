@@ -316,7 +316,7 @@ void ReplayRecorder_SaveReplay(void)
         LogHelpers_Print("Saving replay...");
         foreach_all(HUD, hud) { foreach_break; }
         RSDK.SetSpriteAnimation(HUD->hudMappings, 11, &hud->taData2, true, 0);
-        RSDK.PlaySFX(HUD->sfxClick, 0, 255);
+        RSDK.PlaySfx(HUD->sfxClick, 0, 255);
         EntityDialogRunner *runner = (EntityDialogRunner *)RSDK.CreateEntity(DialogRunner->objectID, DialogRunner_HandleCallback, 0, 0);
         runner->callback           = ReplayRecorder_Unknown6;
         runner->timer              = 45;
@@ -360,7 +360,7 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 a1)
             ActClear->field_14 = 0;
             foreach_all(HUD, hud) { foreach_break; }
             RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &hud->taData2, true, 0);
-            RSDK.PlaySFX(HUD->sfxStarpost, 0, 255);
+            RSDK.PlaySfx(HUD->sfxStarpost, 0, 255);
             HUD->replaySaveEnabled = 0;
         }
         else {
@@ -400,7 +400,7 @@ void ReplayRecorder_Unknown10(int status)
     else {
         foreach_all(HUD, hud) { foreach_break; }
         RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &hud->taData2, true, 0);
-        RSDK.PlaySFX(HUD->sfxStarpost, 0, 255);
+        RSDK.PlaySfx(HUD->sfxStarpost, 0, 255);
         HUD->replaySaveEnabled = 0;
     }
 }
@@ -554,8 +554,8 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[18] = OOZSetup_PlayerState_OilPool;
     ReplayRecorder->actions[19] = OOZSetup_PlayerState_OilSlide;
     ReplayRecorder->actions[20] = OOZSetup_PlayerState_OilStrip;
-    ReplayRecorder->actions[21] = StateMachine_None; // PlaneSeeSaw_Unknown4;
-    ReplayRecorder->actions[22] = StateMachine_None; // PlaneSeeSaw_Unknown5;
+    ReplayRecorder->actions[21] = PlaneSeeSaw_PlayerState_ToBG;
+    ReplayRecorder->actions[22] = PlaneSeeSaw_PlayerState_ToFG;
     ReplayRecorder->actions[23] = Player_State_Air;
     ReplayRecorder->actions[24] = Player_State_BubbleBounce;
     ReplayRecorder->actions[25] = Player_State_FlyCarried;
@@ -580,7 +580,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[44] = Player_State_Peelout;
     ReplayRecorder->actions[45] = Player_State_Roll;
     ReplayRecorder->actions[46] = Player_State_Spindash;
-    ReplayRecorder->actions[47] = Player_Unknown9;
+    ReplayRecorder->actions[47] = Player_ForceSuperTransform;
     ReplayRecorder->actions[48] = Player_State_None;
     ReplayRecorder->actions[49] = Player_State_Transform;
     ReplayRecorder->actions[50] = Player_Unknown7;

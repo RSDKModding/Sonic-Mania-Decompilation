@@ -102,7 +102,7 @@ void FlowerPod_State_Exploding(void)
     RSDK_THIS(FlowerPod);
 
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(FlowerPod->sfxExplosion, false, 255);
+        RSDK.PlaySfx(FlowerPod->sfxExplosion, false, 255);
 
         if ((Zone->timer & 4)) {
             EntityExplosion *explosion =
@@ -115,7 +115,7 @@ void FlowerPod_State_Exploding(void)
     if (++entity->timer == 30) {
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 2, &entity->animator2, true, 0);
         entity->state = 0;
-        RSDK.PlaySFX(FlowerPod->sfxTwinkle, false, 255);
+        RSDK.PlaySfx(FlowerPod->sfxTwinkle, false, 255);
         FlowerPod_SpawnSeeds();
         entity->timer = 48;
         entity->state = FlowerPod_State_Destroyed;

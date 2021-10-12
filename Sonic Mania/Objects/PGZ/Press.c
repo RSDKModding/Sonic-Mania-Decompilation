@@ -183,7 +183,7 @@ void Press_Move(void)
         {
             if (entity->state == Press_Crush && !player->sidekick) {
                 if (abs(entity->position.x - player->position.x) <= 0x600000) {
-                    RSDK.PlaySFX(Press->pressSFX, 0, 255);
+                    RSDK.PlaySfx(Press->pressSFX, 0, 255);
                     entity->state  = Press_HandleMovement;
                     entity->active = ACTIVE_NORMAL;
                 }
@@ -237,7 +237,7 @@ void Press_HandleMovement(void)
             entity->offTop    = newTop - diff;
             entity->offBottom = newBottom + diff;
         }
-        RSDK.PlaySFX(Press->impactSFX, 0, 255);
+        RSDK.PlaySfx(Press->impactSFX, 0, 255);
         entity->active = ACTIVE_BOUNDS;
         Camera_ShakeScreen(0, 0, 5);
         entity->state = Press_FinalCrush;
@@ -272,7 +272,7 @@ void Press_HandleMovement(void)
     }
     entity->topOffset -= entity->offTop;
     if (bottom && top) {
-        RSDK.PlaySFX(Press->impactSFX, 0, 255);
+        RSDK.PlaySfx(Press->impactSFX, 0, 255);
         Camera_ShakeScreen(0, 0, 3);
         entity->state      = Press_HandleCrates;
         entity->timerStart = waitTime;

@@ -160,12 +160,12 @@ void UIReplayCarousel_ProcessButtonCB(void)
             if (parent->activeEntityID != selection) {
                 parent->activeEntityID = selection;
                 UIReplayCarousel_Unknown12();
-                RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
             }
         }
         else {
             if (movedDown) {
-                RSDK.PlaySFX(UIWidgets->sfx_Bleep, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
                 entity->field_164 = id;
             }
 
@@ -467,7 +467,7 @@ void UIReplayCarousel_Unknown11(void)
     entity->state             = UIReplayCarousel_Unknown19;
     entity->processButtonCB   = StateMachine_None;
     parent->selectionDisabled = true;
-    RSDK.PlaySFX(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
 }
 
 void UIReplayCarousel_Unknown12(void)

@@ -140,7 +140,7 @@ void TwistedTubes_HandleInteractions(void)
                 player->nextAirState           = StateMachine_None;
                 player->nextGroundState        = StateMachine_None;
                 TwistedTubes->playerFlags[pID] = true;
-                RSDK.PlaySFX(TwistedTubes->sfxTravel, 0, 255);
+                RSDK.PlaySfx(TwistedTubes->sfxTravel, 0, 255);
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
                 player->playerAnimator.animationSpeed = 240;
             }

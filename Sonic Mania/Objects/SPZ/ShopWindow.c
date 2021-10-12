@@ -138,7 +138,7 @@ void ShopWindow_State_Shattered(void)
             posY += 0x100000;
         }
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
-        RSDK.PlaySFX(ShopWindow->sfxShatter, 0, 0xFF);
+        RSDK.PlaySfx(ShopWindow->sfxShatter, 0, 0xFF);
     }
 }
 

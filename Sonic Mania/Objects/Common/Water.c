@@ -56,10 +56,10 @@ void Water_StaticUpdate(void)
 
     if (Water->waterLevelVolume > 0) {
         if (!Water->playingWaterLevelSFX) {
-            Water->waterLevelChannel_L = RSDK.PlaySFX(Water->sfx_WaterLevelL, 1, 255);
+            Water->waterLevelChannel_L = RSDK.PlaySfx(Water->sfx_WaterLevelL, 1, 255);
             RSDK.SetChannelAttributes(Water->waterLevelChannel_L, 0.0, -1.0, 1.0);
 
-            Water->waterLevelChannel_R = RSDK.PlaySFX(Water->sfx_WaterLevelR, 1, 255);
+            Water->waterLevelChannel_R = RSDK.PlaySfx(Water->sfx_WaterLevelR, 1, 255);
             RSDK.SetChannelAttributes(Water->waterLevelChannel_R, 0.0, 1.0, 1.0);
 
             Water->playingWaterLevelSFX = true;
@@ -81,7 +81,7 @@ void Water_StaticUpdate(void)
             RSDK.ProcessAnimation(&Water->wakeData);
 
         if (!Water->playingSkimSFX) {
-            RSDK.PlaySFX(Water->sfx_Skim, 3570, 255);
+            RSDK.PlaySfx(Water->sfx_Skim, 3570, 255);
             Water->playingSkimSFX = true;
         }
     }
@@ -447,7 +447,7 @@ void Water_State_Palette(void)
                             else {
                                 CREATE_ENTITY(Water, intToVoid(6), player->position.x, Water->waterLevel);
                             }
-                            RSDK.PlaySFX(Water->sfx_Splash, 0, 255);
+                            RSDK.PlaySfx(Water->sfx_Splash, 0, 255);
                         }
 
                         if (player->velocity.y >= -0x40000) {
@@ -491,7 +491,7 @@ void Water_State_Palette(void)
                             else {
                                 CREATE_ENTITY(Water, intToVoid(6), player->position.x, Water->waterLevel);
                             }
-                            RSDK.PlaySFX(Water->sfx_Splash, 0, 255);
+                            RSDK.PlaySfx(Water->sfx_Splash, 0, 255);
                         }
                         player->velocity.y >>= 2;
                     }
@@ -524,7 +524,7 @@ void Water_State_Palette(void)
                             case 660:
                             case 360:
                                 if (!player->sidekick)
-                                    RSDK.PlaySFX(Water->sfx_Warning, 0, 255);
+                                    RSDK.PlaySfx(Water->sfx_Warning, 0, 255);
                                 break;
                             case 1080: Water_SpawnCountDownBubble(player, p, 5); break;
                             case 1200: Water_SpawnCountDownBubble(player, p, 4); break;
@@ -548,7 +548,7 @@ void Water_State_Palette(void)
                                 globals->gameMode == MODE_ENCORE || 
 #endif
                                 globals->gameMode == MODE_COMPETITION)
-                                RSDK.PlaySFX(Water->sfx_DrownAlert, 0, 255);
+                                RSDK.PlaySfx(Water->sfx_DrownAlert, 0, 255);
                         }
                     }
                 }
@@ -640,7 +640,7 @@ void Water_HCZBubbleBurst(EntityWater *entity, bool32 jumpedOut)
         RSDK.SetSpriteAnimation(Water->spriteIndex, 6, &entity->animator, true, 0);
         entity->velocity.x = 0;
         entity->velocity.y = 0;
-        RSDK.PlaySFX(Water->sfx_DNABurst, 0, 255);
+        RSDK.PlaySfx(Water->sfx_DNABurst, 0, 255);
 
         foreach_active(Player, player)
         {
@@ -785,7 +785,7 @@ void Water_State_Bubble(void)
                                     player->airTimer = 0;
                                     if (!player->sidekick)
                                         Music_ResumePrevTrack(TRACK_DROWNING, false);
-                                    RSDK.PlaySFX(Water->sfx_Breathe, 0, 255);
+                                    RSDK.PlaySfx(Water->sfx_Breathe, 0, 255);
                                 }
                             }
                         }
@@ -892,7 +892,7 @@ void Water_State_HCZBubble(void)
                     if (!player->sidekick)
                         Music_ResumePrevTrack(TRACK_DROWNING, false);
 
-                    RSDK.PlaySFX(Water->sfx_DNAGrab, 0, 255);
+                    RSDK.PlaySfx(Water->sfx_DNAGrab, 0, 255);
                     entity->activePlayers |= 1 << playerID;
                     entity->activePlayers2 |= 1 << playerID;
                     if (RSDK.GetEntityID(entity) >= 64) {

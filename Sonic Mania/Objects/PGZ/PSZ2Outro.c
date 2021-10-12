@@ -60,7 +60,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     Zone->playerBoundActiveR[0] = false;
     Zone->playerBoundActiveR[1] = false;
     FXRuby_SetupLayerDeformation();
-    Camera_Unknown3(3, 0, eggman->position.x - 0x600000, camera->position.y, 2);
+    Camera_SetupLerp(3, 0, eggman->position.x - 0x600000, camera->position.y, 2);
     Music_PlayTrack(TRACK_STAGE);
     return true;
 }

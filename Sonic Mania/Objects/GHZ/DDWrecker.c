@@ -226,7 +226,7 @@ void DDWrecker_State_Assemble(void)
         entity->arcOffset  = 2048;
         entity->timer2     = 128;
         entity->state      = DDWrecker_State_Unknown2;
-        RSDK.PlaySFX(DDWrecker->sfx_Assemble, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_Assemble, 0, 255);
     }
 }
 void DDWrecker_State_Unknown2(void)
@@ -289,7 +289,7 @@ void DDWrecker_State_Unknown3(void)
             entityA->lateState = DDWrecker_LateState_Unknown2;
             entityB->lateState = DDWrecker_LateState_Unknown1;
         }
-        RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_Sharp, 0, 255);
         entity->state = StateMachine_None;
     }
 }
@@ -325,7 +325,7 @@ void DDWrecker_State_Unknown4(void)
             EntityDDWrecker *bodyB = entity->bodyB;
             bodyA->lateState       = DDWrecker_LateState_Unknown2;
             bodyB->lateState       = DDWrecker_LateState_Unknown2;
-            RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfx_Sharp, 0, 255);
         }
         else {
             if (entity->velocity.x)
@@ -347,7 +347,7 @@ void DDWrecker_State_Unknown4(void)
                     bodyB->lateState = DDWrecker_LateState_Unknown2;
                 else
                     bodyB->lateState = DDWrecker_LateState_Unknown1;
-                RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
+                RSDK.PlaySfx(DDWrecker->sfx_Sharp, 0, 255);
             }
         }
     }
@@ -384,7 +384,7 @@ void DDWrecker_State_Unknown5(void)
             EntityDDWrecker *bodyB = entity->bodyB;
             bodyA->lateState       = DDWrecker_LateState_Unknown2;
             bodyB->lateState       = DDWrecker_LateState_Unknown2;
-            RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfx_Sharp, 0, 255);
         }
         else {
             if (entity->velocity.x)
@@ -406,7 +406,7 @@ void DDWrecker_State_Unknown5(void)
                     bodyB->lateState = DDWrecker_LateState_Unknown2;
                 else
                     bodyB->lateState = DDWrecker_LateState_Unknown1;
-                RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
+                RSDK.PlaySfx(DDWrecker->sfx_Sharp, 0, 255);
             }
         }
     }
@@ -455,12 +455,12 @@ void DDWrecker_State_Unknown6(void)
         }
         else {
             entity->state = DDWrecker_State_Unknown7;
-            RSDK.PlaySFX(DDWrecker->sfx_Assemble, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfx_Assemble, 0, 255);
         }
     }
     else if (entity->timer2 >= 144) {
         entity->state = DDWrecker_State_Unknown7;
-        RSDK.PlaySFX(DDWrecker->sfx_Assemble, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_Assemble, 0, 255);
     }
     else {
         entity->timer2++;
@@ -588,14 +588,14 @@ void DDWrecker_State_Unknown10(void)
     }
     else {
         RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 1, &entity->animator, true, 0);
-        RSDK.PlaySFX(DDWrecker->sfx_Sharp, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_Sharp, 0, 255);
     }
 
     if (++entity->timer == 30) {
         entity->timer      = 0;
         entity->velocity.y = -0x20000;
         entity->state      = DDWrecker_State_Unknown11;
-        RSDK.PlaySFX(DDWrecker->sfx_Drop, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_Drop, 0, 255);
     }
 }
 void DDWrecker_State_Unknown11(void)
@@ -609,7 +609,7 @@ void DDWrecker_State_Unknown11(void)
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
             ++entity->timer;
             Camera_ShakeScreen(0, 0, 3);
-            RSDK.PlaySFX(DDWrecker->sfx_Impact, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfx_Impact, 0, 255);
             entity->velocity.y = (entity->velocity.y >> 3) - entity->velocity.y;
             if (entity->timer - 1) {
                 if (!(entity->timer - 3)) {
@@ -653,7 +653,7 @@ void DDWrecker_LateState_Unknown1(void)
     {
         if (!entity->invincible && Player_CheckBadnikHit(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
             DDWrecker_Hit();
-            RSDK.PlaySFX(DDWrecker->sfx_BossHit, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfx_BossHit, 0, 255);
         }
     }
 
@@ -689,7 +689,7 @@ void DDWrecker_LateState_Unknown2(void)
             if (player->invincibleTimer || player->blinkTimer > 0 || entity->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, entity)) {
                     DDWrecker_Hit();
-                    RSDK.PlaySFX(DDWrecker->sfx_BossHit, 0, 255);
+                    RSDK.PlaySfx(DDWrecker->sfx_BossHit, 0, 255);
                 }
             }
             else {
@@ -729,7 +729,7 @@ void DDWrecker_LateState_Unknown3(void)
             if (player->invincibleTimer || player->blinkTimer > 0 || entity->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, entity)) {
                     DDWrecker_Hit();
-                    RSDK.PlaySFX(DDWrecker->sfx_BossHit, 0, 255);
+                    RSDK.PlaySfx(DDWrecker->sfx_BossHit, 0, 255);
                 }
             }
             else {
@@ -783,7 +783,7 @@ void DDWrecker_Hit(void)
     }
     else {
         entity->invincible = 48;
-        RSDK.PlaySFX(DDWrecker->sfx_BossHit, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_BossHit, 0, 255);
     }
 }
 void DDWrecker_Spin(void)
@@ -846,7 +846,7 @@ void DDWrecker_State_Die(void)
 {
     RSDK_THIS(DDWrecker);
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySFX(DDWrecker->sfx_Explosion, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfx_Explosion, 0, 255);
         if (Zone->timer & 4) {
             Entity *explosion = RSDK.CreateEntity(Explosion->objectID, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
                                                   (RSDK.Rand(-20, 20) << 16) + entity->position.x, (RSDK.Rand(-20, 20) << 16) + entity->position.y);
@@ -879,7 +879,7 @@ void DDWrecker_State_SpawnSignpost(void)
         {
             signPost->position.x = entity->position.x;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySFX(SignPost->sfx_Twinkle, 0, 255);
+            RSDK.PlaySfx(SignPost->sfx_Twinkle, 0, 255);
         }
         destroyEntity(entity);
     }

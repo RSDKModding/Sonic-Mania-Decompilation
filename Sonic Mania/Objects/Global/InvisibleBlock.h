@@ -15,8 +15,8 @@ typedef struct {
     RSDK_ENTITY
     byte width;
     byte height;
-    int planeFilter;
-    int noCrush;
+    PlaneFilterTypes planeFilter;
+    bool32 noCrush;
     bool32 activeNormal;
     bool32 timeAttackOnly;
     bool32 noChibi;

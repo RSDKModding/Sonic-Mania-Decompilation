@@ -78,7 +78,7 @@ void SwingRope_Update(void)
                 player->groundVel  = 0;
                 player->position.x = -0x800 * RSDK.Sin512(entity->angle) + rotateX;
                 player->position.y = rotateY - ((playerHitbox->top + 2) << 16);
-                RSDK.PlaySFX(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
             }
         }
     }

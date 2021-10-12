@@ -31,7 +31,7 @@ void AIZRockPile_Update(void)
                                 flag |= shield->animator.animationID == 2;
                             }
 
-                            flag |= player->characterID == ID_SONIC && player->superState == 2;
+                            flag |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;
                             if (!player->sidekick && (flag || (player->characterID == ID_KNUCKLES))) {
                                 player->position.x = playerX;
                                 player->position.y = playerY;
@@ -141,7 +141,7 @@ void AIZRockPile_SpawnRocks(int *speeds)
         debris->gravity       = 0x1800;
     }
 
-    RSDK.PlaySFX(AIZRockPile->sfx_Break, 0, 255);
+    RSDK.PlaySfx(AIZRockPile->sfx_Break, 0, 255);
     RSDK.ResetEntityPtr(entity, 0, 0);
 }
 

@@ -102,7 +102,7 @@ void TitleSetup_CheckCheatCode(void)
         && TitleSetup->cheatCode[4] == 1 && TitleSetup->cheatCode[5] == 1 && TitleSetup->cheatCode[6] == 1 && TitleSetup->cheatCode[7] == 1) {
 #if RETRO_USE_PLUS
         if (!globals->superSecret) {
-            RSDK.PlaySFX(TitleSetup->sfx_Ring, 0, 255);
+            RSDK.PlaySfx(TitleSetup->sfx_Ring, 0, 255);
             globals->superSecret = true;
         }
 #endif
@@ -255,7 +255,7 @@ void TitleSetup_SetupLogo_Plus(void)
                     titleLogo->velocity.y = -0x30000;
                     titleLogo->timer      = 2;
                     titleLogo->state      = TitleLogo_Unknown4;
-                    RSDK.PlaySFX(TitleLogo->sfx_Plus, 0, 255);
+                    RSDK.PlaySfx(TitleLogo->sfx_Plus, 0, 255);
                     break;
                 case 6: titleLogo->position.y += 0x80000; break;
                 case 7:
@@ -289,7 +289,7 @@ void TitleSetup_Unknown10(void)
 #endif
     entity->touched = RSDK_touchMouse->count > 0;
     if (skipped2 || skipped) {
-        RSDK.PlaySFX(TitleSetup->sfx_MenuAccept, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfx_MenuAccept, 0, 255);
         entity->timer = 0;
         const char *nextScene = "Menu";
 #if RETRO_GAMEVER == VER_100

@@ -29,7 +29,7 @@ void Propeller_Update(void)
 
         if (RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, player, &entity->playerHitbox)) {
             if (!((1 << playerID) & entity->activePlayers) && flag) {
-                RSDK.PlaySFX(Propeller->sfxFan, 0, 255);
+                RSDK.PlaySfx(Propeller->sfxFan, 0, 255);
                 entity->activePlayers |= (1 << playerID);
             }
         }

@@ -137,7 +137,7 @@ void Spring_State_Vertical(void)
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
-                        RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
                     }
                 }
@@ -162,7 +162,7 @@ void Spring_State_Vertical(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (!entity->timer) {
-                    RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -206,7 +206,7 @@ void Spring_State_Horizontal(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
-                    RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -246,7 +246,7 @@ void Spring_State_Horizontal(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
-                    RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -307,7 +307,7 @@ void Spring_State_Diagonal(void)
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
-                        RSDK.PlaySFX(Spring->sfx_Spring, 0, 255);
+                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
                         entity->timer = 8;
                     }
                 }
@@ -316,9 +316,32 @@ void Spring_State_Diagonal(void)
     }
 }
 
-void Spring_EditorDraw(void) {}
+void Spring_EditorDraw(void)
+{
+    RSDK_THIS(Spring);
+    RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->animator, true, 0);
+    entity->direction = entity->flipFlag;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void Spring_EditorLoad(void) {}
+void Spring_EditorLoad(void)
+{
+    Spring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Spring, type);
+    RSDK_ENUM_VAR(SPRING_VERT_RED);
+    RSDK_ENUM_VAR(SPRING_VERT_YELLOW);
+    RSDK_ENUM_VAR(SPRING_HORIZ_RED);
+    RSDK_ENUM_VAR(SPRING_HORIZ_YELLOW);
+    RSDK_ENUM_VAR(SPRING_DIAG_RED);
+    RSDK_ENUM_VAR(SPRING_DIAG_YELLOW);
+
+    RSDK_ACTIVE_VAR(Spring, flipFlag);
+    RSDK_ENUM_VAR(FLIP_NONE);
+    RSDK_ENUM_VAR(FLIP_X);
+    RSDK_ENUM_VAR(FLIP_Y);
+    RSDK_ENUM_VAR(FLIP_XY);
+}
 
 void Spring_Serialize(void)
 {

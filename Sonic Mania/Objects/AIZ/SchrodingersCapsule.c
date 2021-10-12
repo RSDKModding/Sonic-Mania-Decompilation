@@ -193,7 +193,7 @@ void SchrodingersCapsule_Unknown4(void)
                                                  (RSDK.Rand(-24, 24) << 16) + entity->position.x, (RSDK.Rand(-24, 24) << 16) + entity->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
 
-        RSDK.PlaySFX(SchrodingersCapsule->sfxExplosion2, 0, 255);
+        RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, 0, 255);
     }
 
     if (++entity->timer == 60) {
@@ -247,7 +247,7 @@ void SchrodingersCapsule_Unknown4(void)
         RSDK.SetSpriteAnimation(buddy2->spriteIndex, ANI_HURT, &buddy2->playerAnimator, true, 0);
 
         Music_FadeOut(0.025);
-        RSDK.PlaySFX(SchrodingersCapsule->sfxExplosion3, 0, 255);
+        RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, 0, 255);
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->position.x   = entity->position.x;

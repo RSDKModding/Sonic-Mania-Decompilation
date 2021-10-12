@@ -112,7 +112,7 @@ void AIZKingClaw_Unknown2(void)
 {
     RSDK_THIS(AIZKingClaw);
     if (!entity->timer)
-        RSDK.PlaySFX(AIZKingClaw->sfxClack, false, 0);
+        RSDK.PlaySfx(AIZKingClaw->sfxClack, false, 0);
     ++entity->timer;
     if (!(entity->timer & 3)) {
         if (entity->data4.frameID >= 3) {
@@ -122,7 +122,7 @@ void AIZKingClaw_Unknown2(void)
             entity->data3.frameID++;
             entity->data4.frameID++;
             if (entity->data4.frameID == 3)
-                RSDK.PlaySFX(AIZKingClaw->sfxWalkerLegs, false, 0);
+                RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, false, 0);
         }
     }
 }

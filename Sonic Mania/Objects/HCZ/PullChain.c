@@ -45,9 +45,9 @@ void PullChain_Update(void)
                             && !entity->timer[plrID]) {
                             entity->activePlayers1 |= (1 << plrID);
                             entity->activePlayers2 |= (1 << plrID);
-                            RSDK.PlaySFX(Player->sfx_Grab, 0, 255);
+                            RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
                             if (!player->sidekick)
-                                RSDK.PlaySFX(PullChain->sfxPullChain, 0, 255);
+                                RSDK.PlaySfx(PullChain->sfxPullChain, 0, 255);
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 6);
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
@@ -71,7 +71,7 @@ void PullChain_Update(void)
 #if RETRO_GAMEVER == VER_100
                 if (!player->sidekick && PullChain_HandleDunkeyCode(player)) {
                     HandLauncher->dunkeyMode = true;
-                    RSDK.PlaySFX(Ring->sfx_Ring, false, 0xFF);
+                    RSDK.PlaySfx(Ring->sfx_Ring, false, 0xFF);
                 }
 #endif
                 if (player->jumpPress || player->playerAnimator.animationID != ANI_HANG || player->velocity.x || player->velocity.y) {

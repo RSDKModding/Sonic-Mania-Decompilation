@@ -29,7 +29,7 @@ void Smog_Update(void)
         ++entity->timer;
         foreach_active(Player, player)
         {
-            if (player->superState != 2) {
+            if (player->superState != SUPERSTATE_SUPER) {
                 foreach_all(HUD, hud)
                 {
                     if (hud)

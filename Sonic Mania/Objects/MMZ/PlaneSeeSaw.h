@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    ushort aniFrames;
+    ushort sfxSpring;
+    ushort sfxFlipper;
 } ObjectPlaneSeeSaw;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int seeSawPos;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntityPlaneSeeSaw;
 
 // Object Struct
@@ -28,6 +37,10 @@ void PlaneSeeSaw_EditorLoad(void);
 void PlaneSeeSaw_Serialize(void);
 
 // Extra Entity Functions
-
+void PlaneSeeSaw_State_WaitForPlayer(void);
+void PlaneSeeSaw_State_PlayerPushDown(void);
+void PlaneSeeSaw_State_Launch(void);
+void PlaneSeeSaw_PlayerState_ToBG(void);
+void PlaneSeeSaw_PlayerState_ToFG(void);
 
 #endif //!OBJ_PLANESEESAW_H

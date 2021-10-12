@@ -126,7 +126,7 @@ void SpecialRing_StartWarp(void)
     RSDK_THIS(SpecialRing);
     if (++entity->warpTimer == 30) {
         SaveGame_SaveGameState();
-        RSDK.PlaySFX(SpecialRing->sfx_SpecialWarp, 0, 254);
+        RSDK.PlaySfx(SpecialRing->sfx_SpecialWarp, 0, 254);
         destroyEntity(entity);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         saveRAM->storedStageID  = RSDK_sceneInfo->listPos;
@@ -230,7 +230,7 @@ void SpecialRing_State_Normal(void)
                             globals->specialRingID = entity->id;
                         saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + entity->id);
                     }
-                    RSDK.PlaySFX(SpecialRing->sfx_SpecialRing, 0, 254);
+                    RSDK.PlaySfx(SpecialRing->sfx_SpecialRing, 0, 254);
                 }
             }
         }

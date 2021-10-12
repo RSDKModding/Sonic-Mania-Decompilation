@@ -106,7 +106,7 @@ void FlameSpring_State_Unknown1(void)
                         player->velocity.y = entity->velocity.y;
                         if (player->underwater)
                             player->velocity.y >>= 1;
-                        RSDK.PlaySFX(FlameSpring->sfxSpring, false, 255);
+                        RSDK.PlaySfx(FlameSpring->sfxSpring, false, 255);
                     }
                 }
             }
@@ -117,7 +117,7 @@ void FlameSpring_State_Unknown1(void)
     }
     else {
         if (!(Zone->timer & 7)) {
-            RSDK.PlaySFX(FlameSpring->sfxFlame, false, 255);
+            RSDK.PlaySfx(FlameSpring->sfxFlame, false, 255);
         }
 
         int timer = Zone->timer + entity->offset;

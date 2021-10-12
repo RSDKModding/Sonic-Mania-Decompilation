@@ -169,7 +169,7 @@ void Sweep_CheckShoot(void)
                     projectile->velocity.x = 0x30000;
                 projectile->direction = entity->direction;
                 projectile->active    = ACTIVE_NORMAL;
-                RSDK.PlaySFX(Sweep->sfxPon, 0, 255);
+                RSDK.PlaySfx(Sweep->sfxPon, 0, 255);
                 entity->hasShot    = true;
                 entity->stateStore = entity->state;
                 entity->state      = Sweep_Unknown9;

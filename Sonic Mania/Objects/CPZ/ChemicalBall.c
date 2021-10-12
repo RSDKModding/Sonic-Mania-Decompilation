@@ -103,7 +103,7 @@ void ChemicalBall_MoveType0(void)
     entity->startPos.x += entity->position.x;
     entity->startPos.y += entity->position.y;
     if (!timer || timer == entity->interval)
-        RSDK.PlaySFX(ChemicalBall->sfxBloop, 0, 255);
+        RSDK.PlaySfx(ChemicalBall->sfxBloop, 0, 255);
     ChemicalBall_CheckHit();
 }
 
@@ -130,7 +130,7 @@ void ChemicalBall_MoveType1(void)
     entity->startPos.x += entity->position.x;
     entity->startPos.y += entity->position.y;
     if (timer == 27 || timer == 48)
-        RSDK.PlaySFX(ChemicalBall->sfxBloop, 0, 255);
+        RSDK.PlaySfx(ChemicalBall->sfxBloop, 0, 255);
     ChemicalBall_CheckHit();
 }
 

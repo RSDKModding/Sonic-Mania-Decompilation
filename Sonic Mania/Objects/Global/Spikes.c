@@ -5,49 +5,49 @@ ObjectSpikes *Spikes;
 void Spikes_Update(void)
 {
     RSDK_THIS(Spikes);
-    switch (entity->dword6C) {
+    switch (entity->stateMove) {
         case 1:
             if (entity->stagger << 6 == (Zone->timer & 0x40)) {
                 if ((Zone->timer & 0x3F) == entity->timer) {
-                    entity->dword6C++;
+                    entity->stateMove++;
                     if (entity->activeScreens == 1)
-                        RSDK.PlaySFX(Spikes->sfx_Move, 0, 255);
+                        RSDK.PlaySfx(Spikes->sfx_Move, 0, 255);
                 }
             }
             break;
         case 2:
-            if (entity->dword70 >= 0x200000) {
-                entity->dword6C++;
+            if (entity->moveOffset >= 0x200000) {
+                entity->stateMove++;
             }
             else {
-                entity->dword70 += 0x80000;
+                entity->moveOffset += 0x80000;
                 entity->position.x += entity->velocity.x;
                 entity->position.y += entity->velocity.y;
             }
             break;
         case 3:
             if ((Zone->timer & 0x3F) == entity->timer) {
-                entity->dword6C++;
+                entity->stateMove++;
                 if (entity->activeScreens == 1)
-                    RSDK.PlaySFX(Spikes->sfx_Move, 0, 255);
+                    RSDK.PlaySfx(Spikes->sfx_Move, 0, 255);
             }
             break;
         case 4:
-            if (entity->dword70 <= 0) {
-                entity->dword6C = 1;
+            if (entity->moveOffset <= 0) {
+                entity->stateMove = 1;
             }
             else {
-                entity->dword70 -= 0x80000;
+                entity->moveOffset -= 0x80000;
                 entity->position.x -= entity->velocity.x;
                 entity->position.y -= entity->velocity.y;
             }
             break;
         case 5:
-            if (entity->dword70 >= 0x280000) {
-                entity->dword6C = 6;
+            if (entity->moveOffset >= 0x280000) {
+                entity->stateMove = 6;
             }
             else {
-                entity->dword70 += 0x80000;
+                entity->moveOffset += 0x80000;
                 entity->position.x -= entity->velocity.x;
                 entity->position.y -= entity->velocity.y;
             }
@@ -57,7 +57,7 @@ void Spikes_Update(void)
 
     entity->position.x -= entity->offset.x;
     entity->position.y -= entity->offset.y;
-    if (entity->dword6C != 1) {
+    if (entity->stateMove != 1) {
         foreach_active(Player, player)
         {
             if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
@@ -68,9 +68,9 @@ void Spikes_Update(void)
 
                     byte side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     if (side) {
-                        if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !entity->field_7E) {
+                        if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !entity->shatterTimer) {
                             Ice_ShatterGenerator(16,  16,  8,  0,  0,  0);
-                            entity->field_7E = 15;
+                            entity->shatterTimer = 15;
                         }
 
                         bool32 flag = false;
@@ -81,7 +81,7 @@ void Spikes_Update(void)
                         else {
                             if (side == 1) {
                                 player->collisionFlagV |= 1;
-                                if (entity->dword70 == 0x80000)
+                                if (entity->moveOffset == 0x80000)
                                     player->onGround = false;
                             }
                             flag = false;
@@ -103,7 +103,7 @@ void Spikes_Update(void)
                         switch (side) {
                             case 1:
                                 player->collisionFlagV |= 1;
-                                if (player->velocity.y >= 0 || entity->dword6C == 2) {
+                                if (player->velocity.y >= 0 || entity->stateMove == 2) {
                                     player->position.x += entity->offset.x;
                                     player->position.y += entity->offset.y;
                                     if (side == entity->type)
@@ -112,21 +112,21 @@ void Spikes_Update(void)
                                 break;
                             case 2:
                                 player->collisionFlagH |= 1;
-                                if (player->velocity.x >= 0 || entity->dword6C == 2) {
+                                if (player->velocity.x >= 0 || entity->stateMove == 2) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case 3:
                                 player->collisionFlagH |= 2;
-                                if (player->velocity.x <= 0 || entity->dword6C == 2) {
+                                if (player->velocity.x <= 0 || entity->stateMove == 2) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case 4:
                                 player->collisionFlagV |= 2;
-                                if (player->velocity.y <= 0 || entity->dword6C == 2) {
+                                if (player->velocity.y <= 0 || entity->stateMove == 2) {
                                     if (side == entity->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
@@ -135,7 +135,7 @@ void Spikes_Update(void)
                         }
 
                         if (flag) {
-                            RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
+                            RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
                             Ice_ShatterGenerator(16,  16,  16,  0,  0,  0);
                             destroyEntity(entity);
                         }
@@ -235,9 +235,9 @@ void Spikes_Update(void)
             }
             entity->timer2 = RSDK.Rand(0, 240) + 30;
         }
-        if (entity->field_7E > 0) {
-            entity->field_7E--;
-            if (!entity->field_7E)
+        if (entity->shatterTimer > 0) {
+            entity->shatterTimer--;
+            if (!entity->shatterTimer)
                 Spikes_Unknown1(0, 0);
         }
     }
@@ -313,7 +313,7 @@ void Spikes_Create(void *data)
         if (entity->moving) {
             entity->position.x -= 4 * entity->velocity.x;
             entity->position.y -= 4 * entity->velocity.y;
-            entity->dword6C = 1;
+            entity->stateMove = 1;
         }
     }
 }
@@ -352,32 +352,32 @@ void Spikes_StateDraw_Global(void)
         case 4:
             drawPos.x = 0x100000 - (entity->count << 19) + entity->position.x;
             for (; cnt; --cnt) {
-                RSDK.DrawSprite(&Spikes->vData, &drawPos, 0);
+                RSDK.DrawSprite(&Spikes->vData, &drawPos, false);
                 drawPos.x += 0x200000;
             }
 
             if (entity->count & 1) {
                 drawPos.x -= 0x100000;
-                RSDK.DrawSprite(&Spikes->vData, &drawPos, 0);
+                RSDK.DrawSprite(&Spikes->vData, &drawPos, false);
             }
             break;
         case 2:
         case 3:
             drawPos.y = 0x100000 - (entity->count << 19) + entity->position.y;
             for (; cnt; --cnt) {
-                RSDK.DrawSprite(&Spikes->hData, &drawPos, 0);
+                RSDK.DrawSprite(&Spikes->hData, &drawPos, false);
                 drawPos.y += 0x200000;
             }
 
             if (entity->count & 1) {
                 drawPos.y -= 0x100000;
-                RSDK.DrawSprite(&Spikes->hData, &drawPos, 0);
+                RSDK.DrawSprite(&Spikes->hData, &drawPos, false);
             }
             break;
         default: break;
     }
     entity->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&entity->animator, 0, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
     entity->inkEffect = INK_NONE;
 }
 
@@ -421,7 +421,7 @@ void Spikes_StateDraw_Stage(void)
 void Spikes_Unknown1(int velX, int velY)
 {
     RSDK_THIS(Spikes);
-    RSDK.PlaySFX(Ice->sfxWindowShatter, 0, 255);
+    RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
     Ice_ShatterGenerator(16,  16,  16,  velX,  velY,  0);
     destroyEntity(entity);
 }
@@ -484,14 +484,14 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
             player->jumpAbilityTimer = 0;
             if (player->state == Player_State_Hit) {
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
+                RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
             }
             else {
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, false, 0);
-                RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
+                RSDK.PlaySfx(Player->sfx_MightyUnspin, 0, 255);
             }
             if (player->playerAnimator.animationID != ANI_FLY)
-                RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+                RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
             if (player->underwater) {
                 player->velocity.x >>= 1;
                 player->velocity.y >>= 1;
@@ -511,14 +511,14 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
                 player->jumpAbilityTimer = 0;
                 if (player->state == Player_State_Hit) {
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                    RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
+                    RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
                 }
                 else {
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, false, 0);
-                    RSDK.PlaySFX(Player->sfx_MightyUnspin, 0, 255);
+                    RSDK.PlaySfx(Player->sfx_MightyUnspin, 0, 255);
                 }
                 if (player->playerAnimator.animationID != ANI_FLY)
-                    RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+                    RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
                 if (player->underwater) {
                     player->velocity.x >>= 1;
                     player->velocity.y >>= 1;
@@ -531,7 +531,7 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
                     player->onGround         = false;
                     player->jumpAbility      = 0;
                     player->jumpAbilityTimer = 0;
-                    RSDK.PlaySFX(Player->sfx_PimPom, 0, 255);
+                    RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
                 }
 
                 player->groundedStore   = true;
@@ -551,28 +551,38 @@ void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
     Player_Hit(player);
     if (player->hurtFlag == 1) {
         player->hurtFlag = 2;
-        RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
+        RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
     }
     else if (player->state == Player_State_Hit && (player->shield || player->sidekick)) {
         RSDK.StopSFX(Player->sfx_Hurt);
-        RSDK.PlaySFX(Spikes->sfx_Spike, 0, 255);
+        RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
     }
 }
 
 void Spikes_EditorDraw(void) { 
     RSDK_THIS(Spikes);
+
     switch ((entity->type >> 1) & 1) {
-        case 0: 
-            entity->direction = FLIP_Y * (entity->type & 1);
-            break;
-        case 1:
-            entity->direction = entity->type & 1;
-            break;
+        case 0: entity->direction = FLIP_Y * (entity->type & 1); break;
+        case 1: entity->direction = entity->type & 1; break;
     }
+
     Spikes_Draw(); 
 }
 
-void Spikes_EditorLoad(void) { Spikes_StageLoad(); }
+void Spikes_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(Spikes, type);
+    RSDK_ENUM_VAR(SPIKES_UP);
+    RSDK_ENUM_VAR(SPIKES_DOWN);
+    RSDK_ENUM_VAR(SPIKES_LEFT);
+    RSDK_ENUM_VAR(SPIKES_RIGHT);
+
+    RSDK_ACTIVE_VAR(Spikes, planeFilter);
+    RSDK_ENUM_VAR(PLANEFILTER_NONE);
+    RSDK_ENUM_VAR(PLANEFILTER_A);
+    RSDK_ENUM_VAR(PLANEFILTER_B);
+}
 
 void Spikes_Serialize(void)
 {

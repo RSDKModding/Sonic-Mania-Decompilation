@@ -51,7 +51,7 @@ void Launcher_Unknown1(void)
                     entity->velocity.x = -0x10000;
                 entity->field_CC = 12;
                 entity->field_D0 = 4;
-                RSDK.PlaySFX(Launcher->sfxLaunch, false, 255);
+                RSDK.PlaySfx(Launcher->sfxLaunch, false, 255);
                 entity->state = Launcher_Unknown3;
             }
 

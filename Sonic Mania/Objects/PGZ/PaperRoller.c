@@ -41,8 +41,8 @@ void PaperRoller_StaticUpdate(void) {}
 
 void PaperRoller_Draw(void)
 {
-    PaperRoller_Unknown2();
-    PaperRoller_Unknown3();
+    PaperRoller_DrawPaperLines();
+    PaperRoller_DrawRollers();
 }
 
 void PaperRoller_Create(void *data)
@@ -91,7 +91,7 @@ void PaperRoller_StageLoad(void)
     PaperRoller->sfxPaper = RSDK.GetSFX("PSZ/Paper.wav");
 }
 
-void PaperRoller_Unknown1(uint colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4)
+void PaperRoller_DrawLineDeform(uint colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4)
 {
     RSDK_THIS(PaperRoller);
 
@@ -189,7 +189,7 @@ void PaperRoller_Unknown1(uint colour, int len, int posX1, int posY1, int posX2,
     }
 }
 
-void PaperRoller_Unknown2(void)
+void PaperRoller_DrawPaperLines(void)
 {
     RSDK_THIS(PaperRoller);
 
@@ -209,8 +209,8 @@ void PaperRoller_Unknown2(void)
     int altPosX2 = x1 + 0x1800 * RSDK.Cos256(entity->angle + 64);
     int altPosY2 = y1 + 0x1800 * RSDK.Sin256(entity->angle + 64);
 
-    PaperRoller_Unknown1(0x000000, 0, posX1, posY1, posX2, posY2, 0, 0, entity->field_8C.x, entity->field_8C.y);
-    PaperRoller_Unknown1(0x000000, len, altPosX1, altPosY1, altPosX2, altPosY2, 0, 0, entity->field_94.x, entity->field_94.y);
+    PaperRoller_DrawLineDeform(0x000000, 0, posX1, posY1, posX2, posY2, 0, 0, entity->field_8C.x, entity->field_8C.y);
+    PaperRoller_DrawLineDeform(0x000000, len, altPosX1, altPosY1, altPosX2, altPosY2, 0, 0, entity->field_94.x, entity->field_94.y);
 
     int ang = entity->angle + 32;
     if (ang < 0)
@@ -235,14 +235,14 @@ void PaperRoller_Unknown2(void)
             otherPosX2 = -0x10000;
             break;
     }
-    PaperRoller_Unknown1(0x000000, 0, posX1, posY1, posX2, posY2, otherPosX1, otherPosY1, entity->field_8C.x, entity->field_8C.y);
-    PaperRoller_Unknown1(0x000000, len, altPosX1, altPosY1, altPosX2, altPosY2, otherPosX2, otherPosY2, entity->field_94.x, entity->field_94.y);
-    PaperRoller_Unknown1(0xD0B898, 0, posX1, posY1, posX2, posY2, 2 * otherPosX1, 2 * otherPosY1, entity->field_8C.x, entity->field_8C.y);
-    PaperRoller_Unknown1(0xD0B898, len, altPosX1, altPosY1, altPosX2, altPosY2, 2 * otherPosX2, 2 * otherPosY2, entity->field_94.x,
+    PaperRoller_DrawLineDeform(0x000000, 0, posX1, posY1, posX2, posY2, otherPosX1, otherPosY1, entity->field_8C.x, entity->field_8C.y);
+    PaperRoller_DrawLineDeform(0x000000, len, altPosX1, altPosY1, altPosX2, altPosY2, otherPosX2, otherPosY2, entity->field_94.x, entity->field_94.y);
+    PaperRoller_DrawLineDeform(0xD0B898, 0, posX1, posY1, posX2, posY2, 2 * otherPosX1, 2 * otherPosY1, entity->field_8C.x, entity->field_8C.y);
+    PaperRoller_DrawLineDeform(0xD0B898, len, altPosX1, altPosY1, altPosX2, altPosY2, 2 * otherPosX2, 2 * otherPosY2, entity->field_94.x,
                          entity->field_94.y);
 }
 
-void PaperRoller_Unknown3(void)
+void PaperRoller_DrawRollers(void)
 {
     RSDK_THIS(PaperRoller);
     Vector2 drawPos;
@@ -285,7 +285,7 @@ void PaperRoller_Unknown4(void)
             int distX = abs(entity->position.x - player->position.x);
             int distY = abs(entity->position.y - player->position.y);
             if (MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) <= 40 && !entity->playerTimer[playerID]) {
-                RSDK.PlaySFX(Player->sfx_Release, false, 255);
+                RSDK.PlaySfx(Player->sfx_Release, false, 255);
                 int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
 
                 int ang = 0;
@@ -386,7 +386,7 @@ void PaperRoller_Unknown5(void)
                     player->tileCollisions   = true;
                     player->jumpAbility      = 0;
                     player->jumpAbilityTimer = 0;
-                    RSDK.PlaySFX(PaperRoller->sfxPaper, false, 255);
+                    RSDK.PlaySfx(PaperRoller->sfxPaper, false, 255);
                     valY = 0x100000;
                 }
 
@@ -441,7 +441,7 @@ void PaperRoller_Unknown5(void)
                     player->tileCollisions   = true;
                     player->jumpAbility      = 0;
                     player->jumpAbilityTimer = 0;
-                    RSDK.PlaySFX(PaperRoller->sfxPaper, false, 255);
+                    RSDK.PlaySfx(PaperRoller->sfxPaper, false, 255);
                     valY = -0x100000;
                 }
 

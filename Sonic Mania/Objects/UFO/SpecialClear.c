@@ -435,11 +435,11 @@ void SpecialClear_TallyScore(void)
             entity->state = SpecialClear_Unknown9;
         else
             entity->state = SpecialClear_Unknown10;
-        RSDK.PlaySFX(SpecialClear->sfx_ScoreTotal, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfx_ScoreTotal, 0, 255);
     }
     else if (++entity->timer == 2) {
         entity->timer = 0;
-        RSDK.PlaySFX(SpecialClear->sfx_ScoreAdd, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfx_ScoreAdd, 0, 255);
     }
 }
 
@@ -542,7 +542,7 @@ void SpecialClear_Unknown7(void)
         entity->timer = 0;
         entity->state = SpecialClear_TallyScore;
         if (entity->finishType)
-            RSDK.PlaySFX(SpecialClear->sfx_Emerald, 0, 255);
+            RSDK.PlaySfx(SpecialClear->sfx_Emerald, 0, 255);
     }
     SpecialClear_HandlePositions();
 }
@@ -552,7 +552,7 @@ void SpecialClear_Unknown9(void)
     RSDK_THIS(SpecialClear);
 
     if (++entity->timer == 120) {
-        RSDK.PlaySFX(SpecialClear->sfx_Continue, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfx_Continue, 0, 255);
 
         if (globals->continues < 25)
             globals->continues++;
@@ -581,7 +581,7 @@ void SpecialClear_Unknown9(void)
         else {
             entity->timer = 0;
             entity->flag  = 1;
-            RSDK.PlaySFX(SpecialClear->sfx_SpecialWarp, 0, 255);
+            RSDK.PlaySfx(SpecialClear->sfx_SpecialWarp, 0, 255);
             entity->state = SpecialClear_Unknown15;
         }
     }
@@ -601,7 +601,7 @@ void SpecialClear_Unknown10(void)
         else {
             entity->timer = 0;
             entity->flag  = 1;
-            RSDK.PlaySFX(SpecialClear->sfx_SpecialWarp, 0, 255);
+            RSDK.PlaySfx(SpecialClear->sfx_SpecialWarp, 0, 255);
             entity->state = SpecialClear_Unknown15;
         }
     }
@@ -627,7 +627,7 @@ void SpecialClear_Unknown12(void)
         entity->positions[0].x -= 0x180000;
 
     if (entity->positions[1].x >= 0) {
-        RSDK.PlaySFX(SpecialClear->sfx_Event, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfx_Event, 0, 255);
         entity->state = SpecialClear_Unknown13;
     }
     else {
@@ -641,7 +641,7 @@ void SpecialClear_Unknown13(void)
     if (++entity->timer == 160) {
         entity->timer = 0;
         entity->flag  = true;
-        RSDK.PlaySFX(SpecialClear->sfx_SpecialWarp, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfx_SpecialWarp, 0, 255);
         entity->state = SpecialClear_Unknown15;
     }
 }

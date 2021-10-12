@@ -110,7 +110,7 @@ void ZipLine_Update(void)
                         player->state           = Player_State_None;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
-                        RSDK.PlaySFX(Player->sfx_Grab, 0, 0xFF);
+                        RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
                         entity->grabDelay[pid] = 15;
                         entity->active         = ACTIVE_NORMAL;
                     }
@@ -156,7 +156,7 @@ void ZipLine_Update(void)
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySFX(Player->sfx_Grab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
                                     entity->grabDelay[pid] = 15;
                                     entity->active         = ACTIVE_NORMAL;
                                 }
@@ -190,7 +190,7 @@ void ZipLine_Update(void)
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySFX(Player->sfx_Grab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
                                     entity->grabDelay[pid] = 15;
                                     entity->active         = ACTIVE_NORMAL;
                                 }
@@ -218,7 +218,7 @@ void ZipLine_Update(void)
                                         player->state           = Player_State_None;
                                         player->nextAirState    = StateMachine_None;
                                         player->nextGroundState = StateMachine_None;
-                                        RSDK.PlaySFX(Player->sfx_Grab, 0, 0xFF);
+                                        RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
                                         entity->grabDelay[pid] = 15;
                                         entity->active         = ACTIVE_NORMAL;
                                     }
@@ -242,7 +242,7 @@ void ZipLine_Update(void)
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySFX(Player->sfx_Grab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
                                     entity->grabDelay[pid] = 15;
                                     entity->active         = ACTIVE_NORMAL;
                                 }

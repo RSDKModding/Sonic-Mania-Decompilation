@@ -16,7 +16,7 @@ void HPZEmerald_Update(void)
         //    if (*(_WORD *)(heavyKing + 144) != 5 && !*(_DWORD *)(heavyKing + 72)
         //        && RSDK.CheckObjectCollisionPlatform(entity, entity->hitbox, heavyKing, &HeavyKing[18], 1) == 1) {
         //        Camera_ShakeScreen(0, 0, 3);
-        //        RSDK.PlaySFX(*(unsigned __int16 *)&HeavyKing[29].priority, 0, 255);
+        //        RSDK.PlaySfx(*(unsigned __int16 *)&HeavyKing[29].priority, 0, 255);
         //    }
         //}
     }
