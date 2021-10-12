@@ -828,6 +828,22 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Player_CheckRaySwooping);
 #endif
 
+        ADD_PUBLIC_FUNC(Player_ChangePhysicsState);
+        ADD_PUBLIC_FUNC(Player_HandleGroundMovement);
+        ADD_PUBLIC_FUNC(Player_HandleGroundRotation);
+        ADD_PUBLIC_FUNC(Player_HandleAirMovement);
+        ADD_PUBLIC_FUNC(Player_HandleAirFriction);
+        ADD_PUBLIC_FUNC(Player_StartJump);
+        ADD_PUBLIC_FUNC(Player_StartRoll);
+        ADD_PUBLIC_FUNC(Player_SwapMainPlayer);
+        ADD_PUBLIC_FUNC(Player_StartPeelout);
+        ADD_PUBLIC_FUNC(Player_HandleRollDeceleration);
+        ADD_PUBLIC_FUNC(Player_Hit);
+        ADD_PUBLIC_FUNC(Player_CheckValidState);
+        ADD_PUBLIC_FUNC(Player_CheckStartFlyCarry);
+        ADD_PUBLIC_FUNC(Player_P2JumpBackIn);
+        ADD_PUBLIC_FUNC(Player_ForceSuperTransform);
+
         ADD_PUBLIC_FUNC(Player_GiveScore);
         ADD_PUBLIC_FUNC(Player_GiveRings);
         ADD_PUBLIC_FUNC(Player_GiveLife);
@@ -851,6 +867,8 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Player_CheckBossHit);
         ADD_PUBLIC_FUNC(Player_CheckProjectileHit);
         ADD_PUBLIC_FUNC(Player_CheckHit2);
+
+        ADD_PUBLIC_FUNC(DebugMode_AddObject);
 
         ADD_PUBLIC_FUNC(Ice_State_FrozenPlayer);
 
@@ -909,6 +927,25 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Camera_HandleHBounds);
         ADD_PUBLIC_FUNC(Camera_HandleVBounds);
         ADD_PUBLIC_FUNC(Camera_SetupLerp);
+
+        ADD_PUBLIC_FUNC(Camera_State_Roam);
+        ADD_PUBLIC_FUNC(Camera_State_Follow);
+        ADD_PUBLIC_FUNC(Camera_State_HLock);
+        ADD_PUBLIC_FUNC(Camera_State_VLock);
+        ADD_PUBLIC_FUNC(Camera_State_HandleLerp);
+
+        ADD_PUBLIC_FUNC(Dust_State_DropDash);
+        ADD_PUBLIC_FUNC(Dust_State_HammerDrop);
+        ADD_PUBLIC_FUNC(Dust_State_GlideSlide);
+        ADD_PUBLIC_FUNC(Dust_State_Skid);
+        ADD_PUBLIC_FUNC(Dust_State_Spindash);
+        ADD_PUBLIC_FUNC(Dust_State_EggLoco);
+
+        ADD_PUBLIC_FUNC(Debris_State_Fall);
+        ADD_PUBLIC_FUNC(Debris_State_LightningSpark);
+        ADD_PUBLIC_FUNC(Debris_State_FallAndFlicker);
+        ADD_PUBLIC_FUNC(Debris_FallFlickerAnimSetup);
+        ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
 
         ADD_PUBLIC_FUNC(Music_SetMusicTrack);
         ADD_PUBLIC_FUNC(Music_State_PlayMusic);

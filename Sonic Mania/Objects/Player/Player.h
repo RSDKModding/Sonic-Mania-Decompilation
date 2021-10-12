@@ -441,7 +441,7 @@ void Player_StartPeelout(void);
 void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
-void Player_CheckFlyCarry(EntityPlayer *player);
+void Player_CheckStartFlyCarry(EntityPlayer *player);
 void Player_P2JumpBackIn(void);
 void Player_ForceSuperTransform(void);
 
