@@ -386,7 +386,7 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int playerID)
             entity->field_5C[playerID] += 0x15556;
             if (entity->field_5C[playerID] >= 0) {
                 entity->field_5C[playerID] = 0;
-                RSDK.PlaySfxPlayer->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
                 player->abilityValue1 ^= 1;
             }
         }

@@ -328,7 +328,7 @@ void SpiderMobile_HandlePlatformMovement(void)
         }
         if (player->state == Player_State_None) {
             ushort tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
-            if (tile == -1 || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
+            if (tile == 0xFFFF || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
                 player->drawOrder = Zone->playerDrawLow;
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
                 player->state      = Player_State_Air;

@@ -115,11 +115,11 @@ void LaunchSpring_StageLoad(void)
 
 bool32 LaunchSpring_Unknown1(void *p)
 {
-    EntityPlayer *player = (EntityPlayer *)p;
     if (!Firework)
         return false;
 
-    int playerID = RSDK.GetEntityID(player);
+    // EntityPlayer *player = (EntityPlayer *)p;
+    // int playerID = RSDK.GetEntityID(player);
     bool32 flag  = false;
     foreach_active(Firework, firework)
     {

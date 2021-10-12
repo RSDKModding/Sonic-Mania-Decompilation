@@ -83,7 +83,7 @@ void ERZStart_Player_HandleSuperDash(void *p)
         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 0);
     }
     player->state         = ERZStart_State_PlayerSuperFly;
-    player->maxGlideSpeed = 60;
+    player->abilityValue1 = 60;
     if (FXFade) {
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), entity->position.x, entity->position.y);
         fxFade->speedIn      = 256;
@@ -184,8 +184,8 @@ void ERZStart_State_PlayerSuperFly(void)
             player1->velocity.x = player1->acceleration + velX + (player1->acceleration >> 1);
         }
 
-        if (player1->maxGlideSpeed) {
-            player1->maxGlideSpeed--;
+        if (player1->abilityValue1) {
+            player1->abilityValue1--;
         }
         else if (player1->jumpPress) {
             if (player1->rings > 10)

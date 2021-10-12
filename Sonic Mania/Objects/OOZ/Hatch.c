@@ -60,8 +60,8 @@ void Hatch_Create(void *data)
         entity->active    = ACTIVE_BOUNDS;
         entity->drawOrder = Zone->drawOrderLow + 1;
 
-        entity->updateRange.x = 16 * max(abs(entity->subOff1.x), abs(entity->subOff2.x));
-        entity->updateRange.y = 16 * max(abs(entity->subOff1.y), abs(entity->subOff2.y));
+        entity->updateRange.x = 16 * maxVal(abs(entity->subOff1.x), abs(entity->subOff2.x));
+        entity->updateRange.y = 16 * maxVal(abs(entity->subOff1.y), abs(entity->subOff2.y));
 
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &entity->animator2, true, 4);

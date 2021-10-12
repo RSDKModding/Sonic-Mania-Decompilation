@@ -27,7 +27,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    SpikeTypes type;
+    int type;
     bool32 moving;
     byte count;
     byte stagger;

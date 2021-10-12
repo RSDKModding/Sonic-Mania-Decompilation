@@ -63,7 +63,7 @@ void JunctionWheel_Update(void)
                 player->velocity.y      = 0;
                 RSDK.PlaySfx(Player->sfx_Roll, false, 255);
             }
-            if (player->velocity.y < 0 || player->onGround && player->collisionMode)
+            if (player->velocity.y < 0 || (player->onGround && player->collisionMode))
                 Player_CheckCollisionBox(player, entity, &JunctionWheel->hitbox4);
         }
         else {
@@ -87,7 +87,7 @@ void JunctionWheel_Update(void)
                 player->velocity.y      = 0;
                 RSDK.PlaySfx(Player->sfx_Roll, false, 255);
             }
-            if (player->velocity.y < 0 || player->onGround && player->collisionMode)
+            if (player->velocity.y < 0 || (player->onGround && player->collisionMode))
                 Player_CheckCollisionBox(player, entity, &JunctionWheel->hitbox4);
         }
     }

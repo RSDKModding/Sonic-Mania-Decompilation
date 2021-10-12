@@ -84,7 +84,7 @@ void Shuriken_CheckPlayerCollisions(void)
         if (Player_CheckCollisionTouch(player, entity, &Shuriken->hitbox3)) {
 #if RETRO_USE_PLUS
             int anim = player->playerAnimator.animationID;
-            if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH) || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
+            if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                 if (!player->uncurlTimer) {
                     RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
                     player->uncurlTimer = 30;
@@ -149,7 +149,6 @@ void Shuriken_Unknown4(void)
         }
     }
     else {
-        bool32 flag = false;
         foreach_active(Player, player)
         {
             if (!player->sidekick && Player_CheckCollisionTouch(player, entity, &Shuriken->hitbox2)) {

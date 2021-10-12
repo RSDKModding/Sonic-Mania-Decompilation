@@ -53,6 +53,7 @@ void MatryoshkaBom_Create(void *data)
         entity->timer = 0x600;
 
         switch (entity->size) {
+            default: break;
             case MATRYOSHKA_SIZE_BIG:
                 RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, true, 0);
                 RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &entity->animator2, true, 0);
@@ -139,6 +140,7 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
                             RSDK.PlaySfx(MatryoshkaBom->sfxButton, false, 255);
 
                             switch (entity->size) {
+                                default: break;
                                 case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 1, &entity->animator1, true, 0); break;
                                 case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 5, &entity->animator1, true, 0); break;
                                 case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, true, 0); break;
@@ -218,6 +220,7 @@ void MatryoshkaBom_Unknown5(void)
             entity->timer = 60;
             entity->state = MatryoshkaBom_Unknown6;
             switch (entity->size) {
+                default: break;
                 case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, true, 0); break;
                 case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &entity->animator1, true, 0); break;
                 case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, true, 0); break;
@@ -237,6 +240,7 @@ void MatryoshkaBom_Unknown6(void)
 
     if (!--entity->timer) {
         switch (entity->size) {
+            default: break;
             case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 3, &entity->animator1, true, 0); break;
             case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &entity->animator1, true, 0); break;
             case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &entity->animator1, true, 0); break;
@@ -260,6 +264,7 @@ void MatryoshkaBom_Unknown7(void)
         entity->timer      = 0x600;
         entity->state      = MatryoshkaBom_Unknown5;
         switch (entity->size) {
+            default: break;
             case MATRYOSHKA_SIZE_BIG:
                 RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, true, 0);
                 RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &entity->animator3, true, 0);

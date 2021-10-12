@@ -272,7 +272,7 @@ typedef struct {
     ushort playerID;
     Hitbox *outerbox;
     Hitbox *innerbox;
-    CharacterIDS characterID;
+    int characterID;
     int rings;
     int ringExtraLife;
     int shield;

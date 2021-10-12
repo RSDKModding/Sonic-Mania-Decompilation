@@ -73,7 +73,7 @@ void RPlaneShifter_DrawSprites(void)
                     RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
                 }
             }
-            else if (poleAngles[p] >= 0x80 && poleAngles[p] < 0x100) {
+            else if (poleAngles[p] >= 0x80) {
                 drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
                 RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
             }
@@ -169,8 +169,8 @@ void RPlaneShifter_Unknown3(void)
                     entity->state = RPlaneShifter_Unknown4;
                 }
                 else {
-                    player->maxGlideSpeed = player->left;
-                    player->field_1F8     = player->right;
+                    player->abilityValue1 = player->left;
+                    player->abilityValue2 = player->right;
                 }
             }
         }
@@ -182,18 +182,18 @@ void RPlaneShifter_Unknown3(void)
                     entity->activePlayers2 &= ~(1 << playerID);
                     Player_StartJump(player);
                 }
-                if (!player->maxGlideSpeed && player->left) {
+                if (!player->abilityValue1 && player->left) {
                     entity->activePlayers1 &= ~(1 << playerID);
                     entity->activePlayers2 &= ~(1 << playerID);
                     player->state = Player_State_Ground;
                 }
-                if (!player->field_1F8 && player->right) {
+                if (!player->abilityValue2 && player->right) {
                     entity->activePlayers1 &= ~(1 << playerID);
                     entity->activePlayers2 &= ~(1 << playerID);
                     player->state = Player_State_Ground;
                 }
-                player->maxGlideSpeed = player->left;
-                player->field_1F8     = player->right;
+                player->abilityValue1 = player->left;
+                player->abilityValue2 = player->right;
             }
         }
 

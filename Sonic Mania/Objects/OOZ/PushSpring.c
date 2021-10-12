@@ -97,7 +97,7 @@ void PushSpring_HandlePlayerCollisions_Top(void)
                 player->state         = Player_State_Air;
                 player->velocity.y    = -0xA0000;
                 int anim              = player->playerAnimator.animationID;
-                if (anim == ANI_WALK || anim > ANI_AIRWALK && anim <= ANI_DASH)
+                if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                     player->storedAnim = player->playerAnimator.animationID;
                 else
                     player->storedAnim = ANI_WALK;

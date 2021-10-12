@@ -49,7 +49,7 @@ typedef struct {
     void (*RegisterGlobals)(const char *globalsPath, void **globals, uint size);
     void *RegisterObject_FuncP;
     void *RegisterObject_STD;
-    void *(*GetGlobals)();
+    void *(*GetGlobals)(void);
     void (*Super)(int objectID, ModSuper callback, void *data);
 
     bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
@@ -67,7 +67,7 @@ typedef struct {
     void (*SetSettingsInteger)(const char *key, int val);
     void (*SetSettingsString)(const char *key, TextInfo *val);
 
-    void (*SaveSettings)();
+    void (*SaveSettings)(void);
 
     bool32 (*GetConfigBool)(const char *key, bool32 fallback);
     int (*GetConfigInteger)(const char *key, int fallback);
