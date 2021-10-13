@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int array[5]; // = { -131072, -65536, 0, 65536, 131072 };
+    TABLE(int array[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
     ushort aniFrames;
 } ObjectAIZTornado;
 

@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[5]; //= { 16, 12, 8, 4, 0 };
-    int value2[5]; //= { 40, 30, 20, 10, 0 };
+    TABLE(int value1[5], { 16, 12, 8, 4, 0 });
+    TABLE(int value2[5], { 40, 30, 20, 10, 0 });
     byte value3;
     int value4;
     int value5;

@@ -29,9 +29,9 @@ enum BSSCollectableTypes {
     BSS_UNKNOWN22     = 22,
     BSS_UNKNOWN23     = 23,
 
-    BSS_SPHERE_GREEN_STOOD = 0x80 | 1,
-    BSS_BLUE_STOOD         = 0x80 | 2,
-    BSS_SPHERE_PINK_STOOD  = 0x80 | 6,
+    BSS_SPHERE_GREEN_STOOD = 1 | 0x80,
+    BSS_BLUE_STOOD         = 2 | 0x80,
+    BSS_SPHERE_PINK_STOOD  = 6 | 0x80,
 };
 
 // Object Class
@@ -39,10 +39,12 @@ typedef struct {
     RSDK_OBJECT
     Animator sphereData[24];
     byte loadedTables;
-    int ringScaleTableX[32]; //= { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 32, 32 };
-    int ringScaleTableY[32]; //= { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 21, 22, 23, 24 };
-    int medalScaleTable[32]; //= { 4, 4, 5, 5, 6, 6, 7, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 32, 32, 32, 32, 32, 32, 32
-                         //};
+    TABLE(int ringScaleTableX[32],
+          { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 32, 32 });
+    TABLE(int ringScaleTableY[32],
+          { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 21, 22, 23, 24 });
+    TABLE(int medalScaleTable[32],
+          { 4, 4, 5, 5, 6, 6, 7, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 32, 32, 32, 32, 32, 32, 32 });
     int screenYValues[32];
     int medalScreenYVals[32];
     ushort spriteIndex;

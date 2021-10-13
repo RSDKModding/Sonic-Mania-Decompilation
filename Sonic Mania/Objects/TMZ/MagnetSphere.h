@@ -9,7 +9,7 @@ typedef struct {
     Hitbox hitbox;
     byte sphereAngle[4];
     byte playerAngles[4];
-    int angleList[16]; //= { 32, 32, 32, 48, 64, 80, 96, 96, 96, 160, 160, 176, 192, 208, 224, 224 };
+    TABLE(int angleList[16], { 32, 32, 32, 48, 64, 80, 96, 96, 96, 160, 160, 176, 192, 208, 224, 224 });
     ushort aniFrames;
     ushort sfxBumper;
     ushort sfxPlasmaBall;

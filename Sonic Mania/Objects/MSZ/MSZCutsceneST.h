@@ -6,18 +6,18 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value1[6]; //= { -65536, -65536, 0, 0, 0, -65536 };
+    TABLE(int value1[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
     ushort value2;
     ushort value3;
-    TextInfo value4;
+    Vector2 value4;
     byte value5;
-    bool32 value6;
-    bool32 value7;
-    bool32 value8;
-    bool32 value9;
-    bool32 value10;
-    bool32 value11;
-    bool32 value12;
+    void *value6;
+    void *value7;
+    void *value8;
+    void *value9;
+    void *value10;
+    void *value11[3];
+    void *value12[3];
     byte value13;
     byte value14;
     ushort value15;

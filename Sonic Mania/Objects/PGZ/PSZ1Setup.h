@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int aniTileDelays1[7];  //= { 64, 2, 1, 2, 2, 6, 2 };
-    int aniTileDelays2[14]; //= { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 };
+    TABLE(int aniTileDelays1[7], { 64, 2, 1, 2, 2, 6, 2 });
+    TABLE(int aniTileDelays2[14], { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 });
     int field_58;
     bool32 flag;
     int petalTimer;

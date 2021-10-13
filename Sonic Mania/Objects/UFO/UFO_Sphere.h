@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int field_4;
-    int defaultHeights[4];
+    TABLE(int defaultHeights[4], { 12, 12, 16, 16 });
     ushort spriteIndex;
     ushort sfx_MachSpeed;
     ushort sfx_LedgeBreak;

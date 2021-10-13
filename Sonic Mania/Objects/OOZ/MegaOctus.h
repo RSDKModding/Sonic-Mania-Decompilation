@@ -29,8 +29,8 @@ typedef struct {
     int field_84;
     bool32 spawnHarpoon;
     int field_8C;
-    int field_90[11]; //= { -2097152, -1572864, -1048576, -786432, -524288, 0, 524288, 786432, 1048576, 1572864, 2097152 };
-    int field_BC[4];  //= { -7864320, -8388608, -7340032, -5308416 };
+    TABLE(int field_90[11], { -0x200000, -0x180000, -0x100000, -0xC0000, -0x80000, 0, 0x80000, 0xC0000, 0x100000, 0x180000, 0x200000 });
+    TABLE(int field_BC[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
     int orbHealth[2];
     bool32 field_D4;
     ushort aniFrames;

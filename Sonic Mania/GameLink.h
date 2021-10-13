@@ -664,4 +664,8 @@ typedef enum {
     }
 #define StateMachine_None NULL
 
+//Fancy macro + build magic to make tables & static vars
+#define TABLE(var, ...) var
+#define STATIC(var, val) var
+
 #endif /* GAMELINK_H */

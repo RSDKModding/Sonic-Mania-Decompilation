@@ -9,12 +9,12 @@ typedef struct {
     int palTimer;
     ushort aniTiles;
     TileLayer* bgPtr;
-    int deformData[64]; //= { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1,
-                        //2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 };
+    TABLE(int deformData[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
+                                1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
     int aniTilesTimer;
     int aniTilesFrame;
-    int aniTilesDelay; //= 60;
-    int aniTileDelays[9]; //= { 60, 60, 3, 3, 3, 3, 3, 3, 4 };
+    STATIC(int aniTilesDelay, 60);
+    TABLE(int aniTileDelays[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
     int value9;
     int fadeTimer;
     int flags;

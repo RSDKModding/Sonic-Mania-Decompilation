@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int aniTilesDelay[14]; //= { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 };
+    TABLE(int aniTilesDelay[14], { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 });
     int field_3C;
     int timerB;
     int timerA;

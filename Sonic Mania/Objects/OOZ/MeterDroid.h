@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int debrisSpeeds[21]; //= { 5, 0, 0, -131072, -163840, 1, 0, 131072, -131072, 2, 0, -163840, -65536, 3, 0, 163840, -65536, 4, 0, 65536, 65536 };
+    TABLE(int debrisSpeeds[21], { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;

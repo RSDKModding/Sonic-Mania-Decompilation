@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     ushort aniFrames;
     Hitbox hitbox;
-    int heightArray[33]; //= { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 };
+    TABLE(int heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
     ushort sfxBumper;
     ushort value5;
 } ObjectSDashWheel;

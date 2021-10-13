@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     int aniTileFrameB;
-    int aniTileDelay3; //= 60;
-    int aniTileDelays[12]; //= { 9, 4, 4, 2, 2, 2, 9, 4, 4, 2, 2, 2 };
+    STATIC(int aniTileDelay3, 60);
+    TABLE(int aniTileDelays[12], { 9, 4, 4, 2, 2, 2, 9, 4, 4, 2, 2, 2 });
     byte paletteTimer;
     byte aniTileDelay;
     byte aniTileFrameA;

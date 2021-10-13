@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    colour colours[4]; //= { 15790320, 15790320, 14737632, 14737632 };
+    TABLE(colour colours[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
     ushort aniFrames;
     int table1[0x1000];
     int table2[0x1000];

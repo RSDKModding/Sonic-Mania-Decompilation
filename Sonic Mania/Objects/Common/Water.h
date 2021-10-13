@@ -13,7 +13,7 @@ typedef struct {
     int array3[4];
     int array4[4];
     int array5[4];
-    int bubbleSizes[18];
+    TABLE(int bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
     ushort spriteIndex;
     ushort bigBubbleSprite;
     ushort wakeSprite;

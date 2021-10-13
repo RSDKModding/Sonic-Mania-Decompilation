@@ -10,10 +10,10 @@ typedef struct {
     RSDK_OBJECT
     int palTimer;
     int angle;
-    int timerC; //= 12;
+    STATIC(int timerC, 12);
     int aniTilesFrameC;
-    int aniTileDelaysC[8]; //= { 11, 2, 2, 2, 2, 2, 2, 2 };
-    int delayD;            //= 30;
+    TABLE(int aniTileDelaysC[8], { 11, 2, 2, 2, 2, 2, 2, 2 });
+    STATIC(int delayD, 30);
     int frameD;
     ushort aniTiles;
     ushort aniTiles2;
@@ -24,17 +24,17 @@ typedef struct {
     RSDK_OBJECT
     int palTimer;
     int angle;
-    int timerC; //= 12;
+    STATIC(int timerC, 12);
     int aniTilesFrameC;
-    int aniTileDelaysC[8]; //= { 11, 2, 2, 2, 2, 2, 2, 2 };
-    int delayD;            //= 30;
+    TABLE(int aniTileDelaysC[8], { 11, 2, 2, 2, 2, 2, 2, 2 });
+    STATIC(int delayD, 30);
     int frameD;
-    int aniTilesSrcYD[12];   //= { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
-    int aniTilesDelaysD[12]; //= { 30, 9, 6, 6, 6, 9, 30, 9, 6, 6, 6, 9 };
-    int layerDeform[32];     //= { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    int aniTileSrcXB[16];    //= { 96, 96, 112, 96, 112, 112, 112, 112, 112, 112, 112, 112, 112, 96, 112, 96 };
-    int aniTileSrcYB[16];    //= { 0, 0, 0, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 0 };
-    int aniTileSrcXA[16];    //= { 0, 0, 0, 16, 32, 48, 32, 32, 48, 32, 32, 16, 0, 0, 0, 0 };
+    TABLE(int aniTilesSrcYD[12], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 });
+    TABLE(int aniTilesDelaysD[12], { 30, 9, 6, 6, 6, 9, 30, 9, 6, 6, 6, 9 });
+    TABLE(int layerDeform[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+    TABLE(int aniTileSrcXB[16], { 96, 96, 112, 96, 112, 112, 112, 112, 112, 112, 112, 112, 112, 96, 112, 96 });
+    TABLE(int aniTileSrcYB[16], { 0, 0, 0, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 0 });
+    TABLE(int aniTileSrcXA[16], { 0, 0, 0, 16, 32, 48, 32, 32, 48, 32, 32, 16, 0, 0, 0, 0 });
     int aniTilesFrameB;
     int aniTilesFrameA;
     TileLayer *fgLow;
