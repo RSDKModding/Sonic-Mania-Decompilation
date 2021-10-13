@@ -1,5 +1,5 @@
 import os, sys, re
-from typing import IO, Dict, Iterable, Iterator, List, Tuple
+from typing import IO, BinaryIO, Dict, Iterable, Iterator, List, Tuple
 from pathlib import Path
 
 USE64 = False
@@ -14,7 +14,7 @@ TYPEMAP = {
     "byte": 1,
     "ushort": 2, 
     "uint": 4, 
-    "char": 1,
+    "sbyte": 1,
     "short": 2,
     "int": 4,
     "bool32": 4,
@@ -32,7 +32,6 @@ curpos = 0
 lastpos = 0
 errflag = 0
 path = ""
-
 
 def relseek(where):
     currentfile.seek(currentfile.tell() + where, 0)
@@ -52,7 +51,7 @@ def readlines() -> Iterator[str]:
         r = currentfile.readline()
         if not r:
             break
-        curpos += len(r)
+        curpos = currentfile.tell()
         if r.strip() == "" or r.strip().startswith("//"):
             continue
         yield r[:-1]
@@ -83,7 +82,6 @@ def readuntiltext():
         r += c
     return r
 
-
 def infront():
     r = currentfile.read(1)
     relseek(-1)
@@ -100,8 +98,17 @@ def deduce(delim):
     global errflag, path
     readuntiltext()
     type = readuntil(" ")
+    
     if infront() == "*":
         type = "ptr"
+    if type.endswith("*"):
+        type = "ptr"
+        type.replace("*", "")
+
+    if infront() == "(":
+        type = "ptr"
+        readuntil("*") #da name!!!
+    
     if type in ("color", "colour"):
         type = "uint" 
     if type not in TYPEMAP:
@@ -123,16 +130,30 @@ def deduce(delim):
 
         name = name[:(sp - curpos - 1)]
     backward()
-    readuntil(delim) #readjust to be sure
+    readuntil(delim) #read just to be sure
     t.append((name, tuple(TYPEMAP.keys()).index(type), asize, []))
 
+plus = len(sys.argv) < 3 or sys.argv[2] == "plus"
 for path in Path(sys.argv[1]).rglob("*.h"):
     mode = 0
+    # print(f"{path} STARTED")
     prepare(path)
     for l in readlines():
         if errflag:
             break
-        if l.strip() == "typedef struct {":
+        
+        if ("".join(l.split()).startswith("#ifRETRO_USE_PLUS") and not plus) or ("".join(l.split()).startswith("#if!RETRO_USE_PLUS") and plus):
+            mode = 5
+            continue
+        elif ("".join(l.split()).startswith("#ifRETRO_USE_PLUS") and plus) or ("".join(l.split()).startswith("#if!RETRO_USE_PLUS") and not plus):
+            continue #ok idc
+        elif "".join(l.split()).startswith("#endif"):
+            continue #ok idc
+        elif "".join(l.split()).startswith("#else"):
+            mode = 5
+            continue #ok do care
+
+        if mode < 5 and l.strip() == "typedef struct {":
             mode = 1
             continue
         if mode == 1 and l.strip() == "RSDK_OBJECT":
@@ -148,6 +169,8 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 mode = 4
                 backward()
                 continue
+            if l.strip().startswith("StateMachine"):
+                continue
             if l.strip().startswith("} "):
                 backward()
                 readuntil(" ")
@@ -160,10 +183,11 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 objects[name] = t
                 t = []
                 mode = 0
-                break
+                continue #I changed this specifically because of "SPZSetup" & "SPZ2Setup" sharing a file :LOL:
             backward()
             deduce(";")
         if mode == 3:
+            backward()
             readuntil("(")
             deduce(",")
             if errflag:
@@ -176,19 +200,20 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             for i in range(expected - 1):
                 try: t[-1][3].append(int(readuntil(","), 0))
                 except: 
-                    print(f"INCORRECT INT IN {t[-1][0]} TABLE OR TABLE TOO SMALL IN {os.path.basename(path)}")
+                    print(f"INCORRECT INT IN {t[-1][0]} TABLE OR TABLE TOO SMALL IN {os.path.basename(path)}, EXPECTED: {expected}")
                     errflag = 1
                     break
             if errflag:
                 break
             try: t[-1][3].append(int(readuntil("}"), 0))
             except: 
-                print(f"INCORRECT INT IN {t[-1][0]} TABLE OR TABLE TOO BIG IN {os.path.basename(path)}")
+                print(f"INCORRECT INT IN {t[-1][0]} TABLE OR TABLE TOO BIG IN {os.path.basename(path)}, EXPECTED: {expected}")
                 break
             readuntil(";")
             mode = 2
             continue
         if mode == 4:
+            backward()
             readuntil("(")
             deduce(",")
             if t[-1][1] > tuple(TYPEMAP.keys()).index("bool32"):
@@ -200,7 +225,37 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 break
             readuntil(";")
             mode = 2
+            continue
+        if mode == 5:
+            if l.strip().startswith("#else") or l.strip().startswith("#endif"):
+                mode = 0 #STOP!!!!
 
+print("\n\n\n\nStatic Objs")
+for key in objects:
+    b = bytearray([ord('O'), ord('B'), ord('J'), 0])
+    hasVal = False
+
+    for tup in objects[key]:
+        type = tup[1]
+        if tup[3]:
+            hasVal = True
+            type |= 0x80
+        b.append(type)
+        b.extend(tup[2].to_bytes(4, 'little')) #array size
+        if type >= 0x80:
+            b.extend(tup[2].to_bytes(4, 'little')) #data size
+            size = tuple(TYPEMAP.values())[tup[1]]
+            for val in tup[3]:
+                b.extend(val.to_bytes(size, byteorder='little', signed=False if val >= 0 else True)) #val
+    
+    if hasVal:
+        name = key
+        if len(sys.argv) < 4 or sys.argv[3] != "debug":
+            name = "00000000000000000000000000000000" #TODO: idk how to do hashes and I cba to learn rn :LOL
+
+        with open(f"Static/{name}.bin", "wb") as file:
+            file.write(b)
+            file.close()
                 
 
 

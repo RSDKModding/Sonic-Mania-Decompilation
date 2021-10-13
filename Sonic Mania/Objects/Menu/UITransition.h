@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Entity *activeTransition;
-    const char *newTag;
+    char *newTag;
 } ObjectUITransition;
 
 // Entity Class

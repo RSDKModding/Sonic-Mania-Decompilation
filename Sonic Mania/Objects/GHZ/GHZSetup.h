@@ -9,10 +9,10 @@ typedef struct {
     int waterFadeAmount;
     STATIC(int delayA, 30);
     int frameA;
-    TABLE(int delayListA[8], 30, 2, 2, 2, 30, 2, 2, 2);
+    TABLE(int delayListA[8], { 30, 2, 2, 2, 30, 2, 2, 2 });
     STATIC(int delayB, 60);
     int frameB;
-    TABLE(int delayListB[16], 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2);
+    TABLE(int delayListB[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
     ushort aniTiles;
 } ObjectGHZSetup;
 

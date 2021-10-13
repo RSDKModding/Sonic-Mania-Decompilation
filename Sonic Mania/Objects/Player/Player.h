@@ -214,7 +214,7 @@ typedef struct {
     ushort sfx_MightyUnspin;
     int raySwoopTimer;
     int rayDiveTimer;
-    bool32 gotHit[PLAYER_MAX];
+    bool32 gotHit[4];
     void (*configureGhost_CB)(void);
     bool32 (*canSuper)(bool32);
     int superDashCooldown;

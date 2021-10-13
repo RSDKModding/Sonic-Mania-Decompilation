@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Entity* loadEntity;
-    void(*loadCallback)(bool32);
+    Entity *loadEntity;
+    void (*loadCallback)(bool32);
     Entity *saveEntity;
     void (*saveCallback)(bool32);
     Entity *deleteEntity;

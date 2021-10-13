@@ -60,6 +60,7 @@ cmake/
 
 # safety
 *.rsdk
+Sonic Mania/Static/*
 
 #OSX files
 *.DS_Store
